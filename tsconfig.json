@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "packages/framework-base/*",
+    "packages/plugins/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    "*.spec.ts",
+  ],
+  "files": [],
+}

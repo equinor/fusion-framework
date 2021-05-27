@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "ESNext",
+        "target": "ESNext",
+        "incremental": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        // "stripInternal": true,
+        "lib": [
+            "esnext",
+            "DOM"
+        ],
+        "composite": true,
+        "baseUrl": "./packages",
+        "rootDir": ".",
+        "paths": {
+            "@equinor/fusion-framework": [
+                "framework/src"
+            ],
+        },
+    },
+    // "include": ["packages/**/*"]
+}
