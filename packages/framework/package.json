@@ -14,5 +14,9 @@
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
     "directory": "packages/framework"
+  },
+  "dependencies": {
+    "@equinor/fusion-web-msal": "^0.1.0",
+    "rxjs": "^7.1.0"
   }
 }

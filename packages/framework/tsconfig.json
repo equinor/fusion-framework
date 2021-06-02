@@ -3,6 +3,10 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "@equinor/fusion-framework/services": ["services/index"]
+    }
   },
   "include": [
     "src"
