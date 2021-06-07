@@ -2,10 +2,12 @@
   "name": "@equinor/fusion-framework",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
   "scripts": {
-    "build": "tsc -b --clean && tsc -b --verbose"
+    "build": "npm run build:typescript && npm run build:package",
+    "build:typescript": "tsc -b --verbose",
+    "build:package": "rollup -c"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +18,21 @@
     "directory": "packages/framework"
   },
   "dependencies": {
-    "@equinor/fusion-web-msal": "^0.1.0",
+    "@equinor/fusion-web-msal": "^0.1.1",
     "rxjs": "^7.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "rollup": "^2.50.5",
+    "rollup-plugin-serve": "^1.1.0"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
   }
 }

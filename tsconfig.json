@@ -1,11 +1,25 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "target": "ESNext",
+    "module": "ES2015",
+    "incremental": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "stripInternal": true,
+    "noEmit": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
   },
   "include": [
-    "packages/framework-base/*",
-    "packages/plugins/*"
+    "packages/*/src",
   ],
   "exclude": [
     "node_modules",
