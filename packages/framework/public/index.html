@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Test framework</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <style>
+    pre{
+      white-space: pre-wrap; 
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body style="padding: 20px;">
+  
+
+  <button onclick="window.Fusion.auth.login()">Log me In!</button>
+  <br/>
+  <br/>
+  <div>
+    <button id="btn-scope">Get token!</button>
+    <input type="text" id="scope"/>
+    <br/>
+    <pre id="token"></pre>
+  </div>
+  <br/>
+  <br/>
+  <button id="btn-data">fetch api/apps</button>
+  <pre id="data"></pre>
+
+<script src="https://unpkg.com/rxjs@7.1.0/dist/bundles/rxjs.umd.js"></script>
+  <script type="module">
+    import createInstance, { createAuthClient } from '/index.js';
+
+    const tenantId = '3aa4a235-b6e2-48d5-9195-7fcf05b459b0';
+    const clientId = '9b707e3a-3e90-41ed-a47e-652a1e3b53d0';
+
+    (async () => {
+        const testing = await createInstance((root) => {
+            root.auth.client = createAuthClient(tenantId, clientId);
+            root.http.configureClient('portal', (client) =>{
+              client.uri = 'https://pro-s-portal-ci.azurewebsites.net';
+              client.responseHandler = FusionHttpRepsonseHandler();
+              // client.defaultScope = ['https://StatoilSRM.onmicrosoft.com/630c3229-4443-42f7-a05d-75d9c99225ff/.default']
+            });
+        });
+        window.dispatchEvent(new CustomEvent('fusion.loaded', {detail: testing}));
+        window.Fusion = testing;
+    })();
+  </script>
+  <script type="module">
+    document.getElementById('btn-scope').addEventListener('click', async() => {
+      const tokenEl = document.getElementById('token');
+      tokenEl.innerHTML = 'loading....';
+
+      const scopes = [document.getElementById('scope').value];
+      const token = await window.Fusion.auth.acquireToken({scopes});
+      console.log(token);
+      tokenEl.innerHTML = token.accessToken;
+      tokenEl.innerHTML+=`<span>[<a href="https://jwt.ms/#id_token=${token.accessToken}" target="id-token">view</a>]</span>`;
+    });
+  </script>
+  <script type="module">
+    document.getElementById('btn-data').addEventListener('click', () => {
+      const client = window.Fusion.http.createClient('portal');
+      client.fetch({
+        path: 'api/apps',
+        scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default']
+      })
+        .pipe(rxjs.operators.switchMap(x => x.json()))
+        .pipe(tap(x => !x.ok))
+        .pipe(rxjs.operators.map(x => JSON.stringify(x, null, 2)))
+        .subscribe(x => document.getElementById('data').innerText = x);
+
+      // setTimeout(() =>client.abortAll(), 1000);
+    });
+  </script>
+</body>
+</html>

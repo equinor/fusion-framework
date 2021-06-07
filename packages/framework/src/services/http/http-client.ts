@@ -1,35 +1,14 @@
-import { firstValueFrom, Observable, ObservableInput, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { firstValueFrom, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
+
+import { ProcessOperators } from '../../util/process-operators';
 
 export type HttpRequestInit = RequestInit & { uri: string; path: string };
 
-export type HandlerOperator<T> = (request: T) => T | void | Promise<T | void>;
-
-export class OperatorHandler<T> {
-    protected _operators: Record<string, HandlerOperator<T>> = {};
-    add(name: string, operator: HandlerOperator<T>): OperatorHandler<T> {
-        if (Object.keys(this._operators).includes(name))
-            throw Error(`Operator [${name}] allready defined`);
-        return this.set(name, operator);
-    }
-    set(name: string, operator: HandlerOperator<T>): OperatorHandler<T> {
-        this._operators[name] = operator;
-        return this;
-    }
-    get(name: string): HandlerOperator<T> {
-        return this._operators[name];
-    }
-    process(request: T): Promise<T> {
-        return Object.values(this._operators).reduce(async (acc, value) => {
-            return Promise.resolve(value(await acc)) as Promise<T>;
-        }, Promise.resolve(request) as Promise<T>);
-    }
-}
-
 export class HttpRequestHandler<
     T extends HttpRequestInit = HttpRequestInit
-> extends OperatorHandler<T> {
+> extends ProcessOperators<T> {
     setHeader(name: string, value: string): HttpRequestHandler<T> {
         return this.set('header-' + name, (request) => {
             const headers = new Headers(request.headers);
@@ -39,16 +18,32 @@ export class HttpRequestHandler<
     }
 }
 
-export class HttpResponseHandler<T extends Response = Response> extends OperatorHandler<T> {}
-
 export type HttpClientCreateOptions<T extends HttpRequestInit = HttpRequestInit> = {
     requestHandler: HttpRequestHandler<T>;
 };
 
-export class HttpClient<TInit extends HttpRequestInit = HttpRequestInit> {
-    readonly requestHandler: HttpRequestHandler<TInit>;
-    constructor(public uri: string, options?: HttpClientCreateOptions<TInit>) {
-        this.requestHandler = options?.requestHandler || new HttpRequestHandler<TInit>();
+export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
+
+export class HttpClient<TRequest extends HttpRequestInit = HttpRequestInit, TResponse = Response> {
+    readonly requestHandler: HttpRequestHandler<TRequest>;
+
+    readonly responseHandler: HttpResponseHandler<TResponse> = (x: Response) =>
+        Promise.resolve(x as unknown as TResponse);
+
+    protected _request$ = new Subject<TRequest>();
+    protected _response$ = new Subject<TResponse>();
+    protected _abort$ = new Subject<void>();
+
+    public get request$(): Observable<TRequest> {
+        return this._request$.asObservable();
+    }
+
+    public get response$(): Observable<TResponse> {
+        return this._response$.asObservable();
+    }
+
+    constructor(public uri: string, options?: HttpClientCreateOptions<TRequest>) {
+        this.requestHandler = options?.requestHandler || new HttpRequestHandler<TRequest>();
         this._init();
     }
 
@@ -56,28 +51,41 @@ export class HttpClient<TInit extends HttpRequestInit = HttpRequestInit> {
         // called by children for constructor setup
     }
 
-    protected _prepareRequest(init: TInit): ObservableInput<TInit> {
+    protected _prepareRequest(init: TRequest): ObservableInput<TRequest> {
         return this.requestHandler.process(init);
     }
 
-    protected _postRequest(response: Response): Response {
-        return response;
+    protected _prepareResponse(response: Response): ObservableInput<TResponse> {
+        return this.responseHandler(response);
     }
 
     protected _resolveUrl(path: string): string {
         return [this.uri, path].join('/');
     }
 
-    fetch(init: Omit<TInit, 'uri'> | string): Observable<Response> {
+    public fetch(init: Omit<TRequest, 'uri'> | string): Observable<TResponse> {
         const options = typeof init === 'string' ? { path: init } : init;
-        return of({ ...options, uri: this._resolveUrl(options.path) } as TInit).pipe(
-            switchMap(this._prepareRequest),
+        return of({ ...options, uri: this._resolveUrl(options.path) } as TRequest).pipe(
+            switchMap((x) => this._prepareRequest(x)),
+            tap((x) => this._request$.next(x)),
             switchMap(({ uri, path: _path, ...args }) => fromFetch(uri, args)),
-            // TODO catch error and run error operators
-            map(this._postRequest)
+            switchMap((x) => this._prepareResponse(x)),
+            tap((x) => this._response$.next(x)),
+            takeUntil(this._abort$)
         );
     }
-    fetchAsync(init: Omit<TInit, 'uri'> | string): Promise<Response> {
+
+    /**
+     * Fetch a resource as an promise
+     */
+    public fetchAsync(init: Omit<TRequest, 'uri'> | string): Promise<TResponse> {
         return firstValueFrom(this.fetch(init));
+    }
+
+    /**
+     * Abort all ongoing request for current client
+     */
+    public abort(): void {
+        this._abort$.next();
     }
 }
