@@ -1,3 +1,4 @@
+// TODO - DELETE ME!
 import createInstance, { AuthClient, createAuthClient } from '.';
 
 async () => {
@@ -17,7 +18,16 @@ async () => {
         });
     });
     const client = testing.http.createClient('portal');
-    client.fetchAsync('api/v2/f-u');
+    const response = await client.fetchAsync('api/v2/f-u');
+    if (!response.ok) {
+        // do something;
+        throw Error('invalid something');
+    }
+    // if(response.headers.has('content-type', 'application/json')){
+    //     return await response.json();
+    // }
+
+    testing.http.createClient;
 
     testing.registerApp('myapp', (app) => {
         app.http.configureClient('app-client', 'https://my-app.com');

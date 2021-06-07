@@ -8,7 +8,7 @@ interface Api extends Services {
 
 export const createInstance = async (init: ServiceInitiator): Promise<Api> => {
     const app$ = new BehaviorSubject<Record<string, Services>>({});
-    const rootConfig = await configureServices({});
+    const rootConfig = await configureServices();
     const rootServices = await rootConfig(init);
 
     // TODO move insto services;

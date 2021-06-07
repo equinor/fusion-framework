@@ -1,4 +1,4 @@
-import { HttpClientProvider, HttpClientMsal } from './http';
+import { HttpClientProvider, HttpClientConfigurator, HttpClientMsal } from './http';
 
 // TODO make provider
 interface AuthClient {
@@ -8,7 +8,7 @@ interface AuthClient {
 
 export type Services = {
     auth: AuthClient;
-    http: Pick<HttpClientProvider<HttpClientMsal>, 'createClient'>;
+    http: HttpClientProvider<HttpClientMsal>;
 };
 
 export type ServiceInitiator = (config: ServiceConfig) => void | Promise<void>;
@@ -17,58 +17,75 @@ interface ServiceConfig {
     auth: {
         client?: AuthClient;
     };
-    http: HttpClientProvider<HttpClientMsal>;
+    http: HttpClientConfigurator<HttpClientMsal>;
 }
 
-type ServiceConfigurator<K extends keyof ServiceConfig, R = ServiceConfig[K]> = (
-    services: Partial<Services>
-) => R | Promise<R>;
+type ServiceConfigurator = (
+    config: Partial<ServiceConfig>,
+    services?: Services
+) => (services: Partial<Services>) => Partial<Services> | Promise<Partial<Services>>;
 
-const configureAuth: ServiceConfigurator<'auth'> = (services) => ({ client: services.auth });
+const configureAuth: ServiceConfigurator = (
+    config: Partial<ServiceConfig>,
+    services?: Services
+) => {
+    config.auth = { client: services?.auth };
+    return (_services: Partial<Services>) => {
+        const client = config.auth?.client;
+        if (!client) {
+            throw Error('Missing auth Client');
+        }
+        return {
+            auth: {
+                client,
+                acquireToken(args: { scopes: string[] }) {
+                    return client.acquireToken(args);
+                },
+                login() {
+                    client.login();
+                },
+            },
+        };
+    };
+};
 
-const configureHttp: ServiceConfigurator<'http'> = (services) => {
-    const http = new HttpClientProvider(HttpClientMsal);
-    http.defaulHttpRequestHandler.add('msal', async (request) => {
-        const { scopes } = request;
-        if (scopes) {
+const configureHttp: ServiceConfigurator = (config: Partial<ServiceConfig>) => {
+    config.http = new HttpClientConfigurator(HttpClientMsal);
+    return (services: Partial<Services>) => {
+        if (!config.http) {
+            throw Error('Missing config for HTTP');
+        }
+        config.http.defaulHttpRequestHandler.add('msal', async (request) => {
+            const { scopes = [] } = request;
             const token = await services.auth?.acquireToken({ scopes });
             if (token) {
                 const headers = new Headers(request.headers);
-                headers.append('Bearer', token.accessToken);
+                headers.append('Authorization', `Bearer ${token.accessToken}`);
                 return { ...request, headers };
             }
-        }
-    });
-    return http;
-};
-
-const configureServices = async (services: Partial<Services>): Promise<ServiceConfig> => {
-    const auth = await Promise.resolve(configureAuth(services));
-    const http = await Promise.resolve(configureHttp(services));
-    return { auth, http };
+        });
+        return {
+            http: new HttpClientProvider(config.http),
+        };
+    };
 };
 
 export const createServices = async (
-    services: Partial<Services>
+    services?: Services
 ): Promise<(cb: ServiceInitiator) => Promise<Services>> => {
-    const config = await configureServices(services);
+    const config = {};
+    const build = {
+        auth: configureAuth(config, services),
+        http: configureHttp(config, services),
+    };
     return async (init: (config: ServiceConfig) => void): Promise<Services> => {
-        await Promise.resolve(init(config));
-        const { auth, http } = config;
-
-        if (!auth.client) {
-            throw Error('No auth client provided!');
-        }
-
-        return {
-            auth: {
-                acquireToken: auth.client.acquireToken,
-                login: auth.client.login,
-            },
-            http: {
-                createClient: http.createClient,
-            },
-        };
+        await Promise.resolve(init(config as ServiceConfig));
+        const services = await Object.keys(build).reduce(async (acc, key) => {
+            const obj = await acc;
+            const provider = await Promise.resolve(build[key as keyof typeof build](obj));
+            return Object.assign(obj, provider);
+        }, Promise.resolve({}));
+        return services as Services;
     };
 };
 
