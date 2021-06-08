@@ -3,6 +3,7 @@ import { HttpClientProvider, HttpClientConfigurator, HttpClientMsal } from './ht
 // TODO make provider
 interface AuthClient {
     acquireToken(req: { scopes: string[] }): Promise<{ accessToken: string } | void>;
+    acquireAccessToken(req: { scopes: string[] }): Promise<string | void>;
     login(): void;
 }
 
@@ -40,6 +41,10 @@ const configureAuth: ServiceConfigurator = (
                 client,
                 acquireToken(args: { scopes: string[] }) {
                     return client.acquireToken(args);
+                },
+                async acquireAccessToken(args: { scopes: string[] }) {
+                    const token = await this.acquireToken(args);
+                    return token ? token.accessToken : undefined;
                 },
                 login() {
                     client.login();
