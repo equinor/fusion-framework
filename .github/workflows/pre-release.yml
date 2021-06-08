@@ -46,11 +46,6 @@ jobs:
         run: npx lerna version --yes --conventional-prerelease --no-changelog --no-git-tag-version --preid ${{ github.event.inputs.tag }}
         env:
           GH_TOKEN: ${{ github.token }}
-      
-      - name: Release packages
-        run: npx lerna publish from-package --yes --no-verify-access --dist-tag ${{ github.event.inputs.tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Commit changes
         run: |
@@ -59,5 +54,10 @@ jobs:
             git push
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Release packages
+        run: npx lerna publish from-package --yes --no-verify-access --dist-tag ${{ github.event.inputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       
