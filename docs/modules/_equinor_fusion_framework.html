@@ -1,0 +1,881 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@equinor/fusion-framework | Fusion framework</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<ul class="results-priority" style="display:none">
+					</ul>
+					<a href="../index.html" class="title">Fusion framework</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="_equinor_fusion_framework.html">@equinor/fusion-framework</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-3 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="_equinor_fusion_framework.html">@equinor/fusion-framework</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="col-7 offset-3 col-content">
+			<h1>Module @equinor/fusion-framework</h1>
+			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-text">
+					<a href="#fusion-framework" id="fusion-framework" style="color: inherit; text-decoration: none;">
+						<h1>Fusion Framework</h1>
+					</a>
+					<p>🚨 <strong>WIP</strong>🏗</p>
+					<p>This package is under construction and currently under alpha.</p>
+					<p><strong>Expect breaking changes untill stable release!</strong></p>
+					<a href="#provider--portal" id="provider--portal" style="color: inherit; text-decoration: none;">
+						<h2>Provider / Portal</h2>
+					</a>
+					<pre><code class="language-ts"><span class="hljs-keyword">const</span> initialize = <span class="hljs-keyword">async</span>() =&gt; {
+
+  <span class="hljs-built_in">window</span>.Fusion = <span class="hljs-keyword">await</span> createInstance(<span class="hljs-function">(<span class="hljs-params">root</span>) =&gt;</span> {
+
+    <span class="hljs-comment">// configure auth client instance</span>
+    root.auth.client = createAuthClient(
+      <span class="hljs-string">&#x27;my-tennant-id&#x27;</span>, 
+      <span class="hljs-string">&#x27;my-client-id&#x27;</span>, 
+      <span class="hljs-string">&#x27;/msal/auth&#x27;</span>
+    );
+
+    <span class="hljs-comment">// define simple client (will use login scope)</span>
+    root.http.configureClient(<span class="hljs-string">&#x27;foo&#x27;</span>, <span class="hljs-string">&#x27;https://my.services.com&#x27;</span>);
+
+    <span class="hljs-comment">// define a client with callback for init</span>
+    root.http.configureClient(<span class="hljs-string">&#x27;bar&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">client</span>) =&gt;</span> {
+
+      <span class="hljs-comment">// define base url for requests</span>
+      client.uri = <span class="hljs-string">&#x27;https://my.other-services.com&#x27;</span>;
+
+      <span class="hljs-comment">// define default scope for auth request when using client instance</span>
+      client.defaultScope = [<span class="hljs-string">&#x27;https://somewhere.com/read&#x27;</span>];
+
+      <span class="hljs-comment">// define a request proccessor - supports multiple</span>
+      client.requestHandler.add(<span class="hljs-string">&#x27;custom-headers&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">request</span>) =&gt;</span> {
+          <span class="hljs-keyword">const</span> headers = <span class="hljs-keyword">new</span> Headers(request.headers);
+          headers.append(<span class="hljs-string">&#x27;x-app-version&#x27;</span>, <span class="hljs-string">&#x27;v1.2.3&#x27;</span>);
+          headers.append(<span class="hljs-string">&#x27;x-app-env&#x27;</span>, <span class="hljs-string">&#x27;alpha&#x27;</span>);
+          <span class="hljs-keyword">return</span> { ...request, headers };
+      });
+    });
+  });
+}</code></pre>
+					<a href="#consumer--application" id="consumer--application" style="color: inherit; text-decoration: none;">
+						<h2>Consumer / Application</h2>
+					</a>
+					<pre><code class="language-ts">  <span class="hljs-comment">// default</span>
+  <span class="hljs-built_in">window</span>.Fusion.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
+    .fetch(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
+    .subscribe(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));
+
+  <span class="hljs-comment">// by promise</span>
+  <span class="hljs-built_in">window</span>.Fusion.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
+    .fetchAsync(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
+    .then(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));</code></pre>
+					<a href="#httpclient" id="httpclient" style="color: inherit; text-decoration: none;">
+						<h2>HttpClient</h2>
+					</a>
+					<a href="#fetch" id="fetch" style="color: inherit; text-decoration: none;">
+						<h3>fetch</h3>
+					</a>
+					<blockquote>
+						<p>The fetch method of the client return an <strong>Observable</strong> reponse.</p>
+						<p>Observables has the advantage of cancel when unsuscribed.</p>
+						<p>Secondly we can compose the flow easily with operator functions</p>
+					</blockquote>
+					<pre><code class="language-ts"><span class="hljs-keyword">import</span> { fromEvent, <span class="hljs-keyword">of</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rxjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { 
+  debounceTime, 
+  map,
+  switchMap, 
+  takeUntil, 
+  catchError 
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rxjs/operators&#x27;</span>;
+
+<span class="hljs-keyword">const</span> client = <span class="hljs-built_in">window</span>.Fusion.createClient(<span class="hljs-string">&#x27;my-client&#x27;</span>);
+
+<span class="hljs-keyword">const</span> input = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;input&#x27;</span>);
+<span class="hljs-keyword">const</span> result = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;pre&#x27;</span>);
+
+<span class="hljs-comment">// Observe changes on input field</span>
+<span class="hljs-keyword">const</span> input$ = fromEvent(input, <span class="hljs-string">&#x27;input&#x27;</span>);
+
+input$.pipe(
+
+  <span class="hljs-comment">// only call after no key input in .5s</span>
+  debounceTime(<span class="hljs-number">500</span>),
+
+  <span class="hljs-comment">// extract value from event</span>
+  map(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.currentTarget.value),
+
+  <span class="hljs-comment">// only search when text longer than 2 characters</span>
+  filter(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.length &gt;=<span class="hljs-number">3</span>),
+
+  <span class="hljs-comment">// query api with input value</span>
+  switchMap(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> client.fetch(<span class="hljs-string">`api/foo?q=<span class="hljs-subst">${x}</span>`</span>).pipe(
+
+    <span class="hljs-comment">// retry 2 times</span>
+    retry(<span class="hljs-number">2</span>)
+
+    <span class="hljs-comment">// cancel request if new input</span>
+    takeUntil(input$)
+  )),
+
+  <span class="hljs-comment">// extract data from response</span>
+  switchMap(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.json()),
+
+  <span class="hljs-comment">// process error</span>
+  catchError(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-keyword">of</span>({<span class="hljs-attr">error</span>: e.message}))
+
+<span class="hljs-comment">// write result to pre element</span>
+).subscribe(<span class="hljs-function"><span class="hljs-params">json</span> =&gt;</span> result.innerText = <span class="hljs-built_in">JSON</span>.stringify(json, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>));
+</code></pre>
+					<a href="#react" id="react" style="color: inherit; text-decoration: none;">
+						<h4>React</h4>
+					</a>
+					<p>TODO move to react lib</p>
+					<pre><code class="language-tsx"><span class="hljs-keyword">import</span> { useClient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@equinor/fusion-framework-react&#x27;</span>;
+<span class="hljs-keyword">import</span> { Subscription, <span class="hljs-keyword">of</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rxjs&#x27;</span>;
+<span class="hljs-keyword">import</span> { switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rxjs/operators&#x27;</span>;
+
+<span class="hljs-keyword">const</span> MyComponent = <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">const</span> [query, setQuery] = useState(<span class="hljs-string">&#x27;&#x27;</span>);
+  <span class="hljs-keyword">const</span> [value, setValue] = useState(<span class="hljs-string">&#x27;&#x27;</span>);
+
+  <span class="hljs-keyword">const</span> client = useClient(<span class="hljs-string">&#x27;my-client&#x27;</span>);
+  <span class="hljs-keyword">const</span> input$ = useMemo(<span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">new</span> Subject(), []);
+
+  <span class="hljs-comment">// set next value for observe when input changes</span>
+  <span class="hljs-keyword">const</span> onInput = useCallback(<span class="hljs-function">(<span class="hljs-params">value: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+    input$.next(value), [input$];
+  });
+
+  useEffect(<span class="hljs-function">() =&gt;</span>{
+    <span class="hljs-keyword">const</span> subscription = <span class="hljs-keyword">new</span> Subscription();
+
+    <span class="hljs-comment">// set query state each time input change</span>
+    subscription.add(input$.subscribe(setQuery));
+
+    <span class="hljs-comment">// query api on change</span>
+    subscription.add(input$.pipe(
+      switchMap(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> client.fetch(<span class="hljs-string">`api/foo?q=<span class="hljs-subst">${x}</span>`</span>)),
+      switchMap(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.json()),
+    ).subscribe(setValue);
+
+    <span class="hljs-comment">// cancel subscriptions  on unmount</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> subscription.unsubscribe();
+  }, []));
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{query}</span> <span class="hljs-attr">onInput</span>=<span class="hljs-string">{onInput}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">pre</span>&gt;</span>{value}<span class="hljs-tag">&lt;/<span class="hljs-name">pre</span>&gt;</span>
+  <span class="hljs-tag">&lt;/&gt;</span></span>
+};</code></pre>
+					<a href="#fetchasync" id="fetchasync" style="color: inherit; text-decoration: none;">
+						<h3>fetchAsync</h3>
+					</a>
+					<p>Incase for some reason you don`t want to use <strong>Observables</strong>, the <code>fetchAsync</code> will return a promise</p>
+					<pre><code class="language-ts"><span class="hljs-keyword">const</span> client = <span class="hljs-built_in">window</span>.Fusion.createClient(<span class="hljs-string">&#x27;my-client&#x27;</span>);
+<span class="hljs-keyword">const</span> input = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;input&#x27;</span>);
+<span class="hljs-keyword">const</span> result = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;pre&#x27;</span>);
+
+<span class="hljs-keyword">let</span> controller: AbortController;
+
+input.addEventlistner(<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+  <span class="hljs-keyword">try</span>{
+    <span class="hljs-comment">// if a controller is defined, request might be ongoing</span>
+    controller &amp;&amp; controller.abort();
+
+    <span class="hljs-comment">// create a new abort controller</span>
+    controller = <span class="hljs-keyword">new</span> AbortController();
+
+    <span class="hljs-comment">// query api with </span>
+    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> client.fetch({
+      <span class="hljs-attr">path</span>: <span class="hljs-string">`api/foo?q=<span class="hljs-subst">${e.currentTarget.value}</span>`</span>,
+      <span class="hljs-attr">signal</span>: controller.signal,
+    });
+    <span class="hljs-keyword">const</span> json = <span class="hljs-keyword">await</span> response.json();
+    result.innerText = <span class="hljs-built_in">JSON</span>.stringify(json, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>)
+  } <span class="hljs-keyword">catch</span>(err){
+    resilt.innerText = <span class="hljs-string">&#x27;an error accoured&#x27;</span>
+  } <span class="hljs-keyword">finally</span>{
+    <span class="hljs-keyword">delete</span> controller;
+  }
+});</code></pre>
+					<a href="#requesthandler" id="requesthandler" style="color: inherit; text-decoration: none;">
+						<h3>RequestHandler</h3>
+					</a>
+					<p>Before a request is executed all registered request handlers are proccessed. The tail of a operator is chain to head of the next.</p>
+					<p>Handler must return same type as provided <em><code>RequestInit</code></em> or <em><code>void</code></em> and can be async.</p>
+					<pre><code class="language-ts"><span class="hljs-keyword">type</span> ProcessOperator&lt;T, R = T&gt; = <span class="hljs-function">(<span class="hljs-params">request: T</span>) =&gt;</span>
+  R | <span class="hljs-built_in">void</span> | <span class="hljs-built_in">Promise</span>&lt;R | <span class="hljs-built_in">void</span>&gt;;</code></pre>
+					<p>Handlers are keyed to allow override of existing by <code>client.requestHandler.set</code>, using <code>client.requestHandler.add</code> will throw error if allready defined.</p>
+					<pre><code class="language-ts">client.requestHandler.add(<span class="hljs-string">&#x27;custom-headers&#x27;</span>, <span class="hljs-keyword">async</span>(request) =&gt; {
+  <span class="hljs-keyword">const</span> values = <span class="hljs-keyword">await</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;values.json&#x27;</span>);
+  <span class="hljs-keyword">const</span> headers = <span class="hljs-keyword">new</span> Headers(request.headers);
+  <span class="hljs-built_in">Object</span>.keys(values).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> { 
+    headers.append(<span class="hljs-string">`x-<span class="hljs-subst">${key}</span>`</span>, values[key]);
+  });
+  <span class="hljs-keyword">return</span> {...request, headers};
+});</code></pre>
+			</div></section>
+			<section class="tsd-panel-group tsd-index-group">
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>References</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#httpclient" class="tsd-kind-icon">Http<wbr>Client</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#httpclientconfigurator" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#httpclientmsal" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#httpclientprovider" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.httpclient-1.html" class="tsd-kind-icon">Http<wbr>Client</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.httpclientconfigurator-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.httpclientmsal-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.httpclientprovider-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.httprequesthandler.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Handler</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/_equinor_fusion_framework.processoperators.html" class="tsd-kind-icon">Process<wbr>Operators</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.api.html" class="tsd-kind-icon">Api</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.authclient.html" class="tsd-kind-icon">Auth<wbr>Client</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.httpclientconstructor.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Constructor</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.httpclientconstructoroptions.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Constructor<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.httpclientoptions.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported"><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-kind-icon">Service<wbr>Config</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_equinor_fusion_framework.html#httpclientcreateoptions" class="tsd-kind-icon">Http<wbr>Client<wbr>Create<wbr>Options</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported"><a href="_equinor_fusion_framework.html#httpclientrequestinittype" class="tsd-kind-icon">Http<wbr>Client<wbr>Request<wbr>Init<wbr>Type</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#httprequestinit" class="tsd-kind-icon">Http<wbr>Request<wbr>Init</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_equinor_fusion_framework.html#httpresponsehandler" class="tsd-kind-icon">Http<wbr>Response<wbr>Handler</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_equinor_fusion_framework.html#processoperator" class="tsd-kind-icon">Process<wbr>Operator</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported"><a href="_equinor_fusion_framework.html#requestinitmsal" class="tsd-kind-icon">Request<wbr>Init<wbr>Msal</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported"><a href="_equinor_fusion_framework.html#serviceconfigurator" class="tsd-kind-icon">Service<wbr>Configurator</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#serviceinitiator" class="tsd-kind-icon">Service<wbr>Initiator</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#services" class="tsd-kind-icon">Services</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_equinor_fusion_framework.html#configureauth" class="tsd-kind-icon">configure<wbr>Auth</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_equinor_fusion_framework.html#configurehttp" class="tsd-kind-icon">configure<wbr>Http</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#createinstance" class="tsd-kind-icon">create<wbr>Instance</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_equinor_fusion_framework.html#createservices" class="tsd-kind-icon">create<wbr>Services</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>References</h2>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="httpclient" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="httpclientconfigurator" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client<wbr>Configurator</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<wbr>Configurator<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="httpclientmsal" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client<wbr>Msal</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<wbr>Msal<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="httpclientprovider" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<wbr>Provider<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="httpclientcreateoptions" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client<wbr>Create<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<wbr>Create<wbr>Options&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/http/http-client.ts#L21">
+									framework/src/services/http/http-client.ts:21
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T<span class="tsd-signature-symbol">: </span><a href="_equinor_fusion_framework.html#httprequestinit" class="tsd-signature-type">HttpRequestInit</a></h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>request<wbr>Handler<span class="tsd-signature-symbol">: </span><a href="../classes/_equinor_fusion_framework.httprequesthandler.html" class="tsd-signature-type">HttpRequestHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported">
+					<a name="httpclientrequestinittype" class="tsd-anchor"></a>
+					<h3>Http<wbr>Client<wbr>Request<wbr>Init<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Client<wbr>Request<wbr>Init<wbr>Type&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T extends HttpClient&lt;infer U&gt; ? U : never</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/http/http-configurator.ts#L21">
+									framework/src/services/http/http-configurator.ts:21
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T<span class="tsd-signature-symbol">: </span><a href="../classes/_equinor_fusion_framework.httpclient-1.html" class="tsd-signature-type">HttpClient</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="httprequestinit" class="tsd-anchor"></a>
+					<h3>Http<wbr>Request<wbr>Init</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Request<wbr>Init<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RequestInit</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/http/http-client.ts#L7">
+									framework/src/services/http/http-client.ts:7
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="httpresponsehandler" class="tsd-anchor"></a>
+					<h3>Http<wbr>Response<wbr>Handler</h3>
+					<div class="tsd-signature tsd-kind-icon">Http<wbr>Response<wbr>Handler&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/http/http-client.ts#L25">
+									framework/src/services/http/http-client.ts:25
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Response</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>response: <span class="tsd-signature-type">Response</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="processoperator" class="tsd-anchor"></a>
+					<h3>Process<wbr>Operator</h3>
+					<div class="tsd-signature tsd-kind-icon">Process<wbr>Operator&lt;T, R&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/util/process-operators.ts#L4">
+									framework/src/util/process-operators.ts:4
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+						<li>
+							<h4>R</h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>request: <span class="tsd-signature-type">T</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">R</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">void</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
+										</h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
+					<a name="requestinitmsal" class="tsd-anchor"></a>
+					<h3>Request<wbr>Init<wbr>Msal</h3>
+					<div class="tsd-signature tsd-kind-icon">Request<wbr>Init<wbr>Msal<span class="tsd-signature-symbol">:</span> <a href="_equinor_fusion_framework.html#httprequestinit" class="tsd-signature-type">HttpRequestInit</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/http/http-client-msal.ts#L3">
+									framework/src/services/http/http-client-msal.ts:3
+								</a>
+							</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported">
+					<a name="serviceconfigurator" class="tsd-anchor"></a>
+					<h3>Service<wbr>Configurator</h3>
+					<div class="tsd-signature tsd-kind-icon">Service<wbr>Configurator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L23">
+									framework/src/services/index.ts:23
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span>, services<span class="tsd-signature-symbol">?: </span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>config: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> services: <a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+										<ul class="tsd-parameters">
+											<li class="tsd-parameter-siganture">
+												<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+													<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>services<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+												</ul>
+												<ul class="tsd-descriptions">
+													<li class="tsd-description">
+														<h4 class="tsd-parameters-title">Parameters</h4>
+														<ul class="tsd-parameters">
+															<li>
+																<h5>services: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span></h5>
+															</li>
+														</ul>
+														<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span>
+															<span class="tsd-signature-symbol"> | </span>
+															<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>
+														</h4>
+													</li>
+												</ul>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="serviceinitiator" class="tsd-anchor"></a>
+					<h3>Service<wbr>Initiator</h3>
+					<div class="tsd-signature tsd-kind-icon">Service<wbr>Initiator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L14">
+									framework/src/services/index.ts:14
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>config: <a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span>
+											<span class="tsd-signature-symbol"> | </span>
+											<span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span>
+										</h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="services" class="tsd-anchor"></a>
+					<h3>Services</h3>
+					<div class="tsd-signature tsd-kind-icon">Services<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in
+								<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L9">
+									framework/src/services/index.ts:9
+								</a>
+							</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>auth<span class="tsd-signature-symbol">: </span><a href="../interfaces/_equinor_fusion_framework.authclient.html" class="tsd-signature-type">AuthClient</a></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>http<span class="tsd-signature-symbol">: </span><a href="../classes/_equinor_fusion_framework.httpclientprovider-1.html" class="tsd-signature-type">HttpClientProvider</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_equinor_fusion_framework.httpclientmsal-1.html" class="tsd-signature-type">HttpClientMsal</a><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="configureauth" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> configure<wbr>Auth</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">configure<wbr>Auth<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span>, services<span class="tsd-signature-symbol">?: </span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L28">
+											framework/src/services/index.ts:28
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>config: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> services: <a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="configurehttp" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> configure<wbr>Http</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">configure<wbr>Http<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L52">
+											framework/src/services/index.ts:52
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>config: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-signature-type">ServiceConfig</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="createinstance" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> create<wbr>Instance</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Instance<span class="tsd-signature-symbol">(</span>init<span class="tsd-signature-symbol">: </span><a href="_equinor_fusion_framework.html#serviceinitiator" class="tsd-signature-type">ServiceInitiator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.api.html" class="tsd-signature-type">Api</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/index.ts#L9">
+											framework/src/index.ts:9
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>init: <a href="_equinor_fusion_framework.html#serviceinitiator" class="tsd-signature-type">ServiceInitiator</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_equinor_fusion_framework.api.html" class="tsd-signature-type">Api</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="createservices" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> create<wbr>Services</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Services<span class="tsd-signature-symbol">(</span>services<span class="tsd-signature-symbol">?: </span><a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in
+										<a href="https://github.com/equinor/fusion-framework/blob/main/framework/src/services/index.ts#L73">
+											framework/src/services/index.ts:73
+										</a>
+									</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> services: <a href="_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<!--{&quot;options&quot;:&quot;/home/runner/work/fusion-framework/fusion-framework&quot;,&quot;tsconfig&quot;:&quot;/home/runner/work/fusion-framework/fusion-framework&quot;,&quot;inputFiles&quot;:[&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/__test__.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client-msal.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-configurator.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-provider.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/util/process-operators.ts&quot;],&quot;mode&quot;:1,&quot;includeDeclarations&quot;:false,&quot;entryPoint&quot;:&quot;&quot;,&quot;exclude&quot;:[&quot;**/node_modules/typescript&quot;,&quot;**/*.spec.ts&quot;],&quot;externalPattern&quot;:[],&quot;excludeExternals&quot;:true,&quot;excludeNotExported&quot;:false,&quot;excludeNotDocumented&quot;:false,&quot;excludePrivate&quot;:true,&quot;excludeProtected&quot;:true,&quot;ignoreCompilerErrors&quot;:false,&quot;disableSources&quot;:false,&quot;includes&quot;:&quot;&quot;,&quot;media&quot;:&quot;&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;json&quot;:&quot;&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;name&quot;:&quot;Fusion framework&quot;,&quot;includeVersion&quot;:false,&quot;excludeTags&quot;:[],&quot;readme&quot;:&quot;README.md&quot;,&quot;defaultCategory&quot;:&quot;Other&quot;,&quot;categoryOrder&quot;:[],&quot;categorizeByGroup&quot;:true,&quot;gitRevision&quot;:&quot;&quot;,&quot;gitRemote&quot;:&quot;origin&quot;,&quot;gaID&quot;:&quot;&quot;,&quot;gaSite&quot;:&quot;auto&quot;,&quot;hideGenerator&quot;:false,&quot;toc&quot;:[],&quot;disableOutputCheck&quot;:false,&quot;help&quot;:false,&quot;version&quot;:false,&quot;plugin&quot;:[&quot;typedoc-plugin-lerna-packages&quot;,&quot;typedoc-neo-theme&quot;],&quot;logger&quot;:&quot;console&quot;,&quot;listInvalidSymbolLinks&quot;:false,&quot;lernaExclude&quot;:[],&quot;pathExclude&quot;:[],&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/equinor/fusion-framework/blob/main/&quot;,&quot;line&quot;:&quot;L&quot;}]}-->
+		</div>
+		<div class="col-2 col-menu secondary-menu">
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-reference tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#httpclient" class="tsd-kind-icon">Http<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#httpclientconfigurator" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#httpclientmsal" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#httpclientprovider" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.httpclient-1.html" class="tsd-kind-icon">Http<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.httpclientconfigurator-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.httpclientmsal-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.httpclientprovider-1.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.httprequesthandler.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.processoperators.html" class="tsd-kind-icon">Process<wbr>Operators</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.api.html" class="tsd-kind-icon">Api</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.authclient.html" class="tsd-kind-icon">Auth<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.httpclientconstructor.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.httpclientconstructoroptions.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Constructor<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.httpclientoptions.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-kind-icon">Service<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="_equinor_fusion_framework.html#httpclientcreateoptions" class="tsd-kind-icon">Http<wbr>Client<wbr>Create<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter tsd-is-not-exported root">
+						<a href="_equinor_fusion_framework.html#httpclientrequestinittype" class="tsd-kind-icon">Http<wbr>Client<wbr>Request<wbr>Init<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#httprequestinit" class="tsd-kind-icon">Http<wbr>Request<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="_equinor_fusion_framework.html#httpresponsehandler" class="tsd-kind-icon">Http<wbr>Response<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="_equinor_fusion_framework.html#processoperator" class="tsd-kind-icon">Process<wbr>Operator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="_equinor_fusion_framework.html#requestinitmsal" class="tsd-kind-icon">Request<wbr>Init<wbr>Msal</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="_equinor_fusion_framework.html#serviceconfigurator" class="tsd-kind-icon">Service<wbr>Configurator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#serviceinitiator" class="tsd-kind-icon">Service<wbr>Initiator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#services" class="tsd-kind-icon">Services</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="_equinor_fusion_framework.html#configureauth" class="tsd-kind-icon">configure<wbr>Auth</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported root">
+						<a href="_equinor_fusion_framework.html#configurehttp" class="tsd-kind-icon">configure<wbr>Http</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#createinstance" class="tsd-kind-icon">create<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.html#createservices" class="tsd-kind-icon">create<wbr>Services</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
