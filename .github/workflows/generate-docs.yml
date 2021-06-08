@@ -43,7 +43,7 @@ jobs:
       - name: Build storybook
         run: |
           rm -rf docs
-          npm run doc
+          npm run docs
           touch docs/.nojekyll
 
       - name: Config git user
