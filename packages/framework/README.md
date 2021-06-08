@@ -12,7 +12,11 @@ const initialize = async() => {
   window.Fusion = await createInstance((root) => {
     
     // configure auth client instance
-    root.auth.client = createAuthClient('my-tennant-id', 'my-client-id', '/msal/auth');
+    root.auth.client = createAuthClient(
+      'my-tennant-id', 
+      'my-client-id', 
+      '/msal/auth'
+    );
 
     // define simple client (will use login scope)
     root.http.configureClient('foo', 'https://my.services.com');
@@ -41,10 +45,14 @@ const initialize = async() => {
 ## Consumer / Application
 ```ts
   // default
-  window.Fusion.createClient('bar').fetch('/api/apps').subscribe(async(x) => console.log(await x.json));
+  window.Fusion.createClient('bar')
+    .fetch('/api/apps')
+    .subscribe(async(x) => console.log(await x.json()));
 
   // by promise
-  window.Fusion.createClient('bar').fetchAsync('/api/apps').then(async(x) => console.log(await x.json));
+  window.Fusion.createClient('bar')
+    .fetchAsync('/api/apps')
+    .then(async(x) => console.log(await x.json()));
 ```
 
 ## HttpClient
@@ -59,7 +67,13 @@ const initialize = async() => {
 
 ```ts
 import { fromEvent, of } from 'rxjs';
-import { debounceTime, map, switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { 
+  debounceTime, 
+  map,
+  switchMap, 
+  takeUntil, 
+  catchError 
+} from 'rxjs/operators';
 
 const client = window.Fusion.createClient('my-client');
 
@@ -69,7 +83,7 @@ const result = document.createElement('pre');
 // Observe changes on input field
 const input$ = fromEvent(input, 'input');
 
-$input.pipe(
+input$.pipe(
 
   // only call after no key input in .5s
   debounceTime(500),
@@ -77,21 +91,26 @@ $input.pipe(
   // extract value from event
   map(x => x.currentTarget.value),
 
-  // only search when text longer than 3 characters
+  // only search when text longer than 2 characters
   filter(x => x.length >=3),
 
-  // query api with input value, retry 2 times
-  switchMap(x => client.fetch(`api/foo?q=${x}`).pipe(retry(2))),
+  // query api with input value
+  switchMap(x => client.fetch(`api/foo?q=${x}`).pipe(
+    
+    // retry 2 times
+    retry(2)
+
+    // cancel request if new input
+    takeUntil(input$)
+  )),
 
   // extract data from response
   switchMap(x => x.json()),
 
   // process error
-  catchError(x => of({error: e.message})),
+  catchError(x => of({error: e.message}))
 
-  // cancel request if new input
-  takeUntil(input$)
-
+// write result to pre element
 ).subscribe(json => result.innerText = JSON.stringify(json, null, 2));
 
 ```
@@ -101,7 +120,7 @@ TODO move to react lib
 ```tsx
 import { useClient } from '@equinor/fusion-framework-react';
 import { Subscription, of } from 'rxjs';
-import { debounceTime, map, switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 const MyComponent = () => {
   const [query, setQuery] = useState('');
@@ -111,7 +130,9 @@ const MyComponent = () => {
   const input$ = useMemo(() => new Subject(), []);
 
   // set next value for observe when input changes
-  const onInput = useCallback((value: string) => input$.next(value), [input$]);
+  const onInput = useCallback((value: string) => {
+    input$.next(value), [input$];
+  });
 
   useEffect(() =>{
     const subscription = new Subscription();
@@ -175,7 +196,8 @@ Before a request is executed all registered request handlers are proccessed. The
 
 Handler must return same type as provided _```RequestInit```_ or _```void```_ and can be async.
 ```ts
-type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | void>;
+type ProcessOperator<T, R = T> = (request: T) => 
+  R | void | Promise<R | void>;
 ```
 
 Handlers are keyed to allow override of existing by ```client.requestHandler.set```, using ```client.requestHandler.add``` will throw error if allready defined.
@@ -184,7 +206,9 @@ Handlers are keyed to allow override of existing by ```client.requestHandler.set
 client.requestHandler.add('custom-headers', async(request) => {
   const values = await import('values.json');
   const headers = new Headers(request.headers);
-  Object.keys(values).forEach(key => headers.append(`x-${key}`, values[key]));
+  Object.keys(values).forEach(key => { 
+    headers.append(`x-${key}`, values[key]);
+  });
   return {...request, headers};
 });
 ```
