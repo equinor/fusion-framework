@@ -40,7 +40,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Build storybook
+      - name: Build docs
         run: |
           rm -rf docs
           npm run docs
