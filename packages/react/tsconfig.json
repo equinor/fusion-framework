@@ -5,14 +5,13 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "paths": {
-      "@equinor/fusion-framework/services": ["services/index"]
-    }
+    "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
     "node_modules",
-    "dist",
-    "src/__concept__/**/*"
+    "lib"
   ]
 }

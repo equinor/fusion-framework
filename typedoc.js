@@ -8,11 +8,11 @@ module.exports = {
     excludeExternals: true,
     // excludeNotExported: true,
     readme: 'README.md',
-    exclude: ['**/node_modules/typescript', '**/*.spec.ts'],
+    exclude: ['**/node_modules/typescript', '**/*.spec.ts', '**/__concept__'],
     plugin: ['typedoc-plugin-lerna-packages', 'typedoc-neo-theme'],
     source: [
         {
-            path: 'https://github.com/equinor/fusion-framework/blob/main/',
+            path: 'https://github.com/equinor/fusion-framework/blob/main/packages',
             line: 'L',
         },
     ],
