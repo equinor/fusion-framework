@@ -1,0 +1,7 @@
+{
+  "name": "@equinor/fusion-framework/services",
+  "types": "../dist/types/services/index.d.ts",
+  "module": "../dist/esm/services/index.js",
+  "sideEffects": false,
+  "private": true
+}
