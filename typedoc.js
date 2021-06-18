@@ -11,7 +11,7 @@ module.exports = {
     exclude: ['**/node_modules/typescript'],
     source: [
         {
-            path: 'https://github.com/equinor/fusion-framework/blob/main/packages',
+            path: 'https://github.com/equinor/fusion-framework/blob/main/',
             line: 'L',
         },
     ],
