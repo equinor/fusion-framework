@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "ESNext",
+    "module": "ESNext",
+    "declaration": true,
+    "skipLibCheck": true,
+    "noImplicitReturns": false,
+    "strict": false,
+    "importHelpers": true,
+    "moduleResolution": "Node"
+  },
+  "exclude": ["**/dist"]
+}

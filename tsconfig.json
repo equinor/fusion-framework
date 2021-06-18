@@ -1,25 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ES2015",
-    "incremental": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node",
-    "stripInternal": true,
     "noEmit": true,
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
+    "skipLibCheck": true,
+    "jsx": "react-jsx"
   },
   "include": [
-    "packages/*/src",
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
   ],
   "exclude": [
     "node_modules",
@@ -27,5 +15,12 @@
     "lib",
     "*.spec.ts",
   ],
-  "files": [],
+  "references": [
+    {
+      "path": "./packages/framework"
+    },
+    {
+      "path": "./packages/react"
+    },
+  ]
 }

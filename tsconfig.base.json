@@ -10,16 +10,20 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        // "stripInternal": true,
+        "stripInternal": true,
         "lib": [
             "esnext",
-            "DOM"
+      "dom",
+      "dom.iterable"
         ],
         "composite": true,
         "baseUrl": "./packages",
         "rootDir": ".",
         "paths": {
             "@equinor/fusion-framework": [
+                "framework/src"
+            ],
+            "@equinor/fusion-react": [
                 "framework/src"
             ],
         },

@@ -2,39 +2,27 @@
 
 ## Basic Setup
 ```tsx
-export const setup = (fusion: Fusion) => {
-  const services = fusion.createServiceInstance();
-  return (element: HTMLElement) => 
-      ReactDOM.render(
-          element,
-          <FusionServiceProvider service={services}>
-            <App />
-          </FusionServiceProvider>
-    );
-}
+import { registerReactApp } from '@equinor/fusion-react';
+
+const MyApp = () => <p>Hello Fusion</p>;
+
+export const setup = registerReactApp(MyApp);
+
 export default setup;
 ```
 
 ## Configure
 ```tsx
-const configure = (config) => {
-  config.http.configureClient(
+// config.ts
+export const config = (build) => {
+  build.http.configureClient(
       'bar', 
       'https://somewhere-test.com'
     );
 }
 
-export const setup = (fusion: Fusion) => {
-  const services = fusion.createServiceInstance(configure);
-  return (element: HTMLElement) => 
-      ReactDOM.render(
-          element,
-          <FusionServiceProvider service={services}>
-            <App />
-          </FusionServiceProvider>
-    );
-}
-export default setup;
+// index.ts
+export const setup = registerReactApp(MyApp, config);
 ```
 
 ## Api Client

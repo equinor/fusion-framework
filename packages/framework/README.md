@@ -18,20 +18,20 @@ __Expect breaking changes untill stable release!__
 ```ts
 const initialize = async() => {
 
-  window.Fusion = await createInstance((root) => {
+  window.Fusion = await createInstance((build) => {
     
     // configure auth client instance
-    root.auth.client = createAuthClient(
+    build.auth.client = createAuthClient(
       'my-tennant-id', 
       'my-client-id', 
       '/msal/auth'
     );
 
     // define simple client (will use login scope)
-    root.http.configureClient('foo', 'https://my.services.com');
+    build.http.configureClient('foo', 'https://my.services.com');
 
     // define a client with callback for init
-    root.http.configureClient('bar', (client) => {
+    build.http.configureClient('bar', (client) => {
       
       // define base url for requests
       client.uri = 'https://my.other-services.com';
@@ -52,19 +52,38 @@ const initialize = async() => {
 ```
 
 ## Consumer / Application
+
+### setup
+```ts
+export const setup = (fusion: Fusion, env: ApplicationManifest) => {
+    const services = fusion.createServiceInstance((config) => {
+        //@ts-ignore
+        config.http.configureClient('app-client', env.endpoints.prod.myService);
+        config.http.configureClient('data-proxy', 'https://somewhere-test.com');
+        config.state.configureStore('my-store', (action$, state$, services) => {
+            services.http.createClient('portal').fetch('sadasd')
+        })
+    });
+    return (element: HTMLElement) =>  {
+      const content = document.createElement('p');
+      content.innerText = 'Hello Fusion';
+      element.appendChild(content);
+    }
+};
+```
+
+## HttpClient
 ```ts
   // default
-  window.Fusion.createClient('bar')
+  services.createClient('bar')
     .fetch('/api/apps')
     .subscribe(async(x) => console.log(await x.json()));
 
   // by promise
-  window.Fusion.createClient('bar')
+  services.createClient('bar')
     .fetchAsync('/api/apps')
     .then(async(x) => console.log(await x.json()));
 ```
-
-## HttpClient
 
 ### fetch
 
@@ -72,7 +91,7 @@ The fetch method of the client return an __Observable__ reponse.
 Observables has the advantage of cancel when unsuscribed.
 Secondly we can compose the flow easily with operator functions
 
-#### React
+### React
 TODO move to react lib
 ```tsx
 import { useClient } from '@equinor/fusion-framework-react';

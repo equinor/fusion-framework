@@ -6,10 +6,9 @@ module.exports = {
     excludeProtected: true,
     excludePrivate: true,
     excludeExternals: true,
-    // excludeNotExported: true,
+    excludeNotExported: true,
     readme: 'README.md',
-    exclude: ['**/node_modules/typescript', '**/*.spec.ts', '**/__concept__'],
-    plugin: ['typedoc-plugin-lerna-packages', 'typedoc-neo-theme'],
+    exclude: ['**/node_modules/typescript'],
     source: [
         {
             path: 'https://github.com/equinor/fusion-framework/blob/main/packages',
