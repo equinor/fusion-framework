@@ -15,4 +15,9 @@ module.exports = {
             line: 'L',
         },
     ],
+    customStyles: [
+        {
+            path: '/assets/css/custom.css',
+        },
+    ],
 };
