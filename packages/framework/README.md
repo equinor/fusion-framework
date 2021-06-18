@@ -41,10 +41,10 @@ const initialize = async() => {
 
       // define a request proccessor - supports multiple
       client.requestHandler.add('custom-headers', (request) => {
-          const headers = new Headers(request.headers);
-          headers.append('x-app-version', 'v1.2.3');
-          headers.append('x-app-env', 'alpha');
-          return { ...request, headers };
+        const headers = new Headers(request.headers);
+        headers.append('x-app-version', 'v1.2.3');
+        headers.append('x-app-env', 'alpha');
+        return { ...request, headers };
       });
     });
   });
@@ -56,33 +56,47 @@ const initialize = async() => {
 ### setup
 ```ts
 export const setup = (fusion: Fusion, env: ApplicationManifest) => {
-    const services = fusion.createServiceInstance((config) => {
-        //@ts-ignore
-        config.http.configureClient('app-client', env.endpoints.prod.myService);
-        config.http.configureClient('data-proxy', 'https://somewhere-test.com');
-        config.state.configureStore('my-store', (action$, state$, services) => {
-            services.http.createClient('portal').fetch('sadasd')
-        })
-    });
-    return (element: HTMLElement) =>  {
-      const content = document.createElement('p');
-      content.innerText = 'Hello Fusion';
-      element.appendChild(content);
-    }
+  const services = fusion.createServiceInstance((config) => {
+    // static asset
+    config.http.configureClient(
+      'data-proxy', 
+      'https://somewhere-test.com'
+    );
+
+    // asset by provided config
+    config.http.configureClient(
+      'app-client', 
+      env.endpoints.prod.myService
+    );
+
+    // TODO - add storage provider
+    config.state.configureStore(
+      'my-store', 
+      (action$, state$, services) => {
+        services.http.createClient('portal').fetch('foo')
+      }
+    )
+  });
+
+  return (element: HTMLElement) =>  {
+    const content = document.createElement('p');
+    content.innerText = 'Hello Fusion';
+    element.appendChild(content);
+  }
 };
 ```
 
 ## HttpClient
 ```ts
-  // default
-  services.createClient('bar')
-    .fetch('/api/apps')
-    .subscribe(async(x) => console.log(await x.json()));
+// default
+services.createClient('bar')
+  .fetch('/api/apps')
+  .subscribe(async(x) => console.log(await x.json()));
 
-  // by promise
-  services.createClient('bar')
-    .fetchAsync('/api/apps')
-    .then(async(x) => console.log(await x.json()));
+// by promise
+services.createClient('bar')
+  .fetchAsync('/api/apps')
+  .then(async(x) => console.log(await x.json()));
 ```
 
 ### fetch
