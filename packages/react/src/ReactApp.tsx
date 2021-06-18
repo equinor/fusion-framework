@@ -1,4 +1,4 @@
-import { JSXElementConstructor } from 'react';
+import { ComponentType } from 'react';
 import { render } from 'react-dom';
 
 import { Fusion, ApplicationManifest, ApplicationRenderer } from '@equinor/fusion-framework';
@@ -14,7 +14,7 @@ export type ApplicationRendererss = (
 ) => ((element: HTMLElement) => void) | Promise<(element: HTMLElement) => void>;
 
 export const registerReactApp = (
-    Component: JSXElementConstructor<unknown>,
+    Component: ComponentType,
     configure: ConfigCallback
 ): ApplicationRenderer => {
     return async (fusion, env) => {
