@@ -1,4 +1,4 @@
-export type { Services, ServiceInitiator } from './types';
+export type { Services, ServiceInitiator, ServiceConfig } from './types';
 export { createServices } from './create-services';
 export { default } from './create-services';
 

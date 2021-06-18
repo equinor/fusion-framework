@@ -31,6 +31,14 @@ export interface ApplicationApi {
     services: Services;
 }
 
+export interface ApplicationManifest {}
+
+export interface ApplicationRenderer {
+    (fusion: Fusion, env: ApplicationManifest):
+        | ((element: HTMLElement) => void)
+        | Promise<(element: HTMLElement) => void>;
+}
+
 export const createApi = async (init: ServiceInitiator): Promise<ApiInstance> => {
     const services = await (await configureServices())(init);
     return { services };
