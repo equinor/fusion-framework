@@ -7,6 +7,7 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="/assets/css/custom.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
@@ -122,10 +123,10 @@
 
       <span class="hljs-comment">// define a request proccessor - supports multiple</span>
       client.requestHandler.add(<span class="hljs-string">&#x27;custom-headers&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">request</span>) =&gt;</span> {
-          <span class="hljs-keyword">const</span> headers = <span class="hljs-keyword">new</span> Headers(request.headers);
-          headers.append(<span class="hljs-string">&#x27;x-app-version&#x27;</span>, <span class="hljs-string">&#x27;v1.2.3&#x27;</span>);
-          headers.append(<span class="hljs-string">&#x27;x-app-env&#x27;</span>, <span class="hljs-string">&#x27;alpha&#x27;</span>);
-          <span class="hljs-keyword">return</span> { ...request, headers };
+        <span class="hljs-keyword">const</span> headers = <span class="hljs-keyword">new</span> Headers(request.headers);
+        headers.append(<span class="hljs-string">&#x27;x-app-version&#x27;</span>, <span class="hljs-string">&#x27;v1.2.3&#x27;</span>);
+        headers.append(<span class="hljs-string">&#x27;x-app-env&#x27;</span>, <span class="hljs-string">&#x27;alpha&#x27;</span>);
+        <span class="hljs-keyword">return</span> { ...request, headers };
       });
     });
   });
@@ -137,32 +138,46 @@
 						<h3>setup</h3>
 					</a>
 					<pre><code class="language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> setup = <span class="hljs-function">(<span class="hljs-params">fusion: Fusion, env: ApplicationManifest</span>) =&gt;</span> {
-    <span class="hljs-keyword">const</span> services = fusion.createServiceInstance(<span class="hljs-function">(<span class="hljs-params">config</span>) =&gt;</span> {
-        <span class="hljs-comment">//@ts-ignore</span>
-        config.http.configureClient(<span class="hljs-string">&#x27;app-client&#x27;</span>, env.endpoints.prod.myService);
-        config.http.configureClient(<span class="hljs-string">&#x27;data-proxy&#x27;</span>, <span class="hljs-string">&#x27;https://somewhere-test.com&#x27;</span>);
-        config.state.configureStore(<span class="hljs-string">&#x27;my-store&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">action$, state$, services</span>) =&gt;</span> {
-            services.http.createClient(<span class="hljs-string">&#x27;portal&#x27;</span>).fetch(<span class="hljs-string">&#x27;sadasd&#x27;</span>)
-        })
-    });
-    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">element: HTMLElement</span>) =&gt;</span>  {
-      <span class="hljs-keyword">const</span> content = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;p&#x27;</span>);
-      content.innerText = <span class="hljs-string">&#x27;Hello Fusion&#x27;</span>;
-      element.appendChild(content);
-    }
+  <span class="hljs-keyword">const</span> services = fusion.createServiceInstance(<span class="hljs-function">(<span class="hljs-params">config</span>) =&gt;</span> {
+    <span class="hljs-comment">// static asset</span>
+    config.http.configureClient(
+      <span class="hljs-string">&#x27;data-proxy&#x27;</span>, 
+      <span class="hljs-string">&#x27;https://somewhere-test.com&#x27;</span>
+    );
+
+    <span class="hljs-comment">// asset by provided config</span>
+    config.http.configureClient(
+      <span class="hljs-string">&#x27;app-client&#x27;</span>, 
+      env.endpoints.prod.myService
+    );
+
+    <span class="hljs-comment">// TODO - add storage provider</span>
+    config.state.configureStore(
+      <span class="hljs-string">&#x27;my-store&#x27;</span>, 
+      <span class="hljs-function">(<span class="hljs-params">action$, state$, services</span>) =&gt;</span> {
+        services.http.createClient(<span class="hljs-string">&#x27;portal&#x27;</span>).fetch(<span class="hljs-string">&#x27;foo&#x27;</span>)
+      }
+    )
+  });
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">element: HTMLElement</span>) =&gt;</span>  {
+    <span class="hljs-keyword">const</span> content = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;p&#x27;</span>);
+    content.innerText = <span class="hljs-string">&#x27;Hello Fusion&#x27;</span>;
+    element.appendChild(content);
+  }
 };</code></pre>
 					<a href="#httpclient" id="httpclient" style="color: inherit; text-decoration: none;">
 						<h2>HttpClient</h2>
 					</a>
-					<pre><code class="language-ts">  <span class="hljs-comment">// default</span>
-  services.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
-    .fetch(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
-    .subscribe(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));
+					<pre><code class="language-ts"><span class="hljs-comment">// default</span>
+services.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
+  .fetch(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
+  .subscribe(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));
 
-  <span class="hljs-comment">// by promise</span>
-  services.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
-    .fetchAsync(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
-    .then(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));</code></pre>
+<span class="hljs-comment">// by promise</span>
+services.createClient(<span class="hljs-string">&#x27;bar&#x27;</span>)
+  .fetchAsync(<span class="hljs-string">&#x27;/api/apps&#x27;</span>)
+  .then(<span class="hljs-keyword">async</span>(x) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> x.json()));</code></pre>
 					<a href="#fetch" id="fetch" style="color: inherit; text-decoration: none;">
 						<h3>fetch</h3>
 					</a>
@@ -711,7 +726,7 @@
 					</ul>
 				</section>
 			</section>
-			<!--{&quot;options&quot;:&quot;/home/runner/work/fusion-framework/fusion-framework&quot;,&quot;tsconfig&quot;:&quot;tsconfig.typedoc.json&quot;,&quot;inputFiles&quot;:[&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/config.auth.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/config.http.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/create-services.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/types.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client-msal.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-configurator.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-provider.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/util/process-operators.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/ReactApp.tsx&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/ServiceProvider.tsx&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/useHttpClient.ts&quot;],&quot;mode&quot;:1,&quot;includeDeclarations&quot;:false,&quot;entryPoint&quot;:&quot;&quot;,&quot;exclude&quot;:[&quot;**/node_modules/typescript&quot;],&quot;externalPattern&quot;:[],&quot;excludeExternals&quot;:true,&quot;excludeNotExported&quot;:true,&quot;excludeNotDocumented&quot;:false,&quot;excludePrivate&quot;:true,&quot;excludeProtected&quot;:true,&quot;ignoreCompilerErrors&quot;:false,&quot;disableSources&quot;:false,&quot;includes&quot;:&quot;&quot;,&quot;media&quot;:&quot;&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;json&quot;:&quot;&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;name&quot;:&quot;Fusion framework&quot;,&quot;includeVersion&quot;:false,&quot;excludeTags&quot;:[],&quot;readme&quot;:&quot;README.md&quot;,&quot;defaultCategory&quot;:&quot;Other&quot;,&quot;categoryOrder&quot;:[],&quot;categorizeByGroup&quot;:true,&quot;gitRevision&quot;:&quot;&quot;,&quot;gitRemote&quot;:&quot;origin&quot;,&quot;gaID&quot;:&quot;&quot;,&quot;gaSite&quot;:&quot;auto&quot;,&quot;hideGenerator&quot;:false,&quot;toc&quot;:[],&quot;disableOutputCheck&quot;:false,&quot;help&quot;:false,&quot;version&quot;:false,&quot;plugin&quot;:[],&quot;logger&quot;:&quot;console&quot;,&quot;listInvalidSymbolLinks&quot;:false,&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/equinor/fusion-framework/blob/main/packages&quot;,&quot;line&quot;:&quot;L&quot;}],&quot;lernaExclude&quot;:[],&quot;pathExclude&quot;:[]}-->
+			<!--{&quot;options&quot;:&quot;/home/runner/work/fusion-framework/fusion-framework&quot;,&quot;tsconfig&quot;:&quot;tsconfig.typedoc.json&quot;,&quot;inputFiles&quot;:[&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/config.auth.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/config.http.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/create-services.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/types.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client-msal.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-client.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-configurator.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/http-provider.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/services/http/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/framework/src/util/process-operators.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/ReactApp.tsx&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/ServiceProvider.tsx&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/index.ts&quot;,&quot;/home/runner/work/fusion-framework/fusion-framework/packages/react/src/services/useHttpClient.ts&quot;],&quot;mode&quot;:1,&quot;includeDeclarations&quot;:false,&quot;entryPoint&quot;:&quot;&quot;,&quot;exclude&quot;:[&quot;**/node_modules/typescript&quot;],&quot;externalPattern&quot;:[],&quot;excludeExternals&quot;:true,&quot;excludeNotExported&quot;:true,&quot;excludeNotDocumented&quot;:false,&quot;excludePrivate&quot;:true,&quot;excludeProtected&quot;:true,&quot;ignoreCompilerErrors&quot;:false,&quot;disableSources&quot;:false,&quot;includes&quot;:&quot;&quot;,&quot;media&quot;:&quot;&quot;,&quot;out&quot;:&quot;docs&quot;,&quot;json&quot;:&quot;&quot;,&quot;theme&quot;:&quot;node_modules/typedoc-neo-theme/bin/default&quot;,&quot;name&quot;:&quot;Fusion framework&quot;,&quot;includeVersion&quot;:false,&quot;excludeTags&quot;:[],&quot;readme&quot;:&quot;README.md&quot;,&quot;defaultCategory&quot;:&quot;Other&quot;,&quot;categoryOrder&quot;:[],&quot;categorizeByGroup&quot;:true,&quot;gitRevision&quot;:&quot;&quot;,&quot;gitRemote&quot;:&quot;origin&quot;,&quot;gaID&quot;:&quot;&quot;,&quot;gaSite&quot;:&quot;auto&quot;,&quot;hideGenerator&quot;:false,&quot;toc&quot;:[],&quot;disableOutputCheck&quot;:false,&quot;help&quot;:false,&quot;version&quot;:false,&quot;plugin&quot;:[],&quot;logger&quot;:&quot;console&quot;,&quot;listInvalidSymbolLinks&quot;:false,&quot;source&quot;:[{&quot;path&quot;:&quot;https://github.com/equinor/fusion-framework/blob/main/packages&quot;,&quot;line&quot;:&quot;L&quot;}],&quot;customStyles&quot;:[{&quot;path&quot;:&quot;/assets/css/custom.css&quot;}],&quot;lernaExclude&quot;:[],&quot;pathExclude&quot;:[]}-->
 		</div>
 		<div class="col-2 col-menu secondary-menu">
 			<nav class="tsd-navigation secondary menu-sticky">
