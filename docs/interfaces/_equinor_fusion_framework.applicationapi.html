@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ServiceConfig | Fusion framework</title>
+	<title>ApplicationApi | Fusion framework</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,7 +55,7 @@
 					<a href="../modules/_equinor_fusion_framework.html">@equinor/fusion-framework</a>
 				</li>
 				<li>
-					<a href="_equinor_fusion_framework.serviceconfig.html">ServiceConfig</a>
+					<a href="_equinor_fusion_framework.applicationapi.html">ApplicationApi</a>
 				</li>
 			</ul>
 		</div>
@@ -79,12 +79,12 @@
 			</nav>
 		</div>
 		<div class="col-7 offset-3 col-content">
-			<h1>Interface ServiceConfig</h1>
+			<h1>Interface ApplicationApi</h1>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ServiceConfig</span>
+						<span class="target">ApplicationApi</span>
 					</li>
 				</ul>
 			</section>
@@ -94,8 +94,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_equinor_fusion_framework.serviceconfig.html#auth" class="tsd-kind-icon">auth</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_equinor_fusion_framework.serviceconfig.html#http" class="tsd-kind-icon">http</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_equinor_fusion_framework.applicationapi.html#services" class="tsd-kind-icon">services</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,63 +103,14 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="auth" class="tsd-anchor"></a>
-					<h3>auth</h3>
-					<div class="tsd-signature tsd-kind-icon">auth<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<a name="services" class="tsd-anchor"></a>
+					<h3>services</h3>
+					<div class="tsd-signature tsd-kind-icon">services<span class="tsd-signature-symbol">:</span> <a href="../modules/_equinor_fusion_framework.html#services" class="tsd-signature-type">Services</a></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in
-								<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/services/types.ts#L23">
-									packages/framework/src/services/types.ts:23
-								</a>
-							</li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> client<span class="tsd-signature-symbol">?: </span><a href="_equinor_fusion_framework.authclient.html" class="tsd-signature-type">AuthClient</a></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>configure<wbr>Client<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></h5>
-								<ul class="tsd-parameters">
-									<li class="tsd-parameter-siganture">
-										<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-variable">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>tennant<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, client<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, cb<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-										</ul>
-										<ul class="tsd-descriptions">
-											<li class="tsd-description">
-												<h4 class="tsd-parameters-title">Parameters</h4>
-												<ul class="tsd-parameters">
-													<li>
-														<h5>tennant: <span class="tsd-signature-type">string</span></h5>
-													</li>
-													<li>
-														<h5>client: <span class="tsd-signature-type">string</span></h5>
-													</li>
-													<li>
-														<h5><span class="tsd-flag ts-flagOptional">Optional</span> cb: <span class="tsd-signature-type">string</span></h5>
-													</li>
-												</ul>
-												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="http" class="tsd-anchor"></a>
-					<h3>http</h3>
-					<div class="tsd-signature tsd-kind-icon">http<span class="tsd-signature-symbol">:</span> <a href="../classes/_equinor_fusion_framework.httpclientconfigurator.html" class="tsd-signature-type">HttpClientConfigurator</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/_equinor_fusion_framework.httpclientmsal.html" class="tsd-signature-type">HttpClientMsal</a><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in
-								<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/services/types.ts#L27">
-									packages/framework/src/services/types.ts:27
+								<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/index.ts#L31">
+									packages/framework/src/index.ts:31
 								</a>
 							</li>
 						</ul>
@@ -196,9 +146,18 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
 						<a href="_equinor_fusion_framework.apiinstance.html" class="tsd-kind-icon">Api<wbr>Instance</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module root">
 						<a href="_equinor_fusion_framework.applicationapi.html" class="tsd-kind-icon">Application<wbr>Api</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_equinor_fusion_framework.applicationapi.html#services" class="tsd-kind-icon">services</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
 						<a href="_equinor_fusion_framework.applicationmanifest.html" class="tsd-kind-icon">Application<wbr>Manifest</a>
 					</li>
@@ -217,21 +176,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
 						<a href="_equinor_fusion_framework.fusionservice.html" class="tsd-kind-icon">Fusion<wbr>Service</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module root">
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
 						<a href="_equinor_fusion_framework.serviceconfig.html" class="tsd-kind-icon">Service<wbr>Config</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_equinor_fusion_framework.serviceconfig.html#auth" class="tsd-kind-icon">auth</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_equinor_fusion_framework.serviceconfig.html#http" class="tsd-kind-icon">http</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter root">
 						<a href="../modules/_equinor_fusion_framework.html#httpclientcreateoptions" class="tsd-kind-icon">Http<wbr>Client<wbr>Create<wbr>Options</a>
 					</li>

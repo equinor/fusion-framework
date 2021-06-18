@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ProcessOperators | Fusion framework</title>
+	<title>AuthProvider | Fusion framework</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,7 +55,7 @@
 					<a href="../modules/_equinor_fusion_framework.html">@equinor/fusion-framework</a>
 				</li>
 				<li>
-					<a href="_equinor_fusion_framework.processoperators.html">ProcessOperators</a>
+					<a href="_equinor_fusion_framework.authprovider.html">AuthProvider</a>
 				</li>
 			</ul>
 		</div>
@@ -79,31 +79,12 @@
 			</nav>
 		</div>
 		<div class="col-7 offset-3 col-content">
-			<h1>Class ProcessOperators&lt;T&gt;</h1>
-			<section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography tsd-comment-shorttext">
-					<div class="lead">
-						<p>Container for sync/async operators.
-						Pipes each operator sequential</p>
-					</div>
-			</div></section>
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T</h4>
-					</li>
-				</ul>
-			</section>
+			<h1>Interface AuthProvider</h1>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ProcessOperators</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="_equinor_fusion_framework.httprequesthandler.html" class="tsd-signature-type">HttpRequestHandler</a>
-							</li>
-						</ul>
+						<span class="target">AuthProvider</span>
 					</li>
 				</ul>
 			</section>
@@ -113,10 +94,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_equinor_fusion_framework.processoperators.html#add" class="tsd-kind-icon">add</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_equinor_fusion_framework.processoperators.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_equinor_fusion_framework.processoperators.html#process" class="tsd-kind-icon">process</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_equinor_fusion_framework.processoperators.html#set" class="tsd-kind-icon">set</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_equinor_fusion_framework.authprovider.html#acquireaccesstoken" class="tsd-kind-icon">acquire<wbr>Access<wbr>Token</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_equinor_fusion_framework.authprovider.html#acquiretoken" class="tsd-kind-icon">acquire<wbr>Token</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_equinor_fusion_framework.authprovider.html#login" class="tsd-kind-icon">login</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,137 +104,88 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="add" class="tsd-anchor"></a>
-					<h3>add</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, operator<span class="tsd-signature-symbol">: </span><a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_equinor_fusion_framework.processoperators.html" class="tsd-signature-type">ProcessOperators</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="acquireaccesstoken" class="tsd-anchor"></a>
+					<h3>acquire<wbr>Access<wbr>Token</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">acquire<wbr>Access<wbr>Token<span class="tsd-signature-symbol">(</span>req<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
 									<li>Defined in
-										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/util/process-operators.ts#L16">
-											packages/framework/src/util/process-operators.ts:16
+										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/services/types.ts#L11">
+											packages/framework/src/services/types.ts:11
 										</a>
 									</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-								<div class="lead">
-									<p>Add a new operator (throw error if allready defined)</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>key: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>operator: <a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>req: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>scopes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_equinor_fusion_framework.processoperators.html" class="tsd-signature-type">ProcessOperators</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="get" class="tsd-anchor"></a>
-					<h3>get</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="acquiretoken" class="tsd-anchor"></a>
+					<h3>acquire<wbr>Token</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">acquire<wbr>Token<span class="tsd-signature-symbol">(</span>req<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
 									<li>Defined in
-										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/util/process-operators.ts#L33">
-											packages/framework/src/util/process-operators.ts:33
+										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/services/types.ts#L10">
+											packages/framework/src/services/types.ts:10
 										</a>
 									</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-								<div class="lead">
-									<p>Get a operator, will return undefined on invalid key.</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>key: <span class="tsd-signature-type">string</span></h5>
+									<h5>req: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>scopes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="process" class="tsd-anchor"></a>
-					<h3>process</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">process<span class="tsd-signature-symbol">(</span>request<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="login" class="tsd-anchor"></a>
+					<h3>login</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">login<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
 									<li>Defined in
-										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/util/process-operators.ts#L40">
-											packages/framework/src/util/process-operators.ts:40
+										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/services/types.ts#L12">
+											packages/framework/src/services/types.ts:12
 										</a>
 									</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-								<div class="lead">
-									<p> Process registered processors.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>request: <span class="tsd-signature-type">T</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="set" class="tsd-anchor"></a>
-					<h3>set</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, operator<span class="tsd-signature-symbol">: </span><a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_equinor_fusion_framework.processoperators.html" class="tsd-signature-type">ProcessOperators</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in
-										<a href="https://github.com/equinor/fusion-framework/blob/main/packagespackages/framework/src/util/process-operators.ts#L25">
-											packages/framework/src/util/process-operators.ts:25
-										</a>
-									</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography tsd-comment-shorttext">
-								<div class="lead">
-									<p>Add or sets a operator</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>key: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>operator: <a href="../modules/_equinor_fusion_framework.html#processoperator" class="tsd-signature-type">ProcessOperator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_equinor_fusion_framework.processoperators.html" class="tsd-signature-type">ProcessOperators</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -265,70 +196,67 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module root">
-						<a href="_equinor_fusion_framework.clientnotfoundexception.html" class="tsd-kind-icon">Client<wbr>Not<wbr>Found<wbr>Exception</a>
+						<a href="../classes/_equinor_fusion_framework.clientnotfoundexception.html" class="tsd-kind-icon">Client<wbr>Not<wbr>Found<wbr>Exception</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.httpclient.html" class="tsd-kind-icon">Http<wbr>Client</a>
+						<a href="../classes/_equinor_fusion_framework.httpclient.html" class="tsd-kind-icon">Http<wbr>Client</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.httpclientconfigurator.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a>
+						<a href="../classes/_equinor_fusion_framework.httpclientconfigurator.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Configurator</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.httpclientmsal.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a>
+						<a href="../classes/_equinor_fusion_framework.httpclientmsal.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Msal</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.httpclientprovider.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a>
+						<a href="../classes/_equinor_fusion_framework.httpclientprovider.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.httprequesthandler.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Handler</a>
+						<a href="../classes/_equinor_fusion_framework.httprequesthandler.html" class="tsd-kind-icon">Http<wbr>Request<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
+						<a href="../classes/_equinor_fusion_framework.processoperators.html" class="tsd-kind-icon">Process<wbr>Operators</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.apiinstance.html" class="tsd-kind-icon">Api<wbr>Instance</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.applicationapi.html" class="tsd-kind-icon">Application<wbr>Api</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.applicationmanifest.html" class="tsd-kind-icon">Application<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.applicationrenderer.html" class="tsd-kind-icon">Application<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.authclient.html" class="tsd-kind-icon">Auth<wbr>Client</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter root">
-						<a href="_equinor_fusion_framework.processoperators.html" class="tsd-kind-icon">Process<wbr>Operators</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module root">
+						<a href="_equinor_fusion_framework.authprovider.html" class="tsd-kind-icon">Auth<wbr>Provider</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_equinor_fusion_framework.processoperators.html#add" class="tsd-kind-icon">add</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_equinor_fusion_framework.authprovider.html#acquireaccesstoken" class="tsd-kind-icon">acquire<wbr>Access<wbr>Token</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_equinor_fusion_framework.processoperators.html#get" class="tsd-kind-icon">get</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_equinor_fusion_framework.authprovider.html#acquiretoken" class="tsd-kind-icon">acquire<wbr>Token</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_equinor_fusion_framework.processoperators.html#process" class="tsd-kind-icon">process</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_equinor_fusion_framework.processoperators.html#set" class="tsd-kind-icon">set</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_equinor_fusion_framework.authprovider.html#login" class="tsd-kind-icon">login</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.apiinstance.html" class="tsd-kind-icon">Api<wbr>Instance</a>
+						<a href="_equinor_fusion_framework.fusion.html" class="tsd-kind-icon">Fusion</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.applicationapi.html" class="tsd-kind-icon">Application<wbr>Api</a>
+						<a href="_equinor_fusion_framework.fusionservice.html" class="tsd-kind-icon">Fusion<wbr>Service</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.applicationmanifest.html" class="tsd-kind-icon">Application<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.applicationrenderer.html" class="tsd-kind-icon">Application<wbr>Renderer</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.authclient.html" class="tsd-kind-icon">Auth<wbr>Client</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.authprovider.html" class="tsd-kind-icon">Auth<wbr>Provider</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.fusion.html" class="tsd-kind-icon">Fusion</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.fusionservice.html" class="tsd-kind-icon">Fusion<wbr>Service</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module root">
-						<a href="../interfaces/_equinor_fusion_framework.serviceconfig.html" class="tsd-kind-icon">Service<wbr>Config</a>
+						<a href="_equinor_fusion_framework.serviceconfig.html" class="tsd-kind-icon">Service<wbr>Config</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter root">
 						<a href="../modules/_equinor_fusion_framework.html#httpclientcreateoptions" class="tsd-kind-icon">Http<wbr>Client<wbr>Create<wbr>Options</a>
