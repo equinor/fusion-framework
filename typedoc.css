@@ -1,6 +1,20 @@
 pre code {
     font-size: 14px;
-    line-height: 1.25em;
+    line-height: 1.3;
     font-family: FiraCode, monospace;
     display: block;
+}
+
+.tsd-typography {
+  line-height: 1.5;
+}
+
+blockquote {
+  border-left: 0.5rem solid cornflowerblue;
+  margin: 0;
+  padding: .5rem 1rem;
+  font-size: 14px;
+  background: rgba(0 ,0,255, .05);
+  margin: 1rem 0;
+  color: #333;
 }
