@@ -1,0 +1,35 @@
+{
+  "name": "@equinor/fusion-framework-module-service-discovery",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc -b --verbose",
+    "prepack": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/framework"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "^0.0.0",
+    "@equinor/fusion-framework-module-http": "^0.0.0"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
+  }
+}
