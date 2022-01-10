@@ -1,0 +1,1 @@
+[ ] move code from @equinor/fusion-web-msal (client)

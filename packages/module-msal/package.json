@@ -1,6 +1,6 @@
 {
-  "name": "@equinor/fusion-framework",
-  "version": "1.1.0-alpha.2",
+  "name": "@equinor/fusion-framework-module-msal",
+  "version": "0.0.0",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -18,13 +18,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/framework"
+    "directory": "packages/module-msal"
   },
   "dependencies": {
-    "rxjs": "^7.1.0",
+    "@equinor/fusion-web-msal": "^0.1.1",
     "@equinor/fusion-framework-module": "^0.0.0",
-    "@equinor/fusion-framework-module-http": "^0.0.0",
-    "@equinor/fusion-framework-module-msal": "^0.0.0"
+    "@equinor/fusion-framework-module-http": "^0.0.0"
   },
   "types": "index.d.ts",
   "typesVersions": {

@@ -13,18 +13,18 @@
         "stripInternal": true,
         "lib": [
             "esnext",
-      "dom",
-      "dom.iterable"
+            "dom",
+            "dom.iterable"
         ],
         "composite": true,
-        "baseUrl": "./packages",
         "rootDir": ".",
+        "baseUrl": "./packages",
         "paths": {
-            "@equinor/fusion-framework": [
-                "framework/src"
+            "@equinor/fusion-framework-*": [
+                "./*/src"
             ],
-            "@equinor/fusion-react": [
-                "framework/src"
+            "@equinor/fusion-react-*": [
+                "./*/src"
             ],
         },
     },
