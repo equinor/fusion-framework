@@ -4,18 +4,13 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
+    "baseUrl": ".",
   },
   "references": [
     {
       "path": "../module"
     },
-    {
-      "path": "../module-http"
-    },
-    {
-      "path": "../module-msal"
-    }
+   
   ],
   "include": [
     "src/**/*",

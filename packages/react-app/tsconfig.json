@@ -5,20 +5,18 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
+    "jsx": "react-jsx"
   },
   "references": [
     {
+      "path": "../framework"
+    },
+    {
       "path": "../module"
-    },
-    {
-      "path": "../module-http"
-    },
-    {
-      "path": "../module-msal"
     }
   ],
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

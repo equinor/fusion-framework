@@ -20,7 +20,16 @@
       "path": "./packages/framework"
     },
     {
-      "path": "./packages/react"
+      "path": "./packages/module"
+    },
+    {
+      "path": "./packages/module-http"
+    },
+    {
+      "path": "./packages/module-msal"
+    },
+    {
+      "path": "./packages/react-app"
     },
   ]
 }

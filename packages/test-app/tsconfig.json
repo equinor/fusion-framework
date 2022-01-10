@@ -5,16 +5,14 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
+    "jsx": "react-jsx"
   },
   "references": [
     {
-      "path": "../module"
+      "path": "../react-app"
     },
     {
-      "path": "../module-http"
-    },
-    {
-      "path": "../module-msal"
+      "path": "../module-service-discovery"
     }
   ],
   "include": [

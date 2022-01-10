@@ -12,9 +12,6 @@
     },
     {
       "path": "../module-http"
-    },
-    {
-      "path": "../module-msal"
     }
   ],
   "include": [

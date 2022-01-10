@@ -1,6 +1,7 @@
 {
-  "name": "@equinor/fusion-framework",
-  "version": "1.1.0-alpha.2",
+  "private": true,
+  "name": "@equinor/fusion-react-app",
+  "version": "0.0.0",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -18,13 +19,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/framework"
+    "directory": "packages/react"
   },
   "dependencies": {
-    "rxjs": "^7.1.0",
-    "@equinor/fusion-framework-module": "^0.0.0",
-    "@equinor/fusion-framework-module-http": "^0.0.0",
-    "@equinor/fusion-framework-module-msal": "^0.0.0"
+    "@equinor/fusion-framework": "^1.1.0-alpha.1",
+    "@equinor/fusion-framework-module": "^0.0.0"
   },
   "types": "index.d.ts",
   "typesVersions": {
@@ -33,5 +32,15 @@
         "dist/types/*"
       ]
     }
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "peerDependencies": {
+    "react": "^17.x",
+    "react-dom": "^17.x"
   }
 }
