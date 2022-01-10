@@ -5,13 +5,23 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "paths": {
-      "@equinor/fusion-framework/services": ["services/index"]
-    }
   },
-  "include": ["src/**/*.ts"],
+  "references": [
+    {
+      "path": "../module"
+    },
+    {
+      "path": "../module-http"
+    },
+    {
+      "path": "../module-msal"
+    }
+  ],
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
     "node_modules",
-    "dist",
+    "lib"
   ]
 }
