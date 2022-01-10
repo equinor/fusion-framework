@@ -11,7 +11,8 @@
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",
-    "postdocs": "cp typedoc.css docs/assets/css/custom.css"
+    "postdocs": "cp typedoc.css docs/assets/css/custom.css",
+    "yalc": "npm run build && lerna exec 'yalc push --private'"
   },
   "repository": {
     "type": "git",
@@ -48,7 +49,7 @@
     "typedoc-neo-theme": "^1.1.1",
     "typedoc-plugin-lerna-packages": "^0.3.1",
     "typedoc-plugin-remove-references": "0.0.5",
-    "typescript": "^4.2.4"
+    "typescript": "^4.5.4"
   },
   "peerDependencies": {
     "typescript": ">=4.2"
@@ -63,9 +64,5 @@
     "./packages/**/src/**/*.{ts,tsx}": [
       "eslint --quiet --fix"
     ]
-  },
-  "dependencies": {
-    "rm": "^0.1.8",
-    "ts-loader": "^9.2.3"
   }
 }
