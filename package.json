@@ -10,8 +10,7 @@
     "test": "lerna run test",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
-    "docs": "typedoc --tsconfig tsconfig.typedoc.json",
-    "postdocs": "cp typedoc.css docs/assets/css/custom.css",
+    "docs": "typedoc",
     "yalc": "npm run build && lerna exec 'yalc push --private'"
   },
   "repository": {
