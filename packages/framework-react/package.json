@@ -22,7 +22,7 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework": "^1.1.0-alpha.1"
+    "@equinor/fusion-framework": "^1.1.0-alpha.2"
   },
   "types": "index.d.ts",
   "typesVersions": {
