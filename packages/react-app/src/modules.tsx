@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
     initializeModules,
     ModulesConfigurator,
@@ -6,6 +5,7 @@ import {
 } from '@equinor/fusion-framework-module';
 import { createContext, lazy, useContext } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const moduleContext = createContext<any>(null);
 
 export const ModuleProvider = moduleContext.Provider;
@@ -32,4 +32,5 @@ export const createModuleProvider: ModuleProviderCreator = async <
     return Component;
 };
 
-export const useModuleContext = <T extends any>() => useContext(moduleContext) as T;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useModuleContext = <T extends any>(): T => useContext(moduleContext) as T;

@@ -28,6 +28,7 @@ export type Context = {
     externalId: string | null;
     type: ContextType;
     title: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any;
     isActive: boolean;
     parent: ParentContext;

@@ -18,6 +18,7 @@ export interface IServiceDiscoveryProvider {
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
         protected readonly _config: ServiceDiscoveryConfigurator,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         protected readonly _http: IHttpClientProvider<any>
     ) {}
 
