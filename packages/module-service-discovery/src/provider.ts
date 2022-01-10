@@ -1,6 +1,6 @@
 import { ServiceDiscoveryConfigurator } from './configurator';
 
-import type { Environment, Service } from 'types';
+import type { Environment, Service } from './types';
 
 import type { IHttpClientProvider } from '@equinor/fusion-framework-module-http';
 
