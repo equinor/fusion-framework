@@ -10,5 +10,28 @@
     "importHelpers": true,
     "moduleResolution": "Node"
   },
-  "exclude": ["**/dist"]
+  "exclude": ["**/dist"],
+  "references": [
+    {
+      "path": "./packages/framework"
+    },
+    {
+      "path": "./packages/framework-react"
+    },
+    {
+      "path": "./packages/module"
+    },
+    {
+      "path": "./packages/module-http"
+    },
+    {
+      "path": "./packages/module-msal"
+    },
+    {
+      "path": "./packages/module-service-discovery"
+    },
+    {
+      "path": "./packages/react-app"
+    },
+  ]
 }

@@ -6,7 +6,8 @@ import {
     ModulesConfigType,
     ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
-import { ModuleProvider } from 'modules';
+
+import { ModuleProvider } from './modules';
 
 import type { Fusion, AppManifest } from '@equinor/fusion-framework';
 

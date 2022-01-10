@@ -1,0 +1,11 @@
+{
+  "tsconfig": "./tsconfig.typedoc.json",
+  "entryPoints": ["."],
+  "entryPointStrategy": "packages",
+  "excludeProtected": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "out": "docs",
+  "emit":"both",
+  "hideGenerator": true
+}
