@@ -1,16 +1,18 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "target": "ESNext",
-    "module": "ESNext",
+    "removeComments": false,
     "declaration": true,
-    "skipLibCheck": true,
-    "noImplicitReturns": false,
-    "strict": false,
-    "importHelpers": true,
-    "moduleResolution": "Node"
   },
-  "exclude": ["**/dist"],
+  "exclude": ["**/dist", "**/node_modules"],
+  "typedocOptions": {
+    "entryPoints": ["."],
+    "entryPointStrategy": "packages",
+    "readme": "./README.md",
+    "out": "docs",
+    "hideGenerator": true
+  },
   "references": [
     {
       "path": "./packages/framework"
