@@ -7,7 +7,15 @@
   },
   "exclude": ["**/dist", "**/node_modules"],
   "typedocOptions": {
-    "entryPoints": ["."],
+    "entryPoints": [
+      "./packages/framework",
+      "./packages/framework-react",
+      "./packages/module",
+      "./packages/module-http",
+      "./packages/module-msal",
+      "./packages/module-service-discovery",
+      "./packages/react-app",
+    ],
     "entryPointStrategy": "packages",
     "readme": "./README.md",
     "out": "docs",
@@ -15,28 +23,5 @@
     "includes": [
       "./packages/framework-react"
     ]
-  },
-  "references": [
-    {
-      "path": "./packages/framework"
-    },
-    {
-      "path": "./packages/framework-react"
-    },
-    {
-      "path": "./packages/module"
-    },
-    {
-      "path": "./packages/module-http"
-    },
-    {
-      "path": "./packages/module-msal"
-    },
-    {
-      "path": "./packages/module-service-discovery"
-    },
-    {
-      "path": "./packages/react-app"
-    },
-  ]
+  }
 }
