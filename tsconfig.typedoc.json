@@ -11,7 +11,10 @@
     "entryPointStrategy": "packages",
     "readme": "./README.md",
     "out": "docs",
-    "hideGenerator": true
+    "hideGenerator": true,
+    "includes": [
+      "./packages/framework-react"
+    ]
   },
   "references": [
     {

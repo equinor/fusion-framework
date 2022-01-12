@@ -1,62 +1,44 @@
-# Fusion React
+# Fusion Framework React
 
-## Basic Setup
+> Package for creating React provider for Fusion Framework
+
+use case:
+
+ * Initiatiting framework for hosting, aka portal.
+ * consume framework internally in host
+ * consume framework in child instance, aka app.
+
 ```tsx
-import { registerReactApp } from '@equinor/fusion-react';
+import { createFrameworkProvider } from '@equinor/fusion-framework-react';
 
-const MyApp = () => <p>Hello Fusion</p>;
+const Framework = () => {
+  /** Create and configure framework */
+  const FrameworkProvider = createFrameworkProvider(() => {
+    config.http.createClient('some_service', 'https://foo.bar')
+  });
 
-export const setup = registerReactApp(MyApp);
-
-export default setup;
-```
-
-## Configure
-```tsx
-// config.ts
-export const config = (build) => {
-  build.http.configureClient(
-      'bar', 
-      'https://somewhere-test.com'
-    );
+  return (
+      <Suspense fallback={<span>initializing framework...</span>}>
+          <FrameworkProvider>{children}</FrameworkProvider>
+      </Suspense>
+  );
 }
 
-// index.ts
-export const setup = registerReactApp(MyApp, config);
-```
+const PortalComponent = () => {
+  const framework = useFramework();
+  const [foo, setFoo] = useState();
 
-## Api Client
+  useEffect(() => {
+    const client = framework.http.createClient('some_service');
+    client.fetch('/foobar').subscribe(x => setFoo(x.json()));
+  }, [framework.http])
+}
 
-```tsx
-import {useHttpClient} from '@equinor/fusion-react';
-const App = () => {
-  // fusion registered clients should give intellisense.
-  const portalClient = useHttpClient('portal');
-  portalClient.fetch('api/something');
-
-  const customClient =  useHttpClient('foo');
-  portalClient.fetch('api/bar');
+const Portal = () => {
+  return (
+    <Framework>
+      <PortalComponent />
+    <Framework>
+  );
 }
 ```
-
-### Configure
-```tsx
-const configure = (config) => {
-  config.http.configureClient(
-      'bar', 
-      'https://somewhere-test.com'
-    );
-}
-```
-
-> Declare custom client for intellisense
->```ts  
-> class MyClient extends HttpClient {}
->
-> declare module '@equinor/fusion-react' {
->   export interface CustomHttpClients {
->     foo: HttpClient,
->     bar: MyClient;
->   }
-> }  
-> ```
