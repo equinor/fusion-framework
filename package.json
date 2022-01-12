@@ -56,14 +56,5 @@
     "./packages/**/src/**/*.{ts,tsx}": [
       "eslint --quiet --fix"
     ]
-  },
-  "workspaces": [
-    "packages/framework",
-    "packages/framework-react",
-    "packages/module",
-    "packages/module-http",
-    "packages/module-msal",
-    "packages/module-service-discovery",
-    "packages/react-app"
-  ]
+  }
 }
