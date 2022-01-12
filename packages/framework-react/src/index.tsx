@@ -1,5 +1,5 @@
 /**
- * [[include:README.MD]]
+ * [[include:./README.MD]]
  * @module
  */
 
