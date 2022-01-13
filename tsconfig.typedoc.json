@@ -1,11 +1,10 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "noEmit": false,
     "removeComments": false,
     "declaration": true,
   },
-  "exclude": ["**/dist", "**/node_modules"],
   "typedocOptions": {
     "entryPoints": [
       "./packages/framework",
@@ -20,8 +19,9 @@
     "readme": "./README.md",
     "out": "docs",
     "hideGenerator": true,
+    "excludeExternals": true,
     "includes": [
       "./packages/framework-react"
-    ]
+    ],
   }
 }
