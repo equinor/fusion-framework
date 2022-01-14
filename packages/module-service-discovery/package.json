@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@equinor/fusion-framework-module-service-discovery",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -22,8 +22,8 @@
     "directory": "packages/framework"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.1.0-alpha.0",
-    "@equinor/fusion-framework-module-http": "^0.1.0-alpha.0"
+    "@equinor/fusion-framework-module": "^0.1.0-alpha.1",
+    "@equinor/fusion-framework-module-http": "^0.1.0-alpha.1"
   },
   "types": "index.d.ts",
   "typesVersions": {
