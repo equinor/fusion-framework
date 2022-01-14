@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-react-app",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -21,8 +21,8 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework": "^1.1.0-alpha.3",
-    "@equinor/fusion-framework-module": "^0.1.0-alpha.0"
+    "@equinor/fusion-framework": "^1.1.0-alpha.4",
+    "@equinor/fusion-framework-module": "^0.1.0-alpha.1"
   },
   "types": "index.d.ts",
   "typesVersions": {
