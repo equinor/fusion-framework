@@ -1,4 +1,4 @@
-export { HttpClient } from './client';
+export { HttpClient, IHttpClient } from './client';
 export { HttpClientMsal } from './client-msal';
 
 export * from './configurator';
