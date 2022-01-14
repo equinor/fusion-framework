@@ -23,8 +23,8 @@ export const createApp =
         configure: AppConfigurator<TModules>,
         modules?: TModules
     ) =>
-    (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> => {
-        const Component = lazy(async () => {
+    (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> =>
+        lazy(async () => {
             const configurator: ModulesConfigurator<TModules | Array<AnyModule>> = async (
                 config
             ) => {
@@ -39,7 +39,5 @@ export const createApp =
                 ),
             };
         });
-        return Component;
-    };
 
 export default createApp;
