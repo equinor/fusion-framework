@@ -2,12 +2,12 @@ import { initializeModules, ModulesInstanceType } from '@equinor/fusion-framewor
 
 import type { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import http from '@equinor/fusion-framework-module-http';
-import auth from '@equinor/fusion-framework-module-msal';
+import http, { HttpModule } from '@equinor/fusion-framework-module-http';
+import auth, { MsalModule } from '@equinor/fusion-framework-module-msal';
 
-export const modules = [http, auth];
+export type FusionModules = [HttpModule, MsalModule];
+export const modules: FusionModules = [http, auth];
 
-export type FusionModules = typeof modules;
 export type FusionModulesInstance = ModulesInstanceType<FusionModules>;
 export type FusionConfigurator = ModulesConfigurator<FusionModules>;
 
