@@ -22,10 +22,7 @@
         "paths": {
             "@equinor/fusion-framework-*": [
                 "./*/src"
-            ],
-            "@equinor/fusion-react-*": [
-                "./*/src"
-            ],
+            ]
         },
     },
 }

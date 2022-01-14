@@ -9,6 +9,7 @@
     "build": "lerna run build",
     "build:clean": "lerna exec 'rm -rf dist' && npm run build",
     "test": "lerna run test",
+    "lint": "eslint packages/*/src/**",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",

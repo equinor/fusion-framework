@@ -1,4 +1,4 @@
-import { createApp, AppConfigurator } from '@equinor/fusion-react-app';
+import { createApp, AppConfigurator } from '@equinor/fusion-framework-react-app';
 
 import serviceDiscovery, {
     ServiceDiscoveryModule,
