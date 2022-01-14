@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@equinor/fusion-framework-test-app",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -22,8 +22,8 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-react-app": "^0.0.0",
-    "@equinor/fusion-framework-module-service-discovery": "^0.0.0"
+    "@equinor/fusion-framework-module-service-discovery": "^0.1.0-alpha.0",
+    "@equinor/fusion-react-app": "^0.1.0-alpha.0"
   },
   "types": "index.d.ts",
   "typesVersions": {
