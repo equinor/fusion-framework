@@ -28,7 +28,7 @@ export const createApp =
             const configurator: ModulesConfigurator<TModules | Array<AnyModule>> = async (
                 config
             ) => {
-                configure(config as ModulesConfigType<TModules>, fusion, env);
+                await configure(config as ModulesConfigType<TModules>, fusion, env);
             };
             const value = await initializeModules(configurator, modules || []);
             return {
