@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@equinor/fusion-framework-module-service-discovery",
   "version": "0.1.0-alpha.2",
   "description": "",
