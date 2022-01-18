@@ -20,14 +20,9 @@ export const module: ServiceDiscoveryModule = {
     initialize: ({ serviceDiscovery: config }, instance) =>
         new ServiceDiscoveryProvider(config, instance.http),
     postConfigure: (config) => {
-        const { clientKey, baseUrl } = config.serviceDiscovery;
-        if (config.http.hasClient(clientKey) && baseUrl) {
-            console.warn(
-                `http is already configure for key [${clientKey}], overriding existing endpoint`
-            );
-            config.http.configureClient(clientKey, baseUrl);
-        } else {
-            config.http.configureClient(clientKey, baseUrl);
+        const { clientKey } = config.serviceDiscovery;
+        if (!config.http.hasClient(clientKey)) {
+            console.warn(`missing http config for [${clientKey}]`);
         }
     },
 };
