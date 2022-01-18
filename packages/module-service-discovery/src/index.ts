@@ -1,5 +1,4 @@
-export * from './configurator';
-export * from './provider';
-export * from './module';
 export * from './types';
-export { default } from './module';
+export { IServiceDiscoveryConfigurator, ServiceDiscoveryConfigurator } from './configurator';
+export { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
+export { default, ServiceDiscoveryModule, setupServiceDiscoveryModule } from './module';
