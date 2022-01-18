@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
-  "version": "0.1.0-alpha.8",
+  "version": "0.1.0-alpha.9",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -21,8 +21,8 @@
     "directory": "packages/module-msal"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.1.0-alpha.8",
-    "@equinor/fusion-framework-module-http": "^0.1.0-alpha.8",
+    "@equinor/fusion-framework-module": "^0.1.0-alpha.9",
+    "@equinor/fusion-framework-module-http": "^0.1.0-alpha.9",
     "@equinor/fusion-web-msal": "^0.1.1"
   },
   "types": "index.d.ts",
