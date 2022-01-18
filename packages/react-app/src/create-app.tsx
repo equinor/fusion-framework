@@ -3,6 +3,7 @@ import { lazy } from 'react';
 import {
     AnyModule,
     initializeModules,
+    ModulesConfig,
     ModulesConfigType,
     ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
@@ -28,7 +29,7 @@ export const createApp =
             const configurator: ModulesConfigurator<TModules | Array<AnyModule>> = async (
                 config
             ) => {
-                await configure(config as ModulesConfigType<TModules>, fusion, env);
+                await configure(config as ModulesConfig<TModules>, fusion, env);
             };
             const value = await initializeModules(configurator, modules || []);
             return {
