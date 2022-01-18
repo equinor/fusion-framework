@@ -25,7 +25,7 @@ export const module: MsalModule = {
              */
             config.http.defaultHttpRequestHandler.set('MSAL', async (request) => {
                 const { scopes = [] } = request;
-                if (!scopes.length) {
+                if (scopes.length) {
                     /** TODO should be try catch, check caller for handling */
                     const token = await modules.auth.acquireToken({ scopes });
                     if (token) {
