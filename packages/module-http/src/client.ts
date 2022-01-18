@@ -188,6 +188,7 @@ export class HttpClient<TRequest extends HttpRequestInit = HttpRequestInit, TRes
     }
 
     protected _resolveUrl(path: string): string {
-        return [this.uri, path].join('/');
+        const baseUrl = this.uri || window.location.origin;
+        return new URL(path, baseUrl).href;
     }
 }
