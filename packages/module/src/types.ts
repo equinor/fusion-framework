@@ -37,7 +37,7 @@ export interface ModulesConfigurator<
     TModules extends Array<AnyModule>,
     TRef extends any = ModuleInstance
 > {
-    (config: ModulesObjectConfigType<ModulesType<TModules>>, ref?: TRef): void | Promise<void>;
+    (config: ModulesConfig<ModulesType<TModules>>, ref?: TRef): void | Promise<void>;
 }
 
 /** Extract configs from modules  */
@@ -54,6 +54,14 @@ export type ModulesInstanceType<TModules extends Array<AnyModule> | Record<strin
         : TModules extends Record<string, AnyModule>
         ? ModulesObjectInstanceType<TModules>
         : never;
+
+export interface IModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> {
+    onAfterConfiguration: (cb: (config: ModulesConfigType<M>) => void | Promise<void>) => void;
+    onAfterInit: (cb: (instance: ModulesInstanceType<M>) => void | Promise<void>) => void;
+}
+
+export type ModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> =
+    ModulesConfigType<M> & IModulesConfig<M>;
 
 /** === Internal helpers === */
 

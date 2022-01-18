@@ -1,4 +1,4 @@
-import { ServiceDiscoveryConfigurator } from './configurator';
+import { IServiceDiscoveryConfigurator } from './configurator';
 
 import type { Environment, Service } from './types';
 
@@ -17,7 +17,7 @@ export interface IServiceDiscoveryProvider {
 
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
-        protected readonly _config: ServiceDiscoveryConfigurator,
+        protected readonly _config: IServiceDiscoveryConfigurator,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         protected readonly _http: IHttpClientProvider<any>
     ) {}

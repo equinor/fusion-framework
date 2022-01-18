@@ -36,6 +36,8 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
         name: string,
         onCreate: (client: T) => void
     ): HttpClientConfigurator<TClient>;
+
+    hasClient(name: string): boolean;
 }
 
 export class HttpClientConfigurator<TClient extends IHttpClient>
@@ -55,6 +57,10 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
 
     constructor(client: HttpClientConstructor<TClient>) {
         this.defaultHttpClientCtor = client;
+    }
+
+    hasClient(name: string): boolean {
+        return Object.keys(this._clients).includes(name);
     }
 
     configureClient<T extends TClient>(
