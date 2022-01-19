@@ -31,7 +31,7 @@ export const createApp =
             ) => {
                 await configure(config as ModulesConfig<TModules>, fusion, env);
             };
-            const value = await initializeModules(configurator, modules || []);
+            const value = await initializeModules(configurator, modules || [], fusion.modules);
             return {
                 default: () => (
                     <ModuleProvider value={value}>
