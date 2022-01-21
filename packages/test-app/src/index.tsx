@@ -1,13 +1,7 @@
-import { createApp, AppConfigurator } from '@equinor/fusion-framework-react-app';
-
-import serviceDiscovery, {
-    ServiceDiscoveryModule,
-} from '@equinor/fusion-framework-module-service-discovery';
+import { createApp } from '@equinor/fusion-framework-react-app';
 
 const App = () => <p>ok</p>;
 
-const config: AppConfigurator<[ServiceDiscoveryModule]> = (config) => {
-    config.serviceDiscovery.clientKey;
-};
-
-export const render = createApp(App, config, [serviceDiscovery]);
+export const render = createApp(App, (config) => {
+    config.http.configureClient('foo', 'https://foo.bar');
+});

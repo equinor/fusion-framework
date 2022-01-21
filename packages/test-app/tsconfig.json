@@ -10,9 +10,6 @@
   "references": [
     {
       "path": "../react-app"
-    },
-    {
-      "path": "../module-service-discovery"
     }
   ],
   "include": [

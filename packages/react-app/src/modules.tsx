@@ -1,9 +1,10 @@
+import { createContext, lazy, useContext } from 'react';
+
 import {
     initializeModules,
     ModulesConfigurator,
     AnyModule,
 } from '@equinor/fusion-framework-module';
-import { createContext, lazy, useContext } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const moduleContext = createContext<any>(null);
