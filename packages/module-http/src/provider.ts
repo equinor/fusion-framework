@@ -50,7 +50,7 @@ export class HttpClientProvider<TClient extends HttpClient>
         let config = this.config.clients[key];
         if (!config && isURL(key)) {
             config = { baseUri: key };
-        } else {
+        } else if (!config) {
             throw new ClientNotFoundException(`No registered http client for key [${key}]`);
         }
         const {
