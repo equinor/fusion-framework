@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { lazy } from 'react';
 
-import {
-    AnyModule,
-    initializeModules,
-    ModulesConfig,
-    ModulesConfigType,
-    ModulesConfigurator,
-} from '@equinor/fusion-framework-module';
+import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
 
 import { ModuleProvider } from './modules';
 
@@ -22,27 +16,28 @@ export type AppModules = [HttpModule, MsalModule];
 export { Fusion, AppManifest };
 
 export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
-    (config: ModulesConfigType<TModules>, fusion: Fusion, env: AppManifest): void | Promise<void>;
+    (
+        config: ModulesConfigType<AppModules> & ModulesConfigType<TModules>,
+        fusion: Fusion,
+        env: AppManifest
+    ): void | Promise<void>;
 }
 
 export const createApp =
     <TModules extends Array<AnyModule>>(
         Component: React.ComponentType,
-        configure: AppConfigurator<TModules & AppModules>,
+        configure: AppConfigurator<TModules>,
         modules: TModules = [] as unknown as TModules
     ) =>
     (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> =>
         lazy(async () => {
-            const configurator: ModulesConfigurator<AppModules & TModules> = async (config) => {
-                await configure(
-                    config as unknown as ModulesConfig<AppModules & TModules>,
-                    fusion,
-                    env
-                );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const configurator = async (config: any) => {
+                await configure(config, fusion, env);
             };
-            const value = await initializeModules<AppModules & TModules>(
+            const value = await initializeModules(
                 configurator,
-                [http, msal].concat(modules) as AppModules & TModules,
+                [http, msal].concat(modules),
                 fusion.modules
             );
             return {
