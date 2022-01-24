@@ -1,0 +1,36 @@
+{
+  "name": "@equinor/fusion-framework-module-telemetry",
+  "version": "0.0.0",
+  "description": "Fusion module for using Microsoft Telemetry",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc -b --verbose",
+    "prepack": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules-telemetry"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "^0.1.0-beta.2",
+    "@equinor/fusion-framework-module-msal": "^0.1.0-beta.2",
+    "@microsoft/applicationinsights-web": "^2.7.2"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
+  }
+}
