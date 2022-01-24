@@ -1,17 +1,7 @@
 import { IAuthProvider } from '@equinor/fusion-framework-module-msal';
-import {
-    ApplicationInsights,
-    ITelemetryItem,
-    // ITelemetryItem,
-    // IEventTelemetry,
-    // IPageViewTelemetry,
-    // IExceptionTelemetry,
-    // ITraceTelemetry,
-    // IDependencyTelemetry,
-    // IMetricTelemetry,
-} from '@microsoft/applicationinsights-web';
+import { ApplicationInsights, ITelemetryItem } from '@microsoft/applicationinsights-web';
 
-import { ITelemetryConfigurator } from 'configurator';
+import { ITelemetryConfigurator } from './configurator';
 
 export interface ITelemetryProvider {
     createClient(): ApplicationInsights;
