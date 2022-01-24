@@ -5,9 +5,20 @@ import { AuthRequest } from '@equinor/fusion-web-msal/dist/request';
 
 import { IAuthConfigurator, AuthClientOptions } from './configurator';
 
+// TODO - export from msal
+export declare type AccountInfo = {
+    homeAccountId: string;
+    environment: string;
+    tenantId: string;
+    username: string;
+    localAccountId: string;
+    name?: string;
+};
+
 export interface IAuthProvider {
     readonly client: AuthClient;
     readonly defaultConfig: AuthClientOptions | undefined;
+    readonly account: AccountInfo | undefined;
     createClient(name?: string): AuthClient;
     acquireToken(req: AuthRequest): Promise<{ accessToken: string } | void>;
     acquireAccessToken(req: AuthRequest): Promise<string | undefined>;
@@ -17,6 +28,10 @@ export interface IAuthProvider {
 export class AuthProvider {
     get client(): AuthClient {
         return this.createClient();
+    }
+
+    get account(): AccountInfo | undefined {
+        return this.client.account;
     }
 
     get defaultConfig(): AuthClientOptions | undefined {
