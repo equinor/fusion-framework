@@ -3,7 +3,7 @@ import serviceDiscovery, {
     ServiceDiscoveryModule,
 } from '@equinor/fusion-framework-module-service-discovery';
 
-import { TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
+import tele, { TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
 
 const App = () => <p>ok</p>;
 
@@ -28,10 +28,10 @@ export const defaultRender = createApp(App, (config) => {
 });
 
 // TODO - check resolve of deps array
-export const moduleRender = createApp(
+export const moduleRender = createApp<[ServiceDiscoveryModule, TelemetryModule]>(
     App,
     (config) => {
         config.serviceDiscovery.clientKey;
     },
-    [serviceDiscovery]
+    [serviceDiscovery, tele]
 );

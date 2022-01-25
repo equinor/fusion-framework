@@ -24,7 +24,8 @@
     "@equinor/fusion-framework": "^1.1.0-beta.3",
     "@equinor/fusion-framework-module": "^0.1.0-beta.3",
     "@equinor/fusion-framework-module-http": "^0.1.0-beta.3",
-    "@equinor/fusion-framework-module-msal": "^0.1.0-beta.3"
+    "@equinor/fusion-framework-module-msal": "^0.1.0-beta.3",
+    "@equinor/fusion-framework-react": "^0.1.0-beta.3"
   },
   "types": "index.d.ts",
   "typesVersions": {

@@ -4,7 +4,16 @@ import {
     initializeModules,
     ModulesConfigurator,
     AnyModule,
+    ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
+
+import http, { HttpModule } from '@equinor/fusion-framework-module-http';
+import msal, { MsalModule } from '@equinor/fusion-framework-module-msal';
+
+export type AppModules = [HttpModule, MsalModule];
+export type AppModulesInstance = ModulesInstanceType<AppModules>;
+
+export const appModules = [http, msal];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const moduleContext = createContext<any>(null);
@@ -34,4 +43,5 @@ export const createModuleProvider: ModuleProviderCreator = async <
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useModuleContext = <T extends any>(): T => useContext(moduleContext) as T;
+export const useModuleContext = <T extends any = AppModulesInstance>(): T =>
+    useContext(moduleContext) as T;

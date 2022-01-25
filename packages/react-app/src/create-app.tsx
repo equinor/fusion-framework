@@ -3,17 +3,9 @@ import { lazy } from 'react';
 
 import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
 
-import { ModuleProvider } from './modules';
-
 import type { Fusion, AppManifest } from '@equinor/fusion-framework';
 
-/** default modules provided to apps */
-import http, { HttpModule } from '@equinor/fusion-framework-module-http';
-import msal, { MsalModule } from '@equinor/fusion-framework-module-msal';
-
-export type AppModules = [HttpModule, MsalModule];
-
-export { Fusion, AppManifest };
+import { ModuleProvider, appModules, AppModules } from './modules';
 
 export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
     (
@@ -37,7 +29,7 @@ export const createApp =
             };
             const value = await initializeModules(
                 configurator,
-                [http, msal].concat(modules),
+                appModules.concat(modules),
                 fusion.modules
             );
             return {
