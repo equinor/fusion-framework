@@ -3,7 +3,11 @@ import { IServiceDiscoveryConfigurator } from './configurator';
 import type { Environment, Service } from './types';
 
 import type { ModulesConfigType } from '@equinor/fusion-framework-module';
-import type { HttpModule, IHttpClientProvider } from '@equinor/fusion-framework-module-http';
+import type {
+    HttpModule,
+    IHttpClient,
+    IHttpClientProvider,
+} from '@equinor/fusion-framework-module-http';
 
 export interface IServiceDiscoveryProvider {
     /**
@@ -39,7 +43,11 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         return services.find((x) => x.key === key);
     }
 
-    async configureClient(name: string, config: ModulesConfigType<[HttpModule]>): Promise<void> {
+    async configureClient(
+        name: string,
+        config: ModulesConfigType<[HttpModule]>,
+        onCreate?: (client: IHttpClient) => void
+    ): Promise<void> {
         const service = await this.resolveService(name);
         if (!service) {
             throw Error(`Could not load configuration of service [${name}]`);
@@ -48,6 +56,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
             baseUri: service.uri,
             onCreate: (client) => {
                 client.defaultScope = service.defaultScopes;
+                onCreate && onCreate(client);
             },
         });
     }
