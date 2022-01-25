@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { lazy } from 'react';
 
-import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
-
 import type { Fusion, AppManifest } from '@equinor/fusion-framework';
+import FrameworkProvider from '@equinor/fusion-framework-react';
+
+import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
 
 import { ModuleProvider, appModules, AppModules } from './modules';
 
@@ -34,9 +35,11 @@ export const createApp =
             );
             return {
                 default: () => (
-                    <ModuleProvider value={value}>
-                        <Component />
-                    </ModuleProvider>
+                    <FrameworkProvider value={fusion}>
+                        <ModuleProvider value={value}>
+                            <Component />
+                        </ModuleProvider>
+                    </FrameworkProvider>
                 ),
             };
         });

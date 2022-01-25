@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 import type { Fusion } from '@equinor/fusion-framework';
 
 export const context = createContext<Fusion | null>(null);
@@ -22,24 +22,3 @@ export const context = createContext<Fusion | null>(null);
  * ```
  */
 export const FrameworkProvider = context.Provider;
-
-/**
- * @example
- * ```ts
- * const useSometing = () => {
- *  const fusion = useFramework();
- *  return fusion.something;
- * }
- * ```
- */
-export const useFramework = (): Fusion => {
-    let framework = useContext(context);
-    if (!framework) {
-        console.warn('could not locate fusion in context!');
-    }
-    framework ??= window.Fusion;
-    if (!framework) {
-        console.error('Could not load framework, might not be initiated?');
-    }
-    return framework;
-};
