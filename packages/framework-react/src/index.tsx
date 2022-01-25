@@ -4,4 +4,4 @@
  */
 
 export { createFrameworkProvider } from './create-framework-provider';
-export { FrameworkProvider as default, FrameworkProvider, useFramework } from './context';
+export { FrameworkProvider as default, FrameworkProvider } from './context';
