@@ -14,4 +14,5 @@ export type Service = {
     uri: string;
     type: 'Service';
     internal: boolean;
+    defaultScopes: string[];
 };
