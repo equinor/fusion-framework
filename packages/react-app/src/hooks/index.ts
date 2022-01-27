@@ -1,4 +1,4 @@
-export { useHttpClient } from './use-http-client';
+export { useHttpClient } from './http';
 
 export { useModuleContext } from '../modules';
 
