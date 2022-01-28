@@ -21,9 +21,9 @@
     "directory": "packages/module-msal"
   },
   "dependencies": {
+    "@azure/msal-browser": "^2.21.0",
     "@equinor/fusion-framework-module": "^0.1.0-beta.11",
-    "@equinor/fusion-framework-module-http": "^0.1.0-beta.11",
-    "@equinor/fusion-web-msal": "^0.1.1"
+    "@equinor/fusion-framework-module-http": "^0.1.0-beta.11"
   },
   "types": "index.d.ts",
   "typesVersions": {
