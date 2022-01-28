@@ -13,9 +13,7 @@ export const Framework = createFrameworkProvider(async (config) => {
     // add a setup method for this!
     config.http.configureClient('service_discovery', {
         baseUri: 'https://pro-s-portal-ci.azurewebsites.net',
-        onCreate: (client) => {
-            client.defaultScope = ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'];
-        },
+        defaultScopes: ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'],
     });
     config.onAfterConfiguration(() => {
         console.debug('framework config done');
