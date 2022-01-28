@@ -20,9 +20,9 @@ export class TelemetryProvider implements ITelemetryProvider {
 
         client.loadAppInsights();
 
-        if (this._auth && this._auth.account) {
+        if (this._auth && this._auth.defaultAccount) {
             // TODO - local or home account??
-            client.setAuthenticatedUserContext(this._auth.account.localAccountId);
+            client.setAuthenticatedUserContext(this._auth.defaultAccount.localAccountId);
         } else {
             console.warn('no authorized user provided!');
         }
