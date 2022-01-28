@@ -10,6 +10,12 @@
   "references": [
     {
       "path": "../react-app"
+    },
+    {
+      "path": "../framework-react"
+    },
+    {
+      "path": "../module-msal"
     }
   ],
   "include": [
