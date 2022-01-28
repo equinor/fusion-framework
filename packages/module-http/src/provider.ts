@@ -55,12 +55,14 @@ export class HttpClientProvider<TClient extends HttpClient>
         }
         const {
             baseUri,
+            defaultScopes = [],
             onCreate,
             ctor = this.config.defaultHttpClientCtor,
             requestHandler = this.config.defaultHttpRequestHandler,
         } = config;
         const options = { requestHandler };
         const instance = new ctor(baseUri || '', options) as TClient;
+        Object.assign(instance, { defaultScopes });
         onCreate && onCreate(instance as TClient);
         return instance as TClient;
     }
