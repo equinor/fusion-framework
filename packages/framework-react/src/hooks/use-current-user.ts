@@ -11,5 +11,5 @@ export type AccountInfo = {
 
 export const useCurrentUser = (): AccountInfo | undefined => {
     const framework = useFramework();
-    return framework.modules.auth.client.account;
+    return framework.modules.auth.defaultClient.account;
 };
