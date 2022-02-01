@@ -1,42 +1,52 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { lazy } from 'react';
 
-import {
-    AnyModule,
-    initializeModules,
-    ModulesConfig,
-    ModulesConfigType,
-    ModulesConfigurator,
-} from '@equinor/fusion-framework-module';
-
-import { ModuleProvider } from './modules';
-
 import type { Fusion, AppManifest } from '@equinor/fusion-framework';
+import FrameworkProvider from '@equinor/fusion-framework-react';
 
-export { Fusion, AppManifest };
+import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
+
+import { ModuleProvider, appModules, AppModules } from './modules';
 
 export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
-    (config: ModulesConfigType<TModules>, fusion: Fusion, env: AppManifest): void | Promise<void>;
+    (
+        config: ModulesConfigType<AppModules> & ModulesConfigType<TModules>,
+        fusion: Fusion,
+        env: AppManifest
+    ): void | Promise<void>;
 }
 
 export const createApp =
     <TModules extends Array<AnyModule>>(
         Component: React.ComponentType,
         configure: AppConfigurator<TModules>,
-        modules?: TModules
+        modules: TModules = [] as unknown as TModules
     ) =>
     (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> =>
         lazy(async () => {
-            const configurator: ModulesConfigurator<TModules | Array<AnyModule>> = async (
-                config
-            ) => {
-                await configure(config as ModulesConfig<TModules>, fusion, env);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const configurator = async (config: any) => {
+                await configure(config, fusion, env);
             };
-            const value = await initializeModules(configurator, modules || [], fusion.modules);
+            const value = await initializeModules(
+                configurator,
+                appModules.concat(modules),
+                fusion.modules
+            );
             return {
                 default: () => (
-                    <ModuleProvider value={value}>
-                        <Component />
-                    </ModuleProvider>
+                    <FrameworkProvider value={fusion}>
+                        <ModuleProvider value={value}>
+                            <Router basename="apps/APP_KEY">
+                                <div>
+                                    <div>
+                                        <Route />
+                                    </div>
+                                </div>
+                                <Component />
+                            </Router>
+                        </ModuleProvider>
+                    </FrameworkProvider>
                 ),
             };
         });

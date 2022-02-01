@@ -12,7 +12,8 @@ interface HttpClientConstructor<TClient extends IHttpClient> {
 }
 
 interface HttpClientOptions<TClient extends IHttpClient> {
-    defaultUri?: string;
+    baseUri?: string;
+    defaultScopes?: string[];
     ctor?: HttpClientConstructor<TClient>;
     onCreate?: (client: TClient) => void;
     requestHandler?: HttpRequestHandler<HttpClientRequestInitType<TClient>>;

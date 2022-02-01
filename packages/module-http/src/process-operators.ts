@@ -1,5 +1,5 @@
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { withLatestFrom, concatMap, last } from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { last, mergeScan } from 'rxjs/operators';
 
 export type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | void>;
 
@@ -38,13 +38,17 @@ export class ProcessOperators<T> {
      *  Process registered processors.
      */
     process(request: T): Observable<T> {
-        const request$ = new BehaviorSubject<T>(request);
-        from(Object.values(this._operators))
-            .pipe(
-                withLatestFrom(request$),
-                concatMap(async ([operator, value]) => (await operator(value)) || value)
-            )
-            .subscribe(request$);
-        return request$.pipe(last());
+        return from(Object.values(this._operators)).pipe(
+            mergeScan(
+                // resolve current operator and return result or previous if void
+                (value, operator) => Promise.resolve(operator(value)).then((x) => x ?? value),
+                // initial value
+                request,
+                // only allow concurrency of one operator
+                1
+            ),
+            // output result of last operator
+            last()
+        );
     }
 }

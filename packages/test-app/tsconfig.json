@@ -12,7 +12,10 @@
       "path": "../react-app"
     },
     {
-      "path": "../module-service-discovery"
+      "path": "../framework-react"
+    },
+    {
+      "path": "../module-msal"
     }
   ],
   "include": [

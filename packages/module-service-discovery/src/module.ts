@@ -23,6 +23,7 @@ export const module: ServiceDiscoveryModule = {
         const { clientKey } = config.serviceDiscovery;
         if (!config.http.hasClient(clientKey)) {
             console.warn(`missing http config for [${clientKey}]`);
+            throw Error('could not load http client!');
         }
     },
 };

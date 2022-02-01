@@ -1,4 +1,4 @@
-import { AuthClientConfig } from '@equinor/fusion-web-msal';
+import { AuthClientConfig } from './client';
 
 export type AuthClientOptions = {
     tenantId: string;
