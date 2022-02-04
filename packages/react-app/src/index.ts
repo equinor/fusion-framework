@@ -1,3 +1,8 @@
+/**
+ * [[include:react-app/README.MD]]
+ * @module
+ */
+
 export { AppConfigurator, createApp, default } from './create-app';
 export {
     AppModules,
@@ -6,5 +11,3 @@ export {
     appModules,
     createModuleProvider,
 } from './modules';
-
-export { Fusion, AppManifest } from '@equinor/fusion-framework';

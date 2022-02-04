@@ -1,5 +1,5 @@
 /**
- * [[include:README.MD]]
+ * [[include:framework-react/README.MD]]
  * @module
  */
 

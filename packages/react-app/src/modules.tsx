@@ -18,6 +18,12 @@ export const appModules = [http, msal];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const moduleContext = createContext<any>(null);
 
+/**
+ * Context provider for application modules instances
+ * @see {@link createModuleProvider | createModuleProvider}
+ * @see {@link appModules | appModules}
+ * @see {@link useModuleContext | useModuleContext}
+ */
 export const ModuleProvider = moduleContext.Provider;
 
 type ModuleProviderCreator = <TModules extends Array<AnyModule> = Array<AnyModule>>(
@@ -42,6 +48,9 @@ export const createModuleProvider: ModuleProviderCreator = async <
     return Component;
 };
 
+/**
+ * @template T - type-hint which module types that are in context, defaults to standard [[AppModulesInstance]]
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useModuleContext = <T extends any = AppModulesInstance>(): T =>
     useContext(moduleContext) as T;

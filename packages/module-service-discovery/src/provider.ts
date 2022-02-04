@@ -54,10 +54,8 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         }
         config.http.configureClient(name, {
             baseUri: service.uri,
-            onCreate: (client) => {
-                client.defaultScope = service.defaultScopes;
-                onCreate && onCreate(client);
-            },
+            defaultScopes: service.defaultScopes,
+            onCreate,
         });
     }
 

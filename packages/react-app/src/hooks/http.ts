@@ -3,14 +3,24 @@ import { HttpClientMsal, IHttpClient } from '@equinor/fusion-framework-module-ht
 import { useMemo } from 'react';
 import { useModuleContext } from '../modules';
 
-type OtherString = string & {};
-export type AppHttpClient = '';
+export {
+    IHttpClient,
+    HttpClientMsal,
+    FetchRequestInit,
+} from '@equinor/fusion-framework-module-http';
 
-export { IHttpClient, HttpClientMsal };
-
-export const useHttpClient = <TType extends IHttpClient = HttpClientMsal>(
-    name: AppHttpClient | OtherString
-): TType => {
+/**
+ * Use a configured client from application modules
+ *
+ * creates a new client from configured client by name and memorizes the instance.
+ * if provided name changes a new client will be created
+ *
+ * @see {@link IHttpClient}
+ * @see {@link @equinor/fusion-framework-module-http.IHttpClientConfigurator.configureClient|configureClient}
+ * @template TType type-hint return type, useful if custom Ctor is provided in config
+ * @param name Named client from configuration
+ */
+export const useHttpClient = <TType extends IHttpClient = HttpClientMsal>(name: string): TType => {
     const module = useModuleContext();
     const client = useMemo(() => {
         if (module.http.hasClient(name)) {

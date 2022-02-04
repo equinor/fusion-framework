@@ -4,14 +4,20 @@ import { fromFetch } from 'rxjs/fetch';
 
 import { ProcessOperators } from './process-operators';
 
-export type HttpRequestInit = RequestInit & { uri: string; path: string };
+export type FetchRequest = RequestInit & {
+    uri: string;
+    path: string;
+};
+
+export type FetchRequestInit<TReturn = unknown, TRequest = FetchRequest, TResponse = Response> =
+    Omit<TRequest, 'uri' | 'path'> & {
+        selector?: (response: TResponse) => ObservableInput<TReturn>;
+    };
 
 /**
  * Extends @see {ProcessOperators} for pre-processing requests.
  */
-export class HttpRequestHandler<
-    T extends HttpRequestInit = HttpRequestInit
-> extends ProcessOperators<T> {
+export class HttpRequestHandler<T extends FetchRequest = FetchRequest> extends ProcessOperators<T> {
     /**
      * Set header that will apply on all requests done by consumer @see {HttpClient}
      * @param key - name of header
@@ -26,16 +32,17 @@ export class HttpRequestHandler<
     }
 }
 
-export type HttpClientCreateOptions<T extends HttpRequestInit = HttpRequestInit> = {
+export type HttpClientCreateOptions<T extends FetchRequest = FetchRequest> = {
     requestHandler: HttpRequestHandler<T>;
 };
 
 export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
 
-export interface IHttpClient<
-    TRequest extends HttpRequestInit = HttpRequestInit,
-    TResponse = Response
-> {
+/**
+ * @template TRequest request arguments @see {@link https://developer.mozilla.org/en-US/docs/Web/API/request|request}
+ * @template TResponse request arguments @see {@link https://developer.mozilla.org/en-US/docs/Web/API/response|response}
+ */
+export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = Response> {
     uri: string;
     /** pre-processor of requests */
     readonly requestHandler: HttpRequestHandler<TRequest>;
@@ -52,11 +59,13 @@ export interface IHttpClient<
      * Observable request.
      * Simplifies execution of request and
      * note: request will not be executed until subscribe!
+     *
      * @see {@link https://rxjs.dev/api/fetch/fromFetch|RXJS}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch|fetch}
      * @example
      * ```ts
      * // Observer changes of a input field
-     * const client = window.Fusion.createClient('my-client');
+     * const client = modules.http.createClient('my-client');
      * const input$ = fromEvent(document.getElementById('input'), 'input');
      * input$.pipe(
      *   // only call after no key input in .5s
@@ -80,10 +89,14 @@ export interface IHttpClient<
      * ).subscribe(console.log);
      * ```
      */
-    fetch(init: Omit<TRequest, 'uri'> | string): Observable<TResponse>;
+    fetch<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T>;
 
     /**
      * Fetch a resource as an promise
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch|fetch}
      * @example
      * ```ts
      * let controller: AbortController;
@@ -110,7 +123,10 @@ export interface IHttpClient<
      * });
      * ```
      */
-    fetchAsync(init: Omit<TRequest, 'uri'> | string): Promise<TResponse>;
+    fetchAsync<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T>;
 
     /**
      * Abort all ongoing request for current client
@@ -119,7 +135,7 @@ export interface IHttpClient<
 }
 
 /** Base http client for executing requests */
-export class HttpClient<TRequest extends HttpRequestInit = HttpRequestInit, TResponse = Response>
+export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = Response>
     implements IHttpClient<TRequest, TResponse>
 {
     readonly requestHandler: HttpRequestHandler<TRequest>;
@@ -153,9 +169,32 @@ export class HttpClient<TRequest extends HttpRequestInit = HttpRequestInit, TRes
         // called by children for constructor setup
     }
 
-    public fetch(init: Omit<TRequest, 'uri'> | string): Observable<TResponse> {
-        const options = typeof init === 'string' ? { path: init } : init;
-        return of({ ...options, uri: this._resolveUrl(options.path) } as TRequest).pipe(
+    public fetch<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T> {
+        return this._fetch(path, args);
+    }
+
+    public fetchAsync<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T> {
+        return firstValueFrom(this.fetch<T>(path, args));
+    }
+
+    public abort(): void {
+        this._abort$.next();
+    }
+
+    protected _fetch<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T> {
+        const { selector, ...options } = Object.assign({}, args || { selector: undefined }, {
+            path,
+        });
+        const response$ = of({ ...options, uri: this._resolveUrl(options.path) } as TRequest).pipe(
             /** prepare request, allow extensions to modify request  */
             switchMap((x) => this._prepareRequest(x)),
             /** push request to event buss */
@@ -166,17 +205,12 @@ export class HttpClient<TRequest extends HttpRequestInit = HttpRequestInit, TRes
             switchMap((x) => this._prepareResponse(x)),
             /** push response to event buss */
             tap((x) => this._response$.next(x)),
+
+            switchMap((x) => (selector ? selector(x) : Promise.resolve(x))),
             /** cancel request on abort signal */
             takeUntil(this._abort$)
         );
-    }
-
-    public fetchAsync(init: Omit<TRequest, 'uri'> | string): Promise<TResponse> {
-        return firstValueFrom(this.fetch(init));
-    }
-
-    public abort(): void {
-        this._abort$.next();
+        return response$ as unknown as Observable<T>;
     }
 
     protected _prepareRequest(init: TRequest): ObservableInput<TRequest> {
