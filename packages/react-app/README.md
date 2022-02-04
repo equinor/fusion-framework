@@ -1,62 +1,57 @@
 # Fusion React
 
-## Basic Setup
-```tsx
-import { registerReactApp } from '@equinor/fusion-react';
-
-const MyApp = () => <p>Hello Fusion</p>;
-
-export const setup = registerReactApp(MyApp);
-
-export default setup;
-```
-
 ## Configure
 ```tsx
 // config.ts
-export const config = (build) => {
-  build.http.configureClient(
-      'bar', 
-      'https://somewhere-test.com'
-    );
+import { AppConfigurator } from '@equinor/fusion-framework-react-app';
+const configCallback: AppConfigurator = (configurator) => {
+ configurator.http.configureClient(
+    'bar', {
+      baseUri: 'https://somewhere-test.com',
+      defaultScopes: ['foo/.default']
+    }
+  );
+};
+
+// App.tsx
+export const App = () => {
+  const client = useHttpClient('bar');
+  const [foo, setFoo] = useState('no value');
+  const onClick = useCallback(() => {
+    client.fetchAsync('api').then(x => x.json).then(setFoo);
+  }, [client]);
+  return <Button onClick={onClick}>{foo}</Button>
 }
 
 // index.ts
-export const setup = registerReactApp(MyApp, config);
+import { createApp } from '@equinor/fusion-framework-react-app';
+export const render = createApp(App, configCallback);
+export default render;
 ```
 
-## Api Client
+## Hooks
+
+### useHttpClient
 
 ```tsx
-import {useHttpClient} from '@equinor/fusion-react';
+import {useHttpClient} from '@equinor/fusion-framework-react-app/hooks';
 const App = () => {
-  // fusion registered clients should give intellisense.
-  const portalClient = useHttpClient('portal');
-  portalClient.fetch('api/something');
+  const fooClient = useHttpClient('foo');
+  
+  // using as stream
+  useEffect(() => {
+    const sub = client.fetch('api/all').subscribe((x) => {
+      setFoo(x.json());
+    });
+    return () => sub.unsubscribe();
+  },[fooClient]);
 
-  const customClient =  useHttpClient('foo');
-  portalClient.fetch('api/bar');
+  // using as promise
+  const barClient =  useHttpClient('bar');
+  useCallback(async() => {
+    const res = await portalClient.fetchAsync('api/bar');
+    console.log(res.json());
+  },[barClient]);
+  
 }
 ```
-
-### Configure
-```tsx
-const configure = (config) => {
-  config.http.configureClient(
-      'bar', 
-      'https://somewhere-test.com'
-    );
-}
-```
-
-> Declare custom client for intellisense
->```ts  
-> class MyClient extends HttpClient {}
->
-> declare module '@equinor/fusion-react' {
->   export interface CustomHttpClients {
->     foo: HttpClient,
->     bar: MyClient;
->   }
-> }  
-> ```
