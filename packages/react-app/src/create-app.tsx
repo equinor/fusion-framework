@@ -103,14 +103,7 @@ export const createApp =
                 default: () => (
                     <FrameworkProvider value={fusion}>
                         <ModuleProvider value={value}>
-                            <Router basename="apps/APP_KEY">
-                                <div>
-                                    <div>
-                                        <Route />
-                                    </div>
-                                </div>
-                                <Component />
-                            </Router>
+                            <Component />
                         </ModuleProvider>
                     </FrameworkProvider>
                 ),
