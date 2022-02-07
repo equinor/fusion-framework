@@ -7,7 +7,7 @@
     "install": "npm run bootstrap",
     "bootstrap": "lerna bootstrap",
     "lint": "eslint packages/*/src/**",
-    "build": "lerna run build",
+    "build": "lerna run build --ignore '@equinor/fusion-framework-test-app'",
     "build:clean": "lerna exec 'rm -rf dist' && npm run build",
     "test": "lerna run test",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
