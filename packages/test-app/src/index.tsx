@@ -1,13 +1,14 @@
-import { createApp, AppConfigurator } from '@equinor/fusion-framework-react-app';
+import { Suspense } from 'react';
+import ReactDOM from 'react-dom';
 
-import serviceDiscovery, {
-    ServiceDiscoveryModule,
-} from '@equinor/fusion-framework-module-service-discovery';
+import Framework from './FrameWork';
+import App from './App';
 
-const App = () => <p>ok</p>;
-
-const config: AppConfigurator<[ServiceDiscoveryModule]> = (config) => {
-    config.serviceDiscovery.clientKey;
-};
-
-export const render = createApp(App, config, [serviceDiscovery]);
+ReactDOM.render(
+    <Suspense fallback={<h1>Loading Framework</h1>}>
+        <Framework>
+            <App />
+        </Framework>
+    </Suspense>,
+    document.getElementById('root')
+);

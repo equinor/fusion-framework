@@ -24,6 +24,19 @@ export interface IHttpClientProvider<TClient extends HttpClient = HttpClient> {
     createCustomClient<T extends HttpClient>(key: string): T;
 }
 
+const isURL = (url: string) => {
+    const pattern = new RegExp(
+        '^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$',
+        'i'
+    ); // fragment locator
+    return pattern.test(url);
+};
+
 export class HttpClientProvider<TClient extends HttpClient>
     implements IHttpClientProvider<TClient>
 {
@@ -34,17 +47,22 @@ export class HttpClientProvider<TClient extends HttpClient>
     }
 
     public createClient(key: string): TClient {
-        if (!this.hasClient(key)) {
+        let config = this.config.clients[key];
+        if (!config && isURL(key)) {
+            config = { baseUri: key };
+        } else if (!config) {
             throw new ClientNotFoundException(`No registered http client for key [${key}]`);
         }
         const {
-            defaultUri,
+            baseUri,
+            defaultScopes = [],
             onCreate,
             ctor = this.config.defaultHttpClientCtor,
             requestHandler = this.config.defaultHttpRequestHandler,
-        } = this.config.clients[key];
+        } = config;
         const options = { requestHandler };
-        const instance = new ctor(defaultUri || '', options) as TClient;
+        const instance = new ctor(baseUri || '', options) as TClient;
+        Object.assign(instance, { defaultScopes });
         onCreate && onCreate(instance as TClient);
         return instance as TClient;
     }

@@ -4,12 +4,12 @@
   "description": "colleaction of fusion components",
   "private": true,
   "scripts": {
-    "install": "lerna bootstrap",
-    "lint": "lerna run lint",
-    "build": "lerna run build",
+    "install": "npm run bootstrap",
+    "bootstrap": "lerna bootstrap",
+    "lint": "eslint packages/*/src/**",
+    "build": "lerna run build --ignore '@equinor/fusion-framework-test-app'",
     "build:clean": "lerna exec 'rm -rf dist' && npm run build",
     "test": "lerna run test",
-    "lint": "eslint packages/*/src/**",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",
@@ -42,8 +42,9 @@
     "prettier": "^2.2.1",
     "ts-node": "^10.4.0",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.10",
-    "typescript": "^4.5.4"
+    "typedoc": "^0.22.11",
+    "typedoc-plugin-mermaid": "^1.6.0",
+    "typescript": "^4.5.5"
   },
   "peerDependencies": {
     "typescript": ">=4.5"

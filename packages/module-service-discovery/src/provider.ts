@@ -2,7 +2,12 @@ import { IServiceDiscoveryConfigurator } from './configurator';
 
 import type { Environment, Service } from './types';
 
-import type { IHttpClientProvider } from '@equinor/fusion-framework-module-http';
+import type { ModulesConfigType } from '@equinor/fusion-framework-module';
+import type {
+    HttpModule,
+    IHttpClient,
+    IHttpClientProvider,
+} from '@equinor/fusion-framework-module-http';
 
 export interface IServiceDiscoveryProvider {
     /**
@@ -13,6 +18,9 @@ export interface IServiceDiscoveryProvider {
      * service environment
      */
     readonly environment: Promise<Environment>;
+    readonly clientId: Promise<string>;
+
+    configureClient(name: string, config: ModulesConfigType<[HttpModule]>): Promise<void>;
 }
 
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
@@ -26,9 +34,29 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         return { ...this._getEnvironment() };
     }
 
+    get clientId(): Promise<string> {
+        return this.environment.then((x) => x.clientId);
+    }
+
     async resolveService(key: string): Promise<Service | undefined> {
         const { services } = await this._getEnvironment();
         return services.find((x) => x.key === key);
+    }
+
+    async configureClient(
+        name: string,
+        config: ModulesConfigType<[HttpModule]>,
+        onCreate?: (client: IHttpClient) => void
+    ): Promise<void> {
+        const service = await this.resolveService(name);
+        if (!service) {
+            throw Error(`Could not load configuration of service [${name}]`);
+        }
+        config.http.configureClient(name, {
+            baseUri: service.uri,
+            defaultScopes: service.defaultScopes,
+            onCreate,
+        });
     }
 
     protected _environment?: Environment;
@@ -43,8 +71,11 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         try {
             const client = this._http.createClient(this._config.clientKey);
             const result = await client.fetchAsync(this._config.uri);
-            return await result.json();
+            const env: Environment = await result.json();
+            // TODO - service should return this!
+            env.services.forEach((x) => (x.defaultScopes = [env.clientId + '/.default']));
             // TODO - catch me
+            return env;
         } catch (err) {
             console.error(err);
             throw err;

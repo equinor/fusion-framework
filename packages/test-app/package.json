@@ -1,14 +1,15 @@
 {
   "private": true,
   "name": "@equinor/fusion-framework-test-app",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.15",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
-    "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose",
-    "prepack": "npm run build"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +23,16 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-service-discovery": "^0.1.0-beta.1",
-    "@equinor/fusion-framework-react-app": "^0.1.0-beta.1"
+    "@equinor/fusion-framework-module-msal": "^0.1.0-beta.15",
+    "@equinor/fusion-framework-module-service-discovery": "^0.1.0-beta.15",
+    "@equinor/fusion-framework-module-telemetry": "^0.1.0-beta.11",
+    "@equinor/fusion-framework-react": "^0.1.0-beta.15",
+    "@equinor/fusion-framework-react-app": "^0.1.0-beta.15",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-query": "^3.34.12",
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.4"
   },
   "types": "index.d.ts",
   "typesVersions": {
@@ -42,5 +51,17 @@
   "peerDependencies": {
     "react": "^17.x",
     "react-dom": "^17.x"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

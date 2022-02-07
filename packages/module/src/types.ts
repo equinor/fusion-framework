@@ -31,7 +31,7 @@ export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
               string
           >];
       }
-    : Record<string, any>;
+    : never;
 
 export interface ModulesConfigurator<
     TModules extends Array<AnyModule>,
