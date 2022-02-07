@@ -1,0 +1,17 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.1.0 (2022-02-07)
+
+
+### Bug Fixes
+
+* **module-telemetry:** fix namechange of msal ([daea24f](https://github.com/equinor/fusion-framework/commit/daea24fc0af9eaba96d63361b4da3f30c99c9b8f))
+* **module-telemetry:** remove unused packages ([2ad74cc](https://github.com/equinor/fusion-framework/commit/2ad74cc6d8e0330e7724069c9cbcdb13a2f41b85))
+
+
+### Features
+
+* add module for telemetry ([3960165](https://github.com/equinor/fusion-framework/commit/39601651665516985c4f31726363b42eee1adcae))

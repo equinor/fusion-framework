@@ -1,0 +1,21 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.1.0 (2022-02-07)
+
+
+### Bug Fixes
+
+* **framework-react:** typehint ([75d3793](https://github.com/equinor/fusion-framework/commit/75d37936aca967d17d192977337bae99f6aea277))
+* **framework-react:** update name change ([e2382b7](https://github.com/equinor/fusion-framework/commit/e2382b70a7d7a8cd103cb33c2a839c5a34e315c9))
+* memo http clients ([f876acb](https://github.com/equinor/fusion-framework/commit/f876acb11e19d7802a28f58ce7d70bc76f777c5e))
+* **react:** fix typing ([9a2a51d](https://github.com/equinor/fusion-framework/commit/9a2a51dd76ed68ef95ef5c932555ae31165f16c2))
+* shared context ([f00732e](https://github.com/equinor/fusion-framework/commit/f00732ee3c1016be812204c7cf7b0205b2322075))
+
+
+### Features
+
+* add package for creating framework in react ([3b6858d](https://github.com/equinor/fusion-framework/commit/3b6858dc9f6b8c0efd6aa51275693e068ac72bef))
+* **react-app:** add hooks ([9bfcc5e](https://github.com/equinor/fusion-framework/commit/9bfcc5ebd721b19232e7896cee037637c716f09a))
