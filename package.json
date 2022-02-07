@@ -33,7 +33,7 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@equinor/eslint-config-fusion": "0.0.3",
+    "@equinor/eslint-config-fusion": "0.1.2",
     "eslint": "^7.17.0",
     "eslint-plugin-rxjs": "^3.3.0",
     "husky": "^4.3.7",
