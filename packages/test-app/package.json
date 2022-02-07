@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@equinor/fusion-framework-test-app",
-  "version": "0.1.0-beta.15",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -23,11 +23,11 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-msal": "^0.1.0-beta.15",
-    "@equinor/fusion-framework-module-service-discovery": "^0.1.0-beta.15",
-    "@equinor/fusion-framework-module-telemetry": "^0.1.0-beta.11",
-    "@equinor/fusion-framework-react": "^0.1.0-beta.15",
-    "@equinor/fusion-framework-react-app": "^0.1.0-beta.15",
+    "@equinor/fusion-framework-module-msal": "^0.1.0",
+    "@equinor/fusion-framework-module-service-discovery": "^0.1.0",
+    "@equinor/fusion-framework-module-telemetry": "^0.1.0",
+    "@equinor/fusion-framework-react": "^0.1.0",
+    "@equinor/fusion-framework-react-app": "^0.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-query": "^3.34.12",

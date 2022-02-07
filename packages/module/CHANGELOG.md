@@ -1,0 +1,18 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# 0.1.0 (2022-02-07)
+
+
+### Bug Fixes
+
+* **react-app:** fix AppConfigurator interface ([e5a8a21](https://github.com/equinor/fusion-framework/commit/e5a8a21ff6a558876e3db9a2596e891d9abea0cd))
+
+
+### Features
+
+* add package for creating framework modules ([4020a1e](https://github.com/equinor/fusion-framework/commit/4020a1e444d990e62f5fd4371302fff01b73616c))
+* **framework:** allow registering config, init hooks from config ([5f12718](https://github.com/equinor/fusion-framework/commit/5f1271817b73dccbb5c0b69389877c4278e6920e))
+* **reat-app:** add default modules ([74bf60e](https://github.com/equinor/fusion-framework/commit/74bf60ec07ea9573901d4160de5d4252e6e9c167))
