@@ -3,7 +3,7 @@ import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 export const Framework = createFrameworkProvider(async (config) => {
     console.debug('configuring framework');
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     // const serviceConfig: ServiceConfig | undefined = await fetch('/env/portal-client-id').then((x) => x.json());
     config.auth.configureDefault({
         tenantId: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',

@@ -10,6 +10,7 @@ import { AppList } from 'AppList';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 interface App {
     key: string;
@@ -19,7 +20,7 @@ interface App {
 const configCallback: AppConfigurator = async (appModuleConfig, frameworkApi) => {
     console.debug(0, 'configuring app', frameworkApi, appModuleConfig);
     await frameworkApi.modules.serviceDiscovery.configureClient('portal', appModuleConfig);
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 };
 
 const queryClient = new QueryClient();
@@ -62,7 +63,7 @@ export const App = () => {
     const framework = useFramework();
     const Component = configurator(framework, {});
     return (
-        <Suspense fallback={<h1>Loading App</h1>}>
+        <Suspense fallback={<StarProgress text="Loading Application" />}>
             <Component />
         </Suspense>
     );
