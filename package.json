@@ -49,18 +49,7 @@
   "peerDependencies": {
     "typescript": ">=4.5"
   },
-  "workspaces": [
-    "packages/framework",
-    "packages/framework-react",
-    "packages/module",
-    "packages/module-app",
-    "packages/module-http",
-    "packages/module-msal",
-    "packages/module-service-discovery",
-    "packages/module-telemetry",
-    "packages/react-app",
-    "packages/test-app"
-  ],
+  "workspaces": ["packages/*"],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
