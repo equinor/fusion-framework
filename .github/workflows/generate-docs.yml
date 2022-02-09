@@ -33,10 +33,13 @@ jobs:
 
       - name: Setup node
         uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+          node-version: '16'
 
       - name: Install Node Dependencies
         if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install
 
       - name: Build project
         run: npm run build

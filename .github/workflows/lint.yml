@@ -18,11 +18,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           cache: 'npm'
+          node-version: '16'
 
       - name: Install Node Dependencies
         if: steps.cache-node.outputs.cache-hit != 'true'
         run: |
-          npm ci
+          npm install
           npm run bootstrap
 
       - name: Build project
