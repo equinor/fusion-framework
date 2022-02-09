@@ -51,6 +51,6 @@ export const createModuleProvider: ModuleProviderCreator = async <
 /**
  * @template T - type-hint which module types that are in context, defaults to standard [[AppModulesInstance]]
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-explicit-any
 export const useModuleContext = <T extends any = AppModulesInstance>(): T =>
     useContext(moduleContext) as T;

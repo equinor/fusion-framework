@@ -27,7 +27,9 @@ export const module: MsalModule = {
                 const { scopes = [] } = request;
                 if (scopes.length) {
                     /** TODO should be try catch, check caller for handling */
-                    const token = await modules.auth.acquireToken({ scopes });
+                    const token = await modules.auth.acquireToken({
+                        scopes,
+                    });
                     if (token) {
                         const headers = new Headers(request.headers);
                         headers.set('Authorization', `Bearer ${token.accessToken}`);

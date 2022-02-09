@@ -2,7 +2,9 @@ import { Configuration, IPublicClientApplication } from '@azure/msal-browser';
 import { AuthClient } from './client';
 import { normalizeUri } from './util/url';
 
-export type AuthClientConfig = Configuration & { auth: Partial<Configuration['auth']> };
+export type AuthClientConfig = Configuration & {
+    auth: Partial<Configuration['auth']>;
+};
 
 /**
  * Creates an authentication client with basic config.

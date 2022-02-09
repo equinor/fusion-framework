@@ -194,7 +194,10 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         const { selector, ...options } = Object.assign({}, args || { selector: undefined }, {
             path,
         });
-        const response$ = of({ ...options, uri: this._resolveUrl(options.path) } as TRequest).pipe(
+        const response$ = of({
+            ...options,
+            uri: this._resolveUrl(options.path),
+        } as TRequest).pipe(
             /** prepare request, allow extensions to modify request  */
             switchMap((x) => this._prepareRequest(x)),
             /** push request to event buss */

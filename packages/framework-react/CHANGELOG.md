@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.1 (2022-02-09)
+
+
+### Bug Fixes
+
+* **framework-react:** export Fusion ([94b150f](https://github.com/equinor/fusion-framework/commit/94b150ff9d1b5ad27c12f19160371edb464c88de))
+
+
+
+
+
 # 0.1.0 (2022-02-07)
 
 
