@@ -14,10 +14,7 @@ import type {
  * @param modules - modules to configure
  * @param ref - reference instance (parent module instance)
  */
-export const initializeModules = async <
-    TModules extends Array<AnyModule>,
-    TInstance extends any = any
->(
+export const initializeModules = async <TModules extends Array<AnyModule>, TInstance = any>(
     configure: ModulesConfigurator<TModules, TInstance>,
     modules: TModules,
     ref?: TInstance

@@ -33,10 +33,7 @@ export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
       }
     : never;
 
-export interface ModulesConfigurator<
-    TModules extends Array<AnyModule>,
-    TRef extends any = ModuleInstance
-> {
+export interface ModulesConfigurator<TModules extends Array<AnyModule>, TRef = ModuleInstance> {
     (config: ModulesConfig<ModulesType<TModules>>, ref?: TRef): void | Promise<void>;
 }
 
