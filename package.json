@@ -12,7 +12,8 @@
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",
-    "yalc": "npm run build && lerna exec 'yalc push --private'"
+    "yalc": "npm run build && lerna exec 'yalc push --private'",
+    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 ."
   },
   "repository": {
     "type": "git",
