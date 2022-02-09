@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.1.0...@equinor/fusion-framework-test-app@0.2.0) (2022-02-09)
+
+
+### Features
+
+* add progress indicator ([fce74eb](https://github.com/equinor/fusion-framework/commit/fce74ebceef39da1e4d2f82667adc68b6a7c5489))
+
+
+
+
+
 # 0.1.0 (2022-02-07)
 
 
