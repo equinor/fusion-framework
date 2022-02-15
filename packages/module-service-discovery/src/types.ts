@@ -1,18 +1,19 @@
-export type Environment = {
-    environmentName: string;
+export type EnvironmentResponse = {
     clientId: string;
-    resourceV2: string;
-    resourceV1: string;
-    type: string;
-    services: Service[];
+    services: Array<{
+        key: string;
+        uri: string;
+    }>;
+};
+
+export type Environment = {
+    type?: string;
+    services: Record<string, Service>;
 };
 
 export type Service = {
-    key: string;
-    name: null | string;
-    serviceName: null;
+    name?: null | string;
+    clientId?: string;
     uri: string;
-    type: 'Service';
-    internal: boolean;
     defaultScopes: string[];
 };

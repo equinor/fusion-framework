@@ -1,4 +1,8 @@
-# Fusion React
+# Fusion React App
+
+Package for developing applications that uses the `@equinor/fusion-framework`.
+
+[API documentation](https://equinor.github.io/fusion-framework/modules/_equinor_fusion_framework_react_app.html)
 
 ## Configure
 ```tsx

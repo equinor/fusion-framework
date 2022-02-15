@@ -1,6 +1,7 @@
 name: Release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -19,8 +20,8 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
           cache: 'npm'
+          node-version: '16'
           registry-url: https://registry.npmjs.org
 
       - name: Config git user
@@ -35,7 +36,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Install Node Dependencies
-        run: npm ci
+        run: npm install
         env:
           CI: TRUE
 
