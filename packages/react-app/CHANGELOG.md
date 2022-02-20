@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.1.2...@equinor/fusion-framework-react-app@0.2.0) (2022-02-15)
+
+
+### Features
+
+* **module-service-discovery:** allow custom service discovery ([8917e4e](https://github.com/equinor/fusion-framework/commit/8917e4e3053b824ac8d878b0bfbe6a22efd56c3b))
+
+
+
+
+
 ## [0.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.1.1...@equinor/fusion-framework-react-app@0.1.2) (2022-02-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
