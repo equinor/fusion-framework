@@ -28,7 +28,7 @@
     "@equinor/fusion-framework-module-telemetry": "file:../module-telemetry",
     "@equinor/fusion-framework-react": "file:../framework-react",
     "@equinor/fusion-framework-react-app": "file:../react-app",
-    "@equinor/fusion-react-progress-indicator": "^0.0.2",
+    "@equinor/fusion-react-progress-indicator": "^0.0.4",
     "@equinor/fusion-react-styles": "^0.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
