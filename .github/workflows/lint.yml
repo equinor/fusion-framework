@@ -24,7 +24,7 @@ jobs:
         run: npm -v
 
       - name: Install Node Dependencies
-        run: npm ci --workspaces
+        run: npm install
 
       - name: Build project
         run: npm run build
