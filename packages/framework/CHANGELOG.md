@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@1.1.2...@equinor/fusion-framework@1.1.3) (2022-02-23)
+
+
+### Bug Fixes
+
+* **module-msal:** auth client id check ([#27](https://github.com/equinor/fusion-framework/issues/27)) ([907460e](https://github.com/equinor/fusion-framework/commit/907460e3e63e777f6766dcc044cad7078d7ab747))
+
+
+
+
+
 ## [1.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@1.1.1...@equinor/fusion-framework@1.1.2) (2022-02-15)
 
 **Note:** Version bump only for package @equinor/fusion-framework
