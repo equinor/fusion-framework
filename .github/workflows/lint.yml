@@ -21,10 +21,7 @@ jobs:
           node-version: '16'
 
       - name: Install Node Dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: |
-          npm install
-          npm run bootstrap
+        run: npm ci
 
       - name: Build project
         run: npm run build
