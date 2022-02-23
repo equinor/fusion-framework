@@ -35,7 +35,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Install Node Dependencies
-        run: npm install
+        run: |
+          npm install
+          git add package-lock.json
+          git commit -m "build(release): update package-lock"
+          git push
         env:
           CI: TRUE
 
