@@ -10,6 +10,9 @@
     {
       "path": "../module"
     },
+    {
+      "path": "../module/module-http"
+    },
    
   ],
   "include": [
