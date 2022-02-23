@@ -12,6 +12,7 @@
       "./packages/module",
       "./packages/module-http",
       "./packages/module-msal",
+      "./packages/module-msal/client",
       "./packages/module-service-discovery",
       "./packages/react-app",
       "./packages/react-app/hooks",

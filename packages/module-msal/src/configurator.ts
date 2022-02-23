@@ -10,13 +10,33 @@ export type AuthClientOptions = {
 const DEFAULT_CONFIG_KEY = 'default';
 
 export interface IAuthConfigurator {
+    /**
+     * get default configuration for module
+     */
     readonly defaultConfig: AuthClientOptions | undefined;
+
+    /**
+     * Get named config by key
+     * @param name key for config
+     */
     getClientConfig(name: string): AuthClientOptions;
+
+    /**
+     * Create named config
+     * @param name key for config
+     * @param options config options
+     */
     configureClient(name: string, options: AuthClientOptions): AuthConfigurator;
+
+    /**
+     * Create default module config
+     * @param options config options
+     */
     configureDefault(options: AuthClientOptions): void;
 }
 
 export class AuthConfigurator implements IAuthConfigurator {
+    /** internal map of keyed configs */
     protected _configs: Record<string, AuthClientOptions> = {};
 
     get defaultConfig(): AuthClientOptions | undefined {

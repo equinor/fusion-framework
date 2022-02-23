@@ -20,18 +20,25 @@ export interface IAuthProvider {
      * Get auth client by registered config name
      */
     getClient(name: string): AuthClient;
+
     /**
      * Create auth client by registered config name
+     * @param name name of configured client, default to defaultConfig {@link IAuthConfigurator.configureDefault}
      */
     createClient(name?: string): AuthClient;
+
     /**
      * Acquire token from default auth client
+     * @param req Auth request options
      */
     acquireToken(req: AuthRequest): ReturnType<AuthClient['acquireToken']>;
+
     /**
      * Acquire access token from default auth client
+     * @param req Auth request options
      */
     acquireAccessToken(req: AuthRequest): Promise<string | undefined>;
+
     /**
      * Login to default auth client
      */
@@ -44,7 +51,7 @@ export interface IAuthProvider {
 
 const DEFAULT_CLIENT_NAME = 'default';
 
-export class AuthProvider {
+export class AuthProvider implements IAuthProvider {
     protected _clients: Record<string, AuthClient> = {};
     get defaultClient(): AuthClient {
         return this.getClient(DEFAULT_CLIENT_NAME);
