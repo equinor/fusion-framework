@@ -5,11 +5,20 @@ import {
     SsoSilentRequest,
     PopupRequest,
     RedirectRequest,
-    AccountInfo,
+    AccountInfo as AccountInfoBase,
 } from '@azure/msal-browser';
 
 import { AuthBehavior, defaultBehavior } from './behavior';
 import { AuthRequest } from './request';
+
+export type IdTokenClaims = {
+    aud: string;
+    exp: number;
+};
+
+export type AccountInfo = AccountInfoBase & {
+    idTokenClaims?: IdTokenClaims;
+};
 
 /**
  * ### Simple extension of Microsoft`s authentication client.
@@ -50,7 +59,19 @@ export class AuthClient extends PublicClientApplication {
      */
     get account(): AccountInfo | undefined {
         const accounts = this.getAllAccounts();
-        return accounts.find((a) => (a.idTokenClaims as { aud: string })?.aud === this.clientId);
+        const account = accounts.find(
+            (a) => (a as AccountInfo).idTokenClaims?.aud === this.clientId
+        );
+        return account as AccountInfo;
+    }
+
+    get hasValidClaims(): boolean {
+        const { idTokenClaims } = this.account ?? {};
+        if (idTokenClaims) {
+            const epoch = Math.ceil(Date.now() / 1000);
+            return idTokenClaims.exp > epoch;
+        }
+        return false;
     }
 
     /**
@@ -95,7 +116,8 @@ export class AuthClient extends PublicClientApplication {
         if (loginHint && silent) {
             this.logger.verbose('Attempting to login in silently');
             try {
-                return this.ssoSilent(request as SsoSilentRequest);
+                const res = await this.ssoSilent(request as SsoSilentRequest);
+                return res;
             } catch {
                 this.logger.verbose('Silent login attempt failed');
             }
@@ -135,7 +157,8 @@ export class AuthClient extends PublicClientApplication {
         if (silent && account) {
             this.logger.verbose('Attempting to acquire token in silently');
             try {
-                return this.acquireTokenSilent({ account, ...options });
+                const token = await this.acquireTokenSilent({ account, ...options });
+                return token;
             } catch (err) {
                 this.logger.info(
                     'Expected to navigate away from the current page but timeout occurred.'
