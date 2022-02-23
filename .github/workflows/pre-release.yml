@@ -21,7 +21,6 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          cache: 'npm'
           node-version: '16'
           registry-url: https://registry.npmjs.org
 
@@ -33,7 +32,7 @@ jobs:
 
       - name: Install Node Dependencies
         if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm install
+        run: npm ci
         env:
           CI: TRUE
 

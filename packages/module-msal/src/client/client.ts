@@ -50,7 +50,7 @@ export class AuthClient extends PublicClientApplication {
      */
     get account(): AccountInfo | undefined {
         const accounts = this.getAllAccounts();
-        return accounts.find((a) => (a.tenantId = this.tenantId));
+        return accounts.find((a) => (a.idTokenClaims as { aud: string })?.aud === this.clientId);
     }
 
     /**
