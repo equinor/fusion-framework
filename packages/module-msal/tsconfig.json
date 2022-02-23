@@ -11,7 +11,7 @@
       "path": "../module"
     },
     {
-      "path": "../module/module-http"
+      "path": "../module-http"
     },
    
   ],
