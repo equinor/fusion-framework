@@ -1,14 +1,10 @@
 const fs = require('fs');
 const lockFile = require('./package-lock.json');
 
-for (const [name, info] of Object.entries(lockFile.packages)) {
-  if (name.match(/^packages/)) {
-    delete lockFile.dependencies[name];
-    delete lockFile.packages[name];
-    delete lockFile.packages[info.name];
-    delete lockFile.packages[`node_modules/${info.name}`];
-    console.log(`removed from lock file [${name}]`);
-  }
+const pattern = /^node_modules\/@equinor\/fusion-framework|^packages/;
+for (const dep of Object.keys(lockFile.packages).filter(x => x.match(pattern))) {
+  delete lockFile.packages[dep];
+  console.info(`removed from lock file [${dep}]`);
 }
 
 fs.writeFileSync('./package-lock.json', JSON.stringify(lockFile, null, 2));
