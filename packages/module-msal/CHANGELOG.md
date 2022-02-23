@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.6...@equinor/fusion-framework-module-msal@0.1.7) (2022-02-23)
+
+
+### Bug Fixes
+
+* **module-msal:** await auth ([#33](https://github.com/equinor/fusion-framework/issues/33)) ([d4c3dbd](https://github.com/equinor/fusion-framework/commit/d4c3dbd0afc6a3adebe23853ccd363d1bf37f131))
+
+
+
+
+
 ## [0.1.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.5...@equinor/fusion-framework-module-msal@0.1.6) (2022-02-23)
 
 
