@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.1 (2022-03-14)
+
+
+### Bug Fixes
+
+* **service-discovery:** include uri in service ([#46](https://github.com/equinor/fusion-framework/issues/46)) ([3287d69](https://github.com/equinor/fusion-framework/commit/3287d69e23a5bccce8a9e762886340733f9c5447))
+
+
+
+
+
 # [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.1.1...@equinor/fusion-framework-module-service-discovery@0.2.0) (2022-02-15)
 
 
