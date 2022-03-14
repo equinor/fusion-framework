@@ -15,6 +15,7 @@ const defaultSelector = async (response: Response): Promise<Environment> => {
         return Object.assign(acc, {
             [service.key]: {
                 clientId: env.clientId,
+                uri: service.uri,
                 defaultScopes: [env.clientId + '/.default'],
             },
         });
