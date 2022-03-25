@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.8 (2022-03-25)
+
+
+### Bug Fixes
+
+* **modules-msal:** change regex group selector ([ebaa118](https://github.com/equinor/fusion-framework/commit/ebaa11849303e68f67544f8db57727673f821744))
+
+
+
+
+
 ## [0.1.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.6...@equinor/fusion-framework-module-msal@0.1.7) (2022-02-23)
 
 
