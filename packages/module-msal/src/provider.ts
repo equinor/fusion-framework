@@ -94,9 +94,19 @@ export class AuthProvider implements IAuthProvider {
     async handleRedirect(): ReturnType<AuthClient['handleRedirectPromise']> {
         const { redirectUri } = this.defaultConfig || {};
         if (window.location.pathname === redirectUri) {
-            const url = this.defaultClient.requestOrigin || '';
-            await this.defaultClient.handleRedirectPromise();
-            window.location.replace(url);
+            const client = this.defaultClient;
+            const logger = client.getLogger();
+            const { requestOrigin } = client;
+
+            await client.handleRedirectPromise();
+            if (requestOrigin === redirectUri) {
+                logger.warning(
+                    `detected callback loop from url ${redirectUri}, redirecting to root`
+                );
+                window.location.replace('/');
+            } else {
+                window.location.replace(requestOrigin || '/');
+            }
         }
         return null;
     }
