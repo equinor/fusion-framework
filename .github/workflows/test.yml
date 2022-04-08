@@ -23,10 +23,8 @@ jobs:
         run: npm ci
 
       - name: Test Code
-        uses: pomekhin/jest-github-action@1.1.5
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        uses: mattallty/jest-github-action@v1.0.3
         with:
           changes-only: true
-          min-coverage: 90
-          working-directory: '.'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
