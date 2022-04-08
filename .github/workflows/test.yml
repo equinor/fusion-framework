@@ -24,7 +24,7 @@ jobs:
 
       - name: Test Code
         uses: mattallty/jest-github-action@v1.0.3
-        with:
-          changes-only: true
+        # with:
+        #   changes-only: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
