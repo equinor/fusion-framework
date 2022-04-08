@@ -88,6 +88,10 @@ export const createApp =
     (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> =>
         lazy(async () => {
             modules ??= [] as unknown as TModules;
+            // const client = fusion.modules.http.createClient('portal');
+            // client.fetchAsync('/api/apps/${key}/config');
+            // const env = await fusion.modules.serviceDiscovery.environment).services;
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const configurator = async (config: any) => {
                 if (configure) {

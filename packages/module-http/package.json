@@ -21,7 +21,9 @@
     "directory": "packages/modules-http"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.1.1"
+    "@equinor/fusion-framework-module": "^0.1.1",
+    "@equinor/fusion-react-observable": "^1.1.2",
+    "deep-equal": "^2.0.5"
   },
   "types": "index.d.ts",
   "typesVersions": {
@@ -32,6 +34,7 @@
     }
   },
   "devDependencies": {
+    "@types/deep-equal": "^1.0.1",
     "rxjs": "^7.5.3"
   }
 }
