@@ -18,6 +18,7 @@
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",
     "yalc": "npm run build && lerna exec 'yalc push --private'",
     "test": "jest",
+    "test:ci": "npm test -- --runInBand",
     "test:coverage": "jest --coverage",
     "test:show": "http-server coverage/lcov-report",
     "test:pack": "npm run clean && npm ci && npx lerna exec 'npm pack --dry-run'",
