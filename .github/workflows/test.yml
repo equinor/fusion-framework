@@ -1,4 +1,4 @@
-name: Lint project files
+name: Test project files
 
 on: 
   pull_request:
