@@ -22,9 +22,6 @@
         "paths": {
             "@equinor/fusion-framework-*": [
                 "./*/src"
-            ],
-            "@equinor/fusion-observable": [
-                "./observable/src"
             ]
         },
     },
