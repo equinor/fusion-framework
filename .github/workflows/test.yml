@@ -7,7 +7,7 @@ on:
       - '**.tsx'
 
 jobs:
-  eslint:
+  jest:
     runs-on: ubuntu-latest
 
     steps:
