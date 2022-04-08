@@ -22,12 +22,12 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
-      - run: touch jest.results.json
+      - run: npm test -- --runInBand --testLocationInResults --json --coverage --outputFile="jest.results.json"
 
       - name: Test Code
         uses: mattallty/jest-github-action@v1.0.3
         with:
           changes-only: true
-          test-command: "npm run test:ci"
+          test-command: "echo done"
         env:
           GITHUB_TOKEN: ${{ github.token }}
