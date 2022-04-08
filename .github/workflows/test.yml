@@ -24,6 +24,7 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - run: npm test -- --runInBand --changedSince=main --testLocationInResults --json --coverage --outputFile="jest.results.json"
 
       - name: Test Code
