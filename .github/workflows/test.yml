@@ -22,6 +22,8 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
+      - run: touch jest.results.json
+
       - name: Test Code
         uses: mattallty/jest-github-action@v1.0.3
         with:
