@@ -1,0 +1,56 @@
+{
+  "name": "@equinor/fusion-observable",
+  "version": "0.0.0",
+  "description": "WIP",
+  "private": false,
+  "keywords": [
+    "observable",
+    "react",
+    "fusion",
+    "equinor"
+  ],
+  "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
+  "license": "ISC",
+  "main": "dist/esm/index.js",
+  "directories": {
+    "dist": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:show": "http-server coverage/lcov-report",
+    "lint": "eslint --ext .ts,.tsx,.js src/",
+    "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
+    "prepack": "npm run build"
+  },
+  "bugs": {
+    "url": "https://github.com/equinor/fusion-framework/issues"
+  },
+  "dependencies": {
+    "@equinor/fusion-react-utils": "^1.2.6",
+    "rxjs": "^7.5.5"
+  },
+  "devDependencies": {
+    "@testing-library/react-hooks": "^7.0.2",
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "react": "^18.0.0",
+    "react-test-renderer": "^18.0.0",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.3"
+  },
+  "optionalDependencies": {
+    "react": ">16.8"
+  }
+}
