@@ -28,3 +28,4 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           changes-only: true
+          working-directory: './'
