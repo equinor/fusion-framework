@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Test Code
-        uses: mattallty/jest-github-action@v1.1.15
+        uses: mattallty/jest-github-action@1.1.15
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
