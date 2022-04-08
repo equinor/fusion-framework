@@ -29,3 +29,4 @@ jobs:
         with:
           changes-only: true
           min-coverage: 90
+          working-directory: '.'
