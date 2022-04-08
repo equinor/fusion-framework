@@ -8,6 +8,7 @@ module.exports = {
     }
   },
   coveragePathIgnorePatterns: [
+    "test-app",
     "node_modules",
     "index.ts",
     "types.ts"
