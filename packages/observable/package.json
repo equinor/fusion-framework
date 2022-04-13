@@ -38,7 +38,7 @@
     "url": "https://github.com/equinor/fusion-framework/issues"
   },
   "dependencies": {
-    "@equinor/fusion-react-utils": "^1.2.6",
+    "@equinor/fusion-react-utils": "^2.0.0",
     "rxjs": "^7.5.5"
   },
   "devDependencies": {
