@@ -16,3 +16,5 @@ __Expect breaking changes untill stable release!__
 
 ![npm](https://img.shields.io/npm/v/@equinor/fusion-framework-react?color=%230c0&label=%40equinor%2Ffusion-framework-react)
 
+PS! docs not up to date, fails to build due to max-mem, working on solution to fragment build of repo
+

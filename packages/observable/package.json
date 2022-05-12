@@ -29,6 +29,7 @@
     "build": "tsc -b",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "npm test -- --coverage ",
     "test:show": "http-server coverage/lcov-report",
     "lint": "eslint --ext .ts,.tsx,.js src/",
     "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
@@ -38,11 +39,13 @@
     "url": "https://github.com/equinor/fusion-framework/issues"
   },
   "dependencies": {
-    "rxjs": "^7.5.5"
+    "rxjs": "^7.5.5",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^7.0.2",
     "@types/jest": "^27.4.1",
+    "@types/uuid": "^8.3.4",
     "jest": "^27.5.1",
     "react": "^18.0.0",
     "react-test-renderer": "^18.0.0",

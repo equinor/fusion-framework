@@ -24,7 +24,7 @@ export type ExtractAction<
 export type Effect<TAction extends Action, TState = unknown> = (
     action: TAction,
     state: TState
-) => ObservableInput<TAction | void>;
+) => ObservableInput<TAction | void> | TAction | void;
 
 export type Epic<TAction extends Action, TState = unknown> = (
     action: Observable<TAction>,
