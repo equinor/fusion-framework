@@ -6,7 +6,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "lint": "eslint packages/*/src/**",
-    "clean": "npm run clean:modules && npm run clean:build && npm run clean:lock",
+    "clean": "npm run clean:modules && npm run clean:build",
     "clean:modules": "rm -rf packages/*/node_modules && rm -rf node_modules",
     "clean:build": "rm -rf packages/*/dist",
     "build": "npm run build --workspaces --if-present",
@@ -54,9 +54,9 @@
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.12",
+    "typedoc": "^0.22.15",
     "typedoc-plugin-mermaid": "^1.6.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "typescript": ">=4.5"

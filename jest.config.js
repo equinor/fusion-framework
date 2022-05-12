@@ -7,6 +7,9 @@ module.exports = {
       lines: 75
     }
   },
+  testPathIgnorePatterns: [
+    '__mocks__'
+  ],
   coveragePathIgnorePatterns: [
     "test-app",
     "node_modules",
