@@ -9,3 +9,5 @@ export const switchMapAction =
     ): OperatorFunction<TAction, TResult> =>
     (source) =>
         source.pipe(filterAction(type), switchMap(fn));
+
+export default switchMapAction;

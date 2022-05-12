@@ -34,7 +34,7 @@ describe('useObservableEffect', () => {
         });
 
         act(() => {
-            result.current.dispatch({ type: 'requestAdd', payload: 1 });
+            result.current.next({ type: 'requestAdd', payload: 1 });
             expect(result.current.value.sum).toBe(0);
         });
 

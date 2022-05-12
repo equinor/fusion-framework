@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ReactiveSubject } from '../ReactiveSubject';
+import { ReactiveObservable } from '../ReactiveObservable';
 
-import { Action, Reducer } from '../types';
+import type { Action, Reducer } from '../types';
 
 export const useObservable = <S, A extends Action = Action>(
     reducer: Reducer<S, A>,
     initial: S
-): ReactiveSubject<S, A> => useState(new ReactiveSubject(reducer, initial))[0];
+): ReactiveObservable<S, A> => useState(new ReactiveObservable(reducer, initial))[0];

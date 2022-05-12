@@ -1,5 +1,8 @@
-export * from './ReactiveSubject';
+/**
+ * [[include:observable/README.MD]]
+ * @module
+ */
 
-// export * from './react';
-// export * from './operators';
+export * from './ReactiveObservable';
+export * from './ActionError';
 export * from './types';
