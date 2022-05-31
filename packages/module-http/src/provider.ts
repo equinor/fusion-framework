@@ -1,5 +1,5 @@
 import { HttpClient } from './client';
-import { IHttpClientConfigurator } from './configurator';
+import { HttpClientOptions, IHttpClientConfigurator } from './configurator';
 
 export class ClientNotFoundException extends Error {
     constructor(message: string) {
@@ -12,6 +12,7 @@ export interface IHttpClientProvider<TClient extends HttpClient = HttpClient> {
     hasClient(key: string): boolean;
     /** create a new http client */
     createClient(key: string): TClient;
+    createClient(key: HttpClientOptions<TClient>): TClient;
     /**
      * Class cast creation of custom client
      * @example
@@ -46,20 +47,15 @@ export class HttpClientProvider<TClient extends HttpClient>
         return Object.keys(this.config.clients).includes(key);
     }
 
-    public createClient(key: string): TClient {
-        let config = this.config.clients[key];
-        if (!config && isURL(key)) {
-            config = { baseUri: key };
-        } else if (!config) {
-            throw new ClientNotFoundException(`No registered http client for key [${key}]`);
-        }
+    public createClient(keyOrConfig: string | HttpClientOptions<TClient>): TClient {
+        const config = this._resolveConfig(keyOrConfig);
         const {
             baseUri,
             defaultScopes = [],
             onCreate,
             ctor = this.config.defaultHttpClientCtor,
             requestHandler = this.config.defaultHttpRequestHandler,
-        } = config;
+        } = config as HttpClientOptions<TClient>;
         const options = { requestHandler };
         const instance = new ctor(baseUri || '', options) as TClient;
         Object.assign(instance, { defaultScopes });
@@ -69,5 +65,21 @@ export class HttpClientProvider<TClient extends HttpClient>
 
     public createCustomClient<T extends HttpClient>(key: string): T {
         return this.createClient(key) as unknown as T;
+    }
+
+    protected _resolveConfig(
+        keyOrConfig: string | HttpClientOptions<TClient>
+    ): HttpClientOptions<TClient> {
+        if (typeof keyOrConfig === 'string') {
+            const config = this.config.clients[keyOrConfig];
+            if (!config && isURL(keyOrConfig)) {
+                return { baseUri: keyOrConfig };
+            } else if (!config) {
+                throw new ClientNotFoundException(
+                    `No registered http client for key [${keyOrConfig}]`
+                );
+            }
+        }
+        return keyOrConfig as HttpClientOptions<TClient>;
     }
 }
