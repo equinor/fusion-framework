@@ -17,8 +17,8 @@ export type ServiceDiscoveryModule = Module<
 export const module: ServiceDiscoveryModule = {
     name: 'serviceDiscovery',
     configure: () => new ServiceDiscoveryConfigurator(),
-    initialize: ({ serviceDiscovery: config }, instance) =>
-        new ServiceDiscoveryProvider(config, instance.http),
+    initialize: ({ serviceDiscovery: config }, modules) =>
+        new ServiceDiscoveryProvider(config, modules.http),
     postConfigure: (config) => {
         const { clientKey } = config.serviceDiscovery;
         if (!config.http.hasClient(clientKey)) {
