@@ -3,16 +3,20 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
 import { ProcessOperators } from './process-operators';
+import { jsonSelector } from './selector';
 
 export type FetchRequest = RequestInit & {
     uri: string;
     path: string;
 };
 
-export type FetchRequestInit<TReturn = unknown, TRequest = FetchRequest, TResponse = Response> =
-    Omit<TRequest, 'uri' | 'path'> & {
-        selector?: (response: TResponse) => ObservableInput<TReturn>;
-    };
+export type FetchRequestInit<
+    TReturn = unknown,
+    TRequest = FetchRequest,
+    TResponse = Response
+> = Omit<TRequest, 'uri' | 'path'> & {
+    selector?: (response: TResponse) => ObservableInput<TReturn>;
+};
 
 /**
  * Extends @see {ProcessOperators} for pre-processing requests.
@@ -128,6 +132,16 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
         init?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T>;
 
+    json<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T>;
+
+    jsonAsync<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T>;
+
     /**
      * Abort all ongoing request for current client
      */
@@ -181,6 +195,28 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T> {
         return firstValueFrom(this.fetch<T>(path, args));
+    }
+
+    public json<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T> {
+        const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
+        const selector = args?.selector ?? jsonSelector;
+        const header = new Headers(args?.headers);
+        header.append('Content-Type', 'application/json');
+        return this.fetch(path, {
+            ...args,
+            body,
+            selector,
+        } as FetchRequestInit<T, TRequest, TResponse>);
+    }
+
+    public jsonAsync<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T> {
+        return firstValueFrom(this.json<T>(path, args));
     }
 
     public abort(): void {

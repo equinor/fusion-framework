@@ -11,7 +11,7 @@ interface HttpClientConstructor<TClient extends IHttpClient> {
     ): TClient;
 }
 
-interface HttpClientOptions<TClient extends IHttpClient> {
+export interface HttpClientOptions<TClient extends IHttpClient> {
     baseUri?: string;
     defaultScopes?: string[];
     ctor?: HttpClientConstructor<TClient>;
