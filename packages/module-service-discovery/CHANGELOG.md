@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.2 (2022-05-31)
+
+
+### Bug Fixes
+
+* **module-service-discovery:** update interfaces ([e1b6864](https://github.com/equinor/fusion-framework/commit/e1b686466ae28204e1d605cce0441dab69787e48))
+
+
+
+
+
 ## 0.2.1 (2022-03-14)
 
 
