@@ -27,5 +27,8 @@
         "dist/types/*"
       ]
     }
+  },
+  "dependencies": {
+    "rxjs": "^7.5.5"
   }
 }
