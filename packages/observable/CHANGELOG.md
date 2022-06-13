@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@0.1.2...@equinor/fusion-observable@0.1.3) (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-observable
+
+
+
+
+
 ## 0.1.2 (2022-06-13)
 
 
