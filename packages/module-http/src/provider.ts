@@ -79,6 +79,7 @@ export class HttpClientProvider<TClient extends HttpClient>
                     `No registered http client for key [${keyOrConfig}]`
                 );
             }
+            return config;
         }
         return keyOrConfig as HttpClientOptions<TClient>;
     }
