@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.2.4...@equinor/fusion-framework-module-service-discovery@0.3.0) (2022-06-13)
+
+
+### Features
+
+* **nodules-service-discovery:** make http-module dependency ([001dc2a](https://github.com/equinor/fusion-framework/commit/001dc2acbcd2e9a31a19fe9e7c9cd903fb20b2a1))
+
+
+
+
+
 ## 0.2.4 (2022-06-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery

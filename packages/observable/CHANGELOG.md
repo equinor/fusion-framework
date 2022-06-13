@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.2 (2022-06-13)
+
+
+### Bug Fixes
+
+* **observable:** expose query ([cf11bb9](https://github.com/equinor/fusion-framework/commit/cf11bb963349e1b586cb8c2c4a24e4010aa3cca1))
+
+
+
+
+
 ## 0.1.1 (2022-06-10)
 
 **Note:** Version bump only for package @equinor/fusion-observable

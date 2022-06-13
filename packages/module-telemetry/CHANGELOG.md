@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-telemetry@0.2.1...@equinor/fusion-framework-module-telemetry@0.2.2) (2022-06-13)
+
+
+### Bug Fixes
+
+* **module-telemetry:** change operator ([dcc1284](https://github.com/equinor/fusion-framework/commit/dcc12841639c789af2d4f9282f758e3d8223c676))
+
+
+
+
+
 ## 0.2.1 (2022-06-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-telemetry
