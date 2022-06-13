@@ -33,6 +33,6 @@ export class TelemetryProvider implements ITelemetryProvider {
 
     protected _addTelemetryInitializer(item: ITelemetryItem): void | boolean {
         const { defaultTags } = this._config;
-        defaultTags && Object.assign(item.tags || [], defaultTags);
+        defaultTags && Object.assign(item.tags ?? [], defaultTags);
     }
 }
