@@ -12,6 +12,9 @@
       "path": "../framework"
     },
     {
+      "path": "../framework-react"
+    },
+    {
       "path": "../module"
     },
     {
