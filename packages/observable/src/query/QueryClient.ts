@@ -1,5 +1,5 @@
 import { interval, Observable, ObservableInput, Subject } from 'rxjs';
-import { debounce, pluck,  filter, withLatestFrom, map } from 'rxjs/operators';
+import { debounce, pluck, filter, withLatestFrom, map } from 'rxjs/operators';
 
 import { Query } from './Query';
 
@@ -22,6 +22,10 @@ export class QueryClient<TType, TArgs> extends Observable<TType> {
 
     public get data(): TType | undefined {
         return this.__state$.value.data;
+    }
+
+    public get query(): Query<TType, TArgs> {
+        return this.__client$;
     }
 
     constructor(queryFn: QueryFn<TType, TArgs>, options?: QueryOptions<TType, TArgs>) {
