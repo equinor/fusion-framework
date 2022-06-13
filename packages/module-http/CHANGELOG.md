@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.2 (2022-06-13)
+
+
+### Bug Fixes
+
+* **module-http:** reutrn fallb ack config ([8ece469](https://github.com/equinor/fusion-framework/commit/8ece469e99bd64c10a7697d49fdcc5d396737ac8))
+
+
+
+
+
 ## 0.2.1 (2022-06-10)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
