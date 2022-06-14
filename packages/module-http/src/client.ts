@@ -36,11 +36,17 @@ export class HttpRequestHandler<T extends FetchRequest = FetchRequest> extends P
     }
 }
 
-export type HttpClientCreateOptions<T extends FetchRequest = FetchRequest> = {
-    requestHandler: HttpRequestHandler<T>;
+export class HttpResponseHandler<T = Response> extends ProcessOperators<T> {}
+
+export type HttpClientCreateOptions<
+    TRequest extends FetchRequest = FetchRequest,
+    TResponse = Response
+> = {
+    requestHandler: HttpRequestHandler<TRequest>;
+    responseHandler: HttpResponseHandler<TResponse>;
 };
 
-export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
+// export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
 
 /**
  * @template TRequest request arguments @see {@link https://developer.mozilla.org/en-US/docs/Web/API/request|request}
@@ -106,7 +112,7 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      * let controller: AbortController;
      * const client = window.Fusion.createClient('my-client');
      * const input = document.getElementById('input');
-     * input.addEventlistner('input', (e) => {
+     * input.addEventlistener('input', (e) => {
      *  try{
      *    // if a controller is defined, request might be ongoing
      *    controller && controller.abort();
@@ -154,8 +160,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 {
     readonly requestHandler: HttpRequestHandler<TRequest>;
 
-    readonly responseHandler: HttpResponseHandler<TResponse> = (x: Response) =>
-        Promise.resolve(x as unknown as TResponse);
+    readonly responseHandler: HttpResponseHandler<TResponse>;
 
     /** stream of requests that are about to be executed  */
     protected _request$ = new Subject<TRequest>();
@@ -173,8 +178,12 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return this._response$.asObservable();
     }
 
-    constructor(public uri: string, options?: HttpClientCreateOptions<TRequest>) {
-        this.requestHandler = options?.requestHandler || new HttpRequestHandler<TRequest>();
+    constructor(
+        public uri: string,
+        options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>
+    ) {
+        this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
+        this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
         this._init();
     }
 
@@ -241,7 +250,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
             /** execute request */
             switchMap(({ uri, path: _path, ...args }) => fromFetch(uri, args)),
             /** prepare response, allow extensions to modify response  */
-            switchMap((x) => this._prepareResponse(x)),
+            switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
             /** push response to event buss */
             tap((x) => this._response$.next(x)),
 
@@ -256,8 +265,8 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return this.requestHandler.process(init);
     }
 
-    protected _prepareResponse(response: Response): ObservableInput<TResponse> {
-        return this.responseHandler(response);
+    protected _prepareResponse(response: TResponse): ObservableInput<TResponse> {
+        return this.responseHandler.process(response);
     }
 
     protected _resolveUrl(path: string): string {

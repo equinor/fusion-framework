@@ -1,4 +1,4 @@
-import { HttpRequestHandler, FetchRequest, IHttpClient } from './client';
+import { HttpRequestHandler, FetchRequest, IHttpClient, HttpResponseHandler } from './client';
 
 interface HttpClientConstructorOptions<TInit extends FetchRequest> {
     requestHandler: HttpRequestHandler<TInit>;
@@ -17,6 +17,7 @@ export interface HttpClientOptions<TClient extends IHttpClient> {
     ctor?: HttpClientConstructor<TClient>;
     onCreate?: (client: TClient) => void;
     requestHandler?: HttpRequestHandler<HttpClientRequestInitType<TClient>>;
+    responseHandler?: HttpResponseHandler<HttpClientRequestInitType<TClient>>;
 }
 
 type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpClient<infer U> ? U : never;
