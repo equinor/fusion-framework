@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2022-06-14)
+
+
+### Features
+
+* **module-http:** expose response processor ([e4551c5](https://github.com/equinor/fusion-framework/commit/e4551c549654ef25f33eef72ebc2fcc02ab552a2))
+
+
+
+
+
 ## 0.2.2 (2022-06-13)
 
 
