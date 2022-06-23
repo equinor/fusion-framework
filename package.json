@@ -13,6 +13,7 @@
     "build:clean": "rm -rf packages/*/dist && npm run build",
     "version": "npm i --package-lock-only && git add package-lock.json",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
+    "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
     "docs": "typedoc --tsconfig tsconfig.typedoc.json",
     "yalc": "npm run build && lerna exec 'yalc push --private'",
@@ -22,7 +23,8 @@
     "test:show": "http-server coverage/lcov-report",
     "test:pack": "npm run clean && npm ci && npx lerna exec 'npm pack --dry-run'",
     "test:publish": "npm run clean && npm ci && npx lerna exec 'npm pack --dry-run'",
-    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 ."
+    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -46,7 +48,7 @@
     "@types/jest": "^27.4.1",
     "eslint": "^8.12.0",
     "eslint-plugin-rxjs": "^5.0.2",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
     "jest": "^27.5.1",
     "lerna": "^4.0.0",
     "lint-staged": "^13.0.1",
