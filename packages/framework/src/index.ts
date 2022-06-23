@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
+import { AnyModule } from '@equinor/fusion-framework-module';
 import { FusionConfigurator, FusionModulesInstance, initializeFusionModules } from './modules';
 
-export { FusionConfigurator };
+export type { FusionConfigurator, FusionModules } from './modules';
 
 export interface AppManifest {}
 
-export interface Fusion {
+export interface Fusion<TModules extends Array<AnyModule> = Array<AnyModule>> {
     /**
      * Configured services for Fusion
      */
-    modules: FusionModulesInstance;
+    modules: FusionModulesInstance<TModules>;
     /**
      * Create a scoped instance of services
      */
@@ -19,8 +20,11 @@ export interface Fusion {
     // ) => Promise<ModuleType<Modules>>;
 }
 
-export const initFusion = async (init: FusionConfigurator): Promise<Fusion> => {
-    const modules = await initializeFusionModules(init);
+export const initFusion = async <TModules extends Array<AnyModule> = Array<AnyModule>>(
+    init: FusionConfigurator<TModules>,
+    additionalModules?: TModules
+): Promise<Fusion<TModules>> => {
+    const modules = await initializeFusionModules(init, additionalModules);
     const fusion = {
         modules,
     };

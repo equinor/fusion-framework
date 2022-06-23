@@ -1,4 +1,8 @@
-import { initializeModules, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import {
+    AnyModule,
+    initializeModules,
+    ModulesInstanceType,
+} from '@equinor/fusion-framework-module';
 
 import type { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
@@ -7,11 +11,20 @@ import auth, { MsalModule } from '@equinor/fusion-framework-module-msal';
 import disco, { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
 export type FusionModules = [HttpModule, MsalModule, ServiceDiscoveryModule];
-export const modules: FusionModules = [http, auth, disco];
+export const baseModules: FusionModules = [http, auth, disco];
 
-export type FusionModulesInstance = ModulesInstanceType<FusionModules>;
-export type FusionConfigurator = ModulesConfigurator<FusionModules>;
+export type FusionModulesInstance<TModules extends Array<AnyModule>> =
+    ModulesInstanceType<FusionModules> & ModulesInstanceType<TModules>;
 
-export const initializeFusionModules = async (
-    configurator: FusionConfigurator
-): Promise<FusionModulesInstance> => initializeModules(configurator, modules);
+export type FusionConfigurator<TModules extends Array<AnyModule>> = ModulesConfigurator<
+    [...FusionModules, ...TModules]
+>;
+
+export const initializeFusionModules = async <TModules extends Array<AnyModule> = []>(
+    configurator: FusionConfigurator<TModules>,
+    modules?: TModules
+): Promise<FusionModulesInstance<TModules>> =>
+    // TODO - TS resolve overload, might fix later
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    initializeModules(configurator, [...baseModules, ...modules]);
