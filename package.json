@@ -23,8 +23,7 @@
     "test:show": "http-server coverage/lcov-report",
     "test:pack": "npm run clean && npm ci && npx lerna exec 'npm pack --dry-run'",
     "test:publish": "npm run clean && npm ci && npx lerna exec 'npm pack --dry-run'",
-    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
-    "prepare": "husky install"
+    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 ."
   },
   "repository": {
     "type": "git",
