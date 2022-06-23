@@ -38,6 +38,6 @@
     "@ag-grid-enterprise/core": "~27.3.0"
   },
   "peerDependencies": {
-    "@ag-grid-enterprise/core": "27.3.x"
+    "@ag-grid-enterprise/core": "^27.3.x"
   }
 }

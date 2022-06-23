@@ -1,20 +1,25 @@
 import { IAgGridConfigurator, AgGridConfigurator } from './configurator';
 import { IAgGridProvider, AgGridProvider } from './provider';
-import type { Module } from '@equinor/fusion-framework-module';
+import type { Module, ModulesInstanceType } from '@equinor/fusion-framework-module';
 
-export type TelemetryModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator>;
+export type AgGridModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator>;
 
-export const module: TelemetryModule = {
+export const module: AgGridModule = {
     name: 'agGrid',
-    configure: () => new AgGridConfigurator(),
-    initialize: ({ agGrid: config }, { agGrid: provider }): IAgGridProvider =>
-        new AgGridProvider(config, provider),
+    configure: (ref: ModulesInstanceType<[AgGridModule]>) => {
+        const config = new AgGridConfigurator();
+        if (ref?.agGrid) {
+            config.licenseKey = ref.agGrid.licenseKey;
+        }
+        return config;
+    },
+    initialize: ({ agGrid: config }): IAgGridProvider => new AgGridProvider(config),
 };
 
 export default module;
 
 declare module '@equinor/fusion-framework-module' {
     interface Modules {
-        agGrid: TelemetryModule;
+        agGrid: AgGridModule;
     }
 }
