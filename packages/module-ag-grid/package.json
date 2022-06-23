@@ -1,0 +1,43 @@
+{
+  "name": "@equinor/fusion-framework-module-ag-grid",
+  "version": "0.0.0",
+  "description": "Fusion module for using AG Grid",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc -b --verbose",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "ag-grid",
+    "table"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules-ag-grid"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "^0.2.0"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@ag-grid-enterprise/core": "~27.3.0"
+  },
+  "peerDependencies": {
+    "@ag-grid-enterprise/core": "27.3.x"
+  }
+}
