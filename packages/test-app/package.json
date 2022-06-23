@@ -26,6 +26,7 @@
     "@equinor/fusion-framework-module-msal": "file:../module-msal",
     "@equinor/fusion-framework-module-service-discovery": "file:../module-service-discovery",
     "@equinor/fusion-framework-module-telemetry": "file:../module-telemetry",
+    "@equinor/fusion-framework-module-ag-grid": "file:../module-ag-grid",
     "@equinor/fusion-framework-react": "file:../framework-react",
     "@equinor/fusion-framework-react-app": "file:../react-app",
     "@equinor/fusion-react-progress-indicator": "^0.1.2",
