@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.19...@equinor/fusion-framework-react@0.2.0) (2022-06-24)
+
+
+### Features
+
+* **framework:** allow addtional modules ([d8d697b](https://github.com/equinor/fusion-framework/commit/d8d697b6fa8ea5c8130b324195d39f354d2fa768))
+
+
+
+
+
 ## [0.1.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.18...@equinor/fusion-framework-react@0.1.19) (2022-06-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
