@@ -25,8 +25,9 @@
     "test:publish": "yarn run clean && yarn ci && npx lerna exec 'yarn pack --dry-run'",
     "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
     "dedupe": "yarn lernaupdate --dedupe",
-    "prepublish": "nx run-many --target=test --all",
-    "prepack": "nx run-many --target=build --all"
+    "prepublishOnly": "nx run-many --target=test --all",
+    "prepack": "nx run-many --target=build --all",
+    "version": "yarn install --no-immutable && git stage yarn.lock"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
   "keywords": [
@@ -60,7 +61,7 @@
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.15",
+    "typedoc": "^0.23.2",
     "typedoc-plugin-mermaid": "^1.6.0",
     "typescript": "^4.6.4",
     "yarn": "^1.22.19"
