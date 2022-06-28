@@ -24,10 +24,15 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Node Dependencies
-        run: npm ci
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - run: npm test -- --runInBand --changedSince=origin/main --testLocationInResults --json --coverage --outputFile="jest.results.json"
+      - name: Install Node Dependencies
+        run: yarn install --frozen-lockfile
+
+      - run: yarn test -- --runInBand --changedSince=origin/main --testLocationInResults --json --coverage --outputFile="jest.results.json"
 
       - name: Test Code
         uses: mattallty/jest-github-action@v1.0.3

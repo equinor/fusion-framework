@@ -25,7 +25,7 @@
     "@equinor/fusion-framework-module-http": "^0.3.0",
     "@equinor/fusion-framework-module-msal": "^0.1.13",
     "@equinor/fusion-framework-module-service-discovery": "^0.3.2",
-    "rxjs": "^7.1.0"
+    "rxjs": "7.5.5"
   },
   "types": "index.d.ts",
   "typesVersions": {

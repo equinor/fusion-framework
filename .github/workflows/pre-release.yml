@@ -30,12 +30,6 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
-      - name: Install Node Dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm ci
-        env:
-          CI: TRUE
-
       - name: Bump versions (pre-release)
         run: npx lerna version --yes --conventional-prerelease --no-changelog --no-git-tag-version --preid ${{ github.event.inputs.tag }}
         env:

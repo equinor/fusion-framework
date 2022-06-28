@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module-ag-grid": "file:../module-ag-grid",
-    "@equinor/fusion-framework-module-msal": "file:../module-msal",
-    "@equinor/fusion-framework-module-service-discovery": "file:../module-service-discovery",
+    "@equinor/fusion-framework-module-msal": "^0.1.13",
+    "@equinor/fusion-framework-module-service-discovery": "^0.3.2",
     "@equinor/fusion-framework-module-telemetry": "file:../module-telemetry",
-    "@equinor/fusion-framework-react": "file:../framework-react",
+    "@equinor/fusion-framework-react": "^0.2.0",
     "@equinor/fusion-framework-react-app": "file:../react-app",
     "@equinor/fusion-react-progress-indicator": "^0.1.2",
     "@equinor/fusion-react-styles": "^0.5.0",

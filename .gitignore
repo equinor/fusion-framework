@@ -106,9 +106,7 @@ dist
 
 .vscode
 
-packages/*/package-lock.json
-
-# temp fix, workflows break
-#package-lock.json
+package-lock.json
+packages/*/yarn.lock
 
 docs/

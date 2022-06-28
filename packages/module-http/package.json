@@ -32,6 +32,6 @@
     }
   },
   "devDependencies": {
-    "rxjs": "^7.5.3"
+    "rxjs": "7.5.5"
   }
 }
