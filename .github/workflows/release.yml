@@ -28,16 +28,12 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      
+
       - name: Bump versions
         run: npx lerna version --yes --force-git-tag --conventional-graduate --create-release github
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Install Node Dependencies
-        run: |
-          npm ci
 
       - name: Release packages
         run: npx lerna publish from-package --yes --no-verify-access

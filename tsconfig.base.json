@@ -28,7 +28,7 @@
             ],
             "@equinor/fusion-observable/*": [
                 "./observable/src/*"
-            ],
-        },
-    },
+            ]
+        }
+    }
 }
