@@ -17,13 +17,13 @@
   ],
   "references": [
     {
-      "path": "./packages/framework"
-    },
-    {
-      "path": "./packages/framework-react"
+      "path": "./packages/observable"
     },
     {
       "path": "./packages/module"
+    },
+    {
+      "path": "./packages/framework"
     },
     {
       "path": "./packages/module-http"
@@ -35,7 +35,7 @@
       "path": "./packages/module-service-discovery"
     },
     {
-      "path": "./packages/observable"
+      "path": "./packages/framework-react"
     },
     {
       "path": "./packages/react-app"
