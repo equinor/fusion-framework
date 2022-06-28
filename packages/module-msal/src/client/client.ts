@@ -66,7 +66,7 @@ export class AuthClient extends PublicClientApplication {
     }
 
     get hasValidClaims(): boolean {
-        const { idTokenClaims } = this.account ?? {};
+        const idTokenClaims = this.account?.idTokenClaims;
         if (idTokenClaims) {
             const epoch = Math.ceil(Date.now() / 1000);
             return idTokenClaims.exp > epoch;

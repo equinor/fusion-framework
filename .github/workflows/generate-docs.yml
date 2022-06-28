@@ -35,16 +35,21 @@ jobs:
         with:
           node-version: '16'
 
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Node Dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build project
-        run: npm run build
+        run: yarn build
 
       - name: Build docs
         run: |
           rm -rf docs
-          npm run docs
+          yarn docs
           touch docs/.nojekyll
 
       - name: Config git user

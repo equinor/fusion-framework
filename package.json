@@ -15,7 +15,7 @@
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
-    "docs": "typedoc --tsconfig tsconfig.typedoc.json",
+    "docs": "typedoc .",
     "yalc": "yarn run build && lerna exec 'yalc push --private'",
     "test": "jest",
     "test:ci": "jest --runInBand --debug",
@@ -62,7 +62,8 @@
     "ts-node": "^10.7.0",
     "tslib": "^2.2.0",
     "typedoc": "^0.23.2",
-    "typedoc-plugin-mermaid": "^1.6.0",
+    "typedoc-plugin-mermaid": "^1.8.0",
+    "typedoc-plugin-missing-exports": "^0.23.0",
     "typescript": "^4.6.4",
     "yarn": "^1.22.19"
   },

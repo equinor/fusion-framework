@@ -31,6 +31,7 @@
     }
   },
   "devDependencies": {
-    "rxjs": "7.5.5"
+    "rxjs": "7.5.5",
+    "typescript": "^4.7.4"
   }
 }

@@ -30,5 +30,8 @@
         "dist/types/*"
       ]
     }
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
   }
 }

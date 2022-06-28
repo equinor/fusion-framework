@@ -82,16 +82,16 @@ export class Query<TType, TArgs> extends Observable<QueryState> {
                         throw new QueryError(
                             QueryError.TYPE.ERROR,
                             'failed to execute request',
-                            payload
+                            payload as Error
                         );
                     case ActionType.CANCEL:
                         throw new QueryError(
                             QueryError.TYPE.ABORT,
                             'request was canceled',
-                            new Error(payload)
+                            new Error(String(payload))
                         );
                 }
-                return payload;
+                return payload as TType;
             }),
             observeOn(asyncScheduler)
         );

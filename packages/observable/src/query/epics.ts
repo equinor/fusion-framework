@@ -41,17 +41,12 @@ const requestProcessor =
 
             /** subscribe to cancel request on the action stream */
             subscriber.add(
-                action$
-                    .pipe(
-                        filterAction(ActionType.CANCEL)
-                        // filter(({ id }) => action.id === id)
-                    )
-                    .subscribe((action) => {
-                        if (!controller.signal.aborted) {
-                            controller.abort(action.payload);
-                        }
-                        subscriber.complete();
-                    })
+                action$.pipe(filterAction(ActionType.CANCEL)).subscribe(() => {
+                    if (!controller.signal.aborted) {
+                        controller.abort();
+                    }
+                    subscriber.complete();
+                })
             );
 
             /** subscribe to abort from the controller */
@@ -161,4 +156,3 @@ export const handleRequests =
             })
         );
     };
-

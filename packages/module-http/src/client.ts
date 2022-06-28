@@ -236,12 +236,10 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
-        const { selector, ...options } = Object.assign({}, args || { selector: undefined }, {
-            path,
-        });
+        const selector = args?.selector;
         const response$ = of({
-            ...options,
-            uri: this._resolveUrl(options.path),
+            ...args,
+            uri: this._resolveUrl(path),
         } as TRequest).pipe(
             /** prepare request, allow extensions to modify request  */
             switchMap((x) => this._prepareRequest(x)),

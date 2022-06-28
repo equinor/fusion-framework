@@ -1,4 +1,4 @@
-import { OperatorFunction } from 'rxjs';
+import type { OperatorFunction } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Action, ActionType, ExtractAction } from '../types';

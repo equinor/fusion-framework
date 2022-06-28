@@ -7,6 +7,6 @@ export const jsonSelector = <TType = unknown, TResponse extends Response = Respo
     try {
         return response.json();
     } catch (err) {
-        throw Error('failed to parse response', { cause: err as Error });
+        throw Error('failed to parse response');
     }
 };
