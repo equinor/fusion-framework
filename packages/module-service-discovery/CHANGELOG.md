@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.3.4...@equinor/fusion-framework-module-service-discovery@0.3.5) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## [0.3.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.3.3...@equinor/fusion-framework-module-service-discovery@0.3.4) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## 0.3.3 (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## [0.3.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.3.1...@equinor/fusion-framework-module-service-discovery@0.3.2) (2022-06-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## [0.3.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.3.0...@equinor/fusion-framework-module-service-discovery@0.3.1) (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+# [0.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.2.4...@equinor/fusion-framework-module-service-discovery@0.3.0) (2022-06-13)
+
+
+### Features
+
+* **nodules-service-discovery:** make http-module dependency ([001dc2a](https://github.com/equinor/fusion-framework/commit/001dc2acbcd2e9a31a19fe9e7c9cd903fb20b2a1))
+
+
+
+
+
+## 0.2.4 (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## 0.2.3 (2022-06-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
+
+
+
+
+
+## 0.2.2 (2022-05-31)
+
+
+### Bug Fixes
+
+* **module-service-discovery:** update interfaces ([e1b6864](https://github.com/equinor/fusion-framework/commit/e1b686466ae28204e1d605cce0441dab69787e48))
+
+
+
+
+
+## 0.2.1 (2022-03-14)
+
+
+### Bug Fixes
+
+* **service-discovery:** include uri in service ([#46](https://github.com/equinor/fusion-framework/issues/46)) ([3287d69](https://github.com/equinor/fusion-framework/commit/3287d69e23a5bccce8a9e762886340733f9c5447))
+
+
+
+
+
 # [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.1.1...@equinor/fusion-framework-module-service-discovery@0.2.0) (2022-02-15)
 
 

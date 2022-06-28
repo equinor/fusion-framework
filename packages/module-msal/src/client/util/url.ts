@@ -10,7 +10,7 @@
 export const normalizeUri = (uri: string, home: string = window.location.origin): string => {
     uri = uri.match(/^http[s]?/) ? uri : home + uri;
     const { origin, pathname } = new URL(uri);
-    return origin + pathname.replace(/((?<=[/])[/]+)|\/$/, '');
+    return origin + pathname.replace(/([^:]\/)\/+/g, '$1');
 };
 
 /**

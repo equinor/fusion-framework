@@ -21,21 +21,22 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          cache: 'npm'
           node-version: '16'
           registry-url: https://registry.npmjs.org
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Node Dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Config git user
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-      - name: Install Node Dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm ci
-        env:
-          CI: TRUE
 
       - name: Bump versions (pre-release)
         run: npx lerna version --yes --conventional-prerelease --no-changelog --no-git-tag-version --preid ${{ github.event.inputs.tag }}

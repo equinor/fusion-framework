@@ -1,4 +1,4 @@
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { last, mergeScan } from 'rxjs/operators';
 
 export type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | void>;
@@ -15,7 +15,7 @@ export class ProcessOperators<T> {
      */
     add(key: string, operator: ProcessOperator<T>): ProcessOperators<T> {
         if (Object.keys(this._operators).includes(key))
-            throw Error(`Operator [${key}] allready defined`);
+            throw Error(`Operator [${key}] already defined`);
         return this.set(key, operator);
     }
 
@@ -38,6 +38,11 @@ export class ProcessOperators<T> {
      *  Process registered processors.
      */
     process(request: T): Observable<T> {
+        const operators = Object.values(this._operators);
+        /** if no operators registered, just return the observable value */
+        if (!operators.length) {
+            return of(request);
+        }
         return from(Object.values(this._operators)).pipe(
             mergeScan(
                 // resolve current operator and return result or previous if void

@@ -20,18 +20,25 @@ export interface IAuthProvider {
      * Get auth client by registered config name
      */
     getClient(name: string): AuthClient;
+
     /**
      * Create auth client by registered config name
+     * @param name name of configured client, default to defaultConfig {@link IAuthConfigurator.configureDefault}
      */
     createClient(name?: string): AuthClient;
+
     /**
      * Acquire token from default auth client
+     * @param req Auth request options
      */
     acquireToken(req: AuthRequest): ReturnType<AuthClient['acquireToken']>;
+
     /**
      * Acquire access token from default auth client
+     * @param req Auth request options
      */
     acquireAccessToken(req: AuthRequest): Promise<string | undefined>;
+
     /**
      * Login to default auth client
      */
@@ -44,7 +51,7 @@ export interface IAuthProvider {
 
 const DEFAULT_CLIENT_NAME = 'default';
 
-export class AuthProvider {
+export class AuthProvider implements IAuthProvider {
     protected _clients: Record<string, AuthClient> = {};
     get defaultClient(): AuthClient {
         return this.getClient(DEFAULT_CLIENT_NAME);
@@ -87,9 +94,19 @@ export class AuthProvider {
     async handleRedirect(): ReturnType<AuthClient['handleRedirectPromise']> {
         const { redirectUri } = this.defaultConfig || {};
         if (window.location.pathname === redirectUri) {
-            const url = this.defaultClient.requestOrigin || '';
-            await this.defaultClient.handleRedirectPromise();
-            window.location.replace(url);
+            const client = this.defaultClient;
+            const logger = client.getLogger();
+            const { requestOrigin } = client;
+
+            await client.handleRedirectPromise();
+            if (requestOrigin === redirectUri) {
+                logger.warning(
+                    `detected callback loop from url ${redirectUri}, redirecting to root`
+                );
+                window.location.replace('/');
+            } else {
+                window.location.replace(requestOrigin || '/');
+            }
         }
         return null;
     }

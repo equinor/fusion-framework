@@ -3,6 +3,169 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.2...@equinor/fusion-framework-react@0.2.3) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.1...@equinor/fusion-framework-react@0.2.2) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.0...@equinor/fusion-framework-react@0.2.1) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+# [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.19...@equinor/fusion-framework-react@0.2.0) (2022-06-24)
+
+
+### Features
+
+* **framework:** allow addtional modules ([d8d697b](https://github.com/equinor/fusion-framework/commit/d8d697b6fa8ea5c8130b324195d39f354d2fa768))
+
+
+
+
+
+## [0.1.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.18...@equinor/fusion-framework-react@0.1.19) (2022-06-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.17...@equinor/fusion-framework-react@0.1.18) (2022-06-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.16...@equinor/fusion-framework-react@0.1.17) (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.15...@equinor/fusion-framework-react@0.1.16) (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## 0.1.15 (2022-06-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## 0.1.14 (2022-06-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## 0.1.13 (2022-05-31)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.11...@equinor/fusion-framework-react@0.1.12) (2022-03-25)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.10...@equinor/fusion-framework-react@0.1.11) (2022-03-25)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.9...@equinor/fusion-framework-react@0.1.10) (2022-03-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.8...@equinor/fusion-framework-react@0.1.9) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.7...@equinor/fusion-framework-react@0.1.8) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.6...@equinor/fusion-framework-react@0.1.7) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.5...@equinor/fusion-framework-react@0.1.6) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.4...@equinor/fusion-framework-react@0.1.5) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
+## [0.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.3...@equinor/fusion-framework-react@0.1.4) (2022-02-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+
+
+
+
 ## [0.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.1.2...@equinor/fusion-framework-react@0.1.3) (2022-02-15)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react

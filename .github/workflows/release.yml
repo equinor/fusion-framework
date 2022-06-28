@@ -20,9 +20,16 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          cache: 'npm'
           node-version: '16'
           registry-url: https://registry.npmjs.org
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Node Dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Config git user
         run: |
@@ -36,7 +43,8 @@ jobs:
           CI: TRUE
 
       - name: Bump versions
-        run: npx lerna version --yes --conventional-graduate --create-release github
+        run: npx lerna version --yes --force-git-tag --conventional-graduate --create-release github
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
 

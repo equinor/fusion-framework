@@ -3,6 +3,7 @@
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
     name: TKey;
     configure?: (ref?: any) => TConfig | Promise<TConfig>;
+    deps?: Array<keyof ModulesInstanceType<ModulesType<TDeps>>>;
     postConfigure?: (
         config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>
     ) => void | Promise<void>;

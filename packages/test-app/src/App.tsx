@@ -12,12 +12,14 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
+import moduleAgrGrid, { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+
 interface App {
     key: string;
     name: string;
 }
 
-const configCallback: AppConfigurator = async (appModuleConfig, frameworkApi) => {
+const configCallback: AppConfigurator<[AgGridModule]> = async (appModuleConfig, frameworkApi) => {
     console.debug(0, 'configuring app', frameworkApi, appModuleConfig);
     await frameworkApi.modules.serviceDiscovery.configureClient('portal', appModuleConfig);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -57,7 +59,7 @@ export const AppComponent = (): JSX.Element => {
     );
 };
 
-export const configurator = createApp(AppComponent, configCallback);
+export const configurator = createApp(AppComponent, configCallback, [moduleAgrGrid]);
 
 export const App = () => {
     const framework = useFramework();

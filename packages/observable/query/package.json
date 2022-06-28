@@ -1,0 +1,7 @@
+{
+  "name": "@equinor/fusion-observable/query",
+  "types": "../dist/types/query/index.d.ts",
+  "main": "../dist/esm/query/index.js",
+  "module": "../dist/esm/query/index.js",
+  "sideEffects": false
+}

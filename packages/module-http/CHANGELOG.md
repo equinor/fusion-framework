@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.2...@equinor/fusion-framework-module-http@0.3.3) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-http
+
+
+
+
+
+## [0.3.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.1...@equinor/fusion-framework-module-http@0.3.2) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-http
+
+
+
+
+
+## 0.3.1 (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-http
+
+
+
+
+
+# 0.3.0 (2022-06-14)
+
+
+### Features
+
+* **module-http:** expose response processor ([e4551c5](https://github.com/equinor/fusion-framework/commit/e4551c549654ef25f33eef72ebc2fcc02ab552a2))
+
+
+
+
+
+## 0.2.2 (2022-06-13)
+
+
+### Bug Fixes
+
+* **module-http:** reutrn fallb ack config ([8ece469](https://github.com/equinor/fusion-framework/commit/8ece469e99bd64c10a7697d49fdcc5d396737ac8))
+
+
+
+
+
+## 0.2.1 (2022-06-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-http
+
+
+
+
+
+# 0.2.0 (2022-05-31)
+
+
+### Features
+
+* **module-http:** add json support ([a6adbbb](https://github.com/equinor/fusion-framework/commit/a6adbbb36ca1391f8813be6141ef963031098764))
+
+
+
+
+
 ## 0.1.1 (2022-02-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http

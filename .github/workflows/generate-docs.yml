@@ -29,25 +29,27 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: docs
-          cache: 'npm'
 
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          cache: 'npm'
           node-version: '16'
 
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Node Dependencies
-        if: steps.cache-node.outputs.cache-hit != 'true'
-        run: npm install
+        run: yarn install --frozen-lockfile
 
       - name: Build project
-        run: npm run build
+        run: yarn build
 
       - name: Build docs
         run: |
           rm -rf docs
-          npm run docs
+          yarn docs
           touch docs/.nojekyll
 
       - name: Config git user

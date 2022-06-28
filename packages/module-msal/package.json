@@ -1,13 +1,12 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
-  "version": "0.1.1",
+  "version": "0.1.16",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
     "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose",
-    "prepack": "npm run build"
+    "build:typescript": "tsc -b --verbose"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +21,8 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^2.21.0",
-    "@equinor/fusion-framework-module": "^0.1.1",
-    "@equinor/fusion-framework-module-http": "^0.1.1"
+    "@equinor/fusion-framework-module": "^0.2.3",
+    "@equinor/fusion-framework-module-http": "^0.3.3"
   },
   "types": "index.d.ts",
   "typesVersions": {
@@ -32,5 +31,8 @@
         "dist/types/*"
       ]
     }
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
   }
 }

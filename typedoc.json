@@ -1,0 +1,19 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "out": "./docs",
+  "entryPointStrategy": "Packages",
+  "entryPoints": [
+    "./packages/framework",
+    "./packages/framework-react",
+    "./packages/module",
+    "./packages/module-ag-grid",
+    "./packages/module-http",
+    "./packages/module-msal",
+    "./packages/module-service-discovery",
+    "./packages/react-app",
+    "./packages/react-app/hooks",
+    "./packages/observable"
+  ],
+  "includes": "./packages",
+  "readme": "./README.md"
+}

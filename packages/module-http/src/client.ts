@@ -3,16 +3,20 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
 import { ProcessOperators } from './process-operators';
+import { jsonSelector } from './selector';
 
 export type FetchRequest = RequestInit & {
     uri: string;
     path: string;
 };
 
-export type FetchRequestInit<TReturn = unknown, TRequest = FetchRequest, TResponse = Response> =
-    Omit<TRequest, 'uri' | 'path'> & {
-        selector?: (response: TResponse) => ObservableInput<TReturn>;
-    };
+export type FetchRequestInit<
+    TReturn = unknown,
+    TRequest = FetchRequest,
+    TResponse = Response
+> = Omit<TRequest, 'uri' | 'path'> & {
+    selector?: (response: TResponse) => ObservableInput<TReturn>;
+};
 
 /**
  * Extends @see {ProcessOperators} for pre-processing requests.
@@ -32,11 +36,17 @@ export class HttpRequestHandler<T extends FetchRequest = FetchRequest> extends P
     }
 }
 
-export type HttpClientCreateOptions<T extends FetchRequest = FetchRequest> = {
-    requestHandler: HttpRequestHandler<T>;
+export class HttpResponseHandler<T = Response> extends ProcessOperators<T> {}
+
+export type HttpClientCreateOptions<
+    TRequest extends FetchRequest = FetchRequest,
+    TResponse = Response
+> = {
+    requestHandler: HttpRequestHandler<TRequest>;
+    responseHandler: HttpResponseHandler<TResponse>;
 };
 
-export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
+// export type HttpResponseHandler<T> = (response: Response) => Promise<T>;
 
 /**
  * @template TRequest request arguments @see {@link https://developer.mozilla.org/en-US/docs/Web/API/request|request}
@@ -102,7 +112,7 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      * let controller: AbortController;
      * const client = window.Fusion.createClient('my-client');
      * const input = document.getElementById('input');
-     * input.addEventlistner('input', (e) => {
+     * input.addEventlistener('input', (e) => {
      *  try{
      *    // if a controller is defined, request might be ongoing
      *    controller && controller.abort();
@@ -128,6 +138,16 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
         init?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T>;
 
+    json<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T>;
+
+    jsonAsync<T = TResponse>(
+        path: string,
+        init?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T>;
+
     /**
      * Abort all ongoing request for current client
      */
@@ -140,8 +160,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 {
     readonly requestHandler: HttpRequestHandler<TRequest>;
 
-    readonly responseHandler: HttpResponseHandler<TResponse> = (x: Response) =>
-        Promise.resolve(x as unknown as TResponse);
+    readonly responseHandler: HttpResponseHandler<TResponse>;
 
     /** stream of requests that are about to be executed  */
     protected _request$ = new Subject<TRequest>();
@@ -159,8 +178,12 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return this._response$.asObservable();
     }
 
-    constructor(public uri: string, options?: HttpClientCreateOptions<TRequest>) {
-        this.requestHandler = options?.requestHandler || new HttpRequestHandler<TRequest>();
+    constructor(
+        public uri: string,
+        options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>
+    ) {
+        this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
+        this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
         this._init();
     }
 
@@ -183,6 +206,28 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return firstValueFrom(this.fetch<T>(path, args));
     }
 
+    public json<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Observable<T> {
+        const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
+        const selector = args?.selector ?? jsonSelector;
+        const header = new Headers(args?.headers);
+        header.append('Content-Type', 'application/json');
+        return this.fetch(path, {
+            ...args,
+            body,
+            selector,
+        } as FetchRequestInit<T, TRequest, TResponse>);
+    }
+
+    public jsonAsync<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T> {
+        return firstValueFrom(this.json<T>(path, args));
+    }
+
     public abort(): void {
         this._abort$.next();
     }
@@ -191,12 +236,10 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
-        const { selector, ...options } = Object.assign({}, args || { selector: undefined }, {
-            path,
-        });
+        const selector = args?.selector;
         const response$ = of({
-            ...options,
-            uri: this._resolveUrl(options.path),
+            ...args,
+            uri: this._resolveUrl(path),
         } as TRequest).pipe(
             /** prepare request, allow extensions to modify request  */
             switchMap((x) => this._prepareRequest(x)),
@@ -205,7 +248,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
             /** execute request */
             switchMap(({ uri, path: _path, ...args }) => fromFetch(uri, args)),
             /** prepare response, allow extensions to modify response  */
-            switchMap((x) => this._prepareResponse(x)),
+            switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
             /** push response to event buss */
             tap((x) => this._response$.next(x)),
 
@@ -220,8 +263,8 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return this.requestHandler.process(init);
     }
 
-    protected _prepareResponse(response: Response): ObservableInput<TResponse> {
-        return this.responseHandler(response);
+    protected _prepareResponse(response: TResponse): ObservableInput<TResponse> {
+        return this.responseHandler.process(response);
     }
 
     protected _resolveUrl(path: string): string {

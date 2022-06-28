@@ -7,7 +7,7 @@
   },
   "include": [
     "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.tsx", 
   ],
   "exclude": [
     "node_modules",
@@ -35,7 +35,10 @@
       "path": "./packages/module-service-discovery"
     },
     {
-      "path": "./packages/react-app"
+      "path": "./packages/observable"
     },
+    {
+      "path": "./packages/react-app"
+    }
   ]
 }

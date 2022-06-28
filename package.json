@@ -6,25 +6,36 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "lint": "eslint packages/*/src/**",
-    "clean": "rm -rf packages/*/node_modules && rm -rf node_modules",
-    "build": "npm run build --workspaces --if-present",
-    "build:clean": "rm -rf packages/*/dist && npm run build",
+    "clean": "yarn run clean:modules && yarn run clean:build",
+    "clean:modules": "rm -rf packages/*/node_modules && rm -rf node_modules",
+    "clean:build": "rm -rf packages/*/dist",
+    "build": "lerna run build",
+    "build:affected": "nx run-many --target=build --all",
+    "build:clean": "rm -rf packages/*/dist && yarn run build",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
+    "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
-    "docs": "typedoc --tsconfig tsconfig.typedoc.json",
-    "yalc": "npm run build && lerna exec 'yalc push --private'",
-    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 ."
+    "docs": "typedoc .",
+    "yalc": "yarn run build && lerna exec 'yalc push --private'",
+    "test": "jest",
+    "test:ci": "jest --runInBand --debug",
+    "test:coverage": "jest --coverage",
+    "test:show": "http-server coverage/lcov-report",
+    "test:pack": "yarn run clean && yarn ci && npx lerna exec 'yarn pack --dry-run'",
+    "test:publish": "yarn run clean && yarn ci && npx lerna exec 'yarn pack --dry-run'",
+    "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
+    "dedupe": "yarn lernaupdate --dedupe",
+    "prepublishOnly": "nx run-many --target=test --all",
+    "prepack": "nx run-many --target=build --all",
+    "version": "yarn install --no-immutable && git stage yarn.lock"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git"
-  },
+  "repository": "git+https://github.com/equinor/fusion-framework.git",
   "keywords": [
     "react",
     "fusion",
     "components"
   ],
-  "author": "",
+  "author": "Odin Thomas Rochmann <odin.rochmann@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/equinor/fusion-framework/issues"
@@ -34,22 +45,34 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@equinor/eslint-config-fusion": "^1.0.1",
-    "eslint": "^8.8.0",
+    "@nrwl/nx-cloud": "latest",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^18.0.0",
+    "eslint": "^8.12.0",
     "eslint-plugin-rxjs": "^5.0.2",
-    "husky": "^4.3.7",
-    "lerna": "^4.0.0",
-    "lint-staged": "^10.5.3",
+    "husky": "^8.0.0",
+    "jest": "^27.5.1",
+    "lerna": "^5.1.6",
+    "lerna-update-wizard": "^1.1.2",
+    "lint-staged": "^13.0.1",
+    "nx": "14.3.6",
     "prettier": "^2.5.1",
-    "ts-node": "^10.4.0",
+    "rm": "^0.1.8",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.11",
-    "typedoc-plugin-mermaid": "^1.6.0",
-    "typescript": "^4.5.5"
+    "typedoc": "^0.23.2",
+    "typedoc-plugin-mermaid": "^1.8.0",
+    "typedoc-plugin-missing-exports": "^0.23.0",
+    "typescript": "^4.6.4",
+    "yarn": "^1.22.19"
   },
   "peerDependencies": {
     "typescript": ">=4.5"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
@@ -58,7 +81,8 @@
   },
   "lint-staged": {
     "./packages/**/src/**/*.{ts,tsx}": [
-      "eslint --quiet --fix"
+      "eslint --quiet --fix",
+      "jest --bail --findRelatedTests"
     ]
   }
 }

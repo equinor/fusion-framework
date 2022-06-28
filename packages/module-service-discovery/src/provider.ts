@@ -2,18 +2,14 @@ import { IServiceDiscoveryConfigurator } from './configurator';
 
 import type { Environment, Service } from './types';
 
-import type { ModulesConfigType } from '@equinor/fusion-framework-module';
-import type {
-    HttpModule,
-    IHttpClient,
-    IHttpClientProvider,
-} from '@equinor/fusion-framework-module-http';
+import type { ModulesConfigType, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 
 export interface IServiceDiscoveryProvider {
     /**
      * Try to resolve services for requested key
      */
-    resolveService(key: string): Promise<Service | undefined>;
+    resolveService(key: string): Promise<Service>;
     /**
      * service environment
      */
@@ -26,14 +22,14 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
         protected readonly _config: IServiceDiscoveryConfigurator,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        protected readonly _http: IHttpClientProvider
+        protected readonly _http: ModulesInstanceType<[HttpModule]>['http']
     ) {}
 
     get environment(): Promise<Environment> {
         return { ...this._getEnvironment() };
     }
 
-    async resolveService(key: string): Promise<Service | undefined> {
+    async resolveService(key: string): Promise<Service> {
         const { services } = await this._getEnvironment();
         // TODO - not found error
         const service = services[key];

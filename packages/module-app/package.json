@@ -1,13 +1,12 @@
 {
   "name": "@equinor/fusion-framework-module-app",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
     "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose",
-    "prepack": "npm run build"
+    "build:typescript": "tsc -b --verbose"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +20,8 @@
     "directory": "packages/module-apps"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.1.1"
+    "@equinor/fusion-framework-module": "^0.2.3",
+    "rxjs": "7.5.5"
   },
   "types": "index.d.ts",
   "typesVersions": {
@@ -30,5 +30,8 @@
         "dist/types/*"
       ]
     }
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
   }
 }
