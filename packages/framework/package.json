@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -20,10 +20,10 @@
     "directory": "packages/framework"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.2.2",
-    "@equinor/fusion-framework-module-http": "^0.3.2",
-    "@equinor/fusion-framework-module-msal": "^0.1.15",
-    "@equinor/fusion-framework-module-service-discovery": "^0.3.4",
+    "@equinor/fusion-framework-module": "^0.2.3",
+    "@equinor/fusion-framework-module-http": "^0.3.3",
+    "@equinor/fusion-framework-module-msal": "^0.1.16",
+    "@equinor/fusion-framework-module-service-discovery": "^0.3.5",
     "rxjs": "7.5.5"
   },
   "types": "index.d.ts",
