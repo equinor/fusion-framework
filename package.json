@@ -12,7 +12,6 @@
     "build": "lerna run build",
     "build:affected": "nx run-many --target=build --all",
     "build:clean": "rm -rf packages/*/dist && yarn run build",
-    "version": "yarn && git add yarn.lock",
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
