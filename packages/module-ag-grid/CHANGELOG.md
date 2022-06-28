@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@0.2.0...@equinor/fusion-framework-module-ag-grid@0.2.1) (2022-06-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-ag-grid
+
+
+
+
+
 # [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@0.1.0...@equinor/fusion-framework-module-ag-grid@0.2.0) (2022-06-24)
 
 

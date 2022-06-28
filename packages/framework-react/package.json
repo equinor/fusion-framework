@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -20,7 +20,7 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework": "^1.2.0"
+    "@equinor/fusion-framework": "^1.2.1"
   },
   "types": "index.d.ts",
   "typesVersions": {
