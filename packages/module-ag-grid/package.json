@@ -2,8 +2,10 @@
   "name": "@equinor/fusion-framework-module-ag-grid",
   "version": "0.2.4",
   "description": "Fusion module for using AG Grid",
-  "main": "./dist/esm/index.js",
-  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js"
+  },
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"
@@ -23,21 +25,10 @@
     "directory": "packages/modules-ag-grid"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.2.4"
-  },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ]
-    }
+    "@equinor/fusion-framework-module": "^0.2.4",
+    "@ag-grid-enterprise/core": "~27.3.0"
   },
   "devDependencies": {
-    "@ag-grid-enterprise/core": "~27.3.0",
     "typescript": "^4.7.4"
-  },
-  "peerDependencies": {
-    "@ag-grid-enterprise/core": "^27.3.x"
-  }
+  } 
 }

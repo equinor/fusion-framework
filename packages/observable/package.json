@@ -12,6 +12,20 @@
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
   "license": "ISC",
   "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "operators": [
+        "dist/types/operators/index.d.ts"
+      ],
+      "query": [
+        "dist/types/query/index.d.ts"
+      ],
+      "react": [
+        "dist/types/react/index.d.ts"
+      ]
+    }
+  },
   "directories": {
     "dist": "dist"
   },
@@ -44,6 +58,7 @@
   "devDependencies": {
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^27.4.1",
+    "@types/react": "^17.0.2",
     "@types/uuid": "^8.3.4",
     "jest": "^27.5.1",
     "react": "^17.0.2",
@@ -52,24 +67,12 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "@types/react": "^16.9.0 || ^17.0.0",
-    "react": "^16.9.0 || ^17.0.0",
-    "react-dom": "^16.9.0 || ^17.0.0"
+    "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+    "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {
       "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
-  },
-  "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ]
     }
   }
 }

@@ -1,7 +1,0 @@
-{
-  "name": "@equinor/fusion-observable/react",
-  "types": "../dist/types/react/index.d.ts",
-  "main": "../dist/esm/react/index.js",
-  "module": "../dist/esm/react/index.js",
-  "sideEffects": false
-}

@@ -2,8 +2,10 @@
   "name": "@equinor/fusion-framework-module-telemetry",
   "version": "0.2.8",
   "description": "Fusion module for using Microsoft Telemetry",
-  "main": "./dist/esm/index.js",
-  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js"
+  },
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"
@@ -23,14 +25,6 @@
     "@equinor/fusion-framework-module": "^0.2.4",
     "@equinor/fusion-framework-module-msal": "^0.1.17",
     "@microsoft/applicationinsights-web": "^2.7.2"
-  },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ]
-    }
   },
   "devDependencies": {
     "typescript": "^4.7.4"

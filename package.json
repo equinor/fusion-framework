@@ -15,7 +15,8 @@
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
-    "docs": "typedoc .",
+    "docs": "typedoc",
+    "doc": "extract-apidocs -- --report",
     "yalc": "yarn run build && lerna exec 'yalc push --private'",
     "test": "jest",
     "test:ci": "jest --runInBand --debug",
@@ -59,11 +60,9 @@
     "prettier": "^2.5.1",
     "rm": "^0.1.8",
     "ts-jest": "^27.1.4",
-    "ts-node": "^10.7.0",
     "tslib": "^2.2.0",
-    "typedoc": "^0.23.2",
+    "typedoc": "^0.22.18",
     "typedoc-plugin-mermaid": "^1.8.0",
-    "typedoc-plugin-missing-exports": "^0.23.0",
     "typescript": "^4.6.4",
     "yarn": "^1.22.19"
   },
@@ -73,12 +72,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "./packages/**/src/**/*.{ts,tsx}": [
       "eslint --quiet --fix",

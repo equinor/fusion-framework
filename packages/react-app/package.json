@@ -2,8 +2,18 @@
   "name": "@equinor/fusion-framework-react-app",
   "version": "0.2.21",
   "description": "",
-  "main": "./dist/esm/index.js",
-  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js",
+    "./http": "./dist/esm/http/index.js"
+  },
+  "types": "./dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "http": [
+        "dist/types/http/index.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"
@@ -26,14 +36,6 @@
     "@equinor/fusion-framework-module-msal": "^0.1.17",
     "@equinor/fusion-framework-react": "^0.2.4"
   },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ]
-    }
-  },
   "devDependencies": {
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
@@ -42,7 +44,16 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+    "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   }
 }

@@ -3,12 +3,6 @@ import { HttpClientMsal, IHttpClient } from '@equinor/fusion-framework-module-ht
 import { useMemo } from 'react';
 import { useModuleContext } from '../modules';
 
-export {
-    IHttpClient,
-    HttpClientMsal,
-    FetchRequestInit,
-} from '@equinor/fusion-framework-module-http';
-
 /**
  * Use a configured client from application modules
  *
