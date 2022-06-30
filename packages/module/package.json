@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "exports": {
     ".": "./dist/esm/index.js"
@@ -21,7 +21,6 @@
     "url": "git+https://github.com/equinor/fusion-framework.git",
     "directory": "packages/module"
   },
-  
   "dependencies": {
     "rxjs": "7.5.5"
   },
