@@ -12,6 +12,12 @@
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
   "license": "ISC",
   "main": "dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js",
+    "./operators": "./dist/esm/operators/index.js",
+    "./query": "./dist/esm/query/index.js",
+    "./react": "./dist/esm/react/index.js"
+  },
   "types": "dist/types/index.d.ts",
   "typesVersions": {
     "*": {
