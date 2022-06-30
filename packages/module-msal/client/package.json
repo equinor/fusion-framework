@@ -1,7 +1,0 @@
-{
-  "name": "@equinor/fusion-framework-module-msal/client",
-  "types": "../dist/types/client/index.d.ts",
-  "main": "../dist/esm/client/index.js",
-  "module": "../dist/esm/client/index.js",
-  "sideEffects": false
-}
