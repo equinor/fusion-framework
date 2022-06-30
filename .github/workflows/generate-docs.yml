@@ -49,7 +49,7 @@ jobs:
       - name: Build docs
         run: |
           rm -rf docs
-          yarn docs
+          npx typedoc
           touch docs/.nojekyll
 
       - name: Config git user
