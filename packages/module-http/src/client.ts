@@ -238,9 +238,9 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
-        const selector = args?.selector;
+        const { selector, ...options } = args || {};
         const response$ = of({
-            ...args,
+            ...options,
             uri: this._resolveUrl(path),
         } as TRequest).pipe(
             /** prepare request, allow extensions to modify request  */
@@ -248,7 +248,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
             /** push request to event buss */
             tap((x) => this._request$.next(x)),
             /** execute request */
-            switchMap(({ uri, path: _path, ...args }) => fromFetch(uri, args)),
+            switchMap(({ uri, path: _path, ...init }) => fromFetch(uri, init)),
             /** prepare response, allow extensions to modify response  */
             switchMap((x) => this._prepareResponse(x as unknown as TResponse)),
             /** push response to event buss */
