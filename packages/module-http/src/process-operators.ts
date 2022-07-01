@@ -1,4 +1,5 @@
-import { from, Observable, of } from 'rxjs';
+import { from, of } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { last, mergeScan } from 'rxjs/operators';
 
 export type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | void>;

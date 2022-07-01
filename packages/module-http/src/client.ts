@@ -1,6 +1,8 @@
-import { firstValueFrom, Observable, ObservableInput, of, Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
+
+import type { Observable, ObservableInput } from 'rxjs';
 
 import { ProcessOperators } from './process-operators';
 import { jsonSelector } from './selector';

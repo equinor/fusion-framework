@@ -1,10 +1,13 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { HttpClient, FetchRequestInit, FetchRequest } from './client';
 
 /** Extends request init with scope  */
 type MsalFetchRequest = FetchRequest & { scopes?: string[] };
-type MsalFetchRequestInit<TReturn = unknown, TRequest = FetchRequest, TResponse = Response> =
-    FetchRequestInit<TReturn, TRequest, TResponse> & Pick<MsalFetchRequest, 'scopes'>;
+type MsalFetchRequestInit<
+    TReturn = unknown,
+    TRequest = FetchRequest,
+    TResponse = Response
+> = FetchRequestInit<TReturn, TRequest, TResponse> & Pick<MsalFetchRequest, 'scopes'>;
 
 /** Default Client for MSAL */
 export class HttpClientMsal<
