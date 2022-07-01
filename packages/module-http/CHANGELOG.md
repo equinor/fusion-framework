@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.7...@equinor/fusion-framework-module-http@0.3.8) (2022-07-01)
+
+
+### Bug Fixes
+
+* **module-http:** fix selector of client ([dcc4774](https://github.com/equinor/fusion-framework/commit/dcc477489b51aa988a97494ff553eee34404469d))
+
+
+
+
+
 ## [0.3.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.6...@equinor/fusion-framework-module-http@0.3.7) (2022-07-01)
 
 
