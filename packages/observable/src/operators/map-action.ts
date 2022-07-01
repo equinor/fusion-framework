@@ -9,4 +9,3 @@ export const mapAction =
     ): OperatorFunction<ExtractAction<TAction, TType>, TResult> =>
     (source: Observable<TAction>) =>
         source.pipe(filterAction(type), map(fn));
-

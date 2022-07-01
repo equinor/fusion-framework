@@ -7,7 +7,6 @@ import {
     FetchRequestInit,
 } from '@equinor/fusion-framework-react-app/http';
 
-
 interface App {
     key: string;
     name: string;
