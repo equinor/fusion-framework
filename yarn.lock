@@ -1352,16 +1352,16 @@
     eslint-plugin-react-hooks "^4.3.0"
 
 "@equinor/fusion-framework-module-ag-grid@file:packages/module-ag-grid":
-  version "0.2.5"
+  version "0.2.7"
   dependencies:
     "@ag-grid-enterprise/core" "~27.3.0"
-    "@equinor/fusion-framework-module" "^0.2.5"
+    "@equinor/fusion-framework-module" "^0.2.7"
 
 "@equinor/fusion-framework-module-telemetry@file:packages/module-telemetry":
-  version "0.2.9"
+  version "0.2.11"
   dependencies:
-    "@equinor/fusion-framework-module" "^0.2.5"
-    "@equinor/fusion-framework-module-msal" "^0.1.18"
+    "@equinor/fusion-framework-module" "^0.2.7"
+    "@equinor/fusion-framework-module-msal" "^0.1.20"
     "@microsoft/applicationinsights-web" "^2.7.2"
 
 "@equinor/fusion-react-progress-indicator@^0.1.2":
@@ -11508,9 +11508,9 @@ rxjs-report-usage@^1.0.4:
     glob "~7.2.0"
     prompts "~2.4.2"
 
-rxjs@7.5.5:
+rxjs@7.5.5, rxjs@^7.5.5:
   version "7.5.5"
-  resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.5.5.tgz"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
   integrity sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==
   dependencies:
     tslib "^2.1.0"
@@ -11521,13 +11521,6 @@ rxjs@^6.6.0, rxjs@^6.6.2:
   integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
   dependencies:
     tslib "^1.9.0"
-
-rxjs@^7.5.5:
-  version "7.5.5"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
-  integrity sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==
-  dependencies:
-    tslib "^2.1.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

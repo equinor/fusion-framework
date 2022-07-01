@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.6...@equinor/fusion-framework-module-http@0.3.7) (2022-07-01)
+
+
+### Bug Fixes
+
+* **module-http:** make rxjs dependent ([a20286f](https://github.com/equinor/fusion-framework/commit/a20286f950ff10c84605c025354cb05280c7455a))
+
+
+
+
+
 ## [0.3.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.5...@equinor/fusion-framework-module-http@0.3.6) (2022-06-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
