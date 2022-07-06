@@ -1,7 +1,0 @@
-{
-  "name": "@equinor/fusion-framework-react/hooks",
-  "types": "../dist/types/hooks/index.d.ts",
-  "main": "../dist/esm/hooks/index.js",
-  "module": "../dist/esm/hooks/index.js",
-  "sideEffects": false
-}
