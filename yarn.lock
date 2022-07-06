@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@ag-grid-community/core@~27.3.0":
-  version "27.3.0"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-27.3.0.tgz#04599cff5c35d26b970153ec3db66b945f053e57"
-  integrity sha512-77/bE2KdFlFI/ywEP46aSspXtgBteY/OPQyzU/lWqYrG2wC6cLfPSUB60t9e0FiqElwM/Vdcjz0TAjRwhZOPkw==
+"@ag-grid-community/core@~28.0.0":
+  version "28.0.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-28.0.0.tgz#c1602af72ef6ff3b3d36cfceff7b9b7ff89b7d18"
+  integrity sha512-Lk9hvuvxJVL5eh/aYRZJMNIOIIfT6jg65E3q3KmhYNOAFE82Ixrq7Mraqwsh+dyZsPr5mZrxg4FICNDHxJ0edQ==
 
-"@ag-grid-enterprise/core@~27.3.0":
-  version "27.3.0"
-  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-27.3.0.tgz#e80aa959be873fad5d5faad41ca89664e369194d"
-  integrity sha512-v1XwzyoA2S2c8bpOAAMAS6pXp2KMO50oogCXBDeocNlaHODD32be1W+M3HPU9LKqkUe7ld34xhK/xDvjFsLTew==
+"@ag-grid-enterprise/core@~28.0.0":
+  version "28.0.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.0.0.tgz#81d8b023c369a17354f4aa42d93d8a9a5a9bc0c5"
+  integrity sha512-3bwbizTnYwrYRUAeiaUhcewTQWymM5M670WmNtTAOJ64EFi0+YIFBlajHnBcM12gGBFV+jU80Tg4rsI30nFp8w==
   dependencies:
-    "@ag-grid-community/core" "~27.3.0"
+    "@ag-grid-community/core" "~28.0.0"
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
@@ -1354,14 +1354,14 @@
 "@equinor/fusion-framework-module-ag-grid@file:packages/module-ag-grid":
   version "0.2.7"
   dependencies:
-    "@ag-grid-enterprise/core" "~27.3.0"
+    "@ag-grid-enterprise/core" "~28.0.0"
     "@equinor/fusion-framework-module" "^0.2.7"
 
 "@equinor/fusion-framework-module-telemetry@file:packages/module-telemetry":
-  version "0.2.11"
+  version "0.2.12"
   dependencies:
     "@equinor/fusion-framework-module" "^0.2.7"
-    "@equinor/fusion-framework-module-msal" "^0.1.20"
+    "@equinor/fusion-framework-module-msal" "^0.1.21"
     "@microsoft/applicationinsights-web" "^2.7.2"
 
 "@equinor/fusion-react-progress-indicator@^0.1.2":
