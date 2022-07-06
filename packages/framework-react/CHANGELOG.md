@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.8...@equinor/fusion-framework-react@0.2.9) (2022-07-06)
+
+
+### Bug Fixes
+
+* **framework-react:** remove legacy path ([fa82188](https://github.com/equinor/fusion-framework/commit/fa82188a7471a82fafacf26a1fc50a1703fe3944))
+
+
+
+
+
 ## [0.2.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.7...@equinor/fusion-framework-react@0.2.8) (2022-07-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
