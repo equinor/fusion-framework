@@ -61,7 +61,7 @@
     "rm": "^0.1.8",
     "ts-jest": "^27.1.4",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.18",
+    "typedoc": "^0.23.6",
     "typedoc-plugin-mermaid": "^1.8.0",
     "typescript": "^4.6.4",
     "yarn": "^1.22.19"
