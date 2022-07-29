@@ -56,7 +56,7 @@
     "lerna": "^5.1.6",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^13.0.1",
-    "nx": "14.3.6",
+    "nx": "14.5.1",
     "prettier": "^2.5.1",
     "rm": "^0.1.8",
     "ts-jest": "^27.1.4",
