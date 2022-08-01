@@ -1,11 +1,7 @@
 import { Suspense } from 'react';
 
-import createApp, { AppConfigurator } from '@equinor/fusion-framework-react-app';
-import {
-    useCurrentUser,
-    useFramework,
-    useModuleContext,
-} from '@equinor/fusion-framework-react-app/hooks';
+import createApp, { AppConfigurator, useModuleContext } from '@equinor/fusion-framework-react-app';
+import { useFramework, useCurrentUser } from '@equinor/fusion-framework-react-app/framework';
 import { AppList } from 'AppList';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -31,8 +27,6 @@ export const AppComponent = (): JSX.Element => {
     const framework = useFramework();
     const modules = useModuleContext();
     const account = useCurrentUser();
-    // const client = useHttpClient();
-    // const queryClient = useMemo(() => {}, [client]);
     return (
         <div>
             <h3>Current user</h3>
