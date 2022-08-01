@@ -10,4 +10,5 @@ export {
     ModuleProvider,
     appModules,
     createModuleProvider,
+    useModuleContext,
 } from './modules';

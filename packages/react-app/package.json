@@ -5,11 +5,15 @@
   "main": "dist/esm/index.js",
   "exports": {
     ".": "./dist/esm/index.js",
+    "./framework": "./dist/esm/framework/index.js",
     "./http": "./dist/esm/http/index.js"
   },
   "types": "./dist/types/index.d.ts",
   "typesVersions": {
     "*": {
+      "framework": [
+        "dist/types/framework/index.d.ts"
+      ],
       "http": [
         "dist/types/http/index.d.ts"
       ]
