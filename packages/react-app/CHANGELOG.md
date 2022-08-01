@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.27](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.2.26...@equinor/fusion-framework-react-app@0.2.27) (2022-08-01)
+
+
+### Bug Fixes
+
+* expose framework in react-app package ([9dc2e5b](https://github.com/equinor/fusion-framework/commit/9dc2e5b2ec27344fbb390248abdbb73caed297cc))
+
+
+
+
+
 ## [0.2.26](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.2.25...@equinor/fusion-framework-react-app@0.2.26) (2022-07-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

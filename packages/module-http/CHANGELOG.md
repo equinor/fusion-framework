@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.3.9 (2022-08-01)
+
+
+### Bug Fixes
+
+* change typo of exports ([b049503](https://github.com/equinor/fusion-framework/commit/b049503511fb1b37b920b00aed1468ed8385a67e))
+
+
+
+
+
 ## [0.3.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.7...@equinor/fusion-framework-module-http@0.3.8) (2022-07-01)
 
 
