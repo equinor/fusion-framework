@@ -4,12 +4,12 @@
 
 "@ag-grid-community/core@~27.3.0":
   version "27.3.0"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-27.3.0.tgz#04599cff5c35d26b970153ec3db66b945f053e57"
+  resolved "https://registry.npmjs.org/@ag-grid-community/core/-/core-27.3.0.tgz"
   integrity sha512-77/bE2KdFlFI/ywEP46aSspXtgBteY/OPQyzU/lWqYrG2wC6cLfPSUB60t9e0FiqElwM/Vdcjz0TAjRwhZOPkw==
 
 "@ag-grid-enterprise/core@~27.3.0":
   version "27.3.0"
-  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-27.3.0.tgz#e80aa959be873fad5d5faad41ca89664e369194d"
+  resolved "https://registry.npmjs.org/@ag-grid-enterprise/core/-/core-27.3.0.tgz"
   integrity sha512-v1XwzyoA2S2c8bpOAAMAS6pXp2KMO50oogCXBDeocNlaHODD32be1W+M3HPU9LKqkUe7ld34xhK/xDvjFsLTew==
   dependencies:
     "@ag-grid-community/core" "~27.3.0"
@@ -1358,10 +1358,10 @@
     "@equinor/fusion-framework-module" "^0.2.7"
 
 "@equinor/fusion-framework-module-telemetry@file:packages/module-telemetry":
-  version "0.2.11"
+  version "0.2.12"
   dependencies:
     "@equinor/fusion-framework-module" "^0.2.7"
-    "@equinor/fusion-framework-module-msal" "^0.1.20"
+    "@equinor/fusion-framework-module-msal" "^0.1.21"
     "@microsoft/applicationinsights-web" "^2.7.2"
 
 "@equinor/fusion-react-progress-indicator@^0.1.2":
@@ -2216,7 +2216,7 @@
 
 "@lerna/project@5.1.6":
   version "5.1.6"
-  resolved "https://registry.yarnpkg.com/@lerna/project/-/project-5.1.6.tgz#a8a79c78f9c9b5406cba77ab75986e265e61940a"
+  resolved "https://registry.npmjs.org/@lerna/project/-/project-5.1.6.tgz"
   integrity sha512-9EXc2uTDfruvJcWnW3UrDZCAgZ/LUOQDC92xBSi1qazSE3fEsfrLBJmMqUzBRTuGoGh5BPnJgA2l0It01z51dQ==
   dependencies:
     "@lerna/package" "5.1.6"
@@ -2754,9 +2754,9 @@
     nx "14.3.6"
 
 "@nrwl/nx-cloud@latest":
-  version "14.1.2"
-  resolved "https://registry.npmjs.org/@nrwl/nx-cloud/-/nx-cloud-14.1.2.tgz"
-  integrity sha512-ZMxxx+NNp06IDPJ8cbQDPNMNRuH+pM/RoC7ZsCriotDG3kpzour41OGf0UpnXSXcTJPlDyHG6Xi0XuPdjmpNSw==
+  version "14.2.0"
+  resolved "https://registry.npmjs.org/@nrwl/nx-cloud/-/nx-cloud-14.2.0.tgz"
+  integrity sha512-KnrNFDCII9mbLwFp0HgyKVlhMTXoN90CQzGgdtCNPPBP/Wg84pttcpynGdWyupkrBJxdqMNTJEC7HGib0ipxew==
   dependencies:
     axios "^0.21.1"
     chalk "4.1.0"
@@ -11510,7 +11510,7 @@ rxjs-report-usage@^1.0.4:
 
 rxjs@7.5.5, rxjs@^7.5.5:
   version "7.5.5"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
+  resolved "https://registry.npmjs.org/rxjs/-/rxjs-7.5.5.tgz"
   integrity sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==
   dependencies:
     tslib "^2.1.0"
