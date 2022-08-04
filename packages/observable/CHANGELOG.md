@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2022-08-04)
+
+
+### Features
+
+* **observable:** create hook for using query client ([#191](https://github.com/equinor/fusion-framework/issues/191)) ([0a74d2e](https://github.com/equinor/fusion-framework/commit/0a74d2ea4b0a920887b66a69a5298043fefc8c1a))
+
+
+
+
+
 ## 0.1.12 (2022-08-01)
 
 **Note:** Version bump only for package @equinor/fusion-observable
