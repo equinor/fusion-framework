@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.10...@equinor/fusion-framework-module-http@0.4.0) (2022-08-04)
+
+
+* feat(module)!: allow requireing module instnce (#190) ([3a7e67e](https://github.com/equinor/fusion-framework/commit/3a7e67e9accb5185100325c92d5850a44626e498)), closes [#190](https://github.com/equinor/fusion-framework/issues/190)
+
+
+### BREAKING CHANGES
+
+* `deps` prop is remove from module object, use `await require('MODULE')`;
+
+* feat(module)!: allow requireing module instnce
+
+when module initiates it should be allowed to await an required module.
+
+- add method for awaiting required module
+- add typing for config in initialize fase
+
+- update service discovery to await http module
+- add service discovery client
+- allow configuration of service discovery client
+* `deps` prop is remove from module object, use `await require('MODULE')`;
+
+* fix(module-http): add default interface for HttpClientOptions
+
+
+
+
+
 ## [0.3.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.9...@equinor/fusion-framework-module-http@0.3.10) (2022-08-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
