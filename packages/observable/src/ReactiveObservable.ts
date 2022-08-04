@@ -32,7 +32,7 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
     }
 
     get value(): S {
-        return this.__state$.getValue();
+        return this.__state$.value;
     }
 
     get closed(): boolean {
@@ -70,10 +70,18 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
                 ? this.action$.pipe(filterAction(actionTypeOrFn))
                 : this.action$;
         const mapper = (fn ? fn : actionTypeOrFn) as Effect<A, S>;
-        return (action$ ?? this.__action$)
+        return action$
             .pipe(
                 mergeMap((action) =>
-                    from(Promise.resolve(mapper(action, this.value))).pipe(
+                    from(
+                        new Promise((resolve, reject) => {
+                            try {
+                                resolve(mapper(action, this.value));
+                            } catch (err) {
+                                reject(err);
+                            }
+                        })
+                    ).pipe(
                         catchError((err) => {
                             console.warn('unhandled effect', err);
                             return EMPTY;
@@ -112,6 +120,7 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
 
     /** remove all subscribers  */
     public unsubscribe() {
+        this.__action$.unsubscribe();
         this.__state$.unsubscribe();
     }
 

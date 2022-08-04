@@ -35,6 +35,13 @@ describe('QueryClient', () => {
         }, 10);
     });
 
+    it('should respect completion', (complete) => {
+        const client = new QueryClient(emulateRequest(10), { debounce: 100 });
+        client.subscribe({ complete });
+        client.next('first');
+        client.complete();
+    });
+
     it('should reply last request', (complete) => {
         const queryArgs = { foo: 'bar' };
         const expected = [undefined, queryArgs, queryArgs];

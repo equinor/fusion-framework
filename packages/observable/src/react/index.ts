@@ -1,5 +1,6 @@
 export * from './useObservable';
 export * from './useObservableEffect';
+export * from './useObservableEpic';
 export * from './useObservableRef';
 export * from './useObservableState';
 export * from './useObservableSelector';
