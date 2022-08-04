@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BehaviorSubject, delayWhen, filter, from, lastValueFrom, map, mergeMap, of } from 'rxjs';
+import {
+    BehaviorSubject,
+    filter,
+    firstValueFrom,
+    from,
+    lastValueFrom,
+    map,
+    mergeMap,
+    throwError,
+    timeout,
+} from 'rxjs';
 
 import type {
     AnyModule,
@@ -43,55 +53,12 @@ const logModuleName = (module: AnyModule) =>
 
 const logger = new ConsoleLogger('MODULES');
 
-// TODO - create a class for initializing
-const _initializeModules = async <TModules extends Array<AnyModule>>(
-    modules: TModules,
-    config: ModulesConfigType<TModules>
-) => {
-    const instance$ = new BehaviorSubject<ModulesInstanceType<TModules>>(
-        {} as ModulesInstanceType<TModules>
-    );
-
-    from(modules)
-        .pipe(
-            delayWhen((module) => {
-                const hasDeps = !!module.deps;
-                if (hasDeps) {
-                    logger.debug(
-                        `module ${logModuleName(module)} requires dependencies`,
-                        module.deps
-                    );
-                    return instance$.pipe(
-                        filter(
-                            (instance) =>
-                                /** check that all dependencies are created */
-                                !!module.deps?.every((dep) =>
-                                    Object.keys(instance).includes(String(dep))
-                                )
-                        )
-                    );
-                }
-                return of(0);
-            }),
-            mergeMap((module) =>
-                /** assign module to modules object */
-                from(Promise.resolve(module.initialize(config, instance$.value))).pipe(
-                    map((instance) => {
-                        logger.debug(`initialized ${logModuleName(module)}`);
-                        return [module.name, instance];
-                    })
-                )
-            )
-        )
-        .subscribe({
-            next: ([name, module]) => {
-                instance$.next(Object.assign(instance$.value, { [name]: module }));
-            },
-            complete: () => instance$.complete(),
-        });
-
-    return lastValueFrom(instance$);
-};
+class RequiredModuleTimeoutError extends Error {
+    constructor() {
+        super('It was too slow');
+        this.name = 'RequiredModuleTimeoutError';
+    }
+}
 
 /**
  * Create an instances of provided instances
@@ -105,6 +72,13 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
     modules: TModules,
     ref?: TInstance
 ): Promise<ModulesInstanceType<TModules>> => {
+    const instance$ = new BehaviorSubject<ModulesInstanceType<TModules>>(
+        {} as ModulesInstanceType<TModules>
+    );
+
+    /** extract module names from provided modules */
+    const moduleNames = modules.map((m) => m.name);
+
     const afterConfiguration: Array<(config: ModulesConfigType<TModules>) => void> = [];
     const afterInit: Array<(instance: ModulesInstanceType<TModules>) => void> = [];
 
@@ -115,6 +89,7 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
     );
 
     /** initialize config providers for all modules */
+    // TODO: make configs init in parallel
     const config: ModulesConfig<TModules> = await Object.values(modules).reduce(
         async (acc, module) => {
             logger.debug(`configuring ${logModuleName(module)}`);
@@ -133,6 +108,36 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
         } as ModulesConfig<TModules>)
     );
 
+    /**
+     * Add method for allowing modules to await other module instance when initiating
+     * WARNING: this might create stall-lock if developer does not implement correctly!
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    config.requireInstance = <TKey extends keyof ModulesInstanceType<TModules>>(
+        name: TKey,
+        wait = 60
+    ): Promise<ModulesInstanceType<TModules>[TKey]> => {
+        if (!moduleNames.includes(name)) {
+            throw Error(`cannot not require [${String(name)}] since module is not defined!`);
+        }
+        if (instance$.value[name]) {
+            logger.debug(`Module [${String(name)}] is initiated, skipping queue`);
+            return Promise.resolve(instance$.value[name]);
+        }
+        logger.info(`Awaiting init of module [${String(name)}]`);
+        return firstValueFrom(
+            instance$.pipe(
+                filter((x) => !!x[name]),
+                map((x) => x[name]),
+                timeout({
+                    each: wait,
+                    with: () => throwError(() => new RequiredModuleTimeoutError()),
+                })
+            )
+        );
+    };
+
     /** protected config instance */
     Object.seal(config);
 
@@ -148,7 +153,30 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
         )
     );
 
-    const instance = await _initializeModules(modules, config);
+    from(modules)
+        .pipe(
+            /** assign module to modules object */
+            mergeMap((module) =>
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                from(Promise.resolve(module.initialize(config, instance$.value))).pipe(
+                    map((instance) => {
+                        logger.debug(`initialized ${logModuleName(module)}`);
+                        return [module.name, instance];
+                    })
+                )
+            )
+        )
+        .subscribe({
+            next: ([name, module]) => {
+                /** push instance */
+                instance$.next(Object.assign(instance$.value, { [name]: module }));
+            },
+            complete: () => instance$.complete(),
+        });
+
+    /** await creation of all instances */
+    const instance = await lastValueFrom(instance$);
     logger.debug('✅ initialized');
 
     /** Protected instances */

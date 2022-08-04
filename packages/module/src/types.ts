@@ -1,16 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** config object that are provided to modules when initiating */
+// TODO - create a own class for config (ConfigureConfig and InitializeConfig)
+export type ModuleInitializeConfig<
+    TKey extends string,
+    TConfig,
+    TDeps extends Array<AnyModule> = []
+> = Record<TKey, TConfig> &
+    ModulesConfigType<ModulesType<TDeps>> & {
+        requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
+            name: TKey,
+            wait?: number
+        ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
+    };
+
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
     name: TKey;
     configure?: (ref?: any) => TConfig | Promise<TConfig>;
-    deps?: Array<keyof ModulesInstanceType<ModulesType<TDeps>>>;
     postConfigure?: (
         config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>
     ) => void | Promise<void>;
     initialize: (
-        config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>,
+        config: ModuleInitializeConfig<TKey, TConfig, TDeps>,
         instance: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>
-    ) => TType;
+    ) => TType | Promise<TType>;
     postInitialize?: (
         modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>
     ) => void | Promise<void>;
@@ -63,8 +76,8 @@ export type ModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>
 
 /** === Internal helpers === */
 
-type ModulesObjectInstanceType<M extends Record<string, AnyModule>> = {
-    [K in keyof M as Extract<K, string>]: ModuleType<M[K]>;
+type ModulesObjectInstanceType<TModule extends Record<string, AnyModule>> = {
+    [TKey in keyof TModule as Extract<TKey, string>]: ModuleType<TModule[TKey]>;
 };
 
 type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
