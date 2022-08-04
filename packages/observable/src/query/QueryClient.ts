@@ -1,5 +1,5 @@
 import { interval, Observable, ObservableInput, Subject } from 'rxjs';
-import { debounce, pluck, filter, withLatestFrom, map } from 'rxjs/operators';
+import { debounce, filter, withLatestFrom, map } from 'rxjs/operators';
 
 import { Query } from './Query';
 
@@ -20,6 +20,7 @@ export class QueryClient<TType, TArgs> extends Observable<TType> {
     private __state$: QueryCache<TType, TArgs>;
     private __queries$ = new Subject<TArgs>();
 
+    /** Current data hold in state */
     public get data(): TType | undefined {
         return this.__state$.value.data;
     }
@@ -29,7 +30,7 @@ export class QueryClient<TType, TArgs> extends Observable<TType> {
     }
 
     constructor(queryFn: QueryFn<TType, TArgs>, options?: QueryOptions<TType, TArgs>) {
-        super((subscriber) => this.__state$.pipe(pluck('data')).subscribe(subscriber));
+        super((subscriber) => this.__state$.pipe(map((x) => x.data)).subscribe(subscriber));
 
         this.__client$ = new Query(queryFn, {
             retry: options?.retry,

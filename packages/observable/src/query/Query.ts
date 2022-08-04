@@ -40,6 +40,14 @@ export class Query<TType, TArgs> extends Observable<QueryState> {
         return this.__state$.closed;
     }
 
+    public get status() {
+        return this.value.status;
+    }
+
+    public get error() {
+        return this.value.error;
+    }
+
     constructor(queryFn: QueryFn<TType, TArgs>, config?: { retry?: Partial<RetryOpt> }) {
         super((subscriber) => {
             return this.__state$.subscribe(subscriber);

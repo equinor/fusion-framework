@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Query, QueryError } from '../query';
 import { ActionType } from '../query/actions';
 import { QueryStatus } from '../query/types';
@@ -16,6 +17,7 @@ describe('Query', () => {
         ];
         const client = emulateRequest();
         const query = new Query(client);
+        expect(query.status).toBe(QueryStatus.IDLE);
         query.subscribe({
             next: (state) => {
                 expect(state).toMatchObject({ ...expected.shift() });
@@ -25,7 +27,13 @@ describe('Query', () => {
         });
         query.next();
 
-        expect.assertions(3);
+        expect.assertions(4);
+    });
+
+    it('should convert to observable', () => {
+        const query = new Query(async () => null);
+        const observable = query.asObservable();
+        expect(observable).toBeInstanceOf(Observable);
     });
 
     it('should fail when error thrown', async () => {
@@ -38,11 +46,12 @@ describe('Query', () => {
         try {
             await query.nextAsync('should fail');
         } catch (err) {
+            expect(err).toEqual(query.error);
             expect(err).toBeInstanceOf(QueryError);
             expect(err).toHaveProperty('type', QueryError.TYPE.ERROR);
             expect(err).toHaveProperty('cause.cause', cause);
         }
-        expect.assertions(3);
+        expect.assertions(4);
     });
 
     it('should abort on signal', (complete) => {
