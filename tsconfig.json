@@ -23,6 +23,9 @@
       "path": "./packages/module"
     },
     {
+      "path": "./packages/module-app-config"
+    },
+    {
       "path": "./packages/module-http"
     },
     {

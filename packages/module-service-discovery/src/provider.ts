@@ -1,9 +1,13 @@
-import { IServiceDiscoveryConfigurator } from './configurator';
+import type { ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type {
+    HttpClientOptions,
+    HttpModule,
+    IHttpClient,
+} from '@equinor/fusion-framework-module-http';
+
+import { IServiceDiscoveryClient } from './client';
 
 import type { Environment, Service } from './types';
-
-import type { ModulesConfigType, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 
 export interface IServiceDiscoveryProvider {
     /**
@@ -15,60 +19,38 @@ export interface IServiceDiscoveryProvider {
      */
     readonly environment: Promise<Environment>;
 
-    configureClient(name: string, config: ModulesConfigType<[HttpModule]>): Promise<void>;
+    createClient(
+        name: string,
+        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>
+    ): Promise<IHttpClient>;
 }
 
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
-        protected readonly _config: IServiceDiscoveryConfigurator,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        protected readonly _client: IServiceDiscoveryClient,
         protected readonly _http: ModulesInstanceType<[HttpModule]>['http']
     ) {}
 
-    get environment(): Promise<Environment> {
-        return { ...this._getEnvironment() };
+    public get environment(): Promise<Environment> {
+        return this._client.environment;
     }
 
-    async resolveService(key: string): Promise<Service> {
-        const { services } = await this._getEnvironment();
-        // TODO - not found error
-        const service = services[key];
-        return service;
+    public async resolveService(key: string): Promise<Service> {
+        return this._client.resolveService(key);
     }
 
-    async configureClient(
+    public async createClient(
         name: string,
-        config: ModulesConfigType<[HttpModule]>,
-        onCreate?: (client: IHttpClient) => void
-    ): Promise<void> {
+        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>
+    ) {
         const service = await this.resolveService(name);
         if (!service) {
             throw Error(`Could not load configuration of service [${name}]`);
         }
-        config.http.configureClient(name, {
+        return this._http.createClient({
+            ...opt,
             baseUri: service.uri,
             defaultScopes: service.defaultScopes,
-            onCreate,
         });
-    }
-
-    protected _environment?: Environment;
-    protected async _getEnvironment(): Promise<Environment> {
-        if (!this._environment) {
-            this._environment = await this._fetchServiceDescription();
-        }
-        return this._environment;
-    }
-
-    protected async _fetchServiceDescription(): Promise<Environment> {
-        try {
-            const { clientKey, uri, selector } = this._config;
-            const client = this._http.createClient(clientKey);
-            const result = await client.fetchAsync(uri, { selector });
-            return result;
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
     }
 }
