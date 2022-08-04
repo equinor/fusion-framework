@@ -20,6 +20,7 @@ export class QueryClient<TType, TArgs> extends Observable<TType> {
     private __state$: QueryCache<TType, TArgs>;
     private __queries$ = new Subject<TArgs>();
 
+    /** Current data hold in state */
     public get data(): TType | undefined {
         return this.__state$.value.data;
     }
