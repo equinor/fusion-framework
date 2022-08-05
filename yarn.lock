@@ -1371,17 +1371,17 @@
   dependencies:
     rxjs "7.5.6"
 
-"@equinor/fusion-react-progress-indicator@^0.1.2":
-  version "0.1.4"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.4.tgz"
-  integrity sha512-iPT490AM8ZZENjMPU0T+b/Np+z0ucE+yaKjBeAHdxL9mJQWpRMTIe2FJ99uhNJCSNBTiqM2N2WYDaSHY1M7Nsg==
+"@equinor/fusion-react-progress-indicator@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
+  integrity sha512-dGWykFBw7FTBhMJzXZ39tn2/cFgyC+1Bo4ZYpHmNkq8HjiXEFOPH4BIAQl7UkAi00kP181/Mp+FK/xgCHNFv4g==
   dependencies:
-    "@equinor/fusion-react-utils" "^2.0.2"
+    "@equinor/fusion-react-utils" "^2.0.3"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
-"@equinor/fusion-react-styles@^0.5.0":
+"@equinor/fusion-react-styles@^0.5.4":
   version "0.5.4"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.4.tgz"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.4.tgz#4ea547af02ce1ac0b832da13803d0e583b11b052"
   integrity sha512-TBJR2wxA7aBiRbt2LSqvae2YahTEhBQtWhHNFLu5W65NmG4FmwjVvm8348FtlLP/w6UqdlnuDowpTHFZE94MYg==
   dependencies:
     "@equinor/fusion-wc-theme" "^0.2.25"
@@ -1389,10 +1389,10 @@
     "@material-ui/styles" "^4.11.4"
     clsx "^1.1.1"
 
-"@equinor/fusion-react-utils@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-utils/-/fusion-react-utils-2.0.2.tgz"
-  integrity sha512-nYupAGGan/RGPcj5Ph4sxf8KJZ46u8mQy6LRt9ssGFhVDOYi1vusl9vKLzRODBFZhkLdlKwh6rNghTz6jBgnHg==
+"@equinor/fusion-react-utils@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-utils/-/fusion-react-utils-2.0.3.tgz#f02b65d04adae40601fd09d7168a895413e8fe1e"
+  integrity sha512-O/Cm+K31Wnz84qvYlKoDfdjw8GHWtVsJcmI9GypWS9f9Xe27FRu7bkR6SPzl7xS9zZSrHI565W2vAwRXDNW9Bg==
   dependencies:
     date-fns "^2.28.0"
 
@@ -10569,10 +10569,10 @@ react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-query@^3.34.12:
-  version "3.39.1"
-  resolved "https://registry.npmjs.org/react-query/-/react-query-3.39.1.tgz"
-  integrity sha512-qYKT1bavdDiQZbngWZyPotlBVzcBjDYEJg5RQLBa++5Ix5jjfbEYJmHSZRZD+USVHUSvl/ey9Hu+QfF1QAK80A==
+react-query@^3.39.2:
+  version "3.39.2"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.2.tgz#9224140f0296f01e9664b78ed6e4f69a0cc9216f"
+  integrity sha512-F6hYDKyNgDQfQOuR1Rsp3VRzJnWHx6aRnnIZHMNGGgbL3SBgpZTDg8MQwmxOgpCAoqZJA+JSNCydF1xGJqKOCA==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
@@ -10583,9 +10583,9 @@ react-refresh@^0.11.0:
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.11.0.tgz"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
-react-scripts@5.0.1:
+react-scripts@^5.0.1:
   version "5.0.1"
-  resolved "https://registry.npmjs.org/react-scripts/-/react-scripts-5.0.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-5.0.1.tgz#6285dbd65a8ba6e49ca8d651ce30645a6d980003"
   integrity sha512-8VAmEm/ZAwQzJ+GOMLbBsTdDKOpuZh7RPs0UymvBR2vRk4iZWCskjbFnxqjrzoIvlNNRZ3QJFx6/qDSi6zSnaQ==
   dependencies:
     "@babel/core" "^7.16.0"
