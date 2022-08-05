@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2022-08-05)
+
+
+### Features
+
+* **react-app:** implement react framework modules ([#195](https://github.com/equinor/fusion-framework/issues/195)) ([acb0db3](https://github.com/equinor/fusion-framework/commit/acb0db36bff74c7838c48297179cf644db6cc8ca))
+
+
+
+
+
 ## [0.2.29](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.2.28...@equinor/fusion-framework-react-app@0.2.29) (2022-08-04)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
