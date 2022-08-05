@@ -1352,17 +1352,24 @@
     eslint-plugin-react-hooks "^4.3.0"
 
 "@equinor/fusion-framework-module-ag-grid@file:packages/module-ag-grid":
-  version "0.2.7"
+  version "0.2.9"
   dependencies:
     "@ag-grid-enterprise/core" "~27.3.0"
-    "@equinor/fusion-framework-module" "^0.2.7"
+    "@equinor/fusion-framework-module" "^0.3.0"
 
 "@equinor/fusion-framework-module-telemetry@file:packages/module-telemetry":
-  version "0.2.13"
+  version "0.2.15"
   dependencies:
-    "@equinor/fusion-framework-module" "^0.2.7"
-    "@equinor/fusion-framework-module-msal" "^0.1.22"
+    "@equinor/fusion-framework-module" "^0.3.0"
+    "@equinor/fusion-framework-module-msal" "^0.1.24"
     "@microsoft/applicationinsights-web" "^2.7.2"
+
+"@equinor/fusion-framework-module@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module/-/fusion-framework-module-0.2.8.tgz#ad2f3ea1f16a694f99f1e16eff48c48e998c5745"
+  integrity sha512-x0GrQckDFv2pZ21fKOm1ivu4HPCGOK2JJrac3Y/KYzSWlbP53NYL9RWpOIEG6cOYxb62M44HLQ3F1wsxd213tg==
+  dependencies:
+    rxjs "7.5.6"
 
 "@equinor/fusion-react-progress-indicator@^0.1.2":
   version "0.1.4"

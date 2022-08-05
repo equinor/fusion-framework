@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/esm/index.js",
   "exports": {
     ".": "./dist/esm/index.js"
@@ -10,7 +10,10 @@
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"
   },
-  "keywords": ["React", "@equinor/fusion-framework-module"],
+  "keywords": [
+    "React",
+    "@equinor/fusion-framework-module"
+  ],
   "description": "Utils for initializing and consuming fusion framework modules",
   "author": "odin.rochmann@gmail.com",
   "license": "ISC",
