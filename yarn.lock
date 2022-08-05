@@ -1372,11 +1372,11 @@
     rxjs "7.5.6"
 
 "@equinor/fusion-react-progress-indicator@^0.1.2":
-  version "0.1.4"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.4.tgz"
-  integrity sha512-iPT490AM8ZZENjMPU0T+b/Np+z0ucE+yaKjBeAHdxL9mJQWpRMTIe2FJ99uhNJCSNBTiqM2N2WYDaSHY1M7Nsg==
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
+  integrity sha512-dGWykFBw7FTBhMJzXZ39tn2/cFgyC+1Bo4ZYpHmNkq8HjiXEFOPH4BIAQl7UkAi00kP181/Mp+FK/xgCHNFv4g==
   dependencies:
-    "@equinor/fusion-react-utils" "^2.0.2"
+    "@equinor/fusion-react-utils" "^2.0.3"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
 "@equinor/fusion-react-styles@^0.5.0":
@@ -1389,10 +1389,10 @@
     "@material-ui/styles" "^4.11.4"
     clsx "^1.1.1"
 
-"@equinor/fusion-react-utils@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-utils/-/fusion-react-utils-2.0.2.tgz"
-  integrity sha512-nYupAGGan/RGPcj5Ph4sxf8KJZ46u8mQy6LRt9ssGFhVDOYi1vusl9vKLzRODBFZhkLdlKwh6rNghTz6jBgnHg==
+"@equinor/fusion-react-utils@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-utils/-/fusion-react-utils-2.0.3.tgz#f02b65d04adae40601fd09d7168a895413e8fe1e"
+  integrity sha512-O/Cm+K31Wnz84qvYlKoDfdjw8GHWtVsJcmI9GypWS9f9Xe27FRu7bkR6SPzl7xS9zZSrHI565W2vAwRXDNW9Bg==
   dependencies:
     date-fns "^2.28.0"
 
