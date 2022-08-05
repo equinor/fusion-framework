@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.35](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.2.34...@equinor/fusion-framework-test-app@0.2.35) (2022-08-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
 ## 0.2.34 (2022-08-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
