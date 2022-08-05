@@ -1395,6 +1395,14 @@
   dependencies:
     rxjs "7.5.6"
 
+"@equinor/fusion-observable@^0.1.3":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-0.1.12.tgz#ea238e1d79b13f648f57cae74bd040ed39930cd2"
+  integrity sha512-ki+Eq5byrDca6KhiKCan4xtuYew9yai61fJEDUDy6CL7ZMB8SSRr2oZ+N2VAEoMWS4XnooetcOP7FLb4UaDZRg==
+  dependencies:
+    rxjs "7.5.6"
+    uuid "^8.3.2"
+
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"

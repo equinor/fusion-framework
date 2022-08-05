@@ -4,9 +4,11 @@ import { lazy } from 'react';
 import type { Fusion, AppManifest } from '@equinor/fusion-framework';
 import FrameworkProvider from '@equinor/fusion-framework-react';
 
-import { AnyModule, initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
+import { AnyModule, ModulesConfigType } from '@equinor/fusion-framework-module';
 
-import { ModuleProvider, appModules, AppModules } from './modules';
+import { appModules, AppModules } from './modules';
+
+import { createModuleProvider } from '@equinor/fusion-framework-react-module';
 
 /**
  * Interface for type hinting configuration callbacks
@@ -94,17 +96,20 @@ export const createApp =
                     await Promise.resolve(configure(config, fusion, env));
                 }
             };
-            const value = await initializeModules(
+            const AppModuleProvider = await createModuleProvider(
                 configurator,
+                // TODO type hint concat of modules
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 appModules.concat(modules),
                 fusion.modules
             );
             return {
                 default: () => (
                     <FrameworkProvider value={fusion}>
-                        <ModuleProvider value={value}>
+                        <AppModuleProvider>
                             <Component />
-                        </ModuleProvider>
+                        </AppModuleProvider>
                     </FrameworkProvider>
                 ),
             };
