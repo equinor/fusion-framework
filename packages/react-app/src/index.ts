@@ -4,11 +4,4 @@
  */
 
 export { AppConfigurator, createApp, default } from './create-app';
-export {
-    AppModules,
-    AppModulesInstance,
-    ModuleProvider,
-    appModules,
-    createModuleProvider,
-    useModuleContext,
-} from './modules';
+export { AppModules, AppModulesInstance, appModules, useAppModule, useAppModules } from './modules';

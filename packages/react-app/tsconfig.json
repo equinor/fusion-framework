@@ -9,6 +9,9 @@
   },
   "references": [
     {
+      "path": "../observable"
+    },
+    {
       "path": "../framework"
     },
     {
@@ -22,7 +25,14 @@
     },
     {
       "path": "../module-msal"
-    }
+    },
+    {
+      "path": "../react-module"
+    },
+    {
+      "path": "../react-module-app-config"
+    },
+    
   ],
   "include": [
     "src/**/*"
