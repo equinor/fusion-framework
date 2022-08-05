@@ -44,7 +44,6 @@
     "@equinor/fusion-framework-module-http": "^0.4.0",
     "@equinor/fusion-framework-module-msal": "^0.1.24",
     "@equinor/fusion-framework-react": "^0.2.12",
-    "@equinor/fusion-framework-react-module-app-config": "^0.0.0",
     "@equinor/fusion-observable": "^0.1.3"
   },
   "devDependencies": {

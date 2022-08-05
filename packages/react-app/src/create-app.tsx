@@ -98,6 +98,9 @@ export const createApp =
             };
             const AppModuleProvider = await createModuleProvider(
                 configurator,
+                // TODO type hint concat of modules
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 appModules.concat(modules),
                 fusion.modules
             );
