@@ -17,7 +17,7 @@ jobs:
         run: yarn
 
       - name: Build packages
-        run: yarn build
+        run: yarn nx affected:build --base=remotes/origin/main
 
       - name: Test packages
-        run: yarn test
+        run: yarn nx affected:test --base=remotes/origin/main
