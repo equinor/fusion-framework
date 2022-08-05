@@ -44,7 +44,7 @@
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-conventional": "^17.0.3",
     "@equinor/eslint-config-fusion": "^1.0.1",
     "@nrwl/nx-cloud": "latest",
     "@types/jest": "^27.4.1",
