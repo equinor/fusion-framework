@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.3.0...@equinor/fusion-framework-react-app@0.4.0) (2022-08-08)
+
+
+### Features
+
+* **react-app:** implement app config for react apps ([b367e55](https://github.com/equinor/fusion-framework/commit/b367e550b1868ed30b067a9bfd99db09b269d862))
+
+
+
+
+
 # 0.3.0 (2022-08-05)
 
 

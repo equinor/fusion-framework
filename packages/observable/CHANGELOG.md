@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2022-08-08)
+
+
+### Features
+
+* **observable:** provide hook for converting observable query ([6f1c95c](https://github.com/equinor/fusion-framework/commit/6f1c95c38446e63cb4f0573a0e99ee31daf55e9a))
+
+
+
+
+
 # 0.2.0 (2022-08-04)
 
 

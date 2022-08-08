@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.5.0 (2022-08-08)
+
+
+### Bug Fixes
+
+* **module-http:** expose FetchRequest ([3d14ead](https://github.com/equinor/fusion-framework/commit/3d14ead0d78b36db091c6645ff1b69101e1f911f))
+
+
+### Features
+
+* **module-service-discovery:** resolve service to config ([3fa088d](https://github.com/equinor/fusion-framework/commit/3fa088d2ced8136447df6949928f1af9fc83407a))
+
+
+
+
+
 # [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@0.3.10...@equinor/fusion-framework-module-http@0.4.0) (2022-08-04)
 
 

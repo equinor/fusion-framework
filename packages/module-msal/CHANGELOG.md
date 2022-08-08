@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2022-08-08)
+
+
+### Features
+
+* **module-service-discovery:** resolve service to config ([3fa088d](https://github.com/equinor/fusion-framework/commit/3fa088d2ced8136447df6949928f1af9fc83407a))
+
+
+
+
+
 ## [0.1.24](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.23...@equinor/fusion-framework-module-msal@0.1.24) (2022-08-04)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-msal
