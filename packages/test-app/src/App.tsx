@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
 
-import createApp, { AppConfigurator, useModuleContext } from '@equinor/fusion-framework-react-app';
+import createApp, { AppConfigurator, useAppModules } from '@equinor/fusion-framework-react-app';
+import { useAppConfig } from '@equinor/fusion-framework-react-app/config';
 import { useFramework, useCurrentUser } from '@equinor/fusion-framework-react-app/framework';
 import { AppList } from 'AppList';
 
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 import moduleAgrGrid, { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
@@ -17,7 +18,9 @@ interface App {
 
 const configCallback: AppConfigurator<[AgGridModule]> = async (appModuleConfig, frameworkApi) => {
     console.debug(0, 'configuring app', frameworkApi, appModuleConfig);
-    await frameworkApi.modules.serviceDiscovery.configureClient('portal', appModuleConfig);
+
+    frameworkApi.modules.serviceDiscovery.configureClient(appModuleConfig, 'portal');
+    // await frameworkApi.modules.serviceDiscovery.configureClient('portal', appModuleConfig);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 };
 
@@ -25,8 +28,9 @@ const queryClient = new QueryClient();
 
 export const AppComponent = (): JSX.Element => {
     const framework = useFramework();
-    const modules = useModuleContext();
+    const modules = useAppModules();
     const account = useCurrentUser();
+    const { data: configs } = useAppConfig({ appKey: 'contract-personnel' });
     return (
         <div>
             <h3>Current user</h3>
@@ -39,6 +43,10 @@ export const AppComponent = (): JSX.Element => {
                     <li key={x}>{x}</li>
                 ))}
             </ul>
+            <h3>App Config</h3>
+            <code>
+                <pre>{JSON.stringify(configs, null, 4)}</pre>
+            </code>
             <h3>Registered modules in App</h3>
             <ul>
                 {Object.keys(modules).map((x) => (
