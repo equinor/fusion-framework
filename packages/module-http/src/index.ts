@@ -3,7 +3,7 @@
  * @module
  */
 
-export { HttpClient, IHttpClient, FetchRequestInit } from './client';
+export { HttpClient, IHttpClient, FetchRequestInit, FetchRequest } from './client';
 export { HttpClientMsal } from './client-msal';
 
 export * from './configurator';
