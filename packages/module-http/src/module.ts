@@ -4,7 +4,9 @@ import { IHttpClientProvider, HttpClientProvider } from './provider';
 
 import type { Module, ModulesConfigType } from '@equinor/fusion-framework-module';
 
-export type HttpModule = Module<
+export type HttpModule = Module<'http', IHttpClientProvider, IHttpClientConfigurator>;
+
+export type HttpMsalModule = Module<
     'http',
     IHttpClientProvider<HttpClientMsal>,
     IHttpClientConfigurator<HttpClientMsal>
@@ -16,12 +18,12 @@ export type HttpModule = Module<
 export const module: HttpModule = {
     name: 'http',
     configure: () => new HttpClientConfigurator(HttpClientMsal),
-    initialize: ({ http }): HttpClientProvider<HttpClientMsal> => new HttpClientProvider(http),
+    initialize: ({ http }): HttpClientProvider => new HttpClientProvider(http),
 };
 
 export const setupHttpModule = (
     config: ModulesConfigType<[HttpModule]>,
-    callback: (config: IHttpClientConfigurator<HttpClientMsal>) => void
+    callback: (config: IHttpClientConfigurator) => void
 ): void | Promise<void> => {
     callback(config.http);
 };

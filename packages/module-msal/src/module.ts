@@ -2,9 +2,9 @@ import { AuthConfigurator, IAuthConfigurator } from './configurator';
 import { AuthProvider, IAuthProvider } from './provider';
 
 import type { Module, ModulesConfigType } from '@equinor/fusion-framework-module';
-import type { HttpModule } from '@equinor/fusion-framework-module-http';
+import type { HttpMsalModule } from '@equinor/fusion-framework-module-http';
 
-export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator, [HttpModule]>;
+export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator, [HttpMsalModule]>;
 
 export const module: MsalModule = {
     name: 'auth',

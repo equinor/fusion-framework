@@ -1,4 +1,4 @@
-import { HttpClient } from './client';
+import { HttpClient, IHttpClient } from './client';
 import { HttpClientOptions, IHttpClientConfigurator } from './configurator';
 
 export class ClientNotFoundException extends Error {
@@ -7,7 +7,7 @@ export class ClientNotFoundException extends Error {
     }
 }
 
-export interface IHttpClientProvider<TClient extends HttpClient = HttpClient> {
+export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> {
     /** check if a client is configured */
     hasClient(key: string): boolean;
     /** create a new http client */
@@ -38,7 +38,7 @@ const isURL = (url: string) => {
     return pattern.test(url);
 };
 
-export class HttpClientProvider<TClient extends HttpClient>
+export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     implements IHttpClientProvider<TClient>
 {
     constructor(protected config: IHttpClientConfigurator<TClient>) {}
