@@ -1,5 +1,6 @@
-import { IAppConfigConfigurator } from 'configurator';
 import type { ObservableInput } from 'rxjs';
+
+import { IAppConfigConfigurator } from './configurator';
 
 import { AppConfig } from './types';
 
