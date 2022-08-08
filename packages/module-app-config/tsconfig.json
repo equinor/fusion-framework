@@ -5,18 +5,8 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "jsx": "react-jsx"
   },
   "references": [
-    {
-      "path": "../observable"
-    },
-    {
-      "path": "../framework"
-    },
-    {
-      "path": "../framework-react"
-    },
     {
       "path": "../module"
     },
@@ -24,18 +14,11 @@
       "path": "../module-http"
     },
     {
-      "path": "../module-msal"
-    },
-    {
-      "path": "../react-module"
-    },
-    {
-      "path": "../react-module-app-config"
-    },
-    
+      "path": "../module-service-discovery"
+    }
   ],
   "include": [
-    "src/**/*"
+    "src/**/*",
   ],
   "exclude": [
     "node_modules",

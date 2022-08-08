@@ -18,6 +18,7 @@ export const Framework = createFrameworkProvider<[AgGridModule]>(
             defaultScopes: ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'],
         });
 
+        // TODO: make env
         config.agGrid.licenseKey =
             'CompanyName=Equinor ASA,LicensedGroup=Fusion,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=20,LicensedProductionInstancesCount=2,AssetReference=AG-026689,ExpiryDate=2_May_2023_[v2]_MTY4Mjk4MjAwMDAwMA==ca75ae051394e34c20407e0a3285ee58';
 

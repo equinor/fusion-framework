@@ -6,17 +6,19 @@ Package for developing applications that uses the `@equinor/fusion-framework`.
 
 __Dependencies__
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-framework?label=fusion-framework&style=for-the-badge)
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-framework-module?label=fusion-framework-module&style=for-the-badge)
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fframework%2Fpackage.json&label=framework&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/framework)
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-framework-module-http?label=fusion-framework-module-http&style=for-the-badge)
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule%2Fpackage.json&label=module&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module)
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-framework-module-msal?label=fusion-framework-module-msal&style=for-the-badge)
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule-http%2Fpackage.json&label=module-http&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module-http)
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-framework-react?label=fusion-framework-react&style=for-the-badge)
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule-msal%2Fpackage.json&label=module-msal&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module-msal)
 
-![npm (scoped)](https://img.shields.io/npm/v/@equinor/fusion-observable?label=fusion-observable&style=for-the-badge)
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Freact-module%2Fpackage.json&label=react-module&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/react-module)
+
+[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Freact-module-app-config%2Fpackage.json&label=react-module-app-config&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/react-module-app-config)
+
 
 ## Configure
 ```tsx

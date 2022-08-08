@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import {
     useHttpClient,
@@ -19,7 +19,7 @@ const selector = (x: Response): Promise<App[]> => {
 const useAllApps = () => {
     const client = useHttpClient('portal');
     const fn = useMemo(() => getAllApps(client), [client]);
-    return useQuery('all_apps', ({ signal }) => fn({ signal, selector }));
+    return useQuery(['all_apps'], ({ signal }) => fn({ signal, selector }));
     //     client.fetchAsync('api/apps', { selector, signal })
     // );
 };
