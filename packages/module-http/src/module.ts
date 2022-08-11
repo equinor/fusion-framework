@@ -18,7 +18,7 @@ export type HttpMsalModule = Module<
 export const module: HttpModule = {
     name: 'http',
     configure: () => new HttpClientConfigurator(HttpClientMsal),
-    initialize: ({ http }): HttpClientProvider => new HttpClientProvider(http),
+    initialize: ({ config }): HttpClientProvider => new HttpClientProvider(config),
 };
 
 export const setupHttpModule = (

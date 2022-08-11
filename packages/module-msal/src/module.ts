@@ -8,26 +8,24 @@ export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator, [HttpM
 
 export const module: MsalModule = {
     name: 'auth',
-    configure: (modules) => {
+    configure: (refModules) => {
         const configurator = new AuthConfigurator();
         /** check if parent scope has configured msal */
-        if (modules?.auth?.defaultConfig) {
+        if (refModules?.auth?.defaultConfig) {
             /** copy configuration from parent scope */
-            configurator.configureDefault(modules.auth.defaultConfig);
+            configurator.configureDefault(refModules.auth.defaultConfig);
         }
         return configurator;
     },
-    initialize: (config, modules) => {
-        if (config.http) {
-            /**
-             * Add handler for setting token when request is executed
-             * TODO - maybe check override
-             */
-            config.http.defaultHttpRequestHandler.set('MSAL', async (request) => {
+    initialize: async ({ config, requireInstance }) => {
+        const authProvider = new AuthProvider(config);
+        try {
+            const httpModule = await requireInstance('http');
+            httpModule.defaultHttpRequestHandler.set('MSAL', async (request) => {
                 const { scopes = [] } = request;
                 if (scopes.length) {
                     /** TODO should be try catch, check caller for handling */
-                    const token = await modules.auth.acquireToken({
+                    const token = await authProvider.acquireToken({
                         scopes,
                     });
                     if (token) {
@@ -37,8 +35,11 @@ export const module: MsalModule = {
                     }
                 }
             });
+        } catch (err) {
+            // TODO
+            console.error(err);
         }
-        return new AuthProvider(config.auth);
+        return authProvider;
     },
 };
 

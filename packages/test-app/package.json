@@ -22,10 +22,10 @@
     "directory": "packages/react"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-module-ag-grid": "file:../module-ag-grid",
+    "@equinor/fusion-framework-module-ag-grid": "^0.2.11",
     "@equinor/fusion-framework-module-msal": "^0.2.0",
     "@equinor/fusion-framework-module-service-discovery": "^0.5.0",
-    "@equinor/fusion-framework-module-telemetry": "file:../module-telemetry",
+    "@equinor/fusion-framework-module-telemetry": "^0.2.16",
     "@equinor/fusion-framework-react": "^0.2.13",
     "@equinor/fusion-framework-react-app": "^0.4.0",
     "@equinor/fusion-react-progress-indicator": "^0.1.5",

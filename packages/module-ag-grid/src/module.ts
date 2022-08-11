@@ -13,7 +13,7 @@ export const module: AgGridModule = {
         }
         return config;
     },
-    initialize: ({ agGrid: config }): IAgGridProvider => new AgGridProvider(config),
+    initialize: ({ config }): IAgGridProvider => new AgGridProvider(config),
 };
 
 export default module;

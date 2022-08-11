@@ -1,5 +1,9 @@
-import { HttpClient, IHttpClient } from './client';
-import { HttpClientOptions, IHttpClientConfigurator } from './configurator';
+import { HttpClient, HttpRequestHandler, IHttpClient } from './client';
+import {
+    HttpClientOptions,
+    HttpClientRequestInitType,
+    IHttpClientConfigurator,
+} from './configurator';
 
 export class ClientNotFoundException extends Error {
     constructor(message: string) {
@@ -8,6 +12,7 @@ export class ClientNotFoundException extends Error {
 }
 
 export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> {
+    readonly defaultHttpRequestHandler: HttpRequestHandler<HttpClientRequestInitType<TClient>>;
     /** check if a client is configured */
     hasClient(key: string): boolean;
     /** create a new http client */
@@ -41,6 +46,10 @@ const isURL = (url: string) => {
 export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     implements IHttpClientProvider<TClient>
 {
+    get defaultHttpRequestHandler(): HttpRequestHandler<HttpClientRequestInitType<TClient>> {
+        return this.config.defaultHttpRequestHandler;
+    }
+
     constructor(protected config: IHttpClientConfigurator<TClient>) {}
 
     public hasClient(key: string): boolean {
@@ -54,7 +63,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
             defaultScopes = [],
             onCreate,
             ctor = this.config.defaultHttpClientCtor,
-            requestHandler = this.config.defaultHttpRequestHandler,
+            requestHandler = this.defaultHttpRequestHandler,
         } = config as HttpClientOptions<TClient>;
         const options = { requestHandler };
         const instance = new ctor(baseUri || '', options) as TClient;
