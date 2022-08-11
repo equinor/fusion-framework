@@ -13,8 +13,8 @@ export type TelemetryModule = Module<
 export const module: TelemetryModule = {
     name: 'telemetry',
     configure: () => new TelemetryConfigurator(),
-    initialize: ({ telemetry }, { auth }): ITelemetryProvider =>
-        new TelemetryProvider(telemetry, auth),
+    initialize: async ({ config, requireInstance }): Promise<ITelemetryProvider> =>
+        new TelemetryProvider(config, await requireInstance('auth')),
 };
 
 export default module;

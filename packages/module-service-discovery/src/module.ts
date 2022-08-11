@@ -25,10 +25,10 @@ export const module: ServiceDiscoveryModule = {
             clientKey: 'service_discovery',
             endpoint: '/_discovery/environments/current',
         }),
-    initialize: async (config) => {
-        const httpModule = await config.requireInstance('http');
-        const httpClient = await config.serviceDiscovery.createHttpClientClient(httpModule);
-        const discoClient = await config.serviceDiscovery.createClient(httpClient);
+    initialize: async ({ config, requireInstance }) => {
+        const httpModule = await requireInstance('http');
+        const httpClient = await config.createHttpClientClient(httpModule);
+        const discoClient = await config.createClient(httpClient);
         return new ServiceDiscoveryProvider(discoClient, httpModule);
     },
 };

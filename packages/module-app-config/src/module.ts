@@ -58,27 +58,26 @@ export const module: AppConfigModule = {
         }
         return configurator;
     },
-    initialize: async (config): Promise<IAppConfigProvider> => {
-        const { appConfig } = config;
+    initialize: async ({ config, requireInstance }): Promise<IAppConfigProvider> => {
         /** if no client provided from config tyy to create one */
-        if (!appConfig.httpClient) {
+        if (!config.httpClient) {
             /** load http module */
-            const http = await config.requireInstance('http');
+            const http = await requireInstance('http');
 
             /** check if the http provider has configure a client */
             if (!http.hasClient(moduleKey)) {
-                appConfig.httpClient = http.createClient(moduleKey);
+                config.httpClient = http.createClient(moduleKey);
             } else {
                 /** load service discovery module */
-                const serviceDiscovery = await config.requireInstance('serviceDiscovery');
+                const serviceDiscovery = await requireInstance('serviceDiscovery');
                 /** resolve and create a client from discovery */
-                appConfig.httpClient = await serviceDiscovery.createClient('portal');
+                config.httpClient = await serviceDiscovery.createClient('portal');
             }
         }
-        if (!appConfig.httpClient) {
+        if (!config.httpClient) {
             throw Error('no http client provided for app configuration!');
         }
-        return new AppConfigProvider(appConfig);
+        return new AppConfigProvider(config);
     },
 };
 

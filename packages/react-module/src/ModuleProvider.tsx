@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 
 import {
     initializeModules,
@@ -54,11 +54,12 @@ export const createModuleProvider: ModuleProviderCreator = async <
     ref?: TRef
 ): Promise<React.LazyExoticComponent<React.FunctionComponent>> => {
     const Component = lazy(async () => {
-        const value = await initializeModules(configurator, modules, ref);
+        const { dispose, ...instance } = await initializeModules(configurator, modules, ref);
         return {
-            default: ({ children }: { children?: React.ReactNode }) => (
-                <ModuleProvider value={value}>{children}</ModuleProvider>
-            ),
+            default: ({ children }: { children?: React.ReactNode }) => {
+                useEffect(() => dispose, [instance]);
+                return <ModuleProvider value={instance}>{children}</ModuleProvider>;
+            },
         };
     });
     return Component;

@@ -14,7 +14,7 @@ export type FusionModules = [HttpModule, MsalModule, ServiceDiscoveryModule];
 export const baseModules: FusionModules = [http, auth, disco];
 
 export type FusionModulesInstance<TModules extends Array<AnyModule>> =
-    ModulesInstanceType<FusionModules> & ModulesInstanceType<TModules>;
+    ModulesInstanceType<FusionModules> & ModulesInstanceType<TModules> & { dispose: VoidFunction };
 
 export type FusionConfigurator<TModules extends Array<AnyModule>> = ModulesConfigurator<
     [...FusionModules, ...TModules]

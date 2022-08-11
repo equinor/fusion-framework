@@ -20,7 +20,9 @@ export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
     responseHandler?: HttpResponseHandler<HttpClientRequestInitType<TClient>>;
 }
 
-type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpClient<infer U> ? U : never;
+export type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpClient<infer U>
+    ? U
+    : never;
 
 /**
  * Instance for configuring http client

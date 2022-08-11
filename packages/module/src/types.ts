@@ -1,32 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/** config object that are provided to modules when initiating */
-// TODO - create a own class for config (ConfigureConfig and InitializeConfig)
-export type ModuleInitializeConfig<
-    TKey extends string,
-    TConfig,
-    TDeps extends Array<AnyModule> = []
-> = Record<TKey, TConfig> &
-    ModulesConfigType<ModulesType<TDeps>> & {
-        requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
-            name: TKey,
-            wait?: number
-        ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
-    };
-
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
     name: TKey;
     configure?: (ref?: any) => TConfig | Promise<TConfig>;
     postConfigure?: (
         config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>
     ) => void | Promise<void>;
-    initialize: (
-        config: ModuleInitializeConfig<TKey, TConfig, TDeps>,
-        instance: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>
-    ) => TType | Promise<TType>;
+    initialize: (args: {
+        ref?: any;
+        config: TConfig;
+        requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
+            name: TKey,
+            wait?: number
+        ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
+    }) => TType | Promise<TType>;
     postInitialize?: (
         modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>
     ) => void | Promise<void>;
+    dispose?: (args: {
+        ref?: any;
+        instance: TType;
+        modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
+    }) => void | Promise<void>;
 }
 
 export type AnyModule = Module<any, any, any, any>;
@@ -48,7 +43,7 @@ export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
     : never;
 
 export interface ModulesConfigurator<TModules extends Array<AnyModule>, TRef = ModuleInstance> {
-    (config: ModulesConfig<ModulesType<TModules>>, ref?: TRef): void | Promise<void>;
+    (config: ModulesConfig<TModules>, ref?: TRef): void | Promise<void>;
 }
 
 /** Extract configs from modules  */
