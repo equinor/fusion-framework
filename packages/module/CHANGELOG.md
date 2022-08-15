@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@0.4.0...@equinor/fusion-framework-module@0.4.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* enhance post initialize ([4d10184](https://github.com/equinor/fusion-framework/commit/4d10184bf89d8968360be726ec3885444999ef8f))
+
+
+
+
+
 # 0.4.0 (2022-08-11)
 
 
