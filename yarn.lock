@@ -2768,12 +2768,13 @@
     nx "14.5.4"
 
 "@nrwl/nx-cloud@latest":
-  version "14.3.0"
-  resolved "https://registry.npmjs.org/@nrwl/nx-cloud/-/nx-cloud-14.3.0.tgz"
-  integrity sha512-aByHe8Gp1/IT9CtQYlGLIYBgU+ZtrgEwblBX8kcoBNRPf1OOdouahjyasAjQ9zi1cznve8AzTTcLt2eSCHWfrw==
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@nrwl/nx-cloud/-/nx-cloud-14.4.0.tgz#b706a11934ef0ce936fd9f8e6e999db8383dc1cf"
+  integrity sha512-4sKNzGhBqTipy4fPZD09ZBkV9UTPTn0JUOQxOI7ETqlHhT2u8SfeybSJMnPAi5H6DjsqsooM8JCKPR/7D4+8sQ==
   dependencies:
     axios "^0.21.1"
     chalk "4.1.0"
+    dotenv "~10.0.0"
     node-machine-id "^1.1.12"
     strip-json-comments "^3.1.1"
     tar "6.1.11"
