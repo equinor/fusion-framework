@@ -14,9 +14,11 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
             wait?: number
         ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
     }) => TType | Promise<TType>;
-    postInitialize?: (
-        modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>
-    ) => void | Promise<void>;
+    postInitialize?: (args: {
+        ref?: any;
+        instance: TType;
+        modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
+    }) => void | Promise<void>;
     dispose?: (args: {
         ref?: any;
         instance: TType;

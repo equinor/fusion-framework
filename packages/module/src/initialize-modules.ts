@@ -180,8 +180,15 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
     Object.seal(instance);
 
     /** call all added post config hooks  */
-    const postInitialize = [...modules.map((x) => x.postInitialize), ...afterInit];
-    await Promise.all(postInitialize.map((x) => Promise.resolve(x?.(instance))));
+    await Promise.allSettled(
+        modules.map(async (x) => {
+            await x.postInitialize?.({
+                ref,
+                modules: instance,
+                instance: instance[x.name],
+            });
+        })
+    );
     logger.debug('✅ post initialized');
 
     logger.info(
@@ -191,14 +198,12 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
 
     const dispose = async () => {
         await Promise.allSettled(
-            modules.map((module) => {
-                Promise.resolve(
-                    module.dispose?.({
-                        ref,
-                        modules: instance,
-                        instance: modules[module.name],
-                    })
-                );
+            modules.map(async (module) => {
+                await module.dispose?.({
+                    ref,
+                    modules: instance,
+                    instance: modules[module.name],
+                });
             })
         );
     };
