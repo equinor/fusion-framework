@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-http",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -23,7 +23,7 @@
     "directory": "packages/modules-http"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^0.4.1",
+    "@equinor/fusion-framework-module": "^0.4.2",
     "rxjs": "^7.5.5"
   },
   "devDependencies": {

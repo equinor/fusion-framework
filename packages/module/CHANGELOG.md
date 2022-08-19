@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.4.2 (2022-08-19)
+
+
+### Performance Improvements
+
+* improve logging of initializing modules ([f313bca](https://github.com/equinor/fusion-framework/commit/f313bca19103356f9d1a2bc09b57d4ff975e46a0))
+
+
+
+
+
 ## [0.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@0.4.0...@equinor/fusion-framework-module@0.4.1) (2022-08-15)
 
 
