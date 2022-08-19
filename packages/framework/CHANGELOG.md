@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@2.0.2...@equinor/fusion-framework@2.1.0) (2022-08-19)
+
+
+### Features
+
+* **framework:** enable event module ([e4734d2](https://github.com/equinor/fusion-framework/commit/e4734d2ab747b327eb074ca330aeac2188860c69))
+
+
+
+
+
 ## 2.0.2 (2022-08-19)
 
 **Note:** Version bump only for package @equinor/fusion-framework
