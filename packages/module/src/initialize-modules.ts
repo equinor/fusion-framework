@@ -49,10 +49,12 @@ class ConsoleLogger {
     }
 }
 
-const logModuleName = (module: AnyModule) =>
-    `\u001b[1;32m${module.name.replace(/([A-Z])/g, ' $1').toUpperCase()}\x1b[0m`;
+const logModuleName = (moduleOrName: string | AnyModule) => {
+    const name = typeof moduleOrName === 'string' ? moduleOrName : moduleOrName.name;
+    return `📦\u001b[1;32m${name.replace(/([A-Z])/g, ' $1').toUpperCase()}\x1b[0m`;
+};
 
-const logger = new ConsoleLogger('MODULES');
+const logger = new ConsoleLogger('initialize-modules');
 
 class RequiredModuleTimeoutError extends Error {
     constructor() {
@@ -83,18 +85,28 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
     const afterConfiguration: Array<(config: ModulesConfigType<TModules>) => void> = [];
     const afterInit: Array<(instance: ModulesInstanceType<TModules>) => void> = [];
 
-    logger.debug(
-        `🛠 initializing ${!ref ? 'modules' : 'sub-modules'} ${modules.map(logModuleName)}`,
-        modules,
-        ref
-    );
+    logger.info(`🔵 Configuring modules`);
+    logger.debug(`🛠 start configuration ${modules.map(logModuleName)}`, modules, ref);
 
     const config = await lastValueFrom(
         from(modules).pipe(
             // TODO - handle config creation errors
             mergeMap(async (module) => {
-                const configurator = await module.configure?.(ref);
-                return { [module.name]: configurator };
+                logger.debug(`🛠 creating configurator ${logModuleName(module)}`);
+                try {
+                    const configurator = await module.configure?.(ref);
+                    logger.debug(
+                        `🛠 created configurator for ${logModuleName(module)}`,
+                        configurator
+                    );
+                    return { [module.name]: configurator };
+                } catch (err) {
+                    logger.error(
+                        `🛠 Failed to created configurator for ${logModuleName(module)}`,
+                        err
+                    );
+                    throw err;
+                }
             }),
             scan((acc, module) => Object.assign(acc, module), {
                 onAfterConfiguration(cb) {
@@ -110,30 +122,67 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
     /** protected config instance */
     Object.seal(config);
 
-    logger.debug(`✅ Configured ${modules.map(logModuleName)}`, config);
+    logger.info(`🟢 Config created`);
+    logger.debug(`🛠 Config created ${modules.map(logModuleName)}`, config);
 
     /** allow callback to configure */
-    configure && (await configure(config, ref));
+    if (configure) {
+        await new Promise((resolve, reject) => {
+            try {
+                resolve(configure(config, ref));
+                logger.debug(`🏗 Configured`, config);
+            } catch (err) {
+                logger.error(`🏗 Failed to configure, please check provider configurator`);
+                reject(err);
+            }
+        });
+    } else {
+        logger.debug(`🏗 no configurator provided [skipping]`, config);
+    }
+
+    await Promise.allSettled(
+        modules
+            .filter((module) => !!module.postConfigure)
+            .map(async (module) => {
+                try {
+                    await module.postConfigure?.(config);
+                    logger.debug(`🏗📌 post configured ${logModuleName(module)}`, module);
+                } catch (err) {
+                    logger.warn(`🏗📌 post configure failed ${logModuleName(module)}`);
+                }
+            })
+    );
 
     /** call all added post config hooks  */
-    await Promise.all(
-        [...modules.map((x) => x.postConfigure), ...afterConfiguration].map((x) =>
-            Promise.resolve(x?.(config))
-        )
-    );
+    if (afterConfiguration.length) {
+        try {
+            logger.debug(`🏗📌 post configure hooks [${afterConfiguration.length}]`);
+            await Promise.allSettled(afterConfiguration.map((x) => Promise.resolve(x(config))));
+            logger.debug(`🏗📌 post configure hooks complete`);
+        } catch (err) {
+            logger.warn(`🏗📌 post configure hook failed`, err);
+        }
+    }
+
+    logger.info(`🟢 Configured`);
 
     const requireInstance = <TKey extends keyof ModulesInstanceType<TModules>>(
         name: TKey,
         wait = 60
     ): Promise<ModulesInstanceType<TModules>[TKey]> => {
         if (!moduleNames.includes(name)) {
+            logger.error(
+                `🚀⌛️ Cannot not require ${logModuleName(
+                    String(name)
+                )} since module is not defined!`
+            );
             throw Error(`cannot not require [${String(name)}] since module is not defined!`);
         }
         if (instance$.value[name]) {
-            logger.debug(`Module [${String(name)}] is initiated, skipping queue`);
+            logger.debug(`🚀⌛️ ${logModuleName(String(name))} is initiated, skipping queue`);
             return Promise.resolve(instance$.value[name]);
         }
-        logger.info(`Awaiting init of module [${String(name)}]`);
+        logger.debug(`🚀⌛️ Awaiting init ${logModuleName(String(name))}, timeout ${wait}s`);
         return firstValueFrom(
             instance$.pipe(
                 filter((x) => !!x[name]),
@@ -151,6 +200,7 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
             /** assign module to modules object */
             mergeMap((module) => {
                 const key = module.name;
+                logger.debug(`🚀 initializing ${logModuleName(module)}`);
                 return from(
                     Promise.resolve(
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -159,7 +209,7 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
                     )
                 ).pipe(
                     map((instance) => {
-                        logger.debug(`initialized ${logModuleName(module)}`);
+                        logger.debug(`🚀 initialized ${logModuleName(module)}`);
                         return [key, instance];
                     })
                 );
@@ -175,36 +225,51 @@ export const initializeModules = async <TModules extends Array<AnyModule>, TInst
 
     /** await creation of all instances */
     const instance = await lastValueFrom(instance$);
-    logger.debug('✅ initialized');
 
     Object.seal(instance);
 
     /** call all added post config hooks  */
     await Promise.allSettled(
-        modules.map(async (x) => {
-            await x.postInitialize?.({
-                ref,
-                modules: instance,
-                instance: instance[x.name],
-            });
-        })
+        modules
+            .filter((x) => !!x.postInitialize)
+            .map(async (module) => {
+                try {
+                    logger.debug(`🚀📌 post initializing moule ${logModuleName(module)}`);
+                    await module.postInitialize?.({
+                        ref,
+                        modules: instance,
+                        instance: instance[module.name as keyof ModulesInstanceType<TModules>],
+                    });
+                    logger.debug(`🚀📌 post initialized moule ${logModuleName(module)}`);
+                } catch (err) {
+                    logger.warn(`🚀📌 post initialize failed moule ${logModuleName(module)}`);
+                }
+            })
     );
-    logger.debug('✅ post initialized');
+    if (afterInit.length) {
+        try {
+            logger.debug(`🚀📌 post configure hooks [${afterConfiguration.length}]`);
+            await Promise.allSettled(afterInit.map((x) => Promise.resolve(x(instance))));
+            logger.debug(`🚀📌 post configure hooks complete`);
+        } catch (err) {
+            logger.warn(`🚀📌 post configure hook failed`, err);
+        }
+    }
 
-    logger.info(
-        `🚀 ${!ref ? 'modules' : 'sub-modules'} ready`,
-        process.env.NODE_ENV === 'development' && instance
-    );
+    logger.debug(`🎉 Modules initialized ${modules.map(logModuleName)}`, instance);
+    logger.info('🟢 Modules initialized');
 
     const dispose = async () => {
         await Promise.allSettled(
-            modules.map(async (module) => {
-                await module.dispose?.({
-                    ref,
-                    modules: instance,
-                    instance: modules[module.name],
-                });
-            })
+            modules
+                .filter((module) => !!module.dispose)
+                .map(async (module) => {
+                    await module.dispose?.({
+                        ref,
+                        modules: instance,
+                        instance: modules[module.name],
+                    });
+                })
         );
     };
 
