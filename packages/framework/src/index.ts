@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { AnyModule } from '@equinor/fusion-framework-module';
+import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 import { FusionConfigurator, FusionModulesInstance, initializeFusionModules } from './modules';
 
 export type { FusionConfigurator, FusionModules } from './modules';
@@ -29,8 +30,17 @@ export const initFusion = async <TModules extends Array<AnyModule> = Array<AnyMo
         modules,
     };
     window.Fusion = fusion;
+
+    modules.event.dispatchEvent('onFrameworkLoaded', { detail: fusion });
+
     return fusion;
 };
+
+declare module '@equinor/fusion-framework-module-event' {
+    interface FrameworkEventMap {
+        onFrameworkLoaded: FrameworkEvent<FrameworkEventInit<Fusion>>;
+    }
+}
 
 declare global {
     interface Window {
