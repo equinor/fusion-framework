@@ -1,0 +1,36 @@
+{
+  "name": "@equinor/fusion-framework-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js"
+  },
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc -b --verbose"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/app"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework": "^2.1.0",
+    "@equinor/fusion-framework-module": "^0.4.2",
+    "@equinor/fusion-framework-module-app-config": "^0.2.2",
+    "@equinor/fusion-framework-module-event": "^0.1.1",
+    "@equinor/fusion-framework-module-http": "^0.6.2",
+    "@equinor/fusion-framework-module-msal": "^0.3.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
