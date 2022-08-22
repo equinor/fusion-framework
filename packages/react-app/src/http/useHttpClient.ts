@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { HttpClientMsal, IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useMemo } from 'react';
-import { useAppModule } from '../modules';
+import { useAppModule } from '../useAppModule';
 
 /**
  * Use a configured client from application modules

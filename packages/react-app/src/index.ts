@@ -3,5 +3,18 @@
  * @module
  */
 
-export { AppConfigurator, createApp, default } from './create-app';
-export { AppModules, AppModulesInstance, appModules, useAppModule, useAppModules } from './modules';
+export { appModules } from '@equinor/fusion-framework-app';
+
+export type {
+    AppConfigurator,
+    AppModules,
+    AppModulesInstance,
+    AppManifest,
+} from '@equinor/fusion-framework-app';
+
+export { useAppModule } from './useAppModule';
+export { useAppModules } from './useAppModules';
+
+export { createApp } from './create-app';
+
+export { default } from './create-app';
