@@ -26,11 +26,19 @@ export const Framework = createFrameworkProvider<[AgGridModule]>(
             console.debug('framework config done');
         });
         config.onAfterInit(async (fusion) => {
-            fusion.auth.defaultClient.setLogger(new ConsoleLogger(3));
+            fusion.auth.defaultClient.setLogger(new ConsoleLogger(0));
             await fusion.auth.handleRedirect();
             if (!fusion.auth.defaultAccount) {
                 await fusion.auth.login();
             }
+
+            console.debug('📒 subscribing to all events');
+            fusion.event.subscribe((e) => console.debug(`👻🌍 [${e.type}]`, e));
+
+            console.debug('📒 subscribing to [onReactAppLoaded]');
+            fusion.event.addEventListener('onReactAppLoaded', (e) =>
+                console.debug('👻 [onReactAppLoaded]', e)
+            );
         });
     },
     [moduleAgGrid]

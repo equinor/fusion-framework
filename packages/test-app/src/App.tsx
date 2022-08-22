@@ -65,7 +65,7 @@ export const configurator = createApp(AppComponent, configCallback, [moduleAgrGr
 
 export const App = () => {
     const framework = useFramework();
-    const Component = configurator(framework, {});
+    const Component = configurator(framework, { name: 'test-app' });
     return (
         <Suspense fallback={<StarProgress text="Loading Application" />}>
             <Component />
