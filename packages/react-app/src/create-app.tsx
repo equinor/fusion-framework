@@ -1,36 +1,16 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { lazy } from 'react';
 
-import type { Fusion, AppManifest } from '@equinor/fusion-framework';
-import FrameworkProvider from '@equinor/fusion-framework-react';
+import { FrameworkProvider } from '@equinor/fusion-framework-react';
+import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { AnyModule, ModulesConfigType } from '@equinor/fusion-framework-module';
+import { initializeAppModules } from '@equinor/fusion-framework-app';
+import type { AppManifest, AppConfigurator, AppModules } from '@equinor/fusion-framework-app';
 
-import { appModules, AppModules } from './modules';
+import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-module';
 
-import { createModuleProvider } from '@equinor/fusion-framework-react-module';
+import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
-/**
- * Interface for type hinting configuration callbacks
- * @example
- * ```ts
- * const configCallback: AppConfigurator = (configurator) => {
- *  configurator.http.configureClient(
- *     'bar', {
- *       baseUri: 'https://somewhere-test.com',
- *       defaultScopes: ['foo/.default']
- *     }
- *   );
- * };
- * ```
- */
-export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
-    (
-        config: ModulesConfigType<AppModules> & ModulesConfigType<TModules>,
-        fusion: Fusion,
-        env: AppManifest
-    ): void | Promise<void>;
-}
+import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
 
 /**
  * Creates an lazy loading Component which configures modules
@@ -96,23 +76,34 @@ export const createApp =
                     await Promise.resolve(configure(config, fusion, env));
                 }
             };
-            const AppModuleProvider = await createModuleProvider(
-                configurator,
-                // TODO type hint concat of modules
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                appModules.concat(modules),
-                fusion.modules
-            );
+
+            const appInitiator = initializeAppModules(configurator, modules ?? []);
+
+            const appModules = await appInitiator(fusion, env);
+            appModules.event.dispatchEvent('onReactAppLoaded', {
+                detail: { modules, fusion },
+                source: Component,
+            });
             return {
                 default: () => (
                     <FrameworkProvider value={fusion}>
-                        <AppModuleProvider>
+                        <AppModuleProvider value={appModules}>
                             <Component />
                         </AppModuleProvider>
                     </FrameworkProvider>
                 ),
             };
         });
+
+declare module '@equinor/fusion-framework-module-event' {
+    interface FrameworkEventMap {
+        onReactAppLoaded: FrameworkEvent<
+            FrameworkEventInit<
+                { modules: ModulesInstanceType<AppModules>; fusion: Fusion },
+                React.ComponentType
+            >
+        >;
+    }
+}
 
 export default createApp;
