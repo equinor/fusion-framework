@@ -1375,14 +1375,6 @@
     eslint-plugin-react "^7.28.0"
     eslint-plugin-react-hooks "^4.3.0"
 
-"@equinor/fusion-observable@^0.1.3":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-0.1.12.tgz#ea238e1d79b13f648f57cae74bd040ed39930cd2"
-  integrity sha512-ki+Eq5byrDca6KhiKCan4xtuYew9yai61fJEDUDy6CL7ZMB8SSRr2oZ+N2VAEoMWS4XnooetcOP7FLb4UaDZRg==
-  dependencies:
-    rxjs "7.5.6"
-    uuid "^8.3.2"
-
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
@@ -3114,16 +3106,16 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.0.10.tgz#cae6f818006616dc72c95c863592f5f68b47548a"
   integrity sha512-9LsABpZXkWZHi4P1ozRETEDXQocLAxVzQaIhganxbNuz/uA3PsCAJxJTiQrknG5htLMzOF5MqM9G10e6DCxV1A==
 
-"@tanstack/react-query-devtools@^4.0.10":
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-4.0.10.tgz#d1b3e5b1917f1c22bcee5830ef7af1ccfc4879f4"
-  integrity sha512-3J7LLYQjfjTI0DbPo0bA+M3l4kdvYSWAqihpeG1u93WVyZj0OEFviUv+4cK7+k2AVgQJAPMZ5xvtewKxOOFVrw==
+"@tanstack/react-query-devtools@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-4.2.1.tgz#decee3d1d174b253fa303d5baaa478fb0e2c0e63"
+  integrity sha512-k7Ch3qvs8U74aRMMRvNisxcxZFTzk8FDdvpQKXxSZ8fsD4ZwpM0MoUSqKsCXbfTvUI7MJiGxavy1YlvImPNO+Q==
   dependencies:
     "@tanstack/match-sorter-utils" "^8.0.0-alpha.82"
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/react-query@^4.0.10":
+"@tanstack/react-query@^4.2.1":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.2.1.tgz#1f00f03573b35a353e62fa64f904bbb0286a1808"
   integrity sha512-w02oTOYpoxoBzD/onAGRQNeLAvggLn7WZjS811cT05WAE/4Q3br0PTp388M7tnmyYGbgOOhFq0MkhH0wIfAKqA==
