@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.5.0 (2022-08-22)
+
+
+### Features
+
+* **react-app:** use event module ([21cf7f9](https://github.com/equinor/fusion-framework/commit/21cf7f98eafb8a4d970f3d2d9f56d56046da1321))
+
+
+
+
+
 ## [0.4.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.4.3...@equinor/fusion-framework-react-app@0.4.4) (2022-08-19)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
