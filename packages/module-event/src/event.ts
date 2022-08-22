@@ -5,6 +5,10 @@ export declare interface FrameworkEventMap {
     onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
 }
 
+export type FrameworkEventHandler<TType extends IFrameworkEvent = IFrameworkEvent> = (
+    event: TType
+) => Promise<void> | void;
+
 export interface IFrameworkEvent<
     TInit extends FrameworkEventInit = FrameworkEventInit,
     TType extends string = string
