@@ -1,16 +1,19 @@
 import { Fusion } from '@equinor/fusion-framework';
 
-import {
-    AnyModule,
-    initializeModules,
-    ModulesConfigurator,
-    ModulesInstanceType,
-} from '@equinor/fusion-framework-module';
+import { initializeModules, ModulesConfigType } from '@equinor/fusion-framework-module';
+import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-module';
 
-import appConfig, { AppConfigModule } from '@equinor/fusion-framework-module-app-config';
-import http, { HttpModule } from '@equinor/fusion-framework-module-http';
-import msal, { MsalModule } from '@equinor/fusion-framework-module-msal';
-import event, {
+import appConfig from '@equinor/fusion-framework-module-app-config';
+import type { AppConfigModule } from '@equinor/fusion-framework-module-app-config';
+
+import http from '@equinor/fusion-framework-module-http';
+import type { HttpModule } from '@equinor/fusion-framework-module-http';
+
+import msal from '@equinor/fusion-framework-module-msal';
+import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+
+import event from '@equinor/fusion-framework-module-event';
+import type {
     EventModule,
     FrameworkEvent,
     FrameworkEventInit,
@@ -25,13 +28,14 @@ export type AppModulesInstance<TModules extends Array<AnyModule> = []> =
 
 export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
     (
-        config: ModulesConfigurator<[...AppModules, ...TModules]>,
+        configurator: ModulesConfigType<AppModules> & ModulesConfigType<TModules>,
         fusion: Fusion,
         env: AppManifest
     ): void | Promise<void>;
 }
 
-type AppManifest = {
+// TODO - import from app-module when created
+export type AppManifest = {
     name: string;
 };
 
@@ -49,7 +53,8 @@ export const initializeAppModules =
         };
         const modules = (await initializeModules(
             configurator,
-            appModules.concat(additionalModules || []) as [...AppModules, ...TModules]
+            appModules.concat(additionalModules || []) as [...AppModules, ...TModules],
+            fusion.modules
             // TODO - fix typing
         )) as unknown as AppModulesInstance<TModules>;
 
