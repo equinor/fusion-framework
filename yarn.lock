@@ -8,9 +8,9 @@
   integrity sha512-PA8t23uV/WWL6/OGm6WiyiIG6qh4JDxGJnII4jBtPeZu9VyyRRMsZBwTxXqyhCeJByp5REbShR8aZMQTBfQdiA==
 
 "@ag-grid-enterprise/core@~28.1.0":
-  version "28.1.0"
-  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.1.0.tgz#3acf6abf2873e09a404b92dbc97300242d4bfdef"
-  integrity sha512-jTemI0INbcO/pOsndEjYZkOZ/ZWUC8jaR7B5gPEhRoB1GxZBXNii/oVzMUQpt5cN/CUuKeFPbjtxNRapgo9jJw==
+  version "28.1.1"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.1.1.tgz#734091acd7114cdd79371dade46459eb9d6518c0"
+  integrity sha512-klHrh4M7sSBLD+xrRNb+r6tT5uqtgNaHbB7XneormdpU/V+U1A77DcaKTCXzcxjeF3XE6RRfCEAqwWNGbFOy+Q==
   dependencies:
     "@ag-grid-community/core" "~28.1.0"
 
