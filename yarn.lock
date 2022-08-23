@@ -2760,9 +2760,9 @@
     nx "14.5.7"
 
 "@nrwl/nx-cloud@latest":
-  version "14.4.1"
-  resolved "https://registry.yarnpkg.com/@nrwl/nx-cloud/-/nx-cloud-14.4.1.tgz#a4d8e9ce6e5bbb753916adadaf0e23ca24b54823"
-  integrity sha512-vlWpBmIGfYvB9XMAdDZWOihOTFPE2VV9CDeZzBbSMF32KxDqUkhfaLf3dg6puIeUPkPbj5k+V57xjAl7g9k+Xw==
+  version "14.5.0"
+  resolved "https://registry.yarnpkg.com/@nrwl/nx-cloud/-/nx-cloud-14.5.0.tgz#98fffae0fbc63484c585334613cd536294a2d438"
+  integrity sha512-8xu2/RVCKF7Lz5bLq3ApgkQQvBjVZUbsMQk7JwUKHc79U0k6o59LP7xIffRUI1RXhHXAywyIBVshilm/n5haTA==
   dependencies:
     axios "^0.21.1"
     chalk "4.1.0"
