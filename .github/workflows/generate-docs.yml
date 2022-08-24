@@ -54,7 +54,8 @@ jobs:
 
       - name: Commit changes
         run: |
-            echo "!docs/" >> ../.gitignore
+            cd ..
+            echo "!docs/" >> .gitignore
             git add docs 
             git commit -m'docs: updated docs'
             git push --force
