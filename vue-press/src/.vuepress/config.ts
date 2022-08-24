@@ -2,6 +2,7 @@ import { defineConfig } from 'vuepress/config';
 const { description, name, version } = require('../../package')
 
 export default defineConfig({
+  base: '/fusion-framework/',
   title: [name, version].join('@'),
   description,
   plugins: [
