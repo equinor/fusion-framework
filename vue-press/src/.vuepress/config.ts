@@ -1,5 +1,5 @@
 import { defineConfig } from 'vuepress/config';
-const { description, name, version } = require('../../package')
+const { description, name, version } = require('../../../package.json')
 
 export default defineConfig({
   base: '/fusion-framework/',
@@ -11,8 +11,9 @@ export default defineConfig({
   ],
   themeConfig: {
     repo: 'equinor/fusion-framework',
+    docsBranch: 'main',
     editLinks: true,
-    docsDir: "packages/docs/docs",
+    docsDir: "vue-press/src",
     nav: [
       {
         text: 'Guide',
@@ -28,6 +29,27 @@ export default defineConfig({
       },
     ],
     sidebar: {
+      '/guide/': [
+        {
+          title: 'App',
+          collapsable: true,
+          sidebarDepth: 3,
+          children: [
+            'app/',
+            'app/getting-started',
+            'app/app-modules',
+            'app/add-modules',
+          ]
+        },
+        {
+          title: 'Portal',
+          collapsable: true,
+          sidebarDepth: 3,
+          children: [
+            'portal/',
+          ]
+        }
+      ],
       '/modules/': [
         {
           title: 'Modules',

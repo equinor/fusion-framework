@@ -32,6 +32,9 @@
 </script>
 
 <style scoped lang="stylus">
+.theme-default-content {
+  max-width: 1120px;
+}
 .frontmatter-tags
   display: flex;
   align-items: center;

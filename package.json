@@ -1,6 +1,6 @@
 {
   "name": "fusion-framework",
-  "version": "0.0.0",
+  "version": "1.0.0-beta",
   "description": "colleaction of fusion components",
   "private": true,
   "scripts": {

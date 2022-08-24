@@ -23,7 +23,7 @@ export default {
     },
     layout: {
       type: String,
-      default: 'for-the-badge'
+      default: ''
     },
     label: {
       type: String
