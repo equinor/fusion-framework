@@ -1,0 +1,25 @@
+{
+  "name": "@equinor/fusion-framework-docs",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/framework"
+  },
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vuepress/theme-default": "^1.9.7",
+    "typescript": "^4.7.4",
+    "vuepress": "^1.5.3",
+    "vuepress-plugin-mermaidjs": "^1.0.0"
+  },
+  "dependencies": {
+    "webpack": "^4.0.0"
+  }
+}
