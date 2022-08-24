@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "lint": "eslint packages/*/src/**",
+    "lint": "eslint 'packages/*/src/**/*.{ts,tsx}'",
     "clean": "yarn run clean:modules && yarn run clean:build",
     "clean:modules": "rm -rf packages/*/node_modules && rm -rf node_modules",
     "clean:build": "rm -rf packages/*/dist",
@@ -15,8 +15,7 @@
     "lint:report": "eslint --output-file eslint-report.log.json --format json packages/*/src/**",
     "lint:staged": "lint-staged",
     "npm:clean": "rm -rf node_modules && lerna exec 'rm -rf node_modules'",
-    "docs": "typedoc",
-    "doc": "extract-apidocs -- --report",
+    "docs": "cd packages/docs && yarn build -d ../../docs",
     "yalc": "yarn run build && lerna exec 'yalc push --private'",
     "test": "jest",
     "test:ci": "jest --runInBand --debug",
@@ -60,8 +59,6 @@
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.4",
     "tslib": "^2.2.0",
-    "typedoc": "^0.22.18",
-    "typedoc-plugin-mermaid": "^1.8.0",
     "typescript": "^4.6.4",
     "yarn": "^1.22.19"
   },

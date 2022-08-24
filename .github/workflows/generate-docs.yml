@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'packages/**'
+      - 'docs/**'
 
 jobs:
   merge:
@@ -23,6 +23,10 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest
     needs: merge
+    default:
+      run:
+        working-directory: docs
+
     steps:
 
       - name: Checkout docs
@@ -34,11 +38,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Node Dependencies
         run: yarn install --frozen-lockfile
@@ -61,5 +60,5 @@ jobs:
         run: |
             echo "!docs/" >> .gitignore
             git add docs 
-            git commit -m'docs: Build of storybook'
+            git commit -m'docs: updated docs'
             git push --force
