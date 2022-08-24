@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "build": "vuepress build src -d ../docs"
   },
   "license": "MIT",
   "devDependencies": {
@@ -18,8 +18,5 @@
     "typescript": "^4.7.4",
     "vuepress": "^1.5.3",
     "vuepress-plugin-mermaidjs": "^1.0.0"
-  },
-  "dependencies": {
-    "webpack": "^4.0.0"
   }
 }

@@ -5,9 +5,8 @@ on:
   push:
     branches:
       - main
-      - docs
     paths:
-      - 'docs/**'
+      - 'vue-press/**'
 
 jobs:
   merge:
@@ -26,7 +25,7 @@ jobs:
     needs: merge
     defaults:
       run:
-        working-directory: docs
+        working-directory: vue-press
 
     steps:
 
@@ -44,12 +43,8 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build project
-        run: yarn build
-
-      - name: Build docs
         run: |
-          rm -rf docs
-          yarn docs
+          yarn build
           touch docs/.nojekyll
 
       - name: Config git user
