@@ -33,7 +33,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.21.0",
     "@equinor/fusion-framework-module": "^0.4.2",
-    "@equinor/fusion-framework-module-http": "^0.6.2"
+    "@equinor/fusion-framework-module-http": "^1.0.0-0"
   },
   "devDependencies": {
     "typescript": "^4.7.4"
