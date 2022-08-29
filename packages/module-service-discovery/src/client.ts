@@ -63,7 +63,7 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
     protected async _fetchServiceDescription(): Promise<T> {
         try {
             const { http, selector, endpoint } = this;
-            const result = await http.fetchAsync(endpoint, { selector });
+            const result = await http.fetch(endpoint, { selector });
             return result;
         } catch (err) {
             console.error(err);
