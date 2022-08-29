@@ -3,6 +3,7 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "useNx": true,
+  "changelogPreset": "conventionalcommits",
   "command": {
     "version": {
       "allowBranch": ["main", "alpha", "beta", "feat/**", "feature/**", "fix/**", "build/release"],
