@@ -101,7 +101,7 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      * ).subscribe(console.log);
      * ```
      */
-    fetch<T = TResponse>(
+    fetch$<T = TResponse>(
         path: string,
         init?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T>;
@@ -135,20 +135,14 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      * });
      * ```
      */
-    fetchAsync<T = TResponse>(
-        path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
-    ): Promise<T>;
+    fetch<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
 
-    json<T = TResponse>(
+    json$<T = TResponse>(
         path: string,
         init?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T>;
 
-    jsonAsync<T = TResponse>(
-        path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
-    ): Promise<T>;
+    json<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
 
     /**
      * Abort all ongoing request for current client
@@ -194,21 +188,29 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         // called by children for constructor setup
     }
 
-    public fetch<T = TResponse>(
+    public fetch$<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
-        return this._fetch(path, args);
+        return this._fetch$(path, args);
     }
 
+    public fetch<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T> {
+        return firstValueFrom(this.fetch$<T>(path, args));
+    }
+
+    /** @deprecated */
     public fetchAsync<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T> {
-        return firstValueFrom(this.fetch<T>(path, args));
+        return this.fetch(path, args);
     }
 
-    public json<T = TResponse>(
+    public json$<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
@@ -216,25 +218,33 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         const selector = args?.selector ?? jsonSelector;
         const header = new Headers(args?.headers);
         header.append('Content-Type', 'application/json');
-        return this.fetch(path, {
+        return this.fetch$(path, {
             ...args,
             body,
             selector,
         } as FetchRequestInit<T, TRequest, TResponse>);
     }
 
+    public json<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T> {
+        return firstValueFrom(this.json$<T>(path, args));
+    }
+
+    /** @deprecated */
     public jsonAsync<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T> {
-        return firstValueFrom(this.json<T>(path, args));
+        return this.json(path, args);
     }
 
     public abort(): void {
         this._abort$.next();
     }
 
-    protected _fetch<T = TResponse>(
+    protected _fetch$<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
