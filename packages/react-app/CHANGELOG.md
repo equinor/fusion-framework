@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.5.1...@equinor/fusion-framework-react-app@0.6.0) (2022-08-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename fetch
+
+* fix(module-service-discovery): update http client consumer
+
+* build: update allowed branches
+
+* build: add conventional commit
+
+* build: use conventionalcommits
+
+* build(module-http): push major
+
+* build: update deps
+
+### Features
+
+* rename fetch method ([#226](https://github.com/equinor/fusion-framework/issues/226)) ([f02df7c](https://github.com/equinor/fusion-framework/commit/f02df7cdd2b9098b0da49c5ea56ac3b6a17e9e32))
+
+
+
 ## [0.5.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.5.0...@equinor/fusion-framework-react-app@0.5.1) (2022-08-23)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
