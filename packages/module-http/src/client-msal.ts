@@ -18,14 +18,14 @@ export class HttpClientMsal<
     public defaultScopes: string[] = [];
 
     /** @inheritdoc */
-    fetch<T = TResponse>(
+    fetch$<T = TResponse>(
         path: string,
         init?: MsalFetchRequestInit<T, TRequest, TResponse>
     ): Observable<T> {
         const args = Object.assign(init || {}, {
             scopes: this.defaultScopes.concat(init?.scopes || []),
         }) as FetchRequestInit<T, TRequest, TResponse>;
-        return super._fetch(path, args);
+        return super._fetch$(path, args);
     }
 }
 

@@ -43,7 +43,7 @@
     "@equinor/fusion-framework-app": "^0.1.2",
     "@equinor/fusion-framework-module": "^0.4.2",
     "@equinor/fusion-framework-module-event": "^0.1.2",
-    "@equinor/fusion-framework-module-http": "^0.6.2",
+    "@equinor/fusion-framework-module-http": "^1.0.0-0",
     "@equinor/fusion-framework-module-msal": "^0.3.2",
     "@equinor/fusion-framework-react": "^0.2.18",
     "@equinor/fusion-framework-react-module-app-config": "^0.1.3",
