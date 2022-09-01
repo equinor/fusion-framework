@@ -1,5 +1,6 @@
 ---
 title: Getting started
+category: Guide
 tags:
   - how to
   - basic

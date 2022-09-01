@@ -1,7 +1,7 @@
 {
   "name": "fusion-framework",
   "version": "1.0.0-beta",
-  "description": "colleaction of fusion components",
+  "description": "Framework for Fusion Eco System",
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",

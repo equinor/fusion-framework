@@ -23,7 +23,7 @@ export default {
     },
     layout: {
       type: String,
-      default: ''
+      default: 'for-the-badge'
     },
     label: {
       type: String
@@ -34,11 +34,11 @@ export default {
       const url = new URL(`https://img.shields.io/github/package-json/v/equinor/fusion-framework`);
       url.searchParams.set('filename',  `packages/${this.module}/package.json`);
       url.searchParams.set('style', this.layout);
-      url.searchParams.set('label', this.label ?? this.packageName);
+      url.searchParams.set('label', this.label || this.packageName);
       return url.toString();
     },
     packageName() {
-      return this.package ?? `@equinor/fusion-framework-${this.module}`;
+      return this.package || `@equinor/fusion-framework-${this.module}`;
     },
     npmUrl() {
       return `https://www.npmjs.com/package/${this.packageName}`;

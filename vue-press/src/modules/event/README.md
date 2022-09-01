@@ -1,5 +1,6 @@
 ---
 title: Events
+category: Module
 tags:
   - event
   - core
@@ -22,7 +23,7 @@ event handlers are allowed to execute async, so when `event.cancelable = false` 
 :::
 
 ### Dispatch event
-``` mermaid
+```mermaid
 sequenceDiagram
   autonumber
   Event->>+Provider: dispatch event

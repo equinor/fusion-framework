@@ -1,8 +1,10 @@
 ---
 title: Additional modules
+category: Guide
 tags:
   - how to
   - modules
+  - app
 ---
 
 ```ts
