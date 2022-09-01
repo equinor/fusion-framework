@@ -7,6 +7,7 @@ export { appModules } from '@equinor/fusion-framework-app';
 
 export type {
     AppConfigurator,
+    AppConfigCallback,
     AppModules,
     AppModulesInstance,
     AppManifest,
