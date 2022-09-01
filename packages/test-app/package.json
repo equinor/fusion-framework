@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@equinor/fusion-framework-test-app",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -27,7 +27,7 @@
     "@equinor/fusion-framework-module-service-discovery": "^0.7.0",
     "@equinor/fusion-framework-module-telemetry": "^0.3.3",
     "@equinor/fusion-framework-react": "^0.2.19",
-    "@equinor/fusion-framework-react-app": "^0.6.0",
+    "@equinor/fusion-framework-react-app": "^0.6.1",
     "@equinor/fusion-react-progress-indicator": "^0.1.5",
     "@equinor/fusion-react-styles": "^0.5.4",
     "@tanstack/react-query": "^4.2.1",
