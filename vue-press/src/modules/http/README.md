@@ -238,3 +238,34 @@ client.response$.subscribe(
 ```
 :::
 ::::
+
+## React
+
+<ModuleBadge module="react-module-http" />
+
+:::: code-group
+::: code-group-item Vanilla
+```ts
+import { useHttpClient } from '@equinor/fusion-framework-react-module-http';
+```
+:::
+
+::: code-group-item App:active
+```ts
+import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
+```
+:::
+
+::: code-group-item Portal
+```ts
+import { useHttpClient } from '@equinor/fusion-framework-react/http';
+```
+:::
+::::
+
+```ts
+const useRequest = () => {
+  const myClient = useHttpClient('my-client');
+  ...
+}
+```
