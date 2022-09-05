@@ -5,13 +5,17 @@
   "main": "dist/esm/index.js",
   "exports": {
     ".": "./dist/esm/index.js",
-    "./hooks": "./dist/esm/hooks/index.js"
+    "./hooks": "./dist/esm/hooks/index.js",
+    "./http": "./dist/esm/http/index.js"
   },
   "types": "dist/types/index.d.ts",
   "typesVersions": {
     "*": {
       "hooks": [
         "dist/types/hooks/index.d.ts"
+      ],
+      "http": [
+        "dist/types/http/index.d.ts"
       ]
     }
   },
@@ -31,7 +35,8 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework": "^3.0.0"
+    "@equinor/fusion-framework": "^3.0.0",
+    "@equinor/fusion-framework-react-module-http": "^0.0.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.11",
