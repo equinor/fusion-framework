@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.3.0 (2022-09-05)
+
+
+### Features
+
+* **framework-react:** expose rect module http ([f6ab26f](https://github.com/equinor/fusion-framework/commit/f6ab26f2c4463ce9d0996027a48eb5ad9d94779a))
+
+
+
 ## [0.2.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.2.18...@equinor/fusion-framework-react@0.2.19) (2022-08-29)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
