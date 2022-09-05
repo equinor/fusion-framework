@@ -18,7 +18,7 @@ const selector = (x: Response): Promise<App[]> => {
 
 const useAllApps = () => {
     const client = useHttpClient('portal');
-    
+
     const fn = useMemo(() => getAllApps(client), [client]);
     return useQuery(['all_apps'], ({ signal }) => fn({ signal, selector }));
     //     client.fetchAsync('api/apps', { selector, signal })
@@ -28,7 +28,7 @@ const useAllApps = () => {
 const getAllApps =
     (client: IHttpClient) =>
     (init: FetchRequestInit): Promise<App[]> => {
-        return client.fetchAsync('api/apps', { ...init, selector });
+        return client.fetch('api/apps', { ...init, selector });
     };
 
 export const AppList = () => {
