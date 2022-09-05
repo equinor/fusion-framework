@@ -9,10 +9,7 @@
   },
   "references": [
     {
-      "path": "../observable"
-    },
-    {
-      "path": "../framework"
+      "path": "../module"
     },
     {
       "path": "../app"
@@ -22,9 +19,6 @@
     },
     {
       "path": "../module"
-    },
-    {
-      "path": "../module-http"
     },
     {
       "path": "../module-msal"
