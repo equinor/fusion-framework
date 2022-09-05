@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { lazy, useEffect } from 'react';
 
 import {
     initializeModules,
     ModulesConfigurator,
+    ModulesInstanceType,
     AnyModule,
 } from '@equinor/fusion-framework-module';
 
 import moduleContext from './context';
 
-type ModuleProviderCreator = <TModules extends Array<AnyModule> = Array<AnyModule>, TRef = unknown>(
+type ModuleProviderCreator = <
+    TModules extends Array<AnyModule> = Array<AnyModule>,
+    TRef extends ModulesInstanceType<[AnyModule]> = any
+>(
     configurator: ModulesConfigurator<TModules>,
     modules: TModules,
     ref?: TRef
@@ -47,7 +52,7 @@ type ModuleProviderCreator = <TModules extends Array<AnyModule> = Array<AnyModul
  */
 export const createModuleProvider: ModuleProviderCreator = async <
     TModules extends Array<AnyModule>,
-    TRef = unknown
+    TRef extends ModulesInstanceType<[AnyModule]> = any
 >(
     configurator: ModulesConfigurator<TModules>,
     modules: TModules,

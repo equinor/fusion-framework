@@ -72,7 +72,7 @@
   "lint-staged": {
     "./packages/**/src/**/*.{ts,tsx}": [
       "eslint --quiet --fix",
-      "jest --bail --findRelatedTests"
+      "jest --bail --findRelatedTests --passWithNoTests"
     ]
   }
 }
