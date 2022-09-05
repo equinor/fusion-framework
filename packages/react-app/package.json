@@ -39,15 +39,12 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework": "^3.0.0",
     "@equinor/fusion-framework-app": "^0.2.1",
     "@equinor/fusion-framework-module": "^0.4.2",
     "@equinor/fusion-framework-module-event": "^0.1.2",
-    "@equinor/fusion-framework-module-http": "^1.0.0",
     "@equinor/fusion-framework-module-msal": "^0.4.0",
     "@equinor/fusion-framework-react": "^0.2.19",
-    "@equinor/fusion-framework-react-module-app-config": "^0.1.4",
-    "@equinor/fusion-observable": "^0.3.0"
+    "@equinor/fusion-framework-react-module-app-config": "^0.1.4"
   },
   "devDependencies": {
     "@types/react": "^17.0.11",

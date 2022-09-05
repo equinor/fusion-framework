@@ -1,24 +1,12 @@
 {
-  "name": "@equinor/fusion-framework-react",
-  "version": "0.2.19",
+  "name": "@equinor/fusion-framework-react-module-http",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
-    ".": "./dist/esm/index.js",
-    "./hooks": "./dist/esm/hooks/index.js",
-    "./http": "./dist/esm/http/index.js"
+    ".": "./dist/esm/index.js"
   },
-  "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "hooks": [
-        "dist/types/hooks/index.d.ts"
-      ],
-      "http": [
-        "dist/types/http/index.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"
@@ -32,13 +20,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/react"
-  },
-  "dependencies": {
-    "@equinor/fusion-framework": "^3.0.0",
-    "@equinor/fusion-framework-react-module-http": "^0.0.0"
+    "directory": "packages/react-modules"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module-http": "^1.0.0",
+    "@equinor/fusion-framework-react-module": "^0.2.2",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
     "react": "^17.0.2",
@@ -46,6 +32,8 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
+    "@equinor/fusion-framework-module-http": "^1.0.0",
+    "@equinor/fusion-framework-react-module": "^0.2.0",
     "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
     "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"

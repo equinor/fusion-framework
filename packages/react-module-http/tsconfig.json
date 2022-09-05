@@ -9,30 +9,11 @@
   },
   "references": [
     {
-      "path": "../module"
-    },
-    {
-      "path": "../app"
-    },
-    {
-      "path": "../framework-react"
-    },
-    {
-      "path": "../module"
-    },
-    {
-      "path": "../module-msal"
-    },
-    {
-      "path": "../module-event"
-    },
-    {
       "path": "../react-module"
     },
     {
-      "path": "../react-module-app-config"
+      "path": "../module-http"
     },
-    
   ],
   "include": [
     "src/**/*"

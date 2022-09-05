@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { HttpClientMsal, IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useMemo } from 'react';
-import { useAppModule } from '../useAppModule';
+
+import type {
+    HttpClientProvider,
+    HttpClientMsal,
+    IHttpClient,
+} from '@equinor/fusion-framework-module-http';
+
+import { useModule } from '@equinor/fusion-framework-react-module';
 
 /**
  * Use a configured client from application modules
@@ -15,7 +21,7 @@ import { useAppModule } from '../useAppModule';
  * @param name Named client from configuration
  */
 export const useHttpClient = <TType extends IHttpClient = HttpClientMsal>(name: string): TType => {
-    const http = useAppModule('http');
+    const http = useModule<{ http: HttpClientProvider<TType> }>('http');
     const client = useMemo(() => {
         if (http.hasClient(name)) {
             return http.createClient(name);
@@ -23,7 +29,7 @@ export const useHttpClient = <TType extends IHttpClient = HttpClientMsal>(name: 
         throw Error(`no configured client for key [${name}]`);
     }, [name]);
     // TODO - abort on unmount?
-    return client as unknown as TType;
+    return client;
 };
 
 export default useHttpClient;
