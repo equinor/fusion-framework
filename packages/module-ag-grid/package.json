@@ -30,6 +30,6 @@
     "@equinor/fusion-framework-module": "^0.4.2"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.2"
   }
 }
