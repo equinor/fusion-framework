@@ -17,5 +17,6 @@ export { useAppModule } from './useAppModule';
 export { useAppModules } from './useAppModules';
 
 export { createApp } from './create-app';
+export { createLegacyApp } from './create-legacy-app';
 
 export { default } from './create-app';
