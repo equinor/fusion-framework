@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module@0.2.4...@equinor/fusion-framework-react-module@0.2.5) (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module
+
+
+
+
+
+## [0.2.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module@0.2.3...@equinor/fusion-framework-react-module@0.2.4) (2022-09-05)
+
+
+### Bug Fixes
+
+* **react-module:** fix typing of refs ([0df08fc](https://github.com/equinor/fusion-framework/commit/0df08fc00990a5c93b851f2c00175c7996f15845))
+
+
+
+## 0.2.3 (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module
+
+
+
+
+
 ## 0.2.2 (2022-08-19)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module

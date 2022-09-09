@@ -14,9 +14,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/theme-default": "^1.9.7",
-    "typescript": "^4.7.4",
-    "vuepress": "^1.5.3",
-    "vuepress-plugin-mermaidjs": "^1.0.0"
+    "typescript": "^4.8.2",
+    "vuepress": "^1.9.7",
+    "vuepress-theme-hope": "^1.30.0"
   }
 }

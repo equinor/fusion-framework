@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.17 (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app
+
+
+
+
+
+## 0.1.16 (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app
+
+
+
+
+
 ## 0.1.15 (2022-08-19)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app

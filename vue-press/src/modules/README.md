@@ -1,5 +1,6 @@
 ---
 title: Intro
+category: Module
 tags:
   - core
 ---
@@ -35,7 +36,7 @@ An app can configure the default modules, but also add and configure additional 
 <ModuleBadge module="module" />
 
 
-``` mermaid
+```mermaid
 sequenceDiagram
   title: Module Lifecycle
   note over initiator: Portal, App or a consumer of modules

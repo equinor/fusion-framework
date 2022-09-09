@@ -26,9 +26,12 @@ export const appModules = [http, msal, appConfig, event];
 export type AppModulesInstance<TModules extends Array<AnyModule> = []> =
     ModulesInstanceType<AppModules> & ModulesInstanceType<TModules> & { dispose: VoidFunction };
 
+export type AppConfigCallback<TModules extends Array<AnyModule> = []> =
+    ModulesConfigType<AppModules> & ModulesConfigType<TModules>;
+
 export interface AppConfigurator<TModules extends Array<AnyModule> = []> {
     (
-        configurator: ModulesConfigType<AppModules> & ModulesConfigType<TModules>,
+        configurator: AppConfigCallback<TModules>,
         fusion: Fusion,
         env: AppManifest
     ): void | Promise<void>;

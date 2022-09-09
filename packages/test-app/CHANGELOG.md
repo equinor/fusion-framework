@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.8...@equinor/fusion-framework-test-app@0.5.9) (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
+## [0.5.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.7...@equinor/fusion-framework-test-app@0.5.8) (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
+## [0.5.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.6...@equinor/fusion-framework-test-app@0.5.7) (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
+## [0.5.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.5...@equinor/fusion-framework-test-app@0.5.6) (2022-09-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
+## [0.5.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.4...@equinor/fusion-framework-test-app@0.5.5) (2022-09-05)
+
+
+### Bug Fixes
+
+* **test-app:** update test app ([f2c07d3](https://github.com/equinor/fusion-framework/commit/f2c07d3d28dfd0ff30c67144226bc0605105c63e))
+
+
+
+## [0.5.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.3...@equinor/fusion-framework-test-app@0.5.4) (2022-09-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
+
+
+
+
 ## [0.5.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@0.5.2...@equinor/fusion-framework-test-app@0.5.3) (2022-08-29)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app

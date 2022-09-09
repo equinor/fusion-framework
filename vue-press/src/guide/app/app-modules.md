@@ -1,9 +1,11 @@
 ---
-title: App modules
+title: Modules
+category: Guide
 tags:
  - modules
  - basic
  - app
+ - http
 ---
 
 <ModuleBadge module="react-app" />
