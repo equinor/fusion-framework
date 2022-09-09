@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.7.3...@equinor/fusion-framework-react-app@0.8.0) (2022-09-09)
+
+
+### Features
+
+* **react-app:** create legacy app ([4ae10ab](https://github.com/equinor/fusion-framework/commit/4ae10ab4aec50d9e92ce4cb0c74a1405a0dcc36e))
+
+
+
 ## [0.7.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.7.2...@equinor/fusion-framework-react-app@0.7.3) (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
