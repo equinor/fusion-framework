@@ -1,4 +1,4 @@
-import { AnyModule, ModulesConfigurator } from '@equinor/fusion-framework-module';
+import { AnyModule, ModuleConsoleLogger, ModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
 import http, {
@@ -15,19 +15,18 @@ export class FusionConfigurator<
     TModules extends Array<AnyModule> = [],
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
-    protected _requiredModules = [event, http, auth, disco];
-
     constructor(
         args?: Partial<{
             http: Parameters<typeof configureHttp>;
             msal: Parameters<typeof configureMsal>;
         }>
     ) {
-        super();
+        super([event, http, auth, disco]);
         if (args) {
             args.http && this.configureHttp(...args.http);
             args.msal && this.configureMsal(...args.msal);
         }
+        this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 
     public configureHttp(...args: Parameters<typeof configureHttp>) {
