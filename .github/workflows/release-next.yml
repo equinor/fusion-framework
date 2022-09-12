@@ -39,7 +39,7 @@ jobs:
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - name: Bump versions (pre-release)
-        run: npx lerna version --yes --preid next --conventional-graduate --create-release github
+        run: npx lerna version --yes --preid next --conventional-prerelease --create-release github
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
