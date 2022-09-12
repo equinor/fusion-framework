@@ -1,4 +1,8 @@
-import { AnyModule, ModuleConsoleLogger, ModulesConfigurator } from '@equinor/fusion-framework-module';
+import {
+    AnyModule,
+    ModuleConsoleLogger,
+    ModulesConfigurator,
+} from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
 import http, {
@@ -13,6 +17,7 @@ import { FusionModules } from './types';
 
 export class FusionConfigurator<
     TModules extends Array<AnyModule> = [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor(

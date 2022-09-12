@@ -26,6 +26,7 @@ export const module: HttpModule = {
 };
 
 export const configureHttp = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configure: (config: ModuleConfigType<HttpModule>, ref?: any) => void
 ): IModuleConfigurator<HttpModule> => ({
     module,
