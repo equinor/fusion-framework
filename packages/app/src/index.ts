@@ -1,11 +1,5 @@
-export { initializeAppModules, appModules } from './modules';
+export { AppConfigurator } from './configurator';
 
-export type {
-    AppManifest,
-    AppModules,
-    AppModulesInstance,
-    AppConfigurator,
-    AppConfigCallback,
-} from './modules';
+export * from './types';
 
-export { default } from './modules';
+export { initAppModules, default } from './init';
