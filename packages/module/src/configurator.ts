@@ -150,7 +150,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
             } as ModulesConfig<T>)
         );
 
-        return firstValueFrom(config$) as Promise<ModulesConfig<T>>;
+        return lastValueFrom(config$) as Promise<ModulesConfig<T>>;
     }
 
     protected async _postConfigure<T extends Array<AnyModule> = TModules>(
