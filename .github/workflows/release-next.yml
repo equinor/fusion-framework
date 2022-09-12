@@ -9,13 +9,13 @@ on:
       - 'packages/**'
 
 jobs:
-  release-pkg:
+  pre-release-pkg:
     name: Create pre-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        ref: next
         with:
+          ref: next
           fetch-depth: 0
       
       - name: Setup node
