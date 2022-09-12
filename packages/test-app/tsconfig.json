@@ -15,6 +15,9 @@
       "path": "../framework-react"
     },
     {
+      "path": "../module-ag-grid"
+    },
+    {
       "path": "../module-msal"
     }
   ],

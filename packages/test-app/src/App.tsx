@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import createApp, { AppConfigurator, useAppModules } from '@equinor/fusion-framework-react-app';
+import { createComponent, useAppModules } from '@equinor/fusion-framework-react-app';
 import { useAppConfig } from '@equinor/fusion-framework-react-app/config';
 import { useFramework, useCurrentUser } from '@equinor/fusion-framework-react-app/framework';
 import { AppList } from 'AppList';
@@ -9,20 +9,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
-import moduleAgrGrid, { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
 interface App {
     key: string;
     name: string;
 }
-
-const configCallback: AppConfigurator<[AgGridModule]> = async (appModuleConfig, frameworkApi) => {
-    console.debug(0, 'configuring app', frameworkApi, appModuleConfig);
-
-    frameworkApi.modules.serviceDiscovery.configureClient(appModuleConfig, 'portal');
-    // await frameworkApi.modules.serviceDiscovery.configureClient('portal', appModuleConfig);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-};
 
 const queryClient = new QueryClient();
 
@@ -61,11 +53,14 @@ export const AppComponent = (): JSX.Element => {
     );
 };
 
-export const configurator = createApp(AppComponent, configCallback, [moduleAgrGrid]);
+export const creator = createComponent(AppComponent, async (config, { fusion }) => {
+    enableAgGrid(config);
+    await config.useFrameworkServiceClient(fusion, 'portal');
+});
 
 export const App = () => {
-    const framework = useFramework();
-    const Component = configurator(framework, { name: 'test-app' });
+    const fusion = useFramework();
+    const Component = creator({ fusion, env: { name: 'test-app' } });
     return (
         <Suspense fallback={<StarProgress text="Loading Application" />}>
             <Component />
