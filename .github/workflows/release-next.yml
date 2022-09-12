@@ -9,12 +9,13 @@ on:
       - 'packages/**'
 
 jobs:
-  release-pkg:
+  pre-release-pkg:
     name: Create pre-release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
+          ref: next
           fetch-depth: 0
       
       - name: Setup node
@@ -38,7 +39,7 @@ jobs:
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - name: Bump versions (pre-release)
-        run: npx lerna version --yes --no-changelog --no-git-tag-version --preid next --conventional-graduate --create-release github
+        run: npx lerna version --yes --preid next --conventional-graduate --create-release github
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
