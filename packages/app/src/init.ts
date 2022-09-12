@@ -10,11 +10,11 @@ export const initAppModules =
         cb?: AppModuleInitiator<TModules, TRef, TManifest>
     ): ((args: { fusion: TRef; manifest: TManifest }) => Promise<AppModulesInstance<TModules>>) =>
     async (args: { fusion: TRef; manifest: TManifest }): Promise<AppModulesInstance<TModules>> => {
-        const configurator = new AppConfigurator<TModules, TRef>();
+        const configurator = new AppConfigurator<TModules, TRef['modules']>();
         if (cb) {
             await Promise.resolve(cb(configurator, args));
         }
-        const modules = await configurator.initialize<TModules>(args.fusion);
+        const modules = await configurator.initialize<TModules>(args.fusion.modules);
         modules.event.dispatchEvent('onAppModulesLoaded', {
             detail: { modules, manifest: args.manifest },
         });

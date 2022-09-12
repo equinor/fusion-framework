@@ -1,15 +1,30 @@
-import { Fusion } from '@equinor/fusion-framework';
-import type { ModulesConfigurator, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { Fusion, FusionModulesInstance } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { HttpModule } from '@equinor/fusion-framework-module-http';
-import { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { ModulesConfigurator, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import {
+    configureHttp,
+    configureHttpClient,
+    HttpModule,
+} from '@equinor/fusion-framework-module-http';
+import type { MsalModule, configureMsal } from '@equinor/fusion-framework-module-msal';
+import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> = [],
-    TRef extends Fusion = Fusion
-> extends ModulesConfigurator<AppModules<TModules>, TRef> {}
+    TRef extends FusionModulesInstance = FusionModulesInstance
+> extends ModulesConfigurator<AppModules<TModules>, TRef> {
+    configureHttp(...args: Parameters<typeof configureHttp>): void;
+
+    configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
+
+    configureMsal(...args: Parameters<typeof configureMsal>): void;
+    useFrameworkServiceClient<T extends Fusion = Fusion>(
+        fusion: T,
+        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[1]
+    ): ReturnType<IServiceDiscoveryProvider['configureClient']>;
+}
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/ban-types
