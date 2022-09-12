@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.8.0...@equinor/fusion-framework-react-app@1.0.0-alpha.0) (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **react-app:** config is now object
+
+### Features
+
+* **react-app:** update init ([a41f102](https://github.com/equinor/fusion-framework/commit/a41f102e2fee94ec4e29b567cf867465c672f16f))
+
+
+
 ## [0.8.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@0.7.3...@equinor/fusion-framework-react-app@0.8.0) (2022-09-09)
 
 

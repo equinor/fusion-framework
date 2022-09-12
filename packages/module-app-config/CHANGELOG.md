@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@0.3.2...@equinor/fusion-framework-module-app-config@1.0.0-alpha.0) (2022-09-12)
+
+
+### Bug Fixes
+
+* **module-app-config:** fix typo ([ee280fd](https://github.com/equinor/fusion-framework/commit/ee280fd7dfde4f9d4201f3366b8542543abe39f0))
+
+
+
 ## 0.3.2 (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app-config

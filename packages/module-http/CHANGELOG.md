@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@1.0.2...@equinor/fusion-framework-module-http@2.0.0-alpha.0) (2022-09-12)
+
+
+### Features
+
+* **module-http:** expose simple config ([94e4d6b](https://github.com/equinor/fusion-framework/commit/94e4d6bbb7fef010cd72e49242d68ed155592e11))
+
+
+
 ## 1.0.2 (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http

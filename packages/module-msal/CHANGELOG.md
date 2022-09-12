@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.4.2...@equinor/fusion-framework-module-msal@1.0.0-alpha.0) (2022-09-12)
+
+
+### Features
+
+* **module-msal:** expose simple config ([596c4c2](https://github.com/equinor/fusion-framework/commit/596c4c222a75bfef67e2e129792f6132cbceb47c))
+
+
+### Bug Fixes
+
+* **module-msal:** set default logging to errors ([1b53be8](https://github.com/equinor/fusion-framework/commit/1b53be816600c838257f0b3c6f3a338466938a3f))
+
+
+
 ## 0.4.2 (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-msal

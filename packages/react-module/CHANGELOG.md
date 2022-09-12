@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module@0.2.5...@equinor/fusion-framework-react-module@1.0.0-alpha.0) (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **react-module:** config is now object
+
+### Features
+
+* **react-module:** update configurator ([9105abd](https://github.com/equinor/fusion-framework/commit/9105abd8458a5f1ea04fa46cd1a4bb86596a2346))
+
+
+
 ## [0.2.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module@0.2.4...@equinor/fusion-framework-react-module@0.2.5) (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module
