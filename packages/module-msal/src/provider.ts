@@ -86,7 +86,7 @@ export class AuthProvider implements IAuthProvider {
             config.config
         );
         // TODO - fix with log streamer
-        client.setLogger(new ConsoleLogger(3));
+        client.setLogger(new ConsoleLogger(0));
 
         return client;
     }
