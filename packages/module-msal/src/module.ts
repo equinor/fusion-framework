@@ -1,7 +1,7 @@
-import { AuthConfigurator, IAuthConfigurator } from './configurator';
+import { AuthClientOptions, AuthConfigurator, IAuthConfigurator } from './configurator';
 import { AuthProvider, IAuthProvider } from './provider';
 
-import type { Module, ModulesConfigType } from '@equinor/fusion-framework-module';
+import type { Module, IModuleConfigurator } from '@equinor/fusion-framework-module';
 import type { HttpMsalModule } from '@equinor/fusion-framework-module-http';
 
 export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator, [HttpMsalModule]>;
@@ -43,12 +43,30 @@ export const module: MsalModule = {
     },
 };
 
-export const setupMsalModule = (
-    config: ModulesConfigType<[MsalModule]>,
-    callback: (config: IAuthConfigurator) => void
-): void | Promise<void> => {
-    callback(config.auth);
-};
+export const configureMsal = (
+    defaultClient: AuthClientOptions,
+    args?: {
+        clients?: Record<string, AuthClientOptions>;
+        requiresAuth?: boolean;
+    }
+): IModuleConfigurator<MsalModule> => ({
+    module,
+    configure: (config) => {
+        config.configureDefault(defaultClient);
+        const { clients } = args ?? {};
+        if (clients) {
+            Object.entries(clients).forEach(([key, opt]) => config.configureClient(key, opt));
+        }
+    },
+    afterInit: async (auth) => {
+        if (args?.requiresAuth) {
+            await auth.handleRedirect();
+            if (!auth.defaultAccount) {
+                await auth.login();
+            }
+        }
+    },
+});
 
 declare module '@equinor/fusion-framework-module' {
     interface Modules {
