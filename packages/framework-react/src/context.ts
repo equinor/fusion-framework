@@ -1,7 +1,8 @@
 import { createContext } from 'react';
 import type { Fusion } from '@equinor/fusion-framework';
 
-export const context = createContext<Fusion | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const context = createContext<Fusion<any> | null>(null);
 
 /**
  * Component for providing framework.

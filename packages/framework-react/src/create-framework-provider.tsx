@@ -3,7 +3,7 @@ import initFusion from '@equinor/fusion-framework';
 import type { FusionConfigurator } from '@equinor/fusion-framework';
 
 import { FrameworkProvider } from './context';
-import { AnyModule } from '@equinor/fusion-framework-module';
+import type { AnyModule } from '@equinor/fusion-framework-module';
 
 /**
  * Create a framework provider for react.
@@ -25,11 +25,10 @@ import { AnyModule } from '@equinor/fusion-framework-module';
  * ```
  */
 export const createFrameworkProvider = <TModules extends Array<AnyModule> = []>(
-    configurator: FusionConfigurator<TModules>,
-    modules?: TModules
+    configurator: FusionConfigurator<TModules>
 ): React.LazyExoticComponent<React.FunctionComponent> =>
     lazy(async () => {
-        const framework = await initFusion(configurator, modules);
+        const framework = await initFusion(configurator);
         return {
             default: ({ children }: { children?: React.ReactNode }) => (
                 <FrameworkProvider value={framework}>{children}</FrameworkProvider>
