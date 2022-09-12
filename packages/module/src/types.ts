@@ -27,9 +27,12 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 }
 
 export type AnyModule = Module<any, any, any, any>;
+export type AnyModuleInstance = Record<string, AnyModule>;
 export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : never;
 export type ModuleType<M> = M extends Module<any, infer TType, any, any> ? TType : never;
 export type ModuleConfigType<M> = M extends Module<any, any, infer TType, any> ? TType : never;
+export type ModulesInstance<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
+    ModulesInstanceType<TModules> & { dispose: VoidFunction };
 
 export interface Modules {
     [Key: string]: AnyModule;
@@ -43,10 +46,6 @@ export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
           >];
       }
     : never;
-
-export interface ModulesConfigurator<TModules extends Array<AnyModule>, TRef = ModuleInstance> {
-    (config: ModulesConfig<TModules>, ref?: TRef): void | Promise<void>;
-}
 
 /** Extract configs from modules  */
 export type ModulesConfigType<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
@@ -84,3 +83,10 @@ type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
 /** === */
 
 export type ModuleInstance = ModulesInstanceType<Modules>;
+
+export interface ILogger {
+    debug: (...msg: unknown[]) => void;
+    info: (...msg: unknown[]) => void;
+    warn: (...msg: unknown[]) => void;
+    error: (...msg: unknown[]) => void;
+}
