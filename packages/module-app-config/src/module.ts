@@ -65,7 +65,7 @@ export const module: AppConfigModule = {
             const http = await requireInstance('http');
 
             /** check if the http provider has configure a client */
-            if (!http.hasClient(moduleKey)) {
+            if (http.hasClient(moduleKey)) {
                 config.httpClient = http.createClient(moduleKey);
             } else {
                 /** load service discovery module */
