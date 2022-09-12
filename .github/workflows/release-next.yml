@@ -39,8 +39,16 @@ jobs:
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - name: Bump versions (pre-release)
-        run: npx lerna version --yes --no-changelog --no-git-tag-version --preid next --conventional-graduate --create-release github
+        run: npx lerna version --yes --preid next --conventional-graduate --create-release github
         continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Commit changes
+        run: |
+            git add packages/*/package.json 
+            git commit -m'chore(prerelease): bumped version with tag ${{ github.event.inputs.tag }}'
+            git push
         env:
           GH_TOKEN: ${{ github.token }}
 
