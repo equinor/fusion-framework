@@ -1,16 +1,31 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 
 import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { initializeAppModules } from '@equinor/fusion-framework-app';
-import type { AppManifest, AppConfigurator, AppModules } from '@equinor/fusion-framework-app';
+import { initAppModules } from '@equinor/fusion-framework-app';
+import type {
+    AppManifest,
+    AppModuleInitiator,
+    AppModulesInstance,
+} from '@equinor/fusion-framework-app';
 
-import type { AnyModule, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 
 import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
+
+export type ComponentRenderArgs<
+    TFusion extends Fusion = Fusion,
+    TManifest extends AppManifest = AppManifest
+> = { fusion: TFusion; env: TManifest };
+export type ComponentRenderer<
+    TFusion extends Fusion = Fusion,
+    TManifest extends AppManifest = AppManifest
+> = (
+    args: ComponentRenderArgs<TFusion, TManifest>
+) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
  * Creates an lazy loading Component which configures modules
@@ -61,33 +76,31 @@ import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-r
  * @param configure - Callback for configuring application
  * @param modules - required modules for application
  */
-export const createApp =
-    <TModules extends Array<AnyModule>>(
+export const createComponent =
+    <
+        TModules extends Array<AnyModule>,
+        TRef extends Fusion = Fusion,
+        TManifest extends AppManifest = AppManifest
+    >(
         Component: React.ComponentType,
-        configure?: AppConfigurator<TModules>,
-        modules?: TModules
-    ) =>
-    (fusion: Fusion, env: AppManifest): React.LazyExoticComponent<React.ComponentType> =>
+        configure?: AppModuleInitiator<TModules, TRef, TManifest>
+    ): ComponentRenderer<TRef, TManifest> =>
+    ({ fusion, env }) =>
         lazy(async () => {
-            modules ??= [] as unknown as TModules;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const configurator = async (config: any) => {
-                if (configure) {
-                    await Promise.resolve(configure(config, fusion, env));
-                }
-            };
+            const init = initAppModules(configure);
+            const modules = (await init({
+                fusion,
+                manifest: env,
+            })) as unknown as AppModulesInstance;
 
-            const appInitiator = initializeAppModules(configurator, modules ?? []);
-
-            const appModules = await appInitiator(fusion, env);
-            appModules.event.dispatchEvent('onReactAppLoaded', {
+            modules.event.dispatchEvent('onReactAppLoaded', {
                 detail: { modules, fusion },
                 source: Component,
             });
             return {
                 default: () => (
                     <FrameworkProvider value={fusion}>
-                        <AppModuleProvider value={appModules}>
+                        <AppModuleProvider value={modules}>
                             <Component />
                         </AppModuleProvider>
                     </FrameworkProvider>
@@ -98,12 +111,9 @@ export const createApp =
 declare module '@equinor/fusion-framework-module-event' {
     interface FrameworkEventMap {
         onReactAppLoaded: FrameworkEvent<
-            FrameworkEventInit<
-                { modules: ModulesInstanceType<AppModules>; fusion: Fusion },
-                React.ComponentType
-            >
+            FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion }, React.ComponentType>
         >;
     }
 }
 
-export default createApp;
+export default createComponent;

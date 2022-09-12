@@ -3,20 +3,19 @@ import { Suspense, useMemo } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react/hooks';
 
 import type { AnyModule } from '@equinor/fusion-framework-module';
-import type { AppConfigurator } from '@equinor/fusion-framework-app';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-app';
 
-import { createApp } from './create-app';
+import { createComponent } from './create-component';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
     Component: React.ComponentType,
-    configure?: AppConfigurator<TModules>,
-    modules?: TModules
+    configure?: AppModuleInitiator<TModules>
 ) => {
     return (): JSX.Element => {
         const fusion = useFramework();
         const RenderComponent = useMemo(() => {
-            const creator = createApp(Component, configure, modules);
-            return creator(fusion, { name: '' });
+            const creator = createComponent(Component, configure);
+            return creator({ fusion, env: { name: 'legacy' } });
         }, []);
         return (
             <Suspense fallback={<p>loading app</p>}>

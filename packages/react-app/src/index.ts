@@ -3,11 +3,8 @@
  * @module
  */
 
-export { appModules } from '@equinor/fusion-framework-app';
-
 export type {
     AppConfigurator,
-    AppConfigCallback,
     AppModules,
     AppModulesInstance,
     AppManifest,
@@ -16,7 +13,9 @@ export type {
 export { useAppModule } from './useAppModule';
 export { useAppModules } from './useAppModules';
 
-export { createApp } from './create-app';
+export { renderApp } from './render-app';
+export { createComponent } from './create-component';
+export { renderComponent } from './render-component';
 export { createLegacyApp } from './create-legacy-app';
 
-export { default } from './create-app';
+export { default } from './render-app';
