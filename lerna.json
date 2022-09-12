@@ -6,7 +6,7 @@
   "changelogPreset": "conventionalcommits",
   "command": {
     "version": {
-      "allowBranch": ["main", "alpha", "beta", "feat/**", "feature/**", "fix/**", "build/release"],
+      "allowBranch": ["main", "alpha", "beta", "next", "feat/**", "feature/**", "fix/**", "build/release"],
       "conventionalCommits": true,
       "ignoreChanges": ["*.spec.ts", "*.md"]
     },
