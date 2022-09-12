@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.0 (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **framework-react:** config is now object
+
+### Features
+
+* **framework-react:** update init ([f3e6e2b](https://github.com/equinor/fusion-framework/commit/f3e6e2ba7058b4b515ff0838516fe44705bfdf5c))
+
+
+
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@0.3.3...@equinor/fusion-framework-react@1.0.0-alpha.0) (2022-09-12)
 
 

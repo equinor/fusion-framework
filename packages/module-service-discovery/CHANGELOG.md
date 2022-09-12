@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.0 (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **module-service-discovery:** update config
+
+### Bug Fixes
+
+* **module-service-discovery:** update config ([9998981](https://github.com/equinor/fusion-framework/commit/9998981bbcb1ed283dba7c77268e2c55a8e3fb83))
+
+
+
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@0.7.2...@equinor/fusion-framework-module-service-discovery@1.0.0-alpha.0) (2022-09-12)
 
 

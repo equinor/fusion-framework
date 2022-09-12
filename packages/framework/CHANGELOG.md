@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0 (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **framework:** initialize now takes object
+
+### Features
+
+* **framework:** rewrite configurator ([eda8fbf](https://github.com/equinor/fusion-framework/commit/eda8fbf2cb83e839a798063e15dc185801e6c17b))
+
+
+### Bug Fixes
+
+* **framework:** add default modules ([190271b](https://github.com/equinor/fusion-framework/commit/190271b0ed4a4c3c876cbed0de3ec48cd8004fdc))
+
+
+
 ## [4.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@3.0.2...@equinor/fusion-framework@4.0.0-alpha.0) (2022-09-12)
 
 
