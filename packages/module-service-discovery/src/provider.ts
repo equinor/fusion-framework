@@ -1,11 +1,13 @@
-import type { ModulesConfigType, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import { configureHttpClient } from '@equinor/fusion-framework-module-http';
+
+import { IServiceDiscoveryClient } from './client';
+
+import type { ModulesConfigurator, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import type {
     HttpClientOptions,
     HttpModule,
     IHttpClient,
 } from '@equinor/fusion-framework-module-http';
-
-import { IServiceDiscoveryClient } from './client';
 
 import type { Environment, Service } from './types';
 
@@ -25,7 +27,7 @@ export interface IServiceDiscoveryProvider {
     ): Promise<IHttpClient>;
 
     configureClient(
-        config: ModulesConfigType<[HttpModule]>,
+        config: ModulesConfigurator<[HttpModule]>,
         serviceName: string | { key: string; alias: string }
     ): Promise<void>;
 }
@@ -60,7 +62,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     }
 
     public async configureClient(
-        config: ModulesConfigType<[HttpModule]>,
+        config: ModulesConfigurator<[HttpModule]>,
         serviceName: string | { key: string; alias: string }
     ): Promise<void> {
         const { key, alias } =
@@ -68,6 +70,6 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
                 ? { key: serviceName, alias: serviceName }
                 : serviceName;
         const { uri: baseUri, defaultScopes } = await this.resolveService(key);
-        config.http.configureClient(alias, { baseUri, defaultScopes });
+        config.addConfig(configureHttpClient(alias, { baseUri, defaultScopes }));
     }
 }
