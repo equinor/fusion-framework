@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.0 (2022-09-12)
+
+
+### Features
+
+* **module-ag-grid:** expose simple config ([e0ce67f](https://github.com/equinor/fusion-framework/commit/e0ce67f5594cd0f63aea318d130021b0bdeec41d))
+* **module-ag-grid:** expose simple configurator ([788385f](https://github.com/equinor/fusion-framework/commit/788385fa216853c5cc71b13afbcd1c14ca712a5d))
+
+
+
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@0.3.4...@equinor/fusion-framework-module-ag-grid@1.0.0-alpha.0) (2022-09-12)
 
 

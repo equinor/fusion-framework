@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.0 (2022-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **module:** initialize modules now takes configurator object as argument.
+
+### Features
+
+* **module:** rewrite config to object ([74566f3](https://github.com/equinor/fusion-framework/commit/74566f36eb73c63e1e25df05d89f6f6490dc8272))
+
+
+### Bug Fixes
+
+* **module:** await all creation of configs ([25649a4](https://github.com/equinor/fusion-framework/commit/25649a4a6bc4249f2fe996c0bdf735a7ebd42186))
+* **module:** expose logger ([c88574a](https://github.com/equinor/fusion-framework/commit/c88574a61d368841dd648c511d80cad2e5efd7c6))
+
+
+
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@0.4.4...@equinor/fusion-framework-module@1.0.0-alpha.0) (2022-09-12)
 
 
