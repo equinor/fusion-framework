@@ -2,6 +2,7 @@ import { IAgGridConfigurator, AgGridConfigurator } from './configurator';
 import { IAgGridProvider, AgGridProvider } from './provider';
 import type {
     IModuleConfigurator,
+    IModulesConfigurator,
     Module,
     ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
@@ -28,6 +29,10 @@ export const configureAgGrid = (args: {
         config.licenseKey = args.licenseKey;
     },
 });
+
+export const enableAgGrid = (config: IModulesConfigurator): void => {
+    config.addConfig({ module });
+};
 
 export default module;
 
