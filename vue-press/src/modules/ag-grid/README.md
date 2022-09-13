@@ -49,4 +49,18 @@ export const Framework = createFrameworkProvider<[AgGridModule]>(
 ```
 :::
 
+::: code-group-item Legacy app
+```ts
+import { registerApp } from '@equinor/fusion';
+import { createLegacyApp } from '@equinor/fusion-framework-react-app';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
+
+import RootComponent from from './App';
+
+const AppComponent = createLegacyApp(RootComponent, (config) => enableAgGrid(config));
+
+registerApp('my-app', { AppComponent });
+```
+:::
+
 ::::
