@@ -3,7 +3,7 @@ import React, { lazy } from 'react';
 import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { initAppModules } from '@equinor/fusion-framework-app';
+import { configureModules } from '@equinor/fusion-framework-app';
 import type {
     AppManifest,
     AppModuleInitiator,
@@ -86,7 +86,7 @@ export const createComponent =
     ): ComponentRenderer<TRef, TManifest> =>
     (fusion, env) =>
         lazy(async () => {
-            const init = initAppModules<TModules, TRef, TManifest>(configure);
+            const init = configureModules<TModules, TRef, TManifest>(configure);
             const modules = (await init({
                 fusion,
                 manifest: env,

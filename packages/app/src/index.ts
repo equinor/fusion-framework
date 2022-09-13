@@ -2,4 +2,7 @@ export { AppConfigurator } from './configurator';
 
 export * from './types';
 
-export { initAppModules, default } from './init';
+export { configureModules, default } from './configure-modules';
+
+// TODO remove
+export { configureModules as initAppModules } from './configure-modules';

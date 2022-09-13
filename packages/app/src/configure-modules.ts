@@ -5,7 +5,7 @@ import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-mo
 import { AppConfigurator } from './configurator';
 import type { AppManifest, AppModulesInstance, AppModuleInitiator } from './types';
 
-export const initAppModules =
+export const configureModules =
     <
         TModules extends Array<AnyModule> | never,
         TRef extends Fusion = Fusion,
@@ -25,7 +25,7 @@ export const initAppModules =
         return modules as unknown as AppModulesInstance<TModules>;
     };
 
-export default initAppModules;
+export default configureModules;
 
 declare module '@equinor/fusion-framework-module-event' {
     interface FrameworkEventMap {
