@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-event",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Fusion module for events",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
@@ -23,7 +23,7 @@
     "directory": "packages/module-app-config"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^1.1.0"
+    "@equinor/fusion-framework-module": "^1.1.1"
   },
   "devDependencies": {
     "rxjs": "^7.5.6"
