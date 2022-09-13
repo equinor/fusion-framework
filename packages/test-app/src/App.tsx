@@ -54,6 +54,7 @@ export const AppComponent = (): JSX.Element => {
 };
 
 export const creator = createComponent(AppComponent, async (config, { fusion }) => {
+    config.logger.level = 4;
     enableAgGrid(config);
     await config.useFrameworkServiceClient(fusion, 'portal');
 });

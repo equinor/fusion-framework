@@ -1,6 +1,8 @@
 import { AnyModule } from './types';
 
 export class ConsoleLogger {
+    /** - 0-1-2-3 (error-warning-info-debug) if not provided only errors are logged */
+    public level: 0 | 1 | 2 | 3 | 4 = 1;
     constructor(protected domain: string) {}
 
     /** @inheritdoc */
@@ -15,16 +17,18 @@ export class ConsoleLogger {
     }
 
     debug(...msg: unknown[]) {
-        process.env.NODE_ENV === 'development' && console.debug(...this._createMessage(msg));
+        if (process.env.NODE_ENV === 'development') {
+            this.level > 3 && console.debug(...this._createMessage(msg));
+        }
     }
     info(...msg: unknown[]) {
-        console.info(...this._createMessage(msg));
+        this.level > 2 && console.info(...this._createMessage(msg));
     }
     warn(...msg: unknown[]) {
-        console.warn(...this._createMessage(msg));
+        this.level > 1 && console.warn(...this._createMessage(msg));
     }
     error(...msg: unknown[]) {
-        console.error(...this._createMessage(msg));
+        this.level > 0 && console.error(...this._createMessage(msg));
     }
 }
 

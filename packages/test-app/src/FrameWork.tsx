@@ -4,6 +4,7 @@ import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 import { AgGridModule, configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
 const config = new FusionConfigurator<[AgGridModule]>();
+config.logger.level = 4;
 
 config.configureServiceDiscovery({
     client: {
