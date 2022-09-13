@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.1.0...@equinor/fusion-framework-test-app@1.1.1) (2022-09-13)
+
+
+### Bug Fixes
+
+* update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
+
+
+
 ## [1.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.0.1...@equinor/fusion-framework-test-app@1.1.0) (2022-09-13)
 
 
