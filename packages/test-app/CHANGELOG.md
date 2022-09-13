@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.0.1...@equinor/fusion-framework-test-app@1.1.0) (2022-09-13)
+
+
+### Features
+
+* **module:** allow setting log levels ([017b5b3](https://github.com/equinor/fusion-framework/commit/017b5b34645aa001297f37e7aef5557e9027beee))
+
+
+
 ## [1.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.0.1-next.1...@equinor/fusion-framework-test-app@1.0.1) (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
