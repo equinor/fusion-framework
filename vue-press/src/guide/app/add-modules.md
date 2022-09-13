@@ -9,23 +9,22 @@ tags:
 
 ```ts
 // config.ts
-import type { AppConfigurator } from '@equinor/fusion-framework-react-app';
-import type { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { configureModules } from '@equinor/fusion-framework-app';
+import { enableAgGrid, /* configureAgGrid */ } from '@equinor/fusion-framework-module-ag-grid';
 
-/** add interface of module to configurator for type hinting */
-const configCallback: AppConfigurator<[AgGridModule]> = async (
-  appModuleConfig, 
-  frameworkApi
-) => {}
+import myModule from './myModule';
 
-// index.ts
-import createApp from '@equinor/fusion-framework-react-app';
-import moduleAgGrid from '@equinor/fusion-framework-module-ag-grid';
+configureModules(config => {
+  /** add a config for a module with helper */
+  enableAgGrid(config)
+  //config.addConfig(configureAgGrid({licenseKey: '123'}));
 
-export const render = createApp(
-  AppComponent, 
-  configCallback,
-  /** array of modules to initiate */
-  [ moduleAgGrid ]
-);
-```
+  /** add a module without helper */
+  config.addConfig({
+    module: myModule,
+    configure: (config) => {
+        config.myConfig = 'foobar';
+    },
+    ini
+  })
+});

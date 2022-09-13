@@ -21,31 +21,53 @@ read more for usage of [AG Grid](https://www.ag-grid.com/)
 :::: code-group
 ::: code-group-item App:active
 ```ts
-import { createApp } from '@equinor/fusion-framework-react-app"';
-import moduleAgrGrid, { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { configureModules } from '@equinor/fusion-framework-app"';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
-const initializeApp = createApp<[AgGridModule]>(
-  AppComponent,
-  
-  /** apps will use the license key by parent scope */
-  async(config) = {}
-
-  /** provide the module for instantiation */
-  [moduleAgGrid]
-);
+const initializeApp = configureModules((config) => {
+  enableAgGrid(config);
+} 
 ```
 :::
 
 ::: code-group-item Portal
 ```ts
-import moduleAgrGrid, { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { FusionConfigurator } from '@equinor/fusion-framework';
+import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
-export const Framework = createFrameworkProvider<[AgGridModule]>(
-  async(config) => {
-    config.agGrid.licenseKey = 'my-license-key'
-  },
-  [moduleAgGrid]
-);
+const configurator = new FusionConfigurator();
+configurator.addConfig(configureAgGrid({
+  licenseKey = 'my-license-key'
+}));
+```
+:::
+
+::::
+
+### React
+
+:::: code-group
+::: code-group-item App:active
+```ts
+import { createComponent } from '@equinor/fusion-framework-react-app"';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
+
+const initializeApp = createComponent((config) => {
+  enableAgGrid(config);
+} 
+```
+:::
+
+::: code-group-item Portal
+```ts
+import { createFrameworkProvider } from '@equinor/fusion-framework-react';
+import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
+
+createFrameworkProvider((config) => {
+  config.addConfig(configureAgGrid({
+    licenseKey = 'my-license-key'
+  }));
+})
 ```
 :::
 
@@ -55,11 +77,14 @@ import { registerApp } from '@equinor/fusion';
 import { createLegacyApp } from '@equinor/fusion-framework-react-app';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
-import RootComponent from from './App';
+import App from from './App';
 
-const AppComponent = createLegacyApp(RootComponent, (config) => enableAgGrid(config));
-
-registerApp('my-app', { AppComponent });
+registerApp('my-app', { 
+  AppComponent:  createLegacyApp(
+    App, 
+    (config) => enableAgGrid(config)
+  )
+});
 ```
 :::
 

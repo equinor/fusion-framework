@@ -6,18 +6,24 @@ tags:
   - legacy
 ---
 
+For some apps, replacing `react-router` is a daunting task. 
+With this method the app will
+
 
 
 ```ts
-import { createLegacyApp } from '@equinor/fusion-framework-react-app';
-import type { AppConfigCallback } from '@equinor/fusion-framework-react-app/config';
-import someModule, { SomeModule } from '@equinor/fusion-framework-module-some-module';
-
-const RootComponent: React.ComponentType = () => { ... }
-const configCallback: AppConfigCallback<[SomeModule]> = (config) => { ... }
-
-const AppComponent = createLegacyApp(RootComponent, configCallback, [someModule]);
-
 import { registerApp } from '@equinor/fusion';
-registerApp('my-app', { AppComponent });
+import { createLegacyApp } from '@equinor/fusion-framework-react-app';
+import { configureSomething } from '@equinor/fusion-framework-module-some-module';
+
+const Component: React.ComponentType = () => { ... }
+
+registerApp(
+  'my-app', 
+  { 
+    AppComponent: createLegacyApp(Component, (config) => {
+      config.addConfig(configureSomething());
+    });
+  }
+);
 ```
