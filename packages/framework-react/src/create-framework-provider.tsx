@@ -1,6 +1,6 @@
 import React, { lazy } from 'react';
 import initFusion from '@equinor/fusion-framework';
-import type { FusionConfigurator } from '@equinor/fusion-framework';
+import { FusionConfigurator } from '@equinor/fusion-framework';
 
 import { FrameworkProvider } from './context';
 import type { AnyModule } from '@equinor/fusion-framework-module';
@@ -25,9 +25,11 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
  * ```
  */
 export const createFrameworkProvider = <TModules extends Array<AnyModule> = []>(
-    configurator: FusionConfigurator<TModules>
+    cb: (configurator: FusionConfigurator<TModules>) => void | Promise<void>
 ): React.LazyExoticComponent<React.FunctionComponent> =>
     lazy(async () => {
+        const configurator = new FusionConfigurator<TModules>();
+        await cb(configurator);
         const framework = await initFusion(configurator);
         return {
             default: ({ children }: { children?: React.ReactNode }) => (

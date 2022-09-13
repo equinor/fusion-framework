@@ -27,6 +27,13 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 }
 
 export type AnyModule = Module<any, any, any, any>;
+export type CombinedModules<T1, T2> = T1 extends Array<AnyModule>
+    ? T2 extends Array<AnyModule>
+        ? [...T1, ...T2]
+        : T1
+    : T2 extends Array<AnyModule>
+    ? T2
+    : never;
 export type AnyModuleInstance = Record<string, AnyModule>;
 export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : never;
 export type ModuleType<M> = M extends Module<any, infer TType, any, any> ? TType : never;

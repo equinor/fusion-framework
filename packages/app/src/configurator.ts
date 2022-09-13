@@ -14,7 +14,7 @@ import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module
 import { AppModules, IAppConfigurator } from './types';
 
 export class AppConfigurator<
-        TModules extends Array<AnyModule> = [],
+        TModules extends Array<AnyModule> | unknown = unknown,
         TRef extends FusionModulesInstance = FusionModulesInstance
     >
     extends ModulesConfigurator<AppModules<TModules>, TRef>
@@ -45,8 +45,11 @@ export class AppConfigurator<
     public useFrameworkServiceClient(
         fusion: Fusion,
         serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[1]
-    ) {
-        return fusion.modules.serviceDiscovery.configureClient(this, serviceName);
+    ): ReturnType<IServiceDiscoveryProvider['configureClient']> {
+        return fusion.modules.serviceDiscovery.configureClient(
+            this as AppConfigurator,
+            serviceName
+        );
     }
 
     public configureMsal(...args: Parameters<typeof configureMsal>) {

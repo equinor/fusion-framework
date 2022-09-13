@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IModulesConfigurator } from './configurator';
 
-import type { AnyModule, ModulesInstanceType } from './types';
+import type { AnyModule } from './types';
 
 /**
  * Create an instances of provided instances
@@ -10,10 +10,9 @@ import type { AnyModule, ModulesInstanceType } from './types';
  * @param modules - modules to configure
  * @param ref - reference instance (parent module instance)
  */
-export const initializeModules = async <TModules extends Array<AnyModule>, TInstance = any>(
+export const initializeModules = <TModules extends Array<AnyModule>, TInstance = any>(
     configurator: IModulesConfigurator<TModules, TInstance>,
     ref?: TInstance
-): Promise<ModulesInstanceType<TModules> & { dispose: VoidFunction }> =>
-    configurator.initialize(ref);
+) => configurator.initialize(ref);
 
 export default initializeModules;

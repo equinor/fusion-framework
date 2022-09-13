@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
-import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
+import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
 
 interface App {
     key: string;
@@ -57,11 +57,21 @@ export const creator = createComponent(AppComponent, async (config, { fusion }) 
     config.logger.level = 4;
     enableAgGrid(config);
     await config.useFrameworkServiceClient(fusion, 'portal');
+    config.onInitialized<[AgGridModule]>((instance) => {
+        instance.agGrid;
+    });
+    config.onInitialized((instance) => {
+        instance.appConfig;
+    });
+
+    // config.onInitialized(async(inst) => {
+
+    // })
 });
 
 export const App = () => {
     const fusion = useFramework();
-    const Component = creator({ fusion, env: { name: 'test-app' } });
+    const Component = creator(fusion, { name: 'test-app' });
     return (
         <Suspense fallback={<StarProgress text="Loading Application" />}>
             <Component />

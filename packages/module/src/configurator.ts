@@ -6,6 +6,7 @@ import { ModuleConsoleLogger } from './logger';
 
 import type {
     AnyModule,
+    CombinedModules,
     ModuleConfigType,
     ModuleInstance,
     ModulesConfig,
@@ -16,29 +17,27 @@ import type {
 } from './types';
 
 export interface IModulesConfigurator<TModules extends Array<AnyModule> = [], TRef = any> {
-    configure<T extends Array<AnyModule> = TModules>(
-        ...configs: Array<IModuleConfigurator<T[number]>>
-    ): void;
+    logger: ModuleConsoleLogger;
+    configure(...configs: Array<IModuleConfigurator>): void;
 
-    addConfig<T extends AnyModule = TModules[number]>(config: IModuleConfigurator<T>): void;
+    addConfig<T extends AnyModule>(config: IModuleConfigurator<T>): void;
 
-    initialize<T extends Array<AnyModule> = TModules>(ref?: TRef): Promise<ModulesInstance<T>>;
-
-    onConfigured<T extends Array<AnyModule> = TModules>(
-        cb: (config: ModulesConfigType<T>) => void | Promise<void>
-    ): void;
-
-    onInitialized<T extends Array<AnyModule> = TModules>(
-        cb: (instance: ModulesInstanceType<T>) => void
-    ): void;
-
-    dispose<T extends Array<AnyModule> = TModules>(
-        instance: ModulesInstanceType<T>,
+    initialize<T extends Array<AnyModule> | unknown>(
         ref?: TRef
-    ): Promise<void>;
+    ): Promise<ModulesInstance<CombinedModules<T, TModules>>>;
+
+    onConfigured<T>(
+        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>
+    ): void;
+
+    onInitialized<T extends Array<AnyModule> | unknown>(
+        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void
+    ): void;
+
+    dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void>;
 }
 
-export interface IModuleConfigurator<TModule extends AnyModule, TRef = ModuleInstance> {
+export interface IModuleConfigurator<TModule extends AnyModule = AnyModule, TRef = ModuleInstance> {
     module: TModule;
     configure?: (config: ModuleConfigType<TModule>, ref?: TRef) => void | Promise<void>;
     afterConfig?: (config: ModuleConfigType<TModule>) => void;
@@ -54,7 +53,7 @@ class RequiredModuleTimeoutError extends Error {
 
 // const mapModuleNames = (modules: Array<AnyModule>) => modules.map((x) => x.name);
 
-export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
+export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
     implements IModulesConfigurator<TModules, TRef>
 {
     public logger: ModuleConsoleLogger = new ModuleConsoleLogger('ModulesConfigurator');
@@ -73,10 +72,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
         return [...this._modules];
     }
 
-    public configure<T extends Array<AnyModule> = TModules>(
-        ...configs: Array<IModuleConfigurator<T[number]>>
-    ) {
-        configs.forEach((x) => this.addConfig<T[number]>(x));
+    public configure(...configs: Array<IModuleConfigurator>) {
+        configs.forEach((x) => this.addConfig(x));
     }
 
     public addConfig<T extends AnyModule>(config: IModuleConfigurator<T>) {
@@ -87,39 +84,43 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
         afterInit && this._afterInit.push((instances) => afterInit(instances[module.name]));
     }
 
-    public onConfigured<T extends Array<AnyModule> = TModules>(
-        cb: (config: ModulesConfigType<T>) => void | Promise<void>
+    public onConfigured<T>(
+        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>
     ) {
         this._afterConfiguration.push(cb);
     }
 
-    public onInitialized<T extends Array<AnyModule> = TModules>(
-        cb: (instance: ModulesInstanceType<T>) => void
+    public onInitialized<T>(
+        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void
     ): void {
         this._afterInit.push(cb);
     }
 
-    public async initialize<T extends Array<AnyModule> = TModules, R = TRef>(
+    public async initialize<T, R = TRef>(
         ref?: R
-    ): Promise<ModulesInstance<T>> {
+    ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
         const config = await this._configure<T, R>(ref);
         const instance = await this._initialize<T, R>(config, ref);
         await this._postInitialize<T, R>(instance, ref);
-        return Object.seal(Object.assign({}, instance, { dispose: () => this.dispose(instance) }));
+        return Object.seal(
+            Object.assign({}, instance, {
+                dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
+            })
+        );
     }
 
-    protected async _configure<T extends Array<AnyModule> = TModules, R = TRef>(
+    protected async _configure<T, R = TRef>(
         ref?: R
-    ): Promise<ModulesConfig<T>> {
+    ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
         const config = await this._createConfig<T, R>(ref);
         await Promise.all(this._configs.map((x) => Promise.resolve(x(config))));
         await this._postConfigure<T>(config);
         return config;
     }
 
-    protected _createConfig<T extends Array<AnyModule> = TModules, R = TRef>(
+    protected _createConfig<T, R = TRef>(
         ref?: R
-    ): Promise<ModulesConfig<T>> {
+    ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
         const { modules, logger, _afterConfiguration, _afterInit } = this;
         const config$ = from(modules).pipe(
             // TODO - handle config creation errors
@@ -147,14 +148,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
                 onAfterInit(cb) {
                     _afterInit.push(cb);
                 },
-            } as ModulesConfig<T>)
+            } as ModulesConfig<CombinedModules<T, TModules>>)
         );
 
-        return lastValueFrom(config$) as Promise<ModulesConfig<T>>;
+        return lastValueFrom(config$);
     }
 
-    protected async _postConfigure<T extends Array<AnyModule> = TModules>(
-        config: ModulesConfigType<T>
+    protected async _postConfigure<T>(
+        config: ModulesConfigType<CombinedModules<T, TModules>>
     ): Promise<void> {
         const { modules, logger, _afterConfiguration: afterConfiguration } = this;
         await Promise.allSettled(
@@ -185,19 +186,23 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
         }
     }
 
-    protected async _initialize<T extends Array<AnyModule> = TModules, R = TRef>(
-        config: ModulesConfigType<T>,
+    protected async _initialize<T, R = TRef>(
+        config: ModulesConfigType<CombinedModules<T, TModules>>,
         ref?: R
-    ): Promise<ModulesInstanceType<T>> {
+    ): Promise<ModulesInstanceType<CombinedModules<T, TModules>>> {
         const { modules, logger } = this;
         const moduleNames = modules.map((m) => m.name);
 
-        const instance$ = new BehaviorSubject<ModulesInstanceType<T>>({} as ModulesInstanceType<T>);
+        const instance$ = new BehaviorSubject<ModulesInstanceType<CombinedModules<T, TModules>>>(
+            {} as ModulesInstanceType<CombinedModules<T, TModules>>
+        );
 
-        const requireInstance = <TKey extends keyof ModulesInstanceType<T>>(
+        const requireInstance = <
+            TKey extends keyof ModulesInstanceType<CombinedModules<T, TModules>>
+        >(
             name: TKey,
             wait = 60
-        ): Promise<ModulesInstanceType<T>[TKey]> => {
+        ): Promise<ModulesInstanceType<CombinedModules<T, TModules>>[TKey]> => {
             if (!moduleNames.includes(name)) {
                 logger.error(
                     `🚀⌛️ Cannot not require ${logger.formatModuleName(
@@ -263,8 +268,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
         return instance;
     }
 
-    protected async _postInitialize<T extends Array<AnyModule> = TModules, R = TRef>(
-        instance: ModulesInstanceType<T>,
+    protected async _postInitialize<T, R = TRef>(
+        instance: ModulesInstanceType<CombinedModules<T, TModules>>,
         ref?: R
     ) {
         const { modules, logger, _afterInit: afterInit } = this;
@@ -280,7 +285,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
                         await module.postInitialize?.({
                             ref,
                             modules: instance,
-                            instance: instance[module.name as keyof ModulesInstanceType<T>],
+                            instance:
+                                instance[
+                                    module.name as keyof ModulesInstanceType<
+                                        CombinedModules<T, TModules>
+                                    >
+                                ],
                         });
                         logger.debug(
                             `🚀📌 post initialized moule ${logger.formatModuleName(module)}`
@@ -307,10 +317,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
         logger.info('🟢 Modules initialized');
     }
 
-    public async dispose<T extends Array<AnyModule> = TModules, R = TRef>(
-        instance: ModulesInstanceType<T>,
-        ref?: R
-    ): Promise<void> {
+    public async dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void> {
         const { modules } = this;
         await Promise.allSettled(
             modules
@@ -319,7 +326,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule>, TRef = any>
                     await module.dispose?.({
                         ref,
                         modules: instance,
-                        instance: instance[module.name],
+                        instance: instance[module.name as keyof typeof instance],
                     });
                 })
         );

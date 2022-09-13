@@ -58,7 +58,7 @@ export const createModuleProvider: ModuleProviderCreator = async <
     ref?: TRef
 ): Promise<React.LazyExoticComponent<React.FunctionComponent>> => {
     const Component = lazy(async () => {
-        const { dispose, ...instance } = await initializeModules(configurator, ref);
+        const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
         return {
             default: ({ children }: { children?: React.ReactNode }) => {
                 useEffect(() => dispose, [instance]);
