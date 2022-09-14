@@ -8789,7 +8789,7 @@ jest-snapshot@^29.0.3:
     pretty-format "^29.0.3"
     semver "^7.3.5"
 
-jest-util@^27.0.0, jest-util@^27.5.1:
+jest-util@^27.5.1:
   version "27.5.1"
   resolved "https://registry.npmjs.org/jest-util/-/jest-util-27.5.1.tgz"
   integrity sha512-Kv2o/8jNvX1MQ0KGtw480E/w4fBCDOnH6+6DmeKi6LZUIlKA5kwY0YNdlzaWTiVgxqAqik11QyxDOKk543aKXw==
@@ -8813,24 +8813,12 @@ jest-util@^28.1.1:
     graceful-fs "^4.2.9"
     picomatch "^2.2.3"
 
-jest-util@^29.0.0, jest-util@^29.0.3:
+jest-util@^29.0.0, jest-util@^29.0.2, jest-util@^29.0.3:
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-29.0.3.tgz#06d1d77f9a1bea380f121897d78695902959fbc0"
   integrity sha512-Q0xaG3YRG8QiTC4R6fHjHQPaPpz9pJBEi0AeOE4mQh/FuWOijFjGXMMOfQEaU9i3z76cNR7FobZZUQnL6IyfdQ==
   dependencies:
     "@jest/types" "^29.0.3"
-    "@types/node" "*"
-    chalk "^4.0.0"
-    ci-info "^3.2.0"
-    graceful-fs "^4.2.9"
-    picomatch "^2.2.3"
-
-jest-util@^29.0.2:
-  version "29.0.2"
-  resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-29.0.2.tgz#c75c5cab7f3b410782f9570a60c5558b5dfb6e3a"
-  integrity sha512-ozk8ruEEEACxqpz0hN9UOgtPZS0aN+NffwQduR5dVlhN+eN47vxurtvgZkYZYMpYrsmlAEx1XabkB3BnN0GfKQ==
-  dependencies:
-    "@jest/types" "^29.0.2"
     "@types/node" "*"
     chalk "^4.0.0"
     ci-info "^3.2.0"
@@ -9078,17 +9066,17 @@ json-stringify-safe@^5.0.1:
   resolved "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
   integrity sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==
 
-json5@2.x, json5@^2.1.2, json5@^2.2.0, json5@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
-  integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
-
 json5@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/json5/-/json5-1.0.1.tgz"
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
+
+json5@^2.1.2, json5@^2.2.0, json5@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
+  integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
 jsonc-parser@3.0.0:
   version "3.0.0"
@@ -13029,24 +13017,10 @@ tryer@^1.0.1:
   resolved "https://registry.npmjs.org/tryer/-/tryer-1.0.1.tgz"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-jest@^27.1.4:
-  version "27.1.5"
-  resolved "https://registry.npmjs.org/ts-jest/-/ts-jest-27.1.5.tgz"
-  integrity sha512-Xv6jBQPoBEvBq/5i2TeSG9tt/nqkbpcurrEG1b+2yfBrcJelOZF9Ml6dmyMh7bcW9JyFbRYpR5rxROSlBLTZHA==
-  dependencies:
-    bs-logger "0.x"
-    fast-json-stable-stringify "2.x"
-    jest-util "^27.0.0"
-    json5 "2.x"
-    lodash.memoize "4.x"
-    make-error "1.x"
-    semver "7.x"
-    yargs-parser "20.x"
-
-ts-jest@^29.0.0:
-  version "29.0.0"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-29.0.0.tgz#3617e10c39a76380fe521d0c26186a773f5f1e46"
-  integrity sha512-OxUaigbv5Aon3OMLY9HBtwkGMs1upWE/URrmmVQFzzOcGlEPVuWzGmXUIkWGt/95Dj/T6MGuTrHHGL6kT6Yn8g==
+ts-jest@^29.0.0, ts-jest@^29.0.1:
+  version "29.0.1"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-29.0.1.tgz#3296b39d069dc55825ce1d059a9510b33c718b86"
+  integrity sha512-htQOHshgvhn93QLxrmxpiQPk69+M1g7govO1g6kf6GsjCv4uvRV0znVmDrrvjUrVCnTYeY4FBxTYYYD4airyJA==
   dependencies:
     bs-logger "0.x"
     fast-json-stable-stringify "2.x"
@@ -13973,11 +13947,6 @@ yargs-parser@20.2.4:
   resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-20.2.4.tgz"
   integrity sha512-WOkpgNhPTlE73h4VFAFsOnomJVaovO8VqLDzy5saChRBFQFBoMYirowyW+Q9HB4HFF4Z7VZTiG3iSzJJA29yRA==
 
-yargs-parser@20.x, yargs-parser@^20.2.2, yargs-parser@^20.2.3:
-  version "20.2.9"
-  resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-20.2.9.tgz"
-  integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
-
 yargs-parser@21.0.1:
   version "21.0.1"
   resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.0.1.tgz"
@@ -13987,6 +13956,11 @@ yargs-parser@>=21.0.1, yargs-parser@^21.0.0, yargs-parser@^21.0.1:
   version "21.1.1"
   resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-21.1.1.tgz"
   integrity sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==
+
+yargs-parser@^20.2.2, yargs-parser@^20.2.3:
+  version "20.2.9"
+  resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-20.2.9.tgz"
+  integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
 
 yargs@^16.2.0:
   version "16.2.0"
