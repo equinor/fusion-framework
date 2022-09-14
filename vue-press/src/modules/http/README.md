@@ -25,36 +25,46 @@ type config = ModuleConfigType<[HttpMoldule]>;
 ```
 
 :::: code-group
-::: code-group-item Simple
+::: code-group-item Simple:active
 ```ts
-/** cannot execute authorized requests */
-const configure = (config) => {
-  config.http.configureClient(
-      'bar',
-      'https://somewhere-test.com'
-    );
-}
+import { configureHttpClient } from '@equinor/fusion-framework-module-http';
+
+config.addConfig(configureHttpClient(
+  'my-client',
+  /** HttpClientOptions */
+  {
+    baseUri: 'https://foo.bar/api';
+    defaultScopes: ['my-scope/.default']
+  }
+));
 ```
 :::
 
-::: code-group-item Standard:active
+::: code-group-item Advance
 ```ts
-const configure = (config) => {
-  config.http.configureClient(
+import { 
+  configureHttpClient, 
+  configureHttp 
+} from '@equinor/fusion-framework-module-http';
+
+config.addConfig(configureHttp(
+  'my-client',
+  (config: IHttpClientConfigurator) => {
+    /** cannot execute authorized requests */
+    config.http.configureClient(
+      'bar',
+      'https://somewhere-test.com'
+    );
+
+    config.configureClient(
       'bar', 
       {
         baseUri: 'https://foo.bar',
         defaultScopes: ['foobar/.default']
       }
     );
-}
-```
-:::
 
-::: code-group-item Advance
-```ts
-const configure = async(config) => {
-  config.http.configureClient(
+    config.configureClient(
       'bar',
       /** callback with created http client  */
       (client: IHttpClient): => {
@@ -75,11 +85,12 @@ const configure = async(config) => {
         });
       }
     );
-}
+  }
+));
 ```
 :::
-
 ::::
+
 
 ### HttpClientOptions
 

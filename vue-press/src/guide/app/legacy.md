@@ -6,10 +6,11 @@ tags:
   - legacy
 ---
 
+
 For some apps, replacing `react-router` is a daunting task. 
-With this method the app will
+With this method the app will initialize modules and consume the framework.
 
-
+<ModuleBadge module="react-app" />
 
 ```ts
 import { registerApp } from '@equinor/fusion';
@@ -18,6 +19,7 @@ import { configureSomething } from '@equinor/fusion-framework-module-some-module
 
 const Component: React.ComponentType = () => { ... }
 
+/** note the missing render function */
 registerApp(
   'my-app', 
   { 

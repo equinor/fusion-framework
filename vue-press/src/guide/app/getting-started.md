@@ -25,31 +25,22 @@ yarn add -D '@equinor/fusion-framework-react-app'
 
 ## Configuration
 ```ts
-import type { AppConfigurator } from '@equinor/fusion-framework-react-app';
+/** config.ts */
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
-const configCallback: AppConfigurator = async (
-  appConfig, 
-  frameworkApi
-) => {
-  
-  console.log('configuring my app');
-  
-  /** configure portal client from framework service discovery */
-  await frameworkApi.modules.serviceDiscovery.configureClient(
-    appConfig, 
-    'portal'
-  );
+import { enableAgGrid } from '@equinor/fusion-framework-react-app';
 
+export const configure: AppModuleInitiator = async (config, { fusion }) => {
+  enableAgGrid(config);
+  await config.useFrameworkServiceClient(fusion, 'portal');
   /** configure a custom client */  
-  appConfig.http.configureClient({
+  config.configureHttpClient({
     'bar', 
     {
       baseUri: 'https://foo.bar',
       defaultScopes: ['foobar/.default']
     }
   });
-
-  console.log('configured http client for portal services');
 };
 ```
 
@@ -90,16 +81,14 @@ export const AppComponent = (): JSX.Element => {
 ## Render
 
 ```ts
-import createApp from '@equinor/fusion-framework-react-app';
-
-export const render = createApp(AppComponent, configCallback);
-
-export default render;
-```
-
-::: warning Legacy registering of app in Fusion Portal
-```ts
 import { registerApp } from '@equinor/fusion';
-registerApp('my-app', { render, AppComponent });
+import { createComponent } from '@equinor/fusion-framework-react-app';
+
+registerApp(
+  'my-app', 
+  { 
+    render: createComponent(AppComponent, configCallback),
+    AppComponent 
+  }
+);
 ```
-:::

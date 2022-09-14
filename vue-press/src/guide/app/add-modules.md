@@ -10,14 +10,13 @@ tags:
 ```ts
 // config.ts
 import { configureModules } from '@equinor/fusion-framework-app';
-import { enableAgGrid, /* configureAgGrid */ } from '@equinor/fusion-framework-module-ag-grid';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
 import myModule from './myModule';
 
 configureModules(config => {
   /** add a config for a module with helper */
   enableAgGrid(config)
-  //config.addConfig(configureAgGrid({licenseKey: '123'}));
 
   /** add a module without helper */
   config.addConfig({
@@ -25,6 +24,5 @@ configureModules(config => {
     configure: (config) => {
         config.myConfig = 'foobar';
     },
-    ini
   })
 });
