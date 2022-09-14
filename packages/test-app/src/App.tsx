@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { AppModuleInitiator } from '@equinor/fusion-framework-app';
 
 interface App {
     key: string;
@@ -53,7 +54,7 @@ export const AppComponent = (): JSX.Element => {
     );
 };
 
-export const creator = createComponent(AppComponent, async (config, { fusion }) => {
+const configure: AppModuleInitiator = async (config, { fusion }) => {
     config.logger.level = 4;
     enableAgGrid(config);
     await config.useFrameworkServiceClient(fusion, 'portal');
@@ -63,11 +64,9 @@ export const creator = createComponent(AppComponent, async (config, { fusion }) 
     config.onInitialized((instance) => {
         instance.appConfig;
     });
+};
 
-    // config.onInitialized(async(inst) => {
-
-    // })
-});
+export const creator = createComponent(AppComponent, configure);
 
 export const App = () => {
     const fusion = useFramework();

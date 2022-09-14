@@ -44,7 +44,7 @@ export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unk
     ModulesInstance<AppModules<TModules>>;
 
 export type AppModuleInitiator<
-    TModules extends Array<AnyModule> | unknown,
+    TModules extends Array<AnyModule> | unknown = unknown,
     TRef = Fusion,
     TManifest = AppManifest
 > = (

@@ -16,7 +16,10 @@ import type {
     ModuleType,
 } from './types';
 
-export interface IModulesConfigurator<TModules extends Array<AnyModule> = [], TRef = any> {
+export interface IModulesConfigurator<
+    TModules extends Array<AnyModule> = Array<AnyModule>,
+    TRef = any
+> {
     logger: ModuleConsoleLogger;
     configure(...configs: Array<IModuleConfigurator>): void;
 
