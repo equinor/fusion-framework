@@ -1,18 +1,120 @@
 ```ts
-interface IContextModuleConfig {
-  
-  createContextClient(modules: Modules)?: IContextClient;
 
+type TagInfo {
+  title: string;
+  description?: string;
+  color?: string;
+  iconSvg?: string // svg
+}
+
+/** meta-data about context type */
+type ContextRenderTemplate {
+  id: string;
+  title: string;
+  subtitle? string;
+  /** allow markdown */
+  description?: string;
+  tags?: string[] | TagInfo[];
+  iconSvg?: string: // svg
+  private? boolean;
+}
+
+type ContextItem<TType> {
+  id: string;
+  externalId: string | null;
+  type: string;
+  value: TType;
+  parent?: ParentContext;
+}
+
+```
+
+Framework => module.context
+App => module.context
+
+```ts
+const appConfigurator
+
+
+```
+
+
+```ts 
+
+import { useModule } from '@equinor/fusion-framework-react';
+const contextModule = useModule('context');
+
+// '@equinor/fusion-framework-react-app/context';
+import { useModule } from '@equinor/fusion-framework-react-app';
+export useContextModule = () => {
+  return useModule('context');
+}
+
+export useContextHttpClient = (): IHttpClient => {
+  return useContextModule().httpClient;
+}
+
+import { useContextModule, useContextHttpClient } from '@equinor/fusion-framework-react-app/context';
+
+import { useFrameworkModule } from '@equinor/fusion-framework-react-app/framework';
+
+
+/** gets client defined in the context module - can be their own */
+import useContextClient from '@equinor/fusion-framework-react/context';
+const contextClient = useContextClient();
+
+/** will always return a fusion context client which consumes fusion services */
+import useHttpService from '@equinor/fusion-framework-react-services';
+const fusionContextClient = useHttpService('context', 'v2');
+
+/** alterntive */
+const framework = useFrameWork('context');
+const fusionContextClient = framework.context.contextClient;
+
+
+import {resolveContextFromExternalId} from '@equinor/fusion-framework-react-app/';
+
+```
+
+
+```ts
+
+interface IContextModuleConfigFramework {
   /** 
    * Callback function for creating the context manager
    * 
    * - as a Framework this will create a new ContextManager with a ContextClient
    * - as a consumer (app/portal) this will return the instance from the Framework
-  */
+   */
   createContextManager(modules: Modules)?: IContextManager;
+}
 
-  /** Callback for setting current context when the module is initialized */
-  resolveInitialContext?: (args: { context: ContextItem, history: {items: ContextItem[]} }) => ContextItem;
+interface IContextClient {
+  httpClient: IHttpClient;  
+  queryContext: (args: QueryArgs) => Context;
+  getContext: () => Context;
+  resolveContextFromExternalId: (id: string) => Context;
+}
+
+interface IContextModuleConfig {
+  
+  createContextClient(modules: Modules)?: IContextClient;
+
+  /** 
+   * Callback for setting current context when the module is initialized 
+   * 
+   * The portal should handle errors thrown from this function, future named errors
+   * 
+   * if null is returned the portal should clear selected context
+   * 
+   */
+  resolveInitialContext?: (
+    client: IContextClient, 
+    args: { context: {id: string, private?: boolean }, history: {items: {id: string, private?: boolean}[]} }
+  ) => ContextItem | null;
+
+  /** if flag is set, do not resolve context */
+  disableContext?: boolean; 
 
   persistAppStateOnContextChanged?: boolean;
   onContextChanged?: (args: {
@@ -20,7 +122,12 @@ interface IContextModuleConfig {
     modules: Modules
   })
 
-  /** Callback for what the context provider should return on a search */
+  /** 
+   * Callback for what the context provider should return on a search 
+   * 
+   * @exeample 
+   * portal.search => config.searchContexts(app.modules.context.contextClient, query);
+   * */
   searchContexts?: (
       args: { query: string },
       modules: Modules
@@ -66,6 +173,50 @@ Fusion.context.onContextChange = (e: ContextChangedEvent): void => {
 const App () => {
   const context = useModule('context');
   context.setContextById('magic');
+}
+
+type IContextConfigurator = {
+  onQuery: (client: IHttpClient /** configured client for app */,  query: args) => IContextQueryResult;
+  onGetContext: (client: IHttpClient /** configured client for app */,  query: args) => IContextQueryResult;
+  onContextChange
+}
+
+const configurate = (config, fusion) => {
+
+  config.context.getContextSelector = async (context: Context,) => {
+    const myContext = fusion.http.createClient('my_context_client');
+    return {...context, myContext};
+  } 
+
+  config.context.searchContextSelector = async (context: Context): Context[] => {
+    const myContext = fusion.http.createClient('my_context_client');
+    return [...context, myContext];
+  }
+
+  config.context.additionalContext = (): Context[] => {
+    const client = fusion.http.createClient('my_context_client');
+    return client.featch('/somewthing');
+  }
+
+  /** override the function that the ContextClient.query **/
+  config.context.onQuery = (client: IHttpClient /** configured client for app */,  query: args): IContextQueryResult => {
+    // const fusionContext = await fusion.context.query('project_master', {query.q}),;
+    const myContext = await client.fetch('my_api', {});
+    return {
+      context: myContext,
+      replace: true
+    };
+  }
+
+  config.context.resolveInitialContext(client: ContextClient, current: Context, previous: Context[]) => {
+    if(current.type !== 'project_master'){
+      const result = await client.resolveContextRelation(current.context.id, 'PimsDomain');
+      const resolvedContext = pickContext(result);
+       // do some logic to pick right context
+
+      return resolvedContext;
+    }
+  }
 }
 
 // framework contextManager 
