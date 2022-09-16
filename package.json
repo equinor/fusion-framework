@@ -46,7 +46,7 @@
     "@commitlint/config-conventional": "^17.1.0",
     "@equinor/eslint-config-fusion": "^1.0.1",
     "@nrwl/nx-cloud": "latest",
-    "@types/jest": "^29.0.1",
+    "@types/jest": "^29.0.3",
     "@types/node": "^18.7.17",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "eslint": "^8.23.1",
