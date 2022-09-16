@@ -3,12 +3,10 @@
  * @module
  */
 
-export { HttpClient, IHttpClient, FetchRequestInit, FetchRequest } from './client';
-export { HttpClientMsal } from './client-msal';
-
 export * from './configurator';
 export * from './provider';
 export * from './module';
-export * from './selector';
+
+export type { IHttpClient } from './lib';
 
 export { default } from './module';

@@ -1,4 +1,4 @@
-import { HttpClientMsal } from './client-msal';
+import { HttpClientMsal } from './lib/client';
 import { IHttpClientConfigurator, HttpClientConfigurator, HttpClientOptions } from './configurator';
 import { IHttpClientProvider, HttpClientProvider } from './provider';
 
@@ -45,7 +45,7 @@ export const configureHttpClient = (
 
 declare module '@equinor/fusion-framework-module' {
     interface Modules {
-        http: HttpModule;
+        http: HttpMsalModule;
     }
 }
 

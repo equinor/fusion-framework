@@ -1,5 +1,6 @@
 import type { Observable } from 'rxjs';
-import { HttpClient, FetchRequestInit, FetchRequest } from './client';
+import type { FetchRequestInit, FetchRequest } from '.';
+import { HttpClient } from './client';
 
 /** Extends request init with scope  */
 type MsalFetchRequest = FetchRequest & { scopes?: string[] };

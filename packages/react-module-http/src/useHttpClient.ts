@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { useMemo } from 'react';
 
-import type {
-    HttpClientProvider,
-    HttpClientMsal,
-    IHttpClient,
-} from '@equinor/fusion-framework-module-http';
+import type { HttpClientProvider, IHttpClient } from '@equinor/fusion-framework-module-http';
+import { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 
 import { useModule } from '@equinor/fusion-framework-react-module';
 

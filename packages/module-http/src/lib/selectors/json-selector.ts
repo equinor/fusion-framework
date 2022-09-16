@@ -10,3 +10,5 @@ export const jsonSelector = <TType = unknown, TResponse extends Response = Respo
         throw Error('failed to parse response');
     }
 };
+
+export default jsonSelector;
