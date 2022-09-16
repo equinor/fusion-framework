@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@1.0.5...@equinor/fusion-framework-module-service-discovery@1.0.6) (2022-09-16)
+
+
+### Bug Fixes
+
+* **module-service-discovery:** fix typing ([29941ba](https://github.com/equinor/fusion-framework/commit/29941baa3682ade7f1e15c0322b7c976488599e6))
+
+
+
 ## [1.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@1.0.4...@equinor/fusion-framework-module-service-discovery@1.0.5) (2022-09-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery

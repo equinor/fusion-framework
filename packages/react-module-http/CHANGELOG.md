@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-http@1.0.5...@equinor/fusion-framework-react-module-http@1.0.6) (2022-09-16)
+
+
+### Bug Fixes
+
+* **module-http:** improve hierarchy ([3603347](https://github.com/equinor/fusion-framework/commit/36033474991288983490f250726a551f7ce3dcbd))
+
+
+
 ## [1.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-http@1.0.4...@equinor/fusion-framework-react-module-http@1.0.5) (2022-09-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-http

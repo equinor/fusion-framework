@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.0.5...@equinor/fusion-framework-module-http@2.0.6) (2022-09-16)
+
+
+### Bug Fixes
+
+* **module-http:** fix export ([06a490d](https://github.com/equinor/fusion-framework/commit/06a490d40e34d2074ac102ac4fcd458cadd3538a))
+* **module-http:** improve hierarchy ([3603347](https://github.com/equinor/fusion-framework/commit/36033474991288983490f250726a551f7ce3dcbd))
+
+
+
 ## [2.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.0.4...@equinor/fusion-framework-module-http@2.0.5) (2022-09-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
