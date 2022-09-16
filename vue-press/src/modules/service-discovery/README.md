@@ -1,7 +1,7 @@
 ---
 title: Service Discovery
 category: Module
-tags:
+tag:
   - services
   - http
   - api

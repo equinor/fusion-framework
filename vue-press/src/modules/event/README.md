@@ -1,7 +1,7 @@
 ---
 title: Events
 category: Module
-tags:
+tag:
   - event
   - core
 ---
