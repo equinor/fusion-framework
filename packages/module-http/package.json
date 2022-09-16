@@ -3,10 +3,29 @@
   "version": "2.0.5",
   "description": "",
   "main": "dist/esm/index.js",
+  "types": "index.d.ts",
   "exports": {
-    ".": "./dist/esm/index.js"
+    ".": "./dist/esm/index.js",
+    "./client": "./dist/esm/lib/client/index.js",
+    "./operators": "./dist/esm/lib/operators/index.js",
+    "./selectors": "./dist/esm/lib/selectors/index.js"
   },
-  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ],
+      "client": [
+        "dist/types/lib/client/index.d.ts"
+      ],
+      "operators": [
+        "dist/types/lib/operators/index.d.ts"
+      ],
+      "selectors": [
+        "dist/types/lib/selectors/index.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc -b --verbose"

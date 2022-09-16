@@ -1,9 +1,12 @@
-import { HttpClient, HttpRequestHandler, IHttpClient } from './client';
+import { HttpClient } from './lib/client';
 import {
     HttpClientOptions,
     HttpClientRequestInitType,
     IHttpClientConfigurator,
 } from './configurator';
+
+import type { IHttpRequestHandler } from './lib/operators';
+import type { IHttpClient } from './lib/client';
 
 export class ClientNotFoundException extends Error {
     constructor(message: string) {
@@ -12,7 +15,7 @@ export class ClientNotFoundException extends Error {
 }
 
 export interface IHttpClientProvider<TClient extends IHttpClient = IHttpClient> {
-    readonly defaultHttpRequestHandler: HttpRequestHandler<HttpClientRequestInitType<TClient>>;
+    readonly defaultHttpRequestHandler: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
     /** check if a client is configured */
     hasClient(key: string): boolean;
     /** create a new http client */
@@ -46,7 +49,7 @@ const isURL = (url: string) => {
 export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     implements IHttpClientProvider<TClient>
 {
-    get defaultHttpRequestHandler(): HttpRequestHandler<HttpClientRequestInitType<TClient>> {
+    get defaultHttpRequestHandler(): IHttpRequestHandler<HttpClientRequestInitType<TClient>> {
         return this.config.defaultHttpRequestHandler;
     }
 

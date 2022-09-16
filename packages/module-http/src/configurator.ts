@@ -1,7 +1,10 @@
-import { HttpRequestHandler, FetchRequest, IHttpClient, HttpResponseHandler } from './client';
+import { HttpRequestHandler } from './lib/operators';
+
+import type { FetchRequest, IHttpClient } from './lib/client';
+import type { IHttpRequestHandler, IHttpResponseHandler } from './lib/operators';
 
 interface HttpClientConstructorOptions<TInit extends FetchRequest> {
-    requestHandler: HttpRequestHandler<TInit>;
+    requestHandler: IHttpRequestHandler<TInit>;
 }
 
 interface HttpClientConstructor<TClient extends IHttpClient> {
@@ -16,8 +19,8 @@ export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
     defaultScopes?: string[];
     ctor?: HttpClientConstructor<TClient>;
     onCreate?: (client: TClient) => void;
-    requestHandler?: HttpRequestHandler<HttpClientRequestInitType<TClient>>;
-    responseHandler?: HttpResponseHandler<HttpClientRequestInitType<TClient>>;
+    requestHandler?: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
+    responseHandler?: IHttpResponseHandler<HttpClientRequestInitType<TClient>>;
 }
 
 export type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpClient<infer U>
@@ -31,7 +34,7 @@ export type HttpClientRequestInitType<T extends IHttpClient> = T extends IHttpCl
 export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClient> {
     readonly clients: Record<string, HttpClientOptions<TClient>>;
     readonly defaultHttpClientCtor: HttpClientConstructor<TClient>;
-    readonly defaultHttpRequestHandler: HttpRequestHandler<HttpClientRequestInitType<TClient>>;
+    readonly defaultHttpRequestHandler: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
 
     /**
      * Configure a client with arguments
@@ -48,14 +51,14 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
     configureClient<T extends TClient>(
         name: string,
         args: HttpClientOptions<T>
-    ): HttpClientConfigurator<TClient>;
+    ): IHttpClientConfigurator<TClient>;
 
     /**
      * Configure a simple client by name to an endpoint
      * @param name name of the client
      * @param uri base endpoint for the client
      */
-    configureClient(name: string, uri: string): HttpClientConfigurator<TClient>;
+    configureClient(name: string, uri: string): IHttpClientConfigurator<TClient>;
 
     /**
      * Creates a client with callback configuration
