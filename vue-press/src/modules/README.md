@@ -39,7 +39,7 @@ An app can configure the default modules, but also add and configure additional 
 ```mermaid
 sequenceDiagram
   title: Module Lifecycle
-  note over initiator: Portal, App or a consumer of modules
+  note right of initiator: Portal, App or a consumer of modules
   initiator->>+initializer: initializeModules(modules, configCallback, ref?)
   initializer->>+module: configure(ref?)
   module->>-initializer: Configurator
@@ -75,42 +75,6 @@ When the module has initialized it will return a provider interface for that mod
 > if a module requires another module, the `initializer` will provide an async hook which the module
 > can await, this might throw a `ModuleNotProvidedError` or `TimeOutError`.
 
-::: details Example
-```ts
-import { initializeModules } from '@equinor/fusion-framework-module';
-
-import msal from '@equinor/fusion-framework-module-msal';
-import http from '@equinor/fusion-framework-module-http';
-
-const instance = initializeModules(([msal, http], (config) => {
-  /** configure an auth client */
-  config.auth.configureDefault({
-    tenantId: 'foobar12-foo1-foo2-foo3-f0obarfoobar',
-    clientId: 'foobar12-foo1-foo2-foo3-f0obarfoobar',
-    redirectUri: '/authentication/login-callback',
-  });
-
-  /** configure a http client to use */
-  config.http.configureClient('foo', {
-    baseUri: 'https://foo.bar.net/api',
-    defaultScopes: ['foobar12-foo1-foo2-foo3-f0obarfoobar/.default'],
-  });
-
-  config.onAfterConfiguration(() => {
-    console.debug('config done');
-  });
-
-  config.onAfterInit(() => {
-    console.debug('modules initialized');
-  });
-}));
-
-instance.then(module => {
-  /** use the initialized module */
-  modules.http.createClient('foo').fetch('bar');
-});
-```
-:::
 
 ### React
 

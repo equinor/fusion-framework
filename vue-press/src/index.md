@@ -20,31 +20,28 @@ footer: Made by  with ❤️
 ---
 
 ## App
-:::: code-group
-::: code-group-item Vanilla
+
+::: code-tabs#shell
+@tab Vanilla
 ```sh
 yarn add @equinor/fusion-framework-app
 ```
-:::
 
-::: code-group-item React:active
+@tab:active React
 ```sh
 yarn add @equinor/fusion-framework-react-app
 ```
 :::
-::::
 
 ## Portal
-:::: code-group
-::: code-group-item Vanilla
+::: code-tabs#shell
+@tab Vanilla
 ```sh
 yarn add @equinor/fusion-framework
 ```
-:::
 
-::: code-group-item React:active
+@tab:active React
 ```sh
 yarn add @equinor/fusion-framework-react
 ```
 :::
-::::

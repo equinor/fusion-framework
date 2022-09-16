@@ -1,12 +1,20 @@
 ---
-title: HTTP
+title: Module http
+
 category: Module
-tags:
+tag:
   - http
   - core
 ---
 
 <ModuleBadge module="module-http" />
+
+|Namespace|description|
+|---------|-----------|
+|__@equinor/fusion-framework-module-http__|__module interface__|
+|@equinor/fusion-framework-module-http/client|http client|
+|@equinor/fusion-framework-module-http/selectors|request selectors|
+|@equinor/fusion-framework-module-http/operators|request and response operators|
 
 
 ## Configure
@@ -19,13 +27,8 @@ Each configuration of clients are mapped to key and initiated when runtime reque
 Clients can be provided on the fly, but as good practice, all clients should be defined in `config.ts`
 :::
 
-```ts
-type confgure = ModulesConfigurator<[HttpMoldule]>;
-type config = ModuleConfigType<[HttpMoldule]>;
-```
-
-:::: code-group
-::: code-group-item Simple:active
+::: code-tabs
+@tab:active Simple
 ```ts
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
 
@@ -38,9 +41,8 @@ config.addConfig(configureHttpClient(
   }
 ));
 ```
-:::
 
-::: code-group-item Advance
+@tab Advance
 ```ts
 import { 
   configureHttpClient, 
@@ -89,7 +91,6 @@ config.addConfig(configureHttp(
 ));
 ```
 :::
-::::
 
 
 ### HttpClientOptions
@@ -123,19 +124,17 @@ const client = modules.http.createClient('foo');
 
 ### Fetch
 
-:::: code-group
-::: code-group-item Async:active
+::: code-tabs#flow
+@tab:active Async
 ```ts
 client.fetch('/api', {selector}).then(console.log);
 ```
-:::
 
-::: code-group-item Stream
+@tab Stream
 ```ts
 client.fetch$('/api', {selector}).subscribe(x => console.log(x));
 ```
 :::
-::::
 
 The fetch request arguments are the same as [Web Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Request), but has additional `scope` and `selector` property.
 
@@ -146,6 +145,7 @@ An application can request one or more scopes, this information is then presente
 > Scopes are normally configured for the client, so that by convinces all request done to that base URI will have that scope. But sometimes a endpoint on that URI requires other scopes.
 
 #### Selector <Badge type="info" text="optional"/>
+
 Selectors are callback for processing the response. 
 
 When a selector is provided, the return type of `client.fetch` will be the same as return type of the selector.
@@ -162,19 +162,17 @@ const selector = (response: Response): Promise<FooBar> => response.json();
 
 ### Json
 
-:::: code-group
-::: code-group-item Async:active
+::: code-tabs#flow
+@tab:active Async
 ```ts
 client.json('/api', {selector}).then(console.log);
 ```
-:::
 
-::: code-group-item Stream
+@tab Stream
 ```ts
 client.json$('/api', {selector}).subscribe(x => console.log(x));
 ```
 :::
-::::
 
 Convinces method for json calls, internally calls [fetch](#fetch), but adds `Content-Type=application/json` to the request header. Also add a default selector if none provided `data = await response.json()`
 ### Abort
@@ -183,49 +181,54 @@ calling `client.abort()` will cancel all ongoing request that the client has.
 
 > when executing an async call, an [abort signal](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) should be provided with the request arguments
 
-:::: code-group
-::: code-group-item Async:active
+::: code-tabs#flow
+@tab:active Async
 ```ts
 const controller = new AbortController();
 const {abort, signal} = controller;
 setTimeout(abort, 10);
 client.fetch('foo', {signal});
 ```
-:::
 
-::: code-group-item Stream
+@tab Stream
 ```ts
 /** unsubscribing to an request will abort the request */
-const subscription = client.fetch('foo').subscribe(console.log);
+const subscription = client.fetch$('foo').subscribe(console.log);
 setTimeout(subscription.unsubscribe , 10);
 ```
 :::
-::::
 
 
-## Operators
-Operators are handlers that are executed recursively when executing an request and on response (middleware)
+## Operators 
 
-:::: code-group
-::: code-group-item Request
-```ts
-client.requestHandler.add((x: Request) => console.debug(x));
-```
+Operators are handlers that are executed recursively when executing an request and on response (middleware).
+
+::: warning persistent
+When an operator is set/added to an `IHttpClient`, the operator will persist on that client until disposed.
 :::
 
-::: code-group-item Response
 ```ts
-client.responseHandler.add((x: Response) => console.debug(x));
+import type { ProcessOperator } from '@equinor/fusion-framework-module-http/operators';
+const logOperator = (logger: (...args: string[])): ProcessOperator => (x => logger(x));
+
+/** note that a convinces method for adding headers are included */
+client.requestHandler.setHeader('x-trace-id', 'my_foot_print')
+
+/** add a predefined operator */
+client.requestHandler.add('log', logOperator(console.log));
+client.responseHandler.add('log', logOperator(console.debug));
+
+/** inline operator */
+client.requestHandler.add('no-cache', (req) => Object.assign(req, {cache: 'no-cache'});
+
 ```
-:::
-::::
 
 ## Subscriptions
 
 `IHttpClient` exposes observable requests and responses, an observer can never modify the data, which means these properties are meant for things like telemetry. 
 
-:::: code-group
-::: code-group-item Request
+::: code-tabs
+@tab Request
 ```ts
 client.request$.subscribe(
   {
@@ -235,9 +238,7 @@ client.request$.subscribe(
   }
 )
 ```
-:::
-
-::: code-group-item Response
+@tab Response
 ```ts
 client.response$.subscribe(
   {
@@ -248,35 +249,28 @@ client.response$.subscribe(
 )
 ```
 :::
-::::
 
 ## React
 
 <ModuleBadge module="react-module-http" />
 
-:::: code-group
-::: code-group-item Vanilla
+::: code-tabs#scope
+@tab Vanilla
 ```ts
 import { useHttpClient } from '@equinor/fusion-framework-react-module-http';
+const myClient = useHttpClient('my-client');
 ```
-:::
 
-::: code-group-item App:active
+@tab:active App
 ```ts
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
+const myClient = useHttpClient('my-client');
 ```
-:::
 
-::: code-group-item Portal
+@tab Portal
 ```ts
 import { useHttpClient } from '@equinor/fusion-framework-react/http';
+const myClient = useHttpClient('my-client');
 ```
 :::
-::::
 
-```ts
-const useRequest = () => {
-  const myClient = useHttpClient('my-client');
-  ...
-}
-```

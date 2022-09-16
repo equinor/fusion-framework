@@ -2,8 +2,7 @@
   <a :href="npmUrl" target="npm">
     <img 
       alt="GitHub package.json version (subfolder of monorepo)" 
-      :src="url">
-    </img>
+      :src="url" />
   </a>
 </template>
 
