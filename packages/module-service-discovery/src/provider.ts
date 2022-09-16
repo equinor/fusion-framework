@@ -2,7 +2,7 @@ import { configureHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { IServiceDiscoveryClient } from './client';
 
-import type { ModulesConfigurator, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { ModulesConfigurator, ModuleType } from '@equinor/fusion-framework-module';
 import type {
     HttpClientOptions,
     HttpModule,
@@ -35,7 +35,7 @@ export interface IServiceDiscoveryProvider {
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
         protected readonly _client: IServiceDiscoveryClient,
-        protected readonly _http: ModulesInstanceType<[HttpModule]>['http']
+        protected readonly _http: ModuleType<HttpModule>
     ) {}
 
     public get environment(): Promise<Environment> {
@@ -49,7 +49,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     public async createClient(
         name: string,
         opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>
-    ) {
+    ): Promise<IHttpClient> {
         const service = await this.resolveService(name);
         if (!service) {
             throw Error(`Could not load configuration of service [${name}]`);
