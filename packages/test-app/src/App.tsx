@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { createComponent, useAppModules } from '@equinor/fusion-framework-react-app';
 import { useAppConfig } from '@equinor/fusion-framework-react-app/config';
 import { useFramework, useCurrentUser } from '@equinor/fusion-framework-react-app/framework';
-import { AppList } from 'AppList';
+import { AppList } from './AppList';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
