@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.1.4...@equinor/fusion-framework-test-app@1.2.0) (2022-09-16)
+
+
+### Features
+
+* **test-app:** use vite as builder ([5d27948](https://github.com/equinor/fusion-framework/commit/5d27948ca9fcd31f0acb454f95aed7c404d2c95d))
+
+
+
 ## [1.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.1.3...@equinor/fusion-framework-test-app@1.1.4) (2022-09-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
