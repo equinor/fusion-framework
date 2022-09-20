@@ -200,6 +200,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
             {} as ModulesInstanceType<CombinedModules<T, TModules>>
         );
 
+        const hasModule = (name: string) => moduleNames.includes(name);
+
         const requireInstance = <
             TKey extends keyof ModulesInstanceType<CombinedModules<T, TModules>>
         >(
@@ -243,9 +245,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                     logger.debug(`🚀 initializing ${logger.formatModuleName(module)}`);
                     return from(
                         Promise.resolve(
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            module.initialize({ ref, config: config[key], requireInstance })
+                            module.initialize({
+                                ref,
+                                config: config[key as keyof typeof config],
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                requireInstance,
+                                hasModule,
+                            })
                         )
                     ).pipe(
                         map((instance) => {

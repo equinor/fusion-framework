@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule>> = {
+    ref?: any;
+    config: TConfig;
+    requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
+        name: TKey,
+        wait?: number
+    ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
+    hasModule: ((key: keyof ModulesInstanceType<TDeps>) => boolean) | ((key: string) => boolean);
+};
+
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
     name: TKey;
     configure?: (ref?: any) => TConfig | Promise<TConfig>;
     postConfigure?: (
         config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>
     ) => void | Promise<void>;
-    initialize: (args: {
-        ref?: any;
-        config: TConfig;
-        requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
-            name: TKey,
-            wait?: number
-        ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
-    }) => TType | Promise<TType>;
+    initialize: (args: ModuleInitializerArgs<TConfig, TDeps>) => TType | Promise<TType>;
     postInitialize?: (args: {
         ref?: any;
         instance: TType;
