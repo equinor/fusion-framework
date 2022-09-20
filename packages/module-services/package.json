@@ -1,0 +1,46 @@
+{
+  "name": "@equinor/fusion-framework-module-services",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": "./dist/esm/index.js",
+    "./context": "./dist/esm/lib/context/index.js",
+    "./context/get-context": "./dist/esm/lib/context/get-context/index.js",
+    "./context/query-context": "./dist/esm/lib/context/query-context/index.js"
+  },
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc -b --verbose",
+    "prepack": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/module-services"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "^1.1.3"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ],
+      "context/*": [
+        "dist/types/lib/context/*"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module-http": "^2.0.7",
+    "@equinor/fusion-framework-module-service-discovery": "^1.0.7"
+  }
+}
