@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.0 (2022-09-20)
+
+
+### Features
+
+* **module:** add has module check ([e32cf7b](https://github.com/equinor/fusion-framework/commit/e32cf7b751854ae8e306bb1d6a84260099752714))
+
+
+
 ## [1.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@1.1.2...@equinor/fusion-framework-module@1.1.3) (2022-09-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module
