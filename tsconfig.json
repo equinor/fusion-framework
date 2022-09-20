@@ -32,6 +32,9 @@
       "path": "./packages/module-msal"
     },
     {
+      "path": "./packages/module-services"
+    },
+    {
       "path": "./packages/module-service-discovery"
     },
     {
