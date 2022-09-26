@@ -27,7 +27,7 @@ export interface IAppConfigurator<
     configureMsal(...args: Parameters<typeof configureMsal>): void;
     useFrameworkServiceClient<T extends Fusion = Fusion>(
         fusion: T,
-        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[1]
+        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[0]
     ): ReturnType<IServiceDiscoveryProvider['configureClient']>;
 }
 

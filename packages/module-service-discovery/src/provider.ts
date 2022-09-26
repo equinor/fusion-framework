@@ -27,8 +27,8 @@ export interface IServiceDiscoveryProvider {
     ): Promise<IHttpClient>;
 
     configureClient(
+        serviceName: string | { key: string; alias: string },
         config: ModulesConfigurator<[HttpModule]>,
-        serviceName: string | { key: string; alias: string }
     ): Promise<void>;
 }
 
@@ -62,8 +62,8 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     }
 
     public async configureClient(
+        serviceName: string | { key: string; alias: string },
         config: ModulesConfigurator<[HttpModule]>,
-        serviceName: string | { key: string; alias: string }
     ): Promise<void> {
         const { key, alias } =
             typeof serviceName === 'string'

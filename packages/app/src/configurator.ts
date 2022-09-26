@@ -44,11 +44,11 @@ export class AppConfigurator<
 
     public useFrameworkServiceClient(
         fusion: Fusion,
-        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[1]
+        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[0]
     ): ReturnType<IServiceDiscoveryProvider['configureClient']> {
         return fusion.modules.serviceDiscovery.configureClient(
-            this as AppConfigurator,
-            serviceName
+            serviceName,
+            this as AppConfigurator
         );
     }
 
