@@ -21,9 +21,9 @@ export interface IModulesConfigurator<
     TRef = any
 > {
     logger: ModuleConsoleLogger;
-    configure(...configs: Array<IModuleConfigurator>): void;
+    configure(...configs: Array<IModuleConfigurator<any, TRef>>): void;
 
-    addConfig<T extends AnyModule>(config: IModuleConfigurator<T>): void;
+    addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>): void;
 
     initialize<T extends Array<AnyModule> | unknown>(
         ref?: TRef
@@ -61,7 +61,9 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 {
     public logger: ModuleConsoleLogger = new ModuleConsoleLogger('ModulesConfigurator');
 
-    protected _configs: Array<(config: ModulesConfig<[AnyModule]>) => void | Promise<void>> = [];
+    protected _configs: Array<
+        (config: ModulesConfig<[AnyModule]>, ref?: TRef) => void | Promise<void>
+    > = [];
     protected _afterConfiguration: Array<(config: any) => void> = [];
     protected _afterInit: Array<(instance: any) => void> = [];
 
@@ -75,14 +77,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         return [...this._modules];
     }
 
-    public configure(...configs: Array<IModuleConfigurator>) {
+    public configure(...configs: Array<IModuleConfigurator<any, TRef>>) {
         configs.forEach((x) => this.addConfig(x));
     }
 
-    public addConfig<T extends AnyModule>(config: IModuleConfigurator<T>) {
+    public addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>) {
         const { module, afterConfig, afterInit, configure } = config;
         this._modules.add(module);
-        configure && this._configs.push((config) => configure(config[module.name]));
+        configure && this._configs.push((config, ref) => configure(config[module.name], ref));
         afterConfig && this._afterConfiguration.push((config) => afterConfig(config[module.name]));
         afterInit && this._afterInit.push((instances) => afterInit(instances[module.name]));
     }
@@ -99,7 +101,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         this._afterInit.push(cb);
     }
 
-    public async initialize<T, R = TRef>(
+    public async initialize<T, R extends TRef = TRef>(
         ref?: R
     ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
         const config = await this._configure<T, R>(ref);
@@ -112,11 +114,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         );
     }
 
-    protected async _configure<T, R = TRef>(
+    protected async _configure<T, R extends TRef = TRef>(
         ref?: R
     ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
         const config = await this._createConfig<T, R>(ref);
-        await Promise.all(this._configs.map((x) => Promise.resolve(x(config))));
+        await Promise.all(this._configs.map((x) => Promise.resolve(x(config, ref))));
         await this._postConfigure<T>(config);
         return config;
     }

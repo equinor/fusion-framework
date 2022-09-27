@@ -54,10 +54,10 @@ export const AppComponent = (): JSX.Element => {
     );
 };
 
-const configure: AppModuleInitiator = async (config, { fusion }) => {
+const configure: AppModuleInitiator = async (config) => {
     config.logger.level = 4;
     enableAgGrid(config);
-    await config.useFrameworkServiceClient(fusion, 'portal');
+    await config.useFrameworkServiceClient('portal');
     config.onInitialized<[AgGridModule]>((instance) => {
         instance.agGrid;
     });

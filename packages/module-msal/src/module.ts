@@ -49,7 +49,7 @@ export const configureMsal = (
         clients?: Record<string, AuthClientOptions>;
         requiresAuth?: boolean;
     }
-): IModuleConfigurator<MsalModule> => ({
+): IModuleConfigurator<MsalModule, unknown> => ({
     module,
     configure: (config) => {
         config.configureDefault(defaultClient);

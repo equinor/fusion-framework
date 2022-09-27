@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClientMsal } from './lib/client';
 import { IHttpClientConfigurator, HttpClientConfigurator, HttpClientOptions } from './configurator';
 import { IHttpClientProvider, HttpClientProvider } from './provider';
@@ -25,18 +26,18 @@ export const module: HttpModule = {
     initialize: ({ config }): HttpClientProvider => new HttpClientProvider(config),
 };
 
-export const configureHttp = (
+export const configureHttp = <TRef = unknown>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configure: (config: ModuleConfigType<HttpModule>, ref?: any) => void
-): IModuleConfigurator<HttpModule> => ({
+    configure: (config: ModuleConfigType<HttpModule>, ref?: TRef) => void
+): IModuleConfigurator<HttpModule, TRef> => ({
     module,
     configure,
 });
 
-export const configureHttpClient = (
+export const configureHttpClient = <TRef = unknown>(
     name: string,
     args: HttpClientOptions
-): IModuleConfigurator<HttpModule> => ({
+): IModuleConfigurator<HttpModule, TRef> => ({
     module,
     configure: (config: ModuleConfigType<HttpModule>) => {
         config.configureClient(name, args);

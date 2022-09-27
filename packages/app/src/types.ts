@@ -14,7 +14,6 @@ import {
     HttpModule,
 } from '@equinor/fusion-framework-module-http';
 import type { MsalModule, configureMsal } from '@equinor/fusion-framework-module-msal';
-import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
@@ -25,10 +24,7 @@ export interface IAppConfigurator<
     configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
 
     configureMsal(...args: Parameters<typeof configureMsal>): void;
-    useFrameworkServiceClient<T extends Fusion = Fusion>(
-        fusion: T,
-        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[0]
-    ): ReturnType<IServiceDiscoveryProvider['configureClient']>;
+    useFrameworkServiceClient(serviceName: string): void;
 }
 
 // TODO

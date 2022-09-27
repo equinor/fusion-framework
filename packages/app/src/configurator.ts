@@ -1,4 +1,4 @@
-import { Fusion, FusionModulesInstance } from '@equinor/fusion-framework';
+import { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
     AnyModule,
     ModuleConsoleLogger,
@@ -9,7 +9,6 @@ import event from '@equinor/fusion-framework-module-event';
 import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 import appConfig from '@equinor/fusion-framework-module-app-config';
-import type { IServiceDiscoveryProvider } from '@equinor/fusion-framework-module-service-discovery';
 
 import { AppModules, IAppConfigurator } from './types';
 
@@ -42,14 +41,20 @@ export class AppConfigurator<
         this.addConfig(configureHttpClient(...args));
     }
 
-    public useFrameworkServiceClient(
-        fusion: Fusion,
-        serviceName: Parameters<IServiceDiscoveryProvider['configureClient']>[0]
-    ): ReturnType<IServiceDiscoveryProvider['configureClient']> {
-        return fusion.modules.serviceDiscovery.configureClient(
-            serviceName,
-            this as AppConfigurator
-        );
+    public useFrameworkServiceClient(serviceName: string): void {
+        this.addConfig({
+            module: http,
+            configure: async (config, ref) => {
+                const service = await ref?.serviceDiscovery.resolveService(serviceName);
+                if (!service) {
+                    throw Error(`failed to configure service [${serviceName}]`);
+                }
+                config.configureClient(serviceName, {
+                    baseUri: service.uri,
+                    defaultScopes: service.defaultScopes,
+                });
+            },
+        });
     }
 
     public configureMsal(...args: Parameters<typeof configureMsal>) {
