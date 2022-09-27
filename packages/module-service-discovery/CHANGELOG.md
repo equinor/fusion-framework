@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.0 (2022-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **module-service-discovery:** order of arguments for configuring client in service discovery
+
+### Bug Fixes
+
+* **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
+
+
+
 ## 1.0.7 (2022-09-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery
