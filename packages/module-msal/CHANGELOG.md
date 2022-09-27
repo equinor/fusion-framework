@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.8 (2022-09-27)
+
+
+### Bug Fixes
+
+* update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
+
+
+
 ## 1.0.7 (2022-09-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-msal

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@2.0.0...@equinor/fusion-framework-app@3.0.0) (2022-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **module-service-discovery:** order of arguments for configuring client in service discovery
+
+### Bug Fixes
+
+* **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
+* update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
+
+
+
 ## 2.0.0 (2022-09-26)
 
 
