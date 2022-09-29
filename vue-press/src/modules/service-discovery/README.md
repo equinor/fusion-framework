@@ -1,5 +1,5 @@
 ---
-title: Service Discovery
+title: Module Service Discovery
 category: Module
 tag:
   - services
@@ -7,3 +7,6 @@ tag:
   - api
   - core
 ---
+
+## Services
+@[code](./services.json)

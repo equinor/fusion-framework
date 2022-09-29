@@ -1,0 +1,86 @@
+[
+  {
+    "key": "people",
+    "name": "Fusion people service"
+  },
+  {
+    "key": "org",
+    "name": "Fusion organisation chart service"
+  },
+  {
+    "key": "data-proxy",
+    "name": "Fusion general data proxy service"
+  },
+  {
+    "key": "tasks",
+    "name": "Fusion task service"
+  },
+  {
+    "key": "notification",
+    "name": "Fusion notification service"
+  },
+  {
+    "key": "meeting-v2",
+    "name": "Fusion meeting (new version) service"
+  },
+  {
+    "key": "projects",
+    "name": "Fusion project service"
+  },
+  {
+    "key": "portal",
+    "name": "Fusion portal service"
+  },
+  {
+    "key": "mail",
+    "name": "Fusion mail service"
+  },
+  {
+    "key": "commonlib",
+    "name": "Fusion CommonLib Service"
+  },
+  {
+    "key": "reports",
+    "name": "Fusion Reports integration service"
+  },
+  {
+    "key": "query",
+    "name": "Query api"
+  },
+  {
+    "key": "context",
+    "name": "Context api"
+  },
+  {
+    "key": "roles",
+    "name": "Roles api"
+  },
+  {
+    "key": "fusion-tasks",
+    "name": "Fusion task service v2"
+  },
+  {
+    "key": "line-org",
+    "name": "Fusion line organisation service"
+  },
+  {
+    "key": "info-app",
+    "name": null
+  },
+  {
+    "key": "az-function-utility",
+    "name": "Fusion utility azure function"
+  },
+  {
+    "key": "meeting",
+    "name": null
+  },
+  {
+    "key": "bookmarks",
+    "name": null
+  },
+  {
+    "key": "contract-personnel",
+    "name": null
+  }
+]

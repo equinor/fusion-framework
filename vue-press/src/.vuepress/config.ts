@@ -19,6 +19,11 @@ export default defineUserConfig({
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),
       }
     })
-  ]
+  ],
+  markdown: {
+    code: {
+      lineNumbers: false,
+    }
+  }
 });
 
