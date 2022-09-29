@@ -2,7 +2,8 @@ export { generateEndpoint } from './generate-endpoint';
 export { generateParameters } from './generate-parameters';
 
 export { ApiVersion } from '../static';
+export { ApiContextEntity } from '../api-models';
 
 export * from './types';
 
-export { QueryContext, default } from './client';
+export { queryContext, default } from './client';

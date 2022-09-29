@@ -1,23 +1,22 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
 import { ApiVersion } from '../static';
 
 import { generateEndpoint } from './generate-endpoint';
 
-import type { RequestInitCallback, ApiClientArguments } from '../../types';
-import type { QueryContextArgs } from './types';
+import type { ApiClientArguments, GetContextArgs } from './types';
 
 export const generateParameters = <
     TResult,
-    TVersion extends ApiVersion,
+    TVersion extends string = keyof typeof ApiVersion,
     TClient extends IHttpClient = IHttpClient
 >(
     version: TVersion,
-    args: QueryContextArgs<TVersion>,
-    cb?: RequestInitCallback<TResult, TClient>
+    args: GetContextArgs<TVersion>,
+    init?: ClientRequestInit<TClient, TResult>
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
-    return (cb && cb(path)) ?? [path];
+    return [path, init];
 };
 
 export default generateParameters;

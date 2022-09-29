@@ -2,12 +2,30 @@
   "name": "@equinor/fusion-framework-module-services",
   "version": "0.0.0",
   "description": "",
+  "sideEffects": false,
   "main": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ],
+      "context": [
+        "dist/types/context/index"
+      ],
+      "context/get": [
+        "dist/types/context/get/index"
+      ],
+      "context/query": [
+        "dist/types/context/query/index"
+      ]
+    }
+  },
   "exports": {
     ".": "./dist/esm/index.js",
-    "./context": "./dist/esm/lib/context/index.js",
-    "./context/get-context": "./dist/esm/lib/context/get-context/index.js",
-    "./context/query-context": "./dist/esm/lib/context/query-context/index.js"
+    "./context": "./dist/esm/context/index.js",
+    "./context/get": "./dist/esm/context/get-context/index.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "npm run build:typescript",
@@ -26,21 +44,14 @@
     "directory": "packages/module-services"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module": "^1.1.3"
-  },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ],
-      "context/*": [
-        "dist/types/lib/context/*"
-      ]
-    }
+    "@equinor/fusion-framework-module": "^1.1.3",
+    "odata-query": "^7.0.3"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-http": "^2.0.7",
     "@equinor/fusion-framework-module-service-discovery": "^1.0.7"
+  },
+  "peerDependencies": {
+    "odata-query": "^7.0.3"
   }
 }

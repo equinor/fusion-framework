@@ -20,7 +20,9 @@ type ApiContextEntityTypes = {
     [ApiVersion.v2]: ApiContextEntity_v2;
 };
 
-export type ApiContextEntity<T extends ApiVersion> = ApiContextEntityTypes[T];
+export type ApiContextEntity<T extends string = ApiVersion> = T extends ApiVersion
+    ? ApiContextEntityTypes[T]
+    : unknown;
 
 /** === types === */
 
