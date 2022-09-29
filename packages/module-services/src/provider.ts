@@ -1,41 +1,43 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientMethod } from './lib/types';
+import { ClientMethod } from './types';
 
 import { ApiClientFactory } from './types';
-import { ContextApiClient } from './lib/context';
+import { ContextApiClient } from './context';
 
-enum Services {
+export enum Service {
     Context = 'context',
 }
 
-type ApiServices<TClient extends IHttpClient, TMethod extends keyof ClientMethod> = {
-    [Services.Context]: ContextApiClient<TClient, TMethod>;
+type ApiServices<TMethod extends keyof ClientMethod, TClient extends IHttpClient> = {
+    [Service.Context]: ContextApiClient<TMethod, TClient>;
 };
 
-export interface IApiProvider {
-    createApiClient<TService extends Services, TMethod extends keyof ClientMethod>(
+export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
+    createApiClient<TService extends Service, TMethod extends keyof ClientMethod>(
         name: TService,
         version: TMethod
-    ): Promise<ApiServices<IHttpClient, TMethod>[TService]>;
+    ): Promise<ApiServices<TMethod, TClient>[TService]>;
 }
 
-type ApiProviderCtorArgs = {
-    createClient: ApiClientFactory;
+type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
+    createClient: ApiClientFactory<TClient>;
 };
 
-export class ApiProvider implements IApiProvider {
-    protected __createClientFn: ApiClientFactory;
-    constructor({ createClient }: ApiProviderCtorArgs) {
-        this.__createClientFn = createClient;
+export class ApiProvider<TClient extends IHttpClient = IHttpClient>
+    implements IApiProvider<TClient>
+{
+    protected _createClientFn: ApiClientFactory<TClient>;
+    constructor({ createClient }: ApiProviderCtorArgs<TClient>) {
+        this._createClientFn = createClient;
     }
 
-    public async createApiClient<TService extends Services, TMethod extends keyof ClientMethod>(
+    public async createApiClient<TService extends Service, TMethod extends keyof ClientMethod>(
         name: TService,
         method: TMethod
-    ): Promise<ApiServices<IHttpClient, TMethod>[TService]> {
-        const httpClient = await this.__createClientFn(name);
+    ): Promise<ApiServices<TMethod, TClient>[TService]> {
+        const httpClient = await this._createClientFn(name);
         switch (name) {
-            case Services.Context:
+            case Service.Context:
                 return new ContextApiClient(httpClient, method);
         }
         throw Error(`could not create api client for [${name}]`);
