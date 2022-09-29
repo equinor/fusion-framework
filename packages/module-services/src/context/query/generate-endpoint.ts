@@ -48,9 +48,6 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
             const { query, includeDeleted } = args as QueryContextArgs<'v1'>;
             const params = new URLSearchParams(createSearchParameters(query));
             params.append('api-version', apiVersion);
-            // if (query) {
-            //     params.append('', createSearchParameters(query));
-            // }
             if (includeDeleted) {
                 params.append('includeDeleted', 'true');
             }
