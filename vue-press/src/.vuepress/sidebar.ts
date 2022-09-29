@@ -23,6 +23,25 @@ export default sidebar({
         'http/',
         'event/',
         'ag-grid/',
+        {
+          text: 'Service Discovery',
+          link: 'service-discovery/',
+        },
+        {
+          text: 'Services',
+          prefix: 'services/',
+          link: 'services/',
+          children: [
+            {
+              text: 'module',
+              link: 'README.md',
+            },
+            {
+              text: 'context',
+              link: 'context.md'
+            }
+          ]
+        }
       ]
     }
   ]

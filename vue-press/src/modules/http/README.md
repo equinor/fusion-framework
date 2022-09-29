@@ -130,7 +130,7 @@ const client = modules.http.createClient('foo');
 client.fetch('/api', {selector}).then(console.log);
 ```
 
-@tab Stream
+@tab Observable
 ```ts
 client.fetch$('/api', {selector}).subscribe(x => console.log(x));
 ```
@@ -168,7 +168,7 @@ const selector = (response: Response): Promise<FooBar> => response.json();
 client.json('/api', {selector}).then(console.log);
 ```
 
-@tab Stream
+@tab Observable
 ```ts
 client.json$('/api', {selector}).subscribe(x => console.log(x));
 ```
@@ -190,7 +190,7 @@ setTimeout(abort, 10);
 client.fetch('foo', {signal});
 ```
 
-@tab Stream
+@tab Observable
 ```ts
 /** unsubscribing to an request will abort the request */
 const subscription = client.fetch$('foo').subscribe(console.log);
