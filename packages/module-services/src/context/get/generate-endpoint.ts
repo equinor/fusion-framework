@@ -11,7 +11,7 @@ export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersi
         case ApiVersion.v1:
         case ApiVersion.v2:
         default: {
-            const { id } = args;
+            const { id } = args as { id: string };
             const params = new URLSearchParams();
             params.append('api-version', apiVersion);
             return `/contexts/${id}/?${String(params)}`;

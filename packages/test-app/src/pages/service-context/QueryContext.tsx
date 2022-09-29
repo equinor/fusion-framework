@@ -11,19 +11,18 @@ const useQueryContext = <TVersion extends string = keyof typeof ApiVersion>(
     version: TVersion,
     args: QueryContextArgs<TVersion>
 ): Array<ApiContextEntity<TVersion>> => {
-    const [context, setContext] = useState<any | null>(null);
+    const [context, setContext] = useState<unknown | null>(null);
 
     const client = useContextClient('json$');
 
     useEffect(() => {
-        console.log('cool', client, args.query);
         if (client && args.query.search) {
             const subscription = client.query(String(version), args).subscribe(setContext);
             return () => subscription.unsubscribe();
         }
     }, [client, version, args]);
 
-    return context;
+    return context as Array<ApiContextEntity<TVersion>>;
 };
 
 export const QueryContext = () => {

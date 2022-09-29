@@ -10,7 +10,7 @@ export type FetchRequest = RequestInit & {
 
 export type FetchResponse<T = unknown> = Response & {
     json(): Promise<T>;
-}
+};
 
 export type FetchRequestInit<
     TReturn = unknown,

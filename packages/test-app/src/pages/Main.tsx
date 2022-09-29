@@ -1,27 +1,16 @@
-import { useEffect } from 'react';
-
-import { Service, ServicesModule } from '@equinor/fusion-framework-module-services';
+import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { useAppModules } from '@equinor/fusion-framework-react-app';
 import { useAppConfig } from '@equinor/fusion-framework-react-app/config';
 import { useCurrentUser, useFramework } from '@equinor/fusion-framework-react-app/framework';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-// import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 const queryClient = new QueryClient();
 
 export const Main = (): JSX.Element => {
     const framework = useFramework();
     const modules = useAppModules<[ServicesModule]>();
-
-    useEffect(() => {
-        modules.services.createApiClient(Service.Context, 'fetch$').then((x) => {
-            x.get(x.Version.v1, { id: '29c865ad-1178-4dfd-9e8b-ed5440473da3' }).subscribe((res) =>
-                res.json().then(console.log)
-            );
-        });
-    }, []);
 
     const account = useCurrentUser();
     const { data: configs } = useAppConfig({ appKey: 'contract-personnel' });
