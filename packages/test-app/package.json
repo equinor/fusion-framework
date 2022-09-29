@@ -18,11 +18,14 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router": "^6.4.1",
+    "react-router-dom": "^6.4.1"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-ag-grid": "^1.0.8",
     "@equinor/fusion-framework-react": "^1.0.10",
+    "@equinor/fusion-framework-module-services": "^0.0.0",
     "@equinor/fusion-framework-react-app": "^1.0.12",
     "@equinor/fusion-react-progress-indicator": "^0.1.5",
     "@equinor/fusion-react-styles": "^0.5.4",
