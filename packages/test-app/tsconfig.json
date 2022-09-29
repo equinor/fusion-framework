@@ -37,6 +37,9 @@
       "path": "../module-ag-grid"
     },
     {
+      "path": "../module-services"
+    },
+    {
       "path": "./tsconfig.node.json"
     }
   ]
