@@ -22,7 +22,7 @@ interface App {
 
 const queryClient = new QueryClient();
 
-const configure: AppModuleInitiator = async (config, { fusion }) => {
+const configure: AppModuleInitiator = async (config) => {
     config.logger.level = 4;
     enableAgGrid(config);
     await config.useFrameworkServiceClient('portal');
