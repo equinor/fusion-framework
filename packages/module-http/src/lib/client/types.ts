@@ -8,10 +8,14 @@ export type FetchRequest = RequestInit & {
     path: string;
 };
 
+export type FetchResponse<T = unknown> = Response & {
+    json(): Promise<T>;
+}
+
 export type FetchRequestInit<
     TReturn = unknown,
     TRequest = FetchRequest,
-    TResponse = Response
+    TResponse = FetchResponse<TReturn>
 > = Omit<TRequest, 'uri' | 'path'> & {
     selector?: (response: TResponse) => ObservableInput<TReturn>;
 };
