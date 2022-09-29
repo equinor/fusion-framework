@@ -7,7 +7,7 @@ import { jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
-import type { FetchRequest, FetchRequestInit, IHttpClient, StreamResponse } from '.';
+import type { FetchRequest, FetchRequestInit, FetchResponse, IHttpClient, StreamResponse } from '.';
 
 export type HttpClientCreateOptions<
     TRequest extends FetchRequest = FetchRequest,
@@ -18,7 +18,7 @@ export type HttpClientCreateOptions<
 };
 
 /** Base http client for executing requests */
-export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = Response>
+export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = FetchResponse>
     implements IHttpClient<TRequest, TResponse>
 {
     readonly requestHandler: IHttpRequestHandler<TRequest>;
@@ -77,7 +77,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         return this.fetch(path, args);
     }
 
-    public json$<T = TResponse>(
+    public json$<T = unknown>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): StreamResponse<T> {
@@ -92,7 +92,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         } as FetchRequestInit<T, TRequest, TResponse>);
     }
 
-    public json<T = TResponse>(
+    public json<T = unknown>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T> {
