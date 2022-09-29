@@ -41,16 +41,16 @@ export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unk
 
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
-    TRef = Fusion,
+    TRef extends Fusion = Fusion,
     TManifest = AppManifest
 > = (
-    configurator: IAppConfigurator<TModules>,
+    configurator: IAppConfigurator<TModules, TRef['modules']>,
     args: { fusion: TRef; manifest: TManifest }
 ) => void | Promise<void>;
 
 export type AppModuleInit<
     TModules extends Array<AnyModule> | unknown,
-    TRef = Fusion,
+    TRef extends Fusion = Fusion,
     TManifest = AppManifest
 > = (
     cb: AppModuleInitiator<TModules, TRef, TManifest>
