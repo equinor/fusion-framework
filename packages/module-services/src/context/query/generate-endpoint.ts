@@ -16,7 +16,7 @@ const buildOdataFilter = (obj: QueryContextOdataFilter) => {
             default:
                 return { ...acc, [key]: obj[key as keyof typeof obj] };
         }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
 };
 
@@ -28,12 +28,11 @@ const buildOdataObject = (q: QueryContextOdataParameters) => {
             default:
                 return { ...acc, [key]: q[key as keyof typeof q] };
         }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
 };
 
 const createSearchParameters = (args: string | QueryContextOdataParameters) => {
-    console.log(buildOdataObject(args as QueryContextOdataParameters));
     return typeof args === 'string' ? args : buildOdataQuery(buildOdataObject(args));
 };
 

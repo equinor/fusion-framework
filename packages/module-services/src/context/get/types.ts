@@ -19,7 +19,7 @@ type GetContextArgsTypes = {
 
 export type GetContextArgs<T extends string> = T extends keyof typeof ApiVersion
     ? GetContextArgsTypes[typeof ApiVersion[T]]
-    : any;
+    : unknown;
 
 type GetContextResponseTypes = {
     [ApiVersion.v1]: ApiContextEntity<ApiVersion.v1>;

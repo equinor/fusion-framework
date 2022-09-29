@@ -8,7 +8,7 @@ const useGetContext = <TVersion extends string = keyof typeof ApiVersion>(
     id: string,
     version: TVersion
 ) => {
-    const [context, setContext] = useState<any | null>(null);
+    const [context, setContext] = useState<unknown | null>(null);
 
     const client = useContextClient('json$');
 
