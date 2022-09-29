@@ -2,7 +2,7 @@
 import { BehaviorSubject, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
 import { filter, map, mergeMap, scan, timeout } from 'rxjs/operators';
 
-import { ModuleConsoleLogger } from './logger';
+import { IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
 
 import type {
     AnyModule,
@@ -20,7 +20,7 @@ export interface IModulesConfigurator<
     TModules extends Array<AnyModule> = Array<AnyModule>,
     TRef = any
 > {
-    logger: ModuleConsoleLogger;
+    logger: IModuleConsoleLogger;
     configure(...configs: Array<IModuleConfigurator<any, TRef>>): void;
 
     addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>): void;

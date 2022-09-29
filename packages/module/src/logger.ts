@@ -1,6 +1,14 @@
 import { AnyModule } from './types';
 
-export class ConsoleLogger {
+export interface IConsoleLogger {
+    level: 0 | 1 | 2 | 3 | 4;
+    debug(...msg: unknown[]): void;
+    info(...msg: unknown[]): void;
+    warn(...msg: unknown[]): void;
+    error(...msg: unknown[]): void;
+}
+
+export class ConsoleLogger implements IConsoleLogger {
     /** - 0-1-2-3 (error-warning-info-debug) if not provided only errors are logged */
     public level: 0 | 1 | 2 | 3 | 4 = 1;
     constructor(protected domain: string) {}
@@ -32,7 +40,11 @@ export class ConsoleLogger {
     }
 }
 
-export class ModuleConsoleLogger extends ConsoleLogger {
+export interface IModuleConsoleLogger extends IConsoleLogger {
+    formatModuleName(moduleOrName: string | AnyModule): string;
+}
+
+export class ModuleConsoleLogger extends ConsoleLogger implements IModuleConsoleLogger {
     public formatModuleName(moduleOrName: string | AnyModule): string {
         const name = typeof moduleOrName === 'string' ? moduleOrName : moduleOrName.name;
         return `📦\u001b[1;32m${name.replace(/([A-Z])/g, ' $1').toUpperCase()}\x1b[0m`;
