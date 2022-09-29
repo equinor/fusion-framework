@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@1.2.1...@equinor/fusion-framework-module@1.2.2) (2022-09-29)
+
+
+### Bug Fixes
+
+* **module:** update interface for logging ([fc23ea3](https://github.com/equinor/fusion-framework/commit/fc23ea3602c0b18b3f54de584773f76ffe63617c))
+
+
+
 ## 1.2.1 (2022-09-27)
 
 
