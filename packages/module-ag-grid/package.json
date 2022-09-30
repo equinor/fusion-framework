@@ -26,10 +26,13 @@
     "directory": "packages/modules-ag-grid"
   },
   "dependencies": {
-    "@ag-grid-enterprise/core": "~28.1.0",
-    "@equinor/fusion-framework-module": "^1.2.2"
+    "@ag-grid-enterprise/core": "~28.1.0"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module": "^1.2.2",
     "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "^1.2.2"
   }
 }
