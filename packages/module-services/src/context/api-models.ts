@@ -13,7 +13,7 @@ type ApiContextEntity_v1 = {
     updated: string | null;
 };
 
-type ApiContextEntity_v2 = ApiContextEntity_v1;
+type ApiContextEntity_v2 = unknown;
 
 type ApiContextEntityTypes = {
     [ApiVersion.v1]: ApiContextEntity_v1;
@@ -32,7 +32,7 @@ type ApiContextType_v1 = {
     parentTypeIds: string[] | null;
 };
 
-type ApiContextType_v2 = ApiContextType_v1;
+type ApiContextType_v2 = unknown;
 
 type ApiContextTypeTypes = {
     [ApiVersion.v1]: ApiContextType_v1;

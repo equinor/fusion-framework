@@ -13,13 +13,19 @@ type ApiServices<TMethod extends keyof ClientMethod, TClient extends IHttpClient
 };
 
 export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
+    /**
+     * @param name - Name of the service to use
+     * @param version - Version of the service to use
+     */
     createApiClient<TService extends Service, TMethod extends keyof ClientMethod>(
         name: TService,
         version: TMethod
     ): Promise<ApiServices<TMethod, TClient>[TService]>;
 }
 
+
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
+    /** method for creating IHttpClients for api clients */
     createClient: ApiClientFactory<TClient>;
 };
 

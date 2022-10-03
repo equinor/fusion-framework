@@ -25,6 +25,9 @@ export type ServicesModule = Module<
     [HttpModule, ServiceDiscoveryModule]
 >;
 
+/**
+ * Method to trying to resolve method for creating an IHttpClient
+ */
 const createDefaultClient =
     (http: IHttpClientProvider, serviceDiscovery?: ServiceDiscoveryProvider): ApiClientFactory =>
     async (name: string) => {
@@ -64,10 +67,22 @@ export const module: ServicesModule = {
     },
 };
 
+/**
+ * Method for enabling the Service module
+ * @param config - configuration object
+ */
 export const enableServices = (config: IModulesConfigurator): void => {
     config.addConfig({ module });
 };
 
+/**
+ * @example
+ * ```ts
+ * config.addConfig(x => x.createClient(...));
+ * ```
+ * @param configure - Callback for configuring the module
+ * @returns Configuration object
+ */
 export const configureServices = (
     configure: (configurator: IApiConfigurator) => void
 ): IModuleConfigurator<ServicesModule> => {

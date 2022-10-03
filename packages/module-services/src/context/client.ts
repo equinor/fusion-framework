@@ -1,11 +1,9 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { ClientMethod } from '../types';
+import { ClientMethod, ApiVersion } from '@equinor/fusion-framework-module-services/context';
 
 import { getContext, GetContextFn, GetContextResponse, GetContextResult } from './get';
 import { queryContext, QueryContextFn, QueryContextResponse, QueryContextResult } from './query';
-
-import { ApiVersion } from './static';
 
 export class ContextApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -14,8 +12,13 @@ export class ContextApiClient<
     get Version(): typeof ApiVersion {
         return ApiVersion;
     }
+
     constructor(protected _client: TClient, protected _method: TMethod) {}
 
+    /**
+     * Fetch context by id
+     * @see {@link get/client}
+     */
     public get<
         TVersion extends string = keyof typeof ApiVersion,
         TResult = GetContextResponse<TVersion>
@@ -28,7 +31,8 @@ export class ContextApiClient<
     }
 
     /**
-     * @see {@link query-context/client}
+     * Query context service
+     * @see {@link query/client}
      */
     public query<
         TVersion extends string = keyof typeof ApiVersion,

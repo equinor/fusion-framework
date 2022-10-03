@@ -1,8 +1,15 @@
 import { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
-import { ApiVersion } from '../static';
-import { ApiContextEntity } from '../api-models';
-import { ClientMethod } from '../../types';
+import {
+    ApiVersion,
+    ApiContextEntity,
+    ClientMethod,
+} from '@equinor/fusion-framework-module-services/context';
+
+export {
+    ApiClientArguments,
+    ClientMethod,
+} from '@equinor/fusion-framework-module-services/context';
 
 export type QueryContextOdataFilter = {
     type?: string[];

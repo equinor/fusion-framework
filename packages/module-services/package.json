@@ -25,6 +25,7 @@
     ".": "./dist/esm/index.js",
     "./context": "./dist/esm/context/index.js",
     "./context/get": "./dist/esm/context/get-context/index.js",
+    "./errors": "./dist/esm/errors.js",
     "./package.json": "./package.json"
   },
   "scripts": {
