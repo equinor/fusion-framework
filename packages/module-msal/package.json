@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -32,10 +32,10 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^2.21.0",
-    "@equinor/fusion-framework-module": "^1.2.2",
-    "@equinor/fusion-framework-module-http": "^2.0.10"
+    "@equinor/fusion-framework-module": "^1.2.3",
+    "@equinor/fusion-framework-module-http": "^2.0.11"
   },
   "devDependencies": {
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.4"
   }
 }
