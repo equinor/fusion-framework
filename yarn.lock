@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-28.1.1.tgz#b0454ee818dd960d68b3bdd2bfaa80516f054dfe"
   integrity sha512-0Mrvg1lERglcFd4oQijxvGpECnx1ZX1L/fPlmfxYPGAFMJzIKxfXtF1tL2h20QrntTZSHuDnm3aWkTFB1ybp2A==
 
-"@ag-grid-enterprise/core@~28.1.0":
+"@ag-grid-enterprise/core@^28.1.1":
   version "28.1.1"
   resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.1.1.tgz#734091acd7114cdd79371dade46459eb9d6518c0"
   integrity sha512-klHrh4M7sSBLD+xrRNb+r6tT5uqtgNaHbB7XneormdpU/V+U1A77DcaKTCXzcxjeF3XE6RRfCEAqwWNGbFOy+Q==
@@ -550,14 +550,6 @@
     eslint-plugin-prettier "^4.0.0"
     eslint-plugin-react "^7.28.0"
     eslint-plugin-react-hooks "^4.3.0"
-
-"@equinor/fusion-framework-module-service-discovery@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-service-discovery/-/fusion-framework-module-service-discovery-1.0.7.tgz#288490cb7cc561e5234ba89dffee5487db6f5485"
-  integrity sha512-f4jCozUxWX5YUZ+lTMNaRpLvaTkC+TneKfK6tgHTRPEESdAb9sn6bgpRTdAAcvNkMKObudN6LQCT3i1CYcte8Q==
-  dependencies:
-    "@equinor/fusion-framework-module" "^1.2.0"
-    "@equinor/fusion-framework-module-http" "^2.0.7"
 
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
@@ -8870,7 +8862,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@^3 || ^4", typescript@^4.6.4, typescript@^4.8.2, typescript@^4.8.3:
+"typescript@^3 || ^4", typescript@^4.6.4, typescript@^4.8.3, typescript@^4.8.4:
   version "4.8.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
   integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==

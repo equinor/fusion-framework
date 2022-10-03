@@ -36,6 +36,6 @@
     "@equinor/fusion-framework-module-http": "^2.0.10"
   },
   "devDependencies": {
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.4"
   }
 }
