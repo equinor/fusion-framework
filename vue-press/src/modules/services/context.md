@@ -9,7 +9,10 @@ tag:
 
 ## Get context
 
-Get a context by id
+```ts
+import { generateEndpoint } from '@equinor/fusion-framework-module-services/get';
+const url = generateEndpoint('v1', 'guid-of-an-project');
+```
 
 ## Query Context
 
@@ -38,4 +41,37 @@ type QueryContextODataParameters = {
       externalId?: string;
     }
 };
-``
+```
+
+#### Example
+
+::: code-tabs
+@tab:active Basic
+
+```ts
+import { generateEndpoint } from '@equinor/fusion-framework-module-services/query';
+const url = generateEndpoint('v1', {
+  query: {
+    search: 'johan',
+    filter: {
+      type: ['ProjectMaster'],
+    }
+  }
+});
+```
+
+@tab OData
+```ts
+import { generateEndpoint } from '@equinor/fusion-framework-module-services/query';
+import buildQuery from 'odata-query';
+
+const query = buildQuery({
+  search: 'johan',
+  filter: {
+      type: {
+        in: ['ProjectMaster'],
+      }
+    }
+});
+const url = generateEndpoint('v1', query);
+:::
