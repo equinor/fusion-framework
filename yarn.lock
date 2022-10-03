@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-28.1.1.tgz#b0454ee818dd960d68b3bdd2bfaa80516f054dfe"
   integrity sha512-0Mrvg1lERglcFd4oQijxvGpECnx1ZX1L/fPlmfxYPGAFMJzIKxfXtF1tL2h20QrntTZSHuDnm3aWkTFB1ybp2A==
 
-"@ag-grid-enterprise/core@^28.1.1":
+"@ag-grid-enterprise/core@~28.1.1":
   version "28.1.1"
   resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.1.1.tgz#734091acd7114cdd79371dade46459eb9d6518c0"
   integrity sha512-klHrh4M7sSBLD+xrRNb+r6tT5uqtgNaHbB7XneormdpU/V+U1A77DcaKTCXzcxjeF3XE6RRfCEAqwWNGbFOy+Q==
