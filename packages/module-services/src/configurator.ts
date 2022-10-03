@@ -1,6 +1,7 @@
 import { ApiClientFactory } from './types';
 
 export interface IApiConfigurator {
+    /** Method for creating IHttpClients */
     createClient?: ApiClientFactory;
 }
 

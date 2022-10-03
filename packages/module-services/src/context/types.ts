@@ -1,1 +1,5 @@
-export { ClientMethodType } from '../types';
+export {
+    ClientMethodType,
+    ClientMethod,
+    ApiClientArguments,
+} from '@equinor/fusion-framework-module-services';

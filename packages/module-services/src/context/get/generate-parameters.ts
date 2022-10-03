@@ -1,11 +1,12 @@
 import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import { ApiVersion } from '../static';
+import { ApiVersion } from '@equinor/fusion-framework-module-services/context';
 
 import { generateEndpoint } from './generate-endpoint';
 
 import type { ApiClientArguments, GetContextArgs } from './types';
 
+/** function for creating http client arguments  */
 export const generateParameters = <
     TResult,
     TVersion extends string = keyof typeof ApiVersion,
