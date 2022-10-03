@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module-app-config",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -23,7 +23,7 @@
     "directory": "packages/react-modules"
   },
   "dependencies": {
-    "@equinor/fusion-framework-module-app-config": "^1.0.10",
+    "@equinor/fusion-framework-module-app-config": "^1.0.11",
     "@equinor/fusion-framework-react-module": "^1.0.8",
     "@equinor/fusion-observable": "^0.3.2"
   },

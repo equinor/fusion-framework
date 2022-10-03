@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.13 (2022-10-03)
+
+
+### Bug Fixes
+
+* **react-app:** update typing of module instance ([b656a24](https://github.com/equinor/fusion-framework/commit/b656a24b2c0daac647994c1468dd8f14438fba2e))
+
+
+
 ## [1.0.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.0.11...@equinor/fusion-framework-react-app@1.0.12) (2022-09-29)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.2.7...@equinor/fusion-framework-test-app@1.3.0) (2022-10-03)
+
+
+### Features
+
+* **test-app:** add context service ([0fc5ac8](https://github.com/equinor/fusion-framework/commit/0fc5ac8d25d6244bd8139924f1913d459b18dd1c))
+
+
+
 ## [1.2.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.2.6...@equinor/fusion-framework-test-app@1.2.7) (2022-09-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app

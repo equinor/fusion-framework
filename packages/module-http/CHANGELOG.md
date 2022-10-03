@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.10 (2022-10-03)
+
+
+### Bug Fixes
+
+* **module-http:** allow typing of fetch request ([de08783](https://github.com/equinor/fusion-framework/commit/de0878342d82249ffc7e1212230d0aa0e14d32cb))
+
+
+
 ## [2.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.0.8...@equinor/fusion-framework-module-http@2.0.9) (2022-09-29)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
