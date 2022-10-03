@@ -112,3 +112,65 @@ const data_v2: MyApiContextEntity_v3_beta = await apiClient.x.get(
 ); 
 ```
 
+## Advance
+
+### client
+
+For service endpoints exposed, there is a client method for executing the request
+
+```ts
+/** 
+ * create a reusable function for api calls
+ * 
+ * @template TVersion - version of the endpoint
+ * @template TMethod - call method of the http client, defaults to json
+ * @template TClient - IHttpClient which will execute the request
+ */
+type Query = 
+  <
+    TVersion extends string = keyof typeof ApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod
+  ) =>
+    /** 
+     * @template T - return type from execution to the endpoint
+     */
+    <T = QueryContextResponse<TVersion>>(
+      args: QueryArgs<TVersion>,
+      init?: ClientRequestInit<TClient, T>
+    ): QueryResult<TVersion, TMethod, T>
+```
+
+#### example
+```ts
+import { getContext } from '@equinor/fusion-framework-module/service/context/get';
+const fn = await getContext(client, 'v1');
+const result = fn({ id:'123' });
+```
+
+### generate parameters
+
+Method for generating endpoint and arguments for service.
+
+```ts
+import { generateParameters } from '@equinor/fusion-framework-module/service/context/get';
+
+/** IHttpClient */
+const response = client.fetch(...generateParameters('v1', {id: '123'}));
+```
+
+### generate endpoint
+
+Method for generating endpoint for service
+
+```ts
+import { generateEndpoint } from '@equinor/fusion-framework-module/service/context/get';
+
+const endpoint = generateEndpoint('v1', {id: '123'});
+const response = await fetch(endpoint);
+```
+
