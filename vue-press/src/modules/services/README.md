@@ -7,6 +7,8 @@ tag:
   - api
 ---
 
+<ModuleBadge module="module-services" />
+
 ## Configuration
 
 by default this module does not require any configuration if the Service discovery module is configured for the portal or the application.
