@@ -3,6 +3,7 @@ import { RetryOpt } from './types';
 
 export enum ActionType {
     REQUEST = 'request',
+    SKIPPED = 'skipped',
     SUCCESS = 'success',
     FAILURE = 'failure',
     ERROR = 'error',
@@ -23,10 +24,17 @@ export type RequestAction<TArgs = unknown> = BaseAction<
     {
         controller: AbortController;
         retry?: Partial<RetryOpt>;
+        ref?: string;
     }
 > & {
     transaction: string;
 };
+
+export type SkipAction<TArgs = unknown, TType = unknown> = BaseAction<
+    ActionType.SKIPPED,
+    TArgs,
+    TType
+>;
 
 export type SuccessAction<TArgs, TResponse = Response> = BaseAction<
     ActionType.SUCCESS,
@@ -59,6 +67,7 @@ export type Actions<
     TError extends Error = Error
 > =
     | RequestAction<TArgs>
+    | SkipAction<TArgs>
     | SuccessAction<TArgs, TType>
     | FailureAction<TArgs, TFailure>
     | ErrorAction<TArgs, TError>

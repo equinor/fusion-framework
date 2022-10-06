@@ -1,4 +1,5 @@
 import { QueryClient } from '../query';
+import { ActionType } from '../query/actions';
 import { defer, emulateRequest } from './__mocks__/query.mock';
 
 describe('QueryClient', () => {
@@ -55,5 +56,47 @@ describe('QueryClient', () => {
         });
         client.next(queryArgs);
         defer(() => client.refresh(), 100);
+    });
+
+    it('should query async', async () => {
+        const controller = new AbortController();
+        const client = new QueryClient(emulateRequest(100));
+        const args = [{ foo: 'request 1' }, { foo: 'request 2' }, { foo: 'request 3' }];
+
+        /** create a query which will be skipped */
+        client.query(args[0]).catch((err) => {
+            expect(err.cause).toMatchObject({
+                type: ActionType.SKIPPED,
+                payload: args[0],
+                meta: {
+                    next: {
+                        args: args[1],
+                    },
+                },
+            });
+        });
+
+        /** create a query which will be aborted */
+        client.query(args[1], { controller }).catch((err) => {
+            expect(err.cause).toMatchObject({
+                type: ActionType.CANCEL,
+                meta: {
+                    request: {
+                        type: ActionType.REQUEST,
+                        payload: args[1],
+                    },
+                },
+            });
+        });
+
+        /** abort query 2 */
+        controller.abort();
+
+        /** allow abort signal to dispatch */
+        await defer(undefined, 10);
+
+        /** execute final request */
+        const result = await client.query(args[3]);
+        expect(result.data).toBe(args[3]);
     });
 });

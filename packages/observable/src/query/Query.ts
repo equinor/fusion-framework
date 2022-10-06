@@ -16,9 +16,11 @@ import { RetryOpt, QueryFn, QueryState, QueryStatus } from './types';
  * - __controller__: [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) [optional]
  * - __retry__: retry config {@link RetryOpt}
  */
-type QueryOptions = {
+export type QueryOptions = {
     controller: AbortController;
     retry: Partial<RetryOpt>;
+    /** reference to a query  */
+    ref?: string;
 };
 
 export class Query<TType, TArgs> extends Observable<QueryState> {

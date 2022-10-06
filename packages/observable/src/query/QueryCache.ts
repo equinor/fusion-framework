@@ -7,6 +7,7 @@ export type QueryCacheState<TType, TArgs> = {
     data: TType | undefined;
     args?: TArgs;
     transaction?: string;
+    ref?: string;
     updated?: number;
     updates: number;
 };
@@ -26,6 +27,7 @@ export class QueryCache<TType, TArgs> extends Observable<QueryCacheState<TType, 
                     this.__state$.next({
                         data: action.payload,
                         args: action.meta.request.payload,
+                        ref: action.meta.request.meta.ref,
                         transaction: action.meta.request.transaction,
                         updated: Date.now(),
                         updates: this.__state$.value.updates + 1,

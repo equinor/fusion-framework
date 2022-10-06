@@ -21,4 +21,4 @@ export type RetryOpt = {
     delay: number | ((error: unknown) => ObservableInput<void>);
 };
 
-export type QueryFn<TType, TArgs> = (args: TArgs, signal: AbortSignal) => ObservableInput<TType>;
+export type QueryFn<TType, TArgs> = (args: TArgs, signal?: AbortSignal) => ObservableInput<TType>;
