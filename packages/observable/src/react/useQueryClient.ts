@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Observable, share, Subject } from 'rxjs';
-import { QueryClient, QueryFn, QueryClientOptions, QueryStatus } from '../query';
+import { QueryFn, QueryStatus } from '../query';
+import { QueryClientCtorOptions, QueryClient } from '../query/QueryClient';
 import { useObservableSelector } from './useObservableSelector';
 import { useObservableState } from './useObservableState';
 
@@ -27,7 +28,7 @@ export type UseQueryClientResult<TType, TArgs> = Omit<
  */
 export const useQueryClient$ = <TType, TArgs>(
     queryFn: QueryFn<TType, TArgs>,
-    options?: QueryClientOptions<TType, TArgs>
+    options?: QueryClientCtorOptions<TType, TArgs>
 ): UseQueryClientStreamResult<TType, TArgs> => {
     const [client] = useState(() => new QueryClient(queryFn, options));
 
@@ -71,7 +72,7 @@ export const useQueryClientStreamResult = <
 
 export const useQueryClient = <TType, TArgs>(
     queryFn: QueryFn<TType, TArgs>,
-    options?: QueryClientOptions<TType, TArgs>
+    options?: QueryClientCtorOptions<TType, TArgs>
 ): UseQueryClientResult<TType, TArgs> =>
     useQueryClientStreamResult(useQueryClient$(queryFn, options));
 

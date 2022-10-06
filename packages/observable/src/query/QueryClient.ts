@@ -18,6 +18,10 @@ export type QueryClientOptions<TType, TArgs = unknown> = Partial<QueryOptions> &
         | number;
 };
 
+export type QueryClientCtorOptions<TType, TArgs> = QueryClientOptions<TType, TArgs> & {
+    initial?: TType;
+};
+
 export class QueryClient<TType, TArgs> extends Observable<TType> {
     private __client$: Query<TType, TArgs>;
     private __state$: QueryCache<TType, TArgs>;
@@ -39,10 +43,7 @@ export class QueryClient<TType, TArgs> extends Observable<TType> {
         return this.__state$;
     }
 
-    constructor(
-        queryFn: QueryFn<TType, TArgs>,
-        options?: QueryClientOptions<TType, TArgs> & { initial?: TType }
-    ) {
+    constructor(queryFn: QueryFn<TType, TArgs>, options?: QueryClientCtorOptions<TType, TArgs>) {
         super((subscriber) => this.__state$.pipe(map((x) => x.data)).subscribe(subscriber));
 
         this.__client$ = new Query(queryFn, {
