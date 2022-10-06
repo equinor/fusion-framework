@@ -7,6 +7,10 @@ export const createReducer =
     <TType, TArgs>(): Reducer<QueryState, Actions<TType, TArgs>> =>
     (state, action) => {
         switch (action.type) {
+            case ActionType.SKIPPED: {
+                return state;
+            }
+
             case ActionType.REQUEST: {
                 const { transaction } = action;
                 if (state.transaction === transaction) {

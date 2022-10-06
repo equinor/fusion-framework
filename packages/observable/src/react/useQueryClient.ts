@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Observable, share, Subject } from 'rxjs';
-import { QueryClient, QueryFn, QueryOptions, QueryStatus } from '../query';
+import { QueryClient, QueryFn, QueryClientOptions, QueryStatus } from '../query';
 import { useObservableSelector } from './useObservableSelector';
 import { useObservableState } from './useObservableState';
 
@@ -27,7 +27,7 @@ export type UseQueryClientResult<TType, TArgs> = Omit<
  */
 export const useQueryClient$ = <TType, TArgs>(
     queryFn: QueryFn<TType, TArgs>,
-    options?: QueryOptions<TType, TArgs>
+    options?: QueryClientOptions<TType, TArgs>
 ): UseQueryClientStreamResult<TType, TArgs> => {
     const [client] = useState(() => new QueryClient(queryFn, options));
 
@@ -35,7 +35,7 @@ export const useQueryClient$ = <TType, TArgs>(
     const data$ = client.pipe(share({ connector: () => new Subject() }));
 
     /** extract status from client state */
-    const status$ = useObservableSelector(client.query, (state) => state.status);
+    const status$ = useObservableSelector(client.client, (state) => state.status);
 
     /** map query fn to next client arg and bind instance to client */
     const query = useMemo(() => client.next.bind(client), [client]);
@@ -71,7 +71,7 @@ export const useQueryClientStreamResult = <
 
 export const useQueryClient = <TType, TArgs>(
     queryFn: QueryFn<TType, TArgs>,
-    options?: QueryOptions<TType, TArgs>
+    options?: QueryClientOptions<TType, TArgs>
 ): UseQueryClientResult<TType, TArgs> =>
     useQueryClientStreamResult(useQueryClient$(queryFn, options));
 

@@ -23,7 +23,6 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     ): Promise<ApiServices<TMethod, TClient>[TService]>;
 }
 
-
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
     /** method for creating IHttpClients for api clients */
     createClient: ApiClientFactory<TClient>;
