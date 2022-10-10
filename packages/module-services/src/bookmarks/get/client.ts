@@ -4,7 +4,7 @@ import { generateParameters } from './generate-parameters';
 import { ApiVersions, GetBookmarkArgs, GetBookmarkResult, GetBookmarksResult } from './types';
 
 /**
- * Method for fetching context item from context service
+ * Method for fetching bookmark by it`s id from bookmark service
  * @param client - client for execution of request
  * @param version - version of API to call
  * @param method - client method to call
