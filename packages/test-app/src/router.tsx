@@ -4,6 +4,7 @@ import { Main } from './pages/Main';
 import { AppList } from './pages/AppList';
 import GetContext from './pages/service-context/GetContext';
 import QueryContext from './pages/service-context/QueryContext';
+import GetBookmark from './pages/service-bookmarks/GetBookmark';
 
 export const router = createBrowserRouter([
     {
@@ -23,6 +24,9 @@ export const router = createBrowserRouter([
                         </li>
                         <li>
                             <Link to="/service/context/query">service/context/query</Link>
+                        </li>
+                        <li>
+                            <Link to="/service/bookmarks/get">service/bookmarks/get</Link>
                         </li>
                     </ul>
                 </div>
@@ -44,6 +48,10 @@ export const router = createBrowserRouter([
             {
                 path: '/service/context/query',
                 element: <QueryContext />,
+            },
+            {
+                path: '/service/bookmarks/get',
+                element: <GetBookmark />,
             },
         ],
     },

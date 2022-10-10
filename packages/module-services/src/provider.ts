@@ -3,24 +3,22 @@ import { ClientMethod } from './types';
 
 import { ApiClientFactory } from './types';
 import { ContextApiClient } from './context';
-
-export enum Service {
-    Context = 'context',
-}
-
-type ApiServices<TMethod extends keyof ClientMethod, TClient extends IHttpClient> = {
-    [Service.Context]: ContextApiClient<TMethod, TClient>;
-};
+import BookmarksApiClient from './bookmarks/client';
 
 export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     /**
-     * @param name - Name of the service to use
-     * @param version - Version of the service to use
+     * @param method - Version of the service to use
      */
-    createApiClient<TService extends Service, TMethod extends keyof ClientMethod>(
-        name: TService,
-        version: TMethod
-    ): Promise<ApiServices<TMethod, TClient>[TService]>;
+    createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
+        method: TMethod
+    ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>>;
+
+    /**
+     * @param method - Version of the service to use
+     */
+    createContextClient<TMethod extends keyof ClientMethod>(
+        method: TMethod
+    ): Promise<ContextApiClient<TMethod, TClient>>;
 }
 
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
@@ -36,15 +34,17 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
         this._createClientFn = createClient;
     }
 
-    public async createApiClient<TService extends Service, TMethod extends keyof ClientMethod>(
-        name: TService,
+    public async createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
         method: TMethod
-    ): Promise<ApiServices<TMethod, TClient>[TService]> {
-        const httpClient = await this._createClientFn(name);
-        switch (name) {
-            case Service.Context:
-                return new ContextApiClient(httpClient, method);
-        }
-        throw Error(`could not create api client for [${name}]`);
+    ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>> {
+        const httpClient = await this._createClientFn('bookmarks');
+        return new BookmarksApiClient(httpClient, method);
+    }
+
+    public async createContextClient<TMethod extends keyof ClientMethod>(
+        method: TMethod
+    ): Promise<ContextApiClient<TMethod, TClient>> {
+        const httpClient = await this._createClientFn('context');
+        return new ContextApiClient(httpClient, method);
     }
 }
