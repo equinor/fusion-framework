@@ -2,9 +2,9 @@
 title: Module Services
 category: Module
 tag:
-  - services
-  - http
-  - api
+    - services
+    - http
+    - api
 ---
 
 <ModuleBadge module="module-services" />
@@ -15,13 +15,16 @@ by default this module does not require any configuration if the Service discove
 
 ::: code-tabs
 @tab:active Basic
+
 ```ts
 import { enableServices } from '@equinor/fusion-framework-module-services';
 export default (configurator: IAppConfigurator) => {
-  enableServices(configurator);
-}
+    enableServices(configurator);
+};
 ```
+
 @tab Custom
+
 ```ts
 import { configureServices } from '@equinor/fusion-framework-module-services';
 export default (configurator: IAppConfigurator) => {
@@ -32,12 +35,13 @@ export default (configurator: IAppConfigurator) => {
   )
 }
 ```
+
 :::
 
 ### HttpClient
 
-::: warning createClient 
-Only works if not `createClient` on the config object is overridden 
+::: warning createClient
+Only works if not `createClient` on the config object is overridden
 :::
 
 By default the module will first try to load a named client from the [HttpProvider](../http#configure).
@@ -46,14 +50,12 @@ If no client is defined, the [Service Discovery Module](../service-discovery) wi
 
 ## Usage
 
-### Create api client
+### Create client
+
 ```ts
-type createApiClient<TService extends Service, TMethod extends keyof ClientMethod> = (
-  /** name of the service to create client for */
-  name: TService,
+type createContextClient<TMethod extends keyof ClientMethod> = (
   /** execution method, defaults to `json` */
   method: TMethod
-
 ): Promise<ApiServices<IHttpClient, TMethod>[TService]>
 
 type ClientMethod<T = unknown> = {
@@ -67,16 +69,19 @@ type ClientMethod<T = unknown> = {
 ::: code-tabs#flow
 
 @tab:active Async
+
 ```ts
-const apiClient = await serviceProvider.createApiClient(Service.Context, 'json');
-const apiClient = await serviceProvider.createApiClient(Service.Context, 'fetch');
+const apiClient = await serviceProvider.createContextClient('json');
+const apiClient = await serviceProvider.createContextClient('fetch');
 ```
 
 @tab Observable
+
 ```ts
-const apiClient = await serviceProvider.createApiClient(Service.Context, 'json$');
-const apiClient = await serviceProvider.createApiClient(Service.Context, 'fetch$');
+const apiClient = await serviceProvider.createContextClient('json$');
+const apiClient = await serviceProvider.createContextClient('fetch$');
 ```
+
 :::
 
 ::: warning Fetch
@@ -96,39 +101,39 @@ type ApiMethod<
     ...args: Parameters<ApiFunction<TVersion, TMethod, TClient, TResult>>
 ): ApiFunctionResult<TVersion, TMethod, TResult>
 
-/** 
+/**
  * @see context/get-context/client
  * @note data type if only for illustrting what the api client resolves the return type to be
  */
 const data_v1: ApiContextEntity_v1 = await apiClient.x.get('v1', { id: 'eee' });
 const data_v2: ApiContextEntity_v2 = await apiClient.x.get('v2', { id: 'eee' });
 
-/** 
+/**
  * custom selector
  * @note the api method will resolve the return type from the selector
  */
 const data_v2: MyApiContextEntity_v3_beta = await apiClient.x.get(
-  'v2_beta', 
-  { id: 'eee' }, 
+  'v2_beta',
+  { id: 'eee' },
   selector: (x: FetchResponse<ApiContextEntity_v2>) => new MyApiContextEntity_v3_beta(x)
-); 
+);
 ```
 
-## Advance
+## Advanced
 
 ### client
 
 For service endpoints exposed, there is a client method for executing the request
 
 ```ts
-/** 
+/**
  * create a reusable function for api calls
- * 
+ *
  * @template TVersion - version of the endpoint
  * @template TMethod - call method of the http client, defaults to json
  * @template TClient - IHttpClient which will execute the request
  */
-type Query = 
+type Query =
   <
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod = keyof ClientMethod,
@@ -138,7 +143,7 @@ type Query =
     version: TVersion,
     method: TMethod = 'json' as TMethod
   ) =>
-    /** 
+    /**
      * @template T - return type from execution to the endpoint
      */
     <T = QueryContextResponse<TVersion>>(
@@ -148,10 +153,11 @@ type Query =
 ```
 
 #### example
+
 ```ts
 import { getContext } from '@equinor/fusion-framework-module/service/context/get';
 const fn = await getContext(client, 'v1');
-const result = fn({ id:'123' });
+const result = fn({ id: '123' });
 ```
 
 ### generate parameters
@@ -162,7 +168,7 @@ Method for generating endpoint and arguments for service.
 import { generateParameters } from '@equinor/fusion-framework-module/service/context/get';
 
 /** IHttpClient */
-const response = client.fetch(...generateParameters('v1', {id: '123'}));
+const response = client.fetch(...generateParameters('v1', { id: '123' }));
 ```
 
 ### generate endpoint
@@ -172,7 +178,6 @@ Method for generating endpoint for service
 ```ts
 import { generateEndpoint } from '@equinor/fusion-framework-module/service/context/get';
 
-const endpoint = generateEndpoint('v1', {id: '123'});
+const endpoint = generateEndpoint('v1', { id: '123' });
 const response = await fetch(endpoint);
 ```
-
