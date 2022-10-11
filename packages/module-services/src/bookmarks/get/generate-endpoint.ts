@@ -1,4 +1,3 @@
-import { UnsupportedApiVersion } from '@equinor/fusion-framework-module-services/errors';
 import { ApiVersions, GetBookmarkArgs } from './types';
 
 /**
@@ -9,8 +8,6 @@ export const generateEndpoint = <TVersion extends ApiVersions>(
     args: GetBookmarkArgs<TVersion>
 ) => {
     switch (version) {
-        case 'v2':
-            throw new UnsupportedApiVersion(version);
         case 'v1':
         default: {
             const { id } = args as { id: string };
