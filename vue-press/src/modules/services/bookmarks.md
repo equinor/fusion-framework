@@ -14,7 +14,10 @@ tag:
 Method for generating endpoint and arguments.
 
 ```ts
-import { generateParameters } from '@equinor/fusion-framework-module/service/bookmarks/get';
+import {
+    generateParameters,
+    generateEndpoint,
+} from '@equinor/fusion-framework-module/service/bookmarks/get';
 
 /** IHttpClient */
 const response = client.fetch(...generateParameters('v1', { id: '123' }));
