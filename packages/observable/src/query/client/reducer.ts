@@ -1,62 +1,62 @@
-import type { Reducer } from '..';
+import type { Reducer } from '../..';
 
-import { Actions, ActionType } from './actions';
-import { QueryState, QueryStatus } from './types';
+import { ActionTypes } from './actions';
+import { State } from './types';
 
 export const createReducer =
-    <TType, TArgs>(): Reducer<QueryState, Actions<TType, TArgs>> =>
+    <TType, TArgs>(): Reducer<State, ActionTypes<TType, TArgs>> =>
     (state, action) => {
         switch (action.type) {
-            case ActionType.SKIPPED: {
-                return state;
-            }
+            // case 'skipped': {
+            //     return state;
+            // }
 
-            case ActionType.REQUEST: {
-                const { transaction } = action;
+            case 'request': {
+                const { transaction } = action.meta;
                 if (state.transaction === transaction) {
                     return {
                         ...state,
-                        status: QueryStatus.ACTIVE,
+                        status: 'active',
                         retryCount: (state.retryCount || 0) + 1,
                     };
                 }
                 return {
                     transaction,
-                    status: QueryStatus.ACTIVE,
+                    status: 'active',
                     initiated: Date.now(),
                     retryCount: 0,
                 };
             }
 
-            case ActionType.SUCCESS: {
+            case 'success': {
                 return {
                     ...state,
-                    status: QueryStatus.IDLE,
+                    status: 'idle',
                     completed: Date.now(),
                 };
             }
 
-            case ActionType.FAILURE: {
+            case 'failure': {
                 return {
                     ...state,
-                    status: QueryStatus.FAILED,
+                    status: 'failed',
                 };
             }
 
-            case ActionType.ERROR: {
+            case 'error': {
                 return {
                     ...state,
-                    status: QueryStatus.FAILED,
+                    status: 'failed',
                     error: action.payload,
                 };
             }
 
-            case ActionType.CANCEL: {
-                return state.status === QueryStatus.CANCELED
+            case 'cancel': {
+                return state.status === 'canceled'
                     ? state
                     : {
                           ...state,
-                          status: QueryStatus.CANCELED,
+                          status: 'canceled',
                       };
             }
         }

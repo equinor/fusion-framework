@@ -1,199 +1,123 @@
-import { Observable } from 'rxjs';
-import { Query, QueryError } from '../query';
-import { ActionType } from '../query/actions';
-import { QueryStatus } from '../query/types';
-
-import { defer, emulateRequest, emulateRetry } from './__mocks__/query.mock';
+import { Query } from '../query';
+import { emulateRequest } from './__mocks__/query.mock';
 
 describe('Query', () => {
     it('should query', (complete) => {
-        const expected = [
-            { status: QueryStatus.IDLE },
-            { status: QueryStatus.ACTIVE },
-            {
-                status: QueryStatus.IDLE,
-                completed: expect.any(Number),
+        const expected = [{ iteration: 0 }, { iteration: 1 }, { iteration: 2 }];
+        const key = 'test';
+        const client = new Query(emulateRequest(10), {
+            key: () => key,
+            initial: { test: { value: expected[0] } },
+        });
+        let iteration = 0;
+        client.subscribe({
+            next: (x) => {
+                switch (iteration) {
+                    case 1: {
+                        client.next({ iteration: 2 });
+                        break;
+                    }
+
+                    case 2: {
+                        client.complete();
+                        break;
+                    }
+                }
+                expect(x).toHaveProperty(key);
+                expect(x.test.value).toEqual(expected[iteration]);
+                iteration++;
             },
-        ];
-        const client = emulateRequest();
-        const query = new Query(client);
-        expect(query.status).toBe(QueryStatus.IDLE);
-        query.subscribe({
-            next: (state) => {
-                expect(state).toMatchObject({ ...expected.shift() });
-                expected.length === 0 && query.complete();
+            complete: () => {
+                const item = client.state$.getItem('test');
+                expect(item?.value).toEqual(expected[2]);
+                expect(item?.args).toEqual(expected[2]);
+                expect(item?.updates).toEqual(2);
+                complete();
             },
-            complete,
         });
-        query.next();
-
-        expect.assertions(4);
+        client.next({ iteration: 1 });
     });
+    // it('should debounce requests', (complete) => {
+    //     const client = new Query(emulateRequest(10), { debounce: 100 });
+    //     const expected = [undefined, { foo: 'bar' }];
+    //     const queryArgs = expected[1];
+    //     client.subscribe({
+    //         next: (data) => {
+    //             expect(data).toEqual(expected.shift());
+    //             expected.length === 0 && client.complete();
+    //         },
+    //         complete,
+    //     });
+    //     client.next('first');
+    //     defer(() => {
+    //         client.next('second');
+    //         defer(() => {
+    //             client.next(queryArgs);
+    //         }, 10);
+    //     }, 10);
+    // });
 
-    it('should convert to observable', () => {
-        const query = new Query(async () => null);
-        const observable = query.asObservable();
-        expect(observable).toBeInstanceOf(Observable);
-    });
+    // it('should respect completion', (complete) => {
+    //     const client = new Query(emulateRequest(10), { debounce: 100 });
+    //     client.subscribe({ complete });
+    //     client.next('first');
+    //     client.complete();
+    // });
 
-    it('should fail when error thrown', async () => {
-        const cause = Error('it failed');
-        const client = () =>
-            defer(() => {
-                throw cause;
-            }, 10);
-        const query = new Query(client);
-        try {
-            await query.nextAsync('should fail');
-        } catch (err) {
-            expect(err).toEqual(query.error);
-            expect(err).toBeInstanceOf(QueryError);
-            expect(err).toHaveProperty('type', QueryError.TYPE.ERROR);
-            expect(err).toHaveProperty('cause.cause', cause);
-        }
-        expect.assertions(4);
-    });
+    // it('should reply last request', (complete) => {
+    //     const queryArgs = { foo: 'bar' };
+    //     const expected = [undefined, queryArgs, queryArgs];
+    //     const client = new Query(emulateRequest());
+    //     client.subscribe({
+    //         next: (data) => {
+    //             expect(data).toEqual(expected.shift());
+    //             expected.length === 0 && client.complete();
+    //         },
+    //         complete,
+    //     });
+    //     client.next(queryArgs);
+    //     defer(() => client.refresh(), 100);
+    // });
 
-    it('should abort on signal', (complete) => {
-        const expected = [
-            { status: QueryStatus.IDLE },
-            { status: QueryStatus.ACTIVE },
-            {
-                status: QueryStatus.CANCELED,
-            },
-        ];
-        const client = emulateRequest(10);
-        const controller = new AbortController();
-        const query = new Query(client);
-        query.subscribe({
-            next: (state) => {
-                expect(state).toMatchObject({ ...expected.shift() });
-                expected.length === 0 && query.complete();
-            },
-            complete,
-        });
-        query.next('should be aborted', { controller });
-        defer(() => controller.abort());
+    // it('should query async', async () => {
+    //     const controller = new AbortController();
+    //     const client = new Query(emulateRequest(100));
+    //     const args = [{ foo: 'request 1' }, { foo: 'request 2' }, { foo: 'request 3' }];
 
-        expect.assertions(3);
-    });
+    //     /** create a query which will be skipped */
+    //     client.query(args[0]).catch((err) => {
+    //         expect(err.cause).toMatchObject({
+    //             type: ActionTypes.SKIPPED,
+    //             payload: args[0],
+    //             meta: {
+    //                 next: {
+    //                     args: args[1],
+    //                 },
+    //             },
+    //         });
+    //     });
 
-    it('should cancel on call', (complete) => {
-        const expected = [
-            { status: QueryStatus.IDLE },
-            { status: QueryStatus.ACTIVE },
-            {
-                status: QueryStatus.CANCELED,
-            },
-        ];
-        const client = emulateRequest();
-        const query = new Query(client);
-        query.subscribe({
-            next: (state) => {
-                expect(state).toMatchObject({ ...expected.shift() });
-                expected.length === 0 && query.complete();
-            },
-            complete,
-        });
-        query.next('should be canceled');
-        defer(() => query.cancel());
+    //     /** create a query which will be aborted */
+    //     client.query(args[1], { controller }).catch((err) => {
+    //         expect(err.cause).toMatchObject({
+    //             type: ActionTypes.CANCEL,
+    //             meta: {
+    //                 request: {
+    //                     type: ActionTypes.REQUEST,
+    //                     payload: args[1],
+    //                 },
+    //             },
+    //         });
+    //     });
 
-        expect.assertions(3);
-    });
+    //     /** abort query 2 */
+    //     controller.abort();
 
-    describe('Retry', () => {
-        it('should retry request when failed', () => {
-            const expected = 'test';
-            const client = emulateRetry(3, 10);
-            const query = new Query(client, { retry: { count: 3 } });
-            return query.nextAsync(expected);
-        });
-        it('should fail when too many retries', () => {
-            const expected = 'test';
-            const client = emulateRetry(3, 10);
-            const query = new Query(client, { retry: { count: 1 } });
-            expect(query.nextAsync(expected)).rejects.toBeInstanceOf(Error);
-        });
-        it('should cancel retry', async () => {
-            const expected = 'call1';
-            const client = emulateRetry(1, 10);
-            const query = new Query(client, { retry: { count: 1 } });
-            defer(() => query.cancel('cancel now'), 10);
-            const request = query.nextAsync(expected);
-            expect(request).rejects.toBeInstanceOf(QueryError);
-            expect(request).rejects.toHaveProperty('type', QueryError.TYPE.ABORT);
-            expect(request).rejects.toHaveProperty('cause.message', 'cancel now');
-        });
-        it('should abort retry', async () => {
-            const expected = 'call1';
-            const client = emulateRetry(1, 5);
-            const controller = new AbortController();
-            const query = new Query(client);
-            defer(() => controller.abort(), 10);
-            const request = query.nextAsync(expected, { controller, retry: { count: 1 } });
-            expect(request).rejects.toBeInstanceOf(QueryError);
-            expect(request).rejects.toHaveProperty('type', QueryError.TYPE.ABORT);
-            expect(query.value.status === QueryStatus.CANCELED);
-        });
-    });
+    //     /** allow abort signal to dispatch */
+    //     await defer(undefined, 10);
 
-    describe('Effects', () => {
-        it('should allow adding effects', (complete) => {
-            const client = emulateRequest(10);
-            const expected = [ActionType.REQUEST, ActionType.SUCCESS];
-            const query = new Query(client);
-            query.on(ActionType.REQUEST, (action) => {
-                expect(action.type).toEqual(ActionType.REQUEST);
-            });
-            query.action$.subscribe({
-                next: (action) => {
-                    expect(action.type).toEqual(expected.shift());
-                    expected.length === 0 && query.complete();
-                },
-                complete,
-            });
-            query.next('');
-        });
-    });
-    describe('Async', () => {
-        it('should query async', () => {
-            const expected = 'test';
-            const client = emulateRequest<string>();
-            const query = new Query(client);
-            return expect(query.nextAsync(expected)).resolves.toEqual(expected);
-        });
-
-        it('should abort query async', async () => {
-            const client = emulateRequest();
-            const controller = new AbortController();
-            const query = new Query(client);
-            const request = query.nextAsync('', { controller });
-            defer(() => controller.abort());
-
-            try {
-                await request;
-            } catch (err) {
-                expect(err).toBeInstanceOf(QueryError);
-                expect(query.value.status).toEqual(QueryStatus.CANCELED);
-            }
-            expect.assertions(2);
-        });
-
-        it('should cancel query async', async () => {
-            const message = 'canceled by abort controller';
-            const client = emulateRequest<void>();
-            const query = new Query(client);
-
-            const request = query.nextAsync();
-            defer(() => query.cancel(message));
-            try {
-                await request;
-            } catch (err) {
-                expect(err).toBeInstanceOf(QueryError);
-                expect((err as QueryError).cause?.message).toEqual(message);
-                expect(query.value.status).toEqual(QueryStatus.CANCELED);
-            }
-            expect.assertions(3);
-        });
-    });
+    //     /** execute final request */
+    //     const result = await client.query(args[3]);
+    //     expect(result.data).toBe(args[3]);
+    // });
 });

@@ -1,165 +1,185 @@
-import { asyncScheduler, firstValueFrom, Observable, Subscription } from 'rxjs';
-import { map, observeOn } from 'rxjs/operators';
+import { firstValueFrom, interval, merge, Observable, ObservableInput, race, Subject } from 'rxjs';
+import { debounce, filter, withLatestFrom, map } from 'rxjs/operators';
 
 import { v4 as uuid } from 'uuid';
 
-import { ExtractAction, ReactiveObservable } from '..';
 import { filterAction } from '../operators';
 
-import { Actions, ActionType, RequestAction } from './actions';
-import { handleRequests, handleFailures } from './epics';
-import { QueryError } from './errors';
-import { createReducer } from './reducer';
+import { QueryClient, QueryClientCtorOptions, QueryClientOptions } from './client';
 
-import { RetryOpt, QueryFn, QueryState, QueryStatus } from './types';
-/**
- * - __controller__: [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) [optional]
- * - __retry__: retry config {@link RetryOpt}
- */
-export type QueryOptions = {
-    controller: AbortController;
-    retry: Partial<RetryOpt>;
-    /** reference to a query  */
-    ref?: string;
+import { QueryCache, QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './cache';
+
+import { QueryFn } from './types';
+
+// import { ActionTypes, SkipAction } from './actions';
+
+type CacheOptions<TType, TArgs> = {
+    key: (query: TArgs) => string;
+    validate: CacheValidator<TType, TArgs>;
 };
 
-export class Query<TType, TArgs> extends Observable<QueryState> {
-    /** internal state */
-    private __state$: ReactiveObservable<QueryState, Actions<TType, TArgs>>;
+type Debounce<TType, TArgs = unknown> =
+    | ((value: TArgs, data: QueryCacheState<TType, TArgs>) => ObservableInput<unknown>)
+    | number;
 
-    private __subscription: Subscription;
+export type QueryOptions<TType, TArgs = unknown> = {
+    client?: Partial<QueryClientOptions>;
+    cache?: Partial<CacheOptions<TType, TArgs>>;
+};
 
-    public get value(): QueryState {
-        return this.__state$.value;
+export type QueryCtorOptions<TType, TArgs> = {
+    key: CacheOptions<TType, TArgs>['key'];
+    validate?: CacheOptions<TType, TArgs>['validate'];
+    client?: QueryClientCtorOptions;
+    initial?: QueryCacheStateData<TType, TArgs>;
+    /**
+     * cache expire time in ms.
+     * This attribute is only used when `validate` function is not provided.
+     *
+     * If the number is undefined or 0, cache is disabled
+     * */
+    expire?: number;
+    debounce?: Debounce<TType, TArgs>;
+};
+
+type QueryKeyBuilder<T> = (args: T) => string;
+
+type CacheValidator<TType, TArgs> = (entry: QueryCacheRecord<TType, TArgs>, args: TArgs) => boolean;
+
+const defaultCacheValidator =
+    <TType, TArgs>(expires = 0): CacheValidator<TType, TArgs> =>
+    (entry) =>
+        (entry.created ?? 0) + expires < Date.now();
+
+export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, TArgs>> {
+    #client: QueryClient<TType, TArgs>;
+    #cache: QueryCache<TType, TArgs>;
+    #queryQueue$ = new Subject<{
+        args: TArgs;
+        options?: Partial<QueryClientOptions>;
+    }>();
+
+    #generateCacheKey: QueryKeyBuilder<TArgs>;
+    #validateCacheEntry: CacheValidator<TType, TArgs>;
+
+    public get client(): QueryClient<TType, TArgs> {
+        return this.#client;
     }
 
-    /** get stream of dispatched actions */
-    public get action$(): Observable<Actions<TType, TArgs>> {
-        return this.__state$.action$;
+    public get state$(): QueryCache<TType, TArgs> {
+        return this.#cache;
     }
 
-    public get closed() {
-        return this.__state$.closed;
-    }
+    constructor(queryFn: QueryFn<TType, TArgs>, options: QueryCtorOptions<TType, TArgs>) {
+        super((subscriber) => this.#cache.pipe(map(({ data }) => data)).subscribe(subscriber));
 
-    public get status() {
-        return this.value.status;
-    }
+        this.#generateCacheKey = options.key;
+        this.#validateCacheEntry =
+            options?.validate ?? defaultCacheValidator<TType, TArgs>(options?.expire);
 
-    public get error() {
-        return this.value.error;
-    }
+        this.#client = new QueryClient(queryFn, options.client);
 
-    constructor(queryFn: QueryFn<TType, TArgs>, config?: { retry?: Partial<RetryOpt> }) {
-        super((subscriber) => {
-            return this.__state$.subscribe(subscriber);
+        this.#cache = new QueryCache(this.#client, {
+            KeyBuilder: this.#generateCacheKey,
+            initial: options?.initial,
         });
 
-        this.__state$ = new ReactiveObservable(createReducer(), { status: QueryStatus.IDLE });
+        const debounceCb = options?.debounce;
 
-        this.__subscription = new Subscription(() => this.__state$.complete());
+        this.#queryQueue$
+            .pipe(
+                withLatestFrom(this.#cache),
+                debounce(([query, state]) => {
+                    return typeof debounceCb === 'function'
+                        ? debounceCb(query.args, state)
+                        : interval(Number(debounceCb));
+                }),
+                map(([value]) => value),
+                filter(() => !this.#client.closed)
+            )
+            .subscribe(({ args, options }) => this.#client.next(args, options));
+    }
 
-        this.__subscription.add(this.__state$.addEpic(handleRequests(queryFn)));
-
-        const retry = Object.assign({ count: 0, delay: 0 }, config?.retry);
-        this.__subscription.add(this.__state$.addEpic(handleFailures(retry)));
+    public next(args: TArgs, options?: Partial<QueryClientOptions>) {
+        this.#queryQueue$.next({ args, options });
     }
 
     /**
-     * Execute query, will update state on success
-     * @param args call arguments for query function
-     * @param opt query options {@link QueryOptions}
-     * @returns id of the request
+     * Execute query.
+     * Will throw error if query was skipped or canceled
      */
-    public next(args?: TArgs, opt?: Partial<QueryOptions>): string {
-        return this._next(args, opt).transaction;
-    }
+    public query$(args: TArgs, options?: QueryOptions<TType, TArgs>) {
+        const result$ = new Subject();
 
-    /**
-     * Execute query, will update state on success
-     * @param args call arguments for query function
-     * @param opt query options {@link QueryOptions}
-     * @returns id of the request
-     */
-    public async nextAsync(args?: TArgs, opt?: Partial<QueryOptions>): Promise<TType | Error> {
-        this._next(args, opt);
-        const complete$ = this.__state$.action$.pipe(
-            filterAction(ActionType.SUCCESS, ActionType.ERROR, ActionType.CANCEL),
-            map((action): TType | QueryError => {
-                const { payload, type } = action;
-                switch (type) {
-                    case ActionType.ERROR:
-                        throw new QueryError(
-                            QueryError.TYPE.ERROR,
-                            'failed to execute request',
-                            payload as Error
-                        );
-                    case ActionType.CANCEL:
-                        throw new QueryError(
-                            QueryError.TYPE.ABORT,
-                            'request was canceled',
-                            new Error(String(payload))
-                        );
-                }
-                return payload as TType;
-            }),
-            observeOn(asyncScheduler)
-        );
+        const cacheKey = (options?.cache?.key ?? this.#generateCacheKey)(args);
+        const validateCache = options?.cache?.validate || this.#validateCacheEntry;
+        const cacheEntry = this.#cache.getItem(cacheKey);
 
-        return firstValueFrom(complete$);
-    }
+        const refresh = !cacheEntry || !validateCache(cacheEntry, args);
 
-    /**
-     * Cancel current request
-     * @param reason message of why request was canceled
-     */
-    public cancel(reason?: string): void {
-        if (this.value.status !== QueryStatus.CANCELED) {
-            this.__state$.next({
-                type: ActionType.CANCEL,
-                payload: reason || `request [${this.value.transaction}] was canceled!`,
-                meta: { request: undefined },
-            });
+        if (cacheEntry) {
+            result$.next(cacheEntry);
+            if (!refresh) {
+                return result$;
+            }
         }
-    }
 
-    /**
-     * Process action
-     */
-    public on<TAction extends ActionType>(
-        type: TAction,
-        cb: (
-            action: ExtractAction<Actions<TType, TArgs>, TAction>,
-            subject: Query<TType, TArgs>
-        ) => void
-    ) {
-        return this.__state$.addEffect(type, (action) => {
-            cb(action, this);
-        });
-    }
-
-    /** complete and close query */
-    public complete() {
-        this.__subscription.unsubscribe();
-    }
-
-    public asObservable() {
-        return this.__state$.asObservable();
-    }
-
-    protected _next(args?: TArgs, opt?: Partial<QueryOptions>): RequestAction<TArgs> {
-        const { controller = new AbortController() } = opt ?? {};
-        const meta = { ...opt, controller };
-        const action: RequestAction<TArgs> = {
-            transaction: uuid(),
-            type: ActionType.REQUEST,
-            payload: args as TArgs,
-            meta,
+        const clientOptions: Partial<QueryClientOptions> = {
+            ref: uuid(),
+            ...options?.client,
         };
 
-        this.__state$.next(action);
+        this.next(args, clientOptions);
 
-        return action;
+        /** signal for completed request */
+        const complete$ = this.#cache.action$.pipe(
+            filterAction('set'),
+            filter((action) => action.payload.value.ref === clientOptions.ref),
+            map((action) => action.payload.value)
+        );
+
+        /** signal for canceled requests */
+        const cancel$ = this.#client.action$.pipe(
+            filterAction('cancel'),
+            filter((x) => x.meta.request?.meta.ref === clientOptions.ref)
+        );
+
+        /** signal for skipped request requests, normally triggered by new query before resolving current or debounced */
+        const skipped$ = this.#queryQueue$.pipe(
+            map((next) => ({
+                type: 'skipped',
+                payload: args,
+                meta: { options, next },
+            }))
+        );
+
+        /**
+         * signal for failed query
+         * TODO - add timeout
+         */
+        const reject$ = merge(skipped$, cancel$).pipe(
+            map((cause) => {
+                throw new Error('query was canceled', { cause });
+            })
+        );
+
+        race(complete$, reject$).subscribe(result$);
+
+        return result$.asObservable();
+    }
+
+    /**
+     * Execute async query
+     * @returns - resolves requests, rejects Error with cause SkipAction|CancelAction
+     */
+    public query(payload: TArgs, opt?: QueryOptions<TType, TArgs>) {
+        return firstValueFrom(this.query$(payload, opt));
+    }
+
+    public complete() {
+        this.#queryQueue$.complete();
+        this.#client.complete();
+        this.#cache.complete();
     }
 }
 
