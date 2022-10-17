@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@0.4.0...@equinor/fusion-observable@1.0.0) (2022-10-17)
+
+
+### Features
+
+* **observable:** rewrite observable query ([6725274](https://github.com/equinor/fusion-framework/commit/67252743cacaacb42b47719e2f51f48b52b83545))
+
+
+
 ## [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@0.3.3...@equinor/fusion-observable@0.4.0) (2022-10-17)
 
 
