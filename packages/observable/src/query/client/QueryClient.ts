@@ -27,7 +27,7 @@ export type QueryClientOptions = {
 
 export type QueryClientCtorOptions = {
     retry?: Partial<RetryOptions>;
-}
+};
 
 export class QueryClient<TType, TArgs> extends Observable<State> {
     /** internal state */
