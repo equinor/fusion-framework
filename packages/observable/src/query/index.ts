@@ -1,6 +1,1 @@
-export { Query } from './Query';
-export { QueryCache } from './QueryCache';
-export { QueryClient, QueryClientOptions } from './QueryClient';
-export { QueryError } from './errors';
-
-export * from './types';
+export { default, Query, QueryCtorOptions, QueryOptions } from './Query';

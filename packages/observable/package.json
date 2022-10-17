@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-observable",
-  "version": "0.4.0",
+  "version": "1.0.0-beta.0",
   "description": "WIP",
   "private": false,
   "keywords": [
@@ -16,6 +16,9 @@
     ".": "./dist/esm/index.js",
     "./operators": "./dist/esm/operators/index.js",
     "./query": "./dist/esm/query/index.js",
+    "./query/actions": "./dist/esm/query/actions.js",
+    "./query/client": "./dist/esm/query/client/index.js",
+    "./query/cache": "./dist/esm/query/cache/index.js",
     "./react": "./dist/esm/react/index.js"
   },
   "types": "dist/types/index.d.ts",
@@ -26,6 +29,15 @@
       ],
       "query": [
         "dist/types/query/index.d.ts"
+      ],
+      "query/actions": [
+        "dist/types/query/actions.d.ts"
+      ],
+      "query/client": [
+        "dist/types/query/client/index.d.ts"
+      ],
+      "query/cache": [
+        "dist/types/query/client/index.d.ts"
       ],
       "react": [
         "dist/types/react/index.d.ts"
