@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule>> = {
+export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule>> = {
     ref?: any;
     config: TConfig;
     requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
