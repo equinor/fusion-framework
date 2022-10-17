@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-app",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -39,13 +39,13 @@
     "directory": "packages/react"
   },
   "dependencies": {
-    "@equinor/fusion-framework-app": "^3.0.4",
-    "@equinor/fusion-framework-module": "^1.2.3",
-    "@equinor/fusion-framework-module-event": "^1.0.9",
-    "@equinor/fusion-framework-module-msal": "^1.0.11",
-    "@equinor/fusion-framework-react": "^1.0.12",
-    "@equinor/fusion-framework-react-module-app-config": "^1.0.12",
-    "@equinor/fusion-framework-react-module-http": "^1.0.11"
+    "@equinor/fusion-framework-app": "^3.0.5",
+    "@equinor/fusion-framework-module": "^1.2.4",
+    "@equinor/fusion-framework-module-event": "^1.0.10",
+    "@equinor/fusion-framework-module-msal": "^1.0.12",
+    "@equinor/fusion-framework-react": "^1.0.13",
+    "@equinor/fusion-framework-react-module-app-config": "^1.0.13",
+    "@equinor/fusion-framework-react-module-http": "^1.0.12"
   },
   "devDependencies": {
     "@types/react": "^17.0.11",

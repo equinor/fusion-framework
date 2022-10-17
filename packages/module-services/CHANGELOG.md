@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.1.1...@equinor/fusion-framework-module-services@0.2.0) (2022-10-17)
+
+
+### Features
+
+* **observable:** expose async query function ([b9292fc](https://github.com/equinor/fusion-framework/commit/b9292fcabd0756c0340fc767acf592482b253cd0))
+
+
+
 ## 0.1.1 (2022-10-03)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services

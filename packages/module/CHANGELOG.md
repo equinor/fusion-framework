@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@1.2.3...@equinor/fusion-framework-module@1.2.4) (2022-10-17)
+
+
+### Bug Fixes
+
+* expose init interface for modules ([208cf79](https://github.com/equinor/fusion-framework/commit/208cf792b83d093a0c9ba1cdf919b4196e442989))
+
+
+
 ## 1.2.3 (2022-10-03)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module
