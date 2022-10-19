@@ -1,5 +1,7 @@
-import { useContext } from 'react';
 import type { Fusion } from '@equinor/fusion-framework';
+import type { AnyModule } from '@equinor/fusion-framework-module';
+
+import { useContext } from 'react';
 import { context } from '../context';
 /**
  * @example
@@ -10,7 +12,7 @@ import { context } from '../context';
  * }
  * ```
  */
-export const useFramework = (): Fusion => {
+export const useFramework = <TModules extends Array<AnyModule> = []>(): Fusion<TModules> => {
     let framework = useContext(context);
     if (!framework) {
         console.warn('could not locate fusion in context!');
