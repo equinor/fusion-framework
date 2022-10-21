@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.0 (2022-10-21)
+
+
+### Features
+
+* **observable:** enhance cache system ([626d3a2](https://github.com/equinor/fusion-framework/commit/626d3a299970cccc887501956a00e89db02f20a0))
+
+
+
 ## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@0.4.0...@equinor/fusion-observable@1.0.0) (2022-10-17)
 
 
