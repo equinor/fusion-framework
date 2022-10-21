@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.19 (2022-10-21)
+
+
+### Bug Fixes
+
+* **react-app:** improve app module hook ([ffb66e3](https://github.com/equinor/fusion-framework/commit/ffb66e3f488bf9c28870824b4d42748e5d072364))
+
+
+
 ## [1.0.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.0.17...@equinor/fusion-framework-react-app@1.0.18) (2022-10-21)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
