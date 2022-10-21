@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.5 (2022-10-21)
+
+
+### Bug Fixes
+
+* **module:** update typing ([9428770](https://github.com/equinor/fusion-framework/commit/9428770eca39d5e5afe00b94d0d09a688fc821b0))
+
+
+
 ## [1.2.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module@1.2.3...@equinor/fusion-framework-module@1.2.4) (2022-10-17)
 
 
