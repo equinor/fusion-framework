@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.3.0 (2022-10-21)
+
+
+### Features
+
+* **module-services:** bookmarks get ([0fe2c83](https://github.com/equinor/fusion-framework/commit/0fe2c83155b7c49623da13739f0945edf4ee9200))
+
+
+
 ## [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.1.1...@equinor/fusion-framework-module-services@0.2.0) (2022-10-17)
 
 
