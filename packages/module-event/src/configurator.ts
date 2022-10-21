@@ -1,4 +1,4 @@
-import { FrameworkEvent } from 'event';
+import { FrameworkEvent } from './event';
 
 export interface IEventModuleConfigurator {
     /** Callback when events are dispatched (before other listeners) */
