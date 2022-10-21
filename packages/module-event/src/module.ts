@@ -1,5 +1,5 @@
 import { Module, ModuleInstance, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import { FrameworkEvent, FrameworkEventInit } from 'event';
+import { FrameworkEvent, FrameworkEventInit } from './event';
 import { IEventModuleConfigurator } from './configurator';
 import { EventModuleProvider, IEventModuleProvider } from './provider';
 
