@@ -79,43 +79,43 @@ export class FrameworkEvent<
     TType extends string = keyof FrameworkEventMap
 > implements IFrameworkEvent<TInit, TType>
 {
-    private __detail?: FrameworkEventInitDetail<TInit>;
-    private __source?: FrameworkEventInitSource<TInit>;
-    private __canceled = false;
-    private __cancelable: boolean;
-    private __canBubble: boolean;
-    private __created: number = Date.now();
+    #detail?: FrameworkEventInitDetail<TInit>;
+    #source?: FrameworkEventInitSource<TInit>;
+    #canceled = false;
+    #cancelable: boolean;
+    #canBubble: boolean;
+    #created: number = Date.now();
 
     constructor(private __type: string, args: TInit) {
-        this.__detail = args.detail as FrameworkEventInitDetail<TInit>;
-        this.__source = args.source as FrameworkEventInitSource<TInit>;
-        this.__cancelable = !!args.cancelable;
-        this.__canBubble = args.canBubble === undefined ? true : args.canBubble;
+        this.#detail = args.detail as FrameworkEventInitDetail<TInit>;
+        this.#source = args.source as FrameworkEventInitSource<TInit>;
+        this.#cancelable = !!args.cancelable;
+        this.#canBubble = args.canBubble === undefined ? true : args.canBubble;
     }
 
     /** flag for if the event can propagate */
     public get bubbles(): boolean {
-        return this.__canBubble && !this.__canceled;
+        return this.#canBubble && !this.#canceled;
     }
 
     public get created(): number {
-        return this.__created;
+        return this.#created;
     }
 
     public get cancelable(): boolean {
-        return this.__cancelable;
+        return this.#cancelable;
     }
 
     public get canceled(): boolean {
-        return this.__canceled;
+        return this.#canceled;
     }
 
     public get detail(): FrameworkEventInitDetail<TInit> | undefined {
-        return this.__detail;
+        return this.#detail;
     }
 
     public get source(): FrameworkEventInitSource<TInit> | undefined {
-        return this.__source;
+        return this.#source;
     }
 
     public get type(): TType {
@@ -125,12 +125,12 @@ export class FrameworkEvent<
     /** cancel the event */
     public preventDefault() {
         if (this.cancelable) {
-            this.__canceled = true;
+            this.#canceled = true;
         }
     }
 
     /** prevent event to bubble */
     public stopPropagation(): void {
-        this.__canBubble = false;
+        this.#canBubble = false;
     }
 }
