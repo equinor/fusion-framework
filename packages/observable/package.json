@@ -37,7 +37,7 @@
         "dist/types/query/client/index.d.ts"
       ],
       "query/cache": [
-        "dist/types/query/client/index.d.ts"
+        "dist/types/query/cache/index.d.ts"
       ],
       "react": [
         "dist/types/react/index.d.ts"

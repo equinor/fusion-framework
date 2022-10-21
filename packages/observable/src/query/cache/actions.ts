@@ -12,7 +12,14 @@ export type QueryCacheActions<TType = unknown, TArgs = unknown> = {
     clear: PayloadAction<'clear', { key: string }>;
     reset: PayloadAction<'reset', { data?: Record<string, TType> }>;
     invalidate: PayloadAction<'invalidate', { key: string }>;
-    refresh: PayloadAction<'refresh', { key: string }>;
+    trim: PayloadAction<
+        'trim',
+        {
+            sort?: (a: QueryCacheRecord<TType, TArgs>, b: QueryCacheRecord<TType, TArgs>) => number;
+            validate?: (item: QueryCacheRecord<TType, TArgs>) => boolean;
+            size?: number;
+        }
+    >;
 };
 
 export type QueryCacheActionTypes<TType = unknown, TArgs = unknown> = {

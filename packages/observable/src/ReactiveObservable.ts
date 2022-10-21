@@ -23,35 +23,35 @@ import type { Action, ActionType, Epic, Effect, ExtractAction, Reducer } from '.
  * Observable that mutates by dispatching actions and internally sequentially reduced.
  */
 export class ReactiveObservable<S, A extends Action = Action> extends Observable<S> {
-    private __action$ = new Subject<A>();
-    private __state$: BehaviorSubject<S>;
+    #action$ = new Subject<A>();
+    #state$: BehaviorSubject<S>;
 
     /** observable actions  */
     get action$(): Observable<A> {
-        return this.__action$.asObservable();
+        return this.#action$.asObservable();
     }
 
     get value(): S {
-        return this.__state$.value;
+        return this.#state$.value;
     }
 
     get closed(): boolean {
-        return this.__state$.closed || this.__action$.closed;
+        return this.#state$.closed || this.#action$.closed;
     }
 
     constructor(reducer: Reducer<S, A>, private __initial: S) {
         super((subscriber) => {
-            return this.__state$.subscribe(subscriber);
+            return this.#state$.subscribe(subscriber);
         });
-        this.__state$ = new BehaviorSubject(__initial);
-        this.__action$
+        this.#state$ = new BehaviorSubject(__initial);
+        this.#action$
             .pipe(scan(reducer, __initial), distinctUntilChanged())
-            .subscribe(this.__state$);
+            .subscribe(this.#state$);
     }
 
     /** Dispatch action */
     public next(action: A): void {
-        this.__action$.next(action);
+        this.#action$.next(action);
     }
 
     public addEffect<TType extends ActionType<A>>(
@@ -91,7 +91,7 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
                 filter((x): x is A => !!x),
                 observeOn(asyncScheduler)
             )
-            .subscribe(this.__action$);
+            .subscribe(this.#action$);
     }
 
     public addEpic(fn: Epic<A, S>): Subscription {
@@ -111,26 +111,26 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
                 }),
                 observeOn(asyncScheduler)
             )
-            .subscribe(this.__action$);
+            .subscribe(this.#action$);
     }
 
     public reset() {
-        this.__state$.next(this.__initial);
+        this.#state$.next(this.__initial);
     }
 
     /** remove all subscribers  */
     public unsubscribe() {
-        this.__action$.unsubscribe();
-        this.__state$.unsubscribe();
+        this.#action$.unsubscribe();
+        this.#state$.unsubscribe();
     }
 
     public complete() {
-        this.__action$.complete();
-        this.__state$.complete();
+        this.#action$.complete();
+        this.#state$.complete();
     }
 
     public asObservable() {
-        return this.__state$.asObservable();
+        return this.#state$.asObservable();
     }
 }
 
