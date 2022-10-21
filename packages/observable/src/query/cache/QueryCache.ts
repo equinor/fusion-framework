@@ -1,75 +1,57 @@
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ReactiveObservable } from '../..';
-
-import { QueryClient } from '../client';
-
-// TODO
-// import { Query } from '..';
-// import { ActionTypes } from '../actions';
+import { ActionPayload, ReactiveObservable } from '../..';
 
 import { createReducer } from './create-reducer';
-import type { QueryCacheActionTypes } from './actions';
+import type { QueryCacheActions, QueryCacheActionTypes } from './actions';
 import type { QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './types';
 
-export type QueryCacheOptions<TType, TArgs> = {
+const getLastTransaction = <TType, TArgs>(
+    state: QueryCacheState<TType, TArgs>
+): QueryCacheRecord<TType, TArgs> | undefined => {
+    const transaction = state.lastTransaction;
+    if (transaction) {
+        return Object.values(state.data).find((x) => x.transaction === transaction);
+    }
+};
+
+export type QueryCacheCtorArgs<TType, TArgs> = {
     initial?: QueryCacheStateData<TType, TArgs>;
-    KeyBuilder: (query: TArgs) => string;
+    trimming?: ActionPayload<QueryCacheActions<TType, TArgs>['trim']>;
 };
 
 export class QueryCache<TType, TArgs> extends ReactiveObservable<
     QueryCacheState<TType, TArgs>,
     QueryCacheActionTypes<TType, TArgs>
 > {
-    #subscription = new Subscription();
-
     get data$(): Observable<Record<string, QueryCacheRecord<TType, TArgs>>> {
         return this.pipe(map((x) => x.data));
     }
 
     get latest(): QueryCacheRecord<TType, TArgs> | undefined {
-        const transaction = this.value.lastTransaction;
-        if (transaction) {
-            return Object.values(this.value.data).find((x) => x.transaction === transaction);
+        return getLastTransaction(this.value);
+    }
+
+    constructor(args: QueryCacheCtorArgs<TType, TArgs>) {
+        const { trimming, initial } = args;
+        super(createReducer(), { data: initial ?? {} });
+        if (trimming) {
+            this.addEffect('set', () => this.trim(trimming));
         }
     }
 
-    constructor(query: QueryClient<TType, TArgs>, options: QueryCacheOptions<TType, TArgs>) {
-        super(createReducer(), { data: options.initial ?? {} });
-
-        /** when the client successfully executed an query */
-        query.on('success', (action) => {
-            const {
-                payload: value,
-                meta: { request },
-            } = action;
-            this.#subscription.add(
-                /** request to store cache entry */
-                this.next({
-                    type: 'set',
-                    payload: {
-                        key: options.KeyBuilder(request.payload),
-                        value: {
-                            value,
-                            created: Date.now(),
-                            args: request.payload,
-                            transaction: request.meta.transaction,
-                        },
-                    },
-                })
-            );
+    public setItem(
+        key: string,
+        value: Omit<QueryCacheRecord<TType, TArgs>, 'updates' | 'created'>
+    ) {
+        this.next({
+            type: 'set',
+            payload: {
+                key,
+                value,
+            },
         });
-
-        this.#subscription.add(
-            /** when refresh is requested, dispatch query for cache entry */
-            this.addEffect('refresh', (action) => {
-                const entry = this.getItem(action.payload.key);
-                if (entry) {
-                    query.next(entry.args);
-                }
-            })
-        );
     }
 
     public getItem(key: string): QueryCacheRecord<TType, TArgs> | undefined {
@@ -80,13 +62,8 @@ export class QueryCache<TType, TArgs> extends ReactiveObservable<
         this.next({ type: 'invalidate', payload: { key } });
     }
 
-    public refresh(key: string) {
-        this.next({ type: 'refresh', payload: { key } });
-    }
-
-    public complete() {
-        super.complete();
-        this.#subscription.unsubscribe();
+    public trim(options: ActionPayload<QueryCacheActions<TType, TArgs>['trim']>) {
+        this.next({ type: 'trim', payload: options });
     }
 }
 

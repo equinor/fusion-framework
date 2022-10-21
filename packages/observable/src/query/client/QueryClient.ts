@@ -22,7 +22,7 @@ export type QueryClientOptions = {
     controller: AbortController;
     retry: Partial<RetryOptions>;
     /** reference to a query  */
-    ref?: string;
+    transaction?: string;
 };
 
 export type QueryClientCtorOptions = {
@@ -158,8 +158,8 @@ export class QueryClient<TType, TArgs> extends Observable<State> {
     }
 
     protected _next(args?: TArgs, opt?: Partial<QueryClientOptions>): RequestAction<TArgs> {
-        const { controller = new AbortController() } = opt ?? {};
-        const meta = { ...opt, controller, transaction: uuid() };
+        const { controller = new AbortController(), transaction = uuid() } = opt ?? {};
+        const meta = { ...opt, controller, transaction };
         const action: RequestAction<TArgs> = {
             type: 'request',
             payload: args as TArgs,

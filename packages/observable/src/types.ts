@@ -48,18 +48,3 @@ export type Epic<TAction extends Action, TState = unknown> = (
     action: Observable<TAction>,
     state: Observable<TState>
 ) => Observable<TAction>;
-
-// const test = {
-//     a: (): Action => ({ type: 'test' }),
-//     b: (): Action<number> => ({ type: '', payload: 3 }),
-//     b: (): Action<number, number> => ({ type: '', meta: 3, payload: 4 }),
-//     b: (): Action<undefined, number> => ({}),
-// };
-
-// type M = Action<number, { id: string }, 'test'>;
-
-// type G = ActionType<M>;
-// type GG = ActionPayload<M>;
-// type GGG = ActionMeta<M>;
-
-test;

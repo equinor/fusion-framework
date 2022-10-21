@@ -1,5 +1,15 @@
-import { firstValueFrom, interval, merge, Observable, ObservableInput, race, Subject } from 'rxjs';
-import { debounce, filter, withLatestFrom, map } from 'rxjs/operators';
+import {
+    firstValueFrom,
+    interval,
+    lastValueFrom,
+    merge,
+    Observable,
+    ObservableInput,
+    race,
+    Subject,
+    Subscription,
+} from 'rxjs';
+import { debounce, filter, withLatestFrom, map, take } from 'rxjs/operators';
 
 import { v4 as uuid } from 'uuid';
 
@@ -10,6 +20,7 @@ import { QueryClient, QueryClientCtorOptions, QueryClientOptions } from './clien
 import { QueryCache, QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './cache';
 
 import { QueryFn } from './types';
+import { QueryCacheCtorArgs } from './cache/QueryCache';
 
 // import { ActionTypes, SkipAction } from './actions';
 
@@ -28,10 +39,16 @@ export type QueryOptions<TType, TArgs = unknown> = {
 };
 
 export type QueryCtorOptions<TType, TArgs> = {
+    client:
+        | QueryClient<TType, TArgs>
+        | {
+              fn: QueryFn<TType, TArgs>;
+              options?: QueryClientCtorOptions;
+          };
     key: CacheOptions<TType, TArgs>['key'];
     validate?: CacheOptions<TType, TArgs>['validate'];
-    client?: QueryClientCtorOptions;
-    initial?: QueryCacheStateData<TType, TArgs>;
+    // initial?: QueryCacheStateData<TType, TArgs>;
+    cache?: QueryCache<TType, TArgs> | QueryCacheCtorArgs<TType, TArgs>;
     /**
      * cache expire time in ms.
      * This attribute is only used when `validate` function is not provided.
@@ -49,9 +66,10 @@ type CacheValidator<TType, TArgs> = (entry: QueryCacheRecord<TType, TArgs>, args
 const defaultCacheValidator =
     <TType, TArgs>(expires = 0): CacheValidator<TType, TArgs> =>
     (entry) =>
-        (entry.created ?? 0) + expires < Date.now();
+        (entry.updated ?? 0) + expires > Date.now();
 
 export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, TArgs>> {
+    #subscription = new Subscription();
     #client: QueryClient<TType, TArgs>;
     #cache: QueryCache<TType, TArgs>;
     #queryQueue$ = new Subject<{
@@ -70,34 +88,57 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
         return this.#cache;
     }
 
-    constructor(queryFn: QueryFn<TType, TArgs>, options: QueryCtorOptions<TType, TArgs>) {
+    constructor(options: QueryCtorOptions<TType, TArgs>) {
         super((subscriber) => this.#cache.pipe(map(({ data }) => data)).subscribe(subscriber));
 
         this.#generateCacheKey = options.key;
         this.#validateCacheEntry =
             options?.validate ?? defaultCacheValidator<TType, TArgs>(options?.expire);
 
-        this.#client = new QueryClient(queryFn, options.client);
+        if (options.client instanceof QueryClient) {
+            this.#client = options.client;
+        } else {
+            this.#client = new QueryClient(options.client.fn, options.client.options);
+            this.#subscription.add(() => this.#client.complete());
+        }
 
-        this.#cache = new QueryCache(this.#client, {
-            KeyBuilder: this.#generateCacheKey,
-            initial: options?.initial,
-        });
+        if (options.cache instanceof QueryCache) {
+            this.#cache = options.cache;
+        } else {
+            this.#cache = new QueryCache(options.cache || {});
+            this.#subscription.add(() => this.#cache.complete());
+        }
 
-        const debounceCb = options?.debounce;
+        this.#subscription.add(
+            this.#client.on('success', (action) => {
+                const {
+                    payload: value,
+                    meta: { request },
+                } = action;
+                const key = this.#generateCacheKey(request.payload);
+                this.#cache.setItem(key, {
+                    value,
+                    args: request.payload,
+                    transaction: request.meta.transaction,
+                });
+            })
+        );
 
-        this.#queryQueue$
-            .pipe(
-                withLatestFrom(this.#cache),
-                debounce(([query, state]) => {
-                    return typeof debounceCb === 'function'
-                        ? debounceCb(query.args, state)
-                        : interval(Number(debounceCb));
-                }),
-                map(([value]) => value),
-                filter(() => !this.#client.closed)
-            )
-            .subscribe(({ args, options }) => this.#client.next(args, options));
+        this.#subscription.add(() => this.#queryQueue$.complete());
+        this.#subscription.add(
+            this.#queryQueue$
+                .pipe(
+                    withLatestFrom(this.#cache),
+                    debounce(([query, state]) => {
+                        return typeof options?.debounce === 'function'
+                            ? options?.debounce(query.args, state)
+                            : interval(Number(options?.debounce));
+                    }),
+                    map(([value]) => value),
+                    filter(() => !this.#client.closed)
+                )
+                .subscribe(({ args, options }) => this.#client.next(args, options))
+        );
     }
 
     public next(args: TArgs, options?: Partial<QueryClientOptions>) {
@@ -108,40 +149,29 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
      * Execute query.
      * Will throw error if query was skipped or canceled
      */
-    public query$(args: TArgs, options?: QueryOptions<TType, TArgs>) {
-        const result$ = new Subject();
-
+    public query(
+        args: TArgs,
+        options?: QueryOptions<TType, TArgs>
+    ): Observable<QueryCacheRecord<TType, TArgs>> {
         const cacheKey = (options?.cache?.key ?? this.#generateCacheKey)(args);
         const validateCache = options?.cache?.validate || this.#validateCacheEntry;
         const cacheEntry = this.#cache.getItem(cacheKey);
 
         const refresh = !cacheEntry || !validateCache(cacheEntry, args);
 
-        if (cacheEntry) {
-            result$.next(cacheEntry);
-            if (!refresh) {
-                return result$;
-            }
-        }
-
         const clientOptions: Partial<QueryClientOptions> = {
-            ref: uuid(),
+            transaction: uuid(),
             ...options?.client,
         };
 
-        this.next(args, clientOptions);
-
-        /** signal for completed request */
-        const complete$ = this.#cache.action$.pipe(
-            filterAction('set'),
-            filter((action) => action.payload.value.ref === clientOptions.ref),
-            map((action) => action.payload.value)
-        );
+        if (refresh) {
+            this.next(args, clientOptions);
+        }
 
         /** signal for canceled requests */
         const cancel$ = this.#client.action$.pipe(
             filterAction('cancel'),
-            filter((x) => x.meta.request?.meta.ref === clientOptions.ref)
+            filter((x) => x.meta.request?.meta.transaction === clientOptions.transaction)
         );
 
         /** signal for skipped request requests, normally triggered by new query before resolving current or debounced */
@@ -163,23 +193,41 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
             })
         );
 
-        race(complete$, reject$).subscribe(result$);
+        const complete$ = this.#cache.action$.pipe(
+            filterAction('set'),
+            filter((action) => action.payload.value.transaction === clientOptions.transaction),
+            map((action) => action.payload.value),
+            take(1)
+        );
 
-        return result$.asObservable();
+        return new Observable((observer) => {
+            cacheEntry && observer.next(cacheEntry);
+            if (refresh) {
+                race(complete$, reject$).subscribe(observer);
+            } else {
+                observer.complete();
+            }
+        });
     }
 
     /**
      * Execute async query
+     *
+     * @param awaitResolve - when true, wait until query executed
+     *
      * @returns - resolves requests, rejects Error with cause SkipAction|CancelAction
      */
-    public query(payload: TArgs, opt?: QueryOptions<TType, TArgs>) {
-        return firstValueFrom(this.query$(payload, opt));
+    public queryAsync(
+        payload: TArgs,
+        opt?: QueryOptions<TType, TArgs> & { awaitResolve: false }
+    ): Promise<QueryCacheRecord<TType, TArgs>> {
+        const { awaitResolve, ...args } = opt || {};
+        const fn = awaitResolve ? lastValueFrom : firstValueFrom;
+        return fn(this.query(payload, args));
     }
 
     public complete() {
-        this.#queryQueue$.complete();
-        this.#client.complete();
-        this.#cache.complete();
+        this.#subscription.unsubscribe();
     }
 }
 
