@@ -40,6 +40,7 @@ export type CombinedModules<T1, T2> = T1 extends Array<AnyModule>
 export type AnyModuleInstance = Record<string, AnyModule>;
 export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : never;
 export type ModuleType<M> = M extends Module<any, infer TType, any, any> ? TType : never;
+export type ModuleTypes<M extends Array<AnyModule>> = M extends Array<infer U> ? U : never;
 export type ModuleConfigType<M> = M extends Module<any, any, infer TType, any> ? TType : never;
 export type ModulesInstance<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
     ModulesInstanceType<TModules> & { dispose: VoidFunction };
