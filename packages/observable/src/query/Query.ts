@@ -1,15 +1,13 @@
 import {
     firstValueFrom,
-    interval,
     lastValueFrom,
-    merge,
+    MonoTypeOperatorFunction,
     Observable,
-    ObservableInput,
     race,
     Subject,
     Subscription,
 } from 'rxjs';
-import { debounce, filter, withLatestFrom, map, take } from 'rxjs/operators';
+import { filter, map, take, takeWhile } from 'rxjs/operators';
 
 import { v4 as uuid } from 'uuid';
 
@@ -22,20 +20,20 @@ import { QueryCache, QueryCacheRecord, QueryCacheState, QueryCacheStateData } fr
 import { QueryFn } from './types';
 import { QueryCacheCtorArgs } from './cache/QueryCache';
 
-// import { ActionTypes, SkipAction } from './actions';
-
 type CacheOptions<TType, TArgs> = {
     key: (query: TArgs) => string;
     validate: CacheValidator<TType, TArgs>;
 };
 
-type Debounce<TType, TArgs = unknown> =
-    | ((value: TArgs, data: QueryCacheState<TType, TArgs>) => ObservableInput<unknown>)
-    | number;
+type QueryQueueItem<TArgs> = {
+    args: TArgs;
+    options?: Partial<QueryClientOptions>;
+};
 
 export type QueryOptions<TType, TArgs = unknown> = {
     client?: Partial<QueryClientOptions>;
     cache?: Partial<CacheOptions<TType, TArgs>>;
+    skipQueue?: boolean;
 };
 
 export type QueryCtorOptions<TType, TArgs> = {
@@ -47,7 +45,6 @@ export type QueryCtorOptions<TType, TArgs> = {
           };
     key: CacheOptions<TType, TArgs>['key'];
     validate?: CacheOptions<TType, TArgs>['validate'];
-    // initial?: QueryCacheStateData<TType, TArgs>;
     cache?: QueryCache<TType, TArgs> | QueryCacheCtorArgs<TType, TArgs>;
     /**
      * cache expire time in ms.
@@ -56,7 +53,9 @@ export type QueryCtorOptions<TType, TArgs> = {
      * If the number is undefined or 0, cache is disabled
      * */
     expire?: number;
-    debounce?: Debounce<TType, TArgs>;
+    queueOperator?: (
+        state: QueryCacheState<TType, TArgs>
+    ) => MonoTypeOperatorFunction<QueryQueueItem<TArgs>>;
 };
 
 type QueryKeyBuilder<T> = (args: T) => string;
@@ -72,10 +71,7 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     #subscription = new Subscription();
     #client: QueryClient<TType, TArgs>;
     #cache: QueryCache<TType, TArgs>;
-    #queryQueue$ = new Subject<{
-        args: TArgs;
-        options?: Partial<QueryClientOptions>;
-    }>();
+    #queryQueue$ = new Subject<QueryQueueItem<TArgs>>();
 
     #generateCacheKey: QueryKeyBuilder<TArgs>;
     #validateCacheEntry: CacheValidator<TType, TArgs>;
@@ -109,6 +105,9 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
             this.#subscription.add(() => this.#cache.complete());
         }
 
+        const queueOperator =
+            options.queueOperator ?? (() => ($: Observable<QueryQueueItem<TArgs>>) => $);
+
         this.#subscription.add(
             this.#client.on('success', (action) => {
                 const {
@@ -128,14 +127,8 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
         this.#subscription.add(
             this.#queryQueue$
                 .pipe(
-                    withLatestFrom(this.#cache),
-                    debounce(([query, state]) => {
-                        return typeof options?.debounce === 'function'
-                            ? options?.debounce(query.args, state)
-                            : interval(Number(options?.debounce));
-                    }),
-                    map(([value]) => value),
-                    filter(() => !this.#client.closed)
+                    queueOperator(this.#cache.value),
+                    takeWhile(() => !this.#client.closed)
                 )
                 .subscribe(({ args, options }) => this.#client.next(args, options))
         );
@@ -165,29 +158,15 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
         };
 
         if (refresh) {
-            this.next(args, clientOptions);
+            options?.skipQueue
+                ? this.#client.next(args, clientOptions)
+                : this.next(args, clientOptions);
         }
 
         /** signal for canceled requests */
         const cancel$ = this.#client.action$.pipe(
             filterAction('cancel'),
-            filter((x) => x.meta.request?.meta.transaction === clientOptions.transaction)
-        );
-
-        /** signal for skipped request requests, normally triggered by new query before resolving current or debounced */
-        const skipped$ = this.#queryQueue$.pipe(
-            map((next) => ({
-                type: 'skipped',
-                payload: args,
-                meta: { options, next },
-            }))
-        );
-
-        /**
-         * signal for failed query
-         * TODO - add timeout
-         */
-        const reject$ = merge(skipped$, cancel$).pipe(
+            filter((x) => x.meta.request?.meta.transaction === clientOptions.transaction),
             map((cause) => {
                 throw new Error('query was canceled', { cause });
             })
@@ -203,7 +182,7 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
         return new Observable((observer) => {
             cacheEntry && observer.next(cacheEntry);
             if (refresh) {
-                race(complete$, reject$).subscribe(observer);
+                race(complete$, cancel$).subscribe(observer);
             } else {
                 observer.complete();
             }
