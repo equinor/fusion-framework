@@ -47,7 +47,7 @@ export const createReducer =
 
             case 'reset': {
                 const data = payload.data ?? {};
-                return { data } as QueryCacheState<TType, TArgs>;
+                return { data } as unknown as QueryCacheState<TType, TArgs>;
             }
 
             case 'trim': {
