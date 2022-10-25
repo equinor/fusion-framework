@@ -11,9 +11,11 @@ const getLastTransaction = <TType, TArgs>(
     state: QueryCacheState<TType, TArgs>
 ): QueryCacheRecord<TType, TArgs> | undefined => {
     const transaction = state.lastTransaction;
+    const items = Object.values(state.data);
     if (transaction) {
-        return Object.values(state.data).find((x) => x.transaction === transaction);
+        return items.find((x) => x.transaction === transaction);
     }
+    return items.sort((a, b) => (a.updated ?? 0) - (b.updated ?? 0)).pop();
 };
 
 export type QueryCacheCtorArgs<TType, TArgs> = {
