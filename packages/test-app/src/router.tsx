@@ -2,9 +2,11 @@ import { createBrowserRouter, Outlet, Link } from 'react-router-dom';
 
 import { Main } from './pages/Main';
 import { AppList } from './pages/AppList';
-import GetContext from './pages/service-context/GetContext';
-import QueryContext from './pages/service-context/QueryContext';
 import GetBookmark from './pages/service-bookmarks/GetBookmark';
+import GetContext from './pages/context/GetContext';
+import QueryContext from './pages/context/QueryContext';
+import ServiceGetContext from './pages/service-context/GetContext';
+import ServiceQueryContext from './pages/service-context/QueryContext';
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +20,12 @@ export const router = createBrowserRouter([
                         </li>
                         <li>
                             <Link to="/app-list">app list</Link>
+                        </li>
+                        <li>
+                            <Link to="/context/get">context/get</Link>
+                        </li>
+                        <li>
+                            <Link to="/context/query">context/query</Link>
                         </li>
                         <li>
                             <Link to="/service/context/get">service/context/get</Link>
@@ -42,12 +50,20 @@ export const router = createBrowserRouter([
                 element: <AppList />,
             },
             {
-                path: '/service/context/get',
+                path: '/context/get',
                 element: <GetContext />,
             },
             {
-                path: '/service/context/query',
+                path: '/context/query',
                 element: <QueryContext />,
+            },
+            {
+                path: '/service/context/get',
+                element: <ServiceGetContext />,
+            },
+            {
+                path: '/service/context/query',
+                element: <ServiceQueryContext />,
             },
             {
                 path: '/service/bookmarks/get',

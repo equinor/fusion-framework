@@ -10,6 +10,8 @@ import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
 import { AppModuleInitiator } from '@equinor/fusion-framework-app';
 
+import { enableContext } from '@equinor/fusion-framework-module-context';
+
 import { module as serviceModule } from '@equinor/fusion-framework-module-services';
 import { RouterProvider } from 'react-router-dom';
 
@@ -24,7 +26,11 @@ const queryClient = new QueryClient();
 
 const configure: AppModuleInitiator = async (config) => {
     config.logger.level = 4;
+
     enableAgGrid(config);
+
+    enableContext(config);
+
     await config.useFrameworkServiceClient('portal');
     config.onInitialized<[AgGridModule]>((instance) => {
         instance.agGrid;

@@ -18,6 +18,8 @@
     "@equinor/fusion-framework-module-services": "^0.3.1",
     "@equinor/fusion-framework-react": "^1.0.16",
     "@equinor/fusion-framework-react-app": "^1.0.19",
+    "@equinor/fusion-framework-module-context": "^0.0.0",
+    "@equinor/fusion-observable": "^1.1.0",
     "@equinor/fusion-react-progress-indicator": "^0.1.5",
     "@equinor/fusion-react-styles": "^0.5.4",
     "@tanstack/react-query": "^4.2.3",

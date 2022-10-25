@@ -10,7 +10,7 @@ describe('Query', () => {
             key: () => key,
             cache: {
                 initial: { test: { value: expected[0] } },
-            }
+            },
         });
         let iteration = 0;
         client.subscribe({

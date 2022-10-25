@@ -38,6 +38,9 @@
       "path": "./packages/module-service-discovery"
     },
     {
+      "path": "./packages/module-context"
+    },
+    {
       "path": "./packages/framework"
     },
     {

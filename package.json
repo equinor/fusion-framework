@@ -44,7 +44,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
-    "@equinor/eslint-config-fusion": "^1.0.1",
+    "@equinor/eslint-config-fusion": "^1.0.2",
     "@nrwl/nx-cloud": "^14.7.0",
     "@types/jest": "^29.0.3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
@@ -65,9 +65,10 @@
   "peerDependencies": {
     "typescript": ">=4.5"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "nohoist": ["**/ts-jest", "**/ts-jest/**"],
+    "packages": ["packages/*"]
+  },
   "lint-staged": {
     "./packages/**/src/**/*.{ts,tsx}": [
       "eslint --quiet --fix",
