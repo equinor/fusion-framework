@@ -1,6 +1,8 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { ClientMethod } from '@equinor/fusion-framework-module-services/context';
+import deleteBookmark from './delete/client';
+import { DeleteBookmarkResult, DeleteBookmarksFn, DeleteBookmarksResult } from './delete/types';
 import getBookmark from './get/client';
 import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
 import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
@@ -34,6 +36,14 @@ export class BookmarksApiClient<
         ...args: Parameters<PostBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
     ): PostBookmarksResult<TVersion, TMethod, TPayload, TResult> {
         const fn = postBookmark<TVersion, TMethod, TClient>(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    public delete<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<DeleteBookmarksFn<TVersion, TMethod, TClient, TResult>>
+    ): DeleteBookmarksResult<TVersion, TMethod, TResult> {
+        const fn = deleteBookmark(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 }
