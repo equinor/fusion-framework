@@ -37,8 +37,6 @@ const configure: AppModuleInitiator = async (config) => {
 };
 
 export const render = renderComponent((el, args) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const router = createRoutes(args?.basename);
     const componentRenderer = createComponent(
         () => (

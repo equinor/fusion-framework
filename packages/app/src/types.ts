@@ -31,6 +31,14 @@ export interface IAppConfigurator<
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type AppManifest = {};
 
+export type AppEnv<TConfig = unknown, TProps = unknown> = {
+    /** base routing path of the application */
+    basename?: string;
+    manifest?: AppManifest;
+    config?: TConfig;
+    props?: TProps;
+};
+
 export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
     [EventModule, HttpModule, MsalModule, AppConfigModule]
@@ -42,16 +50,16 @@ export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unk
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
     TRef extends Fusion = Fusion,
-    TManifest = AppManifest
+    TEnv = AppEnv
 > = (
     configurator: IAppConfigurator<TModules, TRef['modules']>,
-    args: { fusion: TRef; manifest: TManifest }
+    args: { fusion: TRef; env: TEnv }
 ) => void | Promise<void>;
 
 export type AppModuleInit<
     TModules extends Array<AnyModule> | unknown,
     TRef extends Fusion = Fusion,
-    TManifest = AppManifest
+    TEnv = AppEnv
 > = (
-    cb: AppModuleInitiator<TModules, TRef, TManifest>
-) => (args: { fusion: TRef; manifest: TManifest }) => Promise<AppModulesInstance<TModules>>;
+    cb: AppModuleInitiator<TModules, TRef, TEnv>
+) => (args: { fusion: TRef; env: TEnv }) => Promise<AppModulesInstance<TModules>>;
