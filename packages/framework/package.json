@@ -28,7 +28,7 @@
     "@equinor/fusion-framework-module-http": "^2.0.13",
     "@equinor/fusion-framework-module-msal": "^1.0.13",
     "@equinor/fusion-framework-module-service-discovery": "^3.0.5",
-    "rxjs": "^7.5.6"
+    "rxjs": "^7.5.7"
   },
   "devDependencies": {
     "typescript": "^4.8.4"
