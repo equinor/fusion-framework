@@ -5,7 +5,7 @@ import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
-import Framework from './Framework';
+import Framework from './Frameworks';
 import { useFramework } from '@equinor/fusion-framework-react/hooks';
 
 const AppLoader = () => {
