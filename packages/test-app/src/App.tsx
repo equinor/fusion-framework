@@ -13,7 +13,7 @@ import { enableContext } from '@equinor/fusion-framework-module-context';
 import { module as serviceModule } from '@equinor/fusion-framework-module-services';
 import { RouterProvider } from 'react-router-dom';
 
-import { router } from './router';
+import { createRoutes } from './router';
 
 const queryClient = new QueryClient();
 
@@ -36,8 +36,11 @@ const configure: AppModuleInitiator = async (config) => {
     });
 };
 
-export const renderApp = renderComponent(
-    createComponent(
+export const render = renderComponent((el, args) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const router = createRoutes(args?.basename);
+    const componentRenderer = createComponent(
         () => (
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen />
@@ -45,7 +48,8 @@ export const renderApp = renderComponent(
             </QueryClientProvider>
         ),
         configure
-    )
-);
+    );
+    return componentRenderer(el, args);
+});
 
-export default renderApp;
+export default render;
