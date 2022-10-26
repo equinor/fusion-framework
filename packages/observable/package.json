@@ -1,96 +1,96 @@
 {
-  "name": "@equinor/fusion-observable",
-  "version": "1.1.0",
-  "description": "WIP",
-  "private": false,
-  "keywords": [
-    "observable",
-    "react",
-    "fusion",
-    "equinor"
-  ],
-  "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
-  "license": "ISC",
-  "main": "dist/esm/index.js",
-  "exports": {
-    ".": "./dist/esm/index.js",
-    "./operators": "./dist/esm/operators/index.js",
-    "./query": "./dist/esm/query/index.js",
-    "./query/actions": "./dist/esm/query/actions.js",
-    "./query/client": "./dist/esm/query/client/index.js",
-    "./query/cache": "./dist/esm/query/cache/index.js",
-    "./react": "./dist/esm/react/index.js"
-  },
-  "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "operators": [
-        "dist/types/operators/index.d.ts"
-      ],
-      "query": [
-        "dist/types/query/index.d.ts"
-      ],
-      "query/actions": [
-        "dist/types/query/actions.d.ts"
-      ],
-      "query/client": [
-        "dist/types/query/client/index.d.ts"
-      ],
-      "query/cache": [
-        "dist/types/query/cache/index.d.ts"
-      ],
-      "react": [
-        "dist/types/react/index.d.ts"
-      ]
+    "name": "@equinor/fusion-observable",
+    "version": "1.2.0",
+    "description": "WIP",
+    "private": false,
+    "keywords": [
+        "observable",
+        "react",
+        "fusion",
+        "equinor"
+    ],
+    "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
+    "license": "ISC",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js",
+        "./operators": "./dist/esm/operators/index.js",
+        "./query": "./dist/esm/query/index.js",
+        "./query/actions": "./dist/esm/query/actions.js",
+        "./query/client": "./dist/esm/query/client/index.js",
+        "./query/cache": "./dist/esm/query/cache/index.js",
+        "./react": "./dist/esm/react/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "operators": [
+                "dist/types/operators/index.d.ts"
+            ],
+            "query": [
+                "dist/types/query/index.d.ts"
+            ],
+            "query/actions": [
+                "dist/types/query/actions.d.ts"
+            ],
+            "query/client": [
+                "dist/types/query/client/index.d.ts"
+            ],
+            "query/cache": [
+                "dist/types/query/cache/index.d.ts"
+            ],
+            "react": [
+                "dist/types/react/index.d.ts"
+            ]
+        }
+    },
+    "directories": {
+        "dist": "dist"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git"
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "npm test -- --coverage ",
+        "test:show": "http-server coverage/lcov-report",
+        "lint": "eslint --ext .ts,.tsx,.js src/",
+        "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix"
+    },
+    "bugs": {
+        "url": "https://github.com/equinor/fusion-framework/issues"
+    },
+    "dependencies": {
+        "rxjs": "^7.5.6",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@testing-library/react-hooks": "^8.0.1",
+        "@types/jest": "^27.4.1",
+        "@types/react": "^17.0.2",
+        "@types/uuid": "^8.3.4",
+        "jest": "^27.5.1",
+        "react": "^17.0.2",
+        "react-test-renderer": "^17.0.2",
+        "ts-jest": "^27.1.4",
+        "typescript": "^4.8.4"
+    },
+    "peerDependencies": {
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        }
     }
-  },
-  "directories": {
-    "dist": "dist"
-  },
-  "files": [
-    "dist"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git"
-  },
-  "scripts": {
-    "build": "tsc -b",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "npm test -- --coverage ",
-    "test:show": "http-server coverage/lcov-report",
-    "lint": "eslint --ext .ts,.tsx,.js src/",
-    "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix"
-  },
-  "bugs": {
-    "url": "https://github.com/equinor/fusion-framework/issues"
-  },
-  "dependencies": {
-    "rxjs": "^7.5.6",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "@testing-library/react-hooks": "^8.0.1",
-    "@types/jest": "^27.4.1",
-    "@types/react": "^17.0.2",
-    "@types/uuid": "^8.3.4",
-    "jest": "^27.5.1",
-    "react": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
-    "ts-jest": "^27.1.4",
-    "typescript": "^4.8.4"
-  },
-  "peerDependencies": {
-    "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-    "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
-    }
-  }
 }

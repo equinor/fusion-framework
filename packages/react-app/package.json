@@ -1,70 +1,70 @@
 {
-  "name": "@equinor/fusion-framework-react-app",
-  "version": "1.0.19",
-  "description": "",
-  "main": "dist/esm/index.js",
-  "exports": {
-    ".": "./dist/esm/index.js",
-    "./config": "./dist/esm/config/index.js",
-    "./framework": "./dist/esm/framework/index.js",
-    "./http": "./dist/esm/http/index.js"
-  },
-  "types": "./dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "config": [
-        "dist/types/config/index.d.ts"
-      ],
-      "framework": [
-        "dist/types/framework/index.d.ts"
-      ],
-      "http": [
-        "dist/types/http/index.d.ts"
-      ]
-    }
-  },
-  "scripts": {
-    "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/react"
-  },
-  "dependencies": {
-    "@equinor/fusion-framework-app": "^3.0.7",
-    "@equinor/fusion-framework-module": "^1.2.5",
-    "@equinor/fusion-framework-module-event": "^1.0.12",
-    "@equinor/fusion-framework-module-msal": "^1.0.13",
-    "@equinor/fusion-framework-react": "^1.0.16",
-    "@equinor/fusion-framework-react-module-app-config": "^1.0.14",
-    "@equinor/fusion-framework-react-module-http": "^1.0.13"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.8.4"
-  },
-  "peerDependencies": {
-    "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-    "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
+    "name": "@equinor/fusion-framework-react-app",
+    "version": "1.0.20",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js",
+        "./config": "./dist/esm/config/index.js",
+        "./framework": "./dist/esm/framework/index.js",
+        "./http": "./dist/esm/http/index.js"
     },
-    "react-dom": {
-      "optional": true
+    "types": "./dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "config": [
+                "dist/types/config/index.d.ts"
+            ],
+            "framework": [
+                "dist/types/framework/index.d.ts"
+            ],
+            "http": [
+                "dist/types/http/index.d.ts"
+            ]
+        }
+    },
+    "scripts": {
+        "build": "npm run build:typescript",
+        "build:typescript": "tsc -b --verbose"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/react"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-app": "^3.0.8",
+        "@equinor/fusion-framework-module": "^1.2.5",
+        "@equinor/fusion-framework-module-event": "^1.0.12",
+        "@equinor/fusion-framework-module-msal": "^1.0.13",
+        "@equinor/fusion-framework-react": "^1.0.16",
+        "@equinor/fusion-framework-react-module-app-config": "^1.0.14",
+        "@equinor/fusion-framework-react-module-http": "^1.0.13"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.11",
+        "@types/react-dom": "^17.0.7",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "typescript": "^4.8.4"
+    },
+    "peerDependencies": {
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        }
     }
-  }
 }
