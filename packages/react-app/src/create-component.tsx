@@ -3,12 +3,8 @@ import React, { lazy } from 'react';
 import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { configureModules } from '@equinor/fusion-framework-app';
-import type {
-    AppManifest,
-    AppModuleInitiator,
-    AppModulesInstance,
-} from '@equinor/fusion-framework-app';
+import { AppEnv, configureModules } from '@equinor/fusion-framework-app';
+import type { AppModuleInitiator, AppModulesInstance } from '@equinor/fusion-framework-app';
 
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
@@ -16,15 +12,15 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 
 import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
 
-export type ComponentRenderArgs<
-    TFusion extends Fusion = Fusion,
-    TManifest extends AppManifest = AppManifest
-> = { fusion: TFusion; env: TManifest };
+export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
+    fusion: TFusion;
+    env: TEnv;
+};
 
-export type ComponentRenderer<
-    TFusion extends Fusion = Fusion,
-    TManifest extends AppManifest = AppManifest
-> = (fusion: TFusion, env: TManifest) => React.LazyExoticComponent<React.ComponentType>;
+export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
+    fusion: TFusion,
+    env: TEnv
+) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
  * Creates an lazy loading Component which configures modules
@@ -76,20 +72,16 @@ export type ComponentRenderer<
  * @param modules - required modules for application
  */
 export const createComponent =
-    <
-        TModules extends Array<AnyModule>,
-        TRef extends Fusion = Fusion,
-        TManifest extends AppManifest = AppManifest
-    >(
+    <TModules extends Array<AnyModule>, TRef extends Fusion = Fusion, TEnv extends AppEnv = AppEnv>(
         Component: React.ComponentType,
-        configure?: AppModuleInitiator<TModules, TRef, TManifest>
-    ): ComponentRenderer<TRef, TManifest> =>
+        configure?: AppModuleInitiator<TModules, TRef, TEnv>
+    ): ComponentRenderer<TRef, TEnv> =>
     (fusion, env) =>
         lazy(async () => {
-            const init = configureModules<TModules, TRef, TManifest>(configure);
+            const init = configureModules<TModules, TRef, TEnv>(configure);
             const modules = (await init({
                 fusion,
-                manifest: env,
+                env,
             })) as unknown as AppModulesInstance;
 
             modules.event.dispatchEvent('onReactAppLoaded', {

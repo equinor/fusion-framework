@@ -15,7 +15,7 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
         const fusion = useFramework();
         const RenderComponent = useMemo(() => {
             const creator = createComponent(Component, configure);
-            return creator(fusion, { name: 'legacy' });
+            return creator(fusion, { manifest: { name: 'legacy' } });
         }, []);
         return (
             <Suspense fallback={<p>loading app</p>}>
