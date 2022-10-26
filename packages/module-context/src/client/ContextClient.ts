@@ -36,7 +36,6 @@ export class ContextClient extends Observable<ContextItem> {
         super((observer) => this.#currentContext$.subscribe(observer));
         this.#client = new Query(options.query);
         this.#currentContext$ = new BehaviorSubject<ContextItem | undefined>(options.initial);
-        this.#client.state$.subscribe(console.debug);
     }
 
     public setCurrentContext(idOrItem?: string | ContextItem) {
