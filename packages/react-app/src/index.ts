@@ -18,4 +18,6 @@ export { createComponent } from './create-component';
 export { renderComponent } from './render-component';
 export { createLegacyApp } from './create-legacy-app';
 
+export type { ComponentRenderArgs, ComponentRenderer } from './create-component';
+
 export { default } from './render-app';
