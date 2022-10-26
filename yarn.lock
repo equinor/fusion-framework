@@ -551,13 +551,19 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@equinor/fusion-observable@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-0.4.0.tgz#e9267aa4d78569be5948b76748c6fb04b24c907b"
-  integrity sha512-5Z7dSO3godRfCyddt5fcxdOLVuHgMgXjZpaDLvTJVCEnCO8eAKXP9GmaRUwY94X2L/Si+OUS2V5m8B0kwq0RHw==
+"@equinor/fusion-framework-module@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module/-/fusion-framework-module-0.4.4.tgz#5cb63acbefa47a0ea13ba581af83761a308126ff"
+  integrity sha512-nZkQh9QLHuldH/oGB3VyT/2+vAuwm5Jw+vU3y4v9zRm80NFUxAqyvOX3oawLZlfpmTwWnT0mbl+tvyOE9UYoAQ==
   dependencies:
     rxjs "^7.5.6"
-    uuid "^8.3.2"
+
+"@equinor/fusion-framework-react-module@^0.2.0":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-react-module/-/fusion-framework-react-module-0.2.5.tgz#f6fb827b3aa34bb7f7c47717addbbab881dbc372"
+  integrity sha512-5LNMFzUILsqheOUndFPDVvvYFCoTPtgt+hDXJiLALUYbC1jThAEGCD8RABB4qHEUuQjyTa97abDZgH0VaykJKg==
+  dependencies:
+    "@equinor/fusion-framework-module" "^0.4.4"
 
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
@@ -8192,7 +8198,7 @@ rxjs@^6.6.2:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.5.5, rxjs@^7.5.6:
+rxjs@^7.5.5, rxjs@^7.5.6, rxjs@^7.5.7:
   version "7.5.7"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.7.tgz#2ec0d57fdc89ece220d2e702730ae8f1e49def39"
   integrity sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==
