@@ -13,9 +13,9 @@ const AppLoader = () => {
     const ref = useRef<HTMLSpanElement>(null);
     const renderRef = useRef<VoidFunction | undefined>(undefined);
     const loadApp = useCallback(async () => {
-        const { renderApp } = await import('./App');
+        const { render } = await import('./App');
         if (ref.current) {
-            return renderApp(ref.current, { fusion, env: {} });
+            return render(ref.current, { fusion, env: {} });
         }
     }, [ref, fusion]);
 
