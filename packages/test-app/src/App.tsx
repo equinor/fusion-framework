@@ -1,11 +1,9 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
-import { createComponent } from '@equinor/fusion-framework-react-app';
-import { useFramework } from '@equinor/fusion-framework-react-app/framework';
+import { createComponent, renderComponent } from '@equinor/fusion-framework-react-app';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
 import { AppModuleInitiator } from '@equinor/fusion-framework-app';
@@ -16,11 +14,6 @@ import { module as serviceModule } from '@equinor/fusion-framework-module-servic
 import { RouterProvider } from 'react-router-dom';
 
 import { router } from './router';
-
-interface App {
-    key: string;
-    name: string;
-}
 
 const queryClient = new QueryClient();
 
@@ -43,21 +36,16 @@ const configure: AppModuleInitiator = async (config) => {
     });
 };
 
-export const creator = createComponent(() => <RouterProvider router={router} />, configure);
-
-export const App = () => {
-    const fusion = useFramework();
-    const Component = creator(fusion, { name: 'test-app' });
-    return (
-        <React.StrictMode>
+export const renderApp = renderComponent(
+    createComponent(
+        () => (
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen />
-                <Suspense fallback={<StarProgress text="Loading Application" />}>
-                    <Component />
-                </Suspense>
+                <RouterProvider router={router} />
             </QueryClientProvider>
-        </React.StrictMode>
-    );
-};
+        ),
+        configure
+    )
+);
 
-export default App;
+export default renderApp;

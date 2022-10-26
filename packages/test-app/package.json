@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:spa": "tsc && vite build --config spa.vite.config.ts",
+    "postbuild:spa": "zip lib/bundle.zip -Dj lib/app-bundle.js app-manifest.json",
+    "deploy:spa": "fdev portal upload -e ci -k test-app lib/bundle.zip",
+    "postdeploy:spa": "fdev portal publish -e ci -k test-app"
   },
   "repository": {
     "type": "git",
