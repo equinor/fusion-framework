@@ -8,6 +8,7 @@ import QueryContext from './pages/context/QueryContext';
 import ServiceGetContext from './pages/service-context/GetContext';
 import ServiceQueryContext from './pages/service-context/QueryContext';
 import { PostBookmark } from './pages/service-bookmarks/PostBookmark';
+import DeleteBookmark from './pages/service-bookmarks/DeleteBookmark';
 
 export const createRoutes = (basename?: string) =>
     createBrowserRouter(
@@ -78,6 +79,10 @@ export const createRoutes = (basename?: string) =>
                     {
                         path: '/service/bookmarks/post',
                         element: <PostBookmark />,
+                    },
+                    {
+                        path: '/service/bookmarks/delete',
+                        element: <DeleteBookmark />,
                     },
                 ],
             },
