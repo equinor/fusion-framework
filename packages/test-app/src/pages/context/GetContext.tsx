@@ -31,19 +31,15 @@ export const GetContext = () => {
         eventHub.addEventListener('onCurrentContextChange', (e) => setEvent(e.detail));
     }, [eventHub]);
 
-    useEffect(() => {
-        setTimeout(() => setContextId('2c49b999-2feb-49dc-bb13-42a651cd92bc'), 10);
-    });
-
     return (
         <div>
             <select onChange={(e) => setContextId(e.currentTarget.value)}>
-                <option value="2c49b999-2feb-49dc-bb13-42a651cd92bc">Johan Castberg</option>
-                <option value="a007e04a-e372-4da5-b5be-8d2f6b671065">Krafla</option>
-                <option value="03f56966-4732-48bc-8b42-6450cedb38fa">Fusion</option>
                 <option value="0c3cb077-fbd5-41e0-a6e7-db4d10dfd2f3">
                     Oseberg Gas Capacity Upgrade (OGP)
                 </option>
+                <option value="2c49b999-2feb-49dc-bb13-42a651cd92bc">Johan Castberg</option>
+                <option value="a007e04a-e372-4da5-b5be-8d2f6b671065">Krafla</option>
+                <option value="03f56966-4732-48bc-8b42-6450cedb38fa">Fusion</option>
             </select>
             <div>
                 <span>Status:</span>
