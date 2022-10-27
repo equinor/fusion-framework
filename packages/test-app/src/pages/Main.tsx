@@ -13,7 +13,7 @@ export const Main = (): JSX.Element => {
     const modules = useAppModules<[ServicesModule]>();
 
     const account = useCurrentUser();
-    const { data: configs } = useAppConfig({ appKey: 'contract-personnel' });
+    const { value: configs } = useAppConfig({ appKey: 'contract-personnel' });
     return (
         <div>
             <h3>Current user</h3>
