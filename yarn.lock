@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@ag-grid-community/core@~28.1.0":
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-28.1.1.tgz#b0454ee818dd960d68b3bdd2bfaa80516f054dfe"
-  integrity sha512-0Mrvg1lERglcFd4oQijxvGpECnx1ZX1L/fPlmfxYPGAFMJzIKxfXtF1tL2h20QrntTZSHuDnm3aWkTFB1ybp2A==
+"@ag-grid-community/core@~28.2.0":
+  version "28.2.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-28.2.0.tgz#477c260be4aa6fc6c128323245626f4d1c8b35b5"
+  integrity sha512-ry9beEwFD0zczoH4B891d5bz//ShEV81JfijvxcQsSJP/+ffnMNOQor2ZS0cWEK5YYhD7uO7NDS6TlIbWcn/oA==
 
-"@ag-grid-enterprise/core@~28.1.1":
-  version "28.1.1"
-  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.1.1.tgz#734091acd7114cdd79371dade46459eb9d6518c0"
-  integrity sha512-klHrh4M7sSBLD+xrRNb+r6tT5uqtgNaHbB7XneormdpU/V+U1A77DcaKTCXzcxjeF3XE6RRfCEAqwWNGbFOy+Q==
+"@ag-grid-enterprise/core@~28.2.0":
+  version "28.2.0"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-28.2.0.tgz#b0b6ef6aa2a41596b87e757b784bdc70d1670b8a"
+  integrity sha512-hVUFWq2K2best/qM+38M11Ii7OCVqdezLxuN9fsZO7Wbtow3T9IeXi5v2ZK20XDb9gX41Oh/Sqt7j90dXVktnQ==
   dependencies:
-    "@ag-grid-community/core" "~28.1.0"
+    "@ag-grid-community/core" "~28.2.0"
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
