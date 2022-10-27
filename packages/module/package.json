@@ -1,31 +1,31 @@
 {
-  "name": "@equinor/fusion-framework-module",
-  "version": "1.2.5",
-  "description": "",
-  "main": "dist/esm/index.js",
-  "exports": {
-    ".": "./dist/esm/index.js"
-  },
-  "types": "dist/types/index.d.ts",
-  "scripts": {
-    "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/module"
-  },
-  "dependencies": {
-    "rxjs": "^7.5.7"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.4"
-  }
+    "name": "@equinor/fusion-framework-module",
+    "version": "1.2.6",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "scripts": {
+        "build": "npm run build:typescript",
+        "build:typescript": "tsc -b --verbose"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/module"
+    },
+    "dependencies": {
+        "rxjs": "^7.5.7"
+    },
+    "devDependencies": {
+        "typescript": "^4.8.4"
+    }
 }

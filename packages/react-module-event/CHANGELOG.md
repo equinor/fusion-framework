@@ -3,161 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [1.0.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.11...@equinor/fusion-framework-react-module-event@1.0.12) (2022-10-21)
+## 1.0.13 (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
+## [1.0.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.11...@equinor/fusion-framework-react-module-event@1.0.12) (2022-10-21)
 
-
-
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
 ## 1.0.11 (2022-10-21)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [1.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.9...@equinor/fusion-framework-react-module-event@1.0.10) (2022-10-17)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## 1.0.9 (2022-10-03)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [1.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.7...@equinor/fusion-framework-react-module-event@1.0.8) (2022-09-29)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## 1.0.7 (2022-09-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## 1.0.6 (2022-09-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [1.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.4...@equinor/fusion-framework-react-module-event@1.0.5) (2022-09-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [1.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.3...@equinor/fusion-framework-react-module-event@1.0.4) (2022-09-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [1.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.2...@equinor/fusion-framework-react-module-event@1.0.3) (2022-09-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [1.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.1...@equinor/fusion-framework-react-module-event@1.0.2) (2022-09-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [1.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.1-next.1...@equinor/fusion-framework-react-module-event@1.0.1) (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [1.0.1-next.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.1-next.0...@equinor/fusion-framework-react-module-event@1.0.1-next.1) (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [1.0.1-next.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@1.0.0...@equinor/fusion-framework-react-module-event@1.0.1-next.0) (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## 1.0.0 (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@0.2.3...@equinor/fusion-framework-react-module-event@1.0.0-alpha.0) (2022-09-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## [0.2.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@0.2.2...@equinor/fusion-framework-react-module-event@0.2.3) (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
-
-
-
-
 
 ## [0.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-event@0.2.1...@equinor/fusion-framework-react-module-event@0.2.2) (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 ## 0.2.1 (2022-09-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-event
 
-
-
-
-
 # 0.2.0 (2022-08-23)
-
 
 ### Features
 
-* **react-module-event:** create hook for handling events ([d05f539](https://github.com/equinor/fusion-framework/commit/d05f539cd48d19f113dc5b73a34b225d191796e5))
+-   **react-module-event:** create hook for handling events ([d05f539](https://github.com/equinor/fusion-framework/commit/d05f539cd48d19f113dc5b73a34b225d191796e5))

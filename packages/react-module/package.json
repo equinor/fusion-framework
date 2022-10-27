@@ -1,51 +1,51 @@
 {
-  "name": "@equinor/fusion-framework-react-module",
-  "version": "1.0.11",
-  "main": "dist/esm/index.js",
-  "exports": {
-    ".": "./dist/esm/index.js"
-  },
-  "types": "./dist/types/index.d.ts",
-  "scripts": {
-    "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose"
-  },
-  "keywords": [
-    "React",
-    "@equinor/fusion-framework-module"
-  ],
-  "description": "Utils for initializing and consuming fusion framework modules",
-  "author": "odin.rochmann@gmail.com",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/react-module"
-  },
-  "dependencies": {
-    "@equinor/fusion-framework-module": "^1.2.5"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "typescript": "^4.8.4"
-  },
-  "peerDependencies": {
-    "@types/react": "^17.0.0 || ^18.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/react": {
-      "optional": true
+    "name": "@equinor/fusion-framework-react-module",
+    "version": "1.0.12",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
     },
-    "react-dom": {
-      "optional": true
+    "types": "./dist/types/index.d.ts",
+    "scripts": {
+        "build": "npm run build:typescript",
+        "build:typescript": "tsc -b --verbose"
+    },
+    "keywords": [
+        "React",
+        "@equinor/fusion-framework-module"
+    ],
+    "description": "Utils for initializing and consuming fusion framework modules",
+    "author": "odin.rochmann@gmail.com",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/react-module"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-module": "^1.2.6"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.11",
+        "@types/react-dom": "^17.0.7",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "typescript": "^4.8.4"
+    },
+    "peerDependencies": {
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        }
     }
-  }
 }

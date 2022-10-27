@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.21](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.0.20...@equinor/fusion-framework-react-app@1.0.21) (2022-10-27)
+
+### Bug Fixes
+
+-   :fire: rewrite hook for getting app config ([cc862ba](https://github.com/equinor/fusion-framework/commit/cc862ba3c23608be6d3406b9cf35d20af6eccb97))
+
 ## [1.0.20](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.0.19...@equinor/fusion-framework-react-app@1.0.20) (2022-10-26)
 
 ### Bug Fixes

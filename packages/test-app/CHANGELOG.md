@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.5.0...@equinor/fusion-framework-test-app@1.5.1) (2022-10-27)
+
+### Bug Fixes
+
+-   :fire: rewrite hook for getting app config ([cc862ba](https://github.com/equinor/fusion-framework/commit/cc862ba3c23608be6d3406b9cf35d20af6eccb97))
+
 ## [1.5.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.4.4...@equinor/fusion-framework-test-app@1.5.0) (2022-10-26)
 
 ### Features

@@ -1,36 +1,36 @@
 {
-  "name": "@equinor/fusion-framework",
-  "version": "4.0.15",
-  "description": "",
-  "main": "dist/esm/index.js",
-  "exports": {
-    ".": "./dist/esm/index.js"
-  },
-  "types": "dist/types/index.d.ts",
-  "scripts": {
-    "build": "npm run build:typescript",
-    "build:typescript": "tsc -b --verbose"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/framework"
-  },
-  "dependencies": {
-    "@equinor/fusion-framework-module": "^1.2.5",
-    "@equinor/fusion-framework-module-event": "^1.0.12",
-    "@equinor/fusion-framework-module-http": "^2.0.13",
-    "@equinor/fusion-framework-module-msal": "^1.0.13",
-    "@equinor/fusion-framework-module-service-discovery": "^3.0.5",
-    "rxjs": "^7.5.7"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.4"
-  }
+    "name": "@equinor/fusion-framework",
+    "version": "4.0.16",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "scripts": {
+        "build": "npm run build:typescript",
+        "build:typescript": "tsc -b --verbose"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/framework"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-module": "^1.2.6",
+        "@equinor/fusion-framework-module-event": "^1.0.13",
+        "@equinor/fusion-framework-module-http": "^2.0.14",
+        "@equinor/fusion-framework-module-msal": "^1.0.14",
+        "@equinor/fusion-framework-module-service-discovery": "^3.0.6",
+        "rxjs": "^7.5.7"
+    },
+    "devDependencies": {
+        "typescript": "^4.8.4"
+    }
 }
