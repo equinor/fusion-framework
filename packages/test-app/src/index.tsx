@@ -1,11 +1,12 @@
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
-import Framework from './Frameworks';
+import { Framework } from '@equinor/fusion-framework-react';
+import { configure } from './config.framework';
 import { useFramework } from '@equinor/fusion-framework-react/hooks';
 
 const AppLoader = () => {
@@ -29,11 +30,9 @@ const AppLoader = () => {
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-        <Suspense fallback={<StarProgress text="Loading framework" />}>
-            <Framework>
-                <AppLoader />
-            </Framework>
-        </Suspense>
+        <Framework configure={configure} fallback={<StarProgress text="Loading framework" />}>
+            <AppLoader />
+        </Framework>
     </ThemeProvider>,
     document.getElementById('root')
 );

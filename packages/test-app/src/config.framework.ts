@@ -1,9 +1,9 @@
-import { createFrameworkProvider } from '@equinor/fusion-framework-react';
+import { FusionConfigurator } from '@equinor/fusion-framework-react';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
-export const Framework = createFrameworkProvider((config) => {
+export const configure = async (config: FusionConfigurator) => {
     config.logger.level = 4;
 
     config.configureServiceDiscovery({
@@ -44,6 +44,6 @@ export const Framework = createFrameworkProvider((config) => {
             console.debug('🔔 [onReactAppLoaded]', e)
         );
     });
-});
+};
 
-export default Framework;
+export default configure;
