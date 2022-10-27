@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@1.0.17...@equinor/fusion-framework-react@1.1.0) (2022-10-27)
+
+### Features
+
+-   :sparkles: expose a single element for setup framework ([154e09f](https://github.com/equinor/fusion-framework/commit/154e09f027b7dea3015eb860fa530ce0f45dfa61))
+
 ## 1.0.17 (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
