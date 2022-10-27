@@ -7,4 +7,6 @@ export type { Fusion } from '@equinor/fusion-framework';
 export { FusionConfigurator } from '@equinor/fusion-framework';
 
 export { createFrameworkProvider } from './create-framework-provider';
-export { FrameworkProvider as default, FrameworkProvider } from './context';
+export { FrameworkProvider } from './context';
+
+export { default, Framework } from './Framework';
