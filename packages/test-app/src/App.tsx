@@ -9,6 +9,7 @@ import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-
 import { AppModuleInitiator } from '@equinor/fusion-framework-app';
 
 import { enableContext } from '@equinor/fusion-framework-module-context';
+import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 
 import { module as serviceModule } from '@equinor/fusion-framework-module-services';
 import { RouterProvider } from 'react-router-dom';
@@ -23,6 +24,7 @@ const configure: AppModuleInitiator = async (config) => {
     enableAgGrid(config);
 
     enableContext(config);
+    enableBookmark(config);
 
     await config.useFrameworkServiceClient('portal');
     config.onInitialized<[AgGridModule]>((instance) => {

@@ -1,53 +1,48 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "skipLibCheck": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "lib",
-    "*.spec.ts",
-  ],
-  "references": [
-    {
-      "path": "./packages/observable"
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "skipLibCheck": true,
+        "jsx": "react-jsx"
     },
-    {
-      "path": "./packages/module"
-    },
-    {
-      "path": "./packages/module-app-config"
-    },
-    {
-      "path": "./packages/module-http"
-    },
-    {
-      "path": "./packages/module-msal"
-    },
-    {
-      "path": "./packages/module-services"
-    },
-    {
-      "path": "./packages/module-service-discovery"
-    },
-    {
-      "path": "./packages/module-context"
-    },
-    {
-      "path": "./packages/framework"
-    },
-    {
-      "path": "./packages/framework-react"
-    },
-    {
-      "path": "./packages/react-app"
-    }
-  ]
+    "include": ["packages/*/src/**/*.ts", "packages/*/src/**/*.tsx"],
+    "exclude": ["node_modules", "dist", "lib", "*.spec.ts"],
+    "references": [
+        {
+            "path": "./packages/observable"
+        },
+        {
+            "path": "./packages/module"
+        },
+        {
+            "path": "./packages/module-app-config"
+        },
+        {
+            "path": "./packages/module-http"
+        },
+        {
+            "path": "./packages/module-msal"
+        },
+        {
+            "path": "./packages/module-services"
+        },
+        {
+            "path": "./packages/module-service-discovery"
+        },
+        {
+            "path": "./packages/module-context"
+        },
+        {
+            "path": "./packages/module-bookmark"
+        },
+        {
+            "path": "./packages/framework"
+        },
+        {
+            "path": "./packages/framework-react"
+        },
+        {
+            "path": "./packages/react-app"
+        }
+    ]
 }
