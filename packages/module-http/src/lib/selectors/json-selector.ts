@@ -9,7 +9,11 @@ export const jsonSelector = <TType = unknown, TResponse extends Response = Respo
         return Promise.resolve() as Promise<TType>;
     }
 
-    return response.json();
+    try {
+        return response.json();
+    } catch (err) {
+        throw Error('failed to parse response');
+    }
 };
 
 export default jsonSelector;
