@@ -7,6 +7,7 @@ import GetContext from './pages/context/GetContext';
 import QueryContext from './pages/context/QueryContext';
 import ServiceGetContext from './pages/service-context/GetContext';
 import ServiceQueryContext from './pages/service-context/QueryContext';
+import { PostBookmark } from './pages/service-bookmarks/PostBookmark';
 
 export const createRoutes = (basename?: string) =>
     createBrowserRouter(
@@ -37,6 +38,9 @@ export const createRoutes = (basename?: string) =>
                                 </li>
                                 <li>
                                     <Link to="/service/bookmarks/get">service/bookmarks/get</Link>
+                                </li>
+                                <li>
+                                    <Link to="/service/bookmarks/post">service/bookmarks/post</Link>
                                 </li>
                             </ul>
                         </div>
@@ -70,6 +74,10 @@ export const createRoutes = (basename?: string) =>
                     {
                         path: '/service/bookmarks/get',
                         element: <GetBookmark />,
+                    },
+                    {
+                        path: '/service/bookmarks/post',
+                        element: <PostBookmark />,
                     },
                 ],
             },
