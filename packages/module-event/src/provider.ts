@@ -83,7 +83,7 @@ export class EventModuleProvider
         });
     }
 
-    addEventListener(type: string, handler: FrameworkEventHandler): VoidFunction {
+    public addEventListener(type: string, handler: FrameworkEventHandler): VoidFunction {
         if (this.closed) {
             throw Error('Cannot listen to events when provider is closed!');
         }
