@@ -1,7 +1,7 @@
 import { createBrowserRouter, Outlet, Link } from 'react-router-dom';
 
 import { Main } from './pages/Main';
-import { AppList } from './pages/AppList';
+import AppPage from './pages/Apps';
 import GetBookmark from './pages/service-bookmarks/GetBookmark';
 import GetContext from './pages/context/GetContext';
 import QueryContext from './pages/context/QueryContext';
@@ -16,14 +16,14 @@ export const createRoutes = (basename?: string) =>
             {
                 path: '/',
                 element: (
-                    <div style={{ display: 'grid', gridTemplateColumns: '200px auto' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '20vw 80vw' }}>
                         <div style={{ border: '1px solid #333', padding: 10 }}>
                             <ul>
                                 <li>
                                     <Link to="/">home</Link>
                                 </li>
                                 <li>
-                                    <Link to="/app-list">app list</Link>
+                                    <Link to="/app">app</Link>
                                 </li>
                                 <li>
                                     <Link to="/context/get">context/get</Link>
@@ -53,8 +53,8 @@ export const createRoutes = (basename?: string) =>
                 children: [
                     { index: true, element: <Main /> },
                     {
-                        path: '/app-list',
-                        element: <AppList />,
+                        path: '/app',
+                        element: <AppPage />,
                     },
                     {
                         path: '/context/get',
