@@ -1,11 +1,9 @@
-import React from 'react';
-
 import { createComponent, renderComponent } from '@equinor/fusion-framework-react-app';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { enableAgGrid, AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { AppModuleInitiator } from '@equinor/fusion-framework-app';
 
 import { enableContext } from '@equinor/fusion-framework-module-context';
@@ -24,13 +22,8 @@ const configure: AppModuleInitiator = async (config) => {
 
     enableContext(config);
 
-    await config.useFrameworkServiceClient('portal');
-    config.onInitialized<[AgGridModule]>((instance) => {
-        instance.agGrid;
-    });
-    config.onInitialized((instance) => {
-        instance.appConfig;
-    });
+    config.useFrameworkServiceClient('portal');
+
     config.addConfig({
         module: serviceModule,
     });
