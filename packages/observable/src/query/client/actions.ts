@@ -21,10 +21,10 @@ export type SuccessAction<TArgs, TResponse = Response> = PayloadMetaAction<
     { request: RequestAction<TArgs> }
 >;
 
-export type CancelAction<TArgs, TReason = string> = PayloadMetaAction<
+export type CancelAction<TArgs, TTransaction = string | undefined> = PayloadMetaAction<
     'cancel',
-    TReason,
-    { request?: RequestAction<TArgs> }
+    TTransaction,
+    { request?: RequestAction<TArgs>; reason?: string }
 >;
 
 export type FailureAction<TArgs, TType extends Error = Error> = PayloadMetaAction<

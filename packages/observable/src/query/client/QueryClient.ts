@@ -123,12 +123,16 @@ export class QueryClient<TType, TArgs> extends Observable<State> {
      * Cancel current request
      * @param reason message of why request was canceled
      */
-    public cancel(reason?: string): void {
+    public cancel(transaction?: string, reason?: string): void {
         if (this.value.status !== 'canceled') {
+            reason ??= `request [${transaction || this.value.transaction}] was canceled!`;
             this.#state$.next({
                 type: 'cancel',
-                payload: reason || `request [${this.value.transaction}] was canceled!`,
-                meta: { request: undefined },
+                payload: transaction,
+                meta: {
+                    request: undefined,
+                    reason,
+                },
             });
         }
     }
