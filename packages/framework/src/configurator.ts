@@ -11,6 +11,7 @@ import http, {
     HttpClientOptions,
 } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
+import app from '@equinor/fusion-framework-module-app';
 import disco from '@equinor/fusion-framework-module-service-discovery';
 
 import { FusionModules } from './types';
@@ -20,17 +21,8 @@ export class FusionConfigurator<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
-    constructor(
-        args?: Partial<{
-            http: Parameters<typeof configureHttp>;
-            msal: Parameters<typeof configureMsal>;
-        }>
-    ) {
-        super([event, http, auth, disco]);
-        if (args) {
-            args.http && this.configureHttp(...args.http);
-            args.msal && this.configureMsal(...args.msal);
-        }
+    constructor() {
+        super([event, http, auth, disco, app]);
         this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 

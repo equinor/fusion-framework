@@ -8,7 +8,6 @@ import {
 import event from '@equinor/fusion-framework-module-event';
 import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
-import appConfig from '@equinor/fusion-framework-module-app-config';
 
 import { AppModules, IAppConfigurator } from './types';
 
@@ -19,17 +18,8 @@ export class AppConfigurator<
     extends ModulesConfigurator<AppModules<TModules>, TRef>
     implements IAppConfigurator<TModules, TRef>
 {
-    constructor(
-        args?: Partial<{
-            http: Parameters<typeof configureHttp>;
-            msal: Parameters<typeof configureMsal>;
-        }>
-    ) {
-        super([event, http, auth, appConfig]);
-        if (args) {
-            args.http && this.configureHttp(...args.http);
-            args.msal && this.configureMsal(...args.msal);
-        }
+    constructor() {
+        super([event, http, auth]);
         this.logger = new ModuleConsoleLogger('AppConfigurator');
     }
 
