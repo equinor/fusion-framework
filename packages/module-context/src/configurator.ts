@@ -61,7 +61,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator<[Se
     public async createConfig(
         init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>
     ) {
-        const config = {
+        const config: IContextModuleConfig = {
             getContext: {
                 query: {
                     client: await this.createContextClientGet(init),
@@ -69,14 +69,13 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator<[Se
                     expire: this.defaultExpireTime,
                 },
             },
-            // TODO
             queryContext: {
                 client: await this.createContextClientQuery(init),
                 key: (args) => JSON.stringify(args),
                 queueOperator: (_) => ($) => $.pipe(debounceTime(250)),
                 expire: this.defaultExpireTime,
             },
-        } as IContextModuleConfig;
+        };
 
         return this.processConfig(config);
     }
