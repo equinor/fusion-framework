@@ -66,13 +66,12 @@
     "typescript": ">=4.5"
   },
   "workspaces": {
-    "nohoist": ["**/ts-jest", "**/ts-jest/**"],
+    "nohoist": ["**jest**"],
     "packages": ["packages/*"]
   },
   "lint-staged": {
     "./packages/**/src/**/*.{ts,tsx}": [
-      "eslint --quiet --fix",
-      "jest --bail --findRelatedTests --passWithNoTests"
+      "eslint --quiet --fix"
     ]
   }
 }
