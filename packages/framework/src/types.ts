@@ -5,13 +5,15 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import { HttpModule } from '@equinor/fusion-framework-module-http';
 import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
+import { AppModule } from '@equinor/fusion-framework-module-app';
 
 export type FusionModules<TModules extends Array<AnyModule> = []> = [
     ...TModules,
     EventModule,
     HttpModule,
     MsalModule,
-    ServiceDiscoveryModule
+    ServiceDiscoveryModule,
+    AppModule
 ];
 
 export type FusionModulesInstance<TModules extends Array<AnyModule> = []> = ModulesInstance<
@@ -25,5 +27,4 @@ export interface Fusion<TModules extends Array<AnyModule> = []> {
     modules: FusionModulesInstance<TModules>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppManifest {}
+export { AppManifest, AppConfig } from '@equinor/fusion-framework-module-app';

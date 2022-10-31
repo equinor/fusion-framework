@@ -1,4 +1,9 @@
-import type { Fusion, FusionModulesInstance } from '@equinor/fusion-framework';
+import type {
+    AppConfig,
+    AppManifest,
+    Fusion,
+    FusionModulesInstance,
+} from '@equinor/fusion-framework';
 import type {
     AnyModule,
     CombinedModules,
@@ -6,7 +11,6 @@ import type {
 } from '@equinor/fusion-framework-module';
 
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
-import type { AppConfigModule } from '@equinor/fusion-framework-module-app-config';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import {
     configureHttp,
@@ -14,6 +18,8 @@ import {
     HttpModule,
 } from '@equinor/fusion-framework-module-http';
 import type { MsalModule, configureMsal } from '@equinor/fusion-framework-module-msal';
+
+export { AppManifest, AppConfig } from '@equinor/fusion-framework';
 
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
@@ -27,21 +33,17 @@ export interface IAppConfigurator<
     useFrameworkServiceClient(serviceName: string): void;
 }
 
-// TODO
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type AppManifest = {};
-
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     /** base routing path of the application */
     basename?: string;
     manifest?: AppManifest;
-    config?: TConfig;
+    config?: AppConfig<TConfig>;
     props?: TProps;
 };
 
 export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
-    [EventModule, HttpModule, MsalModule, AppConfigModule]
+    [EventModule, HttpModule, MsalModule]
 >;
 
 export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
