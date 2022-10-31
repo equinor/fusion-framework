@@ -1,47 +1,9 @@
-export enum ContextTypes {
-    Contract = 'Contract',
-    OrgChart = 'OrgChart',
-    PDP = 'PDP',
-    PimsDomain = 'PimsDomain',
-    Portfolio = 'Portfolio',
-    Project = 'Project',
-    ProjectMaster = 'ProjectMaster',
-    Facility = 'Facility',
-    TpdPortfolio = 'TpdPortfolio',
-}
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { HttpModule } from '@equinor/fusion-framework-module-http';
+import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
-export class ContextType {
-    constructor(
-        readonly id: ContextTypes,
-        readonly isChildType: boolean,
-        readonly parentTypeIds: string[] = []
-    ) {}
-}
-
-type ParentContext = {
-    id: string;
-    type: ContextType;
-};
-
-export type Context = {
-    id: string;
-    externalId: string | null;
-    type: ContextType;
-    title: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any;
-    isActive: boolean;
-    parent: ParentContext;
-};
-
-export type ContextManifest = {
-    readonly types: ContextTypes[];
-    readonly placeholder?: string;
-    readonly nullable?: boolean;
-    filterContexts?: (contexts: Context[]) => Context[];
-    buildUrl?: (context: Context | null, url: string) => string;
-    getContextFromUrl?: (url: string) => string;
-};
+// TODO: change to module-services when new app service is created
+export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
 export type AppType = 'standalone' | 'report' | 'launcher';
 
@@ -65,7 +27,7 @@ export type AppManifest = {
     description: string;
     type: AppType;
     tags: string[];
-    context?: ContextManifest;
+    // context?: ContextManifest;
     auth?: AppAuth[];
     icon?: string;
     order: number | null;
@@ -74,4 +36,11 @@ export type AppManifest = {
     categoryId: string | null;
     category: AppCategory | null;
     hide?: boolean;
+};
+
+export type Endpoint = { name: string; uri: string; scopes?: string[] };
+
+export type AppConfig<TEnvironment = unknown> = {
+    environment: TEnvironment;
+    endpoints: Record<string, string | Endpoint>;
 };

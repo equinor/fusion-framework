@@ -9,6 +9,12 @@
   "references": [
     {
       "path": "../module"
+    },
+    {
+      "path": "../observable"
+    },
+    {
+      "path": "../module-http"
     }
   ],
   "include": [
