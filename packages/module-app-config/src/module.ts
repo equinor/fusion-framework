@@ -59,7 +59,7 @@ export const module: AppConfigModule = {
         return configurator;
     },
     initialize: async ({ config, requireInstance }): Promise<IAppConfigProvider> => {
-        console.warn('module deprecated!, use module-app')
+        console.warn('module deprecated!, use module-app');
         /** if no client provided from config tyy to create one */
         if (!config.httpClient) {
             /** load http module */
