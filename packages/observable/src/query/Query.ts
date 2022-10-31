@@ -7,7 +7,7 @@ import {
     Subject,
     Subscription,
 } from 'rxjs';
-import { filter, map, take, takeWhile } from 'rxjs/operators';
+import { filter, map, take, takeWhile, tap } from 'rxjs/operators';
 
 import { v4 as uuid } from 'uuid';
 
@@ -182,7 +182,11 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
         return new Observable((observer) => {
             cacheEntry && observer.next(cacheEntry);
             if (refresh) {
-                race(complete$, cancel$).subscribe(observer);
+                const cancelTransaction = () => this.#client.cancel(clientOptions.transaction);
+                observer.add(cancelTransaction);
+                race(complete$, cancel$)
+                    .pipe(tap(() => observer.remove(cancelTransaction)))
+                    .subscribe(observer);
             } else {
                 observer.complete();
             }
@@ -198,7 +202,7 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
      */
     public queryAsync(
         payload: TArgs,
-        opt?: QueryOptions<TType, TArgs> & { awaitResolve: false }
+        opt?: QueryOptions<TType, TArgs> & { awaitResolve: boolean }
     ): Promise<QueryCacheRecord<TType, TArgs>> {
         const { awaitResolve, ...args } = opt || {};
         const fn = awaitResolve ? lastValueFrom : firstValueFrom;

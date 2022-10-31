@@ -19,7 +19,7 @@ import { QueryFn, RetryOptions, State } from './types';
  * General function for handling an abortable action
  */
 const requestProcessor =
-    <TType, TArgs>(action$: Observable<ActionTypes<TType, TArgs>>) =>
+    <TType, TArgs>(action$: Observable<ActionTypes<TType, TArgs>>, state$: Observable<State>) =>
     (
         action: RequestAction<TArgs>,
         cb?: (subscriber: Subscriber<ActionTypes<TType, TArgs>>) => TeardownLogic
@@ -41,12 +41,17 @@ const requestProcessor =
 
             /** subscribe to cancel request on the action stream */
             subscriber.add(
-                action$.pipe(filterAction('cancel')).subscribe(() => {
-                    if (!controller.signal.aborted) {
-                        controller.abort();
-                    }
-                    subscriber.complete();
-                })
+                action$
+                    .pipe(filterAction('cancel'), withLatestFrom(state$))
+                    .subscribe(([action, state]) => {
+                        /** if no transaction specified or transaction match current */
+                        if (!action.payload || action.payload === state.transaction) {
+                            if (!controller.signal.aborted) {
+                                controller.abort();
+                            }
+                            subscriber.complete();
+                        }
+                    })
             );
 
             /** subscribe to abort from the controller */
@@ -73,7 +78,7 @@ export const handleFailures = <TType, TArgs>(
 ): Epic<ActionTypes<TType, TArgs>, State> => {
     config = Object.assign({}, { count: 0, delay: 0 }, config);
     return (action$, state$) => {
-        const process = requestProcessor(action$);
+        const process = requestProcessor(action$, state$);
         return action$.pipe(
             filterAction('failure'),
             withLatestFrom(state$),
@@ -123,8 +128,8 @@ export const handleFailures = <TType, TArgs>(
 
 export const handleRequests =
     <TType, TArgs>(fetch: QueryFn<TType, TArgs>): Epic<ActionTypes<TType, TArgs>, State> =>
-    (action$) => {
-        const process = requestProcessor(action$);
+    (action$, state$) => {
+        const process = requestProcessor(action$, state$);
         return action$.pipe(
             filterAction('request'),
             switchMap((action) => {
