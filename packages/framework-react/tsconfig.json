@@ -10,6 +10,9 @@
   "references": [
     {
       "path": "../framework"
+    },
+    {
+      "path": "../module-app"
     }
   ],
   "include": [
