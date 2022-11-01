@@ -80,6 +80,14 @@ Developers should easily configure which services the application needs and main
 - [ ] guide
 - [ ] cookbook
 
+## Ag Grid <Badge type="tip" text="Q3 2022"/>
+
+Allow application to register `AgGrid` license for removing watermark.
+
+- [x] [documentation](../modules/ag-grid/README.md)
+- [x] guide
+- [ ] cookbook
+
 ## Events <Badge type="warning" text="Q3 2022"/>
 
 Since modules are decoupled, the **Framework** needs a bus to communicate on.
@@ -87,7 +95,7 @@ Since modules are decoupled, the **Framework** needs a bus to communicate on.
 
 - [x] create a module for consuming context
 - [x] tooling for `React`
-- [x] [documentation](../modules/event/)
+- [x] [documentation](../modules/event/README.md)
 - [ ] guide
 - [ ] cookbook
 
@@ -219,4 +227,6 @@ Create a CLI for building and developing application
 might be resolved by guide and cookbooks
 
 :::
+
+## Dynatrace <Badge type="warning" text="need grooming"/>
 
