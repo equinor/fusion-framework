@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.4.0 (2022-11-01)
+
+### Features
+
+-   :sparkles: post bookmark module-services ([333ec6a](https://github.com/equinor/fusion-framework/commit/333ec6ab394f305aa02678d93a513ecf67fd52bc))
+
 ## 0.3.2 (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services

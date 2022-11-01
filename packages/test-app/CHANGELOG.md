@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.6.0...@equinor/fusion-framework-test-app@1.7.0) (2022-11-01)
+
+### Features
+
+-   :sparkles: post bookmark module-services ([333ec6a](https://github.com/equinor/fusion-framework/commit/333ec6ab394f305aa02678d93a513ecf67fd52bc))
+
 ## [1.6.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.5.1...@equinor/fusion-framework-test-app@1.6.0) (2022-10-27)
 
 ### Features
