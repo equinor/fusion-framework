@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.3.0 (2022-11-01)
+
+### Features
+
+-   **observable:** allow cancellation of transaction ([9615ee1](https://github.com/equinor/fusion-framework/commit/9615ee1315f0ae44cc0246b4efa48be87512536e))
+-   **observable:** create query value selector ([3bfcdc3](https://github.com/equinor/fusion-framework/commit/3bfcdc3070c926d9c12cb701acdf2098da078717))
+
 ## [1.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@1.2.0...@equinor/fusion-observable@1.2.1) (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-observable

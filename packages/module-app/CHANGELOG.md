@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.0 (2022-11-01)
+
+### Features
+
+-   **module-app:** initial app module ([ce5aed1](https://github.com/equinor/fusion-framework/commit/ce5aed124431afbe55b9cf11a50a5c8d5499260e))
+
 ## 1.0.12 (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app
