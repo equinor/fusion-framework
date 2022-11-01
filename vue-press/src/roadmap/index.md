@@ -59,43 +59,47 @@ The client should also internally expose requests and responses, which can be ma
 >
 > developers can focus more on UI, framework handles complexity
 
-[read more](../modules/README.md)
-
 - [x] create functionality for adding, configuring and initializing modules.
 - [x] create interface with collection of essential modules (app and portal)  
 - [x] add type-hinting for working with framework in IDE
 - [x] tooling for `React`
-- [x] documentation
+- [x] [documentation](../modules/README.md)
 - [x] guide
 
-## Service Discovery <Badge type="tip" text="Q2/Q3 2022"/>
+## Service Discovery <Badge type="warning" text="Q2/Q3 2022"/>
 
-Applications relay on data from **Fusion** services and the **Framework** should dynamically resolve these base on the environment they are hosted on. 
+Applications consumes data from **Fusion** services.
+The **Framework** should dynamically resolve services from the host portal. 
 
 Developers should easily configure which services the application needs and maintainers see which one are used.
 > developers should only name the service, then the framework resolves the endpoint and authentication requirements
 
 - [x] create a module which resolves `http` clients
+- [x] tooling for `React`
+- [x] [documentation](../modules/service-discovery/README.md)
+- [ ] guide
+- [ ] cookbook
 
-## Events <Badge type="tip" text="Q3 2022"/>
+## Events <Badge type="warning" text="Q3 2022"/>
 
-Since modules are decoupled, the **Framework** needs a buss to communicate on.
-> events should be asynchronously when flagged as cancelable 
+Since modules are decoupled, the **Framework** needs a bus to communicate on.
+> Application can interact with events and prevent default behaviors
 
 - [x] create a module for consuming context
-- [x] [documentation](../modules/event/)
 - [x] tooling for `React`
-
+- [x] [documentation](../modules/event/)
+- [ ] guide
+- [ ] cookbook
 
 
 ## Context <Badge type="warning" text="Q3 2022"/>
 
-Many **Fusion** applications are centered around a context and a part of the workflow for providing scoped data to the application.
+**Fusion** context is scoped data with user-friendly name and follows users throughout session.
 
-The framework needs to facilitate query, filtering and selecting context.
+Applications present the user with a interface related the to selected context. 
+
+The framework needs to facilitate query, filtering and selecting scoped data.
 > The framework maintains the cache of context, aborts dangling request and throttles queries
-
-It will also notify when the current context changes.
 
 ![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/equinor/fusion-framework/1)
 - [x] create a module for consuming context
@@ -138,7 +142,7 @@ The framework should facilitate functionality for storing and restoring bookmark
 
 ## Widgets <Badge type="note" text="Q4 2022"/>
 
-Widgets are small applications which are uploaded to an global storage and consumed by portals.
+Widgets are small applications which are uploaded to an global storage and consumed by portals and applications.
 The framework should manage loading metadata and configuration for the widget. 
 
 - [ ] Load widget manifest and configuration
@@ -162,6 +166,23 @@ Convert existing application to be compatible with dynamic loading and configura
 
 # Not planned yet
 
+## Navigation <Badge type="warning" text="need grooming"/>
+
+The **Framework** should provide functionality for applications and portals for navigating.
+
+- [ ] create functionality for building scoped urls
+- [ ] observe changes to routing
+
+## Tasks <Badge type="warning" text="need grooming"/>
+
+Exposes users Fusion tasks/actions
+
+
+## Notification <Badge type="warning" text="need grooming"/>
+
+Exposes users Fusion notifications
+
+
 ## Telemetry
 
 Observer events happening in the framework an log back to application insight
@@ -175,7 +196,7 @@ Observer events happening in the framework an log back to application insight
 - [ ] Cookbook
 
 
-## Service Messages
+## Service Messages <Badge type="warning" text="need grooming"/>
 
 Module for subscribing to **Fusion** service messages (SignalR) 
 
@@ -185,11 +206,17 @@ Module for subscribing to **Fusion** service messages (SignalR)
 - [ ] Cookbook
 
 
-## Person
+## Person <Badge type="warning" text="need grooming"/>
 
 Module for resolving persons (person-card, person-picker, person-avatar, person-availability)
 
-## Application CLI
+## Application CLI <Badge type="warning" text="need grooming"/>
 
 Create a CLI for building and developing application
+
+::: warning
+
+might be resolved by guide and cookbooks
+
+:::
 
