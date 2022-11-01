@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.4.0...@equinor/fusion-framework-module-services@0.5.0) (2022-11-01)
+
+### Features
+
+-   :sparkles: delete bookmark ([df70d9f](https://github.com/equinor/fusion-framework/commit/df70d9f6ed369cfc9e682a268b7175ddf8b3d122))
+
 ## 0.4.0 (2022-11-01)
 
 ### Features

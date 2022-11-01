@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.0 (2022-11-01)
+
+### Features
+
+-   :necktie: remove try catch from json-selector ([fe5e2ea](https://github.com/equinor/fusion-framework/commit/fe5e2ea087cdee99403175e912eb09479b86414e))
+-   :sparkles: return undefined on status code 204 ([af1eea7](https://github.com/equinor/fusion-framework/commit/af1eea7a9ef539a44c3cab69904b4764f169caa6))
+
+### Reverts
+
+-   :rewind: revert changes in json-selector ([8c448e5](https://github.com/equinor/fusion-framework/commit/8c448e5c76fb20cbd908c95f2fbd9d8d0367aad1))
+
 ## 2.0.14 (2022-10-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
