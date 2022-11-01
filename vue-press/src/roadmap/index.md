@@ -1,0 +1,195 @@
+---
+title: RoadMap
+category: Planning
+tag: 
+  - WIP
+---
+
+
+
+- <Badge type="tip" text="Complete"/>
+- <Badge type="warning" text="Minimum viable product"/>
+- <Badge type="info" text="Active - Currently working on"/>
+- <Badge type="note" text="Planned - not started on"/>
+
+::: note
+Some task for planned feature are skipped to meet the dead-line of **Project Portal**
+:::
+
+## Authentication <Badge type="tip" text="Q1 2022"/>
+
+Core of the **Fusion Framework** is to provide tooling for executing authenticated service requests.
+
+Developers of the **Fusion platform** should with minimal effort consume **Fusion Services** and provide their own.
+
+Developers should be able to configure named clients for services. When using the client it should acquire scoped user identity token for the requested endpoint.
+
+The client should also internally expose requests and responses, which can be managed from the portal (example telemetry, custom headers)
+
+> initial modules for moving from ADAL to MSAL
+
+- [x] configure and create http clients 
+- [x] MSAL authentication 
+- [x] [documentation](../modules/http)
+
+
+## Foundation <Badge type="tip" text="Q2 2022"/>
+
+**Fusion Framework** is buildt on a modular design.
+> Functionality for apps and portals composed together by small building block called modules
+>
+> The framework provides essential modules, but developers can pick or create additional modules needed.
+
+**Fusion Framework** provides scoped functionality.
+> Each collection module instances has their own _sandbox_ to not pollute other applications.
+>
+> When a applications is ejected, all facilitated functionality is disposed.
+
+**Fusion Framework Modules** are independent and should be interchangeable.
+> **Example:** if the technology for authentication changes, 
+> only the authentication module should be replaced.
+
+**Fusion Framework** is ecosystem independent.
+> Written in plain TypeScript for future upgrade of libraries or platforms
+>
+> Tooling for easy development on React
+
+**Fusion Framework** is the foundation of applications
+> `build once, run anywhere`, **Fusion Apps** should run on any host(portal).
+>
+> developers can focus more on UI, framework handles complexity
+
+[read more](../modules/README.md)
+
+- [x] create functionality for adding, configuring and initializing modules.
+- [x] create interface with collection of essential modules (app and portal)  
+- [x] add type-hinting for working with framework in IDE
+- [x] tooling for `React`
+- [x] documentation
+- [x] guide
+
+## Service Discovery <Badge type="tip" text="Q2/Q3 2022"/>
+
+Applications relay on data from **Fusion** services and the **Framework** should dynamically resolve these base on the environment they are hosted on. 
+
+Developers should easily configure which services the application needs and maintainers see which one are used.
+> developers should only name the service, then the framework resolves the endpoint and authentication requirements
+
+- [x] create a module which resolves `http` clients
+
+## Events <Badge type="tip" text="Q3 2022"/>
+
+Since modules are decoupled, the **Framework** needs a buss to communicate on.
+> events should be asynchronously when flagged as cancelable 
+
+- [x] create a module for consuming context
+- [x] [documentation](../modules/event/)
+- [x] tooling for `React`
+
+
+
+## Context <Badge type="warning" text="Q3 2022"/>
+
+Many **Fusion** applications are centered around a context and a part of the workflow for providing scoped data to the application.
+
+The framework needs to facilitate query, filtering and selecting context.
+> The framework maintains the cache of context, aborts dangling request and throttles queries
+
+It will also notify when the current context changes.
+
+![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/equinor/fusion-framework/1)
+- [x] create a module for consuming context
+- [ ] update context handling in **Fusion Portal**
+- [x] [documentation](../modules/services/context)
+- [x] tooling for `React`
+- [ ] guide
+- [ ] cookbook
+
+
+
+## Application Loading <Badge type="info" text="Q4 2022"/>
+
+**Fusion** provides metadata about registered applications and configuration for runtime environment.
+When loading an application the **Framework** resolves and provides this information, 
+which the application uses to dynamically configure before rending.
+
+The framework also keeps track of selected application and notifies when when current application changes.
+
+- [x] load application and keep track of selected
+- [x] tooling for `React`
+- [ ] developer documentation
+- [ ] developer guide
+- [ ] cookbook for loading applications
+- [ ] _track usage (awaiting new service)_
+
+
+
+## Bookmarks <Badge type="info" text="Q4 2022"/>
+
+Bookmarks are snapshots of application states which users can navigate to and share with other Fusion users.
+The framework should facilitate functionality for storing and restoring bookmark.
+
+- [x] configurable interface for storing and restoring bookmarks
+- [ ] tooling for `React`
+- [ ] Cookbook for developing bookmarks
+- [ ] Developer documentation
+
+
+
+## Widgets <Badge type="note" text="Q4 2022"/>
+
+Widgets are small applications which are uploaded to an global storage and consumed by portals.
+The framework should manage loading metadata and configuration for the widget. 
+
+- [ ] Load widget manifest and configuration
+- [ ] tooling for `React`
+- [ ] Documentation
+- [ ] Guide
+- [ ] Cookbook
+
+
+
+## Application migration <Badge type="note" text="Q4 2022"/>
+__Q4 2022__
+
+Convert existing application to be compatible with dynamic loading and configuration of framework
+
+- [ ] create build template for building application
+- [ ] create a wrapper for emulating portal in development
+- [ ] create guide for making application compliant with `Fusion Framework` 
+- [ ] make Fusion Portal compliant with `React 18` 
+
+
+# Not planned yet
+
+## Telemetry
+
+Observer events happening in the framework an log back to application insight
+
+> This module exists but missing wiring and final touches
+
+- [ ] subscribe to framework events
+- [ ] tooling for `React`
+- [ ] Documentation
+- [ ] Guide
+- [ ] Cookbook
+
+
+## Service Messages
+
+Module for subscribing to **Fusion** service messages (SignalR) 
+
+- [ ] tooling for `React`
+- [ ] Documentation
+- [ ] Guide
+- [ ] Cookbook
+
+
+## Person
+
+Module for resolving persons (person-card, person-picker, person-avatar, person-availability)
+
+## Application CLI
+
+Create a CLI for building and developing application
+

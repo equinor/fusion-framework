@@ -11,10 +11,10 @@ const navbar: HopeThemeNavbarConfig = [
     text: 'Modules',
     link: '/modules/'
   },
-  // {
-  //   text: 'Tags',
-  //   link: '/tag/'
-  // },
+  {
+    text: 'Roadmap',
+    link: '/roadmap/'
+  },
 ];
 
 export default hopeTheme({
@@ -30,6 +30,8 @@ export default hopeTheme({
         mermaid: true,
         codetabs: true,
         tabs: true,
+        tasklist: true,
+        container: true,
       }
      }
 });
