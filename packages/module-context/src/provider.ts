@@ -1,3 +1,5 @@
+import { Observable, pairwise, Subscription } from 'rxjs';
+
 import { IContextModuleConfig } from './configurator';
 
 import { ContextClient } from './client/ContextClient';
@@ -9,7 +11,6 @@ import {
     FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
 import Query from '@equinor/fusion-observable/query';
-import { pairwise, Subscription } from 'rxjs';
 
 /**
  * WARNING: this is an initial out cast.
@@ -21,6 +22,7 @@ export interface IContextProvider {
     /** DANGER */
     readonly queryClient: Query<ContextItem[], QueryContextParameters>;
 
+    readonly currentContext$: Observable<ContextItem | undefined>;
     currentContext: ContextItem | undefined;
 }
 
@@ -38,6 +40,10 @@ export class ContextProvider implements IContextProvider {
 
     public get queryClient() {
         return this.#contextQuery;
+    }
+
+    get currentContext$(): Observable<ContextItem | undefined> {
+        return this.#contextClient.currentContext$;
     }
 
     get currentContext(): ContextItem | undefined {
