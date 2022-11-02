@@ -1,19 +1,6 @@
-import { ContextItem } from '@equinor/fusion-framework-module-context';
-import { useObservableState } from '@equinor/fusion-observable/react';
-import { useCallback } from 'react';
+import { useCurrentContext as _useCurrentContext } from '@equinor/fusion-framework-react-module-context';
 import { useFramework } from '../useFramework';
 
-export const useCurrentContext = () => {
-    const framework = useFramework();
-    const { context } = framework.modules;
-    const currentContext = useObservableState(context.currentContext$);
-    const setCurrentContext = useCallback(
-        (entry: ContextItem) => {
-            context.currentContext = entry;
-        },
-        [context]
-    );
-    return { currentContext, setCurrentContext };
-};
+export const useCurrentContext = () => _useCurrentContext(useFramework().modules.context);
 
 export default useCurrentContext;
