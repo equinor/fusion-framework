@@ -5,15 +5,15 @@
     "main": "dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./config": "./dist/esm/config/index.js",
+        "./context": "./dist/esm/context/index.js",
         "./framework": "./dist/esm/framework/index.js",
         "./http": "./dist/esm/http/index.js"
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
         "*": {
-            "config": [
-                "dist/types/config/index.d.ts"
+            "context": [
+                "dist/types/context/index.d.ts"
             ],
             "framework": [
                 "dist/types/framework/index.d.ts"
@@ -44,7 +44,7 @@
         "@equinor/fusion-framework-module-event": "^1.1.1",
         "@equinor/fusion-framework-module-msal": "^1.0.15",
         "@equinor/fusion-framework-react": "^1.2.1",
-        "@equinor/fusion-framework-react-module-app-config": "^1.0.17",
+        "@equinor/fusion-framework-react-module-context": "^0.0.0",
         "@equinor/fusion-framework-react-module-http": "^1.0.15"
     },
     "devDependencies": {
