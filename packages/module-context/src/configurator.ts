@@ -1,7 +1,7 @@
 import { AnyModule, ModuleInitializerArgs } from '@equinor/fusion-framework-module';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { QueryCtorOptions } from '@equinor/fusion-observable/query';
-import { ContextClientOptions } from 'client/ContextClient';
+import { ContextClientOptions } from './client/ContextClient';
 import { ContextItem, QueryContextParameters } from './types';
 import { getContextSelector, queryContextSelector } from './selectors';
 import { debounceTime } from 'rxjs/operators';
