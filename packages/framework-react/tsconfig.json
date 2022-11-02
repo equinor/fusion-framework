@@ -13,6 +13,9 @@
     },
     {
       "path": "../module-app"
+    },
+    {
+      "path": "../module-context"
     }
   ],
   "include": [

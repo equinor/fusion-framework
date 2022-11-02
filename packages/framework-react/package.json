@@ -6,6 +6,7 @@
     "exports": {
         ".": "./dist/esm/index.js",
         "./app": "./dist/esm/app/index.js",
+        "./context": "./dist/esm/context/index.js",
         "./hooks": "./dist/esm/hooks/index.js",
         "./http": "./dist/esm/http/index.js"
     },
@@ -14,6 +15,9 @@
         "*": {
             "app": [
                 "dist/types/app/index.d.ts"
+            ],
+            "context": [
+                "dist/types/context/index.d.ts"
             ],
             "hooks": [
                 "dist/types/hooks/index.d.ts"
