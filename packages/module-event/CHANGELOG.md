@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-event@1.1.0...@equinor/fusion-framework-module-event@1.1.1) (2022-11-02)
+
+### Bug Fixes
+
+-   **module-event:** update typing of event source ([321aabc](https://github.com/equinor/fusion-framework/commit/321aabcdaa4f121ffa73e37fe4f9d05f049d12d2))
+
 ## 1.1.0 (2022-11-01)
 
 ### Features

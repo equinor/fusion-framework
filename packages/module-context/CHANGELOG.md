@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.1.4...@equinor/fusion-framework-module-context@0.2.0) (2022-11-02)
+
+### Features
+
+-   **module-context:** connect context module to parent ([6f1158f](https://github.com/equinor/fusion-framework/commit/6f1158f089fee8d9350875b20cba61f52886ee7a))
+
 ## [0.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.1.3...@equinor/fusion-framework-module-context@0.1.4) (2022-11-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
