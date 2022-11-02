@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "prepack": "yarn build",
         "preview": "vite preview",
         "build:spa": "tsc && vite build --config spa.vite.config.ts",
         "postbuild:spa": "zip lib/bundle.zip -Dj lib/app-bundle.js app-manifest.json",

@@ -28,6 +28,9 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "^1.2.7",
+        "@equinor/fusion-framework-module-event": "^1.1.1",
+        "@equinor/fusion-framework-module-http": "^2.1.0",
+        "@equinor/fusion-framework-module-service-discovery": "^3.0.7",
         "typescript": "^4.8.4"
     },
     "peerDependencies": {
