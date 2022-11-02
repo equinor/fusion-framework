@@ -40,10 +40,12 @@ export class ContextClient extends Observable<ContextItem> {
 
     public setCurrentContext(idOrItem?: string | ContextItem) {
         if (typeof idOrItem === 'string') {
+            // TODO - compare context
             this.resolveContext(idOrItem)
                 .pipe(catchError(() => EMPTY))
                 .subscribe((value) => this.#currentContext$.next(value));
-        } else {
+        /** only add context if not match */
+        } else if (idOrItem !== this.#currentContext$.value) {
             this.#currentContext$.next(idOrItem);
         }
     }
