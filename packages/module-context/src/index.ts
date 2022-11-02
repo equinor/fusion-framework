@@ -15,6 +15,8 @@ export {
     IContextModuleConfig,
 } from './configurator';
 
+export { IContextProvider, ContextProvider } from './provider';
+
 export {
     default,
     ContextModule,
