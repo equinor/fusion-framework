@@ -23,6 +23,9 @@
       "path": "../module-service-discovery"
     },
     {
+      "path": "../module-context"
+    },
+    {
       "path": "../module-app"
     }
   ],
