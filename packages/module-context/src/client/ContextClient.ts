@@ -44,7 +44,7 @@ export class ContextClient extends Observable<ContextItem> {
             this.resolveContext(idOrItem)
                 .pipe(catchError(() => EMPTY))
                 .subscribe((value) => this.#currentContext$.next(value));
-        /** only add context if not match */
+            /** only add context if not match */
         } else if (idOrItem !== this.#currentContext$.value) {
             this.#currentContext$.next(idOrItem);
         }

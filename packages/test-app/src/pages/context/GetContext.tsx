@@ -3,9 +3,15 @@ import { ContextModule } from '@equinor/fusion-framework-module-context';
 import { useEffect, useState } from 'react';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
+import { useFramework } from '@equinor/fusion-framework-react/hooks';
 
-const useCurrentContext = () => {
+export const useCurrentContext = () => {
     const provider = useAppModule<ContextModule>('context');
+    return useObservableState(provider.contextClient.currentContext$);
+};
+
+const useFrameworkCurrentContext = () => {
+    const provider = useFramework<[ContextModule]>().modules.context;
     return useObservableState(provider.contextClient.currentContext$);
 };
 
@@ -13,10 +19,13 @@ export const GetContext = () => {
     const provider = useAppModule<ContextModule>('context');
     const eventHub = useAppModule('event');
 
+    const portalEventHub = useFramework().modules.event;
+
     const [event, setEvent] = useState<unknown>(null);
 
-    const [contextId, setContextId] = useState<string>('0c3cb077-fbd5-41e0-a6e7-db4d10dfd2f3');
+    const [contextId, setContextId] = useState<string>('');
     const context = useCurrentContext();
+    const portalContext = useFrameworkCurrentContext();
 
     const status = useObservableState(provider.contextClient.status$);
 
@@ -28,8 +37,18 @@ export const GetContext = () => {
     }, [provider, contextId]);
 
     useEffect(() => {
-        eventHub.addEventListener('onCurrentContextChange', (e) => setEvent(e.detail));
+        return eventHub.addEventListener('onCurrentContextChanged', (e) => setEvent(e.detail));
     }, [eventHub]);
+
+    useEffect(() => {
+        // TODO - check propagation
+        /** prevent setting context krafla */
+        return portalEventHub.addEventListener('onCurrentContextChange', (e) => {
+            if (e.detail.context?.id === 'a007e04a-e372-4da5-b5be-8d2f6b671065') {
+                e.preventDefault();
+            }
+        });
+    }, [portalEventHub]);
 
     return (
         <div>
@@ -46,8 +65,13 @@ export const GetContext = () => {
                 <span>{status}</span>
             </div>
 
+            <h3>App Context</h3>
             <pre>
                 <code>{JSON.stringify(context, undefined, 4)}</code>
+            </pre>
+            <h3>Portal Context</h3>
+            <pre>
+                <code>{JSON.stringify(portalContext, undefined, 4)}</code>
             </pre>
 
             <div style={{ border: 1, padding: 20, background: 'cornflowerblue' }}>
