@@ -27,8 +27,8 @@
         }
     },
     "scripts": {
-        "build": "npm run build:typescript",
-        "build:typescript": "tsc -b --verbose"
+        "build": "tsc -b",
+        "prepack": "yarn build"
     },
     "keywords": [],
     "author": "",

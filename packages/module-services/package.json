@@ -29,9 +29,8 @@
         "./package.json": "./package.json"
     },
     "scripts": {
-        "build": "npm run build:typescript",
-        "build:typescript": "tsc -b --verbose",
-        "prepack": "npm run build"
+        "build": "tsc -b",
+        "prepack": "yarn build"
     },
     "keywords": [],
     "author": "",

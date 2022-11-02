@@ -26,7 +26,6 @@
     "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
     "dedupe": "yarn lernaupdate --dedupe",
     "prepublishOnly": "npx nx run-many --target=test --all",
-    "prepack": "npx nx run-many --target=build --all --verbose",
     "version": "yarn install --no-immutable && git stage yarn.lock"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
