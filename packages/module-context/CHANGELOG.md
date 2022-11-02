@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.3.0 (2022-11-02)
+
+### Features
+
+-   **module-context:** expose current context from client on provider ([6895056](https://github.com/equinor/fusion-framework/commit/68950561d5b3fce3c555842c8d26004387a963e1))
+
+### Bug Fixes
+
+-   **module-context:** expose provider ([1fd2c5a](https://github.com/equinor/fusion-framework/commit/1fd2c5ae8a486a7c9b9933ffcb37918dfa3ac4b0))
+-   **module-context:** fix relative import ([da23b68](https://github.com/equinor/fusion-framework/commit/da23b6836739de1dda27c84b18083feff5c4055b))
+
 ## [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.1.4...@equinor/fusion-framework-module-context@0.2.0) (2022-11-02)
 
 ### Features

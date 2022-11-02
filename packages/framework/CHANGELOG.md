@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.2.0 (2022-11-02)
+
+### Features
+
+-   **framework:** enable context for framework ([647a1c5](https://github.com/equinor/fusion-framework/commit/647a1c5b52ed4c721e1379e7c2395ca7ff752a40))
+
 ## [4.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.1.0...@equinor/fusion-framework@4.1.1) (2022-11-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework

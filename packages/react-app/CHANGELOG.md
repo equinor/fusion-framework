@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.0 (2022-11-02)
+
+### Features
+
+-   deprecate app-config ([1f24abc](https://github.com/equinor/fusion-framework/commit/1f24abc5125b0526c64973fe0b063a9c33d532b0))
+-   **react-app:** react tooling for context ([84a2624](https://github.com/equinor/fusion-framework/commit/84a26242f73da2d77b1468b7724da56b2add590b))
+
 ## [1.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.1.0...@equinor/fusion-framework-react-app@1.1.1) (2022-11-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

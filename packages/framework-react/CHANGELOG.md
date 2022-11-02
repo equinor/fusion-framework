@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.3.0 (2022-11-02)
+
+### Features
+
+-   **framework-react:** create hook for current context ([4ee803f](https://github.com/equinor/fusion-framework/commit/4ee803fd0e457c3ec7414b35100e12186327fb6f))
+-   **framework-react:** react tooling for context ([b530114](https://github.com/equinor/fusion-framework/commit/b53011475a9c1a25b4e0756b66b57fd9b5711bbd))
+
 ## [1.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@1.2.0...@equinor/fusion-framework-react@1.2.1) (2022-11-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
