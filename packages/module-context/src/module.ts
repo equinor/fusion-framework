@@ -1,4 +1,4 @@
-import { Module } from '@equinor/fusion-framework-module';
+import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
 
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
@@ -23,7 +23,12 @@ export const module: ContextModule = {
     initialize: async (args) => {
         const config = await args.config.createConfig(args);
         const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
-        return new ContextProvider({ config, event });
+        const parentContext = (args.ref as ModulesInstance<[ContextModule]>)?.context;
+        return new ContextProvider({ config, event, parentContext });
+    },
+
+    dispose: (args) => {
+        (args.instance as ContextProvider).dispose();
     },
 };
 

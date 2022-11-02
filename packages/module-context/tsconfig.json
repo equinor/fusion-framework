@@ -12,6 +12,9 @@
     },
     {
       "path": "../module-services"
+    },
+    {
+      "path": "../module-event"
     }
   ],
   "include": [
