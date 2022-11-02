@@ -1,4 +1,8 @@
 .husky
 .vscode
 node_modules
+
 **/node_modules
+
+packages/*/lib
+packages/*/dist
