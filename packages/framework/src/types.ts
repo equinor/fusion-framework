@@ -15,7 +15,7 @@ export type FusionModules<TModules extends Array<AnyModule> = []> = [
     EventModule,
     HttpModule,
     MsalModule,
-    ServiceDiscoveryModule,
+    ServiceDiscoveryModule
 ];
 
 export type FusionModulesInstance<TModules extends Array<AnyModule> = []> = ModulesInstance<
