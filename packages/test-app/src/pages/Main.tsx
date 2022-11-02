@@ -5,6 +5,7 @@ import { useCurrentUser, useFramework } from '@equinor/fusion-framework-react-ap
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useCurrentContext } from './context/GetContext';
 
 const queryClient = new QueryClient();
 
@@ -13,6 +14,7 @@ export const Main = (): JSX.Element => {
     const modules = useAppModules<[ServicesModule]>();
 
     const account = useCurrentUser();
+    const context = useCurrentContext();
     return (
         <div>
             <h3>Current user</h3>
@@ -30,6 +32,8 @@ export const Main = (): JSX.Element => {
                     <li key={x}>{x}</li>
                 ))}
             </ul>
+            <h3>Current Context</h3>
+            <CodeInfo data={context} />
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools initialIsOpen />
             </QueryClientProvider>

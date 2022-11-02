@@ -2,6 +2,9 @@ import { FusionConfigurator } from '@equinor/fusion-framework-react';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
+import { contextModule, ContextModule } from '@equinor/fusion-framework-module-context';
+import { enableServices } from '@equinor/fusion-framework-module-services';
+import { FusionModulesInstance } from '@equinor/fusion-framework';
 
 export const configure = async (config: FusionConfigurator) => {
     config.logger.level = 4;
@@ -29,6 +32,12 @@ export const configure = async (config: FusionConfigurator) => {
         })
     );
 
+    // TODO - fix interface
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    enableServices(config);
+    config.addConfig({ module: contextModule });
+
     config.onConfigured(() => {
         console.log('framework config done');
     });
@@ -43,6 +52,18 @@ export const configure = async (config: FusionConfigurator) => {
         fusion.event.addEventListener('onReactAppLoaded', (e) =>
             console.debug('🔔 [onReactAppLoaded]', e)
         );
+
+        const context = (fusion as unknown as FusionModulesInstance<[ContextModule]>).context;
+        await context.contextClient.client
+            .queryAsync(
+                {
+                    id: '29c865ad-1178-4dfd-9e8b-ed5440473da3',
+                },
+                { awaitResolve: true }
+            )
+            .then(({ value }) => {
+                context.currentContext = value;
+            });
     });
 };
 
