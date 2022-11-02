@@ -7,8 +7,8 @@
     },
     "types": "./dist/types/index.d.ts",
     "scripts": {
-        "build": "npm run build:typescript",
-        "build:typescript": "tsc -b --verbose"
+        "build": "tsc -b",
+        "prepack": "yarn build"
     },
     "keywords": [
         "React",

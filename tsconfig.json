@@ -47,6 +47,9 @@
       "path": "./packages/framework-react"
     },
     {
+      "path": "./packages/app"
+    },
+    {
       "path": "./packages/react-app"
     }
   ]

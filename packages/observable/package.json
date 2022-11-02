@@ -64,7 +64,8 @@
         "test:coverage": "npm test -- --coverage ",
         "test:show": "http-server coverage/lcov-report",
         "lint": "eslint --ext .ts,.tsx,.js src/",
-        "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix"
+        "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
+        "prepack": "yarn build"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
