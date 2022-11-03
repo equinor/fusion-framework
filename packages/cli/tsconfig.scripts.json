@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "bin",
+    "rootDir": "src/scripts",
+    "target": "ES6",
+    "module": "es2020",
+    "lib": ["ES6", "ES2015", "DOM"],
+    "strict": true,
+    "types": ["node"],
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/scripts",
+  ],
+}
