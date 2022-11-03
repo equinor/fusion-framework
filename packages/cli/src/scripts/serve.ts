@@ -1,6 +1,8 @@
 import { createServer } from 'vite';
 import type { UserConfig } from 'vite';
 
+import { readFileSync } from 'fs';
+
 import express from 'express';
 
 import dns from 'dns';
@@ -23,9 +25,11 @@ export const server = async (config: UserConfig) => {
     const vite = await createServer(config);
 
     app.use(vite.middlewares);
-    app.use(express.static(resolveRelativePath('dev-portal')));
-    app.use('*', async (_, res) => {
-        res.sendFile(resolveRelativePath('dev-portal/index.html'));
+    app.use(express.static(resolveRelativePath('dev-portal'), { index: false }));
+    app.use('*', async (req, res) => {
+        const htmlRaw = readFileSync(resolveRelativePath('dev-portal/index.html'), 'utf-8');
+        const html = await vite.transformIndexHtml(req.url, htmlRaw);
+        res.send(html);
     });
 
     app.listen(port);
