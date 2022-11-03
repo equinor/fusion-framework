@@ -3,7 +3,7 @@ import { ContextModule } from '@equinor/fusion-framework-module-context';
 import { useEffect, useState } from 'react';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
-import { useFramework } from '@equinor/fusion-framework-react/hooks';
+import { useFramework } from '@equinor/fusion-framework-react';
 
 export const useCurrentContext = () => {
     const provider = useAppModule<ContextModule>('context');

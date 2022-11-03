@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AppManifest } from '@equinor/fusion-framework-module-app';
-import { useFramework } from '../hooks';
+import { useFramework } from '../useFramework';
 
 export const useApp = (appKey: string) => {
     const provider = useFramework().modules.app;

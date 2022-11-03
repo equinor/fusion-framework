@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Fusion } from '@equinor/fusion-framework';
-import { useFramework } from './use-framework';
+import { useFramework } from '../useFramework';
 
 type HttpClient = ReturnType<Fusion['modules']['http']['createClient']>;
 type FrameworkHttpClient = 'portal';

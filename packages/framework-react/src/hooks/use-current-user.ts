@@ -1,4 +1,4 @@
-import { useFramework } from './use-framework';
+import { useFramework } from '../useFramework';
 
 export type AccountInfo = {
     // homeAccountId: string;

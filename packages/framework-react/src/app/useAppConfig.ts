@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppConfig } from '@equinor/fusion-framework-module-app';
 
-import { useFramework } from '../hooks';
+import { useFramework } from '../useFramework';
 
 type UseAppConfigState<TType> = {
     value?: AppConfig<TType>;

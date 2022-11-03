@@ -1,7 +1,7 @@
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback } from 'react';
 
-import { useFramework } from '../hooks/use-framework';
+import { useFramework } from '../useFramework';
 
 export const useCurrentApp = () => {
     const provider = useFramework().modules.app;

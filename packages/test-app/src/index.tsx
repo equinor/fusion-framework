@@ -7,7 +7,7 @@ import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 import { Framework } from '@equinor/fusion-framework-react';
 import { configure } from './config.framework';
-import { useFramework } from '@equinor/fusion-framework-react/hooks';
+import { useFramework } from '@equinor/fusion-framework-react';
 import { useAppEnv } from '@equinor/fusion-framework-react/app';
 import type { AppConfig, AppManifest } from '@equinor/fusion-framework-react/app';
 
