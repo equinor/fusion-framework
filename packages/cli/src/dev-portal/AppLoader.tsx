@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useFramework } from '@equinor/fusion-framework-react/hooks';
+import { useFramework } from '@equinor/fusion-framework-react';
 import { AppConfig, AppManifest, useAppEnv } from '@equinor/fusion-framework-react/app';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 

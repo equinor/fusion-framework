@@ -1,6 +1,6 @@
 import { FrameworkEventMap } from '@equinor/fusion-framework-module-event';
 import { useEffect } from 'react';
-import { useFramework } from '../hooks/use-framework';
+import { useFramework } from '../useFramework';
 
 export const useCurrentAppChanged = (
     cb: (e: FrameworkEventMap['onCurrentAppChanged']) => Promise<void> | void

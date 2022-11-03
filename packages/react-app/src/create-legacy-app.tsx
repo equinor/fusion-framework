@@ -1,6 +1,6 @@
 import { Suspense, useMemo } from 'react';
 
-import { useFramework } from '@equinor/fusion-framework-react/hooks';
+import { useFramework } from '@equinor/fusion-framework-react';
 
 import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { AppModuleInitiator } from '@equinor/fusion-framework-app';
