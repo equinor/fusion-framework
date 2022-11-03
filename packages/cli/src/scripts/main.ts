@@ -30,8 +30,8 @@ app.command('dev')
         startDevServer(mergeConfig(config, { server: port }));
     });
 
-app.command('build').action(async() => {
-    build(mergeConfig(await createConfig(), { build:{emptyOutDir:true}}));
+app.command('build').action(async () => {
+    build(mergeConfig(await createConfig(), { build: { emptyOutDir: true } }));
 });
 
 program.parse();
