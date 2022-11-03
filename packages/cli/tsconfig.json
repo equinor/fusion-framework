@@ -9,11 +9,8 @@
   },
   "references": [
     {
-      "path": "../framework"
-    },
-    {
-      "path": "../module-app"
-    },
+      "path": "../framework-react"
+    }
   ],
   "include": [
     "src/**/*",

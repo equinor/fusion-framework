@@ -9,6 +9,7 @@
     "scripts": {
         "build": "yarn build:scripts && yarn build:dev-server",
         "build:scripts": "tsc -p tsconfig.scripts.json",
+        "prebuild:dev-server": "yarn workspace @equinor/fusion-framework-react build",
         "build:dev-server": "vite build",
         "prepack": "yarn build"
     },
