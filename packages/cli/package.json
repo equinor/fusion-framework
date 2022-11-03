@@ -1,6 +1,12 @@
 {
     "name": "@equinor/fusion-framework-cli",
     "version": "0.1.4",
+    "keywords": ["Fusion", "Fusion Framework", "CLI"],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "main": "./bin/main.js",
     "bin": {
