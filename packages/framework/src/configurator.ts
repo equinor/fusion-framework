@@ -19,6 +19,7 @@ import context from '@equinor/fusion-framework-module-context';
 import app from '@equinor/fusion-framework-module-app';
 
 import disco from '@equinor/fusion-framework-module-service-discovery';
+import services from '@equinor/fusion-framework-module-services';
 
 import { FusionModules } from './types';
 
@@ -28,7 +29,7 @@ export class FusionConfigurator<
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {
-        super([event, http, auth, disco, app, context]);
+        super([event, http, auth, disco, services, app, context]);
         this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 
