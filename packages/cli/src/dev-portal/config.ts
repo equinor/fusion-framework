@@ -2,7 +2,7 @@ import { FusionConfigurator } from '@equinor/fusion-framework-react';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 export const configure = async (config: FusionConfigurator) => {
-    config.logger.level = 4;
+    config.logger.level = 3;
 
     config.configureServiceDiscovery({
         client: {
