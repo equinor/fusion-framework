@@ -10,7 +10,7 @@ export interface IConsoleLogger {
 
 export class ConsoleLogger implements IConsoleLogger {
     /** - 0-1-2-3 (error-warning-info-debug) if not provided only errors are logged */
-    public level: 0 | 1 | 2 | 3 | 4 = 1;
+    public level: 0 | 1 | 2 | 3 | 4 = process.env.NODE_ENV === 'development' ? 3 : 1;
     constructor(protected domain: string) {}
 
     /** @inheritdoc */
@@ -25,9 +25,7 @@ export class ConsoleLogger implements IConsoleLogger {
     }
 
     debug(...msg: unknown[]) {
-        if (process.env.NODE_ENV === 'development') {
-            this.level > 3 && console.debug(...this._createMessage(msg));
-        }
+        this.level > 3 && console.debug(...this._createMessage(msg));
     }
     info(...msg: unknown[]) {
         this.level > 2 && console.info(...this._createMessage(msg));
