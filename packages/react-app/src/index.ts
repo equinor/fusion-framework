@@ -4,20 +4,26 @@
  */
 
 export type {
-    AppConfigurator,
+    AppConfig,
+    AppEnv,
     AppModules,
     AppModulesInstance,
     AppManifest,
+    IAppConfigurator,
 } from '@equinor/fusion-framework-app';
 
 export { useAppModule } from './useAppModule';
 export { useAppModules } from './useAppModules';
 
+export { makeComponent, ComponentRenderArgs } from './make-component';
+
+export { createLegacyApp } from './create-legacy-app';
+
+// TODO deprecate
 export { renderApp } from './render-app';
 export { createComponent } from './create-component';
 export { renderComponent } from './render-component';
-export { createLegacyApp } from './create-legacy-app';
 
-export type { ComponentRenderArgs, ComponentRenderer } from './create-component';
+export type { ComponentRenderer } from './create-component';
 
 export { default } from './render-app';

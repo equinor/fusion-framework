@@ -23,6 +23,7 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
 ) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
+ * @deprecated
  * Creates an lazy loading Component which configures modules
  * and provides context to framework and configured modules
  *

@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 
 export type RenderTeardown = VoidFunction;
 
+/** @deprecated */
 export const renderComponent = (renderer: ComponentRenderer) => {
     return (el: HTMLElement, args: ComponentRenderArgs): RenderTeardown => {
         const Component = renderer(args.fusion, args.env);
