@@ -15,9 +15,10 @@ export const AppLoader = (props: { appKey: string }) => {
     const loadApp = useCallback(
         async (manifest: AppManifest, config: AppConfig) => {
             const url = new URL('/index.tsx', import.meta.url).href;
-            const { render } = await import(url);
+            const module = await import(url);
+            const renderFn = module.render ?? module.default;
             if (ref.current) {
-                return render(ref.current, { fusion, env: { manifest, config } });
+                return renderFn(ref.current, { fusion, env: { manifest, config } });
             }
         },
         [ref, fusion]
@@ -33,7 +34,7 @@ export const AppLoader = (props: { appKey: string }) => {
     return (
         <div>
             {isLoading && <StarProgress text="Loading Application" />}
-            <span ref={ref} style={{ display: isLoading ? 'none' : '' }}></span>;
+            <span ref={ref} style={{ display: isLoading ? 'none' : '' }}></span>
         </div>
     );
 };
