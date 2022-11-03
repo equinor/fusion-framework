@@ -6,7 +6,7 @@ import { Framework } from '@equinor/fusion-framework-react';
 import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
-import {configure} from './config';
+import { configure } from './config';
 
 import { AppLoader } from './AppLoader';
 

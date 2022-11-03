@@ -14,6 +14,9 @@
     {
       "path": "../module-context"
     },
+    {
+      "path": "../react-module"
+    },
   ],
   "include": [
     "src/**/*"
