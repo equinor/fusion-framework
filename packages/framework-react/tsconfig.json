@@ -19,6 +19,9 @@
     },
     {
       "path": "../react-module-context"
+    },
+    {
+      "path": "../react-module-http"
     }
   ],
   "include": [
