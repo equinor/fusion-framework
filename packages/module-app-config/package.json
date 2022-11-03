@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-app-config",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Fusion module for application config",
     "main": "./dist/esm/index.js",
     "module": "./dist/esm/index.js",
@@ -22,11 +22,11 @@
         "directory": "packages/module-app-config"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module": "^1.2.7"
+        "@equinor/fusion-framework-module": "^1.2.8"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module-http": "^2.1.1",
-        "@equinor/fusion-framework-module-service-discovery": "^3.0.8",
+        "@equinor/fusion-framework-module-http": "^2.1.2",
+        "@equinor/fusion-framework-module-service-discovery": "^3.0.9",
         "rxjs": "^7.5.7"
     },
     "types": "index.d.ts",
