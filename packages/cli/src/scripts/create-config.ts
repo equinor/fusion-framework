@@ -22,6 +22,7 @@ export const createConfig = (): UserConfig => {
         server: {
             middlewareMode: true,
         },
+        mode: 'development',
         appType: 'custom',
         build: {
             outDir: resolve(root, 'dist'),
