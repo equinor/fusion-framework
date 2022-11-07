@@ -12,7 +12,6 @@ export default function (el: HTMLElement, args: ComponentRenderArgs) {
     const AppComponent = makeComponent(
         <StrictMode>
             <h1>🚀 Hello Fusion 😎</h1>
-            <h2>Modules loaded</h2>
         </StrictMode>,
 
         /** render args (framework and environment variables) */
