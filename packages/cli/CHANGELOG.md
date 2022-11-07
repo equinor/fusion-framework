@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.1.9...@equinor/fusion-framework-cli@0.1.10) (2022-11-07)
+
+### Bug Fixes
+
+-   **cli:** add dep @vitejs/plugin-react ([415dd9f](https://github.com/equinor/fusion-framework/commit/415dd9f466076f232e751bbbffa54a8b10c0bea4))
+
 ## [0.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.1.8...@equinor/fusion-framework-cli@0.1.9) (2022-11-07)
 
 ### Bug Fixes
