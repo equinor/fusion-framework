@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@1.2.6...@equinor/fusion-framework-react-app@1.2.7) (2022-11-07)
+
+### Bug Fixes
+
+-   **react-app:** adjust function for creating components ([c986a4a](https://github.com/equinor/fusion-framework/commit/c986a4ac8aeb57035eb555ed07b86b1792b09900))
+
 ## 1.2.6 (2022-11-03)
 
 ### Bug Fixes
