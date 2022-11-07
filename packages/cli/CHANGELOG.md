@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.1.8...@equinor/fusion-framework-cli@0.1.9) (2022-11-07)
+
+### Bug Fixes
+
+-   **cli:** requires vite ([c512d9e](https://github.com/equinor/fusion-framework/commit/c512d9e0e413e515fe0dcb412af49996b04d2484))
+
 ## [0.1.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.1.7...@equinor/fusion-framework-cli@0.1.8) (2022-11-07)
 
 ### Bug Fixes
