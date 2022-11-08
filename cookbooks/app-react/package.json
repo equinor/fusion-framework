@@ -5,7 +5,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "fusion-framework-cli app dev"
+        "dev": "fusion-framework-cli app dev",
+        "docker": "cd .. && sh docker-script.sh app-react"
     },
     "author": "",
     "license": "ISC",

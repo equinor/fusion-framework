@@ -8,6 +8,4 @@ RUN yarn
 
 COPY tsconfig.docker.json tsconfig.json
 
-COPY src src
-
 CMD yarn dev
