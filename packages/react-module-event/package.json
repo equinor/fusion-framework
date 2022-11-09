@@ -27,7 +27,7 @@
         "@equinor/fusion-framework-react-module": "^1.0.14"
     },
     "devDependencies": {
-        "@types/react": "^17.0.11",
+        "@types/react": "^18.0.25",
         "@types/react-dom": "^17.0.7",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
