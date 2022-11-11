@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.19 (2022-11-11)
+
+### Bug Fixes
+
+-   **module-msal:** await redirect handling ([92686d2](https://github.com/equinor/fusion-framework/commit/92686d2ae054d7f507093b839edb2fe5775c7449))
+
 ## 1.0.18 (2022-11-11)
 
 ### Bug Fixes

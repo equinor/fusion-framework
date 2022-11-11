@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.4 (2022-11-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
 ## 1.1.3 (2022-11-11)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app-config
