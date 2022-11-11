@@ -22,6 +22,9 @@
     },
     {
       "path": "../react-module-http"
+    },
+    {
+      "path": "../module-service-discovery"
     }
   ],
   "include": [

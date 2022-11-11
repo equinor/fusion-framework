@@ -11,6 +11,7 @@ import http, {
     configureHttp,
     HttpClientOptions,
 } from '@equinor/fusion-framework-module-http';
+import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
@@ -29,7 +30,7 @@ export class FusionConfigurator<
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {
-        super([event, http, auth, disco, services, app, context]);
+        super([event, auth, http, disco, services, app, context]);
         this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 
@@ -45,7 +46,7 @@ export class FusionConfigurator<
         this.addConfig(configureMsal(...args));
     }
 
-    public configureServiceDiscovery(args: { client: HttpClientOptions }) {
+    public configureServiceDiscovery(args: { client: HttpClientOptions<HttpClientMsal> }) {
         this.configureHttpClient('service_discovery', args.client);
     }
 }
