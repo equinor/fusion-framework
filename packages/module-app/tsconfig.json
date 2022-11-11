@@ -17,6 +17,9 @@
       "path": "../module-http"
     },
     {
+      "path": "../module-event"
+    },
+    {
       "path": "../module-service-discovery"
     }
   ],
