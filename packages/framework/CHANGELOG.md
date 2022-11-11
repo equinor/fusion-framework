@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.3.2 (2022-11-11)
+
+### Bug Fixes
+
+-   **module-auth:** make http module await auth ([18a0ed9](https://github.com/equinor/fusion-framework/commit/18a0ed947e128bf1cdc86aa45d31e73c1f8c4bbb))
+
 ## 4.3.1 (2022-11-03)
 
 **Note:** Version bump only for package @equinor/fusion-framework

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.8.12 (2022-11-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
 ## [1.8.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.8.10...@equinor/fusion-framework-test-app@1.8.11) (2022-11-07)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app

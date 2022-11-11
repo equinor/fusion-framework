@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.1.2...@equinor/fusion-framework-cookbook-app-react@1.2.0) (2022-11-11)
+
+### Features
+
+-   **cookbook:** add docker image ([2a51535](https://github.com/equinor/fusion-framework/commit/2a515350bd193fc789f9726eb1528b29ad2d7dbd))
+
 ## [1.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.1.1...@equinor/fusion-framework-cookbook-app-react@1.1.2) (2022-11-07)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
