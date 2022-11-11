@@ -9,11 +9,7 @@
   "references": [
     {
       "path": "../module"
-    },
-    {
-      "path": "../module-http"
-    },
-   
+    }
   ],
   "include": [
     "src/**/*",

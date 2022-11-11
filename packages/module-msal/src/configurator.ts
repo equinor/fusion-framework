@@ -33,11 +33,14 @@ export interface IAuthConfigurator {
      * @param options config options
      */
     configureDefault(options: AuthClientOptions): void;
+
+    requiresAuth: boolean;
 }
 
 export class AuthConfigurator implements IAuthConfigurator {
     /** internal map of keyed configs */
     protected _configs: Record<string, AuthClientOptions> = {};
+    requiresAuth = true;
 
     get defaultConfig(): AuthClientOptions | undefined {
         return this._configs[DEFAULT_CONFIG_KEY];

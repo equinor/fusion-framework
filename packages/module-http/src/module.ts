@@ -9,37 +9,64 @@ import type {
     IModuleConfigurator,
 } from '@equinor/fusion-framework-module';
 
+import { MsalModule } from '@equinor/fusion-framework-module-msal';
+
 export type HttpModule = Module<'http', IHttpClientProvider, IHttpClientConfigurator>;
 
 export type HttpMsalModule = Module<
     'http',
     IHttpClientProvider<HttpClientMsal>,
-    IHttpClientConfigurator<HttpClientMsal>
+    IHttpClientConfigurator<HttpClientMsal>,
+    [MsalModule]
 >;
 
 /**
  *  Configure http-client
  */
-export const module: HttpModule = {
+export const module: HttpMsalModule = {
     name: 'http',
     configure: () => new HttpClientConfigurator(HttpClientMsal),
-    initialize: ({ config }): HttpClientProvider => new HttpClientProvider(config),
+    initialize: async ({
+        config,
+        hasModule,
+        requireInstance,
+    }): Promise<HttpClientProvider<HttpClientMsal>> => {
+        const httpProvider = new HttpClientProvider(config);
+        if (hasModule('auth')) {
+            const authProvider = await requireInstance('auth');
+            httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
+                const { scopes = [] } = request;
+                if (scopes.length) {
+                    /** TODO should be try catch, check caller for handling */
+                    const token = await authProvider.acquireToken({
+                        scopes,
+                    });
+                    if (token) {
+                        const headers = new Headers(request.headers);
+                        headers.set('Authorization', `Bearer ${token.accessToken}`);
+                        return { ...request, headers };
+                    }
+                }
+            });
+        }
+        return httpProvider;
+    },
 };
 
 export const configureHttp = <TRef = unknown>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configure: (config: ModuleConfigType<HttpModule>, ref?: TRef) => void
-): IModuleConfigurator<HttpModule, TRef> => ({
+    configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void
+): IModuleConfigurator<HttpMsalModule, TRef> => ({
     module,
     configure,
 });
 
 export const configureHttpClient = <TRef = unknown>(
     name: string,
-    args: HttpClientOptions
-): IModuleConfigurator<HttpModule, TRef> => ({
+    args: HttpClientOptions<HttpClientMsal>
+): IModuleConfigurator<HttpMsalModule, TRef> => ({
     module,
-    configure: (config: ModuleConfigType<HttpModule>) => {
+    configure: (config: ModuleConfigType<HttpMsalModule>) => {
         config.configureClient(name, args);
     },
 });
