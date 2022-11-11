@@ -232,7 +232,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                     filter((x) => !!x[name]),
                     map((x) => x[name]),
                     timeout({
-                        each: wait,
+                        each: wait * 1000,
                         with: () => throwError(() => new RequiredModuleTimeoutError()),
                     })
                 )
