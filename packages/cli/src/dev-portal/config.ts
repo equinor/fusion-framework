@@ -2,11 +2,11 @@ import { FusionConfigurator } from '@equinor/fusion-framework-react';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 export const configure = async (config: FusionConfigurator) => {
-    config.logger.level = 3;
+    config.logger.level = 4;
 
     config.configureServiceDiscovery({
         client: {
-            baseUri: 'https://pro-s-portal-ci.azurewebsites.net',
+            baseUri: import.meta.url,
             defaultScopes: ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'],
         },
     });
