@@ -9,7 +9,7 @@ import {
 
 import { ModuleType } from '@equinor/fusion-framework-module';
 
-import { Query, queryValue } from '@equinor/fusion-observable/query';
+import { Query } from '@equinor/fusion-observable/query';
 
 import {
     EventModule,
@@ -78,25 +78,25 @@ export class AppProvider extends Observable<AppManifest | undefined> implements 
     }
 
     public getApp(appKey: string): Observable<AppManifest> {
-        return queryValue(this.#appClient.query({ appKey }));
+        return Query.extractQueryValue(this.#appClient.query({ appKey }));
     }
 
     public getAllApps(): Observable<AppManifest[]> {
-        return queryValue(this.#appsClient.query());
+        return Query.extractQueryValue(this.#appsClient.query());
     }
 
     public getAppConfig<TType = unknown>(
         appKey: string,
         tag?: string
     ): Observable<AppConfig<TType>> {
-        return queryValue(this.#configClient.query({ appKey, tag }));
+        return Query.extractQueryValue(this.#configClient.query({ appKey, tag }));
     }
 
     public setCurrentApp(appKey: string): Promise<void> {
         return new Promise((complete, error) => {
-            const query$ = this.#appClient.query({ appKey }, { skipQueue: true });
+            const query$ = this.#appClient.query({ appKey });
             this.#subscription.add(
-                queryValue(query$).subscribe({
+                Query.extractQueryValue(query$).subscribe({
                     next: (x) => this.#current$.next(x),
                     error,
                     complete,

@@ -1,5 +1,10 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import { Query } from '@equinor/fusion-observable/query';
+
 import { Environment, EnvironmentResponse, Service } from './types';
+
+import { tap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 export interface IServiceDiscoveryClient {
     readonly environment: Promise<Environment>;
@@ -18,18 +23,34 @@ type ServiceDiscoveryClientCtorArgs = {
 export class ServiceDiscoveryClient<T extends Environment = Environment>
     implements IServiceDiscoveryClient
 {
-    protected _environment?: T;
+    // TODO - make better
+    #query: Query<T, void>;
 
     public endpoint: string;
     public http: IHttpClient;
 
     get environment(): Promise<Environment> {
-        return { ...this._getEnvironment() };
+        return firstValueFrom(
+            Query.extractQueryValue(
+                this.#query.query(undefined, { cache: { suppressInvalid: true } })
+            )
+        );
     }
 
     constructor({ http, endpoint }: ServiceDiscoveryClientCtorArgs) {
         this.http = http;
         this.endpoint = endpoint;
+        this.#query = new Query<T, void>({
+            client: {
+                fn: () =>
+                    http
+                        .fetch$(endpoint, { selector: this.selector.bind(this) })
+                        .pipe(tap((x) => console.log('🔥', x))),
+            },
+            key: () => 'services',
+            expire: 5 * 60 * 1000,
+            // queueOperator: (_) => ($) => $.pipe(throttleTime(100)),
+        });
     }
 
     public async selector(response: Response): Promise<T> {
@@ -47,24 +68,10 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
     }
 
     public async resolveService(key: string): Promise<Service> {
-        const { services } = await this._getEnvironment();
-        // TODO - not found error
-        const service = services[key];
-        return service;
-    }
-
-    protected async _getEnvironment(): Promise<T> {
-        if (!this._environment) {
-            this._environment = await this._fetchServiceDescription();
-        }
-        return this._environment;
-    }
-
-    protected async _fetchServiceDescription(): Promise<T> {
         try {
-            const { http, selector, endpoint } = this;
-            const result = await http.fetch(endpoint, { selector });
-            return result;
+            const { services } = await this.environment;
+            const service = services[key];
+            return service;
         } catch (err) {
             console.error(err);
             throw err;

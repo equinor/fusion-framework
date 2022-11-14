@@ -2,7 +2,6 @@ import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Query, QueryCtorOptions } from '@equinor/fusion-observable/query';
-import { QueryClientStatus } from '@equinor/fusion-observable/query/client';
 
 import { ContextItem } from '../types';
 
@@ -22,10 +21,6 @@ export class ContextClient extends Observable<ContextItem> {
 
     get currentContext$(): Observable<ContextItem | undefined> {
         return this.#currentContext$.asObservable();
-    }
-
-    get status$(): Observable<QueryClientStatus> {
-        return this.#client.client.pipe(map((x) => x.status));
     }
 
     get client(): Query<ContextItem, { id: string }> {
