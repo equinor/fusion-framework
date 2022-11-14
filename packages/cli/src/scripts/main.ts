@@ -23,15 +23,15 @@ app.command('dev')
     .description('Create a development server')
 
     .option('-p, --port <number>', 'devserver port', '3000')
-    .action(async (port) => {
+    .action(async (port: number) => {
         const spinner = ora('Loading configuration').start();
         const config = mergeConfig(await createConfig(), { server: port });
         spinner.succeed('Configuration loaded');
         startDevServer(mergeConfig(config, { server: port }));
     });
 
-app.command('build').action(async () => {
-    build(mergeConfig(await createConfig(), { build: { emptyOutDir: true } }));
+app.command('build').action(() => {
+    build();
 });
 
 program.parse();
