@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@1.3.0...@equinor/fusion-framework-module-app@1.3.1) (2022-11-14)
+
+### Bug Fixes
+
+-   **module-app:** throw error when config or app not loading ([e4bd23a](https://github.com/equinor/fusion-framework/commit/e4bd23a4071bd68334aeaed9ed9ea12cac93222c))
+
 ## 1.3.0 (2022-11-14)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.2.4...@equinor/fusion-framework-cookbook-app-react@1.3.0) (2022-11-14)
+
+### Features
+
+-   **cookbook:** add sample config file ([0c3a4f6](https://github.com/equinor/fusion-framework/commit/0c3a4f64da505775974a0483769864ef032bb03a))
+
 ## 1.2.4 (2022-11-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react

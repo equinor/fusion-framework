@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.1.15...@equinor/fusion-framework-cli@0.2.0) (2022-11-14)
+
+### Features
+
+-   add router and app loader ([f21661d](https://github.com/equinor/fusion-framework/commit/f21661d1255633848d1662dabb74e8e33ab629d5))
+-   **cli:** add proxy routing for app and config ([b923830](https://github.com/equinor/fusion-framework/commit/b9238309a2f15a470d63411d2da0b58a1eb63e90))
+
 ## 0.1.15 (2022-11-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli

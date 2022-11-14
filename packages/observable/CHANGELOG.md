@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.4.1 (2022-11-14)
+
+### Bug Fixes
+
+-   **observable:** skip error handling on cache subscription ([b3c8102](https://github.com/equinor/fusion-framework/commit/b3c81027dade03e5fb73680ee419200c6f3d0ba4))
+
 ## 1.4.0 (2022-11-14)
 
 ### Features
