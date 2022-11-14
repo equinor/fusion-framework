@@ -1,9 +1,16 @@
 import {
     BehaviorSubject,
     distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    from,
+    map,
+    merge,
     Observable,
     pairwise,
+    scan,
     Subscription,
+    switchMap,
     takeWhile,
 } from 'rxjs';
 
@@ -28,7 +35,21 @@ export interface IAppProvider {
     getAppConfig<TType = unknown>(appKey: string): Observable<AppConfig<TType>>;
     setCurrentApp(appKey: string): void;
     readonly current$: Observable<AppManifest | undefined>;
+
+    loadApp<TEnvironment = unknown, TModule = any>(
+        appKey: string
+    ): Observable<AppBundle<TEnvironment, TModule>>;
 }
+
+/**
+ * @template TModule - ES module type
+ */
+export type AppBundle<TEnvironment = unknown, TModule = unknown> = {
+    manifest: AppManifest;
+    config: AppConfig<TEnvironment>;
+    /** ES module instance */
+    module: TModule;
+};
 
 export class AppProvider extends Observable<AppManifest | undefined> implements IAppProvider {
     #appClient: Query<AppManifest, { appKey: string }>;
@@ -103,6 +124,30 @@ export class AppProvider extends Observable<AppManifest | undefined> implements 
                 })
             );
         });
+    }
+
+    public loadApp<TEnvironment = unknown, TModule = unknown>(
+        appKey: string
+    ): Observable<AppBundle<TEnvironment, TModule>> {
+        const loadApp$ = this.getApp(appKey).pipe(
+            switchMap((manifest) => {
+                return firstValueFrom(
+                    // TODO: use source from manifest when service is ready!
+                    /* @vite-ignore */
+                    from(import(manifest.entry)).pipe(map((module) => ({ manifest, module })))
+                );
+            })
+        );
+
+        const loadConfig$ = this.getAppConfig(appKey).pipe(map((config) => ({ config })));
+
+        return merge(loadApp$, loadConfig$).pipe(
+            scan((acc: Partial<AppBundle>, next) => Object.assign({}, acc, next), {}),
+            /** only output when all attributes are filled */
+            filter((x): x is AppBundle<TEnvironment, TModule> =>
+                ['manifest', 'module', 'config'].every((key) => !!x[key as keyof AppBundle])
+            )
+        );
     }
 
     public dispose() {
