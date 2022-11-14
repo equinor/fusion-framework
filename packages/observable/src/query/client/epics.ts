@@ -1,16 +1,16 @@
-import { from, fromEvent, Observable, of, Subscriber, TeardownLogic, timer } from 'rxjs';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { EMPTY, from, fromEvent, Observable, of, Subscriber, TeardownLogic, timer } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { Epic, ActionError } from '../..';
 import { filterAction } from '../../operators';
 
 import {
     ActionTypes,
-    // QueryClientAction,
     FailureAction,
     RequestAction,
     SuccessAction,
     ErrorAction,
+    RetryAction,
 } from './actions';
 
 import { QueryFn, RetryOptions, State } from './types';
@@ -19,39 +19,38 @@ import { QueryFn, RetryOptions, State } from './types';
  * General function for handling an abortable action
  */
 const requestProcessor =
-    <TType, TArgs>(action$: Observable<ActionTypes<TType, TArgs>>, state$: Observable<State>) =>
+    <TType, TArgs>(action$: Observable<ActionTypes<TType, TArgs>>) =>
     (
-        action: RequestAction<TArgs>,
+        request: RequestAction<TArgs, TType>,
         cb?: (subscriber: Subscriber<ActionTypes<TType, TArgs>>) => TeardownLogic
     ): Observable<ActionTypes<TType, TArgs>> => {
         return new Observable((subscriber) => {
-            const { controller, transaction } = action.meta;
+            const {
+                meta: { controller, transaction },
+            } = request;
             /**
              * if the abort signal has been triggered,
              * create a cancel action and complete the observable
-             */
+            //  */
             if (controller.signal.aborted) {
                 subscriber.next({
                     type: 'cancel',
-                    payload: `request [${transaction}] was aborted!`,
-                    meta: { request: action },
+                    payload: { transaction, reason: `request [${transaction}] was aborted!` },
                 });
                 return subscriber.complete();
             }
 
             /** subscribe to cancel request on the action stream */
             subscriber.add(
-                action$
-                    .pipe(filterAction('cancel'), withLatestFrom(state$))
-                    .subscribe(([action, state]) => {
-                        /** if no transaction specified or transaction match current */
-                        if (!action.payload || action.payload === state.transaction) {
-                            if (!controller.signal.aborted) {
-                                controller.abort();
-                            }
-                            subscriber.complete();
+                action$.pipe(filterAction('cancel')).subscribe((action) => {
+                    /** if no transaction specified or transaction match current */
+                    if (action.payload.transaction === transaction) {
+                        if (!controller.signal.aborted) {
+                            controller.abort();
                         }
-                    })
+                        subscriber.complete();
+                    }
+                })
             );
 
             /** subscribe to abort from the controller */
@@ -59,8 +58,10 @@ const requestProcessor =
                 fromEvent(controller.signal, 'abort').subscribe(() => {
                     subscriber.next({
                         type: 'cancel',
-                        payload: `request [${transaction}] was aborted!`,
-                        meta: { request: action },
+                        payload: {
+                            transaction,
+                            reason: `request [${transaction}] was aborted!`,
+                        },
                     });
                     subscriber.complete();
                 })
@@ -75,16 +76,26 @@ const requestProcessor =
 
 export const handleFailures = <TType, TArgs>(
     config?: Partial<RetryOptions>
-): Epic<ActionTypes<TType, TArgs>, State> => {
+): Epic<ActionTypes<TType, TArgs>, State<TType, TArgs>> => {
     config = Object.assign({}, { count: 0, delay: 0 }, config);
     return (action$, state$) => {
-        const process = requestProcessor(action$, state$);
+        const process = requestProcessor(action$);
         return action$.pipe(
             filterAction('failure'),
             withLatestFrom(state$),
             switchMap(([action, state]) => {
-                const { retryCount = 0 } = state;
-                const request = { ...action.payload.action } as RequestAction<TArgs>;
+                const { request } = action.meta;
+                const { transaction } = request.meta;
+                const entry = state[transaction];
+                if (!entry) {
+                    return EMPTY;
+                }
+                const retryCount = entry.retry?.length ?? 0;
+
+                const retryAction: RetryAction<TArgs, TType> = {
+                    type: 'retry',
+                    payload: action.meta.request,
+                };
                 const retry = Object.assign({}, config, request.meta.retry) as RetryOptions;
                 return process(request, (subscriber) => {
                     if (retryCount >= retry.count) {
@@ -105,18 +116,17 @@ export const handleFailures = <TType, TArgs>(
 
                     return delay$
                         .pipe(
-                            map(() => request),
-                            catchError(
-                                (err): Observable<ErrorAction<TArgs>> =>
-                                    of({
-                                        type: 'error',
-                                        payload: new ActionError(
-                                            request,
-                                            err,
-                                            'failed to resolve delay'
-                                        ),
-                                        meta: { request },
-                                    })
+                            map(() => retryAction),
+                            catchError((err) =>
+                                of<ErrorAction<TArgs, TType>>({
+                                    type: 'error',
+                                    payload: new ActionError(
+                                        retryAction,
+                                        err,
+                                        'failed to resolve delay'
+                                    ),
+                                    meta: { request },
+                                })
                             )
                         )
                         .subscribe(subscriber);
@@ -127,24 +137,27 @@ export const handleFailures = <TType, TArgs>(
 };
 
 export const handleRequests =
-    <TType, TArgs>(fetch: QueryFn<TType, TArgs>): Epic<ActionTypes<TType, TArgs>, State> =>
-    (action$, state$) => {
-        const process = requestProcessor(action$, state$);
+    <TType, TArgs>(
+        fetch: QueryFn<TType, TArgs>
+    ): Epic<ActionTypes<TType, TArgs>, State<TType, TArgs>> =>
+    (action$) => {
+        const process = requestProcessor(action$);
         return action$.pipe(
-            filterAction('request'),
-            switchMap((action) => {
-                return process(action, (subscriber) => {
-                    from(fetch(action.payload, action.meta.controller.signal))
+            filterAction('request', 'retry'),
+            mergeMap((action) => {
+                const request = action.type === 'request' ? action : action.payload;
+                return process(request, (subscriber) => {
+                    from(fetch(request.payload, request.meta.controller.signal))
                         .pipe(
                             map(
                                 (result): SuccessAction<TArgs, TType> => ({
                                     type: 'success',
                                     payload: result,
-                                    meta: { request: action },
+                                    meta: { request },
                                 })
                             ),
                             catchError(
-                                (err): Observable<FailureAction<TArgs>> =>
+                                (err): Observable<FailureAction<TArgs, TType>> =>
                                     of({
                                         type: 'failure',
                                         payload: new ActionError(
@@ -152,7 +165,7 @@ export const handleRequests =
                                             err,
                                             'failed to execute request'
                                         ),
-                                        meta: { request: action },
+                                        meta: { request },
                                     })
                             )
                         )

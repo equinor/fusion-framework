@@ -1,40 +1,36 @@
 import {
     firstValueFrom,
     lastValueFrom,
-    MonoTypeOperatorFunction,
     Observable,
-    race,
+    ReplaySubject,
     Subject,
     Subscription,
 } from 'rxjs';
-import { filter, map, take, takeWhile, tap } from 'rxjs/operators';
+import { map, takeWhile } from 'rxjs/operators';
 
-import { v4 as uuid } from 'uuid';
+import * as uuid from 'uuid';
 
-import { filterAction } from '../operators';
+import {
+    QueryClient,
+    QueryClientCtorOptions,
+    QueryClientOptions,
+    QueryTaskCompleted,
+    QueryTaskValue,
+} from './client';
 
-import { QueryClient, QueryClientCtorOptions, QueryClientOptions } from './client';
+import { QueryCache, QueryCacheRecord, QueryCacheStateData } from './cache';
 
-import { QueryCache, QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './cache';
-
-import { QueryFn } from './types';
+import {
+    CacheOptions,
+    QueryFn,
+    QueryOptions,
+    QueryQueueFn,
+    QueryQueueItem,
+    QueryTaskCached,
+} from './types';
 import { QueryCacheCtorArgs } from './cache/QueryCache';
-
-type CacheOptions<TType, TArgs> = {
-    key: (query: TArgs) => string;
-    validate: CacheValidator<TType, TArgs>;
-};
-
-type QueryQueueItem<TArgs> = {
-    args: TArgs;
-    options?: Partial<QueryClientOptions>;
-};
-
-export type QueryOptions<TType, TArgs = unknown> = {
-    client?: Partial<QueryClientOptions>;
-    cache?: Partial<CacheOptions<TType, TArgs>>;
-    skipQueue?: boolean;
-};
+import { filterQueryTaskComplete } from './client/operators';
+import { queryValue, switchQueue } from './operators';
 
 export type QueryCtorOptions<TType, TArgs> = {
     client:
@@ -53,9 +49,7 @@ export type QueryCtorOptions<TType, TArgs> = {
      * If the number is undefined or 0, cache is disabled
      * */
     expire?: number;
-    queueOperator?: (
-        state: QueryCacheState<TType, TArgs>
-    ) => MonoTypeOperatorFunction<QueryQueueItem<TArgs>>;
+    queueOperator?: QueryQueueFn<TArgs, TType>;
 };
 
 type QueryKeyBuilder<T> = (args: T) => string;
@@ -68,13 +62,17 @@ const defaultCacheValidator =
         (entry.updated ?? 0) + expires > Date.now();
 
 export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, TArgs>> {
+    static extractQueryValue = queryValue;
+
     #subscription = new Subscription();
     #client: QueryClient<TType, TArgs>;
     #cache: QueryCache<TType, TArgs>;
-    #queryQueue$ = new Subject<QueryQueueItem<TArgs>>();
+    #queryQueue$ = new Subject<QueryQueueItem<TArgs, TType>>();
 
     #generateCacheKey: QueryKeyBuilder<TArgs>;
     #validateCacheEntry: CacheValidator<TType, TArgs>;
+
+    #namespace = uuid.v4();
 
     public get client(): QueryClient<TType, TArgs> {
         return this.#client;
@@ -87,7 +85,9 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     constructor(options: QueryCtorOptions<TType, TArgs>) {
         super((subscriber) => this.#cache.pipe(map(({ data }) => data)).subscribe(subscriber));
 
-        this.#generateCacheKey = options.key;
+        this.#generateCacheKey = (args: TArgs) => {
+            return uuid.v5(options.key(args), this.#namespace);
+        };
         this.#validateCacheEntry =
             options?.validate ?? defaultCacheValidator<TType, TArgs>(options?.expire);
 
@@ -105,36 +105,38 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
             this.#subscription.add(() => this.#cache.complete());
         }
 
-        const queueOperator =
-            options.queueOperator ?? (() => ($: Observable<QueryQueueItem<TArgs>>) => $);
-
-        this.#subscription.add(
-            this.#client.on('success', (action) => {
-                const {
-                    payload: value,
-                    meta: { request },
-                } = action;
-                const key = this.#generateCacheKey(request.payload);
-                this.#cache.setItem(key, {
-                    value,
-                    args: request.payload,
-                    transaction: request.meta.transaction,
-                });
-            })
-        );
+        const queueOperator = options.queueOperator ?? switchQueue;
 
         this.#subscription.add(() => this.#queryQueue$.complete());
         this.#subscription.add(
             this.#queryQueue$
                 .pipe(
-                    queueOperator(this.#cache.value),
+                    queueOperator(
+                        ({ args, options }) =>
+                            new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
+                                const { task, transaction } = this.#client.next(args, options);
+                                subscriber.add(task.subscribe(subscriber));
+                                subscriber.add(() => {
+                                    this.#client.cancel(transaction);
+                                });
+                            })
+                    ),
+                    filterQueryTaskComplete<TType, TArgs>(),
                     takeWhile(() => !this.#client.closed)
                 )
-                .subscribe(({ args, options }) => this.#client.next(args, options))
+                .subscribe((task) => {
+                    const { args, value, transaction, ref } = task;
+                    const key = ref ?? this.#generateCacheKey(args);
+                    this.#cache.setItem(key, {
+                        value,
+                        args,
+                        transaction,
+                    });
+                })
         );
     }
 
-    public next(args: TArgs, options?: Partial<QueryClientOptions>) {
+    public next(args: TArgs, options?: Partial<QueryClientOptions<TType, TArgs>>) {
         this.#queryQueue$.next({ args, options });
     }
 
@@ -145,52 +147,17 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     public query(
         args: TArgs,
         options?: QueryOptions<TType, TArgs>
-    ): Observable<QueryCacheRecord<TType, TArgs>> {
-        const cacheKey = (options?.cache?.key ?? this.#generateCacheKey)(args);
-        const validateCache = options?.cache?.validate || this.#validateCacheEntry;
-        const cacheEntry = this.#cache.getItem(cacheKey);
+    ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
+        const ref = this.#generateCacheKey(args);
+        const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
 
-        const refresh = !cacheEntry || !validateCache(cacheEntry, args);
-
-        const clientOptions: Partial<QueryClientOptions> = {
-            transaction: uuid(),
-            ...options?.client,
-        };
-
-        if (refresh) {
-            options?.skipQueue
-                ? this.#client.next(args, clientOptions)
-                : this.next(args, clientOptions);
-        }
-
-        /** signal for canceled requests */
-        const cancel$ = this.#client.action$.pipe(
-            filterAction('cancel'),
-            filter((x) => x.meta.request?.meta.transaction === clientOptions.transaction),
-            map((cause) => {
-                throw new Error('query was canceled', { cause });
-            })
-        );
-
-        const complete$ = this.#cache.action$.pipe(
-            filterAction('set'),
-            filter((action) => action.payload.value.transaction === clientOptions.transaction),
-            map((action) => action.payload.value),
-            take(1)
-        );
-
-        return new Observable((observer) => {
-            cacheEntry && observer.next(cacheEntry);
-            if (refresh) {
-                const cancelTransaction = () => this.#client.cancel(clientOptions.transaction);
-                observer.add(cancelTransaction);
-                race(complete$, cancel$)
-                    .pipe(tap(() => observer.remove(cancelTransaction)))
-                    .subscribe(observer);
-            } else {
-                observer.complete();
-            }
-        });
+        // const gg = task.pipe(
+        //     catchError((error) => {
+        //         console.error('QUERY_ERROR', error);
+        //         return EMPTY;
+        //     })
+        // );
+        return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
     }
 
     /**
@@ -203,14 +170,57 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     public queryAsync(
         payload: TArgs,
         opt?: QueryOptions<TType, TArgs> & { awaitResolve: boolean }
-    ): Promise<QueryCacheRecord<TType, TArgs>> {
+    ): Promise<QueryTaskValue<TType, TArgs>> {
         const { awaitResolve, ...args } = opt || {};
         const fn = awaitResolve ? lastValueFrom : firstValueFrom;
-        return fn(this.query(payload, args));
+        return fn(this._query(payload, args));
     }
 
     public complete() {
         this.#subscription.unsubscribe();
+    }
+
+    protected _query(
+        args: TArgs,
+        options?: QueryOptions<TType, TArgs>
+    ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
+        const ref = this.#generateCacheKey(args);
+        const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
+        return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
+    }
+
+    protected _createTask(
+        ref: string,
+        args: TArgs,
+        options?: QueryOptions<TType, TArgs>
+    ): Observable<QueryTaskValue<TType, TArgs>> {
+        const task = new ReplaySubject<QueryTaskValue<TType, TArgs>>();
+
+        const cacheEntry = this.#cache.getItem(ref);
+        if (cacheEntry) {
+            const { value, args, created, updated, updates, transaction } = cacheEntry;
+            const taskEntry: QueryTaskCached<TType, TArgs> = {
+                status: 'cache',
+                value,
+                args,
+                created,
+                updated,
+                updates,
+                transaction,
+            };
+            task.next(taskEntry);
+        }
+
+        const validateCache = options?.cache?.validate || this.#validateCacheEntry;
+        const validCacheEntry = cacheEntry && validateCache(cacheEntry, args);
+
+        if (!validCacheEntry) {
+            this.#queryQueue$.next({ args, options: { ref, task } });
+        } else {
+            task.complete();
+        }
+
+        return task.asObservable();
     }
 }
 

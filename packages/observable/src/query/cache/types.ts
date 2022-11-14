@@ -1,8 +1,8 @@
 export type QueryCacheRecord<TType = unknown, TArgs = unknown> = {
     value: TType;
-    args?: TArgs;
-    transaction?: string;
-    created?: number;
+    args: TArgs;
+    transaction: string;
+    created: number;
     updated?: number;
     updates?: number;
 };

@@ -1,42 +1,55 @@
 import { ActionError } from '../..';
-import type { Action, PayloadMetaAction } from '../..';
-import type { RetryOptions } from './types';
+import type { Action, PayloadAction, PayloadMetaAction } from '../..';
+import type { QueryTaskValue, RetryOptions } from './types';
+import { Subject } from 'rxjs';
 
-export type RequestAction<TArgs = unknown> = PayloadMetaAction<
+export type RequestAction<TArgs = unknown, TResponse = unknown> = PayloadMetaAction<
     'request',
     TArgs,
     {
+        transaction: string;
         controller: AbortController;
+        task: Subject<QueryTaskValue<TResponse, TArgs>>;
         retry?: Partial<RetryOptions>;
         ref?: string;
-        transaction: string;
     }
 >;
 
-// export type SkipAction<TArgs = unknown, TType = unknown> = Action<'skipped', TArgs, TType>;
+export type RetryAction<TArgs = unknown, TResponse = unknown> = PayloadAction<
+    'retry',
+    RequestAction<TArgs, TResponse>
+>;
 
-export type SuccessAction<TArgs, TResponse = Response> = PayloadMetaAction<
+export type SuccessAction<TArgs = unknown, TResponse = unknown> = PayloadMetaAction<
     'success',
     TResponse,
-    { request: RequestAction<TArgs> }
+    { request: RequestAction<TArgs, TResponse> }
 >;
 
-export type CancelAction<TArgs, TTransaction = string | undefined> = PayloadMetaAction<
+export type CancelAction = PayloadAction<
     'cancel',
-    TTransaction,
-    { request?: RequestAction<TArgs>; reason?: string }
+    /** reason */
+    { transaction: string; reason?: string }
 >;
 
-export type FailureAction<TArgs, TType extends Error = Error> = PayloadMetaAction<
+export type FailureAction<
+    TArgs = unknown,
+    TResponse = unknown,
+    TError extends Error = Error
+> = PayloadMetaAction<
     'failure',
-    ActionError<Action, TType>,
-    { request: RequestAction<TArgs> }
+    ActionError<Action, TError>,
+    { request: RequestAction<TArgs, TResponse> }
 >;
 
-export type ErrorAction<TArgs, TType extends Error = Error> = PayloadMetaAction<
+export type ErrorAction<
+    TArgs = unknown,
+    TResponse = unknown,
+    TError extends Error = Error
+> = PayloadMetaAction<
     'error',
-    ActionError<Action, TType>,
-    { request: RequestAction<TArgs> }
+    ActionError<Action, TError>,
+    { request: RequestAction<TArgs, TResponse> }
 >;
 
 export type ActionTypes<
@@ -45,9 +58,9 @@ export type ActionTypes<
     TFailure extends Error = Error,
     TError extends Error = Error
 > =
-    | RequestAction<TArgs>
-    // | SkipAction<TArgs>
-    | SuccessAction<TArgs, TType>
-    | FailureAction<TArgs, TFailure>
-    | ErrorAction<TArgs, TError>
-    | CancelAction<TArgs>;
+    | CancelAction
+    | ErrorAction<TArgs, TType, TError>
+    | FailureAction<TArgs, TType, TFailure>
+    | RequestAction<TArgs, TType>
+    | RetryAction<TArgs, TType>
+    | SuccessAction<TArgs, TType>;
