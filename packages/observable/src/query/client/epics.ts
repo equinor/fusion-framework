@@ -163,7 +163,7 @@ export const handleRequests =
                                         payload: new ActionError(
                                             action,
                                             err,
-                                            'failed to execute request'
+                                            `failed to execute request for transaction ${request.meta.transaction}`
                                         ),
                                         meta: { request },
                                     })
