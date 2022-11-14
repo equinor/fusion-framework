@@ -8,11 +8,15 @@
     "jsx": "react-jsx"
   },
   "references": [
+    
+    {
+      "path": "../observable"
+    },
     {
       "path": "../module-app-config"
     },
     {
-      "path": "../observable"
+      "path": "../react-module"
     },
   ],
   "include": [
