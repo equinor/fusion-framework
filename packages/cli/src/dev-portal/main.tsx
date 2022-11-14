@@ -8,20 +8,14 @@ import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 import { configure } from './config';
 
-import { AppLoader } from './AppLoader';
+// import { AppLoader } from './AppLoader';
+import { Router } from './Router';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <Framework configure={configure} fallback={<StarProgress text="Loading framework" />}>
-                <div>
-                    <section>
-                        <header>
-                            <h1>Fusion Dev Portal</h1>
-                        </header>
-                    </section>
-                    <AppLoader appKey={'test-app'} />
-                </div>
+                <Router />
             </Framework>
         </ThemeProvider>
     </React.StrictMode>

@@ -1,40 +1,55 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
-import { AppConfig, AppManifest, useAppEnv } from '@equinor/fusion-framework-react/app';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
+
+import { ErrorViewer } from './ErrorViewer';
 
 export const AppLoader = (props: { appKey: string }) => {
     const { appKey } = props;
     const fusion = useFramework();
     const ref = useRef<HTMLSpanElement>(null);
-    const renderRef = useRef<VoidFunction | undefined>(undefined);
 
-    const { config, manifest, isLoading } = useAppEnv(appKey);
-
-    const loadApp = useCallback(
-        async (manifest: AppManifest, config: AppConfig) => {
-            const url = new URL('/index.tsx', import.meta.url).href;
-            const module = await import(url);
-            const renderFn = module.render ?? module.default;
-            if (ref.current) {
-                return renderFn(ref.current, { fusion, env: { manifest, config } });
-            }
-        },
-        [ref, fusion]
-    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [appModule, setAppModule] = useState<any | undefined>();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<Error | undefined>();
 
     useEffect(() => {
-        if (!isLoading && manifest && config) {
-            loadApp(manifest, config).then((x) => (renderRef.current = x));
+        setLoading(true);
+        const sub = fusion.modules.app.loadApp(appKey).subscribe({
+            next: (module) => setAppModule(module),
+            error: setError,
+            complete: () => {
+                setLoading(false);
+            },
+        });
+        return () => sub.unsubscribe();
+    }, [appKey]);
+
+    useEffect(() => {
+        if (appModule && ref.current) {
+            const { manifest, config, module } = appModule;
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const renderFn = module.render ?? module.default;
+            return renderFn(ref.current, { fusion, env: { manifest, config } });
         }
-        return renderRef.current;
-    }, [loadApp, isLoading, manifest, config]);
+    }, [fusion, ref, appModule]);
+
+    if (error) {
+        return (
+            <div>
+                <h2>🔥 Failed to load application 🤬</h2>
+                <ErrorViewer error={error} />;
+            </div>
+        );
+    }
 
     return (
         <div>
-            {isLoading && <StarProgress text="Loading Application" />}
-            <span ref={ref} style={{ display: isLoading ? 'none' : '' }}></span>
+            {loading && <StarProgress text="Loading Application" />}
+            {<span ref={ref} style={{ display: !appModule ? 'none' : '' }}></span>}
         </div>
     );
 };
