@@ -36,6 +36,7 @@ export type AppManifest = {
     categoryId: string | null;
     category: AppCategory | null;
     hide?: boolean;
+    entry: string;
 };
 
 export type Endpoint = { name: string; uri: string; scopes?: string[] };

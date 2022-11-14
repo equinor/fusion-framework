@@ -36,8 +36,13 @@ export class AppConfigurator<TDeps extends ModuleDeps = ModuleDeps>
         } else {
             /** load service discovery module */
             const serviceDiscovery = await init.requireInstance('serviceDiscovery');
+
             /** resolve and create a client from discovery */
-            return await serviceDiscovery.createClient('portal');
+            try {
+                return await serviceDiscovery.createClient('app');
+            } catch (err) {
+                return await serviceDiscovery.createClient('portal');
+            }
         }
     }
 
