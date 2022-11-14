@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.3.4...@equinor/fusion-framework-module-context@0.4.0) (2022-11-14)
+
+### Features
+
+-   update packages to use observable ([98024aa](https://github.com/equinor/fusion-framework/commit/98024aa466c68f03bd793bd564cf7b6bf65def72))
+
 ## 0.3.4 (2022-11-11)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context

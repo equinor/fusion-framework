@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@3.0.11...@equinor/fusion-framework-module-service-discovery@3.1.0) (2022-11-14)
+
+### Features
+
+-   update packages to use observable ([98024aa](https://github.com/equinor/fusion-framework/commit/98024aa466c68f03bd793bd564cf7b6bf65def72))
+
 ## 3.0.11 (2022-11-11)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery

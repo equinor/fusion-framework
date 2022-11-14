@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.4.0 (2022-11-14)
+
+### Features
+
+-   **observable:** update queue system ([bda336c](https://github.com/equinor/fusion-framework/commit/bda336cf40e131866c5dcc48c93d8349c7e77063))
+
 ## 1.3.1 (2022-11-02)
 
 **Note:** Version bump only for package @equinor/fusion-observable
