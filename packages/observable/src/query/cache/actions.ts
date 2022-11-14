@@ -6,7 +6,12 @@ export type QueryCacheActions<TType = unknown, TArgs = unknown> = {
         'set',
         {
             key: string;
-            value: QueryCacheRecord<TType, TArgs>;
+            value: {
+                value: TType;
+                args: TArgs;
+                transaction: string;
+                created?: number;
+            };
         }
     >;
     clear: PayloadAction<'clear', { key: string }>;
