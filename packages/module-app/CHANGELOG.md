@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.3.0 (2022-11-14)
+
+### Features
+
+-   **module-app:** add app loader ([0ef0b71](https://github.com/equinor/fusion-framework/commit/0ef0b71de27f1dccc757aa7eceea558072a1db60))
+
 ## [1.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@1.1.6...@equinor/fusion-framework-module-app@1.2.0) (2022-11-14)
 
 ### Features
