@@ -1,24 +1,30 @@
-import { readFileSync } from 'fs';
-import { dirname, resolve } from 'path';
-import { findUpSync } from 'find-up';
+import { resolve } from 'path';
 
-import { defineConfig, UserConfig } from 'vite';
+import { defineConfig, UserConfig, createLogger } from 'vite';
 import react from '@vitejs/plugin-react';
 
-const resolvePackage = () => {
-    const pkgFile = findUpSync('package.json');
-    if (!pkgFile) {
-        throw Error('failed to resolve package');
-    }
-    const pkgRaw = readFileSync(pkgFile, 'utf8');
-    return { root: dirname(pkgFile), pkg: JSON.parse(pkgRaw) };
+import { resolvePackage } from './app-config.js';
+
+const createCustomLogger = () => {
+    const logger = createLogger();
+    const originalWarning = logger.warn;
+    logger.warn = (msg, options) => {
+        /** import of app file from framework */
+        if (
+            msg.includes('import(manifest.entry)') &&
+            msg.includes('dynamic-import-vars#limitations')
+        )
+            return;
+        originalWarning(msg, options);
+    };
+    return logger;
 };
 
 export const createConfig = (): UserConfig => {
-    const { root } = resolvePackage();
+    const { root, pkg } = resolvePackage();
     return defineConfig({
         plugins: [react()],
-        root: resolve(root, 'src'),
+        root: root,
         server: {
             middlewareMode: true,
         },
@@ -27,11 +33,12 @@ export const createConfig = (): UserConfig => {
         build: {
             outDir: resolve(root, 'dist'),
             lib: {
-                entry: resolve(root, 'src/index.tsx'),
+                entry: resolve(root, pkg.main),
                 fileName: 'app-bundle',
                 formats: ['es'],
             },
         },
+        customLogger: createCustomLogger(),
     }) as unknown as UserConfig;
 };
 

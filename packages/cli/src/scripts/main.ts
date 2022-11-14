@@ -4,10 +4,11 @@ import { Command } from 'commander';
 
 import ora from 'ora';
 
-import { build, mergeConfig } from 'vite';
+import { build, mergeConfig, UserConfig } from 'vite';
 
 import startDevServer from './serve.js';
 import createConfig from './create-config.js';
+import { resolveAppConfig } from './app-config.js';
 
 const program = new Command();
 
@@ -22,12 +23,14 @@ const app = program
 app.command('dev')
     .description('Create a development server')
 
-    .option('-p, --port <number>', 'devserver port', '3000')
+    .option('-p, --port <number>', 'dev-server port', '3000')
     .action(async (port) => {
         const spinner = ora('Loading configuration').start();
-        const config = mergeConfig(await createConfig(), { server: port });
+        const viteConfig = mergeConfig(await createConfig(), { server: port }) as UserConfig;
+        const appConfig = await resolveAppConfig();
+
         spinner.succeed('Configuration loaded');
-        startDevServer(mergeConfig(config, { server: port }));
+        startDevServer({ viteConfig, appConfig });
     });
 
 app.command('build').action(async () => {
