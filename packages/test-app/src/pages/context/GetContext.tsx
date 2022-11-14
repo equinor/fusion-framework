@@ -27,8 +27,6 @@ export const GetContext = () => {
     const context = useCurrentContext();
     const portalContext = useFrameworkCurrentContext();
 
-    const status = useObservableState(provider.contextClient.status$);
-
     useEffect(() => {
         if (!contextId) {
             return;
@@ -60,10 +58,6 @@ export const GetContext = () => {
                 <option value="a007e04a-e372-4da5-b5be-8d2f6b671065">Krafla</option>
                 <option value="03f56966-4732-48bc-8b42-6450cedb38fa">Fusion</option>
             </select>
-            <div>
-                <span>Status:</span>
-                <span>{status}</span>
-            </div>
 
             <h3>App Context</h3>
             <pre>

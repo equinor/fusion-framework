@@ -1,44 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
-
 import { useAppModule } from '@equinor/fusion-framework-react-app';
-import { ContextModule, QueryContextParameters } from '@equinor/fusion-framework-module-context';
-import { useObservableSelectorState } from '@equinor/fusion-observable/react';
-
-const useContextQuery = () => {
-    const provider = useAppModule<ContextModule>('context');
-    const [result, setResult] = useState<unknown>(null);
-
-    const search = useCallback(
-        (args: QueryContextParameters) => {
-            provider.queryClient.query(args).subscribe(setResult);
-        },
-        [provider]
-    );
-
-    const status = useObservableSelectorState(provider.queryClient.client, (x) => x.status);
-
-    useEffect(() => {
-        provider.queryClient.client.status;
-    }, []);
-
-    return { search, result, status };
-};
+import { ContextModule } from '@equinor/fusion-framework-module-context';
+import { useDebounceQuery } from '@equinor/fusion-observable/react';
 
 export const QueryContext = () => {
-    const [query, setQuery] = useState<string>('');
-    const { result, search, status } = useContextQuery();
-    useEffect(() => {
-        if (query.length > 2) {
-            search({ search: query });
-        }
-    }, [query, search]);
+    const provider = useAppModule<ContextModule>('context');
+    const { value, query } = useDebounceQuery(provider.queryClient, { debounce: 500 });
     return (
         <div>
-            <input type="search" onChange={(e) => setQuery(e.currentTarget.value)} />
-            <span>status: {status}</span>
+            <input
+                type="search"
+                onChange={(e) => query({ args: { search: e.currentTarget.value } })}
+            />
             <div>
-                {status === 'active' && <p>Loading data</p>}
-                {status === 'idle' && <pre>{JSON.stringify(result, undefined, 4)}</pre>}
+                <pre>{JSON.stringify(value, undefined, 4)}</pre>
             </div>
         </div>
     );

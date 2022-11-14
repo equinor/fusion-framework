@@ -4,7 +4,6 @@ import { QueryCtorOptions } from '@equinor/fusion-observable/query';
 import { ContextClientOptions } from './client/ContextClient';
 import { ContextItem, QueryContextParameters } from './types';
 import { getContextSelector, queryContextSelector } from './selectors';
-import { debounceTime } from 'rxjs/operators';
 
 export interface IContextModuleConfig {
     getContext: ContextClientOptions;
@@ -72,7 +71,6 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator<[Se
             queryContext: {
                 client: await this.createContextClientQuery(init),
                 key: (args) => JSON.stringify(args),
-                queueOperator: (_) => ($) => $.pipe(debounceTime(250)),
                 expire: this.defaultExpireTime,
             },
         };

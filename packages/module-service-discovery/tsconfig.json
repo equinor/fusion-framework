@@ -12,6 +12,9 @@
     },
     {
       "path": "../module-http"
+    },
+    {
+      "path": "../observable"
     }
   ],
   "include": [
