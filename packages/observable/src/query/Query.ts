@@ -1,4 +1,5 @@
 import {
+    EMPTY,
     firstValueFrom,
     lastValueFrom,
     Observable,
@@ -6,7 +7,7 @@ import {
     Subject,
     Subscription,
 } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
+import { catchError, map, takeWhile } from 'rxjs/operators';
 
 import * as uuid from 'uuid';
 
@@ -115,7 +116,10 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
                         ({ args, options }) =>
                             new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
                                 const { task, transaction } = this.#client.next(args, options);
-                                subscriber.add(task.subscribe(subscriber));
+                                subscriber.add(
+                                    // ignore errors, only emit new cache values
+                                    task.pipe(catchError(() => EMPTY)).subscribe(subscriber)
+                                );
                                 subscriber.add(() => {
                                     this.#client.cancel(transaction);
                                 });
