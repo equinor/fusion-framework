@@ -1,5 +1,6 @@
 import {
     BehaviorSubject,
+    catchError,
     distinctUntilChanged,
     filter,
     firstValueFrom,
@@ -12,6 +13,7 @@ import {
     Subscription,
     switchMap,
     takeWhile,
+    throwIfEmpty,
 } from 'rxjs';
 
 import { ModuleType } from '@equinor/fusion-framework-module';
@@ -99,7 +101,13 @@ export class AppProvider extends Observable<AppManifest | undefined> implements 
     }
 
     public getApp(appKey: string): Observable<AppManifest> {
-        return Query.extractQueryValue(this.#appClient.query({ appKey }));
+        return Query.extractQueryValue(
+            this.#appClient.query({ appKey }).pipe(
+                catchError((cause) => {
+                    throw Error('failed to load manifest', { cause });
+                })
+            )
+        );
     }
 
     public getAllApps(): Observable<AppManifest[]> {
@@ -110,7 +118,13 @@ export class AppProvider extends Observable<AppManifest | undefined> implements 
         appKey: string,
         tag?: string
     ): Observable<AppConfig<TType>> {
-        return Query.extractQueryValue(this.#configClient.query({ appKey, tag }));
+        return Query.extractQueryValue(
+            this.#configClient.query({ appKey, tag }).pipe(
+                catchError((cause) => {
+                    throw Error('failed to load config', { cause });
+                })
+            )
+        );
     }
 
     public setCurrentApp(appKey: string): Promise<void> {
@@ -146,7 +160,8 @@ export class AppProvider extends Observable<AppManifest | undefined> implements 
             /** only output when all attributes are filled */
             filter((x): x is AppBundle<TEnvironment, TModule> =>
                 ['manifest', 'module', 'config'].every((key) => !!x[key as keyof AppBundle])
-            )
+            ),
+            throwIfEmpty(() => 'failed to load application')
         );
     }
 
