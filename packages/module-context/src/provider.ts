@@ -1,4 +1,5 @@
-import { Observable, pairwise, Subscription } from 'rxjs';
+import { lastValueFrom, Observable, Subscription } from 'rxjs';
+import { map, pairwise } from 'rxjs/operators';
 
 import { IContextModuleConfig } from './configurator';
 
@@ -28,11 +29,14 @@ export interface IContextProvider {
 
 export class ContextProvider implements IContextProvider {
     #contextClient: ContextClient;
-    #contextQuery: Query<ContextItem[], QueryContextParameters>;
+    #contextQuery: Query<Array<ContextItem>, QueryContextParameters>;
 
     #event?: ModuleType<EventModule>;
 
     #subscriptions = new Subscription();
+
+    #contextType?: IContextModuleConfig['contextType'];
+    #contextFilter: IContextModuleConfig['contextFilter'];
 
     public get contextClient() {
         return this.#contextClient;
@@ -40,6 +44,23 @@ export class ContextProvider implements IContextProvider {
 
     public get queryClient() {
         return this.#contextQuery;
+    }
+
+    public queryContext(search: string): Observable<Array<ContextItem>> {
+        const query$ = this.queryClient
+            .query({
+                search,
+                filter: {
+                    type: this.#contextType,
+                },
+            })
+            .pipe(map((x) => x.value));
+
+        return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
+    }
+
+    public queryContextAsync(search: string): Promise<Array<ContextItem>> {
+        return lastValueFrom(this.queryContext(search));
     }
 
     get currentContext$(): Observable<ContextItem | undefined> {
@@ -77,6 +98,10 @@ export class ContextProvider implements IContextProvider {
         parentContext?: IContextProvider;
     }) {
         const { config, event, parentContext } = args;
+
+        this.#contextType = config.contextType;
+        this.#contextFilter = config.contextFilter;
+
         this.#contextClient = new ContextClient(config.getContext);
 
         this.#contextQuery = new Query(config.queryContext);
