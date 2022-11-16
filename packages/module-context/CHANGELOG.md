@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.4.1...@equinor/fusion-framework-module-context@0.5.0) (2022-11-16)
+
+### Features
+
+-   **module-context:** allow query filter ([1a89ee5](https://github.com/equinor/fusion-framework/commit/1a89ee57277af3853ce802da9b5e0956bff8ceaa))
+
 ## 0.4.1 (2022-11-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
