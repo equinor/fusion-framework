@@ -1,12 +1,26 @@
 import { IModulesConfigurator } from '@equinor/fusion-framework-module';
+import { IContextModuleConfig } from './configurator';
 
 import { module } from './module';
 /**
  * Method for enabling the Service module
- * @param config - configuration object
+ * @param configurator - configuration object
  */
-export const enableContext = (config: IModulesConfigurator): void => {
-    config.addConfig({ module });
+export const enableContext = (
+    configurator: IModulesConfigurator,
+    options?: Pick<IContextModuleConfig, 'contextFilter' | 'contextType'>
+): void => {
+    configurator.addConfig({
+        module,
+        configure: (contextConfigurator) => {
+            contextConfigurator.processConfig = (config) => {
+                return {
+                    ...config,
+                    ...options,
+                };
+            };
+        },
+    });
 };
 
 export {
