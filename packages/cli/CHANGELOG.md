@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.2.1...@equinor/fusion-framework-cli@0.2.2) (2022-11-17)
+
+### Bug Fixes
+
+-   **cli:** update dev scope for service discovery ([af1ff9c](https://github.com/equinor/fusion-framework/commit/af1ff9cb2eebb2a19b658549feef3b5822d8f8a3))
+
 ## [0.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.2.0...@equinor/fusion-framework-cli@0.2.1) (2022-11-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
