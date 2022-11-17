@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <Root />,
         children: [
             {
-                path: 'apps/:appKey',
+                path: 'apps/:appKey/*',
                 element: <AppRoute />,
             },
             {

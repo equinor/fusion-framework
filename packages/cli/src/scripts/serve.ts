@@ -119,7 +119,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
     spinner.start('Starting dev-server');
     const instance = app.listen(port);
     vite.watcher.on('change', async (x) => {
-        if (x === config.appConfig.dev.configSource.file) {
+        if (x === config.appConfig.dev?.configSource?.file) {
             console.log('🛠', kleur.red('config changed, closing dev server'));
             await vite.close();
             instance.close();
