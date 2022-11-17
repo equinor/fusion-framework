@@ -1,4 +1,4 @@
-import type { ModulesInstance } from '@equinor/fusion-framework-module';
+import type { CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import { AppModule } from '@equinor/fusion-framework-module-app';
@@ -9,22 +9,23 @@ import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 
-export type FusionModules<TModules extends Array<AnyModule> = []> = [
-    ...TModules,
-    AppModule,
-    ContextModule,
-    EventModule,
-    HttpModule,
-    MsalModule,
-    ServicesModule,
-    ServiceDiscoveryModule
-];
-
-export type FusionModulesInstance<TModules extends Array<AnyModule> = []> = ModulesInstance<
-    FusionModules<TModules>
+export type FusionModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
+    TModules,
+    [
+        AppModule,
+        ContextModule,
+        EventModule,
+        HttpModule,
+        MsalModule,
+        ServicesModule,
+        ServiceDiscoveryModule
+    ]
 >;
 
-export interface Fusion<TModules extends Array<AnyModule> = []> {
+export type FusionModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
+    ModulesInstance<FusionModules<TModules>>;
+
+export interface Fusion<TModules extends Array<AnyModule> | unknown = unknown> {
     /**
      * Configured services for Fusion
      */

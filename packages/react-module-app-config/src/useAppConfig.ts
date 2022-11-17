@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useModule } from '@equinor/fusion-framework-react-module';
 
-import { appConfigModuleKey } from '@equinor/fusion-framework-module-app-config';
-import type { AppConfig, IAppConfigProvider } from '@equinor/fusion-framework-module-app-config';
+import type { AppConfig, AppConfigModule } from '@equinor/fusion-framework-module-app-config';
 
 import { Query } from '@equinor/fusion-observable/query';
 
@@ -18,7 +17,7 @@ export type UseAppConfigResult<T> = {
 };
 
 export const useAppConfig = <T>(props: AppConfigProps<T>): UseAppConfigResult<T> => {
-    const module = useModule<{ [appConfigModuleKey]: IAppConfigProvider }>('appConfig');
+    const module = useModule<AppConfigModule>('appConfig');
     if (!module) {
         throw Error('app config module is not initiated in scope!');
     }

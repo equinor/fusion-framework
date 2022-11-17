@@ -2,10 +2,10 @@ import { useModule } from '@equinor/fusion-framework-react-module';
 import {
     eventModuleKey,
     FrameworkEventMap,
-    IEventModuleProvider,
     FrameworkEventHandler,
     FrameworkEvent,
     IFrameworkEvent,
+    EventModule,
 } from '@equinor/fusion-framework-module-event';
 import { useEffect } from 'react';
 
@@ -26,15 +26,8 @@ export const useEventHandler: useEventHandler = <
         ? FrameworkEventHandler<FrameworkEventMap[TKey]>
         : FrameworkEventHandler<TType>
 ): void => {
-    const module = useModule<{ [eventModuleKey]: IEventModuleProvider }>(eventModuleKey);
-    useEffect(
-        () =>
-            module.addEventListener<TType>(
-                name as unknown as string,
-                cb as unknown as FrameworkEventHandler<TType>
-            ),
-        [name, cb]
-    );
+    const module = useModule<EventModule>(eventModuleKey);
+    useEffect(() => module.addEventListener(name, cb), [name, cb]);
 };
 
 export default useEventHandler;
