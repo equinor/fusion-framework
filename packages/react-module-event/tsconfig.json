@@ -9,11 +9,14 @@
   },
   "references": [
     {
+      "path": "../observable"
+    },
+    {
       "path": "../module-event"
     },
     {
-      "path": "../observable"
-    },
+      "path": "../react-module"
+    }
   ],
   "include": [
     "src/**/*"

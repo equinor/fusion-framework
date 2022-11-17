@@ -1,4 +1,4 @@
-import { ContextItem } from '@equinor/fusion-framework-module-context';
+import { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
 import { IContextProvider, contextModuleKey } from '@equinor/fusion-framework-module-context';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useObservableState } from '@equinor/fusion-observable/react';
@@ -19,7 +19,7 @@ export const useCurrentContext = (provider: IContextProvider) => {
  * uses context provider from closes module provider
  */
 export const useModuleCurrentContext = () => {
-    const provider = useModule<{ [contextModuleKey]: IContextProvider }>(contextModuleKey);
+    const provider = useModule<ContextModule>(contextModuleKey);
     return useCurrentContext(provider);
 };
 

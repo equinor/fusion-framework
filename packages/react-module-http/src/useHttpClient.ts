@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { useMemo } from 'react';
 
-import type { HttpClientProvider, IHttpClient } from '@equinor/fusion-framework-module-http';
-import { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
+import type { HttpMsalModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { useModule } from '@equinor/fusion-framework-react-module';
 
@@ -17,8 +16,8 @@ import { useModule } from '@equinor/fusion-framework-react-module';
  * @template TType type-hint return type, useful if custom Ctor is provided in config
  * @param name Named client from configuration
  */
-export const useHttpClient = <TType extends IHttpClient = HttpClientMsal>(name: string): TType => {
-    const http = useModule<{ http: HttpClientProvider<TType> }>('http');
+export const useHttpClient = (name: string): IHttpClient => {
+    const http = useModule<HttpMsalModule>('http');
     const client = useMemo(() => {
         if (http.hasClient(name)) {
             return http.createClient(name);
