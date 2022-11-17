@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.2.2...@equinor/fusion-framework-cli@0.2.3) (2022-11-17)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
 ## [0.2.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.2.1...@equinor/fusion-framework-cli@0.2.2) (2022-11-17)
 
 ### Bug Fixes

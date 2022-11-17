@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.4.0 (2022-11-17)
+
+### Features
+
+-   update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
+
 ## [4.3.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.3.7...@equinor/fusion-framework@4.3.8) (2022-11-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.0 (2022-11-17)
+
+### Features
+
+-   update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
+
 ## [0.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.1.8...@equinor/fusion-framework-react-module-context@0.1.9) (2022-11-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-context

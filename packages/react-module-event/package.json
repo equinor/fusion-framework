@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-module-event",
-    "version": "1.0.19",
+    "version": "1.1.0",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module-event": "^1.1.4",
-        "@equinor/fusion-framework-react-module": "^1.0.15"
+        "@equinor/fusion-framework-react-module": "^1.1.0"
     },
     "devDependencies": {
         "@types/react": "^17.0.11",
