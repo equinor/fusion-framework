@@ -30,10 +30,11 @@ export const AppLoader = (props: { appKey: string }) => {
     useEffect(() => {
         if (appModule && ref.current) {
             const { manifest, config, module } = appModule;
+            const [basename] = window.location.pathname.match(/\/?apps\/[a-z|-]+(\/)?/g) ?? [];
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const renderFn = module.render ?? module.default;
-            return renderFn(ref.current, { fusion, env: { manifest, config } });
+            return renderFn(ref.current, { fusion, basename, env: { manifest, config } });
         }
     }, [fusion, ref, appModule]);
 
