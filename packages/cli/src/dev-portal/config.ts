@@ -7,7 +7,7 @@ export const configure = async (config: FusionConfigurator) => {
     config.configureServiceDiscovery({
         client: {
             baseUri: import.meta.url,
-            defaultScopes: ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'],
+            defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
         },
     });
 
