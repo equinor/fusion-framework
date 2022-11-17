@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.4.0 (2022-11-17)
+
+### Features
+
+-   **module-navigation:** initial ([891e69d](https://github.com/equinor/fusion-framework/commit/891e69d9a98ba02ee1f9dd1c5b0cb31ff1b5fd0f))
+
 ## [1.3.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@1.3.0...@equinor/fusion-framework-module-app@1.3.1) (2022-11-14)
 
 ### Bug Fixes
