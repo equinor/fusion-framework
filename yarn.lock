@@ -551,19 +551,6 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@equinor/fusion-framework-cli@^0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-cli/-/fusion-framework-cli-0.1.15.tgz#9e24a96d1c81d82cac29b37b9e0be65da99dd93f"
-  integrity sha512-CNwDcqXxzIvKikNfwUG4VfeXqh5e2QuXnEcniMAQFitiamING0c3gOgvXIRzkOwCNC6etkx4Nbbc+xt22aJ2Uw==
-  dependencies:
-    "@vitejs/plugin-react" "^2.2.0"
-    commander "^9.4.1"
-    express "^4.18.2"
-    find-up "^6.3.0"
-    kleur "^4.1.5"
-    ora "^6.1.2"
-    vite "^3.2.0"
-
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
