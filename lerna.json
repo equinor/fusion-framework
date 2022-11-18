@@ -15,8 +15,5 @@
       "ignoreChanges": ["*.spec.ts", "*.md"],
       "message": "chore(release): publish"
     }
-  },
-  "packages": [
-    "packages/*"
-  ]
+  }
 }
