@@ -2,6 +2,7 @@ import {
     IModuleConfigurator,
     IModulesConfigurator,
     Module,
+    ModuleConfigType,
 } from '@equinor/fusion-framework-module';
 import { INavigationConfigurator, NavigationConfigurator } from './configurator';
 import { INavigationProvider, NavigationProvider } from './provider';
@@ -24,10 +25,18 @@ export const module: NavigationModule = {
 };
 
 export const enableNavigation = <TRef = unknown>(
-    config: IModulesConfigurator,
-    options: Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>
+    configurator: IModulesConfigurator,
+    basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>
 ): void => {
-    config.addConfig({ module, ...options });
+    const options =
+        typeof basenameOrOptions === 'string'
+            ? {
+                  configure: (config: ModuleConfigType<NavigationModule>) => {
+                      config.basename = basenameOrOptions;
+                  },
+              }
+            : basenameOrOptions;
+    configurator.addConfig({ module, ...options });
 };
 
 export default module;

@@ -34,7 +34,7 @@ export const AppLoader = (props: { appKey: string }) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const renderFn = module.render ?? module.default;
-            return renderFn(ref.current, { fusion, basename, env: { manifest, config } });
+            return renderFn(ref.current, { fusion, env: { manifest, config, basename } });
         }
     }, [fusion, ref, appModule]);
 
