@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.5 (2022-11-18)
+
+### Bug Fixes
+
+-   **module-http:** add headers to json request ([8223394](https://github.com/equinor/fusion-framework/commit/8223394362a24663bf65442025f0b031aa37a910))
+
 ## 2.1.4 (2022-11-11)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http

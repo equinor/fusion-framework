@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.3.6...@equinor/fusion-framework-cookbook-app-react@1.3.7) (2022-11-18)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
+
 ## [1.3.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.3.5...@equinor/fusion-framework-cookbook-app-react@1.3.6) (2022-11-18)
 
 ### Bug Fixes
