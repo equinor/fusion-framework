@@ -5,8 +5,6 @@ tag:
   - WIP
 ---
 
-
-
 - <Badge type="tip" text="Complete"/>
 - <Badge type="warning" text="Minimum viable product"/>
 - <Badge type="info" text="Active - Currently working on"/>
@@ -131,7 +129,7 @@ The framework also keeps track of selected application and notifies when when cu
 - [x] tooling for `React`
 - [ ] developer documentation
 - [ ] developer guide
-- [ ] cookbook for loading applications
+- [x] cookbook for loading applications
 - [ ] _track usage (awaiting new service)_
 
 
@@ -171,15 +169,35 @@ Convert existing application to be compatible with dynamic loading and configura
 - [ ] create guide for making application compliant with `Fusion Framework` 
 - [ ] make Fusion Portal compliant with `React 18` 
 
-
-# Not planned yet
-
-## Navigation <Badge type="warning" text="need grooming"/>
+## Navigation <Badge type="info" text="Q4 2022"/>
+__Q4 2022__
 
 The **Framework** should provide functionality for applications and portals for navigating.
 
-- [ ] create functionality for building scoped urls
+![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/equinor/fusion-framework/7)
+
+- [x] create functionality for building scoped urls
+- [x] create module for creating router
+- [ ] create documentation
 - [ ] observe changes to routing
+
+## Application CLI <Badge type="info" text="Q4 2022"/>
+__Q4 2022__
+
+Create a CLI for building and developing application
+
+![GitHub milestone](https://img.shields.io/github/milestones/progress-percent/equinor/fusion-framework/4)
+
+- [x] create a CLI for developing application
+- [ ] create application builder
+- [x] create proxy-server for emulating portal (manifest, config)
+- [x] add routing to CLI portal
+- [ ] add __context__ selector and provider to CLI portal 
+- [ ] add __person__ provider to CLI portal
+- [ ] support configuration of portal framework (auth and service discovery) 
+
+# Not planned yet
+
 
 ## Tasks <Badge type="warning" text="need grooming"/>
 
@@ -218,15 +236,6 @@ Module for subscribing to **Fusion** service messages (SignalR)
 
 Module for resolving persons (person-card, person-picker, person-avatar, person-availability)
 
-## Application CLI <Badge type="warning" text="need grooming"/>
-
-Create a CLI for building and developing application
-
-::: warning
-
-might be resolved by guide and cookbooks
-
-:::
 
 ## Dynatrace <Badge type="warning" text="need grooming"/>
 

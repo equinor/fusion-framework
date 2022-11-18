@@ -14,10 +14,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/plugin-register-components": "^2.0.0-beta.51",
+    "@vuepress/plugin-register-components": "^2.0.0-beta.53",
     "typescript": "^4.8.2",
-    "vuepress": "^2.0.0-beta.51",
-    "vuepress-plugin-md-enhance": "^2.0.0-beta.100",
-    "vuepress-theme-hope": "^2.0.0-beta.100"
+    "vuepress": "^2.0.0-beta.53",
+    "vuepress-plugin-comment2": "^2.0.0-beta.123",
+    "vuepress-theme-hope": "^2.0.0-beta.122"
   }
 }

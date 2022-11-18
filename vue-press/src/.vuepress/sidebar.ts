@@ -22,6 +22,7 @@ export default sidebar({
                 '',
                 'http/',
                 'event/',
+                'navigation/',
                 'ag-grid/',
                 {
                     text: 'Service Discovery',
