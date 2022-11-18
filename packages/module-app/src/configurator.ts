@@ -36,8 +36,14 @@ export class AppConfigurator<TDeps extends ModuleDeps = ModuleDeps>
         } else {
             /** load service discovery module */
             const serviceDiscovery = await init.requireInstance('serviceDiscovery');
+
+            // TODO - remove when refactor portal service!
             /** resolve and create a client from discovery */
-            return await serviceDiscovery.createClient('app');
+            try {
+                return await serviceDiscovery.createClient('app');
+            } catch {
+                return await serviceDiscovery.createClient('portal');
+            }
         }
     }
 
