@@ -15,7 +15,6 @@ import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-r
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
     fusion: TFusion;
     env: TEnv;
-    basename: string;
 };
 
 export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
