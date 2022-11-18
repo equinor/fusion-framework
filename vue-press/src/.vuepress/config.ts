@@ -10,8 +10,6 @@ const { description, name, version } = require('../../../package.json');
 
 import theme from './theme';
 
-import { commentPlugin } from "vuepress-plugin-comment2";
-
 export default defineUserConfig({
   base: '/fusion-framework/',
   title: [name, version].join('@'),
@@ -22,13 +20,6 @@ export default defineUserConfig({
       components: {
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),
       }
-    }),
-    commentPlugin({
-      provider: "Giscus",
-      repo: 'equinor/fusion-framework',
-      repoId: "MDEwOlJlcG9zaXRvcnkzNzEyODUwMzk=",
-      category: "Documentation",
-      categoryId: "DIC_kwDOFiFcL84CSoOm",
     })
   ],
   markdown: {

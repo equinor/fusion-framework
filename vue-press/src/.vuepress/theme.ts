@@ -32,6 +32,13 @@ export default hopeTheme({
         tabs: true,
         tasklist: true,
         container: true,
-      }
+      },
+      comment: {
+        provider: "Giscus",
+        repo: 'equinor/fusion-framework',
+        repoId: "MDEwOlJlcG9zaXRvcnkzNzEyODUwMzk=",
+        category: "Documentation",
+        categoryId: "DIC_kwDOFiFcL84CSoOm",
+      },
      }
 });
