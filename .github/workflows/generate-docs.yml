@@ -40,11 +40,11 @@ jobs:
           node-version: '16'
 
       - name: Install Node Dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Build project
         run: |
-          yarn build
+          npm run build
           touch ../docs/.nojekyll
 
       - name: Config git user
