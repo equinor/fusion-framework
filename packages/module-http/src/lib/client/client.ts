@@ -83,12 +83,13 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
     ): StreamResponse<T> {
         const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
         const selector = args?.selector ?? jsonSelector;
-        const header = new Headers(args?.headers);
-        header.append('Content-Type', 'application/json');
+        const headers = new Headers(args?.headers);
+        headers.append('Content-Type', 'application/json');
         return this.fetch$(path, {
             ...args,
             body,
             selector,
+            headers,
         } as FetchRequestInit<T, TRequest, TResponse>);
     }
 
