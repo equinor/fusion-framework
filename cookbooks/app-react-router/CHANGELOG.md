@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-router@1.1.1...@equinor/fusion-framework-cookbook-app-react-router@1.1.2) (2022-11-18)
+
+### Bug Fixes
+
+-   **cookbooks:** update cookbooks ([bd4c1a7](https://github.com/equinor/fusion-framework/commit/bd4c1a792ccdbae8415b0d8d83ff9bf77071f931))
+
 ## [1.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-router@1.1.0...@equinor/fusion-framework-cookbook-app-react-router@1.1.1) (2022-11-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-router

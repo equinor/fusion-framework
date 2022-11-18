@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.1...@equinor/fusion-framework-cli@0.3.2) (2022-11-18)
+
+### Bug Fixes
+
+-   basename in app render ([ae75815](https://github.com/equinor/fusion-framework/commit/ae75815877701c364f853413b29ad4f053d9c2c2))
+
 ## [0.3.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.0...@equinor/fusion-framework-cli@0.3.1) (2022-11-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
