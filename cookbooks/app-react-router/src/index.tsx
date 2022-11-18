@@ -1,36 +1,20 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
 import { makeComponent, ComponentRenderArgs } from '@equinor/fusion-framework-react-app';
-import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 
-import AppRouter from './Router';
+import configure from './config';
 
-/** Render function */
+import App from './App';
+
+/** render callback function */
 export default function (el: HTMLElement, args: ComponentRenderArgs) {
-    /** create render foor from provided element */
     const root = createRoot(el);
 
-    /** Make app component */
-    const AppComponent = makeComponent(
-        <StrictMode>
-            <h1>🚦 React Router</h1>
-            <AppRouter />
-        </StrictMode>,
-        args,
-        (configurator) => {
-            enableNavigation(configurator, {
-                configure: (config) => {
-                    console.log(args);
-                    config.basename = args.basename;
-                },
-            });
-        }
-    );
+    /** make render component */
+    const Component = makeComponent(<App />, args, configure);
 
-    /** render Application */
-    root.render(<AppComponent />);
+    /** render app component */
+    root.render(<Component />);
 
-    /** Teardown */
+    /** teardown */
     return () => root.unmount();
 }
