@@ -5,7 +5,7 @@ import sidebar from './sidebar';
 const navbar: HopeThemeNavbarConfig = [
   {
     text: 'Guide',
-    link: '/guide/'
+    link: '/guide/app'
   },
   {
     text: 'Modules',
