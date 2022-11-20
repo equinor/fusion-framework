@@ -1,4 +1,5 @@
 export {
+    enableContext,
     ContextItem,
     ContextItemType,
     IContextProvider,
