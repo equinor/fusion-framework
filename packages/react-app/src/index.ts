@@ -6,6 +6,7 @@
 export type {
     AppConfig,
     AppEnv,
+    AppModuleInitiator,
     AppModules,
     AppModulesInstance,
     AppManifest,
