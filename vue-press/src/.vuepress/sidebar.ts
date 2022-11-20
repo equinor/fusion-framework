@@ -8,6 +8,7 @@ export default sidebar({
             children: [
                 'app/',
                 'app/getting-started',
+                'app/cli',
                 'app/legacy',
             ],
         },
