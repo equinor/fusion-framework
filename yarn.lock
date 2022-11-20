@@ -551,6 +551,14 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
+"@equinor/fusion-framework-react-module-context@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-react-module-context/-/fusion-framework-react-module-context-0.2.1.tgz#2b92bef3c67ac0425ec5caa5253420e59b65a7c6"
+  integrity sha512-CpG1bwTKGuW8GrvOZLg0tXwqnwopltkeWKmXYQtsNOYS4bwVUK8t7cOqnTkE53Q1fl7uvsShUUmNKlSROcoH2w==
+  dependencies:
+    "@equinor/fusion-framework-module-context" "^0.5.1"
+    "@equinor/fusion-framework-react-module" "^1.1.0"
+
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
