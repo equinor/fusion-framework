@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { debounce, debounceTime, ObservableInput, Subject, switchMap } from 'rxjs';
+import { debounce, debounceTime, ObservableInput, Subject, switchMap, tap } from 'rxjs';
 import { useObservableState } from './useObservableState';
 import type { ObservableType } from '../types';
 import Query, { QueryCtorOptions } from '../query/Query';
@@ -20,10 +20,13 @@ export const useDebounceQuery = <TType, TArgs>(
 ): {
     value: UseDebounceQueryValue<TType, TArgs> | undefined;
     query: (args: UseDebounceQueryArgs<TType, TArgs>) => void;
+    querying: boolean;
 } => {
     const [client] = useState<Query<TType, TArgs>>(() =>
         clientOrClientCtor instanceof Query ? clientOrClientCtor : new Query(clientOrClientCtor)
     );
+
+    const [querying, setQuerying] = useState<boolean>(false);
     const [queuer] = useState(
         () => options?.queuer ?? new Subject<UseDebounceQueryArgs<TType, TArgs>>()
     );
@@ -46,14 +49,16 @@ export const useDebounceQuery = <TType, TArgs>(
             () =>
                 queuer.pipe(
                     debounceFn,
-                    switchMap(({ args, options }) => client.query(args, options))
+                    tap(() => setQuerying(true)),
+                    switchMap(({ args, options }) => client.query(args, options)),
+                    tap(() => setQuerying(false))
                 ),
             [client]
         ),
         options?.initial
     );
 
-    return { value, query };
+    return { value, query, querying };
 };
 
 export default useDebounceQuery;
