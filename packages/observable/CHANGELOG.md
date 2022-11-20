@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.5.0 (2022-11-20)
+
+### Features
+
+-   **observable:** expose fetch status ([d936826](https://github.com/equinor/fusion-framework/commit/d93682607194ea9512a8cce6711772b65164257f))
+
 ## 1.4.1 (2022-11-14)
 
 ### Bug Fixes
