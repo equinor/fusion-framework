@@ -7,8 +7,8 @@ import { useCallback } from 'react';
 export const useCurrentContext = (provider: IContextProvider) => {
     const currentContext = useObservableState(provider.currentContext$);
     const setCurrentContext = useCallback(
-        (entry: ContextItem) => {
-            provider.currentContext = entry;
+        (entry: ContextItem | string) => {
+            provider.contextClient.setCurrentContext(entry);
         },
         [provider]
     );
