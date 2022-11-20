@@ -4,7 +4,7 @@
     "description": "",
     "private": true,
     "type": "module",
-    "main": "src/index.tsx",
+    "main": "src/index.ts",
     "scripts": {
         "dev": "fusion-framework-cli app dev",
         "docker": "cd .. && sh docker-script.sh app-react"
