@@ -32,6 +32,8 @@ export default hopeTheme({
         tabs: true,
         tasklist: true,
         container: true,
+        imageSize: true,
+        align: true,
       },
       comment: {
         provider: "Giscus",

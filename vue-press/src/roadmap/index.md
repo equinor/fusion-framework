@@ -5,14 +5,18 @@ tag:
   - WIP
 ---
 
-- <Badge type="tip" text="Complete"/>
-- <Badge type="warning" text="Minimum viable product"/>
-- <Badge type="info" text="Active - Currently working on"/>
-- <Badge type="note" text="Planned - not started on"/>
-
-::: note
-Some task for planned feature are skipped to meet the dead-line of **Project Portal**
+::: center
+![Road map](./roadmap.png =x500)
 :::
+
+> Some task for planned feature are skipped to meet the dead-line of **Project Portal**
+
+<Badge type="tip" text="Complete"/>
+<Badge type="warning" text="Minimum viable product"/>
+<Badge type="info" text="Active - Currently working on"/>
+<Badge type="note" text="Planned - not started on"/>
+
+
 
 ## Authentication <Badge type="tip" text="Q1 2022"/>
 
@@ -112,8 +116,8 @@ The framework needs to facilitate query, filtering and selecting scoped data.
 - [ ] update context handling in **Fusion Portal**
 - [x] [documentation](../modules/services/context)
 - [x] tooling for `React`
-- [ ] guide
-- [ ] cookbook
+- [x] guide
+- [x] cookbook
 
 
 
@@ -178,7 +182,7 @@ The **Framework** should provide functionality for applications and portals for 
 
 - [x] create functionality for building scoped urls
 - [x] create module for creating router
-- [ ] create documentation
+- [x] create documentation
 - [ ] observe changes to routing
 
 ## Application CLI <Badge type="info" text="Q4 2022"/>
