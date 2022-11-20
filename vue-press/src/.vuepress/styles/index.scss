@@ -4,6 +4,8 @@
  * ref：https://v1.vuepress.vuejs.org/config/#index-styl
  */
 
-body {
-  font-family: system-ui
+:root {
+  --font-family-code: system-ui;
+  --font-family: "Equinor", sans-serif !important;
+  --font-family-fancy: "Equinor", sans-serif !important;
 }

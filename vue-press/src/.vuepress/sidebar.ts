@@ -8,8 +8,6 @@ export default sidebar({
             children: [
                 'app/',
                 'app/getting-started',
-                'app/app-modules',
-                'app/add-modules',
                 'app/legacy',
             ],
         },
@@ -20,7 +18,14 @@ export default sidebar({
             prefix: '/modules/',
             children: [
                 '',
-                'http/',
+                {
+                    text: 'HTTP',
+                    link: 'http/',
+                },
+                {
+                    text: 'Context',
+                    link: 'context/',
+                },
                 'event/',
                 'navigation/',
                 'ag-grid/',

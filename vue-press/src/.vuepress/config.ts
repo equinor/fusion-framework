@@ -14,6 +14,9 @@ export default defineUserConfig({
   base: '/fusion-framework/',
   title: [name, version].join('@'),
   description,
+  head: [
+    ["link", { href:"https://eds-static.equinor.com/font/equinor-font.css", rel:"stylesheet"}]
+  ],
   theme,
   plugins: [
     registerComponentsPlugin({
