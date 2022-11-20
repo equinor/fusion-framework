@@ -1,6 +1,7 @@
 ---
 home: true
-heroImage: /fusion.png
+heroImage: fusion.png
+heroText: Fusion Framework
 action:
   - text: 🚀 Quick Start (App)
     link:  /guide/app/
