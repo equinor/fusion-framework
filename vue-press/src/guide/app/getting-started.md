@@ -204,6 +204,9 @@ export const configure = (configurator, { env: { basename } }) => {
 
 
 ### Enable context
+
+[read more about context](../../modules/context/README.md)
+
 ```ts
 import { enableNavigation } from '@equinor/fusion-framework-module-context';
 export const configure = (configurator) => {

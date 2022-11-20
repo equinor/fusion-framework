@@ -1,8 +1,9 @@
 ---
 home: true
+title: Home
 heroImage: fusion.png
 heroText: Fusion Framework
-action:
+actions:
   - text: 🚀 Quick Start (App)
     link:  /guide/app/
   - text: 📚 Docs
@@ -17,7 +18,7 @@ features:
   details: Written in TypeScript
 - title: 📄 TypeDoc
   details: Documentation with IntelliSense
-footer: Made by  with ❤️
+footer: Powered by Fusion
 ---
 
 ## App
