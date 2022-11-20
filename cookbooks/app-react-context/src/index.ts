@@ -1,20 +1,17 @@
+import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
+
 import { makeComponent, ComponentRenderArgs } from '@equinor/fusion-framework-react-app';
 
 import configure from './config';
 
 import App from './App';
 
-/** render callback function */
+const createApp = (args: ComponentRenderArgs) => makeComponent(App, args, configure);
+
 export default function (el: HTMLElement, args: ComponentRenderArgs) {
+    const app = createApp(args);
     const root = createRoot(el);
-
-    /** make render component */
-    const Component = makeComponent(<App />, args, configure);
-
-    /** render app component */
-    root.render(<Component />);
-
-    /** teardown */
+    root.render(createElement(app));
     return () => root.unmount();
 }
