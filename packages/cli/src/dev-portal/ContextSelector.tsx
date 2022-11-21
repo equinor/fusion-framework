@@ -6,7 +6,7 @@ import {
     ContextSelector as ContextSelectorComponent,
     ContextResult,
     ContextResultItem,
-		ContextResolver,
+    ContextResolver,
 } from '@equinor/fusion-react-context-selector';
 
 import { makeStyles, createStyles, clsx } from '@equinor/fusion-react-styles';
@@ -32,7 +32,7 @@ const mapper = (src: ContextItem<Record<string, unknown>>[]): ContextResult => {
             id: i.id,
             title: i.title,
             subTitle: i.type.id,
-            graphic: i.type.id === 'Project' ? 'list' : undefined,
+            graphic: i.type.id === 'OrgChart' ? 'list' : undefined,
         };
     });
 
@@ -48,15 +48,16 @@ const useQueryContext = () => {
     const [provider, setProvider] = useState<IContextProvider | undefined>();
     useEffect(() => {
         return framework.modules.event.addEventListener('onAppModulesLoaded', (e) => {
-					if (e.detail) {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						/* @ts-ignore */
-						if (e.detail.env.manifest?.appKey === framework.modules.app.current?.appKey) {
-						}
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						/* @ts-ignore */
-						setProvider(e.detail.modules.context);
-					}
+            if (e.detail) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                /* @ts-ignore */
+                if (e.detail.env.manifest?.appKey === framework.modules.app.current?.appKey) {
+                    console.log('Current app is matching event current app.');
+                }
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                /* @ts-ignore */
+                setProvider(e.detail.modules.context);
+            }
         });
     }, [framework]);
 
@@ -109,8 +110,8 @@ export const ContextSelector = () => {
                 label="Context Selector"
                 placeholder="Search for context..."
                 initialText="Start typing to search..."
-								resolver={resolver as ContextResolver}
-								onSelect={(e) => console.log(e)}
+                resolver={resolver as ContextResolver}
+                onSelect={(e) => console.log(e)}
             />
         </div>
     );
