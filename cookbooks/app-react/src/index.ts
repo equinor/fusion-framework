@@ -6,7 +6,11 @@ import { ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-re
 import configure from './config';
 import App from './App';
 
-const createApp = (args: ComponentRenderArgs) => makeComponent(App, args, configure);
+/** create a render component */
+const appComponent = createElement(App);
+
+/** create React render root component */
+const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args, configure);
 
 /** Render function */
 export const renderApp = (el: HTMLElement, args: ComponentRenderArgs) => {

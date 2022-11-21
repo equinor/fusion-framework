@@ -7,7 +7,9 @@ import configure from './config';
 
 import App from './App';
 
-const createApp = (args: ComponentRenderArgs) => makeComponent(App, args, configure);
+const appComponent = createElement(App);
+
+const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, args, configure);
 
 export default function (el: HTMLElement, args: ComponentRenderArgs) {
     const app = createApp(args);
