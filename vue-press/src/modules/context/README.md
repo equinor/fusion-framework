@@ -13,12 +13,12 @@ tag:
 
 @tab poj
 ```ts
-import { enableNavigation } from '@equinor/fusion-framework-module-context';
+import { enableContext } from '@equinor/fusion-framework-module-context';
 ```
 
 @tab react
 ```ts
-import { enableNavigation } from '@equinor/fusion-framework-react-module-context';
+import { enableContext } from '@equinor/fusion-framework-react-module-context';
 ```
 :::
 
