@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.5...@equinor/fusion-framework-cli@0.3.6) (2022-11-23)
+
+### Bug Fixes
+
+-   **cli:** windows url path ([0176fa8](https://github.com/equinor/fusion-framework/commit/0176fa8ac1337025c584101ec2ceac8092eb0c13))
+
 ## 0.3.5 (2022-11-23)
 
 ### Bug Fixes
