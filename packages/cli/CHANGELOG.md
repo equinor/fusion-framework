@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.3.5 (2022-11-23)
+
+### Bug Fixes
+
+-   **cli:** relative path resolve windows ([0316c30](https://github.com/equinor/fusion-framework/commit/0316c30fd0e75d230893015c40c96dd369e8e472))
+
 ## [0.3.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.3...@equinor/fusion-framework-cli@0.3.4) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
