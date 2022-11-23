@@ -2,6 +2,7 @@ import { createServer } from 'vite';
 import type { UserConfig } from 'vite';
 
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 
 import express, { Request } from 'express';
 
@@ -14,7 +15,7 @@ import ora from 'ora';
 
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 
-const resolveRelativePath = (path: string) => String(new URL(path, import.meta.url));
+const resolveRelativePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export const server = async (config: { viteConfig: UserConfig; appConfig: any }) => {
     const { manifest: appManifest } = config.appConfig;
