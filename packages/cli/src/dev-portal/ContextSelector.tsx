@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
 import '@equinor/fusion-framework-app';
@@ -8,23 +9,6 @@ import {
     ContextResultItem,
     ContextResolver,
 } from '@equinor/fusion-react-context-selector';
-
-import { makeStyles, createStyles, clsx } from '@equinor/fusion-react-styles';
-
-/* typescript reference for makeStyles */
-import '@material-ui/styles';
-
-const useStyles = makeStyles(
-    createStyles({
-        contextselector: {
-            width: '100%',
-            maxWidth: '640px',
-        },
-    }),
-    { name: 'contextselector-styles' }
-);
-
-import { useEffect, useMemo, useState } from 'react';
 
 const mapper = (src: ContextItem<Record<string, unknown>>[]): ContextResult => {
     const dst = src.map((i) => {
@@ -112,24 +96,19 @@ const useQueryContext = (): ContextResolver => {
 };
 
 export const ContextSelector = () => {
-    const styles = useStyles();
     const resolver = useQueryContext();
 
     return (
-        <div>
-            <h2>Awesome Context Selector 🔥</h2>
-            <ContextSelectorComponent
-                id="context-selector-header"
-                className={clsx(styles.contextselector)}
-                label="Context Selector"
-                placeholder="Search for context..."
-                initialText="Start typing to search..."
-                dropdownHeight="300px"
-                variant="header"
-                resolver={resolver}
-                onSelect={(e) => console.log(e)}
-            />
-        </div>
+        <ContextSelectorComponent
+            id="context-selector-header"
+            label="Context Selector"
+            placeholder="Search for context..."
+            initialText="Start typing to search..."
+            dropdownHeight="300px"
+            variant="header"
+            resolver={resolver}
+            onSelect={(e) => console.log(e)}
+        />
     );
 };
 
