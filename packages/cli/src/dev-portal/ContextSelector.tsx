@@ -43,7 +43,7 @@ const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
     return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 
-const useQueryContext = () => {
+const useQueryContext = (): ContextResolver => {
     const framework = useFramework();
     const [provider, setProvider] = useState<IContextProvider | undefined>();
     useEffect(() => {
@@ -62,55 +62,74 @@ const useQueryContext = () => {
     }, [framework]);
 
     const resolver = useMemo(
-        () =>
-            provider && {
-                searchQuery: async (search: string) => {
-                    const minLength = 3;
-                    if (search.length < minLength) {
-                        return [
-                            singleItem({
-                                id: 'min-length',
-                                title: `Type ${minLength - search.length} more chars to search`,
-                                isDisabled: true,
-                            }),
-                        ];
+        () => ({
+            searchQuery: async (search: string) => {
+                if (!provider) {
+                    return [];
+                }
+                const minLength = 3;
+                if (search.length < minLength) {
+                    return [
+                        singleItem({
+                            id: 'min-length',
+                            title: `Type ${minLength - search.length} more chars to search`,
+                            isDisabled: true,
+                        }),
+                    ];
+                }
+                try {
+                    const result = await provider.queryContextAsync(search);
+                    if (result.length) {
+                        return mapper(result);
                     }
-                    try {
-                        const result = await provider.queryContextAsync(search);
-                        if (result.length) {
-                            return mapper(result);
-                        }
-                        return [
-                            singleItem({
-                                id: 'no-results',
-                                title: 'No results found',
-                                isDisabled: true,
-                            }),
-                        ];
-                    } catch (e) {
-                        console.error('ContextResolver:', e);
-                    }
-                },
+                    return [
+                        singleItem({
+                            id: 'no-results',
+                            title: 'No results found',
+                            isDisabled: true,e
+                        }),
+                    ];
+                } catch (e) {
+                    console.error('ContextResolver:', e);
+                }
             },
+            initialResult: [
+                {
+                    id: '0',
+                    title: 'InitialResults',
+                    subTitle: 'Favourites or readily available contexts',
+                    isDisabled: true,
+                },
+                {
+                    id: '1',
+                    title: 'Another initial result',
+                    subTitle: 'Favourites or readily available contexts',
+                    isDisabled: true,
+                },
+            ],
+        }),
         [provider]
     );
 
-    return { resolver };
+    return resolver as ContextResolver;
 };
 
 export const ContextSelector = () => {
     const styles = useStyles();
-    const { resolver } = useQueryContext();
+    const resolver = useQueryContext();
 
     return (
         <div>
             <h2>Awesome Context Selector 🔥</h2>
             <ContextSelectorComponent
+                id="context-selector-header"
                 className={clsx(styles.contextselector)}
                 label="Context Selector"
                 placeholder="Search for context..."
                 initialText="Start typing to search..."
-                resolver={resolver as ContextResolver}
+                dropdownHeight="300px"
+                variant="header"
+                resolver={resolver}
                 onSelect={(e) => console.log(e)}
             />
         </div>
