@@ -49,14 +49,11 @@ const useQueryContext = (): ContextResolver => {
     useEffect(() => {
         return framework.modules.event.addEventListener('onAppModulesLoaded', (e) => {
             if (e.detail) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
-                if (e.detail.env.manifest?.appKey === framework.modules.app.current?.appKey) {
-                    console.log('Current app is matching event current app.');
+                if (e.detail.env.manifest?.key === framework.modules.app.current?.key) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    /* @ts-ignore */
+                    setProvider(e.detail.modules.context);
                 }
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
-                setProvider(e.detail.modules.context);
             }
         });
     }, [framework]);
@@ -86,7 +83,7 @@ const useQueryContext = (): ContextResolver => {
                         singleItem({
                             id: 'no-results',
                             title: 'No results found',
-                            isDisabled: true,e
+                            isDisabled: true,
                         }),
                     ];
                 } catch (e) {

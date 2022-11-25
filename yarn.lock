@@ -564,12 +564,12 @@
     "@equinor/fusion-framework-module-context" "^0.5.1"
     "@equinor/fusion-framework-react-module" "^1.1.0"
 
-"@equinor/fusion-react-context-selector@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.1.5.tgz#faa6b7f4b54cb3f20ee2241a26f63ed079118271"
-  integrity sha512-hacuWGHEokHR9NU/RdLEeRNKo8C4KqzBQFoolP4oo0ddJZuAyqhB0AyEqq6xFqnBoiy5p9x3ghaRL/yq/6Ov2w==
+"@equinor/fusion-react-context-selector@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.1.6.tgz#95fbfb9089b44e8b2451aa262b1462165e84332f"
+  integrity sha512-NVuZiHy7StpoOi0X7pbyx2EqylrFtNZEMPr2NG94fSfVDW4JvYmrFfMMIg3VZr+yukqzzX+OW5K8Ghg+OgrbZg==
   dependencies:
-    "@equinor/fusion-react-searchable-dropdown" "^0.1.5"
+    "@equinor/fusion-react-searchable-dropdown" "^0.1.6"
     "@equinor/fusion-react-utils" "^2.0.4"
 
 "@equinor/fusion-react-progress-indicator@^0.1.5":
@@ -580,13 +580,13 @@
     "@equinor/fusion-react-utils" "^2.0.3"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
-"@equinor/fusion-react-searchable-dropdown@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.1.5.tgz#59eff4a4c1d53971d8526a400726dd0a0147d101"
-  integrity sha512-lD/Ezu3ycz+54i9Q7wDbYEhsxARytA9XkI9eLKy1cAJRbkLeAGiCg6lFS/ZC0IXUfIhLo4ZQfK7u20F92EODkQ==
+"@equinor/fusion-react-searchable-dropdown@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.1.6.tgz#55af07cb4d9e8b032c777e188c9db7448be626d1"
+  integrity sha512-hZ7FbekvNdwRhYdN3lK8PFrDah7uFGwm4udx0vZD+iqp/H3EBfk9JChHd1+PsGhoV6UPKuQfRF8dZZ2teVOTVQ==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
-    "@equinor/fusion-wc-searchable-dropdown" "^2.0.0"
+    "@equinor/fusion-wc-searchable-dropdown" "^2.0.1"
 
 "@equinor/fusion-react-styles@^0.5.5":
   version "0.5.5"
@@ -673,10 +673,10 @@
     "@material/mwc-radio" "^0.27.0"
     lit "2.4.1"
 
-"@equinor/fusion-wc-searchable-dropdown@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-searchable-dropdown/-/fusion-wc-searchable-dropdown-2.0.0.tgz#c674e4a3c1de44442f23fce82d1b616f8828ec2b"
-  integrity sha512-0kGX68sq5uPxsHxMygfUOFe6CXHVWOblrWrq/MqFf7954YG9ide2hBFd3yMeHDbBacsbGhytHvSyY3SJHtjUjg==
+"@equinor/fusion-wc-searchable-dropdown@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-searchable-dropdown/-/fusion-wc-searchable-dropdown-2.0.1.tgz#5c44bca10a7a4ad87a480f2f8ef818f3fe419eb6"
+  integrity sha512-Y58oo6ATJMNy8+mGi6ECtNonu5L65RzYTDeqku1PKYzXaTqfCKiAK0nLWrKbC+FLxhWYshqwX2U6fUm8cwUCOw==
   dependencies:
     "@equinor/fusion-wc-core" "^1.0.5"
     "@equinor/fusion-wc-divider" "^0.2.18"
