@@ -34,9 +34,9 @@ const useQueryContext = (): ContextResolver => {
         return framework.modules.event.addEventListener('onAppModulesLoaded', (e) => {
             if (e.detail) {
                 if (e.detail.env.manifest?.key === framework.modules.app.current?.key) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    /* @ts-ignore */
-                    setProvider(e.detail.modules.context);
+                    if (e.detail.modules.context) {
+                        setProvider(e.detail.modules.context);
+                    }
                 }
             }
         });

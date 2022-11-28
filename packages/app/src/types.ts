@@ -11,6 +11,7 @@ import type {
 } from '@equinor/fusion-framework-module';
 
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
+import { ContextModule } from '@equinor/fusion-framework-module-context';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import {
     configureHttp,
@@ -43,7 +44,7 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
 
 export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
-    [EventModule, HttpModule, MsalModule]
+    [ContextModule, EventModule, HttpModule, MsalModule]
 >;
 
 export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
