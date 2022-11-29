@@ -564,13 +564,37 @@
     "@equinor/fusion-framework-module-context" "^0.5.1"
     "@equinor/fusion-framework-react-module" "^1.1.0"
 
-"@equinor/fusion-react-context-selector@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.1.6.tgz#95fbfb9089b44e8b2451aa262b1462165e84332f"
-  integrity sha512-NVuZiHy7StpoOi0X7pbyx2EqylrFtNZEMPr2NG94fSfVDW4JvYmrFfMMIg3VZr+yukqzzX+OW5K8Ghg+OgrbZg==
+"@equinor/fusion-react-button@^0.5.15":
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.5.15.tgz#92f748fcbb3cbe4604f2e35375b68c59357b39da"
+  integrity sha512-XtSH7Q4y7dALqIUsziwA9AXKQJL6Bv45//ms2Uon+RqO039TrGnZIy2CrIO1nQPJ23dWDEKrtX6M91kE0kmgng==
   dependencies:
-    "@equinor/fusion-react-searchable-dropdown" "^0.1.6"
     "@equinor/fusion-react-utils" "^2.0.4"
+    "@equinor/fusion-wc-button" "^1.1.31"
+
+"@equinor/fusion-react-context-selector@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.1.7.tgz#4e0c4d3a6177a89153317e4e6b396047404c880c"
+  integrity sha512-PNYYiPAJ/wa7E8xDuShIOo2+S0V6ItHC/+OdToDIVrC6AEySI6lJSbkrXcVyYxFUCjM3CyUomNL7A2A+KkTs2g==
+  dependencies:
+    "@equinor/fusion-react-searchable-dropdown" "^0.1.7"
+    "@equinor/fusion-react-utils" "^2.0.4"
+
+"@equinor/fusion-react-icon@^0.2.15":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-icon/-/fusion-react-icon-0.2.15.tgz#cc7b263f1e0d9df76a74db76610c31a602676c68"
+  integrity sha512-Fx3it860/WTEp7GtnMQov33FhxlpTUd5aAtmtKdHAHIi6sJaH7tDkODdfUbiVRpjYZAKtUJwWxwBk6+vess5yg==
+  dependencies:
+    "@equinor/fusion-react-utils" "^2.0.4"
+    "@equinor/fusion-wc-icon" "^1.0.24"
+
+"@equinor/fusion-react-menu@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-menu/-/fusion-react-menu-0.1.5.tgz#536db96bcb8c41affbc2d437bdc23bc1662f4113"
+  integrity sha512-SP9rPA6hdRISLDiq6YL7wT+VvkPN7r4xCZvPqq/AnA1EMDCsRlwuO7FpMWIlwguDIHIA4fNK07XeWRRhdNffpQ==
+  dependencies:
+    "@equinor/fusion-react-utils" "^2.0.4"
+    "@equinor/fusion-wc-menu" "^0.1.0"
 
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
@@ -580,13 +604,13 @@
     "@equinor/fusion-react-utils" "^2.0.3"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
-"@equinor/fusion-react-searchable-dropdown@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.1.6.tgz#55af07cb4d9e8b032c777e188c9db7448be626d1"
-  integrity sha512-hZ7FbekvNdwRhYdN3lK8PFrDah7uFGwm4udx0vZD+iqp/H3EBfk9JChHd1+PsGhoV6UPKuQfRF8dZZ2teVOTVQ==
+"@equinor/fusion-react-searchable-dropdown@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.1.7.tgz#d653678d68ff88b01ca8ac3bf96abcb4868dd93b"
+  integrity sha512-CP90XixzhVYUQfofhSF8KC+XDCa52N4SDdh9lPdwpF7sbzKZUUWLzoiSiEO7utTe0XOyWzk4csTXuTNU0UcEmw==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
-    "@equinor/fusion-wc-searchable-dropdown" "^2.0.1"
+    "@equinor/fusion-wc-searchable-dropdown" "^2.0.2"
 
 "@equinor/fusion-react-styles@^0.5.5":
   version "0.5.5"
@@ -612,6 +636,16 @@
   dependencies:
     date-fns "^2.28.0"
 
+"@equinor/fusion-wc-button@^1.1.31":
+  version "1.1.34"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-button/-/fusion-wc-button-1.1.34.tgz#780f496a4605c0aa5b056ef45b7f382c99df15b7"
+  integrity sha512-ZpdhNYEpG0mBpUymDriK4KTRyxtYuZi+HUY9egbHUsgyz4jZJ2LcCIhUn90mw9NPIUdIj2FH9vn6yqBZv9FlQw==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@equinor/fusion-wc-icon" "^1.0.27"
+    "@material/mwc-button" "^0.27.0"
+    lit "2.4.1"
+
 "@equinor/fusion-wc-checkbox@^0.3.12":
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-checkbox/-/fusion-wc-checkbox-0.3.12.tgz#e2342b58b5d2bcf7bd3e84a732f148b4a4d2d71c"
@@ -634,7 +668,7 @@
     "@equinor/fusion-wc-core" "^1.0.5"
     lit "2.4.1"
 
-"@equinor/fusion-wc-icon@^1.0.27":
+"@equinor/fusion-wc-icon@^1.0.24", "@equinor/fusion-wc-icon@^1.0.27":
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.27.tgz#50d084b19cbde880210bac24b38f88c27b5485b4"
   integrity sha512-vLhG6RU0xLIJCiceNojJiceuppNxrEi2zMV26ulyqP3yppovyo1e/5qFf1Dk63hplugIWVXUZPKFIrOpkfa1NA==
@@ -656,6 +690,16 @@
     "@material/mwc-list" "^0.27.0"
     lit "2.4.1"
 
+"@equinor/fusion-wc-menu@^0.1.0":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-menu/-/fusion-wc-menu-0.1.4.tgz#6f834eb3b82174156cfb58e1685c9412162d4815"
+  integrity sha512-XOodvP8w9fwJBQnRcoUiXXwzN0XHJbyzbWJrkvHBBH5tqClnJt2GGOUyHGAVuFOsLhwSQUJblp8bWftDE6sgzw==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@equinor/fusion-wc-list" "^0.3.1"
+    "@material/mwc-menu" "^0.27.0"
+    lit "2.4.1"
+
 "@equinor/fusion-wc-progress-indicator@^0.4.3":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-progress-indicator/-/fusion-wc-progress-indicator-0.4.5.tgz#42e02c4fbdaf2738644be2db2b1b387c6d281049"
@@ -673,10 +717,10 @@
     "@material/mwc-radio" "^0.27.0"
     lit "2.4.1"
 
-"@equinor/fusion-wc-searchable-dropdown@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-searchable-dropdown/-/fusion-wc-searchable-dropdown-2.0.1.tgz#5c44bca10a7a4ad87a480f2f8ef818f3fe419eb6"
-  integrity sha512-Y58oo6ATJMNy8+mGi6ECtNonu5L65RzYTDeqku1PKYzXaTqfCKiAK0nLWrKbC+FLxhWYshqwX2U6fUm8cwUCOw==
+"@equinor/fusion-wc-searchable-dropdown@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-searchable-dropdown/-/fusion-wc-searchable-dropdown-2.0.2.tgz#6be58fa0bc2468c2bb0a7593b7612a1e3b009485"
+  integrity sha512-rXhJidMoJo195zTmmGEMdWjTuxaWc5wPHzGVvjz3VOFIH01wn6Kb4psVXia/CtIDvA1m5AkB1Mfjw6Pa+Mf+YA==
   dependencies:
     "@equinor/fusion-wc-core" "^1.0.5"
     "@equinor/fusion-wc-divider" "^0.2.18"
@@ -2021,7 +2065,7 @@
     "@material/theme" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
-"@material/list@=14.0.0-canary.53b3cad2f.0":
+"@material/list@14.0.0-canary.53b3cad2f.0", "@material/list@=14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/list/-/list-14.0.0-canary.53b3cad2f.0.tgz#0c0d0bdf3f9454a820e990fddb0abb1c42767f1c"
   integrity sha512-mkMpltSKAYLBtFnTTCk/mQIDzwxF/VLh1gh59ehOtmRXt7FvTz83RoAa4tqe53hpVrbX4HoLDBu+vILhq/wkjw==
@@ -2037,6 +2081,36 @@
     "@material/typography" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
+"@material/menu-surface@14.0.0-canary.53b3cad2f.0", "@material/menu-surface@=14.0.0-canary.53b3cad2f.0":
+  version "14.0.0-canary.53b3cad2f.0"
+  resolved "https://registry.yarnpkg.com/@material/menu-surface/-/menu-surface-14.0.0-canary.53b3cad2f.0.tgz#3a7f10135f11938d7cffda553289e4803cfc030d"
+  integrity sha512-IQWb/n15FpLnn+kHp0EqzLE+UoWSPumq3eze2QifiowvGb37bNFR9oSe7CaOzPMrHdkrZ5SBWnDU41wPZN5kOg==
+  dependencies:
+    "@material/animation" "14.0.0-canary.53b3cad2f.0"
+    "@material/base" "14.0.0-canary.53b3cad2f.0"
+    "@material/elevation" "14.0.0-canary.53b3cad2f.0"
+    "@material/feature-targeting" "14.0.0-canary.53b3cad2f.0"
+    "@material/rtl" "14.0.0-canary.53b3cad2f.0"
+    "@material/shape" "14.0.0-canary.53b3cad2f.0"
+    "@material/theme" "14.0.0-canary.53b3cad2f.0"
+    tslib "^2.1.0"
+
+"@material/menu@=14.0.0-canary.53b3cad2f.0":
+  version "14.0.0-canary.53b3cad2f.0"
+  resolved "https://registry.yarnpkg.com/@material/menu/-/menu-14.0.0-canary.53b3cad2f.0.tgz#40d45a417537d1a9ba8489dc9ff093ac97d7fddb"
+  integrity sha512-MmYKVrMIqOtP3TN4vdrrnQrS8P81+tMaA6bKiT9V79R1U6+mKsBYTzaLtLbzyem5vF8O0q7bSwyPwhWPtJr75Q==
+  dependencies:
+    "@material/base" "14.0.0-canary.53b3cad2f.0"
+    "@material/dom" "14.0.0-canary.53b3cad2f.0"
+    "@material/elevation" "14.0.0-canary.53b3cad2f.0"
+    "@material/feature-targeting" "14.0.0-canary.53b3cad2f.0"
+    "@material/list" "14.0.0-canary.53b3cad2f.0"
+    "@material/menu-surface" "14.0.0-canary.53b3cad2f.0"
+    "@material/ripple" "14.0.0-canary.53b3cad2f.0"
+    "@material/rtl" "14.0.0-canary.53b3cad2f.0"
+    "@material/theme" "14.0.0-canary.53b3cad2f.0"
+    tslib "^2.1.0"
+
 "@material/mwc-base@^0.27.0":
   version "0.27.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-base/-/mwc-base-0.27.0.tgz#9bb282510b39168dcaa2d2c23aecdf91f6733c6e"
@@ -2044,6 +2118,16 @@
   dependencies:
     "@material/base" "=14.0.0-canary.53b3cad2f.0"
     "@material/dom" "=14.0.0-canary.53b3cad2f.0"
+    lit "^2.0.0"
+    tslib "^2.0.1"
+
+"@material/mwc-button@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-button/-/mwc-button-0.27.0.tgz#192ab82eab8f7f4dcbf987d0af7bb808408d77d2"
+  integrity sha512-t5m2zfE93RNKHMjdsU67X6csFzuSG08VJKKvXVQ+BriGE3xBgzY5nZdmZXomFpaWjDENPAlyS4ppCFm6o+DILw==
+  dependencies:
+    "@material/mwc-icon" "^0.27.0"
+    "@material/mwc-ripple" "^0.27.0"
     lit "^2.0.0"
     tslib "^2.0.1"
 
@@ -2063,6 +2147,14 @@
   integrity sha512-uLleloTxQ6dDShcZzqgqfC8otQY8DtGMO9HFQbAEncoFAWpAehcEonsuT/IUhMORN+c5un0P5WXwcZsInJb7og==
   dependencies:
     "@material/floating-label" "=14.0.0-canary.53b3cad2f.0"
+    lit "^2.0.0"
+    tslib "^2.0.1"
+
+"@material/mwc-icon@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-icon/-/mwc-icon-0.27.0.tgz#f25ecdd7fe54d810d7d655ba05251169f78b84fd"
+  integrity sha512-Sul44I37M9Ewynn0A9DjkEBrmll2VtNbth6Pxj7I1A/EAwEfaCrPvryyGqfIu1T2hTsRcaojzQx6QjF+B5QW9A==
+  dependencies:
     lit "^2.0.0"
     tslib "^2.0.1"
 
@@ -2087,6 +2179,20 @@
     "@material/mwc-checkbox" "^0.27.0"
     "@material/mwc-radio" "^0.27.0"
     "@material/mwc-ripple" "^0.27.0"
+    lit "^2.0.0"
+    tslib "^2.0.1"
+
+"@material/mwc-menu@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-menu/-/mwc-menu-0.27.0.tgz#db81ee42d702690b38051767a63c366963ab8f2d"
+  integrity sha512-K+L/t267ZGrlhjK/iSKUVZQKRMkWELArKVglfS5of93ALP4in0RGnj1sOG2u3IFI2F/mEZxRi+wr7HgNxpe0wA==
+  dependencies:
+    "@material/menu" "=14.0.0-canary.53b3cad2f.0"
+    "@material/menu-surface" "=14.0.0-canary.53b3cad2f.0"
+    "@material/mwc-base" "^0.27.0"
+    "@material/mwc-list" "^0.27.0"
+    "@material/shape" "=14.0.0-canary.53b3cad2f.0"
+    "@material/theme" "=14.0.0-canary.53b3cad2f.0"
     lit "^2.0.0"
     tslib "^2.0.1"
 
@@ -2187,7 +2293,7 @@
     "@material/theme" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
-"@material/shape@14.0.0-canary.53b3cad2f.0":
+"@material/shape@14.0.0-canary.53b3cad2f.0", "@material/shape@=14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/shape/-/shape-14.0.0-canary.53b3cad2f.0.tgz#60d2ba5ae2c428997cab78c65a29bcd6029f268a"
   integrity sha512-RyjInLCNe+nI/ulKea0ZLHphXQDiDqYazS25SRn18g8Hoa5qGNaY5oOBncDXUYn3jm5oI5kFc9oif//kulkbjg==
@@ -2218,7 +2324,7 @@
     "@material/typography" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
-"@material/theme@14.0.0-canary.53b3cad2f.0":
+"@material/theme@14.0.0-canary.53b3cad2f.0", "@material/theme@=14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/theme/-/theme-14.0.0-canary.53b3cad2f.0.tgz#27863ec21c7c913b80b98a22f056dd3e75b85a0a"
   integrity sha512-S06XAevDCDWMe+GgsEpITMS07imUidzadNaTbJsqssFajBLr53QWVZsG84BpjXKXoYvyEJvb0hX5U0lq6ip9UQ==
