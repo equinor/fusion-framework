@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-service-discovery",
-    "version": "3.2.7",
+    "version": "3.2.8",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -25,7 +25,7 @@
     "dependencies": {
         "@equinor/fusion-framework-module": "^1.2.10",
         "@equinor/fusion-framework-module-http": "^2.1.7",
-        "@equinor/fusion-query": "^0.2.5",
+        "@equinor/fusion-query": "^0.2.6",
         "rxjs": "^7.5.7"
     },
     "devDependencies": {

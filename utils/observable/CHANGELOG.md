@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.4.0...@equinor/fusion-observable@2.4.1) (2022-12-01)
+
+### Bug Fixes
+
+-   **observable:** add missing state creation in reducer ([205e490](https://github.com/equinor/fusion-framework/commit/205e490ba485106e115974b3dc84280cf5853649))
+
 ## [2.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.3.0...@equinor/fusion-observable@2.4.0) (2022-12-01)
 
 ### Features
