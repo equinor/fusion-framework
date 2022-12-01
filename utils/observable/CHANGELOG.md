@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.0.1...@equinor/fusion-observable@2.1.0) (2022-12-01)
+
+
+### Features
+
+* **observable:** expose function for creating actions ([26e1731](https://github.com/equinor/fusion-framework/commit/26e17313fb9e1a4e329f3d4b037fbcf75688d224))
+
+
+
 ## [2.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.0.0...@equinor/fusion-observable@2.0.1) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-observable
