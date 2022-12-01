@@ -24,7 +24,7 @@
         "prepack": "yarn build"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "^1.6.0",
+        "@equinor/fusion-observable": "^2.0.0-manual",
         "@vitejs/plugin-react": "^2.2.0",
         "commander": "^9.4.1",
         "express": "^4.18.2",

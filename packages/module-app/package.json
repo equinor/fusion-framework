@@ -23,7 +23,7 @@
         "directory": "packages/module-app"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "^1.6.0",
+        "@equinor/fusion-observable": "^2.0.0-manual",
         "rxjs": "^7.5.7"
     },
     "devDependencies": {
