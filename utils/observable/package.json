@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-observable",
-    "version": "2.0.0-manual",
+    "version": "2.0.0",
     "description": "WIP",
     "private": false,
     "keywords": [

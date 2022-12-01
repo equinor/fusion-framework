@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.0...@equinor/fusion-framework-react-module-context@0.4.1) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
 ## [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.3.1...@equinor/fusion-framework-react-module-context@0.4.0) (2022-12-01)
 
 ### Features
