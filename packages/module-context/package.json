@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-context",
-    "version": "0.6.9",
+    "version": "0.6.10",
     "description": "",
     "main": "./dist/esm/index.js",
     "exports": {
@@ -31,12 +31,12 @@
         "directory": "packages/modules-context"
     },
     "dependencies": {
-        "@equinor/fusion-query": "^0.2.7"
+        "@equinor/fusion-query": "^0.3.0"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "^1.2.10",
         "@equinor/fusion-framework-module-event": "^1.1.6",
-        "@equinor/fusion-framework-module-services": "^0.5.19",
+        "@equinor/fusion-framework-module-services": "^0.5.20",
         "rxjs": "^7.5.7"
     },
     "peerDependencies": {
