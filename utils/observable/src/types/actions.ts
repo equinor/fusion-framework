@@ -1,20 +1,18 @@
-import { Observable, ObservableInput } from 'rxjs';
-
-export { Observable };
-
-export type ObservableType<T> = T extends Observable<infer U> ? U : never;
-
-export type Reducer<S, A> = (prevState: S, action: A) => S;
-export type ReducerState<R extends Reducer<unknown, unknown>> = R extends Reducer<infer S, unknown>
-    ? S
-    : never;
-export type ReducerAction<R extends Reducer<unknown, unknown>> = R extends Reducer<unknown, infer A>
-    ? A
-    : never;
-
 export type TypeConstant = string;
 
 export type Action<T extends TypeConstant = TypeConstant> = { type: T };
+
+/**
+ * An Action type which accepts any other properties.
+ * This is mainly for the use of the `Reducer` type.
+ * This is not part of `Action` itself to prevent types that extend `Action` from
+ * having an index signature.
+ */
+export interface AnyAction extends Action {
+    // Allows any extra properties to be defined in an action.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [extraProps: string]: any;
+}
 
 export type PayloadAction<T extends TypeConstant = TypeConstant, P = unknown> = Action<T> & {
     payload: P;
@@ -38,13 +36,3 @@ export type ExtractAction<
     TAction extends Action,
     TType extends TypeConstant = ActionType<TAction>
 > = Extract<TAction, Action<TType>>;
-
-export type Effect<TAction extends Action, TState = unknown> = (
-    action: TAction,
-    state: TState
-) => ObservableInput<TAction | void> | TAction | void;
-
-export type Epic<TAction extends Action, TState = unknown> = (
-    action: Observable<TAction>,
-    state: Observable<TState>
-) => Observable<TAction>;
