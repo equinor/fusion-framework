@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ActionPayloadType, ReactiveObservable } from '@equinor/fusion-observable';
+import { ActionPayloadType, FlowSubject } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer';
 import type { QueryCacheActions, QueryCacheActionTypes } from './actions';
@@ -23,7 +23,7 @@ export type QueryCacheCtorArgs<TType, TArgs> = {
     trimming?: ActionPayloadType<QueryCacheActions<TType, TArgs>['trim']>;
 };
 
-export class QueryCache<TType, TArgs> extends ReactiveObservable<
+export class QueryCache<TType, TArgs> extends FlowSubject<
     QueryCacheState<TType, TArgs>,
     QueryCacheActionTypes<TType, TArgs>
 > {
