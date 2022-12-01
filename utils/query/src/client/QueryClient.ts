@@ -3,12 +3,7 @@ import { map } from 'rxjs/operators';
 
 import * as uuid from 'uuid';
 
-import {
-    ActionMeta,
-    ActionType,
-    ExtractAction,
-    ReactiveObservable,
-} from '@equinor/fusion-observable';
+import { ActionType, ExtractAction, ReactiveObservable } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 
 import { ActionTypes, RequestAction } from './actions';
@@ -90,7 +85,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     public next(
         args?: TArgs,
         opt?: Partial<QueryClientOptions<TType, TArgs>>
-    ): ActionMeta<RequestAction<TArgs, TType>> {
+    ): RequestAction<TArgs, TType>['meta'] {
         return this._next(args, opt).meta;
     }
 
