@@ -1,4 +1,4 @@
-import { produce, isDraft, isDraftable } from 'immer';
+import { produce as createNextState, isDraft, isDraftable } from 'immer';
 
 import type { Draft } from 'immer';
 
@@ -8,7 +8,7 @@ import type { ReducerWithInitialState } from './types/reducers';
 
 function freezeDraftable<T>(val: T) {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    return isDraftable(val) ? produce(val, () => {}) : val;
+    return isDraftable(val) ? createNextState(val, () => {}) : val;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
