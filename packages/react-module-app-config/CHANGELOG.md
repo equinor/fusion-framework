@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-app-config@1.3.6...@equinor/fusion-framework-react-module-app-config@1.3.7) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-app-config
+
 ## [1.3.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-app-config@1.3.5...@equinor/fusion-framework-react-module-app-config@1.3.6) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-app-config

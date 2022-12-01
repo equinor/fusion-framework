@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.3.0...@equinor/fusion-observable@2.4.0) (2022-12-01)
+
+### Features
+
+-   **observable:** support mapping of action definitions ([a508a6e](https://github.com/equinor/fusion-framework/commit/a508a6e19f1119b23cc2c20c9caa593a63d05412))
+
 ## [2.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.2.0...@equinor/fusion-observable@2.3.0) (2022-12-01)
 
 ### Features
