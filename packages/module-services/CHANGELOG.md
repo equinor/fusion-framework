@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.18...@equinor/fusion-framework-module-services@0.5.19) (2022-12-01)
+
+### Bug Fixes
+
+-   import typos ([c6449f1](https://github.com/equinor/fusion-framework/commit/c6449f1ac692439d52ed0e88f8492de9721e29ce))
+
 ## [0.5.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.17...@equinor/fusion-framework-module-services@0.5.18) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services

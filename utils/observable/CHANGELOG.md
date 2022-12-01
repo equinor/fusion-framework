@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.4.1...@equinor/fusion-observable@2.4.2) (2022-12-01)
+
+### Bug Fixes
+
+-   import typos ([c6449f1](https://github.com/equinor/fusion-framework/commit/c6449f1ac692439d52ed0e88f8492de9721e29ce))
+
 ## [2.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.4.0...@equinor/fusion-observable@2.4.1) (2022-12-01)
 
 ### Bug Fixes

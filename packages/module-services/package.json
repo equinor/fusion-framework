@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-services",
-    "version": "0.5.18",
+    "version": "0.5.19",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
@@ -49,7 +49,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "^1.2.10",
         "@equinor/fusion-framework-module-http": "^2.1.7",
-        "@equinor/fusion-framework-module-service-discovery": "^3.2.8"
+        "@equinor/fusion-framework-module-service-discovery": "^3.2.9"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "^1.2.2",
