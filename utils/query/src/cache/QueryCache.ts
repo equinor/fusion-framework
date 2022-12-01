@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ActionPayload, ReactiveObservable } from '@equinor/fusion-observable';
+import { ActionPayloadType, ReactiveObservable } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer';
 import type { QueryCacheActions, QueryCacheActionTypes } from './actions';
@@ -20,7 +20,7 @@ const getLastTransaction = <TType, TArgs>(
 
 export type QueryCacheCtorArgs<TType, TArgs> = {
     initial?: QueryCacheStateData<TType, TArgs>;
-    trimming?: ActionPayload<QueryCacheActions<TType, TArgs>['trim']>;
+    trimming?: ActionPayloadType<QueryCacheActions<TType, TArgs>['trim']>;
 };
 
 export class QueryCache<TType, TArgs> extends ReactiveObservable<
@@ -64,7 +64,7 @@ export class QueryCache<TType, TArgs> extends ReactiveObservable<
         this.next({ type: 'invalidate', payload: { key } });
     }
 
-    public trim(options: ActionPayload<QueryCacheActions<TType, TArgs>['trim']>) {
+    public trim(options: ActionPayloadType<QueryCacheActions<TType, TArgs>['trim']>) {
         this.next({ type: 'trim', payload: options });
     }
 }

@@ -3,7 +3,6 @@ import type { QueryCacheRecord } from './types';
 
 export type QueryCacheActions<TType = unknown, TArgs = unknown> = {
     set: PayloadAction<
-        'set',
         {
             key: string;
             value: {
@@ -12,18 +11,19 @@ export type QueryCacheActions<TType = unknown, TArgs = unknown> = {
                 transaction: string;
                 created?: number;
             };
-        }
+        },
+        'set'
     >;
-    clear: PayloadAction<'clear', { key: string }>;
-    reset: PayloadAction<'reset', { data?: Record<string, TType> }>;
-    invalidate: PayloadAction<'invalidate', { key: string }>;
+    clear: PayloadAction<{ key: string }, 'clear'>;
+    reset: PayloadAction<{ data?: Record<string, TType> }, 'reset'>;
+    invalidate: PayloadAction<{ key: string }, 'invalidate'>;
     trim: PayloadAction<
-        'trim',
         {
             sort?: (a: QueryCacheRecord<TType, TArgs>, b: QueryCacheRecord<TType, TArgs>) => number;
             validate?: (item: QueryCacheRecord<TType, TArgs>) => boolean;
             size?: number;
-        }
+        },
+        'trim'
     >;
 };
 
