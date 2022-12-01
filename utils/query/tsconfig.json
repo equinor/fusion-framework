@@ -4,24 +4,17 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
+    "esModuleInterop": true,
   },
   "references": [
     {
-      "path": "../module"
-    },
-    {
-      "path": "../module-http"
-    },
-    {
-      "path": "../../utils/query"
+      "path": "../observable"
     }
   ],
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "lib"
-  ]
+    "node_modules"
+  ],
 }

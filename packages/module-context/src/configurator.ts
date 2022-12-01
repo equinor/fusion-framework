@@ -4,7 +4,7 @@ import {
     ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
 import { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
-import { QueryCtorOptions } from '@equinor/fusion-observable/query';
+import type { QueryCtorOptions } from '@equinor/fusion-query';
 import { ContextClientOptions } from './client/ContextClient';
 import { ContextItem, QueryContextParameters } from './types';
 import { getContextSelector, queryContextSelector } from './selectors';

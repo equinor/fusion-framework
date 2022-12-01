@@ -1,7 +1,7 @@
 import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Query, QueryCtorOptions } from '@equinor/fusion-observable/query';
+import { Query, QueryCtorOptions } from '@equinor/fusion-query';
 
 import { ContextItem } from '../types';
 

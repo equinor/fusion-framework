@@ -1,6 +1,6 @@
 {
-    "name": "@equinor/fusion-observable",
-    "version": "1.5.1",
+    "name": "@equinor/fusion-query",
+    "version": "0.0.0",
     "description": "WIP",
     "private": false,
     "keywords": [
@@ -14,14 +14,18 @@
     "main": "dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./operators": "./dist/esm/operators/index.js",
+        "./cache": "./dist/esm/cache/index.js",
+        "./client": "./dist/esm/client/index.js",
         "./react": "./dist/esm/react/index.js"
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
         "*": {
-            "operators": [
-                "dist/types/operators/index.d.ts"
+            "cache": [
+                "dist/types/cache/index.d.ts"
+            ],
+            "client": [
+                "dist/types/client/index.d.ts"
             ],
             "react": [
                 "dist/types/react/index.d.ts"
@@ -39,35 +43,27 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git"
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "utils/query"
     },
     "scripts": {
         "build": "tsc -b",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:coverage": "npm test -- --coverage ",
-        "test:show": "http-server coverage/lcov-report",
-        "lint": "eslint --ext .ts,.tsx,.js src/",
-        "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
         "prepack": "yarn build"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
     },
     "dependencies": {
+        "@equinor/fusion-observable": "^1.5.1",
+        "immer": "^9.0.16",
         "rxjs": "^7.5.7",
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@testing-library/react-hooks": "^8.0.1",
-        "@types/jest": "^27.4.1",
         "@types/react": "^17.0.2",
         "@types/uuid": "^8.3.4",
-        "jest": "^27.5.1",
         "react": "^17.0.2",
-        "react-test-renderer": "^17.0.2",
-        "ts-jest": "^27.1.4",
-        "typescript": "^4.8.4"
+        "typescript": "^4.9.3"
     },
     "peerDependencies": {
         "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
@@ -75,6 +71,9 @@
     },
     "peerDependenciesMeta": {
         "@types/react": {
+            "optional": true
+        },
+        "react": {
             "optional": true
         }
     }

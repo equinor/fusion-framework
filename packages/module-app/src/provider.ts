@@ -18,7 +18,7 @@ import {
 
 import { ModuleType } from '@equinor/fusion-framework-module';
 
-import { Query } from '@equinor/fusion-observable/query';
+import { Query } from '@equinor/fusion-query';
 
 import {
     EventModule,

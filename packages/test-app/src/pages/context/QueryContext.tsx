@@ -1,6 +1,6 @@
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 import { ContextModule } from '@equinor/fusion-framework-module-context';
-import { useDebounceQuery } from '@equinor/fusion-observable/react';
+import { useDebounceQuery } from '@equinor/fusion-query/react';
 
 export const QueryContext = () => {
     const provider = useAppModule<ContextModule>('context');

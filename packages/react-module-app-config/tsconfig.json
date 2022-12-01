@@ -10,7 +10,7 @@
   "references": [
     
     {
-      "path": "../../utils/observable"
+      "path": "../../utils/query"
     },
     {
       "path": "../module-app-config"

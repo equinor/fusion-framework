@@ -1,4 +1,4 @@
-import type { PayloadAction } from '../..';
+import type { PayloadAction } from '@equinor/fusion-observable';
 import type { QueryCacheRecord } from './types';
 
 export type QueryCacheActions<TType = unknown, TArgs = unknown> = {

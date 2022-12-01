@@ -1,6 +1,6 @@
 import { AnyModule, ModuleInitializerArgs } from '@equinor/fusion-framework-module';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { QueryCtorOptions } from '@equinor/fusion-observable/query';
+import { QueryCtorOptions } from '@equinor/fusion-query';
 import { moduleKey } from './module';
 import type { AppConfig, AppManifest, ModuleDeps } from './types';
 

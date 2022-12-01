@@ -1,4 +1,4 @@
-import type { Reducer } from '../..';
+import type { Reducer } from '@equinor/fusion-observable';
 
 import { ActionTypes } from './actions';
 import { QueryClientError } from './QueryClientError';

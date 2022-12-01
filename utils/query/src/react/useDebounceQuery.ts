@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 import { debounce, debounceTime, ObservableInput, Subject, switchMap, tap } from 'rxjs';
-import { useObservableState } from './useObservableState';
-import type { ObservableType } from '../types';
-import Query, { QueryCtorOptions } from '../query/Query';
-import { QueryOptions } from '../query/types';
+import { useObservableState } from '@equinor/fusion-observable/react';
+import type { ObservableType } from '@equinor/fusion-observable';
+import Query, { QueryCtorOptions } from '../Query';
+import { QueryOptions } from '../types';
 
 type UseDebounceQueryArgs<TType, TArgs> = { args: TArgs; options?: QueryOptions<TType, TArgs> };
 type UseDebounceQueryValue<TType, TArgs> = ObservableType<ReturnType<Query<TType, TArgs>['query']>>;

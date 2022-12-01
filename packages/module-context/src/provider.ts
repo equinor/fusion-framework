@@ -11,7 +11,7 @@ import {
     FrameworkEvent,
     FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
-import Query from '@equinor/fusion-observable/query';
+import Query from '@equinor/fusion-query';
 
 /**
  * WARNING: this is an initial out cast.
