@@ -9,7 +9,7 @@ import {
 } from 'rxjs';
 import { catchError, takeWhile } from 'rxjs/operators';
 
-import * as uuid from 'uuid';
+import { v4 as generateGUID, v5 as generateUniqueKey } from 'uuid';
 
 import {
     QueryClient,
@@ -73,7 +73,7 @@ export class Query<TType, TArgs> {
     #generateCacheKey: QueryKeyBuilder<TArgs>;
     #validateCacheEntry: CacheValidator<TType, TArgs>;
 
-    #namespace = uuid.v4();
+    #namespace = generateGUID();
 
     public get client(): QueryClient<TType, TArgs> {
         // TODO: Proxy
@@ -87,7 +87,7 @@ export class Query<TType, TArgs> {
 
     constructor(options: QueryCtorOptions<TType, TArgs>) {
         this.#generateCacheKey = (args: TArgs) => {
-            return uuid.v5(options.key(args), this.#namespace);
+            return generateUniqueKey(options.key(args), this.#namespace);
         };
         this.#validateCacheEntry =
             options?.validate ?? defaultCacheValidator<TType, TArgs>(options?.expire);

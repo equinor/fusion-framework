@@ -1,6 +1,6 @@
 import { ReplaySubject, Subject } from 'rxjs';
 
-import uuid from 'uuid';
+import { v4 as generateGUID } from 'uuid';
 
 import { ActionInstanceMap, createAction } from '@equinor/fusion-observable';
 
@@ -22,7 +22,7 @@ const createActions = <TType, TArgs>() => {
         'client/request',
         (payload: unknown, meta?: Partial<RequestMeta<TType, TArgs>>) => {
             meta ??= {};
-            meta.transaction ??= uuid.v4();
+            meta.transaction ??= generateGUID();
             meta.created ??= Date.now();
             meta.controller ??= new AbortController();
             meta.task ??= new ReplaySubject<QueryTaskValue<TType, TArgs>>();
