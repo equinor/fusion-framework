@@ -1,4 +1,4 @@
-import { ActionCreator, ActionDefinitions, AnyAction } from './types/actions';
+import { ActionCreator, ActionDefinitions, ActionTypes } from './types/actions';
 
 /** flat map ActionDefinitions  */
 type ActionCalls<T extends ActionDefinitions> = {
@@ -15,7 +15,7 @@ type ActionCalls<T extends ActionDefinitions> = {
 export const actionMapper = <T extends ActionDefinitions>(
     actions: T,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    subject: { next: (action: AnyAction) => void }
+    subject: { next: (action: ActionTypes<T>) => void }
 ): ActionCalls<T> =>
     Object.entries(actions).reduce(
         (cur, [prop, fnOrActions]) =>
@@ -23,7 +23,8 @@ export const actionMapper = <T extends ActionDefinitions>(
                 [prop]:
                     typeof fnOrActions === 'function'
                         ? /** if value is a function, call it 🤙🏻 */
-                          (...args: unknown[]) => subject.next(fnOrActions(...args))
+                          (...args: unknown[]) =>
+                              subject.next(fnOrActions(...args) as ActionTypes<T>)
                         : /** extract child actions */
                           actionMapper(fnOrActions, subject),
             }),
