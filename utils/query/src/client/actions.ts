@@ -1,5 +1,5 @@
-import { ActionError } from '../..';
-import type { Action, PayloadAction, PayloadMetaAction } from '../..';
+import { ActionError } from '@equinor/fusion-observable';
+import type { Action, PayloadAction, PayloadMetaAction } from '@equinor/fusion-observable';
 import type { QueryTaskValue, RetryOptions } from './types';
 import { Subject } from 'rxjs';
 

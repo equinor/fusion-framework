@@ -25,7 +25,7 @@
     "dependencies": {
         "@equinor/fusion-framework-module-app-config": "^1.1.9",
         "@equinor/fusion-framework-react-module": "^1.1.0",
-        "@equinor/fusion-observable": "^1.5.1"
+        "@equinor/fusion-query": "^0.0.0"
     },
     "devDependencies": {
         "@types/react": "^17.0.11",

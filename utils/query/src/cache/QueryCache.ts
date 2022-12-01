@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ActionPayload, ReactiveObservable } from '../..';
+import { ActionPayload, ReactiveObservable } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer';
 import type { QueryCacheActions, QueryCacheActionTypes } from './actions';

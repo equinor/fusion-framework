@@ -8,6 +8,9 @@
   },
   "references": [
     {
+      "path": "../../utils/query"
+    },
+    {
       "path": "../module"
     },
     {

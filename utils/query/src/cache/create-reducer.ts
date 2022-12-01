@@ -1,4 +1,4 @@
-import type { Reducer } from '../..';
+import type { Reducer } from '@equinor/fusion-observable';
 import type { QueryCacheActionTypes } from './actions';
 import type { QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './types';
 

@@ -25,7 +25,7 @@
     "dependencies": {
         "@equinor/fusion-framework-module": "^1.2.9",
         "@equinor/fusion-framework-module-http": "^2.1.6",
-        "@equinor/fusion-observable": "^1.5.1",
+        "@equinor/fusion-query": "^0.0.0",
         "rxjs": "^7.5.7"
     },
     "devDependencies": {

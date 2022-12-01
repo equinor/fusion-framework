@@ -1,8 +1,8 @@
 import { EMPTY, from, fromEvent, Observable, of, Subscriber, TeardownLogic, timer } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 
-import { Epic, ActionError } from '../..';
-import { filterAction } from '../../operators';
+import { Epic, ActionError } from '@equinor/fusion-observable';
+import { filterAction } from '@equinor/fusion-observable/operators';
 
 import {
     ActionTypes,

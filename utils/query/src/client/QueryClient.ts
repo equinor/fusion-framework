@@ -3,8 +3,13 @@ import { map } from 'rxjs/operators';
 
 import * as uuid from 'uuid';
 
-import { ActionMeta, ActionType, ExtractAction, ReactiveObservable } from '../..';
-import { filterAction } from '../../operators';
+import {
+    ActionMeta,
+    ActionType,
+    ExtractAction,
+    ReactiveObservable,
+} from '@equinor/fusion-observable';
+import { filterAction } from '@equinor/fusion-observable/operators';
 
 import { ActionTypes, RequestAction } from './actions';
 import { handleRequests, handleFailures } from './epics';
