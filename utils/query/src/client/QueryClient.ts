@@ -1,8 +1,8 @@
 import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { FlowSubject } from '@equinor/fusion-observable/src';
-import { filterAction } from '@equinor/fusion-observable/src/operators';
+import { FlowSubject } from '@equinor/fusion-observable';
+import { filterAction } from '@equinor/fusion-observable/operators';
 
 import actions, { ActionBuilder, ActionMap, Actions } from './actions';
 

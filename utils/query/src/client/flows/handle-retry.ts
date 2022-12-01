@@ -1,4 +1,4 @@
-import { Flow } from '@equinor/fusion-observable/src/types';
+import { Flow } from '@equinor/fusion-observable';
 import { filter, map } from 'rxjs';
 import actions, { Actions } from '../actions';
 
