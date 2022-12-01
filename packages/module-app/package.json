@@ -31,7 +31,7 @@
         "@equinor/fusion-framework-module-event": "^1.1.5",
         "@equinor/fusion-framework-module-http": "^2.1.6",
         "@equinor/fusion-framework-module-service-discovery": "^3.2.1",
-        "typescript": "^4.8.4"
+        "typescript": "^4.9.3"
     },
     "peerDependencies": {
         "@equinor/fusion-query": "^0.0.0"
