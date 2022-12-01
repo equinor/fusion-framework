@@ -7,7 +7,7 @@ import {
     Subject,
     Subscription,
 } from 'rxjs';
-import { catchError, map, takeWhile } from 'rxjs/operators';
+import { catchError, takeWhile } from 'rxjs/operators';
 
 import * as uuid from 'uuid';
 
@@ -19,7 +19,7 @@ import {
     QueryTaskValue,
 } from './client';
 
-import { QueryCache, QueryCacheRecord, QueryCacheStateData } from './cache';
+import { QueryCache, QueryCacheRecord } from './cache';
 
 import {
     CacheOptions,
@@ -62,7 +62,7 @@ const defaultCacheValidator =
     (entry) =>
         (entry.updated ?? 0) + expires > Date.now();
 
-export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, TArgs>> {
+export class Query<TType, TArgs> {
     static extractQueryValue = queryValue;
 
     #subscription = new Subscription();
@@ -76,16 +76,16 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     #namespace = uuid.v4();
 
     public get client(): QueryClient<TType, TArgs> {
+        // TODO: Proxy
         return this.#client;
     }
 
-    public get state$(): QueryCache<TType, TArgs> {
+    public get cache(): QueryCache<TType, TArgs> {
+        // TODO: Proxy
         return this.#cache;
     }
 
     constructor(options: QueryCtorOptions<TType, TArgs>) {
-        super((subscriber) => this.#cache.pipe(map(({ data }) => data)).subscribe(subscriber));
-
         this.#generateCacheKey = (args: TArgs) => {
             return uuid.v5(options.key(args), this.#namespace);
         };
@@ -154,13 +154,6 @@ export class Query<TType, TArgs> extends Observable<QueryCacheStateData<TType, T
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
-
-        // const gg = task.pipe(
-        //     catchError((error) => {
-        //         console.error('QUERY_ERROR', error);
-        //         return EMPTY;
-        //     })
-        // );
         return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
     }
 
