@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-services",
-    "version": "0.5.11",
+    "version": "0.5.12",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
@@ -47,9 +47,9 @@
         "odata-query": "^7.0.3"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^1.2.9",
-        "@equinor/fusion-framework-module-http": "^2.1.6",
-        "@equinor/fusion-framework-module-service-discovery": "^3.2.1"
+        "@equinor/fusion-framework-module": "^1.2.10",
+        "@equinor/fusion-framework-module-http": "^2.1.7",
+        "@equinor/fusion-framework-module-service-discovery": "^3.2.2"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "^1.2.2",
