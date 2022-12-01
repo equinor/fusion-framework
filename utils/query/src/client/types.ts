@@ -2,7 +2,8 @@ import { ObservableInput, Subject } from 'rxjs';
 
 // export type Status = 'idle' | 'active' | 'failed' | 'canceled';
 
-export type QueryTaskValue<TValue = unknown, TArgs = unknown> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type QueryTaskValue<TValue = any, TArgs = any> = {
     status: string;
     transaction: string;
     created: number;
@@ -26,14 +27,16 @@ export type QueueItem<TType = unknown, TArgs = unknown> = {
     ref?: string;
 };
 
-export type State<TType = unknown, TArgs = unknown> = Record<string, QueueItem<TType, TArgs>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type State<TType = any, TArgs = any> = Record<string, QueueItem<TType, TArgs>>;
 
 export type RetryOptions = {
     count: number;
     delay: number | ((error: unknown) => ObservableInput<void>);
 };
 
-export type QueryFn<TType = unknown, TArgs = unknown> = (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type QueryFn<TType = any, TArgs = any> = (
     args: TArgs,
     signal?: AbortSignal
 ) => ObservableInput<TType>;

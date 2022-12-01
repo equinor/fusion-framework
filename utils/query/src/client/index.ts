@@ -1,4 +1,4 @@
-export { ActionTypes as QueryClientActions } from './actions';
+export { Actions as QueryClientActions } from './actions';
 
 export { QueryClientError } from './QueryClientError';
 

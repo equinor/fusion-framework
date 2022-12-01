@@ -4,7 +4,7 @@ import type { QueryClientOptions, QueryTaskValue } from './client';
 
 export type QueryState = {
     status: QueryStatus;
-    transaction?: string;
+    transaction: string;
     initiated?: number;
     retryCount?: number;
     completed?: number;

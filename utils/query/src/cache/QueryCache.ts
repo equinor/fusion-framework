@@ -1,71 +1,63 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { ActionPayloadType, FlowSubject } from '@equinor/fusion-observable';
+import { FlowSubject } from '@equinor/fusion-observable';
 
-import { createReducer } from './create-reducer';
-import type { QueryCacheActions, QueryCacheActionTypes } from './actions';
-import type { QueryCacheRecord, QueryCacheState, QueryCacheStateData } from './types';
+import { actions } from './actions';
 
-const getLastTransaction = <TType, TArgs>(
-    state: QueryCacheState<TType, TArgs>
-): QueryCacheRecord<TType, TArgs> | undefined => {
-    const transaction = state.lastTransaction;
-    const items = Object.values(state.data);
-    if (transaction) {
-        return items.find((x) => x.transaction === transaction);
-    }
-    return items.sort((a, b) => (a.updated ?? 0) - (b.updated ?? 0)).pop();
-};
+import createReducer from './create-reducer';
+
+import type { QueryCacheRecord, QueryCacheStateData } from './types';
+import type { ActionMap, Actions } from './actions';
+
+type TrimOptions<TType, TArgs> = ActionMap<TType, TArgs>['trim']['payload'];
 
 export type QueryCacheCtorArgs<TType, TArgs> = {
     initial?: QueryCacheStateData<TType, TArgs>;
-    trimming?: ActionPayloadType<QueryCacheActions<TType, TArgs>['trim']>;
+    trimming?: TrimOptions<TType, TArgs>;
 };
 
-export class QueryCache<TType, TArgs> extends FlowSubject<
-    QueryCacheState<TType, TArgs>,
-    QueryCacheActionTypes<TType, TArgs>
-> {
-    get data$(): Observable<Record<string, QueryCacheRecord<TType, TArgs>>> {
-        return this.pipe(map((x) => x.data));
-    }
+export class QueryCache<TType, TArgs> {
+    #state: FlowSubject<QueryCacheStateData<TType, TArgs>, Actions<TType, TArgs>>;
 
-    get latest(): QueryCacheRecord<TType, TArgs> | undefined {
-        return getLastTransaction(this.value);
+    get state$(): Observable<Record<string, QueryCacheRecord<TType, TArgs>>> {
+        return this.#state.asObservable();
     }
 
     constructor(args: QueryCacheCtorArgs<TType, TArgs>) {
         const { trimming, initial } = args;
-        super(createReducer(), { data: initial ?? {} });
+
+        this.#state = new FlowSubject(createReducer(actions, initial));
         if (trimming) {
-            this.addEffect('set', () => this.trim(trimming));
+            this.#state.addEffect('cache/set', () => this.#state.next(actions.trim(trimming)));
         }
     }
 
-    public setItem(
-        key: string,
-        value: Omit<QueryCacheRecord<TType, TArgs>, 'updates' | 'created'>
-    ) {
-        this.next({
-            type: 'set',
-            payload: {
-                key,
-                value,
-            },
-        });
+    public setItem(...args: Parameters<typeof actions.set>) {
+        this.#state.next(actions.set(...args));
     }
 
     public getItem(key: string): QueryCacheRecord<TType, TArgs> | undefined {
-        return this.value.data[key];
+        return this.#state.value[key];
+    }
+
+    public removeItem(key: string) {
+        this.#state.next(actions.remove(key));
     }
 
     public invalidate(key: string) {
-        this.next({ type: 'invalidate', payload: { key } });
+        this.#state.next(actions.invalidate(key));
     }
 
-    public trim(options: ActionPayloadType<QueryCacheActions<TType, TArgs>['trim']>) {
-        this.next({ type: 'trim', payload: options });
+    public trim(options: TrimOptions<TType, TArgs>) {
+        this.#state.next(actions.trim(options));
+    }
+
+    public reset() {
+        this.#state.reset();
+    }
+
+    public complete() {
+        this.#state.complete();
     }
 }
 

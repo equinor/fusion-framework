@@ -1,16 +1,15 @@
-import { firstValueFrom, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import * as uuid from 'uuid';
+import { FlowSubject } from '@equinor/fusion-observable/src';
+import { filterAction } from '@equinor/fusion-observable/src/operators';
 
-import { ActionType, ExtractAction, FlowSubject } from '@equinor/fusion-observable';
-import { filterAction } from '@equinor/fusion-observable/operators';
+import actions, { ActionBuilder, ActionMap, Actions } from './actions';
 
-import { ActionTypes, RequestAction } from './actions';
-import { handleRequests, handleFailures } from './epics';
+import { handleRetry, handleFailures, handleRequests } from './flows';
 import { filterQueryTaskComplete } from './operators';
 import { QueryClientError } from './QueryClientError';
-import { createReducer } from './reducer';
+import createReducer from './reducer';
 
 import { State, RetryOptions, QueryFn, QueryTaskCompleted, QueryTaskValue } from './types';
 
@@ -18,7 +17,7 @@ import { State, RetryOptions, QueryFn, QueryTaskCompleted, QueryTaskValue } from
  * - __controller__: [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) [optional]
  * - __retry__: retry config {@link RetryOpt}
  */
-export type QueryClientOptions<TType = unknown, TArgs = unknown> = {
+export type QueryClientOptions<TType = any, TArgs = any> = {
     controller: AbortController;
     retry: Partial<RetryOptions>;
     /** reference to a query  */
@@ -32,29 +31,33 @@ export type QueryClientCtorOptions = {
 
 export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     /** internal state */
-    #state: FlowSubject<State<TType, TArgs>, ActionTypes<TType, TArgs>>;
+    #state: FlowSubject<State, Actions>;
 
     #subscription: Subscription;
-
-    /** get stream of dispatched actions */
-    public get action$(): Observable<ActionTypes<TType, TArgs>> {
-        return this.#state.action$;
-    }
 
     public get closed() {
         return this.#state.closed;
     }
 
+    public get state$(): Observable<State<TType, TArgs>> {
+        return this.#state as Observable<State<TType, TArgs>>;
+    }
+
+    /** get stream of dispatched actions */
+    public get action$(): Observable<Actions<TType, TArgs>> {
+        return this.#state.action$ as Observable<Actions<TType, TArgs>>;
+    }
+
     public get success$(): Observable<TType> {
         return this.action$.pipe(
-            filterAction('success'),
-            map(({ payload }) => payload)
+            filter(actions.success.match),
+            map(({ payload }) => payload as TType)
         );
     }
 
     public get error$(): Observable<QueryClientError> {
         return this.action$.pipe(
-            filterAction('error'),
+            filterAction('client/error'),
             map(
                 ({ payload }) => new QueryClientError('error', 'failed to execute request', payload)
             )
@@ -66,14 +69,17 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
             return this.#state.subscribe(subscriber);
         });
 
-        this.#state = new FlowSubject(createReducer<TType, TArgs>(), {});
+        const initial = {};
+
+        this.#state = new FlowSubject<State<TType, TArgs>, Actions>(createReducer(initial));
 
         this.#subscription = new Subscription(() => this.#state.complete());
 
-        this.#subscription.add(this.#state.addEpic(handleRequests(queryFn)));
+        this.#subscription.add(this.#state.addFlow(handleRequests(queryFn)));
+        this.#subscription.add(this.#state.addFlow(handleRetry));
 
         const retry = Object.assign({ count: 0, delay: 0 }, options?.retry);
-        this.#subscription.add(this.#state.addEpic(handleFailures(retry)));
+        this.#subscription.add(this.#state.addFlow(handleFailures(retry)));
     }
 
     /**
@@ -85,8 +91,10 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     public next(
         args?: TArgs,
         opt?: Partial<QueryClientOptions<TType, TArgs>>
-    ): RequestAction<TArgs, TType>['meta'] {
-        return this._next(args, opt).meta;
+    ): ActionMap<TType, TArgs>['request']['meta'] {
+        const action = (actions as ActionBuilder<TType, TArgs>).request(args, opt);
+        this.#state.next(action);
+        return action.meta;
     }
 
     /**
@@ -121,10 +129,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     public cancel(transaction?: string, reason?: string): void {
         if (transaction && this.#state.value[transaction]) {
             reason ??= `[${transaction}]: transaction canceled`;
-            this.#state.next({
-                type: 'cancel',
-                payload: { transaction, reason },
-            });
+            this.#state.next(actions.cancel({ transaction, reason }));
         } else {
             for (const key of Object.keys(this.#state.value)) {
                 this.cancel(key, `[${transaction}]: all transactions canceled`);
@@ -135,15 +140,12 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     /**
      * Process action
      */
-    public on<TAction extends ActionType<ActionTypes>>(
+    public on<TAction extends keyof ActionMap>(
         type: TAction,
-        cb: (
-            action: ExtractAction<ActionTypes<TType, TArgs>, TAction>,
-            subject: QueryClient<TType, TArgs>
-        ) => void
+        cb: (action: ActionMap[TAction], subject: QueryClient<TType, TArgs>) => void
     ) {
-        return this.#state.addEffect(type, (action) => {
-            cb(action, this);
+        return this.#state.addEffect(actions[type].type, (action) => {
+            cb(action as ActionMap[TAction], this);
         });
     }
 
@@ -154,29 +156,6 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
 
     public asObservable() {
         return this.#state.asObservable();
-    }
-
-    protected _next(
-        args?: TArgs,
-        opt?: Partial<QueryClientOptions<TType, TArgs>>
-    ): RequestAction<TArgs, TType> {
-        const meta = Object.assign(
-            {
-                transaction: uuid.v4(),
-                controller: new AbortController(),
-                task: new ReplaySubject<QueryTaskValue>(),
-            },
-            opt ?? {}
-        );
-        const action: RequestAction<TArgs, TType> = {
-            type: 'request',
-            payload: args as TArgs,
-            meta,
-        };
-
-        this.#state.next(action);
-
-        return action;
     }
 }
 
