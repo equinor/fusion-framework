@@ -10,7 +10,7 @@ import {
     filter,
 } from 'rxjs';
 
-import { Flow } from '@equinor/fusion-observable/src';
+import { Flow } from '@equinor/fusion-observable';
 
 import { actions, Actions } from '../actions';
 import { RetryOptions, State } from '../types';

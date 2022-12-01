@@ -2,7 +2,7 @@ import { QueryClientError } from './QueryClientError';
 import { QueryTaskCompleted, State } from './types';
 
 import { actions } from './actions';
-import { createReducer as makeReducer } from '@equinor/fusion-observable/src';
+import { createReducer as makeReducer } from '@equinor/fusion-observable';
 
 export const createReducer = (initial: State = {}) =>
     makeReducer(initial as State, (builder) =>

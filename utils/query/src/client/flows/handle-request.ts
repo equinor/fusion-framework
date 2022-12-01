@@ -1,6 +1,6 @@
 import { from } from 'rxjs';
 
-import { Flow } from '@equinor/fusion-observable/src';
+import { Flow } from '@equinor/fusion-observable';
 import { catchError, map } from 'rxjs/operators';
 import { actions, Actions } from '../actions';
 import { QueryFn, State } from '../types';
