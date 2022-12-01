@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - 'packages/**'
+      - 'utils/**'
 
 jobs:
   release-pkg:
