@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.5.0 (2022-12-01)
+
+### Features
+
+-   **observable:** add functionality for create state ([a114838](https://github.com/equinor/fusion-framework/commit/a114838a83a050516c50cfaeeb7adbd3ac181665))
+
+### Bug Fixes
+
+-   **observable:** fix typing of action mapper ([2ebca25](https://github.com/equinor/fusion-framework/commit/2ebca25789106e94f5a0dc2aa11f5bca2d40a255))
+
 ## [2.4.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.4.1...@equinor/fusion-observable@2.4.2) (2022-12-01)
 
 ### Bug Fixes
