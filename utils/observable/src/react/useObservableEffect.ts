@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { ReactiveObservable } from '../ReactiveObservable';
+import { FlowSubject } from '../FlowSubject';
 import { Action, Effect, ActionType, ExtractAction } from '../types';
 
 export interface useObservableEffect<
@@ -8,14 +8,14 @@ export interface useObservableEffect<
     TType extends ActionType<A> = ActionType<A>
 > {
     (
-        subject: ReactiveObservable<S, A>,
+        subject: FlowSubject<S, A>,
         type: TType,
         effect?: Effect<ExtractAction<A, TType>, S>
     ): void;
 }
 
 export interface useObservableEffect<S, A extends Action = Action> {
-    (subject: ReactiveObservable<S, A>, effect: Effect<A, S>): void;
+    (subject: FlowSubject<S, A>, effect: Effect<A, S>): void;
 }
 /**
  * Apply side effect to Reactive Subject.
@@ -27,7 +27,7 @@ export const useObservableEffect = <
     A extends Action = Action,
     TType extends ActionType<A> = ActionType<A>
 >(
-    subject: ReactiveObservable<S, A>,
+    subject: FlowSubject<S, A>,
     effectOrType: Effect<A, S> | TType,
     effect?: Effect<ExtractAction<A, TType>, S>
 ): void => {

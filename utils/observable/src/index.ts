@@ -3,8 +3,11 @@
  * @module
  */
 
-export * from './ReactiveObservable';
+export * from './FlowSubject';
 export * from './ActionError';
 export * from './types';
+
+/** @deprecated use {@link FlowSubject} */
+export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
 export { createAction, createAsyncAction } from './create-action';

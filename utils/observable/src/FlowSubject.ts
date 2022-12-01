@@ -25,7 +25,7 @@ import type { ReducerWithInitialState } from './types/reducers';
 /**
  * Observable that mutates by dispatching actions and internally sequentially reduced.
  */
-export class ReactiveObservable<S, A extends Action = Action> extends Observable<S> {
+export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     /**
      * return state to initial
      */
@@ -170,4 +170,4 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
     }
 }
 
-export default ReactiveObservable;
+export default FlowSubject;

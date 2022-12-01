@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import * as uuid from 'uuid';
 
-import { ActionType, ExtractAction, ReactiveObservable } from '@equinor/fusion-observable';
+import { ActionType, ExtractAction, FlowSubject } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 
 import { ActionTypes, RequestAction } from './actions';
@@ -32,7 +32,7 @@ export type QueryClientCtorOptions = {
 
 export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     /** internal state */
-    #state: ReactiveObservable<State<TType, TArgs>, ActionTypes<TType, TArgs>>;
+    #state: FlowSubject<State<TType, TArgs>, ActionTypes<TType, TArgs>>;
 
     #subscription: Subscription;
 
@@ -66,7 +66,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
             return this.#state.subscribe(subscriber);
         });
 
-        this.#state = new ReactiveObservable(createReducer<TType, TArgs>(), {});
+        this.#state = new FlowSubject(createReducer<TType, TArgs>(), {});
 
         this.#subscription = new Subscription(() => this.#state.complete());
 
