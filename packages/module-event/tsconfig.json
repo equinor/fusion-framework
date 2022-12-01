@@ -9,6 +9,9 @@
   "references": [
     {
       "path": "../module"
+    },
+    {
+      "path": "../../utils/observable"
     }
   ],
   "include": [
