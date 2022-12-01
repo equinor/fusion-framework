@@ -3,13 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.5.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.12...@equinor/fusion-framework-module-services@0.5.13) (2022-12-01)
+## [0.5.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.13...@equinor/fusion-framework-module-services@0.5.14) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services
 
+## [0.5.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.12...@equinor/fusion-framework-module-services@0.5.13) (2022-12-01)
 
-
-
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
 
 ## [0.5.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.11...@equinor/fusion-framework-module-services@0.5.12) (2022-12-01)
 

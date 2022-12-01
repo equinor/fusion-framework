@@ -3,13 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.1.23](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@3.1.22...@equinor/fusion-framework-app@3.1.23) (2022-12-01)
+## [3.1.24](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@3.1.23...@equinor/fusion-framework-app@3.1.24) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-app
 
+## [3.1.23](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@3.1.22...@equinor/fusion-framework-app@3.1.23) (2022-12-01)
 
-
-
+**Note:** Version bump only for package @equinor/fusion-framework-app
 
 ## [3.1.22](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@3.1.21...@equinor/fusion-framework-app@3.1.22) (2022-12-01)
 
