@@ -9,7 +9,7 @@
   },
   "references": [
     {
-      "path": "../observable"
+      "path": "../../utils/observable"
     },
     {
       "path": "../module-context"

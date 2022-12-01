@@ -28,7 +28,7 @@
   ],
   "references": [
     {
-      "path": "../observable"
+      "path": "../../utils/observable"
     },
     {
       "path": "../react-app"

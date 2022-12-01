@@ -11,7 +11,7 @@
       "path": "../module"
     },
     {
-      "path": "../observable"
+      "path": "../../utils/observable"
     },
     {
       "path": "../module-http"
