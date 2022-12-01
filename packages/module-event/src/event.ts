@@ -31,7 +31,8 @@ export interface IFrameworkEvent<
 }
 
 /** initial args of event  */
-export type FrameworkEventInit<TDetail = unknown, TSource = unknown> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FrameworkEventInit<TDetail = any, TSource = any> = {
     detail: TDetail;
     source?: TSource;
     cancelable?: boolean;
