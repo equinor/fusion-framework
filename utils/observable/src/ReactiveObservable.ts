@@ -1,3 +1,4 @@
+import { Reducer } from 'react';
 import {
     asyncScheduler,
     BehaviorSubject,
@@ -15,36 +16,57 @@ import {
     observeOn,
     scan,
 } from 'rxjs/operators';
-
 import { filterAction } from './operators';
-import type { Action, ActionType, Epic, Effect, ExtractAction, Reducer } from './types';
+
+import type { Action, ActionType, ExtractAction } from './types/actions';
+import type { Flow, Effect } from './types/flow';
+import type { ReducerWithInitialState } from './types/reducers';
 
 /**
  * Observable that mutates by dispatching actions and internally sequentially reduced.
  */
 export class ReactiveObservable<S, A extends Action = Action> extends Observable<S> {
+    /**
+     * return state to initial
+     */
+    public reset: VoidFunction;
+
     #action = new Subject<A>();
     #state: BehaviorSubject<S>;
 
-    /** observable actions  */
+    /**
+     * Observable stream of actions dispatched to the subject
+     */
     get action$(): Observable<A> {
         return this.#action.asObservable();
     }
 
+    /**
+     * current value of state
+     */
     get value(): S {
         return this.#state.value;
     }
 
+    /**
+     * flag to indicate of the observable is closed
+     */
     get closed(): boolean {
         return this.#state.closed || this.#action.closed;
     }
 
-    constructor(reducer: Reducer<S, A>, private __initial: S) {
+    constructor(reducer: ReducerWithInitialState<S, A>);
+    constructor(reducer: Reducer<S, A>, initialState: S);
+
+    constructor(reducer: ReducerWithInitialState<S, A> | Reducer<S, A>, initialState?: S) {
         super((subscriber) => {
             return this.#state.subscribe(subscriber);
         });
-        this.#state = new BehaviorSubject(__initial);
-        this.#action.pipe(scan(reducer, __initial), distinctUntilChanged()).subscribe(this.#state);
+        const initial =
+            'getInitialState' in reducer ? reducer.getInitialState() : (initialState as S);
+        this.#state = new BehaviorSubject(initial);
+        this.#action.pipe(scan(reducer, initial), distinctUntilChanged()).subscribe(this.#state);
+        this.reset = () => this.#state.next(initial);
     }
 
     /** Dispatch action */
@@ -52,13 +74,20 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
         this.#action.next(action);
     }
 
+    public addEffect(fn: Effect<A, S>): Subscription;
     public addEffect<TType extends ActionType<A>>(
         actionType: TType,
-        fn: Effect<ExtractAction<A, TType>, S>
+        cb: Effect<ExtractAction<A, TType>, S>
     ): Subscription;
 
-    public addEffect(fn: Effect<A, S>): Subscription;
-
+    /**
+     * observe dispatch of an action type
+     *
+     * @note side-effect cannot alter state, nor be sync
+     * @note unsubscribe when done
+     * @param actionType - type of action to observe
+     * @param fn - callback when action is dispatch
+     */
     public addEffect<TType extends ActionType<A>>(
         actionTypeOrFn: TType | Effect<A, S>,
         fn?: Effect<ExtractAction<A, TType>, S>
@@ -92,7 +121,12 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
             .subscribe(this.#action);
     }
 
-    public addEpic(fn: Epic<A, S>): Subscription {
+    /** @deprecated use `addFlow`*/
+    public addEpic(fn: Flow<A, S>): Subscription {
+        return this.addFlow(fn);
+    }
+
+    public addFlow(fn: Flow<A, S>): Subscription {
         const epic$ = fn(this.action$, this);
         if (!epic$) {
             throw new TypeError(
@@ -112,21 +146,25 @@ export class ReactiveObservable<S, A extends Action = Action> extends Observable
             .subscribe(this.#action);
     }
 
-    public reset() {
-        this.#state.next(this.__initial);
-    }
-
-    /** remove all subscribers  */
+    /**
+     * unsubscribes to actions, removes subscribers
+     */
     public unsubscribe() {
         this.#action.unsubscribe();
         this.#state.unsubscribe();
     }
 
+    /**
+     * finalizes the subject, completes observers
+     */
     public complete() {
         this.#action.complete();
         this.#state.complete();
     }
 
+    /**
+     * clone to simple observable
+     */
     public asObservable() {
         return this.#state.asObservable();
     }
