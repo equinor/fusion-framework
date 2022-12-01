@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-navigation",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
