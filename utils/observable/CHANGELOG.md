@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.2.0...@equinor/fusion-observable@2.3.0) (2022-12-01)
+
+### Features
+
+-   **observable:** support state from create-reducer ([32d7664](https://github.com/equinor/fusion-framework/commit/32d7664d34ecbfc151d609a555b1bebd4989c965))
+
 ## [2.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.1.2...@equinor/fusion-observable@2.2.0) (2022-12-01)
 
 ### Features
