@@ -1,7 +1,4 @@
-import {
-    ClientRequestInit,
-    IHttpClient,
-} from '@equinor/fusion-framework-module-services/../../module-http/src/lib/client';
+import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 import { ApiClientArguments } from '../..';
 import { generateEndpoint } from './generate-endpoint';
 import { ApiVersions, DeleteBookmarkArgs } from './types';

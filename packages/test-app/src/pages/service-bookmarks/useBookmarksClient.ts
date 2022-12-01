@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppModules } from '@equinor/fusion-framework-react-app';
 import { ClientMethodType, ServicesModule } from '@equinor/fusion-framework-module-services';
 import BookmarksApiClient from '@equinor/fusion-framework-module-services/bookmarks/index';
-import { IHttpClient } from '@equinor/fusion-framework-react-app/src/http';
+import { IHttpClient } from '@equinor/fusion-framework-react-app/http';
 
 export const useBookmarksClient = <TMethod extends ClientMethodType, TPayload = unknown>(
     type: TMethod

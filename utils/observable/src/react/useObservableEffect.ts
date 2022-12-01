@@ -7,11 +7,7 @@ export interface useObservableEffect<
     A extends Action = Action,
     TType extends ActionType<A> = ActionType<A>
 > {
-    (
-        subject: FlowSubject<S, A>,
-        type: TType,
-        effect?: Effect<ExtractAction<A, TType>, S>
-    ): void;
+    (subject: FlowSubject<S, A>, type: TType, effect?: Effect<ExtractAction<A, TType>, S>): void;
 }
 
 export interface useObservableEffect<S, A extends Action = Action> {
