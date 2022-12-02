@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.11...@equinor/fusion-framework-module-context@1.0.0) (2022-12-02)
+
+### Features
+
+-   **module-context:** simplify context config ([d77c665](https://github.com/equinor/fusion-framework/commit/d77c6656d02f0a241ea685ae2595dda9b21420e4))
+
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.11...@equinor/fusion-framework-module-context@1.0.0-alpha.0) (2022-12-02)
 
 ### Features

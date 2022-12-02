@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.5.0...@equinor/fusion-observable@3.0.0) (2022-12-02)
+
+### Features
+
+-   **observable:** create hook for debouncing functions ([cca2630](https://github.com/equinor/fusion-framework/commit/cca2630c8ad26ddf054ad1d65aa9994254e0d153))
+-   update exiting debounce hooks ([27e716c](https://github.com/equinor/fusion-framework/commit/27e716ca253206d532e0f02233beb6f29c10de22))
+
 ## [3.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.5.0...@equinor/fusion-observable@3.0.0-alpha.0) (2022-12-02)
 
 ### Features

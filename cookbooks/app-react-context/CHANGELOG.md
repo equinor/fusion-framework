@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@1.0.18...@equinor/fusion-framework-cookbook-app-react-context@2.0.0) (2022-12-02)
+
+### Features
+
+-   update exiting debounce hooks ([27e716c](https://github.com/equinor/fusion-framework/commit/27e716ca253206d532e0f02233beb6f29c10de22))
+
 ## [2.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@1.0.18...@equinor/fusion-framework-cookbook-app-react-context@2.0.0-alpha.0) (2022-12-02)
 
 ### Features
