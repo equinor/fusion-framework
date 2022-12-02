@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.10.12...@equinor/fusion-framework-test-app@2.0.0-alpha.0) (2022-12-02)
+
+### Features
+
+-   update exiting debounce hooks ([dd3eb5f](https://github.com/equinor/fusion-framework/commit/dd3eb5ff1a05edd6c25fd1ad65c0b68d50f5799a))
+
 ## [1.10.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@1.10.11...@equinor/fusion-framework-test-app@1.10.12) (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
