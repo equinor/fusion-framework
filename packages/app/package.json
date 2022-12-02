@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-app",
-    "version": "3.1.31",
+    "version": "4.0.0-alpha.0",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -23,9 +23,9 @@
         "directory": "packages/app"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^4.4.17",
+        "@equinor/fusion-framework": "^5.0.0-alpha.0",
         "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-app-config": "^1.1.21",
+        "@equinor/fusion-framework-module-app-config": "^2.0.0-alpha.0",
         "@equinor/fusion-framework-module-event": "^1.1.6",
         "@equinor/fusion-framework-module-http": "^2.1.7",
         "@equinor/fusion-framework-module-msal": "^1.0.21"
