@@ -5,10 +5,7 @@ import { Query, QueryCtorOptions } from '@equinor/fusion-query';
 
 import { ContextItem } from '../types';
 
-export type ContextClientOptions = {
-    query: QueryCtorOptions<ContextItem, { id: string }>;
-    initial?: ContextItem;
-};
+export type GetContextParameters = { id: string };
 
 export class ContextClient extends Observable<ContextItem> {
     #client: Query<ContextItem, { id: string }>;
@@ -27,10 +24,10 @@ export class ContextClient extends Observable<ContextItem> {
         return this.#client;
     }
 
-    constructor(options: ContextClientOptions) {
+    constructor(options: QueryCtorOptions<ContextItem, GetContextParameters>) {
         super((observer) => this.#currentContext$.subscribe(observer));
-        this.#client = new Query(options.query);
-        this.#currentContext$ = new BehaviorSubject<ContextItem | undefined>(options.initial);
+        this.#client = new Query(options);
+        this.#currentContext$ = new BehaviorSubject<ContextItem | undefined>(undefined);
     }
 
     public setCurrentContext(idOrItem?: string | ContextItem) {

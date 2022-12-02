@@ -1,56 +1,31 @@
-import {
-    AnyModule,
-    ModuleInitializerArgs,
-    ModulesInstanceType,
-} from '@equinor/fusion-framework-module';
+import { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
-import type { QueryCtorOptions } from '@equinor/fusion-query';
-import { ContextClientOptions } from './client/ContextClient';
-import { ContextItem, QueryContextParameters } from './types';
 import { getContextSelector, queryContextSelector } from './selectors';
+import { QueryCtorOptions } from '@equinor/fusion-query';
+import { ContextFilterFn, ContextItem, QueryContextParameters } from './types';
+import { GetContextParameters } from './client/ContextClient';
+import { ContextConfigBuilder, ContextConfigBuilderCallback } from './ContextConfigBuilder';
 
-export interface IContextModuleConfig {
-    getContext: ContextClientOptions;
-    queryContext: QueryCtorOptions<ContextItem[], QueryContextParameters>;
+export interface ContextModuleConfig {
+    client: {
+        get: QueryCtorOptions<ContextItem, GetContextParameters>;
+        query: QueryCtorOptions<ContextItem[], QueryContextParameters>;
+    };
     contextType?: string[];
-    contextFilter?: (items: Array<ContextItem>) => Array<ContextItem>;
+    contextFilter?: ContextFilterFn;
 }
 
-export interface IContextModuleConfigurator<TDeps extends Array<AnyModule> = [ServicesModule]> {
-    /** fired on initialize of module */
-    createConfig: (
-        args: ModuleInitializerArgs<IContextModuleConfigurator, TDeps>
-    ) => Promise<IContextModuleConfig>;
-
-    /** post process function for altering created config  */
-    processConfig: (config: IContextModuleConfig) => IContextModuleConfig;
+export interface IContextModuleConfigurator {
+    addConfigBuilder: (init: ContextConfigBuilderCallback) => void;
 }
 
-export class ContextModuleConfigurator implements IContextModuleConfigurator<[ServicesModule]> {
-    getContext?: Promise<ContextClientOptions['query']['client']>;
-
+export class ContextModuleConfigurator implements IContextModuleConfigurator {
     defaultExpireTime = 1 * 60 * 1000;
 
-    protected async _createContextClientGet(
-        apiProvider: IApiProvider
-    ): Promise<QueryCtorOptions<ContextItem, { id: string }>['client']> {
-        const contextClient = await apiProvider.createContextClient('json$');
-        return {
-            fn: (args) => {
-                return contextClient.get('v1', args, { selector: getContextSelector });
-            },
-        };
-    }
+    #configBuilders: Array<ContextConfigBuilderCallback> = [];
 
-    protected async _createContextClientQuery(
-        apiProvider: IApiProvider
-    ): Promise<QueryCtorOptions<ContextItem[], QueryContextParameters>['client']> {
-        const contextClient = await apiProvider.createContextClient('json$');
-        return {
-            fn: (query) => {
-                return contextClient.query('v1', { query }, { selector: queryContextSelector });
-            },
-        };
+    addConfigBuilder(init: ContextConfigBuilderCallback): void {
+        this.#configBuilders.push(init);
     }
 
     protected async _getServiceProvider(
@@ -70,28 +45,43 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator<[Se
 
     public async createConfig(
         init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>
-    ) {
-        const apiProvider = await this._getServiceProvider(init);
-        const config: IContextModuleConfig = {
-            getContext: {
-                query: {
-                    client: await this._createContextClientGet(apiProvider),
+    ): Promise<ContextModuleConfig>  {
+        const config = await this.#configBuilders.reduce(async (cur, cb) => {
+            const builder = new ContextConfigBuilder<any, any>(init, await cur);
+            await Promise.resolve(cb(builder));
+            return Object.assign(cur, builder.config);
+        }, Promise.resolve({} as Partial<ContextModuleConfig>));
+
+        // TODO - make less lazy
+        config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {
+            const apiProvider = await this._getServiceProvider(init);
+            const contextClient = await apiProvider.createContextClient('json$');
+            return {
+                get: {
+                    client: {
+                        fn: (args) =>
+                            contextClient.get('v1', args, { selector: getContextSelector }),
+                    },
                     key: ({ id }) => id,
                     expire: this.defaultExpireTime,
                 },
-            },
-            queryContext: {
-                client: await this._createContextClientQuery(apiProvider),
-                key: (args) => JSON.stringify(args),
-                expire: this.defaultExpireTime,
-            },
-        };
+                query: {
+                    client: {
+                        fn: (query) =>
+                            contextClient.query(
+                                'v1',
+                                { query },
+                                { selector: queryContextSelector }
+                            ),
+                    },
+                    // TODO - might cast to checksum
+                    key: (args) => JSON.stringify(args),
+                    expire: this.defaultExpireTime,
+                },
+            };
+        })();
 
-        return this.processConfig(config);
-    }
-
-    public processConfig(config: IContextModuleConfig): IContextModuleConfig {
-        return config;
+        return config as ContextModuleConfig;
     }
 }
 
