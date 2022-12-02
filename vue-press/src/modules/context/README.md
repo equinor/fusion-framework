@@ -23,30 +23,60 @@ import { enableContext } from '@equinor/fusion-framework-react-module-context';
 :::
 
 ```ts
-export const configure = (configurator) => {
-  enableContext(configurator, {
-    /** optional filter for query types */
-    contextType: ['project'],
-    /** optional filter of query result */
-    contextFilter: (items) => items.filter(item => item.title.match(/a/)) 
-  });
-}
+export const configure = (configurator) => enableContext(configurator);
 ```
 
 ### Options
 
-#### contextType
+#### setContextType
 
 ```ts
-type contextType = Array<string>
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    /** optional filter for query types, array of string */
+    builder.setContextType(['project']);
+  });
+}
 ```
 
 array of context types which queries are filtered by
 
-#### contextFilter
+#### setContextFilter
 
 ```ts
-type contextFilter = (items: Array<ContextItem>) => Array<ContextItem>
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    /** optional filter of query result */
+    builder.setContextFilter((items) => items.filter(item => item.title.match(/a/)));
+  });
+}
+```
+
+#### setContextClient
+
+```ts
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    /** request another module that is enabled */
+    const httpProvider = await builder.requireInstance('http');
+    const client = httpProvider.createClient('my-api');
+
+    /** 
+     * By default the Framework will resolve the context service
+     * @see {@link QueryCtorOptions} for advance configuration of query client
+     * @see [ObservableInput - RxJS](https://rxjs.dev/api/index/type-alias/ObservableInput) 
+     * @return object for getting and querying context
+     */
+    return builder.setContextClient({
+        get: (args) => client.json$(`/api/context/${args.id}`),
+        query: (args) =>
+            client.json$(`/api/context/search/`, {
+                method: 'post',
+                body: JSON.stringify(args),
+            }),
+    });
+  });
+}
 ```
 
 query post request processor, called after query is executed 
