@@ -1,64 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
-import { debounce, debounceTime, ObservableInput, Subject, switchMap, tap } from 'rxjs';
-import { useObservableState } from '@equinor/fusion-observable/react';
-import type { ObservableType } from '@equinor/fusion-observable';
+import { useState } from 'react';
+import { useDebounce, UseDebounceOptions } from '@equinor/fusion-observable/react';
 import Query, { QueryCtorOptions } from '../Query';
-import { QueryOptions } from '../types';
-
-type UseDebounceQueryArgs<TType, TArgs> = { args: TArgs; options?: QueryOptions<TType, TArgs> };
-type UseDebounceQueryValue<TType, TArgs> = ObservableType<ReturnType<Query<TType, TArgs>['query']>>;
 
 export const useDebounceQuery = <TType, TArgs>(
     clientOrClientCtor: Query<TType, TArgs> | QueryCtorOptions<TType, TArgs>,
-    options: {
-        debounce:
-            | ((value: UseDebounceQueryArgs<TType, TArgs>) => ObservableInput<unknown>)
-            | number;
-        initial?: ObservableType<ReturnType<Query<TType, TArgs>['query']>>;
-        queuer?: Subject<UseDebounceQueryArgs<TType, TArgs>>;
-    }
-): {
-    value: UseDebounceQueryValue<TType, TArgs> | undefined;
-    query: (args: UseDebounceQueryArgs<TType, TArgs>) => void;
-    querying: boolean;
-} => {
+    options: UseDebounceOptions<[TArgs]>
+) => {
     const [client] = useState<Query<TType, TArgs>>(() =>
         clientOrClientCtor instanceof Query ? clientOrClientCtor : new Query(clientOrClientCtor)
     );
 
-    const [querying, setQuerying] = useState<boolean>(false);
-    const [queuer] = useState(
-        () => options?.queuer ?? new Subject<UseDebounceQueryArgs<TType, TArgs>>()
-    );
-
-    const query = useCallback(
-        (args: UseDebounceQueryArgs<TType, TArgs>) => queuer.next(args),
-        [queuer]
-    );
-
-    const debounceFn = useMemo(
-        () =>
-            typeof options.debounce === 'function'
-                ? debounce(options.debounce)
-                : debounceTime<UseDebounceQueryArgs<TType, TArgs>>(options.debounce),
-        [options.debounce]
-    );
-
-    const value = useObservableState(
-        useMemo(
-            () =>
-                queuer.pipe(
-                    debounceFn,
-                    tap(() => setQuerying(true)),
-                    switchMap(({ args, options }) => client.query(args, options)),
-                    tap(() => setQuerying(false))
-                ),
-            [client]
-        ),
-        options?.initial
-    );
-
-    return { value, query, querying };
+    return useDebounce(client.query.bind(client), options);
 };
 
 export default useDebounceQuery;
