@@ -12,7 +12,7 @@ export const App = () => {
 
     const onInputChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            query({ args: { search: e.currentTarget.value } });
+            query(e.currentTarget.value);
         },
         [query]
     );
@@ -31,7 +31,7 @@ export const App = () => {
             <br />
             <select onChange={onSelectChange} disabled={querying}>
                 {searchResult &&
-                    searchResult.value.map((x) => (
+                    searchResult.map((x) => (
                         <option value={x.id} key={x.id}>
                             {x.title}
                         </option>

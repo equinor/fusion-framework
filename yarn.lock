@@ -551,28 +551,6 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@equinor/fusion-framework-module-context@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-context/-/fusion-framework-module-context-0.5.3.tgz#1783497a2fc27f3f1a8726c246bea85d81ed7135"
-  integrity sha512-gRY50YHBduViK+BH3tNmfjgwPwS30iqohBxgfGf2lFADCGN0WlmoYVfyjX8JoD9+Zwmr/DIh3ak4pqMnS4Nitg==
-
-"@equinor/fusion-framework-react-module-context@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-react-module-context/-/fusion-framework-react-module-context-0.3.1.tgz#4ce74c83dc503ddcb322df16ba64bdb0270fdc53"
-  integrity sha512-Zavg8nJij7VYow9HQAuedvCz5tTqGR6mRyQRbfHWkrU1YnhiKoPtN4zMBD6kQNepkKVn1Dbz7+6eftwncogIvg==
-  dependencies:
-    "@equinor/fusion-framework-module-context" "^0.5.3"
-    "@equinor/fusion-framework-react-module" "^1.1.0"
-    "@equinor/fusion-observable" "^1.5.1"
-
-"@equinor/fusion-observable@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-1.5.1.tgz#211279615cd27cb8e5571686938b5883cbbd6e6a"
-  integrity sha512-iDVkMJSTfnvOGv+OWDWtycZtkwbmNZI374U5fd22py72kT6Ab5jImAhZQfjLu9cJtoAtZO/ZwtOojJVvb5odKA==
-  dependencies:
-    rxjs "^7.5.7"
-    uuid "^8.3.2"
-
 "@equinor/fusion-react-progress-indicator@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.5.tgz#4de6a3b12b32f6d614ae1d340636c83f59aa6dd3"
