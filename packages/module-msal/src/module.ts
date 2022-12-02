@@ -45,7 +45,7 @@ export const configureMsal = (
         if (clients) {
             Object.entries(clients).forEach(([key, opt]) => config.configureClient(key, opt));
         }
-    }
+    },
 });
 
 declare module '@equinor/fusion-framework-module' {

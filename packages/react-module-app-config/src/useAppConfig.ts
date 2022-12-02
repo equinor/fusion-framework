@@ -4,7 +4,7 @@ import { useModule } from '@equinor/fusion-framework-react-module';
 
 import type { AppConfig, AppConfigModule } from '@equinor/fusion-framework-module-app-config';
 
-import { Query } from '@equinor/fusion-observable/query';
+import { Query } from '@equinor/fusion-query';
 
 export type UseAppConfigQueryArgs = { appKey: string; tag?: string };
 

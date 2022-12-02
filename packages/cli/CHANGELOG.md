@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@1.0.0...@equinor/fusion-framework-cli@1.0.1) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.20...@equinor/fusion-framework-cli@1.0.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.20...@equinor/fusion-framework-cli@1.0.0-alpha.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.20](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.19...@equinor/fusion-framework-cli@0.3.20) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.18...@equinor/fusion-framework-cli@0.3.19) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.17...@equinor/fusion-framework-cli@0.3.18) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.16...@equinor/fusion-framework-cli@0.3.17) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.15...@equinor/fusion-framework-cli@0.3.16) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.14...@equinor/fusion-framework-cli@0.3.15) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.13...@equinor/fusion-framework-cli@0.3.14) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.12...@equinor/fusion-framework-cli@0.3.13) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.11...@equinor/fusion-framework-cli@0.3.12) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.10...@equinor/fusion-framework-cli@0.3.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.9...@equinor/fusion-framework-cli@0.3.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.8...@equinor/fusion-framework-cli@0.3.9) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.7...@equinor/fusion-framework-cli@0.3.8) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.6...@equinor/fusion-framework-cli@0.3.7) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [0.3.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.5...@equinor/fusion-framework-cli@0.3.6) (2022-11-23)
+
+### Bug Fixes
+
+-   **cli:** windows url path ([0176fa8](https://github.com/equinor/fusion-framework/commit/0176fa8ac1337025c584101ec2ceac8092eb0c13))
+
+## 0.3.5 (2022-11-23)
+
+### Bug Fixes
+
+-   **cli:** relative path resolve windows ([0316c30](https://github.com/equinor/fusion-framework/commit/0316c30fd0e75d230893015c40c96dd369e8e472))
+
 ## [0.3.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@0.3.3...@equinor/fusion-framework-cli@0.3.4) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli

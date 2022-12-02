@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.11...@equinor/fusion-framework-react-module-context@1.0.0) (2022-12-02)
+
+### Features
+
+-   update exiting debounce hooks ([27e716c](https://github.com/equinor/fusion-framework/commit/27e716ca253206d532e0f02233beb6f29c10de22))
+
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.11...@equinor/fusion-framework-react-module-context@1.0.0-alpha.0) (2022-12-02)
+
+### Features
+
+-   update exiting debounce hooks ([dd3eb5f](https://github.com/equinor/fusion-framework/commit/dd3eb5ff1a05edd6c25fd1ad65c0b68d50f5799a))
+
+## [0.4.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.10...@equinor/fusion-framework-react-module-context@0.4.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.9...@equinor/fusion-framework-react-module-context@0.4.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.8...@equinor/fusion-framework-react-module-context@0.4.9) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.7...@equinor/fusion-framework-react-module-context@0.4.8) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.6...@equinor/fusion-framework-react-module-context@0.4.7) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.5...@equinor/fusion-framework-react-module-context@0.4.6) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.4...@equinor/fusion-framework-react-module-context@0.4.5) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.3...@equinor/fusion-framework-react-module-context@0.4.4) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.2...@equinor/fusion-framework-react-module-context@0.4.3) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.1...@equinor/fusion-framework-react-module-context@0.4.2) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.4.0...@equinor/fusion-framework-react-module-context@0.4.1) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
+## [0.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.3.1...@equinor/fusion-framework-react-module-context@0.4.0) (2022-12-01)
+
+### Features
+
+-   **query:** separate query from observable ([1408609](https://github.com/equinor/fusion-framework/commit/140860976c3ee9430a30deebcc8b08da857e5772))
+
+## 0.3.1 (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-context
+
 ## [0.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@0.2.1...@equinor/fusion-framework-react-module-context@0.3.0) (2022-11-20)
 
 ### Features

@@ -28,7 +28,10 @@
   ],
   "references": [
     {
-      "path": "../observable"
+      "path": "../../utils/observable"
+    },
+    {
+      "path": "../../utils/query"
     },
     {
       "path": "../react-app"

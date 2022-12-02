@@ -1,0 +1,80 @@
+{
+    "name": "@equinor/fusion-query",
+    "version": "1.0.0",
+    "description": "WIP",
+    "private": false,
+    "keywords": [
+        "observable",
+        "react",
+        "fusion",
+        "equinor"
+    ],
+    "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
+    "license": "ISC",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js",
+        "./cache": "./dist/esm/cache/index.js",
+        "./client": "./dist/esm/client/index.js",
+        "./react": "./dist/esm/react/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "cache": [
+                "dist/types/cache/index.d.ts"
+            ],
+            "client": [
+                "dist/types/client/index.d.ts"
+            ],
+            "react": [
+                "dist/types/react/index.d.ts"
+            ]
+        }
+    },
+    "directories": {
+        "dist": "dist"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "utils/query"
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "bugs": {
+        "url": "https://github.com/equinor/fusion-framework/issues"
+    },
+    "dependencies": {
+        "@equinor/fusion-observable": "^3.0.0",
+        "immer": "^9.0.16",
+        "rxjs": "^7.5.7",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.2",
+        "@types/uuid": "^8.3.4",
+        "react": "^17.0.2",
+        "typescript": "^4.9.3"
+    },
+    "peerDependencies": {
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        },
+        "react": {
+            "optional": true
+        }
+    }
+}

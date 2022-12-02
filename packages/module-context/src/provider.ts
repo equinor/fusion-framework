@@ -1,7 +1,7 @@
 import { lastValueFrom, Observable, Subscription } from 'rxjs';
 import { map, pairwise } from 'rxjs/operators';
 
-import { IContextModuleConfig } from './configurator';
+import { ContextModuleConfig } from './configurator';
 
 import { ContextClient } from './client/ContextClient';
 import { ContextItem, QueryContextParameters } from './types';
@@ -11,7 +11,7 @@ import {
     FrameworkEvent,
     FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
-import Query from '@equinor/fusion-observable/query';
+import Query from '@equinor/fusion-query';
 
 /**
  * WARNING: this is an initial out cast.
@@ -37,8 +37,8 @@ export class ContextProvider implements IContextProvider {
 
     #subscriptions = new Subscription();
 
-    #contextType?: IContextModuleConfig['contextType'];
-    #contextFilter: IContextModuleConfig['contextFilter'];
+    #contextType?: ContextModuleConfig['contextType'];
+    #contextFilter: ContextModuleConfig['contextFilter'];
 
     public get contextClient() {
         return this.#contextClient;
@@ -95,7 +95,7 @@ export class ContextProvider implements IContextProvider {
     }
 
     constructor(args: {
-        config: IContextModuleConfig;
+        config: ContextModuleConfig;
         event?: ModuleType<EventModule>;
         parentContext?: IContextProvider;
     }) {
@@ -104,9 +104,8 @@ export class ContextProvider implements IContextProvider {
         this.#contextType = config.contextType;
         this.#contextFilter = config.contextFilter;
 
-        this.#contextClient = new ContextClient(config.getContext);
-
-        this.#contextQuery = new Query(config.queryContext);
+        this.#contextClient = new ContextClient(config.client.get);
+        this.#contextQuery = new Query(config.client.query);
 
         if (event) {
             this.#event = event;

@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module",
-    "version": "1.2.9",
+    "version": "1.2.10",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -26,6 +26,6 @@
         "rxjs": "^7.5.7"
     },
     "devDependencies": {
-        "typescript": "^4.8.4"
+        "typescript": "^4.9.3"
     }
 }

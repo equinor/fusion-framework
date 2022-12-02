@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.11...@equinor/fusion-framework-module-context@1.0.0) (2022-12-02)
+
+### Features
+
+-   **module-context:** simplify context config ([d77c665](https://github.com/equinor/fusion-framework/commit/d77c6656d02f0a241ea685ae2595dda9b21420e4))
+
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.11...@equinor/fusion-framework-module-context@1.0.0-alpha.0) (2022-12-02)
+
+### Features
+
+-   **module-context:** simplify context config ([3b3caa9](https://github.com/equinor/fusion-framework/commit/3b3caa9374b21bb17998d78e6858880489d2e61a))
+
+## [0.6.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.10...@equinor/fusion-framework-module-context@0.6.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.9...@equinor/fusion-framework-module-context@0.6.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.8...@equinor/fusion-framework-module-context@0.6.9) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.7...@equinor/fusion-framework-module-context@0.6.8) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.6...@equinor/fusion-framework-module-context@0.6.7) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.5...@equinor/fusion-framework-module-context@0.6.6) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.4...@equinor/fusion-framework-module-context@0.6.5) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.3...@equinor/fusion-framework-module-context@0.6.4) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.2...@equinor/fusion-framework-module-context@0.6.3) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.1...@equinor/fusion-framework-module-context@0.6.2) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.6.0...@equinor/fusion-framework-module-context@0.6.1) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
+## [0.6.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.5.3...@equinor/fusion-framework-module-context@0.6.0) (2022-12-01)
+
+### Features
+
+-   **query:** separate query from observable ([1408609](https://github.com/equinor/fusion-framework/commit/140860976c3ee9430a30deebcc8b08da857e5772))
+
+## 0.5.3 (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
 ## [0.5.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@0.5.1...@equinor/fusion-framework-module-context@0.5.2) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context

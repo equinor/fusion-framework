@@ -1,4 +1,4 @@
-import type { History, Location, To } from '@remix-run/router';
+import type { History, To, Path } from '@remix-run/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate } from './types';
@@ -48,8 +48,8 @@ export class Navigator extends Observable<NavigationUpdate> implements INavigato
         this.#subscriptions.add(this.#history.listen(this.#state.next.bind(this.#state)));
     }
 
-    public encodeLocation(location: Location): Location {
-        return this.#history.encodeLocation(location);
+    public encodeLocation(to: To): Path {
+        return this.#history.encodeLocation(to);
     }
 
     public listen(listener: (next: NavigationUpdate) => void): VoidFunction {

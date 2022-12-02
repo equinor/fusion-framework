@@ -207,17 +207,26 @@ export const configure = (configurator, { env: { basename } }) => {
 
 [read more about context](../../modules/context/README.md)
 
+::: code-tabs
+@tab simple
+```ts
+import { enableNavigation } from '@equinor/fusion-framework-module-context';
+export const configure = (configurator) => enableContext(configurator);
+```
+
+@tab advance
 ```ts
 import { enableNavigation } from '@equinor/fusion-framework-module-context';
 export const configure = (configurator) => {
-  enableContext(configurator, {
-    /** optional filter for query types */
-    contextType: ['project'],
-    /** optional filter of query result */
-    contextFilter: (items) => items.filter(item => item.title.match(/a/)) 
-  });
+   enableContext(configurator, (builder) => {
+        builder.setContextType(['project']);
+        builder.setContextFilter((items) => {
+            return items.filter(item => item.title.match(/a/));
+        });
+   });
 }
 ```
+:::
 
 ### Enable Ag Grid
 
@@ -227,7 +236,5 @@ Enable license key when deployed to portal
 
 ```ts
 import { enableAgGrid } from '@equinor/fusion-framework-module-navigation';
-export const configure = (configurator) => {
-  enableAgGrid(configurator);
-}
+export const configure = (configurator) => enableAgGrid(configurator);
 ```

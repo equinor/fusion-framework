@@ -1,5 +1,5 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { Query } from '@equinor/fusion-observable/query';
+import { Query } from '@equinor/fusion-query';
 
 import { Environment, EnvironmentResponse, Service } from './types';
 

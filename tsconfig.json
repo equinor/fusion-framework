@@ -17,7 +17,7 @@
   ],
   "references": [
     {
-      "path": "./packages/observable"
+      "path": "./utils/observable"
     },
     {
       "path": "./packages/module"

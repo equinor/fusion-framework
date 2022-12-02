@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@5.0.0...@equinor/fusion-framework@5.0.1) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [5.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.17...@equinor/fusion-framework@5.0.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [5.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.17...@equinor/fusion-framework@5.0.0-alpha.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.16...@equinor/fusion-framework@4.4.17) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.15...@equinor/fusion-framework@4.4.16) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.14...@equinor/fusion-framework@4.4.15) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.13...@equinor/fusion-framework@4.4.14) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.12...@equinor/fusion-framework@4.4.13) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.11...@equinor/fusion-framework@4.4.12) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.10...@equinor/fusion-framework@4.4.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.9...@equinor/fusion-framework@4.4.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.8...@equinor/fusion-framework@4.4.9) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.7...@equinor/fusion-framework@4.4.8) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.6...@equinor/fusion-framework@4.4.7) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## [4.4.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.5...@equinor/fusion-framework@4.4.6) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
+## 4.4.5 (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
 ## [4.4.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@4.4.3...@equinor/fusion-framework@4.4.4) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework

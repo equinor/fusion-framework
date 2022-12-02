@@ -556,13 +556,94 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@equinor/fusion-framework-react-module-context@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-react-module-context/-/fusion-framework-react-module-context-0.2.1.tgz#2b92bef3c67ac0425ec5caa5253420e59b65a7c6"
-  integrity sha512-CpG1bwTKGuW8GrvOZLg0tXwqnwopltkeWKmXYQtsNOYS4bwVUK8t7cOqnTkE53Q1fl7uvsShUUmNKlSROcoH2w==
+"@equinor/fusion-framework-app@^3.1.18":
+  version "3.1.31"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-app/-/fusion-framework-app-3.1.31.tgz#0383e4a0c4688bda24af68bfdfd3de0e4af4108c"
+  integrity sha512-VKTFwgFxTYG9DPuLdrsJdb0mLLikUNPqiqI/4GElNXUnpRhJWBZAMC7XzkomLtuazP7AbGyHE0SUytCFoN6VwQ==
   dependencies:
-    "@equinor/fusion-framework-module-context" "^0.5.1"
-    "@equinor/fusion-framework-react-module" "^1.1.0"
+    "@equinor/fusion-framework" "^4.4.17"
+    "@equinor/fusion-framework-module" "^1.2.10"
+    "@equinor/fusion-framework-module-app-config" "^1.1.21"
+    "@equinor/fusion-framework-module-event" "^1.1.6"
+    "@equinor/fusion-framework-module-http" "^2.1.7"
+    "@equinor/fusion-framework-module-msal" "^1.0.21"
+
+"@equinor/fusion-framework-module-app-config@^1.1.21":
+  version "1.1.21"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-app-config/-/fusion-framework-module-app-config-1.1.21.tgz#acaf6c3de94e48e93153d76f5e7ebd067e08a21d"
+  integrity sha512-5NypvCxW1ksRzvkm6H5TlF+qnFhoG26W8SJVSyvoejguBMjGXAZlYxmNcs8dzV5I59gKZaXyVl8uud2f3nwAbg==
+  dependencies:
+    "@equinor/fusion-framework-module" "^1.2.10"
+
+"@equinor/fusion-framework-module-app@^1.5.11":
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-app/-/fusion-framework-module-app-1.5.11.tgz#3524c4d1c5af1e0addb9bcd3ab387a5fd221dce6"
+  integrity sha512-bqSEBvB4G1YWvOcLrYwYeyhu37mq1GwazVlns1Fbax6+sU9scUHwk3d7mxxwVgP/QmNgObQQleym2gq/6zeG3g==
+  dependencies:
+    "@equinor/fusion-observable" "^2.5.0"
+    rxjs "^7.5.7"
+
+"@equinor/fusion-framework-module-context@^0.5.2":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-context/-/fusion-framework-module-context-0.5.3.tgz#1783497a2fc27f3f1a8726c246bea85d81ed7135"
+  integrity sha512-gRY50YHBduViK+BH3tNmfjgwPwS30iqohBxgfGf2lFADCGN0WlmoYVfyjX8JoD9+Zwmr/DIh3ak4pqMnS4Nitg==
+
+"@equinor/fusion-framework-module-context@^0.6.11":
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-context/-/fusion-framework-module-context-0.6.11.tgz#412e6677a8770b6987fbb5ae06edf02cfc154950"
+  integrity sha512-+1x7wSU1eIYGV7/Q2L3Y5c9+ZhrlEeqxTxRO9u7UFNRrvv7vlMW/0oy+a8cKqIIfuQgzPaUm5Uazih2kbkzCew==
+  dependencies:
+    "@equinor/fusion-query" "^0.3.1"
+
+"@equinor/fusion-framework-module-service-discovery@^3.2.11":
+  version "3.2.11"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-service-discovery/-/fusion-framework-module-service-discovery-3.2.11.tgz#b65df5b512cda4724208ad0c83644ba2b48a5c75"
+  integrity sha512-wdQ1vP22X81cdfURdIN1HUW86GPc0tDZMkijvtjTvXqO2YBtz9HV+97JbjB42JmwA8curzJGz4u6sjxw8xzRzQ==
+  dependencies:
+    "@equinor/fusion-framework-module" "^1.2.10"
+    "@equinor/fusion-framework-module-http" "^2.1.7"
+    "@equinor/fusion-query" "^0.3.1"
+    rxjs "^7.5.7"
+
+"@equinor/fusion-framework-module-services@^0.5.21":
+  version "0.5.21"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-services/-/fusion-framework-module-services-0.5.21.tgz#98c00d48b0e4fbd98d9004565b812e89cd12bfd9"
+  integrity sha512-pdlyRwAzdoIbZxTtpNSYK4HnHFKMeFYFGHS7oh6uq2eS1TUF6Vkq2XORioG14GKo4vT5K2BpjK/JCkiC3mFL7g==
+  dependencies:
+    odata-query "^7.0.3"
+
+"@equinor/fusion-framework@^4.4.17":
+  version "4.4.17"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework/-/fusion-framework-4.4.17.tgz#3e3762ae716c7c879df7dc4ea98e2750bd4b09bb"
+  integrity sha512-VDbRlRAHutTepRKWtrxKVcUjDJRVoRjUV2pav87YzDhJgzklt+sIL318b6vdl14bRXZqTv3DydToE527+5CZPA==
+  dependencies:
+    "@equinor/fusion-framework-module" "^1.2.10"
+    "@equinor/fusion-framework-module-app" "^1.5.11"
+    "@equinor/fusion-framework-module-context" "^0.6.11"
+    "@equinor/fusion-framework-module-event" "^1.1.6"
+    "@equinor/fusion-framework-module-http" "^2.1.7"
+    "@equinor/fusion-framework-module-msal" "^1.0.21"
+    "@equinor/fusion-framework-module-service-discovery" "^3.2.11"
+    "@equinor/fusion-framework-module-services" "^0.5.21"
+    rxjs "^7.5.7"
+
+"@equinor/fusion-observable@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-2.5.0.tgz#26fd6f2b0e1b1ac6493fa67b0de2fad93ba783b5"
+  integrity sha512-HrWKQdgPTUiFtlqWRKH/ngZ8NK2T6GA27lJey/upU8UYCI739jdffy5Gtg/81+7aGULflDcNqaX1glZFeyb66g==
+  dependencies:
+    rxjs "^7.5.7"
+    uuid "^8.3.2"
+
+"@equinor/fusion-query@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-query/-/fusion-query-0.3.1.tgz#7660db0f4f990e93d9caf6f2add2160585a06a49"
+  integrity sha512-dR1p1Q8JTHLRk7n0vryb2BpvXGPYpHm7JFi/LsPm87lmzIFIysK0lrPJXOfOgCleTppU9kVzBMJuACY6/vZ9BQ==
+  dependencies:
+    "@equinor/fusion-observable" "^2.5.0"
+    immer "^9.0.16"
+    rxjs "^7.5.7"
+    uuid "^8.3.2"
 
 "@equinor/fusion-react-button@^0.5.15":
   version "0.5.15"
@@ -2776,10 +2857,15 @@
   dependencies:
     esquery "^1.0.1"
 
-"@remix-run/router@1.0.3", "@remix-run/router@^1.0.3":
+"@remix-run/router@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.3.tgz#953b88c20ea00d0eddaffdc1b115c08474aa295d"
   integrity sha512-ceuyTSs7PZ/tQqi19YZNBc5X7kj1f8p+4DIyrcIYFY9h+hd1OKm4RqtiWldR9eGEvIiJfsqwM4BsuCtRIuEw6Q==
+
+"@remix-run/router@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.0.4.tgz#cbfbec6735711e7c2fc93b9b40adf70ef5a39990"
+  integrity sha512-gTL8H5USTAKOyVA4xczzDJnC3HMssdFa3tRlwBicXynx9XfiXwneHnYQogwSKpdCkjXISrEKSTtX62rLpNEVQg==
 
 "@sinclair/typebox@^0.24.1":
   version "0.24.51"
@@ -3229,7 +3315,7 @@
     "@typescript-eslint/types" "5.43.0"
     eslint-visitor-keys "^3.3.0"
 
-"@vitejs/plugin-react@^2.1.0", "@vitejs/plugin-react@^2.2.0":
+"@vitejs/plugin-react@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-2.2.0.tgz#1b9f63b8b6bc3f56258d20cd19b33f5cc761ce6e"
   integrity sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==
@@ -5854,6 +5940,11 @@ ignore@^5.0.4, ignore@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.0.tgz#6d3bac8fa7fe0d45d9f9be7bac2fc279577e345a"
   integrity sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==
+
+immer@^9.0.16:
+  version "9.0.16"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.16.tgz#8e7caab80118c2b54b37ad43e05758cdefad0198"
+  integrity sha512-qenGE7CstVm1NrHQbMh8YaSzTZTFNP3zPqr3YU0S0UY441j4bJTg4A2Hh5KAhwgaiU6ZZ1Ar6y/2f4TblnMReQ==
 
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
@@ -10025,7 +10116,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@^3 || ^4", typescript@^4.6.4, typescript@^4.8.4:
+"typescript@^3 || ^4", typescript@^4.6.4, typescript@^4.9.3:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
   integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
@@ -10192,7 +10283,7 @@ vite-plugin-environment@^1.1.3:
   resolved "https://registry.yarnpkg.com/vite-plugin-environment/-/vite-plugin-environment-1.1.3.tgz#d01a04abb2f69730a4866c9c9db51d3dab74645b"
   integrity sha512-9LBhB0lx+2lXVBEWxFZC+WO7PKEyE/ykJ7EPWCq95NEcCpblxamTbs5Dm3DLBGzwODpJMEnzQywJU8fw6XGGGA==
 
-vite@^3.1.8, vite@^3.2.0:
+vite@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/vite/-/vite-3.2.4.tgz#d8c7892dd4268064e04fffbe7d866207dd24166e"
   integrity sha512-Z2X6SRAffOUYTa+sLy3NQ7nlHFU100xwanq1WDwqaiFiCe+25zdxP1TfCS5ojPV2oDDcXudHIoPnI1Z/66B7Yw==

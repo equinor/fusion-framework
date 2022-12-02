@@ -1,5 +1,5 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientRequestInit } from '@equinor/fusion-framework-module-services/../../module-http/src/lib/client';
+import { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 import { ClientMethod } from '../..';
 import { ApiBookmarkEntityV1 } from '../api-models';
 

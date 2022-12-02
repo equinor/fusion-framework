@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.21...@equinor/fusion-framework-module-app-config@2.0.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [2.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.21...@equinor/fusion-framework-module-app-config@2.0.0-alpha.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.21](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.20...@equinor/fusion-framework-module-app-config@1.1.21) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.20](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.19...@equinor/fusion-framework-module-app-config@1.1.20) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.18...@equinor/fusion-framework-module-app-config@1.1.19) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.17...@equinor/fusion-framework-module-app-config@1.1.18) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.16...@equinor/fusion-framework-module-app-config@1.1.17) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.15...@equinor/fusion-framework-module-app-config@1.1.16) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.14...@equinor/fusion-framework-module-app-config@1.1.15) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.13...@equinor/fusion-framework-module-app-config@1.1.14) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.12...@equinor/fusion-framework-module-app-config@1.1.13) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.11...@equinor/fusion-framework-module-app-config@1.1.12) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.10...@equinor/fusion-framework-module-app-config@1.1.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## [1.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.9...@equinor/fusion-framework-module-app-config@1.1.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
+## 1.1.9 (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app-config
+
 ## [1.1.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app-config@1.1.7...@equinor/fusion-framework-module-app-config@1.1.8) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app-config

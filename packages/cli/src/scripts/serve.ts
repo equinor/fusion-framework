@@ -2,21 +2,20 @@ import { createServer } from 'vite';
 import type { UserConfig } from 'vite';
 
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 
 import express, { Request } from 'express';
 
 import dns from 'dns';
 dns.setDefaultResultOrder('verbatim');
 
-import path from 'path';
 import kleur from 'kleur';
 
 import ora from 'ora';
 
 import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
 
-const resolveRelativePath = (relative: string) =>
-    path.resolve(new URL(relative, import.meta.url).pathname);
+const resolveRelativePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export const server = async (config: { viteConfig: UserConfig; appConfig: any }) => {
     const { manifest: appManifest } = config.appConfig;

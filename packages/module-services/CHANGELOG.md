@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.21...@equinor/fusion-framework-module-services@1.0.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.21...@equinor/fusion-framework-module-services@1.0.0-alpha.0) (2022-12-02)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.21](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.20...@equinor/fusion-framework-module-services@0.5.21) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.20](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.19...@equinor/fusion-framework-module-services@0.5.20) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.19](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.18...@equinor/fusion-framework-module-services@0.5.19) (2022-12-01)
+
+### Bug Fixes
+
+-   import typos ([c6449f1](https://github.com/equinor/fusion-framework/commit/c6449f1ac692439d52ed0e88f8492de9721e29ce))
+
+## [0.5.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.17...@equinor/fusion-framework-module-services@0.5.18) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.16...@equinor/fusion-framework-module-services@0.5.17) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.15...@equinor/fusion-framework-module-services@0.5.16) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.14...@equinor/fusion-framework-module-services@0.5.15) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.13...@equinor/fusion-framework-module-services@0.5.14) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.12...@equinor/fusion-framework-module-services@0.5.13) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.11...@equinor/fusion-framework-module-services@0.5.12) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.10...@equinor/fusion-framework-module-services@0.5.11) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## [0.5.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.9...@equinor/fusion-framework-module-services@0.5.10) (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
+## 0.5.9 (2022-12-01)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-services
+
 ## [0.5.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@0.5.7...@equinor/fusion-framework-module-services@0.5.8) (2022-11-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services
