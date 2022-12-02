@@ -24,3 +24,5 @@ export type QueryContextParameters = {
         externalId?: string;
     };
 };
+
+export type ContextFilterFn = (items: ContextItem[]) => ContextItem[];

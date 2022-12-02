@@ -21,7 +21,7 @@ export const module: ContextModule = {
     name: moduleKey,
     configure: () => new ContextModuleConfigurator(),
     initialize: async (args) => {
-        const config = await args.config.createConfig(args);
+        const config = await (args.config as ContextModuleConfigurator).createConfig(args);
         const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
         const parentContext = (args.ref as ModulesInstance<[ContextModule]>)?.context;
         return new ContextProvider({ config, event, parentContext });
@@ -31,5 +31,11 @@ export const module: ContextModule = {
         (args.instance as ContextProvider).dispose();
     },
 };
+
+declare module '@equinor/fusion-framework-module' {
+    interface Modules {
+        context: ContextModule;
+    }
+}
 
 export default module;
