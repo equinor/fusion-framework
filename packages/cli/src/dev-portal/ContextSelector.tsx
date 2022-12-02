@@ -58,7 +58,7 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] =
     }
 
     /* context provider state */
-    const [provider, setProvider] = useState<IContextProvider | undefined>();
+    const [provider, setProvider] = useState<IContextProvider>();
 
     /**
      * Set context provider state if this app triggered the event.

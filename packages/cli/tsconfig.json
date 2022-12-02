@@ -12,7 +12,7 @@
       "path": "../framework-react"
     },
     {
-      "path": "../observable"
+      "path": "../../utils/observable"
     }
   ],
   "include": [
