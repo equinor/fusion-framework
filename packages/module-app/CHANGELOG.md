@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.0.1...@equinor/fusion-framework-module-app@2.1.0) (2022-12-05)
+
+### Features
+
+-   **context-selector:** header type contextselector and appcheck ([8ab0a50](https://github.com/equinor/fusion-framework/commit/8ab0a50e3f7ea3487796735c868f2e65d84fecd2))
+
 ## [2.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.0.1...@equinor/fusion-framework-module-app@2.0.2) (2022-12-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app

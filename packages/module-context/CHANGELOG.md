@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.0 (2022-12-05)
+
+### Features
+
+-   **contextselector:** cli context selector ([f414466](https://github.com/equinor/fusion-framework/commit/f4144668e4deee32ed229807d81a0ea08ba5a476))
+
 ## 1.0.1 (2022-12-05)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
