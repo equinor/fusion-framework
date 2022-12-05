@@ -5,16 +5,17 @@ export type ContextItem<TType extends Record<string, unknown> = Record<string, u
     type: ContextItemType;
     value: TType;
     title?: string;
-    isActive: boolean;
-    isDeleted: boolean;
-    created: Date;
+    subTitle?: string;
+    isActive?: boolean;
+    isDeleted?: boolean;
+    created?: Date;
     updated?: Date;
 };
 
 export interface ContextItemType {
     id: string;
-    isChildType: boolean;
-    parentTypeIds: string[];
+    isChildType?: boolean;
+    parentTypeIds?: string[];
 }
 
 export type QueryContextParameters = {
