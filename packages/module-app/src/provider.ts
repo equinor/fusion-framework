@@ -37,7 +37,7 @@ export interface IAppProvider {
     getAppConfig<TType = unknown>(appKey: string): Observable<AppConfig<TType>>;
     setCurrentApp(appKey: string): void;
     readonly current$: Observable<AppManifest | undefined>;
-
+    current: AppManifest | undefined;
     loadApp<TEnvironment = unknown, TModule = any>(
         appKey: string
     ): Observable<AppBundle<TEnvironment, TModule>>;

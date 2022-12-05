@@ -1,10 +1,12 @@
 import { createBrowserRouter, Outlet, RouterProvider, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
+import Header from './Header';
 
 const Root = () => {
     return (
         <div style={{ fontFamily: 'Equinor' }}>
             <Outlet />
+            <Header />
         </div>
     );
 };

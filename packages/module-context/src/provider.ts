@@ -25,8 +25,8 @@ export interface IContextProvider {
 
     readonly currentContext$: Observable<ContextItem | undefined>;
     currentContext: ContextItem | undefined;
-
     queryContext(search: string): Observable<Array<ContextItem>>;
+    queryContextAsync(search: string): Promise<Array<ContextItem>>;
 }
 
 export class ContextProvider implements IContextProvider {
