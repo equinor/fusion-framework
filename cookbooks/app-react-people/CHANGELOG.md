@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.0 (2022-12-05)
+
+### Features
+
+-   **cookbook:** create a app for searching for people ([4580ebc](https://github.com/equinor/fusion-framework/commit/4580ebc1a71c834420dba38f8e2d621129887790))
+
 ## [2.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.3.25...@equinor/fusion-framework-cookbook-app-react@2.0.0) (2022-12-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react

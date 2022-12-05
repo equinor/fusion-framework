@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.1 (2022-12-05)
+
+### Bug Fixes
+
+-   **utils:** export createState ([2e5030c](https://github.com/equinor/fusion-framework/commit/2e5030ca823c752ccd2e438afdec088bdcf1a8e5))
+
 ## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@2.5.0...@equinor/fusion-observable@3.0.0) (2022-12-02)
 
 ### Features
