@@ -1,0 +1,22 @@
+{
+    "name": "@equinor/fusion-framework-cookbook-app-react-people",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "type": "module",
+    "main": "src/index.ts",
+    "scripts": {
+        "dev": "fusion-framework-cli app dev",
+        "docker": "cd .. && sh docker-script.sh app-react"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@equinor/fusion-framework-cli": "^1.0.0",
+        "@equinor/fusion-framework-react-app": "^2.0.0",
+        "@types/react": "^18.0.24",
+        "@types/react-dom": "^18.0.8",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    }
+}
