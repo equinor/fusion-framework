@@ -3,17 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@2.0.2...@equinor/fusion-framework-cookbook-app-react@2.0.3) (2022-12-05)
+## [1.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-people@1.1.0...@equinor/fusion-framework-cookbook-app-react-people@1.1.1) (2022-12-05)
 
-**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-people
 
-## [2.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@2.0.1...@equinor/fusion-framework-cookbook-app-react@2.0.2) (2022-12-05)
+## 1.1.0 (2022-12-05)
 
-**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
+### Features
 
-## [2.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@2.0.0...@equinor/fusion-framework-cookbook-app-react@2.0.1) (2022-12-02)
-
-**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
+-   **cookbook:** create a app for searching for people ([4580ebc](https://github.com/equinor/fusion-framework/commit/4580ebc1a71c834420dba38f8e2d621129887790))
 
 ## [2.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@1.3.25...@equinor/fusion-framework-cookbook-app-react@2.0.0) (2022-12-02)
 

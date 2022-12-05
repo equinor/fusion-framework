@@ -1,6 +1,6 @@
 {
-    "name": "@equinor/fusion-framework-cookbook-app-react",
-    "version": "2.0.3",
+    "name": "@equinor/fusion-framework-cookbook-app-react-people",
+    "version": "1.1.1",
     "description": "",
     "private": true,
     "type": "module",
