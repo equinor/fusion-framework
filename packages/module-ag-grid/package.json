@@ -33,6 +33,6 @@
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": "^1.2.2"
+        "@equinor/fusion-framework-module": ">=1.2.2"
     }
 }

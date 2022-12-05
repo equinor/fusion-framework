@@ -52,7 +52,7 @@
         "@equinor/fusion-framework-module-service-discovery": "^4.0.1"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": "^1.2.2",
+        "@equinor/fusion-framework-module": ">=1.2.2",
         "odata-query": "^7.0.3"
     }
 }
