@@ -53,6 +53,7 @@ export class ContextProvider implements IContextProvider {
         const query$ = this.queryClient
             .query(
                 // TODO
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 this.#contextParameterFn({search, type: this.#contextType})
             )
