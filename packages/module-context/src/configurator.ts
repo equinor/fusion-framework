@@ -13,6 +13,7 @@ export interface ContextModuleConfig {
     };
     contextType?: string[];
     contextFilter?: ContextFilterFn;
+    contextParameterFn?: (args: {search: string, type: ContextModuleConfig['contextType']} ) => any
 }
 
 export interface IContextModuleConfigurator {
