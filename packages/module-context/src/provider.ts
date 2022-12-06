@@ -39,7 +39,7 @@ export class ContextProvider implements IContextProvider {
 
     #contextType?: ContextModuleConfig['contextType'];
     #contextFilter: ContextModuleConfig['contextFilter'];
-    #contextParameterFn: Required<ContextModuleConfig["contextParameterFn"]>;
+    #contextParameterFn: Required<ContextModuleConfig['contextParameterFn']>;
 
     public get contextClient() {
         return this.#contextClient;
@@ -55,7 +55,7 @@ export class ContextProvider implements IContextProvider {
                 // TODO
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
-                this.#contextParameterFn({search, type: this.#contextType})
+                this.#contextParameterFn({ search, type: this.#contextType })
             )
             .pipe(map((x) => x.value));
 
@@ -107,7 +107,12 @@ export class ContextProvider implements IContextProvider {
 
         this.#contextClient = new ContextClient(config.client.get);
         this.#contextQuery = new Query(config.client.query);
-        this.#contextParameterFn = config.contextParameterFn ?? ((args: Parameters<Required<ContextModuleConfig>["contextParameterFn"]>[0]) => ({search: args.search, filter: {type: args.type}}));
+        this.#contextParameterFn =
+            config.contextParameterFn ??
+            ((args: Parameters<Required<ContextModuleConfig>['contextParameterFn']>[0]) => ({
+                search: args.search,
+                filter: { type: args.type },
+            }));
 
         if (event) {
             this.#event = event;
