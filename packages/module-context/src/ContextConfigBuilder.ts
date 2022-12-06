@@ -53,6 +53,10 @@ export class ContextConfigBuilder<
         this.config.contextFilter = filter;
     }
 
+    setContextParameterFn(fn: ContextModuleConfig["contextParameterFn"])  {
+        this.config.contextParameterFn = fn;
+    }
+    
     setContextClient(
         client: {
             get:

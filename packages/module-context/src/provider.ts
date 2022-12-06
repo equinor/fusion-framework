@@ -39,6 +39,7 @@ export class ContextProvider implements IContextProvider {
 
     #contextType?: ContextModuleConfig['contextType'];
     #contextFilter: ContextModuleConfig['contextFilter'];
+    #contextParameterFn: Required<ContextModuleConfig["contextParameterFn"]>;
 
     public get contextClient() {
         return this.#contextClient;
@@ -50,12 +51,11 @@ export class ContextProvider implements IContextProvider {
 
     public queryContext(search: string): Observable<Array<ContextItem>> {
         const query$ = this.queryClient
-            .query({
-                search,
-                filter: {
-                    type: this.#contextType,
-                },
-            })
+            .query(
+                // TODO
+                /* @ts-ignore */
+                this.#contextParameterFn({search, type: this.#contextType})
+            )
             .pipe(map((x) => x.value));
 
         return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
@@ -106,6 +106,7 @@ export class ContextProvider implements IContextProvider {
 
         this.#contextClient = new ContextClient(config.client.get);
         this.#contextQuery = new Query(config.client.query);
+        this.#contextParameterFn = config.contextParameterFn ?? ((args: Parameters<Required<ContextModuleConfig>["contextParameterFn"]>[0]) => ({search: args.search, filter: {type: args.type}}));
 
         if (event) {
             this.#event = event;
