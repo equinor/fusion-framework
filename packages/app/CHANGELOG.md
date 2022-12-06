@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@4.0.3...@equinor/fusion-framework-app@4.0.6) (2022-12-06)
+
+**Note:** Version bump only for package @equinor/fusion-framework-app
+
 ## [4.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@4.0.4...@equinor/fusion-framework-app@4.0.5) (2022-12-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-app

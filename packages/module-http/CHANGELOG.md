@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.8 (2022-12-06)
+
+### Bug Fixes
+
+-   **module-http:** adding missing types on module-http iHttpClient ([ac6e81e](https://github.com/equinor/fusion-framework/commit/ac6e81e54d70b8a943466046fcbe86f6bd7c4c67))
+
 ## 2.1.7 (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
