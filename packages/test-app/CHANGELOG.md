@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@2.0.6...@equinor/fusion-framework-test-app@2.0.7) (2022-12-06)
+
+### Bug Fixes
+
+-   **react-module-context:** memo client query fn ([ebfae82](https://github.com/equinor/fusion-framework/commit/ebfae82fcdd4879cdefee07dcc7a5612b7ac81cd))
+
 ## [2.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@2.0.5...@equinor/fusion-framework-test-app@2.0.6) (2022-12-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
