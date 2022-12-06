@@ -126,12 +126,22 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      */
     fetch<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
 
+    fetchAsync<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T>;
+
     json$<T = TResponse>(
         path: string,
         init?: FetchRequestInit<T, TRequest, TResponse>
     ): StreamResponse<T>;
 
     json<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
+
+    jsonAsync<T = TResponse>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>
+    ): Promise<T>;
 
     /**
      *
