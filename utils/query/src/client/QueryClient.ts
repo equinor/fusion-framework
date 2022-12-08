@@ -1,5 +1,5 @@
 import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 
 import { FlowSubject } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
@@ -58,9 +58,17 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     public get error$(): Observable<QueryClientError> {
         return this.action$.pipe(
             filterAction('client/error'),
-            map(
-                ({ payload }) => new QueryClientError('error', 'failed to execute request', payload)
-            )
+            withLatestFrom(this.#state),
+            map(([action, state]) => {
+                const { payload, meta } = action;
+                const { transaction } = meta.request.meta;
+                const request = state[action.meta.request.meta.transaction];
+                return new QueryClientError('error', {
+                    request,
+                    message: `failed to process task [${transaction}]`,
+                    cause: payload,
+                });
+            })
         );
     }
 

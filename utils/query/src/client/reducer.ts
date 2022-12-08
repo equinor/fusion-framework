@@ -1,8 +1,13 @@
+import { original } from 'immer';
+
+import { createReducer as makeReducer } from '@equinor/fusion-observable';
+
 import { QueryClientError } from './QueryClientError';
-import { QueryTaskCompleted, State } from './types';
 
 import { actions } from './actions';
-import { createReducer as makeReducer } from '@equinor/fusion-observable';
+
+import type { QueryTaskCompleted, QueueItem, State } from './types';
+
 
 export const createReducer = (initial: State = {}) =>
     makeReducer(initial as State, (builder) =>
@@ -45,10 +50,14 @@ export const createReducer = (initial: State = {}) =>
             })
             .addCase(actions.cancel, (state, action) => {
                 const { transaction, reason } = action.payload;
-                const entry = state[transaction];
-                if (entry) {
-                    entry.task.error(
-                        new QueryClientError('abort', 'request was canceled', new Error(reason))
+                const request = { ...original(state[transaction]) } as QueueItem;
+                if (request) {
+                    request.task.error(
+                        new QueryClientError('abort', {
+                            request,
+                            message: 'request was canceled',
+                            cause: new Error(reason),
+                        })
                     );
                     delete state[transaction];
                 }
@@ -60,6 +69,22 @@ export const createReducer = (initial: State = {}) =>
                 if (entry) {
                     entry.errors ??= [];
                     entry.errors.push(payload);
+                }
+            })
+            .addCase(actions.error, (state, action) => {
+                const { payload, meta } = action;
+                const { transaction } = meta.request.meta;
+                const request = { ...original(state[transaction]) } as QueueItem;
+                if (request) {
+                    console.log(payload, payload.cause);
+                    request.task.error(
+                        new QueryClientError('error', {
+                            request,
+                            message: `failed to process task [${transaction}]`,
+                            cause: payload,
+                        })
+                    );
+                    delete state[transaction];
                 }
             })
     );

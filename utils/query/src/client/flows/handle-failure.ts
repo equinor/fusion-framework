@@ -39,10 +39,10 @@ export const handleFailures = (config?: Partial<RetryOptions>): Flow<Actions, St
                         ) as RetryOptions;
 
                         if (retryCount >= retryOptions.count) {
-                            const message = retryOptions.count
-                                ? 'maximum retries executed!'
-                                : action.payload.message;
-                            throw Error(message, { cause: action.payload });
+                            const error = retryOptions.count
+                                ? Error('maximum retries executed!', { cause: action.payload })
+                                : action.payload;
+                            throw error;
                         }
                         const delay$ =
                             typeof retryOptions.delay === 'function'
