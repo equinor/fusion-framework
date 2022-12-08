@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.1.8...@equinor/fusion-framework-module-http@2.2.0) (2022-12-08)
+
+### Features
+
+-   **http:** throw error when selector error ([dc0aa35](https://github.com/equinor/fusion-framework/commit/dc0aa35cbc44fb0503a9431ab728b81d8a3af290))
+
 ## 2.1.8 (2022-12-06)
 
 ### Bug Fixes
