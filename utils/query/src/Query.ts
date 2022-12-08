@@ -122,7 +122,8 @@ export class Query<TType, TArgs = any> {
                                     task.pipe(catchError(() => EMPTY)).subscribe(subscriber)
                                 );
                                 subscriber.add(() => {
-                                    this.#client.cancel(transaction);
+                                    /** cancel transaction if switched */
+                                    setTimeout(() => this.#client.cancel(transaction));
                                 });
                             })
                     ),
@@ -154,6 +155,7 @@ export class Query<TType, TArgs = any> {
         options?: QueryOptions<TType, TArgs>
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
+        console.log(ref);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
         return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
     }

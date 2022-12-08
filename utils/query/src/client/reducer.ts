@@ -50,8 +50,8 @@ export const createReducer = (initial: State = {}) =>
             })
             .addCase(actions.cancel, (state, action) => {
                 const { transaction, reason } = action.payload;
-                const request = { ...original(state[transaction]) } as QueueItem;
-                if (request) {
+                if (state[transaction]) {
+                    const request = { ...original(state[transaction]) } as QueueItem;
                     request.task.error(
                         new QueryClientError('abort', {
                             request,
@@ -74,9 +74,8 @@ export const createReducer = (initial: State = {}) =>
             .addCase(actions.error, (state, action) => {
                 const { payload, meta } = action;
                 const { transaction } = meta.request.meta;
-                const request = { ...original(state[transaction]) } as QueueItem;
-                if (request) {
-                    console.log(payload, payload.cause);
+                if (state[transaction]) {
+                    const request = { ...original(state[transaction]) } as QueueItem;
                     request.task.error(
                         new QueryClientError('error', {
                             request,
