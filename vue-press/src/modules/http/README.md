@@ -160,6 +160,23 @@ Secondly by abstracting the response selector, the selector can be tested withou
 const selector = (response: Response): Promise<FooBar> => response.json(); 
 ```
 
+::: warning Errors
+
+When using selectors and the selector fails, it will cast a `HttpResponseError`.
+
+> __note, if using something like json selector, the response only resolves once, trying to extract json again will cause error__
+
+```ts
+interface HttpResponseError {
+  message: string;
+  response: Response;
+  cause?: Error
+}
+```
+
+
+:::
+
 ### Json
 
 ::: code-tabs#flow

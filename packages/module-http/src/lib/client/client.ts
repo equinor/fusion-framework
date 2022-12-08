@@ -1,5 +1,5 @@
 import { firstValueFrom, of, Subject } from 'rxjs';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
 import { HttpRequestHandler, HttpResponseHandler } from '../operators';
@@ -8,6 +8,7 @@ import { jsonSelector } from '../selectors';
 import type { Observable, ObservableInput } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
 import type { FetchRequest, FetchRequestInit, FetchResponse, IHttpClient, StreamResponse } from '.';
+import { HttpResponseError } from '../../errors';
 
 export type HttpClientCreateOptions<
     TRequest extends FetchRequest = FetchRequest,
@@ -140,7 +141,23 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
             /** push response to event buss */
             tap((x) => this._response$.next(x)),
 
-            switchMap((x) => (selector ? selector(x) : Promise.resolve(x))),
+            /** execute selector */
+            switchMap((response) => {
+                if (selector) {
+                    try {
+                        return selector(response);
+                    } catch (err) {
+                        throw new HttpResponseError(
+                            'failed to parse response',
+                            response as Response,
+                            {
+                                cause: err,
+                            }
+                        );
+                    }
+                }
+                return of(response);
+            }),
             /** cancel request on abort signal */
             takeUntil(this._abort$)
         );
