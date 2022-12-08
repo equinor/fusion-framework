@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.1.1 (2022-12-08)
+
+### Bug Fixes
+
+-   **utils/query:** debounce cancelation of request ([f280bb8](https://github.com/equinor/fusion-framework/commit/f280bb812384d1c183372f8f68dda1de29995fff))
+
 ## [1.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-query@1.0.2...@equinor/fusion-query@1.1.0) (2022-12-08)
 
 ### Features

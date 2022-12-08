@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework",
-    "version": "5.0.10",
+    "version": "5.0.11",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -24,13 +24,13 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-app": "^2.1.5",
-        "@equinor/fusion-framework-module-context": "^1.1.7",
+        "@equinor/fusion-framework-module-app": "^2.1.6",
+        "@equinor/fusion-framework-module-context": "^1.1.8",
         "@equinor/fusion-framework-module-event": "^1.2.0",
         "@equinor/fusion-framework-module-http": "^2.2.0",
         "@equinor/fusion-framework-module-msal": "^1.0.21",
-        "@equinor/fusion-framework-module-service-discovery": "^4.0.5",
-        "@equinor/fusion-framework-module-services": "^1.0.6",
+        "@equinor/fusion-framework-module-service-discovery": "^4.0.6",
+        "@equinor/fusion-framework-module-services": "^1.0.7",
         "rxjs": "^7.5.7"
     },
     "devDependencies": {
