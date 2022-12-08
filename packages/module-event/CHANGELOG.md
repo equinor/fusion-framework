@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.0 (2022-12-08)
+
+### Features
+
+-   **module-event:** allow filtering of events ([7cf41a7](https://github.com/equinor/fusion-framework/commit/7cf41a7e3662c46bb1126e7ac969ff229f22cd63))
+
 ## 1.1.6 (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-event
