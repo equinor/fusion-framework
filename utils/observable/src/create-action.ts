@@ -3,7 +3,7 @@
  * taken from https://github.com/reduxjs/redux-toolkit/tree/master/packages/toolkit/src
  */
 
-import { Action, AnyAction, PayloadAction } from './types/actions';
+import { Action, PayloadAction } from './types/actions';
 import { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from './types/ts-helpers';
 
 /**
@@ -252,74 +252,13 @@ export function createAction(type: string, prepareAction?: PrepareAction<any>): 
     return actionCreator;
 }
 
-export function createAsyncAction<
-    PA extends PrepareAction<any>,
-    PA_Success extends PrepareAction<any>,
-    T extends string = string
->(
-    type: T,
-    request: PA,
-    success: PA_Success
-): PayloadActionCreator<ReturnType<PA>['payload'], T, PA> & {
-    success: PayloadActionCreator<ReturnType<PA_Success>['payload'], `${T}::success`, PA_Success>;
-};
+export const actionSuffixDivider = '::';
 
-// export function createAsyncAction<
-//     PA extends PrepareAction<any>,
-//     PA_Failure extends PrepareAction<any>,
-//     T extends string = string
-// >(
-//     type: T,
-//     builder: { request: PA; failure: PA_Failure }
-// ): PayloadActionCreator<ReturnType<PA>['payload'], `${T}::request`, PA> & {
-//     failure: PayloadActionCreator<ReturnType<PA_Failure>['payload'], `${T}::failure`, PA_Failure>;
-// };
+export const matchActionSuffix = (suffix: string) =>
+    new RegExp(`${actionSuffixDivider}\\${suffix}$`);
 
-export function createAsyncAction<
-    PA extends PrepareAction<any>,
-    PA_Success extends PrepareAction<any>,
-    PA_Failure extends PrepareAction<any>,
-    T extends string = string
->(
-    type: T,
-    request: PA,
-    success: PA_Success,
-    failure: PA_Failure
-): PayloadActionCreator<ReturnType<PA>['payload'], T, PA> & {
-    success: PayloadActionCreator<ReturnType<PA_Success>['payload'], `${T}::success`, PA_Success>;
-    failure: PayloadActionCreator<ReturnType<PA_Failure>['payload'], `${T}::failure`, PA_Failure>;
-};
-
-export function createAsyncAction(
-    type: string,
-    request: PrepareAction<any>,
-    success: PrepareAction<any>,
-    failure?: PrepareAction<any>
-): any {
-    const action = createAction(type, request);
-    if (success) {
-        Object.assign(action, {
-            success: createAction([type, 'success'].join('::'), success),
-        });
-    }
-    if (failure) {
-        Object.assign(action, {
-            success: createAction([type, 'failure'].join('::'), failure),
-        });
-    }
-    return action;
-}
-
-export const isSuccessAction = <A extends AnyAction>(action: A): action is A =>
-    !!action.type.match(/::success$/);
-
-export const isFailureAction = <A extends AnyAction>(action: A): action is A =>
-    !!action.type.match(/::failure$/);
-
-export const isCompleteAction = <A extends AnyAction>(action: A): action is A =>
-    isSuccessAction(action) || isFailureAction(action);
-
-export const actionBaseType = (action: Action) => action.type.replace(/::\w+$/, '');
+export const actionBaseType = (action: Action) =>
+    action.type.replace(matchActionSuffix('\\w+$'), '');
 
 /**
  * Returns the action type of the actions created by the passed
