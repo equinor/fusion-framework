@@ -2,7 +2,7 @@ import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useEffect, useState } from 'react';
 import { useFramework } from '../useFramework';
 
-export const useApps = () => {
+export const useAppManifests = () => {
     const provider = useFramework().modules.app;
     const [value, setValue] = useState<AppManifest[] | undefined>(undefined);
     const [error, setError] = useState<Error | undefined>();
@@ -10,7 +10,7 @@ export const useApps = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        const request = provider.getAllApps().subscribe({
+        const request = provider.getAllAppManifests().subscribe({
             next: (value) => setValue(value),
             error: (err) => setError(err),
             complete: () => setIsLoading(false),
@@ -23,4 +23,4 @@ export const useApps = () => {
     return { value, error, isLoading };
 };
 
-export default useApps;
+export default useAppManifests;

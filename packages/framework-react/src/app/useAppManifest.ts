@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useFramework } from '../useFramework';
 
-export const useApp = (appKey: string) => {
+export const useAppManifest = (appKey: string) => {
     const provider = useFramework().modules.app;
     const [value, setValue] = useState<AppManifest | undefined>(undefined);
     const [error, setError] = useState<Error | undefined>();
@@ -10,7 +10,7 @@ export const useApp = (appKey: string) => {
 
     useEffect(() => {
         setIsLoading(true);
-        const request = provider.getApp(appKey).subscribe({
+        const request = provider.getAppManifest(appKey).subscribe({
             next: (value) => setValue(value),
             error: (err) => setError(err),
             complete: () => setIsLoading(false),
@@ -23,4 +23,4 @@ export const useApp = (appKey: string) => {
     return { value, error, isLoading };
 };
 
-export default useApp;
+export default useAppManifest;
