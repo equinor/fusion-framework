@@ -155,7 +155,6 @@ export class Query<TType, TArgs = any> {
         options?: QueryOptions<TType, TArgs>
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
-        console.log(ref);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
         return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
     }
