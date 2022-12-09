@@ -1,5 +1,11 @@
-export { AppConfigurator, IAppConfigurator, IAppModuleConfig } from './configurator';
-export { AppProvider, IAppProvider } from './provider';
+export {
+    AppConfigurator,
+    IAppConfigurator,
+    AppModuleConfig as IAppModuleConfig,
+} from './configurator';
+export { AppModuleProvider } from './AppModuleProvider';
+
+export { App } from './app/App';
 
 export * from './events';
 export * from './types';

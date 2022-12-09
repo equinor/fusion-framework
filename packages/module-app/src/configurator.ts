@@ -4,18 +4,18 @@ import { QueryCtorOptions } from '@equinor/fusion-query';
 import { moduleKey } from './module';
 import type { AppConfig, AppManifest, ModuleDeps } from './types';
 
-export interface IAppModuleConfig {
-    getApp: QueryCtorOptions<AppManifest, { appKey: string }>;
+export interface AppModuleConfig {
+    getAppManifest: QueryCtorOptions<AppManifest, { appKey: string }>;
     // TODO: add filter
-    getApps: QueryCtorOptions<AppManifest[], void>;
-    getConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
+    getAppManifests: QueryCtorOptions<AppManifest[], void>;
+    getAppConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
 }
 
 export interface IAppConfigurator<TDeps extends Array<AnyModule>> {
     createConfig: (
         args: ModuleInitializerArgs<IAppConfigurator<TDeps>, TDeps>
-    ) => Promise<IAppModuleConfig>;
-    processConfig: (config: IAppModuleConfig) => IAppModuleConfig;
+    ) => Promise<AppModuleConfig>;
+    processConfig: (config: AppModuleConfig) => AppModuleConfig;
 }
 
 export class AppConfigurator<TDeps extends ModuleDeps = ModuleDeps>
@@ -49,22 +49,22 @@ export class AppConfigurator<TDeps extends ModuleDeps = ModuleDeps>
 
     public async createConfig(
         args: ModuleInitializerArgs<IAppConfigurator<TDeps>, TDeps>
-    ): Promise<IAppModuleConfig> {
+    ): Promise<AppModuleConfig> {
         const httpClient = await this._createHttpClient(args);
-        const config: IAppModuleConfig = {
-            getApp: {
+        const config: AppModuleConfig = {
+            getAppManifest: {
                 client: {
-                    fn: ({ appKey }) => httpClient.json$(`/api/apps/${appKey}`),
+                    fn: ({ appKey }) => httpClient.json$<AppManifest>(`/api/apps/${appKey}`),
                 },
                 key: ({ appKey }) => appKey,
             },
-            getApps: {
+            getAppManifests: {
                 client: {
                     fn: () => httpClient.json$(`/api/apps`),
                 },
                 key: () => 'apps',
             },
-            getConfig: {
+            getAppConfig: {
                 client: {
                     fn: ({ appKey, tag }) =>
                         httpClient.json$(`/api/apps/${appKey}/config${tag ? `?tag=${tag}` : ''}`),
@@ -75,7 +75,7 @@ export class AppConfigurator<TDeps extends ModuleDeps = ModuleDeps>
         return this.processConfig(config);
     }
 
-    public processConfig(config: IAppModuleConfig): IAppModuleConfig {
+    public processConfig(config: AppModuleConfig): AppModuleConfig {
         return config;
     }
 }

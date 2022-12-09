@@ -4,9 +4,17 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": "./dist/esm/index.js",
+        "./errors.js": "./dist/esm/errors.js"
     },
     "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "errors.js": [
+                "dist/types/errors.d.ts"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "yarn build"
