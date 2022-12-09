@@ -10,7 +10,7 @@ export const ErrorViewer = ({ error }: { error: Error }) => {
                         margin: 0,
                     }}
                 >
-                    {error.name} - {error.message}
+                    {error.message}
                 </h4>
                 <section style={{ padding: 10 }}>{error.stack && <pre>{error.stack}</pre>}</section>
             </div>
