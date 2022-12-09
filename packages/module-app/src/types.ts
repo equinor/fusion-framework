@@ -5,6 +5,7 @@ import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
 // TODO
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;
 
 export type AppEnv<TConfig = unknown, TProps = unknown> = {

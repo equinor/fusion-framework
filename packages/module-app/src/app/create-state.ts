@@ -19,4 +19,3 @@ export const createState = (
     state.addFlow(handleImportApplication());
     return state;
 };
-

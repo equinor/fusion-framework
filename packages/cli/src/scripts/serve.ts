@@ -17,6 +17,7 @@ import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middlewar
 
 const resolveRelativePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const server = async (config: { viteConfig: UserConfig; appConfig: any }) => {
     const { manifest: appManifest } = config.appConfig;
 

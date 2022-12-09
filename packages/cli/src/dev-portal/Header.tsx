@@ -46,7 +46,7 @@ export const Header = () => {
                 <div className={clsx(styles.contextselector)}>
                     <ContextSelector />
                 </div>
-            </header> 
+            </header>
         </ThemeProvider>
     );
 };

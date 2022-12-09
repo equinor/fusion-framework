@@ -27,6 +27,7 @@ const createActions = () => ({
         (error: unknown) => ({ payload: error })
     ),
     /** App loading */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setModule: createAction('set_module', (module: any) => ({ payload: module })),
     importApp: createAsyncAction(
         'import_app',
@@ -38,7 +39,7 @@ const createActions = () => ({
     // App Instance
     setInstance: createAction('set_instance', (instance: AppModulesInstance) => ({
         payload: instance,
-    }))
+    })),
 });
 
 export const actions = createActions();
