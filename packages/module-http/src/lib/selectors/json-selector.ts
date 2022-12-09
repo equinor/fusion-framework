@@ -2,7 +2,7 @@ export const jsonSelector = <TType = unknown, TResponse extends Response = Respo
     response: TResponse
 ): Promise<TType> => {
     if (!response.ok) {
-        throw new Error('Network response was not OK');
+        throw new Error('network response was not OK');
     }
     //Status code 204 is no content
     if (response.status === 204) {

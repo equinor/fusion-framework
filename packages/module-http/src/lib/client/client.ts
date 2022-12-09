@@ -148,7 +148,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
                         return selector(response);
                     } catch (err) {
                         throw new HttpResponseError(
-                            'failed to parse response',
+                            'failed to execute response selector',
                             response as Response,
                             {
                                 cause: err,
