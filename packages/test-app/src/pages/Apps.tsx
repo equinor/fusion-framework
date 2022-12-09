@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
     useAppConfig,
-    useApps,
+    useAppManifests,
     useCurrentApp,
     useCurrentAppChanged,
 } from '@equinor/fusion-framework-react/app';
@@ -10,7 +10,7 @@ import {
 import { CodeInfo } from '../components';
 
 export const CurrentApp = () => {
-    const apps = useApps();
+    const apps = useAppManifests();
     const { currentApp, setCurrentApp } = useCurrentApp();
     const [appKey, setAppKey] = useState('');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,9 +33,9 @@ export const CurrentApp = () => {
             <h2>Current App</h2>
             <select onChange={(e) => setAppKey(e.currentTarget.value)}>
                 {apps.value.map((app) => {
-                    const { key, name } = app;
+                    const { appKey, name } = app;
                     return (
-                        <option key={key} value={key}>
+                        <option key={appKey} value={appKey}>
                             {name}
                         </option>
                     );
