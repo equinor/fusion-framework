@@ -4,23 +4,20 @@ import type {
     Fusion,
     FusionModulesInstance,
 } from '@equinor/fusion-framework';
-import type {
-    AnyModule,
-    CombinedModules,
-    IModulesConfigurator,
-} from '@equinor/fusion-framework-module';
 
-import type { ModulesInstance } from '@equinor/fusion-framework-module';
-import { ContextModule } from '@equinor/fusion-framework-module-context';
-import type { EventModule } from '@equinor/fusion-framework-module-event';
-import {
-    configureHttp,
-    configureHttpClient,
-    HttpModule,
-} from '@equinor/fusion-framework-module-http';
-import type { MsalModule, configureMsal } from '@equinor/fusion-framework-module-msal';
+import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-export { AppManifest, AppConfig } from '@equinor/fusion-framework';
+import { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+
+import { configureHttp, configureHttpClient } from '@equinor/fusion-framework-module-http';
+import type { configureMsal } from '@equinor/fusion-framework-module-msal';
+
+export type {
+    AppModules,
+    AppManifest,
+    AppConfig,
+    AppModulesInstance,
+} from '@equinor/fusion-framework-module-app';
 
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
@@ -37,18 +34,10 @@ export interface IAppConfigurator<
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     /** base routing path of the application */
     basename?: string;
-    manifest?: AppManifest;
+    manifest: AppManifest;
     config?: AppConfig<TConfig>;
     props?: TProps;
 };
-
-export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
-    TModules,
-    [ContextModule, EventModule, HttpModule, MsalModule]
->;
-
-export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
-    ModulesInstance<AppModules<TModules>>;
 
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
