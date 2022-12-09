@@ -1,8 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { ContextItem, IContextProvider } from '@equinor/fusion-framework-module-context';
-import { useObservableState } from '@equinor/fusion-observable/react';
+import { useCurrentApp } from '@equinor/fusion-framework-react/app';
+import {
+    ContextItem,
+    ContextModule,
+    IContextProvider,
+} from '@equinor/fusion-framework-module-context';
+import { useObservableState, useObservableSubscription } from '@equinor/fusion-observable/react';
 import '@equinor/fusion-framework-app';
+
+import { EMPTY } from 'rxjs';
 
 import {
     ContextSelector as ContextSelectorComponent,
@@ -11,6 +18,7 @@ import {
     ContextResolver,
     ContextSelectEvent,
 } from '@equinor/fusion-react-context-selector';
+import { AppModulesInstance } from '@equinor/fusion-framework-app';
 
 /**
  * Map context query result to ContextSelectorResult.
@@ -38,6 +46,8 @@ const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
     return Object.assign({ id: 'no-such-item', title: 'Change me' }, props);
 };
 
+const noPreselect: ContextResult = [];
+
 /**
  * Hook for querying context and setting resolver for ContextSelector component
  * See React Components storybook for info about ContextSelector component and its resolver
@@ -52,27 +62,41 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] =
     const currentContext = useObservableState(framework.modules.context.currentContext$);
 
     /* Set currentContext as initialResult in dropdown  */
-    let preselected: ContextResult = [];
-    if (currentContext) {
-        preselected = mapper([currentContext]);
-    }
+    const preselected: ContextResult = useMemo(
+        () => (currentContext ? mapper([currentContext]) : noPreselect),
+        [currentContext]
+    );
 
     /* context provider state */
-    const [provider, setProvider] = useState<IContextProvider>();
+    const [provider, setProvider] = useState<IContextProvider | null>(null);
+
+    const { currentApp } = useCurrentApp();
+
+    /** App module collection instance */
+    const instance$ = useMemo(() => currentApp?.instance$ || EMPTY, [currentApp]);
+
+    /** callback function when current app instance changes */
+    const onContextProviderChange = useCallback(
+        (modules: AppModulesInstance) => {
+            /** try to get the context module from the app module instance */
+            const contextProvider = (modules as AppModulesInstance<[ContextModule]>).context;
+            if (contextProvider) {
+                setProvider(contextProvider);
+            }
+        },
+        [setProvider]
+    );
+
+    /** clear the app provider */
+    const clearContextProvider = useCallback(() => setProvider(null), [setProvider]);
+
+    /** observe changes to app modules and  clear / set the context provider on change */
+    useObservableSubscription(instance$, onContextProviderChange, clearContextProvider);
 
     /**
      * Set context provider state if this app triggered the event.
      * and only if the app has a context
      * */
-    useEffect(() => {
-        return framework.modules.event.addEventListener('onAppModulesLoaded', (e) => {
-            if (e.detail?.env.manifest?.key === framework.modules.app.current?.key) {
-                if (e.detail.modules.context) {
-                    setProvider(e.detail.modules.context);
-                }
-            }
-        });
-    }, [framework]);
 
     /**
      * set resolver for ContextSelector
