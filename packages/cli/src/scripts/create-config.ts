@@ -37,6 +37,10 @@ export const createConfig = (): UserConfig => {
                 fileName: 'app-bundle',
                 formats: ['es'],
             },
+            // minify: false,
+            // terserOptions: {
+            //     mangle: false,
+            // },
         },
         customLogger: createCustomLogger(),
     }) as unknown as UserConfig;
