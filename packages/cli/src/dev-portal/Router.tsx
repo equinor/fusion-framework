@@ -5,8 +5,8 @@ import Header from './Header';
 const Root = () => {
     return (
         <div style={{ fontFamily: 'Equinor' }}>
-            <Outlet />
             <Header />
+            <Outlet />
         </div>
     );
 };
