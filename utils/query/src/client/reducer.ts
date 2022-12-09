@@ -8,7 +8,6 @@ import { actions } from './actions';
 
 import type { QueryTaskCompleted, QueueItem, State } from './types';
 
-
 export const createReducer = (initial: State = {}) =>
     makeReducer(initial as State, (builder) =>
         builder
@@ -55,8 +54,7 @@ export const createReducer = (initial: State = {}) =>
                     request.task.error(
                         new QueryClientError('abort', {
                             request,
-                            message: 'request was canceled',
-                            cause: new Error(reason),
+                            message: reason ?? 'request was canceled',
                         })
                     );
                     delete state[transaction];
@@ -80,7 +78,7 @@ export const createReducer = (initial: State = {}) =>
                         new QueryClientError('error', {
                             request,
                             message: `failed to process task [${transaction}]`,
-                            cause: payload,
+                            cause: payload.cause,
                         })
                     );
                     delete state[transaction];
