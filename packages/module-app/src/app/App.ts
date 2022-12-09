@@ -25,6 +25,7 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
     return filter((value): value is T => value !== undefined && value !== null);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown> {
     #state: FlowSubject<AppBundleState, Actions>;
 
