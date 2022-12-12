@@ -18,7 +18,7 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import type { AppConfig, AppManifest } from './types';
 
 import { App, filterEmpty } from './app/App';
-import { AppModuleConfig } from './configurator';
+import { AppModuleConfig } from './AppConfigurator';
 import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import { AppConfigError, AppManifestError } from './errors';
 
@@ -57,9 +57,9 @@ export class AppModuleProvider {
 
         this.#current$ = new BehaviorSubject<App | undefined>(undefined);
 
-        this.appClient = new Query(config.getAppManifest);
-        this.#appsClient = new Query(config.getAppManifests);
-        this.#configClient = new Query(config.getAppConfig);
+        this.appClient = new Query(config.client.getAppManifest);
+        this.#appsClient = new Query(config.client.getAppManifests);
+        this.#configClient = new Query(config.client.getAppConfig);
 
         this.#subscription.add(() => this.appClient.complete());
         this.#subscription.add(() => this.#appsClient.complete());
