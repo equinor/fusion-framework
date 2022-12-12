@@ -52,6 +52,64 @@ export const configure = (configurator) => {
 }
 ```
 
+#### setContextParameterFn
+
+Set method which generates the parameters for the query function. see [Query Context](../services/context/#query-context).
+
+::: code-tabs
+
+@tab Standard
+```ts
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    builder.setContextParameterFn((args) => {
+      const { search, type } = args;
+      // Modify search and type ??
+      return {
+          search,
+          filter: {
+              type,
+              externalId: 'foobar36-8890-4b16-b973-9e13b9a72c26'
+          }
+      };
+    } 
+  });
+}
+```
+
+@tab OData
+```ts
+/** helper method for generating odata */
+import buildQuery from 'odata-query';
+
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    builder.setContextParameterFn((args) => {
+      const { search, type } = args;
+      return buildQuery({
+          search,
+          filter: {
+              type: {
+                  in: type,
+              },
+          },
+      });
+    } 
+  });
+}
+```
+:::
+
+::: info QueryClient
+currently `setContextParameterFn` requires an return type of `string | QueryContextParameters`, 
+but this method is creating the parameters to the query function. 
+
+If using a custom client with custom parameters, use this method to generate the custom parameters. 
+
+If there is a demand for generic query parameters we will in the future make the return type more generic. 
+:::
+
+
 #### setContextClient
 
 ```ts
