@@ -4,7 +4,7 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 
 import { IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
-import { IContextProvider, ContextProvider } from './provider';
+import { IContextProvider, ContextProvider } from './ContextProvider';
 
 export type ContextModuleKey = 'context';
 
