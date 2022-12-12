@@ -21,6 +21,7 @@ import { App, filterEmpty } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
 import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import { AppConfigError, AppManifestError } from './errors';
+import { AppBundleStateInitial } from 'app/types';
 
 export class AppModuleProvider {
     static compareAppManifest<T extends AppManifest>(a?: T, b?: T): boolean {
@@ -147,8 +148,16 @@ export class AppModuleProvider {
      * set the current application, will internally resolve manifest
      * @param appKey - application key
      */
-    public setCurrentApp(appKey: string): void {
-        this.#current$.next(new App(appKey, { provider: this, event: this.#event }));
+    public setCurrentApp(appKeyOrApp: string | App): void {
+        const app = typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : App;
+        this.#current$.next(app as App);
+    }
+
+    /**
+     * This should not be used, only for legacy creation backdoor
+     */
+    public createApp(value: AppBundleStateInitial): App {
+        return new App(value, { provider: this, event: this.#event });
     }
 
     public dispose() {
