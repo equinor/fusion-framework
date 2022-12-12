@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@1.1.9...@equinor/fusion-framework-module-context@1.1.10) (2022-12-12)
+
+### Bug Fixes
+
+-   **context:** method for contextParameterFn on enableContext ([398658d](https://github.com/equinor/fusion-framework/commit/398658de26355a8ca99aea291963b8c302df3ddc))
+-   linting issues fixed ([2e62877](https://github.com/equinor/fusion-framework/commit/2e628770754b40425e97c7be2ec770824c42c6ff))
+
 ## [1.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@1.1.8...@equinor/fusion-framework-module-context@1.1.9) (2022-12-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context

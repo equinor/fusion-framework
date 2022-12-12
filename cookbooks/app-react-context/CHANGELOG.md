@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.10...@equinor/fusion-framework-cookbook-app-react-context@2.1.11) (2022-12-12)
+
+### Bug Fixes
+
+-   **context:** method for contextParameterFn on enableContext ([398658d](https://github.com/equinor/fusion-framework/commit/398658de26355a8ca99aea291963b8c302df3ddc))
+
 ## [2.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.9...@equinor/fusion-framework-cookbook-app-react-context@2.1.10) (2022-12-12)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@1.2.0...@equinor/fusion-framework-cli@1.2.1) (2022-12-12)
+
+### Bug Fixes
+
+-   **context:** method for contextParameterFn on enableContext ([398658d](https://github.com/equinor/fusion-framework/commit/398658de26355a8ca99aea291963b8c302df3ddc))
+
 ## [1.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@1.1.9...@equinor/fusion-framework-cli@1.2.0) (2022-12-12)
 
 ### Features

@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@equinor/fusion-framework-test-app",
-    "version": "2.0.14",
+    "version": "2.0.15",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -20,10 +20,10 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-ag-grid": "^1.0.19",
-        "@equinor/fusion-framework-module-context": "^1.1.9",
+        "@equinor/fusion-framework-module-context": "^1.1.10",
         "@equinor/fusion-framework-module-services": "^1.0.8",
-        "@equinor/fusion-framework-react": "^2.0.13",
-        "@equinor/fusion-framework-react-app": "^2.0.14",
+        "@equinor/fusion-framework-react": "^2.0.14",
+        "@equinor/fusion-framework-react-app": "^2.0.15",
         "@equinor/fusion-observable": "^3.0.2",
         "@equinor/fusion-query": "^1.1.2",
         "@equinor/fusion-react-progress-indicator": "^0.1.5",
