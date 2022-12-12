@@ -1,8 +1,9 @@
 export {
+    AppModuleConfig,
     AppConfigurator,
     IAppConfigurator,
     AppModuleConfig as IAppModuleConfig,
-} from './configurator';
+} from './AppConfigurator';
 export { AppModuleProvider } from './AppModuleProvider';
 
 export { App } from './app/App';
