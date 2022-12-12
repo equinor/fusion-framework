@@ -4,7 +4,7 @@ export {
     ContextModuleConfig,
 } from './configurator';
 
-export { IContextProvider, ContextProvider } from './provider';
+export { IContextProvider, ContextProvider } from './ContextProvider';
 
 export {
     default,
