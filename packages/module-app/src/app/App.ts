@@ -16,7 +16,7 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
 import { actions, Actions } from './actions';
-import { AppBundleState } from './types';
+import { AppBundleState, AppBundleStateInitial } from './types';
 
 import '../events';
 
@@ -78,10 +78,15 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     }
 
     constructor(
-        appKey: string,
-        args: { provider: AppModuleProvider; event?: ModuleType<EventModule> }
+        value: AppBundleStateInitial,
+        args: {
+            provider: AppModuleProvider;
+            event?: ModuleType<EventModule>;
+        }
     ) {
-        this.#state = createState(appKey, args.provider);
+        this.#state = createState(value, args.provider);
+
+        const { appKey } = value;
 
         const subscriptions = new Subscription();
 

@@ -9,3 +9,8 @@ export type AppBundleState<TConfig = any, TModules = any> = {
     modules?: AppScriptModule;
     instance?: AppModulesInstance<TModules>;
 };
+
+export type AppBundleStateInitial<TConfig = any, TModules = any> = Omit<
+    AppBundleState<TConfig, TModules>,
+    'status'
+>;

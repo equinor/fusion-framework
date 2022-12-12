@@ -5,14 +5,14 @@ import { createReducer } from './create-reducer';
 import { handleFetchManifest, handleFetchConfig, handleImportApplication } from './flows';
 
 import type { Actions } from './actions';
-import type { AppBundleState } from './types';
+import type { AppBundleState, AppBundleStateInitial } from './types';
 import type { AppModuleProvider } from '../AppModuleProvider';
 
 export const createState = (
-    appKey: string,
-    provider: AppModuleProvider
+    value: AppBundleStateInitial,
+    provider: AppModuleProvider,
 ): FlowSubject<AppBundleState, Actions> => {
-    const reducer = createReducer(appKey);
+    const reducer = createReducer(value);
     const state = new FlowSubject<AppBundleState, Actions>(reducer);
     state.addFlow(handleFetchManifest(provider));
     state.addFlow(handleFetchConfig(provider));

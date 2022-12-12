@@ -11,10 +11,10 @@ enableMapSet();
 
 import { actions } from './actions';
 
-import { AppBundleState } from './types';
+import { AppBundleState, AppBundleStateInitial } from './types';
 
-export const createReducer = (appKey: string) =>
-    makeReducer({ appKey, status: new Set() } as AppBundleState, (builder) =>
+export const createReducer = (value: AppBundleStateInitial) =>
+    makeReducer({ ...value, status: new Set() } as AppBundleState, (builder) =>
         builder
             .addCase(actions.setManifest, (state, action) => {
                 state.manifest = action.payload;
