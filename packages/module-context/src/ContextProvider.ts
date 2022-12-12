@@ -27,6 +27,7 @@ export interface IContextProvider {
     currentContext: ContextItem | undefined;
     queryContext(search: string): Observable<Array<ContextItem>>;
     queryContextAsync(search: string): Promise<Array<ContextItem>>;
+    clearCurrentContext: VoidFunction;
 }
 
 export class ContextProvider implements IContextProvider {
@@ -47,23 +48,6 @@ export class ContextProvider implements IContextProvider {
 
     public get queryClient() {
         return this.#contextQuery;
-    }
-
-    public queryContext(search: string): Observable<Array<ContextItem>> {
-        const query$ = this.queryClient
-            .query(
-                // TODO
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
-                this.#contextParameterFn({ search, type: this.#contextType })
-            )
-            .pipe(map((x) => x.value));
-
-        return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
-    }
-
-    public queryContextAsync(search: string): Promise<Array<ContextItem>> {
-        return lastValueFrom(this.queryContext(search));
     }
 
     get currentContext$(): Observable<ContextItem | undefined> {
@@ -148,6 +132,27 @@ export class ContextProvider implements IContextProvider {
                 )
             );
         }
+    }
+
+    public queryContext(search: string): Observable<Array<ContextItem>> {
+        const query$ = this.queryClient
+            .query(
+                // TODO
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                /* @ts-ignore */
+                this.#contextParameterFn({ search, type: this.#contextType })
+            )
+            .pipe(map((x) => x.value));
+
+        return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
+    }
+
+    public queryContextAsync(search: string): Promise<Array<ContextItem>> {
+        return lastValueFrom(this.queryContext(search));
+    }
+
+    public clearCurrentContext() {
+        this.currentContext = undefined;
     }
 
     dispose() {
