@@ -559,9 +559,9 @@
   integrity sha512-PserXGVxf5Q7Z0o/AypudGWdh9Vangct3dQZsgiERfqRj8+a+mU0ObRa6bMm+JouQRV3WktNPJVWMjjJf8jQbw==
 
 "@equinor/eslint-config-fusion@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@equinor/eslint-config-fusion/-/eslint-config-fusion-1.0.2.tgz#6019bd4bfdf627b20eca7905c2e6e88046b7bdc2"
-  integrity sha512-S9i82f1Uu2kH5yuy4XK6AuYYR7usE0DKUxOQIS6PSeX2vkrQsmWhj9knMP2Cz267SzR38mpn+SbO94Mtq+AH0A==
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@equinor/eslint-config-fusion/-/eslint-config-fusion-1.0.6.tgz#05e55101d98d560eb7455496afa89dae82bb8cfd"
+  integrity sha512-+w2kTdcaMRUoNP5gpozWdQDK+ZGW+VXDQzXzDZRum7+UjuubjFgm2aQqkuTwwf2WbSmtlBGRSpYHfRj23k52Cw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.40.0"
     "@typescript-eslint/parser" "^5.40.0"
