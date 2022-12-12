@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.13...@equinor/fusion-framework-react-app@2.0.14) (2022-12-12)
+
+### Bug Fixes
+
+-   **react-app:** update typing of legacy-app ([d4dbbb0](https://github.com/equinor/fusion-framework/commit/d4dbbb0a326cb6b54bb3a2348fd7961b3abf4ba7))
+
 ## [2.0.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.12...@equinor/fusion-framework-react-app@2.0.13) (2022-12-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.1.6...@equinor/fusion-framework-module-app@2.2.0) (2022-12-12)
+
+### Features
+
+-   create instance container for application ([d5cbd74](https://github.com/equinor/fusion-framework/commit/d5cbd74b89cd9cba0dabef4a62f585c72e3c14be))
+-   **module-app:** load javascript modules ([bb3d2a1](https://github.com/equinor/fusion-framework/commit/bb3d2a1cb00b5753462094ebdf24c8ba3c614c9f))
+
 ## [2.1.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.1.5...@equinor/fusion-framework-module-app@2.1.6) (2022-12-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app

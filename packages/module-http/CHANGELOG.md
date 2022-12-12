@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.2.1 (2022-12-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-http
+
 ## [2.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.1.8...@equinor/fusion-framework-module-http@2.2.0) (2022-12-08)
 
 ### Features

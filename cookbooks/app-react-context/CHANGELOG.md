@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.9...@equinor/fusion-framework-cookbook-app-react-context@2.1.10) (2022-12-12)
+
+### Bug Fixes
+
+-   **cookbooks/app-react-context:** update context content ([7120315](https://github.com/equinor/fusion-framework/commit/7120315750543e61e2291e4075b007310b8894fb))
+
 ## [2.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.8...@equinor/fusion-framework-cookbook-app-react-context@2.1.9) (2022-12-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-context

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@1.1.9...@equinor/fusion-framework-cli@1.2.0) (2022-12-12)
+
+### Features
+
+-   **utils/cli:** update context selector ([c091107](https://github.com/equinor/fusion-framework/commit/c09110735e019b47f16300332fedb360d3396cfc))
+
+### Bug Fixes
+
+-   **utils/cli:** fix layout of router outlet ([ac99033](https://github.com/equinor/fusion-framework/commit/ac99033061ae9867adf6c47f1293266fd20ab8ef))
+-   **utils/cli:** update header of error view ([971b5e5](https://github.com/equinor/fusion-framework/commit/971b5e5ee8f3ec98e2ec41eb485bf01b35ee501e))
+-   **utils/cli:** update loading of application ([4de3289](https://github.com/equinor/fusion-framework/commit/4de3289942f8e3d81f4ee5749311479f4f49b680))
+
 ## [1.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@1.1.8...@equinor/fusion-framework-cli@1.1.9) (2022-12-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
