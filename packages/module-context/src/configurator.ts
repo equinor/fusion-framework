@@ -13,10 +13,14 @@ export interface ContextModuleConfig {
     };
     contextType?: string[];
     contextFilter?: ContextFilterFn;
+
+    /**
+     * Method for generating context query parameters.
+     */
     contextParameterFn?: (args: {
         search: string;
         type: ContextModuleConfig['contextType'];
-    }) => any;
+    }) => string | QueryContextParameters;
 }
 
 export interface IContextModuleConfigurator {
