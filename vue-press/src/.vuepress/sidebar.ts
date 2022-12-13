@@ -27,6 +27,7 @@ export default sidebar({
                     text: 'Context',
                     link: 'context/',
                 },
+                'app/',
                 'event/',
                 'navigation/',
                 'ag-grid/',
