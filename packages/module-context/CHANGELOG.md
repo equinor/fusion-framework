@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.0 (2022-12-13)
+
+### Features
+
+-   **module-context:** add `clearContext` ([f214714](https://github.com/equinor/fusion-framework/commit/f21471479f92fb6f12f88211429d846272d6cffb))
+
 ## [1.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@1.1.9...@equinor/fusion-framework-module-context@1.1.10) (2022-12-12)
 
 ### Bug Fixes
