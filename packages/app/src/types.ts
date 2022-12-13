@@ -37,6 +37,7 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
     manifest: AppManifest;
     config?: AppConfig<TConfig>;
     props?: TProps;
+    key?: string;
 };
 
 export type AppModuleInitiator<

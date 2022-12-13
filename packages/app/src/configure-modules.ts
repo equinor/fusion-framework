@@ -20,8 +20,11 @@ export const configureModules =
         const modules = (await configurator.initialize(
             args.fusion.modules
         )) as AppModulesInstance<TModules>;
+
+        const key = args.env.manifest ?? args.env.key;
+
         modules.event.dispatchEvent('onAppModulesLoaded', {
-            detail: { appKey: args.env.manifest.appKey, modules },
+            detail: { appKey: key, modules },
         });
         return modules;
     };
