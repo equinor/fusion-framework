@@ -15,7 +15,6 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-
 import type { AppConfig, AppManifest } from './types';
 
 import { App, filterEmpty } from './app/App';

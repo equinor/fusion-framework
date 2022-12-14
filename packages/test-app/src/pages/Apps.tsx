@@ -1,24 +1,27 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { AppModule } from '@equinor/fusion-framework-module-app';
-import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
 import { CodeInfo } from '../components';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { useObservableState } from '@equinor/fusion-observable/react';
 import { EMPTY } from 'rxjs';
+import { useObservableState } from '@equinor/fusion-observable/react';
 
 export const CurrentApp = () => {
     const framework = useFramework<[AppModule]>();
     const [appKey, setAppKey] = useState('');
 
-    const AppManifest = useObservableState(useMemo(() => !!appKey ? framework.modules.app.getAppManifest(appKey): EMPTY , [appKey]));
-    const appConfig = useObservableState(useMemo(() => !!appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY , [appKey]));
+    const AppManifest = useObservableState(
+        useMemo(() => (appKey ? framework.modules.app.getAppManifest(appKey) : EMPTY), [appKey])
+    );
+    const appConfig = useObservableState(
+        useMemo(() => (appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY), [appKey])
+    );
 
     const apps = useObservableState(
-        useMemo(() => framework.modules.app.getAllAppManifests(), [framework])
-    , []);
-
+        useMemo(() => framework.modules.app.getAllAppManifests(), [framework]),
+        []
+    );
 
     return (
         <div>

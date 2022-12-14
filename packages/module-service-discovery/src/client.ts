@@ -3,7 +3,6 @@ import { Query } from '@equinor/fusion-query';
 
 import { Environment, EnvironmentResponse, Service } from './types';
 
-import { tap } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 
 export interface IServiceDiscoveryClient {
