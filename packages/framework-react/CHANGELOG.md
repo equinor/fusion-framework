@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@2.0.17...@equinor/fusion-framework-react@2.0.18) (2022-12-14)
+
+### Bug Fixes
+
+-   remove deprecated hooks ([af5586f](https://github.com/equinor/fusion-framework/commit/af5586f563e32c1e7e577a3e6837be610a135fc9))
+
 ## [2.0.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@2.0.16...@equinor/fusion-framework-react@2.0.17) (2022-12-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react

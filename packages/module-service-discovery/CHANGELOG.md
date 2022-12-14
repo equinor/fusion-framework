@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.8 (2022-12-14)
+
+### Bug Fixes
+
+-   **module-service-discovery:** remove console log ([776d174](https://github.com/equinor/fusion-framework/commit/776d174fc141d4c6e1b8b476cb85b18985eb93b9))
+
 ## [4.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@4.0.6...@equinor/fusion-framework-module-service-discovery@4.0.7) (2022-12-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery

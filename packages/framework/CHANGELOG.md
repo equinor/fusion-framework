@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@5.0.16...@equinor/fusion-framework@5.0.17) (2022-12-14)
+
+### Bug Fixes
+
+-   **module-app:** make app module optional ([fa5c0ed](https://github.com/equinor/fusion-framework/commit/fa5c0ed0a9afc1f9ade3adb6e52e4425a59a7aa6))
+
 ## [5.0.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework@5.0.15...@equinor/fusion-framework@5.0.16) (2022-12-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework

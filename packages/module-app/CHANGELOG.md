@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.5.0 (2022-12-14)
+
+### Features
+
+-   **module-app:** update manifest interface ([ba740ef](https://github.com/equinor/fusion-framework/commit/ba740ef6f7a37eb72b1386d929cc27bf0530218a))
+
+### Bug Fixes
+
+-   **module-app:** correct import and exports ([d9de2d7](https://github.com/equinor/fusion-framework/commit/d9de2d71cb2521fb4b38843e54a4928646294df8))
+-   **module-app:** fix key for fetching all manifest ([2df1815](https://github.com/equinor/fusion-framework/commit/2df18159d1128546b801c374f419b1e9528ca8c2))
+-   **module-app:** make app module optional ([fa5c0ed](https://github.com/equinor/fusion-framework/commit/fa5c0ed0a9afc1f9ade3adb6e52e4425a59a7aa6))
+
 ## [2.4.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.3.0...@equinor/fusion-framework-module-app@2.4.0) (2022-12-12)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.3 (2022-12-14)
+
+### Bug Fixes
+
+-   **utils/observable:** improve type-hinting ([761dfb0](https://github.com/equinor/fusion-framework/commit/761dfb0d5675fba05bd31889d4bd4d2f721880ec))
+
 ## 3.0.2 (2022-12-08)
 
 **Note:** Version bump only for package @equinor/fusion-observable
