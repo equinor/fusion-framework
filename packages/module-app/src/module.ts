@@ -21,7 +21,7 @@ export const module: AppModule = {
     },
 };
 
-export const enableAppModule = (configurator: IModulesConfigurator) => {
+export const enableAppModule = (configurator: IModulesConfigurator<any, any>) => {
     configurator.addConfig({ module });
 };
 

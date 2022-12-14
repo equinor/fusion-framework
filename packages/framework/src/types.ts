@@ -1,7 +1,6 @@
 import type { CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { AppModule } from '@equinor/fusion-framework-module-app';
 import { ContextModule } from '@equinor/fusion-framework-module-context';
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { HttpModule } from '@equinor/fusion-framework-module-http';
@@ -11,15 +10,7 @@ import { ServicesModule } from '@equinor/fusion-framework-module-services';
 
 export type FusionModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
-    [
-        AppModule,
-        ContextModule,
-        EventModule,
-        HttpModule,
-        MsalModule,
-        ServicesModule,
-        ServiceDiscoveryModule
-    ]
+    [ContextModule, EventModule, HttpModule, MsalModule, ServicesModule, ServiceDiscoveryModule]
 >;
 
 export type FusionModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =

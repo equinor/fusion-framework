@@ -10,10 +10,11 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 import { AppManifestError } from '@equinor/fusion-framework-module-app/errors.js';
 
 import { ErrorViewer } from './ErrorViewer';
+import { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const AppLoader = (props: { appKey: string }) => {
     const { appKey } = props;
-    const fusion = useFramework();
+    const fusion = useFramework<[AppModule]>();
     const ref = useRef<HTMLElement>(null);
     const appRef = useRef<HTMLDivElement>(document.createElement('div'));
 
@@ -68,8 +69,6 @@ export const AppLoader = (props: { appKey: string }) => {
             }
         };
     }, [ref.current, appRef.current]);
-
-    console.log(ref.current, appRef.current);
 
     if (error) {
         if (error.cause instanceof AppManifestError) {

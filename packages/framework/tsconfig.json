@@ -28,9 +28,6 @@
     {
       "path": "../module-context"
     },
-    {
-      "path": "../module-app"
-    }
   ],
   "include": [
     "src/**/*",
