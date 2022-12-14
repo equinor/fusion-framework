@@ -25,6 +25,9 @@
     },
     {
       "path": "../module-service-discovery"
+    },
+    {
+      "path": "../module-app"
     }
   ],
   "include": [
