@@ -9,6 +9,8 @@ tag:
   - application module instance
 ---
 
+<ModuleBadge module="module-app" />
+
 This module purpose is:
 - [x] load application manifest.
 - [x] load application configuration.
@@ -60,13 +62,25 @@ This module purpose is:
   M-->-L: done
 ```
 
+::: warning Initialize
+when calling `initialize`, it might emit multiple time, since manifest and config has cache.
+
+__How to only use settle values__
+```ts
+// Observable
+app.initialize().pipe(last());
+// Async
+await lastValueFrom(app.initialize());
+```
+:::
+
 ### Manifest
 
 Meta data description of application, loaded from the Fusion Application Store
 
 ### Config
-
 Configuration for the application 
+
 
 ### Script Modules
 
@@ -75,3 +89,75 @@ imported javascript script modules
 ### Instance
 
 Collection of initialized modules of the application
+
+## Configuration
+
+::: code-tabs
+
+@tab simple
+
+```ts
+export const configure = (configurator) => {
+  enableAppModule(configurator);
+}
+```
+
+@tab custom
+
+```ts
+
+const manifestMapper = (value: any): AppManifest => {
+  const { appKey, name, entry, version } = value;
+  return { appKey, name, entry, version };
+} 
+
+export const configure = (configurator) => {
+  enableAppModule(configurator, async(builder) => {
+    const httpProvider = await builder.requireInstance('http');
+    const appClient = httpProvider.createClient('app-api-client');
+
+    builder.setAppClient(() => {
+      /** callback for fetching an applications */
+      getAppManifest: ({ appKey: string }) => appClient.json$(
+        `/api/app/${appKey}`, 
+        { selector: async(x) => manifestMapper(await res.json()) }
+      ),
+
+      /** callback for fetching all applications */
+      getAppManifests: () => appClient.json$(
+        `/api/apps`, 
+        { selector: async(x) => (await res.json()).map(manifestMapper) }
+      ),
+
+      /** callback for fetching application config */
+      getAppConfig:  ({ appKey: string }) => appClient.json$(
+        `/api/app/${appKey}/config`,
+      ),
+    });
+  });
+}
+```
+:::
+
+## Events
+
+### onAppModulesLoaded
+
+This event is fired when the application has initialized it`s modules
+
+> implemented by `@equinor/fusion-framework-app`
+
+```ts
+type AppModulesLoadedEventDetails {
+  /** key of application which loaded modules */ 
+  appKey: string;
+  /** instance collection of modules initiated by application */
+  modules: AppModulesInstance<TModules>;
+}
+```
+## Examples
+
+### Apploader
+
+@[code](@packages/cli/src/dev-portal/AppLoader.tsx)
+
