@@ -42,10 +42,7 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
         this.endpoint = endpoint;
         this.#query = new Query<T, void>({
             client: {
-                fn: () =>
-                    http
-                        .fetch$(endpoint, { selector: this.selector.bind(this) })
-                        .pipe(tap((x) => console.log('🔥', x))),
+                fn: () => http.fetch$(endpoint, { selector: this.selector.bind(this) }),
             },
             key: () => 'services',
             expire: 5 * 60 * 1000,
