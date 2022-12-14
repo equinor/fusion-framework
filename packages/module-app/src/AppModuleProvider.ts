@@ -10,18 +10,18 @@ import {
 } from 'rxjs';
 
 import { ModuleType } from '@equinor/fusion-framework-module';
+import { HttpResponseError } from '@equinor/fusion-framework-module-http';
+import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import type { AppConfig, AppManifest } from './types';
 
 import { App, filterEmpty } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
-import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import { AppConfigError, AppManifestError } from './errors';
-import { AppBundleStateInitial } from 'app/types';
+import { AppBundleStateInitial } from './app/types';
 
 export class AppModuleProvider {
     static compareAppManifest<T extends AppManifest>(a?: T, b?: T): boolean {

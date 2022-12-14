@@ -5,13 +5,17 @@
     "main": "dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./errors.js": "./dist/esm/errors.js"
+        "./errors.js": "./dist/esm/errors.js",
+        "./app": "./dist/esm/app/index.js"
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
         "*": {
             "errors.js": [
                 "dist/types/errors.d.ts"
+            ],
+            "app": [
+                "dist/types/app/index.d.ts"
             ]
         }
     },
