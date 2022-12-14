@@ -35,21 +35,21 @@ type AppCategory = {
 export type AppManifest = {
     appKey: string;
     name: string;
-    shortName: string;
+    entry: string;
     version: string;
-    description: string;
-    type: AppType;
-    tags: string[];
+    shortName?: string;
+    description?: string;
+    type?: AppType;
+    tags?: string[];
     // context?: ContextManifest;
     auth?: AppAuth[];
     icon?: string;
-    order: number | null;
-    publishedDate: Date | null;
-    accentColor: string | null;
-    categoryId: string | null;
-    category: AppCategory | null;
+    order?: number;
+    publishedDate?: Date;
+    accentColor?: string;
+    categoryId?: string;
+    category?: AppCategory;
     hide?: boolean;
-    entry: string;
 };
 
 export type Endpoint = { name: string; uri: string; scopes?: string[] };
