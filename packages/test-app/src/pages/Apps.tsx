@@ -1,38 +1,30 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import {
-    useAppConfig,
-    useAppManifests,
-    useCurrentApp,
-    useCurrentAppChanged,
-} from '@equinor/fusion-framework-react/app';
+import { AppModule } from '@equinor/fusion-framework-module-app';
+import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
 import { CodeInfo } from '../components';
+import { useFramework } from '@equinor/fusion-framework-react';
+import { useObservableState } from '@equinor/fusion-observable/react';
+import { EMPTY } from 'rxjs';
 
 export const CurrentApp = () => {
-    const apps = useAppManifests();
-    const { currentApp, setCurrentApp } = useCurrentApp();
+    const framework = useFramework<[AppModule]>();
     const [appKey, setAppKey] = useState('');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [changeEvent, setChangeEvent] = useState<any>(null);
 
-    const appConfig = useAppConfig({ appKey });
+    const AppManifest = useObservableState(useMemo(() => !!appKey ? framework.modules.app.getAppManifest(appKey): EMPTY , [appKey]));
+    const appConfig = useObservableState(useMemo(() => !!appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY , [appKey]));
 
-    useCurrentAppChanged(useCallback((e) => setChangeEvent(e.detail), [setChangeEvent]));
+    const apps = useObservableState(
+        useMemo(() => framework.modules.app.getAllAppManifests(), [framework])
+    , []);
 
-    useEffect(() => {
-        appKey && setCurrentApp(appKey);
-    }, [setCurrentApp, appKey]);
-
-    if (!apps.value) {
-        return <p>loading all apps</p>;
-    }
 
     return (
         <div>
             <h2>Current App</h2>
             <select onChange={(e) => setAppKey(e.currentTarget.value)}>
-                {apps.value.map((app) => {
+                {apps.map((app) => {
                     const { appKey, name } = app;
                     return (
                         <option key={appKey} value={appKey}>
@@ -41,14 +33,10 @@ export const CurrentApp = () => {
                     );
                 })}
             </select>
-            <CodeInfo data={currentApp} />
+            <CodeInfo data={AppManifest} />
             <div>
                 <h3>App Config</h3>
-                {!!appConfig.value && <CodeInfo data={appConfig.value} />}
-            </div>
-            <div style={{ color: 'white', backgroundColor: '#333', padding: 10 }}>
-                <h2>Last event</h2>
-                <CodeInfo data={changeEvent} />
+                {!!appConfig && <CodeInfo data={appConfig} />}
             </div>
         </div>
     );

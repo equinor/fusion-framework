@@ -5,6 +5,7 @@ import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 import { contextModule, ContextModule } from '@equinor/fusion-framework-module-context';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { FusionModulesInstance } from '@equinor/fusion-framework';
+import { enableAppModule } from '@equinor/fusion-framework-module-app';
 
 export const configure = async (config: FusionConfigurator) => {
     config.logger.level = 4;
@@ -15,6 +16,8 @@ export const configure = async (config: FusionConfigurator) => {
             defaultScopes: ['97978493-9777-4d48-b38a-67b0b9cd88d2/.default'],
         },
     });
+
+    enableAppModule(config);
 
     config.configureMsal(
         {
