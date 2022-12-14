@@ -17,8 +17,6 @@ import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
 import context from '@equinor/fusion-framework-module-context';
 
-import app from '@equinor/fusion-framework-module-app';
-
 import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
 
@@ -30,7 +28,7 @@ export class FusionConfigurator<
     TRef = any
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {
-        super([event, auth, http, disco, services, app, context]);
+        super([event, auth, http, disco, services, context]);
         this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 

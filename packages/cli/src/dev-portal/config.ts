@@ -1,4 +1,5 @@
 import { FusionConfigurator } from '@equinor/fusion-framework-react';
+import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 
 export const configure = async (config: FusionConfigurator) => {
@@ -19,6 +20,8 @@ export const configure = async (config: FusionConfigurator) => {
         },
         { requiresAuth: true }
     );
+
+    enableAppModule(config);
 
     config.onConfigured(() => {
         console.log('framework config done');

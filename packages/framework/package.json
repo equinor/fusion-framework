@@ -24,7 +24,6 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-app": "^2.4.0",
         "@equinor/fusion-framework-module-context": "^1.2.0",
         "@equinor/fusion-framework-module-event": "^1.2.0",
         "@equinor/fusion-framework-module-http": "^2.2.1",

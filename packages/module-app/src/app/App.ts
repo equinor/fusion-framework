@@ -246,3 +246,5 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     public dispose: VoidFunction;
 }
+
+export default App;
