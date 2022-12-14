@@ -31,7 +31,7 @@ export default defineUserConfig({
     },
     importCode: {
       handleImportPath: (str) => {
-        return str.replace(/^@cookbooks/, path.resolve(__repoRoot, 'cookbooks'));
+        return str.replace(/^@cookbooks/, path.resolve(__repoRoot, 'cookbooks')).replace(/^@packages/, path.resolve(__repoRoot, 'packages'));
       }
     }
   }
