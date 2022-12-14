@@ -1,8 +1,8 @@
 import { AnyModule } from '@equinor/fusion-framework-module';
 
 import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
-import { App } from 'app/App';
-import AppModuleProvider from 'AppModuleProvider';
+import { App } from './app/App';
+import AppModuleProvider from './AppModuleProvider';
 
 import { AppModulesInstance } from './types';
 
