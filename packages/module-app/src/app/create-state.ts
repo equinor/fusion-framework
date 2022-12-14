@@ -10,7 +10,7 @@ import type { AppModuleProvider } from '../AppModuleProvider';
 
 export const createState = (
     value: AppBundleStateInitial,
-    provider: AppModuleProvider,
+    provider: AppModuleProvider
 ): FlowSubject<AppBundleState, Actions> => {
     const reducer = createReducer(value);
     const state = new FlowSubject<AppBundleState, Actions>(reducer);

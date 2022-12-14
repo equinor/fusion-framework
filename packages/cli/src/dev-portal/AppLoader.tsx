@@ -14,7 +14,7 @@ import { AppModule } from '@equinor/fusion-framework-module-app';
 
 /**
  * React Functional Component for handling current application
- * 
+ *
  * this component will set the current app by provided appKey.
  * when the appKey changes, this component will try to initialize the referred application
  * and render it.
@@ -26,9 +26,9 @@ export const AppLoader = (props: { appKey: string }) => {
     /** reference of application section/container */
     const ref = useRef<HTMLElement>(null);
 
-    /** 
+    /**
      * reference of element which application rendered to
-     * 
+     *
      * the current value will be created when application tries to render.
      * since we cant make sure that application render does ensure teardown,
      * each render instance will have its own element, which then will be added to the application container.
@@ -49,7 +49,7 @@ export const AppLoader = (props: { appKey: string }) => {
     useEffect(() => {
         /** flag that application is loading */
         setLoading(true);
-        
+
         /** clear previous errors */
         setError(undefined);
 
@@ -86,7 +86,7 @@ export const AppLoader = (props: { appKey: string }) => {
                 },
             })
         );
-        
+
         /** teardown application when hook unmounts */
         return () => subscription.unsubscribe();
     }, [currentApp, appRef]);

@@ -11,13 +11,11 @@ import { Framework } from '@equinor/fusion-framework-react';
 import { configure } from './config.framework';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
-import { AppModule, AppScriptModule } from '@equinor/fusion-framework-module-app';
+import { AppModule } from '@equinor/fusion-framework-module-app';
 
 const AppLoader = (props: { appKey: string }) => {
     const { appKey } = props;
     const fusion = useFramework<[AppModule]>();
-    // const ref = useRef<HTMLSpanElement>(null);
-    // const renderRef = useRef<VoidFunction | undefined>(undefined);
 
     const { currentApp, setCurrentApp } = useCurrentApp();
 
@@ -34,12 +32,16 @@ const AppLoader = (props: { appKey: string }) => {
     useEffect(() => {
         setLoading(true);
         setError(undefined);
-        if(!currentApp){
+        if (!currentApp) {
             return;
         }
         const subscription = new Subscription();
         subscription.add(
-            combineLatest([currentApp!.getManifest(), from(import('./App')),  currentApp!.getConfig()]).subscribe({
+            combineLatest([
+                currentApp.getManifest(),
+                from(import('./App')),
+                currentApp.getConfig(),
+            ]).subscribe({
                 next: ([manifest, module, config]) => {
                     const [basename] = window.location.pathname.match(
                         /\/?apps\/[a-z|-]+(\/)?/g
