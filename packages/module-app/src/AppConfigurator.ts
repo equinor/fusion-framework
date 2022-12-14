@@ -80,7 +80,7 @@ export class AppConfigurator implements IAppConfigurator {
                         fn: () => httpClient.json$(`/api/apps`),
                     },
                     // TODO - might cast to checksum
-                    key: (args) => JSON.stringify(args),
+                    key: () => 'manifests',
                     expire: this.defaultExpireTime,
                 },
                 getAppConfig: {
