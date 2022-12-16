@@ -32,11 +32,6 @@ export const configure = async (config: FusionConfigurator) => {
 
         console.debug('📒 subscribing to all events');
         fusion.event.subscribe((e) => console.debug(`🔔🌍 [${e.type}]`, e));
-
-        console.debug('📒 subscribing to [onReactAppLoaded]');
-        fusion.event.addEventListener('onReactAppLoaded', (e) =>
-            console.debug('🔔 [onReactAppLoaded]', e)
-        );
     });
 };
 
