@@ -59,7 +59,7 @@ export const AppLoader = (props: { appKey: string }) => {
         /** make sure that initialize is canceled and disposed if current app changes  */
         subscription.add(
             currentApp?.initialize().subscribe({
-                next: ([manifest, module, config]) => {
+                next: ({ manifest, script, config }) => {
                     /** generate basename for application */
                     const [basename] = window.location.pathname.match(
                         /\/?apps\/[a-z|-]+(\/)?/g
@@ -69,7 +69,7 @@ export const AppLoader = (props: { appKey: string }) => {
                     appRef.current = document.createElement('div');
 
                     /** extract render callback function from javascript module */
-                    const render = module.renderApp ?? module.default;
+                    const render = script.renderApp ?? script.default;
 
                     /** add application teardown to current render effect teardown */
                     subscription.add(
