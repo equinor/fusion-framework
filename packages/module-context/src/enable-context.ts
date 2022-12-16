@@ -3,8 +3,8 @@ import type {
     AnyModule,
     ModuleInitializerArgs,
 } from '@equinor/fusion-framework-module';
-import type { IContextModuleConfigurator } from 'configurator';
-import type { ContextConfigBuilder } from 'ContextConfigBuilder';
+import type { IContextModuleConfigurator } from './configurator';
+import type { ContextConfigBuilder } from './ContextConfigBuilder';
 
 import { module } from './module';
 
