@@ -11,4 +11,6 @@ export { App } from './app/App';
 export * from './events';
 export * from './types';
 
-export { default, AppModule, module, moduleKey, enableAppModule } from './module';
+export { enableAppModule } from './enable-app-module';
+
+export { default, AppModule, module, moduleKey } from './module';
