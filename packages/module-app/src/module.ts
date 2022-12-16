@@ -1,4 +1,4 @@
-import { IModulesConfigurator, Module } from '@equinor/fusion-framework-module';
+import { Module } from '@equinor/fusion-framework-module';
 import { ModuleDeps } from './types';
 
 import { IAppConfigurator, AppConfigurator } from './AppConfigurator';
@@ -19,11 +19,6 @@ export const module: AppModule = {
     dispose: (args) => {
         (args.instance as unknown as AppModuleProvider).dispose();
     },
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const enableAppModule = (configurator: IModulesConfigurator<any, any>) => {
-    configurator.addConfig({ module });
 };
 
 export default module;
