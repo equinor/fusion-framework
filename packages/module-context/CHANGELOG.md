@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.2 (2022-12-16)
+
+### Bug Fixes
+
+-   **module-context:** import paths ([00df4e0](https://github.com/equinor/fusion-framework/commit/00df4e04b59b8b5e7ac124cdfc726ff3e7b0f5d2))
+
 ## [1.2.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@1.2.0...@equinor/fusion-framework-module-context@1.2.1) (2022-12-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
