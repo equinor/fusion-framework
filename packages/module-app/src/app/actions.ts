@@ -40,6 +40,13 @@ const createActions = () => ({
     setInstance: createAction('set_instance', (instance: AppModulesInstance) => ({
         payload: instance,
     })),
+
+    initialize: createAsyncAction(
+        'initialize_app',
+        () => ({ payload: null }),
+        () => ({ payload: null }),
+        (error: unknown) => ({ payload: error })
+    ),
 });
 
 export const actions = createActions();

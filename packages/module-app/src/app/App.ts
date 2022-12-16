@@ -18,7 +18,7 @@ import { createState } from './create-state';
 import { actions, Actions } from './actions';
 import { AppBundleState, AppBundleStateInitial } from './types';
 
-import '../events';
+import './events';
 
 // TODO - move globally
 export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
@@ -87,12 +87,17 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         this.#state = createState(value, args.provider);
 
         const { appKey } = value;
+        const { event } = args;
+
+        event && this.#registerEvents(event);
 
         const subscriptions = new Subscription();
-
-        if (args.event) {
+        if (event) {
+            subscriptions.add(() => {
+                event.dispatchEvent('onAppDispose', { detail: { appKey } });
+            });
             subscriptions.add(
-                args.event.addEventListener('onAppModulesLoaded', (e) => {
+                event.addEventListener('onAppModulesLoaded', (e) => {
                     if (e.detail.appKey === appKey) {
                         this.#state.next(actions.setInstance(e.detail.modules));
                     }
@@ -101,16 +106,104 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         }
 
         this.dispose = () => {
+            subscriptions?.unsubscribe();
             if (this.#state.value.instance) {
+                /** tear down modules of application */
                 this.#state.value.instance.dispose();
             }
-            subscriptions.unsubscribe();
             this.#state.complete();
         };
     }
 
-    public initialize(): Observable<[AppManifest, AppScriptModule, AppConfig]> {
-        return combineLatest([this.getManifest(), this.getAppModule(), this.getConfig()]);
+    #registerEvents(event: ModuleType<EventModule>): void {
+        const { appKey } = this;
+
+        this.#state.addEffect(actions.fetchManifest.success.type, (action) => {
+            event.dispatchEvent('onAppManifestLoaded', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
+
+        this.#state.addEffect(actions.fetchConfig.success.type, (action) => {
+            event.dispatchEvent('onAppConfigLoaded', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
+
+        this.#state.addEffect(actions.importApp.success.type, (action) => {
+            event.dispatchEvent('onAppScriptLoaded', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
+
+        this.#state.addEffect(actions.initialize.type, () => {
+            event.dispatchEvent('onAppInitialize', {
+                detail: { appKey },
+                source: this,
+            });
+        });
+
+        this.#state.addEffect(actions.initialize.success.type, () => {
+            event.dispatchEvent('onAppInitialized', {
+                detail: { appKey },
+                source: this,
+            });
+        });
+
+        this.#state.addEffect(actions.initialize.failure.type, ({ payload }) => {
+            event.dispatchEvent('onAppInitializeFailed', {
+                detail: { appKey, error: payload },
+                source: this,
+            });
+        });
+    }
+
+    /**
+     * The initializing request won`t trigger until subscribing to the returned observable
+     *
+     * @example
+     * ```ts
+     * app.initialize().subscribe({
+     *  next: (value) => {
+     *      value.script.render(el, ...);
+     *  },
+     *  error: (err) => console.error('failed to load application', err),
+     *  complete: () => setInitializingApp(false)
+     * })
+     * ```
+     */
+    public initialize(): Observable<{
+        manifest: AppManifest;
+        script: AppScriptModule;
+        config: AppConfig;
+    }> {
+        return new Observable((observer) => {
+            this.#state.next(actions.initialize());
+            observer.add(
+                combineLatest([
+                    this.getManifest(),
+                    this.getAppModule(),
+                    this.getConfig(),
+                ]).subscribe({
+                    next: ([manifest, script, config]) =>
+                        observer.next({
+                            manifest,
+                            script,
+                            config,
+                        }),
+                    error: (err) => {
+                        observer.error(err), this.#state.next(actions.initialize.failure(err));
+                    },
+                    complete: () => {
+                        this.#state.next(actions.initialize.success());
+                        observer.complete();
+                    },
+                })
+            );
+        });
     }
 
     public loadConfig() {
