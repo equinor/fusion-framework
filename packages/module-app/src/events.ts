@@ -5,6 +5,14 @@ import './app/events';
 
 declare module '@equinor/fusion-framework-module-event' {
     interface FrameworkEventMap {
-        onCurrentAppChanged: FrameworkEvent<FrameworkEventInit<{ next?: App; previous?: App }>>;
+        /** fired when the current selected application changes */
+        onCurrentAppChanged: FrameworkEvent<
+            FrameworkEventInit<{
+                /** current application  */
+                next?: App;
+                /** previous application */
+                previous?: App;
+            }>
+        >;
     }
 }

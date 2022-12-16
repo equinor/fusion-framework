@@ -141,20 +141,12 @@ export const configure = (configurator) => {
 
 ## Events
 
-### onAppModulesLoaded
+@[code](@packages/module-app/src/events.ts)
 
-This event is fired when the application has initialized it`s modules
+### App
 
-> implemented by `@equinor/fusion-framework-app`
+@[code](@packages/module-app/src/app/events.ts)
 
-```ts
-type AppModulesLoadedEventDetails {
-  /** key of application which loaded modules */ 
-  appKey: string;
-  /** instance collection of modules initiated by application */
-  modules: AppModulesInstance<TModules>;
-}
-```
 ## Examples
 
 ### Apploader
