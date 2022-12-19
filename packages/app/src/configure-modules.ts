@@ -20,9 +20,14 @@ export const configureModules =
         const modules = (await configurator.initialize(
             args.fusion.modules
         )) as AppModulesInstance<TModules>;
-        modules.event.dispatchEvent('onAppModulesLoaded', {
-            detail: { appKey: args.env.manifest.appKey, modules },
-        });
+
+        // @eikeland
+        // TODO - remove check after fusion-cli is updated (app module is not enabled in fusion-cli)
+        if (args.env.manifest?.appKey) {
+            modules.event.dispatchEvent('onAppModulesLoaded', {
+                detail: { appKey: args.env.manifest.appKey, modules },
+            });
+        }
         return modules;
     };
 
