@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.23](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.22...@equinor/fusion-framework-react-app@2.0.23) (2022-12-19)
+
+### Bug Fixes
+
+-   **react-app:** check if manifest is provided in env ([e41b6d1](https://github.com/equinor/fusion-framework/commit/e41b6d1c9006f7d55933a6375861d96126498015))
+
 ## [2.0.22](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.21...@equinor/fusion-framework-react-app@2.0.22) (2022-12-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
