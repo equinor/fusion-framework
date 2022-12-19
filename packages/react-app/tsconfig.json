@@ -24,6 +24,9 @@
       "path": "../module-msal"
     },
     {
+      "path": "../module-app"
+    },
+    {
       "path": "../module-event"
     },
     {
