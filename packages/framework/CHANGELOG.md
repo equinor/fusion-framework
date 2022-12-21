@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.19 (2022-12-21)
+
+### Bug Fixes
+
+-   import export of app types ([6adeabe](https://github.com/equinor/fusion-framework/commit/6adeabecd1d261f3fda18a1cf93e5be4e374cbb5))
+
 ## 5.0.18 (2022-12-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework
