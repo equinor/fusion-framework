@@ -22,5 +22,3 @@ export interface Fusion<TModules extends Array<AnyModule> | unknown = unknown> {
      */
     modules: FusionModulesInstance<TModules>;
 }
-
-export { AppManifest, AppConfig } from '@equinor/fusion-framework-module-app';

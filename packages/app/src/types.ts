@@ -1,13 +1,13 @@
-import type {
-    AppConfig,
-    AppManifest,
-    Fusion,
-    FusionModulesInstance,
-} from '@equinor/fusion-framework';
+import type { Fusion, FusionModulesInstance } from '@equinor/fusion-framework';
 
 import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import {
+    AppConfig,
+    AppManifest,
+    AppModules,
+    AppModulesInstance,
+} from '@equinor/fusion-framework-module-app';
 
 import { configureHttp, configureHttpClient } from '@equinor/fusion-framework-module-http';
 import type { configureMsal } from '@equinor/fusion-framework-module-msal';
