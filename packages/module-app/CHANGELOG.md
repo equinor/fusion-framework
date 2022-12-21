@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.8.1 (2022-12-21)
+
+### Bug Fixes
+
+-   **module-app:** fix typo ([7db0811](https://github.com/equinor/fusion-framework/commit/7db08113697761ecfa75b5684272e6244ec9e137))
+
 ## 2.8.0 (2022-12-21)
 
 ### Features
