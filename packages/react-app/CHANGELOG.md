@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.24](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.23...@equinor/fusion-framework-react-app@2.0.24) (2022-12-21)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-app
+
 ## [2.0.23](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.22...@equinor/fusion-framework-react-app@2.0.23) (2022-12-19)
 
 ### Bug Fixes

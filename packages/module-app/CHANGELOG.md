@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.8.0 (2022-12-21)
+
+### Features
+
+-   **module-app:** expose current state of app ([accb084](https://github.com/equinor/fusion-framework/commit/accb08477416541beaa39574ff966ab2784ad430))
+
 ## [2.7.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@2.7.0...@equinor/fusion-framework-module-app@2.7.1) (2022-12-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app
