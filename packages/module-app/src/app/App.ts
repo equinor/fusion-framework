@@ -61,6 +61,11 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     //#endregion
 
+    get state(): AppBundleState {
+        // todo deep-freeze
+        return this.#state.value;
+    }
+
     get appKey(): string {
         return this.#state.value.appKey;
     }
