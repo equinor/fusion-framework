@@ -148,7 +148,8 @@ export class AppModuleProvider {
      * @param appKey - application key
      */
     public setCurrentApp(appKeyOrApp: string | App): void {
-        const app = typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : App;
+        const app =
+            typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : appKeyOrApp;
         this.#current$.next(app as App);
     }
 
