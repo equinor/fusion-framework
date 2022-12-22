@@ -7,7 +7,6 @@ import {
     IContextProvider,
 } from '@equinor/fusion-framework-module-context';
 import { useObservableState, useObservableSubscription } from '@equinor/fusion-observable/react';
-import '@equinor/fusion-framework-app';
 
 import { EMPTY } from 'rxjs';
 
@@ -18,7 +17,8 @@ import {
     ContextResolver,
     ContextSelectEvent,
 } from '@equinor/fusion-react-context-selector';
-import { AppModulesInstance } from '@equinor/fusion-framework-app';
+
+import type { AppModulesInstance } from '@equinor/fusion-framework-app';
 
 /**
  * Map context query result to ContextSelectorResult.

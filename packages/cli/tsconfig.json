@@ -9,11 +9,17 @@
   },
   "references": [
     {
-      "path": "../framework-react"
+      "path": "../../utils/observable"
     },
     {
-      "path": "../../utils/observable"
-    }
+      "path": "../module-context"
+    },
+    {
+      "path": "../app"
+    },
+    {
+      "path": "../framework-react"
+    },
   ],
   "include": [
     "src/**/*",
