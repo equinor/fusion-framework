@@ -22,6 +22,9 @@
     },
     {
       "path": "../module-event"
+    },
+    {
+      "path": "../module-app"
     }
   ],
   "include": [
