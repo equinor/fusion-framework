@@ -28,7 +28,7 @@ export const CurrentApp = () => {
             <h2>Current App</h2>
             <select onChange={(e) => setAppKey(e.currentTarget.value)}>
                 {apps.map((app) => {
-                    const { appKey, name } = app;
+                    const { key: appKey, name } = app;
                     return (
                         <option key={appKey} value={appKey}>
                             {name}

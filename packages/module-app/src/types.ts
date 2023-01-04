@@ -33,7 +33,7 @@ type AppCategory = {
 };
 
 export type AppManifest = {
-    appKey: string;
+    key: string;
     name: string;
     entry: string;
     version: string;
