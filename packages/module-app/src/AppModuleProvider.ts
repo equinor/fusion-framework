@@ -1,7 +1,7 @@
 import {
     BehaviorSubject,
     catchError,
-    distinctUntilKeyChanged,
+    distinctUntilChanged,
     map,
     Observable,
     pairwise,
@@ -15,7 +15,7 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import type { AppConfig, AppManifest } from './types';
+import type { AppConfig, AppManifest, CurrentApp } from './types';
 
 import { App, filterEmpty } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
@@ -32,7 +32,7 @@ export class AppModuleProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
-    #current$: BehaviorSubject<App | undefined>;
+    #current$: BehaviorSubject<CurrentApp>;
 
     #subscription = new Subscription();
 
@@ -42,12 +42,19 @@ export class AppModuleProvider {
      * fetch an application by key
      * @param appKey - application key
      */
-    get current(): App | undefined {
+    get current(): CurrentApp {
         return this.#current$.value;
     }
 
-    get current$(): Observable<App> {
-        return this.#current$.pipe(filterEmpty(), distinctUntilKeyChanged('appKey'));
+    get current$(): Observable<CurrentApp> {
+        return this.#current$.pipe(
+            distinctUntilChanged((prev, next) => {
+                if (prev && next) {
+                    return prev.appKey === next.appKey;
+                }
+                return prev === next;
+            })
+        );
     }
 
     constructor(args: { config: AppModuleConfig; event?: ModuleType<EventModule> }) {
@@ -55,7 +62,7 @@ export class AppModuleProvider {
 
         this.#event = event;
 
-        this.#current$ = new BehaviorSubject<App | undefined>(undefined);
+        this.#current$ = new BehaviorSubject<CurrentApp>(undefined);
 
         this.appClient = new Query(config.client.getAppManifest);
         this.#appsClient = new Query(config.client.getAppManifests);
@@ -151,6 +158,10 @@ export class AppModuleProvider {
         const app =
             typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : appKeyOrApp;
         this.#current$.next(app as App);
+    }
+
+    public clearCurrentApp(): void {
+        this.#current$.next(null);
     }
 
     /**
