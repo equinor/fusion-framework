@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cli",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "keywords": [
         "Fusion",
         "Fusion Framework",
@@ -35,7 +35,7 @@
         "vite": "^4.0.0"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-app": "^5.0.0",
+        "@equinor/fusion-framework-app": "^5.0.1",
         "@equinor/fusion-framework-module-context": "^1.2.2",
         "@equinor/fusion-framework-react": "^2.1.0",
         "@equinor/fusion-react-button": "^0.5.15",

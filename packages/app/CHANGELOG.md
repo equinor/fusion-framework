@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.1 (2023-01-04)
+
+### Bug Fixes
+
+-   **module-app:** update deps ([3e956c4](https://github.com/equinor/fusion-framework/commit/3e956c4b66b012988e68c2f4633ccdb692dc9bc9))
+
 ## 5.0.0 (2023-01-04)
 
 ### ⚠ BREAKING CHANGES
