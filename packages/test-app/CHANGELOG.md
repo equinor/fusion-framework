@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.0 (2023-01-04)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-app:** manifest prop rename
+
+### Bug Fixes
+
+-   **module-app:** rename `appKey` to `key` ([9ee97b1](https://github.com/equinor/fusion-framework/commit/9ee97b149b9167a3747da371de76490e287d9514))
+
 ## [2.0.27](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-test-app@2.0.26...@equinor/fusion-framework-test-app@2.0.27) (2022-12-21)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app
