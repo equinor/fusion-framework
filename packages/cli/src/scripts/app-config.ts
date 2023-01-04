@@ -93,7 +93,7 @@ export const resolveAppConfig = async (): Promise<{
 
     const manifest = Object.assign(
         {
-            appKey: pkg.name.replace(/^@|\w.*\//gm, ''),
+            key: pkg.name.replace(/^@|\w.*\//gm, ''),
         },
         localConfig.manifest,
         {

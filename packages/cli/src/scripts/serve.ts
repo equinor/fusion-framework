@@ -66,7 +66,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
             selfHandleResponse: true,
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
                 const { appKey } = (req as Request<{ appKey: string }>).params;
-                if (appManifest.appKey === appKey) {
+                if (appManifest.key === appKey) {
                     const { endpoints, environment } = config.appConfig;
                     const response = { endpoints, environment };
                     if (Number(proxyRes.statusCode) === 404) {
@@ -91,7 +91,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
             selfHandleResponse: true,
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
                 const { appKey } = (req as Request<{ appKey: string }>).params;
-                if (appManifest.appKey === appKey) {
+                if (appManifest.key === appKey) {
                     const response = {
                         ...appManifest,
                         entry: new URL(appManifest.main, host).href,
@@ -129,7 +129,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
     });
 
     spinner.succeed(`dev server started`);
-    console.log('🔗', kleur.underline().green(new URL(`/apps/${appManifest.appKey}`, host).href));
+    console.log('🔗', kleur.underline().green(new URL(`/apps/${appManifest.key}`, host).href));
 };
 
 export default server;
