@@ -32,10 +32,6 @@
     {
       "path": "../react-module"
     },
-    {
-      "path": "../react-module-app-config"
-    },
-    
   ],
   "include": [
     "src/**/*"
