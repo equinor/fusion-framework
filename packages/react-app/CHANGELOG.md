@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.30](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.29...@equinor/fusion-framework-react-app@2.0.30) (2023-01-04)
+
+### Bug Fixes
+
+-   **react-app:** cleanup tsconfig ([1283609](https://github.com/equinor/fusion-framework/commit/1283609ad137c7956fe2181fba97b0050638c553))
+
 ## [2.0.29](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@2.0.28...@equinor/fusion-framework-react-app@2.0.29) (2023-01-04)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app
