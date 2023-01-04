@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.1 (2023-01-04)
+
+**Note:** Version bump only for package @equinor/fusion-framework-test-app
+
 ## 3.0.0 (2023-01-04)
 
 ### ⚠ BREAKING CHANGES
