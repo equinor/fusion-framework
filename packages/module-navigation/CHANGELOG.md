@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.5 (2023-01-09)
+
+### Bug Fixes
+
+-   **module-navigation:** expose navigator ([8385afd](https://github.com/equinor/fusion-framework/commit/8385afd32a15ff3fe5e7c0a245266b3d33a3e8a0))
+
 ## 0.1.4 (2022-12-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-navigation
