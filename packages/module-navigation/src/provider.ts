@@ -9,10 +9,15 @@ import type { INavigationConfigurator } from './configurator';
 export interface INavigationProvider {
     dispose: VoidFunction;
     createRouter(routes: AgnosticRouteObject[]): Router;
+    readonly navigator: INavigator;
 }
 
 export class NavigationProvider implements INavigationProvider {
     #navigator: INavigator;
+
+    public get navigator(): INavigator {
+        return this.#navigator;
+    }
 
     constructor(args: { config: INavigationConfigurator }) {
         const { config } = args;
