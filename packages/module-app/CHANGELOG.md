@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.2.0 (2023-01-10)
+
+### Features
+
+-   make app state sync ([c8b4567](https://github.com/equinor/fusion-framework/commit/c8b456743ff5b2b397ce928a1006936cb8de5488))
+
 ## 3.1.0 (2023-01-04)
 
 ### Features
