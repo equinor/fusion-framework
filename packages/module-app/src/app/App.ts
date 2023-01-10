@@ -70,11 +70,19 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         return this.#state.value.appKey;
     }
 
-    get manifest(): Promise<AppManifest> {
+    get manifest(): AppManifest | undefined {
+        return this.state.manifest;
+    }
+
+    get manifestAsync(): Promise<AppManifest> {
         return firstValueFrom(this.manifest$);
     }
 
-    get config(): Promise<AppConfig<TEnv>> {
+    get config(): AppConfig<TEnv> | undefined {
+        return this.state.config;
+    }
+
+    get configAsync(): Promise<AppConfig<TEnv>> {
         return firstValueFrom(this.config$);
     }
 
