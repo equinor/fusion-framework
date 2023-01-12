@@ -1,0 +1,58 @@
+{
+    "name": "@equinor/fusion-framework-legacy-interopt",
+    "version": "0.0.0",
+    "description": "Library for interopt legacy fusion applications",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js",
+        "./components": "./dist/esm/components/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        ">=4.2": {
+            "*": [
+                "dist/types/*"
+            ],
+            "components": [
+                "dist/types/components/index.d.ts"
+            ]
+        }
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/legacy-interopt"
+    },
+    "devDependencies": {
+        "@equinor/fusion": "^3.4.5",
+        "@equinor/fusion-components": "^2.9.0",
+        "@equinor/fusion-framework": "^5.0.19",
+        "@equinor/fusion-framework-module-app": "^3.2.0",
+        "@equinor/fusion-framework-module-navigation": "^0.1.5",
+        "@types/react": "^17.0.52",
+        "react": "^17.0.0",
+        "rxjs": "^7.5.7",
+        "typescript": "^4.9.3"
+    },
+    "peerDependencies": {
+        "@equinor/fusion": "*",
+        "@equinor/fusion-components": "*",
+        "@equinor/fusion-framework": ">=5",
+        "@equinor/fusion-framework-module-app": ">=3.2.0",
+        "@equinor/fusion-framework-module-navigation": ">=0.1.5",
+        "react": "^17.0.52",
+        "rxjs": "^7.5.7"
+    },
+    "dependencies": {
+    }
+}
