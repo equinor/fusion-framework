@@ -8,6 +8,7 @@ import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-se
 type Fusion = any;
 
 export type WidgetEnv = {
+    //Not sure if this is needed
     manifest?: WidgetManifest;
     config?: WidgetConfig;
 };
