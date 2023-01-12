@@ -1,0 +1,33 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+      "outDir": "dist/esm",
+      "rootDir": "src",
+      "declarationDir": "./dist/types",
+      "baseUrl": "src",
+    },
+    "references": [
+      {
+        "path": "../module"
+      },
+      {
+        "path": "../../utils/query"
+      },
+      {
+        "path": "../module-http"
+      },
+      {
+        "path": "../module-event"
+      },
+      {
+        "path": "../module-service-discovery"
+      }
+    ],
+    "include": [
+      "src/**/*",
+    ],
+    "exclude": [
+      "node_modules",
+      "lib"
+    ]
+  }
