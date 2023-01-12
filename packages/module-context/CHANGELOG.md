@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.2.3 (2023-01-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
 ## 1.2.2 (2022-12-16)
 
 ### Bug Fixes

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0 (2023-01-12)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-service-discovery:** changed `environment` from promise to sync
+
+### Features
+
+-   **module-service-discovery:** allow sync resolve of service ([aa0361c](https://github.com/equinor/fusion-framework/commit/aa0361c765604ca5f642c9f2916cea860968d4a3))
+
 ## 4.0.8 (2022-12-14)
 
 ### Bug Fixes

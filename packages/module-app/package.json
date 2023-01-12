@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-app",
-    "version": "3.2.0",
+    "version": "3.2.1",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -42,7 +42,7 @@
         "@equinor/fusion-framework-module": "^1.2.10",
         "@equinor/fusion-framework-module-event": "^1.2.0",
         "@equinor/fusion-framework-module-http": "^2.2.1",
-        "@equinor/fusion-framework-module-service-discovery": "^4.0.8",
+        "@equinor/fusion-framework-module-service-discovery": "^5.0.0",
         "typescript": "^4.9.3"
     }
 }

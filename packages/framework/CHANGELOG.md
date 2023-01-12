@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.20 (2023-01-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
 ## 5.0.19 (2022-12-21)
 
 ### Bug Fixes
