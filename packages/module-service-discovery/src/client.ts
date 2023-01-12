@@ -6,8 +6,9 @@ import { Environment, EnvironmentResponse, Service } from './types';
 import { firstValueFrom } from 'rxjs';
 
 export interface IServiceDiscoveryClient {
-    readonly environment: Promise<Environment>;
+    readonly environment: Environment;
     resolveService(key: string): Promise<Service>;
+    fetchEnvironment(): Promise<Environment>;
 }
 
 export interface IServiceDiscoveryClientCtor<TEnv extends Environment = Environment> {
@@ -19,6 +20,8 @@ type ServiceDiscoveryClientCtorArgs = {
     endpoint: string;
 };
 
+const queryKey = 'services';
+
 export class ServiceDiscoveryClient<T extends Environment = Environment>
     implements IServiceDiscoveryClient
 {
@@ -28,12 +31,12 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
     public endpoint: string;
     public http: IHttpClient;
 
-    get environment(): Promise<Environment> {
-        return firstValueFrom(
-            Query.extractQueryValue(
-                this.#query.query(undefined, { cache: { suppressInvalid: true } })
-            )
-        );
+    get environment(): T {
+        const env = this.#query.cache.getItem(queryKey)?.value;
+        if (!env) {
+            throw Error('no cached environment found');
+        }
+        return env;
     }
 
     constructor({ http, endpoint }: ServiceDiscoveryClientCtorArgs) {
@@ -43,10 +46,18 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
             client: {
                 fn: () => http.fetch$(endpoint, { selector: this.selector.bind(this) }),
             },
-            key: () => 'services',
+            key: () => queryKey,
             expire: 5 * 60 * 1000,
             // queueOperator: (_) => ($) => $.pipe(throttleTime(100)),
         });
+    }
+
+    public async fetchEnvironment(): Promise<T> {
+        return firstValueFrom(
+            Query.extractQueryValue(
+                this.#query.query(undefined, { cache: { suppressInvalid: true } })
+            )
+        );
     }
 
     public async selector(response: Response): Promise<T> {
@@ -65,7 +76,7 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
 
     public async resolveService(key: string): Promise<Service> {
         try {
-            const { services } = await this.environment;
+            const { services } = await this.fetchEnvironment();
             const service = services[key];
             return service;
         } catch (err) {
