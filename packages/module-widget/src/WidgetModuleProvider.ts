@@ -27,16 +27,12 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
 
     #subscription = new Subscription();
 
-    //Should this be used
-    #event?: ModuleType<EventModule>;
-
     #baseUrl: string;
 
     constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
-        const { event, config } = args;
+        const { config } = args;
 
         this.#baseUrl = config.uri;
-        this.#event = event;
 
         this.#widgetClient = new Query(config.client.getWidgetManifest);
         this.#configClient = new Query(config.client.getWidgetConfig);
