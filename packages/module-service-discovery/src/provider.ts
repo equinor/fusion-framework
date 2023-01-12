@@ -18,8 +18,11 @@ export interface IServiceDiscoveryProvider {
     resolveService(key: string): Promise<Service>;
     /**
      * service environment
+     * this might throw error if no environment is loaded
      */
-    readonly environment: Promise<Environment>;
+    readonly environment: Environment;
+
+    resolveServices(): Promise<Environment>;
 
     createClient(
         name: string,
@@ -38,8 +41,12 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         protected readonly _http: ModuleType<HttpModule>
     ) {}
 
-    public get environment(): Promise<Environment> {
+    public get environment(): Environment {
         return this._client.environment;
+    }
+
+    public resolveServices(): Promise<Environment> {
+        return this._client.fetchEnvironment();
     }
 
     public async resolveService(key: string): Promise<Service> {
