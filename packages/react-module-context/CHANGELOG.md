@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.17 (2023-01-12)
+
+### Bug Fixes
+
+-   :bug: context undefined on first render ([790850e](https://github.com/equinor/fusion-framework/commit/790850e8c928e4feb8537a07bd8d5d6afb268bb5))
+
 ## 1.0.16 (2022-12-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-context
