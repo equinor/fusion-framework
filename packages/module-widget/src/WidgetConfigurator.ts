@@ -44,9 +44,7 @@ export class WidgetConfigurator implements IWidgetConfigurator {
             /** load service discovery module */
             const serviceDiscovery = await init.requireInstance('serviceDiscovery');
 
-            const discoClient = await serviceDiscovery.createClient('portal');
-            //Remove when client is added to disco
-            discoClient.uri = 'https://pro-s-apps-ci.azurewebsites.net';
+            const discoClient = await serviceDiscovery.createClient('apps');
 
             return discoClient;
         }
