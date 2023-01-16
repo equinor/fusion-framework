@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-service-discovery@5.0.1...@equinor/fusion-framework-module-service-discovery@5.0.2) (2023-01-16)
+
+### Bug Fixes
+
+-   **legacy-interopt:** register legacy auth token resolve ([24ee4ea](https://github.com/equinor/fusion-framework/commit/24ee4eab42d4f472c8f4c8b959ce73f8f5b4dc1c))
+
 ## 5.0.1 (2023-01-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-service-discovery

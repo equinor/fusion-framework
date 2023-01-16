@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@1.0.2...@equinor/fusion-framework-legacy-interopt@1.0.3) (2023-01-16)
+
+### Bug Fixes
+
+-   **legacy-interopt:** register legacy auth token resolve ([24ee4ea](https://github.com/equinor/fusion-framework/commit/24ee4eab42d4f472c8f4c8b959ce73f8f5b4dc1c))
+-   **legacy-interopt:** remove yalc ([8f32e52](https://github.com/equinor/fusion-framework/commit/8f32e521de5b0cfde14309ec77f5c7a5e996456b))
+
 ## [1.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@1.0.1...@equinor/fusion-framework-legacy-interopt@1.0.2) (2023-01-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt
