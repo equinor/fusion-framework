@@ -72,7 +72,10 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 builder.setContextFilter(manifest.context.filterContexts);
                         });
                     });
-                    initModules({ fusion: args.framework, env: { manifest: manifest as any } });
+                    initModules({
+                        fusion: args.framework,
+                        env: { manifest: manifest as AppManifest },
+                    });
                 }
             }
         });

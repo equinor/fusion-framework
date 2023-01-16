@@ -10,4 +10,3 @@ export type Effect<TAction extends AnyAction, TState = unknown> = (
     action: TAction,
     state: TState
 ) => ObservableInput<TAction | void> | TAction | void;
-

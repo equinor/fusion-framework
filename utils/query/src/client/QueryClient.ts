@@ -17,6 +17,7 @@ import { State, RetryOptions, QueryFn, QueryTaskCompleted, QueryTaskValue } from
  * - __controller__: [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) [optional]
  * - __retry__: retry config {@link RetryOpt}
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryClientOptions<TType = any, TArgs = any> = {
     controller: AbortController;
     retry: Partial<RetryOptions>;

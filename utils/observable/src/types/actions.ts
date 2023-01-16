@@ -14,6 +14,7 @@ export interface AnyAction extends Action {
     [extraProps: string]: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionCreator = (...args: any[]) => AnyAction;
 
 export type AsyncActionCreator = ActionCreator & {
@@ -90,6 +91,7 @@ export type ActionType<T> = T extends ActionCreator
     ? T['type']
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionPayloadType<T> = ActionInstance<T> extends PayloadAction<any>
     ? ActionInstance<T>['payload']
     : never;

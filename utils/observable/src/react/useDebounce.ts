@@ -11,6 +11,7 @@ export type UseDebounceOptions<TArgs extends any[]> = {
 
 export const useDebounce = <
     TFn extends (...args: TArgs) => TType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TType extends ObservableInput<any> = ReturnType<TFn>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TArgs extends any[] = Parameters<TFn>

@@ -25,11 +25,15 @@ export default function createActions<TType = any, TArgs = any>() {
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
     typeof createActions<TType, TArgs>
 >;
 
 export const actions = createActions();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;
