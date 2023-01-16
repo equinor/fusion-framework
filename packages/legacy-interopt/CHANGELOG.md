@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@1.0.0...@equinor/fusion-framework-legacy-interopt@1.0.1) (2023-01-16)
+
+### Bug Fixes
+
+-   **legacy-import:** add build references ([5ecea04](https://github.com/equinor/fusion-framework/commit/5ecea04b9db6546751e7bc02ec176596249f5339))
+
 ## 1.0.0 (2023-01-16)
 
 ### Features
