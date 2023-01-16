@@ -109,4 +109,7 @@ dist
 package-lock.json
 packages/*/yarn.lock
 
+yalc.lock
+
+
 docs/

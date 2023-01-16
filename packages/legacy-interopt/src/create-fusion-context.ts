@@ -28,9 +28,12 @@ import { LegacyAuthContainer } from './LegacyAuthContainer';
 
 import createServiceResolver from './create-service-resolver';
 import type { PortalFramework } from './types';
-import legacySignIn from 'legacy-api-signin';
+import legacySignIn from './legacy-api-signin';
+import LegacyContextManager from './LegacyContextManager';
 
-type FusionContextOptions = {
+import { globalEquinorFusionContextKey } from './static';
+
+export type FusionContextOptions = {
     loadBundlesFromDisk: boolean;
     environment?: {
         env: string;
@@ -58,7 +61,11 @@ export const createFusionContext = async (args: {
 
     await legacySignIn(framework);
 
-    const serviceResolver = await createServiceResolver(framework.modules.serviceDiscovery);
+    const { serviceDiscovery } = framework.modules;
+    if (!serviceDiscovery) {
+        throw Error('missing module for service discovery');
+    }
+    const serviceResolver = await createServiceResolver(serviceDiscovery);
     const resourceCollections = createResourceCollections(serviceResolver, {
         loadBundlesFromDisk,
         environment,
@@ -137,7 +144,7 @@ export const createFusionContext = async (args: {
     appContainerFactory(appContainer);
 
     // @ts-ignore
-    const contextManager = new CliContextManager({ featureLogger, framework, history });
+    const contextManager = new LegacyContextManager({ featureLogger, framework, history });
 
     const tasksContainer = new TasksContainer(apiClients, new EventHub());
     const notificationCenter = new NotificationCenter(new EventHub(), apiClients);
