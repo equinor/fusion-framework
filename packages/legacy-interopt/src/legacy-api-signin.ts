@@ -7,7 +7,7 @@ const executeSignIn = (client: IHttpClient) =>
 export const legacySignIn = async (framework: PortalFramework) =>
     Promise.all([
         framework.modules.serviceDiscovery.createClient('people').then(executeSignIn),
-        framework.modules.serviceDiscovery.createClient('dataProxy').then(executeSignIn),
+        framework.modules.serviceDiscovery.createClient('data-proxy').then(executeSignIn),
     ]);
 
 export default legacySignIn;
