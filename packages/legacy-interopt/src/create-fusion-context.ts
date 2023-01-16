@@ -59,13 +59,13 @@ export const createFusionContext = async (args: {
 
     const abortControllerManager = new AbortControllerManager(new EventHub());
 
-    await legacySignIn(framework);
 
     const { serviceDiscovery } = framework.modules;
     if (!serviceDiscovery) {
         throw Error('missing module for service discovery');
     }
-    const serviceResolver = await createServiceResolver(serviceDiscovery);
+    const serviceResolver = await createServiceResolver(serviceDiscovery, authContainer);
+
     const resourceCollections = createResourceCollections(serviceResolver, {
         loadBundlesFromDisk,
         environment,
@@ -184,6 +184,8 @@ export const createFusionContext = async (args: {
     };
     // @ts-ignore
     window[globalEquinorFusionContextKey] = fusionContext;
+
+    await legacySignIn(framework);
 
     return fusionContext as unknown as IFusionContext;
 };

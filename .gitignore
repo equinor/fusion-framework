@@ -110,6 +110,7 @@ package-lock.json
 packages/*/yarn.lock
 
 yalc.lock
+.yalc
 
 
 docs/

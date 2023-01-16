@@ -52,5 +52,8 @@
         "@equinor/fusion-framework-module-service-discovery": ">=5",
         "react": "^17.0.52",
         "rxjs": "^7.5.7"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-legacy-interopt": "file:.yalc/@equinor/fusion-framework-legacy-interopt"
     }
 }

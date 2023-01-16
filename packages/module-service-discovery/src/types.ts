@@ -8,6 +8,7 @@ export type EnvironmentResponse = {
 
 export type Environment = {
     type?: string;
+    clientId: string;
     services: Record<string, Service>;
 };
 

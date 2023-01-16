@@ -1,9 +1,19 @@
+import LegacyAuthContainer from './LegacyAuthContainer';
 import { PortalFramework } from './types';
 
 export const createServiceResolver = async (
-    provider: PortalFramework['modules']['serviceDiscovery']
+    provider: PortalFramework['modules']['serviceDiscovery'],
+    authContainer: LegacyAuthContainer
 ) => {
-    const { services } = await provider.resolveServices();
+    const { services, clientId } = await provider.resolveServices();
+    /** register for legacy auth token */
+    await authContainer.registerAppAsync(
+        clientId,
+        Object.values(services)
+            .map((x) => x.uri)
+            .concat([window.location.origin]),
+        false
+    );
     return {
         getContextBaseUrl: () => services['context'].uri,
         getDataProxyBaseUrl: () => services['data-proxy'].uri,
