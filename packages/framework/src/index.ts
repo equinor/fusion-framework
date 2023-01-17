@@ -13,7 +13,14 @@ declare global {
     }
 }
 
-export { FusionConfigurator } from './configurator';
+export {
+    FrameworkConfigurator,
+    /**
+     * @deprecated use FrameworkConfigurator
+     */
+    FrameworkConfigurator as FusionConfigurator,
+} from './FrameworkConfigurator';
+
 export * from './types';
 
 export { default, init } from './init';

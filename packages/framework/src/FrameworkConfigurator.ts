@@ -22,7 +22,12 @@ import services from '@equinor/fusion-framework-module-services';
 
 import { FusionModules } from './types';
 
-export class FusionConfigurator<
+/**
+ * Module configurator for Framework modules
+ * @template TModules - Addition modules
+ * @template TRef - usually undefined, optional references
+ */
+export class FrameworkConfigurator<
     TModules extends Array<AnyModule> = [],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TRef = any
@@ -48,3 +53,5 @@ export class FusionConfigurator<
         this.configureHttpClient('service_discovery', args.client);
     }
 }
+
+export default FrameworkConfigurator;

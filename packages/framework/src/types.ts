@@ -8,11 +8,17 @@ import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 
+/**
+ * interface of the modules provided by Fusion Framework
+ */
 export type FusionModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
     [ContextModule, EventModule, HttpModule, MsalModule, ServicesModule, ServiceDiscoveryModule]
 >;
 
+/**
+ * Blueprint of instance of framework modules
+ */
 export type FusionModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
     ModulesInstance<FusionModules<TModules>>;
 

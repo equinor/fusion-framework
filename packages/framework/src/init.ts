@@ -1,10 +1,19 @@
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { FusionConfigurator } from './configurator';
+import { FrameworkConfigurator } from './FrameworkConfigurator';
 import type { Fusion, FusionModules } from './types';
 
+/**
+ *
+ * @template TModules addition modules
+ * @template TRef optional reference
+ *
+ * @param configurator config builder instance
+ * @param ref optional references
+ * @returns instance of framework modules
+ */
 export const init = async <TModules extends Array<AnyModule>, TRef extends object>(
-    configurator: FusionConfigurator<TModules>,
+    configurator: FrameworkConfigurator<TModules>,
     ref?: TRef
 ): Promise<Fusion<TModules>> => {
     const modules = await configurator.initialize<FusionModules>(ref);
