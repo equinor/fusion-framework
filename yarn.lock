@@ -653,6 +653,16 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
+"@equinor/fusion-framework-module-service-discovery@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-module-service-discovery/-/fusion-framework-module-service-discovery-4.0.8.tgz#7627db81beffb134d04b78429025477161b2aec0"
+  integrity sha512-wu4FA/Lx0ZquGNc1dmrVeqra3U1GYuP+xc6RQkBHigXySUEFyVgipcYwQu6XxiFyl8Ix3UDWNpV1n8kK9tLjOQ==
+  dependencies:
+    "@equinor/fusion-framework-module" "^1.2.10"
+    "@equinor/fusion-framework-module-http" "^2.2.1"
+    "@equinor/fusion-query" "^1.1.3"
+    rxjs "^7.5.7"
+
 "@equinor/fusion-react-button@^0.5.15":
   version "0.5.15"
   resolved "https://registry.npmjs.org/@equinor/fusion-react-button/-/fusion-react-button-0.5.15.tgz"

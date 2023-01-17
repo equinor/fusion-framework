@@ -1,5 +1,5 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import type { WidgetConfigBuilderCallback } from './WidgetConfigBuilder';
+import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigBuilder';
 
 import { module } from './module';
 
@@ -10,7 +10,7 @@ import { module } from './module';
 export const enableWidgetModule = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    builder?: WidgetConfigBuilderCallback
+    builder?: WidgetModuleConfigBuilderCallback
 ): void => {
     configurator.addConfig({
         module,

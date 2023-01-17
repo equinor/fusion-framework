@@ -1,19 +1,21 @@
 import { ModuleInitializerArgs, Modules, ModuleType } from '@equinor/fusion-framework-module';
 import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
 
-import { WidgetModuleConfig, IWidgetConfigurator } from './WidgetConfigurator';
+import { WidgetModuleConfig, IWidgetModuleConfigurator } from './WidgetModuleConfigurator';
 
-import type { Widget, WidgetManifest, ModuleDeps, GetWidgetConfig } from './types';
+import type { WidgetManifest, ModuleDeps, GetWidgetParameters } from './types';
 
-export type WidgetConfigBuilderCallback = (
+export type WidgetModuleConfigBuilderCallback = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    builder: WidgetConfigBuilder<ModuleInitializerArgs<IWidgetConfigurator, any>>
+    builder: WidgetModuleConfigBuilder<ModuleInitializerArgs<IWidgetModuleConfigurator, any>>
 ) => void | Promise<void>;
 
-export class WidgetConfigBuilder<
+export type WidgetEndpointBuilder = (args: GetWidgetParameters) => string;
+
+export class WidgetModuleConfigBuilder<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TInit extends ModuleInitializerArgs<IWidgetConfigurator, any> = ModuleInitializerArgs<
-        IWidgetConfigurator,
+    TInit extends ModuleInitializerArgs<IWidgetModuleConfigurator, any> = ModuleInitializerArgs<
+        IWidgetModuleConfigurator,
         ModuleDeps
     >
 > {
@@ -33,14 +35,15 @@ export class WidgetConfigBuilder<
         return this.#init.requireInstance(module);
     }
 
+    setEndpointBuilder(fn: WidgetEndpointBuilder): void {
+        this.config.endpointBuilder = fn;
+    }
+
     setWidgetClient(
         client: {
-            getWidgetManifest:
+            getWidget:
                 | QueryFn<WidgetManifest, { widgetKey: string }>
-                | QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
-            getWidgetConfig:
-                | QueryFn<Widget, { widgetKey: string }>
-                | QueryCtorOptions<Widget, GetWidgetConfig>;
+                | QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
         },
         expire = 1 * 60 * 1000
     ) {
@@ -48,27 +51,17 @@ export class WidgetConfigBuilder<
         expire;
 
         this.config.client = {
-            getWidgetManifest:
-                typeof client.getWidgetManifest === 'function'
-                    ? {
-                          key: ({ widgetKey }) => widgetKey,
-                          client: {
-                              fn: client.getWidgetManifest,
-                          },
-                          expire,
-                      }
-                    : client.getWidgetManifest,
             getWidget:
-                typeof client.getWidgetConfig === 'function'
+                typeof client.getWidget === 'function'
                     ? {
                           // TODO - might cast to checksum
                           key: (args) => JSON.stringify(args),
                           client: {
-                              fn: client.getWidgetConfig,
+                              fn: client.getWidget,
                           },
                           expire,
                       }
-                    : client.getWidgetConfig,
+                    : client.getWidget,
         };
     }
 }
