@@ -28,6 +28,23 @@ export const module: MsalModule = {
     },
 };
 
+/**
+ * Enable MSAL module
+ * 
+ * @example
+ ```ts
+ configureMsal(
+    {
+        tenantId: '{TENANT_ID}',
+        clientId: '{CLIENT_ID}',
+        redirectUri: '/authentication/login-callback',
+    },
+    // requires authenticated user when module is initialized (force login)
+    { requiresAuth: true }
+ );
+ ```
+ * @param defaultClient - default auth client for the module
+ */
 export const configureMsal = (
     defaultClient: AuthClientOptions,
     args?: {
