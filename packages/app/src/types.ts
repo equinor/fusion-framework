@@ -1,16 +1,14 @@
-import type { Fusion, FusionModulesInstance } from '@equinor/fusion-framework';
+import type { Fusion } from '@equinor/fusion-framework';
 
-import type { AnyModule, IModulesConfigurator } from '@equinor/fusion-framework-module';
+import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import {
+import type {
     AppConfig,
     AppManifest,
-    AppModules,
     AppModulesInstance,
 } from '@equinor/fusion-framework-module-app';
 
-import { configureHttp, configureHttpClient } from '@equinor/fusion-framework-module-http';
-import type { configureMsal } from '@equinor/fusion-framework-module-msal';
+import type { IAppConfigurator } from './AppConfigurator';
 
 export type {
     AppModules,
@@ -19,18 +17,10 @@ export type {
     AppModulesInstance,
 } from '@equinor/fusion-framework-module-app';
 
-export interface IAppConfigurator<
-    TModules extends Array<AnyModule> | unknown = unknown,
-    TRef extends FusionModulesInstance = FusionModulesInstance
-> extends IModulesConfigurator<AppModules<TModules>, TRef> {
-    configureHttp(...args: Parameters<typeof configureHttp>): void;
-
-    configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
-
-    configureMsal(...args: Parameters<typeof configureMsal>): void;
-    useFrameworkServiceClient(serviceName: string): void;
-}
-
+/**
+ * Application environment args
+ * Arguments provided when initializing/configuring application modules
+ */
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     /** base routing path of the application */
     basename?: string;
@@ -39,6 +29,9 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
     props?: TProps;
 };
 
+/**
+ * Blueprint for initializing application modules
+ */
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
     TRef extends Fusion = Fusion,
@@ -48,6 +41,9 @@ export type AppModuleInitiator<
     args: { fusion: TRef; env: TEnv }
 ) => void | Promise<void>;
 
+/**
+ * Blueprint for creating application initialization
+ */
 export type AppModuleInit<
     TModules extends Array<AnyModule> | unknown,
     TRef extends Fusion = Fusion,

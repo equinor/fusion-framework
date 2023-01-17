@@ -11,8 +11,13 @@
         "build": "tsc -b",
         "prepack": "yarn build"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": ["fusion", "fusion-framework", "utility"],
+    "homepage": "https://equinor.github.io/fusion-framework/",
+    "author": {
+        "name": "Odin thomas Rochmann",
+        "email": "oroc@equinor.com",
+        "url": "https://github.com/odinr"
+    },
     "license": "ISC",
     "publishConfig": {
         "access": "public"

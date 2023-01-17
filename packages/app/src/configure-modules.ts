@@ -1,9 +1,23 @@
 import { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import { AppConfigurator } from './configurator';
+import { AppConfigurator } from './AppConfigurator';
 import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
 
+/**
+ * 
+ * Creates a callback for initializing configuration of application modules
+ * 
+ * @example
+ ```ts
+    const initialize =  configureModules((configurator, args) => {
+        configurator.configure(someModule);
+    });
+    await initialize({ fusion, { manifest, config }});
+ ```
+ * @param cb - configuration callback
+ * @returns initialize function, executes configurator
+ */
 export const configureModules =
     <
         TModules extends Array<AnyModule> | never,
@@ -12,6 +26,13 @@ export const configureModules =
     >(
         cb?: AppModuleInitiator<TModules, TRef, TEnv>
     ): ((args: { fusion: TRef; env: TEnv }) => Promise<AppModulesInstance<TModules>>) =>
+    /**
+     *
+     * Callback for initializing application modules
+     *
+     * @param args - Fusion and application  environments (manifest, config ...)
+     * @returns initialized app modules
+     */
     async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
         const configurator = new AppConfigurator<TModules, TRef['modules']>();
         if (cb) {

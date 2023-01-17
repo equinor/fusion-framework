@@ -1,4 +1,4 @@
-export { AppConfigurator } from './configurator';
+export { AppConfigurator, IAppConfigurator } from './AppConfigurator';
 
 export * from './types';
 

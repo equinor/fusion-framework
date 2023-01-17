@@ -1,6 +1,7 @@
 import { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
     AnyModule,
+    IModulesConfigurator,
     ModuleConsoleLogger,
     ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
@@ -9,7 +10,61 @@ import event from '@equinor/fusion-framework-module-event';
 import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-import { AppModules, IAppConfigurator } from './types';
+import { AppModules } from './types';
+
+export interface IAppConfigurator<
+    TModules extends Array<AnyModule> | unknown = unknown,
+    TRef extends FusionModulesInstance = FusionModulesInstance
+> extends IModulesConfigurator<AppModules<TModules>, TRef> {
+    /**
+     * [optional]
+     * enable/configure the http module
+     */
+    configureHttp(...args: Parameters<typeof configureHttp>): void;
+
+    /**
+     * [optional]
+     * Configure a named http client.
+     * @example
+     * ```ts
+     configurator.configureHttpClient(
+        'myClient', 
+        { 
+            baseUri: 'https://foo.bar', 
+            defaultScopes: ['client-id/.default'] 
+        }
+    );
+     * ```
+     */
+    configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
+
+    /**
+     * [required]
+     * Setup of MSAL auth module
+     * @example
+     * ```ts
+     configurator.configureMsal(
+        {
+            tenantId: '{TENANT_ID}',
+            clientId: '{CLIENT_ID}',
+            redirectUri: '/authentication/login-callback',
+        },
+        { requiresAuth: true }
+    );
+     * ```
+     */
+    configureMsal(...args: Parameters<typeof configureMsal>): void;
+
+    /**
+     * [optional]
+     *
+     * configure a http client which is resolved by service discovery
+     *
+     * @param serviceName - name of the service to use
+     */
+    // TODO - rename
+    useFrameworkServiceClient(serviceName: string): void;
+}
 
 export class AppConfigurator<
         TModules extends Array<AnyModule> | unknown = unknown,
