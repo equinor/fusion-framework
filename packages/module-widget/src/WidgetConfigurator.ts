@@ -82,7 +82,7 @@ export class WidgetConfigurator implements IWidgetConfigurator {
 
                             if (!args) {
                                 return httpClient
-                                    .json$(`/widgets/${widgetKey}?api-version=1.0-preview}`)
+                                    .json$(`/widgets/${widgetKey}?api-version=1.0-preview`)
                                     .pipe(map((s) => transform(s as unknown as Widget)));
                             }
                             //future-proofing
