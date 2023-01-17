@@ -26,9 +26,9 @@
         "@equinor/fusion-framework-module-http": "^2.2.2",
         "@equinor/fusion-framework-react-module": "^1.1.1",
         "@types/react": "^17.0.11",
-        "@types/react-dom": "^17.0.7",
+        "@types/react-dom": "^18.0.10",
         "react": "^17.0.2",
-        "react-dom": "^17.0.2",
+        "react-dom": "^18.2.0",
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
