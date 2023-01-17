@@ -9,6 +9,12 @@ import {
 } from '@equinor/fusion-framework-module-event';
 import { useEffect } from 'react';
 
+/**
+ * hook for subscribing to framework events
+ *
+ * @template TKey name of the event to subscribe too
+ * @template TType event type
+ */
 export interface useEventHandler<
     TKey extends keyof FrameworkEventMap = keyof FrameworkEventMap,
     TType extends IFrameworkEvent = FrameworkEventMap[TKey]
