@@ -1,67 +1,43 @@
 import { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
-import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;
 
 export type WidgetEnv = {
-    //Not sure if this is needed
-    manifest?: WidgetManifest;
-    config?: Widget;
+    config?: WidgetManifest;
 };
 
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
-export type GetWidgetConfig = {
+export type GetWidgetParameters = {
     widgetKey: string;
-    args?: GetWidgetArgs;
+    args?: { type: 'version' | 'tag'; value: string };
 };
 
 export type WidgetManifest = {
     id: string;
     name: string;
-    version?: string;
-    description: string;
-    maintainers: string[];
-};
-
-export type Widget = {
-    id: string;
-    name: string;
     version: string;
     description: string;
+    maintainers?: string[];
     entryPoint: string;
     assetPath: string;
-} & {
+    // TODO move to @equinor/fusion-widget
     importBundle: () => Promise<WidgetScriptModule>;
 };
 
 export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
     TModules,
-    [EventModule, HttpModule, MsalModule]
+    [EventModule, ServiceDiscoveryModule]
 >;
 
 export type WidgetRenderArgs<TFusion extends Fusion = Fusion, TEnv = WidgetEnv> = {
     fusion: TFusion;
     env: TEnv;
-};
-
-/**
- * Version and tag has the same signature today but it can change in the future
- */
-export type GetWidgetArgs = GetWidgetByTag | GetWidgetByVersion;
-
-type GetWidgetByVersion = {
-    type: 'version';
-    version: string;
-};
-type GetWidgetByTag = {
-    type: 'tag';
-    tag: string;
 };
 
 export type WidgetScriptModule<

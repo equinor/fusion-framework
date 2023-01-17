@@ -6,52 +6,40 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import type { GetWidgetArgs, Widget, WidgetManifest } from './types';
+import type { GetWidgetParameters, WidgetManifest } from './types';
 
-import { WidgetModuleConfig } from './WidgetConfigurator';
-import { WidgetConfigError, WidgetManifestError } from './errors';
+import { WidgetModuleConfig } from './WidgetModuleConfigurator';
+import { GetWidgetError } from './errors';
 
 export interface IWidgetModuleProvider {
-    getWidget(widgetKey: string, args?: GetWidgetArgs): Observable<Widget>;
-    dispose: VoidFunction;
+    getWidget(
+        widgetKey: GetWidgetParameters['widgetKey'],
+        args: GetWidgetParameters['args']
+    ): Observable<WidgetManifest>;
 }
 
 export class WidgetModuleProvider implements IWidgetModuleProvider {
-    #widgetClient: Query<WidgetManifest, { widgetKey: string }>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    #configClient: Query<Widget, { widgetKey: string; args?: GetWidgetArgs }>;
-
+    #widgetClient: Query<WidgetManifest, GetWidgetParameters>;
     #subscription = new Subscription();
 
     constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
         const { config } = args;
 
-        this.#widgetClient = new Query(config.client.getWidgetManifest);
-        this.#configClient = new Query(config.client.getWidget);
+        this.#widgetClient = new Query(config.client.getWidget);
 
         this.#subscription.add(() => this.#widgetClient.complete());
-        this.#subscription.add(() => this.#configClient.complete());
     }
 
-    /**
-     * @deprecated Not used during runtime
-     */
-    _getWidgetManifest(widgetKey: string): Observable<WidgetManifest> {
-        return Query.extractQueryValue(
-            this.#widgetClient.query({ widgetKey }).pipe(
-                catchError((err) => {
-                    /** extract cause, since error will be a `QueryError` */
-                    const { cause } = err;
-                    if (cause instanceof WidgetManifestError) {
-                        throw cause;
-                    }
-                    if (cause instanceof HttpResponseError) {
-                        throw WidgetManifestError.fromHttpResponse(cause.response, { cause });
-                    }
-                    throw new WidgetManifestError('unknown', 'failed to load manifest', { cause });
-                })
-            )
-        );
+    public getWidget(name: string): Observable<WidgetManifest> {
+        return this._getWidget(name);
+    }
+
+    public getWidgetByVersion(name: string, version: string): Observable<WidgetManifest> {
+        return this._getWidget(name, { type: 'version', value: version });
+    }
+
+    public getWidgetByTag(name: string, tag: string): Observable<WidgetManifest> {
+        return this._getWidget(name, { type: 'tag', value: tag });
     }
 
     /**
@@ -59,19 +47,22 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
      * @param widgetKey - widget key
      * @param version - version of widget to use
      */
-    getWidget(widgetKey: string, args?: GetWidgetArgs): Observable<Widget> {
+    protected _getWidget(
+        widgetKey: GetWidgetParameters['widgetKey'],
+        args?: GetWidgetParameters['args']
+    ): Observable<WidgetManifest> {
         return Query.extractQueryValue(
-            this.#configClient.query({ widgetKey, args }).pipe(
+            this.#widgetClient.query({ widgetKey, args }).pipe(
                 catchError((err) => {
                     /** extract cause, since error will be a `QueryError` */
                     const { cause } = err;
-                    if (cause instanceof WidgetConfigError) {
+                    if (cause instanceof GetWidgetError) {
                         throw cause;
                     }
                     if (cause instanceof HttpResponseError) {
-                        throw WidgetConfigError.fromHttpResponse(cause.response, { cause });
+                        throw GetWidgetError.fromHttpResponse(cause.response, { cause });
                     }
-                    throw new WidgetConfigError('unknown', 'failed to load config', { cause });
+                    throw new GetWidgetError('unknown', 'failed to load config', { cause });
                 })
             )
         );
