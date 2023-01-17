@@ -15,7 +15,12 @@ import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
     });
     await initialize({ fusion, { manifest, config }});
  ```
- * @param cb - configuration callback
+ * @template TModules Addition modules
+ * @template TRef usually undefined, optional references
+ * @template TEnv environment object for configuring modules
+ * 
+ * @param cb configuration callback
+ * 
  * @returns initialize function, executes configurator
  */
 export const configureModules =

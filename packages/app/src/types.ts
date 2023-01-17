@@ -20,6 +20,9 @@ export type {
 /**
  * Application environment args
  * Arguments provided when initializing/configuring application modules
+ *
+ * @template TConfig config value type
+ * @template TProps [__not in use__] properties for application component
  */
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     /** base routing path of the application */
@@ -31,6 +34,10 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
 
 /**
  * Blueprint for initializing application modules
+ *
+ * @template TModules Addition modules
+ * @template TRef usually undefined, optional references
+ * @template TEnv environment object for configuring modules
  */
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
@@ -43,6 +50,10 @@ export type AppModuleInitiator<
 
 /**
  * Blueprint for creating application initialization
+ *
+ * @template TModules Addition modules
+ * @template TRef usually undefined, optional references
+ * @template TEnv environment object for configuring modules
  */
 export type AppModuleInit<
     TModules extends Array<AnyModule> | unknown,

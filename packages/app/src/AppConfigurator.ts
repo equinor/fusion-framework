@@ -12,6 +12,12 @@ import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
 import { AppModules } from './types';
 
+/**
+ * Configurator for configuring application modules
+ *
+ * @template TModules Addition modules
+ * @template TRef usually undefined, optional references
+ */
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
     TRef extends FusionModulesInstance = FusionModulesInstance
