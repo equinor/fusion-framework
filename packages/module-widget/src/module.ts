@@ -15,7 +15,7 @@ export type WidgetModule = Module<
 
 export const module: WidgetModule = {
     name: moduleKey,
-    configure: () => new WidgetConfigurator(),
+    configure: () => new WidgetConfigurator('1.0-preview'),
     initialize: async (args) => {
         const config = await (args.config as WidgetConfigurator).createConfig(args);
         const event = await args.requireInstance('event').catch(() => undefined);

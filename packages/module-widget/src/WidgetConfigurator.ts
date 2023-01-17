@@ -29,6 +29,12 @@ export class WidgetConfigurator implements IWidgetConfigurator {
     addConfigBuilder(init: WidgetConfigBuilderCallback): void {
         this.#configBuilders.push(init);
     }
+    #apiVersion = '1.0';
+    constructor(apiVersion?: string) {
+        if (apiVersion) {
+            this.#apiVersion = apiVersion;
+        }
+    }
 
     /**
      * WARNING: this function will be remove in future
@@ -68,7 +74,7 @@ export class WidgetConfigurator implements IWidgetConfigurator {
                     client: {
                         fn: ({ widgetKey }) =>
                             httpClient.json$<WidgetManifest>(
-                                `/widgets/${widgetKey}?api-version=1.0-preview`
+                                `/widgets/${widgetKey}?api-version=${this.#apiVersion}`
                             ),
                     },
                     key: ({ widgetKey }) => widgetKey,
@@ -78,18 +84,20 @@ export class WidgetConfigurator implements IWidgetConfigurator {
                     client: {
                         fn: ({ widgetKey, args }) => {
                             const transform = (s: Widget) =>
-                                appendBundleImport(s, httpClient.uri, '1.0-preview');
+                                appendBundleImport(s, httpClient.uri, this.#apiVersion);
 
                             if (!args) {
                                 return httpClient
-                                    .json$(`/widgets/${widgetKey}?api-version=1.0-preview`)
+                                    .json$(`/widgets/${widgetKey}?api-version=${this.#apiVersion}`)
                                     .pipe(map((s) => transform(s as unknown as Widget)));
                             }
                             //future-proofing
                             const version = args.type === 'tag' ? args.tag : args.version;
                             return httpClient
                                 .json$(
-                                    `/widgets/${widgetKey}/versions/${version}?api-version=1.0-preview`
+                                    `/widgets/${widgetKey}/versions/${version}?api-version=${
+                                        this.#apiVersion
+                                    }`
                                 )
                                 .pipe(map((s) => transform(s as unknown as Widget)));
                         },
@@ -104,7 +112,7 @@ export class WidgetConfigurator implements IWidgetConfigurator {
     }
 }
 
-function appendBundleImport(widgetConfig: Widget, uri: string, apiVersion = '1.0') {
+function appendBundleImport(widgetConfig: Widget, uri: string, apiVersion: string) {
     return {
         ...widgetConfig,
         importBundle: async () =>
