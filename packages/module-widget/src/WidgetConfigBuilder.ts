@@ -51,7 +51,7 @@ export class WidgetConfigBuilder<
             getWidgetManifest:
                 typeof client.getWidgetManifest === 'function'
                     ? {
-                          key: ({ widgetKey: appKey }) => appKey,
+                          key: ({ widgetKey }) => widgetKey,
                           client: {
                               fn: client.getWidgetManifest,
                           },
