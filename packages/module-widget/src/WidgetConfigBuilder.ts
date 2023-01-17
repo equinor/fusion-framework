@@ -3,7 +3,7 @@ import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
 
 import { WidgetModuleConfig, IWidgetConfigurator } from './WidgetConfigurator';
 
-import type { WidgetConfig, WidgetManifest, ModuleDeps, GetWidgetConfig } from './types';
+import type { Widget, WidgetManifest, ModuleDeps, GetWidgetConfig } from './types';
 
 export type WidgetConfigBuilderCallback = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,8 +39,8 @@ export class WidgetConfigBuilder<
                 | QueryFn<WidgetManifest, { widgetKey: string }>
                 | QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
             getWidgetConfig:
-                | QueryFn<WidgetConfig, { widgetKey: string }>
-                | QueryCtorOptions<WidgetConfig, GetWidgetConfig>;
+                | QueryFn<Widget, { widgetKey: string }>
+                | QueryCtorOptions<Widget, GetWidgetConfig>;
         },
         expire = 1 * 60 * 1000
     ) {
@@ -58,7 +58,7 @@ export class WidgetConfigBuilder<
                           expire,
                       }
                     : client.getWidgetManifest,
-            getWidgetConfig:
+            getWidget:
                 typeof client.getWidgetConfig === 'function'
                     ? {
                           // TODO - might cast to checksum

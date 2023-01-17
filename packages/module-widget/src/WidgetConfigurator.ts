@@ -7,15 +7,14 @@ import { WidgetConfigBuilder, WidgetConfigBuilderCallback } from './WidgetConfig
 
 import { moduleKey } from './module';
 
-import type { GetWidgetConfig, WidgetConfig, WidgetManifest } from './types';
+import type { GetWidgetConfig, Widget, WidgetManifest } from './types';
+import { map } from 'rxjs';
 
 export interface WidgetModuleConfig {
     client: {
         getWidgetManifest: QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
-        getWidgetConfig: QueryCtorOptions<WidgetConfig, GetWidgetConfig>;
+        getWidget: QueryCtorOptions<Widget, GetWidgetConfig>;
     };
-    uri: string;
-    apiVersion: string;
 }
 
 export interface IWidgetConfigurator {
@@ -64,32 +63,35 @@ export class WidgetConfigurator implements IWidgetConfigurator {
         // TODO - make less lazy
         config.client ??= await (async (): Promise<WidgetModuleConfig['client']> => {
             const httpClient = await this._createHttpClient(init);
-            config.uri = httpClient.uri;
-            config.apiVersion = '1.0-preview';
             return {
                 getWidgetManifest: {
                     client: {
                         fn: ({ widgetKey }) =>
                             httpClient.json$<WidgetManifest>(
-                                `/widgets/${widgetKey}${config.apiVersion}`
+                                `/widgets/${widgetKey}?api-version=1.0-preview`
                             ),
                     },
                     key: ({ widgetKey }) => widgetKey,
                     expire: this.defaultExpireTime,
                 },
-                getWidgetConfig: {
+                getWidget: {
                     client: {
                         fn: ({ widgetKey, args }) => {
+                            const transform = (s: Widget) =>
+                                appendBundleImport(s, httpClient.uri, '1.0-preview');
+
                             if (!args) {
-                                return httpClient.json$(
-                                    `/widgets/${widgetKey}?api-version=${config.apiVersion}`
-                                );
+                                return httpClient
+                                    .json$(`/widgets/${widgetKey}?api-version=1.0-preview}`)
+                                    .pipe(map((s) => transform(s as unknown as Widget)));
                             }
                             //future-proofing
                             const version = args.type === 'tag' ? args.tag : args.version;
-                            return httpClient.json$(
-                                `/widgets/${widgetKey}/versions/${version}?api-version=${config.apiVersion}`
-                            );
+                            return httpClient
+                                .json$(
+                                    `/widgets/${widgetKey}/versions/${version}?api-version=1.0-preview`
+                                )
+                                .pipe(map((s) => transform(s as unknown as Widget)));
                         },
                     },
                     key: (args) => JSON.stringify(args),
@@ -100,4 +102,17 @@ export class WidgetConfigurator implements IWidgetConfigurator {
 
         return config as WidgetModuleConfig;
     }
+}
+
+function appendBundleImport(widgetConfig: Widget, uri: string, apiVersion = '1.0') {
+    return {
+        ...widgetConfig,
+        importBundle: async () =>
+            import(
+                new URL(
+                    `${widgetConfig.assetPath}/${widgetConfig.entryPoint}?api-version=${apiVersion}`,
+                    uri
+                ).toString()
+            ),
+    };
 }
