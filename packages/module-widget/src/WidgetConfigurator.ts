@@ -7,14 +7,15 @@ import { WidgetConfigBuilder, WidgetConfigBuilderCallback } from './WidgetConfig
 
 import { moduleKey } from './module';
 
-import type { WidgetConfig, WidgetManifest } from './types';
+import type { GetWidgetConfig, WidgetConfig, WidgetManifest } from './types';
 
 export interface WidgetModuleConfig {
     client: {
         getWidgetManifest: QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
-        getWidgetConfig: QueryCtorOptions<WidgetConfig, { widgetKey: string; version: string }>;
+        getWidgetConfig: QueryCtorOptions<WidgetConfig, GetWidgetConfig>;
     };
     uri: string;
+    apiVersion: string;
 }
 
 export interface IWidgetConfigurator {
@@ -64,20 +65,32 @@ export class WidgetConfigurator implements IWidgetConfigurator {
         config.client ??= await (async (): Promise<WidgetModuleConfig['client']> => {
             const httpClient = await this._createHttpClient(init);
             config.uri = httpClient.uri;
-            const CGI = `?api-version=1.0-preview`;
+            config.apiVersion = '1.0-preview';
             return {
                 getWidgetManifest: {
                     client: {
                         fn: ({ widgetKey }) =>
-                            httpClient.json$<WidgetManifest>(`/widgets/${widgetKey}${CGI}`),
+                            httpClient.json$<WidgetManifest>(
+                                `/widgets/${widgetKey}${config.apiVersion}`
+                            ),
                     },
                     key: ({ widgetKey }) => widgetKey,
                     expire: this.defaultExpireTime,
                 },
                 getWidgetConfig: {
                     client: {
-                        fn: ({ widgetKey, version }) =>
-                            httpClient.json$(`/widgets/${widgetKey}/versions/${version}${CGI}`),
+                        fn: ({ widgetKey, args }) => {
+                            if (!args) {
+                                return httpClient.json$(
+                                    `/widgets/${widgetKey}?api-version=${config.apiVersion}`
+                                );
+                            }
+                            //future-proofing
+                            const version = args.type === 'tag' ? args.tag : args.version;
+                            return httpClient.json$(
+                                `/widgets/${widgetKey}/versions/${version}?api-version=${config.apiVersion}`
+                            );
+                        },
                     },
                     key: (args) => JSON.stringify(args),
                     expire: this.defaultExpireTime,

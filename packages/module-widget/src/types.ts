@@ -16,6 +16,11 @@ export type WidgetEnv = {
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
+export type GetWidgetConfig = {
+    widgetKey: string;
+    args?: GetWidgetArgs;
+};
+
 export type WidgetManifest = {
     id: string;
     name: string;
@@ -41,6 +46,20 @@ export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown>
 export type WidgetRenderArgs<TFusion extends Fusion = Fusion, TEnv = WidgetEnv> = {
     fusion: TFusion;
     env: TEnv;
+};
+
+/**
+ * Version and tag has the same signature today but it can change in the future
+ */
+export type GetWidgetArgs = GetWidgetByTag | GetWidgetByVersion;
+
+type GetWidgetByVersion = {
+    type: 'version';
+    version: string;
+};
+type GetWidgetByTag = {
+    type: 'tag';
+    tag: string;
 };
 
 export type WidgetScriptModule<
