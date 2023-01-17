@@ -10,7 +10,7 @@ type Fusion = any;
 export type WidgetEnv = {
     //Not sure if this is needed
     manifest?: WidgetManifest;
-    config?: WidgetConfig;
+    config?: Widget;
 };
 
 // TODO: change to module-services when new app service is created
@@ -29,13 +29,15 @@ export type WidgetManifest = {
     maintainers: string[];
 };
 
-export type WidgetConfig = {
+export type Widget = {
     id: string;
     name: string;
     version: string;
     description: string;
     entryPoint: string;
     assetPath: string;
+} & {
+    importBundle: () => Promise<WidgetScriptModule>;
 };
 
 export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
