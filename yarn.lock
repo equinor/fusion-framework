@@ -671,12 +671,12 @@
     "@equinor/fusion-wc-formfield" "^0.2.3"
     "@lit-labs/react" "^1.0.0"
 
-"@equinor/fusion-react-context-selector@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.1.8.tgz"
-  integrity sha512-yPDKj5YIjeVyUxQt1NBNhNUaI18RWeRnlR/mRqfxeC5j811Dl5fAF0P4rm6uLqjO29g+ktZI5qXlP3XBlVOcqw==
+"@equinor/fusion-react-context-selector@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.2.0.tgz#c739aaef3ed105fcd605cf263a0542e1cda8b559"
+  integrity sha512-W8f/aRawyTBN5H59/EmRNAEnVthI7clwJkhtpjY5qvw+WRgpXKdBizjKJagladAgcaIEEeM4s+APx6gUAaeFKw==
   dependencies:
-    "@equinor/fusion-react-searchable-dropdown" "^0.1.8"
+    "@equinor/fusion-react-searchable-dropdown" "^0.2.0"
     "@equinor/fusion-react-utils" "^2.0.4"
 
 "@equinor/fusion-react-divider@^0.2.8":
@@ -712,10 +712,10 @@
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
-"@equinor/fusion-react-searchable-dropdown@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.1.8.tgz"
-  integrity sha512-Exs/fp/AOwvW+rlzS6ZrH4mr+ihuR8ZOrw5TjLJ34D1PJDPBRZhKpUNwsPpGRlYGrh6+2MTwp1FP8hbbrnxNUQ==
+"@equinor/fusion-react-searchable-dropdown@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.2.0.tgz#40baa209b49928c31066eb526246037ac6a4e683"
+  integrity sha512-IarZwFAWB790AFvkFCz9gukcIxFv5N6cDQpHNNEa74ZXOokXIWz4p7XzSyg/FkEVjXnAhT3Ya7F0B0Lkb/hr8w==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-searchable-dropdown" "^2.2.0"
