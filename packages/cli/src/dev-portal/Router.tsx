@@ -2,11 +2,17 @@ import { createBrowserRouter, Outlet, RouterProvider, useParams } from 'react-ro
 import AppLoader from './AppLoader';
 import Header from './Header';
 
+import { PersonProvider } from '@equinor/fusion-react-person';
+import { usePersonResolver } from './usePersonResolver';
+
 const Root = () => {
+    const personResolver = usePersonResolver();
     return (
         <div style={{ fontFamily: 'Equinor' }}>
-            <Header />
-            <Outlet />
+            <PersonProvider resolve={personResolver}>
+                <Header />
+                <Outlet />
+            </PersonProvider>
         </div>
     );
 };
