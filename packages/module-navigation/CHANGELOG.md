@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.6 (2023-01-19)
+
+### Bug Fixes
+
+-   update interface for enabling modules ([1e5730e](https://github.com/equinor/fusion-framework/commit/1e5730e91992c1d0177790c851be993a0532a3d1))
+
 ## 0.1.5 (2023-01-09)
 
 ### Bug Fixes

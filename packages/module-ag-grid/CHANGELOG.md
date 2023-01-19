@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@2.0.0...@equinor/fusion-framework-module-ag-grid@2.0.1) (2023-01-19)
+
+### Bug Fixes
+
+-   **module-ag-grid:** make options optional ([dfa6458](https://github.com/equinor/fusion-framework/commit/dfa6458ce3ed5e83370f8ad0ecdcb0aee68feb7e))
+-   update interface for enabling modules ([1e5730e](https://github.com/equinor/fusion-framework/commit/1e5730e91992c1d0177790c851be993a0532a3d1))
+
 ## 2.0.0 (2023-01-19)
 
 ### ⚠ BREAKING CHANGES
