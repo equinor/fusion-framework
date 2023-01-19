@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.0 (2023-01-19)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-ag-grid:** enableAgGrid now requires options
+
+### Features
+
+-   **module-ag-grid:** enhance enabling module ([4ae3c61](https://github.com/equinor/fusion-framework/commit/4ae3c61bc1e9e569e9002ef6a171dc3ef12ef5db))
+
 ## 1.0.19 (2022-12-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-ag-grid
