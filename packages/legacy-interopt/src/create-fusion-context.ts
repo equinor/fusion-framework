@@ -59,7 +59,6 @@ export const createFusionContext = async (args: {
 
     const abortControllerManager = new AbortControllerManager(new EventHub());
 
-
     const { serviceDiscovery } = framework.modules;
     if (!serviceDiscovery) {
         throw Error('missing module for service discovery');

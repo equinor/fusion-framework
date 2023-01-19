@@ -71,7 +71,10 @@ export const module: ServicesModule = {
  * Method for enabling the Service module
  * @param config - configuration object
  */
-export const enableServices = (config: IModulesConfigurator): void => {
+export const enableServices = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: IModulesConfigurator<any, any>
+): void => {
     config.addConfig({ module });
 };
 

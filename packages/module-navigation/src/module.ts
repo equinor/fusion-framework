@@ -25,7 +25,8 @@ export const module: NavigationModule = {
 };
 
 export const enableNavigation = <TRef = unknown>(
-    configurator: IModulesConfigurator,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    configurator: IModulesConfigurator<any, any>,
     basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>
 ): void => {
     const options =

@@ -31,7 +31,8 @@ export const configureAgGrid = (args: {
 });
 
 export const enableAgGrid = (
-    config: IModulesConfigurator,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: IModulesConfigurator<any, any>,
     options?: {
         licenseKey: string;
     }
