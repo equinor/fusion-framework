@@ -1,0 +1,45 @@
+{
+    "name": "@equinor/fusion-framework-widget",
+    "version": "0.0.0",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "types": "./dist/types/index.d.ts",
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "keywords": [
+        "fusion",
+        "fusion-framework",
+        "utility"
+    ],
+    "homepage": "https://equinor.github.io/fusion-framework/",
+    "author": {
+        "name": "Odin thomas Rochmann",
+        "email": "oroc@equinor.com",
+        "url": "https://github.com/odinr"
+    },
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/app"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework": "^5.0.23",
+        "@equinor/fusion-framework-module": "^1.2.10",
+        "@equinor/fusion-framework-module-event": "^1.2.0",
+        "@equinor/fusion-framework-module-http": "^2.2.2",
+        "@equinor/fusion-framework-module-msal": "^1.0.22",
+        "@equinor/fusion-framework-module-widget": "^0.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^4.9.3"
+    }
+}

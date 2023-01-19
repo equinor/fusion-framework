@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": "src",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../module"
+    },
+    {
+      "path": "../framework"
+    },
+    {
+      "path": "../module-http"
+    },
+    {
+      "path": "../module-msal"
+    },
+    {
+      "path": "../module-event"
+    },
+    {
+      "path": "../module-widget"
+    }
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}
