@@ -66,12 +66,11 @@ export type ModulesConfigType<TModules extends Array<AnyModule> | Record<string,
         ? ModulesObjectConfigType<TModules>
         : never;
 
-export type ModulesInstanceType<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
-    TModules extends Array<AnyModule>
-        ? ModulesObjectInstanceType<ModulesType<TModules>>
-        : TModules extends Record<string, AnyModule>
-        ? ModulesObjectInstanceType<TModules>
-        : never;
+export type ModulesInstanceType<TModules> = TModules extends Array<AnyModule>
+    ? ModulesObjectInstanceType<ModulesType<TModules>>
+    : TModules extends Record<string, AnyModule>
+    ? ModulesObjectInstanceType<TModules>
+    : never;
 
 export interface IModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> {
     onAfterConfiguration: (cb: (config: ModulesConfigType<M>) => void | Promise<void>) => void;
