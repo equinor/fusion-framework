@@ -41,6 +41,9 @@
       "path": "./packages/module-context"
     },
     {
+      "path": "./packages/module-signalr"
+    },
+    {
       "path": "./packages/framework"
     },
     {

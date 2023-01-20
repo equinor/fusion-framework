@@ -1,0 +1,46 @@
+{
+    "name": "@equinor/fusion-framework-module-signalr",
+    "version": "0.0.1",
+    "description": "",
+    "sideEffects": false,
+    "main": "dist/esm/index.js",
+    "types": "index.d.ts",
+    "typesVersions": {
+        ">=4.2": {
+            "*": [
+                "dist/types/*"
+            ]
+        }
+    },
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/module-signalr"
+    },
+    "dependencies": {
+        "@microsoft/signalr": "^7.0.0",
+        "odata-query": "^7.0.3"
+    },
+    "devDependencies": {
+        "@equinor/fusion-framework-module": "^1.2.10",
+        "@equinor/fusion-framework-module-http": "^2.2.1",
+        "@equinor/fusion-framework-module-service-discovery": "^4.0.8"
+    },
+    "peerDependencies": {
+        "@equinor/fusion-framework-module": ">=1.2.2",
+        "odata-query": "^7.0.3"
+    }
+}
