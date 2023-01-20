@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": "src",
+    "paths": {
+      "@equinor/fusion-framework-module-services": [
+        "."
+      ],
+      "@equinor/fusion-framework-module-services/*": [
+        "./*"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../../utils/query"
+    },
+    {
+      "path": "../module"
+    },
+    {
+      "path": "../module-services"
+    },
+    {
+      "path": "../module-event"
+    }
+  ],
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
