@@ -3669,9 +3669,9 @@
   integrity sha512-XTEEvOGy7wlABPTYfmg7U287WYcf2PV8lH15oKWD2I09okqMOHrB23WxyikEVRwJCjYNKcCW0BuYaAY4S2g/jg==
 
 "@tanstack/react-query-devtools@^4.2.3":
-  version "4.20.9"
-  resolved "https://registry.npmjs.org/@tanstack/react-query-devtools/-/react-query-devtools-4.20.9.tgz"
-  integrity sha512-Bim/6nzxb5ZdFR+du4MvyAGPsOlMXiJiIiU8XcDIrgJzdRzHdw6dkkMpWXENKmjn9nTE5Ns0Mj+r11yBZcnMYA==
+  version "4.22.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-4.22.4.tgz#4f3c12164952e72099f3e382f9216f33840d505c"
+  integrity sha512-SKY9s/RVp5pkLVEIGcFTmgqM9VTU6byDtdNAAkeN9y0PyZyJhAlhrcW0utTgOmY3CRKmBTO9jpYEsW1FFCnxLA==
   dependencies:
     "@tanstack/match-sorter-utils" "^8.7.0"
     superjson "^1.10.0"
