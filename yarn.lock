@@ -612,46 +612,13 @@
     eslint-plugin-react "^7.31.10"
     eslint-plugin-react-hooks "^4.6.0"
 
-"@equinor/fusion-components@^2.9.0":
-  version "2.9.0"
-  resolved "https://registry.npmjs.org/@equinor/fusion-components/-/fusion-components-2.9.0.tgz"
-  integrity sha512-itCcbGy1HTWCchdpegsOUb7R7Sw9AcCVsB2K2S63YqY3H269WGtMVT+jHDUPbj6NkHzxHAt3VpZn+OxgqLXrFg==
+"@equinor/fusion-observable@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-3.0.4.tgz#1ed2df5da2caade958add57186eaabc89f9ae0f0"
+  integrity sha512-YZEovUGKTASjss9hEWDK71BArDjJYThybLp74eJrsSDKhPyAOz0ks3hSBL6XuitejnWedIrt9oW9V0jDGRnWbA==
   dependencies:
-    "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
-    "@equinor/fusion-react-checkbox" "^0.4.0"
-    "@equinor/fusion-react-divider" "^0.2.8"
-    "@equinor/fusion-react-icon" "^0.2.6"
-    "@equinor/fusion-react-styles" "^0.4.0"
-    "@equinor/fusion-wc-icon" "^1.0.17"
-    "@reach/router" "^1.3.4"
-    "@storybook/addon-jest" "^6.2.9"
-    "@types/lodash.throttle" "^4.1.6"
-    "@types/prosemirror-model" "^1.11.2"
-    "@types/prosemirror-state" "^1.2.6"
-    "@types/prosemirror-view" "^1.17.1"
-    "@typescript-eslint/eslint-plugin" "^4.15.0"
-    "@typescript-eslint/parser" "^4.15.0"
-    "@webcomponents/custom-elements" "^1.4.3"
-    clsx "^1.1.1"
-    date-fns "^2.17.0"
-    loader-utils "^2.0.4"
-    lodash.throttle "^4.1.1"
-    npm-force-resolutions "0.0.10"
-    pixi.js-legacy "^5.3.7"
-    powerbi-client-react "^1.3.3"
-    prosemirror-commands "^1.1.5"
-    prosemirror-history "^1.1.3"
-    prosemirror-inputrules "^1.1.3"
-    prosemirror-keymap "^1.1.4"
-    prosemirror-markdown "^1.5.1"
-    prosemirror-schema-basic "^1.1.2"
-    prosemirror-schema-list "^1.1.4"
-    prosemirror-state "^1.3.4"
-    prosemirror-view "^1.17.5"
-    react-textarea-autosize "^8.3.0"
-    rxjs "^7.0.0"
-  optionalDependencies:
-    fsevents "^2.3.2"
+    rxjs "^7.5.7"
+    uuid "^8.3.2"
 
 "@equinor/fusion-react-button@^0.5.15":
   version "0.5.15"
