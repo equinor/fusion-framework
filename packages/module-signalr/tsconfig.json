@@ -5,19 +5,8 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "paths": {
-      "@equinor/fusion-framework-module-services": [
-        "."
-      ],
-      "@equinor/fusion-framework-module-services/*": [
-        "./*"
-      ]
-    }
   },
   "references": [
-    {
-      "path": "../../utils/query"
-    },
     {
       "path": "../module"
     },
@@ -29,7 +18,7 @@
     }
   ],
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

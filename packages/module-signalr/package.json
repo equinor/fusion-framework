@@ -31,16 +31,13 @@
         "directory": "packages/module-signalr"
     },
     "dependencies": {
-        "@microsoft/signalr": "^7.0.0",
-        "odata-query": "^7.0.3"
+        "@equinor/fusion-observable": "^3.0.4",
+        "@microsoft/signalr": "^7.0.0"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-http": "^2.2.1",
-        "@equinor/fusion-framework-module-service-discovery": "^4.0.8"
+        "@equinor/fusion-framework-module": "^1.2.10"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.2",
-        "odata-query": "^7.0.3"
+        "@equinor/fusion-framework-module": ">=1.2.2"
     }
 }
