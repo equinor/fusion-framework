@@ -31,16 +31,12 @@
         "directory": "packages/react-module-signalr"
     },
     "dependencies": {
-        "@microsoft/signalr": "^7.0.0",
-        "odata-query": "^7.0.3"
+        "@equinor/fusion-framework-module-signalr": "^0.0.1"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-http": "^2.2.1",
-        "@equinor/fusion-framework-module-service-discovery": "^4.0.8"
+        "react": "^18.2.0"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.2",
-        "odata-query": "^7.0.3"
+        "react": "^17.0.0 || ^18.0.0"
     }
 }
