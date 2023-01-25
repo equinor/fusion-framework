@@ -1,4 +1,14 @@
-export { default, module } from './module';
-export * from './enable-signalr-module';
-export * from './use-signalr';
-export * from './topic';
+export {
+    ISignalRConfigurator,
+    SignalRConfigurator,
+    SignalRConfig,
+    SignalRHubConfig,
+    SignalRModuleConfigBuilder,
+    SignalRModuleConfigBuilderCallback,
+} from './SignalRModuleConfigurator';
+
+export { Topic } from './lib/Topic';
+
+export { enableSignalR } from './lib/utils/enable-signalr';
+
+export { default, module, moduleKey, SignalRModule, SignalRModuleKey } from './SignalRModule';
