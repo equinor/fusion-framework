@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule>> = {
+export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
     ref?: any;
     config: TConfig;
     requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
         name: TKey,
         wait?: number
     ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
-    hasModule: ((key: keyof ModulesInstanceType<TDeps>) => boolean) | ((key: string) => boolean);
+    hasModule: (key: string) => boolean;
+    // | ((key: Extract<keyof ModulesInstanceType<TDeps>, string>) => boolean)
 };
 
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
