@@ -55,13 +55,13 @@ export class SignalRModuleConfigBuilder<
 export class SignalRConfigurator implements ISignalRConfigurator {
     #builderCallbacks: Array<SignalRModuleConfigBuilderCallback> = [];
 
-    #hubs: Record<string, Promise<SignalRHubConfig>> = {};
+    #hubs: Record<string, SignalRHubConfig> = {};
 
     /**
      * register SignalR hub configuration.
      */
-    public addHub(name: string, config: SignalRHubConfig | Promise<SignalRHubConfig>) {
-        this.#hubs[name] = Promise.resolve(config);
+    public addHub(name: string, config: SignalRHubConfig) {
+        this.#hubs[name] = config;
     }
 
     /**
@@ -87,12 +87,6 @@ export class SignalRConfigurator implements ISignalRConfigurator {
             await Promise.resolve(cb(builder));
         }
 
-        /** generate configuration for hubs */
-        const hubs = await Object.entries(this.#hubs).reduce(
-            async (acc, [name, foo]) => Object.assign(await acc, { [name]: await foo }),
-            Promise.resolve({} as SignalRConfig['hubs'])
-        );
-
-        return { hubs };
+        return { hubs: this.#hubs };
     }
 }
