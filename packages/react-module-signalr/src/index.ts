@@ -1,3 +1,4 @@
+export { useProviderTopic } from './use-provider-topic';
 export { useTopic } from './use-topic';
 export { useTopicValue } from './use-topic-value';
 
