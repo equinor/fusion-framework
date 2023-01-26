@@ -16,7 +16,7 @@
   },
   "references": [
     {
-      "path": "../../utils/observable"
+      "path": "../utils/observable"
     },
     {
       "path": "../module"

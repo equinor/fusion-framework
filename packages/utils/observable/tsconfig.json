@@ -1,20 +1,19 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "esModuleInterop": true,
+    "baseUrl": "."
   },
-  "references": [
-    {
-      "path": "../observable"
-    }
-  ],
   "include": [
     "src/**/*"
   ],
   "exclude": [
+    "src/__tests__",
     "node_modules"
   ],
+  "ts-node": {
+    "esm": true
+  }
 }

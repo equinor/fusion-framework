@@ -11,7 +11,7 @@
       "path": "../module"
     },
     {
-      "path": "../../utils/observable"
+      "path": "../utils/observable"
     }
   ],
   "include": [

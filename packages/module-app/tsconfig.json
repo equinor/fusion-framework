@@ -11,7 +11,7 @@
       "path": "../module"
     },
     {
-      "path": "../../utils/query"
+      "path": "../utils/query"
     },
     {
       "path": "../module-http"

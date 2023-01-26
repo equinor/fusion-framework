@@ -44,7 +44,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "utils/query"
+        "directory": "packages/utils/query"
     },
     "scripts": {
         "build": "tsc -b",
