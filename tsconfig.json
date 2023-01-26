@@ -3,7 +3,37 @@
   "compilerOptions": {
     "noEmit": true,
     "skipLibCheck": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./packages",
+    "paths": {
+        "@equinor/fusion-framework-react-module": [
+            "./react/modules/module/src"
+        ],
+        "@equinor/fusion-framework-react-module-*": [
+            "./react/modules/*/src"
+        ],
+        "@equinor/fusion-framework-react-*": [
+            "./react/*/src"
+        ],
+        "@equinor/fusion-framework-module": [
+            "./modules/module/src"
+        ],
+        "@equinor/fusion-framework-module-*": [
+            "./modules/*/src"
+        ],
+        "@equinor/fusion-framework-*": [
+            "./*/src"
+        ],
+        "@equinor/fusion-framework": [
+            "./framework/src"
+        ],
+        "@equinor/fusion-observable": [
+            "./utils/observable/src"
+        ],
+        "@equinor/fusion-query": [
+            "./utils/query/src"
+        ]
+    }
   },
   "include": [
     "packages/**/src/**/*.ts",

@@ -15,13 +15,13 @@
       "path": "../framework"
     },
     {
-      "path": "../module"
+      "path": "../modules/module"
     },
     {
-      "path": "../module-http"
+      "path": "../modules/http"
     },
     {
-      "path": "../module-context"
+      "path": "../modules/context"
     }
   ],
   "include": [

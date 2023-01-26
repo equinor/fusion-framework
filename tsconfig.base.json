@@ -17,21 +17,5 @@
             "dom.iterable"
         ],
         "composite": true,
-        "rootDir": ".",
-        "baseUrl": "./packages",
-        "paths": {
-            "@equinor/fusion-framework-react-*": [
-                "./react/*/src"
-            ],
-            "@equinor/fusion-framework-*": [
-                "./*/src"
-            ],
-            "@equinor/fusion-observable": [
-                "./utils/observable/src"
-            ],
-            "@equinor/fusion-query": [
-                "./utils/query/src"
-            ]
-        }
     }
 }

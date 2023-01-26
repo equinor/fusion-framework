@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.react.json",
+  "extends": "../../tsconfig.react.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
@@ -8,7 +8,7 @@
   },
   "references": [
     {
-      "path": "../../modules/http"
+      "path": "../../../modules/http"
     },
     {
       "path": "../module"

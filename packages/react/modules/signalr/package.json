@@ -28,7 +28,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react/module-signalr"
+        "directory": "packages/react/modules/signalr"
     },
     "dependencies": {
         "@equinor/fusion-framework-module-signalr": "^0.1.0"

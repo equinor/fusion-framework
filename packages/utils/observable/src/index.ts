@@ -12,7 +12,7 @@ export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
 export { actionMapper } from './action-mapper';
 
-export { createAction, actionBaseType } from './create-action';
+export { createAction, actionBaseType, ActionCreatorWithPreparedPayload } from './create-action';
 
 export {
     createAsyncAction,

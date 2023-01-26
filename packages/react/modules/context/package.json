@@ -20,7 +20,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react/module-context"
+        "directory": "packages/react/modules/context"
     },
     "dependencies": {
         "@equinor/fusion-framework-module-context": "^1.2.8",
