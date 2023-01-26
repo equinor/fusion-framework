@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../tsconfig.react.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
@@ -8,10 +8,10 @@
   },
   "references": [
     {
-      "path": "../module-signalr"
+      "path": "../../module-signalr"
     },
     {
-      "path": "../react-module"
+      "path": "../module"
     }
   ],
   "include": [

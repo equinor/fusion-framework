@@ -1,29 +1,21 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../tsconfig.react.json",
   "compilerOptions": {
-    "jsx": "react",
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "jsx": "react-jsx",
     "skipLibCheck": true,
   },
   "references": [
     {
-      "path": "../module-service-discovery"
+      "path": "../../module-service-discovery"
     },
     {
-      "path": "../module-app"
-    },
-    {
-      "path": "../module-navigation"
+      "path": "../../module-navigation"
     },
     {
       "path": "../framework"
-    },
-    {
-      "path": "../framework-react"
     },
     {
       "path": "../app"

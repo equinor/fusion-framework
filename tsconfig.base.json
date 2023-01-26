@@ -20,6 +20,9 @@
         "rootDir": ".",
         "baseUrl": "./packages",
         "paths": {
+            "@equinor/fusion-framework-react-*": [
+                "./react/*/src"
+            ],
             "@equinor/fusion-framework-*": [
                 "./*/src"
             ],

@@ -1,21 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../tsconfig.react.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "jsx": "react-jsx"
   },
   "references": [
     {
-      "path": "../utils/observable"
-    },
-    {
-      "path": "../module-event"
-    },
-    {
-      "path": "../react-module"
+      "path": "../../module"
     }
   ],
   "include": [

@@ -67,6 +67,7 @@
   "workspaces": {
     "packages": [
       "packages/*",
+      "packages/react/*",
       "packages/utils/*",
       "cookbooks/*"
     ]

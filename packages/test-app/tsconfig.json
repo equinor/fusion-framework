@@ -17,11 +17,6 @@
     "jsx": "react-jsx",
     "rootDir": ".",
     "baseUrl": ".",
-    "paths": {
-      "@equinor/fusion-framework-*": [
-          "../*/src"
-      ],
-    }
   },
   "include": [
     "src"
@@ -34,10 +29,10 @@
       "path": "../utils/query"
     },
     {
-      "path": "../react-app"
+      "path": "../react/app"
     },
     {
-      "path": "../framework-react"
+      "path": "../react/framework"
     },
     {
       "path": "../module-ag-grid"
