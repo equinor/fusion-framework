@@ -9,10 +9,10 @@
   },
   "references": [
     {
-      "path": "../../module-service-discovery"
+      "path": "../../modules/service-discovery"
     },
     {
-      "path": "../../module-navigation"
+      "path": "../../modules/navigation"
     },
     {
       "path": "../framework"

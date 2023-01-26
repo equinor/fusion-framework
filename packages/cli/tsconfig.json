@@ -12,7 +12,7 @@
       "path": "../utils/observable"
     },
     {
-      "path": "../module-context"
+      "path": "../modules/context"
     },
     {
       "path": "../app"

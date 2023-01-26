@@ -11,10 +11,10 @@
       "path": "../../framework"
     },
     {
-      "path": "../../module-app"
+      "path": "../../modules/app"
     },
     {
-      "path": "../../module-service-discovery"
+      "path": "../../modules/service-discovery"
     },
     {
       "path": "../module-context"

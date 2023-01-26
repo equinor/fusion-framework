@@ -11,7 +11,7 @@
       "path": "../../utils/query"
     },
     {
-      "path": "../../module-context"
+      "path": "../../modules/context"
     },
     {
       "path": "../module"
