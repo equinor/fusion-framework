@@ -37,6 +37,7 @@
         "react": "^18.2.0"
     },
     "peerDependencies": {
-        "react": "^17.0.0 || ^18.0.0"
+        "react": "^17.0.0 || ^18.0.0",
+        "@equinor/fusion-framework-react-module": "^1.1.1"
     }
 }
