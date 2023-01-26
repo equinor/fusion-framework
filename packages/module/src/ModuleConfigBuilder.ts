@@ -21,10 +21,26 @@ export abstract class ModuleConfigBuilder<
         this.#init = init;
     }
 
+    /**
+     * require a module instance (provider).
+     *
+     * will try to await init of requested module
+     *
+     * @template TKey module key
+     * @returns module instance
+     */
     public requireInstance<TKey extends string = Extract<keyof Modules, string>>(
         module: TKey
     ): Promise<ModuleType<Modules[TKey]>>;
 
+    /**
+     * require a module instance (provider).
+     *
+     * will try to await init of requested module
+     *
+     * @template T type cast module instance
+     * @returns module instance
+     */
     public requireInstance<T>(module: string): Promise<T>;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
