@@ -11,7 +11,7 @@
       "path": "../module-signalr"
     },
     {
-      "path": "../framework-react"
+      "path": "../react-module"
     }
   ],
   "include": [
