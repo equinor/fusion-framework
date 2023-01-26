@@ -7,6 +7,8 @@ export {
     SignalRModuleConfigBuilderCallback,
 } from './SignalRModuleConfigurator';
 
+export { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
+
 export { Topic } from './lib/Topic';
 
 export { enableSignalR } from './lib/utils/enable-signalr';
