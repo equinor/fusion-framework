@@ -46,11 +46,22 @@ export class SignalRModuleProvider implements ISignalRProvider {
             connection.start().then(() => {
                 observer.next(connection);
             });
-            return () => {
+
+            const teardown = () => {
                 connection.stop();
+                observer.complete();
                 delete this.#hubConnections[hubId];
             };
-        }).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+
+            return teardown;
+        }).pipe(
+            shareReplay({
+                /** only emit last connection when new subscriber connects */
+                bufferSize: 1,
+                /** when no subscribers, teardown observable */
+                refCount: true,
+            })
+        );
 
         return this.#hubConnections[hubId];
     }
