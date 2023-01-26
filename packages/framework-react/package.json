@@ -57,11 +57,15 @@
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
+        "@equinor/fusion-framework-react-module-signalr": "*",
         "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
         "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
         "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
+        "@equinor/fusion-framework-react-module-signalr": {
+            "optional": true
+        },
         "@types/react": {
             "optional": true
         },

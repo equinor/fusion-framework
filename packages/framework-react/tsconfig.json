@@ -24,6 +24,9 @@
       "path": "../react-module-http"
     },
     {
+      "path": "../react-module-signalr"
+    },
+    {
       "path": "../module-service-discovery"
     },
     {
