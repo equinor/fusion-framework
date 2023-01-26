@@ -24,10 +24,10 @@
                 "./*/src"
             ],
             "@equinor/fusion-observable": [
-                "./observable/src"
+                "./utils/observable/src"
             ],
-            "@equinor/fusion-observable/*": [
-                "./observable/src/*"
+            "@equinor/fusion-query": [
+                "./utils/query/src"
             ]
         }
     }

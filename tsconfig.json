@@ -6,8 +6,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
+    "packages/**/src/**/*.ts",
+    "packages/**/src/**/*.tsx",
   ],
   "exclude": [
     "node_modules",
@@ -15,42 +15,4 @@
     "lib",
     "*.spec.ts",
   ],
-  "references": [
-    {
-      "path": "./utils/observable"
-    },
-    {
-      "path": "./packages/module"
-    },
-    {
-      "path": "./packages/module-http"
-    },
-    {
-      "path": "./packages/module-msal"
-    },
-    {
-      "path": "./packages/module-services"
-    },
-    {
-      "path": "./packages/module-service-discovery"
-    },
-    {
-      "path": "./packages/module-context"
-    },
-    {
-      "path": "./packages/module-signalr"
-    },
-    {
-      "path": "./packages/framework"
-    },
-    {
-      "path": "./packages/framework-react"
-    },
-    {
-      "path": "./packages/app"
-    },
-    {
-      "path": "./packages/react-app"
-    }
-  ]
 }
