@@ -35,13 +35,13 @@
       "path": "../react/framework"
     },
     {
-      "path": "../module-ag-grid"
+      "path": "../modules/ag-grid"
     },
     {
-      "path": "../module-services"
+      "path": "../modules/services"
     },
     {
-      "path": "../module-context"
+      "path": "../modules/context"
     },
     {
       "path": "./tsconfig.node.json"

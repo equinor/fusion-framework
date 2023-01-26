@@ -141,11 +141,11 @@ export const configure = (configurator) => {
 
 ## Events
 
-@[code](@packages/module-app/src/events.ts)
+@[code](@packages/modules/app/src/events.ts)
 
 ### App
 
-@[code](@packages/module-app/src/app/events.ts)
+@[code](@packages/modules/app/src/app/events.ts)
 
 ## Examples
 
