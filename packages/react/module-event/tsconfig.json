@@ -11,7 +11,7 @@
       "path": "../../utils/observable"
     },
     {
-      "path": "../../module-event"
+      "path": "../../modules/event"
     },
     {
       "path": "../module"

@@ -1,0 +1,40 @@
+{
+    "name": "@equinor/fusion-framework-module-msal",
+    "version": "1.0.23",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js",
+        "./client": "./dist/esm/client/index.js"
+    },
+    "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "client": [
+                "dist/types/client/index.d.ts"
+            ]
+        }
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/modules/msal"
+    },
+    "dependencies": {
+        "@azure/msal-browser": "^2.21.0",
+        "@equinor/fusion-framework-module": "^1.3.0"
+    },
+    "devDependencies": {
+        "typescript": "^4.9.3"
+    }
+}

@@ -1,15 +1,11 @@
 {
-  "extends": "../tsconfig.react.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
   },
   "references": [
-    {
-      "path": "../../modules/signalr"
-    },
     {
       "path": "../module"
     }
@@ -19,6 +15,6 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "lib"
   ]
 }

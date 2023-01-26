@@ -8,7 +8,7 @@
   },
   "references": [
     {
-      "path": "../../module-http"
+      "path": "../../modules/http"
     },
     {
       "path": "../module"

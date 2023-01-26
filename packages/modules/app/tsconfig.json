@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.react.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
@@ -8,10 +8,19 @@
   },
   "references": [
     {
-      "path": "../../modules/signalr"
+      "path": "../../utils/query"
     },
     {
       "path": "../module"
+    },
+    {
+      "path": "../http"
+    },
+    {
+      "path": "../event"
+    },
+    {
+      "path": "../service-discovery"
     }
   ],
   "include": [
@@ -19,6 +28,6 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "lib"
   ]
 }

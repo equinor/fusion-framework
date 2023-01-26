@@ -9,23 +9,23 @@
   },
   "references": [
     {
-      "path": "../module"
+      "path": "../modules/module"
+    },
+    {
+      "path": "../modules/http"
+    },
+    {
+      "path": "../modules/msal"
+    },
+    {
+      "path": "../modules/event"
+    },
+    {
+      "path": "../modules/app"
     },
     {
       "path": "../framework"
     },
-    {
-      "path": "../module-http"
-    },
-    {
-      "path": "../module-msal"
-    },
-    {
-      "path": "../module-event"
-    },
-    {
-      "path": "../module-app"
-    }
   ],
   "include": [
     "src/**/*"

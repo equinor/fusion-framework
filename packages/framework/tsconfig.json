@@ -8,25 +8,25 @@
   },
   "references": [
     {
-      "path": "../module"
+      "path": "../modules/module"
     },
     {
-      "path": "../module-event"
+      "path": "../modules/event"
     },
     {
-      "path": "../module-http"
+      "path": "../modules/http"
     },
     {
-      "path": "../module-msal"
+      "path": "../modules/msal"
     },
     {
-      "path": "../module-service-discovery"
+      "path": "../modules/service-discovery"
     },
     {
-      "path": "../module-services"
+      "path": "../modules/services"
     },
     {
-      "path": "../module-context"
+      "path": "../modules/context"
     },
   ],
   "include": [
