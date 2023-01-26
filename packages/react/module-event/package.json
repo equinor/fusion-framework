@@ -20,7 +20,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react-modules"
+        "directory": "packages/react/module-event"
     },
     "dependencies": {
         "@equinor/fusion-framework-module-event": "^1.2.1",
@@ -34,9 +34,9 @@
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
-        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {

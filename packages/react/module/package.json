@@ -1,7 +1,6 @@
 {
-    "name": "@equinor/fusion-framework-react-module-context",
-    "version": "1.0.23",
-    "description": "",
+    "name": "@equinor/fusion-framework-react-module",
+    "version": "1.1.2",
     "main": "dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js"
@@ -11,8 +10,12 @@
         "build": "tsc -b",
         "prepack": "yarn build"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "React",
+        "@equinor/fusion-framework-module"
+    ],
+    "description": "Utils for initializing and consuming fusion framework modules",
+    "author": "odin.rochmann@gmail.com",
     "license": "ISC",
     "publishConfig": {
         "access": "public"
@@ -20,12 +23,10 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react-modules"
+        "directory": "packages/react/module"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-context": "^1.2.8",
-        "@equinor/fusion-framework-react-module": "^1.1.2",
-        "@equinor/fusion-query": "^1.1.4"
+        "@equinor/fusion-framework-module": "^1.3.0"
     },
     "devDependencies": {
         "@types/react": "^17.0.11",
@@ -35,9 +36,9 @@
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
-        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {

@@ -20,7 +20,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react-modules"
+        "directory": "packages/react/module-http"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-http": "^2.2.3",

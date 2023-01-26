@@ -1,0 +1,27 @@
+{
+  "extends": "../tsconfig.react.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": "src",
+  },
+  "references": [
+    {
+      "path": "../../utils/query"
+    },
+    {
+      "path": "../../module-context"
+    },
+    {
+      "path": "../module"
+    },
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}
