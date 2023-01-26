@@ -1,6 +1,5 @@
-export { useProviderTopic } from './use-provider-topic';
-export { useTopic } from './use-topic';
-export { useTopicValue } from './use-topic-value';
+export { useSignalRProvider as useProviderTopic } from './use-signalr-provider';
+export { useTopic } from './use-signalr';
 
 export { Topic, enableSignalR } from '@equinor/fusion-framework-module-signalr';
 

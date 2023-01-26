@@ -8,7 +8,8 @@
         "./app": "./dist/esm/app/index.js",
         "./context": "./dist/esm/context/index.js",
         "./hooks": "./dist/esm/hooks/index.js",
-        "./http": "./dist/esm/http/index.js"
+        "./http": "./dist/esm/http/index.js",
+        "./signalr": "./dist/esm/signalr/index.js"
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
@@ -24,6 +25,9 @@
             ],
             "http": [
                 "dist/types/http/index.d.ts"
+            ],
+            "signalr": [
+                "dist/types/signalr/index.d.ts"
             ]
         }
     },
