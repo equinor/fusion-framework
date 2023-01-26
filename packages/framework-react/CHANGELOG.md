@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@2.1.7...@equinor/fusion-framework-react@2.2.0) (2023-01-26)
+
+### Features
+
+-   **framework-react:** expose hook for signalr ([e807202](https://github.com/equinor/fusion-framework/commit/e807202e32e1031c7feb6e8ec1d30b3ed4336f35))
+
 ## 2.1.7 (2023-01-19)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react

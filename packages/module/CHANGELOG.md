@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.3.0 (2023-01-26)
+
+### Features
+
+-   **module:** add base module config builder ([5a897b7](https://github.com/equinor/fusion-framework/commit/5a897b762a3a9139a1de025d1b1f4ae162079028))
+
 ## 1.2.10 (2022-12-01)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module

@@ -1,0 +1,16 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 0.1.0 (2023-01-26)
+
+### Features
+
+-   initial code for signalr-module and react-signalr ([c385ee2](https://github.com/equinor/fusion-framework/commit/c385ee2eca6ee58d87e2de955c43c2b75212efe4))
+-   **module-signalr:** expose provider interfaces ([c3dfea1](https://github.com/equinor/fusion-framework/commit/c3dfea130e2d11202bb8f98d916dbe067f17f85f))
+-   **module-signalr:** improve connection handing ([d78deba](https://github.com/equinor/fusion-framework/commit/d78debad569e322e02df342a3239a3f1f2f025fd))
+
+### Bug Fixes
+
+-   **module-signalr:** resolve config sync ([3cfc1ec](https://github.com/equinor/fusion-framework/commit/3cfc1eca4c3991aa6b85707d5a7fe9e274ff9af1))
