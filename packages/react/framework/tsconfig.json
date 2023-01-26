@@ -17,13 +17,13 @@
       "path": "../../modules/service-discovery"
     },
     {
-      "path": "../module-context"
+      "path": "../modules/context"
     },
     {
-      "path": "../module-http"
+      "path": "../modules/http"
     },
     {
-      "path": "../module-signalr"
+      "path": "../modules/signalr"
     }
   ],
   "include": [

@@ -1,6 +1,6 @@
 {
-    "name": "@equinor/fusion-framework-react-module-event",
-    "version": "1.1.5",
+    "name": "@equinor/fusion-framework-react-module-http",
+    "version": "1.1.9",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -20,13 +20,11 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react/module-event"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module-event": "^1.2.1",
-        "@equinor/fusion-framework-react-module": "^1.1.2"
+        "directory": "packages/react/modules/http"
     },
     "devDependencies": {
+        "@equinor/fusion-framework-module-http": "^2.2.3",
+        "@equinor/fusion-framework-react-module": "^1.1.2",
         "@types/react": "^17.0.11",
         "@types/react-dom": "^17.0.7",
         "react": "^17.0.2",
@@ -34,9 +32,11 @@
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+        "@equinor/fusion-framework-module-http": ">=1.0.0",
+        "@equinor/fusion-framework-react-module": ">=0.2.0",
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {
