@@ -5,26 +5,25 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "jsx": "react-jsx"
   },
   "references": [
-    {
-      "path": "../module"
-    },
     {
       "path": "../framework"
     },
     {
-      "path": "../module-http"
+      "path": "../modules/module"
     },
     {
-      "path": "../module-msal"
+      "path": "../modules/http"
     },
     {
-      "path": "../module-event"
+      "path": "../modules/msal"
     },
     {
-      "path": "../module-widget"
+      "path": "../modules/event"
+    },
+    {
+      "path": "../modules/widget"
     }
   ],
   "include": [
