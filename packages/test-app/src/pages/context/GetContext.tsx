@@ -7,12 +7,12 @@ import { useFramework } from '@equinor/fusion-framework-react';
 
 export const useCurrentContext = () => {
     const provider = useAppModule<ContextModule>('context');
-    return useObservableState(provider.contextClient.currentContext$);
+    return useObservableState(provider.contextClient.currentContext$).next;
 };
 
 const useFrameworkCurrentContext = () => {
     const provider = useFramework<[ContextModule]>().modules.context;
-    return useObservableState(provider.contextClient.currentContext$);
+    return useObservableState(provider.contextClient.currentContext$).next;
 };
 
 export const GetContext = () => {

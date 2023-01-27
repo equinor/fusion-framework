@@ -39,7 +39,7 @@ export const AppLoader = (props: { appKey: string }) => {
     const [error, setError] = useState<Error | undefined>();
 
     /** observe and use the current selected application from framework */
-    const currentApp = useObservableState(fusion.modules.app.current$);
+    const { next: currentApp } = useObservableState(fusion.modules.app.current$);
 
     useEffect(() => {
         /** when appKey property change, assign it to current */

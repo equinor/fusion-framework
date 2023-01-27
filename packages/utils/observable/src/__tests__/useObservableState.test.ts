@@ -8,7 +8,7 @@ describe('useObservableState', () => {
         const subject = new Observable();
         const {
             result: { current: state },
-        } = renderHook(() => useObservableState(subject));
+        } = renderHook(() => useObservableState(subject).next);
         expect(state).toBeUndefined();
     });
     it('should allow initial value', () => {
@@ -16,7 +16,7 @@ describe('useObservableState', () => {
         const initial = 'test';
         const {
             result: { current: state },
-        } = renderHook(() => useObservableState(subject, initial));
+        } = renderHook(() => useObservableState(subject, { initial }).next);
         expect(state).toEqual(initial);
     });
     it('should take initial value from a subject', () => {
@@ -24,7 +24,7 @@ describe('useObservableState', () => {
         const subject = new BehaviorSubject(initial);
         const {
             result: { current: state },
-        } = renderHook(() => useObservableState(subject));
+        } = renderHook(() => useObservableState(subject).next);
         expect(state).toEqual(initial);
     });
     it('should update state when subject emits', () => {
@@ -36,7 +36,7 @@ describe('useObservableState', () => {
         let renderCount = 0;
         const { result } = renderHook(() => {
             renderCount++;
-            return useObservableState(subject);
+            return useObservableState(subject).next;
         });
 
         expect(result.current).toEqual(expected.shift());

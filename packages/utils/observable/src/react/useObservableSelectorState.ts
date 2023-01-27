@@ -15,4 +15,5 @@ export const useObservableSelectorState = <S, P extends keyof S, R = S[P]>(
     selector: P | ((state: S) => R),
     initial?: R,
     compare?: (x: R, y: R) => boolean
-): R | undefined => useObservableState(useObservableSelector(subject, selector, compare), initial);
+): R | undefined =>
+    useObservableState(useObservableSelector(subject, selector, compare), { initial }).next;
