@@ -4,7 +4,7 @@ type FusionLogoProps = {
     scale?: number;
 };
 
-const FusionLogo: FC<FusionLogoProps> = ({ scale = 1 }) => (
+export const FusionLogo: FC<FusionLogoProps> = ({ scale = 1 }) => (
     <svg
         width="50"
         height="35"

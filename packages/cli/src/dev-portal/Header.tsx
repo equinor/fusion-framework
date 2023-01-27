@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
 import { makeStyles, createStyles, clsx, ThemeProvider, theme } from '@equinor/fusion-react-styles';
-import ContextSelector from './ContextSelector';
-import FusionLogo from './FusionLogo';
-import Button from '@equinor/fusion-react-button';
-import Icon from '@equinor/fusion-react-icon';
+import { ContextSelector } from './ContextSelector';
+import { FusionLogo } from './FusionLogo';
+import { Button } from '@equinor/fusion-react-button';
+import { Icon } from '@equinor/fusion-react-icon';
 
 /* typescript reference for makeStyles */
 import '@material-ui/styles';
