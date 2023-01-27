@@ -32,11 +32,11 @@
         "directory": "packages/widget"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^5.0.23",
-        "@equinor/fusion-framework-module": "^1.2.10",
-        "@equinor/fusion-framework-module-event": "^1.2.0",
-        "@equinor/fusion-framework-module-http": "^2.2.2",
-        "@equinor/fusion-framework-module-msal": "^1.0.22",
+        "@equinor/fusion-framework": "^6.0.0",
+        "@equinor/fusion-framework-module": "^2.0.0",
+        "@equinor/fusion-framework-module-event": "^2.0.0",
+        "@equinor/fusion-framework-module-http": "^3.0.0",
+        "@equinor/fusion-framework-module-msal": "^2.0.0",
         "@equinor/fusion-framework-module-widget": "^0.0.2"
     },
     "devDependencies": {

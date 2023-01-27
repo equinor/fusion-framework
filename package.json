@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "clean": "yarn run clean:modules && yarn run clean:build",
+    "clean": "yarn run clean:npm && yarn run clean:build",
     "clean:npm": "rm -rf node_modules && npx lerna exec 'rm -rf node_modules'",
     "clean:build": "npx lerna exec 'rm -rf dist'",
     "build": "lerna run build",
@@ -14,7 +14,6 @@
     "lint": "eslint 'packages/**/src/**/*.{ts,tsx}'",
     "lint:report": "yarn lint --output-file eslint-report.log.json --format json",
     "lint:staged": "lint-staged",
-    "npm:clean": "rm -rf node_modules && npx lerna exec 'rm -rf node_modules'",
     "docs": "cd packages/docs && yarn build -d ../../docs",
     "yalc": "yarn run build && lerna exec 'yalc push --private'",
     "test": "jest",

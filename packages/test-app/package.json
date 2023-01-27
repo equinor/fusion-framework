@@ -26,7 +26,7 @@
         "@equinor/fusion-framework-react-app": "^3.0.0",
         "@equinor/fusion-observable": "^4.0.0",
         "@equinor/fusion-query": "^2.0.0",
-        "@equinor/fusion-react-progress-indicator": "^0.1.5",
+        "@equinor/fusion-react-progress-indicator": "^0.1.6",
         "@equinor/fusion-react-styles": "^0.5.5",
         "@tanstack/react-query": "^4.2.3",
         "@tanstack/react-query-devtools": "^4.2.3",
