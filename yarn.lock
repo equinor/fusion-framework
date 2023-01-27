@@ -740,13 +740,13 @@
     rxjs "^7.5.7"
     uuid "^8.3.2"
 
-"@equinor/fusion-react-button@^0.5.15":
-  version "0.5.15"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-button/-/fusion-react-button-0.5.15.tgz"
-  integrity sha512-XtSH7Q4y7dALqIUsziwA9AXKQJL6Bv45//ms2Uon+RqO039TrGnZIy2CrIO1nQPJ23dWDEKrtX6M91kE0kmgng==
+"@equinor/fusion-react-button@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.6.0.tgz#c6faf73458a15474eec6c1a12db5ab33e52d8cef"
+  integrity sha512-VfAl0ouksVKOBm/NtV+4acvr68jZdSQ9i3UlB/TYFb8Xg6BXfF+HA3X1sF92xvtSBIPjU06i8/51X5pEs+lI0w==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
-    "@equinor/fusion-wc-button" "^1.1.31"
+    "@equinor/fusion-wc-button" "^1.1.36"
 
 "@equinor/fusion-react-checkbox@^0.4.0":
   version "0.4.0"
@@ -841,10 +841,10 @@
   dependencies:
     date-fns "^2.28.0"
 
-"@equinor/fusion-wc-button@^1.1.31":
-  version "1.1.34"
-  resolved "https://registry.npmjs.org/@equinor/fusion-wc-button/-/fusion-wc-button-1.1.34.tgz"
-  integrity sha512-ZpdhNYEpG0mBpUymDriK4KTRyxtYuZi+HUY9egbHUsgyz4jZJ2LcCIhUn90mw9NPIUdIj2FH9vn6yqBZv9FlQw==
+"@equinor/fusion-wc-button@^1.1.36":
+  version "1.1.36"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-button/-/fusion-wc-button-1.1.36.tgz#5ebc528d8c892b6f27e75bd9dfa97373fe17682b"
+  integrity sha512-srLK7G/1oU2bmCAVfW/P+VMz5iftKqbkO4XEVnFDlnFmsBX9VbfO4f6QYv3YZ3KLsXP79ToLZ48KDcYbxadjEw==
   dependencies:
     "@equinor/fusion-wc-core" "^1.0.5"
     "@equinor/fusion-wc-icon" "^1.0.27"
