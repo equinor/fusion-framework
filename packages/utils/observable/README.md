@@ -98,7 +98,7 @@ const AddTodo = () => {
 
 const TodoList = () => {
   const { state$, setSelected } = useContext(TodoContext);
-  const items = useObservableState(state$);
+  const items = useObservableState(state$).next;
   return (
     <ul>
       { Object.entries(items).map(

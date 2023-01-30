@@ -59,7 +59,7 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] =
     const framework = useFramework();
 
     /* Current context observable */
-    const currentContext = useObservableState(framework.modules.context.currentContext$);
+    const currentContext = useObservableState(framework.modules.context.currentContext$).next;
 
     /* Set currentContext as initialResult in dropdown  */
     const preselected: ContextResult = useMemo(

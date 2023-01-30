@@ -11,7 +11,7 @@ export const useQueryContext = (provider: IContextProvider, options?: { debounce
     const args = Object.assign({}, { debounce: 500 }, options);
     const searchFn = useMemo(() => provider.queryContext.bind(provider), [provider]);
     const { idle, next, value$ } = useDebounce(searchFn, args);
-    const value = useObservableState(value$);
+    const value = useObservableState(value$).next;
     return { value, querying: !idle, query: next };
 };
 
