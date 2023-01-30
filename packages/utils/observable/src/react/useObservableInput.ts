@@ -14,5 +14,5 @@ export const useObservableInputState = <T>(
     input: ObservableInput<T>,
     initial?: T
 ): T | undefined => {
-    return useObservableState(useObservableInput(input), initial);
+    return useObservableState(useObservableInput(input), { initial }).next;
 };

@@ -13,15 +13,15 @@ export const CurrentApp = () => {
 
     const AppManifest = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppManifest(appKey) : EMPTY), [appKey])
-    );
+    ).next;
     const appConfig = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY), [appKey])
-    );
+    ).next;
 
     const apps = useObservableState(
         useMemo(() => framework.modules.app.getAllAppManifests(), [framework]),
-        []
-    );
+        { initial: [] }
+    ).next;
 
     return (
         <div>
