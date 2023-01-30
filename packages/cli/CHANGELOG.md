@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@3.0.3...@equinor/fusion-framework-cli@3.0.4) (2023-01-30)
+
+### Bug Fixes
+
+-   **cli:** disable 'x-powered-by' ([29cc4a8](https://github.com/equinor/fusion-framework/commit/29cc4a866f3f38a17a2df23eac047e7b82129696))
+
 ## [3.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@3.0.2...@equinor/fusion-framework-cli@3.0.3) (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
