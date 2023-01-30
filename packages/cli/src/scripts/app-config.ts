@@ -4,7 +4,7 @@ import fs from 'fs';
 import { findUpSync } from 'find-up';
 
 const supportedTypes = ['js', 'json'] as const;
-type SupportedTyped = typeof supportedTypes[number];
+type SupportedTyped = (typeof supportedTypes)[number];
 
 type LocalConfig = {
     manifest?: {

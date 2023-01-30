@@ -13,7 +13,7 @@ export const useHttpClient = (name: FrameworkHttpClient): HttpClient => {
             return framework.modules.http.createClient(name);
         }
         throw Error(`no configured client for key [${name}]`);
-    }, [name]);
+    }, [framework, name]);
     // TODO - abort on unmount?
     return client;
 };

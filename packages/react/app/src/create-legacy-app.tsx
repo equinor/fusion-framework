@@ -12,7 +12,7 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
     Component: React.ComponentType,
     configure?: AppModuleInitiator<TModules>
 ) => {
-    return (): JSX.Element => {
+    const LegacyComponent = (): JSX.Element => {
         const fusion = useFramework<[AppModule]>();
         const RenderComponent = useMemo(() => {
             const creator = createComponent(Component, configure);
@@ -31,4 +31,5 @@ export const createLegacyApp = <TModules extends Array<AnyModule>>(
             </Suspense>
         );
     };
+    return LegacyComponent;
 };

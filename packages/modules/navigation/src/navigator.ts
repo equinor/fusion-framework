@@ -52,8 +52,13 @@ export class Navigator extends Observable<NavigationUpdate> implements INavigato
         return this.#history.encodeLocation(to);
     }
 
-    public listen(listener: (next: NavigationUpdate) => void): VoidFunction {
-        return this.subscribe(listener).unsubscribe.bind(this);
+    public listen(...args: Parameters<History['listen']>): VoidFunction {
+        const teardown = this.#history.listen(...args);
+        this.#subscriptions.add(teardown);
+        return () => {
+            this.#subscriptions.remove(teardown);
+            teardown();
+        };
     }
 
     public createHref(to: To): string {
@@ -70,6 +75,10 @@ export class Navigator extends Observable<NavigationUpdate> implements INavigato
 
     public replace(to: To, state?: unknown): void {
         return this.#history.replace(to, state);
+    }
+
+    public createURL(to: To): URL {
+        return this.#history.createURL(to);
     }
 
     dispose() {

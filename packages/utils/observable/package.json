@@ -2,7 +2,6 @@
     "name": "@equinor/fusion-observable",
     "version": "4.0.0",
     "description": "WIP",
-    "private": false,
     "keywords": [
         "observable",
         "react",
@@ -44,10 +43,6 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:coverage": "npm test -- --coverage ",
-        "test:show": "http-server coverage/lcov-report",
         "lint": "eslint --ext .ts,.tsx,.js src/",
         "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
         "prepack": "yarn build"
@@ -60,19 +55,14 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@testing-library/react-hooks": "^8.0.1",
-        "@types/jest": "^27.4.1",
         "@types/react": "^17.0.2",
         "@types/uuid": "^8.3.4",
-        "jest": "^27.5.1",
         "react": "^17.0.2",
-        "react-test-renderer": "^17.0.2",
-        "ts-jest": "^27.1.4",
         "typescript": "^4.9.3"
     },
     "peerDependencies": {
-        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {

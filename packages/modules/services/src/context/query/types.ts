@@ -34,7 +34,7 @@ type SearchContextArgTypes = {
 };
 
 export type QueryContextArgs<T> = T extends keyof typeof ApiVersion
-    ? SearchContextArgTypes[typeof ApiVersion[T]]
+    ? SearchContextArgTypes[(typeof ApiVersion)[T]]
     : { query: { search: string } };
 
 type QueryContextResponseTypes = {
@@ -43,7 +43,7 @@ type QueryContextResponseTypes = {
 };
 
 export type QueryContextResponse<T> = T extends keyof typeof ApiVersion
-    ? QueryContextResponseTypes[typeof ApiVersion[T]]
+    ? QueryContextResponseTypes[(typeof ApiVersion)[T]]
     : unknown;
 
 export type QueryContextFn<
