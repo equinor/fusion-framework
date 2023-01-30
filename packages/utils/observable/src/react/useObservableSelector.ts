@@ -14,6 +14,7 @@ const selectorFn = <S, P extends keyof S, R = S[P]>(
         distinctUntilChanged(compare)
     );
 };
+
 /**
  * Hook for observing a property of an object
  * @param subject the subject to observe changes on
