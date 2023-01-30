@@ -23,6 +23,8 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
 
     const app = express();
 
+    app.disable('x-powered-by');
+
     const port = config.viteConfig.server?.port ?? 3000;
     const host = `http://localhost:${port}`;
 
