@@ -13,7 +13,7 @@ export const useCurrentApp = (): {
     if (!provider) {
         throw Error('Current framework does not have AppModule configured');
     }
-    const currentApp = useObservableState(provider.current$);
+    const currentApp = useObservableState(provider.current$).next;
     return {
         currentApp,
         setCurrentApp: useMemo(() => provider.setCurrentApp.bind(provider), [provider]),

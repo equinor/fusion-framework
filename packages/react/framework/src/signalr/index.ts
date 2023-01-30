@@ -14,7 +14,7 @@ import {enableSignalR} from '@equinor/fusion-framework-react-module-signalr';
 // myHook.ts
 const myHook = () => {
     const topic = useSignalR('notifications', 'foo');
-    return useObservableState(topic);
+    return useObservableState(topic).next;
 }
  ```
  *
