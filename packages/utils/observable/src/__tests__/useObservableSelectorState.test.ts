@@ -13,7 +13,7 @@ describe('useSelector', () => {
                 value: 2,
             },
         ];
-        const subject = new Subject<typeof expected[0]>();
+        const subject = new Subject<(typeof expected)[0]>();
         const { result } = renderHook(() => useObservableSelectorState(subject, 'value'));
         expected.forEach((x, i) => {
             act(() => {

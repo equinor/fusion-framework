@@ -33,7 +33,7 @@ export const useEventHandler: useEventHandler = <
         : FrameworkEventHandler<TType>
 ): void => {
     const module = useModule<EventModule>(eventModuleKey);
-    useEffect(() => module.addEventListener(name, cb), [name, cb]);
+    useEffect(() => module.addEventListener(name, cb), [module, name, cb]);
 };
 
 export default useEventHandler;

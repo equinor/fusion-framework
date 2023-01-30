@@ -23,7 +23,7 @@ type GetContextArgsTypes = {
 };
 
 export type GetContextArgs<T extends string> = T extends keyof typeof ApiVersion
-    ? GetContextArgsTypes[typeof ApiVersion[T]]
+    ? GetContextArgsTypes[(typeof ApiVersion)[T]]
     : unknown;
 
 type GetContextResponseTypes = {
@@ -32,7 +32,7 @@ type GetContextResponseTypes = {
 };
 
 export type GetContextResponse<T> = T extends keyof typeof ApiVersion
-    ? GetContextResponseTypes[typeof ApiVersion[T]]
+    ? GetContextResponseTypes[(typeof ApiVersion)[T]]
     : unknown;
 
 export type GetContextFn<

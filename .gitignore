@@ -109,6 +109,11 @@ dist
 package-lock.json
 packages/*/yarn.lock
 
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
+
 yalc.lock
 .yalc
 

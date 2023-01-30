@@ -61,7 +61,12 @@ export const createModuleProvider: ModuleProviderCreator = async <
         const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
         return {
             default: ({ children }: { children?: React.ReactNode }) => {
-                useEffect(() => dispose, [instance]);
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                useEffect(
+                    () => dispose,
+                    // eslint-disable-next-line  react-hooks/exhaustive-deps
+                    [instance]
+                );
                 return <ModuleProvider value={instance}>{children}</ModuleProvider>;
             },
         };

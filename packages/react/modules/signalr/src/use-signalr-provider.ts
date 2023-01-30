@@ -6,6 +6,6 @@ export const useSignalRProvider = <T>(
     hubId: string,
     topicId: string
 ): Topic<T> => {
-    const topic = useMemo(() => provider.connect<T>(hubId, topicId), [hubId, topicId]);
+    const topic = useMemo(() => provider.connect<T>(hubId, topicId), [provider, hubId, topicId]);
     return topic;
 };
