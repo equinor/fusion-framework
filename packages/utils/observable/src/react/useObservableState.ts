@@ -18,8 +18,8 @@ export function useObservableState<S>(subject: Observable<S>): ObservableStateRe
  * **note** when state changes the consumer of the hook will rerender
  *
  * @param subject Observable subject
- * @param initial initial value
- * @returns current state of observable
+ * @param opt ObservableStateOptions with options for initial state and a teardown function.
+ * @returns {next, error, complete} where 'next' is current state of observable, 'error' is Error object or undefined, 'complete' is a boolean of the observable's loading state
  */
 export function useObservableState<S, E = unknown>(
     subject: Observable<S>,
