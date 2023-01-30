@@ -5,9 +5,9 @@ import { useMemo } from 'react';
 import { useAppProvider } from './useAppProvider';
 
 /**
- * Get array of apps from framework
- * @param args include hidden apps
- * @returns Array with AppManifest or undefined
+ * React Hook - Get apps from framework
+ * @param args Object with boolean  member includeHidden
+ * @returns Object {apps, isLoading} where apps is Array of AppManifest, isLoading is a boolean on observable complete
  */
 export const useApps = (args: {
     includeHidden: boolean;
