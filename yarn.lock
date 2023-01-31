@@ -618,6 +618,14 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
+"@equinor/fusion-observable@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-4.0.1.tgz#a82aef534f43faeed41ae30bc2df17f2abce8474"
+  integrity sha512-RGjt6SM+J2ik5LKBpN7B/eb7XahIZTGK/QIVn/Kl6onf96aIemvIxalm6UiXR7gjVJ2lh7q+L/NtbaO2j4qxew==
+  dependencies:
+    rxjs "^7.5.7"
+    uuid "^8.3.2"
+
 "@equinor/fusion-react-button@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.6.1.tgz#cd13c304e720e6569e19f1e63425947d2c4bbd45"
