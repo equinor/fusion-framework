@@ -93,8 +93,11 @@ export const createComponent =
                 default: () => (
                     <FrameworkProvider value={fusion}>
                         <AppModuleProvider value={modules}>
-                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
-                            {/* @ts-ignore */}
+                            {
+                                /* TODO */
+                                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment*/
+                                /* @ts-ignore */
+                            }
                             <Component />
                         </AppModuleProvider>
                     </FrameworkProvider>
