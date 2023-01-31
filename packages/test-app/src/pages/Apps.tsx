@@ -14,6 +14,7 @@ export const CurrentApp = () => {
     const AppManifest = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppManifest(appKey) : EMPTY), [appKey])
     ).next;
+
     const appConfig = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY), [appKey])
     ).next;
@@ -27,7 +28,7 @@ export const CurrentApp = () => {
         <div>
             <h2>Current App</h2>
             <select onChange={(e) => setAppKey(e.currentTarget.value)}>
-                {apps.map((app) => {
+                {apps?.map((app) => {
                     const { key: appKey, name } = app;
                     return (
                         <option key={appKey} value={appKey}>
