@@ -24,7 +24,7 @@
         "@equinor/fusion-framework-module-services": "^2.0.1",
         "@equinor/fusion-framework-react": "^3.0.1",
         "@equinor/fusion-framework-react-app": "^3.0.1",
-        "@equinor/fusion-observable": "^4.0.1",
+        "@equinor/fusion-observable": "^5.0.0",
         "@equinor/fusion-query": "^2.0.1",
         "@equinor/fusion-react-progress-indicator": "^0.1.6",
         "@equinor/fusion-react-styles": "^0.5.5",
