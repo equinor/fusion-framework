@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.5...@equinor/fusion-framework-cookbook-app-react-context@3.0.6) (2023-02-01)
+
+### Bug Fixes
+
+-   **cookbooks:** fixing path to references ([0cf722c](https://github.com/equinor/fusion-framework/commit/0cf722c395f03542fef32a72069d8ff1f1943276))
+
 ## [3.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.4...@equinor/fusion-framework-cookbook-app-react-context@3.0.5) (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-context

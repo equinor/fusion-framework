@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@3.0.5...@equinor/fusion-framework-cli@3.1.0) (2023-02-01)
+
+### Features
+
+-   **equinorloader:** centered starprogress loader ([081226d](https://github.com/equinor/fusion-framework/commit/081226d4afa1bdbb9daca0304ce34bc13471e8d7))
+
+### Bug Fixes
+
+-   **cli:** fixing contextresolver ([41edf18](https://github.com/equinor/fusion-framework/commit/41edf18223aed93b393c0fab1e1f41797b7f06da)), closes [#591](https://github.com/equinor/fusion-framework/issues/591)
+
 ## [3.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@3.0.4...@equinor/fusion-framework-cli@3.0.5) (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
