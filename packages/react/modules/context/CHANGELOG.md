@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.0 (2023-02-01)
+
+### ⚠ BREAKING CHANGES
+
+-   hook has new return type
+
+### Bug Fixes
+
+-   references to useObservableState ([614a569](https://github.com/equinor/fusion-framework/commit/614a5691f856765f07f5d71e39708f80dea49a6e))
+
 ## 2.0.1 (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-context

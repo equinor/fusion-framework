@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.2 (2023-02-01)
+
+### Bug Fixes
+
+-   **react-app:** ts-ignore for type error ([b1b3eb7](https://github.com/equinor/fusion-framework/commit/b1b3eb7da1a35eb9ad7461aa4ee15f58d4de9766))
+
 ## 3.0.1 (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

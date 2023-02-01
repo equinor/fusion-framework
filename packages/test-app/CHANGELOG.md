@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.0 (2023-02-01)
+
+### ⚠ BREAKING CHANGES
+
+-   hook has new return type
+
+### Features
+
+-   useObservableState hook ([e26f2a9](https://github.com/equinor/fusion-framework/commit/e26f2a9a116e128c407b8268775eaffab02c4a7c))
+
+### Bug Fixes
+
+-   references to useObservableState ([614a569](https://github.com/equinor/fusion-framework/commit/614a5691f856765f07f5d71e39708f80dea49a6e))
+
 ## 4.0.2 (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-test-app

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.1.0 (2023-02-01)
+
+### Features
+
+-   hooks useApps and useAppProvider ([bfa61a2](https://github.com/equinor/fusion-framework/commit/bfa61a2f01e70880f5a90e5184454ca40033ce71))
+
 ## 3.0.1 (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
