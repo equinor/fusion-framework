@@ -7,7 +7,7 @@
   },
   "references": [
     {
-      "path": "../../packages/react-app"
+      "path": "../../packages/react/app"
     },
     {
       "path": "../../packages/cli"

@@ -10,6 +10,7 @@
     "clean:npm": "rm -rf node_modules && npx lerna exec 'rm -rf node_modules'",
     "clean:build": "npx lerna exec 'rm -rf dist'",
     "build": "lerna run build",
+    "build:cookbooks": "lerna run build --scope '@equinor/fusion-framework-cookbook-*'",
     "build:affected": "nx run-many --target=build --all",
     "build:clean": "yarn clean:build && yarn run build",
     "lint": "eslint 'packages/**/src/**/*.{ts,tsx}'",
