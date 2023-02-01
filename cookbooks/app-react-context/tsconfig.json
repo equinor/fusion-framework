@@ -7,10 +7,10 @@
   },
   "references": [
     {
-      "path": "../../packages/react-app"
+      "path": "../../packages/react/app"
     },
     {
-      "path": "../../packages/react-module-context"
+      "path": "../../packages/react/modules/context"
     },
     {
       "path": "../../packages/cli"
