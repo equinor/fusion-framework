@@ -5,10 +5,9 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback } from 'react';
 
 export const useCurrentContext = (provider: IContextProvider) => {
-    const currentContext = useObservableState(
-        provider.currentContext$,
-        { initial: provider.currentContext }
-    ).next;
+    const currentContext = useObservableState(provider.currentContext$, {
+        initial: provider.currentContext,
+    }).next;
     const setCurrentContext = useCallback(
         (entry: ContextItem | string) => {
             provider.contextClient.setCurrentContext(entry);
