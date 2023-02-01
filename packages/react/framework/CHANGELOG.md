@@ -3,14 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.0...@equinor/fusion-framework-react@3.1.1) (2023-02-01)
-
+## [3.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.0...@equinor/fusion-framework-react@3.1.2) (2023-02-01)
 
 ### Bug Fixes
 
-* **framework-app:** exporting hooks useApps and useAppProvider ([fd62fb3](https://github.com/equinor/fusion-framework/commit/fd62fb35667730d6d1f915bab4fc0c9bd8f6152b))
+-   **framework-app:** exporting hooks useApps and useAppProvider ([fd62fb3](https://github.com/equinor/fusion-framework/commit/fd62fb35667730d6d1f915bab4fc0c9bd8f6152b))
 
+## [3.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.0...@equinor/fusion-framework-react@3.1.1) (2023-02-01)
 
+### Bug Fixes
+
+-   **framework-app:** exporting hooks useApps and useAppProvider ([fd62fb3](https://github.com/equinor/fusion-framework/commit/fd62fb35667730d6d1f915bab4fc0c9bd8f6152b))
 
 ## 3.1.0 (2023-02-01)
 
