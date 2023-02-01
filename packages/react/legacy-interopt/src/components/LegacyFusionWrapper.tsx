@@ -1,4 +1,13 @@
-import { PropsWithChildren, ReactNode, Suspense, useMemo, useRef } from 'react';
+/* eslint-disable react/no-multi-comp */
+import {
+    PropsWithChildren,
+    ReactChild,
+    ReactElement,
+    ReactNode,
+    Suspense,
+    useMemo,
+    useRef,
+} from 'react';
 
 import { FusionRoot } from '@equinor/fusion-components';
 
@@ -10,10 +19,15 @@ export type LegacyFusionWrapperProps = {
     loader: NonNullable<ReactNode>;
     framework: PortalFramework;
     options?: FusionContextOptions;
+    RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
 };
 
+const FallThrewComponent = ({ children }: { children: ReactChild }): ReactElement<any, any> => (
+    <>{children}</>
+);
+
 export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapperProps>) => {
-    const { framework, options, loader } = props;
+    const { framework, options, loader, RootWrapper = FallThrewComponent } = props;
     const root = useRef(null);
     const overlay = useRef(null);
     const headerContent = useRef<HTMLElement | null>(null);
@@ -30,9 +44,11 @@ export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapper
     return (
         <Suspense fallback={loader}>
             <LegacyContext>
-                <FusionRoot rootRef={root} overlayRef={overlay}>
-                    {props.children}
-                </FusionRoot>
+                <RootWrapper>
+                    <FusionRoot rootRef={root} overlayRef={overlay}>
+                        {props.children}
+                    </FusionRoot>
+                </RootWrapper>
             </LegacyContext>
         </Suspense>
     );
