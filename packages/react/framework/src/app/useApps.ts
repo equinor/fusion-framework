@@ -9,7 +9,7 @@ import { useAppProvider } from './useAppProvider';
  * @param args Object with boolean  member includeHidden
  * @returns Object {apps, isLoading} where apps is Array of AppManifest, isLoading is a boolean on observable complete
  */
-export const useApps = (args: {
+export const useApps = (args?: {
     includeHidden: boolean;
 }): { apps: AppManifest[] | undefined; isLoading: boolean } => {
     const provider = useAppProvider();
@@ -18,7 +18,7 @@ export const useApps = (args: {
     );
 
     const apps = useMemo(() => {
-        if (next && !args.includeHidden) {
+        if (next && !args?.includeHidden) {
             return next.filter((app) => app.hide);
         }
         return next;
