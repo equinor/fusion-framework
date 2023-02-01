@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.2...@equinor/fusion-framework-react@3.1.3) (2023-02-01)
+
+### Bug Fixes
+
+-   **framework-react:** make params for useApps optional ([9e3fce1](https://github.com/equinor/fusion-framework/commit/9e3fce16cb1abfea8ae77239078efa2b1b0f52c2))
+
 ## [3.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.0...@equinor/fusion-framework-react@3.1.2) (2023-02-01)
 
 ### Bug Fixes
