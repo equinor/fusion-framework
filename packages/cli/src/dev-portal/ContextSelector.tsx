@@ -11,7 +11,8 @@ import { useObservableState, useObservableSubscription } from '@equinor/fusion-o
 import { EMPTY } from 'rxjs';
 
 import {
-    ContextSelector as ContextSelectorComponent,
+    ContextProvider,
+    ContextSearch,
     ContextResult,
     ContextResultItem,
     ContextResolver,
@@ -54,7 +55,7 @@ const noPreselect: ContextResult = [];
  * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
  * @return Array<ContextResolver, SetContextCallback>
  */
-const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] => {
+const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, () => void] => {
     /* Framework modules */
     const framework = useFramework();
 
@@ -152,7 +153,12 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] =
         [framework]
     );
 
-    return [resolver, setContext];
+    /* Clear current context */
+    const clearContext = useCallback(() => {
+        framework?.modules?.context?.clearCurrentContext();
+    }, [framework]);
+
+    return [resolver, setContext, clearContext];
 };
 
 /**
@@ -161,17 +167,20 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void] =
  * @returns JSX element
  */
 export const ContextSelector = () => {
-    const [resolver, setContext] = useQueryContext();
+    const [resolver, setContext, clearContext] = useQueryContext();
     return (
-        <ContextSelectorComponent
-            id="context-selector-header"
-            placeholder="Search for context"
-            initialText="Start typing to search"
-            dropdownHeight="300px"
-            variant="header"
-            resolver={resolver}
-            onSelect={setContext}
-        />
+        <ContextProvider resolver={resolver}>
+            <ContextSearch
+                id="context-selector-header"
+                placeholder="Search for context"
+                initialText="Start typing to search"
+                dropdownHeight="300px"
+                variant="header"
+                onSelect={setContext}
+                autofocus={true}
+                onClearContext={clearContext}
+            />
+        </ContextProvider>
     );
 };
 
