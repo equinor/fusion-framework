@@ -31,7 +31,7 @@ import {
 } from './types';
 import { QueryCacheCtorArgs } from './cache/QueryCache';
 import { filterQueryTaskComplete } from './client/operators';
-import { queryValue, switchQueue } from './operators';
+import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
 
 export type QueryCtorOptions<TType, TArgs> = {
     client:
@@ -50,7 +50,7 @@ export type QueryCtorOptions<TType, TArgs> = {
      * If the number is undefined or 0, cache is disabled
      * */
     expire?: number;
-    queueOperator?: QueryQueueFn<TArgs, TType>;
+    queueOperator?: QueueOperatorType | QueryQueueFn<TArgs, TType>;
 };
 
 type QueryKeyBuilder<T> = (args: T) => string;
@@ -61,6 +61,25 @@ const defaultCacheValidator =
     <TType, TArgs>(expires = 0): CacheValidator<TType, TArgs> =>
     (entry) =>
         (entry.updated ?? 0) + expires > Date.now();
+
+type QueueOperatorType = 'switch' | 'merge' | 'concat';
+
+const useQueueOperator = <TType, TArgs>(
+    type?: QueueOperatorType | QueryQueueFn<TArgs, TType>
+): QueryQueueFn<TArgs, TType> => {
+    if (typeof type === 'function') {
+        return type;
+    }
+    switch (type) {
+        case 'concat':
+            return concatQueue;
+        case 'merge':
+            return mergeQueue;
+        case 'switch':
+        default:
+            return switchQueue;
+    }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Query<TType, TArgs = any> {
@@ -107,7 +126,7 @@ export class Query<TType, TArgs = any> {
             this.#subscription.add(() => this.#cache.complete());
         }
 
-        const queueOperator = options.queueOperator ?? switchQueue;
+        const queueOperator = useQueueOperator(options.queueOperator);
 
         this.#subscription.add(() => this.#queryQueue$.complete());
         this.#subscription.add(
