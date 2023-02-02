@@ -15,7 +15,8 @@
         ".": "./dist/esm/index.js",
         "./cache": "./dist/esm/cache/index.js",
         "./client": "./dist/esm/client/index.js",
-        "./react": "./dist/esm/react/index.js"
+        "./react": "./dist/esm/react/index.js",
+        "./operators": "./dist/esm/operators.js"
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
@@ -25,6 +26,9 @@
             ],
             "client": [
                 "dist/types/client/index.d.ts"
+            ],
+            "operators": [
+                "dist/types/operators.d.ts"
             ],
             "react": [
                 "dist/types/react/index.d.ts"
