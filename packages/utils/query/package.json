@@ -53,7 +53,7 @@
         "url": "https://github.com/equinor/fusion-framework/issues"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "^4.0.1",
+        "@equinor/fusion-observable": "^6.0.0",
         "immer": "^9.0.16",
         "rxjs": "^7.5.7",
         "uuid": "^8.3.2"

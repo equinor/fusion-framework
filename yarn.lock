@@ -577,10 +577,10 @@
     eslint-config-prettier "^8.6.0"
     eslint-plugin-prettier "^4.2.1"
 
-"@equinor/fusion-components@^2.9.1":
-  version "2.9.2"
-  resolved "https://registry.npmjs.org/@equinor/fusion-components/-/fusion-components-2.9.2.tgz"
-  integrity sha512-gXWygnb6E49v47v4iZglYXsjvEoT4bd3cmKhnjNwNw6Pib/nd1ExkMENzycZS407SOSXj1SqY+Uqg7dk9rlI4w==
+"@equinor/fusion-components@^2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.9.3.tgz#b25f2e1ba4680227c4ef0ff12225c105f4de548f"
+  integrity sha512-s4DD0MhDwr5Q7BBhPgl9o1AHN/Xm9ASjoCreRHvZJZTIxWrGv4qUdkbhWrPdsCQWkjSIfpbrMRhzt2z3UcueNg==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
     "@equinor/fusion-react-checkbox" "^0.4.0"
@@ -618,17 +618,9 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@equinor/fusion-observable@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-4.0.1.tgz#a82aef534f43faeed41ae30bc2df17f2abce8474"
-  integrity sha512-RGjt6SM+J2ik5LKBpN7B/eb7XahIZTGK/QIVn/Kl6onf96aIemvIxalm6UiXR7gjVJ2lh7q+L/NtbaO2j4qxew==
-  dependencies:
-    rxjs "^7.5.7"
-    uuid "^8.3.2"
-
-"@equinor/fusion-react-button@^0.6.0":
+"@equinor/fusion-react-button@^0.6.1":
   version "0.6.1"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-button/-/fusion-react-button-0.6.1.tgz"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.6.1.tgz#cd13c304e720e6569e19f1e63425947d2c4bbd45"
   integrity sha512-VAMNDOFt8hRM+HUazNd8kfAVwDfaFjrXqHC/8IqylrwjxoOSFK7YZkMbcr/hrmakYDYthQxsfYmltfZbi8A6+A==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
@@ -862,10 +854,10 @@
     "@equinor/eds-tokens" "0.5.5"
     csstype "^3.0.10"
 
-"@equinor/fusion@^3.4.5":
-  version "3.4.5"
-  resolved "https://registry.npmjs.org/@equinor/fusion/-/fusion-3.4.5.tgz"
-  integrity sha512-fRDQQZvznMDaeuLWW9Nrt7PsxaqNKRtKrYYXZ1yyJYMfRINGvHHzeJTKqTAjWqHK+cGD5BLjwPrOi7ab7DZrYg==
+"@equinor/fusion@^3.4.6":
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion/-/fusion-3.4.6.tgz#14f6168354576832a38898f90cf81bb2cc08ccba"
+  integrity sha512-7IGQwTi8ReKNwTWG+tfzpAUE8cGJmpMCknHSBPWPdl45C6wei0yC/7zv7Ic32xe7czM5r2R9BveIaQC6c/KKoA==
   dependencies:
     "@equinor/eslint-config-fusion" "^0.1.2"
     "@microsoft/applicationinsights-web" "^2.4.3"
