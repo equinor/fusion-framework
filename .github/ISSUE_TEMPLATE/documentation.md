@@ -2,7 +2,7 @@
 name: Documentation
 about: Describe which feature(s) that needs docuemnetation
 title: ''
-labels: documentation, improvement
+labels: 📚 documentation, ✨ improvement
 assignees: ''
 
 ---

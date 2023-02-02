@@ -2,7 +2,7 @@
 name: Bug report - Implementation
 about: Create a report to help us improve
 title: ''
-labels: browser, bug
+labels: 🕸️ browser, 🐞 bug
 assignees: ''
 
 ---

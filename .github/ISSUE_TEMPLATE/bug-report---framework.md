@@ -2,7 +2,7 @@
 name: Bug report - Framework
 about: Create a report to help us improve
 title: ''
-labels: bug, framework
+labels: 🐞 bug, 🏗️ framework
 assignees: ''
 
 ---
