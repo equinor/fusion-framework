@@ -1,0 +1,12 @@
+{
+  "extends": "@equinor/eslint-config-fusion-react",
+  "plugins": ["rxjs"],
+  "rules": {
+    "@typescript-eslint/no-empty-interface": [
+      "warn",
+      {
+        "allowSingleExtends": true
+      }
+    ]
+  }
+}
