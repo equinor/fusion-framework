@@ -9,6 +9,15 @@
   },
   "references": [
     {
+      "path": "../utils/observable"
+    },
+    {
+      "path": "../utils/query"
+    },
+    {
+      "path": "../modules/http"
+    },
+    {
       "path": "../modules/context"
     },
     {
@@ -17,12 +26,6 @@
     {
       "path": "../react/framework"
     },
-    {
-      "path": "../utils/observable"
-    },
-    {
-      "path": "../utils/query"
-    }
   ],
   "include": [
     "src/**/*",
