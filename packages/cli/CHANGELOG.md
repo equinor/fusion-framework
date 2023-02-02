@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@4.0.4...@equinor/fusion-framework-cli@4.0.5) (2023-02-02)
+
+### Bug Fixes
+
+-   **cli:** add custom element register ([3f30c34](https://github.com/equinor/fusion-framework/commit/3f30c34324ca43fcc947f9163919a31611471afd))
+
 ## 4.0.4 (2023-02-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
