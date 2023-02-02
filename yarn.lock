@@ -671,6 +671,13 @@
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-menu" "^0.1.0"
 
+"@equinor/fusion-react-person@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-person/-/fusion-react-person-0.1.1.tgz#d6f837314dcfc899d942a1822613a5827a511511"
+  integrity sha512-/E/xObh8taAmZ6qZYA7hpXJfUroceuwzMtnrUM276PygfdMw0cbmcZ2oWzgjbATTuqAulekenorrmo/p6UhMWQ==
+  dependencies:
+    "@equinor/fusion-wc-person" "^0.3.6"
+
 "@equinor/fusion-react-progress-indicator@^0.1.6":
   version "0.1.6"
   resolved "https://registry.npmjs.org/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.6.tgz"
@@ -720,6 +727,25 @@
   integrity sha512-4+nvmje698DOdkkNUQJyz9gxNnk3nospA1Ul1HKFV1beBm5aFbSDGj6LfYkCaIQYde1rzrswDInnMQIPnQj53w==
   dependencies:
     date-fns "^2.28.0"
+
+"@equinor/fusion-wc-avatar@^1.0.39":
+  version "1.0.39"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-avatar/-/fusion-wc-avatar-1.0.39.tgz#47bfddcb2c137ae017b8712d580cab0daf3be9ba"
+  integrity sha512-2Vez8MPa4tUVp2F3R1i657FsewbWtwvCt1dx3KgQGxV5bfHaFBplH1diZ7/VmxOk37Xo7xjOG6tQ/gVZ4ZxbUA==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@equinor/fusion-wc-picture" "^1.0.26"
+    "@equinor/fusion-wc-ripple" "^0.2.16"
+    lit "2.4.1"
+
+"@equinor/fusion-wc-badge@^0.2.28":
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-badge/-/fusion-wc-badge-0.2.28.tgz#dda264fab899145a91a61a7a2cad5b769b365d58"
+  integrity sha512-5Gp5L90PQ9uGAjomHbesa/UihoGXo8ThHtg22RCWf2+jq0+haUmyVdFAAtyduS8asIc05GhmTduRl2+B+LEH1Q==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@equinor/fusion-wc-icon" "^1.0.27"
+    lit "2.4.1"
 
 "@equinor/fusion-wc-button@^1.1.36":
   version "1.1.36"
@@ -840,6 +866,15 @@
   dependencies:
     "@equinor/fusion-wc-core" "^1.0.5"
     "@material/mwc-radio" "^0.27.0"
+    lit "2.4.1"
+
+"@equinor/fusion-wc-ripple@^0.2.16":
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-ripple/-/fusion-wc-ripple-0.2.16.tgz#72999ff754763a870661a83a92820b0639517650"
+  integrity sha512-bpqGS0b+6w4TVZBXHImiSE9O9y4SnAu13TwBG7uF5nQdgl4R6xx4mvUZeLpnqRnRKgHZZ7BD3v5sf0f7Taxqww==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@material/mwc-ripple" "^0.27.0"
     lit "2.4.1"
 
 "@equinor/fusion-wc-searchable-dropdown@^2.4.0":
