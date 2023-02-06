@@ -134,13 +134,10 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                         for (const appKey in nextState) {
                             const current = currentState[appKey];
                             const next = nextState[appKey];
-                            if (appKey == 'people') {
-                                console.log('updateManifests::people', current, next);
-                            }
                             if (!current) {
                                 state[appKey] = next;
                             } else if (compareApp(current, next)) {
-                                console.debug('🔥 manifest changed', current, next);
+                                console.debug(`🔥 [${appKey}] manifest changed`, current, next);
                                 state[appKey] = { ...current, ...next };
                             }
                         }
@@ -175,7 +172,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         framework.modules.event.addEventListener('onCurrentAppChanged', (e) => {
             const { next, previous } = e.detail;
 
-            console.log('📦 current application changed', next, previous);
+            console.debug('📦 current application changed', next, previous);
 
             const currentManifest = next ? this.#manifests.value[next.appKey] || null : null;
             currentApp.state = currentManifest;
