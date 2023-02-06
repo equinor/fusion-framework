@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.2...@equinor/fusion-framework-legacy-interopt@2.1.3) (2023-02-06)
+
+### Bug Fixes
+
+-   **legacy-iternopt:** remove logging ([76b2cfa](https://github.com/equinor/fusion-framework/commit/76b2cfa47bce288c53f49d856661bb027757347d))
+
 ## 2.1.2 (2023-02-06)
 
 ### Bug Fixes
