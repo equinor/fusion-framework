@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.2 (2023-02-06)
+
+### Bug Fixes
+
+-   **navigation:** fix subscription of listener ([f76eee1](https://github.com/equinor/fusion-framework/commit/f76eee19327c9ef805232ca7a3271a4a06e94b6f))
+
 ## 1.0.1 (2023-01-30)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-navigation

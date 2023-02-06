@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.2 (2023-02-06)
+
+### Bug Fixes
+
+-   **navigation:** fix subscription of listener ([f76eee1](https://github.com/equinor/fusion-framework/commit/f76eee19327c9ef805232ca7a3271a4a06e94b6f))
+
 ## [2.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.0...@equinor/fusion-framework-legacy-interopt@2.1.1) (2023-02-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt
