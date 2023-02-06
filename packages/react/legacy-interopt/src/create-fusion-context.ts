@@ -98,30 +98,28 @@ export const createFusionContext = async (args: {
             action?: NavigationUpdate['action']
         ) => void
     ) => {
-        return historyListenFn(
-            (e: { action: NavigationUpdate['action']; location: NavigationUpdate['location'] }) => {
-                const event = new Proxy(e, {
-                    get(target, p) {
-                        switch (p) {
-                            case 'action':
-                                return target.action;
+        return historyListenFn((e: NavigationUpdate) => {
+            const event = new Proxy(e, {
+                get(target, p) {
+                    switch (p) {
+                        case 'action':
+                            return target.action;
 
-                            case 'location':
-                                return target.location;
+                        case 'location':
+                            return target.location;
 
-                            case 'state':
-                            case 'hash':
-                            case 'key':
-                            case 'search':
-                            case 'pathname':
-                                // @ts-ignore
-                                return target.location[p];
-                        }
-                    },
-                });
-                cb(event, e.action);
-            }
-        );
+                        case 'state':
+                        case 'hash':
+                        case 'key':
+                        case 'search':
+                        case 'pathname':
+                            // @ts-ignore
+                            return target.location[p];
+                    }
+                },
+            });
+            cb(event, e.action);
+        });
     };
 
     const coreSettings = new SettingsContainer(

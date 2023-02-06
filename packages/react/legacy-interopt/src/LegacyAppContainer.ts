@@ -9,6 +9,8 @@ import {
 
 import { ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
 
+import { original } from 'immer';
+
 import type { PortalFramework } from './types';
 
 type AppContainerEvents = {
@@ -36,7 +38,7 @@ export type Actions = ActionTypes<typeof actions>;
 
 const compareApp = (a: AppManifest, b?: AppManifest) => {
     if (!b) return true;
-    const attr = Object.keys(a) as Array<keyof AppManifest>;
+    const attr = Object.keys(b) as Array<keyof AppManifest>;
     return attr.some((key) => {
         switch (key) {
             case 'auth':
@@ -45,8 +47,13 @@ const compareApp = (a: AppManifest, b?: AppManifest) => {
             case 'context':
                 return false;
             case 'tags': {
-                for (const tag of a.tags) {
-                    if (b.tags.includes(tag)) {
+                if (a.tags.length !== b.tags.length) {
+                    console.debug('tags changed', a.tags, b.tags);
+                    return true;
+                }
+                for (const tag of b.tags ?? []) {
+                    if (!a.tags.includes(tag)) {
+                        console.debug(`tag [${tag}] changed`, a.tags, b.tags);
                         return true;
                     }
                 }
@@ -54,12 +61,17 @@ const compareApp = (a: AppManifest, b?: AppManifest) => {
             }
 
             case 'category':
+                a.category?.id !== b.category?.id &&
+                    console.debug('category changed', a.category, b.category);
                 return a.category?.id !== b.category?.id;
             // Dates
             case 'publishedDate':
+                String(a[key]) !== String(b[key]) &&
+                    console.debug('publishedDate changed', a.publishedDate, b.publishedDate);
                 return String(a[key]) !== String(b[key]);
 
             default:
+                a[key] !== b[key] && console.debug(`${key} changed`, a[key], b[key]);
                 return a[key] !== b[key];
         }
     });
@@ -117,10 +129,18 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                         state = action.payload;
                     })
                     .addCase(actions.updateManifests, (state, action) => {
-                        for (const appKey in action.payload) {
-                            const next = action.payload[appKey];
-                            const current = state[appKey];
-                            if (!current || compareApp(current, next)) {
+                        const currentState = original(state) || {};
+                        const nextState = action.payload;
+                        for (const appKey in nextState) {
+                            const current = currentState[appKey];
+                            const next = nextState[appKey];
+                            if (appKey == 'people') {
+                                console.log('updateManifests::people', current, next);
+                            }
+                            if (!current) {
+                                state[appKey] = next;
+                            } else if (compareApp(current, next)) {
+                                console.debug('🔥 manifest changed', current, next);
                                 state[appKey] = { ...current, ...next };
                             }
                         }
@@ -135,6 +155,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             eventHub
         );
         apps.on('change', (apps) => {
+            console.debug('app-container changed', apps);
             return this.#manifests.next(actions.updateManifests(apps));
         });
         this.#manifests.subscribe((value) => (apps.state = value));
@@ -206,10 +227,12 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
 
     async setCurrentAppAsync(appKey: string | null): Promise<void> {
         if (appKey) {
-            const manifest = this.#manifests.value[appKey];
-            if (!manifest.AppComponent) {
-                await this.#loadScript(manifest.key);
+            const { key, AppComponent } = this.#manifests.value[appKey];
+            if (!AppComponent) {
+                await this.#loadScript(key);
             }
+            await new Promise((resolve) => window.requestAnimationFrame(resolve));
+            const manifest = this.#manifests.value[appKey];
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const app = this.#framework.modules.app.createApp({ appKey, manifest });
@@ -243,8 +266,8 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     }
 
     async #loadScript(appKey: string): Promise<void> {
-        const { uri } = await this.#framework.modules.serviceDiscovery.resolveService('portal');
-        const source = new URL(`/bundles/apps/${appKey}.js`, uri);
+        // const { uri } = await this.#framework.modules.serviceDiscovery.resolveService('portal');
+        // const source = new URL(`/bundles/apps/${appKey}.js`, uri);
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.async = true;
@@ -254,7 +277,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             script.addEventListener('abort', () => reject());
             script.addEventListener('error', () => reject());
 
-            script.src = source.href;
+            script.src = `/bundles/apps/${appKey}.js`;
         });
     }
 
