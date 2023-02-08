@@ -1,4 +1,4 @@
-import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr';
+import { HubConnectionBuilder, HubConnection, AbortError } from '@microsoft/signalr';
 import { Observable, shareReplay } from 'rxjs';
 
 import { SignalRConfig } from './SignalRModuleConfigurator';
@@ -43,9 +43,18 @@ export class SignalRModuleProvider implements ISignalRProvider {
 
             const connection = builder.build();
 
-            connection.start().then(() => {
-                observer.next(connection);
-            });
+            connection
+                .start()
+                .then(() => {
+                    observer.next(connection);
+                })
+                .catch((error: any) => {
+                    if (error instanceof AbortError) {
+                        // Omit AbortError
+                    } else {
+                        throw error;
+                    }
+                });
 
             const teardown = () => {
                 connection.stop();
