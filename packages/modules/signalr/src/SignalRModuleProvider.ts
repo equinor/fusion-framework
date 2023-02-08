@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, HubConnection, AbortError } from '@microsoft/signalr';
-import { Observable, shareReplay } from 'rxjs';
+import { delay, Observable, shareReplay } from 'rxjs';
 
 import { SignalRConfig } from './SignalRModuleConfigurator';
 
@@ -26,6 +26,8 @@ export class SignalRModuleProvider implements ISignalRProvider {
     }
 
     protected _createHubConnection(hubId: string): Observable<HubConnection> {
+        const LOG_LEVEL_CRITICAL = 5;
+
         if (hubId in this.#hubConnections) {
             return this.#hubConnections[hubId];
         }
@@ -40,6 +42,8 @@ export class SignalRModuleProvider implements ISignalRProvider {
             });
 
             config.automaticReconnect && builder.withAutomaticReconnect();
+
+            builder.configureLogging(config.logLevel || LOG_LEVEL_CRITICAL);
 
             const connection = builder.build();
 

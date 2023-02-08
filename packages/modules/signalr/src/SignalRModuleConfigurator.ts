@@ -5,7 +5,7 @@ import {
 } from '@equinor/fusion-framework-module';
 
 import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { IHttpConnectionOptions } from '@microsoft/signalr';
+import { IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 
 export interface ISignalRConfigurator {
     /** add configuration for hub connection */
@@ -32,6 +32,7 @@ export type SignalRHubConfig = {
 
     /** reconnect when connection lost */
     automaticReconnect?: boolean;
+    logLevel?: LogLevel;
 };
 
 /**
