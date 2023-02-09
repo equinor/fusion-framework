@@ -3,7 +3,7 @@ import { Fusion } from '@equinor/fusion-framework';
 import { useFramework } from '../useFramework';
 
 type HttpClient = ReturnType<Fusion['modules']['http']['createClient']>;
-type FrameworkHttpClient = 'portal';
+type FrameworkHttpClient = 'portal' | 'people';
 
 export const useHttpClient = (name: FrameworkHttpClient): HttpClient => {
     const framework = useFramework();

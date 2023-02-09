@@ -18,6 +18,5 @@
             "dom.iterable"
         ],
         "composite": true,
-        "skipLibCheck": true,
     }
 }

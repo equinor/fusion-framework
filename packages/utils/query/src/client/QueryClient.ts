@@ -136,13 +136,14 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
      * @param reason message of why request was canceled
      */
     public cancel(transaction?: string, reason?: string): void {
-        if (transaction && this.#state.value[transaction]) {
+        /** if no transaction specified, close all connection */
+        if (!transaction) {
+            for (const key of Object.keys(this.#state.value)) {
+                this.cancel(key, `all transactions canceled`);
+            }
+        } else if (transaction && this.#state.value[transaction]) {
             reason ??= `[${transaction}]: transaction canceled`;
             this.#state.next(actions.cancel({ transaction, reason }));
-        } else {
-            for (const key of Object.keys(this.#state.value)) {
-                this.cancel(key, `[${transaction}]: all transactions canceled`);
-            }
         }
     }
 

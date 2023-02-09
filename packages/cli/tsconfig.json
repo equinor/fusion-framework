@@ -12,6 +12,12 @@
       "path": "../utils/observable"
     },
     {
+      "path": "../utils/query"
+    },
+    {
+      "path": "../modules/http"
+    },
+    {
       "path": "../modules/context"
     },
     {
