@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-query@2.0.2...@equinor/fusion-query@2.0.3) (2023-02-09)
+
+### Bug Fixes
+
+-   **util/query:** enhance selection of queue operator ([b41a99f](https://github.com/equinor/fusion-framework/commit/b41a99fb046bd3adbd2ede2b38ebb1edf7eba3d8))
+-   **util/query:** expose queue operators ([f597f25](https://github.com/equinor/fusion-framework/commit/f597f25f98198e46a600309898ac9f2557c973f3))
+-   **util/query:** only cancel all request when transaction is not specified ([3ece6a3](https://github.com/equinor/fusion-framework/commit/3ece6a3d8d59f12036e9e329e3a4ff677dd87fec))
+
 ## 2.0.2 (2023-02-02)
 
 **Note:** Version bump only for package @equinor/fusion-query

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@4.0.4...@equinor/fusion-framework-cli@4.1.0) (2023-02-09)
+
+### Features
+
+-   (framework): person provider ([d4a3936](https://github.com/equinor/fusion-framework/commit/d4a3936d6a60f093f71eac1dacc05cd60c7bf554))
+-   **cli:** add react es lint for cli ([55137d7](https://github.com/equinor/fusion-framework/commit/55137d7baee9611fcb3e4bde4a4c0a954a8a68c6))
+
+### Bug Fixes
+
+-   **cli:** add custom element register ([3f30c34](https://github.com/equinor/fusion-framework/commit/3f30c34324ca43fcc947f9163919a31611471afd))
+-   **cli:** update person resolver ([4ef99ae](https://github.com/equinor/fusion-framework/commit/4ef99ae5da870ec5d076041996ee98548fc18e5a))
+
 ## [4.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@4.0.4...@equinor/fusion-framework-cli@4.0.5) (2023-02-02)
 
 ### Bug Fixes

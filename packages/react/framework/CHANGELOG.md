@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@3.1.4...@equinor/fusion-framework-react@3.2.0) (2023-02-09)
+
+### Features
+
+-   (framework): person provider ([d4a3936](https://github.com/equinor/fusion-framework/commit/d4a3936d6a60f093f71eac1dacc05cd60c7bf554))
+
 ## 3.1.4 (2023-02-02)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
