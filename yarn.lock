@@ -637,12 +637,12 @@
     "@lit-labs/react" "^1.0.0"
 
 "@equinor/fusion-react-context-selector@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.3.0.tgz"
-  integrity sha512-57JhuxET1pXNiyIzQKkQ3a6IB8xqCZyonuuYlxtYbVEscngFvbqDZbNL48IAQRr1509LYFHhFSYuBbZTdxWsHA==
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.3.1.tgz#7188cc0891e51c8988e57fd5023f2c1a55abbf10"
+  integrity sha512-HqWtp+1OBEG6AY9FcsiKIcdlohZPTaqk0k1UbJGUx94N7kx6UKH/d8iVPfa9N+LgWlkmTnDDFsYjchAtnHkS4Q==
   dependencies:
     "@equinor/fusion-react-icon" "^0.2.15"
-    "@equinor/fusion-react-searchable-dropdown" "^0.3.0"
+    "@equinor/fusion-react-searchable-dropdown" "^0.3.1"
     "@equinor/fusion-react-styles" "^0.5.5"
     "@equinor/fusion-react-utils" "^2.0.4"
 
@@ -686,10 +686,10 @@
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-progress-indicator" "^0.4.3"
 
-"@equinor/fusion-react-searchable-dropdown@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.3.0.tgz"
-  integrity sha512-tQfL1BoNKbHMMuklIn6OyUE4/QyNhm4QlXBcUegNyy7+dGctkuu0jS81SVXCUND4NEzfQCd7VgreyZcv1X49GA==
+"@equinor/fusion-react-searchable-dropdown@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-searchable-dropdown/-/fusion-react-searchable-dropdown-0.3.1.tgz#be0c03878707f955e6ecff9ac50cf404ed40d647"
+  integrity sha512-LwXiF5p4BZt9r2uNZu8s5AUQb5eWwM9p1ef767bsZuwlvF2eiWd9POHWUhvPn+nn44mNSnnd3seiZwNS38b0Rg==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-searchable-dropdown" "^2.4.0"
