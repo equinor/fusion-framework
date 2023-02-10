@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-person",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Example usage of the components PersonAvatar and PersonCard",
   "private": true,
   "type": "module",
