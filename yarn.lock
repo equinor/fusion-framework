@@ -569,7 +569,7 @@
 
 "@equinor/eslint-config-fusion@^2.0.0":
   version "2.0.0"
-  resolved "https://registry.npmjs.org/@equinor/eslint-config-fusion/-/eslint-config-fusion-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/@equinor/eslint-config-fusion/-/eslint-config-fusion-2.0.0.tgz#92e3ee2020448f97cdb93933ddfd246325a2c937"
   integrity sha512-+WrpwFqT+qL0RhOADfCJUCD2FG2IBgsL+UyrHAAo7pUUCyCNM6UMsPEmJ3KVU6jCsDwENkeWXor3vVplLAulNA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.49.0"
@@ -678,6 +678,13 @@
   dependencies:
     "@equinor/fusion-wc-person" "^0.3.6"
 
+"@equinor/fusion-react-person@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-person/-/fusion-react-person-0.1.2.tgz#81d21d7802e5c903ac3b5cba3ad60b1fa5dcf7fc"
+  integrity sha512-T4gLmkZUO8GHpyhnkMsdXkFMcw04RJ1kJ8CUocnClf2MRh0Ry+UxwZ4lIpL8SBqK7XfW7MjQM8x7GY8TN9SNWw==
+  dependencies:
+    "@equinor/fusion-wc-person" "^0.3.6"
+
 "@equinor/fusion-react-progress-indicator@^0.1.6":
   version "0.1.6"
   resolved "https://registry.npmjs.org/@equinor/fusion-react-progress-indicator/-/fusion-react-progress-indicator-0.1.6.tgz"
@@ -706,7 +713,7 @@
 
 "@equinor/fusion-react-styles@^0.5.5":
   version "0.5.5"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.5.tgz"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.5.tgz#dc97bc7c82142deb0e2f04668fab21fc6f1ead04"
   integrity sha512-C+90P19fd6YtYn7vuYwlrTAE0cBvxkWiTz3GEzG9nQVVpqhf3r2fLP1QIO0h+0/O07MaBhaglRCEds0GDFxvMg==
   dependencies:
     "@equinor/fusion-wc-theme" "^0.2.25"
@@ -1070,6 +1077,11 @@
     js-yaml "^4.1.0"
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
+
+"@faker-js/faker@^7.6.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
+  integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
 
 "@gar/promisify@^1.1.3":
   version "1.1.3"
@@ -3764,14 +3776,14 @@
   dependencies:
     "@types/react" "^17"
 
-"@types/react-dom@^18.0.6", "@types/react-dom@^18.0.7", "@types/react-dom@^18.0.8":
+"@types/react-dom@^18.0.10", "@types/react-dom@^18.0.6", "@types/react-dom@^18.0.7", "@types/react-dom@^18.0.8":
   version "18.0.10"
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.0.10.tgz"
   integrity sha512-E42GW/JA4Qv15wQdqJq8DL4JhNpB3prJgjgapN3qJT9K2zO5IIAQh4VXvCEDupoqAwnz0cY4RlXeC/ajX5SFHg==
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.0.17", "@types/react@^18.0.22", "@types/react@^18.0.24":
+"@types/react@*", "@types/react@^18.0.17", "@types/react@^18.0.22", "@types/react@^18.0.24", "@types/react@^18.0.27":
   version "18.0.27"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.0.27.tgz"
   integrity sha512-3vtRKHgVxu3Jp9t718R9BuzoD4NcQ8YJ5XRzsSKxNDiDonD2MXIT1TmSkenxuCycZJoQT5d2vE8LwWJxBC1gmA==
@@ -5696,7 +5708,7 @@ eslint-visitor-keys@^3.3.0:
 
 eslint@^8.33.0:
   version "8.33.0"
-  resolved "https://registry.npmjs.org/eslint/-/eslint-8.33.0.tgz"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.33.0.tgz#02f110f32998cb598c6461f24f4d306e41ca33d7"
   integrity sha512-WjOpFQgKK8VrCnAtl8We0SUOy/oVZ5NHykyMiagV1M9r8IFpIJX7DduK6n1mpfhlG7T1NLWm2SuD8QB7KFySaA==
   dependencies:
     "@eslint/eslintrc" "^1.4.1"
@@ -9521,7 +9533,7 @@ react-dom@^17.0.2:
 
 react-dom@^18.2.0:
   version "18.2.0"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
   dependencies:
     loose-envify "^1.1.0"
@@ -9624,7 +9636,7 @@ react@17.x, react@^17.0.0, react@^17.0.2:
 
 react@^18.2.0:
   version "18.2.0"
-  resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
   dependencies:
     loose-envify "^1.1.0"
