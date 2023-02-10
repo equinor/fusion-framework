@@ -28,6 +28,15 @@ const useStyles = makeStyles(
 
 export const App = () => {
     const styles = useStyles();
+    const azureIds = [
+        'b40a0024-5dfd-4a6b-bb33-8d80bd3a4dde',
+        '49132c24-6ea4-41fe-8221-112f314573f0',
+        'cbc6480d-12c1-467e-b0b8-cfbb22612daa',
+        'c81d9c4f-c882-4631-b0da-45e9ab9039c7',
+        '3268952b-f566-49ed-a2b4-6feda8c0d5ef',
+        '9716b649-5a4b-4470-9e0c-622742dc2935',
+        '1ea5f203-c1ad-4893-bdea-4fadd95455e4',
+    ];
 
     return (
         <StrictMode>
@@ -44,48 +53,13 @@ export const App = () => {
                     </a>
                 </p>
                 <div className={styles.list}>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="b40a0024-5dfd-4a6b-bb33-8d80bd3a4dde"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="49132c24-6ea4-41fe-8221-112f314573f0"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="c81d9c4f-c882-4631-b0da-45e9ab9039c7"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="3268952b-f566-49ed-a2b4-6feda8c0d5ef"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="9716b649-5a4b-4470-9e0c-622742dc2935"
-                        />
-                    </div>
-                    <div className={styles.card}>
-                        <PersonCard
-                            size={AvatarSize.Medium}
-                            azureId="1ea5f203-c1ad-4893-bdea-4fadd95455e4"
-                        />
-                    </div>
+                    {azureIds.map((azureId) => {
+                        return (
+                            <div className={styles.card}>
+                                <PersonCard size={AvatarSize.Medium} azureId={azureId} />
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
             <div className={styles.section}>
@@ -101,34 +75,9 @@ export const App = () => {
                     </a>
                 </p>
                 <div className={styles.list}>
-                    <PersonAvatar
-                        size={AvatarSize.Large}
-                        azureId="b40a0024-5dfd-4a6b-bb33-8d80bd3a4dde"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="49132c24-6ea4-41fe-8221-112f314573f0"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="c81d9c4f-c882-4631-b0da-45e9ab9039c7"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="3268952b-f566-49ed-a2b4-6feda8c0d5ef"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="9716b649-5a4b-4470-9e0c-622742dc2935"
-                    />
-                    <PersonAvatar
-                        size={AvatarSize.Medium}
-                        azureId="1ea5f203-c1ad-4893-bdea-4fadd95455e4"
-                    />
+                    {azureIds.map((azureId) => {
+                        return <PersonAvatar size={AvatarSize.Medium} azureId={azureId} />;
+                    })}
                 </div>
             </div>
         </StrictMode>
