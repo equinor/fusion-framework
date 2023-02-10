@@ -1,9 +1,9 @@
-// TODO - @AndrejNikolicEq fix export for react component
-import { PersonPresence, PersonDetails } from '@equinor/fusion-wc-person';
+import { PersonPresence, PersonDetails, PersonResolver } from '@equinor/fusion-wc-person';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Query } from '@equinor/fusion-query';
 import { useMemo, useState } from 'react';
+import { faker } from '@faker-js/faker';
 
 const createPersonClient = (client: IHttpClient) => {
     // TODO - good cache amount? 3min?
@@ -13,8 +13,21 @@ const createPersonClient = (client: IHttpClient) => {
         queueOperator: 'merge',
         key: (azureId) => azureId,
         client: {
-            fn: (azureId: string) => {
-                return client.json<PersonDetails>(`/persons/${azureId}?api-version=4.0`);
+            fn: async (azureId: string) => {
+                const user = await client.json<PersonDetails>(
+                    `/persons/${azureId}?api-version=4.0`
+                );
+
+                try {
+                    const image = await client.json<string>(
+                        `/persons/${azureId}/photo?api-version=1.0`
+                    );
+                    user.pictureSrc = image;
+                } catch (error) {
+                    user.pictureSrc = faker.image.avatar();
+                }
+
+                return user;
             },
         },
     });
@@ -36,9 +49,7 @@ const createPersonClient = (client: IHttpClient) => {
 };
 
 export const usePersonResolver = () => {
-    // TODO - make better 🐒
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [resolver, setResolver] = useState<any | undefined>(undefined);
+    const [resolver, setResolver] = useState<PersonResolver | undefined>(undefined);
     const framework = useFramework();
     useMemo(() => {
         framework.modules.serviceDiscovery
