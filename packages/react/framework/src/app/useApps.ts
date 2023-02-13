@@ -13,16 +13,16 @@ export const useApps = (args?: {
     includeHidden: boolean;
 }): { apps: AppManifest[] | undefined; isLoading: boolean } => {
     const provider = useAppProvider();
-    const { next, complete } = useObservableState(
+    const { value: manifests, complete } = useObservableState(
         useMemo(() => provider.getAllAppManifests(), [provider])
     );
 
     const apps = useMemo(() => {
-        if (next && !args?.includeHidden) {
-            return next.filter((app) => app.hide);
+        if (manifests && !args?.includeHidden) {
+            return manifests.filter((app) => app.hide);
         }
-        return next;
-    }, [args, next]);
+        return manifests;
+    }, [args, manifests]);
 
     return { apps, isLoading: !complete };
 };

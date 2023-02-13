@@ -1,5 +1,5 @@
 import { useObservableSelector } from './useObservableSelector';
-import { useObservableState } from './useObservableState';
+import { ObservableStateReturnType, useObservableState } from './useObservableState';
 import { Observable } from '../types';
 
 /**
@@ -10,10 +10,10 @@ import { Observable } from '../types';
  * @param compare **Memoize** function for comparing difference
  * @returns Observable property of subject
  */
-export const useObservableSelectorState = <S, P extends keyof S, R = S[P]>(
+export const useObservableSelectorState = <S, P extends keyof S, R = S[P], E = unknown>(
     subject: Observable<S>,
     selector: P | ((state: S) => R),
     initial?: R,
     compare?: (x: R, y: R) => boolean
-): R | undefined =>
-    useObservableState(useObservableSelector(subject, selector, compare), { initial }).next;
+): ObservableStateReturnType<R | undefined, E> =>
+    useObservableState(useObservableSelector(subject, selector, compare), { initial });

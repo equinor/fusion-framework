@@ -61,7 +61,7 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, (
 
     // TODO change to `useCurrentContext`
     /* Current context observable */
-    const { next: currentContext } = useObservableState(
+    const { value: currentContext } = useObservableState(
         useMemo(() => framework.modules.context.currentContext$, [framework.modules.context])
     );
 

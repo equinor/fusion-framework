@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useEffect, useMemo } from 'react';
+import { StrictMode, useCallback, useMemo } from 'react';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import { Query } from '@equinor/fusion-query';
 import { useDebounceQuery } from '@equinor/fusion-query/react';
@@ -34,7 +34,7 @@ export const App = () => {
 
     const { idle, next, value$ } = useDebounceQuery(peopleQuery, { debounce: 1000 });
 
-    const results = useObservableSelectorState(
+    const { value: results } = useObservableSelectorState(
         value$,
         useCallback((x) => x.value.results, [value$])
     );
