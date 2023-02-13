@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.4...@equinor/fusion-framework-legacy-interopt@2.1.5) (2023-02-13)
+
+**Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt
+
 ## [2.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.3...@equinor/fusion-framework-legacy-interopt@2.1.4) (2023-02-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt

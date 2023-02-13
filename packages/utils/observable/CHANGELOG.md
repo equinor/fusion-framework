@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.0.0 (2023-02-13)
+
+### ⚠ BREAKING CHANGES
+
+-   **utils/observable:** `useObservableInputState` and `useObservableSelectorState` now return full state, not only value
+
+### Bug Fixes
+
+-   **utils/observable:** rename `next` to `value`from `useObservableState` ([4a08445](https://github.com/equinor/fusion-framework/commit/4a08445645af2488666564c2da716d32aa5e88c0))
+-   **utils/observable:** when subject in useObservableState reset state ([9c5c041](https://github.com/equinor/fusion-framework/commit/9c5c041d3d8c0b01bd507ea7f672711d9f5cb653))
+
 ## 6.0.0 (2023-02-01)
 
 ### ⚠ BREAKING CHANGES

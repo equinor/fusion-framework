@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-people@2.0.13...@equinor/fusion-framework-cookbook-app-react-people@3.0.0) (2023-02-13)
+
+### ⚠ BREAKING CHANGES
+
+-   **utils/observable:** `useObservableInputState` and `useObservableSelectorState` now return full state, not only value
+
+### Bug Fixes
+
+-   **utils/observable:** rename `next` to `value`from `useObservableState` ([4a08445](https://github.com/equinor/fusion-framework/commit/4a08445645af2488666564c2da716d32aa5e88c0))
+
 ## [2.0.13](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-people@2.0.11...@equinor/fusion-framework-cookbook-app-react-people@2.0.13) (2023-02-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-people
