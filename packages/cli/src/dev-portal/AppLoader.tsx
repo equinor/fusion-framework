@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Subscription } from 'rxjs';
 
@@ -38,8 +38,11 @@ export const AppLoader = (props: { appKey: string }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | undefined>();
 
+    // TODO change to `useCurrentApp`
     /** observe and use the current selected application from framework */
-    const currentApp = useObservableState(fusion.modules.app.current$).next;
+    const { next: currentApp } = useObservableState(
+        useMemo(() => fusion.modules.app.current$, [fusion.modules.app])
+    );
 
     useEffect(() => {
         /** when appKey property change, assign it to current */
