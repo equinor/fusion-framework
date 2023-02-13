@@ -2,12 +2,13 @@ import { ContextItem, ContextModule } from '@equinor/fusion-framework-module-con
 import { IContextProvider, contextModuleKey } from '@equinor/fusion-framework-module-context';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useObservableState } from '@equinor/fusion-observable/react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const useCurrentContext = (provider: IContextProvider) => {
-    const currentContext = useObservableState(provider.currentContext$, {
+    const currentContext$ = useMemo(() => provider.currentContext$, [provider]);
+    const { next: currentContext } = useObservableState(currentContext$, {
         initial: provider.currentContext,
-    }).next;
+    });
     const setCurrentContext = useCallback(
         (entry: ContextItem | string) => {
             provider.contextClient.setCurrentContext(entry);

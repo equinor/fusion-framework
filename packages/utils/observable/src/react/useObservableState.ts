@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from '../types';
 import { useObservableLayoutSubscription } from './useObservableSubscription';
 
-type ObservableStateOptions<S> = { initial?: S; teardown?: VoidFunction };
+type ObservableStateOptions<S = undefined> = { initial: S; teardown?: VoidFunction };
 
 type ObservableStateReturnType<S, E = unknown> = {
     next: S;
@@ -11,7 +11,9 @@ type ObservableStateReturnType<S, E = unknown> = {
     complete: boolean;
 };
 
-export function useObservableState<S>(subject: Observable<S>): ObservableStateReturnType<S>;
+export function useObservableState<S>(
+    subject: Observable<S>
+): ObservableStateReturnType<S | undefined>;
 
 /**
  * Hook for extracting state of observable.
@@ -21,25 +23,49 @@ export function useObservableState<S>(subject: Observable<S>): ObservableStateRe
  * @param initial initial value
  * @returns current state of observable
  */
-export function useObservableState<S, E = unknown>(
+export function useObservableState<S, E = unknown, I = undefined>(
     subject: Observable<S>,
-    opt?: ObservableStateOptions<S>
-): ObservableStateReturnType<S, E>;
+    opt: ObservableStateOptions<S> | ObservableStateOptions<I>
+): ObservableStateReturnType<S | I, E>;
+
+export function useObservableState<S, E = unknown, I = undefined>(
+    subject: Observable<S>,
+    opt: { initial: I; teardown?: VoidFunction }
+): ObservableStateReturnType<S | I, E>;
 
 export function useObservableState<S, E = unknown>(
     subject: Observable<S>,
     opt?: ObservableStateOptions<S>
 ): ObservableStateReturnType<S | undefined, E> {
-    const initial = opt?.initial ?? (subject as BehaviorSubject<S>).value;
-    const [next, setNext] = useState<S | undefined>(initial);
+    const [initialValue] = useState<S | undefined>(opt?.initial);
+
+    const [next, setNext] = useState<S | undefined>(initialValue);
     const [error, setError] = useState<E | null>(null);
     const [complete, setComplete] = useState<boolean>(false);
 
-    useObservableLayoutSubscription(
-        subject,
-        useMemo(() => ({ next: setNext, error: setError, complete: () => setComplete(true) }), []),
-        opt?.teardown
+    const resetState = useCallback(() => {
+        setError(null);
+        setNext(initialValue);
+        setComplete(false);
+    }, [setNext, setError, setComplete, initialValue]);
+
+    useLayoutEffect(() => {
+        const subjectValue = (subject as BehaviorSubject<S>).value;
+        subjectValue && setNext(subjectValue);
+        return resetState;
+    }, [setNext, resetState, subject]);
+
+    const subscriber = useMemo(
+        () => ({
+            next: setNext,
+            error: setError,
+            complete: () => setComplete(true),
+        }),
+        [setNext, setError, setComplete]
     );
+
+    useObservableLayoutSubscription(subject, subscriber, opt?.teardown);
+
     return { next, error, complete };
 }
 
