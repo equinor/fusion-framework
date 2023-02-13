@@ -5,8 +5,8 @@ import { useObservableLayoutSubscription } from './useObservableSubscription';
 
 type ObservableStateOptions<S = undefined> = { initial: S; teardown?: VoidFunction };
 
-type ObservableStateReturnType<S, E = unknown> = {
-    next: S;
+export type ObservableStateReturnType<S, E = unknown> = {
+    value: S;
     error: E | null;
     complete: boolean;
 };
@@ -66,7 +66,7 @@ export function useObservableState<S, E = unknown>(
 
     useObservableLayoutSubscription(subject, subscriber, opt?.teardown);
 
-    return { next, error, complete };
+    return { value: next, error, complete };
 }
 
 export default useObservableState;

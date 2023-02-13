@@ -6,7 +6,7 @@ import { useCallback, useMemo } from 'react';
 
 export const useCurrentContext = (provider: IContextProvider) => {
     const currentContext$ = useMemo(() => provider.currentContext$, [provider]);
-    const { next: currentContext } = useObservableState(currentContext$, {
+    const { value: currentContext } = useObservableState(currentContext$, {
         initial: provider.currentContext,
     });
     const setCurrentContext = useCallback(

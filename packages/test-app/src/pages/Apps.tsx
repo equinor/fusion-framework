@@ -11,18 +11,18 @@ export const CurrentApp = () => {
     const framework = useFramework<[AppModule]>();
     const [appKey, setAppKey] = useState('');
 
-    const AppManifest = useObservableState(
+    const { value: AppManifest } = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppManifest(appKey) : EMPTY), [appKey])
-    ).next;
+    );
 
-    const appConfig = useObservableState(
+    const { value: appConfig } = useObservableState(
         useMemo(() => (appKey ? framework.modules.app.getAppConfig(appKey) : EMPTY), [appKey])
-    ).next;
+    );
 
-    const apps = useObservableState(
+    const { value: apps } = useObservableState(
         useMemo(() => framework.modules.app.getAllAppManifests(), [framework]),
         { initial: [] }
-    ).next;
+    );
 
     return (
         <div>

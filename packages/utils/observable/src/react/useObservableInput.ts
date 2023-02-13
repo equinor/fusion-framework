@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { from, Observable, ObservableInput } from 'rxjs';
-import { useObservableState } from './useObservableState';
+import { useObservableState, ObservableStateReturnType } from './useObservableState';
 
 /**
  * Convert an observable input to an observable
@@ -10,9 +10,9 @@ export const useObservableInput = <T>(input: ObservableInput<T>): Observable<T> 
 };
 
 /** Observe state of an observable input */
-export const useObservableInputState = <T>(
+export const useObservableInputState = <T, E = unknown, I = undefined>(
     input: ObservableInput<T>,
-    initial?: T
-): T | undefined => {
-    return useObservableState(useObservableInput(input), { initial }).next;
+    initial: I
+): ObservableStateReturnType<T | I, E> => {
+    return useObservableState(useObservableInput(input), { initial });
 };

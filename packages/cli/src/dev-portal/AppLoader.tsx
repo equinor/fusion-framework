@@ -40,7 +40,7 @@ export const AppLoader = (props: { appKey: string }) => {
 
     // TODO change to `useCurrentApp`
     /** observe and use the current selected application from framework */
-    const { next: currentApp } = useObservableState(
+    const { value: currentApp } = useObservableState(
         useMemo(() => fusion.modules.app.current$, [fusion.modules.app])
     );
 

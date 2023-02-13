@@ -11,7 +11,7 @@ export const useCurrentContext = () => {
         () => provider.contextClient.currentContext$,
         [provider.contextClient]
     );
-    return useObservableState(currentContext$).next;
+    return useObservableState(currentContext$).value;
 };
 
 const useFrameworkCurrentContext = () => {
@@ -20,7 +20,7 @@ const useFrameworkCurrentContext = () => {
         () => provider.contextClient.currentContext$,
         [provider.contextClient]
     );
-    return useObservableState(currentContext$).next;
+    return useObservableState(currentContext$).value
 };
 
 export const GetContext = () => {
