@@ -40,7 +40,7 @@
         "@equinor/fusion-framework-module-context": "^2.0.4",
         "@equinor/fusion-framework-react": "^4.0.0",
         "@equinor/fusion-query": "^2.0.4",
-        "@equinor/fusion-react-button": "^0.6.1",
+        "@equinor/fusion-react-button": "^0.8.0",
         "@equinor/fusion-react-context-selector": "^0.3.0",
         "@equinor/fusion-react-icon": "^0.2.15",
         "@equinor/fusion-react-menu": "^0.1.5",
