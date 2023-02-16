@@ -1,7 +1,7 @@
 import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 import { ApiClientArguments } from '../..';
 import { generateEndpoint } from './generate-endpoint';
-import { ApiVersions, PostBookmarkArgs } from './types';
+import { ApiVersions, PutBookmarkArgs } from './types';
 
 /** function for creating http client arguments  */
 export const generateParameters = <
@@ -10,7 +10,7 @@ export const generateParameters = <
     TClient extends IHttpClient = IHttpClient
 >(
     version: TVersion,
-    args: PostBookmarkArgs<TVersion>,
+    args: PutBookmarkArgs<TVersion>,
     init?: ClientRequestInit<TClient, TResult>
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
@@ -20,7 +20,7 @@ export const generateParameters = <
 
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
-        { method: 'post', body: JSON.stringify(args), headers: headers },
+        { method: 'put', body: JSON.stringify(args), headers: headers },
         init
     );
 

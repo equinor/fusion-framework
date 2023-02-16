@@ -33,7 +33,7 @@ export type PostBookmarkFn<
     init?: ClientRequestInit<TClient, TResult>
 ) => PostBookmarksResult<TVersion, TMethod, TPayload, TResult>;
 
-type PostBookmarksArgsV1<T = unknown> = {
+export interface PostBookmarksArgsV1<T = unknown> {
     /** Display name of the bookmark */
     name: string;
     description?: string;
@@ -49,7 +49,7 @@ type PostBookmarksArgsV1<T = unknown> = {
         name?: string;
         subSystem?: string;
     };
-};
+}
 
 export type PostBookmarksVersions<TPayload = unknown> = {
     ['v1']: { args: PostBookmarksArgsV1<TPayload>; result: ApiBookmarkEntityV1<TPayload> };

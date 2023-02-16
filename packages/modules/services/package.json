@@ -18,12 +18,16 @@
             ],
             "context/query": [
                 "dist/types/context/query/index"
+            ],
+            "bookmarks": [
+                "dist/types/bookmarks/index"
             ]
         }
     },
     "exports": {
         ".": "./dist/esm/index.js",
         "./context": "./dist/esm/context/index.js",
+        "./bookmark": "./dist/esm/bookmarks/index.js",
         "./context/get": "./dist/esm/context/get-context/index.js",
         "./errors": "./dist/esm/errors.js",
         "./package.json": "./package.json"

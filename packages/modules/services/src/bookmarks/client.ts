@@ -7,6 +7,8 @@ import getBookmark from './get/client';
 import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
 import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
 import postBookmark from './post/client';
+import putBookmark, { PutBookmarkFn, PutBookmarkResult, PutBookmarksResult } from './put';
+import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
 
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -23,8 +25,18 @@ export class BookmarksApiClient<
         version: TVersion,
         ...args: Parameters<GetBookmarksFn<TVersion, TMethod, TClient, TPayload, TResult>>
     ): GetBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = getBookmark<TVersion, TMethod, TClient>(this._client, version, this._method);
+        const fn = getBookmark(this._client, version, this._method);
         return fn<TResult>(...args);
+    }
+    /**
+     * Fetch all bookmarks
+     * @see {@link get/client}
+     */
+    public getAll<TVersion extends ApiVersions, TResult = GetAllBookmarkResult<TVersion, TPayload>>(
+        version: TVersion
+    ): GetAllBookmarksResult<TVersion, TMethod, TPayload, TResult> {
+        const fn = getAllBookmarks(this._client, version, this._method);
+        return fn<TResult>();
     }
 
     /**
@@ -35,7 +47,19 @@ export class BookmarksApiClient<
         version: TVersion,
         ...args: Parameters<PostBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
     ): PostBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = postBookmark<TVersion, TMethod, TClient>(this._client, version, this._method);
+        const fn = postBookmark(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    /**
+     * Update a bookmark
+     * @see {@link get/client}
+     */
+    public put<TVersion extends ApiVersions, TResult = PutBookmarkResult<TVersion, TPayload>>(
+        version: TVersion,
+        ...args: Parameters<PutBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
+    ): PutBookmarksResult<TVersion, TMethod, TPayload, TResult> {
+        const fn = putBookmark(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 
