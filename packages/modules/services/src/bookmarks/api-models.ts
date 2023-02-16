@@ -8,8 +8,8 @@ export interface ApiBookmarkEntityV1<TPayload> {
     context: Context;
     createdBy: CreatedBy;
     updatedBy: UpdatedBy;
-    created: Date;
-    updated: Date;
+    created: string;
+    updated: string;
     sourceSystem: SourceSystem;
 }
 
