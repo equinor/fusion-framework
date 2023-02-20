@@ -1,7 +1,7 @@
 import { ActionCreator, ActionDefinitions, ActionTypes } from './types/actions';
 
 /** flat map ActionDefinitions  */
-type ActionCalls<T extends ActionDefinitions> = {
+export type ActionCalls<T extends ActionDefinitions> = {
     [K in keyof T]: T[K] extends ActionCreator ? (...args: Parameters<T[K]>) => void : never;
 };
 

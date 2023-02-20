@@ -10,7 +10,7 @@ export * from './types';
 /** @deprecated use {@link FlowSubject} */
 export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
-export { actionMapper } from './action-mapper';
+export { actionMapper, ActionCalls } from './action-mapper';
 
 export { createAction, actionBaseType, ActionCreatorWithPreparedPayload } from './create-action';
 
