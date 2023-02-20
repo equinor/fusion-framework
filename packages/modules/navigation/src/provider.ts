@@ -29,11 +29,14 @@ export class NavigationProvider implements INavigationProvider {
 
     public createRouter(routes: AgnosticRouteObject[]) {
         const history = this.#navigator;
-        return createRouter({
+        console.debug('NavigationProvider::createRouter', history, routes);
+        const router = createRouter({
             basename: history.basename,
             history,
             routes,
         });
+        router.initialize();
+        return router;
     }
 
     dispose() {

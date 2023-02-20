@@ -1,5 +1,5 @@
 import type { History, To, Path } from '@remix-run/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
 
@@ -21,6 +21,8 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     #subscriptions = new Subscription();
     #state: BehaviorSubject<T>;
 
+    #logger: typeof console;
+
     get basename(): string | undefined {
         return this.#baseName;
     }
@@ -41,9 +43,10 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         return this.value.action;
     }
 
-    constructor(args: { basename?: string; history: History }) {
+    constructor(args: { basename?: string; history: History; logger?: any }) {
         super((subscriber) => this.#state.subscribe(subscriber));
         const { basename, history } = args;
+        this.#logger = args.logger || console;
         this.#baseName = basename;
         this.#history = history;
         this.#state = new BehaviorSubject<T>({
@@ -51,7 +54,19 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
             location: this.#history.location,
             delta: null,
         } as T);
-        this.#subscriptions.add(this.#history.listen((update) => this.#state.next(update as T)));
+        this.#subscriptions.add(
+            this.#history.listen((update) => {
+                if (update.location.key !== this.#state.value.location.key) {
+                    this.#logger.debug(
+                        'Navigator::constructor',
+                        'history changed',
+                        update,
+                        this.#state.value
+                    );
+                    this.#state.next(update as T);
+                }
+            })
+        );
     }
 
     public encodeLocation(to: To): Path {
@@ -59,7 +74,15 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     }
 
     public listen(listener: NavigationListener): VoidFunction {
-        return this.subscribe(listener).unsubscribe.bind(this);
+        this.#logger.debug('Navigator::listen', listener);
+        const subscription = this.#state.subscribe((x) => {
+            this.#logger.debug('Navigator::listen[onchange]', x);
+            listener(x);
+        });
+        return () => {
+            this.#logger.debug('Navigator::listen[unsubscribe]');
+            return subscription.unsubscribe();
+        };
     }
 
     public createHref(to: To): string {
