@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.0...@equinor/fusion-framework-cli@5.0.1) (2023-02-20)
+
+### Bug Fixes
+
+-   **cli:** allow cli to read paths from tsconfig ([c78673f](https://github.com/equinor/fusion-framework/commit/c78673f7d85a2c3697798aa6a59ef1792ca53af6))
+
 ## [5.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@4.1.0...@equinor/fusion-framework-cli@5.0.0) (2023-02-13)
 
 ### ⚠ BREAKING CHANGES

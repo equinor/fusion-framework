@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.3 (2023-02-20)
+
+### Bug Fixes
+
+-   **modules/navigation:** initialize router on creation ([04ca77f](https://github.com/equinor/fusion-framework/commit/04ca77fd8d33d25e6e7e9580f1b9495a817aff92))
+
 ## 1.0.2 (2023-02-06)
 
 ### Bug Fixes

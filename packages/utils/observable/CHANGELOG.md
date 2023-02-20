@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-observable@7.0.0...@equinor/fusion-observable@7.0.1) (2023-02-20)
+
+### Bug Fixes
+
+-   **utils:** expose action call types ([af50204](https://github.com/equinor/fusion-framework/commit/af502049e2709c349f8b488aa84a62afc1baf0fd))
+
 ## 7.0.0 (2023-02-13)
 
 ### ⚠ BREAKING CHANGES

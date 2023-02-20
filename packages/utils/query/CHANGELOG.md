@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-query@2.0.4...@equinor/fusion-query@2.0.5) (2023-02-20)
+
+**Note:** Version bump only for package @equinor/fusion-query
+
 ## [2.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-query@2.0.3...@equinor/fusion-query@2.0.4) (2023-02-13)
 
 **Note:** Version bump only for package @equinor/fusion-query
