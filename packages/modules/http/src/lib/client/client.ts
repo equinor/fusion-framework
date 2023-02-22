@@ -7,7 +7,14 @@ import { jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
-import type { FetchRequest, FetchRequestInit, FetchResponse, IHttpClient, StreamResponse } from '.';
+import type {
+    FetchRequest,
+    FetchRequestInit,
+    FetchResponse,
+    IHttpClient,
+    JsonRequest,
+    StreamResponse,
+} from '.';
 import { HttpResponseError } from '../../errors';
 
 export type HttpClientCreateOptions<
@@ -80,7 +87,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     public json$<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
     ): StreamResponse<T> {
         const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
         const selector = args?.selector ?? jsonSelector;
@@ -96,15 +103,15 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     public json<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
     ): Promise<T> {
         return firstValueFrom(this.json$<T>(path, args));
     }
 
     /** @deprecated */
-    public jsonAsync<T = TResponse>(
+    public jsonAsync<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
     ): Promise<T> {
         return this.json(path, args);
     }

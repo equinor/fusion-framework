@@ -8,6 +8,10 @@ export type FetchRequest = RequestInit & {
     path: string;
 };
 
+export type JsonRequest<TRequest extends FetchRequest = FetchRequest> = Omit<TRequest, 'body'> & {
+    body?: object | string | null;
+};
+
 export type FetchResponse<T = unknown> = Response & {
     json(): Promise<T>;
 };
@@ -131,26 +135,20 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
         args?: FetchRequestInit<T, TRequest, TResponse>
     ): Promise<T>;
 
-    json$<T = TResponse>(
+    json$<T = unknown>(
         path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
+        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
     ): StreamResponse<T>;
 
-    json<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
-
-    jsonAsync<T = TResponse>(
+    json<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
     ): Promise<T>;
 
-    /**
-     *
-     */
-    execute<T = TResponse, TMethod extends 'fetch' | 'fetch$' | 'json' | 'json$' = 'fetch'>(
-        method: TMethod,
+    jsonAsync<T = unknown>(
         path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
-    ): ReturnType<IHttpClient[TMethod]>;
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+    ): Promise<T>;
 
     /**
      * Abort all ongoing request for current client
