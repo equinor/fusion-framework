@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-legacy-interopt",
-    "version": "2.1.6",
+    "version": "2.1.7",
     "description": "Library for interopt legacy fusion applications",
     "main": "dist/esm/index.js",
     "exports": {
@@ -33,11 +33,11 @@
     "devDependencies": {
         "@equinor/fusion": "^3.4.6",
         "@equinor/fusion-components": "^2.9.3",
-        "@equinor/fusion-framework": "^6.0.5",
-        "@equinor/fusion-framework-app": "^6.0.5",
-        "@equinor/fusion-framework-module-app": "^4.0.5",
+        "@equinor/fusion-framework": "^6.0.6",
+        "@equinor/fusion-framework-app": "^6.0.6",
+        "@equinor/fusion-framework-module-app": "^4.0.6",
         "@equinor/fusion-framework-module-navigation": "^1.0.3",
-        "@equinor/fusion-framework-react": "^4.0.1",
+        "@equinor/fusion-framework-react": "^4.0.2",
         "@types/react": "^17.0.52",
         "react": "^17.0.0",
         "rxjs": "^7.5.7",

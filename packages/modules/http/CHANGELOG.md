@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0 (2023-02-22)
+
+### ⚠ BREAKING CHANGES
+
+-   **modules/http:** `IHttpClient.execute` is removed, most likely not used, too complex to maintain
+
+### Bug Fixes
+
+-   **modules/http:** fix typing for json requests ([459df80](https://github.com/equinor/fusion-framework/commit/459df80bfc79426ec6507db8f06d488b6a3d0f07))
+
 ## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-http@2.2.3...@equinor/fusion-framework-module-http@3.0.0) (2023-01-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-http
