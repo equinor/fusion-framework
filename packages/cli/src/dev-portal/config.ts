@@ -1,6 +1,7 @@
 import { FusionConfigurator } from '@equinor/fusion-framework-react';
 import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
+import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 
 export const configure = async (config: FusionConfigurator) => {
     config.logger.level = 4;
@@ -22,6 +23,14 @@ export const configure = async (config: FusionConfigurator) => {
     );
 
     enableAppModule(config);
+
+    enableBookmark(config, (builder) => {
+        builder.setSourceSystem({
+            subSystem: 'CLI',
+            identifier: 'fusion-cli',
+            name: 'Fusion CLI',
+        });
+    });
 
     config.onConfigured(() => {
         console.log('framework config done');

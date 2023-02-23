@@ -21,11 +21,17 @@
       "path": "../modules/context"
     },
     {
+      "path": "../modules/bookmark"
+    },
+    {
       "path": "../app"
     },
     {
       "path": "../react/framework"
     },
+    {
+      "path": "../react/modules/bookmark"
+    }
   ],
   "include": [
     "src/**/*",
