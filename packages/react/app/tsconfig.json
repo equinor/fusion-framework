@@ -22,6 +22,9 @@
     },
     {
       "path": "../modules/context"
+    },
+    {
+      "path": "../modules/bookmark"
     }
   ],
   "include": [
