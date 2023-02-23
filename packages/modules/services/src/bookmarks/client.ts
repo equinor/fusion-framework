@@ -7,7 +7,11 @@ import getBookmark from './get/client';
 import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
 import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
 import postBookmark from './post/client';
-import putBookmark, { PutBookmarkFn, PutBookmarkResult, PutBookmarksResult } from './put';
+import patchBookmark, {
+    PutBookmarkFn as PatchBookmarkFn,
+    PutBookmarkResult as PatchBookmarkResult,
+    PutBookmarksResult as PatchBookmarksResult,
+} from './patch';
 import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
 
 export class BookmarksApiClient<
@@ -55,11 +59,11 @@ export class BookmarksApiClient<
      * Update a bookmark
      * @see {@link get/client}
      */
-    public put<TVersion extends ApiVersions, TResult = PutBookmarkResult<TVersion, TPayload>>(
+    public patch<TVersion extends ApiVersions, TResult = PatchBookmarkResult<TVersion, TPayload>>(
         version: TVersion,
-        ...args: Parameters<PutBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
-    ): PutBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = putBookmark(this._client, version, this._method);
+        ...args: Parameters<PatchBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
+    ): PatchBookmarksResult<TVersion, TMethod, TPayload, TResult> {
+        const fn = patchBookmark(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 
