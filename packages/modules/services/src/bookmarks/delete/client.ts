@@ -22,7 +22,7 @@ export const deleteBookmark =
     >(
         client: TClient,
         version: TVersion,
-        method: TMethod = 'json' as TMethod
+        method: TMethod = 'fetch' as TMethod
     ) =>
     <TResult = DeleteBookmarkResult<TVersion>>(
         args: DeleteBookmarkArgs<TVersion>,

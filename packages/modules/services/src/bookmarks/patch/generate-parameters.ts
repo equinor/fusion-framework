@@ -20,7 +20,7 @@ export const generateParameters = <
 
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
-        { method: 'put', body: JSON.stringify(args), headers: headers },
+        { method: 'patch', body: JSON.stringify(args), headers: headers },
         init
     );
 
