@@ -9,6 +9,6 @@ export * from './module';
 
 export * from './errors';
 
-export type { IHttpClient } from './lib/client';
+export type { IHttpClient, FetchResponse } from './lib/client';
 
 export { default } from './module';
