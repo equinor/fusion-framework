@@ -53,7 +53,7 @@
     "lerna": "^6.4.1",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^13.1.0",
-    "nx": "15.6.3",
+    "nx": "15.8.1",
     "prettier": "^2.8.3",
     "ts-jest": "^29.0.5",
     "tslib": "^2.5.0",
