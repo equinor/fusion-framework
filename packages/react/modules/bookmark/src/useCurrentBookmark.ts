@@ -4,8 +4,8 @@ import useModuleBookmark from './useModuleBookmark';
 export const useCurrentBookmark = <TData>(
     createBookmarkState?: CreateBookMarkFn<TData>
 ): CurrentBookmark<TData> => {
-    const { currentBookmark, hasBookmark } = useModuleBookmark(createBookmarkState);
-    return { currentBookmark, hasBookmark };
+    const { currentBookmark } = useModuleBookmark(createBookmarkState);
+    return { currentBookmark };
 };
 
 export default useCurrentBookmark;

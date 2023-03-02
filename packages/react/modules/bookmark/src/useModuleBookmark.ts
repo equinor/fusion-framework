@@ -2,7 +2,7 @@ import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useEffect } from 'react';
 import { CreateBookMarkFn, Bookmarks } from './types';
-import { useBookmark } from './useBookmarks';
+import { useBookmark } from './portal/useBookmark';
 
 export const useModuleBookmark = <TData>(
     createBookmarkState?: CreateBookMarkFn<TData>

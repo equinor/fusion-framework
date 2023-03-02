@@ -8,10 +8,10 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
     createBookmark: (args: { name: string; description: string; isShared: boolean }) => void;
     updateBookmark: (bookmark: Bookmark<TData>) => void;
     deleteBookmarkById: (bookmarkId: string) => void;
+    setCurrentBookmark(IdOrItem: string | Bookmark<TData>): void;
     bookmarks: Bookmark<unknown>[];
 }
 
 export interface CurrentBookmark<TData> {
-    hasBookmark: boolean;
     currentBookmark: Bookmark<TData> | undefined;
 }
