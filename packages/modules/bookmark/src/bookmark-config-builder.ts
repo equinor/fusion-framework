@@ -4,7 +4,10 @@ import {
     Modules,
     ModuleType,
 } from '@equinor/fusion-framework-module';
+import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+
 import { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
+import { CreateBookmarkFn } from 'bookmark-provider';
 
 import {
     BookmarkModuleConfig,
@@ -47,6 +50,20 @@ export class BookmarkConfigBuilder<
 
     setBookmarkIdResolver(fn: () => string | null) {
         this.config.resolveBookmarkId = fn;
+    }
+
+    setContextIdResolver(fn: () => string | undefined) {
+        this.config.getContextId = fn;
+    }
+    setAppResolver(fn: () => string | undefined) {
+        this.config.getAppIdentification = fn;
+    }
+    setEventProvider(provider: IEventModuleProvider) {
+        this.config.event = provider;
+    }
+
+    setCurrentAppProvider(cb: () => Record<string, CreateBookmarkFn<unknown>>) {
+        this.config.getCurrentAppCreator = cb;
     }
 
     setBookmarkClient(

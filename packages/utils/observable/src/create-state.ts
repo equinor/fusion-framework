@@ -4,6 +4,12 @@ import { FlowSubject } from './FlowSubject';
 import { ActionDefinitions, ActionTypes } from './types/actions';
 import { ReducerWithInitialState } from './types/reducers';
 
+export type FlowState<TState, TActions extends ActionDefinitions> = {
+    subject: FlowSubject<TState, ActionTypes<TActions>>;
+    actions: TActions;
+    dispatch: ReturnType<typeof actionMapper<TActions>>;
+};
+
 export function createState<TState, TActions extends ActionDefinitions>(
     actions: TActions,
     reducer_or_builder:

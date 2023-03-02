@@ -3,15 +3,14 @@ import {
     FrameworkEventInit,
     IEventModuleProvider,
 } from '@equinor/fusion-framework-module-event';
-import { FetchResponse, IHttpClient } from '@equinor/fusion-framework-module-http';
+import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import {
-    ApiBookmarkEntityV1,
-    BookmarksApiClient,
-} from '@equinor/fusion-framework-module-services/bookmarks';
+import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+import { createState } from '@equinor/fusion-observable';
+import { FlowState } from '@equinor/fusion-observable/src/create-state';
 import Query from '@equinor/fusion-query';
 import { BookmarkModuleConfig } from 'configurator';
-import { BehaviorSubject, catchError, EMPTY, map, Observable, Subject, Subscription } from 'rxjs';
+import { catchError, EMPTY, map, Observable, Subject, Subscription } from 'rxjs';
 
 import {
     Bookmark,
@@ -19,7 +18,16 @@ import {
     GetAllBookmarksParameters,
     GetBookmarkParameters,
     SourceSystem,
-} from 'types';
+} from '../types';
+import { ActionBuilder, actions } from './bookmarkActions';
+import { reducer } from './bookmarkReducer';
+import {
+    handleBookmarkGetAll,
+    handleCreateBookmark,
+    handleDeleteBookmark,
+    handleGetAllOnSuccessCreateUpdateDelete,
+    handleUpdateBookmark,
+} from './bookmarkFlows';
 
 export class BookmarkClient {
     #queryBookmarkById: Query<Bookmark<unknown>, GetBookmarkParameters>;
@@ -28,22 +36,30 @@ export class BookmarkClient {
 
     #currentBookmark$: Subject<Bookmark<unknown> | undefined>;
     #currentBookmark: Bookmark<unknown> | undefined;
-    #bookmarks$: BehaviorSubject<Array<Bookmark<unknown>>>;
 
-    #subscriptions = new Subscription();
     #sourceSystem: SourceSystem;
     #event?: IEventModuleProvider;
 
-    constructor(config: BookmarkModuleConfig, event?: IEventModuleProvider) {
+    #state: FlowState<Record<string, Bookmark>, ActionBuilder>;
+    #subscriptions = new Subscription();
+
+    constructor(config: BookmarkModuleConfig) {
         this.#currentBookmark$ = new Subject();
 
-        this.#bookmarks$ = new BehaviorSubject([] as Array<Bookmark<unknown>>);
         this.#bookmarkAPiClient = config.client;
         this.#queryBookmarkById = new Query(config.queryClientConfig.getBookmarkById);
         this.#queryAllBookmarks = new Query(config.queryClientConfig.getAllBookmarks);
-        this.#subscriptions = new Subscription();
+
         this.#sourceSystem = config.sourceSystem;
-        this.#event = event;
+        this.#event = config.event;
+
+        this.#state = createState(actions, reducer);
+
+        // Add Bookmark API calls as flows
+        this.addSubjectFlows();
+
+        // Add Events to flows success
+        this.addStateEffects();
     }
 
     public get currentBookmark() {
@@ -55,7 +71,9 @@ export class BookmarkClient {
     }
 
     public get bookmarks$() {
-        return this.#bookmarks$.asObservable();
+        return this.#state.subject.pipe(
+            map((bookmarks) => Object.entries(bookmarks).map(([_, bookmark]) => bookmark))
+        );
     }
 
     setCurrentBookmark<T>(IdOrItem: string | Bookmark<T>) {
@@ -91,67 +109,74 @@ export class BookmarkClient {
 
     getAllBookmarks(args = { isValid: false }) {
         const { isValid } = args;
-        this.#queryAllBookmarks
-            .query({ isValid })
-            .pipe(
-                map((bookmarks) => bookmarks.value),
-                catchError(() => EMPTY)
-            )
-            .subscribe((bookmarks) => {
-                if (this.#event) {
-                    this.#event.dispatchEvent('onBookmarksChanged', {
-                        detail: bookmarks,
-                        canBubble: true,
-                    });
-                }
-
-                this.#bookmarks$.next(
-                    bookmarks.filter(
-                        (bookmark) =>
-                            bookmark.sourceSystem.identifier === this.#sourceSystem.identifier
-                    )
-                );
-            });
+        this.#state.dispatch.getAll(isValid);
     }
 
+    // Convert to state ??
     async getBookmarkById(bookmarkId: string) {
         return await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
     }
 
-    async createBookmark<T>(bookmark: CreateBookmark<T>): Promise<ApiBookmarkEntityV1<unknown>> {
-        const response = await this.#bookmarkAPiClient.post('v1', bookmark);
-        return await this.#responseParser('onBookmarkCreated', response);
+    createBookmark<T>(bookmark: CreateBookmark<T>) {
+        this.#state.dispatch.create(bookmark);
     }
-    async updateBookmark(bookmark: Bookmark<unknown>): Promise<ApiBookmarkEntityV1<unknown>> {
-        const response = await this.#bookmarkAPiClient.patch('v1', bookmark);
-        return await this.#responseParser('onBookmarkUpdated', response);
+    updateBookmark(bookmark: Bookmark<unknown>) {
+        this.#state.dispatch.update(bookmark);
     }
-    async deleteBookmarkById(bookmarkId: string) {
-        const response = await this.#bookmarkAPiClient.delete('v1', { id: bookmarkId });
+    deleteBookmarkById(bookmarkId: string) {
+        this.#state.dispatch.delete(bookmarkId);
+    }
 
-        if (response.ok && this.#event) {
-            this.#event.dispatchEvent('onBookmarkDeleted', {
-                detail: bookmarkId,
+    private addStateEffects() {
+        this.#state.subject.addEffect('create::success', (action) => {
+            this.#currentBookmark$.next(action.payload);
+            this.#event?.dispatchEvent('onBookmarkCreated', {
+                detail: action.payload,
                 canBubble: true,
+                source: this,
             });
-        }
-    }
-
-    async #responseParser<T>(type: string, response: FetchResponse<T>) {
-        if (response.ok && this.#event) {
-            const resultData = await response.json();
-            this.#event.dispatchEvent(type, {
-                detail: resultData,
+        });
+        this.#state.subject.addEffect('delete::success', (action) => {
+            this.#event?.dispatchEvent('onBookmarkDeleted', {
+                detail: action.payload,
                 canBubble: true,
+                source: this,
             });
-            return resultData;
-        }
-
-        return await response.json();
+        });
+        this.#state.subject.addEffect('update::success', (action) => {
+            this.#event?.dispatchEvent('onBookmarkUpdated', {
+                detail: action.payload,
+                canBubble: true,
+                source: this,
+            });
+        });
     }
 
     dispose() {
         this.#subscriptions.unsubscribe();
+    }
+
+    private addSubjectFlows() {
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(
+                handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem.identifier)
+            )
+        );
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(handleCreateBookmark(this.#bookmarkAPiClient))
+        );
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(handleDeleteBookmark(this.#bookmarkAPiClient))
+        );
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient))
+        );
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient))
+        );
+        this.#subscriptions.add(
+            this.#state.subject.addFlow(handleGetAllOnSuccessCreateUpdateDelete())
+        );
     }
 }
 
@@ -165,7 +190,7 @@ declare module '@equinor/fusion-framework-module-event' {
         >;
         onBookmarkCreated: FrameworkEvent<FrameworkEventInit<Bookmark<unknown>, BookmarkClient>>;
         onBookmarkUpdated: FrameworkEvent<FrameworkEventInit<Bookmark<unknown>, BookmarkClient>>;
-        onBookmarkDeleted: FrameworkEvent<FrameworkEventInit<string, BookmarkClient>>;
+        onBookmarkDeleted: FrameworkEvent<FrameworkEventInit<boolean, BookmarkClient>>;
         onBookmarkResolved: FrameworkEvent<FrameworkEventInit<Bookmark<unknown>, BookmarkClient>>;
     }
 }
