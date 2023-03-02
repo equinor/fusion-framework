@@ -1,12 +1,6 @@
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useEffect } from 'react';
-import {
-    createBrowserRouter,
-    Outlet,
-    RouterProvider,
-    useNavigate,
-    useParams,
-} from 'react-router-dom';
+import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
+
+import { createBrowserRouter, Outlet, RouterProvider, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
 import Header from './Header';
 
@@ -15,15 +9,8 @@ import { usePersonResolver } from './usePersonResolver';
 
 const Root = () => {
     const personResolver = usePersonResolver();
-    const { modules } = useFramework();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        const unSub = modules.event.addEventListener('onNavigateToApp', (e) => {
-            navigate(e.detail.pathname + e.detail.search);
-        });
-        return unSub;
-    }, []);
+    useBookmarkNavigate((appKey: string) => `/apps/${appKey}`);
 
     return (
         <div style={{ fontFamily: 'Equinor' }}>

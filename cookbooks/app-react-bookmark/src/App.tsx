@@ -1,7 +1,9 @@
-import { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import { useFramework } from '@equinor/fusion-framework-react';
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { StrictMode, useEffect, useState } from 'react';
+import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark/portal';
+import { StrictMode, useCallback, useEffect, useState } from 'react';
 
 interface MyBookmark {
     myId: string;
@@ -26,32 +28,31 @@ const init = {
 };
 
 export const App = () => {
-    const [bookmarks, setBookmarks] = useState<Bookmark<unknown>[]>([]);
     const bookmarkModule = useAppModule<BookmarkModule>('bookmark');
-
-    const { currentBookmark } = useCurrentBookmark();
+    const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
 
     const [state, setState] = useState<BookmarkState>(init);
+
+    const {
+        bookmarks,
+        getAllBookmarks,
+        updateBookmark,
+        deleteBookmarkById,
+        createBookmark,
+        setCurrentBookmark,
+    } = useBookmark(bookmarkProvider);
+
+    const { currentBookmark } = useCurrentBookmark(
+        useCallback(() => state.payload, [state.payload])
+    );
 
     useEffect(() => {
         if (currentBookmark) setState(currentBookmark as BookmarkState);
     }, [currentBookmark]);
 
     useEffect(() => {
-        if (!bookmarkModule) return;
-
-        bookmarkModule.bookmarks$.subscribe((b) => {
-            console.log('Bookmarks', b);
-            setBookmarks(b);
-        });
-
-        bookmarkModule.bookmarkClient.getAllBookmarks();
-    }, [bookmarkModule]);
-
-    useEffect(() => {
-        if (!bookmarkModule) return;
-        bookmarkModule.addCreator(() => state.payload);
-    }, [state.payload, bookmarkModule]);
+        getAllBookmarks();
+    }, []);
 
     if (!bookmarkModule) return <div>No bookmark module</div>;
 
@@ -136,7 +137,7 @@ export const App = () => {
                         <button
                             disabled={state.name.length < 2 || state.description.length < 3}
                             onClick={() => {
-                                bookmarkModule?.createBookmark(state);
+                                createBookmark(state);
                             }}
                         >
                             Create Bookmark
@@ -145,7 +146,7 @@ export const App = () => {
                             disabled={!currentBookmark}
                             onClick={() => {
                                 if (currentBookmark) {
-                                    bookmarkModule.bookmarkClient.updateBookmark({
+                                    updateBookmark({
                                         ...currentBookmark,
                                         ...state,
                                     });
@@ -165,10 +166,7 @@ export const App = () => {
                         <button
                             disabled={!currentBookmark}
                             onClick={() => {
-                                if (currentBookmark)
-                                    bookmarkModule?.bookmarkClient.deleteBookmarkById(
-                                        currentBookmark?.id
-                                    );
+                                if (currentBookmark) deleteBookmarkById(currentBookmark?.id);
                                 setState(init);
                                 // setBookmark(undefined);
                             }}
@@ -195,7 +193,7 @@ export const App = () => {
                             key={bookmark.id}
                             style={{ display: 'flex' }}
                             onClick={() => {
-                                bookmarkModule?.bookmarkClient.setCurrentBookmark(bookmark.id);
+                                setCurrentBookmark(bookmark.id);
                             }}
                         >
                             <svg
