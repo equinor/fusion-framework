@@ -4,9 +4,17 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": "./dist/esm/index.js",
+        "./portal": "./dist/esm/portal/index.js"
     },
     "types": "./dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "portal": [
+                "dist/types/portal/index.d.ts"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "yarn build"
@@ -31,6 +39,7 @@
     "devDependencies": {
         "@types/react": "^17.0.11",
         "@types/react-dom": "^17.0.7",
+        "react-router-dom": "^6.4.3",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "typescript": "^4.9.3"
@@ -38,7 +47,8 @@
     "peerDependencies": {
         "@types/react": "^17.0.0 || ^18.0.0",
         "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+        "react-dom": "^17.0.0 || ^18.0.0",
+        "react-router-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {
