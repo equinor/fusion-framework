@@ -22,28 +22,10 @@ export const module: BookmarkModule = {
     name: moduleKey,
     configure: () => new BookmarkModuleConfigurator(),
     initialize: async (args) => {
-        const config = await (args.config as BookmarkModuleConfigurator).createConfig(args);
-        const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
         const ref = (args.ref as ModulesInstance<[BookmarkModule]>)?.bookmark;
+        const config = await (args.config as BookmarkModuleConfigurator).createConfig(args, ref);
 
-        // Looks like the navigation module is not needed.
-        // const navigation = args.hasModule('navigation')
-        //     ? await args.requireInstance('navigation')
-        //     : undefined;
-
-        const contextModule = args.hasModule('context')
-            ? await args.requireInstance('context')
-            : undefined;
-
-        const appModule = args.hasModule('app') ? await args.requireInstance('app') : undefined;
-
-        return new BookmarkProvider({
-            config,
-            event,
-            ref,
-            appModule,
-            contextModule,
-        });
+        return new BookmarkProvider(config);
     },
     dispose: (args) => {
         (args.instance as BookmarkProvider).dispose();

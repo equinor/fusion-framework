@@ -5,15 +5,16 @@
     "main": "./dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./utils": "./dist/esm/utils/index.js"
     },
-    "types": "index.d.ts",
+    "types": "./dist/types/index.d.ts",
     "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
+        "*": {
+            "utils": [
+                "dist/types/utils/index.d.ts"
             ]
-        }
+        } 
     },
     "scripts": {
         "build": "tsc -b",

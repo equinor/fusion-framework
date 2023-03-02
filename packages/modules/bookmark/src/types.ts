@@ -1,6 +1,6 @@
 import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
 
-export interface Bookmark<TData> {
+export interface Bookmark<TData = unknown> {
     id: string;
     name: string;
     description: string;
@@ -15,7 +15,7 @@ export interface Bookmark<TData> {
     sourceSystem: SourceSystem;
 }
 
-export type CreateBookmark<T = unknown> = {
+export type CreateBookmark<TData = unknown> = {
     /** Display name of the bookmark */
     name: string;
     description?: string;
@@ -25,7 +25,7 @@ export type CreateBookmark<T = unknown> = {
     appKey: string;
     contextId?: string;
     /** Any JSON object to store as the bookmark payload */
-    payload: T;
+    payload: TData;
     sourceSystem?: Partial<SourceSystem>;
 };
 

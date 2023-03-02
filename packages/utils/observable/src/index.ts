@@ -22,6 +22,6 @@ export {
     isSuccessAction,
 } from './create-async-action';
 
-export { createReducer } from './create-reducer';
+export { createReducer, ActionReducerMapBuilder } from './create-reducer';
 
 export { createState } from './create-state';

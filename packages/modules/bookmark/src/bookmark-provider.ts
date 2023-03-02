@@ -1,6 +1,5 @@
 import { ModuleType } from '@equinor/fusion-framework-module';
-import { App, AppModule, AppModuleProvider } from '@equinor/fusion-framework-module-app';
-import { ContextModule, IContextProvider } from '@equinor/fusion-framework-module-context';
+
 import {
     EventModule,
     FrameworkEvent,
@@ -10,11 +9,8 @@ import {
 import { BookmarkClient } from './client/bookmarkClient';
 
 import { BookmarkModuleConfig } from './configurator';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Bookmark, CreateBookmark } from './types';
-
-import { BookmarkModule } from 'index';
-import { removeBookmarkIdFromURL } from './utils/handle-url';
 
 export interface IBookmarkProvider {
     readonly config: BookmarkModuleConfig;
@@ -23,14 +19,12 @@ export interface IBookmarkProvider {
     readonly bookmarks$: Observable<Array<Bookmark<unknown>>>;
     currentBookmark: Bookmark<unknown> | undefined;
     addCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction;
-    hasBookmark$: Observable<boolean>;
-    hasBookmark: boolean;
     createBookmark(args: { name: string; description: string; isShared: boolean }): Promise<void>;
     parentBookmarkProvider?: IBookmarkProvider;
     bookmarkCreators: Record<string, CreateBookmarkFn<unknown>>;
 }
 
-type CreateBookmarkFn<T> = () => Promise<Partial<T>> | Partial<T>;
+export type CreateBookmarkFn<T> = () => Promise<Partial<T>> | Partial<T>;
 
 /** Application BookmarkProvider */
 // On bookmark change > bookmarkId > resolve Bookmark > call bookmark handler.
@@ -40,18 +34,12 @@ export class BookmarkProvider implements IBookmarkProvider {
 
     #event?: ModuleType<EventModule>;
 
-    #contextModule?: IContextProvider;
-    #appModule?: AppModuleProvider;
     config: BookmarkModuleConfig;
     #subscriptions = new Subscription();
 
     bookmarkCreators: Record<string | number | symbol, CreateBookmarkFn<unknown>> = {};
-    #hasBookmark$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     parentBookmarkProvider?: IBookmarkProvider;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    #app: App<any, [BookmarkModule]> | undefined;
 
     public get bookmarkClient() {
         return this.#bookmarkClient;
@@ -69,36 +57,12 @@ export class BookmarkProvider implements IBookmarkProvider {
         return this.#bookmarkClient.currentBookmark$;
     }
 
-    public get hasBookmark$() {
-        return this.#hasBookmark$.asObservable();
-    }
-
-    public get hasBookmark() {
-        return this.#hasBookmark$.value;
-    }
-
-    constructor(args: {
-        config: BookmarkModuleConfig;
-        event?: ModuleType<EventModule>;
-        contextModule?: ModuleType<ContextModule>;
-        appModule?: ModuleType<AppModule>;
-        ref?: IBookmarkProvider;
-    }) {
-        const { config, event, ref, contextModule } = args;
-
+    constructor(config: BookmarkModuleConfig) {
         this.config = config;
-        this.#event = event;
-        this.#contextModule = contextModule;
+        this.#event = config.event;
+        this.#bookmarkClient = config.bookmarkClient;
 
-        if (ref) {
-            this.parentBookmarkProvider = ref;
-            this.config.sourceSystem = ref.config.sourceSystem;
-        }
-
-        this.#bookmarkClient = ref
-            ? ref.bookmarkClient
-            : new BookmarkClient(this.config, this.#event);
-
+        // Move3 to config
         const initialBookmarkId = config.resolveBookmarkId && config.resolveBookmarkId();
 
         if (initialBookmarkId) {
@@ -106,74 +70,33 @@ export class BookmarkProvider implements IBookmarkProvider {
         }
 
         if (this.#event) {
-            this.#event.addEventListener('onBookmarkChanged', (e) => {
-                const { appKey } = e.detail;
+            this.#subscriptions.add(
+                this.#event.addEventListener('onCurrentAppChanged', () => {
+                    this.bookmarkCreators = {};
+                })
+            );
+            // this.#subscriptions.add(
+            //     this.#event.addEventListener('onAddCreator', (e) => {
+            //         const { key, cb } = e.detail;
 
-                if (this.#shouldNavigate(appKey)) {
-                    this.#navigateToApplication(appKey);
-                }
-                this.#hasBookmark$.next(false);
-            });
-
-            this.#event.addEventListener('onBookmarkCreated', (e) => {
-                this.#bookmarkClient.setCurrentBookmark(e.detail);
-                this.#bookmarkClient.getAllBookmarks({ isValid: true });
-            });
-
-            this.#event.addEventListener('onBookmarkUpdated', (e) => {
-                this.#bookmarkClient.setCurrentBookmark(e.detail);
-                this.#bookmarkClient.getAllBookmarks({ isValid: true });
-            });
-            this.#event.addEventListener('onBookmarkDeleted', () => {
-                this.#bookmarkClient.getAllBookmarks({ isValid: true });
-            });
-
-            this.#event.addEventListener('onCurrentAppChanged', (e) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                this.#app = e.detail.next as App<any, [BookmarkModule]>;
-            });
-
-            this.#event.addEventListener('onAddCreator', (e) => {
-                const { cb, key } = e.detail;
-                if (e.source !== this) {
-                    this.addCreator(cb, key);
-                    this.#hasBookmark$.next(true);
-                }
-            });
+            //         if (e.source !== this) {
+            //             this.addCreator(cb, key);
+            //         }
+            //     })
+            // );
         }
-    }
-
-    #navigateToApplication(appKey?: string) {
-        if (!appKey) return;
-
-        if (this.config.appRoute) {
-            const url = new URL(this.config.appRoute(appKey), window.location.origin);
-            url.search = window.location.search;
-
-            this.#event?.dispatchEvent('onNavigateToApp', {
-                source: this,
-                canBubble: true,
-                detail: url,
-            });
-            return;
-        }
-
-        removeBookmarkIdFromURL();
-    }
-
-    #shouldNavigate(appKey?: string): boolean {
-        if (!appKey) return false;
-        return !window.location.pathname.includes(appKey);
     }
 
     addCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
         const bookmarkCreatorKey = key ? key : '#creator';
 
-        this.#event?.dispatchEvent('onAddCreator', {
-            source: this,
-            canBubble: true,
-            detail: { key, cb },
-        });
+        if (this.#event) {
+            this.#event?.dispatchEvent('onAddCreator', {
+                source: this,
+                canBubble: true,
+                detail: { key, cb },
+            });
+        }
 
         this.bookmarkCreators[bookmarkCreatorKey] = cb;
         return () => {
@@ -184,8 +107,8 @@ export class BookmarkProvider implements IBookmarkProvider {
     async createBookmark(args: { name: string; description: string; isShared: boolean }) {
         const payload = await this.#createPayload();
 
-        const currentContext = this.#contextModule?.currentContext;
-        const appKey = this.#app?.appKey && this.#appModule?.current?.appKey;
+        const contextId = this.config.getContextId && this.config.getContextId();
+        const appKey = this.config.getAppIdentification && this.config.getAppIdentification();
 
         if (!appKey)
             throw new Error(`There is noe current application selected, can't create bookmark.`);
@@ -193,16 +116,16 @@ export class BookmarkProvider implements IBookmarkProvider {
         const bookmark: CreateBookmark<unknown> = {
             ...args,
             appKey,
-            contextId: currentContext?.id,
+            contextId,
             sourceSystem: this.config.sourceSystem,
             payload,
         };
 
-        await this.#bookmarkClient.createBookmark(bookmark);
+        this.#bookmarkClient.createBookmark(bookmark);
     }
 
     async #createPayload() {
-        const creator = this.bookmarkCreators;
+        const creator = this.bookmarkCreators || this.config.getCurrentAppCreator();
         if (!creator || Object.keys(creator).length === 0) {
             throw Error('No creator registered on this BookmarkProvider');
         }
@@ -218,6 +141,7 @@ export class BookmarkProvider implements IBookmarkProvider {
 
     dispose() {
         this.#subscriptions.unsubscribe();
+        this.#bookmarkClient.dispose();
     }
 }
 
