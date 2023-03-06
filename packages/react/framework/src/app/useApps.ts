@@ -19,7 +19,7 @@ export const useApps = (args?: {
 
     const apps = useMemo(() => {
         if (manifests && !args?.includeHidden) {
-            return manifests.filter((app) => app.hide);
+            return manifests.filter((app) => !app.hide);
         }
         return manifests;
     }, [args, manifests]);
