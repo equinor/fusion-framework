@@ -1,60 +1,18 @@
 import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { useAppModule } from '@equinor/fusion-framework-react-app';
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark/portal';
-import { useCallback, useEffect, useState } from 'react';
-
-interface MyBookmark {
-    myId: string;
-    data: string;
-}
-
-interface BookmarkState {
-    name: string;
-    description: string;
-    isShared: boolean;
-    payload: MyBookmark;
-}
-
-const init = {
-    name: '',
-    description: '',
-    isShared: false,
-    payload: {
-        myId: '',
-        data: '',
-    },
-};
+import { init, useBookmarkContext } from 'Provider';
 
 export const Create = () => {
-    const bookmarkModule = useAppModule<BookmarkModule>('bookmark');
     const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
 
-    const [state, setState] = useState<BookmarkState>(init);
+    const { updateState, ...state } = useBookmarkContext();
 
-    const {
-        bookmarks,
-        getAllBookmarks,
-        updateBookmark,
-        deleteBookmarkById,
-        createBookmark,
-        setCurrentBookmark,
-    } = useBookmark(bookmarkProvider);
+    const { bookmarks, updateBookmark, deleteBookmarkById, createBookmark, setCurrentBookmark } =
+        useBookmark(bookmarkProvider);
 
-    const { currentBookmark } = useCurrentBookmark(
-        useCallback(() => state.payload, [state.payload])
-    );
-
-    useEffect(() => {
-        if (currentBookmark) setState(currentBookmark as BookmarkState);
-    }, [currentBookmark]);
-
-    useEffect(() => {
-        getAllBookmarks();
-    }, []);
-
-    if (!bookmarkModule) return <div>No bookmark module</div>;
+    const { currentBookmark } = useCurrentBookmark();
 
     return (
         <div
@@ -87,7 +45,7 @@ export const Create = () => {
                             id="name"
                             type="text"
                             onChange={(e) => {
-                                setState((s) => ({ ...s, name: e.target.value }));
+                                updateState(() => ({ name: e.target.value }));
                             }}
                             value={state.name}
                         />
@@ -97,33 +55,31 @@ export const Create = () => {
                             rows={10}
                             id="description"
                             onChange={(e) => {
-                                setState((s) => ({ ...s, description: e.target.value }));
+                                updateState(() => ({ description: e.target.value }));
                             }}
                             value={state.description}
                         />
 
-                        <label htmlFor="value">myId:</label>
+                        <label htmlFor="value">Title</label>
                         <input
                             id="value"
                             type="text"
                             onChange={(e) => {
-                                setState((s) => ({
-                                    ...s,
+                                updateState((s) => ({
                                     payload: {
                                         ...s.payload,
-                                        myId: e.target.value,
+                                        title: e.target.value,
                                     },
                                 }));
                             }}
-                            value={state.payload.myId}
+                            value={state.payload.title}
                         />
                         <label htmlFor="value">Bookmark data:</label>
                         <input
                             id="value"
                             type="text"
                             onChange={(e) => {
-                                setState((s) => ({
-                                    ...s,
+                                updateState((s) => ({
                                     payload: {
                                         ...s.payload,
                                         data: e.target.value,
@@ -156,7 +112,7 @@ export const Create = () => {
                     </button>
                     <button
                         onClick={() => {
-                            setState(init);
+                            updateState(() => init);
                             // setBookmark(undefined);
                         }}
                     >
@@ -166,7 +122,7 @@ export const Create = () => {
                         disabled={!currentBookmark}
                         onClick={() => {
                             if (currentBookmark) deleteBookmarkById(currentBookmark?.id);
-                            setState(init);
+                            updateState(() => init);
                             // setBookmark(undefined);
                         }}
                     >
@@ -255,6 +211,7 @@ export const Create = () => {
                             <h4 style={{ margin: 0 }}>{bookmark.name}</h4>
                             <p style={{ marginTop: '0.25rem' }}>{bookmark.description}</p>
                             <p style={{ fontSize: '10px' }}>{bookmark.id}</p>
+                            <p style={{ fontSize: '10px' }}>{bookmark.appKey}</p>
                         </div>
                     </button>
                 ))}
