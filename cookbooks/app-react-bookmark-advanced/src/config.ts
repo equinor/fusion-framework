@@ -6,7 +6,9 @@ import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 export const configure: AppModuleInitiator = (configurator, args) => {
     const { basename } = args.env;
     enableNavigation(configurator, basename);
+
     enableBookmark(configurator);
+
     enableContext(configurator, async (builder) => {
         builder.setContextType(['projectMaster']); // set contextType to match against
     });
