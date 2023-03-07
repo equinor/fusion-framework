@@ -15,10 +15,11 @@ import { Bookmark, CreateBookmark } from './types';
 export interface IBookmarkProvider {
     readonly config: BookmarkModuleConfig;
     readonly bookmarkClient: BookmarkClient;
-    readonly currentBookmark$: Observable<Bookmark<unknown> | undefined>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    readonly currentBookmark$: Observable<Bookmark<any> | undefined>;
     readonly bookmarks$: Observable<Array<Bookmark<unknown>>>;
     currentBookmark: Bookmark<unknown> | undefined;
-    addCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction;
+    addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction;
     createBookmark(args: { name: string; description: string; isShared: boolean }): Promise<void>;
     parentBookmarkProvider?: IBookmarkProvider;
     bookmarkCreators: Record<string, CreateBookmarkFn<unknown>>;
@@ -71,23 +72,12 @@ export class BookmarkProvider implements IBookmarkProvider {
 
         if (this.#event) {
             this.#subscriptions.add(
-                this.#event.addEventListener('onCurrentAppChanged', () => {
-                    this.bookmarkCreators = {};
-                })
+                this.#event.addEventListener('onCurrentAppChanged', this.#clearStateCreators)
             );
-            // this.#subscriptions.add(
-            //     this.#event.addEventListener('onAddCreator', (e) => {
-            //         const { key, cb } = e.detail;
-
-            //         if (e.source !== this) {
-            //             this.addCreator(cb, key);
-            //         }
-            //     })
-            // );
         }
     }
 
-    addCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
+    addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
         const bookmarkCreatorKey = key ? key : '#creator';
 
         if (this.#event) {
@@ -108,7 +98,8 @@ export class BookmarkProvider implements IBookmarkProvider {
         const payload = await this.#createPayload();
 
         const contextId = this.config.getContextId && this.config.getContextId();
-        const appKey = this.config.getAppIdentification && this.config.getAppIdentification();
+        const appKey =
+            this.config.getCurrentAppIdentification && this.config.getCurrentAppIdentification();
 
         if (!appKey)
             throw new Error(`There is noe current application selected, can't create bookmark.`);
@@ -124,8 +115,12 @@ export class BookmarkProvider implements IBookmarkProvider {
         this.#bookmarkClient.createBookmark(bookmark);
     }
 
+    #clearStateCreators() {
+        this.bookmarkCreators = {};
+    }
+
     async #createPayload() {
-        const creator = this.bookmarkCreators || this.config.getCurrentAppCreator();
+        const creator = this.config.getCurrentAppStateCreator() || this.bookmarkCreators;
         if (!creator || Object.keys(creator).length === 0) {
             throw Error('No creator registered on this BookmarkProvider');
         }

@@ -10,7 +10,7 @@ import { createState } from '@equinor/fusion-observable';
 import { FlowState } from '@equinor/fusion-observable/src/create-state';
 import Query from '@equinor/fusion-query';
 import { BookmarkModuleConfig } from 'configurator';
-import { catchError, EMPTY, map, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, catchError, EMPTY, map, Observable, Subscription } from 'rxjs';
 
 import {
     Bookmark,
@@ -34,7 +34,7 @@ export class BookmarkClient {
     #queryAllBookmarks: Query<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
     #bookmarkAPiClient: BookmarksApiClient<'fetch', IHttpClient, unknown>;
 
-    #currentBookmark$: Subject<Bookmark<unknown> | undefined>;
+    #currentBookmark$: BehaviorSubject<Bookmark<unknown> | undefined>;
     #currentBookmark: Bookmark<unknown> | undefined;
 
     #sourceSystem: SourceSystem;
@@ -44,7 +44,7 @@ export class BookmarkClient {
     #subscriptions = new Subscription();
 
     constructor(config: BookmarkModuleConfig) {
-        this.#currentBookmark$ = new Subject();
+        this.#currentBookmark$ = new BehaviorSubject<Bookmark<unknown> | undefined>(undefined);
 
         this.#bookmarkAPiClient = config.client;
         this.#queryBookmarkById = new Query(config.queryClientConfig.getBookmarkById);
@@ -56,10 +56,10 @@ export class BookmarkClient {
         this.#state = createState(actions, reducer);
 
         // Add Bookmark API calls as flows
-        this.addSubjectFlows();
+        this.#addSubjectFlows();
 
-        // Add Events to flows success
-        this.addStateEffects();
+        // Add Events to actions success
+        this.#addStateEffects();
     }
 
     public get currentBookmark() {
@@ -127,7 +127,11 @@ export class BookmarkClient {
         this.#state.dispatch.delete(bookmarkId);
     }
 
-    private addStateEffects() {
+    dispose() {
+        this.#subscriptions.unsubscribe();
+    }
+
+    #addStateEffects() {
         this.#state.subject.addEffect('create::success', (action) => {
             this.#currentBookmark$.next(action.payload);
             this.#event?.dispatchEvent('onBookmarkCreated', {
@@ -152,11 +156,7 @@ export class BookmarkClient {
         });
     }
 
-    dispose() {
-        this.#subscriptions.unsubscribe();
-    }
-
-    private addSubjectFlows() {
+    #addSubjectFlows() {
         this.#subscriptions.add(
             this.#state.subject.addFlow(
                 handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem.identifier)

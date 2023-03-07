@@ -20,9 +20,9 @@ import { BookmarkModule } from './module';
 
 export interface BookmarkModuleConfig {
     getContextId: () => string | undefined;
-    getAppIdentification?(): string | undefined;
+    getCurrentAppIdentification?(): string | undefined;
     resolveBookmarkId?(): string | null;
-    appRoute?(appKey: string): string;
+    appRoute(appKey: string): string;
     sourceSystem: SourceSystem;
     queryClientConfig: {
         getAllBookmarks: QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
@@ -32,7 +32,8 @@ export interface BookmarkModuleConfig {
     event?: IEventModuleProvider;
     bookmarkClient: BookmarkClient;
     isParent: boolean;
-    getCurrentAppCreator(): Record<string, CreateBookmarkFn<unknown>> | undefined;
+    getCurrentAppStateCreator(): Record<string, CreateBookmarkFn<unknown>> | undefined;
+    navigateByBookmark?: <TData>(bookmark: TData) => string;
 }
 
 export type IBookmarkModuleConfigurator = {
@@ -127,7 +128,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
         if (ref) {
             config.sourceSystem = ref.config.sourceSystem;
             config.getContextId = ref.config.getContextId;
-            config.getAppIdentification = ref.config.getAppIdentification;
+            config.getCurrentAppIdentification = ref.config.getCurrentAppIdentification;
             config.bookmarkClient = ref.config.bookmarkClient;
         }
 
@@ -139,12 +140,12 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             config.appRoute = (appKey: string) => `/apps/${appKey}`;
         }
 
-        if (!config.getAppIdentification) {
-            config.getAppIdentification = () => appProvider.current?.appKey;
+        if (!config.getCurrentAppIdentification) {
+            config.getCurrentAppIdentification = () => appProvider.current?.appKey;
         }
 
-        if (!config.getCurrentAppCreator) {
-            config.getCurrentAppCreator = () => {
+        if (!config.getCurrentAppStateCreator) {
+            config.getCurrentAppStateCreator = () => {
                 if (!appProvider.current) return;
                 const currentAppBookmarkProvider = (
                     appProvider.current.instance as AppModulesInstance<[BookmarkModule]>
