@@ -31,10 +31,10 @@
         "directory": "packages/react/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-context": "^2.0.2",
+        "@equinor/fusion-framework-module-context": "^2.0.6",
         "@equinor/fusion-framework-react-module": "^2.0.1",
         "@equinor/fusion-framework-module-bookmark": "^0.0.1",
-        "@equinor/fusion-query": "^2.0.2"
+        "@equinor/fusion-query": "^2.0.5"
     },
     "devDependencies": {
         "@types/react": "^17.0.11",
