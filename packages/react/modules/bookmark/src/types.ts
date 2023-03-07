@@ -3,7 +3,7 @@ import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 export type CreateBookMarkFn<TData> = () => Partial<TData>;
 
 export interface Bookmarks<TData> extends CurrentBookmark<TData> {
-    addBookmarkCreator: (createBookmarkState?: CreateBookMarkFn<TData> | undefined) => VoidFunction;
+    addBookmarkCreator: (createBookmarkState?: CreateBookMarkFn<TData>) => VoidFunction;
     getAllBookmarks: () => void;
     createBookmark: (args: { name: string; description: string; isShared: boolean }) => void;
     updateBookmark: (bookmark: Bookmark<TData>) => void;
@@ -13,5 +13,5 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
 }
 
 export interface CurrentBookmark<TData> {
-    currentBookmark: Bookmark<TData> | undefined;
+    currentBookmark?: Bookmark<TData>;
 }

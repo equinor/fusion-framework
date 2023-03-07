@@ -1,6 +1,6 @@
 import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 import { useModule } from '@equinor/fusion-framework-react-module';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { CreateBookMarkFn, Bookmarks } from './types';
 import { useBookmark } from './portal/useBookmark';
 
@@ -11,8 +11,10 @@ export const useModuleBookmark = <TData>(
 
     const bookmarkProvider = useBookmark<TData>(provider);
 
-    useEffect(() => {
-        return bookmarkProvider.addBookmarkCreator(createBookmarkState);
+    useLayoutEffect(() => {
+        if (createBookmarkState) {
+            return bookmarkProvider.addBookmarkCreator(createBookmarkState);
+        }
     }, [bookmarkProvider, createBookmarkState]);
 
     return bookmarkProvider;

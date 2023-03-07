@@ -6,7 +6,7 @@ import { Bookmarks, CreateBookMarkFn } from '../types';
 export const useBookmark = <TData>(bookmarkProvider: IBookmarkProvider): Bookmarks<TData> => {
     const currentBookmark = useObservableState(bookmarkProvider.currentBookmark$, {
         initial: bookmarkProvider.currentBookmark,
-    }).next as Bookmark<TData>;
+    }).value as Bookmark<TData>;
 
     //use Memo
     const bookmarks = useObservableState(
@@ -14,7 +14,7 @@ export const useBookmark = <TData>(bookmarkProvider: IBookmarkProvider): Bookmar
         {
             initial: [],
         }
-    ).next;
+    ).value;
 
     const addBookmarkCreator = useCallback(
         (createBookmarkState?: CreateBookMarkFn<TData>) => {
@@ -22,7 +22,7 @@ export const useBookmark = <TData>(bookmarkProvider: IBookmarkProvider): Bookmar
                 return () => {
                     // Noting to remove
                 };
-            return bookmarkProvider.addCreator(() => {
+            return bookmarkProvider.addStateCreator(() => {
                 return createBookmarkState();
             });
         },
