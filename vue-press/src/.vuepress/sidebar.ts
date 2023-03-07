@@ -5,12 +5,7 @@ export default sidebar({
         {
             text: 'App',
             prefix: '/guide/',
-            children: [
-                'app/',
-                'app/getting-started',
-                'app/cli',
-                'app/legacy',
-            ],
+            children: ['app/', 'app/getting-started', 'app/cli', 'app/legacy', 'app/bookmark'],
         },
     ],
     '/modules/': [
@@ -30,6 +25,7 @@ export default sidebar({
                 'app/',
                 'event/',
                 'navigation/',
+                'bookmark/',
                 'ag-grid/',
                 {
                     text: 'Service Discovery',
