@@ -5,6 +5,8 @@ import {
     ModuleType,
 } from '@equinor/fusion-framework-module';
 import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
 
 import { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
 import { CreateBookmarkFn } from 'bookmark-provider';
@@ -44,29 +46,104 @@ export class BookmarkConfigBuilder<
         return this.#init.requireInstance(module);
     }
 
+    /**
+     *
+     * This will sett the SourceSystem used when creating a new bookmark,
+     * used as the identifier frr the current client. Only used in app shell / portal configuration.
+     *
+     * @param {SourceSystem} sourceSystem
+     * ```ts
+     * interface SourceSystem {
+     *  identifier: string;
+     *  name: string;
+     *  subSystem: string;
+     * }
+     * ```
+     * @memberof BookmarkConfigBuilder
+     */
     setSourceSystem(sourceSystem: SourceSystem) {
         this.config.sourceSystem = sourceSystem;
     }
 
+    /**
+     * Used to over write the default  Url id resolving.
+     *
+     * @param {(() => string | null)} fn - Resolver for bookmarkId
+     * @memberof BookmarkConfigBuilder
+     */
     setBookmarkIdResolver(fn: () => string | null) {
         this.config.resolveBookmarkId = fn;
     }
 
+    /**
+     * This allow for custom BookmarkApiClient to be added.
+     *
+     * @param {BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>} client - Custom Api client
+     * @memberof BookmarkConfigBuilder
+     */
+    serCustomBookmarkApiClient(
+        client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>
+    ) {
+        this.config.client = client;
+    }
+
+    /**
+     * Used to over withe the default context id resolver.
+     *
+     * @param {(() => string | undefined)} fn - Function for providing current contextId
+     * @memberof BookmarkConfigBuilder
+     */
     setContextIdResolver(fn: () => string | undefined) {
         this.config.getContextId = fn;
     }
-    setAppResolver(fn: () => string | undefined) {
-        this.config.getAppIdentification = fn;
+
+    /**
+     * Used to over withe the default function for getting the current applications
+     * key identifier.
+     *
+     * @param {(() => string | undefined)}  - A function for getting the current application key
+     * @memberof BookmarkConfigBuilder
+     */
+    setCurrentAppIdResolver(fn: () => string | undefined) {
+        this.config.getCurrentAppIdentification = fn;
     }
+
+    /**
+     * Enable the over write default Event provider if needed.
+     * Should not be used if all event providers are changes in the current environment
+     *
+     * @param {IEventModuleProvider} provider - Custom Event provider
+     * @memberof BookmarkConfigBuilder
+     */
     setEventProvider(provider: IEventModuleProvider) {
         this.config.event = provider;
     }
 
-    setCurrentAppProvider(cb: () => Record<string, CreateBookmarkFn<unknown>>) {
-        this.config.getCurrentAppCreator = cb;
+    /**
+     * This lets you overwrite the default configuration for getting the current applications
+     * state creators
+     *
+     * @param {() => Record<string, CreateBookmarkFn<unknown>>} fn - Get state creator function
+     * @memberof BookmarkConfigBuilder
+     */
+    setCurrentAppStateCreator(fn: () => Record<string, CreateBookmarkFn<unknown>>) {
+        this.config.getCurrentAppStateCreator = fn;
     }
-
-    setBookmarkClient(
+    /**
+     * Use for override the bookmark query client
+     *
+     * @param {({
+     *             getAllBookmarks:
+     *                 | QueryFn<Array<Bookmark<unknown>>, GetAllBookmarksParameters>
+     *                 | QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
+     *             getBookmarkById:
+     *                 | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
+     *                 | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
+     *         })} client - Custom client definition.
+     * @param {number} [expire=1 * 60 * 1000] - Time which queries expire.
+     * @memberof BookmarkConfigBuilder
+     */
+    setBookmarkQueryClient(
         client: {
             getAllBookmarks:
                 | QueryFn<Array<Bookmark<unknown>>, GetAllBookmarksParameters>
