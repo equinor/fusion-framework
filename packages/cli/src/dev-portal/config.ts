@@ -24,7 +24,7 @@ export const configure = async (config: FrameworkConfigurator) => {
 
     enableAppModule(config);
 
-    enableBookmark(config, async (builder) => {
+    enableBookmark(config, (builder) => {
         builder.setSourceSystem({
             subSystem: 'CLI',
             identifier: 'fusion-cli',
