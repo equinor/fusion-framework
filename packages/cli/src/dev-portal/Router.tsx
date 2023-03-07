@@ -10,7 +10,7 @@ import { usePersonResolver } from './usePersonResolver';
 const Root = () => {
     const personResolver = usePersonResolver();
 
-    useBookmarkNavigate((appKey: string) => `/apps/${appKey}`);
+    useBookmarkNavigate();
 
     return (
         <div style={{ fontFamily: 'Equinor' }}>
