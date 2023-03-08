@@ -51,9 +51,18 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         // why do we need and array of all contexts?
                         previusContexts: values.map((c) => ({ id: c.id, name: c.title })),
                     });
-                    this.#framework.modules.navigation.navigator.push(
-                        ['', currentContext.id].join('/')
-                    );
+
+                    const setUrlParts = [''];
+                    if (this.#framework.modules.app.current) {
+                        setUrlParts.push(
+                            this.#framework.modules.navigation.navigator.location.pathname.replace(
+                                '/',
+                                ''
+                            )
+                        );
+                    }
+                    setUrlParts.push(currentContext.id);
+                    this.#framework.modules.navigation.navigator.replace(setUrlParts.join('/'));
                 }
             });
 
