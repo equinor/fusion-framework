@@ -88,7 +88,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
     }
 
     public async setCurrentContextAsync(context: string | ContextItem | null): Promise<void> {
-        console.log('elg');
         if (context !== null) {
             this.#framework.modules.context.contextClient.setCurrentContext(
                 context as string | ContextItem
