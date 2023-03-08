@@ -1,5 +1,5 @@
 import type { History, To, Path } from '@remix-run/router';
-import { BehaviorSubject, distinctUntilChanged, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
 
