@@ -19,9 +19,11 @@ export type LegacyFusionWrapperProps = {
     loader: NonNullable<ReactNode>;
     framework: PortalFramework;
     options?: FusionContextOptions;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const FallThrewComponent = ({ children }: { children: ReactChild }): ReactElement<any, any> => (
     <>{children}</>
 );

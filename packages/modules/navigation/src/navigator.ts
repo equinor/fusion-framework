@@ -1,5 +1,5 @@
 import type { History, To, Path } from '@remix-run/router';
-import { BehaviorSubject, distinctUntilChanged, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
 
@@ -43,6 +43,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         return this.value.action;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(args: { basename?: string; history: History; logger?: any }) {
         super((subscriber) => this.#state.subscribe(subscriber));
         const { basename, history } = args;
