@@ -17,6 +17,7 @@ const Root = () => {
     );
 };
 
+// eslint-disable-next-line react/no-multi-comp
 const AppRoute = () => {
     const { appKey } = useParams();
     return appKey ? <AppLoader appKey={appKey} /> : null;
@@ -39,4 +40,5 @@ const router = createBrowserRouter([
     },
 ]);
 
+// eslint-disable-next-line react/no-multi-comp
 export const Router = () => <RouterProvider router={router} fallbackElement={<p>wooot</p>} />;

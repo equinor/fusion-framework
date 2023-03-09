@@ -43,6 +43,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         return this.value.action;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(args: { basename?: string; history: History; logger?: any }) {
         super((subscriber) => this.#state.subscribe(subscriber));
         const { basename, history } = args;

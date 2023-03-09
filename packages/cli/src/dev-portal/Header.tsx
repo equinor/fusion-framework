@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { makeStyles, createStyles, clsx, ThemeProvider, theme } from '@equinor/fusion-react-styles';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
@@ -32,14 +32,10 @@ export const Header = () => {
     const buttonRef = useRef(null);
     const [open, setOpen] = useState(false);
 
-    const menuToogle = useCallback(() => {
-        setOpen(!open);
-    }, [setOpen]);
-
     return (
         <ThemeProvider theme={theme}>
             <header className={clsx(styles.header, styles.center)}>
-                <Button ref={buttonRef} onClick={menuToogle} variant="ghost">
+                <Button ref={buttonRef} onClick={() => setOpen(!open)} variant="ghost">
                     <Icon icon="menu" />
                 </Button>
                 <FusionLogo scale={0.7} />

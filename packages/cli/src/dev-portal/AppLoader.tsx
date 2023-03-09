@@ -47,7 +47,7 @@ export const AppLoader = (props: { appKey: string }) => {
     useEffect(() => {
         /** when appKey property change, assign it to current */
         fusion.modules.app.setCurrentApp(appKey);
-    }, [appKey]);
+    }, [appKey, fusion]);
 
     useEffect(() => {
         /** flag that application is loading */
@@ -92,11 +92,11 @@ export const AppLoader = (props: { appKey: string }) => {
 
         /** teardown application when hook unmounts */
         return () => subscription.unsubscribe();
-    }, [currentApp, appRef]);
+    }, [fusion, currentApp, appRef]);
 
+    const refEl = ref.current;
+    const appEl = appRef.current;
     useEffect(() => {
-        const refEl = ref.current;
-        const appEl = appRef.current;
         if (!(appEl && refEl)) {
             return;
         }
@@ -110,7 +110,7 @@ export const AppLoader = (props: { appKey: string }) => {
                 console.error(err);
             }
         };
-    }, [ref.current, appRef.current]);
+    }, [refEl, appEl]);
 
     if (error) {
         if (error.cause instanceof AppManifestError) {
