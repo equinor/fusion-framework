@@ -12,8 +12,8 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^5.0.2",
-        "@equinor/fusion-framework-react-app": "^3.0.10",
+        "@equinor/fusion-framework-cli": "^5.0.5",
+        "@equinor/fusion-framework-react-app": "^3.0.11",
         "@equinor/fusion-framework-module-bookmark": "^0.0.1",
         "@equinor/fusion-framework-react-module-bookmark": "^0.0.1",
         "@types/react": "^18.0.24",

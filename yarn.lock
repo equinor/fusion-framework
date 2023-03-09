@@ -674,10 +674,10 @@
     eslint-config-prettier "^8.6.0"
     eslint-plugin-prettier "^4.2.1"
 
-"@equinor/fusion-components@^2.9.3":
-  version "2.9.3"
-  resolved "https://registry.npmjs.org/@equinor/fusion-components/-/fusion-components-2.9.3.tgz"
-  integrity sha512-s4DD0MhDwr5Q7BBhPgl9o1AHN/Xm9ASjoCreRHvZJZTIxWrGv4qUdkbhWrPdsCQWkjSIfpbrMRhzt2z3UcueNg==
+"@equinor/fusion-components@^2.10.5":
+  version "2.10.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.5.tgz#530fee3aa8411a92547c09090244380ead3e2297"
+  integrity sha512-W9Ej+r2/xcDMaqUf3FonGjkOGf9QMDUcm7B3vcUxwjvpuQ4/w4we9tx+cdSchkkYFXiw47uyYU8Dc2nbTGgACw==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
     "@equinor/fusion-react-checkbox" "^0.4.0"
@@ -715,34 +715,10 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@equinor/fusion-framework-cli@^4.0.5":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-framework-cli/-/fusion-framework-cli-4.1.0.tgz#d4c846e3e0df3c2fa647141c230e3371806f8a3a"
-  integrity sha512-Cd9Yyu9GKcNR8uH+K/Rtutkg8Ci9kJBAbI1CP6Ec6YD5M+YZE943LfUghl0WHbi9Sb+UIF7EMnTKE09bd41JVQ==
-  dependencies:
-    "@equinor/fusion-framework-app" "^6.0.3"
-    "@equinor/fusion-observable" "^6.0.0"
-    "@vitejs/plugin-react" "^3.0.0"
-    commander "^10.0.0"
-    express "^4.18.2"
-    find-up "^6.3.0"
-    http-proxy-middleware "^2.0.6"
-    kleur "^4.1.5"
-    ora "^6.1.2"
-    vite "^4.0.0"
-
-"@equinor/fusion-observable@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-observable/-/fusion-observable-6.0.0.tgz#f7be5ff910e159a238b2b1933ea8af009ab52afb"
-  integrity sha512-dSOjTANePkQ8jzRrSJoV5OnlLeOvLy0UgUMlzImmI2TMt1V9Vzaf6itPV5kP8O8nZG6Ww/0pWErs9RXbVtX79w==
-  dependencies:
-    rxjs "^7.5.7"
-    uuid "^8.3.2"
-
-"@equinor/fusion-react-button@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/@equinor/fusion-react-button/-/fusion-react-button-0.6.1.tgz"
-  integrity sha512-VAMNDOFt8hRM+HUazNd8kfAVwDfaFjrXqHC/8IqylrwjxoOSFK7YZkMbcr/hrmakYDYthQxsfYmltfZbi8A6+A==
+"@equinor/fusion-react-button@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.8.1.tgz#f4f33f14d9d808ef79e3755307dd224219416a21"
+  integrity sha512-8BLaGZZaHv9Gf64BO2DmyndaMB662su/omz/1AiUXrM6o2y3zaBWsf2GtNFgk8cMn3vX1Vra0im5tcpLdS1hwQ==
   dependencies:
     "@equinor/fusion-react-utils" "^2.0.4"
     "@equinor/fusion-wc-button" "^1.3.2"
@@ -1099,10 +1075,10 @@
     "@equinor/eds-tokens" "0.5.5"
     csstype "^3.0.10"
 
-"@equinor/fusion@^3.4.6":
-  version "3.4.6"
-  resolved "https://registry.npmjs.org/@equinor/fusion/-/fusion-3.4.6.tgz"
-  integrity sha512-7IGQwTi8ReKNwTWG+tfzpAUE8cGJmpMCknHSBPWPdl45C6wei0yC/7zv7Ic32xe7czM5r2R9BveIaQC6c/KKoA==
+"@equinor/fusion@^3.4.9":
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion/-/fusion-3.4.9.tgz#34baad1cfe7e333fec7a275cb816b9ef26ae4abf"
+  integrity sha512-seL9uUA/xWlwQdL7Bfuh4yBrKJj6tNhV7H7f0mZOScWSvIJJgd1oE/GiydcyS6rbAEW2TIinrkUqOLEdVWV4YA==
   dependencies:
     "@equinor/eslint-config-fusion" "^0.1.2"
     "@microsoft/applicationinsights-web" "^2.4.3"
