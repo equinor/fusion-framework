@@ -39,10 +39,10 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                     return acc;
                 }, [] as Array<ContextItem>)
             )
-            .subscribe((values) => {
+            .subscribe(async (values) => {
                 const currentContext = values.shift();
 
-                this.setAsync('history', values);
+                this.setAsync('history', this.getAsync('history'));
 
                 if (currentContext) {
                     this.setAsync('current', currentContext);
@@ -52,17 +52,33 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         previusContexts: values.map((c) => ({ id: c.id, name: c.title })),
                     });
 
-                    const setUrlParts = [''];
+                    /* Somehow current is the previous context */
+                    const prevCtx = await this.getAsync('current');
+
+                    const portalPath: Array<string> = [''];
+                    const appPath: Array<string> = [];
                     if (this.#framework.modules.app.current) {
-                        setUrlParts.push(
-                            this.#framework.modules.navigation.navigator.location.pathname.replace(
-                                '/',
-                                ''
-                            )
-                        );
+                        portalPath.push('apps');
+                        portalPath.push(this.#framework.modules.app.current.appKey);
+
+                        /* Save paths after contextid or app location in portal */
+                        this.#framework.modules.navigation.navigator.location.pathname
+                            .split('/')
+                            .forEach((part) => {
+                                if (part && part !== prevCtx?.id && portalPath.indexOf(part) < 0) {
+                                    appPath.push(part);
+                                }
+                            });
                     }
-                    setUrlParts.push(currentContext.id);
-                    this.#framework.modules.navigation.navigator.replace(setUrlParts.join('/'));
+
+                    const location = [
+                        portalPath.join('/'),
+                        currentContext.id,
+                        appPath.join('/'),
+                    ].join('/');
+
+                    /* Navigate to uri with updated context id */
+                    this.#framework.modules.navigation.navigator.replace(location);
                 }
             });
 
