@@ -59,8 +59,8 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
         args.framework.modules.app.current$.subscribe((app) => {
             if (app) {
-                const manifest = app.state.manifest as unknown as AppManifestLegacy;
-                if (manifest.context) {
+                const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
+                if (manifest?.context) {
                     const initModules = configureModules((configurator) => {
                         enableContext(configurator, async (builder) => {
                             // TODO - check build url and get context from url
