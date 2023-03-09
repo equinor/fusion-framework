@@ -7,6 +7,7 @@ export interface INavigator<T extends NavigationUpdate = NavigationUpdate>
     extends Observable<T>,
         History {
     readonly basename?: string;
+    readonly origin?: string;
     readonly value: NavigationUpdate;
     readonly location: NavigationUpdate['location'];
     dispose: VoidFunction;
@@ -18,6 +19,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
 {
     #history: History;
     #baseName?: string;
+    #origin?: string = window.location.origin;
     #subscriptions = new Subscription();
     #state: BehaviorSubject<T>;
 
@@ -25,6 +27,9 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
 
     get basename(): string | undefined {
         return this.#baseName;
+    }
+    get origin(): string | undefined {
+        return this.#origin;
     }
 
     get state(): Observable<T> {
