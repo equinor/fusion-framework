@@ -7,6 +7,8 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { resolvePackage } from './app-config.js';
 
+import EnvironmentPlugin from 'vite-plugin-environment';
+
 const createCustomLogger = () => {
     const logger = createLogger();
     const originalWarning = logger.warn;
@@ -25,7 +27,13 @@ const createCustomLogger = () => {
 export const createConfig = (): UserConfig => {
     const { root, pkg } = resolvePackage();
     return defineConfig({
-        plugins: [react(), tsconfigPaths()],
+        plugins: [
+            react(),
+            tsconfigPaths(),
+            EnvironmentPlugin({
+                NODE_ENV: 'production',
+            }),
+        ],
         root: root,
         server: {
             middlewareMode: true,
