@@ -33,6 +33,7 @@
     "dependencies": {
         "@equinor/fusion-framework-module-context": "^2.0.6",
         "@equinor/fusion-framework-react-module": "^2.0.1",
+        "@equinor/fusion-framework-react": "^4.0.3",
         "@equinor/fusion-framework-module-bookmark": "^0.0.1",
         "@equinor/fusion-query": "^2.0.5"
     },
