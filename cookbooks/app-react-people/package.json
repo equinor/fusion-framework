@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-people",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "description": "",
     "private": true,
     "type": "module",
@@ -12,7 +12,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^5.0.3",
+        "@equinor/fusion-framework-cli": "^5.0.4",
         "@equinor/fusion-framework-react-app": "^3.0.11",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",

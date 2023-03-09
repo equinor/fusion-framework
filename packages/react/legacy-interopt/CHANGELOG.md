@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.8...@equinor/fusion-framework-legacy-interopt@2.1.9) (2023-03-09)
+
+### Bug Fixes
+
+-   **react/legact-interopt:** check if app manifest exists when current app changes ([8ad2a93](https://github.com/equinor/fusion-framework/commit/8ad2a930d0279cd48929141f4bd20ea975dba6b7))
+
 ## [2.1.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.7...@equinor/fusion-framework-legacy-interopt@2.1.8) (2023-03-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt

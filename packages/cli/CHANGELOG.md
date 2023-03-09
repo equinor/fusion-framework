@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.3...@equinor/fusion-framework-cli@5.0.4) (2023-03-09)
+
+### Bug Fixes
+
+-   **cli:** include `NODE_ENV` environment in build ([28faf2a](https://github.com/equinor/fusion-framework/commit/28faf2abc1adb09cc52242e26abb61e2ddfeb6c1))
+
 ## [5.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.2...@equinor/fusion-framework-cli@5.0.3) (2023-03-06)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
