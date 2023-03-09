@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { makeStyles, createStyles, clsx, ThemeProvider, theme } from '@equinor/fusion-react-styles';
 import { ContextSelector } from './ContextSelector';
-import { FusionLogo } from './FusionLogo';
+import { FusionLogo } from './components/FusionLogo';
 import { Button } from '@equinor/fusion-react-button';
 import { Icon } from '@equinor/fusion-react-icon';
 
