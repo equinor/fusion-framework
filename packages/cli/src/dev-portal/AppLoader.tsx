@@ -24,8 +24,7 @@ export const AppLoader = (props: { appKey: string }) => {
     const fusion = useFramework<[AppModule]>();
 
     /** reference of application section/container */
-    // const ref = useRef<HTMLElement>(null);
-    const [ref, setRef] = useState<HTMLElement | null>(null);
+    const [refEl, setRef] = useState<HTMLElement | null>(null);
 
     /**
      * reference of element which application rendered to
@@ -98,7 +97,6 @@ export const AppLoader = (props: { appKey: string }) => {
     const appEl = appRef.current;
 
     useEffect(() => {
-        const refEl = ref;
         if (!(appEl && refEl)) {
             return;
         }
@@ -113,7 +111,7 @@ export const AppLoader = (props: { appKey: string }) => {
                 console.error(err);
             }
         };
-    }, [ref, appEl]);
+    }, [refEl, appEl]);
 
     if (error) {
         if (error.cause instanceof AppManifestError) {
