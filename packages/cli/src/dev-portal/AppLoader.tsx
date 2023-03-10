@@ -26,15 +26,6 @@ export const AppLoader = (props: { appKey: string }) => {
     /** reference of application section/container */
     const ref = useRef<HTMLElement>(null);
 
-    /**
-     * reference of element which application rendered to
-     *
-     * the current value will be created when application tries to render.
-     * since we cant make sure that application render does ensure teardown,
-     * each render instance will have its own element, which then will be added to the application container.
-     */
-    const appRef = useRef<HTMLDivElement>(document.createElement('div'));
-
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | undefined>();
 
@@ -69,15 +60,22 @@ export const AppLoader = (props: { appKey: string }) => {
                     ) ?? [''];
 
                     /** create a 'private' element for the application */
-                    appRef.current = document.createElement('div');
+                    const el = document.createElement('div');
+
+                    if (!ref.current) {
+                        throw Error('Missing application mounting point');
+                    }
+
+                    ref.current.appendChild(el);
 
                     /** extract render callback function from javascript module */
                     const render = script.renderApp ?? script.default;
 
                     /** add application teardown to current render effect teardown */
-                    subscription.add(
-                        render(appRef.current, { fusion, env: { basename, config, manifest } })
-                    );
+                    subscription.add(render(el, { fusion, env: { basename, config, manifest } }));
+
+                    /** remove app element when application unmounts */
+                    subscription.add(() => el.remove());
                 },
                 complete: () => {
                     /** flag that application is no longer loading */
@@ -92,25 +90,7 @@ export const AppLoader = (props: { appKey: string }) => {
 
         /** teardown application when hook unmounts */
         return () => subscription.unsubscribe();
-    }, [fusion, currentApp, appRef]);
-
-    const refEl = ref.current;
-    const appEl = appRef.current;
-    useEffect(() => {
-        if (!(appEl && refEl)) {
-            return;
-        }
-        /** when application has rendered on referenced element, add element to application sections */
-        refEl.appendChild(appEl);
-        return () => {
-            try {
-                /** remove application element on unmount */
-                refEl.removeChild(appEl);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-    }, [refEl, appEl]);
+    }, [fusion, currentApp, ref]);
 
     if (error) {
         if (error.cause instanceof AppManifestError) {
@@ -130,11 +110,7 @@ export const AppLoader = (props: { appKey: string }) => {
         );
     }
 
-    if (loading) {
-        return <EquinorLoader text="Loading Application" />;
-    }
-
-    return <section ref={ref}></section>;
+    return <section ref={ref}>{loading && <EquinorLoader text="Loading Application" />}</section>;
 };
 
 export default AppLoader;
