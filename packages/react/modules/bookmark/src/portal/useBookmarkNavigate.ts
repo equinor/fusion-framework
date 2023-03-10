@@ -1,36 +1,52 @@
 import { useLayoutEffect } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { useNavigate } from 'react-router-dom';
 import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-// import { removeBookmarkIdFromURL } from '@equinor/fusion-framework-module-bookmark/utils';
+const BOOKMARK_ID_PARM = 'bookmarkId';
 
+/**
+ * A React Hook for navigation when bookmark change utilizing the configured getAppPath,
+ * The also change the current context if the context is provided form the bookmark
+ */
 export const useBookmarkNavigate = (): void => {
-    const { event, context, bookmark } = useFramework<[BookmarkModule]>().modules;
-
-    const navigate = useNavigate();
+    const {
+        event,
+        context,
+        bookmark,
+        navigation: { navigator },
+    } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
     useLayoutEffect(() => {
         const sub = event.addEventListener('onBookmarkChanged', (e) => {
-            const { appKey } = e.detail;
+            const { appKey, context: bookmarkContext } = e.detail;
 
-            const bookmarkPath = bookmark.config.appRoute(appKey);
+            const pathname = bookmark.config.getAppPath(appKey);
 
-            if (window.location.pathname !== bookmarkPath) {
-                const url = new URL(bookmarkPath, window.location.origin);
-                url.search = window.location.search;
-                navigate(url.pathname + url.search);
+            if (navigator.location.pathname !== pathname) {
+                const { hash, search } = navigator.location;
+
+                const to = {
+                    pathname,
+                    search: removeBookmarkIdFromURL(search),
+                    hash,
+                };
+                navigator.push(to);
             }
 
-            if (e.detail.context) {
-                context.contextClient.currentContext?.id !== e.detail.context.id &&
-                    context.contextClient.setCurrentContext(e.detail.context.id);
+            if (bookmarkContext) {
+                context.contextClient.currentContext?.id !== bookmarkContext.id &&
+                    context.contextClient.setCurrentContext(bookmarkContext.id);
             }
-
-            // removeBookmarkIdFromURL();
         });
         return sub;
-    }, [bookmark.config, context, event, navigate]);
+    }, [bookmark.config, context, event, navigator]);
 };
+
+function removeBookmarkIdFromURL(searchParams: string): string {
+    const params = new URLSearchParams(searchParams);
+    params.delete(BOOKMARK_ID_PARM);
+    return `?${params.toString()}`;
+}
 
 export default useBookmarkNavigate;
