@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.5...@equinor/fusion-framework-cli@5.0.6) (2023-03-10)
+
+### Bug Fixes
+
+-   **cli:** fix mounting element in app loader ([0410c7f](https://github.com/equinor/fusion-framework/commit/0410c7f0ce7a1b9f25c7716e0206534a1d047529))
+
 ## 5.0.5 (2023-03-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
