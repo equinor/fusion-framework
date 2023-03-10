@@ -42,7 +42,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
             .subscribe(async (values) => {
                 const currentContext = values.shift();
 
-                this.setAsync('history', this.getAsync('history'));
+                this.setAsync('history', values);
 
                 if (currentContext) {
                     this.setAsync('current', currentContext);
