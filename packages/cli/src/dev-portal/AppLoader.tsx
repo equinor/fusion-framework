@@ -24,7 +24,8 @@ export const AppLoader = (props: { appKey: string }) => {
     const fusion = useFramework<[AppModule]>();
 
     /** reference of application section/container */
-    const ref = useRef<HTMLElement>(null);
+    // const ref = useRef<HTMLElement>(null);
+    const [ref, setRef] = useState<HTMLElement | null>(null);
 
     /**
      * reference of element which application rendered to
@@ -94,12 +95,14 @@ export const AppLoader = (props: { appKey: string }) => {
         return () => subscription.unsubscribe();
     }, [fusion, currentApp, appRef]);
 
-    const refEl = ref.current;
     const appEl = appRef.current;
+
     useEffect(() => {
+        const refEl = ref;
         if (!(appEl && refEl)) {
             return;
         }
+
         /** when application has rendered on referenced element, add element to application sections */
         refEl.appendChild(appEl);
         return () => {
@@ -110,7 +113,7 @@ export const AppLoader = (props: { appKey: string }) => {
                 console.error(err);
             }
         };
-    }, [refEl, appEl]);
+    }, [ref, appEl]);
 
     if (error) {
         if (error.cause instanceof AppManifestError) {
@@ -134,7 +137,7 @@ export const AppLoader = (props: { appKey: string }) => {
         return <EquinorLoader text="Loading Application" />;
     }
 
-    return <section ref={ref}></section>;
+    return <section ref={setRef}></section>;
 };
 
 export default AppLoader;
