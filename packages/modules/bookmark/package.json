@@ -14,7 +14,7 @@
             "utils": [
                 "dist/types/utils/index.d.ts"
             ]
-        } 
+        }
     },
     "scripts": {
         "build": "tsc -b",
@@ -38,6 +38,7 @@
         "@equinor/fusion-framework-module": "^2.0.0",
         "@equinor/fusion-framework-module-event": "^2.0.0",
         "@equinor/fusion-framework-module-services": "^2.0.6",
+        "@equinor/fusion-framework-module-navigation": "^1.0.3",
         "rxjs": "^7.5.7"
     },
     "peerDependencies": {
