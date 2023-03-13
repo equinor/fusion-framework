@@ -32,10 +32,6 @@ Bookmarks are used to save the state of an application at a specific point in ti
 
 ## Configuration
 
-::: code-tabs
-
-@tab Portal
-
 ```ts
 import { enableContext } from '@equinor/fusion-framework-module-bookmark';
 export const configure = (configurator) => {
@@ -51,19 +47,6 @@ export const configure = (configurator) => {
 };
 ```
 
-@tab React Application
-
-```ts
-import { enableContext } from '@equinor/fusion-framework-react-module-bookmark';
-export const configure = (configurator) => {
-    // Some applications configuration
-    enableBookmark(configurator);
-    // more configuration...
-};
-```
-
-:::
-
 ## BookmarkProvider
 
 The public properties of the class are:
@@ -75,15 +58,12 @@ The public properties of the class are:
 
 BookmarkProvider has several public methods:
 
--   addCreator
--   createBookmark
--   dispose
-
 ### Public Functions
 
 #### addStateCreator
 
-the state creator is used to collect the state stored in a bookmark. and by adding a creator will enable the bookmark functionality for an application this is used.
+The state creator is used to collect the state stored in a bookmark. and by adding a creator will enable the bookmark functionality for an application this is used.
+cb - For creating the bookmark payload, this should ne wrapped in a useCallback, payload return can be a partial.
 
 ```ts
 addStateCreator(cb: CreateBookmarkFn<TData>, key?: keyof TData): VoidFunction
@@ -91,7 +71,7 @@ addStateCreator(cb: CreateBookmarkFn<TData>, key?: keyof TData): VoidFunction
 
 #### createBookmark
 
-creates a new bookmark with the given arguments, and utilizes teh provided stateCreator to create the bookmark payload.
+Creates a new bookmark with the given arguments, and utilizes teh provided stateCreator to create the bookmark payload.
 
 ```TS
 createBookmark(args: { name: string; description: string; isShared: boolean }): Promise<void>:
@@ -103,6 +83,55 @@ disposes of the class and unsubscribes all subscriptions.
 
 ```TS
 dispose(): void:
+```
+
+#### getBookmarkById
+
+     Function for resolving a bookmark form api client
+     @param {string} bookmarkId - bookmark indemnificator.
+
+```TS
+   getBookmarkById(bookmarkId: string): void;
+```
+
+#### getAllBookmarks
+
+    Function for resoling all bookmarks current sub system.
+
+```TS
+    getBookmarkById(): void;
+```
+
+    Function for updating bookmark a bookmark when successful this will update the bookmark list.
+
+#### updateBookmark
+
+@param {string} bookmarkId
+@param {Bookmark<unknown>} bookmark
+
+```TS
+    updateBookmark(bookmark: Bookmark<unknown>): void;
+```
+
+#### deleteBookmarkById
+
+Function for deleting a bookmark, when successful this will update the bookmark list.
+@param {string} bookmarkId
+
+```TS
+    deleteBookmarkById(bookmarkId: string): void;
+```
+
+#### setCurrentBookmark
+
+Function for setting the current bookmark, when successful this will update the bookmark list.
+@template TData - Bookmark payload type.
+@param {(string | Bookmark<TData> | undefined)} idOrItem - can be full bookmark object or bookmarkId.
+If not provided the current bookmark state will be set to undefined.
+
+```TS
+setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): void;
+
 ```
 
 ### Configuration Options
@@ -220,14 +249,5 @@ export const configure = (configurator) => {
     }, 0 );
 };
 ```
-
-#### serCustomBookmarkApiClient
-
-### Bookmark navigation
-
-If the current application is different than what the current bookmark is revering to the portal will need to navigate to the
-application given by the bookmark. This is don by utilizing the application `appKey`.
-
-For now the portal allows for configuration of the application path.
 
  <ModuleBadge module="module-bookmark" />
