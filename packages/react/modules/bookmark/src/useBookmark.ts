@@ -1,14 +1,35 @@
-import { Bookmark, IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import { useFramework } from '@equinor/fusion-framework-react';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
-import { Bookmarks, CreateBookMarkFn } from '../types';
+import { Bookmarks, CreateBookMarkFn } from './types';
 
-export const useBookmark = <TData>(bookmarkProvider: IBookmarkProvider): Bookmarks<TData> => {
-    const currentBookmark = useObservableState(bookmarkProvider.currentBookmark$, {
-        initial: bookmarkProvider.currentBookmark,
-    }).value as Bookmark<TData>;
+/**
+ *  For application development the useCurrentBookmark should be sufficient enough
+ *
+ *  Functionality provided here is:
+ *  - addBookmarkCreator
+ *  - getAllBookmarks
+ *  - createBookmark
+ *  - updateBookmark
+ *  - deleteBookmarkById
+ *  - setCurrentBookmark
+ *  - currentBookmark
+ *  - bookmarks,
+ *
+ * @template TData - Current applications  bookmark type
+ * @return {*}  {Bookmarks<TData>} the full api fro handling bookmarks
+ */
+export const useBookmark = <TData>(): Bookmarks<TData> => {
+    const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
 
-    //use Memo
+    const currentBookmark = useObservableState(
+        useMemo(() => bookmarkProvider.currentBookmark$, [bookmarkProvider]),
+        {
+            initial: bookmarkProvider.currentBookmark,
+        }
+    ).value as Bookmark<TData>;
+
     const bookmarks = useObservableState(
         useMemo(() => bookmarkProvider.bookmarks$, [bookmarkProvider]),
         {
@@ -37,23 +58,23 @@ export const useBookmark = <TData>(bookmarkProvider: IBookmarkProvider): Bookmar
     );
     const updateBookmark = useCallback(
         (bookmark: Bookmark<TData>) => {
-            bookmarkProvider.bookmarkClient.updateBookmark(bookmark);
+            bookmarkProvider.updateBookmark(bookmark);
         },
         [bookmarkProvider]
     );
     const deleteBookmarkById = useCallback(
         (bookmarkId: string) => {
-            bookmarkProvider.bookmarkClient.deleteBookmarkById(bookmarkId);
+            bookmarkProvider.deleteBookmarkById(bookmarkId);
         },
         [bookmarkProvider]
     );
     const getAllBookmarks = useCallback(() => {
-        bookmarkProvider.bookmarkClient.getAllBookmarks();
+        bookmarkProvider.getAllBookmarks();
     }, [bookmarkProvider]);
 
     const setCurrentBookmark = useCallback(
         <TData>(IdOrItem: string | Bookmark<TData>) => {
-            bookmarkProvider.bookmarkClient.setCurrentBookmark(IdOrItem);
+            bookmarkProvider.setCurrentBookmark(IdOrItem);
         },
         [bookmarkProvider]
     );

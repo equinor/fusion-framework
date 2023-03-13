@@ -1,3 +1,3 @@
 export * from './types';
-export { useCurrentBookmark } from './useCurrentBookmark';
-export { useModuleBookmark } from './useModuleBookmark';
+export { default, useCurrentBookmark } from './useCurrentBookmark';
+export { useBookmark } from './useBookmark';
