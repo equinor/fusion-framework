@@ -52,16 +52,20 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         previusContexts: values.map((c) => ({ id: c.id, name: c.title })),
                     });
 
-                    /* Somehow current is the previous context */
+                    /* Get stored context, previous */
                     const prevCtx = await this.getAsync('current');
 
+                    /* parts to build naigation url from. */
                     const portalPath: Array<string> = [''];
                     const appPath: Array<string> = [];
+
+                    // we have a current app
                     if (this.#framework.modules.app.current) {
+                        /* Build basepath to app */
                         portalPath.push('apps');
                         portalPath.push(this.#framework.modules.app.current.appKey);
 
-                        /* Save paths after contextid or app location in portal */
+                        /* Reuse paths after contextid or app location in portal */
                         this.#framework.modules.navigation.navigator.location.pathname
                             .split('/')
                             .forEach((part) => {
@@ -71,6 +75,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                             });
                     }
 
+                    /* Re-Construct url */
                     const location = [
                         portalPath.join('/'),
                         currentContext.id,
