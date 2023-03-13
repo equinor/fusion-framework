@@ -4,6 +4,7 @@ import { Link, Outlet, RouteObject } from 'react-router-dom';
 import { Create } from './Create';
 import { Provider } from './Provider';
 import { BookmarkAppNavigation } from './BoomarkAppNavigation';
+import Selected from './Selected';
 
 export const routes: RouteObject[] = [
     {
@@ -12,11 +13,14 @@ export const routes: RouteObject[] = [
             <Provider>
                 <BookmarkAppNavigation>
                     <section style={{ display: 'inline-flex', gap: 10 }}>
-                        <Link to={''}>Create Bookmark</Link>
+                        <Link to={''}>Home</Link>
                         <Link to={'page1'}>Page 1</Link>
                         <Link to={'page2'}>Page 2</Link>
                     </section>
+
                     <Outlet />
+
+                    <Create />
                 </BookmarkAppNavigation>
             </Provider>
         ),
@@ -25,7 +29,7 @@ export const routes: RouteObject[] = [
                 index: true,
                 element: (
                     <div>
-                        <Create />,
+                        <Selected />,
                     </div>
                 ),
             },
