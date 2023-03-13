@@ -8,26 +8,14 @@ tags:
     - bookmark
 ---
 
-### React App development
+### React App Bookmark implementation
 
-<ModuleBadge module="react-module-bookmark" />
+<ModuleBadge module="react-module-app" />
 
-To enable bookmark for an application there are 2 tinges needed. Fist the `enableBookmark` will need to be configured as shown below, and then a function to capture the applications state is needed.
-
-```ts
-import { enableContext } from '@equinor/fusion-framework-react-module-bookmark';
-
-export const configure = (configurator) => {
-    // Some Application configuration
-    enableBookmark(configurator);
-    // more configuration...
-};
-```
-
-The `currentBookmark` will be updated when ever the bookmark changes, and all navigation will be handled by parent application / portal.
+To enable bookmark for an application there are only one tinges needed. If the bookmark is enabled on in your portal. A function to capture the applications state is needed. The `currentBookmark` will be updated when ever the bookmark changes, and all navigation will be handled by parent application / portal.
 
 ```ts
-import { useCurrentBookmark } from '@equinor/fusion-framework-react-bookmark';
+import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
 const currentBookmark = useCurrentBookmark(
     useCallback(() => someApplicationState, [someApplicationState])
