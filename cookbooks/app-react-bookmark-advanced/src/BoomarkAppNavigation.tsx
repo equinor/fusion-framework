@@ -10,8 +10,9 @@ export const BookmarkAppNavigation: FC<PropsWithChildren<unknown>> = ({ children
     const navigate = useNavigate();
 
     useLayoutEffect(() => {
-        if (currentBookmark && !location.pathname.includes(currentBookmark.payload.page))
-            navigate(currentBookmark.payload.page);
+        if (currentBookmark && !location.pathname.includes(currentBookmark.payload.page)) {
+            navigate({ pathname: currentBookmark.payload.page, search: location.search });
+        }
     }, [currentBookmark]);
 
     return <>{children}</>;

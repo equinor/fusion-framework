@@ -1,15 +1,8 @@
-import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark/portal';
 import { useEffect } from 'react';
 import { useBookmarkContext } from './Provider';
 
 export function Page2() {
-    const { updateState, payload, name, description, isShared } = useBookmarkContext();
-
-    const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
-
-    const { createBookmark } = useBookmark(bookmarkProvider);
+    const { updateState, payload } = useBookmarkContext();
 
     useEffect(() => {
         updateState((s) => {
@@ -23,6 +16,7 @@ export function Page2() {
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '1rem',
+                width: '800px',
             }}
         >
             <div style={{ flex: 2 }}>
@@ -58,14 +52,6 @@ export function Page2() {
                             value={payload.title}
                         />
                     </form>
-                    <button
-                        disabled={name.length < 2 || description.length < 3}
-                        onClick={() => {
-                            createBookmark({ name, description, isShared });
-                        }}
-                    >
-                        Create Bookmark
-                    </button>
                 </div>
             </div>
         </div>

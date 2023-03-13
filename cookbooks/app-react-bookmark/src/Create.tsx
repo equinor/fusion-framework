@@ -1,11 +1,23 @@
 import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { init, useBookmarkContext } from 'Provider';
+import { FC, useEffect } from 'react';
+import { BookmarkState, init } from './App';
 
-export const Create = () => {
-    const { updateState, ...state } = useBookmarkContext();
+export const Create: FC<{
+    state: BookmarkState;
+    updateState: (newState: () => Partial<BookmarkState>) => void;
+}> = ({ state, updateState }) => {
+    const {
+        bookmarks,
+        updateBookmark,
+        deleteBookmarkById,
+        createBookmark,
+        setCurrentBookmark,
+        getAllBookmarks,
+    } = useBookmark();
 
-    const { bookmarks, updateBookmark, deleteBookmarkById, createBookmark, setCurrentBookmark } =
-        useBookmark();
+    useEffect(() => {
+        getAllBookmarks();
+    }, []);
 
     return (
         <div
@@ -15,7 +27,7 @@ export const Create = () => {
                 top: '58px',
                 height: '100%',
                 width: '250px',
-                borderLeft: '1 solid #11111',
+                borderLeft: '1px solid #11111',
                 display: 'flex',
                 flexDirection: 'row',
                 gap: '1rem',
@@ -64,9 +76,9 @@ export const Create = () => {
                             id="value"
                             type="text"
                             onChange={(e) => {
-                                updateState((s) => ({
+                                updateState(() => ({
                                     payload: {
-                                        ...s.payload,
+                                        ...state.payload,
                                         title: e.target.value,
                                     },
                                 }));
@@ -78,9 +90,9 @@ export const Create = () => {
                             id="value"
                             type="text"
                             onChange={(e) => {
-                                updateState((s) => ({
+                                updateState(() => ({
                                     payload: {
-                                        ...s.payload,
+                                        ...state.payload,
                                         data: e.target.value,
                                     },
                                 }));
@@ -96,7 +108,6 @@ export const Create = () => {
                     >
                         Create Bookmark
                     </button>
-
                     <button
                         onClick={() => {
                             updateState(() => init);
@@ -107,9 +118,7 @@ export const Create = () => {
                     <div style={{ height: '600px', overflow: 'auto' }}>
                         {bookmarks
                             .filter(
-                                (b) =>
-                                    b.appKey ===
-                                    'fusion-framework-cookbook-app-react-bookmark-advanced'
+                                (b) => b.appKey === 'fusion-framework-cookbook-app-react-bookmark'
                             )
                             .map((bookmark) => (
                                 <div key={bookmark.id} style={{ display: 'flex' }}>
