@@ -1,43 +1,74 @@
-import { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
-import { QueryCtorOptions } from '@equinor/fusion-query';
 import { getBookmarkIdFormURL } from './utils/handle-url';
-
 import { BookmarkConfigBuilder, BookmarkConfigBuilderCallback } from './bookmark-config-builder';
-import { Bookmark, GetAllBookmarksParameters, GetBookmarkParameters, SourceSystem } from './types';
-import { ContextModule, IContextProvider } from '@equinor/fusion-framework-module-context';
-import {
-    AppModule,
-    AppModuleProvider,
-    AppModulesInstance,
-} from '@equinor/fusion-framework-module-app';
-import { EventModule, IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import { CreateBookmarkFn, IBookmarkProvider } from './bookmark-provider';
-import { BookmarkClient } from './client/bookmarkClient';
-import { BookmarkModule } from './module';
+
+import type { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
+import type { SourceSystem } from './types';
+import type { ContextModule, IContextProvider } from '@equinor/fusion-framework-module-context';
+import type { AppModule, AppModuleProvider } from '@equinor/fusion-framework-module-app';
+import type { EventModule, IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+import type { IBookmarkModuleProvider } from './bookmark-provider';
+
+import type {
+    INavigationProvider,
+    NavigationModule,
+} from '@equinor/fusion-framework-module-navigation';
+import type { BookmarkClientConfig } from './client/bookmarkClient';
 
 export interface BookmarkModuleConfig {
-    getContextId: () => string | undefined;
-    getCurrentAppIdentification?(): string | undefined;
-    resolveBookmarkId?(): string | null;
-    appRoute(appKey: string): string;
+    /**
+     *  SourceSystem used when creating a new bookmark,
+     *  used as the identifier for the current client. Only used in app shell / portal configuration.
+     */
     sourceSystem: SourceSystem;
-    queryClientConfig: {
-        getAllBookmarks: QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
-        getBookmarkById: QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
-    };
-    client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>;
+    /**
+     *  The clintConfiguration consist of both Api client configuration and query client configuration
+     */
+    clintConfiguration: BookmarkClientConfig;
+    /**
+     * It is possible to associate a Fusion context with a bookmark and this function is used to resolve the current context id applied.
+     * @returns - should return a fusion context id.
+     */
+    getContextId: () => string | undefined;
+    /**
+     * A bookmark kan be connected to a application this is used to resolve the current applications appKey.
+     */
+    getCurrentAppIdentification?(): string | undefined;
+    /**
+     * The resolves bookmarkId at startup, default configured to resolve id form URL with query parm
+     * ?bookmarkId=GUID but this can be resolved for any where if needed.
+     */
+    resolveBookmarkId?(): string | null;
+    /**
+     * Used to configure the navigation path to the bookmarks associated application.
+     * default configuration is /apps/:appKey
+     * @param appKey - Application identifier used to load application module.
+     */
+    getAppPath(appKey: string): string;
+    /**
+     * default set to Fusion Events Module.
+     */
     event?: IEventModuleProvider;
-    bookmarkClient: BookmarkClient;
-    isParent: boolean;
-    getCurrentAppStateCreator(): Record<string, CreateBookmarkFn<unknown>> | undefined;
-    navigateByBookmark?: <TData>(bookmark: TData) => string;
 }
 
 export type IBookmarkModuleConfigurator = {
+    /**
+     * @param init BookmarkConfigBuilderCallback for configuring the bookmark module.
+     * Configuration is only needed for application shell / portals.
+     */
     addConfigBuilder(init: BookmarkConfigBuilderCallback): void;
+    /**
+     * Bookmark Config Factory Providing default configuration if no configuration is provided.
+     * @param init ModuleInitializerArgs<IBookmarkModuleConfigurator, [ServicesModule, AppModule, ContextModule]>
+     * @param parentProvider Parent IBookmarkModuleProvider
+     */
+    createConfig(
+        init: ModuleInitializerArgs<
+            IBookmarkModuleConfigurator,
+            [ServicesModule, AppModule, ContextModule]
+        >,
+        parentProvider?: IBookmarkModuleProvider
+    ): Promise<BookmarkModuleConfig>;
 };
 
 export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
@@ -49,68 +80,12 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
         this.#configBuilders.push(init);
     }
 
-    protected async _getServiceProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ServicesModule]>
-    ): Promise<IApiProvider> {
-        if (init.hasModule('services')) {
-            return init.requireInstance('services');
-        } else {
-            const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)
-                ?.services;
-            if (parentServiceModule) {
-                return parentServiceModule;
-            }
-            throw Error('no service services provider configures [ServicesModule]');
-        }
-    }
-
-    protected async _getContextProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ContextModule]>
-    ): Promise<IContextProvider> {
-        if (init.hasModule('context')) {
-            return init.requireInstance('context');
-        } else {
-            const parentContextModule = (init.ref as ModulesInstanceType<[ContextModule]>)?.context;
-            if (parentContextModule) {
-                return parentContextModule;
-            }
-            throw Error('no context provider configures [ContextModule]');
-        }
-    }
-
-    protected async _getAppProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [AppModule]>
-    ): Promise<AppModuleProvider> {
-        if (init.hasModule('app')) {
-            return init.requireInstance('app');
-        } else {
-            const parentAppModule = (init.ref as ModulesInstanceType<[AppModule]>)?.app;
-            if (parentAppModule) {
-                return parentAppModule;
-            }
-            throw Error('no app provider configures [AppModule]');
-        }
-    }
-    protected async _getEventProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [EventModule]>
-    ): Promise<IEventModuleProvider> {
-        if (init.hasModule('event')) {
-            return init.requireInstance('event');
-        } else {
-            const parentEventModule = (init.ref as ModulesInstanceType<[EventModule]>)?.event;
-            if (parentEventModule) {
-                return parentEventModule;
-            }
-            throw Error('no event provider configures [EventModule]');
-        }
-    }
-
-    public async createConfig(
+    async createConfig(
         init: ModuleInitializerArgs<
             IBookmarkModuleConfigurator,
             [ServicesModule, AppModule, ContextModule]
         >,
-        ref?: IBookmarkProvider
+        parentProvider?: IBookmarkModuleProvider
     ): Promise<BookmarkModuleConfig> {
         const config: Partial<BookmarkModuleConfig> = await this.#configBuilders.reduce(
             async (cur, cb) => {
@@ -122,37 +97,20 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             Promise.resolve({} as Partial<BookmarkModuleConfig>)
         );
 
-        config.isParent = ref ? false : true;
         const appProvider = await this._getAppProvider(init);
 
-        if (ref) {
-            config.sourceSystem = ref.config.sourceSystem;
-            config.getContextId = ref.config.getContextId;
-            config.getCurrentAppIdentification = ref.config.getCurrentAppIdentification;
-            config.bookmarkClient = ref.config.bookmarkClient;
-        }
+        this.#applyParentProviderConfiguration(parentProvider, config);
 
         if (!config.resolveBookmarkId) {
             config.resolveBookmarkId = getBookmarkIdFormURL;
         }
 
-        if (!config.appRoute) {
-            config.appRoute = (appKey: string) => `/apps/${appKey}`;
+        if (!config.getAppPath) {
+            config.getAppPath = (appKey: string) => `/apps/${appKey}`;
         }
 
         if (!config.getCurrentAppIdentification) {
             config.getCurrentAppIdentification = () => appProvider.current?.appKey;
-        }
-
-        if (!config.getCurrentAppStateCreator) {
-            config.getCurrentAppStateCreator = () => {
-                if (!appProvider.current) return;
-                const currentAppBookmarkProvider = (
-                    appProvider.current.instance as AppModulesInstance<[BookmarkModule]>
-                ).bookmark;
-
-                return currentAppBookmarkProvider.bookmarkCreators;
-            };
         }
 
         if (!config.getContextId) {
@@ -162,19 +120,42 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             };
         }
 
-        if (!config.sourceSystem) {
-            config.sourceSystem = {
-                subSystem: 'CLI',
-                identifier: 'fusion-cli',
-                name: 'Fusion CLI',
-            };
-        }
-
         if (!config.event) {
             const event = await this._getEventProvider(init);
             config.event = event;
         }
 
+        config.clintConfiguration = await this._createClientConfiguration(
+            init,
+            config.clintConfiguration
+        );
+
+        if (!config.sourceSystem) {
+            throw Error('missing sourceSystem configuration');
+        }
+
+        return config as BookmarkModuleConfig;
+    }
+
+    #applyParentProviderConfiguration(
+        parentProvider: IBookmarkModuleProvider | undefined,
+        config: Partial<BookmarkModuleConfig>
+    ) {
+        if (parentProvider) {
+            config.clintConfiguration = parentProvider.config.clintConfiguration;
+            config.sourceSystem = parentProvider.config.sourceSystem;
+            config.getContextId = parentProvider.config.getContextId;
+            config.getCurrentAppIdentification = parentProvider.config.getCurrentAppIdentification;
+        }
+    }
+
+    protected async _createClientConfiguration(
+        init: ModuleInitializerArgs<
+            IBookmarkModuleConfigurator,
+            [ServicesModule, AppModule, ContextModule]
+        >,
+        config: Partial<BookmarkClientConfig> = {}
+    ): Promise<BookmarkClientConfig> {
         if (!config.client) {
             const apiProvider = await this._getServiceProvider(init);
             config.client = await apiProvider.createBookmarksClient('fetch');
@@ -204,10 +185,81 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             };
         }
 
-        config.bookmarkClient = ref
-            ? ref.bookmarkClient
-            : new BookmarkClient(config as BookmarkModuleConfig);
+        return config as BookmarkClientConfig;
+    }
 
-        return config as BookmarkModuleConfig;
+    protected async _getServiceProvider(
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ServicesModule]>
+    ): Promise<IApiProvider> {
+        if (init.hasModule('services')) {
+            return init.requireInstance('services');
+        } else {
+            const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)
+                ?.services;
+            if (parentServiceModule) {
+                return parentServiceModule;
+            }
+            throw Error('[BookmarkConfigurator] No service provider configures [ServicesModule] ');
+        }
+    }
+
+    protected async _getContextProvider(
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ContextModule]>
+    ): Promise<IContextProvider> {
+        if (init.hasModule('context')) {
+            return init.requireInstance('context');
+        } else {
+            const parentContextModule = (init.ref as ModulesInstanceType<[ContextModule]>)?.context;
+            if (parentContextModule) {
+                return parentContextModule;
+            }
+            throw Error('[BookmarkConfigurator] No context provider configures [ContextModule]');
+        }
+    }
+
+    protected async _getAppProvider(
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [AppModule]>
+    ): Promise<AppModuleProvider> {
+        if (init.hasModule('app')) {
+            return init.requireInstance('app');
+        } else {
+            const parentAppModule = (init.ref as ModulesInstanceType<[AppModule]>)?.app;
+            if (parentAppModule) {
+                return parentAppModule;
+            }
+            throw Error('[BookmarkConfigurator] No app provider configures [AppModule]');
+        }
+    }
+    protected async _getEventProvider(
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [EventModule]>
+    ): Promise<IEventModuleProvider> {
+        if (init.hasModule('event')) {
+            return init.requireInstance('event');
+        } else {
+            const parentEventModule = (init.ref as ModulesInstanceType<[EventModule]>)?.event;
+            if (parentEventModule) {
+                return parentEventModule;
+            }
+            throw Error('[BookmarkConfigurator] No event provider configures [EventModule]');
+        }
+    }
+
+    protected async _getNavigationProvider(
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [NavigationModule]>
+    ): Promise<INavigationProvider> {
+        if (init.hasModule('navigation')) {
+            return init.requireInstance('navigation');
+        } else {
+            const parentNavigationModule = (init.ref as ModulesInstanceType<[NavigationModule]>)
+                ?.navigation;
+            if (parentNavigationModule) {
+                return parentNavigationModule;
+            }
+            throw Error(
+                '[BookmarkConfigurator] No navigation provider configures [NavigationModule]'
+            );
+        }
     }
 }
+
+export default BookmarkModuleConfigurator;

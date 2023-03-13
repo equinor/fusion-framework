@@ -9,7 +9,6 @@ import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
 
 import { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
-import { CreateBookmarkFn } from 'bookmark-provider';
 
 import {
     BookmarkModuleConfig,
@@ -49,7 +48,7 @@ export class BookmarkConfigBuilder<
     /**
      *
      * This will sett the SourceSystem used when creating a new bookmark,
-     * used as the identifier frr the current client. Only used in app shell / portal configuration.
+     * used as the identifier for the current client. Only used in app shell / portal configuration.
      *
      * @param {SourceSystem} sourceSystem
      * ```ts
@@ -84,7 +83,9 @@ export class BookmarkConfigBuilder<
     serCustomBookmarkApiClient(
         client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>
     ) {
-        this.config.client = client;
+        if (this.config.clintConfiguration) {
+            this.config.clintConfiguration.client = client;
+        }
     }
 
     /**
@@ -95,6 +96,17 @@ export class BookmarkConfigBuilder<
      */
     setContextIdResolver(fn: () => string | undefined) {
         this.config.getContextId = fn;
+    }
+
+    /**
+     * Used to over withe the default configuration fot the path resolver for
+     * the application related to the bookmark.
+     *
+     * @param {((appKey: string) => string)} fn - Function for providing the navigation path.
+     * @memberof BookmarkConfigBuilder
+     */
+    setAppPathResolver(fn: (appKey: string) => string) {
+        this.config.getAppPath = fn;
     }
 
     /**
@@ -120,16 +132,6 @@ export class BookmarkConfigBuilder<
     }
 
     /**
-     * This lets you overwrite the default configuration for getting the current applications
-     * state creators
-     *
-     * @param {() => Record<string, CreateBookmarkFn<unknown>>} fn - Get state creator function
-     * @memberof BookmarkConfigBuilder
-     */
-    setCurrentAppStateCreator(fn: () => Record<string, CreateBookmarkFn<unknown>>) {
-        this.config.getCurrentAppStateCreator = fn;
-    }
-    /**
      * Use for override the bookmark query client
      *
      * @param {({
@@ -154,27 +156,29 @@ export class BookmarkConfigBuilder<
         },
         expire: number = 1 * 60 * 1000
     ): void {
-        this.config.queryClientConfig = {
-            getAllBookmarks:
-                typeof client.getAllBookmarks === 'function'
-                    ? {
-                          key: () => 'all-bookmarks',
-                          client: {
-                              fn: client.getAllBookmarks,
-                          },
-                          validate: ({ args }) => args.isValid,
-                      }
-                    : client.getAllBookmarks,
-            getBookmarkById:
-                typeof client.getBookmarkById === 'function'
-                    ? {
-                          key: ({ id }) => id,
-                          client: {
-                              fn: client.getBookmarkById,
-                          },
-                          expire,
-                      }
-                    : client.getBookmarkById,
-        };
+        if (this.config.clintConfiguration) {
+            this.config.clintConfiguration.queryClientConfig = {
+                getAllBookmarks:
+                    typeof client.getAllBookmarks === 'function'
+                        ? {
+                              key: () => 'all-bookmarks',
+                              client: {
+                                  fn: client.getAllBookmarks,
+                              },
+                              validate: ({ args }) => args.isValid,
+                          }
+                        : client.getAllBookmarks,
+                getBookmarkById:
+                    typeof client.getBookmarkById === 'function'
+                        ? {
+                              key: ({ id }) => id,
+                              client: {
+                                  fn: client.getBookmarkById,
+                              },
+                              expire,
+                          }
+                        : client.getBookmarkById,
+            };
+        }
     }
 }

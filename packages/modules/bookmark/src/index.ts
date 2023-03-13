@@ -11,7 +11,7 @@ export {
     moduleKey as bookmarkModuleKey,
 } from './module';
 
-export { IBookmarkProvider, BookmarkProvider } from './bookmark-provider';
+export { IBookmarkModuleProvider, BookmarkModuleProvider } from './bookmark-provider';
 
 export { enableBookmark } from './enable-bookmark';
 

@@ -3,7 +3,7 @@ import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bo
 import { Observable } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 import { Query } from '@equinor/fusion-query';
-import { switchMap, map, catchError, EMPTY, filter } from 'rxjs';
+import { switchMap, map, catchError, EMPTY } from 'rxjs';
 import { GetAllBookmarksParameters, Bookmark } from '../types';
 import { actions, Actions } from './bookmarkActions';
 
@@ -64,16 +64,3 @@ export const handleDeleteBookmark =
                 return actions.delete.success(action.payload);
             })
         );
-
-export const handleGetAllOnSuccessCreateUpdateDelete = () => (action$: Observable<Actions>) =>
-    action$.pipe(
-        filter((action) => {
-            switch (action.type) {
-                case actions.create.success.type:
-                case actions.update.success.type:
-                    return true;
-            }
-            return false;
-        }),
-        map(() => actions.getAll(false))
-    );
