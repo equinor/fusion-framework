@@ -6,7 +6,6 @@ import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 import { Fusion } from '@equinor/fusion-framework-react';
 import { configureModules } from '@equinor/fusion-framework-app';
 import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
-import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { enableContext, ContextItem } from '@equinor/fusion-framework-module-context';
 
 import { filter, scan, tap } from 'rxjs';
@@ -16,10 +15,10 @@ type AppManifestLegacy = AppManifest & {
 };
 
 export class LegacyContextManager extends ReliableDictionary<ContextCache> {
-    #framework: Fusion<[AppModule, NavigationModule]>;
+    #framework: Fusion<[AppModule]>;
 
     constructor(args: {
-        framework: Fusion<[AppModule, NavigationModule]>;
+        framework: Fusion<[AppModule]>;
         // TODO - enable module-navigation
         history: History;
         featureLogger: FeatureLogger;
@@ -51,9 +50,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         // why do we need and array of all contexts?
                         previusContexts: values.map((c) => ({ id: c.id, name: c.title })),
                     });
-                    this.#framework.modules.navigation.navigator.push(
-                        ['', currentContext.id].join('/')
-                    );
                 }
             });
 
@@ -79,8 +75,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                 }
             }
         });
-
-        // args.history.listen(this.ensureCurrentContextExistsInUrl);
     }
 
     public getCurrentContext(): ContextItem | undefined {
@@ -100,15 +94,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
     public async setCurrentContextIdAsync(id: string | null): Promise<void> {
         return this.setCurrentContextAsync(id);
     }
-
-    /**
-     * @todo - kill as soon as possible
-     */
-    private ensureCurrentContextExistsInUrl = async () => {
-        // if (!this.appHasContext()) return;
-        // const newUrl = await this.buildUrlWithContext();
-        // if (newUrl && window.location.pathname.indexOf(newUrl) !== 0) this.history.replace(newUrl);
-    };
 
     getLinkedContextAsync() {
         throw Error(
