@@ -8,8 +8,8 @@ import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
 import { createState } from '@equinor/fusion-observable';
 import { FlowState } from '@equinor/fusion-observable/src/create-state';
-import Query from '@equinor/fusion-query';
-import { BookmarkModuleConfig } from 'configurator';
+import Query, { type QueryCtorOptions } from '@equinor/fusion-query';
+
 import { BehaviorSubject, catchError, EMPTY, map, Observable, Subscription } from 'rxjs';
 
 import {
@@ -20,14 +20,21 @@ import {
     SourceSystem,
 } from '../types';
 import { ActionBuilder, actions } from './bookmarkActions';
-import { reducer } from './bookmarkReducer';
+import { reducer, State } from './bookmarkReducer';
 import {
     handleBookmarkGetAll,
     handleCreateBookmark,
     handleDeleteBookmark,
-    handleGetAllOnSuccessCreateUpdateDelete,
     handleUpdateBookmark,
 } from './bookmarkFlows';
+
+export type BookmarkClientConfig = {
+    client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>;
+    queryClientConfig: {
+        getAllBookmarks: QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
+        getBookmarkById: QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
+    };
+};
 
 export class BookmarkClient {
     #queryBookmarkById: Query<Bookmark<unknown>, GetBookmarkParameters>;
@@ -35,23 +42,28 @@ export class BookmarkClient {
     #bookmarkAPiClient: BookmarksApiClient<'fetch', IHttpClient, unknown>;
 
     #currentBookmark$: BehaviorSubject<Bookmark<unknown> | undefined>;
-    #currentBookmark: Bookmark<unknown> | undefined;
 
     #sourceSystem: SourceSystem;
     #event?: IEventModuleProvider;
 
-    #state: FlowState<Record<string, Bookmark>, ActionBuilder>;
+    #state: FlowState<State, ActionBuilder>;
     #subscriptions = new Subscription();
 
-    constructor(config: BookmarkModuleConfig) {
+    appRoute?(appKey: string): string;
+
+    constructor(
+        config: BookmarkClientConfig,
+        sourceSystem: SourceSystem,
+        event?: IEventModuleProvider
+    ) {
         this.#currentBookmark$ = new BehaviorSubject<Bookmark<unknown> | undefined>(undefined);
 
         this.#bookmarkAPiClient = config.client;
         this.#queryBookmarkById = new Query(config.queryClientConfig.getBookmarkById);
         this.#queryAllBookmarks = new Query(config.queryClientConfig.getAllBookmarks);
 
-        this.#sourceSystem = config.sourceSystem;
-        this.#event = config.event;
+        this.#sourceSystem = sourceSystem;
+        this.#event = event;
 
         this.#state = createState(actions, reducer);
 
@@ -62,36 +74,39 @@ export class BookmarkClient {
         this.#addStateEffects();
     }
 
-    public get currentBookmark() {
-        return this.#currentBookmark;
-    }
-
     public get currentBookmark$() {
         return this.#currentBookmark$.asObservable();
     }
 
     public get bookmarks$() {
         return this.#state.subject.pipe(
-            map((bookmarks) => Object.entries(bookmarks).map(([_, bookmark]) => bookmark))
+            map((state) => Object.values(state.bookmarks).map((bookmark) => bookmark))
         );
     }
 
-    setCurrentBookmark<T>(IdOrItem: string | Bookmark<T>) {
-        if (typeof IdOrItem === 'string') {
-            this.resolverBookmark<T>(IdOrItem)
+    setCurrentBookmark<T>(idOrItem?: string | Bookmark<T>) {
+        if (!idOrItem) this.#currentBookmark$.next(undefined);
+
+        if (typeof idOrItem === 'string') {
+            this.resolverBookmark<T>(idOrItem)
                 .pipe(catchError(() => EMPTY))
                 .subscribe((bookmark) => {
                     if (this.#event) {
-                        this.#event.dispatchEvent('onBookmarkChanged', {
-                            detail: bookmark,
-                            canBubble: true,
-                        });
+                        this.#event
+                            .dispatchEvent('onBookmarkChanged', {
+                                detail: bookmark,
+                                canBubble: true,
+                                cancelable: true,
+                            })
+                            .then(() => {
+                                this.#currentBookmark$.next(bookmark);
+                            });
+                    } else {
+                        this.#currentBookmark$.next(bookmark);
                     }
-
-                    this.#currentBookmark$.next(bookmark);
                 });
-        } else if (IdOrItem !== this.currentBookmark) {
-            this.#currentBookmark$.next(IdOrItem);
+        } else if (idOrItem !== this.#currentBookmark$.value) {
+            this.#currentBookmark$.next(idOrItem);
         }
     }
 
@@ -112,7 +127,6 @@ export class BookmarkClient {
         this.#state.dispatch.getAll(isValid);
     }
 
-    // Convert to state ??
     async getBookmarkById(bookmarkId: string) {
         return await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
     }
@@ -173,9 +187,6 @@ export class BookmarkClient {
         );
         this.#subscriptions.add(
             this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient))
-        );
-        this.#subscriptions.add(
-            this.#state.subject.addFlow(handleGetAllOnSuccessCreateUpdateDelete())
         );
     }
 }
