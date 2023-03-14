@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cli",
-    "version": "5.0.7",
+    "version": "5.0.7-beta.0",
     "keywords": [
         "Fusion",
         "Fusion Framework",
@@ -24,7 +24,7 @@
         "prepack": "yarn build"
     },
     "dependencies": {
-        "@equinor/fusion-framework-app": "^6.0.6",
+        "@equinor/fusion-framework-app": "^6.0.7-beta.0",
         "@equinor/fusion-observable": "^7.0.1",
         "@vitejs/plugin-react": "^3.0.0",
         "commander": "^10.0.0",
@@ -37,8 +37,8 @@
         "vite-tsconfig-paths": "^4.0.5"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module-context": "^2.0.6",
-        "@equinor/fusion-framework-react": "^4.0.3",
+        "@equinor/fusion-framework-module-context": "^2.0.7-beta.0",
+        "@equinor/fusion-framework-react": "^4.0.4-beta.0",
         "@equinor/fusion-query": "^2.0.5",
         "@equinor/fusion-react-button": "^0.6.1",
         "@equinor/fusion-react-context-selector": "^0.3.0",
