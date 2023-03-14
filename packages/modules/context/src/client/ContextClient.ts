@@ -1,6 +1,8 @@
 import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import equal from 'fast-deep-equal';
+
 import { Query, QueryCtorOptions } from '@equinor/fusion-query';
 
 import { ContextItem } from '../types';
@@ -35,9 +37,9 @@ export class ContextClient extends Observable<ContextItem> {
             // TODO - compare context
             this.resolveContext(idOrItem)
                 .pipe(catchError(() => EMPTY))
-                .subscribe((value) => this.#currentContext$.next(value));
+                .subscribe((value) => this.setCurrentContext(value));
             /** only add context if not match */
-        } else if (idOrItem !== this.#currentContext$.value) {
+        } else if (!equal(idOrItem, this.#currentContext$.value)) {
             this.#currentContext$.next(idOrItem);
         }
     }
