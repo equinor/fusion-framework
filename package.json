@@ -1,6 +1,6 @@
 {
   "name": "fusion-framework",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta.0",
   "description": "Framework for Fusion Eco System",
   "private": true,
   "type": "module",
