@@ -10,7 +10,7 @@ import { createState } from '@equinor/fusion-observable';
 import { FlowState } from '@equinor/fusion-observable/src/create-state';
 import Query, { type QueryCtorOptions } from '@equinor/fusion-query';
 
-import { BehaviorSubject, catchError, EMPTY, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, map, Observable, Subscription } from 'rxjs';
 
 import {
     Bookmark,
@@ -72,45 +72,65 @@ export class BookmarkClient {
 
         // Add Events to actions success
         this.#addStateEffects();
+
+        if (event) {
+            this.#subscriptions.add(
+                this.#currentBookmark$.subscribe((bookmark) => {
+                    event.dispatchEvent('onBookmarkChanged', {
+                        detail: bookmark,
+                        canBubble: true,
+                        source: this,
+                    });
+                })
+            );
+        }
     }
 
-    public get currentBookmark$() {
+    public get currentBookmark$(): Observable<Bookmark | undefined> {
         return this.#currentBookmark$.asObservable();
     }
 
-    public get bookmarks$() {
+    public get bookmarks$(): Observable<Bookmark[]> {
         return this.#state.subject.pipe(
             map((state) => Object.values(state.bookmarks).map((bookmark) => bookmark))
         );
     }
 
-    setCurrentBookmark<T>(idOrItem?: string | Bookmark<T>) {
-        if (!idOrItem) this.#currentBookmark$.next(undefined);
+    public async setCurrentBookmark<T>(idOrItem?: string | Bookmark<T>): Promise<void> {
+        if (!idOrItem) {
+            return this.#currentBookmark$.next(undefined);
+        }
 
         if (typeof idOrItem === 'string') {
-            this.resolverBookmark<T>(idOrItem)
-                .pipe(catchError(() => EMPTY))
-                .subscribe((bookmark) => {
-                    if (this.#event) {
-                        this.#event
-                            .dispatchEvent('onBookmarkChanged', {
-                                detail: bookmark,
-                                canBubble: true,
-                                cancelable: true,
-                            })
-                            .then(() => {
-                                this.#currentBookmark$.next(bookmark);
-                            });
-                    } else {
-                        this.#currentBookmark$.next(bookmark);
-                    }
-                });
+            // TODO add custom error
+            const bookmark = await this.resolverBookmarkAsync<T>(idOrItem);
+            return this.setBookmark(bookmark);
+            // TODO do a deep fast equal, since propagated bookmarks can be of different instances
         } else if (idOrItem !== this.#currentBookmark$.value) {
-            this.#currentBookmark$.next(idOrItem);
+            return this.setBookmark(idOrItem);
         }
     }
 
-    resolverBookmark<T>(bookmarkId: string): Observable<Bookmark<T>> {
+    public async setBookmark<T>(bookmark?: Bookmark<T>): Promise<void> {
+        if (this.#event) {
+            /** notify that current bookmark is about to change */
+            const event = await this.#event.dispatchEvent('onBookmarkChange', {
+                detail: bookmark,
+                cancelable: true,
+                canBubble: true,
+                source: this,
+            });
+
+            /** check if any listeners requested canceling */
+            if (!event.canceled) {
+                this.#currentBookmark$.next(bookmark);
+            }
+        } else {
+            this.#currentBookmark$.next(bookmark);
+        }
+    }
+
+    public resolverBookmark<T>(bookmarkId: string): Observable<Bookmark<T>> {
         return this.#queryBookmarkById
             .query({
                 id: bookmarkId,
@@ -122,26 +142,34 @@ export class BookmarkClient {
             ) as Observable<Bookmark<T>>;
     }
 
-    getAllBookmarks(args = { isValid: false }) {
+    public resolverBookmarkAsync<T>(bookmarkId: string): Promise<Bookmark<T>> {
+        return lastValueFrom(this.resolverBookmark<T>(bookmarkId));
+    }
+
+    public getAllBookmarks(args = { isValid: false }): void {
         const { isValid } = args;
         this.#state.dispatch.getAll(isValid);
     }
 
-    async getBookmarkById(bookmarkId: string) {
-        return await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
+    async getBookmarkById<T>(bookmarkId: string): Promise<Bookmark> {
+        const result = await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
+        const bookmark = (await result.json()) as Bookmark<T>;
+        return bookmark;
     }
 
-    createBookmark<T>(bookmark: CreateBookmark<T>) {
+    createBookmark<T>(bookmark: CreateBookmark<T>): void {
         this.#state.dispatch.create(bookmark);
     }
-    updateBookmark(bookmark: Bookmark<unknown>) {
+
+    updateBookmark(bookmark: Bookmark<unknown>): void {
         this.#state.dispatch.update(bookmark);
     }
-    deleteBookmarkById(bookmarkId: string) {
+
+    deleteBookmarkById(bookmarkId: string): void {
         this.#state.dispatch.delete(bookmarkId);
     }
 
-    dispose() {
+    dispose(): void {
         this.#subscriptions.unsubscribe();
     }
 
