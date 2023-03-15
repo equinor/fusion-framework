@@ -157,8 +157,25 @@ export class BookmarkClient {
         return bookmark;
     }
 
-    createBookmark<T>(bookmark: CreateBookmark<T>): void {
-        this.#state.dispatch.create(bookmark);
+    createBookmark<T>(bookmark: CreateBookmark<T>): Observable<Bookmark<T>> {
+        return new Observable((subscriber) => {
+            this.#state.dispatch.create(bookmark);
+            subscriber.add(
+                this.#state.subject.addEffect('create::success', (action) => {
+                    subscriber.next(action.payload as Bookmark<T>);
+                    subscriber.complete();
+                })
+            );
+            subscriber.add(
+                this.#state.subject.addEffect('create::failure', (action) => {
+                    subscriber.error(action.payload);
+                })
+            );
+        });
+    }
+
+    createBookmarkAsync<T>(bookmark: CreateBookmark<T>): Promise<Bookmark<T>> {
+        return lastValueFrom(this.createBookmark(bookmark));
     }
 
     updateBookmark(bookmark: Bookmark<unknown>): void {
