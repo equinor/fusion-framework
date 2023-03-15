@@ -22,7 +22,8 @@ export const actions = {
     create: createAsyncAction(
         'create',
         (bookmark: CreateBookmark) => ({ payload: bookmark }),
-        (bookmark: Bookmark) => ({ payload: bookmark })
+        (bookmark: Bookmark) => ({ payload: bookmark }),
+        (err: unknown) => ({ payload: err })
     ),
 };
 
