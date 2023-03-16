@@ -13,7 +13,7 @@ import { useState } from 'react';
 const Root = () => {
     const personResolver = usePersonResolver();
 
-    useBookmarkNavigate();
+    useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
 
     return (
         <div style={{ fontFamily: 'Equinor' }}>

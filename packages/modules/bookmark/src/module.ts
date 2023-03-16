@@ -3,7 +3,6 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { AppModule } from '@equinor/fusion-framework-module-app';
 import { ContextModule } from '@equinor/fusion-framework-module-context';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { BookmarkModuleProvider, IBookmarkModuleProvider } from './bookmark-provider';
 import { BookmarkModuleConfigurator, IBookmarkModuleConfigurator } from './configurator';
 
@@ -15,7 +14,7 @@ export type BookmarkModule = Module<
     BookmarkModuleKey,
     IBookmarkModuleProvider,
     IBookmarkModuleConfigurator,
-    [EventModule, ServicesModule, AppModule, ContextModule, NavigationModule]
+    [EventModule, ServicesModule, AppModule, ContextModule]
 >;
 
 export const module: BookmarkModule = {

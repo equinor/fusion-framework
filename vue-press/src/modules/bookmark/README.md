@@ -5,7 +5,9 @@ tag:
     - bookmark
 ---
 
-## Concept
+ <ModuleBadge module="module-bookmark" />
+ 
+ ## Concept
 
 Bookmarks are used to save the state of an application at a specific point in time, so that users can easily return to that state later. A bookmark is for any application, as long that it has been enabled in the given environment. The bookmark module is created to orchestrate this behavior.
 
@@ -69,69 +71,98 @@ cb - For creating the bookmark payload, this should ne wrapped in a useCallback,
 addStateCreator(cb: CreateBookmarkFn<TData>, key?: keyof TData): VoidFunction
 ```
 
+#### getAllBookmarks / getAllBookmarksAsync
+
+Function for resolving all bookmarks for the current sub system.
+
+::: code-tabs
+@tab Async
+
+```ts
+getAllBookmarksAsync(): Promise<Array<Bookmark>>;
+```
+
+@tab Observable
+
+```ts
+getAllBookmarks(): Observable<Array<Bookmark>>;
+```
+
+:::
+
 #### createBookmark
 
 Creates a new bookmark with the given arguments, and utilizes teh provided stateCreator to create the bookmark payload.
 
+```ts
+createBookmark<T>(args: { name: string; description: string; isShared: boolean }): Promise<Bookmark<T>>:
+```
+
+#### getBookmarkById
+
+Function for resolving a bookmark and the bookmarks payload.
+
+```ts
+getBookmarkById<T>(bookmarkId: string): Promise<Bookmark<T>>;
+```
+
+#### updateBookmark / updateBookmarkAsync
+
+Function for updating bookmark a bookmark when successful this will update the bookmark list.
+
+::: code-tabs
+
+@tab Async
+
+```ts
+ updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>>;
+```
+
+@tab Observable
+
+```ts
+updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>>;
+```
+
+:::
+
+#### deleteBookmarkById / deleteBookmarkByIdAsync
+
+Function for deleting a bookmark by the given identification,
+When successful this will update the bookmark list automatically.
+
+::: code-tabs
+
+@tab Async
+
+```ts
+    deleteBookmarkByIdAsync(bookmarkId: string): Promise<string>;
+```
+
+@tab Observable
+
 ```TS
-createBookmark(args: { name: string; description: string; isShared: boolean }): Promise<void>:
+    deleteBookmarkById(bookmarkId: string): Observable<string>;
+```
+
+:::
+
+#### setCurrentBookmark
+
+Function for setting the current bookmark, when successful this will update the bookmark list.
+
+If not provided the current bookmark state will be set to undefined.
+
+```ts
+setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): void;
 ```
 
 #### dispose
 
 disposes of the class and unsubscribes all subscriptions.
 
-```TS
+```ts
 dispose(): void:
-```
-
-#### getBookmarkById
-
-     Function for resolving a bookmark form api client
-     @param {string} bookmarkId - bookmark indemnificator.
-
-```TS
-   getBookmarkById(bookmarkId: string): void;
-```
-
-#### getAllBookmarks
-
-    Function for resoling all bookmarks current sub system.
-
-```TS
-    getBookmarkById(): void;
-```
-
-    Function for updating bookmark a bookmark when successful this will update the bookmark list.
-
-#### updateBookmark
-
-@param {string} bookmarkId
-@param {Bookmark<unknown>} bookmark
-
-```TS
-    updateBookmark(bookmark: Bookmark<unknown>): void;
-```
-
-#### deleteBookmarkById
-
-Function for deleting a bookmark, when successful this will update the bookmark list.
-@param {string} bookmarkId
-
-```TS
-    deleteBookmarkById(bookmarkId: string): void;
-```
-
-#### setCurrentBookmark
-
-Function for setting the current bookmark, when successful this will update the bookmark list.
-@template TData - Bookmark payload type.
-@param {(string | Bookmark<TData> | undefined)} idOrItem - can be full bookmark object or bookmarkId.
-If not provided the current bookmark state will be set to undefined.
-
-```TS
-setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): void;
-
 ```
 
 ### Configuration Options
@@ -249,5 +280,3 @@ export const configure = (configurator) => {
     }, 0 );
 };
 ```
-
- <ModuleBadge module="module-bookmark" />

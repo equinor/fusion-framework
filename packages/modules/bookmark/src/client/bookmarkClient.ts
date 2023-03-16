@@ -146,23 +146,35 @@ export class BookmarkClient {
         return lastValueFrom(this.resolverBookmark<T>(bookmarkId));
     }
 
-    public getAllBookmarks(args = { isValid: false }): void {
+    public getAllBookmarks(args = { isValid: false }): Observable<Array<Bookmark>> {
         const { isValid } = args;
-        this.#state.dispatch.getAll(isValid);
+        return new Observable((subscriber) => {
+            this.#state.dispatch.getAll(isValid);
+            subscriber.add(
+                this.#state.subject.addEffect('getAll::success', (action) => {
+                    subscriber.next(action.payload);
+                    subscriber.complete();
+                })
+            );
+        });
     }
 
-    async getBookmarkById<T>(bookmarkId: string): Promise<Bookmark> {
+    public async getAllBookmarksAsync(args = { isValid: false }): Promise<Array<Bookmark>> {
+        return lastValueFrom(this.getAllBookmarks(args));
+    }
+
+    public async getBookmarkById<T>(bookmarkId: string): Promise<Bookmark<T>> {
         const result = await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
         const bookmark = (await result.json()) as Bookmark<T>;
         return bookmark;
     }
 
-    createBookmark<T>(bookmark: CreateBookmark<T>): Observable<Bookmark<T>> {
+    public createBookmark(bookmark: CreateBookmark<unknown>): Observable<Bookmark<unknown>> {
         return new Observable((subscriber) => {
             this.#state.dispatch.create(bookmark);
             subscriber.add(
                 this.#state.subject.addEffect('create::success', (action) => {
-                    subscriber.next(action.payload as Bookmark<T>);
+                    subscriber.next(action.payload as Bookmark<unknown>);
                     subscriber.complete();
                 })
             );
@@ -174,16 +186,42 @@ export class BookmarkClient {
         });
     }
 
-    createBookmarkAsync<T>(bookmark: CreateBookmark<T>): Promise<Bookmark<T>> {
+    public async createBookmarkAsync(
+        bookmark: CreateBookmark<unknown>
+    ): Promise<Bookmark<unknown>> {
         return lastValueFrom(this.createBookmark(bookmark));
     }
 
-    updateBookmark(bookmark: Bookmark<unknown>): void {
-        this.#state.dispatch.update(bookmark);
+    public updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>> {
+        return new Observable((subscriber) => {
+            this.#state.dispatch.update(bookmark);
+            subscriber.add(
+                this.#state.subject.addEffect('update::success', (action) => {
+                    subscriber.next(action.payload as Bookmark<T>);
+                    subscriber.complete();
+                })
+            );
+        });
     }
 
-    deleteBookmarkById(bookmarkId: string): void {
-        this.#state.dispatch.delete(bookmarkId);
+    public async updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> {
+        return lastValueFrom(this.updateBookmark(bookmark));
+    }
+
+    public deleteBookmarkById(bookmarkId: string): Observable<string> {
+        return new Observable((subscriber) => {
+            this.#state.dispatch.delete(bookmarkId);
+            subscriber.add(
+                this.#state.subject.addEffect('delete::success', (action) => {
+                    subscriber.next(action.payload);
+                    subscriber.complete();
+                })
+            );
+        });
+    }
+
+    public async deleteBookmarkByIdAsync(bookmarkId: string): Promise<string> {
+        return lastValueFrom(this.deleteBookmarkById(bookmarkId));
     }
 
     dispose(): void {

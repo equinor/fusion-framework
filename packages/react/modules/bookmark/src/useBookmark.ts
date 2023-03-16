@@ -51,29 +51,33 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
     );
 
     const createBookmark = useCallback(
-        (args: { name: string; description: string; isShared: boolean }) => {
-            bookmarkProvider.createBookmark(args);
+        async <T>(args: {
+            name: string;
+            description: string;
+            isShared: boolean;
+        }): Promise<Bookmark<T>> => {
+            return await bookmarkProvider.createBookmark<T>(args);
         },
         [bookmarkProvider]
     );
     const updateBookmark = useCallback(
-        (bookmark: Bookmark<TData>) => {
-            bookmarkProvider.updateBookmark(bookmark);
+        async <T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> => {
+            return await bookmarkProvider.updateBookmarkAsync<T>(bookmark);
         },
         [bookmarkProvider]
     );
     const deleteBookmarkById = useCallback(
-        (bookmarkId: string) => {
-            bookmarkProvider.deleteBookmarkById(bookmarkId);
+        async (bookmarkId: string): Promise<string> => {
+            return await bookmarkProvider.deleteBookmarkByIdAsync(bookmarkId);
         },
         [bookmarkProvider]
     );
-    const getAllBookmarks = useCallback(() => {
-        bookmarkProvider.getAllBookmarks();
+    const getAllBookmarks = useCallback(async (): Promise<Array<Bookmark>> => {
+        return await bookmarkProvider.getAllBookmarksAsync();
     }, [bookmarkProvider]);
 
     const setCurrentBookmark = useCallback(
-        <TData>(IdOrItem: string | Bookmark<TData>) => {
+        <TData>(IdOrItem: string | Bookmark<TData>): void => {
             bookmarkProvider.setCurrentBookmark(IdOrItem);
         },
         [bookmarkProvider]
