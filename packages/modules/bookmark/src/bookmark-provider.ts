@@ -37,6 +37,7 @@ export interface IBookmarkModuleProvider {
      * @type {Bookmark<unknown>}
      */
     currentBookmark?: Bookmark<unknown>;
+
     /**
      * Function fo setting the current applications state creator, is used to collect the state stored in a bookmark.
      * This will enable the bookmark functionality for the application.
@@ -50,27 +51,55 @@ export interface IBookmarkModuleProvider {
 
     /**
      * Function for resolving a bookmark form api client
+     * @template T - Bookmark Payload type.
      * @param {string} bookmarkId - bookmark indemnificator.
+     * @returns {Promise<Bookmark<T>>}
      */
-    getBookmarkById(bookmarkId: string): void;
+    getBookmarkById<T>(bookmarkId: string): Promise<Bookmark<T>>;
 
     /**
-     * Function for resoling all bookmarks current sub system.
+     * Function for resolving all bookmarks for the current sub system.
+     * @return {Observable<Bookmark<T>>} - An observable of the all Bookmarks.
      */
-    getAllBookmarks(): void;
+    getAllBookmarks(): Observable<Array<Bookmark>>;
+
+    /**
+     * Function for resolving all bookmarks forthe current sub system.
+     * @return {Promise<Array<Bookmark<T><>} - Promise of all Bookmarks
+     */
+    getAllBookmarksAsync(): Promise<Array<Bookmark>>;
 
     /**
      * Function for updating bookmark a bookmark when successful this will update the bookmark list.
+     * @template T - Payload Type
      * @param {string} bookmarkId
-     * @param {Bookmark<unknown>} bookmark
+     * @param {Bookmark<T>} bookmark
+     * @return {Observable<Bookmark<T>>} - An observable of the updated Bookmark.
      */
-    updateBookmark(bookmark: Bookmark<unknown>): void;
+    updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>>;
+
+    /**
+     * Function for updating bookmark a bookmark when successful this will update the bookmark list.
+     * @template T - Payload Type
+     * @param {string} bookmarkId
+     * @param {Bookmark<T>} bookmark
+     * @return {Promise<Bookmark<T>>} - Promise of a Bookmark
+     */
+    updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>>;
 
     /**
      * Function for deleting a bookmark, when successful this will update the bookmark list.
      * @param {string} bookmarkId
+     * @return {Observable<string>} Observable of the deletes BookmarkId
      */
-    deleteBookmarkById(bookmarkId: string): void;
+    deleteBookmarkById(bookmarkId: string): Observable<string>;
+
+    /**
+     * Function for deleting a bookmark, when successful this will update the bookmark list.
+     * @param {string} bookmarkId
+     * @return {Promise<string>} - Promise of the deleted bookmarkId
+     */
+    deleteBookmarkByIdAsync(bookmarkId: string): Promise<string>;
 
     /**
      * Function for setting the current bookmark, when successful this will update the bookmark list.
@@ -84,7 +113,11 @@ export interface IBookmarkModuleProvider {
      * Creates a new bookmark with the given arguments, and utilizes teh provided stateCreator to create the bookmark payload.
      * @param {{ name: string; description: string; isShared: boolean }} args - Name, Description and isSheared
      */
-    createBookmark(args: { name: string; description: string; isShared: boolean }): Promise<void>;
+    createBookmark<T>(args: {
+        name: string;
+        description: string;
+        isShared: boolean;
+    }): Promise<Bookmark<T>>;
 
     /**
      * A parent provider if configuration if application is needed. A backdoor enabling bookmark configuration in a sub application.
@@ -127,7 +160,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         this.#event = config.event;
         this._bookmarkClient = ref
             ? (ref as unknown as BookmarkModuleProvider)._bookmarkClient
-            : new BookmarkClient(config.clintConfiguration, config.sourceSystem, config.event);
+            : new BookmarkClient(config.clientConfiguration, config.sourceSystem, config.event);
 
         const initialBookmarkId = config.resolveBookmarkId && config.resolveBookmarkId();
 
@@ -142,26 +175,39 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         }
     }
 
-    async getBookmarkById(bookmarkId: string) {
-        return await this._bookmarkClient.getBookmarkById(bookmarkId);
+    public async getBookmarkById<T>(bookmarkId: string): Promise<Bookmark<T>> {
+        return await this._bookmarkClient.getBookmarkById<T>(bookmarkId);
     }
 
-    setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): void {
+    public async setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): Promise<void> {
         this._bookmarkClient.setCurrentBookmark(idOrItem);
     }
 
-    getAllBookmarks() {
-        this._bookmarkClient.getAllBookmarks();
+    public getAllBookmarks(): Observable<Bookmark<unknown>[]> {
+        return this._bookmarkClient.getAllBookmarks();
     }
 
-    updateBookmark(bookmark: Bookmark<unknown>) {
-        this._bookmarkClient.updateBookmark(bookmark);
-    }
-    deleteBookmarkById(bookmarkId: string) {
-        this._bookmarkClient.deleteBookmarkById(bookmarkId);
+    public async getAllBookmarksAsync(): Promise<Bookmark<unknown>[]> {
+        return this._bookmarkClient.getAllBookmarksAsync();
     }
 
-    addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
+    public updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>> {
+        return this._bookmarkClient.updateBookmark<T>(bookmark);
+    }
+
+    public async updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> {
+        return this._bookmarkClient.updateBookmarkAsync<T>(bookmark);
+    }
+
+    public deleteBookmarkById(bookmarkId: string): Observable<string> {
+        return this._bookmarkClient.deleteBookmarkById(bookmarkId);
+    }
+
+    public deleteBookmarkByIdAsync(bookmarkId: string): Promise<string> {
+        return this._bookmarkClient.deleteBookmarkByIdAsync(bookmarkId);
+    }
+
+    public addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
         const bookmarkCreatorKey = key ? key : '#creator';
 
         if (this.#event) {
@@ -178,7 +224,11 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         };
     }
 
-    async createBookmark(args: { name: string; description: string; isShared: boolean }) {
+    public async createBookmark<T>(args: {
+        name: string;
+        description: string;
+        isShared: boolean;
+    }): Promise<Bookmark<T>> {
         const payload = await this.#createPayload();
 
         const contextId = this.config.getContextId && this.config.getContextId();
@@ -196,7 +246,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
             payload,
         };
 
-        this._bookmarkClient.createBookmark(bookmark);
+        return this._bookmarkClient.createBookmarkAsync(bookmark) as Promise<Bookmark<T>>;
     }
 
     #clearStateCreators = () => {
@@ -218,7 +268,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         }, Promise.resolve({}));
     }
 
-    dispose() {
+    public dispose() {
         this.#subscriptions.unsubscribe();
         this._bookmarkClient.dispose();
     }

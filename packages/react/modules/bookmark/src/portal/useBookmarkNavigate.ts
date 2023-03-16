@@ -5,15 +5,20 @@ import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 const BOOKMARK_ID_PARM = 'bookmarkId';
 
+type AppPathResolver = (appKey: string) => string;
+
 /**
  * A React Hook for navigation when bookmark change utilizing the configured getAppPath,
  * The also change the current context if the context is provided form the bookmark
+ *
+ * @param args {{resolveAppPath: AppPathResolver}} - Application path resolver appKey is provided asd identifier used to load application module.
+ * Used to configure the navigation path to the bookmarks associated application.
+ * default configuration is /apps/:appKey
  */
-export const useBookmarkNavigate = (): void => {
+export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): void => {
     const {
         event,
         context,
-        bookmark,
         navigation: { navigator },
     } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
@@ -21,7 +26,7 @@ export const useBookmarkNavigate = (): void => {
         const sub = event.addEventListener('onBookmarkChanged', (e) => {
             const { appKey, context: bookmarkContext } = e.detail;
 
-            const pathname = bookmark.config.getAppPath(appKey);
+            const pathname = args.resolveAppPath(appKey);
 
             if (navigator.location.pathname !== pathname) {
                 const { hash, search } = navigator.location;
@@ -40,7 +45,7 @@ export const useBookmarkNavigate = (): void => {
             }
         });
         return sub;
-    }, [bookmark.config, context, event, navigator]);
+    }, [args, context, event, navigator]);
 };
 
 function removeBookmarkIdFromURL(searchParams: string): string {

@@ -1,8 +1,6 @@
-import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
-import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark/portal';
+import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
 import {
     createContext,
@@ -34,11 +32,9 @@ interface BookmarkContext extends BookmarkState {
 const Context = createContext<BookmarkContext | null>(null);
 
 export const Provider: FC<PropsWithChildren<unknown>> = ({ children }) => {
-    const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
-
     const [state, setState] = useState<BookmarkState>(init);
 
-    const { getAllBookmarks } = useBookmark(bookmarkProvider);
+    const { getAllBookmarks } = useBookmark();
 
     const { currentBookmark } = useCurrentBookmark(
         useCallback(() => state.payload, [state.payload])

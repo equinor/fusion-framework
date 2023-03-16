@@ -21,30 +21,29 @@ export interface BookmarkModuleConfig {
      *  used as the identifier for the current client. Only used in app shell / portal configuration.
      */
     sourceSystem: SourceSystem;
+
     /**
      *  The clintConfiguration consist of both Api client configuration and query client configuration
      */
-    clintConfiguration: BookmarkClientConfig;
+    clientConfiguration: BookmarkClientConfig;
+
     /**
      * It is possible to associate a Fusion context with a bookmark and this function is used to resolve the current context id applied.
      * @returns - should return a fusion context id.
      */
     getContextId: () => string | undefined;
+
     /**
      * A bookmark kan be connected to a application this is used to resolve the current applications appKey.
      */
     getCurrentAppIdentification?(): string | undefined;
+
     /**
      * The resolves bookmarkId at startup, default configured to resolve id form URL with query parm
      * ?bookmarkId=GUID but this can be resolved for any where if needed.
      */
     resolveBookmarkId?(): string | null;
-    /**
-     * Used to configure the navigation path to the bookmarks associated application.
-     * default configuration is /apps/:appKey
-     * @param appKey - Application identifier used to load application module.
-     */
-    getAppPath(appKey: string): string;
+
     /**
      * default set to Fusion Events Module.
      */
@@ -105,10 +104,6 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             config.resolveBookmarkId = getBookmarkIdFormURL;
         }
 
-        if (!config.getAppPath) {
-            config.getAppPath = (appKey: string) => `/apps/${appKey}`;
-        }
-
         if (!config.getCurrentAppIdentification) {
             config.getCurrentAppIdentification = () => appProvider.current?.appKey;
         }
@@ -125,9 +120,9 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             config.event = event;
         }
 
-        config.clintConfiguration = await this._createClientConfiguration(
+        config.clientConfiguration = await this._createClientConfiguration(
             init,
-            config.clintConfiguration
+            config.clientConfiguration
         );
 
         if (!config.sourceSystem) {
@@ -142,7 +137,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
         config: Partial<BookmarkModuleConfig>
     ) {
         if (parentProvider) {
-            config.clintConfiguration = parentProvider.config.clintConfiguration;
+            config.clientConfiguration = parentProvider.config.clientConfiguration;
             config.sourceSystem = parentProvider.config.sourceSystem;
             config.getContextId = parentProvider.config.getContextId;
             config.getCurrentAppIdentification = parentProvider.config.getCurrentAppIdentification;

@@ -83,30 +83,19 @@ export class BookmarkConfigBuilder<
     serCustomBookmarkApiClient(
         client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>
     ) {
-        if (this.config.clintConfiguration) {
-            this.config.clintConfiguration.client = client;
+        if (this.config.clientConfiguration) {
+            this.config.clientConfiguration.client = client;
         }
     }
 
     /**
-     * Used to over withe the default context id resolver.
+     * Used to over with the default context id resolver.
      *
      * @param {(() => string | undefined)} fn - Function for providing current contextId
      * @memberof BookmarkConfigBuilder
      */
     setContextIdResolver(fn: () => string | undefined) {
         this.config.getContextId = fn;
-    }
-
-    /**
-     * Used to over withe the default configuration fot the path resolver for
-     * the application related to the bookmark.
-     *
-     * @param {((appKey: string) => string)} fn - Function for providing the navigation path.
-     * @memberof BookmarkConfigBuilder
-     */
-    setAppPathResolver(fn: (appKey: string) => string) {
-        this.config.getAppPath = fn;
     }
 
     /**
@@ -142,22 +131,19 @@ export class BookmarkConfigBuilder<
      *                 | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
      *                 | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
      *         })} client - Custom client definition.
-     * @param {number} [expire=1 * 60 * 1000] - Time which queries expire.
      * @memberof BookmarkConfigBuilder
      */
-    setBookmarkQueryClient(
-        client: {
-            getAllBookmarks:
-                | QueryFn<Array<Bookmark<unknown>>, GetAllBookmarksParameters>
-                | QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
-            getBookmarkById:
-                | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
-                | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
-        },
-        expire: number = 1 * 60 * 1000
-    ): void {
-        if (this.config.clintConfiguration) {
-            this.config.clintConfiguration.queryClientConfig = {
+    setBookmarkQueryClient(client: {
+        getAllBookmarks:
+            | QueryFn<Array<Bookmark<unknown>>, GetAllBookmarksParameters>
+            | QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
+        getBookmarkById:
+            | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
+            | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
+    }): void {
+        const expire: number = 1 * 60 * 1000;
+        if (this.config.clientConfiguration) {
+            this.config.clientConfiguration.queryClientConfig = {
                 getAllBookmarks:
                     typeof client.getAllBookmarks === 'function'
                         ? {
@@ -176,6 +162,7 @@ export class BookmarkConfigBuilder<
                                   fn: client.getBookmarkById,
                               },
                               expire,
+                              validate: () => false,
                           }
                         : client.getBookmarkById,
             };
