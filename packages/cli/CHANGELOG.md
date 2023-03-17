@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.6...@equinor/fusion-framework-cli@5.0.7) (2023-03-17)
+
+### Bug Fixes
+
+-   **cli:** use referer as proxy uri ([35edbdc](https://github.com/equinor/fusion-framework/commit/35edbdcae83d51595e013550303b8ea8b7e1c675))
+
 ## [5.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.5...@equinor/fusion-framework-cli@5.0.6) (2023-03-10)
 
 ### Bug Fixes
