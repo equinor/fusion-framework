@@ -3517,10 +3517,10 @@
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/query-core@4.24.2":
-  version "4.24.2"
-  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-4.24.2.tgz"
-  integrity sha512-nVX9Pfvash6o3gTquPsUXEcadEO7Rh7i0Aa5iM8gNA2x1HqF5mKXDZBCFQAbnwiJ/0kCxWMaMaqhtzjGWssmNA==
+"@tanstack/query-core@4.27.0":
+  version "4.27.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.27.0.tgz#96bcef499008ea080b66611d029655e3ffdf8bea"
+  integrity sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA==
 
 "@tanstack/react-query-devtools@^4.2.3":
   version "4.24.2"
@@ -3532,11 +3532,11 @@
     use-sync-external-store "^1.2.0"
 
 "@tanstack/react-query@^4.2.3":
-  version "4.24.2"
-  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-4.24.2.tgz"
-  integrity sha512-lqpxLhPNJmxshhrevOW7UAlVxMEgh1Fdk6qw1MGd5ZayOKIIQaiYT3jjFVsm+xQA326XNTPF5pfJcrsU4y8aiQ==
+  version "4.27.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.27.0.tgz#624da94e2e44e08f846f8caf91320bf93bd72ac7"
+  integrity sha512-9S49LTFenWbxVHx0iR6qUXP+MKL5kwz/mV9pzfNXvdIM1R0vT+hiecCCL+ox/tD2glAQ51JHHMffQaRuH7wYRA==
   dependencies:
-    "@tanstack/query-core" "4.24.2"
+    "@tanstack/query-core" "4.27.0"
     use-sync-external-store "^1.2.0"
 
 "@tootallnate/once@2":
