@@ -45,8 +45,7 @@ jobs:
 
       - name: Commit changes
         run: |
-            git add packages/*/package.json 
-            git commit -m'chore(prerelease): bumped version with tag ${{ github.event.inputs.tag }}'
+            git commit -am'chore(prerelease): bumped version with tag ${{ github.event.inputs.tag }}'
             git push
         env:
           GH_TOKEN: ${{ github.token }}
