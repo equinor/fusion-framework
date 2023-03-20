@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-people@3.0.7...@equinor/fusion-framework-cookbook-app-react-people@3.0.8) (2023-03-20)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-people
+
 ## [3.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-people@3.0.7...@equinor/fusion-framework-cookbook-app-react-people@3.0.7) (2023-03-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-people

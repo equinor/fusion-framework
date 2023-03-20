@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-widget",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -32,12 +32,12 @@
         "directory": "packages/widget"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^6.0.7",
-        "@equinor/fusion-framework-module": "^2.0.0",
-        "@equinor/fusion-framework-module-event": "^2.0.0",
-        "@equinor/fusion-framework-module-http": "^4.0.0",
-        "@equinor/fusion-framework-module-msal": "^2.0.0",
-        "@equinor/fusion-framework-module-widget": "^0.0.8"
+        "@equinor/fusion-framework": "^6.0.8",
+        "@equinor/fusion-framework-module": "^2.0.1",
+        "@equinor/fusion-framework-module-event": "^2.0.1",
+        "@equinor/fusion-framework-module-http": "^4.0.1",
+        "@equinor/fusion-framework-module-msal": "^2.0.1",
+        "@equinor/fusion-framework-module-widget": "^0.0.9"
     },
     "devDependencies": {
         "typescript": "^4.9.3"

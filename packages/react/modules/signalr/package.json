@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-module-signalr",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
@@ -31,7 +31,7 @@
         "directory": "packages/react/modules/signalr"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-signalr": "^1.0.0"
+        "@equinor/fusion-framework-module-signalr": "^1.0.1"
     },
     "devDependencies": {
         "react": "^18.2.0"
