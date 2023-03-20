@@ -6,18 +6,6 @@ import { findUpSync } from 'find-up';
 const supportedTypes = ['js', 'json'] as const;
 type SupportedTyped = (typeof supportedTypes)[number];
 
-type LocalConfig = {
-    manifest?: {
-        key: string;
-    };
-    environment?: Record<string, unknown>;
-    endpoints?: Record<string, string>;
-    configSource?: {
-        type: SupportedTyped;
-        file: string;
-    };
-};
-
 type PackageInfo = {
     version: string;
     name: string;
@@ -25,9 +13,23 @@ type PackageInfo = {
 };
 
 type AppConfig = {
-    key?: string;
+    manifest?: {
+        key?: string;
+    };
     environment?: Record<string, unknown>;
     endpoints?: Record<string, string>;
+    portalHost?: string;
+};
+
+type ConfigSource = {
+    type: SupportedTyped;
+    file: string;
+};
+
+type LocalConfig = AppConfig & {
+    configSource?: ConfigSource;
+    pkg: any; // package.json
+    root: any; // project root
 };
 
 export const resolvePackageRoot = () => {
@@ -59,19 +61,21 @@ const loadConfigFromJson = async (file: string): Promise<AppConfig> => {
     return JSON.parse(fs.readFileSync(file, 'utf-8'));
 };
 
-export const loadConfig = async (root: string): Promise<LocalConfig> => {
-    const resolved = getConfigType(root);
-    const { environment, endpoints, ...manifest } = await (() => {
-        switch (resolved?.type) {
+export const loadConfig = async (
+    path: string
+): Promise<AppConfig & { configSource?: ConfigSource }> => {
+    const configSource = getConfigType(path);
+    const customConfig = await (() => {
+        switch (configSource?.type) {
             case 'js':
-                return loadConfigFromJavascript(resolved.file);
+                return loadConfigFromJavascript(configSource.file);
             case 'json':
-                return loadConfigFromJson(resolved.file);
+                return loadConfigFromJson(configSource.file);
             default:
                 return Promise.resolve({} as AppConfig);
         }
     })();
-    return { ...manifest, environment, endpoints, configSource: resolved };
+    return { ...customConfig, configSource };
 };
 
 const validateConfig = (config: { main: string }): void => {
@@ -80,31 +84,25 @@ const validateConfig = (config: { main: string }): void => {
     }
 };
 
-export const resolveAppConfig = async (): Promise<{
-    manifest: PackageInfo & LocalConfig;
-    dev: {
-        root: string;
-    } & LocalConfig;
-}> => {
+export const resolveAppConfig = async (): Promise<LocalConfig> => {
     const { root, pkg } = resolvePackage();
 
-    const { configSource, ...localConfig } = await loadConfig(root);
-    const dev = { root, configSource };
+    const appConfig = await loadConfig(root);
 
     const manifest = Object.assign(
         {
             key: pkg.name.replace(/^@|\w.*\//gm, ''),
         },
-        localConfig.manifest,
+        appConfig.manifest,
         {
             version: pkg.version,
             name: pkg.name,
             main: pkg.main,
-            __DEV__: dev,
+            __DEV__: { root, configSource: appConfig.configSource, portal: appConfig.portalHost },
         }
     );
 
     validateConfig(manifest);
 
-    return { ...localConfig, manifest, dev };
+    return { ...appConfig, manifest, pkg, root };
 };

@@ -24,10 +24,16 @@ app.command('dev')
     .description('Create a development server')
 
     .option('-p, --port <number>', 'dev-server port', '3000')
-    .action(async (port) => {
+    .option('--portal <string>', 'fusion portal host')
+    .action(async ({ port, portal }) => {
         const spinner = ora('Loading configuration').start();
-        const viteConfig = mergeConfig(await createConfig(), { server: port }) as UserConfig;
+        const viteConfig = mergeConfig(await createConfig(), { server: { port } }) as UserConfig;
         const appConfig = await resolveAppConfig();
+        if (portal) {
+            appConfig.portalHost = portal
+                ? portal
+                : process.env.FUSION_PORTAL_HOST ?? 'https://fusion-s-portal-ci.azurewebsites.net';
+        }
 
         spinner.succeed('Configuration loaded');
         startDevServer({ viteConfig, appConfig });
