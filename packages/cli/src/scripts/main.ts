@@ -29,11 +29,10 @@ app.command('dev')
         const spinner = ora('Loading configuration').start();
         const viteConfig = mergeConfig(await createConfig(), { server: { port } }) as UserConfig;
         const appConfig = await resolveAppConfig();
-        if (portal) {
-            appConfig.portalHost = portal
-                ? portal
-                : process.env.FUSION_PORTAL_HOST ?? 'https://fusion-s-portal-ci.azurewebsites.net';
-        }
+
+        appConfig.portalHost = portal
+            ? portal
+            : process.env.FUSION_PORTAL_HOST ?? 'https://fusion-s-portal-ci.azurewebsites.net';
 
         spinner.succeed('Configuration loaded');
         startDevServer({ viteConfig, appConfig });
