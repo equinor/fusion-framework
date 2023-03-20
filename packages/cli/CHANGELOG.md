@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.0...@equinor/fusion-framework-cli@5.1.1) (2023-03-20)
+
+### Bug Fixes
+
+-   **cli:** add missing proxy target ([1f14f99](https://github.com/equinor/fusion-framework/commit/1f14f99290d6ee3c112115f29b9f28d1a6959b62))
+
 ## [5.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.0.8...@equinor/fusion-framework-cli@5.1.0) (2023-03-20)
 
 ### Features
