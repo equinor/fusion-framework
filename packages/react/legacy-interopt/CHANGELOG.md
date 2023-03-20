@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.12 (2023-03-20)
+
+### Bug Fixes
+
+-   **legacyContext:** removed ensurecontextidinurl, and navigation on contextchange ([f56c5d9](https://github.com/equinor/fusion-framework/commit/f56c5d9d001988454c7337e25e93399ce829bb90))
+
 ## [2.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@2.1.10...@equinor/fusion-framework-legacy-interopt@2.1.11) (2023-03-09)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt

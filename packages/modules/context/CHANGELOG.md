@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.7 (2023-03-20)
+
+### Bug Fixes
+
+-   **module-context:** recursive subscribe on setCurrentContext and equal comparison ([3fe58d4](https://github.com/equinor/fusion-framework/commit/3fe58d44af770c41f5f8ea6169892318dcd35cc0))
+
 ## [2.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@2.0.5...@equinor/fusion-framework-module-context@2.0.6) (2023-02-22)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
