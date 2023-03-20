@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@3.0.22...@equinor/fusion-framework-cookbook-app-react@3.1.0) (2023-03-20)
+
+### Features
+
+-   **cli:** allow configuring portal host in cli ([9641b21](https://github.com/equinor/fusion-framework/commit/9641b215a1bff957687e9eda661679f000588a47))
+
 ## [3.0.22](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react@3.0.21...@equinor/fusion-framework-cookbook-app-react@3.0.22) (2023-03-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react
