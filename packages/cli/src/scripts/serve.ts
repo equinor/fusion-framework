@@ -33,6 +33,8 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
     const spinner = ora('Configuring dev-server').start();
     const vite = await createServer(config.viteConfig);
 
+    const { portalHost } = config.appConfig;
+
     spinner.succeed('Configured dev-server');
 
     /** expose middlewares from vite (dev-server) */
@@ -43,7 +45,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
 
     app.use(
         createProxyMiddleware('/_discovery/environments/current', {
-            target: 'https://pro-s-portal-ci.azurewebsites.net',
+            target: portalHost,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyRes: responseInterceptor(async (responseBuffer, _proxyRes, req) => {
@@ -65,7 +67,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
         '/api/apps/:appKey/config',
         // '/api/widget/:appKey/config',
         createProxyMiddleware('/api/apps/*/config', {
-            target: 'https://pro-s-portal-ci.azurewebsites.net',
+            target: portalHost,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
@@ -90,7 +92,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
     app.get(
         '/api/apps/:appKey',
         createProxyMiddleware('/api/apps/*', {
-            target: 'https://pro-s-portal-ci.azurewebsites.net',
+            target: portalHost,
             changeOrigin: true,
             selfHandleResponse: true,
             onProxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
