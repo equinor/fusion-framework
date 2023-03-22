@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, HubConnection, AbortError } from '@microsoft/signalr';
-import { delay, Observable, shareReplay } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 
 import { SignalRConfig } from './SignalRModuleConfigurator';
 
@@ -52,7 +52,7 @@ export class SignalRModuleProvider implements ISignalRProvider {
                 .then(() => {
                     observer.next(connection);
                 })
-                .catch((error: any) => {
+                .catch((error: unknown) => {
                     if (error instanceof AbortError) {
                         // Omit AbortError
                     } else {
