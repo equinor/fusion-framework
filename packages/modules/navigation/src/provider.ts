@@ -20,10 +20,15 @@ export class NavigationProvider implements INavigationProvider {
     }
 
     constructor(args: { config: INavigationConfigurator }) {
-        const { config } = args;
+        const {
+            config: { basename, history },
+        } = args;
+        if (!history) {
+            throw Error('no history provided!');
+        }
         this.#navigator = new Navigator({
-            basename: config.basename,
-            history: config.createHistory(),
+            basename,
+            history,
         });
     }
 

@@ -3,8 +3,10 @@ import {
     IModulesConfigurator,
     Module,
     ModuleConfigType,
+    ModuleInstance,
 } from '@equinor/fusion-framework-module';
 import { INavigationConfigurator, NavigationConfigurator } from './configurator';
+import { createHistory } from './createHistory';
 import { INavigationProvider, NavigationProvider } from './provider';
 
 export const moduleKey = 'navigation';
@@ -17,8 +19,17 @@ export type NavigationModule = Module<
 
 export const module: NavigationModule = {
     name: moduleKey,
-    configure: () => new NavigationConfigurator(),
-    initialize: ({ config }) => new NavigationProvider({ config }),
+    configure: (ref?: any) => {
+        const configurator = new NavigationConfigurator();
+        if (ref) {
+            configurator.history = (ref as ModuleInstance).navigation.navigator;
+        }
+        return configurator;
+    },
+    initialize: ({ config }) => {
+        config.history ??= createHistory();
+        return new NavigationProvider({ config });
+    },
     dispose({ instance }) {
         instance.dispose();
     },
