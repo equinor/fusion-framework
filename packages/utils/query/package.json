@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-query",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "description": "WIP",
     "keywords": [
         "observable",
@@ -57,7 +57,7 @@
         "url": "https://github.com/equinor/fusion-framework/issues"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "^7.0.2",
+        "@equinor/fusion-observable": "^7.0.3",
         "immer": "^9.0.16",
         "rxjs": "^7.5.7",
         "uuid": "^8.3.2"

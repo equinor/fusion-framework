@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.0 (2023-03-22)
+
+### Features
+
+-   added put and getAll endpoints to the bookmark api client ([b9deb40](https://github.com/equinor/fusion-framework/commit/b9deb406460cea2f0fa34eb688d4e427bfb2f9b5))
+
+### Bug Fixes
+
+-   **pr:** Fixing pr comments ([4ee3fb3](https://github.com/equinor/fusion-framework/commit/4ee3fb3b509c7b7560378e18ee51d9c1759a8685))
+
 ## [2.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@2.0.6...@equinor/fusion-framework-module-services@2.0.7) (2023-03-20)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services
