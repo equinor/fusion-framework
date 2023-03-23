@@ -83,6 +83,12 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         [bookmarkProvider]
     );
 
+    const getBookmarkById = useCallback(
+        <TData>(id: string): Promise<Bookmark<TData>> =>
+            bookmarkProvider.getBookmarkById<TData>(id),
+        [bookmarkProvider]
+    );
+
     return {
         addBookmarkCreator,
         getAllBookmarks,
@@ -90,6 +96,7 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         updateBookmark,
         deleteBookmarkById,
         setCurrentBookmark,
+        getBookmarkById,
         currentBookmark,
         bookmarks,
     };

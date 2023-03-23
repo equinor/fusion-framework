@@ -53,6 +53,12 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      */
     setCurrentBookmark(IdOrItem: string | Bookmark<TData>): void;
     /**
+     * Function for resolving a bookmark bookmark.
+     * @template TData - Bookmark payload type set on class level
+     * @param {(string} id - bookmarkId.
+     */
+    getBookmarkById<T>(IdOrItem: string | Bookmark<TData>): Promise<Bookmark<T>>;
+    /**
      * List of bookmarks in the current configured system,
      * filtered by the confirmed SourceSystem identifier. This is done by the portal development team;
      * @type {Observable<Array<Bookmark<unknown>>>}
