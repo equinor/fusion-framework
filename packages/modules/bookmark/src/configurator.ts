@@ -9,10 +9,6 @@ import type { AppModule, AppModuleProvider } from '@equinor/fusion-framework-mod
 import type { EventModule, IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import type { IBookmarkModuleProvider } from './bookmark-provider';
 
-import type {
-    INavigationProvider,
-    NavigationModule,
-} from '@equinor/fusion-framework-module-navigation';
 import type { BookmarkClientConfig } from './client/bookmarkClient';
 
 export interface BookmarkModuleConfig {
@@ -236,23 +232,6 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
                 return parentEventModule;
             }
             throw Error('[BookmarkConfigurator] No event provider configures [EventModule]');
-        }
-    }
-
-    protected async _getNavigationProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [NavigationModule]>
-    ): Promise<INavigationProvider> {
-        if (init.hasModule('navigation')) {
-            return init.requireInstance('navigation');
-        } else {
-            const parentNavigationModule = (init.ref as ModulesInstanceType<[NavigationModule]>)
-                ?.navigation;
-            if (parentNavigationModule) {
-                return parentNavigationModule;
-            }
-            throw Error(
-                '[BookmarkConfigurator] No navigation provider configures [NavigationModule]'
-            );
         }
     }
 }
