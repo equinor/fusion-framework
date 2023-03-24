@@ -160,6 +160,23 @@ export const Create: FC<{
                                         >
                                             u
                                         </button>
+                                        <button
+                                            style={{
+                                                display: 'flex',
+                                                background: bookmark.isShared ? 'cyan' : 'none',
+                                            }}
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(
+                                                    appendBookmarkIdToUrl(bookmark.id)
+                                                );
+                                                updateBookmark({
+                                                    ...bookmark,
+                                                    isShared: !bookmark.isShared,
+                                                });
+                                            }}
+                                        >
+                                            s
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -171,3 +188,9 @@ export const Create: FC<{
 };
 
 export default Create;
+
+function appendBookmarkIdToUrl(id: string): string {
+    const url = new URL(window.location.toString());
+    url.searchParams.set('bookmarkId', id);
+    return url.toString();
+}

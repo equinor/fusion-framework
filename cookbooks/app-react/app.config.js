@@ -2,7 +2,7 @@
 export default () => ({
   // "appKey": "",
   "manifest": {
-    "key": "test"
+    "key": "test-key"
   },
   "environment": {
     "scope": "foobar"
