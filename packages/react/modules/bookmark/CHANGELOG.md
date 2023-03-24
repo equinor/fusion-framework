@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@0.1.3...@equinor/fusion-framework-react-module-bookmark@0.1.4) (2023-03-24)
+
+### Bug Fixes
+
+-   **react-module-bookmark:** fix tsconfig ([f3e0714](https://github.com/equinor/fusion-framework/commit/f3e07144b6f769bd039a4699e6cd19a6ef538799))
+
 ## [0.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@0.1.2...@equinor/fusion-framework-react-module-bookmark@0.1.3) (2023-03-24)
 
 ### Bug Fixes
