@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-bookmark@0.1.1...@equinor/fusion-framework-module-bookmark@0.1.2) (2023-03-24)
+
+### Bug Fixes
+
+-   **bookmark-module:** invalidate cache for query by id ([24d6ca5](https://github.com/equinor/fusion-framework/commit/24d6ca5a59ce3e2a17291ddd65f0adb9f605e995))
+
 ## 0.1.1 (2023-03-24)
 
 ### Bug Fixes

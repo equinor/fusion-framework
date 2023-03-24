@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@3.1.1...@equinor/fusion-framework-cookbook-app-react-bookmark@3.1.2) (2023-03-24)
+
+### Bug Fixes
+
+-   **bookmark-cookbook:** enable shear bookmark ([f7af56d](https://github.com/equinor/fusion-framework/commit/f7af56d3f7b99a7a3c13073e0bb89fe46f9dd148))
+
 ## 3.1.1 (2023-03-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
