@@ -4,6 +4,7 @@ import { ClientMethod } from './types';
 import { ApiClientFactory } from './types';
 import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
+import { NotificationApiClient } from './notification';
 
 export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     /**
@@ -32,6 +33,13 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     protected _createClientFn: ApiClientFactory<TClient>;
     constructor({ createClient }: ApiProviderCtorArgs<TClient>) {
         this._createClientFn = createClient;
+    }
+
+    public async createNotificationClient<TMethod extends keyof ClientMethod>(
+        method: TMethod
+    ): Promise<NotificationApiClient<TMethod, TClient>> {
+        const httpClient = await this._createClientFn('notification');
+        return new NotificationApiClient(httpClient, method);
     }
 
     public async createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(

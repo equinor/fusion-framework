@@ -10,6 +10,9 @@
             "*": [
                 "dist/types/*"
             ],
+            "notification": [
+                "dist/types/notification/index"
+            ],
             "context": [
                 "dist/types/context/index"
             ],
@@ -28,6 +31,7 @@
         ".": "./dist/esm/index.js",
         "./context": "./dist/esm/context/index.js",
         "./bookmark": "./dist/esm/bookmarks/index.js",
+        "./notification": "./dist/esm/notification/index.js",
         "./context/get": "./dist/esm/context/get-context/index.js",
         "./errors": "./dist/esm/errors.js",
         "./package.json": "./package.json"
