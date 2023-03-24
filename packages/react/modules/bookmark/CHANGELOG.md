@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.1 (2023-03-24)
+
+### Bug Fixes
+
+-   **react-module-bookmark:** added navigation module to devDeps ([1d9083f](https://github.com/equinor/fusion-framework/commit/1d9083f57e62281bc52c649757dc450d2ecf7fdc))
+-   **react-module-bookmark:** changed import ti type import ([08507d1](https://github.com/equinor/fusion-framework/commit/08507d17e653baf0e42a314476994af63e80464a))
+
 ## 0.1.0 (2023-03-22)
 
 ### Features

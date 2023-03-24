@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.1.4 (2023-03-24)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
 ## 5.1.3 (2023-03-22)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.1 (2023-03-24)
+
+### Bug Fixes
+
+-   **bookmark-module:** remove navigation provider resolver sins it not in use ([851a46b](https://github.com/equinor/fusion-framework/commit/851a46bb48cd01a51f630bc8b2e405660855152e))
+
 ## 0.1.0 (2023-03-22)
 
 ### Features
