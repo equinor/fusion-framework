@@ -199,6 +199,7 @@ export class BookmarkClient {
                 this.#state.subject.addEffect('update::success', (action) => {
                     subscriber.next(action.payload as Bookmark<T>);
                     subscriber.complete();
+                    this.#queryBookmarkById.cache.invalidate(action.payload.id);
                 })
             );
         });
@@ -215,6 +216,7 @@ export class BookmarkClient {
                 this.#state.subject.addEffect('delete::success', (action) => {
                     subscriber.next(action.payload);
                     subscriber.complete();
+                    this.#queryBookmarkById.cache.invalidate(action.payload);
                 })
             );
         });
