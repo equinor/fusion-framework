@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.2.0 (2023-03-27)
+
+### Features
+
+-   **services:** Added notification api service ([8a40606](https://github.com/equinor/fusion-framework/commit/8a406068d69903e0d7ebc76079ed12caeac540f1))
+
 ## 2.1.0 (2023-03-22)
 
 ### Features
