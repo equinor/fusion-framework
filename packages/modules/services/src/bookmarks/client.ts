@@ -21,6 +21,7 @@ import deleteBookmarkFavorite, {
     DeleteBookmarksFavoriteFn,
     DeleteBookmarksFavoriteResult,
 } from './favorites/delete';
+import { HeadBookmarkFavoriteFn, HeadBookmarksFavoriteResult } from './favorites/head';
 
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -98,6 +99,7 @@ export class BookmarksApiClient<
         const fn = addBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }
+
     /**
      *
      * Remove bookmark from favorites by bookmark id
@@ -107,6 +109,19 @@ export class BookmarksApiClient<
         version: TVersion,
         ...args: Parameters<DeleteBookmarksFavoriteFn<TVersion, TMethod, TClient, TResult>>
     ): DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult> {
+        const fn = deleteBookmarkFavorite(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    /**
+     *
+     * Verify that the current bookmark is present in the users collection of bookmarks.
+     * @see {@link verifyFavorite/client}
+     */
+    public verifyFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<HeadBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): HeadBookmarksFavoriteResult<TVersion, TMethod, TResult> {
         const fn = deleteBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }
