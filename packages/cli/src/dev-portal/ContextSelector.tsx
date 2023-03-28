@@ -32,8 +32,8 @@ const mapper = (src: Array<ContextItem>): ContextResult => {
         return {
             id: i.id,
             title: i.title,
-            subTitle: i.type.id,
-            graphic: i.type.id === 'OrgChart' ? 'list' : undefined,
+            subTitle: i.type?.id,
+            graphic: i.type?.id === 'OrgChart' ? 'list' : undefined,
         };
     });
 };
@@ -55,7 +55,7 @@ const noPreselect: ContextResult = [];
  * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
  * @return Array<ContextResolver, SetContextCallback>
  */
-const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, () => void] => {
+const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, ContextResultItem, () => void] => {
     /* Framework modules */
     const framework = useFramework();
 
@@ -106,13 +106,13 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, (
      * set resolver for ContextSelector
      * @return ContextResolver
      */
+    const minLength = 3;
     const resolver = useMemo(
         (): ContextResolver => ({
             searchQuery: async (search: string) => {
                 if (!provider) {
                     return [];
                 }
-                const minLength = 3;
                 if (search.length < minLength) {
                     return [
                         singleItem({
@@ -158,10 +158,11 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, (
 
     /* Clear current context */
     const clearContext = useCallback(() => {
-        framework?.modules?.context?.clearCurrentContext();
+        if (!framework) return;
+        framework.modules.context.clearCurrentContext();
     }, [framework]);
 
-    return [resolver, setContext, clearContext];
+    return [resolver, setContext, preselected?.[0], clearContext];
 };
 
 /**
@@ -170,7 +171,7 @@ const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, (
  * @returns JSX element
  */
 export const ContextSelector = () => {
-    const [resolver, setContext, clearContext] = useQueryContext();
+    const [resolver, setContext, currentContext, clearContext] = useQueryContext();
     return (
         <ContextProvider resolver={resolver}>
             <ContextSearch
@@ -182,6 +183,9 @@ export const ContextSelector = () => {
                 onSelect={setContext}
                 autofocus={true}
                 onClearContext={clearContext}
+                previewItem={currentContext ?? null}
+                value={currentContext?.title}
+                selectedId={currentContext?.title}
             />
         </ContextProvider>
     );
