@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@2.2.0...@equinor/fusion-framework-module-services@2.3.0) (2023-03-28)
+
+### Features
+
+-   **bookmark-client:** added verify users bookmark ([971835c](https://github.com/equinor/fusion-framework/commit/971835c801f46fc4bebd3d1b97ca8cd83c085a77))
+-   **Bookmark-Client:** Enable to add bookmark favorites ([83dd966](https://github.com/equinor/fusion-framework/commit/83dd966ef1d609f0be44373ee16344810ae9beb4))
+
+### Bug Fixes
+
+-   **bookmark-client:** fix import ([7c7d585](https://github.com/equinor/fusion-framework/commit/7c7d585b6eb53688e5ce9f80474eac3275576290))
+-   **bookmark-client:** renamed id to bookmarkId ([590ad69](https://github.com/equinor/fusion-framework/commit/590ad69cfca579ec65accb5dab47c69968aade95))
+
 ## 2.2.0 (2023-03-27)
 
 ### Features

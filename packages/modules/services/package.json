@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-services",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",

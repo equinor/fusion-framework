@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-module-bookmark",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -31,9 +31,9 @@
         "directory": "packages/react/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-bookmark": "^0.1.3",
-        "@equinor/fusion-framework-module-context": "^2.0.10",
-        "@equinor/fusion-framework-react": "^4.0.7",
+        "@equinor/fusion-framework-module-bookmark": "^0.1.4",
+        "@equinor/fusion-framework-module-context": "^2.0.11",
+        "@equinor/fusion-framework-react": "^4.0.8",
         "@equinor/fusion-framework-react-module": "^2.0.1",
         "@equinor/fusion-query": "^2.0.7"
     },

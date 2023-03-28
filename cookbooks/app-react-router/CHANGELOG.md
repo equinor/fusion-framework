@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.35](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-router@3.0.34...@equinor/fusion-framework-cookbook-app-react-router@3.0.35) (2023-03-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-router
+
 ## [3.0.34](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-router@3.0.33...@equinor/fusion-framework-cookbook-app-react-router@3.0.34) (2023-03-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-router

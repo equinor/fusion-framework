@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@4.0.7...@equinor/fusion-framework-react@4.0.8) (2023-03-28)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
 ## 4.0.7 (2023-03-27)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
