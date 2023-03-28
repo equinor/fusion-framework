@@ -21,7 +21,10 @@ import deleteBookmarkFavorite, {
     DeleteBookmarksFavoriteFn,
     DeleteBookmarksFavoriteResult,
 } from './favorites/delete';
-import { HeadBookmarkFavoriteFn, HeadBookmarksFavoriteResult } from './favorites/head';
+import verifyBookmarkFavorite, {
+    HeadBookmarkFavoriteFn,
+    HeadBookmarksFavoriteResult,
+} from './favorites/head';
 
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -122,7 +125,7 @@ export class BookmarksApiClient<
         version: TVersion,
         ...args: Parameters<HeadBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
     ): HeadBookmarksFavoriteResult<TVersion, TMethod, TResult> {
-        const fn = deleteBookmarkFavorite(this._client, version, this._method);
+        const fn = verifyBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 }
