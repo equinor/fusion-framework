@@ -13,6 +13,18 @@ import patchBookmark, {
     PutBookmarksResult as PatchBookmarksResult,
 } from './patch';
 import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
+import addBookmarkFavorite, {
+    PostBookmarkFavoriteFn,
+    PostBookmarksFavoriteResult,
+} from './favorites/post';
+import deleteBookmarkFavorite, {
+    DeleteBookmarksFavoriteFn,
+    DeleteBookmarksFavoriteResult,
+} from './favorites/delete';
+import verifyBookmarkFavorite, {
+    HeadBookmarkFavoriteFn,
+    HeadBookmarksFavoriteResult,
+} from './favorites/head';
 
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -67,11 +79,53 @@ export class BookmarksApiClient<
         return fn<TResult>(...args);
     }
 
+    /**
+     * Delete a bookmark
+     * @see {@link delete/client}
+     */
     public delete<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
         version: TVersion,
         ...args: Parameters<DeleteBookmarksFn<TVersion, TMethod, TClient, TResult>>
     ): DeleteBookmarksResult<TVersion, TMethod, TResult> {
         const fn = deleteBookmark(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    /**
+     * Add bookmark to favorites by bookmark id
+     * @see {@link addFavorite/client}
+     */
+    public addFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<PostBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): PostBookmarksFavoriteResult<TVersion, TMethod, TResult> {
+        const fn = addBookmarkFavorite(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    /**
+     *
+     * Remove bookmark from favorites by bookmark id
+     * @see {@link removeFavorite/client}
+     */
+    public removeFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<DeleteBookmarksFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult> {
+        const fn = deleteBookmarkFavorite(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+
+    /**
+     *
+     * Verify that the current bookmark is present in the users collection of bookmarks.
+     * @see {@link verifyFavorite/client}
+     */
+    public verifyFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<HeadBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): HeadBookmarksFavoriteResult<TVersion, TMethod, TResult> {
+        const fn = verifyBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 }
