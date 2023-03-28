@@ -14,8 +14,8 @@ import patchBookmark, {
 } from './patch';
 import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
 import addBookmarkFavorite, {
-    PostBookmarkFavoritesFn,
-    PostBookmarksFavoritesResult,
+    PostBookmarkFavoriteFn,
+    PostBookmarksFavoriteResult,
 } from './favorites/post';
 
 export class BookmarksApiClient<
@@ -92,8 +92,8 @@ export class BookmarksApiClient<
         TResult = DeleteBookmarkResult<TVersion>
     >(
         version: TVersion,
-        ...args: Parameters<PostBookmarkFavoritesFn<TVersion, TMethod, TClient, TResult>>
-    ): PostBookmarksFavoritesResult<TVersion, TMethod, TResult> {
+        ...args: Parameters<PostBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): PostBookmarksFavoriteResult<TVersion, TMethod, TResult> {
         const fn = addBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }

@@ -3,9 +3,9 @@ import { ClientMethod } from '../..';
 import { generateParameters } from './generate-parameters';
 import {
     ApiVersions,
-    PostBookmarkFavoritesArgs,
-    PostBookmarkFavoritesResult,
-    PostBookmarksFavoritesResult,
+    PostBookmarkFavoriteArgs,
+    PostBookmarkFavoriteResult,
+    PostBookmarksFavoriteResult,
 } from './types';
 
 /**
@@ -24,12 +24,12 @@ export const addBookmarkFavorite =
         version: TVersion,
         method: TMethod = 'json' as TMethod
     ) =>
-    <TResult = PostBookmarkFavoritesResult<TVersion>>(
-        args: PostBookmarkFavoritesArgs<TVersion>,
+    <TResult = PostBookmarkFavoriteResult<TVersion>>(
+        args: PostBookmarkFavoriteArgs<TVersion>,
         init?: ClientRequestInit<TClient, TResult>
-    ): PostBookmarksFavoritesResult<TVersion, TMethod, TResult> =>
+    ): PostBookmarksFavoriteResult<TVersion, TMethod, TResult> =>
         client[method](
             ...generateParameters<TResult, TVersion, TClient>(version, args, init)
-        ) as PostBookmarksFavoritesResult<TVersion, TMethod, TResult>;
+        ) as PostBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export default addBookmarkFavorite;
