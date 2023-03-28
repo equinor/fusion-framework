@@ -17,6 +17,10 @@ import addBookmarkFavorite, {
     PostBookmarkFavoriteFn,
     PostBookmarksFavoriteResult,
 } from './favorites/post';
+import deleteBookmarkFavorite, {
+    DeleteBookmarksFavoriteFn,
+    DeleteBookmarksFavoriteResult,
+} from './favorites/delete';
 
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
@@ -85,16 +89,25 @@ export class BookmarksApiClient<
 
     /**
      * Add bookmark to favorites by bookmark id
-     * @see {@link delete/client}
+     * @see {@link addFavorite/client}
      */
-    public addBookmarkFavorite<
-        TVersion extends ApiVersions,
-        TResult = DeleteBookmarkResult<TVersion>
-    >(
+    public addFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
         version: TVersion,
         ...args: Parameters<PostBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
     ): PostBookmarksFavoriteResult<TVersion, TMethod, TResult> {
         const fn = addBookmarkFavorite(this._client, version, this._method);
+        return fn<TResult>(...args);
+    }
+    /**
+     *
+     * Remove bookmark from favorites by bookmark id
+     * @see {@link removeFavorite/client}
+     */
+    public removeFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+        version: TVersion,
+        ...args: Parameters<DeleteBookmarksFavoriteFn<TVersion, TMethod, TClient, TResult>>
+    ): DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult> {
+        const fn = deleteBookmarkFavorite(this._client, version, this._method);
         return fn<TResult>(...args);
     }
 }
