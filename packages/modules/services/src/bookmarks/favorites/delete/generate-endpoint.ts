@@ -10,10 +10,10 @@ export const generateEndpoint = <TVersion extends ApiVersions>(
     switch (version) {
         case 'v1':
         default: {
-            const { id } = args as { id: string };
+            const { bookmarkId } = args as { bookmarkId: string };
             const params = new URLSearchParams();
             params.append('api-version', '1.0');
-            return `/persons/me/bookmarks/favorites/${id}/?${String(params)}`;
+            return `/persons/me/bookmarks/favorites/${bookmarkId}/?${String(params)}`;
         }
     }
 };
