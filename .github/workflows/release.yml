@@ -61,7 +61,7 @@ jobs:
           git checkout main
           git merge "release/${{ github.run_id }}"
           git push origin --delete "release/${{ github.run_id }}"
-          git push -f origin main
+          git push -f origin HEAD
 
       - name: Release packages
         run: npx lerna publish from-package --yes
