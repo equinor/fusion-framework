@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import url from 'url';
 
 import { findUpSync } from 'find-up';
 
@@ -54,7 +55,8 @@ export const getConfigType = (root: string): { type: SupportedTyped; file: strin
 };
 
 const loadConfigFromJavascript = async (file: string): Promise<AppConfig> => {
-    return (await import(file)).default();
+    const path = url.pathToFileUrl(file);
+    return (await import(path)).default();
 };
 
 const loadConfigFromJson = async (file: string): Promise<AppConfig> => {
