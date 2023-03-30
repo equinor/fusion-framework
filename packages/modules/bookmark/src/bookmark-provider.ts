@@ -102,6 +102,27 @@ export interface IBookmarkModuleProvider {
     deleteBookmarkByIdAsync(bookmarkId: string): Promise<string>;
 
     /**
+     * Function for adding external bookmark to user's bookmarks.
+     * @param {string} bookmarkId
+     * @return {Promise<string>} void
+     */
+    addBookmarkFavoriteAsync(bookmarkId: string): Promise<void>;
+
+    /**
+     * Function for removing external bookmark to user's bookmarks.
+     * @param {string} bookmarkId
+     * @return {Promise<void>} - void
+     */
+    removeBookmarkFavoriteAsync(bookmarkId: string): Promise<void>;
+
+    /**
+     * Function for verifying that a bookmark belongs to the current user.
+     * @param {string} bookmarkId
+     * @return {Promise<string>} - void
+     */
+    verifyBookmarkFavoriteAsync(bookmarkId: string): Promise<boolean>;
+
+    /**
      * Function for setting the current bookmark, when successful this will update the bookmark list.
      * @template TData - Bookmark payload type.
      * @param {(string | Bookmark<TData> | undefined)} idOrItem - can be full bookmark object or bookmarkId.
@@ -205,6 +226,18 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
 
     public deleteBookmarkByIdAsync(bookmarkId: string): Promise<string> {
         return this._bookmarkClient.deleteBookmarkByIdAsync(bookmarkId);
+    }
+
+    public async addBookmarkFavoriteAsync(bookmarkId: string): Promise<void> {
+        await this._bookmarkClient.addBookmarkFavoriteAsync(bookmarkId);
+    }
+
+    public async removeBookmarkFavoriteAsync(bookmarkId: string): Promise<void> {
+        await this._bookmarkClient.removeBookmarkFavoriteAsync(bookmarkId);
+    }
+
+    public async verifyBookmarkFavoriteAsync(bookmarkId: string): Promise<boolean> {
+        return await this._bookmarkClient.verifyBookmarkFavoriteAsync(bookmarkId);
     }
 
     public addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {

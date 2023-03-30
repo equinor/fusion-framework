@@ -157,6 +157,31 @@ If not provided the current bookmark state will be set to undefined.
 setCurrentBookmark<TData>(idOrItem?: string | Bookmark<TData>): void;
 ```
 
+#### addBookmarkFavoriteAsync
+
+A bookmark can be sheared with other users, when reserving a sheared bookmark this can be added to you collection of bookmarks.
+Function for adding external bookmark to users bookmarks .
+
+```ts
+addBookmarkFavoriteAsync(bookmarkId: string): Promise<void>;
+```
+
+#### removeBookmarkFavoriteAsync
+
+Function for removing external bookmark to user's bookmarks.
+
+```ts
+removeBookmarkFavoriteAsync(bookmarkId: string): Promise<void>;
+```
+
+#### verifyBookmarkFavoriteAsync
+
+Function for verifying that a bookmark belongs to the current user.
+
+```ts
+verifyBookmarkFavoriteAsync(bookmarkId: string): Promise<boolean>;
+```
+
 #### dispose
 
 disposes of the class and unsubscribes all subscriptions.
