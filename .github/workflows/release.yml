@@ -1,5 +1,11 @@
 name: Release
 
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+
 on:
   workflow_dispatch:
   push:
