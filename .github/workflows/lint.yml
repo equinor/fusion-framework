@@ -33,16 +33,17 @@ jobs:
 
       - name: Save Code Linting Report JSON
         run: yarn lint:report
-        continue-on-error: true
 
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@1.1.2
+        continue-on-error: true
         with:
           repo-token: "${{ github.token }}"
           report-json: "eslint-report.log.json"
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v2
+        continue-on-error: true
         with:
           name: eslint-report.log.json
           path: eslint-report.log.json
