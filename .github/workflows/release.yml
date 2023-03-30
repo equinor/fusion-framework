@@ -37,8 +37,8 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          git checkout -b "release/${{ github.job_workflow_sha }}"
-          git push --set-upstream origin "release/${{ github.job_workflow_sha }}"
+          git checkout -b "release/${{ github.run_id }}"
+          git push --set-upstream origin "release/${{ github.run_id }}"
 
       - name: Bump versions
         run: npx lerna version --yes --force-git-tag --conventional-graduate --create-release github
@@ -49,9 +49,9 @@ jobs:
       - name: Merge release to main
         run: |
           git checkout main
-          git merge "release/${{ github.job_workflow_sha }}"
+          git merge "release/${{ github.run_id }}"
           git push --force
-          git push origin --delete "release/${{ github.job_workflow_sha }}"
+          git push origin --delete "release/${{ github.run_id }}"
 
       - name: Release packages
         run: npx lerna publish from-package --yes
