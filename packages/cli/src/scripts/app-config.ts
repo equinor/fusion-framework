@@ -55,7 +55,7 @@ export const getConfigType = (root: string): { type: SupportedTyped; file: strin
 };
 
 const loadConfigFromJavascript = async (file: string): Promise<AppConfig> => {
-    const path = url.pathToFileUrl(file);
+    const path = url.pathToFileURL(file);
     return (await import(path)).default();
 };
 
