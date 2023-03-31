@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.9...@equinor/fusion-framework-cli@5.1.11) (2023-03-31)
+
+### Bug Fixes
+
+-   **cli:** contextSearch shows current context in selector ([52b4cc4](https://github.com/equinor/fusion-framework/commit/52b4cc4f2ade64e4f2722e16a2d27358d0121c05))
+-   **cli:** moved vite-plugin-enviornment from dev-dependencie to dependecies ([1c42889](https://github.com/equinor/fusion-framework/commit/1c428894503cdd95c5bfc2b60c0148860491f305))
+-   **cli:** update deps ([86cc317](https://github.com/equinor/fusion-framework/commit/86cc31728ce6d78ebd198eadc0ccddcaf16df55e))
+
 ## [5.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.9...@equinor/fusion-framework-cli@5.1.10) (2023-03-31)
 
 ### Bug Fixes
