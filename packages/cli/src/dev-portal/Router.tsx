@@ -1,6 +1,6 @@
 import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
 
-import { Outlet, RouterProvider, useParams } from 'react-router-dom';
+import { Outlet, RouterProvider, RouterProviderProps, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
 import Header from './Header';
 
@@ -56,5 +56,10 @@ const routes = [
 export const Router = () => {
     const { navigation } = useFramework<[NavigationModule]>().modules;
     const [router] = useState(() => navigation.createRouter(routes));
-    return <RouterProvider router={router} fallbackElement={<p>wooot</p>} />;
+    return (
+        <RouterProvider
+            router={router as unknown as RouterProviderProps['router']}
+            fallbackElement={<p>wooot</p>}
+        />
+    );
 };

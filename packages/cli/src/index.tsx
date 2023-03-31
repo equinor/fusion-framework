@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 
 // import 'vite/modulepreload-polyfill';
 
-const Test = (args) => {
+const Test = (args: { env: unknown }) => {
     return (
         <div>
             <p>Hello there this is all! good 🤙🏻</p>
@@ -12,7 +12,7 @@ const Test = (args) => {
     );
 };
 
-export const render = (el: HTMLElement, args) => {
+export const render = (el: HTMLElement, args: { env: unknown }) => {
     const root = ReactDOM.createRoot(el);
     root.render(
         <StrictMode>

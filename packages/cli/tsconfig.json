@@ -1,11 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "bin",
+    "outDir": "tmp",
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": "src",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
   },
   "references": [
     {
@@ -19,6 +19,9 @@
     },
     {
       "path": "../modules/context"
+    },
+    {
+      "path": "../modules/navigation"
     },
     {
       "path": "../modules/bookmark"
