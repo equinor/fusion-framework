@@ -55,9 +55,6 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Enable Pull Request Automerge
-        run: gh pr merge --merge --auto "1"
       
       - name: Merge release to main
         run: |
