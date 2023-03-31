@@ -27,7 +27,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
           registry-url: https://registry.npmjs.org
 
       - uses: actions/cache@v2
@@ -55,6 +55,9 @@ jobs:
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Enable Pull Request Automerge
+        run: gh pr merge --merge --auto "1"
       
       - name: Merge release to main
         run: |
