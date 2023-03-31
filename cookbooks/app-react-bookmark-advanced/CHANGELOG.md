@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@3.1.8...@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@3.1.9) (2023-03-31)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark-advanced
+
 ## [3.1.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@3.1.6...@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@3.1.8) (2023-03-31)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark-advanced

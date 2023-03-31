@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.11...@equinor/fusion-framework-cli@5.1.12) (2023-03-31)
+
+### Bug Fixes
+
+-   force build of cli ([3fdff80](https://github.com/equinor/fusion-framework/commit/3fdff80c69c769d789d00f7cec5895a080be3ccf))
+
 ## [5.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.9...@equinor/fusion-framework-cli@5.1.11) (2023-03-31)
 
 ### Bug Fixes
