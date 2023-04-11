@@ -2847,9 +2847,9 @@
     ws "^6.0.0"
 
 "@microsoft/signalr@^7.0.0":
-  version "7.0.2"
-  resolved "https://registry.npmjs.org/@microsoft/signalr/-/signalr-7.0.2.tgz"
-  integrity sha512-U+o33K2m6nnMojZzBrjrApKgYfiQ0A0t4I2F5oFJObgfzRSDS9v0YoYgkmva5nbPftUp3YcR5XmH0S/1+BZT6Q==
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-7.0.5.tgz#e7a984ac1f1b6a488170e9cb2f2f46a5d97d5f80"
+  integrity sha512-j84syCKlXkQAOQhyrzRmW7w/M2UXQ6OKcXXFIVNjmiiZbEGIvSvJDRAuyMFjArdQOXz+etJgd58H/prTbyTCrA==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^2.0.2"
