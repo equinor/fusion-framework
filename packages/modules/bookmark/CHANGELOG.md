@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.0 (2023-04-11)
+
+### Features
+
+-   **bookmark-module:** added functionality fro bookmark favorites ([0d66c30](https://github.com/equinor/fusion-framework/commit/0d66c301dd5d938c5e327273a6a48275bf29d5e1))
+
 ## [0.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-bookmark@0.1.3...@equinor/fusion-framework-module-bookmark@0.1.4) (2023-03-28)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-bookmark
