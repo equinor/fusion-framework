@@ -1,6 +1,6 @@
 import { createAsyncAction, ActionInstanceMap, ActionTypes } from '@equinor/fusion-observable';
 
-import { Bookmark, CreateBookmark } from '../types';
+import { Bookmark, CreateBookmark, PatchBookmark } from '../types';
 
 export const actions = {
     getAll: createAsyncAction(
@@ -16,7 +16,7 @@ export const actions = {
     ),
     update: createAsyncAction(
         'update',
-        (bookmark: Bookmark) => ({ payload: bookmark }),
+        (bookmark: PatchBookmark) => ({ payload: bookmark }),
         (bookmark: Bookmark) => ({ payload: bookmark })
     ),
     create: createAsyncAction(

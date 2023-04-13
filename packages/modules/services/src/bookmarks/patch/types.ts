@@ -4,42 +4,42 @@ import { ClientMethod } from '../..';
 import { ApiBookmarkEntityV1 } from '../api-models';
 import { PostBookmarksArgsV1 } from '../post';
 
-export type PutBookmarkResult<
+export type PatchBookmarkResult<
     TVersion extends ApiVersions,
     TPayload
-> = PutBookmarksVersions<TPayload>[TVersion]['result'];
+> = PatchBookmarksVersions<TPayload>[TVersion]['result'];
 
 /** Returns args for PutBookmark based on version*/
-export type PutBookmarkArgs<
+export type PatchBookmarkArgs<
     TVersion extends ApiVersions,
     TPayload = unknown
-> = PutBookmarksVersions<TPayload>[TVersion]['args'];
+> = PatchBookmarksVersions<TPayload>[TVersion]['args'];
 
 /**Gets result type for PutBookmark call based on version and method */
-export type PutBookmarksResult<
+export type PatchBookmarksResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TPayload = unknown,
-    TResult = PutBookmarkResult<TVersion, TPayload>
+    TResult = PatchBookmarkResult<TVersion, TPayload>
 > = ClientMethod<TResult>[TMethod];
 
-export type PutBookmarkFn<
+export type PatchBookmarkFn<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
     TPayload = unknown,
-    TResult = PutBookmarkResult<TVersion, TPayload>
+    TResult = PatchBookmarkResult<TVersion, TPayload>
 > = (
-    args: PutBookmarkArgs<TVersion>,
+    args: PatchBookmarkArgs<TVersion>,
     init?: ClientRequestInit<TClient, TResult>
-) => PutBookmarksResult<TVersion, TMethod, TPayload, TResult>;
+) => PatchBookmarksResult<TVersion, TMethod, TPayload, TResult>;
 
-export interface PutBookmarksArgsV1<T = unknown> extends PostBookmarksArgsV1<T> {
+export interface PatchBookmarksArgsV1<T = unknown> extends Partial<PostBookmarksArgsV1<T>> {
     id: string;
 }
 
-export type PutBookmarksVersions<TPayload = unknown> = {
-    ['v1']: { args: PutBookmarksArgsV1<TPayload>; result: ApiBookmarkEntityV1<TPayload> };
+export type PatchBookmarksVersions<TPayload = unknown> = {
+    ['v1']: { args: PatchBookmarksArgsV1<TPayload>; result: ApiBookmarkEntityV1<TPayload> };
 };
 
-export type ApiVersions = keyof PutBookmarksVersions<unknown>;
+export type ApiVersions = keyof PatchBookmarksVersions<unknown>;

@@ -7,11 +7,7 @@ import getBookmark from './get/client';
 import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
 import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
 import postBookmark from './post/client';
-import patchBookmark, {
-    PutBookmarkFn as PatchBookmarkFn,
-    PutBookmarkResult as PatchBookmarkResult,
-    PutBookmarksResult as PatchBookmarksResult,
-} from './patch';
+import patchBookmark, { PatchBookmarkFn, PatchBookmarkResult, PatchBookmarksResult } from './patch';
 import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
 import addBookmarkFavorite, {
     PostBookmarkFavoriteFn,

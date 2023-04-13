@@ -17,6 +17,7 @@ import {
     CreateBookmark,
     GetAllBookmarksParameters,
     GetBookmarkParameters,
+    PatchBookmark,
     SourceSystem,
 } from '../types';
 import { ActionBuilder, actions } from './bookmarkActions';
@@ -192,7 +193,7 @@ export class BookmarkClient {
         return lastValueFrom(this.createBookmark(bookmark));
     }
 
-    public updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>> {
+    public updateBookmark<T>(bookmark: PatchBookmark<T>): Observable<Bookmark<T>> {
         return new Observable((subscriber) => {
             this.#state.dispatch.update(bookmark);
             subscriber.add(
@@ -205,7 +206,7 @@ export class BookmarkClient {
         });
     }
 
-    public async updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> {
+    public async updateBookmarkAsync<T>(bookmark: PatchBookmark<T>): Promise<Bookmark<T>> {
         return lastValueFrom(this.updateBookmark(bookmark));
     }
 

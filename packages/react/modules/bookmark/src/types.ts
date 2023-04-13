@@ -1,4 +1,8 @@
-import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
+import {
+    Bookmark,
+    PatchBookmark,
+    UpdateBookmarkOptions,
+} from '@equinor/fusion-framework-module-bookmark';
 
 export type CreateBookMarkFn<TData> = () => Partial<TData>;
 
@@ -36,9 +40,13 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      * @template T - Bookmark Payload Type
      * @param {string} bookmarkId
      * @param {Bookmark<T>} bookmark
+     * @param {UpdateBookmarkOptions} options - alow for configuration of bookmark payload update.
      * @returns {Promise<Bookmark<T>>} the updated bookmark item.
      */
-    updateBookmark: <T>(bookmark: Bookmark<T>) => Promise<Bookmark<T>>;
+    updateBookmark: <T>(
+        bookmark: PatchBookmark<T>,
+        options: UpdateBookmarkOptions
+    ) => Promise<Bookmark<T> | undefined>;
     /**
      * Function for deleting a bookmark, when successful this will update the bookmark list.
      * @param {string} bookmarkId

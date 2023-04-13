@@ -1,7 +1,7 @@
 import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 import { ClientMethod } from '../..';
 import { generateParameters } from './generate-parameters';
-import { ApiVersions, PutBookmarkArgs, PutBookmarkResult, PutBookmarksResult } from './types';
+import { ApiVersions, PatchBookmarkArgs, PatchBookmarkResult, PatchBookmarksResult } from './types';
 
 /**
  * Method for updating bookmark
@@ -9,7 +9,7 @@ import { ApiVersions, PutBookmarkArgs, PutBookmarkResult, PutBookmarksResult } f
  * @param version - version of API to call
  * @param method - client method to call
  */
-export const putBookmark =
+export const patchBookmark =
     <
         TClient extends IHttpClient = IHttpClient,
         TVersion extends ApiVersions = ApiVersions,
@@ -19,12 +19,12 @@ export const putBookmark =
         version: TVersion,
         method: TMethod = 'json' as TMethod
     ) =>
-    <TResult = PutBookmarkResult<TVersion, unknown>>(
-        args: PutBookmarkArgs<TVersion>,
+    <TResult = PatchBookmarkResult<TVersion, unknown>>(
+        args: PatchBookmarkArgs<TVersion>,
         init?: ClientRequestInit<TClient, TResult>
-    ): PutBookmarksResult<TVersion, TMethod, unknown, TResult> =>
+    ): PatchBookmarksResult<TVersion, TMethod, unknown, TResult> =>
         client[method](
             ...generateParameters<TResult, TVersion, TClient>(version, args, init)
-        ) as PutBookmarksResult<TVersion, TMethod, unknown, TResult>;
+        ) as PatchBookmarksResult<TVersion, TMethod, unknown, TResult>;
 
-export default putBookmark;
+export default patchBookmark;

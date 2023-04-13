@@ -1,11 +1,11 @@
-import { ApiVersions, PutBookmarkArgs } from './types';
+import { ApiVersions, PatchBookmarkArgs } from './types';
 
 /**
  * Method for generating endpoint for getting bookmark by id
  */
 export const generateEndpoint = <TVersion extends ApiVersions>(
     version: TVersion,
-    _args: PutBookmarkArgs<TVersion>
+    _args: PatchBookmarkArgs<TVersion>
 ) => {
     switch (version) {
         case 'v1':
