@@ -460,9 +460,9 @@
     yargs "^17.0.0"
 
 "@commitlint/config-conventional@^17.4.2":
-  version "17.4.2"
-  resolved "https://registry.npmjs.org/@commitlint/config-conventional/-/config-conventional-17.4.2.tgz"
-  integrity sha512-JVo1moSj5eDMoql159q8zKCU8lkOhQ+b23Vl3LVVrS6PXDLQIELnJ34ChQmFVbBdSSRNAbbXnRDhosFU+wnuHw==
+  version "17.6.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.6.0.tgz#dfd4ae715b3997c5dd319f2d99dd1421b2b783eb"
+  integrity sha512-2Y9M7MN942bTK5h70fJGknhXA02+OtWCkKeIzTSwsdwz1V7y6bxYv24x052E9XHKtZHJfvM3iLuTOsjRvLqWtA==
   dependencies:
     conventional-changelog-conventionalcommits "^5.0.0"
 
