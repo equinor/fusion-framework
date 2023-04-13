@@ -61,7 +61,7 @@ export const AppLoader = (props: { appKey: string }) => {
 
                     /** create a 'private' element for the application */
                     const el = document.createElement('div');
-
+                    el.style.height = "100%"
                     if (!ref.current) {
                         throw Error('Missing application mounting point');
                     }
@@ -110,7 +110,7 @@ export const AppLoader = (props: { appKey: string }) => {
         );
     }
 
-    return <section ref={ref}>{loading && <EquinorLoader text="Loading Application" />}</section>;
+    return <section style={{height: "100%"}} ref={ref}>{loading && <EquinorLoader text="Loading Application" />}</section>;
 };
 
 export default AppLoader;
