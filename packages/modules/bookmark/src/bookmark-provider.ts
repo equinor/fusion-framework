@@ -10,7 +10,7 @@ import { BookmarkClient } from './client/bookmarkClient';
 
 import { BookmarkModuleConfig } from './configurator';
 import { Observable, Subscription } from 'rxjs';
-import { Bookmark, CreateBookmark } from './types';
+import { Bookmark, CreateBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
 
 export interface IBookmarkModuleProvider {
     /**
@@ -83,9 +83,13 @@ export interface IBookmarkModuleProvider {
      * @template T - Payload Type
      * @param {string} bookmarkId
      * @param {Bookmark<T>} bookmark
+     * @param {UpdateBookmarkOptions} options - optional options that allow for configuration of bookmark payload update.
      * @return {Promise<Bookmark<T>>} - Promise of a Bookmark
      */
-    updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>>;
+    updateBookmarkAsync<T>(
+        bookmark: PatchBookmark<T>,
+        options?: UpdateBookmarkOptions
+    ): Promise<Bookmark<T> | undefined>;
 
     /**
      * Function for deleting a bookmark, when successful this will update the bookmark list.
@@ -191,11 +195,21 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         return this._bookmarkClient.getAllBookmarksAsync();
     }
 
-    public updateBookmark<T>(bookmark: Bookmark<T>): Observable<Bookmark<T>> {
+    public updateBookmark<T>(bookmark: PatchBookmark<T>): Observable<Bookmark<T>> {
         return this._bookmarkClient.updateBookmark<T>(bookmark);
     }
 
-    public async updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> {
+    public async updateBookmarkAsync<T>(
+        bookmark: PatchBookmark<T>,
+        options?: UpdateBookmarkOptions
+    ): Promise<Bookmark<T> | undefined> {
+        if (this.#getAppKey() !== bookmark.appKey) {
+            return;
+        }
+
+        if (options?.updatePayload) {
+            bookmark.payload = (await this.#createPayload()) as T;
+        }
         return this._bookmarkClient.updateBookmarkAsync<T>(bookmark);
     }
 
@@ -232,12 +246,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         const payload = await this.#createPayload();
 
         const contextId = this.config.getContextId && this.config.getContextId();
-        const appKey =
-            this.config.getCurrentAppIdentification && this.config.getCurrentAppIdentification();
-
-        if (!appKey)
-            throw new Error(`There is noe current application selected, can't create bookmark.`);
-
+        const appKey = this.#getAppKey();
         const bookmark: CreateBookmark<unknown> = {
             ...args,
             appKey,
@@ -266,6 +275,16 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         return await Object.entries(creator).reduce(async (cur, [key, fn]) => {
             return Object.assign(await cur, { [key]: await fn() });
         }, Promise.resolve({}));
+    }
+
+    #getAppKey() {
+        const appKey =
+            this.config.getCurrentAppIdentification && this.config.getCurrentAppIdentification();
+
+        if (!appKey)
+            throw new Error(`There is noe current application selected, can't create bookmark.`);
+
+        return appKey;
     }
 
     public dispose() {

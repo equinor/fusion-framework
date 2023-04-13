@@ -115,7 +115,7 @@ Function for updating bookmark a bookmark when successful this will update the b
 @tab Async
 
 ```ts
- updateBookmarkAsync<T>(bookmark: Bookmark<T>): Promise<Bookmark<T>>;
+ updateBookmarkAsync<T>(bookmark: PatchBookmark<T>, options: UpdateBookmarkOptions): Promise<Bookmark<T> | undefined>;
 ```
 
 @tab Observable

@@ -1,4 +1,9 @@
-import { Bookmark, BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import {
+    Bookmark,
+    PatchBookmark,
+    BookmarkModule,
+    UpdateBookmarkOptions,
+} from '@equinor/fusion-framework-module-bookmark';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
@@ -61,8 +66,11 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         [bookmarkProvider]
     );
     const updateBookmark = useCallback(
-        async <T>(bookmark: Bookmark<T>): Promise<Bookmark<T>> => {
-            return await bookmarkProvider.updateBookmarkAsync<T>(bookmark);
+        async <T>(
+            bookmark: PatchBookmark<T>,
+            options: UpdateBookmarkOptions
+        ): Promise<Bookmark<T> | undefined> => {
+            return await bookmarkProvider.updateBookmarkAsync<T>(bookmark, options);
         },
         [bookmarkProvider]
     );

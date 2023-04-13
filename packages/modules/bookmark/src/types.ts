@@ -1,5 +1,9 @@
 import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
 
+export interface PatchBookmark<TData = unknown> extends Partial<Bookmark<TData>> {
+    id: string;
+    appKey: string;
+}
 export interface Bookmark<TData = unknown> {
     id: string;
     name: string;
@@ -63,3 +67,7 @@ export interface BookmarkQueryClient {
         | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
         | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
 }
+
+export type UpdateBookmarkOptions = {
+    updatePayload: boolean;
+};
