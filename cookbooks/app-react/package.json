@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react",
-    "version": "3.1.17",
+    "version": "3.1.18",
     "description": "",
     "private": true,
     "type": "module",
@@ -12,8 +12,8 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^5.1.17",
-        "@equinor/fusion-framework-react-app": "^3.0.23",
+        "@equinor/fusion-framework-cli": "^5.1.18",
+        "@equinor/fusion-framework-react-app": "^3.0.24",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
