@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.4.0 (2023-04-14)
+
+### Features
+
+-   **module-services:** add api interface for resolving related context ([54a8d9f](https://github.com/equinor/fusion-framework/commit/54a8d9f1a34052abb0f2e9104c9395b0fc4c77c4))
+
 ## 2.3.1 (2023-04-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-services
