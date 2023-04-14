@@ -38,7 +38,7 @@
         "vite-tsconfig-paths": "^4.0.7"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-app": "^6.0.11",
+        "@equinor/fusion-framework-app": "^6.0.14",
         "@equinor/fusion-framework-module-bookmark": "^0.2.3",
         "@equinor/fusion-framework-module-context": "^2.0.14",
         "@equinor/fusion-framework-react": "^4.0.11",
