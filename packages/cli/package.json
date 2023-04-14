@@ -24,7 +24,6 @@
         "prepack": "yarn build"
     },
     "dependencies": {
-        "@equinor/fusion-framework-app": "^6.0.15",
         "@equinor/fusion-observable": "^7.0.3",
         "@vitejs/plugin-react": "^3.1.0",
         "commander": "^10.0.0",
@@ -38,7 +37,7 @@
         "vite-tsconfig-paths": "^4.0.7"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-app": "^6.0.14",
+        "@equinor/fusion-framework-app": "^6.0.15",
         "@equinor/fusion-framework-module-bookmark": "^0.2.4",
         "@equinor/fusion-framework-module-context": "^2.0.15",
         "@equinor/fusion-framework-react": "^4.0.12",
