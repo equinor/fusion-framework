@@ -7,7 +7,12 @@ import { EquinorLoader } from './EquinorLoader';
 import { configure } from './config';
 import { Router } from './Router';
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+document.body.style.height = '100%';
+const target = document.getElementById("root") as HTMLElement;
+target.style.height = '100%'
+
+
+ReactDOM.createRoot(target).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <Framework configure={configure} fallback={<EquinorLoader text="Loading framework" />}>
