@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.14 (2023-04-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework
+
 ## 6.0.13 (2023-04-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework
