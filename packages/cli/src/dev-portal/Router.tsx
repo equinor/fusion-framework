@@ -16,7 +16,7 @@ const Root = () => {
     useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
 
     return (
-        <div style={{ fontFamily: 'Equinor', height: "100%" }}>
+        <div style={{ fontFamily: 'Equinor', height: '100%' }}>
             <PersonProvider resolve={personResolver}>
                 <Header />
                 <Outlet />
