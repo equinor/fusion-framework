@@ -22,6 +22,9 @@
             "context/query": [
                 "dist/types/context/query/index"
             ],
+            "context/related": [
+                "dist/types/context/related/index"
+            ],
             "bookmarks": [
                 "dist/types/bookmarks/index"
             ]
