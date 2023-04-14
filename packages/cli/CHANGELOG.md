@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.14...@equinor/fusion-framework-cli@5.1.15) (2023-04-14)
+
+### Bug Fixes
+
+-   :bug: fix incorrect height cli portal ([38aee24](https://github.com/equinor/fusion-framework/commit/38aee24011fe1d3c049d7667d777c91b19a02d2c))
+
 ## [5.1.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@5.1.13...@equinor/fusion-framework-cli@5.1.14) (2023-04-13)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli
