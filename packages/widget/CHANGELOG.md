@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.1.16 (2023-04-14)
+
+**Note:** Version bump only for package @equinor/fusion-framework-widget
+
 ## 0.1.15 (2023-04-14)
 
 **Note:** Version bump only for package @equinor/fusion-framework-widget

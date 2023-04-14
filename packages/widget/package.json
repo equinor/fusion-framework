@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-widget",
-    "version": "0.1.15",
+    "version": "0.1.16",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -32,7 +32,7 @@
         "directory": "packages/widget"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^6.0.14",
+        "@equinor/fusion-framework": "^6.0.15",
         "@equinor/fusion-framework-module": "^2.0.1",
         "@equinor/fusion-framework-module-event": "^2.0.1",
         "@equinor/fusion-framework-module-http": "^4.0.2",
