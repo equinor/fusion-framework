@@ -15,7 +15,7 @@ import type {
     IContextModuleConfigurator,
 } from './configurator';
 
-import type { ContextItem, QueryContextParameters } from './types';
+import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
 
 export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>(
     builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>
@@ -57,6 +57,14 @@ export class ContextConfigBuilder<
         this.config.contextParameterFn = fn;
     }
 
+    setValidateContext(fn: ContextModuleConfig['validateContext']) {
+        this.config.validateContext = fn;
+    }
+
+    setResolveContext(fn: ContextModuleConfig['resolveContext']) {
+        this.config.resolveContext = fn;
+    }
+
     setContextClient(
         client: {
             get:
@@ -65,6 +73,9 @@ export class ContextConfigBuilder<
             query:
                 | QueryFn<ContextItem[], QueryContextParameters>
                 | QueryCtorOptions<ContextItem[], QueryContextParameters>;
+            related?:
+                | QueryFn<ContextItem[], RelatedContextParameters>
+                | QueryCtorOptions<ContextItem[], RelatedContextParameters>;
         },
         expire = 1 * 60 * 1000
     ): void {
@@ -91,5 +102,19 @@ export class ContextConfigBuilder<
                       }
                     : client.query,
         };
+        if (client.related) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            this.config.client!.related =
+                typeof client.related === 'function'
+                    ? {
+                          // TODO - might cast to checksum
+                          key: (args) => JSON.stringify(args),
+                          client: {
+                              fn: client.related,
+                          },
+                          expire,
+                      }
+                    : client.related;
+        }
     }
 }

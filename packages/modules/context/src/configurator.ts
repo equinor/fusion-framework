@@ -1,15 +1,22 @@
 import { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
-import { getContextSelector, queryContextSelector } from './selectors';
+import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
 import { QueryCtorOptions } from '@equinor/fusion-query';
-import { ContextFilterFn, ContextItem, QueryContextParameters } from './types';
+import {
+    ContextFilterFn,
+    ContextItem,
+    QueryContextParameters,
+    RelatedContextParameters,
+} from './types';
 import { GetContextParameters } from './client/ContextClient';
 import { ContextConfigBuilder, ContextConfigBuilderCallback } from './ContextConfigBuilder';
+import { IContextProvider } from 'ContextProvider';
 
 export interface ContextModuleConfig {
     client: {
         get: QueryCtorOptions<ContextItem, GetContextParameters>;
         query: QueryCtorOptions<ContextItem[], QueryContextParameters>;
+        related?: QueryCtorOptions<ContextItem[], RelatedContextParameters>;
     };
     contextType?: string[];
     contextFilter?: ContextFilterFn;
@@ -21,6 +28,16 @@ export interface ContextModuleConfig {
         search: string;
         type: ContextModuleConfig['contextType'];
     }) => string | QueryContextParameters;
+
+    resolveContext?: (
+        this: IContextProvider,
+        item: ContextItem | null
+    ) => ReturnType<IContextProvider['resolveContext']>;
+
+    validateContext?: (
+        this: IContextProvider,
+        item: ContextItem | null
+    ) => ReturnType<IContextProvider['validateContext']>;
 }
 
 export interface IContextModuleConfigurator {
@@ -82,6 +99,20 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
                                 { query },
                                 { selector: queryContextSelector }
                             ),
+                    },
+                    // TODO - might cast to checksum
+                    key: (args) => JSON.stringify(args),
+                    expire: this.defaultExpireTime,
+                },
+                related: {
+                    client: {
+                        fn: (args) => {
+                            return contextClient.related(
+                                'v1',
+                                { id: args.item.id, query: { filter: args.filter } },
+                                { selector: relatedContextSelector }
+                            );
+                        },
                     },
                     // TODO - might cast to checksum
                     key: (args) => JSON.stringify(args),
