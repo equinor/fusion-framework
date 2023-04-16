@@ -21,20 +21,21 @@ const buildOdataFilter = (filterObj: RelatedContextOdataFilter) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
 };
-
 const buildOdataObject = (parameters: RelatedContextOdataParameters) => {
-    return Object.keys(parameters).reduce((acc, key) => {
-        switch (key) {
-            case 'filter':
-                return {
-                    ...acc,
-                    [key]: buildOdataFilter(parameters['filter'] as RelatedContextOdataFilter),
-                };
-            default:
-                return { ...acc, [key]: parameters[key as keyof typeof parameters] };
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, {} as any);
+    return Object.entries(parameters)
+        .filter(([_, value]) => !!value)
+        .reduce((acc, [key, value]) => {
+            switch (key) {
+                case 'filter':
+                    return {
+                        ...acc,
+                        [key]: buildOdataFilter(value as RelatedContextOdataFilter),
+                    };
+                default:
+                    return { ...acc, [key]: parameters[key as keyof typeof parameters] };
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }, {} as any);
 };
 
 const createSearchParameters = (args: string | RelatedContextOdataParameters) => {
