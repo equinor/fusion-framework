@@ -3,8 +3,8 @@ import { useRelatedContext } from './useRelatedContext';
 
 export const App = () => {
     const { currentContext } = useModuleCurrentContext();
-    // const { relatedContext } = useRelatedContext(['EquinorTask']);
-    const { relatedContext } = useRelatedContext();
+    // const { value: relatedContext } = useRelatedContext(['EquinorTask']);
+    const { value: relatedContext } = useRelatedContext();
     return (
         <>
             <section>

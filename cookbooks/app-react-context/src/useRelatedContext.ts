@@ -1,44 +1,28 @@
 import { useMemo } from 'react';
+import { EMPTY } from 'rxjs';
 
-import { combineLatest, EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useObservableInput, useObservableState } from '@equinor/fusion-observable/react';
-
+import { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
+import { useAppModule } from '@equinor/fusion-framework-react-app';
+import { useObservableState } from '@equinor/fusion-observable/react';
+import { useModuleCurrentContext } from '@equinor/fusion-framework-react-module-context';
 /**
  * DO NOT COPY
  * will create util functions for related context
  */
-export const useRelatedContext = (type?: string[]) => {
-    const framework = useFramework();
-    const {
-        modules: { context, services },
-    } = framework;
-
-    const client$ = useObservableInput(
-        useMemo(() => services.createContextClient('json$'), [services])
+export const useRelatedContext = (
+    type?: string[]
+): ReturnType<typeof useObservableState<ContextItem[]>> => {
+    const { currentContext } = useModuleCurrentContext();
+    const provider = useAppModule<ContextModule>('context');
+    return useObservableState(
+        useMemo(() => {
+            if (!currentContext) return EMPTY;
+            return provider.relatedContexts({
+                item: currentContext,
+                filter: { type },
+            });
+        }, [provider, currentContext])
     );
-    const context$ = useMemo(() => context.currentContext$, [context]);
-
-    const related$ = useMemo(
-        () =>
-            combineLatest([context$, client$]).pipe(
-                switchMap(([context, client]) => {
-                    return context
-                        ? client.related('v1', {
-                              id: context.id,
-                              query: { filter: { type } },
-                          })
-                        : EMPTY;
-                })
-            ),
-        [context$, client$]
-    );
-
-    const { value: relatedContext } = useObservableState(related$);
-
-    return { relatedContext };
 };
 
 export default useRelatedContext;
