@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.0.0 (2023-04-16)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-navigation
+
 ## [1.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-navigation@1.0.7...@equinor/fusion-framework-module-navigation@1.0.8) (2023-03-22)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-navigation
