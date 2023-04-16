@@ -26,4 +26,6 @@ export type QueryContextParameters = {
     };
 };
 
+export type RelatedContextParameters = { item: ContextItem; filter?: { type?: string[] } };
+
 export type ContextFilterFn = (items: ContextItem[]) => ContextItem[];
