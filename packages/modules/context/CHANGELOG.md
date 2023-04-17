@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@3.0.0...@equinor/fusion-framework-module-context@3.0.1) (2023-04-17)
+
+### Bug Fixes
+
+-   **context:** handle promise rejection of setting context ([96a0054](https://github.com/equinor/fusion-framework/commit/96a0054f6b4e9f3250a2b09493efabe96bf1e2ba))
+
 ## 3.0.0 (2023-04-16)
 
 ### Features

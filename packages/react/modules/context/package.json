@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-module-context",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -23,7 +23,7 @@
         "directory": "packages/react/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-context": "^3.0.0",
+        "@equinor/fusion-framework-module-context": "^3.0.1",
         "@equinor/fusion-framework-react-module": "^3.0.0",
         "@equinor/fusion-query": "^3.0.0"
     },

@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework",
-    "version": "7.0.0",
+    "version": "7.0.1",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -33,7 +33,7 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module": "^3.0.0",
-        "@equinor/fusion-framework-module-context": "^3.0.0",
+        "@equinor/fusion-framework-module-context": "^3.0.1",
         "@equinor/fusion-framework-module-event": "^3.0.0",
         "@equinor/fusion-framework-module-http": "^5.0.0",
         "@equinor/fusion-framework-module-msal": "^3.0.0",
