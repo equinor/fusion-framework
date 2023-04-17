@@ -147,10 +147,10 @@ export class ContextProvider implements IContextProvider {
                         filter((x) => !x.canceled),
                         map(({ next }) => next)
                     )
-                    .subscribe((next) => {
+                    .subscribe(async (next) => {
                         if (next) {
                             try {
-                                this.setCurrentContext(next, {
+                                await this.setCurrentContext(next, {
                                     validate: true,
                                     resolve: true,
                                 });
