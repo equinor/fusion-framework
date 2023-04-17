@@ -13,7 +13,7 @@ export const generateEndpoint = <TVersion extends ApiVersions>(
             const { bookmarkId } = args as { bookmarkId: string };
             const params = new URLSearchParams();
             params.append('api-version', '1.0');
-            return `/persons/me/bookmarks/favorites/${bookmarkId}/?${String(params)}`;
+            return `/persons/me/bookmarks/favourites/${bookmarkId}/?${String(params)}`;
         }
     }
 };
