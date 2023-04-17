@@ -11,6 +11,11 @@ export {
     ClientMethod,
 } from '@equinor/fusion-framework-module-services/context';
 
+export type ApiRelatedContextEntity<T extends ApiVersion> = ApiContextEntity<T> & {
+    relationSource: string; // "ProjectMaster|OrgChart",
+    relationType: unknown;
+};
+
 export type RelatedContextOdataFilter = {
     type?: string[];
 };
@@ -38,8 +43,8 @@ export type RelatedContextArgs<T> = T extends keyof typeof ApiVersion
     : { id: string };
 
 type RelatedContextResponseTypes = {
-    [ApiVersion.v1]: Array<ApiContextEntity<ApiVersion.v1>>;
-    [ApiVersion.v2]: Array<ApiContextEntity<ApiVersion.v2>>;
+    [ApiVersion.v1]: Array<ApiRelatedContextEntity<ApiVersion.v1>>;
+    [ApiVersion.v2]: Array<ApiRelatedContextEntity<ApiVersion.v2>>;
 };
 
 export type RelatedContextResponse<T> = T extends keyof typeof ApiVersion
