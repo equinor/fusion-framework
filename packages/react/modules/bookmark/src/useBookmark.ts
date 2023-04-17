@@ -68,7 +68,7 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
     const updateBookmark = useCallback(
         async <T>(
             bookmark: PatchBookmark<T>,
-            options: UpdateBookmarkOptions
+            options?: UpdateBookmarkOptions
         ): Promise<Bookmark<T> | undefined> => {
             return await bookmarkProvider.updateBookmarkAsync<T>(bookmark, options);
         },
@@ -84,6 +84,19 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         return await bookmarkProvider.getAllBookmarksAsync();
     }, [bookmarkProvider]);
 
+    const addBookmarkFavorite = useCallback(
+        async (bookmarkId: string): Promise<void> => {
+            return await bookmarkProvider.addBookmarkFavoriteAsync(bookmarkId);
+        },
+        [bookmarkProvider]
+    );
+    const removeBookmarkFavorite = useCallback(
+        async (bookmarkId: string): Promise<void> => {
+            return await bookmarkProvider.removeBookmarkFavoriteAsync(bookmarkId);
+        },
+        [bookmarkProvider]
+    );
+
     const setCurrentBookmark = useCallback(
         <TData>(IdOrItem: string | Bookmark<TData>): void => {
             bookmarkProvider.setCurrentBookmark(IdOrItem);
@@ -97,6 +110,13 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         [bookmarkProvider]
     );
 
+    const getCurrentAppKey = useCallback(() => {
+        return (
+            bookmarkProvider.config.getCurrentAppIdentification &&
+            bookmarkProvider.config.getCurrentAppIdentification()
+        );
+    }, [bookmarkProvider]);
+
     return {
         addBookmarkCreator,
         getAllBookmarks,
@@ -107,6 +127,9 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         getBookmarkById,
         currentBookmark,
         bookmarks,
+        getCurrentAppKey,
+        addBookmarkFavorite,
+        removeBookmarkFavorite,
     };
 };
 

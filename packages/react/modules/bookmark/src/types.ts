@@ -45,7 +45,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      */
     updateBookmark: <T>(
         bookmark: PatchBookmark<T>,
-        options: UpdateBookmarkOptions
+        options?: UpdateBookmarkOptions
     ) => Promise<Bookmark<T> | undefined>;
     /**
      * Function for deleting a bookmark, when successful this will update the bookmark list.
@@ -72,6 +72,14 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      * @type {Observable<Array<Bookmark<unknown>>>}
      */
     bookmarks: Bookmark<unknown>[];
+    /**
+     * Util function for resolving current app key for bookmark use.
+     */
+    getCurrentAppKey: () => string | undefined;
+
+    //add description
+    removeBookmarkFavorite: (bookmarkId: string) => Promise<void>;
+    addBookmarkFavorite: (bookmarkId: string) => Promise<void>;
 }
 
 export interface CurrentBookmark<TData> {
