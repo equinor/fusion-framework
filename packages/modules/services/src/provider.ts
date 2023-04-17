@@ -20,13 +20,12 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     createContextClient<TMethod extends keyof ClientMethod>(
         method: TMethod
     ): Promise<ContextApiClient<TMethod, TClient>>;
-    
     /**
      * @param method - Version of the service to use
      */
     createNotificationClient<TMethod extends keyof ClientMethod>(
         method: TMethod
-    ): Promise<NotificationApiClient<TMethod, TClient>> 
+    ): Promise<NotificationApiClient<TMethod, TClient>>;
 }
 
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
