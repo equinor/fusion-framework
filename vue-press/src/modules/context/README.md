@@ -302,6 +302,12 @@ dispatch before resolving context when setting current context
 #### onSetContextResolved
 dispatch when context resolved when setting current context
 
+#### onSetContextResolveFailed
+dispatch when failed to resolve context when setting current context
+
+### onSetContextValidationFailed
+dispatch when failed to validate context when setting current context
+> will only trigger when not resolving context
 
 ## React
 
