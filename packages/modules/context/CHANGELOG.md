@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@3.0.1...@equinor/fusion-framework-module-context@3.0.2) (2023-04-17)
+
+### Bug Fixes
+
+-   **context:** skip clearing context ([d4032b7](https://github.com/equinor/fusion-framework/commit/d4032b78b21d123e67cc7dadc50a65071d976b94))
+
 ## [3.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@3.0.0...@equinor/fusion-framework-module-context@3.0.1) (2023-04-17)
 
 ### Bug Fixes
