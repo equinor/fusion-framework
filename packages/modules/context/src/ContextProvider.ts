@@ -204,7 +204,6 @@ export class ContextProvider implements IContextProvider {
                     return this.setCurrentContext(resolvedContext);
                 } catch (err) {
                     console.error('failed to resolve context', context, err);
-                    this.clearCurrentContext();
                 }
             }
             throw Error('failed to validate provided context');
