@@ -40,12 +40,15 @@ jobs:
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
       - name: Bump versions
-        run: |
-          printf -v PR_BODY "%q" "${{ github.event.pull_request.body }}"
-          npx lerna version --yes --force-git-tag --conventional-graduate --create-release github\
-            --message ${{ github.event.pull_request.title }}\
-            --message $PR_BODY\
-            --message $(npx lerna changed -l --loglevel "error")\
+        run: >
+          npx lerna version 
+            --yes 
+            --force-git-tag 
+            --conventional-graduate 
+            --create-release github
+            --message "${{ github.event.pull_request.title }}"
+            --message "${{ github.event.pull_request.body }}"
+            --message "$(npx lerna changed -l --loglevel \"error\")"
             --message "(pr-${{ github.event.pull_request.title }})[${{ github.event.pull_request.html_url }}]"
         env:
           GH_TOKEN: ${{ github.token }}
