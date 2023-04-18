@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.4 (2023-04-18)
+
+### Bug Fixes
+
+-   **services:** update-api-provider-types,,added som missing types,,@equinor/fusion-framework-app v7.0.3 packages/app ([994188b](https://github.com/equinor/fusion-framework/commit/994188bbc727bc10a924eeb4d8178763a4c27ac7))
+-   update github action ([0a0860a](https://github.com/equinor/fusion-framework/commit/0a0860ad23ed33d5df73aac08710076901e3e958))
+
 ## [3.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-telemetry@3.0.2...@equinor/fusion-framework-module-telemetry@3.0.3) (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-telemetry
