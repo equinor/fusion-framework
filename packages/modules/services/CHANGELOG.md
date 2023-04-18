@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.2 (2023-04-18)
+
+### Bug Fixes
+
+-   **service:** fix linting ([88b5e59](https://github.com/equinor/fusion-framework/commit/88b5e596d18ac8b999404c3487a9896b0806a767))
+-   **services:** update-api-provider-types ([380c6af](https://github.com/equinor/fusion-framework/commit/380c6af855fa6b9a29dbedd51917f0d6e4e7742b))
+
 ## 3.0.1 (2023-04-17)
 
 ### Bug Fixes

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.1.1 (2023-04-18)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-context
+
 ## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@3.0.2...@equinor/fusion-framework-module-context@3.1.0) (2023-04-17)
 
 ### Features

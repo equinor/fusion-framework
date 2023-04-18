@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cli",
-    "version": "6.0.3",
+    "version": "6.0.4",
     "keywords": [
         "Fusion",
         "Fusion Framework",
@@ -37,11 +37,11 @@
         "vite-tsconfig-paths": "^4.0.7"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-app": "^7.0.3",
-        "@equinor/fusion-framework-module-bookmark": "^1.0.1",
-        "@equinor/fusion-framework-module-context": "^3.1.0",
-        "@equinor/fusion-framework-react": "^5.0.3",
-        "@equinor/fusion-framework-react-module-bookmark": "^1.0.3",
+        "@equinor/fusion-framework-app": "^7.0.4",
+        "@equinor/fusion-framework-module-bookmark": "^1.0.2",
+        "@equinor/fusion-framework-module-context": "^3.1.1",
+        "@equinor/fusion-framework-react": "^5.0.4",
+        "@equinor/fusion-framework-react-module-bookmark": "^1.0.4",
         "@equinor/fusion-query": "^3.0.0",
         "@equinor/fusion-react-button": "^0.8.1",
         "@equinor/fusion-react-context-selector": "^0.4.3",
