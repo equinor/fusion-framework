@@ -19,7 +19,7 @@ export type NavigationModule = Module<
 
 export const module: NavigationModule = {
     name: moduleKey,
-    configure: (ref?: any) => {
+    configure: (ref?: unknown) => {
         const configurator = new NavigationConfigurator();
         if (ref) {
             configurator.history = (ref as ModuleInstance).navigation.navigator;
