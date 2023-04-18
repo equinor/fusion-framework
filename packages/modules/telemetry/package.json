@@ -12,7 +12,8 @@
         "prepack": "yarn build"
     },
     "keywords": [
-        "telemetry"
+        "telemetry",
+        "fusion"
     ],
     "author": "",
     "license": "ISC",
