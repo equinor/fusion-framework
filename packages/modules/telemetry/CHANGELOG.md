@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-telemetry@3.0.1...@equinor/fusion-framework-module-telemetry@3.0.2) (2023-04-18)
+
+### Bug Fixes
+
+-   update release action ([c73d7c6](https://github.com/equinor/fusion-framework/commit/c73d7c61e228b62810a6d1a8f32b438f78ec6f74))
+
 ## 3.0.1 (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-telemetry
