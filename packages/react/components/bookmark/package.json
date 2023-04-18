@@ -1,0 +1,60 @@
+{
+    "name": "@equinor/fusion-framework-react-components-bookmark",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "types": "./dist/types/index.d.ts",
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "yarn build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/react/components/bookmark"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-react-module-bookmark": "^0.1.6",
+        "@equinor/eds-utils": "^0.7.0"
+    },
+    "devDependencies": {
+        "@equinor/eds-core-react": "^0.30.0",
+        "@equinor/eds-tokens": "^0.9.0",
+        "@equinor/eds-icons": "^0.19.1",
+        "styled-components": "^5.3.9",
+        "@emotion/css": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@emotion/react": "^11.10.6",
+        "@types/react": "^17.0.11",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "typescript": "^4.9.3"
+    },
+    "peerDependencies": {
+        "@equinor/eds-core-react": "^0.30.0",
+        "@equinor/eds-tokens": "^0.9.0",
+        "@equinor/eds-icons": "^0.19.1",
+        "styled-components": "^5.3.9",
+        "@emotion/css": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        }
+    }
+}
