@@ -23,6 +23,12 @@ export const reducer = createReducer<State>(initialState, (builder) => {
         .addCase(actions.delete.success, (state, { payload }) => {
             delete state.bookmarks[payload];
         })
+        .addCase(actions.removeFavorite, (state, { payload }) => {
+            delete state.bookmarks[payload];
+        })
+        .addCase(actions.addFavorite, (state, { payload }) => {
+            state.bookmarks[payload.id] = payload;
+        })
         .addCase(actions.update.success, (state, { payload }) => {
             state.bookmarks[payload.id] = payload;
         });

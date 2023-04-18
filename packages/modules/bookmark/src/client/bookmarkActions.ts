@@ -14,6 +14,16 @@ export const actions = {
         (id: string) => ({ payload: id }),
         (id: string) => ({ payload: id })
     ),
+    addFavorite: createAsyncAction(
+        'addFavorite',
+        (bookmark: Bookmark) => ({ payload: bookmark }),
+        (bookmark: Bookmark) => ({ payload: bookmark })
+    ),
+    removeFavorite: createAsyncAction(
+        'removeFavorite',
+        (id: string) => ({ payload: id }),
+        (id: string) => ({ payload: id })
+    ),
     update: createAsyncAction(
         'update',
         (bookmark: PatchBookmark) => ({ payload: bookmark }),

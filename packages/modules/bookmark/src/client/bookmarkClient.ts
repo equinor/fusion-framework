@@ -228,11 +228,17 @@ export class BookmarkClient {
     }
 
     public async addBookmarkFavoriteAsync(bookmarkId: string): Promise<void> {
-        this.#bookmarkAPiClient.addFavorite('v1', { bookmarkId });
+        const response = await this.#bookmarkAPiClient.addFavorite('v1', { bookmarkId });
+        if (response.ok && this.#currentBookmark$.value) {
+            this.#state.dispatch.addFavorite(this.#currentBookmark$.value);
+        }
     }
 
     public async removeBookmarkFavoriteAsync(bookmarkId: string): Promise<void> {
-        this.#bookmarkAPiClient.removeFavorite('v1', { bookmarkId });
+        const response = await this.#bookmarkAPiClient.removeFavorite('v1', { bookmarkId });
+        if (response.ok) {
+            this.#state.dispatch.removeFavorite(bookmarkId);
+        }
     }
 
     public async verifyBookmarkFavoriteAsync(bookmarkId: string): Promise<boolean> {
