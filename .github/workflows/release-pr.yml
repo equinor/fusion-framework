@@ -46,9 +46,12 @@ jobs:
           --force-git-tag 
           --conventional-graduate 
           --message "${{ github.event.pull_request.title }}"
+          --message "$(printf '\n')"
           --message "${{ github.event.pull_request.body }}"
+          --message "$(printf '\n\n')"
           --message "$(npx lerna changed -l --loglevel \"error\")"
-          --message "(pr-${{ github.event.pull_request.title }})[${{ github.event.pull_request.html_url }}]"
+          --message "$(printf '\n\n')"
+          --message "triggered by ${{ github.event.pull_request.html_url }}"
           --create-release github
         env:
           GH_TOKEN: ${{ github.token }}
