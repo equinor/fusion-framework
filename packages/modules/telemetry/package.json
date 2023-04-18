@@ -15,7 +15,8 @@
         "telemetry",
         "fusion",
         "microsoft",
-        "utility"
+        "utility",
+        ""
     ],
     "author": "",
     "license": "ISC",
