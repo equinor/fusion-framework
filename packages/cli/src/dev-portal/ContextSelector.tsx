@@ -55,7 +55,12 @@ const noPreselect: ContextResult = [];
  * @link https://equinor.github.io/fusion-react-components/?path=/docs/data-contextselector--component
  * @return Array<ContextResolver, SetContextCallback>
  */
-const useQueryContext = (): [ContextResolver, (e: ContextSelectEvent) => void, ContextResultItem, () => void] => {
+const useQueryContext = (): [
+    ContextResolver,
+    (e: ContextSelectEvent) => void,
+    ContextResultItem,
+    () => void
+] => {
     /* Framework modules */
     const framework = useFramework();
 

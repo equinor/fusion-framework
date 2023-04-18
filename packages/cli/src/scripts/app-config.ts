@@ -29,7 +29,9 @@ type ConfigSource = {
 
 type LocalConfig = AppConfig & {
     configSource?: ConfigSource;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pkg: any; // package.json
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     root: any; // project root
 };
 
