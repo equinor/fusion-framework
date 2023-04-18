@@ -229,7 +229,11 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         }
 
         if (options?.updatePayload) {
-            bookmark.payload = (await this.#createPayload()) as T;
+            const payload = (await this.#createPayload()) as T;
+            bookmark = {
+                ...bookmark,
+                payload,
+            };
         }
         return this._bookmarkClient.updateBookmarkAsync<T>(bookmark);
     }
