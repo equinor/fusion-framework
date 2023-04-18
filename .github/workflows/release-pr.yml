@@ -7,7 +7,8 @@ permissions:
   deployments: write
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
 
 jobs:
   release-pkg:
@@ -37,6 +38,12 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+      - name: Bump versions
+        run: npx lerna version --yes --force-git-tag --conventional-graduate --create-release -m "${{ github.event.pull_request.title }}\n\n$(lerna changed -l --loglevel \"error\") \n\n${{ github.event.pull_request.body }}\n\n[${{ github.event.pull_request.id }}](${{ github.event.pull_request.html_url }})" github 
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Release packages
         run: npx lerna publish from-package --yes
