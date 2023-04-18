@@ -42,13 +42,12 @@ jobs:
       - name: Bump versions
         run: |
           printf -v PR_BODY "%q" "${{ github.event.pull_request.body }}"
-          PR_CHANGED_MODULES=$(npx lerna changed -l --loglevel "error")
-          PR_MESSAGE="$PR_TITLE\n\n$PR_CHANGED_MODULES\n\n${PR_BODY}\n\n[pr-$PR_NUMBER]($PR_URL)"
-          npx lerna version --yes --force-git-tag --conventional-graduate --create-release github -m "${PR_MESSAGE}"
+          npx lerna version --yes --force-git-tag --conventional-graduate --create-release github\
+            --message ${{ github.event.pull_request.title }}\
+            --message $PR_BODY\
+            --message $(npx lerna changed -l --loglevel "error")\
+            --message "(pr-${{ github.event.pull_request.title }})[${{ github.event.pull_request.html_url }}]"
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ github.token }}
 
       - name: Release packages
