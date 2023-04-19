@@ -58,7 +58,7 @@
     },
     "dependencies": {
         "@equinor/fusion-observable": "^8.0.0",
-        "immer": "^9.0.16",
+        "immer": "^10.0.1",
         "rxjs": "^7.5.7",
         "uuid": "^8.3.2"
     },
