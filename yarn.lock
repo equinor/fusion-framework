@@ -23,16 +23,16 @@
     "@jridgewell/trace-mapping" "^0.3.9"
 
 "@azure/msal-browser@^2.21.0":
-  version "2.32.2"
-  resolved "https://registry.npmjs.org/@azure/msal-browser/-/msal-browser-2.32.2.tgz"
-  integrity sha512-1YqGzXtPG3QrZPFBKaMWr2WQdukDj+PelqUCv351+p+hlw/AhdRrb8haY73/iqkhT6Cdrbnh7sL4gikVsF4O1g==
+  version "2.36.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.36.0.tgz#a95af979da1dd8572b6b3cb9fc86d51713d8ad91"
+  integrity sha512-OrVDZ9ftO7ExqZVHripAt+doKg6G14YbP2LoSygiWQoSqoO4CejoXLRLqANc/HGg18N0p/oaRETw4IHZvwsxZw==
   dependencies:
-    "@azure/msal-common" "^9.0.2"
+    "@azure/msal-common" "^12.1.0"
 
-"@azure/msal-common@^9.0.2":
-  version "9.1.1"
-  resolved "https://registry.npmjs.org/@azure/msal-common/-/msal-common-9.1.1.tgz"
-  integrity sha512-we9xR8lvu47fF0h+J8KyXoRy9+G/fPzm3QEa2TrdR3jaVS3LKAyE2qyMuUkNdbVkvzl8Zr9f7l+IUSP22HeqXw==
+"@azure/msal-common@^12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-12.1.0.tgz#e253a4912a359193c52c570a1e2585cfd0213bff"
+  integrity sha512-9RUiv0evSHvYtvF7r9ksShw9FgCeT6Rf6JB/SOMbMzI0VySZDUBSE+0b9e7DgL2Ph8wSARIh3m8c5pCK9TRY3w==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
   version "7.18.6"
