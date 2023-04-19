@@ -6,17 +6,19 @@ import { SharedIcon } from '../shared/SharedIcon';
 import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import { useCallback, useState } from 'react';
-import { delete_to_trash, share, edit, close } from '@equinor/eds-icons';
+import { useCallback, useEffect, useState } from 'react';
+import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
+import { Loading } from '../loading/Loading';
 
 Icon.add({
     delete_to_trash,
     edit,
     share,
     close,
+    update,
 });
 
 type SectionListProps = {
@@ -27,10 +29,18 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
     const { deleteBookmarkById, getCurrentAppKey, updateBookmark, removeBookmarkFavorite } =
         useBookmark();
 
+    const [loading, setLoading] = useState(true);
+
     const user = useCurrentUser();
     const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
 
     const { event } = useFramework().modules;
+
+    useEffect(() => {
+        return event.addEventListener('onBookmarksChanged', () => {
+            setLoading(false);
+        });
+    }, [event]);
 
     const editBookmark = useCallback(
         (bookmarkId: string) => {
@@ -51,6 +61,13 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
         [event, updateBookmark]
     );
 
+    const updateBookmarkWithCurrentView = useCallback(
+        (bookmark: Bookmark) => {
+            updateBookmark({ ...bookmark }, { updatePayload: true });
+        },
+        [updateBookmark]
+    );
+
     const createMenuOptions = (bookmark: Bookmark) =>
         createBookmarkActions(
             bookmark,
@@ -58,9 +75,13 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             editBookmark,
             shareBookmark,
             removeBookmarkFavorite,
+            updateBookmarkWithCurrentView,
             getCurrentAppKey(),
             user?.localAccountId
         );
+
+    // Todo: add if loading and error if api fails
+    if (loading) return <Loading />;
 
     return (
         <>
@@ -95,8 +116,9 @@ function createBookmarkActions(
     bookmark: Bookmark,
     deleteBookmarkById: (bookmarkId: string) => Promise<string>,
     editBookmark: (bookmark: string) => void,
-    updateBookmark: (bookmark: Bookmark) => void,
+    shareBookmark: (bookmark: Bookmark) => void,
     removeBookmarkFavorite: (bookmarkId: string) => void,
+    updateBookmarkWithCurrentView: (bookmark: Bookmark) => void,
     appKey?: string,
     localAccountId?: string
 ) {
@@ -111,6 +133,14 @@ function createBookmarkActions(
                 Icon: <Icon name="edit" />,
             },
             {
+                name: 'Update with current view',
+                disabled: appKey !== bookmark.appKey,
+                onClick: () => {
+                    updateBookmarkWithCurrentView(bookmark);
+                },
+                Icon: <Icon name="update" />,
+            },
+            {
                 name: 'Remove',
                 disabled: false,
                 onClick: () => {
@@ -122,7 +152,7 @@ function createBookmarkActions(
                 name: bookmark.isShared ? 'Unshare' : 'Share',
                 disabled: false,
                 onClick: () => {
-                    updateBookmark(bookmark);
+                    shareBookmark(bookmark);
                 },
                 Icon: <Icon name="share" />,
             },

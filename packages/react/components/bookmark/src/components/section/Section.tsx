@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 const styles = {
     childrenFlex: css`
         margin-left: 0.7rem;
-        padding: 0 1rem;
+        padding-left: 1rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
