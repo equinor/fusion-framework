@@ -80,7 +80,6 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             user?.localAccountId
         );
 
-    // Todo: add if loading and error if api fails
     if (loading) return <Loading />;
 
     return (
