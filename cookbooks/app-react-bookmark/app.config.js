@@ -1,6 +1,9 @@
 // demo
 export default () => ({
-  // "appKey": "",
+  "manifest": {
+    "key": "fusion-bookmark",
+    "name":" Fusion Bookmark" 
+  },
   "environment": {
     "scope": "foobar"
   },
