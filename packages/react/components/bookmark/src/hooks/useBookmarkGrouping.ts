@@ -2,12 +2,12 @@ import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 
 import { useState } from 'react';
 
-export type GroupingKeys = 'Group by app' | 'Created by' | 'App groups';
+export type GroupingKeys = 'Group by app' | 'Created by' | 'Group by Context';
 
 const groupingModes: Record<GroupingKeys, (item: Bookmark) => string> = {
     'Group by app': (item: Bookmark) => item.appKey,
     'Created by': (item: Bookmark) => item.createdBy.name,
-    'App groups': (item: Bookmark) => item?.sourceSystem?.subSystem ?? 'Unknown',
+    'Group by Context': (item: Bookmark) => item?.context?.name ?? 'Unknown',
 } as const;
 
 export function useBookmarkGrouping(bookmarks?: Bookmark[]) {
