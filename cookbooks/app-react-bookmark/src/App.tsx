@@ -1,6 +1,5 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 import { StrictMode, useCallback, useEffect, useState } from 'react';
-import Create from './Create';
 
 export interface MyBookmark {
     title: string;
@@ -8,16 +7,10 @@ export interface MyBookmark {
 }
 
 export interface BookmarkState {
-    name: string;
-    description: string;
-    isShared: boolean;
     payload: MyBookmark;
 }
 
 export const init = {
-    name: '',
-    description: '',
-    isShared: false,
     payload: {
         title: '',
         data: '',
@@ -56,9 +49,38 @@ export const App = () => {
                     }}
                 >
                     <h1>🚀 Fusion Bookmark😎</h1>
+                    <form style={{ display: 'flex', gap: '1rem' }}>
+                        <label htmlFor="value">Title</label>
+                        <input
+                            id="value"
+                            type="text"
+                            onChange={(e) => {
+                                updateState(() => ({
+                                    payload: {
+                                        ...state.payload,
+                                        title: e.target.value,
+                                    },
+                                }));
+                            }}
+                            value={state.payload.title}
+                        />
+                        <label htmlFor="value">Bookmark data:</label>
+                        <input
+                            id="value"
+                            type="text"
+                            onChange={(e) => {
+                                updateState(() => ({
+                                    payload: {
+                                        ...state.payload,
+                                        data: e.target.value,
+                                    },
+                                }));
+                            }}
+                            value={state.payload.data}
+                        />
+                    </form>
                     <pre>{JSON.stringify(currentBookmark, null, 2)}</pre>
                 </div>
-                <Create state={state} updateState={updateState} />
             </div>
         </StrictMode>
     );
