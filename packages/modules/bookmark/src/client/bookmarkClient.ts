@@ -155,6 +155,11 @@ export class BookmarkClient {
                 this.#state.subject.addEffect('getAll::success', (action) => {
                     subscriber.next(action.payload);
                     subscriber.complete();
+
+                    this.#event?.dispatchEvent('onBookmarksChanged', {
+                        detail: action.payload,
+                        source: this,
+                    });
                 })
             );
         });
@@ -253,6 +258,7 @@ export class BookmarkClient {
 
     #addStateEffects() {
         this.#state.subject.addEffect('create::success', (action) => {
+            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
             this.#currentBookmark$.next(action.payload);
             this.#event?.dispatchEvent('onBookmarkCreated', {
                 detail: action.payload,
@@ -261,6 +267,8 @@ export class BookmarkClient {
             });
         });
         this.#state.subject.addEffect('delete::success', (action) => {
+            console.log('here');
+            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
             this.#event?.dispatchEvent('onBookmarkDeleted', {
                 detail: action.payload,
                 canBubble: true,
@@ -268,11 +276,19 @@ export class BookmarkClient {
             });
         });
         this.#state.subject.addEffect('update::success', (action) => {
+            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
             this.#event?.dispatchEvent('onBookmarkUpdated', {
                 detail: action.payload,
                 canBubble: true,
                 source: this,
             });
+        });
+        this.#state.subject.addEffect('addFavorite::request', () => {
+            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+        });
+
+        this.#state.subject.addEffect('removeFavorite::request', () => {
+            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
         });
     }
 
