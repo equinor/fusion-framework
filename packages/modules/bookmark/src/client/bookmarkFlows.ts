@@ -3,7 +3,7 @@ import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bo
 import { Observable } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 import { Query } from '@equinor/fusion-query';
-import { switchMap, map, catchError, EMPTY } from 'rxjs';
+import { switchMap, map, catchError, EMPTY, last } from 'rxjs';
 import { GetAllBookmarksParameters, Bookmark } from '../types';
 import { actions, Actions } from './bookmarkActions';
 
@@ -17,6 +17,7 @@ export const handleBookmarkGetAll =
             filterAction(actions.getAll.type),
             switchMap((action) => {
                 return queryAllBookmarks.query({ isValid: action.payload }).pipe(
+                    last(),
                     map((bookmarks) =>
                         actions.getAll.success(
                             bookmarks.value.filter(
