@@ -40,7 +40,7 @@ export const BookmarkFilter = ({
                 multiple={false}
                 hideClearButton
                 autoWidth
-                onOptionsChange={(changes) => setGroupBy(changes.selectedItems[0] as any)}
+                onOptionsChange={(changes) => setGroupBy(changes.selectedItems[0] as GroupingKeys)}
                 label={''}
             />
         </div>
