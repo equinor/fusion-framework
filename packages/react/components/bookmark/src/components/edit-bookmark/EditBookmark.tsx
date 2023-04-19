@@ -13,14 +13,14 @@ const StyledContent = styled(Dialog.Content)`
     flex-direction: column;
     gap: 1rem;
 `;
+const StyledDialog = styled(Dialog)`
+    width: 500px;
+`;
 
 const styles = {
     checkboxWrapper: css`
         display: flex;
         gap: 1rem;
-    `,
-    dialogWidth: css`
-        width: 500px;
     `,
     actions: css`
         display: 'flex';
@@ -60,7 +60,7 @@ export const EditBookmarkModal = ({
     }, [bookmarkId, bookmarks]);
 
     return (
-        <Dialog className={styles.dialogWidth} open={isOpen}>
+        <StyledDialog open={isOpen}>
             <Dialog.Header>Edit bookmark</Dialog.Header>
             <StyledContent>
                 <div>
@@ -106,7 +106,7 @@ export const EditBookmarkModal = ({
                         }}
                     />
                     <Checkbox
-                        label="Update application data "
+                        label="Update bookmark with current view"
                         checked={updatePayload}
                         onChange={() => {
                             setUpdatePayload((s) => !s);
@@ -131,6 +131,6 @@ export const EditBookmarkModal = ({
                     </Button>
                 </div>
             </Dialog.Actions>
-        </Dialog>
+        </StyledDialog>
     );
 };

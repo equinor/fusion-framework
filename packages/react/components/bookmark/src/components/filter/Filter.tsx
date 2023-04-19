@@ -12,7 +12,6 @@ type BookmarkFilterProps = {
 
 const styles = {
     row: css`
-        height: 100px;
         display: flex;
         align-items: center;
         justify-content: space-between;
