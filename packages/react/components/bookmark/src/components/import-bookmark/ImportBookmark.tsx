@@ -1,6 +1,14 @@
+import { css } from '@emotion/css';
 import { Button, Dialog } from '@equinor/eds-core-react';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { useEffect, useState } from 'react';
+
+const styles = {
+    actionWrapper: css`
+        display: flex;
+        gap: 1rem;
+    `,
+};
 
 export const ImportBookmarkModal = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +31,7 @@ export const ImportBookmarkModal = () => {
                 <p>Would you like to import it?</p>
             </Dialog.Content>
             <Dialog.Actions>
-                <div style={{ display: 'flex', gap: '0.2em' }}>
+                <div className={styles.actionWrapper}>
                     <Button
                         onClick={() => setIsOpen(false)}
                         variant={'ghost'}
