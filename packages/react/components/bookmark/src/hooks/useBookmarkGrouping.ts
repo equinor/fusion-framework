@@ -10,7 +10,7 @@ const groupingModes: Record<GroupingKeys, (item: Bookmark) => string> = {
     'Group by Context': (item: Bookmark) => item?.context?.name ?? 'Unknown',
 } as const;
 
-export function useBookmarkGrouping(bookmarks?: Bookmark[]) {
+export const useBookmarkGrouping = (bookmarks?: Bookmark[]) => {
     const [searchText, setSearchText] = useState<string | null>(null);
 
     const [groupByKey, setGroupBy] = useState<keyof typeof groupingModes>('Group by app');
@@ -25,14 +25,14 @@ export function useBookmarkGrouping(bookmarks?: Bookmark[]) {
         groupingModes,
         groupByKey,
     };
-}
+};
 
-function groupBy<T>(
+const groupBy = <T>(
     array: T[],
     getKey: (item: T) => string,
     searchText: string | null,
     field: keyof T
-) {
+) => {
     return (
         array
             ?.map(getKey)
@@ -43,12 +43,12 @@ function groupBy<T>(
                     .filter((s) => getKey(s) === groupingProperty)
                     .filter((s) => {
                         const fieldData = s[field];
-                        if (typeof fieldData === 'string') {
-                            return searchText ? fieldData.includes(searchText) : true;
+                        if (typeof fieldData === 'string' && searchText) {
+                            return fieldData.includes(searchText);
                         }
 
                         return true;
                     }),
             })) ?? []
     );
-}
+};
