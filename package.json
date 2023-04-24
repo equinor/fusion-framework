@@ -44,7 +44,7 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@equinor/eslint-config-fusion": "^2.0.0",
     "@equinor/eslint-config-fusion-react": "^1.0.0",
-    "@nrwl/nx-cloud": "^15.0.2",
+    "@nrwl/nx-cloud": "^16.0.2",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "eslint": "^8.33.0",
     "eslint-plugin-rxjs": "^5.0.2",
