@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.5 (2023-04-24)
+
+### Bug Fixes
+
+-   **app-react-bookmark:** removed create bookmark form cookbook ([d8ec745](https://github.com/equinor/fusion-framework/commit/d8ec745a612b4e80fa3410a2fbc7eb27cc6d50df))
+-   **app-react-bookmark:** update app config ([d185b95](https://github.com/equinor/fusion-framework/commit/d185b955d73a48caed961d93737528c2e22d960b))
+
 ## 4.0.4 (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark

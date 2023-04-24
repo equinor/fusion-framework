@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 1.0.3 (2023-04-24)
+
+### Bug Fixes
+
+-   **bookmark-module:** favorites now updates the bookmarks state when adding and removing bookmarks ([0e43cb1](https://github.com/equinor/fusion-framework/commit/0e43cb1a4e2f9b8fe3fcff4df053846f585cca3d))
+-   **bookmark-module:** get the last event from get all bookmarks, and added onBookmarksChange dispatch ([4b53fc3](https://github.com/equinor/fusion-framework/commit/4b53fc37c0d072604c336490dc82beca2310cd51))
+
 ## 1.0.2 (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-bookmark

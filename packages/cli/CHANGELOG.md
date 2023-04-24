@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.1.0 (2023-04-24)
+
+### Features
+
+-   **cli:** added bookmark side sheet to cli and updated header ([d5da5eb](https://github.com/equinor/fusion-framework/commit/d5da5eb2c61983c8f038956a18e7a8c16a987450))
+
+### Bug Fixes
+
+-   **bookmark:** fix linting ([17b179f](https://github.com/equinor/fusion-framework/commit/17b179fbb25243730dd65cc116c86471074faabc))
+-   cli package json ([966695a](https://github.com/equinor/fusion-framework/commit/966695a7701cbea9115053226f48d378a77d6af3))
+
 ## 6.0.4 (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cli

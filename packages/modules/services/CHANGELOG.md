@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.0.3 (2023-04-24)
+
+### Bug Fixes
+
+-   **services-module:** fix bookmark favorites url ([f9c6129](https://github.com/equinor/fusion-framework/commit/f9c612914eae57452e1ffe77b1dc054eefea2850))
+
 ## 3.0.2 (2023-04-18)
 
 ### Bug Fixes
