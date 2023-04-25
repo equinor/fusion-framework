@@ -91,20 +91,46 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                         nextId: next?.id,
                                         urlId: this._resolveContextIdFromUrl(),
                                     })),
+                                    // TODO might not needed 🤷
                                     observeOn(asyncScheduler)
                                 )
-                                .subscribe(({ previousId, nextId, urlId }) => {
-                                    if (nextId) {
-                                        if (urlId) {
-                                            navigator.replace(
-                                                navigator.location.pathname.replace(urlId, nextId)
-                                            );
+                                .subscribe({
+                                    next: (data) => {
+                                        const { previousId, nextId, urlId } = data;
+                                        console.debug(
+                                            'LegacyContextManager.instance.context.currentContext$',
+                                            app,
+                                            data
+                                        );
+                                        if (nextId) {
+                                            if (urlId) {
+                                                navigator.replace(
+                                                    navigator.location.pathname.replace(
+                                                        urlId,
+                                                        nextId
+                                                    )
+                                                );
+                                            } else {
+                                                navigator.replace(`apps/${app.appKey}/${nextId}`);
+                                            }
                                         } else {
-                                            navigator.replace(`apps/${app.appKey}/${nextId}`);
+                                            if (previousId) {
+                                                this._clearContextFromLocalStorage();
+                                            }
+                                            navigator.replace(`apps/${app.appKey}`);
                                         }
-                                    } else if (previousId) {
-                                        this._clearContextFromLocalStorage();
-                                    }
+                                    },
+                                    error: (err) =>
+                                        console.error(
+                                            'LegacyContextManager.instance.context.currentContext$',
+                                            err
+                                        ),
+                                    complete: () =>
+                                        console.error(
+                                            'LegacyContextManager.instance.context.currentContext$',
+                                            'subscription closed',
+                                            app
+                                        ),
                                 });
                         });
                     });
@@ -178,12 +204,13 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
     }
 
     public async setCurrentContextAsync(context: string | ContextItem | null): Promise<void> {
-        if (context !== null) {
-            this.#framework.modules.context.contextClient.setCurrentContext(
-                context as string | ContextItem
-            );
-        } else {
+        const contextProvider = this.#framework.modules.context;
+        if (context === null) {
             this.#framework.modules.context.clearCurrentContext();
+        } else if (typeof context === 'string') {
+            await contextProvider.setCurrentContextByIdAsync(context);
+        } else {
+            await contextProvider.setCurrentContextAsync(context);
         }
     }
 
