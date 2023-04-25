@@ -1,4 +1,4 @@
-import { ReliableDictionary, EventHub, LocalStorageProvider } from '@equinor/fusion';
+import { ReliableDictionary, EventHub, LocalStorageProvider, Context } from '@equinor/fusion';
 import type { FeatureLogger, ContextManifest } from '@equinor/fusion';
 
 import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
@@ -12,7 +12,7 @@ import {
     ContextModule,
 } from '@equinor/fusion-framework-module-context';
 
-import { asyncScheduler, filter, map, observeOn, pairwise, scan, tap } from 'rxjs';
+import { asyncScheduler, filter, observeOn, pairwise, scan, tap } from 'rxjs';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { LOCAL_STORAGE_CURRENT_CONTEXT_KEY } from 'static';
 
@@ -65,6 +65,65 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
             if (app) {
                 const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
                 if (manifest?.context) {
+                    const { navigator } = navigation;
+                    const appUrlResolver = {
+                        root: `apps/${app.appKey}`,
+                        get location() {
+                            return navigation.navigator.location;
+                        },
+                        get pathname() {
+                            const { pathname } = this.location;
+                            return pathname.replace(this.root, '').replace(/^[/]/, '');
+                        },
+                        get contextId() {
+                            const { pathname } = this;
+                            if (manifest.context?.getContextFromUrl) {
+                                return manifest.context.getContextFromUrl(pathname);
+                            }
+
+                            console.warn(
+                                'LegacyContextManager.appUrlResolver.contextId',
+                                'legacy application with manifest should have method [getContextFromUrl]'
+                            );
+
+                            const [contextId] =
+                                pathname.match(/^\d+$/) ??
+                                pathname.match(/^(?:[a-z0-9]+-){4}[a-z0-9]+$/) ??
+                                [];
+                            return contextId;
+                        },
+                        navigate(path?: string): void {
+                            navigation.navigator.replace(
+                                [this.root, path].filter((x) => !!x).join('/')
+                            );
+                        },
+                        buildPathname(context?: ContextItem) {
+                            if (manifest.context?.buildUrl) {
+                                return manifest.context.buildUrl(
+                                    (context as unknown as Context) ?? null,
+                                    this.pathname
+                                );
+                            }
+
+                            console.warn(
+                                'LegacyContextManager.appUrlResolver.buildPathname',
+                                'legacy application with manifest should have method [buildUrl]'
+                            );
+
+                            const { contextId, pathname } = this;
+                            if (contextId && context) {
+                                return pathname.replace(contextId, context.id);
+                            } else {
+                                return [this.pathname, context?.id].filter((x) => !!x).join('/');
+                            }
+                        },
+                        buildLocation(context?: ContextItem) {
+                            return [this.buildPathname(context), this.location.search]
+                                .filter((x) => !!x)
+                                .join('?');
+                        },
+                    };
+
                     const initModules = configureModules<[ContextModule]>((configurator) => {
                         enableContext(configurator, async (builder) => {
                             // TODO - check build url and get context from url
@@ -76,49 +135,45 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 builder.setContextFilter(manifest.context.filterContexts);
                         });
 
-                        configurator.onInitialized((instance) => {
-                            const { navigator } = navigation;
-                            const currentContextId = context.currentContext?.id;
-                            if (!this._resolveContextIdFromUrl() && currentContextId) {
-                                navigator.replace(`apps/${app.appKey}/${currentContextId}`);
+                        configurator.onInitialized(async (instance) => {
+                            /** remove context from url if no context is presented */
+                            if (!instance.context.currentContext) {
+                                const { contextId } = appUrlResolver;
+                                console.debug(
+                                    'LegacyContextManager.onInitialized',
+                                    'application missing context',
+                                    contextId
+                                        ? `setting context from url [${contextId}]`
+                                        : 'no context found in url'
+                                );
+                                if (contextId) {
+                                    await instance.context.setCurrentContextByIdAsync(contextId);
+                                }
+                            }
+                            if (context.currentContext) {
+                                // TODO - is it needed, should be fetch by current context?
+                                //navigator.replace(buildUrl(context.currentContext));
                             }
 
                             instance.context.currentContext$
                                 .pipe(
                                     pairwise(),
-                                    map(([previous, next]) => ({
-                                        previousId: previous?.id,
-                                        nextId: next?.id,
-                                        urlId: this._resolveContextIdFromUrl(),
-                                    })),
                                     // TODO might not needed 🤷
                                     observeOn(asyncScheduler)
                                 )
                                 .subscribe({
-                                    next: (data) => {
-                                        const { previousId, nextId, urlId } = data;
+                                    next: ([previous, next]) => {
+                                        const url = appUrlResolver.buildLocation(next);
                                         console.debug(
                                             'LegacyContextManager.instance.context.currentContext$',
+                                            url,
                                             app,
-                                            data
+                                            { previous, next }
                                         );
-                                        if (nextId) {
-                                            if (urlId) {
-                                                navigator.replace(
-                                                    navigator.location.pathname.replace(
-                                                        urlId,
-                                                        nextId
-                                                    )
-                                                );
-                                            } else {
-                                                navigator.replace(`apps/${app.appKey}/${nextId}`);
-                                            }
-                                        } else {
-                                            if (previousId) {
-                                                this._clearContextFromLocalStorage();
-                                            }
-                                            navigator.replace(`apps/${app.appKey}`);
+                                        if (!next && previous) {
+                                            this._clearContextFromLocalStorage();
                                         }
+                                        appUrlResolver.navigate(url);
                                     },
                                     error: (err) =>
                                         console.error(
@@ -126,7 +181,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                             err
                                         ),
                                     complete: () =>
-                                        console.error(
+                                        console.debug(
                                             'LegacyContextManager.instance.context.currentContext$',
                                             'subscription closed',
                                             app
@@ -141,26 +196,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                 }
             }
         });
-    }
-
-    protected _resolveContextIdFromUrl(): string | undefined {
-        const [, appUrl] = window.location.pathname.match(/apps\/(?:\w|-)+\/(.*)/) ?? [];
-        if (appUrl) {
-            console.debug(
-                'LegacyContextManager::_resolveContextIdFromUrl',
-                'failed to resolve context from url',
-                window.location.pathname
-            );
-            return;
-        }
-        const [contextUrlId] =
-            appUrl.match(/^\d+$/) ?? appUrl.match(/^(?:[a-z0-9]+-){4}[a-z0-9]+$/) ?? [];
-
-        console.debug(
-            'LegacyContextManager::_resolveContextIdFromUrl',
-            `resolved context id [${contextUrlId}] from ${window.location.pathname}`
-        );
-        return contextUrlId;
     }
 
     protected _clearContextFromLocalStorage(): void {
