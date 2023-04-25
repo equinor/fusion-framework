@@ -75,9 +75,19 @@ export class ContextProvider implements IContextProvider {
     constructor(args: {
         config: ContextModuleConfig;
         event?: ModuleType<EventModule>;
+        /** @deprecated use  ContextProvider.connectParentContext */
         parentContext?: IContextProvider;
     }) {
-        const { config, event, parentContext } = args;
+        const { config, event } = args;
+
+        if (args.parentContext) {
+            console.warn(
+                '@deprecated',
+                'parentContext as arg is deprecated, use ContextProvider.connectParentContext'
+            );
+        }
+
+        this.#event = event;
 
         config.resolveContext && (this.resolveContext = config.resolveContext?.bind(this));
         config.validateContext && (this.validateContext = config.validateContext?.bind(this));
@@ -99,25 +109,21 @@ export class ContextProvider implements IContextProvider {
                 filter: { type: args.type },
             }));
 
-        if (event) {
-            this.#event = event;
-
-            /** this might be moved to client, to await prevention of event */
+        if (this.#event) {
             this.#subscriptions.add(
                 this.#contextClient.currentContext$
                     .pipe(pairwise())
                     .subscribe(([previous, next]) => {
-                        event.dispatchEvent('onCurrentContextChanged', {
+                        this.#event?.dispatchEvent('onCurrentContextChanged', {
                             source: this,
                             canBubble: true,
                             detail: { previous, next },
                         });
                     })
             );
-
             this.#subscriptions.add(
                 /** observe event from child modules */
-                event.addEventListener('onCurrentContextChanged', (e) => {
+                this.#event.addEventListener('onCurrentContextChanged', (e) => {
                     /** loop prevention */
                     if (e.source !== this) {
                         this.currentContext = e.detail.next;
@@ -125,44 +131,58 @@ export class ContextProvider implements IContextProvider {
                 })
             );
         }
+    }
 
-        if (parentContext) {
-            this.#subscriptions.add(
-                parentContext.contextClient.currentContext$
-                    .pipe(
-                        switchMap(async (next) => {
-                            if (next) {
-                                const onParentContextChanged = await this.#event?.dispatchEvent(
-                                    'onParentContextChanged',
-                                    {
-                                        source: this,
-                                        detail: next,
-                                        cancelable: true,
-                                    }
-                                );
-                                return { next, canceled: onParentContextChanged?.canceled };
-                            }
-                            return { next };
-                        }),
-                        filter((x) => !x.canceled),
-                        map(({ next }) => next)
-                    )
-                    .subscribe(async (next) => {
-                        if (next) {
-                            try {
-                                await this.setCurrentContext(next, {
-                                    validate: true,
-                                    resolve: true,
-                                });
-                            } catch (err) {
-                                console.warn('ContextProvider::onParentContextChanged', err);
-                            }
-                        } else {
-                            this.clearCurrentContext();
+    public async connectParentContext(
+        provider: IContextProvider,
+        opt?: { setCurrent?: boolean }
+    ): Promise<Subscription> {
+        const parentContext$ = provider.currentContext$.pipe(
+            filter((next) => this.currentContext !== next),
+            switchMap(async (next) => {
+                if (next) {
+                    const onParentContextChanged = await this.#event?.dispatchEvent(
+                        'onParentContextChanged',
+                        {
+                            source: this,
+                            detail: next,
+                            cancelable: true,
                         }
-                    })
-            );
+                    );
+                    return { next, canceled: onParentContextChanged?.canceled };
+                }
+                return { next };
+            }),
+            filter((x) => !x.canceled),
+            map(({ next }) => next)
+        );
+
+        // TODO cancel set context on dispose
+        const subscription = parentContext$.subscribe(async (next) => {
+            if (next) {
+                try {
+                    await this.setCurrentContext(next, {
+                        validate: true,
+                        resolve: true,
+                    });
+                } catch (err) {
+                    console.warn('ContextProvider::onParentContextChanged', err);
+                }
+            } else {
+                this.clearCurrentContext();
+            }
+        });
+
+        this.#subscriptions.add(subscription);
+
+        if (opt?.setCurrent && provider.currentContext) {
+            await this.setCurrentContext(provider.currentContext, {
+                validate: true,
+                resolve: true,
+            });
         }
+
+        return subscription;
     }
 
     public async setCurrentContext(

@@ -23,8 +23,21 @@ export const module: ContextModule = {
     initialize: async (args) => {
         const config = await (args.config as ContextModuleConfigurator).createConfig(args);
         const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
-        const parentContext = (args.ref as ModulesInstance<[ContextModule]>)?.context;
-        return new ContextProvider({ config, event, parentContext });
+        const parentProvider = (args.ref as ModulesInstance<[ContextModule]>)?.context;
+        const provider = new ContextProvider({ config, event, parentContext: parentProvider });
+
+        // TODO add option for skipping this step
+        if (parentProvider) {
+            try {
+                await provider.connectParentContext(parentProvider, {
+                    setCurrent: !config.skipInitialContext,
+                });
+            } catch (err) {
+                console.warn('provider.connectParentContext', 'failed to set parent context', err);
+            }
+        }
+
+        return provider;
     },
 
     dispose: (args) => {

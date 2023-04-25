@@ -65,6 +65,10 @@ export class ContextConfigBuilder<
         this.config.resolveContext = fn;
     }
 
+    setSkipInitialContext(skip: ContextModuleConfig['skipInitialContext']) {
+        this.config.skipInitialContext = skip;
+    }
+
     setContextClient(
         client: {
             get:
