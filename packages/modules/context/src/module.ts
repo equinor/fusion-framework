@@ -29,7 +29,7 @@ export const module: ContextModule = {
         // TODO add option for skipping this step
         if (parentProvider) {
             try {
-                await provider.connectParentContext(parentProvider, {
+                await provider.connectParentContextAsync(parentProvider, {
                     setCurrent: !config.skipInitialContext,
                 });
             } catch (err) {

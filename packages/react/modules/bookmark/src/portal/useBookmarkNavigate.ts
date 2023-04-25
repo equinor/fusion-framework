@@ -41,7 +41,7 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
 
             if (bookmarkContext) {
                 context.contextClient.currentContext?.id !== bookmarkContext.id &&
-                    context.contextClient.setCurrentContext(bookmarkContext.id);
+                    context.setCurrentContextByIdAsync(bookmarkContext.id);
             }
         });
         return sub;
