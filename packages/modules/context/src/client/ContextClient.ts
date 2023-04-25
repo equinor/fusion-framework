@@ -47,6 +47,10 @@ export class ContextClient extends Observable<ContextItem> {
     public resolveContext(id: string): Observable<ContextItem> {
         return this.#client.query({ id }).pipe(map((x) => x.value));
     }
+
+    public dispose(): void {
+        this.#currentContext$.complete();
+    }
 }
 
 export default ContextClient;
