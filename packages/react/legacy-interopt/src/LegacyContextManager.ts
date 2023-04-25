@@ -197,12 +197,13 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                     observeOn(asyncScheduler)
                                 )
                                 .subscribe({
-                                    next: ([previous, next]) => {
+                                    next: async ([previous, next]) => {
                                         console.debug(
                                             'LegacyContextManager.instance.context.currentContext$',
                                             'context changed',
                                             { app, previous, next }
                                         );
+                                        await this.setAsync('current', next);
                                         appUrlResolver.navigateContext(next);
                                     },
                                     error: (err) =>
