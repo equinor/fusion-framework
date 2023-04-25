@@ -21,6 +21,9 @@ export interface ContextModuleConfig {
     contextType?: string[];
     contextFilter?: ContextFilterFn;
 
+    /** set initial context from parent, will await resolve */
+    skipInitialContext?: boolean;
+
     /**
      * Method for generating context query parameters.
      */
