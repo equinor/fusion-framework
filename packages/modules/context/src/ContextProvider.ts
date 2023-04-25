@@ -308,6 +308,7 @@ export class ContextProvider implements IContextProvider {
 
     dispose() {
         this.#subscriptions.unsubscribe();
+        this.#contextClient.dispose();
     }
 }
 
