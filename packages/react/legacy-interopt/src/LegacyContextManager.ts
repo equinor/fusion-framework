@@ -1,20 +1,31 @@
-import { ReliableDictionary, EventHub, LocalStorageProvider, Context } from '@equinor/fusion';
-import type { FeatureLogger, ContextManifest } from '@equinor/fusion';
+import { asyncScheduler, filter, observeOn, pairwise, scan, tap } from 'rxjs';
+
+import {
+    ReliableDictionary,
+    EventHub,
+    LocalStorageProvider,
+    Context,
+    type FeatureLogger,
+    type ContextManifest,
+} from '@equinor/fusion';
 
 import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 
 import { Fusion } from '@equinor/fusion-framework-react';
+
 import { configureModules } from '@equinor/fusion-framework-app';
-import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
+
+import { type AppManifest, type AppModule } from '@equinor/fusion-framework-module-app';
+
 import {
     enableContext,
-    ContextItem,
-    ContextModule,
+    type ContextItem,
+    type ContextModule,
 } from '@equinor/fusion-framework-module-context';
 
-import { asyncScheduler, filter, observeOn, pairwise, scan, tap } from 'rxjs';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { LOCAL_STORAGE_CURRENT_CONTEXT_KEY } from 'static';
+import { type NavigationModule } from '@equinor/fusion-framework-module-navigation';
+
+import { LOCAL_STORAGE_CURRENT_CONTEXT_KEY } from './static';
 
 type AppManifestLegacy = AppManifest & {
     context?: ContextManifest;
