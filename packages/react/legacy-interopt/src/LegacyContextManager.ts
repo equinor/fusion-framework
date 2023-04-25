@@ -62,8 +62,9 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
                 this.setAsync('history', values);
 
+                this.setAsync('current', currentContext ?? null);
+
                 if (currentContext) {
-                    this.setAsync('current', currentContext);
                     args.featureLogger.log('Context selected', '0.0.1', {
                         selectedContext: currentContext,
                         // why do we need and array of all contexts?
@@ -76,9 +77,8 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
             if (app) {
                 const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
                 if (manifest?.context) {
-                    const { navigator } = navigation;
                     const appUrlResolver = {
-                        root: `apps/${app.appKey}`,
+                        root: `/apps/${app.appKey}`,
                         get location() {
                             return navigation.navigator.location;
                         },
@@ -107,6 +107,20 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                             navigation.navigator.replace(
                                 [this.root, path].filter((x) => !!x).join('/')
                             );
+                        },
+                        navigateContext(context?: ContextItem) {
+                            // TODO maybe more sophisticated 🤷
+                            const shouldNavigate = this.contextId !== context?.id;
+
+                            console.debug(
+                                'LegacyContextManager.appUrlResolver.navigateContext',
+                                shouldNavigate ? 'replacing url' : 'context matched url',
+                                context
+                            );
+
+                            if (shouldNavigate) {
+                                this.navigate(this.buildLocation(context));
+                            }
                         },
                         buildPathname(context?: ContextItem) {
                             if (manifest.context?.buildUrl) {
@@ -147,8 +161,11 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         });
 
                         configurator.onInitialized(async (instance) => {
-                            /** remove context from url if no context is presented */
-                            if (!instance.context.currentContext) {
+                            const { currentContext: initialContext } = instance.context;
+                            if (initialContext) {
+                                appUrlResolver.navigateContext(initialContext);
+                            } else {
+                                /** remove context from url if no context is presented */
                                 const { contextId } = appUrlResolver;
                                 console.debug(
                                     'LegacyContextManager.onInitialized',
@@ -159,11 +176,14 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 );
                                 if (contextId) {
                                     await instance.context.setCurrentContextByIdAsync(contextId);
+                                } else {
+                                    const current = await this.getAsync('current');
+                                    if (current) {
+                                        await instance.context.setCurrentContextByIdAsync(
+                                            current.id
+                                        );
+                                    }
                                 }
-                            }
-                            if (context.currentContext) {
-                                // TODO - is it needed, should be fetch by current context?
-                                //navigator.replace(buildUrl(context.currentContext));
                             }
 
                             instance.context.currentContext$
@@ -174,17 +194,12 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 )
                                 .subscribe({
                                     next: ([previous, next]) => {
-                                        const url = appUrlResolver.buildLocation(next);
                                         console.debug(
                                             'LegacyContextManager.instance.context.currentContext$',
-                                            url,
-                                            app,
-                                            { previous, next }
+                                            'context changed',
+                                            { app, previous, next }
                                         );
-                                        if (!next && previous) {
-                                            this._clearContextFromLocalStorage();
-                                        }
-                                        appUrlResolver.navigate(url);
+                                        appUrlResolver.navigateContext(next);
                                     },
                                     error: (err) =>
                                         console.error(
@@ -207,42 +222,6 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                 }
             }
         });
-    }
-
-    protected _clearContextFromLocalStorage(): void {
-        const storage = window.localStorage.getItem(LOCAL_STORAGE_CURRENT_CONTEXT_KEY);
-        if (!storage) {
-            console.debug(
-                'LegacyContextManager::_clearContextFromLocalStorage',
-                `no local storage for ${LOCAL_STORAGE_CURRENT_CONTEXT_KEY}`
-            );
-            return;
-        }
-
-        const contextData = JSON.parse(storage);
-        if (!contextData) {
-            console.debug(
-                'LegacyContextManager::_clearContextFromLocalStorage',
-                'no data for context found in local storage'
-            );
-            return;
-        }
-
-        if (!contextData.current) {
-            console.debug(
-                'LegacyContextManager::_clearContextFromLocalStorage',
-                'no current context found in local storage'
-            );
-            return;
-        }
-
-        delete contextData.current;
-        const setStorage = JSON.stringify(contextData);
-        window.localStorage.setItem(LOCAL_STORAGE_CURRENT_CONTEXT_KEY, setStorage);
-        console.debug(
-            'LegacyContextManager::_clearContextFromLocalStorage',
-            'current context removed from local storage'
-        );
     }
 
     public getCurrentContext(): ContextItem | undefined {

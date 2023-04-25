@@ -138,15 +138,13 @@ export class ContextProvider implements IContextProvider {
 
         if (this.#event) {
             this.#subscriptions.add(
-                this.#contextClient.currentContext$
-                    .pipe(pairwise())
-                    .subscribe(([previous, next]) => {
-                        this.#event?.dispatchEvent('onCurrentContextChanged', {
-                            source: this,
-                            canBubble: true,
-                            detail: { previous, next },
-                        });
-                    })
+                this.currentContext$.pipe(pairwise()).subscribe(([previous, next]) => {
+                    this.#event?.dispatchEvent('onCurrentContextChanged', {
+                        source: this,
+                        canBubble: true,
+                        detail: { previous, next },
+                    });
+                })
             );
             this.#subscriptions.add(
                 /** observe event from child modules */
