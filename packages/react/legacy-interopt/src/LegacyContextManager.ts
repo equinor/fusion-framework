@@ -105,7 +105,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         },
                         navigate(path?: string): void {
                             navigation.navigator.replace(
-                                [this.root, path].filter((x) => !!x).join('/')
+                                [this.root, path?.replace(/^[/]/, '')].filter((x) => !!x).join('/')
                             );
                         },
                         navigateContext(context?: ContextItem) {
@@ -123,24 +123,28 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                             }
                         },
                         buildPathname(context?: ContextItem) {
+                            const suggestedUrl = (() => {
+                                const { contextId, pathname } = this;
+                                if (contextId && context) {
+                                    return pathname.replace(contextId, context.id);
+                                }
+                                return [this.root, context?.id].filter((x) => !!x).join('/');
+                            })();
+
                             if (manifest.context?.buildUrl) {
                                 return manifest.context.buildUrl(
                                     (context as unknown as Context) ?? null,
-                                    this.pathname
+                                    suggestedUrl
                                 );
                             }
 
                             console.warn(
                                 'LegacyContextManager.appUrlResolver.buildPathname',
-                                'legacy application with manifest should have method [buildUrl]'
+                                'legacy application with manifest should have method [buildUrl]',
+                                suggestedUrl
                             );
 
-                            const { contextId, pathname } = this;
-                            if (contextId && context) {
-                                return pathname.replace(contextId, context.id);
-                            } else {
-                                return [this.pathname, context?.id].filter((x) => !!x).join('/');
-                            }
+                            return suggestedUrl;
                         },
                         buildLocation(context?: ContextItem) {
                             return [this.buildPathname(context), this.location.search]
