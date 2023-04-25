@@ -6,19 +6,25 @@ import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 import { Fusion } from '@equinor/fusion-framework-react';
 import { configureModules } from '@equinor/fusion-framework-app';
 import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
-import { enableContext, ContextItem } from '@equinor/fusion-framework-module-context';
+import {
+    enableContext,
+    ContextItem,
+    ContextModule,
+} from '@equinor/fusion-framework-module-context';
 
-import { filter, scan, tap } from 'rxjs';
+import { asyncScheduler, filter, map, observeOn, pairwise, scan, tap } from 'rxjs';
+import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import { LOCAL_STORAGE_CURRENT_CONTEXT_KEY } from 'static';
 
 type AppManifestLegacy = AppManifest & {
     context?: ContextManifest;
 };
 
 export class LegacyContextManager extends ReliableDictionary<ContextCache> {
-    #framework: Fusion<[AppModule]>;
+    #framework: Fusion<[AppModule, NavigationModule]>;
 
     constructor(args: {
-        framework: Fusion<[AppModule]>;
+        framework: Fusion<[AppModule, NavigationModule]>;
         // TODO - enable module-navigation
         history: History;
         featureLogger: FeatureLogger;
@@ -27,7 +33,9 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
         this.#framework = args.framework;
 
-        args.framework.modules.context.currentContext$
+        const { context, app, navigation } = args.framework.modules;
+
+        context.currentContext$
             .pipe(
                 tap((x) => args.featureLogger.setCurrentContext(x?.id ?? null, x?.title ?? null)),
                 filter((x): x is ContextItem => !!x),
@@ -53,11 +61,11 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                 }
             });
 
-        args.framework.modules.app.current$.subscribe((app) => {
+        app.current$.subscribe((app) => {
             if (app) {
                 const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
                 if (manifest?.context) {
-                    const initModules = configureModules((configurator) => {
+                    const initModules = configureModules<[ContextModule]>((configurator) => {
                         enableContext(configurator, async (builder) => {
                             // TODO - check build url and get context from url
                             manifest.context?.types &&
@@ -67,6 +75,38 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 // @ts-ignore
                                 builder.setContextFilter(manifest.context.filterContexts);
                         });
+
+                        configurator.onInitialized((instance) => {
+                            const { navigator } = navigation;
+                            const currentContextId = context.currentContext?.id;
+                            if (!this._resolveContextIdFromUrl() && currentContextId) {
+                                navigator.replace(`apps/${app.appKey}/${currentContextId}`);
+                            }
+
+                            instance.context.currentContext$
+                                .pipe(
+                                    pairwise(),
+                                    map(([previous, next]) => ({
+                                        previousId: previous?.id,
+                                        nextId: next?.id,
+                                        urlId: this._resolveContextIdFromUrl(),
+                                    })),
+                                    observeOn(asyncScheduler)
+                                )
+                                .subscribe(({ previousId, nextId, urlId }) => {
+                                    if (nextId) {
+                                        if (urlId) {
+                                            navigator.replace(
+                                                navigator.location.pathname.replace(urlId, nextId)
+                                            );
+                                        } else {
+                                            navigator.replace(`apps/${app.appKey}/${nextId}`);
+                                        }
+                                    } else if (previousId) {
+                                        this._clearContextFromLocalStorage();
+                                    }
+                                });
+                        });
                     });
                     initModules({
                         fusion: args.framework,
@@ -75,6 +115,62 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                 }
             }
         });
+    }
+
+    protected _resolveContextIdFromUrl(): string | undefined {
+        const [, appUrl] = window.location.pathname.match(/apps\/(?:\w|-)+\/(.*)/) ?? [];
+        if (appUrl) {
+            console.debug(
+                'LegacyContextManager::_resolveContextIdFromUrl',
+                'failed to resolve context from url',
+                window.location.pathname
+            );
+            return;
+        }
+        const [contextUrlId] =
+            appUrl.match(/^\d+$/) ?? appUrl.match(/^(?:[a-z0-9]+-){4}[a-z0-9]+$/) ?? [];
+
+        console.debug(
+            'LegacyContextManager::_resolveContextIdFromUrl',
+            `resolved context id [${contextUrlId}] from ${window.location.pathname}`
+        );
+        return contextUrlId;
+    }
+
+    protected _clearContextFromLocalStorage(): void {
+        const storage = window.localStorage.getItem(LOCAL_STORAGE_CURRENT_CONTEXT_KEY);
+        if (!storage) {
+            console.debug(
+                'LegacyContextManager::_clearContextFromLocalStorage',
+                `no local storage for ${LOCAL_STORAGE_CURRENT_CONTEXT_KEY}`
+            );
+            return;
+        }
+
+        const contextData = JSON.parse(storage);
+        if (!contextData) {
+            console.debug(
+                'LegacyContextManager::_clearContextFromLocalStorage',
+                'no data for context found in local storage'
+            );
+            return;
+        }
+
+        if (!contextData.current) {
+            console.debug(
+                'LegacyContextManager::_clearContextFromLocalStorage',
+                'no current context found in local storage'
+            );
+            return;
+        }
+
+        delete contextData.current;
+        const setStorage = JSON.stringify(contextData);
+        window.localStorage.setItem(LOCAL_STORAGE_CURRENT_CONTEXT_KEY, setStorage);
+        console.debug(
+            'LegacyContextManager::_clearContextFromLocalStorage',
+            'current context removed from local storage'
+        );
     }
 
     public getCurrentContext(): ContextItem | undefined {
