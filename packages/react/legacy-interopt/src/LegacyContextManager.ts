@@ -105,7 +105,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         },
                         navigate(path?: string): void {
                             navigation.navigator.replace(
-                                [this.root, path?.replace(/^[/]/, '')].filter((x) => !!x).join('/')
+                                [this.root, path?.replace(/^\//, '')].filter((x) => !!x).join('/')
                             );
                         },
                         navigateContext(context?: ContextItem) {
@@ -128,7 +128,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                                 if (contextId && context) {
                                     return pathname.replace(contextId, context.id);
                                 }
-                                return [this.root, context?.id].filter((x) => !!x).join('/');
+                                return context ? `/${context?.id}` : '/';
                             })();
 
                             if (manifest.context?.buildUrl) {
