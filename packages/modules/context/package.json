@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-context",
-    "version": "4.0.0-next.7",
+    "version": "4.0.0-next.8",
     "description": "",
     "main": "./dist/esm/index.js",
     "exports": {
@@ -37,7 +37,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "^3.0.0",
         "@equinor/fusion-framework-module-event": "^3.0.0",
-        "@equinor/fusion-framework-module-services": "^3.0.3",
+        "@equinor/fusion-framework-module-services": "^3.1.0-next.0",
         "rxjs": "^7.5.7"
     },
     "peerDependencies": {

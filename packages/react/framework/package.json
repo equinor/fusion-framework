@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react",
-    "version": "5.0.6-next.7",
+    "version": "5.0.6-next.8",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
@@ -47,8 +47,8 @@
         "directory": "packages/react/framework"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^7.0.6-next.7",
-        "@equinor/fusion-framework-react-module-context": "^6.0.0-next.7",
+        "@equinor/fusion-framework": "^7.0.6-next.8",
+        "@equinor/fusion-framework-react-module-context": "^6.0.0-next.8",
         "@equinor/fusion-framework-react-module-http": "^3.0.0",
         "rxjs": "^7.5.7"
     },
