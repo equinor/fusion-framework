@@ -33,6 +33,25 @@ type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
     createClient: ApiClientFactory<TClient>;
 };
 
+export class ApiProviderHttpError extends Error {
+    readonly type: ResponseType;
+    readonly status: number;
+    readonly statusText: string;
+    readonly json?: Promise<unknown>;
+
+    constructor(msg: string, response: Response, options?: ErrorOptions) {
+        super(msg, options);
+        this.type = response.type;
+        this.status = response.status;
+        this.statusText = response.statusText;
+        try {
+            this.json = response.json();
+        } catch (err) {
+            this.json = Promise.resolve({ err });
+        }
+    }
+}
+
 export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     implements IApiProvider<TClient>
 {
@@ -59,6 +78,11 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
         method: TMethod
     ): Promise<ContextApiClient<TMethod, TClient>> {
         const httpClient = await this._createClientFn('context');
+        httpClient.responseHandler.add('validate_api_request', (response) => {
+            if (!response.ok) {
+                throw new ApiProviderHttpError('ContextApiClient: response was not ok', response);
+            }
+        });
         return new ContextApiClient(httpClient, method);
     }
 }
