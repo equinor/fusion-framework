@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-bookmark-advanced",
-    "version": "4.0.6-next.5",
+    "version": "4.0.6-next.6",
     "description": "",
     "private": true,
     "type": "module",
@@ -12,8 +12,8 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^7.0.0-next.5",
-        "@equinor/fusion-framework-react-app": "^4.0.6-next.5",
+        "@equinor/fusion-framework-cli": "^7.0.0-next.6",
+        "@equinor/fusion-framework-react-app": "^4.0.6-next.6",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
