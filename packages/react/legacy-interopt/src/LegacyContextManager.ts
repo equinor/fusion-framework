@@ -25,8 +25,6 @@ import {
 
 import { type NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-import { LOCAL_STORAGE_CURRENT_CONTEXT_KEY } from './static';
-
 type AppManifestLegacy = AppManifest & {
     context?: ContextManifest;
 };
@@ -84,7 +82,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         },
                         get pathname() {
                             const { pathname } = this.location;
-                            return pathname.replace(this.root, '').replace(/^[/]/, '');
+                            return pathname.replace(this.root, '');
                         },
                         get contextId() {
                             const { pathname } = this;
