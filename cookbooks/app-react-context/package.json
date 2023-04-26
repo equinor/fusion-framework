@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-context",
-    "version": "4.0.6-next.6",
+    "version": "4.0.6-next.7",
     "description": "React application using framework context",
     "private": true,
     "type": "module",
@@ -12,9 +12,9 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@equinor/fusion-framework-cli": "^7.0.0-next.6",
-        "@equinor/fusion-framework-react-app": "^4.0.6-next.6",
-        "@equinor/fusion-framework-react-module-context": "^6.0.0-next.6",
+        "@equinor/fusion-framework-cli": "^7.0.0-next.7",
+        "@equinor/fusion-framework-react-app": "^4.0.6-next.7",
+        "@equinor/fusion-framework-react-module-context": "^6.0.0-next.7",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
