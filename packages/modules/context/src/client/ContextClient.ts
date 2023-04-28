@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, lastValueFrom, firstValueFrom } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import equal from 'fast-deep-equal';
@@ -56,6 +56,11 @@ export class ContextClient extends Observable<ContextItem> {
                 throw err;
             })
         );
+    }
+
+    public resolveContextAsync(id: string, opt?: { awaitResolve: boolean }): Promise<ContextItem> {
+        const fn = opt?.awaitResolve ? lastValueFrom : firstValueFrom;
+        return fn(this.resolveContext(id));
     }
 
     public dispose(): void {
