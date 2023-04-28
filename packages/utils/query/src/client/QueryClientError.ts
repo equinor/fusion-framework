@@ -9,6 +9,7 @@ export class QueryClientError extends Error {
         args: { message?: string; cause?: Error | unknown; request: QueueItem }
     ) {
         super(args.message, { cause: args.cause });
+        this.name = 'QueryClientError';
         this.request = args.request;
     }
 }
