@@ -36,6 +36,7 @@ export class ContextClient extends Observable<ContextItem> {
         if (typeof idOrItem === 'string') {
             // TODO - compare context
             this.resolveContext(idOrItem)
+                // TODO should this catch error?
                 .pipe(catchError(() => EMPTY))
                 .subscribe((value) => this.setCurrentContext(value));
             /** only add context if not match */
@@ -45,7 +46,16 @@ export class ContextClient extends Observable<ContextItem> {
     }
 
     public resolveContext(id: string): Observable<ContextItem> {
-        return this.#client.query({ id }).pipe(map((x) => x.value));
+        return this.#client.query({ id }).pipe(
+            map((x) => x.value),
+            // unwrap error
+            catchError((err) => {
+                if (err.cause) {
+                    throw err.cause;
+                }
+                throw err;
+            })
+        );
     }
 
     public dispose(): void {
