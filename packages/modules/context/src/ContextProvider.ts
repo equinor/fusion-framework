@@ -407,7 +407,15 @@ export class ContextProvider implements IContextProvider {
                 )
             );
         }
-        return this.#contextRelated.query(args).pipe(map(({ value }) => value));
+        return this.#contextRelated.query(args).pipe(
+            map(({ value }) => value),
+            catchError((err) => {
+                if (err.cause) {
+                    throw err.cause;
+                }
+                throw err;
+            })
+        );
     }
 
     public relatedContextsAsync(
