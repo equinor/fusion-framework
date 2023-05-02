@@ -158,12 +158,22 @@ export class ContextProvider implements IContextProvider {
         }
     }
 
-    public async connectParentContextAsync(
+    public connectParentContext(
         provider: IContextProvider,
-        opt?: { setCurrent?: boolean }
-    ): Promise<Subscription> {
+        opt?: { skipFirst: boolean }
+    ): Subscription {
         const parentContext$ = provider.currentContext$.pipe(
-            filter((next) => this.currentContext !== next),
+            filter((next, index) => {
+                if (opt?.skipFirst && index <= 1) {
+                    console.debug(
+                        'ContextProvider::connectParentContext',
+                        'skipping first item',
+                        next
+                    );
+                    return false;
+                }
+                return this.currentContext !== next;
+            }),
             switchMap(async (next) => {
                 if (next) {
                     const onParentContextChanged = await this.#event?.dispatchEvent(
@@ -206,29 +216,7 @@ export class ContextProvider implements IContextProvider {
 
         const subscription = parentContext$.subscribe();
         this.#subscriptions.add(subscription);
-
-        return new Promise((resolve, reject) => {
-            if (opt?.setCurrent && provider.currentContext) {
-                subscription.add(reject);
-                subscription.add(
-                    this.setCurrentContext(provider.currentContext, {
-                        validate: true,
-                        resolve: true,
-                    }).subscribe({
-                        error: (err) => {
-                            subscription.remove(reject);
-                            reject(err);
-                        },
-                        complete: () => {
-                            subscription.remove(reject);
-                            resolve(subscription);
-                        },
-                    })
-                );
-            } else {
-                return resolve(subscription);
-            }
-        });
+        return subscription;
     }
 
     public setCurrentContextById(id: string): Observable<ContextItem<Record<string, unknown>>> {
