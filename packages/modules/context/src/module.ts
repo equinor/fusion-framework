@@ -2,9 +2,12 @@ import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
 
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
+import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
 import { IContextProvider, ContextProvider } from './ContextProvider';
+import { catchError, EMPTY, from, Observable, switchMap, filter, Subscription } from 'rxjs';
+import { ContextItem } from 'types';
 
 export type ContextModuleKey = 'context';
 
@@ -14,34 +17,84 @@ export type ContextModule = Module<
     ContextModuleKey,
     IContextProvider,
     IContextModuleConfigurator,
-    [ServicesModule, EventModule]
+    [ServicesModule, EventModule, NavigationModule]
 >;
 
 export const module: ContextModule = {
     name: moduleKey,
     configure: () => new ContextModuleConfigurator(),
-    initialize: async (args) => {
+    initialize: async function (args) {
         const config = await (args.config as ContextModuleConfigurator).createConfig(args);
         const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
         const parentProvider = (args.ref as ModulesInstance<[ContextModule]>)?.context;
         const provider = new ContextProvider({ config, event, parentContext: parentProvider });
 
-        // TODO add option for skipping this step
-        if (parentProvider) {
-            try {
-                await provider.connectParentContextAsync(parentProvider, {
-                    setCurrent: !config.skipInitialContext,
-                });
-            } catch (err) {
-                console.warn('provider.connectParentContext', 'failed to set parent context', err);
-            }
-        }
+        const subscription = new Subscription(() => provider.dispose());
+
+        this.postInitialize = (args) =>
+            new Observable((subscriber) => {
+                const resolveInitialContext$ = config.resolveInitialContext
+                    ? from(config.resolveInitialContext(args)).pipe(
+                          filter((item): item is ContextItem => !!item),
+                          switchMap((item) =>
+                              args.modules.context.setCurrentContext(item, {
+                                  validate: true,
+                                  resolve: true,
+                              })
+                          )
+                      )
+                    : EMPTY;
+
+                subscriber.add(
+                    resolveInitialContext$
+                        .pipe(
+                            catchError((err) => {
+                                console.warn(
+                                    'ContextModule.postInitialize',
+                                    'failed to resolve initial context',
+                                    err
+                                );
+                                return EMPTY;
+                            })
+                        )
+                        .subscribe({
+                            next: (item) => {
+                                console.debug(
+                                    'ContextModule.postInitialize',
+                                    `initial context was resolved to [${item.id}]`,
+                                    item
+                                );
+                            },
+                            complete: () => {
+                                provider.connectParentContext(parentProvider, { skipFirst: true });
+                                subscriber.complete();
+                            },
+                        })
+                );
+
+                if (args.modules.navigation) {
+                    subscription.add(
+                        provider.currentContext$.subscribe((item) => {
+                            if (!item) {
+                                return args.modules.navigation.replace('/');
+                            }
+                            const { path } = args.modules.navigation;
+                            const partial = path.pathname.split('/') ?? [];
+                            if (partial[0] !== item.id) {
+                                partial[0] = item?.id;
+                                args.modules.navigation.replace({
+                                    ...path,
+                                    pathname: partial.join('/'),
+                                });
+                            }
+                        })
+                    );
+                }
+            });
+
+        this.dispose = () => subscription.unsubscribe();
 
         return provider;
-    },
-
-    dispose: (args) => {
-        (args.instance as ContextProvider).dispose();
     },
 };
 
