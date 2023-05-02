@@ -5,13 +5,17 @@
     "main": "./dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./utils": "./dist/esm/utils/index.js"
     },
     "types": "index.d.ts",
     "typesVersions": {
         ">=4.2": {
             "*": [
                 "dist/types/*"
+            ],
+            "utils": [
+                "dist/types/utils/index.d.ts"
             ]
         }
     },
@@ -37,6 +41,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "^3.0.0",
         "@equinor/fusion-framework-module-event": "^3.0.0",
+        "@equinor/fusion-framework-module-navigation": "^2.0.1",
         "@equinor/fusion-framework-module-services": "^3.1.0-next.3",
         "rxjs": "^7.5.7"
     },
