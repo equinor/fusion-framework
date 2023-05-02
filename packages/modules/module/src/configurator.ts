@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BehaviorSubject, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
-import { filter, map, mergeMap, scan, timeout } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
+import { catchError, filter, map, mergeMap, scan, tap, timeout } from 'rxjs/operators';
 
 import { IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
 
@@ -285,35 +285,43 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         ref?: R
     ) {
         const { modules, logger, _afterInit: afterInit } = this;
-        /** call all added post config hooks  */
-        await Promise.allSettled(
-            modules
-                .filter((x) => !!x.postInitialize)
-                .map(async (module) => {
-                    try {
-                        logger.debug(
-                            `🚀📌 post initializing moule ${logger.formatModuleName(module)}`
-                        );
-                        await module.postInitialize?.({
-                            ref,
-                            modules: instance,
-                            instance:
-                                instance[
-                                    module.name as keyof ModulesInstanceType<
-                                        CombinedModules<T, TModules>
-                                    >
-                                ],
-                        });
+
+        const postInitialize$ = from(modules).pipe(
+            filter((module): module is Required<AnyModule> => !!module.postInitialize),
+            tap((module) =>
+                logger.debug(`🚀📌 post initializing moule ${logger.formatModuleName(module)}`)
+            ),
+            mergeMap((module) =>
+                from(
+                    module.postInitialize({
+                        ref,
+                        modules: instance,
+                        instance:
+                            instance[
+                                module.name as keyof ModulesInstanceType<
+                                    CombinedModules<T, TModules>
+                                >
+                            ],
+                    })
+                ).pipe(
+                    tap(() => {
                         logger.debug(
                             `🚀📌 post initialized moule ${logger.formatModuleName(module)}`
                         );
-                    } catch (err) {
+                    }),
+                    catchError((err) => {
                         logger.warn(
-                            `🚀📌 post initialize failed moule ${logger.formatModuleName(module)}`
+                            `🚀📌 post initialize failed moule ${logger.formatModuleName(module)}`,
+                            err
                         );
-                    }
-                })
+                        return EMPTY;
+                    })
+                )
+            )
         );
+
+        /** call all added post config hooks  */
+        await lastValueFrom(postInitialize$);
 
         if (afterInit.length) {
             try {
