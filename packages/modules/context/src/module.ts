@@ -1,3 +1,5 @@
+import { catchError, EMPTY, from, Observable, switchMap, filter, Subscription } from 'rxjs';
+
 import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
 
 import { EventModule } from '@equinor/fusion-framework-module-event';
@@ -6,7 +8,6 @@ import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
 import { IContextProvider, ContextProvider } from './ContextProvider';
-import { catchError, EMPTY, from, Observable, switchMap, filter, Subscription } from 'rxjs';
 import { ContextItem } from 'types';
 
 export type ContextModuleKey = 'context';
@@ -61,7 +62,7 @@ export const module: ContextModule = {
                             next: (item) => {
                                 console.debug(
                                     'ContextModule.postInitialize',
-                                    `initial context was resolved to [${item.id}]`,
+                                    `initial context was resolved to [${item ? item.id : 'none'}]`,
                                     item
                                 );
                             },
@@ -71,25 +72,6 @@ export const module: ContextModule = {
                             },
                         })
                 );
-
-                if (args.modules.navigation) {
-                    subscription.add(
-                        provider.currentContext$.subscribe((item) => {
-                            if (!item) {
-                                return args.modules.navigation.replace('/');
-                            }
-                            const { path } = args.modules.navigation;
-                            const partial = path.pathname.split('/') ?? [];
-                            if (partial[0] !== item.id) {
-                                partial[0] = item?.id;
-                                args.modules.navigation.replace({
-                                    ...path,
-                                    pathname: partial.join('/'),
-                                });
-                            }
-                        })
-                    );
-                }
             });
 
         this.dispose = () => subscription.unsubscribe();
