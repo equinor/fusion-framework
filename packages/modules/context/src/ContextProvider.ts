@@ -31,8 +31,8 @@ export interface IContextProvider {
     /** DANGER */
     readonly queryClient: Query<ContextItem[], QueryContextParameters>;
 
-    readonly currentContext$: Observable<ContextItem | undefined>;
-    currentContext: ContextItem | undefined;
+    readonly currentContext$: Observable<ContextItem | null | undefined>;
+    currentContext: ContextItem | null | undefined;
     queryContext(search: string): Observable<Array<ContextItem>>;
     queryContextAsync(search: string): Promise<Array<ContextItem>>;
     validateContext(item: ContextItem<Record<string, unknown>>): boolean;
@@ -50,14 +50,14 @@ export interface IContextProvider {
     setCurrentContextByIdAsync(id: string): Promise<ContextItem<Record<string, unknown>>>;
 
     setCurrentContext(
-        context: ContextItem<Record<string, unknown>>,
+        context: ContextItem<Record<string, unknown>> | null,
         opt?: { validate?: boolean; resolve?: boolean }
-    ): Observable<ContextItem<Record<string, unknown>>>;
+    ): Observable<ContextItem<Record<string, unknown>> | null>;
 
     setCurrentContextAsync(
-        context: ContextItem<Record<string, unknown>>,
+        context: ContextItem<Record<string, unknown>> | null,
         opt?: { validate?: boolean; resolve?: boolean }
-    ): Promise<ContextItem<Record<string, unknown>>>;
+    ): Promise<ContextItem<Record<string, unknown>> | null>;
 }
 
 export class ContextProvider implements IContextProvider {
@@ -81,22 +81,25 @@ export class ContextProvider implements IContextProvider {
         return this.#contextQuery;
     }
 
-    get currentContext$(): Observable<ContextItem | undefined> {
+    get currentContext$(): Observable<ContextItem | null | undefined> {
         return this.#contextClient.currentContext$;
     }
 
-    get currentContext(): ContextItem | undefined {
+    get currentContext(): ContextItem | undefined | null {
         return this.#contextClient.currentContext;
     }
 
     /** @deprecated do not use, will be removed */
-    set currentContext(context: ContextItem | undefined) {
+    set currentContext(context: ContextItem | null | undefined) {
         console.warn(
             '@deprecated',
             'ContextProvider.currentContext',
             'use setCurrentContextById|setCurrentContext|clearCurrentContext'
         );
-        context ? this.setCurrentContextAsync(context) : this.clearCurrentContext();
+        if (context === undefined) {
+            throw Error('not allowed to set current context as undefined undefined!');
+        }
+        this.setCurrentContextAsync(context);
     }
 
     constructor(args: {
@@ -150,8 +153,8 @@ export class ContextProvider implements IContextProvider {
                 /** observe event from child modules */
                 this.#event.addEventListener('onCurrentContextChanged', (e) => {
                     /** loop prevention */
-                    if (e.source !== this) {
-                        this.currentContext = e.detail.next;
+                    if (e.source !== this && e.detail.next !== undefined) {
+                        this.setCurrentContext(e.detail.next);
                     }
                 })
             );
@@ -224,7 +227,10 @@ export class ContextProvider implements IContextProvider {
             try {
                 this.#contextClient
                     .resolveContext(id)
-                    .pipe(switchMap((item) => this.setCurrentContext(item)))
+                    .pipe(
+                        filter((item): item is ContextItem => !!item),
+                        switchMap((item) => this.setCurrentContext(item))
+                    )
                     .subscribe(subscriber);
             } catch (err) {
                 subscriber.error(err);
@@ -236,16 +242,16 @@ export class ContextProvider implements IContextProvider {
         return firstValueFrom(this.setCurrentContextById(id));
     }
 
-    public setCurrentContext(
-        context: ContextItem<Record<string, unknown>>,
+    public setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
         opt?: { validate?: boolean; resolve?: boolean }
-    ): Observable<ContextItem<Record<string, unknown>>> {
+    ): Observable<T> {
         return new Observable((subscriber) => {
             if (context === this.currentContext) {
                 subscriber.next(context);
                 return subscriber.complete();
             }
-            if (opt?.validate && !this.validateContext(context)) {
+            if (context && opt?.validate && !this.validateContext(context)) {
                 if (!opt.resolve) {
                     /** cannot resolve context, and provided is invalid  */
                     this.#event?.dispatchEvent('onSetContextValidationFailed', {
@@ -297,7 +303,9 @@ export class ContextProvider implements IContextProvider {
                                 return resolved;
                             }),
                             /** recursive set current context without validation and resolve */
-                            switchMap((resolved) => this.setCurrentContext(resolved))
+                            switchMap((resolved) =>
+                                this.setCurrentContext(resolved as unknown as T)
+                            )
                         )
                         .subscribe(subscriber);
                 }
@@ -321,17 +329,17 @@ export class ContextProvider implements IContextProvider {
                     })
                 )
                 .subscribe((context) => {
-                    this.#contextClient.setCurrentContext(context);
+                    this.#contextClient.setCurrentContext(context ?? null);
                     subscriber.next(context);
                     subscriber.complete();
                 });
         });
     }
 
-    public async setCurrentContextAsync(
-        context: ContextItem<Record<string, unknown>>,
+    public async setCurrentContextAsync<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
         opt?: { validate?: boolean; resolve?: boolean }
-    ): Promise<ContextItem<Record<string, unknown>>> {
+    ): Promise<T> {
         return firstValueFrom(this.setCurrentContext(context, opt));
     }
 
@@ -413,7 +421,7 @@ export class ContextProvider implements IContextProvider {
     }
 
     public clearCurrentContext() {
-        this.#contextClient.setCurrentContext(undefined);
+        this.setCurrentContextAsync(null);
     }
 
     dispose() {
@@ -430,7 +438,7 @@ declare module '@equinor/fusion-framework-module-event' {
         onCurrentContextChange: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    context: ContextItem | undefined;
+                    context: ContextItem | null;
                 },
                 IContextProvider
             >
@@ -439,8 +447,8 @@ declare module '@equinor/fusion-framework-module-event' {
         onCurrentContextChanged: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    next: ContextItem | undefined;
-                    previous: ContextItem | undefined;
+                    next: ContextItem | null;
+                    previous?: ContextItem | null;
                 },
                 IContextProvider
             >
@@ -448,7 +456,7 @@ declare module '@equinor/fusion-framework-module-event' {
         onParentContextChanged: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    context: ContextItem | undefined;
+                    context: ContextItem | null;
                 },
                 IContextProvider
             >

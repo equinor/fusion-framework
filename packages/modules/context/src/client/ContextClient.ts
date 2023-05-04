@@ -9,16 +9,16 @@ import { ContextItem } from '../types';
 
 export type GetContextParameters = { id: string };
 
-export class ContextClient extends Observable<ContextItem> {
+export class ContextClient extends Observable<ContextItem | null> {
     #client: Query<ContextItem, { id: string }>;
     /** might change to reactive state, for comparing state with reducer */
-    #currentContext$: BehaviorSubject<ContextItem | undefined>;
+    #currentContext$: BehaviorSubject<ContextItem | null | undefined>;
 
-    get currentContext(): ContextItem | undefined {
+    get currentContext(): ContextItem | null | undefined {
         return this.#currentContext$.value;
     }
 
-    get currentContext$(): Observable<ContextItem | undefined> {
+    get currentContext$(): Observable<ContextItem | null | undefined> {
         return this.#currentContext$.asObservable();
     }
 
@@ -29,10 +29,10 @@ export class ContextClient extends Observable<ContextItem> {
     constructor(options: QueryCtorOptions<ContextItem, GetContextParameters>) {
         super((observer) => this.#currentContext$.subscribe(observer));
         this.#client = new Query(options);
-        this.#currentContext$ = new BehaviorSubject<ContextItem | undefined>(undefined);
+        this.#currentContext$ = new BehaviorSubject<ContextItem | null | undefined>(undefined);
     }
 
-    public setCurrentContext(idOrItem?: string | ContextItem) {
+    public setCurrentContext(idOrItem?: string | ContextItem | null) {
         if (typeof idOrItem === 'string') {
             // TODO - compare context
             this.resolveContext(idOrItem)
