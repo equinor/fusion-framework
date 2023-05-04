@@ -25,6 +25,8 @@ export interface INavigationProvider extends Observable<{ action: Action; path: 
     replace(to: To, state?: unknown): void;
 }
 
+const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
+
 export class NavigationProvider
     extends Observable<{ action: Action; path: Path }>
     implements INavigationProvider
@@ -39,7 +41,7 @@ export class NavigationProvider
     public get path(): Path {
         const { pathname, search, hash } = this.navigator.location;
         return {
-            pathname: pathname.replace(this.#basePathname ?? '', ''),
+            pathname: normalizePathname(pathname.replace(this.#basePathname ?? '', '')),
             search,
             hash,
         };
@@ -99,7 +101,7 @@ export class NavigationProvider
         const { pathname, search, hash } = location;
         return {
             // TODO make better check
-            pathname: pathname.replace(this.#basePathname ?? '', ''),
+            pathname: normalizePathname(pathname.replace(this.#basePathname ?? '', '')),
             search,
             hash,
         };
@@ -109,7 +111,11 @@ export class NavigationProvider
         const { pathname, search, hash } =
             typeof to === 'string' ? { pathname: to, search: undefined, hash: undefined } : to;
         return {
-            pathname: [this.path.pathname, pathname].filter((x) => !!x).join('/'),
+            pathname: normalizePathname(
+                [this.#basePathname, pathname === '/' ? undefined : pathname]
+                    .filter((x) => !!x)
+                    .join('/')
+            ),
             search,
             hash,
         };
