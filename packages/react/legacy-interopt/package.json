@@ -38,8 +38,13 @@
         "@equinor/fusion-framework-module-app": "^5.0.1-next.3",
         "@equinor/fusion-framework-module-navigation": "^2.1.0-next.0",
         "@equinor/fusion-framework-react": "^5.0.6-next.12",
-        "@types/react": "^17.0.2",
+        "@equinor/fusion-framework-react-app": "^4.0.6-next.12",
+        "@types/history": "^4.7.2",
+        "@types/react": "^17",
+        "@types/react-router-dom": "^5.3.3",
+        "history": "^4.7.2",
         "react": "^17.0.2",
+        "react-router-dom": "^5",
         "rxjs": "^7.5.7",
         "typescript": "^4.9.3"
     },
@@ -50,6 +55,7 @@
         "@equinor/fusion-framework-module-app": ">=3.2.0",
         "@equinor/fusion-framework-module-navigation": ">=0.1.5",
         "@equinor/fusion-framework-module-service-discovery": ">=5",
+        "@equinor/fusion-framework-react-app": ">=4",
         "react": "^17.0.2",
         "rxjs": "^7.5.7"
     }
