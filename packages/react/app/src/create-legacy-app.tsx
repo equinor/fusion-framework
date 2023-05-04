@@ -9,7 +9,7 @@ import { createComponent } from './create-component';
 import { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
-    Component: React.ComponentType,
+    Component: React.ElementType,
     configure?: AppModuleInitiator<TModules>
 ) => {
     const LegacyComponent = (): JSX.Element => {
