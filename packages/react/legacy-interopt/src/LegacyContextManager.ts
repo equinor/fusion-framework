@@ -1,43 +1,23 @@
-import { concat, filter, from, scan, switchMap, take, tap } from 'rxjs';
+import { filter, scan, tap } from 'rxjs';
 
 import {
     ReliableDictionary,
     EventHub,
     LocalStorageProvider,
     type FeatureLogger,
-    type ContextManifest,
 } from '@equinor/fusion';
 
 import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 
 import { Fusion } from '@equinor/fusion-framework-react';
 
-import { configureModules } from '@equinor/fusion-framework-app';
-
-import { type AppManifest, type AppModule } from '@equinor/fusion-framework-module-app';
-
-import {
-    enableContext,
-    type ContextItem,
-    type ContextModule,
-} from '@equinor/fusion-framework-module-context';
-
-import { resolveInitialContext } from '@equinor/fusion-framework-module-context/utils';
-
-import {
-    enableNavigation,
-    type NavigationModule,
-} from '@equinor/fusion-framework-module-navigation';
-
-type AppManifestLegacy = AppManifest & {
-    context?: ContextManifest;
-};
+import { type ContextItem } from '@equinor/fusion-framework-module-context';
 
 export class LegacyContextManager extends ReliableDictionary<ContextCache> {
-    #framework: Fusion<[AppModule, NavigationModule]>;
+    #framework: Fusion;
 
     constructor(args: {
-        framework: Fusion<[AppModule, NavigationModule]>;
+        framework: Fusion;
         // TODO - enable module-navigation
         history: History;
         featureLogger: FeatureLogger;
@@ -46,7 +26,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
         this.#framework = args.framework;
 
-        const { context, app } = args.framework.modules;
+        const { context } = args.framework.modules;
 
         context.currentContext$
             .pipe(
@@ -74,59 +54,9 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                     });
                 }
             });
-
-        app.current$.subscribe((app) => {
-            if (app) {
-                const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
-                if (!manifest?.context) {
-                    return;
-                }
-                const initModules = configureModules<[ContextModule, NavigationModule]>(
-                    (configurator) => {
-                        enableNavigation(configurator, `/apps/${app.appKey}`);
-                        enableContext(configurator, async (builder) => {
-                            // TODO - check build url and get context from url
-                            if (manifest.context?.types) {
-                                builder.setContextType(manifest.context.types);
-                            }
-                            if (manifest.context?.filterContexts) {
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                builder.setContextFilter(manifest.context.filterContexts);
-                            }
-                            builder.setResolveInitialContext((args) => {
-                                const resolver = resolveInitialContext({
-                                    path: {
-                                        validate: (path) =>
-                                            !!path.match(/^\d+$/) ||
-                                            !!path.match(/^(?:[a-z0-9]+-){4}[a-z0-9]+$/),
-                                    },
-                                });
-                                return concat(
-                                    resolver(args),
-                                    from(this.getAsync<'current', ContextItem>('current')).pipe(
-                                        filter((x): x is ContextItem => !!x)
-                                    )
-                                ).pipe(take(1));
-                            });
-                        });
-
-                        configurator.onInitialized(async (instance) => {
-                            instance.context.currentContext$
-                                .pipe(switchMap((next) => this.setAsync('current', next)))
-                                .subscribe();
-                        });
-                    }
-                );
-                initModules({
-                    fusion: args.framework,
-                    env: { manifest: manifest as AppManifest },
-                });
-            }
-        });
     }
 
-    public getCurrentContext(): ContextItem | undefined {
+    public getCurrentContext(): ContextItem | null | undefined {
         return this.#framework.modules.context.currentContext;
     }
 
