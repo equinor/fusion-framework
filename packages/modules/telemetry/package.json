@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-telemetry",
-    "version": "3.0.5-next.0",
+    "version": "3.0.5-next.1",
     "description": "Fusion module for using Microsoft Telemetry",
     "main": "dist/esm/index.js",
     "exports": {
@@ -29,8 +29,8 @@
         "directory": "packages/modules/telemetry"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module": "^4.0.0-next.0",
-        "@equinor/fusion-framework-module-msal": "^3.0.1-next.0",
+        "@equinor/fusion-framework-module": "^4.0.0-next.1",
+        "@equinor/fusion-framework-module-msal": "^3.0.1-next.1",
         "@microsoft/applicationinsights-web": "^2.7.2"
     },
     "devDependencies": {
