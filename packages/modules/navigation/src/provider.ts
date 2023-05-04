@@ -19,8 +19,8 @@ export interface INavigationProvider extends Observable<{ action: Action; path: 
     readonly navigator: INavigator;
     dispose: VoidFunction;
     createRouter(routes: AgnosticRouteObject[]): Router;
-    createHref(to: To): string;
-    createURL(to: To): URL;
+    createHref(to?: To): string;
+    createURL(to?: To): URL;
     push(to: To, state?: unknown): void;
     replace(to: To, state?: unknown): void;
 }
@@ -81,12 +81,12 @@ export class NavigationProvider
         return router;
     }
 
-    public createHref(to: To): string {
-        return this.#navigator.createHref(this._createToPath(to));
+    public createHref(to?: To): string {
+        return this.#navigator.createHref(this._createToPath(to ?? this.path));
     }
 
-    public createURL(to: To): URL {
-        return this.#navigator.createURL(this._createToPath(to));
+    public createURL(to?: To): URL {
+        return this.#navigator.createURL(this._createToPath(to ?? this.path));
     }
 
     public push(to: To, state?: unknown): void {
