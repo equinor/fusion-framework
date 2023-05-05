@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-legacy-interopt@3.0.5...@equinor/fusion-framework-legacy-interopt@4.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **legacy-interopt:** portal need to implement navigation when context changes
+
+### Features
+
+-   **legacy-interopt:** create tooling for legacy app wrapper ([815fead](https://github.com/equinor/fusion-framework/commit/815fead99a9d59ea3bb77b9db25deba4e33a5f0a))
+-   **legacy-interopt:** remove navigation from context manager ([4c5518f](https://github.com/equinor/fusion-framework/commit/4c5518f619174b9423f4c751da805d7c88e5cbd4))
+-   **react-legacy-interopt:** add support for legacy application to change context ([3262bde](https://github.com/equinor/fusion-framework/commit/3262bde423315d44881b5bca0e03ecbddf3f4a4d))
+-   **react-legacy-interopt:** update legacy context app init ([e29cdf2](https://github.com/equinor/fusion-framework/commit/e29cdf2fdb0169b3fd9bbaaa685d47b4bfb677dd))
+
+### Bug Fixes
+
+-   **react-legacy-interopt:** fix fallback url path ([44204c1](https://github.com/equinor/fusion-framework/commit/44204c17a9b025bff041bfebd8f5000cb51b0a20))
+-   **react-legacy-interopt:** fix initial context url ([31f113a](https://github.com/equinor/fusion-framework/commit/31f113aebc2ad09e6a446997e95ecfeef3da2fff))
+-   **react-legacy-interopt:** fix legacy url resolving ([8082ad5](https://github.com/equinor/fusion-framework/commit/8082ad599c71b07c017fc0a9f32ee0dc21683087))
+-   **react-legacy-interopt:** keep leading slash in pathname ([34e9b75](https://github.com/equinor/fusion-framework/commit/34e9b7508e98f938e0996448444173e7a9d641a8))
+-   **react-legacy-interopt:** monitor current context changes ([a6b703a](https://github.com/equinor/fusion-framework/commit/a6b703a0d0d31a3d0d20cd52d6a1e4caef022f9d))
+-   **react-legacy-interopt:** remove context from suggest url when clearing context ([a04c80c](https://github.com/equinor/fusion-framework/commit/a04c80c94b19b9d9abc27965dec2fb22ed19dedd))
+
 ## 3.0.5 (2023-04-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-legacy-interopt

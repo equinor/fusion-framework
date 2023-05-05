@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.0 (2023-05-05)
+
+### Features
+
+-   **module-navigation:** allow no argument when creating link ([4a7b56b](https://github.com/equinor/fusion-framework/commit/4a7b56bc67fe89bb79a707e8ecf2dca6757867d5))
+-   **module-navigation:** expose util method from provider. ([cbb1aaf](https://github.com/equinor/fusion-framework/commit/cbb1aafb700abfa0eefeac0184f92618687c3be1))
+
+### Bug Fixes
+
+-   **module-navigation:** normalize navigation path ([08decd5](https://github.com/equinor/fusion-framework/commit/08decd59d264596a714e4346cd1853995b58b869))
+-   **module-navigation:** skip initial value when listening for change ([4d1a44d](https://github.com/equinor/fusion-framework/commit/4d1a44deb3a873983975112032652e3545e3548a))
+
 ## 2.0.1 (2023-04-18)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-navigation

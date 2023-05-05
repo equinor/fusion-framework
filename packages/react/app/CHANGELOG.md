@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-app@4.0.5...@equinor/fusion-framework-react-app@4.0.6) (2023-05-05)
+
+### Bug Fixes
+
+-   **react-app:** allow broader component type when creating react framework component ([a0c9187](https://github.com/equinor/fusion-framework/commit/a0c9187aa8861f48e6b62ea848cf951a75d02c1b))
+
 ## 4.0.5 (2023-04-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-app

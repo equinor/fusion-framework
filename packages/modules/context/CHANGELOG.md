@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@3.1.2...@equinor/fusion-framework-module-context@4.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-context:** current context can now be `null`
+-   **module-context:** skipInitialContext is now removed
+-   **module-context:** `ContextProvider.setCurrentContext` now returns an `Observable`
+
+### Features
+
+-   **module-context:** add utils ([741774d](https://github.com/equinor/fusion-framework/commit/741774d0459c80c0f53f2030e13c7683c57359ce))
+-   **module-context:** allow connect tp parent context provider ([2d2a312](https://github.com/equinor/fusion-framework/commit/2d2a312a214d3b2c26fb2496af395976b0681b18))
+-   **module-context:** allow resolving of initial context ([b0713f3](https://github.com/equinor/fusion-framework/commit/b0713f3ff7d74e39d6a2d585bd2d95beaba7bc1c))
+-   **module-context:** dispose context client ([dd4203b](https://github.com/equinor/fusion-framework/commit/dd4203b50713079729be13876514e87184cbe84f))
+-   **module-context:** explicit `null` when context is cleared ([03738e7](https://github.com/equinor/fusion-framework/commit/03738e7a5ce75d1da322b2f34c511022f89e5aea))
+-   **module-context:** make setting context as an observable ([21e1c6b](https://github.com/equinor/fusion-framework/commit/21e1c6b64f541ec63dd6ea830410c7bb5cbdd84a))
+
+### Bug Fixes
+
+-   **module-context:** expose resolve context async ([cff1cd8](https://github.com/equinor/fusion-framework/commit/cff1cd82a3a0d57513d9245d1289fc481bfac9e0))
+-   **module-context:** extract cause from query ([b04090c](https://github.com/equinor/fusion-framework/commit/b04090cef3184dda1db7f899939b8c223f290be5))
+-   **module-context:** fix index of context path ([38c89cf](https://github.com/equinor/fusion-framework/commit/38c89cfcc0d809d2ea27a8f388546ab4315fd010))
+-   **module-context:** fix parameters for resolving context from parent ([65eb101](https://github.com/equinor/fusion-framework/commit/65eb10159ee3bae8be53994112cac8244a315b28))
+-   **react-legacy-interopt:** fix initial context url ([31f113a](https://github.com/equinor/fusion-framework/commit/31f113aebc2ad09e6a446997e95ecfeef3da2fff))
+
 ## 3.1.2 (2023-04-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context

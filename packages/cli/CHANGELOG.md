@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@6.1.0...@equinor/fusion-framework-cli@7.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-context:** `ContextProvider.setCurrentContext` now returns an `Observable`
+
+### Features
+
+-   **module-context:** make setting context as an observable ([21e1c6b](https://github.com/equinor/fusion-framework/commit/21e1c6b64f541ec63dd6ea830410c7bb5cbdd84a))
+
 ## 6.1.0 (2023-04-24)
 
 ### Features

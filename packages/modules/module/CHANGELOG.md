@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.0 (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **modules:** postInitialize no longer support void function, should not affect any application, only used internally
+
+### Features
+
+-   **modules:** change postInitialize to return ObservableInput ([f1c2f56](https://github.com/equinor/fusion-framework/commit/f1c2f5644c6db2405bf5747a1094548e1723cce1))
+
 ## 3.0.0 (2023-04-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module

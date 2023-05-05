@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-services@3.0.3...@equinor/fusion-framework-module-services@3.1.0) (2023-05-05)
+
+### Features
+
+-   **module-services:** add response handler ([77128e8](https://github.com/equinor/fusion-framework/commit/77128e82692ff570cf65a8b3c900bc6234ce4ae9))
+
+### Bug Fixes
+
+-   **module-services:** validate response for http client ([6958f82](https://github.com/equinor/fusion-framework/commit/6958f82c4615f701e2ae9edf2d34dda60af8960a))
+
 ## 3.0.3 (2023-04-24)
 
 ### Bug Fixes

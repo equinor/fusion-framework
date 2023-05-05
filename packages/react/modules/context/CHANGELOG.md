@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-context@5.0.5...@equinor/fusion-framework-react-module-context@6.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-context:** `ContextProvider.setCurrentContext` now returns an `Observable`
+
+### Features
+
+-   **module-context:** make setting context as an observable ([21e1c6b](https://github.com/equinor/fusion-framework/commit/21e1c6b64f541ec63dd6ea830410c7bb5cbdd84a))
+
 ## 5.0.5 (2023-04-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-context
