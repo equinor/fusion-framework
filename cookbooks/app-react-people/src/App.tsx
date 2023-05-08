@@ -5,7 +5,6 @@ import { useDebounceQuery } from '@equinor/fusion-query/react';
 import { PersonSearchResult } from './api-models';
 import { PersonSearchResult as P } from './components/PersonSearchResult';
 
-import { tap } from 'rxjs/operators';
 import { useObservableSelectorState } from '@equinor/fusion-observable/react';
 
 type PeopleSearchArgs = {

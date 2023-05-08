@@ -12,7 +12,7 @@
     "build": "lerna run build",
     "build:affected": "nx run-many --target=build --all",
     "build:clean": "yarn clean:build && yarn run build",
-    "lint": "eslint 'packages/**/src/**/*.{ts,tsx}'",
+    "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "yarn lint --output-file eslint-report.log.json --format json",
     "lint:staged": "lint-staged",
     "docs": "cd packages/docs && yarn build -d ../../docs",
