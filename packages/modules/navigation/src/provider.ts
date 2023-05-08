@@ -71,11 +71,14 @@ export class NavigationProvider
 
     public createRouter(routes: AgnosticRouteObject[]) {
         const history = this.#navigator;
-        console.debug('NavigationProvider::createRouter', history, routes);
+        console.debug('NavigationProvider::createRouter', routes);
         const router = createRouter({
             basename: history.basename,
             history,
             routes,
+            future: {
+                v7_prependBasename: true,
+            },
         });
         router.initialize();
         return router;

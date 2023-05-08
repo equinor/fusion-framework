@@ -31,7 +31,7 @@
         "directory": "packages/modules/navigation"
     },
     "dependencies": {
-        "@remix-run/router": "^1.0.4"
+        "@remix-run/router": "^1.6.1"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "^4.0.0",
@@ -40,7 +40,7 @@
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": ">=1.2.2",
-        "@remix-run/router": "^1.0.4",
+        "@remix-run/router": "^1.6.1",
         "rxjs": "^7.0.0"
     }
 }
