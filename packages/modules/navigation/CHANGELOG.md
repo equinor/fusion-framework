@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-navigation@2.1.0...@equinor/fusion-framework-module-navigation@2.1.1) (2023-05-08)
+
+### Bug Fixes
+
+-   **module-navigation:** prepend basename ([5d7c844](https://github.com/equinor/fusion-framework/commit/5d7c84454562a4c1a2ebad05923a716fbaf10660)), closes [/github.com/remix-run/react-router/blame/852e05ae4132132cf5dd82ffff4c7e5be76672ae/packages/router/router.ts#L716](https://github.com/equinor//github.com/remix-run/react-router/blame/852e05ae4132132cf5dd82ffff4c7e5be76672ae/packages/router/router.ts/issues/L716)
+
 ## 2.1.0 (2023-05-05)
 
 ### Features
