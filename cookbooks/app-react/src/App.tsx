@@ -1,9 +1,5 @@
-import { StrictMode } from 'react';
-
 export const App = () => (
-    <StrictMode>
-        <h1>🚀 Hello Fusion😎</h1>;
-    </StrictMode>
+    <h1>🚀 Hello Fusion😎</h1>
 );
 
 export default App;

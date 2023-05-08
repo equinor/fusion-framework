@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import { Query } from '@equinor/fusion-query';
 import { useDebounceQuery } from '@equinor/fusion-query/react';
@@ -40,8 +40,8 @@ export const App = () => {
     );
 
     return (
-        <StrictMode>
-            <h1>🚀 Hello Fusion😎</h1>;
+        <>
+            <h1>🚀 Hello Fusion😎</h1>
             <div>
                 <input
                     disabled={!idle}
@@ -50,7 +50,7 @@ export const App = () => {
                 />
                 {results && results.map((x) => <P key={x.document.azureUniqueId} item={x}></P>)}
             </div>
-        </StrictMode>
+        </>
     );
 };
 
