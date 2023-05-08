@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { RouterProvider } from 'react-router-dom';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
