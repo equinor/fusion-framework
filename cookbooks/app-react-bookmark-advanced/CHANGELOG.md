@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.8 (2023-05-09)
+
+### Bug Fixes
+
+-   **cookbooks:** remove strict mode as it is not needed for React 18 ([eda33e4](https://github.com/equinor/fusion-framework/commit/eda33e4d0e6c67e3da964599167a9db6e1eadf0a))
+
 ## [4.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@4.0.6...@equinor/fusion-framework-cookbook-app-react-bookmark-advanced@4.0.7) (2023-05-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark-advanced
