@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-ag-grid",
-    "version": "4.0.1",
+    "version": "29.3.0-next",
     "description": "Fusion module for using AG Grid",
     "main": "dist/esm/index.js",
     "exports": {
@@ -26,7 +26,7 @@
         "directory": "packages/modules/ag-grid"
     },
     "dependencies": {
-        "@ag-grid-enterprise/core": "~28.1.1"
+        "@ag-grid-enterprise/core": "~29.3.4"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "^4.0.0",
