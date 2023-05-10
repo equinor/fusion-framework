@@ -166,6 +166,8 @@ export class ContextProvider implements IContextProvider {
         opt?: { skipFirst: boolean }
     ): Subscription {
         const parentContext$ = provider.currentContext$.pipe(
+            // do not set context if parent has not initialized
+            filter((x) => x !== undefined),
             filter((next, index) => {
                 if (opt?.skipFirst && index <= 1) {
                     console.debug(
