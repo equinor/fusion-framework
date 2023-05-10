@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.2 (2023-05-10)
+
+### Bug Fixes
+
+-   **module-context:** only skip first context item if not resolved ([cea6fce](https://github.com/equinor/fusion-framework/commit/cea6fcefd4853dcfbedf0d65d83cac7ac1b26523))
+
 ## [4.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.0...@equinor/fusion-framework-module-context@4.0.1) (2023-05-08)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-context
