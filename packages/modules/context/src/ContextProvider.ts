@@ -4,10 +4,20 @@ import {
     lastValueFrom,
     Observable,
     of,
+    Subject,
     Subscription,
     throwError,
 } from 'rxjs';
-import { catchError, filter, map, pairwise, switchMap } from 'rxjs/operators';
+import {
+    catchError,
+    filter,
+    finalize,
+    map,
+    pairwise,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs/operators';
 
 import { ContextModuleConfig } from './configurator';
 
@@ -72,6 +82,8 @@ export class ContextProvider implements IContextProvider {
     #contextType?: ContextModuleConfig['contextType'];
     #contextFilter: ContextModuleConfig['contextFilter'];
     #contextParameterFn: Required<ContextModuleConfig['contextParameterFn']>;
+
+    #contextQueue = new Subject<Observable<ContextItem<Record<string, unknown>>>>();
 
     public get contextClient() {
         return this.#contextClient;
@@ -159,6 +171,15 @@ export class ContextProvider implements IContextProvider {
                 })
             );
         }
+
+        this.#subscriptions.add(
+            this.#contextQueue
+                .pipe(
+                    switchMap((next) => next),
+                    tap((x) => console.debug('ContextProvider::#contextQueue', x))
+                )
+                .subscribe((context) => this.#contextClient.setCurrentContext(context ?? null))
+        );
     }
 
     public connectParentContext(
@@ -244,7 +265,53 @@ export class ContextProvider implements IContextProvider {
         return firstValueFrom(this.setCurrentContextById(id));
     }
 
+    /**
+     * Setting context is a complex operation, and might not happen immediately.
+     * When setting the context, a task is created and added to the queue.
+     * Once the task is completed, the returned observable will emit the value which will be the next state.
+     *
+     * Even tho this function returns a `Observable`, the task will be queued even tho nobody subscribes.
+     *
+     * If the observable is subscribe, unsubscribing __WILL__ abort the task and remove it from queue
+     *
+     * @param context context item which would be queue to set as current
+     */
     public setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Observable<T> {
+        /** signal for aborting the queue entry */
+        const abort$ = new Subject();
+
+        /** wrapper for returning an observable to the caller */
+        const subject$ = new Subject<T>();
+
+        const task$ = this._setCurrentContext(context, opt).pipe(
+            /** send context item which was set to the caller */
+            tap((x) => subject$.next(x)),
+            /** abort task on signal */
+            takeUntil(abort$),
+            /** close observable sent to caller */
+            finalize(() => subject$.complete()),
+            /** catch errors to not stall queue  */
+            catchError((err) => {
+                /** send the error to the caller  */
+                subject$.error(err);
+                /** skip setting any context */
+                return EMPTY;
+            })
+        );
+
+        /** add task to internal queue */
+        this.#contextQueue.next(task$ as Observable<ContextItem<Record<string, unknown>>>);
+
+        return subject$.pipe(
+            /** if caller subscribes, unsubscribe should abort queue entry */
+            finalize(() => abort$.next(true))
+        );
+    }
+
+    protected _setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
         context: T,
         opt?: { validate?: boolean; resolve?: boolean }
     ): Observable<T> {
@@ -331,7 +398,6 @@ export class ContextProvider implements IContextProvider {
                     })
                 )
                 .subscribe((context) => {
-                    this.#contextClient.setCurrentContext(context ?? null);
                     subscriber.next(context);
                     subscriber.complete();
                 });
