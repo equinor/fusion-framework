@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.2...@equinor/fusion-framework-module-context@4.0.3) (2023-05-11)
+
+### Bug Fixes
+
+-   **module-context:** execute all setting of context ([eb85c0c](https://github.com/equinor/fusion-framework/commit/eb85c0c239ec70edeb796b2f03b6ecd4c2fb9fb5)), closes [/github.com/equinor/fusion-framework/blob/3cd1a9e01c56fc9afb72f2df474a7b066b4215c4/packages/modules/context/src/ContextProvider.ts#L181](https://github.com/equinor//github.com/equinor/fusion-framework/blob/3cd1a9e01c56fc9afb72f2df474a7b066b4215c4/packages/modules/context/src/ContextProvider.ts/issues/L181)
+
 ## 4.0.2 (2023-05-10)
 
 ### Bug Fixes
