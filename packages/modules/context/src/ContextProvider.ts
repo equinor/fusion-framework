@@ -1,13 +1,4 @@
-import {
-    EMPTY,
-    firstValueFrom,
-    lastValueFrom,
-    Observable,
-    of,
-    Subject,
-    Subscription,
-    throwError,
-} from 'rxjs';
+import { EMPTY, lastValueFrom, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import {
     catchError,
     filter,
@@ -188,7 +179,7 @@ export class ContextProvider implements IContextProvider {
     ): Subscription {
         const parentContext$ = provider.currentContext$.pipe(
             // do not set context if parent has not initialized
-            filter((x) => x !== undefined),
+            filter((x): x is ContextItem | null => x !== undefined),
             filter((next, index) => {
                 if (opt?.skipFirst && index <= 1) {
                     console.debug(
@@ -198,7 +189,7 @@ export class ContextProvider implements IContextProvider {
                     );
                     return false;
                 }
-                return this.currentContext !== next;
+                return this.currentContext?.id !== next?.id;
             }),
             switchMap(async (next) => {
                 if (next) {
@@ -216,10 +207,6 @@ export class ContextProvider implements IContextProvider {
             }),
             filter((x) => !x.canceled),
             switchMap(({ next }) => {
-                if (!next) {
-                    this.clearCurrentContext();
-                    return EMPTY;
-                }
                 return this.setCurrentContext(next, {
                     validate: true,
                     resolve: true,
@@ -262,7 +249,7 @@ export class ContextProvider implements IContextProvider {
     }
 
     public setCurrentContextByIdAsync(id: string): Promise<ContextItem<Record<string, unknown>>> {
-        return firstValueFrom(this.setCurrentContextById(id));
+        return lastValueFrom(this.setCurrentContextById(id));
     }
 
     /**
@@ -408,7 +395,7 @@ export class ContextProvider implements IContextProvider {
         context: T,
         opt?: { validate?: boolean; resolve?: boolean }
     ): Promise<T> {
-        return firstValueFrom(this.setCurrentContext(context, opt));
+        return lastValueFrom(this.setCurrentContext(context, opt));
     }
 
     public queryContext(search: string): Observable<Array<ContextItem>> {
@@ -488,8 +475,8 @@ export class ContextProvider implements IContextProvider {
         return lastValueFrom(this.relatedContexts(args));
     }
 
-    public clearCurrentContext() {
-        this.setCurrentContextAsync(null);
+    public clearCurrentContext(): void {
+        this.setCurrentContext(null);
     }
 
     dispose() {

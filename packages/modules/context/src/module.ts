@@ -68,9 +68,7 @@ export const module: ContextModule = {
                             },
                             complete: () => {
                                 // TODO - do we need to check first?
-                                provider.connectParentContext(parentProvider, {
-                                    skipFirst: !!provider.currentContext,
-                                });
+                                provider.connectParentContext(parentProvider);
                                 subscriber.complete();
                             },
                         })
