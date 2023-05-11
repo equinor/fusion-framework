@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.3...@equinor/fusion-framework-module-context@4.0.4) (2023-05-11)
+
+### Bug Fixes
+
+-   **module-context:** make clearCurrentContext await set context queue ([30f11fb](https://github.com/equinor/fusion-framework/commit/30f11fb0aa3204aac95718b69cca81bd1d24d983))
+
 ## [4.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.2...@equinor/fusion-framework-module-context@4.0.3) (2023-05-11)
 
 ### Bug Fixes
