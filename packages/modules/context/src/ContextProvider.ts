@@ -360,7 +360,7 @@ export class ContextProvider implements IContextProvider {
                             }),
                             /** recursive set current context without validation and resolve */
                             switchMap((resolved) =>
-                                this.setCurrentContext(resolved as unknown as T)
+                                this._setCurrentContext(resolved as unknown as T)
                             )
                         )
                         .subscribe(subscriber);
