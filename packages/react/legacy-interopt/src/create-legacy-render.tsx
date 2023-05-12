@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+
+import { useEffect, type PropsWithChildren, memo } from 'react';
+
 import { concat, filter, from, take } from 'rxjs';
 
 import { Router } from 'react-router-dom';
-import { createBrowserHistory, createLocation, History } from 'history';
+import { createBrowserHistory, createLocation, type History } from 'history';
 
-import { AppManifest, HistoryContext, IFusionContext } from '@equinor/fusion';
+import { HistoryContext, type AppManifest, type IFusionContext } from '@equinor/fusion';
 
 import {
-    ContextItem,
-    ContextModule,
     enableContext,
+    type ContextItem,
+    type ContextModule,
 } from '@equinor/fusion-framework-module-context';
 
 import { resolveInitialContext } from '@equinor/fusion-framework-module-context/utils';
@@ -17,7 +20,6 @@ import { resolveInitialContext } from '@equinor/fusion-framework-module-context/
 import { enableNavigation, NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { createComponent } from '@equinor/fusion-framework-react-app';
-import { useEffect, type PropsWithChildren, ElementType } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
 
 const AppWrapper = (
@@ -67,21 +69,18 @@ const AppWrapper = (
 
 export const createLegacyRender = (
     appKey: string,
-    AppComponent: ElementType,
+    AppComponent: React.FunctionComponent,
     legacy: IFusionContext
 ) => {
     const basename = `/apps/${appKey}`;
+    const history = createBrowserHistory({ basename });
     return createComponent<[ContextModule, NavigationModule]>(
-        () => (
-            <AppWrapper
-                history={createBrowserHistory({ basename })}
-                basename={basename}
-                appKey={appKey}
-            >
-                {/* @ts-ignore */}
+        // eslint-disable-next-line react/no-multi-comp, react/display-name
+        memo(() => (
+            <AppWrapper history={history} basename={basename} appKey={appKey}>
                 <AppComponent />
             </AppWrapper>
-        ),
+        )),
         (configurator, { env }) => {
             const { context: contextConfig } = env.manifest as unknown as AppManifest;
             enableNavigation(configurator, basename);
