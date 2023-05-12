@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.4...@equinor/fusion-framework-module-context@4.0.5) (2023-05-12)
+
+### Bug Fixes
+
+-   **module-context:** skip internal context queue when settting context internally ([79ed276](https://github.com/equinor/fusion-framework/commit/79ed2767e7742a4133223546ca20fa0a99db6d96))
+
 ## [4.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-context@4.0.3...@equinor/fusion-framework-module-context@4.0.4) (2023-05-11)
 
 ### Bug Fixes
