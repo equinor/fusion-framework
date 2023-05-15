@@ -8,6 +8,7 @@ __Expect breaking changes untill stable release!__
 ## 📚 read the [Doc](https://equinor.github.io/fusion-framework/)
 ## 🚀 see the [Road Map](https://equinor.github.io/fusion-framework/roadmap)
 ## 🍰 see our [Cookboks](https://github.com/equinor/fusion-framework/tree/main/cookbooks)
+> read [setup](#setup) before starting a cookbook directly from this repo
 
 ## Repo structure
 
@@ -23,3 +24,12 @@ __Expect breaking changes untill stable release!__
     - 🗂️ Modules - _collection of modules with tooling_
   - 🗂️ Utils - _collection of utilities_
 
+
+# Setup
+this is a mono repo, packages need to be installed and hoisted before developing.
+```sh
+  # install packages
+  yarn
+  # build all packages
+  yarn build
+```

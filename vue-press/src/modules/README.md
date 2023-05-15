@@ -33,7 +33,7 @@ An app can configure the default modules, but also add and configure additional 
   - [module-service-discovery](service-discovery/)
 
 ### Modules
-<ModuleBadge module="module" />
+<ModuleBadge module="modules/module" package="@equinor/fusion-framework-module"/>
 
 
 ```mermaid
@@ -78,9 +78,9 @@ When the module has initialized it will return a provider interface for that mod
 
 ### React
 
-<ModuleBadge module="framework-react" package="@equinor/fusion-framework-react"/>
+<ModuleBadge module="react/framework" package="@equinor/fusion-framework-react"/>
 <br>
-<ModuleBadge module="react-app" />
+<ModuleBadge module="react/app" package="@equinor/fusion-framework-react-app"/>
 
 > Since the framework is async, these modules requires [Suspense](https://reactjs.org/docs/react-api.html#reactsuspense).
 > Only React 17 or higher works with these modules

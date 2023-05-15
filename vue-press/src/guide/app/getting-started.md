@@ -27,7 +27,7 @@ yarn add --dev '@equinor/fusion-framework-cli'
 
 ### Frameowork
 
-<ModuleBadge module="react-app" />
+<ModuleBadge module="react/app" />
 
 ```sh
 yarn add --dev '@equinor/fusion-framework-react-app'
@@ -134,44 +134,46 @@ export default () => ({
 ### Component
 @[code](@cookbooks/app-react/src/App.tsx)
 
-::: info legacy
-
-```ts
-import { registerApp } from '@equinor/fusion';
-import { createComponent } from '@equinor/fusion-framework-react-app';
-
-registerApp(
-  'my-app', 
-  { 
-    renderApp,
-    AppComponent: <></> 
-  }
-);
-```
-:::
 
 ## Basic features
 
 ### Use http client
 
+upload this config to the application admin under `configs`
+> in the future the `config.endpoint` attribute in app admin will support scopes
+
+[read more about authentication](./authentication.md)
+
+```json dsadsa 
+// config.ENV.json
+{
+  "services": {
+    "myApi": {
+      "baseUri": "https://foo.bar",
+      "defaultScopes": "c5161f15-9930-4cfc-b233-e9dfc5f8ad82/.default"
+    }
+  }
+}
+```
+
+configure application to create a http client based on dynamic config from app service
 ```ts
 // config.ts
-export const configure = (configurator, { env }) => {
-  /** custom client */
-  configurator.configureHttpClient({ "my-api", { 
-    baseUri: 'https://foo.bar', 
-    defaultScopes: 'foobar/.default'
-  });
+export const configure: AppModuleInitiator = (configurator, { env }) => {
+  configurator.configureHttpClient("myApi",  env.config.environment.myApi);
 };
+```
 
-// useFooClient.ts
+create a util hook for accessing custom http client
+```ts
+// useMyApi.ts
 import { useModule } from '@equinor/fusion-framework-react-app';
 import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
 import type { IHttpClient } from '@equinor/fusion-framework-react-app/http';
 
 export const useFooClient = (): IHttpClient => {
   const httpProvider = useModule('http');
-  return useHttpClient('foo');
+  return useHttpClient('useMyApi');
 }
 ```
 
@@ -237,4 +239,18 @@ Enable license key when deployed to portal
 ```ts
 import { enableAgGrid } from '@equinor/fusion-framework-module-navigation';
 export const configure = (configurator) => enableAgGrid(configurator);
+```
+
+### Using Bookmarks
+
+To enable bookmark for an application there are only one tinges needed. If the bookmark is enabled on in your portal. A function to capture the applications state is needed. The `currentBookmark` will be updated when ever the bookmark changes, and all navigation will be handled by parent application / portal.
+
+[read more about Bookmarks](../../modules/bookmark/README.md)
+
+```ts
+import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
+
+const currentBookmark = useCurrentBookmark(
+    useCallback(() => someApplicationState, [someApplicationState])
+);
 ```

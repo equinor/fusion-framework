@@ -5,7 +5,10 @@ tag:
     - bookmark
 ---
 
- <ModuleBadge module="module-bookmark" />
+ <ModuleBadge module="modules/bookmark" />
+ 
+ __React__
+ <ModuleBadge module="react/modules/bookmark" />
  
  ## Concept
 
