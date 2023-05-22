@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.1.0...@equinor/fusion-framework-react@5.1.1) (2023-05-22)
+
+### Bug Fixes
+
+-   **react-framework:** expose useCurrentAppModules ([785d5eb](https://github.com/equinor/fusion-framework/commit/785d5eb08963d5ba1a007573879908b33e52fb3f))
+
 ## 5.1.0 (2023-05-22)
 
 ### Features
