@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.1.0 (2023-05-22)
+
+### Features
+
+-   **react-framework:** add hook for using current app modules ([2d65464](https://github.com/equinor/fusion-framework/commit/2d654647b84e03d1c6e322509885d8bfa2b9142f))
+-   **react-framework:** enhance `useCurrentApp` ([60026c9](https://github.com/equinor/fusion-framework/commit/60026c918c5033137cc359665074ea65c11a34fb))
+
 ## [5.0.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.10...@equinor/fusion-framework-react@5.0.11) (2023-05-12)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react
