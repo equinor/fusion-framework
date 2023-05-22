@@ -1293,9 +1293,9 @@
     csstype "^3.0.10"
 
 "@equinor/fusion@^3.4.9":
-  version "3.4.9"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion/-/fusion-3.4.9.tgz#34baad1cfe7e333fec7a275cb816b9ef26ae4abf"
-  integrity sha512-seL9uUA/xWlwQdL7Bfuh4yBrKJj6tNhV7H7f0mZOScWSvIJJgd1oE/GiydcyS6rbAEW2TIinrkUqOLEdVWV4YA==
+  version "3.4.10"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion/-/fusion-3.4.10.tgz#c151917fc41beedad365aff644f3a0e4c2319c9b"
+  integrity sha512-3dbGiPiTP5ogFe78SE1lu2ya6sDXeDtQY+lIfxa10VV2PeMZZe7uPqz3GKbevWBe+43j1qwoCpqU9wC7PN1WPA==
   dependencies:
     "@equinor/eslint-config-fusion" "^0.1.2"
     "@microsoft/applicationinsights-web" "^2.4.3"
