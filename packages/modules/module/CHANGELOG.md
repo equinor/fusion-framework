@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.1.0 (2023-05-23)
+
+### Features
+
+-   **module:** create base configurator ([f94b51e](https://github.com/equinor/fusion-framework/commit/f94b51e53d6ae235456e2ea2b5a82db5aa1a18f0))
+
 ## 4.0.0 (2023-05-05)
 
 ### ⚠ BREAKING CHANGES
