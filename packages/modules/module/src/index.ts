@@ -3,8 +3,15 @@ export { initializeModules } from './initialize-modules';
 
 export { ModuleConsoleLogger } from './logger';
 
-export { ModulesConfigurator } from './configurator';
-
 export { ModuleConfigBuilder } from './ModuleConfigBuilder';
+export {
+    type ConfigBuilderCallback,
+    type ConfigBuilderCallbackArgs,
+    BaseConfigBuilder,
+} from './BaseConfigBuilder';
 
-export type { IModuleConfigurator, IModulesConfigurator } from './configurator';
+export {
+    type IModuleConfigurator,
+    type IModulesConfigurator,
+    ModulesConfigurator,
+} from './configurator';
