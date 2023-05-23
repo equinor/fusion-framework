@@ -2,11 +2,53 @@ import { from, lastValueFrom, of, type Observable, type ObservableInput } from '
 import { last, mergeMap, scan } from 'rxjs/operators';
 import { Modules, ModuleType } from './types';
 
+type ConfigPropType<T, Path extends string> = string extends Path
+    ? unknown
+    : Path extends keyof T
+    ? T[Path]
+    : Path extends `${infer K}.${infer R}`
+    ? K extends keyof T
+        ? ConfigPropType<T[K], R>
+        : unknown
+    : unknown;
+
+type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
+
+type DotNestedKeys<T> = (
+    T extends object
+        ? { [K in Exclude<keyof T, symbol>]: K | `${K}${DotPrefix<DotNestedKeys<T[K]>>}` }[Exclude<
+              keyof T,
+              symbol
+          >]
+        : ''
+) extends infer D
+    ? Extract<D, string>
+    : never;
+
+/** helper function for extracting multilevel attribute keys */
+const assignConfigValue = <T>(
+    obj: Record<string, unknown>,
+    prop: string | string[],
+    value: unknown
+): T => {
+    const props = typeof prop === 'string' ? prop.split('.') : prop;
+    const attr = props.shift();
+    if (attr) {
+        obj[attr] ??= {};
+        props.length
+            ? assignConfigValue(obj[attr] as Record<string, unknown>, props, value)
+            : Object.assign(obj, { [attr]: value });
+    }
+    return obj as T;
+};
+
 /**
  * callback arguments for config builder callback function
  * @template TRef parent instance
  */
-export type ConfigBuilderCallbackArgs<TRef = unknown> = {
+export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
+    config: TConfig;
+
     /** reference, parent modules */
     ref?: TRef;
 
@@ -47,12 +89,13 @@ export type ConfigBuilderCallback<TReturn = unknown> = (
 /**
  * template class for building module config
  *
- * __Limitations:__
- * this only allows configuring an attribute of config root level
- *
  * @example
  * ```ts
- * type MyModuleConfig = { foo: string; bar?: number };
+ * type MyModuleConfig = {
+ *      foo: string;
+ *      bar?: number,
+ *      nested?: { up: boolean }
+ * };
  *
  * class MyModuleConfigurator extends BaseConfigBuilder<MyModuleConfig> {
  *   public setFoo(cb: ModuleConfigCallback<string>) {
@@ -62,13 +105,17 @@ export type ConfigBuilderCallback<TReturn = unknown> = (
  *   public setBar(cb: ModuleConfigCallback<number>) {
  *     this._set('bar', cb);
  *   }
+ *
+ *   public setUp(cb: ModuleConfigCallback<boolean>) {
+ *     this._set('nested.up', cb);
+ *   }
  * }
  * ```
  * @template TConfig expected config the builder will create
  */
 export abstract class BaseConfigBuilder<TConfig = unknown> {
     /** internal hashmap of registered callback functions */
-    #configCallbacks = {} as Record<keyof TConfig, ConfigBuilderCallback>;
+    #configCallbacks = {} as Record<string, ConfigBuilderCallback>;
 
     /**
      * request the builder to generate config
@@ -95,13 +142,13 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
 
     /**
      * internally set configuration of a config attribute
-     * @param target attribute name of config
+     * @param target attribute name of config dot notaded
      * @param cb callback function for setting the attribute
-     * @template TKey keyof config (attribute name
+     * @template TKey keyof config
      */
-    protected _set<TKey extends keyof TConfig>(
-        target: TKey,
-        cb: ConfigBuilderCallback<TConfig[TKey]>
+    protected _set<TTarget extends DotNestedKeys<TConfig>>(
+        target: TTarget,
+        cb: ConfigBuilderCallback<ConfigPropType<TConfig, TTarget>>
     ) {
         this.#configCallbacks[target] = cb;
     }
@@ -131,7 +178,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
                 return { target, value };
             }),
             scan(
-                (acc, { target, value }) => Object.assign({}, acc, { [target]: value }),
+                (acc, { target, value }) => assignConfigValue(acc, target, value),
                 initial ?? ({} as TConfig)
             ),
             last()
