@@ -9,6 +9,8 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
 import { Bookmarks, CreateBookMarkFn } from './types';
 
+import { EMPTY } from 'rxjs';
+
 /**
  *  For application development the useCurrentBookmark should be sufficient enough
  *
@@ -29,14 +31,14 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
     const bookmarkProvider = useFramework<[BookmarkModule]>().modules.bookmark;
 
     const currentBookmark = useObservableState(
-        useMemo(() => bookmarkProvider.currentBookmark$, [bookmarkProvider]),
+        useMemo(() => bookmarkProvider?.currentBookmark$ ?? EMPTY, [bookmarkProvider]),
         {
             initial: bookmarkProvider.currentBookmark,
         }
-    ).value as Bookmark<TData>;
+    ).value as Bookmark<TData> | null | undefined;
 
     const bookmarks = useObservableState(
-        useMemo(() => bookmarkProvider.bookmarks$, [bookmarkProvider]),
+        useMemo(() => bookmarkProvider?.bookmarks$ ?? EMPTY, [bookmarkProvider]),
         {
             initial: [],
         }

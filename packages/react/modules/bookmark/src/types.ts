@@ -83,5 +83,5 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
 }
 
 export interface CurrentBookmark<TData> {
-    currentBookmark?: Bookmark<TData>;
+    currentBookmark?: Bookmark<TData> | null;
 }
