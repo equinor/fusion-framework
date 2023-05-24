@@ -16,7 +16,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      * @param {keyof TData} [key] - User to that property to add partial payload to ,
      * @return {*}  {VoidFunction} - Return a cleanup function for removing the stateCreator.
      */
-    addBookmarkCreator: (createBookmarkState?: CreateBookMarkFn<TData>) => VoidFunction;
+    addBookmarkCreator: (createBookmarkState?: CreateBookMarkFn<TData>) => VoidFunction|undefined;
     /**
      * Function for resoling all bookmarks current sub system.
      * @return {Promise<Array<Bookmark>>} - A list of bookmarks with no payload. Payload needs to be resolved
@@ -33,7 +33,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
         name: string;
         description: string;
         isShared: boolean;
-    }) => Promise<Bookmark<T>>;
+    }) => Promise<Bookmark<T>|undefined>;
 
     /**
      * Function for updating bookmark a bookmark when successful this will update the bookmark list.
@@ -52,7 +52,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      * @param {string} bookmarkId
      * @returns {Promise<string>} the bookmarkId ot the deleted bookmark
      */
-    deleteBookmarkById: (bookmarkId: string) => Promise<string>;
+    deleteBookmarkById: (bookmarkId: string) => Promise<string|undefined>;
     /**
      * Function for setting the current bookmark, when successful this will update the bookmark list.
      * @template TData - Bookmark payload type set on class level
@@ -65,7 +65,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      * @template TData - Bookmark payload type set on class level
      * @param {(string} id - bookmarkId.
      */
-    getBookmarkById<T>(IdOrItem: string | Bookmark<T>): Promise<Bookmark<T>>;
+    getBookmarkById<T>(IdOrItem: string | Bookmark<T>): Promise<Bookmark<T>> | undefined;
     /**
      * List of bookmarks in the current configured system,
      * filtered by the confirmed SourceSystem identifier. This is done by the portal development team;
