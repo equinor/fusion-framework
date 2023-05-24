@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.9...@equinor/fusion-framework-react-module-bookmark@2.0.10) (2023-05-24)
+
+### Bug Fixes
+
+-   **react-module-bookmark:** check if bookmark provider ([af112fb](https://github.com/equinor/fusion-framework/commit/af112fb43f95be28c129be1d31c0d494edb027cc))
+
 ## [2.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.8...@equinor/fusion-framework-react-module-bookmark@2.0.9) (2023-05-23)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark

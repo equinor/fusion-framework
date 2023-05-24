@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-components-bookmark@0.1.10...@equinor/fusion-framework-react-components-bookmark@0.1.11) (2023-05-24)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-components-bookmark
+
 ## [0.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-components-bookmark@0.1.9...@equinor/fusion-framework-react-components-bookmark@0.1.10) (2023-05-23)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react-components-bookmark

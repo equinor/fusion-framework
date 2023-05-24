@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cli",
-    "version": "7.0.9",
+    "version": "7.0.10",
     "keywords": [
         "Fusion",
         "Fusion Framework",
@@ -50,8 +50,8 @@
         "@equinor/fusion-framework-module-bookmark": "^1.0.6",
         "@equinor/fusion-framework-module-context": "^4.0.7",
         "@equinor/fusion-framework-react": "^5.1.3",
-        "@equinor/fusion-framework-react-components-bookmark": "^0.1.10",
-        "@equinor/fusion-framework-react-module-bookmark": "^2.0.9",
+        "@equinor/fusion-framework-react-components-bookmark": "^0.1.11",
+        "@equinor/fusion-framework-react-module-bookmark": "^2.0.10",
         "@equinor/fusion-query": "^3.0.2",
         "@equinor/fusion-react-button": "^0.8.1",
         "@equinor/fusion-react-context-selector": "^0.4.3",
