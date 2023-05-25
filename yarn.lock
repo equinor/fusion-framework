@@ -945,16 +945,6 @@
   resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.19.1.tgz#f55dcfe842513db693ad2b8e0246afcf1fca1527"
   integrity sha512-0GZqzLhJQGqAHsTmviUK9au+eRsT9z2BcJTbWWmG8EtxjWNq5dcTpeGSOv6pWNY5nfcGhLNtjOIjRlSidWMHnw==
 
-"@equinor/eds-icons@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.npmjs.org/@equinor/eds-icons/-/eds-icons-0.15.0.tgz"
-  integrity sha512-4vGsMHB6+RXvJjVka+dbWLr+0q5tLSlhBSrtstsj1Q0bgQPmj6hIMF+eHK5brkZGJ6d1K1RXYgiUOP2LguGL4Q==
-
-"@equinor/eds-icons@^0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.18.0.tgz#bfa581cb997bf43cf182a2ec3656b8c4ad8fdeff"
-  integrity sha512-2M0XaNp5r2lIIN5bOfhE3/i/utiURDCC06WXVj/3H2H3ZUNgcYjYnU4tr2BJHRi5/ruH6z1UxWwYTB0hUZCrGQ==
-
 "@equinor/eds-tokens@0.5.5":
   version "0.5.5"
   resolved "https://registry.npmjs.org/@equinor/eds-tokens/-/eds-tokens-0.5.5.tgz"
@@ -1020,9 +1010,9 @@
     eslint-plugin-prettier "^4.2.1"
 
 "@equinor/fusion-components@^2.10.5":
-  version "2.10.5"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.5.tgz#530fee3aa8411a92547c09090244380ead3e2297"
-  integrity sha512-W9Ej+r2/xcDMaqUf3FonGjkOGf9QMDUcm7B3vcUxwjvpuQ4/w4we9tx+cdSchkkYFXiw47uyYU8Dc2nbTGgACw==
+  version "2.10.8"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.8.tgz#52d7e5f5211a9c5d87b9e8879bf4cb096c2af5c2"
+  integrity sha512-tmASSDHaem7CtKs9MqwVA3Pm20x2JXTfnU/rG4JDRJSEWFHiLjjimGDALlwwZcIBNgquepRAuSkVKIpSiSGoJg==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
     "@equinor/fusion-react-checkbox" "^0.4.0"
@@ -1280,25 +1270,7 @@
     "@material/mwc-formfield" "^0.27.0"
     lit "2.4.1"
 
-"@equinor/fusion-wc-icon@^1.0.17", "@equinor/fusion-wc-icon@^1.0.24", "@equinor/fusion-wc-icon@^1.0.27":
-  version "1.0.27"
-  resolved "https://registry.npmjs.org/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.27.tgz"
-  integrity sha512-vLhG6RU0xLIJCiceNojJiceuppNxrEi2zMV26ulyqP3yppovyo1e/5qFf1Dk63hplugIWVXUZPKFIrOpkfa1NA==
-  dependencies:
-    "@equinor/eds-icons" "^0.15.0"
-    "@equinor/fusion-wc-core" "^1.0.5"
-    lit "2.4.1"
-
-"@equinor/fusion-wc-icon@^1.0.29":
-  version "1.0.29"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.29.tgz#d1b0be150fa27e352fffbc184591c3fedf96938d"
-  integrity sha512-pRET08kHksG6eg0jvrLBWjXpLh8hqNp8FgdWan1onk7xiVLqDG2qJtAahewsAJGY6Ktd1SCc6dVPnd+HAwXFHg==
-  dependencies:
-    "@equinor/eds-icons" "^0.18.0"
-    "@equinor/fusion-wc-core" "^1.0.5"
-    lit "2.6.1"
-
-"@equinor/fusion-wc-icon@^1.0.30":
+"@equinor/fusion-wc-icon@^1.0.17", "@equinor/fusion-wc-icon@^1.0.24", "@equinor/fusion-wc-icon@^1.0.27", "@equinor/fusion-wc-icon@^1.0.29", "@equinor/fusion-wc-icon@^1.0.30":
   version "1.0.30"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.30.tgz#ff18216b7f6982a4523d9bb7ab875ba6994b21ec"
   integrity sha512-DGM7e75w5CehpFfIklJA5REZfikQmheHIuaPerV5lCPuLGrZr1+8OjpSxFvAQe2d5M06hjKfZovcnOP3eLkFcw==
@@ -4688,7 +4660,7 @@
     "@typescript-eslint/typescript-estree" "4.33.0"
     debug "^4.3.1"
 
-"@typescript-eslint/parser@^5.40.0":
+"@typescript-eslint/parser@^5.40.0", "@typescript-eslint/parser@^5.49.0":
   version "5.54.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-5.54.1.tgz#05761d7f777ef1c37c971d3af6631715099b084c"
   integrity sha512-8zaIXJp/nG9Ff9vQNh7TI+C3nA6q6iIsGJ4B4L6MhZ7mHnTMR4YP5vp2xydmFXIy8rpyIVbNAG44871LMt6ujg==
@@ -4696,16 +4668,6 @@
     "@typescript-eslint/scope-manager" "5.54.1"
     "@typescript-eslint/types" "5.54.1"
     "@typescript-eslint/typescript-estree" "5.54.1"
-    debug "^4.3.4"
-
-"@typescript-eslint/parser@^5.49.0":
-  version "5.49.0"
-  resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-5.49.0.tgz"
-  integrity sha512-veDlZN9mUhGqU31Qiv2qEp+XrJj5fgZpJ8PW30sHU+j/8/e5ruAhLaVDAeznS7A7i4ucb/s8IozpDtt9NqCkZg==
-  dependencies:
-    "@typescript-eslint/scope-manager" "5.49.0"
-    "@typescript-eslint/types" "5.49.0"
-    "@typescript-eslint/typescript-estree" "5.49.0"
     debug "^4.3.4"
 
 "@typescript-eslint/scope-manager@4.33.0":
