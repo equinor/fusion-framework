@@ -9906,9 +9906,9 @@ odata-query@^6.7.0:
     tslib "^1.10.0"
 
 odata-query@^7.0.3:
-  version "7.0.3"
-  resolved "https://registry.npmjs.org/odata-query/-/odata-query-7.0.3.tgz"
-  integrity sha512-Pgc4YK71Z2MNj5mDN8lwDxfNTdjAczw+g80QIUqeUhi3NLX6h4tm3V4Mamjin2Zuu1s5xGsaz1wF2LrzamyGfQ==
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/odata-query/-/odata-query-7.0.4.tgz#1b640bb086e0aa460b87002f751f0f4ee647c923"
+  integrity sha512-/Zq6xZMWEoMpWgpUg1MIeAUoqSzQBmvnci+eqXvySjVn9MN0R67xpLf75gpswRkbK2/u9hHltYsKOGu7WGlq8g==
   dependencies:
     tslib "^2.4.0"
 
