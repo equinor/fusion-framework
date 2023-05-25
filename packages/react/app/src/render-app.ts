@@ -3,7 +3,7 @@ import { renderComponent, RenderTeardown } from './render-component';
 
 import type { ComponentRenderArgs } from './create-component';
 
-/** @deprecated */
+/** @deprecated  test */
 export const renderApp = (...componentArgs: Parameters<typeof createComponent>) => {
     const renderer = renderComponent(createComponent(...componentArgs));
     return (el: HTMLElement, args: ComponentRenderArgs): RenderTeardown => {
