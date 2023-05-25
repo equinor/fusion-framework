@@ -10,8 +10,13 @@ export const useCurrentContext = (provider: IContextProvider) => {
         initial: provider.currentContext,
     });
     const setCurrentContext = useCallback(
-        (entry: ContextItem | string) => {
-            provider.contextClient.setCurrentContext(entry);
+        (entry?: ContextItem | string | null) => {
+            if (!entry) {
+                return provider.clearCurrentContext();
+            } else if (typeof entry === 'string') {
+                return provider.setCurrentContextByIdAsync(entry);
+            }
+            return provider.setCurrentContextAsync(entry);
         },
         [provider]
     );

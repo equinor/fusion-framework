@@ -21,7 +21,10 @@ export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
 export type AppType = 'standalone' | 'report' | 'launcher';
 
-export type CurrentApp = App | null | undefined;
+export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
+    | App<TEnv, TModules>
+    | null
+    | undefined;
 
 export type AppAuth = {
     clientId: string;

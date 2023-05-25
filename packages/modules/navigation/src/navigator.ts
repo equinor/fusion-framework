@@ -1,5 +1,5 @@
 import type { History, To, Path } from '@remix-run/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, skip, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
 
@@ -81,10 +81,16 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
 
     public listen(listener: NavigationListener): VoidFunction {
         this.#logger.debug('Navigator::listen', listener);
-        const subscription = this.#state.subscribe((x) => {
-            this.#logger.debug('Navigator::listen[onchange]', x);
-            listener(x);
-        });
+        const subscription = this.#state
+            .pipe(
+                /** skip the first, since we only want up-coming events  */
+                skip(1)
+                // TODO filter only locations within this basename
+            )
+            .subscribe((x) => {
+                this.#logger.debug('Navigator::listen[onchange]');
+                listener(x);
+            });
         return () => {
             this.#logger.debug('Navigator::listen[unsubscribe]');
             return subscription.unsubscribe();

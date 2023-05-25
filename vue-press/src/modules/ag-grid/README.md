@@ -6,13 +6,39 @@ tag:
   - external
 ---
 
-<ModuleBadge module="module-ag-grid" />
+<ModuleBadge module="modules/ag-grid" />
 
 This module is for configuring the license key of Ag Grid.
 
 When installing this module, `@ag-grid-enterprise/core` is installed as a peer dependency.
 
 read more for usage of [AG Grid](https://www.ag-grid.com/)
+
+::: warning using module version of ag-grid
+when installing the ag-grid packages, make sure to use the `mjs` version __NOT__ `cjs`.
+```sh
+# correct
+npm i @ag-grid-community/core
+
+# wrong
+npm i ag-grid-community
+```
+:::
+
+::: warning version
+When installing ag-grid packages, the packages must inhere to same __major__ and __minor__ as the framework module.
+
+_The framework package should represent the major and minor of ag-grid, but double check the decencies in `package.json`_
+
+> Reasoning for being so strict about versioning is to not have a higher version than we current have licensed for.
+```sh
+# correct
+npm i @ag-grid-community/core@~xx.yy
+
+# wrong
+npm i @ag-grid-community/core@^x.yy
+```
+:::
 
 > in the future a `@equinor/fusion-framework-react-module-ag-grid` will be created, which also exposes 
 > plugins/extensions for react, see [Fusion React Component](https://github.com/equinor/fusion-react-components)

@@ -1,24 +1,23 @@
-import { ReliableDictionary, EventHub, LocalStorageProvider } from '@equinor/fusion';
-import type { FeatureLogger, ContextManifest } from '@equinor/fusion';
+import { filter, scan, tap } from 'rxjs';
+
+import {
+    ReliableDictionary,
+    EventHub,
+    LocalStorageProvider,
+    type FeatureLogger,
+} from '@equinor/fusion';
 
 import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 
 import { Fusion } from '@equinor/fusion-framework-react';
-import { configureModules } from '@equinor/fusion-framework-app';
-import type { AppManifest, AppModule } from '@equinor/fusion-framework-module-app';
-import { enableContext, ContextItem } from '@equinor/fusion-framework-module-context';
 
-import { filter, scan, tap } from 'rxjs';
-
-type AppManifestLegacy = AppManifest & {
-    context?: ContextManifest;
-};
+import { type ContextItem } from '@equinor/fusion-framework-module-context';
 
 export class LegacyContextManager extends ReliableDictionary<ContextCache> {
-    #framework: Fusion<[AppModule]>;
+    #framework: Fusion;
 
     constructor(args: {
-        framework: Fusion<[AppModule]>;
+        framework: Fusion;
         // TODO - enable module-navigation
         history: History;
         featureLogger: FeatureLogger;
@@ -27,7 +26,9 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
         this.#framework = args.framework;
 
-        args.framework.modules.context.currentContext$
+        const { context } = args.framework.modules;
+
+        context.currentContext$
             .pipe(
                 tap((x) => args.featureLogger.setCurrentContext(x?.id ?? null, x?.title ?? null)),
                 filter((x): x is ContextItem => !!x),
@@ -43,8 +44,9 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
                 this.setAsync('history', values);
 
+                this.setAsync('current', currentContext ?? null);
+
                 if (currentContext) {
-                    this.setAsync('current', currentContext);
                     args.featureLogger.log('Context selected', '0.0.1', {
                         selectedContext: currentContext,
                         // why do we need and array of all contexts?
@@ -52,42 +54,20 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                     });
                 }
             });
-
-        args.framework.modules.app.current$.subscribe((app) => {
-            if (app) {
-                const manifest = app.state.manifest as unknown as AppManifestLegacy | undefined;
-                if (manifest?.context) {
-                    const initModules = configureModules((configurator) => {
-                        enableContext(configurator, async (builder) => {
-                            // TODO - check build url and get context from url
-                            manifest.context?.types &&
-                                builder.setContextType(manifest.context.types);
-                            manifest.context?.filterContexts &&
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                // @ts-ignore
-                                builder.setContextFilter(manifest.context.filterContexts);
-                        });
-                    });
-                    initModules({
-                        fusion: args.framework,
-                        env: { manifest: manifest as AppManifest },
-                    });
-                }
-            }
-        });
     }
 
-    public getCurrentContext(): ContextItem | undefined {
+    public getCurrentContext(): ContextItem | null | undefined {
         return this.#framework.modules.context.currentContext;
     }
 
     public async setCurrentContextAsync(context: string | ContextItem | null): Promise<void> {
-        if (context !== null) {
-            this.#framework.modules.context.contextClient.setCurrentContext(
-                context as string | ContextItem
-            );
-        } else {
+        const contextProvider = this.#framework.modules.context;
+        if (context === null) {
             this.#framework.modules.context.clearCurrentContext();
+        } else if (typeof context === 'string') {
+            await contextProvider.setCurrentContextByIdAsync(context);
+        } else {
+            await contextProvider.setCurrentContextAsync(context);
         }
     }
 

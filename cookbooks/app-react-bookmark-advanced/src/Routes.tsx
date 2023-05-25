@@ -29,7 +29,7 @@ export const routes: RouteObject[] = [
                 index: true,
                 element: (
                     <div>
-                        <Selected />,
+                        <Selected />
                     </div>
                 ),
             },

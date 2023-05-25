@@ -1,5 +1,14 @@
-import { lastValueFrom, Observable, Subscription, throwError } from 'rxjs';
-import { filter, map, pairwise, switchMap } from 'rxjs/operators';
+import { EMPTY, lastValueFrom, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import {
+    catchError,
+    filter,
+    finalize,
+    map,
+    pairwise,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs/operators';
 
 import { ContextModuleConfig } from './configurator';
 
@@ -23,8 +32,8 @@ export interface IContextProvider {
     /** DANGER */
     readonly queryClient: Query<ContextItem[], QueryContextParameters>;
 
-    readonly currentContext$: Observable<ContextItem | undefined>;
-    currentContext: ContextItem | undefined;
+    readonly currentContext$: Observable<ContextItem | null | undefined>;
+    currentContext: ContextItem | null | undefined;
     queryContext(search: string): Observable<Array<ContextItem>>;
     queryContextAsync(search: string): Promise<Array<ContextItem>>;
     validateContext(item: ContextItem<Record<string, unknown>>): boolean;
@@ -37,6 +46,19 @@ export interface IContextProvider {
         args: RelatedContextParameters
     ) => Promise<Array<ContextItem<Record<string, unknown>>>>;
     clearCurrentContext: VoidFunction;
+
+    setCurrentContextById(id: string): Observable<ContextItem<Record<string, unknown>>>;
+    setCurrentContextByIdAsync(id: string): Promise<ContextItem<Record<string, unknown>>>;
+
+    setCurrentContext(
+        context: ContextItem<Record<string, unknown>> | null,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Observable<ContextItem<Record<string, unknown>> | null>;
+
+    setCurrentContextAsync(
+        context: ContextItem<Record<string, unknown>> | null,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Promise<ContextItem<Record<string, unknown>> | null>;
 }
 
 export class ContextProvider implements IContextProvider {
@@ -52,6 +74,8 @@ export class ContextProvider implements IContextProvider {
     #contextFilter: ContextModuleConfig['contextFilter'];
     #contextParameterFn: Required<ContextModuleConfig['contextParameterFn']>;
 
+    #contextQueue = new Subject<Observable<ContextItem<Record<string, unknown>>>>();
+
     public get contextClient() {
         return this.#contextClient;
     }
@@ -60,24 +84,43 @@ export class ContextProvider implements IContextProvider {
         return this.#contextQuery;
     }
 
-    get currentContext$(): Observable<ContextItem | undefined> {
+    get currentContext$(): Observable<ContextItem | null | undefined> {
         return this.#contextClient.currentContext$;
     }
 
-    get currentContext(): ContextItem | undefined {
+    get currentContext(): ContextItem | undefined | null {
         return this.#contextClient.currentContext;
     }
 
-    set currentContext(context: ContextItem | undefined) {
-        context ? this.setCurrentContext(context) : this.clearCurrentContext();
+    /** @deprecated do not use, will be removed */
+    set currentContext(context: ContextItem | null | undefined) {
+        console.warn(
+            '@deprecated',
+            'ContextProvider.currentContext',
+            'use setCurrentContextById|setCurrentContext|clearCurrentContext'
+        );
+        if (context === undefined) {
+            throw Error('not allowed to set current context as undefined undefined!');
+        }
+        this.setCurrentContextAsync(context);
     }
 
     constructor(args: {
         config: ContextModuleConfig;
         event?: ModuleType<EventModule>;
+        /** @deprecated use  ContextProvider.connectParentContext */
         parentContext?: IContextProvider;
     }) {
-        const { config, event, parentContext } = args;
+        const { config, event } = args;
+
+        if (args.parentContext) {
+            console.warn(
+                '@deprecated',
+                'parentContext as arg is deprecated, use ContextProvider.connectParentContext'
+            );
+        }
+
+        this.#event = event;
 
         config.resolveContext && (this.resolveContext = config.resolveContext?.bind(this));
         config.validateContext && (this.validateContext = config.validateContext?.bind(this));
@@ -99,138 +142,260 @@ export class ContextProvider implements IContextProvider {
                 filter: { type: args.type },
             }));
 
-        if (event) {
-            this.#event = event;
-
-            /** this might be moved to client, to await prevention of event */
+        if (this.#event) {
             this.#subscriptions.add(
-                this.#contextClient.currentContext$
-                    .pipe(pairwise())
-                    .subscribe(([previous, next]) => {
-                        event.dispatchEvent('onCurrentContextChanged', {
-                            source: this,
-                            canBubble: true,
-                            detail: { previous, next },
-                        });
-                    })
+                this.currentContext$.pipe(pairwise()).subscribe(([previous, next]) => {
+                    this.#event?.dispatchEvent('onCurrentContextChanged', {
+                        source: this,
+                        canBubble: true,
+                        detail: { previous, next },
+                    });
+                })
             );
-
             this.#subscriptions.add(
                 /** observe event from child modules */
-                event.addEventListener('onCurrentContextChanged', (e) => {
+                this.#event.addEventListener('onCurrentContextChanged', (e) => {
                     /** loop prevention */
-                    if (e.source !== this) {
-                        this.currentContext = e.detail.next;
+                    if (e.source !== this && e.detail.next !== undefined) {
+                        this.setCurrentContext(e.detail.next);
                     }
                 })
             );
         }
 
-        if (parentContext) {
-            this.#subscriptions.add(
-                parentContext.contextClient.currentContext$
-                    .pipe(
-                        switchMap(async (next) => {
-                            if (next) {
-                                const onParentContextChanged = await this.#event?.dispatchEvent(
-                                    'onParentContextChanged',
-                                    {
-                                        source: this,
-                                        detail: next,
-                                        cancelable: true,
-                                    }
-                                );
-                                return { next, canceled: onParentContextChanged?.canceled };
-                            }
-                            return { next };
-                        }),
-                        filter((x) => !x.canceled),
-                        map(({ next }) => next)
-                    )
-                    .subscribe(async (next) => {
-                        if (next) {
-                            try {
-                                await this.setCurrentContext(next, {
-                                    validate: true,
-                                    resolve: true,
-                                });
-                            } catch (err) {
-                                console.warn('ContextProvider::onParentContextChanged', err);
-                            }
-                        } else {
-                            this.clearCurrentContext();
-                        }
-                    })
-            );
-        }
+        this.#subscriptions.add(
+            this.#contextQueue
+                .pipe(
+                    switchMap((next) => next),
+                    tap((x) => console.debug('ContextProvider::#contextQueue', x))
+                )
+                .subscribe((context) => this.#contextClient.setCurrentContext(context ?? null))
+        );
     }
 
-    public async setCurrentContext(
-        context: ContextItem<Record<string, unknown>>,
-        opt?: { validate?: boolean; resolve?: boolean }
-    ): Promise<ContextItem<Record<string, unknown>>> {
-        if (context === this.currentContext) {
-            return context;
-        }
-        if (opt?.validate && !this.validateContext(context)) {
-            if (opt.resolve) {
-                /** notify listeners about to resolve invalid context */
-                const onSetContextResolve = await this.#event?.dispatchEvent(
-                    'onSetContextResolve',
-                    {
-                        source: this,
-                        cancelable: true,
-                        detail: { context },
-                    }
-                );
-                if (onSetContextResolve?.canceled) {
-                    throw Error('resolving of context was canceled');
+    public connectParentContext(
+        provider: IContextProvider,
+        opt?: { skipFirst: boolean }
+    ): Subscription {
+        const parentContext$ = provider.currentContext$.pipe(
+            // do not set context if parent has not initialized
+            filter((x): x is ContextItem | null => x !== undefined),
+            filter((next, index) => {
+                if (opt?.skipFirst && index <= 1) {
+                    console.debug(
+                        'ContextProvider::connectParentContext',
+                        'skipping first item',
+                        next
+                    );
+                    return false;
                 }
-
-                try {
-                    const resolved = await this.resolveContextAsync(context);
-                    /** notify listeners about to resolved invalid context */
-                    const onSetContextResolved = await this.#event?.dispatchEvent(
-                        'onSetContextResolved',
+                return this.currentContext?.id !== next?.id;
+            }),
+            switchMap(async (next) => {
+                if (next) {
+                    const onParentContextChanged = await this.#event?.dispatchEvent(
+                        'onParentContextChanged',
                         {
                             source: this,
+                            detail: next,
                             cancelable: true,
-                            detail: { context, resolved },
                         }
                     );
-                    if (onSetContextResolved?.canceled) {
-                        throw Error('resolving of context was canceled');
-                    }
-                    return this.setCurrentContext(resolved);
-                } catch (error) {
-                    console.error('failed to resolve context', context, error);
-                    this.#event?.dispatchEvent('onSetContextResolveFailed', {
+                    return { next, canceled: onParentContextChanged?.canceled };
+                }
+                return { next };
+            }),
+            filter((x) => !x.canceled),
+            switchMap(({ next }) => {
+                return this.setCurrentContext(next, {
+                    validate: true,
+                    resolve: true,
+                }).pipe(
+                    catchError((err) => {
+                        console.warn(
+                            'ContextProvider::onParentContextChanged',
+                            'setCurrentContext',
+                            err
+                        );
+                        return EMPTY;
+                    })
+                );
+            }),
+            catchError((err) => {
+                console.warn('ContextProvider::onParentContextChanged', 'unhandled exception', err);
+                return EMPTY;
+            })
+        );
+
+        const subscription = parentContext$.subscribe();
+        this.#subscriptions.add(subscription);
+        return subscription;
+    }
+
+    public setCurrentContextById(id: string): Observable<ContextItem<Record<string, unknown>>> {
+        return new Observable((subscriber) => {
+            try {
+                this.#contextClient
+                    .resolveContext(id)
+                    .pipe(
+                        filter((item): item is ContextItem => !!item),
+                        switchMap((item) => this.setCurrentContext(item))
+                    )
+                    .subscribe(subscriber);
+            } catch (err) {
+                subscriber.error(err);
+            }
+        });
+    }
+
+    public setCurrentContextByIdAsync(id: string): Promise<ContextItem<Record<string, unknown>>> {
+        return lastValueFrom(this.setCurrentContextById(id));
+    }
+
+    /**
+     * Setting context is a complex operation, and might not happen immediately.
+     * When setting the context, a task is created and added to the queue.
+     * Once the task is completed, the returned observable will emit the value which will be the next state.
+     *
+     * Even tho this function returns a `Observable`, the task will be queued even tho nobody subscribes.
+     *
+     * If the observable is subscribe, unsubscribing __WILL__ abort the task and remove it from queue
+     *
+     * @param context context item which would be queue to set as current
+     */
+    public setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Observable<T> {
+        /** signal for aborting the queue entry */
+        const abort$ = new Subject();
+
+        /** wrapper for returning an observable to the caller */
+        const subject$ = new Subject<T>();
+
+        const task$ = this._setCurrentContext(context, opt).pipe(
+            /** send context item which was set to the caller */
+            tap((x) => subject$.next(x)),
+            /** abort task on signal */
+            takeUntil(abort$),
+            /** close observable sent to caller */
+            finalize(() => subject$.complete()),
+            /** catch errors to not stall queue  */
+            catchError((err) => {
+                /** send the error to the caller  */
+                subject$.error(err);
+                /** skip setting any context */
+                return EMPTY;
+            })
+        );
+
+        /** add task to internal queue */
+        this.#contextQueue.next(task$ as Observable<ContextItem<Record<string, unknown>>>);
+
+        return subject$.pipe(
+            /** if caller subscribes, unsubscribe should abort queue entry */
+            finalize(() => abort$.next(true))
+        );
+    }
+
+    protected _setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Observable<T> {
+        return new Observable((subscriber) => {
+            if (context === this.currentContext) {
+                subscriber.next(context);
+                return subscriber.complete();
+            }
+            if (context && opt?.validate && !this.validateContext(context)) {
+                if (!opt.resolve) {
+                    /** cannot resolve context, and provided is invalid  */
+                    this.#event?.dispatchEvent('onSetContextValidationFailed', {
                         source: this,
-                        detail: { context, error },
+                        detail: { context },
                     });
+                    return subscriber.error(Error('failed to validate provided context'));
+                }
+                if (opt.resolve) {
+                    return of(context)
+                        .pipe(
+                            /** notify event observers that context is about to get resolved */
+                            switchMap(async (context) => {
+                                const event = await this.#event?.dispatchEvent(
+                                    'onSetContextResolve',
+                                    {
+                                        source: this,
+                                        cancelable: true,
+                                        detail: { context },
+                                    }
+                                );
+                                if (event?.canceled) {
+                                    throw Error('resolving of context was canceled');
+                                }
+                                return context;
+                            }),
+                            /** execute resolve */
+                            switchMap((context) =>
+                                this.resolveContext(context).pipe(
+                                    map((resolved) => ({
+                                        context,
+                                        resolved,
+                                    }))
+                                )
+                            ),
+                            /** notify event observers that context was resolved */
+                            switchMap(async ({ context, resolved }) => {
+                                const event = await this.#event?.dispatchEvent(
+                                    'onSetContextResolved',
+                                    {
+                                        source: this,
+                                        cancelable: true,
+                                        detail: { context, resolved },
+                                    }
+                                );
+                                if (event?.canceled) {
+                                    throw Error('resolving of context was canceled');
+                                }
+                                return resolved;
+                            }),
+                            /** recursive set current context without validation and resolve */
+                            switchMap((resolved) =>
+                                this._setCurrentContext(resolved as unknown as T)
+                            )
+                        )
+                        .subscribe(subscriber);
                 }
             }
-            this.#event?.dispatchEvent('onSetContextValidationFailed', {
-                source: this,
-                detail: { context },
-            });
-            throw Error('failed to validate provided context');
-        }
 
-        const onCurrentContextChange = await this.#event?.dispatchEvent('onCurrentContextChange', {
-            source: this,
-            canBubble: true,
-            cancelable: true,
-            detail: { context: context },
+            return of(context)
+                .pipe(
+                    switchMap(async (context) => {
+                        const event = await this.#event?.dispatchEvent('onCurrentContextChange', {
+                            source: this,
+                            canBubble: true,
+                            cancelable: true,
+                            detail: { context: context },
+                        });
+
+                        if (event?.canceled) {
+                            throw Error('change of context was aborted');
+                        }
+
+                        return context;
+                    })
+                )
+                .subscribe((context) => {
+                    subscriber.next(context);
+                    subscriber.complete();
+                });
         });
+    }
 
-        if (onCurrentContextChange?.canceled) {
-            throw Error('change of context was aborted');
-        }
-
-        this.#contextClient.setCurrentContext(context);
-
-        return context;
+    public async setCurrentContextAsync<T extends ContextItem<Record<string, unknown>> | null>(
+        context: T,
+        opt?: { validate?: boolean; resolve?: boolean }
+    ): Promise<T> {
+        return lastValueFrom(this.setCurrentContext(context, opt));
     }
 
     public queryContext(search: string): Observable<Array<ContextItem>> {
@@ -293,7 +458,15 @@ export class ContextProvider implements IContextProvider {
                 )
             );
         }
-        return this.#contextRelated.query(args).pipe(map(({ value }) => value));
+        return this.#contextRelated.query(args).pipe(
+            map(({ value }) => value),
+            catchError((err) => {
+                if (err.cause) {
+                    throw err.cause;
+                }
+                throw err;
+            })
+        );
     }
 
     public relatedContextsAsync(
@@ -302,12 +475,13 @@ export class ContextProvider implements IContextProvider {
         return lastValueFrom(this.relatedContexts(args));
     }
 
-    public clearCurrentContext() {
-        this.#contextClient.setCurrentContext(undefined);
+    public clearCurrentContext(): void {
+        this.setCurrentContext(null);
     }
 
     dispose() {
         this.#subscriptions.unsubscribe();
+        this.#contextClient.dispose();
     }
 }
 
@@ -319,7 +493,7 @@ declare module '@equinor/fusion-framework-module-event' {
         onCurrentContextChange: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    context: ContextItem | undefined;
+                    context: ContextItem | null;
                 },
                 IContextProvider
             >
@@ -328,8 +502,8 @@ declare module '@equinor/fusion-framework-module-event' {
         onCurrentContextChanged: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    next: ContextItem | undefined;
-                    previous: ContextItem | undefined;
+                    next: ContextItem | null;
+                    previous?: ContextItem | null;
                 },
                 IContextProvider
             >
@@ -337,7 +511,7 @@ declare module '@equinor/fusion-framework-module-event' {
         onParentContextChanged: FrameworkEvent<
             FrameworkEventInit<
                 {
-                    context: ContextItem | undefined;
+                    context: ContextItem | null;
                 },
                 IContextProvider
             >

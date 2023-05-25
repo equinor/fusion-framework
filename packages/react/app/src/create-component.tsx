@@ -74,7 +74,7 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
  */
 export const createComponent =
     <TModules extends Array<AnyModule>, TRef extends Fusion = Fusion, TEnv extends AppEnv = AppEnv>(
-        Component: React.ComponentType,
+        Component: React.ElementType,
         configure?: AppModuleInitiator<TModules, TRef, TEnv>
     ): ComponentRenderer<TRef, TEnv> =>
     (fusion, env) =>

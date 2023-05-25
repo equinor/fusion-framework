@@ -1,5 +1,8 @@
 import { AnyModule, CombinedModules, ModuleInitializerArgs, Modules, ModuleType } from './types';
 
+/**
+ * @deprecated @see {@link BaseConfigBuilder}
+ */
 export abstract class ModuleConfigBuilder<
     TModules extends Array<AnyModule> | unknown = unknown,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

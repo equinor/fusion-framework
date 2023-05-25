@@ -24,7 +24,7 @@ export const module: EventModule = {
         return configurator;
     },
     initialize: ({ config }) => new EventModuleProvider(config),
-    postInitialize({ instance, modules }) {
+    postInitialize: async ({ instance, modules }) => {
         instance.dispatchEvent('onModulesLoaded', { detail: modules, source: instance });
     },
     dispose({ instance }) {

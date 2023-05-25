@@ -153,7 +153,7 @@ const useQueryContext = (): [
     const setContext = useCallback(
         (e: ContextSelectEvent): void => {
             if (e.nativeEvent.detail?.selected.length) {
-                framework.modules.context.contextClient.setCurrentContext(
+                framework.modules.context.setCurrentContextByIdAsync(
                     e.nativeEvent.detail.selected[0].id
                 );
             }

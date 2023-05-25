@@ -12,7 +12,7 @@
     "build": "lerna run build",
     "build:affected": "nx run-many --target=build --all",
     "build:clean": "yarn clean:build && yarn run build",
-    "lint": "eslint 'packages/**/src/**/*.{ts,tsx}'",
+    "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "yarn lint --output-file eslint-report.log.json --format json",
     "lint:staged": "lint-staged",
     "docs": "cd packages/docs && yarn build -d ../../docs",
@@ -53,7 +53,7 @@
     "lerna": "^6.4.1",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^13.1.0",
-    "nx": "15.8.7",
+    "nx": "16.2.2",
     "prettier": "^2.8.3",
     "ts-jest": "^29.0.5",
     "tslib": "^2.5.0",
@@ -74,6 +74,7 @@
     ]
   },
   "dependencies": {
+    "@changesets/cli": "^2.26.1",
     "@typescript-eslint/eslint-plugin": "^5.49.0"
   }
 }

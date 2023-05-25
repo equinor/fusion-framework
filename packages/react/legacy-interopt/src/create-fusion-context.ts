@@ -31,7 +31,7 @@ import type { PortalFramework } from './types';
 import legacySignIn from './legacy-api-signin';
 import LegacyContextManager from './LegacyContextManager';
 
-import { globalEquinorFusionContextKey } from './static';
+import { GLOBAL_FUSION_CONTEXT_KEY } from './static';
 
 export type FusionContextOptions = {
     loadBundlesFromDisk: boolean;
@@ -180,7 +180,7 @@ export const createFusionContext = async (args: {
         options: { environment },
     };
     // @ts-ignore
-    window[globalEquinorFusionContextKey] = fusionContext;
+    window[GLOBAL_FUSION_CONTEXT_KEY] = fusionContext;
 
     await legacySignIn(framework);
 

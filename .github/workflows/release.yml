@@ -1,44 +1,35 @@
 name: Release
 
-permissions:
-  actions: write
-  checks: write
-  contents: write
-  deployments: write
-
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  release-pkg:
-    name: Create release
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 16.x
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 0
-      
-      - name: Setup node
-        uses: actions/setup-node@v2
+          node-version: 16.x
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
         with:
-          node-version: '18'
-          registry-url: https://registry.npmjs.org
-
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install Node Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Config git user
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-      - name: Release packages
-        run: npx lerna publish from-package --yes
+          publish: npx lerna publish from-package --yes
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+

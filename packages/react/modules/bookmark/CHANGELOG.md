@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.9...@equinor/fusion-framework-react-module-bookmark@2.0.10) (2023-05-24)
+
+### Bug Fixes
+
+-   **react-module-bookmark:** check if bookmark provider ([af112fb](https://github.com/equinor/fusion-framework/commit/af112fb43f95be28c129be1d31c0d494edb027cc))
+
+## [2.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.8...@equinor/fusion-framework-react-module-bookmark@2.0.9) (2023-05-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.7...@equinor/fusion-framework-react-module-bookmark@2.0.8) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.6...@equinor/fusion-framework-react-module-bookmark@2.0.7) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## 2.0.6 (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.4...@equinor/fusion-framework-react-module-bookmark@2.0.5) (2023-05-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.3...@equinor/fusion-framework-react-module-bookmark@2.0.4) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.2...@equinor/fusion-framework-react-module-bookmark@2.0.3) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## 2.0.2 (2023-05-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@2.0.0...@equinor/fusion-framework-react-module-bookmark@2.0.1) (2023-05-08)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react-module-bookmark
+
+## [2.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-bookmark@1.0.5...@equinor/fusion-framework-react-module-bookmark@2.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-context:** `ContextProvider.setCurrentContext` now returns an `Observable`
+
+### Features
+
+-   **module-context:** make setting context as an observable ([21e1c6b](https://github.com/equinor/fusion-framework/commit/21e1c6b64f541ec63dd6ea830410c7bb5cbdd84a))
+
+### Bug Fixes
+
+-   **react-legacy-interopt:** fix initial context url ([31f113a](https://github.com/equinor/fusion-framework/commit/31f113aebc2ad09e6a446997e95ecfeef3da2fff))
+
 ## 1.0.5 (2023-04-24)
 
 ### Bug Fixes

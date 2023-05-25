@@ -1,5 +1,13 @@
-import { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import { ObservableInput } from 'rxjs';
+
+import {
+    AnyModuleInstance,
+    ModuleInitializerArgs,
+    ModuleInstance,
+    ModulesInstanceType,
+} from '@equinor/fusion-framework-module';
 import { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
+import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
 import { QueryCtorOptions } from '@equinor/fusion-query';
 import {
@@ -10,7 +18,8 @@ import {
 } from './types';
 import { GetContextParameters } from './client/ContextClient';
 import { ContextConfigBuilder, ContextConfigBuilderCallback } from './ContextConfigBuilder';
-import { IContextProvider } from 'ContextProvider';
+import { type IContextProvider } from './ContextProvider';
+import resolveInitialContext from './utils/resolve-initial-context';
 
 export interface ContextModuleConfig {
     client: {
@@ -20,6 +29,9 @@ export interface ContextModuleConfig {
     };
     contextType?: string[];
     contextFilter?: ContextFilterFn;
+
+    /** set initial context from parent, will await resolve */
+    skipInitialContext?: boolean;
 
     /**
      * Method for generating context query parameters.
@@ -38,6 +50,14 @@ export interface ContextModuleConfig {
         this: IContextProvider,
         item: ContextItem | null
     ) => ReturnType<IContextProvider['validateContext']>;
+
+    resolveInitialContext?: (
+        args: {
+            ref?: AnyModuleInstance | any;
+            modules: ModuleInstance;
+        }
+        // ...args: Parameters<ContextModule['postInitialize']>
+    ) => ObservableInput<ContextItem | void>;
 }
 
 export interface IContextModuleConfigurator {
@@ -69,7 +89,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
     }
 
     public async createConfig(
-        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>
+        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>
     ): Promise<ContextModuleConfig> {
         const config = await this.#configBuilders.reduce(async (cur, cb) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,6 +97,8 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
             await Promise.resolve(cb(builder));
             return Object.assign(cur, builder.config);
         }, Promise.resolve({} as Partial<ContextModuleConfig>));
+
+        config.resolveInitialContext ??= resolveInitialContext();
 
         // TODO - make less lazy
         config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {

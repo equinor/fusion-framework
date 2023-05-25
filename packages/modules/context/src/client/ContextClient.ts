@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, EMPTY } from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, lastValueFrom, firstValueFrom } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import equal from 'fast-deep-equal';
@@ -9,16 +9,16 @@ import { ContextItem } from '../types';
 
 export type GetContextParameters = { id: string };
 
-export class ContextClient extends Observable<ContextItem> {
+export class ContextClient extends Observable<ContextItem | null> {
     #client: Query<ContextItem, { id: string }>;
     /** might change to reactive state, for comparing state with reducer */
-    #currentContext$: BehaviorSubject<ContextItem | undefined>;
+    #currentContext$: BehaviorSubject<ContextItem | null | undefined>;
 
-    get currentContext(): ContextItem | undefined {
+    get currentContext(): ContextItem | null | undefined {
         return this.#currentContext$.value;
     }
 
-    get currentContext$(): Observable<ContextItem | undefined> {
+    get currentContext$(): Observable<ContextItem | null | undefined> {
         return this.#currentContext$.asObservable();
     }
 
@@ -29,13 +29,14 @@ export class ContextClient extends Observable<ContextItem> {
     constructor(options: QueryCtorOptions<ContextItem, GetContextParameters>) {
         super((observer) => this.#currentContext$.subscribe(observer));
         this.#client = new Query(options);
-        this.#currentContext$ = new BehaviorSubject<ContextItem | undefined>(undefined);
+        this.#currentContext$ = new BehaviorSubject<ContextItem | null | undefined>(undefined);
     }
 
-    public setCurrentContext(idOrItem?: string | ContextItem) {
+    public setCurrentContext(idOrItem?: string | ContextItem | null) {
         if (typeof idOrItem === 'string') {
             // TODO - compare context
             this.resolveContext(idOrItem)
+                // TODO should this catch error?
                 .pipe(catchError(() => EMPTY))
                 .subscribe((value) => this.setCurrentContext(value));
             /** only add context if not match */
@@ -45,7 +46,25 @@ export class ContextClient extends Observable<ContextItem> {
     }
 
     public resolveContext(id: string): Observable<ContextItem> {
-        return this.#client.query({ id }).pipe(map((x) => x.value));
+        return this.#client.query({ id }).pipe(
+            map((x) => x.value),
+            // unwrap error
+            catchError((err) => {
+                if (err.cause) {
+                    throw err.cause;
+                }
+                throw err;
+            })
+        );
+    }
+
+    public resolveContextAsync(id: string, opt?: { awaitResolve: boolean }): Promise<ContextItem> {
+        const fn = opt?.awaitResolve ? lastValueFrom : firstValueFrom;
+        return fn(this.resolveContext(id));
+    }
+
+    public dispose(): void {
+        this.#currentContext$.complete();
     }
 }
 
