@@ -28,6 +28,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
+          createGithubReleases: true
+          version: npx changeset version && yarn --mode="update-lockfile"
           publish: npx lerna publish from-package --yes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
