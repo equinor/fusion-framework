@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.3
+
+### Patch Changes
+
+-   d8a439f0: chore(signalr): update peer deps
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

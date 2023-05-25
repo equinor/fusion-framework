@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.0.11
+
+### Patch Changes
+
+-   727fb935: fix(react-module-bookmark): module can be undefined
+
+    the bookmark module might not been enable, which makes the application crash.
+
+    **TODO:**
+
+    -   [ ] create a simpler hook for using bookmark
+    -   [ ] create a hook for exposing the module
+    -   [ ] create better documentation
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
