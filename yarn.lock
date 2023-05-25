@@ -960,10 +960,15 @@
   resolved "https://registry.npmjs.org/@equinor/eds-tokens/-/eds-tokens-0.5.5.tgz"
   integrity sha512-PserXGVxf5Q7Z0o/AypudGWdh9Vangct3dQZsgiERfqRj8+a+mU0ObRa6bMm+JouQRV3WktNPJVWMjjJf8jQbw==
 
-"@equinor/eds-tokens@0.9.0", "@equinor/eds-tokens@^0.9.0":
+"@equinor/eds-tokens@0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@equinor/eds-tokens/-/eds-tokens-0.9.0.tgz#725c065e423a3e5a1ea04630b402fac5936799c4"
   integrity sha512-7FLqrH13dRc/q+wxHzZrIGkV35XMYIGojjkqLIbIeM0AwijSE1PETKqLauNf8VtMZPevt/2Hr9dV2a2NpEORQw==
+
+"@equinor/eds-tokens@^0.9.0":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@equinor/eds-tokens/-/eds-tokens-0.9.1.tgz#dcf17986edd8f5bf4e283ece70e7f7a9501a23ef"
+  integrity sha512-EElCCO6JUCAQFlLU7FXiQSH8MZT/AE45suwWCPLDs+6RNopiqvMBo3kNMVcNYojKEsQSM5z68aofdPljrZOnYw==
 
 "@equinor/eds-utils@0.7.0", "@equinor/eds-utils@^0.7.0":
   version "0.7.0"
