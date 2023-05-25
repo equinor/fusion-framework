@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.3
+
+### Patch Changes
+
+-   d8a439f0: chore(signalr): update peer deps
+-   Updated dependencies [d8a439f0]
+    -   @equinor/fusion-framework-module-signalr@2.0.3
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
