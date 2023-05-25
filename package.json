@@ -24,8 +24,7 @@
     "test:pack": "yarn run clean && yarn ci && npx lerna exec 'yarn pack --dry-run'",
     "test:publish": "yarn run clean && yarn ci && npx lerna exec 'yarn pack --dry-run'",
     "test:build": "docker build -f node16.Dockerfile -t fusion_framework_16 .",
-    "dedupe": "yarn lernaupdate --dedupe",
-    "version": "yarn install --no-immutable && git stage yarn.lock"
+    "dedupe": "yarn lernaupdate --dedupe"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
   "keywords": [
