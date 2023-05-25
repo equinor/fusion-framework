@@ -39,7 +39,7 @@
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": ">=1.2.2",
-        "@equinor/fusion-framework-module-service-discovery": "^5.0.4"
+        "@equinor/fusion-framework-module-service-discovery": "^7.0.3"
     },
     "peerDependenciesMeta": {
         "@equinor/fusion-framework-module-service-discovery": {
