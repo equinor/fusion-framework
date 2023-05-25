@@ -1,5 +1,5 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { StrictMode, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface MyBookmark {
     title: string;
@@ -35,54 +35,52 @@ export const App = () => {
     }, [currentBookmark.currentBookmark]);
 
     return (
-        <StrictMode>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '1rem',
+            }}
+        >
             <div
                 style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: '1rem',
+                    padding: '1rem',
                 }}
             >
-                <div
-                    style={{
-                        padding: '1rem',
-                    }}
-                >
-                    <h1>🚀 Fusion Bookmark😎</h1>
-                    <form style={{ display: 'flex', gap: '1rem' }}>
-                        <label htmlFor="value">Title</label>
-                        <input
-                            id="value"
-                            type="text"
-                            onChange={(e) => {
-                                updateState(() => ({
-                                    payload: {
-                                        ...state.payload,
-                                        title: e.target.value,
-                                    },
-                                }));
-                            }}
-                            value={state.payload.title}
-                        />
-                        <label htmlFor="value">Bookmark data:</label>
-                        <input
-                            id="value"
-                            type="text"
-                            onChange={(e) => {
-                                updateState(() => ({
-                                    payload: {
-                                        ...state.payload,
-                                        data: e.target.value,
-                                    },
-                                }));
-                            }}
-                            value={state.payload.data}
-                        />
-                    </form>
-                    <pre>{JSON.stringify(currentBookmark, null, 2)}</pre>
-                </div>
+                <h1>🚀 Fusion Bookmark😎</h1>
+                <form style={{ display: 'flex', gap: '1rem' }}>
+                    <label htmlFor="value">Title</label>
+                    <input
+                        id="value"
+                        type="text"
+                        onChange={(e) => {
+                            updateState(() => ({
+                                payload: {
+                                    ...state.payload,
+                                    title: e.target.value,
+                                },
+                            }));
+                        }}
+                        value={state.payload.title}
+                    />
+                    <label htmlFor="value">Bookmark data:</label>
+                    <input
+                        id="value"
+                        type="text"
+                        onChange={(e) => {
+                            updateState(() => ({
+                                payload: {
+                                    ...state.payload,
+                                    data: e.target.value,
+                                },
+                            }));
+                        }}
+                        value={state.payload.data}
+                    />
+                </form>
+                <pre>{JSON.stringify(currentBookmark, null, 2)}</pre>
             </div>
-        </StrictMode>
+        </div>
     );
 };
 

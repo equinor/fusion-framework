@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-signalr",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
@@ -35,11 +35,11 @@
         "rxjs": "^7.5.7"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^3.0.0"
+        "@equinor/fusion-framework-module": "^4.1.0"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": ">=1.2.2",
-        "@equinor/fusion-framework-module-service-discovery": "^5.0.4"
+        "@equinor/fusion-framework-module-service-discovery": "^7.0.3"
     },
     "peerDependenciesMeta": {
         "@equinor/fusion-framework-module-service-discovery": {

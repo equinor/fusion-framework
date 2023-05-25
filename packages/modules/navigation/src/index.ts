@@ -1,3 +1,5 @@
+export type { Action, Path } from '@remix-run/router';
+
 export { INavigationConfigurator, NavigationConfigurator } from './configurator';
 
 export { INavigationProvider, NavigationProvider } from './provider';

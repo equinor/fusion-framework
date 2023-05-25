@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.17](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.16...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.17) (2023-05-24)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.16](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.15...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.16) (2023-05-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.15](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.14...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.15) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.14](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.13...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.14) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## 4.0.13 (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.12](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.11...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.12) (2023-05-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.10...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.11) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.9...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.10) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.8...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.9) (2023-05-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## 4.0.8 (2023-05-09)
+
+### Bug Fixes
+
+-   **cookbooks:** remove strict mode as it is not needed for React 18 ([eda33e4](https://github.com/equinor/fusion-framework/commit/eda33e4d0e6c67e3da964599167a9db6e1eadf0a))
+
+## [4.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.6...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.7) (2023-05-08)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
+## [4.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.5...@equinor/fusion-framework-cookbook-app-react-bookmark@4.0.6) (2023-05-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cookbook-app-react-bookmark
+
 ## 4.0.5 (2023-04-24)
 
 ### Bug Fixes

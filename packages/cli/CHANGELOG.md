@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.9...@equinor/fusion-framework-cli@7.0.10) (2023-05-24)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.8...@equinor/fusion-framework-cli@7.0.9) (2023-05-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.8](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.7...@equinor/fusion-framework-cli@7.0.8) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.6...@equinor/fusion-framework-cli@7.0.7) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## 7.0.6 (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.4...@equinor/fusion-framework-cli@7.0.5) (2023-05-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.3...@equinor/fusion-framework-cli@7.0.4) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.2...@equinor/fusion-framework-cli@7.0.3) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## 7.0.2 (2023-05-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@7.0.0...@equinor/fusion-framework-cli@7.0.1) (2023-05-08)
+
+**Note:** Version bump only for package @equinor/fusion-framework-cli
+
+## [7.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cli@6.1.0...@equinor/fusion-framework-cli@7.0.0) (2023-05-05)
+
+### ⚠ BREAKING CHANGES
+
+-   **module-context:** `ContextProvider.setCurrentContext` now returns an `Observable`
+
+### Features
+
+-   **module-context:** make setting context as an observable ([21e1c6b](https://github.com/equinor/fusion-framework/commit/21e1c6b64f541ec63dd6ea830410c7bb5cbdd84a))
+
 ## 6.1.0 (2023-04-24)
 
 ### Features

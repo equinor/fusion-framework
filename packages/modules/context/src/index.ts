@@ -13,6 +13,6 @@ export {
     moduleKey as contextModuleKey,
 } from './module';
 
-export { enableContext } from './enable-context';
+export { enableContext } from './utils/enable-context';
 
 export * from './types';

@@ -5,7 +5,15 @@ export default sidebar({
         {
             text: 'App',
             prefix: '/guide/',
-            children: ['app/', 'app/getting-started', 'app/cli', 'app/legacy', 'app/bookmark'],
+            children: [
+                'app/', 
+                'app/getting-started', 
+                'app/cli',
+                'app/cookbooks',
+                'app/authentication',
+                'app/legacy',
+                'app/tips_and_tricks'
+            ],
         },
     ],
     '/modules/': [

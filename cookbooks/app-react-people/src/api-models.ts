@@ -1,3 +1,5 @@
+// @TODO: Update types from any
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Project = {
     id: string;
     name: string;

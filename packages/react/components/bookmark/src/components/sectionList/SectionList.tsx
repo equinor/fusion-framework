@@ -113,7 +113,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
 
 function createBookmarkActions(
     bookmark: Bookmark,
-    deleteBookmarkById: (bookmarkId: string) => Promise<string>,
+    deleteBookmarkById: (bookmarkId: string) => Promise<string | undefined>,
     editBookmark: (bookmark: string) => void,
     shareBookmark: (bookmark: Bookmark) => void,
     removeBookmarkFavorite: (bookmarkId: string) => void,

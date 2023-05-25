@@ -65,6 +65,10 @@ export class ContextConfigBuilder<
         this.config.resolveContext = fn;
     }
 
+    setResolveInitialContext(fn: ContextModuleConfig['resolveInitialContext']) {
+        this.config.resolveInitialContext = fn;
+    }
+
     setContextClient(
         client: {
             get:

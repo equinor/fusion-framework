@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-app@5.1.1...@equinor/fusion-framework-module-app@5.1.2) (2023-05-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app
+
+## 5.1.1 (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app
+
+## 5.1.0 (2023-05-22)
+
+### Features
+
+-   **module-app:** allow type hinting modules and env ([c80be46](https://github.com/equinor/fusion-framework/commit/c80be46c3c16a40b53506c29debfe6196ea7d945))
+
+## 5.0.1 (2023-05-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-module-app
+
 ## 5.0.0 (2023-04-16)
 
 **Note:** Version bump only for package @equinor/fusion-framework-module-app

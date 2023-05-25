@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.1.2...@equinor/fusion-framework-react@5.1.3) (2023-05-23)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.1.1...@equinor/fusion-framework-react@5.1.2) (2023-05-22)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.1.1](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.1.0...@equinor/fusion-framework-react@5.1.1) (2023-05-22)
+
+### Bug Fixes
+
+-   **react-framework:** expose useCurrentAppModules ([785d5eb](https://github.com/equinor/fusion-framework/commit/785d5eb08963d5ba1a007573879908b33e52fb3f))
+
+## 5.1.0 (2023-05-22)
+
+### Features
+
+-   **react-framework:** add hook for using current app modules ([2d65464](https://github.com/equinor/fusion-framework/commit/2d654647b84e03d1c6e322509885d8bfa2b9142f))
+-   **react-framework:** enhance `useCurrentApp` ([60026c9](https://github.com/equinor/fusion-framework/commit/60026c918c5033137cc359665074ea65c11a34fb))
+
+## [5.0.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.10...@equinor/fusion-framework-react@5.0.11) (2023-05-12)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.0.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.9...@equinor/fusion-framework-react@5.0.10) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.0.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.8...@equinor/fusion-framework-react@5.0.9) (2023-05-11)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## 5.0.8 (2023-05-10)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.6...@equinor/fusion-framework-react@5.0.7) (2023-05-08)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
+## [5.0.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react@5.0.5...@equinor/fusion-framework-react@5.0.6) (2023-05-05)
+
+**Note:** Version bump only for package @equinor/fusion-framework-react
+
 ## 5.0.5 (2023-04-24)
 
 **Note:** Version bump only for package @equinor/fusion-framework-react

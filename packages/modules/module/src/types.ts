@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { ObservableInput } from 'rxjs';
+
 export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
     ref?: any;
     config: TConfig;
@@ -21,8 +23,8 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
     postInitialize?: (args: {
         ref?: any;
         instance: TType;
-        modules: Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
-    }) => void | Promise<void>;
+        modules: ModuleInstance; // Record<TKey, TType> & ModulesInstanceType<ModulesType<TDeps>>;
+    }) => ObservableInput<void>;
     dispose?: (args: {
         ref?: any;
         instance: TType;
