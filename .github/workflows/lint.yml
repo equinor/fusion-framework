@@ -5,6 +5,9 @@ on:
     paths:
       - '**.ts'
       - '**.tsx'
+  push:
+    branches:
+      - 'changeset-release/main'
 
 jobs:
   eslint:
