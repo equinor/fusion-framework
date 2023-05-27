@@ -67,8 +67,9 @@ export const module: ContextModule = {
                                 );
                             },
                             complete: () => {
-                                // TODO - do we need to check first?
-                                provider.connectParentContext(parentProvider);
+                                if (config.connectParentContext !== false && parentProvider) {
+                                    provider.connectParentContext(parentProvider);
+                                }
                                 subscriber.complete();
                             },
                         })

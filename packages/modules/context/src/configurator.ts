@@ -30,6 +30,13 @@ export interface ContextModuleConfig {
     contextType?: string[];
     contextFilter?: ContextFilterFn;
 
+    /**
+     * connect context module to paren context module.
+     *
+     * _default: `true`_
+     */
+    connectParentContext?: boolean;
+
     /** set initial context from parent, will await resolve */
     skipInitialContext?: boolean;
 
