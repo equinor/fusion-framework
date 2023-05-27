@@ -53,6 +53,10 @@ export class ContextConfigBuilder<
         this.config.contextFilter = filter;
     }
 
+    connectParentContext(connect: ContextModuleConfig['connectParentContext']) {
+        this.config.connectParentContext = connect;
+    }
+
     setContextParameterFn(fn: ContextModuleConfig['contextParameterFn']) {
         this.config.contextParameterFn = fn;
     }
