@@ -1,5 +1,14 @@
 # Change Log
 
+## 6.0.8
+
+### Patch Changes
+
+-   [#898](https://github.com/equinor/fusion-framework/pull/898) [`4551142e`](https://github.com/equinor/fusion-framework/commit/4551142ededdb2f1bf74eae552da26d28cd23057) Thanks [@odinr](https://github.com/odinr)! - refactor(module-react-context): expose module and configurator interface from context module
+
+-   Updated dependencies [[`4551142e`](https://github.com/equinor/fusion-framework/commit/4551142ededdb2f1bf74eae552da26d28cd23057)]:
+    -   @equinor/fusion-framework-module-context@4.0.8
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
