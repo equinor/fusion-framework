@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.0.8
+
+### Patch Changes
+
+-   [#898](https://github.com/equinor/fusion-framework/pull/898) [`4551142e`](https://github.com/equinor/fusion-framework/commit/4551142ededdb2f1bf74eae552da26d28cd23057) Thanks [@odinr](https://github.com/odinr)! - feat(module-context): add config option for connection to parent context
+
+    -   add attribute to config interface
+    -   add setter on config builder
+    -   add check for connecting to parent when creating provider
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
