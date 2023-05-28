@@ -56,7 +56,7 @@ const AppWrapper = (
                     break;
             }
         });
-    }, [appKey, framework]);
+    }, [appKey, basename, framework, history]);
     return (
         <HistoryContext.Provider value={{ history }}>
             <Router key={appKey} history={history}>

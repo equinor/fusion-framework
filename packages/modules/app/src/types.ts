@@ -21,6 +21,7 @@ export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
 export type AppType = 'standalone' | 'report' | 'launcher';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
     | App<TEnv, TModules>
     | null
