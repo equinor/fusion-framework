@@ -1,4 +1,4 @@
-import SemanticVersion from "lib/semantic-version";
+import SemanticVersion from '../semantic-version';
 
 import { type IModuleProvider } from "./IModuleProvider";
 
