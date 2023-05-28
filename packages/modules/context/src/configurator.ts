@@ -58,13 +58,11 @@ export interface ContextModuleConfig {
         item: ContextItem | null
     ) => ReturnType<IContextProvider['validateContext']>;
 
-    resolveInitialContext?: (
-        args: {
-            ref?: AnyModuleInstance | any;
-            modules: ModuleInstance;
-        }
-        // ...args: Parameters<ContextModule['postInitialize']>
-    ) => ObservableInput<ContextItem | void>;
+    resolveInitialContext?: (args: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ref?: AnyModuleInstance | any;
+        modules: ModuleInstance;
+    }) => ObservableInput<ContextItem | void>;
 }
 
 export interface IContextModuleConfigurator {

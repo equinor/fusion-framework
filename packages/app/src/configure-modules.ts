@@ -45,7 +45,8 @@ export const configureModules =
         }
         const modules = (await configurator.initialize(
             args.fusion.modules
-        )) as AppModulesInstance<TModules>;
+            // TODO
+        )) as unknown as AppModulesInstance<TModules>;
 
         // @eikeland
         // TODO - remove check after fusion-cli is updated (app module is not enabled in fusion-cli)

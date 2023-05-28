@@ -40,6 +40,6 @@
         "@equinor/fusion-framework-module-msal": "^3.0.2"
     },
     "devDependencies": {
-        "typescript": "^4.9.3"
+        "typescript": "^5.0.4"
     }
 }

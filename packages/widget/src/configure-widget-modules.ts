@@ -45,7 +45,8 @@ export const configureWidgetModules =
         }
         const modules = (await configurator.initialize(
             args.fusion.modules
-        )) as WidgetModulesInstance<TModules>;
+            // TODO
+        )) as unknown as WidgetModulesInstance<TModules>;
 
         // TODO - fire event when widget is loaded
         // if (args.env.manifest?.key) {
