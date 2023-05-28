@@ -16,33 +16,33 @@ export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> 
 
 /**
  * Interface which describes the structure of a module
- * 
+ *
  * @TODO create a BaseModule which implements this interface
- * 
+ *
  * @template TKey name of the module
  * @template TType module instance type
  * @template TConfig module configurator type
  * @template TDeps optional peer module dependencies
  */
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
-    /** 
-     * package version 
+    /**
+     * package version
      */
     version?: SemanticVersion;
 
-    /** 
-     * uniq name of module, used as attribute name on module instances 
+    /**
+     * uniq name of module, used as attribute name on module instances
      */
     name: TKey;
 
     /**
      * _[optional]_
-     * 
+     *
      * Create a configurator builder which the consumer can use for configuring
-     * 
+     *
      * @TODO change return type to `ObservableInput`
      * @TODO add reference to `IConfigurationBuilder`
-     * 
+     *
      * @param ref this would normally be the parent instance
      * @returns a configurator build
      */
@@ -50,13 +50,13 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 
     /**
      * _[optional]_
-     * 
+     *
      * This method is called after the module initiator has created config.
      * @see {@link Module.configure}
-     * 
+     *
      * @TODO change return type to `ObservableInput`
-     * 
-     * @param config 
+     *
+     * @param config
      * @returns void
      */
     postConfigure?: (
@@ -65,11 +65,11 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 
     /**
      * __[required]__
-     * 
+     *
      * Called after all configuration is done.
-     * 
+     *
      * Creates the instance to interact with
-     * 
+     *
      * @param args @see {@link ModuleInitializerArgs}
      * @returns a provider instance which the consumer interact with
      */
@@ -77,9 +77,9 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 
     /**
      * _[optional]_
-     * 
+     *
      * Called after the module is initialized
-     * 
+     *
      * @param args @see {@link ModuleInitializerArgs}
      */
     postInitialize?: (args: {
@@ -90,10 +90,10 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
 
     /**
      * _[optional]_
-     * 
+     *
      * Cleanup callback
-     * 
-     * @param args 
+     *
+     * @param args
      */
     dispose?: (args: {
         ref?: any;

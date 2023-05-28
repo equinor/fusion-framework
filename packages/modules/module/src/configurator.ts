@@ -272,11 +272,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                                 try {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
-                                    instance.version = module.version instanceof SemanticVersion 
-                                        ? module.version 
-                                        : new SemanticVersion(
-                                            module.version ?? '0.0.0-unknown'
-                                        );
+                                    instance.version =
+                                        module.version instanceof SemanticVersion
+                                            ? module.version
+                                            : new SemanticVersion(
+                                                  module.version ?? '0.0.0-unknown'
+                                              );
                                 } catch (err) {
                                     logger.error(`🚨 failed to set module version`);
                                 }
