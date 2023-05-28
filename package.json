@@ -39,6 +39,7 @@
   },
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@equinor/eslint-config-fusion": "^2.0.0",
