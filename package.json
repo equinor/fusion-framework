@@ -44,25 +44,12 @@
   },
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.8",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@equinor/eslint-config-fusion": "^2.0.0",
-    "@equinor/eslint-config-fusion-react": "^1.0.0",
     "@nrwl/nx-cloud": "^16.0.5",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
-    "eslint": "^8.33.0",
-    "eslint-plugin-rxjs": "^5.0.2",
     "husky": "^8.0.3",
-    "jest": "^29.4.1",
-    "lerna": "^6.4.1",
     "lerna-update-wizard": "^1.1.2",
-    "lint-staged": "^13.1.0",
-    "nx": "16.2.2",
-    "prettier": "^2.8.3",
-    "ts-jest": "^29.0.5",
-    "tslib": "^2.5.0",
-    "typescript": "^4.9.4"
+    "lint-staged": "^13.1.0"
   },
   "peerDependencies": {
     "typescript": ">=4.5"
@@ -79,7 +66,17 @@
     ]
   },
   "dependencies": {
+    "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.1",
-    "@typescript-eslint/eslint-plugin": "^5.49.0"
+    "@equinor/eslint-config-fusion": "^2.0.0",
+    "@equinor/eslint-config-fusion-react": "^1.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "eslint": "^8.33.0",
+    "eslint-plugin-rxjs": "^5.0.2",
+    "lerna": "^6.4.1",
+    "nx": "16.2.2",
+    "prettier": "^2.8.3",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.4"
   }
 }
