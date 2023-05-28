@@ -36,8 +36,8 @@ jobs:
           title: Fusion Framework Realse
           createGithubReleases: true
           setupGitUser: false
-          version: yarn version
-          publish: yarn release
+          version: yarn changeset:version
+          publish: yarn changeset:release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
