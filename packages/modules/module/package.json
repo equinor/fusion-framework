@@ -23,7 +23,8 @@
         "directory": "packages/modules/module"
     },
     "dependencies": {
-        "rxjs": "^7.5.7"
+        "rxjs": "^7.5.7",
+        "semver": "^7.5.0"
     },
     "devDependencies": {
         "typescript": "^4.9.3"
