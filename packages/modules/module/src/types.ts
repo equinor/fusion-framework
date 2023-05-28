@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import SemanticVersion from './lib/semantic-version';
 import { ObservableInput } from 'rxjs';
 
 export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
@@ -24,6 +25,10 @@ export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> 
  * @template TDeps optional peer module dependencies
  */
 export interface Module<TKey extends string, TType, TConfig, TDeps extends Array<AnyModule> = []> {
+    /** 
+     * package version 
+     */
+    version?: SemanticVersion;
 
     /** 
      * uniq name of module, used as attribute name on module instances 
