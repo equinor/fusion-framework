@@ -4,6 +4,9 @@
   "description": "Framework for Fusion Eco System",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "^16 || ^18"
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "clean": "yarn run clean:npm && yarn run clean:build",
