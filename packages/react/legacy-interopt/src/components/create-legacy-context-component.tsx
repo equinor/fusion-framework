@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import type { ReactNode } from 'react';
 
 import { FusionContext } from '@equinor/fusion';
 
@@ -12,7 +11,7 @@ export const createLegacyContextComponent = (props: Parameters<typeof createFusi
         props.framework ??= window.Fusion as PortalFramework;
         const fusionContext = await createFusionContext(props);
         return {
-            default: ({ children }: { children?: ReactNode }) => (
+            default: ({ children }: { children?: JSX.Element }) => (
                 <FusionContext.Provider value={fusionContext}>{children}</FusionContext.Provider>
             ),
         };
