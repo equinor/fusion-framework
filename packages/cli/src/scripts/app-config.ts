@@ -101,7 +101,7 @@ export const resolveAppConfig = async (): Promise<LocalConfig> => {
         {
             version: pkg.version,
             name: pkg.name,
-            main: pkg.main,
+            main: pkg.main.startsWith('/') ? pkg.main : `/${pkg.main}`,
             __DEV__: { root, configSource: appConfig.configSource, portal: appConfig.portalHost },
         }
     );
