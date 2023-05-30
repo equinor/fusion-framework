@@ -4,8 +4,8 @@ import { type IModuleProvider } from './IModuleProvider';
 
 import { Subscription, type TeardownLogic } from 'rxjs';
 
-type BaseModuleProviderCtorArgs<TConfig = unknown> = {
-    version: string;
+export type BaseModuleProviderCtorArgs<TConfig = unknown> = {
+    version: string | SemanticVersion;
     config: TConfig;
 };
 
