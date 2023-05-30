@@ -23,7 +23,12 @@ labels:
     matcher:
       commits: '^docs.*?:'
       title: '^docs.*?:'
-      files: ['vue-press', '**/*.md']
+      files: ['**/*.md']
+      
+ - label: '🌍 Gihub Pages'
+    sync: true
+    matcher:
+      files: ['vue-press']
 
   - label: '🚧 chore'
     sync: true
