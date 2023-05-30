@@ -1,72 +1,60 @@
-import {
-    createRouter,
-    type Action,
-    type AgnosticRouteObject,
-    type Location,
-    type Path,
-    type Router,
-    type To,
-} from '@remix-run/router';
+import { AgnosticRouteObject, createRouter, Path, To } from '@remix-run/router';
 
-import { Navigator } from './navigator';
-import type { INavigator } from './navigator';
+import { filter, map } from 'rxjs/operators';
 
-import type { INavigationConfigurator } from './configurator';
-import { Observable } from 'rxjs';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module';
 
-export interface INavigationProvider extends Observable<{ action: Action; path: Path }> {
-    readonly path: Path;
-    readonly navigator: INavigator;
-    dispose: VoidFunction;
-    createRouter(routes: AgnosticRouteObject[]): Router;
-    createHref(to?: To): string;
-    createURL(to?: To): URL;
-    push(to: To, state?: unknown): void;
-    replace(to: To, state?: unknown): void;
-}
+import { INavigationProvider } from './INavigationProvider';
+
+import { type INavigationConfigurator } from '../../configurator';
+import { Navigator, type INavigator } from '../../navigator';
 
 const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
 
 export class NavigationProvider
-    extends Observable<{ action: Action; path: Path }>
+    extends BaseModuleProvider<INavigationConfigurator>
     implements INavigationProvider
 {
-    #navigator: INavigator;
+    #navigator!: INavigator;
     #basePathname?: string;
+
+    public get state$() {
+        return this.#navigator.pipe(
+            /** only push navigation state if the path is within the basename scope */
+            filter((event) =>
+                this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true
+            ),
+            /** map path to localized path */
+            map(({ action, location }) => ({
+                action,
+                location: this._localizePath(location),
+            }))
+        );
+    }
 
     public get navigator(): INavigator {
         return this.#navigator;
     }
 
     public get path(): Path {
-        const { pathname, search, hash } = this.navigator.location;
-        return {
-            pathname: normalizePathname(pathname.replace(this.#basePathname ?? '', '')),
-            search,
-            hash,
-        };
+        return this._localizePath(this.navigator.location);
     }
 
-    constructor(args: { config: INavigationConfigurator }) {
-        super((subscriber) =>
-            this.#navigator.subscribe(({ action, location }) => {
-                subscriber.next({
-                    action,
-                    path: this._localizeLocation(location),
-                });
-            })
-        );
-        const {
-            config: { basename, history },
-        } = args;
+    protected _init(config: INavigationConfigurator): void {
+        const { basename, history } = config;
+
+        this.#basePathname = basename;
+
         if (!history) {
             throw Error('no history provided!');
         }
-        this.#basePathname = basename;
+
         this.#navigator = new Navigator({
             basename,
             history,
         });
+
+        this._addTeardown(() => this.#navigator.dispose());
     }
 
     public createRouter(routes: AgnosticRouteObject[]) {
@@ -100,7 +88,7 @@ export class NavigationProvider
         return this.#navigator.replace(this._createToPath(to), state);
     }
 
-    protected _localizeLocation(location: Location) {
+    protected _localizePath(location: Path): Path {
         const { pathname, search, hash } = location;
         return {
             // TODO make better check
@@ -122,9 +110,5 @@ export class NavigationProvider
             search,
             hash,
         };
-    }
-
-    dispose() {
-        this.#navigator.dispose();
     }
 }

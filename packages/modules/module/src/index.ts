@@ -1,4 +1,5 @@
 export * from './types';
+export * from './lib';
 export { initializeModules } from './initialize-modules';
 
 export { ModuleConsoleLogger } from './logger';
