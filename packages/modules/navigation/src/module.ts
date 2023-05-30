@@ -4,10 +4,13 @@ import {
     Module,
     ModuleConfigType,
     ModuleInstance,
+    SemanticVersion,
 } from '@equinor/fusion-framework-module';
 import { INavigationConfigurator, NavigationConfigurator } from './configurator';
 import { createHistory } from './createHistory';
 import { INavigationProvider, NavigationProvider } from './provider';
+
+import version from './version';
 
 export const moduleKey = 'navigation';
 
@@ -18,6 +21,7 @@ export type NavigationModule = Module<
 >;
 
 export const module: NavigationModule = {
+    version: new SemanticVersion(version),
     name: moduleKey,
     configure: (ref?: unknown) => {
         const configurator = new NavigationConfigurator();
