@@ -6,9 +6,9 @@ import {
     ModuleInstance,
     SemanticVersion,
 } from '@equinor/fusion-framework-module';
-import { INavigationConfigurator, NavigationConfigurator } from './configurator';
+import { type INavigationConfigurator, NavigationConfigurator } from './configurator';
 import { createHistory } from './createHistory';
-import { INavigationProvider, NavigationProvider } from './provider';
+import { type INavigationProvider, NavigationProvider } from './lib';
 
 import version from './version';
 
@@ -32,7 +32,7 @@ export const module: NavigationModule = {
     },
     initialize: ({ config }) => {
         config.history ??= createHistory();
-        return new NavigationProvider({ config });
+        return new NavigationProvider({ version, config });
     },
     dispose({ instance }) {
         instance.dispose();
