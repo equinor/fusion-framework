@@ -26,8 +26,8 @@ labels:
       files: ['**/*.md']
       
   - label: '🌍 GitHub Pages'
-     sync: true
-     matcher:
+    sync: true
+    matcher:
       files: ['vue-press']
 
   - label: '🚧 chore'
