@@ -25,9 +25,9 @@ labels:
       title: '^docs.*?:'
       files: ['**/*.md']
       
- - label: '🌍 Gihub Pages'
-    sync: true
-    matcher:
+  - label: '🌍 GitHub Pages'
+     sync: true
+     matcher:
       files: ['vue-press']
 
   - label: '🚧 chore'
