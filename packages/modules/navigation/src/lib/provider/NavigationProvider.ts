@@ -2,7 +2,10 @@ import { AgnosticRouteObject, createRouter, Path, To } from '@remix-run/router';
 
 import { filter, map } from 'rxjs/operators';
 
-import { BaseModuleProvider } from '@equinor/fusion-framework-module';
+import {
+    BaseModuleProvider,
+    type BaseModuleProviderCtorArgs,
+} from '@equinor/fusion-framework-module/provider';
 
 import { INavigationProvider } from './INavigationProvider';
 
@@ -15,7 +18,7 @@ export class NavigationProvider
     extends BaseModuleProvider<INavigationConfigurator>
     implements INavigationProvider
 {
-    #navigator!: INavigator;
+    #navigator: INavigator;
     #basePathname?: string;
 
     public get state$() {
@@ -40,8 +43,10 @@ export class NavigationProvider
         return this._localizePath(this.navigator.location);
     }
 
-    protected _init(config: INavigationConfigurator): void {
-        const { basename, history } = config;
+    constructor(args: BaseModuleProviderCtorArgs<INavigationConfigurator>) {
+        super(args);
+
+        const { basename, history } = args.config;
 
         this.#basePathname = basename;
 
