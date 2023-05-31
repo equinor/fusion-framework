@@ -1,2 +1,2 @@
 export type { IModuleProvider } from './IModuleProvider';
-export { BaseModuleProvider } from './BaseModuleProvider';
+export { BaseModuleProvider, BaseModuleProviderCtorArgs } from './BaseModuleProvider';

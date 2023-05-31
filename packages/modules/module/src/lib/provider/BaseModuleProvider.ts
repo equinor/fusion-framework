@@ -23,12 +23,10 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
     }
 
     constructor(args: BaseModuleProviderCtorArgs<TConfig>) {
-        this.#version = new SemanticVersion(args.version);
+        const { version } = args;
+        this.#version = new SemanticVersion(version);
         this.#subscriptions = new Subscription();
-        this._init(args.config);
     }
-
-    protected abstract _init(config: TConfig): void;
 
     /**
      * Add teardown down function, which is called on dispose.

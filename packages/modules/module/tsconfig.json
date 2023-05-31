@@ -4,7 +4,12 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@equinor/fusion-framework-module/provider": [
+        "lib/provider"
+      ]
+    }
   },
   "include": [
     "src/**/*",
