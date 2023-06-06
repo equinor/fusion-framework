@@ -1,25 +1,26 @@
-name: Dependabot Check
+name: Dependabot auto-merge
 on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - name: Install Node Dependencies
-        run: yarn
-
-      - name: Build packages
-        run: yarn nx affected:build --base=remotes/origin/main
-
-      - name: Test packages
-        run: yarn nx affected:test --base=remotes/origin/main
+    - name: Dependabot metadata
+      id: metadata
+      uses: dependabot/fetch-metadata@v1
+      with:
+        github-token: "${{ github.token }}"
+        
+    - name: Enable auto-merge for Dependabot PRs
+      if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+      run: |
+        gh pr review --approve "$PR_URL"
+        gh pr merge --auto --squash "$PR_URL"
+      env:
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GITHUB_TOKEN: ${{ github.token }}

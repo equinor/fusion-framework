@@ -16,6 +16,9 @@ import type {
     ModuleType,
 } from './types';
 
+import { SemanticVersion } from './lib/semantic-version';
+import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
+
 export interface IModulesConfigurator<
     TModules extends Array<AnyModule> = Array<AnyModule>,
     TRef = any
@@ -254,10 +257,31 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                                 // @ts-ignore
                                 requireInstance,
                                 hasModule,
-                            })
+                            }) as IModuleProvider
                         )
                     ).pipe(
                         map((instance) => {
+                            if (
+                                !(instance instanceof BaseModuleProvider) &&
+                                !(instance.version instanceof SemanticVersion)
+                            ) {
+                                // TODO change to warn in future
+                                logger.debug(
+                                    `🤷 module does not extends the [BaseModuleProvider] or exposes [SemanticVersion]`
+                                );
+                                try {
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    instance.version =
+                                        module.version instanceof SemanticVersion
+                                            ? module.version
+                                            : new SemanticVersion(
+                                                  module.version ?? '0.0.0-unknown'
+                                              );
+                                } catch (err) {
+                                    logger.error(`🚨 failed to set module version`);
+                                }
+                            }
                             logger.debug(`🚀 initialized ${logger.formatModuleName(module)}`);
                             return [key, instance];
                         })

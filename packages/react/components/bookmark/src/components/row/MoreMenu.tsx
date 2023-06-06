@@ -23,8 +23,10 @@ export const MoreMenu = ({ pRef, onClose, open, options }: MenuProps) => {
                     }}
                     key={name}
                 >
-                    {Icon && Icon}
-                    {name}
+                    <>
+                        {Icon && Icon}
+                        {name}
+                    </>
                 </Menu.Item>
             ))}
         </Menu>

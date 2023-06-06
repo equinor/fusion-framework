@@ -1,0 +1,70 @@
+version: v1
+
+labels:
+  - label: '📦 RELEASE'
+    sync: true
+    matcher:
+      files: ['./changeset/*.md']
+
+  - label: '🚀 feature'
+    sync: true
+    matcher:
+      commits: '^feat.*?:'
+      title: '^feat.*?:'
+
+  - label: '🐞 bug'
+    sync: true
+    matcher:
+      commits: '^fix.*?:'
+      title: '^fix.*?:'
+
+  - label: '📚 documentation'
+    sync: true
+    matcher:
+      commits: '^docs.*?:'
+      title: '^docs.*?:'
+      files: ['**/*.md']
+      
+  - label: '🌍 GitHub Pages'
+    sync: true
+    matcher:
+      files: ['vue-press']
+
+  - label: '🚧 chore'
+    sync: true
+    matcher:
+      commits: '^chore.*?:'
+      title: '^chore.*?:'
+      files: ['.github/**', '.husky/**', './lerna.json', './tsconfig*.json', './.*']
+
+  - label: '🧨 breaking changes'
+    sync: true
+    matcher:
+      commits: '(^(.+?)!:)|(BREAKING CHANGE:)'
+
+  - label: '💾 CLI'
+    sync: true
+    matcher:
+      files: ['packages/cli/**']
+
+  - label: '👾 React'
+    sync: true
+    matcher:
+      files: ['packages/react/**']
+
+  - label: '🧬 Modules'
+    sync: true
+    matcher:
+      files: ['packages/modules/**', 'packages/react/modules/**']
+
+  - label: '🛠️ utils'
+    sync: true
+    matcher:
+      files: ['packages/utils/**']
+
+  - label: '👨🏻‍🍳 cookbooks'
+    sync: true
+    matcher:
+      files: ['cookbooks/**']
+
+  

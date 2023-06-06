@@ -4,9 +4,20 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": "./dist/esm/index.js",
+        "./provider": "./dist/esm/lib/provider/index.js"
     },
-    "types": "dist/types/index.d.ts",
+    "types": "index.d.ts",
+    "typesVersions": {
+        ">=4.2": {
+            "*": [
+                "dist/types/*"
+            ],
+            "provider": [
+                "dist/types/lib/provider/index"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "yarn build"
@@ -23,9 +34,10 @@
         "directory": "packages/modules/module"
     },
     "dependencies": {
-        "rxjs": "^7.5.7"
+        "rxjs": "^7.5.7",
+        "semver": "^7.5.0"
     },
     "devDependencies": {
-        "typescript": "^4.9.3"
+        "typescript": "^5.0.4"
     }
 }

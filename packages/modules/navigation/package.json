@@ -16,6 +16,7 @@
         ".": "./dist/esm/index.js"
     },
     "scripts": {
+        "prebuild": "echo \"export default $(npm pkg get version --workspaces=false);\" > src/version.ts",
         "build": "tsc -b",
         "prepack": "yarn build"
     },
@@ -36,7 +37,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "^4.1.0",
         "rxjs": "^7.5.7",
-        "typescript": "^4.9.3"
+        "typescript": "^5.0.4"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": ">=1.2.2",
