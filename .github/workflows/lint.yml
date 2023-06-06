@@ -3,9 +3,6 @@ name: Lint project files
 on: 
   merge_group:
   pull_request:
-    paths:
-      - '**.ts'
-      - '**.tsx'
   push:
     branches:
       - 'changeset-release/main'
