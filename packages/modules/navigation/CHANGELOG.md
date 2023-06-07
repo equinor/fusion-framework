@@ -1,5 +1,36 @@
 # Change Log
 
+## 3.0.0
+
+### Major Changes
+
+-   [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - extend base module provider
+
+    -   make `NavigationProvider` extend `BaseModuleProvider`
+    -   internal function `_localizeLocation` is renamed to `_localizePath`. _should not cause breaking changes_
+    -   expose localized state from `Navigator` _(history)_
+
+    BREAKING CHANGE: `NavigationProvider` no longer extends `Observable<{ action: Action; path: Path }>`, use `INavigationProvider.state# Change Log _(this is now a localized path)_
+
+### Minor Changes
+
+-   [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - add version to module
+
+    -   add `prebuild` step to generate version
+    -   update `.gitignore` to skip `version.ts` since this file is generated during building
+
+### Patch Changes
+
+-   [#913](https://github.com/equinor/fusion-framework/pull/913) [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d) Thanks [@odinr](https://github.com/odinr)! - **Change init of NavigationProvider**
+
+    moved the init to constructor
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

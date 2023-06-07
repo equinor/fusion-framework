@@ -1,5 +1,21 @@
 # Change Log
 
+## 4.0.12
+
+### Patch Changes
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
+-   [`d6671bc5`](https://github.com/equinor/fusion-framework/commit/d6671bc526179f18a5290049728c9c5ac72da671) Thanks [@odinr](https://github.com/odinr)! - added missing [exhausted-deps](https://legacy.reactjs.org/docs/hooks-rules.html), this might cause rerender, since `ReactRouterDom.createBrowserHistory` might create history dynamicly.
+
+    this should be tested in portal when updating the `@equinor/fusion-framework-legacy-interopt`
+
+    https://github.com/equinor/fusion-framework/blob/7c0a475174f61ba02570614c237d5cfb3b009cb1/packages/react/legacy-interopt/src/create-legacy-render.tsx#L59
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
