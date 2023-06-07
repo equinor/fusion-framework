@@ -45,11 +45,10 @@ const compareApp = (a: LegacyAppManifest, b?: LegacyAppManifest) => {
     const attr = Object.keys(b) as Array<keyof LegacyAppManifest>;
     return attr.some((key) => {
         switch (key) {
-            case 'auth':
-                return false;
-            //@todo maybe?!?!
-            case 'context':
-                return false;
+            case 'render':
+            case 'AppComponent':
+                return a[key] !== b[key];
+
             case 'tags': {
                 if (a.tags.length !== b.tags.length) {
                     console.debug('tags changed', a.tags, b.tags);
@@ -64,20 +63,23 @@ const compareApp = (a: LegacyAppManifest, b?: LegacyAppManifest) => {
                 return false;
             }
 
-            case 'category':
-                a.category?.id !== b.category?.id &&
+            case 'category': {
+                const hasChanged = a.category?.id !== b.category?.id;
+                if (hasChanged) {
                     console.debug('category changed', a.category, b.category);
-                return a.category?.id !== b.category?.id;
+                }
+                return hasChanged;
+            }
             // Dates
-            case 'publishedDate':
-                String(a[key]) !== String(b[key]) &&
+            case 'publishedDate': {
+                const hasChanged = String(a[key]) !== String(b[key]);
+                if (hasChanged) {
                     console.debug('publishedDate changed', a.publishedDate, b.publishedDate);
+                }
                 return String(a[key]) !== String(b[key]);
-
-            default:
-                a[key] !== b[key] && console.debug(`${key} changed`, a[key], b[key]);
-                return a[key] !== b[key];
+            }
         }
+        return false;
     });
 };
 
@@ -228,8 +230,11 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
 
     async setCurrentAppAsync(appKey: string | null): Promise<void> {
         if (appKey) {
-            const { key, AppComponent } = this.#manifests.value[appKey];
-            if (AppComponent === undefined) {
+            const { key, AppComponent, render } = this.#manifests.value[appKey];
+            /**
+             * assume if the manifest missing AppComponent or render, that loading is required
+             */
+            if (!!AppComponent && !!render) {
                 await this.#loadScript(key);
             }
             await new Promise((resolve) => window.requestAnimationFrame(resolve));
