@@ -13,10 +13,10 @@ export const handleFetchManifest =
     (action$) =>
         action$.pipe(
             filter(actions.fetchManifest.match),
-            switchMap(({ payload: appKey }) => {
+            switchMap(({ payload: appKey, meta: { update } }) => {
                 const fetch$ = from(provider.getAppManifest(appKey)).pipe(
                     filter((x) => !!x),
-                    map(actions.setManifest)
+                    map((manifest) => actions.setManifest(manifest, update))
                 );
                 return merge(
                     fetch$,

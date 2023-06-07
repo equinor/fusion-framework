@@ -17,7 +17,7 @@ import { Query } from '@equinor/fusion-query';
 
 import type { AppConfig, AppManifest, CurrentApp } from './types';
 
-import { App, filterEmpty } from './app/App';
+import { App, filterEmpty, IApp } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
 import { AppConfigError, AppManifestError } from './errors';
 import { AppBundleStateInitial } from './app/types';
@@ -154,10 +154,10 @@ export class AppModuleProvider {
      * set the current application, will internally resolve manifest
      * @param appKey - application key
      */
-    public setCurrentApp(appKeyOrApp: string | App): void {
+    public setCurrentApp(appKeyOrApp: string | IApp): void {
         const app =
             typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : appKeyOrApp;
-        this.#current$.next(app as App);
+        this.#current$.next(app as CurrentApp);
     }
 
     public clearCurrentApp(): void {
@@ -166,8 +166,10 @@ export class AppModuleProvider {
 
     /**
      * This should not be used, only for legacy creation backdoor
+     * @deprecated
      */
     public createApp(value: AppBundleStateInitial): App {
+        console.warn();
         return new App(value, { provider: this, event: this.#event });
     }
 
