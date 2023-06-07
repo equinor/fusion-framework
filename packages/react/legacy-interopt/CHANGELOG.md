@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.0.13
+
+### Patch Changes
+
+-   [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - update loading of legacy applications
+
+    -   when an application load from CJS with `registerApp` the manifest is mutated and should update in legacy app container
+    -   add strict `undefined` check of manifest app component
+    -   add check if miss match of appKey, output warn and error if current app is not in scope
+
 ## 4.0.12
 
 ### Patch Changes
