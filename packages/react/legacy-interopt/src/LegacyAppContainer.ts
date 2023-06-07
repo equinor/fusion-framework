@@ -1,5 +1,5 @@
 import {
-    AppManifest,
+    AppManifest as LegacyAppManifest,
     DistributedState,
     EventEmitter,
     FeatureLogger,
@@ -7,6 +7,7 @@ import {
     TelemetryLogger,
 } from '@equinor/fusion';
 
+import { AppManifest } from '@equinor/fusion-framework-app';
 import { ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
 
 import { original } from 'immer';
@@ -14,8 +15,8 @@ import { original } from 'immer';
 import type { PortalFramework } from './types';
 
 type AppContainerEvents = {
-    update: (app: Record<string, AppManifest>) => void;
-    change: (app: AppManifest | null) => void;
+    update: (app: Record<string, LegacyAppManifest>) => void;
+    change: (app: LegacyAppManifest | null) => void;
     fetch: (status: boolean) => void;
 };
 
@@ -26,19 +27,22 @@ type AppContainerEvents = {
 // > = THandler extends (arg: infer P) => void ? P : never;
 
 export const actions = {
-    updateManifests: createAction('update_manifest', (manifest: Record<string, AppManifest>) => ({
-        payload: manifest,
-    })),
-    setManifests: createAction('set_manifests', (manifests: Record<string, AppManifest>) => ({
+    updateManifests: createAction(
+        'update_manifest',
+        (manifest: Record<string, LegacyAppManifest>) => ({
+            payload: manifest,
+        })
+    ),
+    setManifests: createAction('set_manifests', (manifests: Record<string, LegacyAppManifest>) => ({
         payload: manifests,
     })),
 };
 
 export type Actions = ActionTypes<typeof actions>;
 
-const compareApp = (a: AppManifest, b?: AppManifest) => {
+const compareApp = (a: LegacyAppManifest, b?: LegacyAppManifest) => {
     if (!b) return true;
-    const attr = Object.keys(b) as Array<keyof AppManifest>;
+    const attr = Object.keys(b) as Array<keyof LegacyAppManifest>;
     return attr.some((key) => {
         switch (key) {
             case 'auth':
@@ -77,12 +81,12 @@ const compareApp = (a: AppManifest, b?: AppManifest) => {
     });
 };
 
-const indexManifests = (manifests: AppManifest[]): Record<string, AppManifest> =>
+const indexManifests = (manifests: LegacyAppManifest[]): Record<string, LegacyAppManifest> =>
     manifests.reduce((cur, value) => Object.assign(cur, { [value.key]: value }), {});
 
 export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     #framework: PortalFramework;
-    #manifests: FlowSubject<Record<string, AppManifest>, Actions>;
+    #manifests: FlowSubject<Record<string, LegacyAppManifest>, Actions>;
 
     #updateTask: Promise<void> & { state?: 'pending' | 'fulfilled' | 'rejected' } =
         Promise.resolve();
@@ -105,11 +109,11 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         return this.#updateTask;
     }
 
-    get currentApp(): AppManifest | undefined {
-        return this.#framework.modules.app.current?.state.manifest as unknown as AppManifest;
+    get currentApp(): LegacyAppManifest | undefined {
+        return this.#framework.modules.app.current?.state.manifest as unknown as LegacyAppManifest;
     }
 
-    get allApps(): Record<string, AppManifest> {
+    get allApps(): Record<string, LegacyAppManifest> {
         return this.#manifests.value;
     }
 
@@ -123,7 +127,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         const { framework, eventHub, featureLogger, telemetryLogger } = args;
         this.#framework = framework;
         this.#manifests = new FlowSubject(
-            createReducer({} as Record<string, AppManifest>, (builder) =>
+            createReducer({} as Record<string, LegacyAppManifest>, (builder) =>
                 builder
                     .addCase(actions.setManifests, (state, action) => {
                         state = action.payload;
@@ -146,7 +150,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         );
 
         /** legacy wrapper */
-        const apps = new DistributedState<Record<string, AppManifest>>(
+        const apps = new DistributedState<Record<string, LegacyAppManifest>>(
             'AppContainer.apps',
             {},
             eventHub
@@ -158,12 +162,12 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         this.#manifests.subscribe((value) => (apps.state = value));
 
         /** legacy wrapper */
-        const currentApp = new DistributedState<AppManifest | null>(
+        const currentApp = new DistributedState<LegacyAppManifest | null>(
             'AppContainer.currentApp',
             null,
             eventHub
         );
-        const previousApps = new DistributedState<Record<string, AppManifest>>(
+        const previousApps = new DistributedState<Record<string, LegacyAppManifest>>(
             'AppContainer.previousApps',
             {},
             eventHub
@@ -225,35 +229,52 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     async setCurrentAppAsync(appKey: string | null): Promise<void> {
         if (appKey) {
             const { key, AppComponent } = this.#manifests.value[appKey];
-            if (!AppComponent) {
+            if (AppComponent === undefined) {
                 await this.#loadScript(key);
             }
             await new Promise((resolve) => window.requestAnimationFrame(resolve));
-            const manifest = this.#manifests.value[appKey];
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const app = this.#framework.modules.app.createApp({ appKey, manifest });
-            await app.getConfigAsync();
-            this.#framework.modules.app.setCurrentApp(app);
+            const manifest = this.#manifests.value[appKey] as unknown as AppManifest;
+            const appProvider = this.#framework.modules.app;
+            const currentApp = appProvider.current;
+            if (currentApp && currentApp.appKey !== appKey) {
+                currentApp?.updateManifest(manifest);
+                await currentApp.getConfigAsync();
+            } else {
+                if (currentApp?.appKey !== appKey) {
+                    console.warn(
+                        'LegacyAppContainer::setCurrentAppAsync',
+                        'miss match of application keys!, should not happen'
+                    );
+                } else {
+                    console.error(
+                        '🚨',
+                        'LegacyAppContainer::setCurrentAppAsync',
+                        'these lines should newer been reached'
+                    );
+                }
+                const newApp = appProvider.createApp({ appKey, manifest });
+                await newApp.getConfigAsync();
+                appProvider.setCurrentApp(newApp);
+            }
         } else {
             this.#framework.modules.app.clearCurrentApp();
         }
     }
 
-    public get(appKey: string): AppManifest | undefined {
+    public get(appKey: string): LegacyAppManifest | undefined {
         return this.#manifests.value[appKey];
     }
 
-    public getAll(): Array<AppManifest> {
+    public getAll(): Array<LegacyAppManifest> {
         return Object.values(this.#manifests.value);
     }
 
-    public async getAllAsync(): Promise<Record<string, AppManifest>> {
+    public async getAllAsync(): Promise<Record<string, LegacyAppManifest>> {
         await this.requestUpdate();
         return this.#manifests.value;
     }
 
-    public updateManifest(manifest: AppManifest): void {
+    public updateManifest(manifest: LegacyAppManifest): void {
         this.#manifests.next(actions.updateManifests({ [manifest.key]: manifest }));
     }
 
@@ -293,7 +314,9 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 },
                 next: (value) =>
                     this.#manifests.next(
-                        actions.updateManifests(indexManifests(value as unknown as AppManifest[]))
+                        actions.updateManifests(
+                            indexManifests(value as unknown as LegacyAppManifest[])
+                        )
                     ),
             });
         });
