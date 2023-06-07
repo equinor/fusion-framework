@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.0.11
+
+### Patch Changes
+
+-   [#910](https://github.com/equinor/fusion-framework/pull/910) [`d40951a3`](https://github.com/equinor/fusion-framework/commit/d40951a3f5044083e7aec416c065342d0207e5d5) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Removes requirement of leading slash in `main` attr in `package.json`, meaning
+    both `"main": "src/index.ts"` and `"main": "/src/index.ts"` will resolve.
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
+-   Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+    -   @equinor/fusion-framework-app@7.0.15
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
