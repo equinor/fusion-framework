@@ -1,5 +1,27 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+-   [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Create and expose interface for App
+
+    -   deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
+
+    this should not create any breaking changes since apps was only created from provider.
+    if the class is still needed it can be imported:
+
+    ```ts
+    import { App } from '@equinor/fusion-framework-module-app/app';
+    ```
+
+-   [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Allow updating manifest of application
+
+    -   add meta data for `setManifest` action to flag if `merge` or `replace`
+    -   add method on `App` to update manifest, _default flag `merge`_
+    -   check in state reducer if `setManifest` action is `update` or `merge`
+    -   update flow `handleFetchManifest` to prop passing of flag
+
 ## 5.1.3
 
 ### Patch Changes
