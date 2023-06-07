@@ -8,13 +8,18 @@ import { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../
 
 const createActions = () => ({
     /** Manifest loading */
-    setManifest: createAction('set_manifest', (manifest: AppManifest) => ({
+    setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
         payload: manifest,
-        meta: { created: Date.now() },
+        meta: {
+            // TODO when updating
+            created: Date.now(),
+            update,
+        },
     })),
+
     fetchManifest: createAsyncAction(
         'fetch_manifest',
-        (key: string) => ({ payload: key }),
+        (key: string, update?: boolean) => ({ payload: key, meta: { update } }),
         (manifest: AppManifest) => ({ payload: manifest }),
         (error: unknown) => ({ payload: error })
     ),

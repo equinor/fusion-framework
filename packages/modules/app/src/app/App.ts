@@ -262,8 +262,12 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         this.#state.next(actions.fetchConfig(this.appKey));
     }
 
-    public loadManifest() {
-        this.#state.next(actions.fetchManifest(this.appKey));
+    public loadManifest(update?: boolean) {
+        this.#state.next(actions.fetchManifest(this.appKey, update));
+    }
+
+    public updateManifest(manifest: AppManifest, replace?: false) {
+        this.#state.next(actions.setManifest(manifest, !replace));
     }
 
     public async loadAppModule(allow_cache = true) {
