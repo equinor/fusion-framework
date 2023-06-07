@@ -1,5 +1,90 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+-   [#902](https://github.com/equinor/fusion-framework/pull/902) [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5) Thanks [@odinr](https://github.com/odinr)! - **Feat(module)** add base module class
+
+    As a module developer there should be a base provider class to extend, which handles basic wireing.
+
+    Some aspects of providers should be the same for all, like `version` handling.
+
+    These new features does not change any existing code, only tooling for future development
+
+-   [#882](https://github.com/equinor/fusion-framework/pull/882) [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898) Thanks [@odinr](https://github.com/odinr)! - Add possibility to add multilevel config for module
+
+    ```ts
+    type MyModuleConfig = {
+        foo: string;
+        bar?: number;
+        nested?: { up: boolean };
+    };
+
+    class MyModuleConfigurator extends BaseConfigBuilder<MyModuleConfig> {
+        public setFoo(cb: ModuleConfigCallback<string>) {
+            this._set('foo', cb);
+        }
+
+        public setBar(cb: ModuleConfigCallback<number>) {
+            this._set('bar', cb);
+        }
+
+        public setUp(cb: ModuleConfigCallback<boolean>) {
+            this._set('nested.up', cb);
+        }
+    }
+    ```
+
+-   [#902](https://github.com/equinor/fusion-framework/pull/902) [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5) Thanks [@odinr](https://github.com/odinr)! - **Feat(module): add semver**
+
+    In some cases other modules might require features in sibling modules
+
+    ```ts
+    if (modules.context.version.satisfies('>=7.2')) {
+        // do some code
+    } else {
+        throw Error(
+            'this feature requires ContextModule of 7.2 or higher, please update depencies'
+        );
+    }
+    ```
+
+    Usage:
+
+    -   log telemetry about module usage and outdated application
+    -   debug code runtime by knowing version of implementation
+    -   write inter-opt when breaking changes accour
+
+### Patch Changes
+
+-   [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - export `lib` assets:
+
+    -   SemanticVersion
+    -   ModuleProvider
+
+-   [#913](https://github.com/equinor/fusion-framework/pull/913) [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d) Thanks [@odinr](https://github.com/odinr)! - **Change base behavior of BaseModuleProvider**
+
+    because of weird limitations of JavaScript, private fields are not accessible until all constructors are initialized (from ancestor to current child).
+    This causes the `abstract` init function could not access private members when overridden.
+
+    -   **removed** `init` from `BaseModuleProvider`
+        -   _this is a breaking change, but not yet published, yet the `patch` version_
+        -   https://github.com/equinor/fusion-framework/blob/43854d9538ade189483c43e04b52eff7e1aa3b0c/packages/modules/module/src/lib/provider/BaseModuleProvider.ts#L31
+    -   **added** `provider` sub-scope for package
+
+    > The usage when extending `BaseModuleProvider` is not as 😘, but now works
+
+-   [#907](https://github.com/equinor/fusion-framework/pull/907) [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9) Thanks [@odinr](https://github.com/odinr)! - allow `SemanticVersion` as `version` in ctor args for `BaseModuleProvider`
+
+-   [#924](https://github.com/equinor/fusion-framework/pull/924) [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - fix(module): add config builder callback args to process config method so that
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

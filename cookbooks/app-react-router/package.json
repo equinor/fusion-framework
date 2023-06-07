@@ -12,9 +12,9 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^7.0.10",
-        "@equinor/fusion-framework-module-navigation": "^2.1.2",
-        "@equinor/fusion-framework-react-app": "^4.0.16",
+        "@equinor/fusion-framework-cli": "^7.0.11",
+        "@equinor/fusion-framework-module-navigation": "^3.0.0",
+        "@equinor/fusion-framework-react-app": "^4.0.17",
         "@remix-run/router": "^1.0.4",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
