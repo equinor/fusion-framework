@@ -161,7 +161,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
         initial?: Partial<TConfig>
     ): Observable<TConfig> {
         return this._buildConfig(init, initial).pipe(
-            mergeMap((config) => this._processConfig(config))
+            mergeMap((config) => this._processConfig(config, init))
         );
     }
 
@@ -192,7 +192,10 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      * can be used for adding required config attributes which might not been
      * added config callbacks for
      */
-    protected _processConfig(config: Partial<TConfig>): ObservableInput<TConfig> {
+    protected _processConfig(
+        config: Partial<TConfig>,
+        _init: ConfigBuilderCallbackArgs
+    ): ObservableInput<TConfig> {
         return of(config as TConfig);
     }
 }
