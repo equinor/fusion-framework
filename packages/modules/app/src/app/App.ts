@@ -49,16 +49,16 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
 
     loadManifest(): void;
 
-    loadAppModule(allow_cache: boolean): void;
+    loadAppModule(allow_cache?: boolean): void;
 
-    getConfig(force_refresh: boolean): Observable<AppConfig>;
-    getConfigAsync(allow_cache: boolean): Promise<AppConfig>;
+    getConfig(force_refresh?: boolean): Observable<AppConfig>;
+    getConfigAsync(allow_cache?: boolean): Promise<AppConfig>;
 
-    getManifest(force_refresh: boolean): Observable<AppManifest>;
-    getManifestAsync(allow_cache: boolean): Promise<AppManifest>;
+    getManifest(force_refresh?: boolean): Observable<AppManifest>;
+    getManifestAsync(allow_cache?: boolean): Promise<AppManifest>;
 
-    getAppModule(force_refresh: false): Observable<AppScriptModule>;
-    getAppModuleAsync(allow_cache: true): Promise<AppScriptModule>;
+    getAppModule(force_refresh?: boolean): Observable<AppScriptModule>;
+    getAppModuleAsync(allow_cache?: boolean): Promise<AppScriptModule>;
 }
 
 // TODO make streams distinct until changed from state
