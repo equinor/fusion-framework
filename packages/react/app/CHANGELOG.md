@@ -1,5 +1,36 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - **Add tooling for navigation in React App package**
+
+    -   add hook for using the navigation module
+    -   add hook for creating a react router
+
+    ```ts
+    const routes = [
+        {
+            path: '/',
+            element: <p>👍🏻</p>,
+        },
+    ];
+
+    const Router = () => {
+        const router = useRouter(routes);
+        return <RouterProvider router={router} fallbackElement={<p>😥</p>} />;
+    };
+
+    const App = () => <Router />;
+    ```
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - hook `useAppModule` now throws error if requested module is not configured
+
+### Patch Changes
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - updated cookbook for routing ([documentation](https://equinor.github.io/fusion-framework/modules/navigation/))
+
 ## 4.0.17
 
 ### Patch Changes
