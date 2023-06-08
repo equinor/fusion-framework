@@ -1,5 +1,39 @@
 # Change Log
 
+## 5.0.0
+
+### Major Changes
+
+-   [#935](https://github.com/equinor/fusion-framework/pull/935) [`710c337f`](https://github.com/equinor/fusion-framework/commit/710c337f2fa4ce834de4673c9805c2e0d07e7fef) Thanks [@odinr](https://github.com/odinr)! - **hotfix** provide legacy app manifest to `createLegacyRender`
+
+    all application should have a `render` method for connecting to the framework, minimal effort for getting end-of-life application to run just a little longer...🌈
+
+    **How to migrate**
+
+    > as a app developer, you should not be using this package! 🙄
+
+    as a portal developer, see code below 😎
+
+    _current_
+
+    ```ts
+    // before change
+    createLegacyRender(
+        manifest.key,
+        manifest.AppComponent as React.FunctionComponent,
+        legacyFusion // fusion context container
+    );
+    ```
+
+    _after_
+
+    ```ts
+    createLegacyRender(
+        manifest, // mutated legacy manifest
+        legacyFusion // fusion context container
+    );
+    ```
+
 ## 4.0.14
 
 ### Patch Changes
