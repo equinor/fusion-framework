@@ -8,7 +8,8 @@
         "./bookmark": "./dist/esm/bookmark/index.js",
         "./context": "./dist/esm/context/index.js",
         "./framework": "./dist/esm/framework/index.js",
-        "./http": "./dist/esm/http/index.js"
+        "./http": "./dist/esm/http/index.js",
+        "./navigation": "./dist/esm/navigation/index.js"
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
@@ -24,6 +25,9 @@
             ],
             "http": [
                 "dist/types/http/index.d.ts"
+            ],
+            "navigation": [
+                "dist/types/navigation/index.d.ts"
             ]
         }
     },
@@ -44,6 +48,7 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-app": "^7.0.15",
+        "@equinor/fusion-framework-module-navigation": "^3.0.0",
         "@equinor/fusion-framework-react": "^5.1.4",
         "@equinor/fusion-framework-react-module-http": "^3.0.3"
     },
@@ -63,6 +68,9 @@
     },
     "peerDependenciesMeta": {
         "@equinor/fusion-framework-react-module-context": {
+            "optional": true
+        },
+        "@equinor/fusion-framework-module-navigation": {
             "optional": true
         },
         "@equinor/fusion-framework-react-module-bookmark": {
