@@ -67,11 +67,8 @@ const AppWrapper = (
     );
 };
 
-export const createLegacyRender = (
-    appKey: string,
-    AppComponent: React.FunctionComponent,
-    legacy: IFusionContext
-) => {
+export const createLegacyRender = (manifest: AppManifest, legacy: IFusionContext) => {
+    const { key: appKey, AppComponent, context: contextConfig } = manifest;
     const basename = `/apps/${appKey}`;
     const history = createBrowserHistory({ basename });
     return createComponent<[ContextModule, NavigationModule]>(
@@ -81,8 +78,7 @@ export const createLegacyRender = (
                 <AppComponent />
             </AppWrapper>
         )),
-        (configurator, { env }) => {
-            const { context: contextConfig } = env.manifest as unknown as AppManifest;
+        (configurator) => {
             enableNavigation(configurator, basename);
             if (contextConfig) {
                 enableContext(configurator, async (builder) => {
