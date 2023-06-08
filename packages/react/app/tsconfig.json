@@ -25,6 +25,9 @@
     },
     {
       "path": "../modules/bookmark"
+    },
+    {
+      "path": "../../modules/navigation"
     }
   ],
   "include": [

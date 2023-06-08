@@ -1,13 +1,9 @@
-import { useState } from 'react';
-
 import { RouterProvider } from 'react-router-dom';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import { useAppModule } from '@equinor/fusion-framework-react-app';
+import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
 
-import routes from './Routes';
+import routes from './routes';
 
 export default function () {
-    const module = useAppModule<NavigationModule>('navigation');
-    const [router] = useState(() => module.createRouter(routes));
+    const router = useRouter(routes);
     return <RouterProvider router={router} fallbackElement={<p>:(</p>} />;
 }
