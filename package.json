@@ -8,12 +8,12 @@
     "node": "^16 || ^18"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "install": "lerna run postversion",
     "clean": "yarn run clean:build && yarn run clean:npm",
     "clean:npm": "npx lerna exec 'rm -rf node_modules' && rm -rf node_modules",
     "clean:build": "npx lerna exec 'rm -rf dist'",
-    "build": "lerna run build",
-    "build:affected": "nx run-many --target=build --all",
+    "build": "lerna run build build",
+    "build:affected": "nx affected:build",
     "build:clean": "yarn clean:build && yarn run build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "yarn lint --output-file eslint-report.log.json --format json",
