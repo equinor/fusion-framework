@@ -946,9 +946,9 @@
     eslint-plugin-prettier "^4.2.1"
 
 "@equinor/fusion-components@^2.10.5":
-  version "2.10.8"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.8.tgz#52d7e5f5211a9c5d87b9e8879bf4cb096c2af5c2"
-  integrity sha512-tmASSDHaem7CtKs9MqwVA3Pm20x2JXTfnU/rG4JDRJSEWFHiLjjimGDALlwwZcIBNgquepRAuSkVKIpSiSGoJg==
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.11.0.tgz#5e292719f94f633eb8ade103b3e82393b49ce57a"
+  integrity sha512-v7EpQhoJff0Rp5csccSVGVf9gCaqvUz2hplu5VdVy8DLAgbTx+pycDp4wP4QhKDwVxmHHvHu0Q/H87X5OVZY+g==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
     "@equinor/fusion-react-checkbox" "^0.4.0"
