@@ -34,6 +34,6 @@
         "@microsoft/applicationinsights-web": "^2.7.2"
     },
     "devDependencies": {
-        "typescript": "^5.0.4"
+        "typescript": "^5.1.3"
     }
 }
