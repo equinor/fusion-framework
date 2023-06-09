@@ -26,7 +26,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
  */
 export const createFrameworkProvider = <TModules extends Array<AnyModule> = []>(
     cb: (configurator: FusionConfigurator<TModules>) => void | Promise<void>
-): React.LazyExoticComponent<React.FunctionComponent> =>
+): React.LazyExoticComponent<React.FunctionComponent<React.PropsWithChildren<unknown>>> =>
     lazy(async () => {
         const configurator = new FusionConfigurator<TModules>();
         await cb(configurator);

@@ -60,11 +60,11 @@
         "@equinor/fusion-observable": "^8.0.1",
         "immer": "^9.0.16",
         "rxjs": "^7.5.7",
-        "uuid": "^8.3.2"
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@types/react": "^17.0.2",
-        "@types/uuid": "^8.3.4",
+        "@types/uuid": "^9.0.2",
         "react": "^17.0.2",
         "typescript": "^5.0.4"
     },

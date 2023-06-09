@@ -76,6 +76,8 @@ Once you submit your PR, a Fusion Core team member will review your proposal. We
 - As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
 - If you run into any merge issues, checkout this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
 
+When all task checks are green and you are done with your PR, add the label `🤞🏻 Ready for review`
+
 ### Your PR is merged!
 
 Congratulations 🎉 The Fusion team thanks you 😘
