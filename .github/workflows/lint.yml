@@ -32,7 +32,9 @@ jobs:
 
       # Cookbooks require CLI to be build for linking
       - name: Build CLI
-        run: yarn workspace @equinor/fusion-framework-cli build
+        run: |
+          yarn workspace @equinor/fusion-framework-cli build
+          lerna exec --scope @equinor/fusion-framework-cli npm link
 
       - name: Build project [affected]
         if: ${{ github.actor != 'dependabot[bot]' }}
