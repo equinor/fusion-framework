@@ -1,5 +1,20 @@
 # Change Log
 
+## 7.0.15
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
+-   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+    -   @equinor/fusion-framework-module-context@4.0.10
+    -   @equinor/fusion-framework-module-event@4.0.2
+    -   @equinor/fusion-framework-module-http@5.0.4
+    -   @equinor/fusion-framework-module@4.2.1
+    -   @equinor/fusion-framework-module-msal@3.0.4
+    -   @equinor/fusion-framework-module-service-discovery@7.0.5
+    -   @equinor/fusion-framework-module-services@3.1.3
+
 ## 7.0.14
 
 ### Patch Changes
