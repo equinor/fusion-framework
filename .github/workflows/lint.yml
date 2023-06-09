@@ -30,6 +30,10 @@ jobs:
         if: ${{ github.actor == 'dependabot[bot]' }}
         run: yarn build
 
+      # Cookbooks require CLI to be build for linking
+      - name: Build CLI
+        run: yarn workspace @equinor/fusion-framework-cli build
+
       - name: Build project [affected]
         if: ${{ github.actor != 'dependabot[bot]' }}
         run: yarn nx affected:build --base=remotes/origin/main
