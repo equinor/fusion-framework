@@ -1,5 +1,15 @@
 # Change Log
 
+## 8.0.2
+
+### Patch Changes
+
+-   [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - fix linting
+
+    when using `React.useCallback` inside another hook, the callback function cant resolve input type of callback.
+
+    https://github.com/equinor/fusion-framework/blob/ddc5bdbc0e0f8c61affb66631fe59366785ee474/packages/utils/observable/src/react/useObservableRef.ts#L15-L18
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
