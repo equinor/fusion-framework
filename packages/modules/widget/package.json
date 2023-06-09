@@ -38,6 +38,6 @@
         "@equinor/fusion-framework-module": "^4.2.0",
         "@equinor/fusion-framework-module-event": "^4.0.1",
         "@equinor/fusion-framework-module-service-discovery": "^7.0.4",
-        "typescript": "^5.0.4"
+        "typescript": "^5.1.3"
     }
 }
