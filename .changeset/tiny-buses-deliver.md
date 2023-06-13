@@ -1,5 +1,4 @@
 ---
-"fusion-framework": minor
 ---
 
 build(deps): bump lerna from 6.6.2 to 7.0.0
