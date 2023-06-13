@@ -12,7 +12,7 @@
     "clean": "yarn run clean:build && yarn run clean:npm",
     "clean:npm": "npx lerna exec 'rm -rf node_modules' && rm -rf node_modules",
     "clean:build": "npx lerna exec 'rm -rf dist'",
-    "build": "lerna run build",
+    "build": "nx run-many -t build",
     "build:affected": "nx affected:build",
     "build:clean": "yarn clean:build && yarn run build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
