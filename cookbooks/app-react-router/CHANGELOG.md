@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.21
+
+### Patch Changes
+
+-   [#955](https://github.com/equinor/fusion-framework/pull/955) [`b0310b3b`](https://github.com/equinor/fusion-framework/commit/b0310b3b3668f72bdc973e5fee50118dbe17823f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Remove leading `/` in package's main property for the cookbooks.
+
 ## 4.0.20
 
 ### Patch Changes

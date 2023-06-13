@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-router",
-    "version": "4.0.20",
+    "version": "4.0.21",
     "description": "",
     "private": true,
     "type": "module",
@@ -14,7 +14,7 @@
     "license": "ISC",
     "devDependencies": {
         "@equinor/fusion-framework-cli": "^7.0.12",
-        "@equinor/fusion-framework-module-navigation": "^3.0.1",
+        "@equinor/fusion-framework-module-navigation": "^3.0.2",
         "@equinor/fusion-framework-react-app": "^4.1.1",
         "@remix-run/router": "^1.0.4",
         "@types/react": "^18.0.24",
