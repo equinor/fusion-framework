@@ -3,6 +3,9 @@ name: Lint project files
 on: 
   merge_group:
   pull_request:
+  push:
+    branches:
+      - 'changeset-release/*'
 
 jobs:
   eslint:
