@@ -16,7 +16,6 @@
         ".": "./dist/esm/index.js"
     },
     "scripts": {
-        "postversion": "echo \"export default $(npm pkg get version --workspaces=false);\" > src/version.ts",
         "build": "tsc -b",
         "prepack": "yarn build"
     },
