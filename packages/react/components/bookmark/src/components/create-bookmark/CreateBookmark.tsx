@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
-import { AppModule } from '@equinor/fusion-framework-module-app';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { ChangeEvent, useState } from 'react';

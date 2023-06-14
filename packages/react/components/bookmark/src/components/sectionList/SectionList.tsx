@@ -3,7 +3,8 @@ import { useBookmarkGrouping } from '../../hooks';
 import { Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
-import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
+// TODO - export from `@equinor/fusion-framework-react-module-bookmark`
+import type { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useEffect, useState } from 'react';
