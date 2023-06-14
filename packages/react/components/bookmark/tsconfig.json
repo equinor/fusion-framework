@@ -7,7 +7,12 @@
     "baseUrl": "src",
   },
   "references": [
-
+    {
+      "path": "../../framework"
+    },
+    {
+      "path": "../../modules/bookmark"
+    }
   ],
   "include": [
     "src/**/*"
