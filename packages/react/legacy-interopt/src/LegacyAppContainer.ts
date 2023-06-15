@@ -11,6 +11,7 @@ import { AppManifest } from '@equinor/fusion-framework-app';
 import { ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
 
 import { original } from 'immer';
+import { pairwise, Subscription } from 'rxjs';
 
 import type { PortalFramework } from './types';
 
@@ -31,11 +32,9 @@ export const actions = {
         'update_manifest',
         (manifest: Record<string, LegacyAppManifest>) => ({
             payload: manifest,
+            meta: { created: Date.now() },
         })
     ),
-    setManifests: createAction('set_manifests', (manifests: Record<string, LegacyAppManifest>) => ({
-        payload: manifests,
-    })),
 };
 
 export type Actions = ActionTypes<typeof actions>;
@@ -86,9 +85,16 @@ const compareApp = (a: LegacyAppManifest, b?: LegacyAppManifest) => {
 const indexManifests = (manifests: LegacyAppManifest[]): Record<string, LegacyAppManifest> =>
     manifests.reduce((cur, value) => Object.assign(cur, { [value.key]: value }), {});
 
+/** minimum time between updated of internal state */
+const minManifestLastUpdated = 20;
+
 export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     #framework: PortalFramework;
-    #manifests: FlowSubject<Record<string, LegacyAppManifest>, Actions>;
+    #subscription: Subscription;
+    #state: FlowSubject<
+        { lastUpdated: number; manifests: Record<string, LegacyAppManifest> },
+        Actions
+    >;
 
     #updateTask: Promise<void> & { state?: 'pending' | 'fulfilled' | 'rejected' } =
         Promise.resolve();
@@ -116,7 +122,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     }
 
     get allApps(): Record<string, LegacyAppManifest> {
-        return this.#manifests.value;
+        return this.#state.value.manifests;
     }
 
     constructor(args: {
@@ -127,24 +133,51 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     }) {
         super();
         const { framework, eventHub, featureLogger, telemetryLogger } = args;
+
         this.#framework = framework;
-        this.#manifests = new FlowSubject(
-            createReducer({} as Record<string, LegacyAppManifest>, (builder) =>
-                builder
-                    .addCase(actions.setManifests, (state, action) => {
-                        state = action.payload;
-                    })
-                    .addCase(actions.updateManifests, (state, action) => {
-                        const currentState = original(state) || {};
+
+        this.#subscription = new Subscription();
+
+        this.#state = new FlowSubject(
+            createReducer(
+                {
+                    lastUpdated: 0,
+                    manifests: {} as Record<string, LegacyAppManifest>,
+                },
+                (builder) =>
+                    builder.addCase(actions.updateManifests, (state, action) => {
+                        const currentState = original(state.manifests) || {};
                         const nextState = action.payload;
+
+                        const lastUpdated = action.meta.created - state.lastUpdated;
+                        console.debug(
+                            '🕥 LegacyAppContainer',
+                            `${lastUpdated}ms since last update`
+                        );
+                        if (lastUpdated < minManifestLastUpdated) {
+                            return console.warn(
+                                '🚨 LegacyAppContainer',
+                                'loop detection! skipping updating of state!',
+                                currentState,
+                                nextState
+                            );
+                        }
+
                         for (const appKey in nextState) {
                             const current = currentState[appKey];
                             const next = nextState[appKey];
                             if (!current) {
-                                state[appKey] = next;
+                                state.manifests[appKey] = next;
+                                state.lastUpdated = action.meta.created;
                             } else if (compareApp(current, next)) {
-                                console.debug(`🔥 [${appKey}] manifest changed`, current, next);
-                                state[appKey] = { ...current, ...next };
+                                console.debug(
+                                    '🔥 LegacyAppContainer',
+                                    `[${appKey}] manifest changed`,
+                                    current,
+                                    next
+                                );
+                                state.manifests[appKey] = { ...current, ...next };
+                                state.lastUpdated = action.meta.created;
                             }
                         }
                     })
@@ -157,11 +190,6 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             {},
             eventHub
         );
-        apps.on('change', (apps) => {
-            console.debug('app-container changed', apps);
-            return this.#manifests.next(actions.updateManifests(apps));
-        });
-        this.#manifests.subscribe((value) => (apps.state = value));
 
         /** legacy wrapper */
         const currentApp = new DistributedState<LegacyAppManifest | null>(
@@ -175,70 +203,93 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             eventHub
         );
 
-        framework.modules.event.addEventListener('onCurrentAppChanged', (e) => {
-            const { next, previous } = e.detail;
+        /** this should not happen, this means there is a duplicate app manager */
+        this.#subscription.add(
+            /** danger zone, this might cause loop */
+            apps.on('change', (apps) => {
+                console.debug('🚨 LegacyAppContainer', 'manifest changed', apps);
+                return this.#state.next(actions.updateManifests(apps));
+            })
+        );
 
-            console.debug('📦 current application changed', next, previous);
+        this.#subscription.add(
+            this.#state.subscribe((value) => {
+                this.emit('update', value);
+                /** update legacy DistributedState */
+                apps.state = value.manifests;
+            })
+        );
 
-            const currentManifest = next ? this.#manifests.value[next.appKey] || null : null;
-            currentApp.state = currentManifest;
-            this.emit('change', currentManifest);
+        /** this is all legacy remove in future */
+        this.#subscription.add(
+            framework.modules.app.current$.pipe(pairwise()).subscribe(([previous, current]) => {
+                const { manifests } = this.#state.value;
+                /** update current app state */
+                const currentManifest = current ? manifests[current.appKey] || null : null;
+                currentApp.state = currentManifest;
 
-            const previousManifest = previous
-                ? this.#manifests.value[previous.appKey] || null
-                : null;
-            if (previousManifest) {
-                previousApps.state = {
-                    ...previousApps.state,
-                    [previousManifest.key]: previousManifest,
-                };
-            }
+                /** notify that current application changed!  */
+                this.emit('change', currentManifest);
 
-            featureLogger.setCurrentApp(currentManifest?.key || null);
-            featureLogger.log('App selected', '0.0.1', {
-                selectedApp: currentManifest
-                    ? {
-                          key: currentManifest.key,
-                          name: currentManifest.name,
-                      }
-                    : null,
-                previousApps: Object.keys(previousApps.state).map((key) => ({
-                    key,
-                    name: previousApps.state[key].name,
-                })),
-            });
-            if (!currentManifest?.context) {
-                // Reset context on feature logger if current app does not support it
-                featureLogger.setCurrentContext(null, null);
-            }
+                /** update previous app state */
+                const previousManifest = previous ? manifests[previous.appKey] || null : null;
 
-            telemetryLogger.trackEvent({
-                name: 'App selected',
-                properties: {
-                    previousApp: currentApp.state ? currentApp.state.name : null,
-                    selectedApp: currentManifest?.name,
-                    previousApps: Object.keys(previousApps.state).map(
-                        (key) => previousApps.state[key].name
-                    ),
-                    currentApp: currentManifest?.name,
-                },
-            });
-        });
+                if (previousManifest) {
+                    previousApps.state = {
+                        ...previousApps.state,
+                        [previousManifest.key]: previousManifest,
+                    };
+                }
+
+                /** log entry to Fusion feature logger */
+                featureLogger.setCurrentApp(currentManifest?.key || null);
+                featureLogger.log('App selected', '0.0.1', {
+                    selectedApp: currentManifest
+                        ? {
+                              key: currentManifest.key,
+                              name: currentManifest.name,
+                          }
+                        : null,
+                    previousApps: Object.keys(previousApps.state).map((key) => ({
+                        key,
+                        name: previousApps.state[key].name,
+                    })),
+                });
+
+                if (!currentManifest?.context) {
+                    // Reset context on feature logger if current app does not support it
+                    featureLogger.setCurrentContext(null, null);
+                }
+
+                /** log change in AI */
+                telemetryLogger.trackEvent({
+                    name: 'App selected',
+                    properties: {
+                        previousApp: previousManifest ? previousManifest.name : null,
+                        selectedApp: currentManifest?.name,
+                        previousApps: Object.keys(previousApps.state).map(
+                            (key) => previousApps.state[key].name
+                        ),
+                        currentApp: currentManifest?.name,
+                    },
+                });
+            })
+        );
 
         this.on('fetch', (fetching) => (this.#isUpdating = fetching));
     }
 
     async setCurrentAppAsync(appKey: string | null): Promise<void> {
         if (appKey) {
-            const { key, AppComponent, render } = this.#manifests.value[appKey];
+            const { AppComponent, render } = this.get(appKey) || {};
             /**
              * assume if the manifest missing AppComponent or render, that loading is required
              */
             if (!!AppComponent && !!render) {
-                await this.#loadScript(key);
+                await this.#loadScript(appKey);
             }
             await new Promise((resolve) => window.requestAnimationFrame(resolve));
-            const manifest = this.#manifests.value[appKey] as unknown as AppManifest;
+            const manifest = this.get(appKey) as unknown as AppManifest;
             const appProvider = this.#framework.modules.app;
             const currentApp = appProvider.current;
             if (currentApp && currentApp.appKey === appKey) {
@@ -267,25 +318,29 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     }
 
     public get(appKey: string): LegacyAppManifest | undefined {
-        return this.#manifests.value[appKey];
+        return this.#state.value.manifests[appKey];
     }
 
     public getAll(): Array<LegacyAppManifest> {
-        return Object.values(this.#manifests.value);
+        return Object.values(this.#state.value.manifests);
     }
 
     public async getAllAsync(): Promise<Record<string, LegacyAppManifest>> {
         await this.requestUpdate();
-        return this.#manifests.value;
+        return this.#state.value.manifests;
     }
 
     public updateManifest(manifest: LegacyAppManifest): void {
-        this.#manifests.next(actions.updateManifests({ [manifest.key]: manifest }));
+        this.#state.next(actions.updateManifests({ [manifest.key]: manifest }));
     }
 
     public async requestUpdate(): Promise<void> {
         this.requireUpdate && this.#update();
         return this.updateComplete;
+    }
+
+    public dispose() {
+        this.#subscription.unsubscribe();
     }
 
     async #loadScript(appKey: string): Promise<void> {
@@ -318,7 +373,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                     reject(err);
                 },
                 next: (value) =>
-                    this.#manifests.next(
+                    this.#state.next(
                         actions.updateManifests(
                             indexManifests(value as unknown as LegacyAppManifest[])
                         )
