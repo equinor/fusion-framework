@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.1.2
+
+### Patch Changes
+
+-   [#959](https://github.com/equinor/fusion-framework/pull/959) [`ac889787`](https://github.com/equinor/fusion-framework/commit/ac88978763f7c2d2eee3b5154a0eac12a93bc5a8) Thanks [@odinr](https://github.com/odinr)! - create a hook which returns the current `ContextProvider`
+
+    example
+
+    ```ts
+    import { useContextProvider } from '@equinor/fusion-framework-react-app/context';
+    const App = () => {
+        const contextProvider = useContextProvider();
+    };
+    ```
+
 ## 4.1.1
 
 ### Patch Changes

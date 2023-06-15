@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.15
+
+### Patch Changes
+
+-   [#958](https://github.com/equinor/fusion-framework/pull/958) [`e50acbb2`](https://github.com/equinor/fusion-framework/commit/e50acbb28ef10c83cf6e7913fa9f03ed971f0957) Thanks [@odinr](https://github.com/odinr)! - _refactor: only added missing deps for stand alone compile_
+
 ## 0.1.14
 
 ### Patch Changes
