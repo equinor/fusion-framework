@@ -1,0 +1,24 @@
+{
+  "name": "@equinor/fusion-framework-cookbook-app-react-person-component",
+  "version": "1.0.0",
+  "description": "Example usage of the components PersonAvatar, PersonCard and PersonList",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "fusion-framework-cli app dev",
+    "docker": "cd .. && sh docker-script.sh app-react"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@equinor/fusion-framework-cli": "^7.0.10",
+    "@equinor/fusion-framework-react-app": "^4.0.16",
+    "@equinor/fusion-react-person": "^0.2.1",
+    "@equinor/fusion-react-styles": "^0.5.5",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
