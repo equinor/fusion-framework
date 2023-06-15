@@ -1,5 +1,5 @@
 import { Snackbar } from '@equinor/eds-core-react';
-import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
+import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { CreateBookmarkModal } from './create-bookmark';

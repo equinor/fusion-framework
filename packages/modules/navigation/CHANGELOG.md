@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.0.2
+
+### Patch Changes
+
+-   [#950](https://github.com/equinor/fusion-framework/pull/950) [`24123cf7`](https://github.com/equinor/fusion-framework/commit/24123cf717c9b2b8987f9a349d7507e7057ea669) Thanks [@odinr](https://github.com/odinr)! - update generate version for packages
+
+## 3.0.1
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,19 +1,26 @@
 {
-  "version": "independent",
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "useNx": true,
-  "changelogPreset": "conventionalcommits",
-  "command": {
-    "version": {
-      "allowBranch": ["main", "alpha", "beta", "next", "feat/**", "feature/**", "fix/**", "release/**"],
-      "conventionalCommits": true,
-      "ignoreChanges": ["*.spec.ts", "*.md"]
-    },
-    "publish": {
-      "conventionalCommits": true,
-      "ignoreChanges": ["*.spec.ts", "*.md"],
-      "message": "chore(release): publish"
+    "version": "independent",
+    "npmClient": "yarn",
+    "changelogPreset": "conventionalcommits",
+    "command": {
+        "version": {
+            "allowBranch": [
+                "main",
+                "alpha",
+                "beta",
+                "next",
+                "feat/**",
+                "feature/**",
+                "fix/**",
+                "release/**"
+            ],
+            "conventionalCommits": true,
+            "ignoreChanges": ["*.spec.ts", "*.md"]
+        },
+        "publish": {
+            "conventionalCommits": true,
+            "ignoreChanges": ["*.spec.ts", "*.md"],
+            "message": "chore(release): publish"
+        }
     }
-  }
 }

@@ -1,5 +1,22 @@
 # Change Log
 
+## 5.2.2
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
+-   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+    -   @equinor/fusion-framework@7.0.15
+
+## 5.2.1
+
+### Patch Changes
+
+-   [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - update typing to typescript 5
+
+    provider from `createFrameworkProvider` was missing typehint of children
+
 ## 5.2.0
 
 ### Minor Changes

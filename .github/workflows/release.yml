@@ -27,18 +27,18 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn --silent --production=true --frozen-lockfile
+        run: yarn --silent --frozen-lockfile
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
-          title: Fusion Framework Realse
+          title: '🤖 Bip Bop - Fusion Framework Release'
           createGithubReleases: true
           setupGitUser: false
           version: yarn changeset:version
           publish: yarn changeset publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 

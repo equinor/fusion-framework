@@ -3,6 +3,9 @@ name: Lint project files
 on: 
   merge_group:
   pull_request:
+  push:
+    branches:
+      - 'changeset-release/*'
 
 jobs:
   eslint:
@@ -25,6 +28,12 @@ jobs:
 
       - name: Install Node Dependencies
         run: yarn install --frozen-lockfile
+
+      # Cookbooks require CLI to be build for linking
+      - name: Build CLI
+        run: |
+          yarn workspace @equinor/fusion-framework-cli build
+          lerna exec --scope @equinor/fusion-framework-cli npm link
 
       - name: Build project [dependabot]
         if: ${{ github.actor == 'dependabot[bot]' }}

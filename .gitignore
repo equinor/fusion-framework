@@ -110,7 +110,7 @@ tmp/
 
 package-lock.json
 packages/**/yarn.lock
-packages/**/src/version.ts
+**/src/version.ts
 
 .yarn/*
 !.yarn/releases
