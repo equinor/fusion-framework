@@ -13,8 +13,24 @@ const createPersonClient = (client: IHttpClient) => {
         queueOperator: 'merge',
         key: (azureId) => azureId,
         client: {
-            fn: (azureId: string) => {
-                return client.json<PersonDetails>(`/persons/${azureId}?api-version=4.0`);
+            fn: async (azureId: string) => {
+                const user = await client.json<PersonDetails>(
+                    `/persons/${azureId}?api-version=4.0&$expand=positions,manager`
+                );
+
+                try {
+                    const image = await client.json<string>(
+                        `/persons/${azureId}/photo?api-version=1.0`
+                    );
+
+                    if (image) {
+                        user.pictureSrc = image;
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+
+                return user;
             },
         },
     });
