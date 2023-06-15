@@ -1,5 +1,28 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+-   [#962](https://github.com/equinor/fusion-framework/pull/962) [`14162858`](https://github.com/equinor/fusion-framework/commit/141628585c12174575a5ecd12d2a79ea47acca9d) Thanks [@odinr](https://github.com/odinr)! - **LegacyAppContainer**
+
+    change behavior of internal application state of `LegacyAppContainer`.
+    current value is set to 20ms, this can be adjusted later (if needed).
+
+    Without this throttle the internal state could en up in death-loop since `DistributedState` is triggered on `window.requestAnimationFrame`, which would make a ping pong effect
+
+    other:
+
+    -   `#manifest` is renamed to `#state`
+    -   subscription to Framework app changed is now directly on the app module vs event
+    -   added `dispose` since subscription/listeners are not cleaned up (should only be one `LegacyAppContainer`)
+
+### Patch Changes
+
+-   [#962](https://github.com/equinor/fusion-framework/pull/962) [`14162858`](https://github.com/equinor/fusion-framework/commit/141628585c12174575a5ecd12d2a79ea47acca9d) Thanks [@odinr](https://github.com/odinr)! - Changed subscription on fusion framework history
+
+    Application had random error with attaching to the Framework history since it was attached by `useEffect`, now changed to `useLayoutEffect`. this error only occurred when resolving initial context, which lead the legacy router in initial path and not the resolved context route.
+
 ## 5.0.2
 
 ### Patch Changes
