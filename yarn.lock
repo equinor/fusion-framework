@@ -1005,13 +1005,13 @@
     "@lit-labs/react" "^1.0.0"
 
 "@equinor/fusion-react-context-selector@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.4.3.tgz#00b1428cb8408b90703e51d115e9f63702d7aec0"
-  integrity sha512-ceFv5vLwCmLgXS5kHuYHv3KdAKUW+GbYLP84yb0Zs0NO1ytUv7k+RRqIpKGGsfHD1ahmrc25iG05BbmqJNsuYA==
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.4.4.tgz#a49fe05ca5e44b1bc9d8ab93b0bcc0c64e08ba14"
+  integrity sha512-AnlSzmV6Jr9ggfGMt+rp04/a8cHv0eWAthIwb9C+EOEzmBJqpn+30BekK/aC8CrG5hHopPMTc1fWp2GyPUd68Q==
   dependencies:
     "@equinor/fusion-react-icon" "^0.2.15"
     "@equinor/fusion-react-searchable-dropdown" "^0.3.4"
-    "@equinor/fusion-react-styles" "^0.5.5"
+    "@equinor/fusion-react-styles" "^0.5.6"
     "@equinor/fusion-react-utils" "^2.0.4"
 
 "@equinor/fusion-react-divider@^0.2.8":
@@ -1091,17 +1091,7 @@
     "@material-ui/styles" "^4.11.4"
     clsx "^1.1.1"
 
-"@equinor/fusion-react-styles@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.5.tgz#dc97bc7c82142deb0e2f04668fab21fc6f1ead04"
-  integrity sha512-C+90P19fd6YtYn7vuYwlrTAE0cBvxkWiTz3GEzG9nQVVpqhf3r2fLP1QIO0h+0/O07MaBhaglRCEds0GDFxvMg==
-  dependencies:
-    "@equinor/fusion-wc-theme" "^0.2.25"
-    "@equinor/fusion-web-theme" "^0.1.7"
-    "@material-ui/styles" "^4.11.4"
-    clsx "^1.1.1"
-
-"@equinor/fusion-react-styles@^0.5.6":
+"@equinor/fusion-react-styles@^0.5.5", "@equinor/fusion-react-styles@^0.5.6":
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.6.tgz#fd5322fa4345efdca154c20a37a64c1a14dfe40d"
   integrity sha512-gxM8q6MLRxEZ3WA+h/gmBfCmpXGztC2tU9a4quTRKvmAX9bgKCpOaVdx4TzVMq3fyalO2p+3C4ju5j4RT4IapA==
@@ -1310,7 +1300,7 @@
     "@material/mwc-textfield" "^0.27.0"
     lit "2.7.0"
 
-"@equinor/fusion-wc-theme@^0.2.19", "@equinor/fusion-wc-theme@^0.2.25":
+"@equinor/fusion-wc-theme@^0.2.19":
   version "0.2.31"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-theme/-/fusion-wc-theme-0.2.31.tgz#4b6ed6fc889c6ef30bfabe03baddb651f64a23f0"
   integrity sha512-bqpeUVCDkdL7Tv6EFgNOFsHdWJVtAAO4BQhaSgt2mWSnPu6tcErrZzISYefj0oOPp4oehbmtAUYKYFdYI/KdIA==
