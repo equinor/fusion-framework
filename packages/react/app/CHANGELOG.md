@@ -1,5 +1,77 @@
 # Change Log
 
+## 4.1.2
+
+### Patch Changes
+
+-   [#959](https://github.com/equinor/fusion-framework/pull/959) [`ac889787`](https://github.com/equinor/fusion-framework/commit/ac88978763f7c2d2eee3b5154a0eac12a93bc5a8) Thanks [@odinr](https://github.com/odinr)! - create a hook which returns the current `ContextProvider`
+
+    example
+
+    ```ts
+    import { useContextProvider } from '@equinor/fusion-framework-react-app/context';
+    const App = () => {
+        const contextProvider = useContextProvider();
+    };
+    ```
+
+## 4.1.1
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
+-   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+    -   @equinor/fusion-framework-app@7.0.16
+    -   @equinor/fusion-framework-module-navigation@3.0.1
+    -   @equinor/fusion-framework-react@5.2.2
+
+## 4.1.0
+
+### Minor Changes
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - **Add tooling for navigation in React App package**
+
+    -   add hook for using the navigation module
+    -   add hook for creating a react router
+
+    ```ts
+    const routes = [
+        {
+            path: '/',
+            element: <p>👍🏻</p>,
+        },
+    ];
+
+    const Router = () => {
+        const router = useRouter(routes);
+        return <RouterProvider router={router} fallbackElement={<p>😥</p>} />;
+    };
+
+    const App = () => <Router />;
+    ```
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - hook `useAppModule` now throws error if requested module is not configured
+
+### Patch Changes
+
+-   [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - updated cookbook for routing ([documentation](https://equinor.github.io/fusion-framework/modules/navigation/))
+
+## 4.0.17
+
+### Patch Changes
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
+-   Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+    -   @equinor/fusion-framework-app@7.0.15
+    -   @equinor/fusion-framework-react@5.1.4
+    -   @equinor/fusion-framework-react-module-http@3.0.3
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

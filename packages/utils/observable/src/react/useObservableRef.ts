@@ -14,7 +14,7 @@ export const useObservableRef = <S>(
     const ref = useRef<S | undefined>(initial);
     useObservableLayoutSubscription(
         subject,
-        useCallback((x) => (ref.current = x), [])
+        useCallback((x: S) => (ref.current = x), [])
     );
     return ref;
 };

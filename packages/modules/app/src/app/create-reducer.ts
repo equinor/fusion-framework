@@ -17,7 +17,11 @@ export const createReducer = (value: AppBundleStateInitial) =>
     makeReducer({ ...value, status: new Set() } as AppBundleState, (builder) =>
         builder
             .addCase(actions.setManifest, (state, action) => {
-                state.manifest = action.payload;
+                if (action.meta.update) {
+                    state.manifest = { ...state.manifest, ...action.payload };
+                } else {
+                    state.manifest = action.payload;
+                }
             })
             .addCase(actions.setConfig, (state, action) => {
                 state.config = action.payload;

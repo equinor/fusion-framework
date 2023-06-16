@@ -2,12 +2,12 @@ name: Post PRs to Teams
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [labeled]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-    
+    if: contains( github.event.pull_request.labels.*.name, '🤞🏻 Ready for review')
     steps:
       - name: Notify
         uses: davidwengier/PostAdaptiveCard@v1.0.0

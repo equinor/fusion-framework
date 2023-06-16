@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { useEffect, type PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo, useLayoutEffect } from 'react';
 
 import { concat, filter, from, take } from 'rxjs';
 
@@ -27,7 +27,7 @@ const AppWrapper = (
 ) => {
     const framework = useFramework<[NavigationModule]>();
     const { history, basename, appKey, children } = props;
-    useEffect(() => {
+    useLayoutEffect(() => {
         return framework.modules.navigation.navigator.listen(({ location, action }) => {
             if (
                 location.pathname.indexOf(basename) === -1 ||
@@ -67,11 +67,8 @@ const AppWrapper = (
     );
 };
 
-export const createLegacyRender = (
-    appKey: string,
-    AppComponent: React.FunctionComponent,
-    legacy: IFusionContext
-) => {
+export const createLegacyRender = (manifest: AppManifest, legacy: IFusionContext) => {
+    const { key: appKey, AppComponent, context: contextConfig } = manifest;
     const basename = `/apps/${appKey}`;
     const history = createBrowserHistory({ basename });
     return createComponent<[ContextModule, NavigationModule]>(
@@ -81,8 +78,7 @@ export const createLegacyRender = (
                 <AppComponent />
             </AppWrapper>
         )),
-        (configurator, { env }) => {
-            const { context: contextConfig } = env.manifest as unknown as AppManifest;
+        (configurator) => {
             enableNavigation(configurator, basename);
             if (contextConfig) {
                 enableContext(configurator, async (builder) => {

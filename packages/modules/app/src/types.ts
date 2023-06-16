@@ -3,7 +3,7 @@ import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import App from './app';
+import IApp from './app';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,7 +23,7 @@ export type AppType = 'standalone' | 'report' | 'launcher';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
-    | App<TEnv, TModules>
+    | IApp<TEnv, TModules>
     | null
     | undefined;
 

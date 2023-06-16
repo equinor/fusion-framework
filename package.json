@@ -8,12 +8,12 @@
     "node": "^16 || ^18"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "install": "lerna exec \"genversion --es6 --semi src/version.ts\"",
     "clean": "yarn run clean:build && yarn run clean:npm",
     "clean:npm": "npx lerna exec 'rm -rf node_modules' && rm -rf node_modules",
     "clean:build": "npx lerna exec 'rm -rf dist'",
-    "build": "lerna run build",
-    "build:affected": "nx run-many --target=build --all",
+    "build": "nx run-many -t build",
+    "build:affected": "nx affected:build",
     "build:clean": "yarn clean:build && yarn run build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "yarn lint --output-file eslint-report.log.json --format json",
@@ -47,6 +47,7 @@
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@nrwl/nx-cloud": "^16.0.5",
+    "genversion": "^3.1.1",
     "husky": "^8.0.3",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^13.1.0"
@@ -73,8 +74,8 @@
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "eslint": "^8.33.0",
     "eslint-plugin-rxjs": "^5.0.2",
-    "lerna": "^6.6.2",
-    "nx": "16.2.2",
+    "lerna": "^7.0.0",
+    "nx": "16.3.2",
     "prettier": "^2.8.3",
     "tslib": "^2.5.0",
     "typescript": "^4.9.4"

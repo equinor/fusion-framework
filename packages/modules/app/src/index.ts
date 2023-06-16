@@ -6,7 +6,7 @@ export {
 } from './AppConfigurator';
 export { AppModuleProvider } from './AppModuleProvider';
 
-export { App } from './app/App';
+export { IApp } from './app/App';
 
 export * from './events';
 export * from './types';

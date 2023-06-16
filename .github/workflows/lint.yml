@@ -3,16 +3,16 @@ name: Lint project files
 on: 
   merge_group:
   pull_request:
-    paths:
-      - '**.ts'
-      - '**.tsx'
   push:
     branches:
-      - 'changeset-release/main'
+      - 'changeset-release/*'
 
 jobs:
   eslint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [16, 18]
 
     steps:
       - name: Checkout Repo
@@ -20,22 +20,35 @@ jobs:
         with: 
           fetch-depth: '0'
 
-      - name: Setup Node.js 16.x
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: ${{ matrix.version }}
           cache: 'yarn'
 
       - name: Install Node Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build project
+      # Cookbooks require CLI to be build for linking
+      - name: Build CLI
+        run: |
+          yarn workspace @equinor/fusion-framework-cli build
+          lerna exec --scope @equinor/fusion-framework-cli npm link
+
+      - name: Build project [dependabot]
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        run: yarn build
+
+      - name: Build project [affected]
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: yarn nx affected:build --base=remotes/origin/main
 
       - name: Save Code Linting Report JSON
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: yarn lint:report
 
       - name: Annotate Code Linting Results
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: ataylorme/eslint-annotate-action@1.1.2
         continue-on-error: true
         with:
@@ -43,6 +56,7 @@ jobs:
           report-json: "eslint-report.log.json"
 
       - name: Upload ESLint report
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: actions/upload-artifact@v2
         continue-on-error: true
         with:

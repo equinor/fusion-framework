@@ -1,23 +1,25 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-bookmark",
-    "version": "4.0.17",
+    "version": "4.0.21",
     "description": "",
     "private": true,
     "type": "module",
-    "main": "/src/index.ts",
+    "main": "src/index.ts",
     "scripts": {
+        "build": "fusion-framework-cli app build",
         "dev": "fusion-framework-cli app dev",
         "docker": "cd .. && sh docker-script.sh app-react"
     },
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^7.0.10",
-        "@equinor/fusion-framework-module-bookmark": "^1.0.6",
-        "@equinor/fusion-framework-react-app": "^4.0.16",
+        "@equinor/fusion-framework-cli": "^7.0.12",
+        "@equinor/fusion-framework-module-bookmark": "^1.0.7",
+        "@equinor/fusion-framework-react-app": "^4.1.1",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "typescript": "^5.1.3"
     }
 }

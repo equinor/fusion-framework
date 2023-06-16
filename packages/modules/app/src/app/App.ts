@@ -25,8 +25,47 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
     return filter((value): value is T => value !== undefined && value !== null);
 }
 
+// TODO add comments!
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown> {
+export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown> {
+    get manifest$(): Observable<AppManifest>;
+    get config$(): Observable<AppConfig<TEnv>>;
+    get modules$(): Observable<AppScriptModule>;
+    get instance$(): Observable<AppModulesInstance<TModules>>;
+    get state(): AppBundleState;
+    get appKey(): string;
+    get manifest(): AppManifest | undefined;
+    get manifestAsync(): Promise<AppManifest>;
+    get config(): AppConfig<TEnv> | undefined;
+    get instance(): AppModulesInstance<TModules> | undefined;
+
+    initialize(): Observable<{
+        manifest: AppManifest;
+        script: AppScriptModule;
+        config: AppConfig;
+    }>;
+
+    loadConfig(): void;
+
+    loadManifest(): void;
+
+    loadAppModule(allow_cache?: boolean): void;
+
+    getConfig(force_refresh?: boolean): Observable<AppConfig>;
+    getConfigAsync(allow_cache?: boolean): Promise<AppConfig>;
+
+    getManifest(force_refresh?: boolean): Observable<AppManifest>;
+    getManifestAsync(allow_cache?: boolean): Promise<AppManifest>;
+
+    getAppModule(force_refresh?: boolean): Observable<AppScriptModule>;
+    getAppModuleAsync(allow_cache?: boolean): Promise<AppScriptModule>;
+}
+
+// TODO make streams distinct until changed from state
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown>
+    implements IApp<TEnv, TModules>
+{
     #state: FlowSubject<AppBundleState, Actions>;
 
     //#region === streams ===
@@ -223,8 +262,12 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         this.#state.next(actions.fetchConfig(this.appKey));
     }
 
-    public loadManifest() {
-        this.#state.next(actions.fetchManifest(this.appKey));
+    public loadManifest(update?: boolean) {
+        this.#state.next(actions.fetchManifest(this.appKey, update));
+    }
+
+    public updateManifest(manifest: AppManifest, replace?: false) {
+        this.#state.next(actions.setManifest(manifest, !replace));
     }
 
     public async loadAppModule(allow_cache = true) {

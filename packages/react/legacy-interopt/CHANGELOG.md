@@ -1,5 +1,118 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+-   [#962](https://github.com/equinor/fusion-framework/pull/962) [`14162858`](https://github.com/equinor/fusion-framework/commit/141628585c12174575a5ecd12d2a79ea47acca9d) Thanks [@odinr](https://github.com/odinr)! - **LegacyAppContainer**
+
+    change behavior of internal application state of `LegacyAppContainer`.
+    current value is set to 20ms, this can be adjusted later (if needed).
+
+    Without this throttle the internal state could en up in death-loop since `DistributedState` is triggered on `window.requestAnimationFrame`, which would make a ping pong effect
+
+    other:
+
+    -   `#manifest` is renamed to `#state`
+    -   subscription to Framework app changed is now directly on the app module vs event
+    -   added `dispose` since subscription/listeners are not cleaned up (should only be one `LegacyAppContainer`)
+
+### Patch Changes
+
+-   [#962](https://github.com/equinor/fusion-framework/pull/962) [`14162858`](https://github.com/equinor/fusion-framework/commit/141628585c12174575a5ecd12d2a79ea47acca9d) Thanks [@odinr](https://github.com/odinr)! - Changed subscription on fusion framework history
+
+    Application had random error with attaching to the Framework history since it was attached by `useEffect`, now changed to `useLayoutEffect`. this error only occurred when resolving initial context, which lead the legacy router in initial path and not the resolved context route.
+
+## 5.0.2
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
+## 5.0.0
+
+### Major Changes
+
+-   [#935](https://github.com/equinor/fusion-framework/pull/935) [`710c337f`](https://github.com/equinor/fusion-framework/commit/710c337f2fa4ce834de4673c9805c2e0d07e7fef) Thanks [@odinr](https://github.com/odinr)! - **hotfix** provide legacy app manifest to `createLegacyRender`
+
+    all application should have a `render` method for connecting to the framework, minimal effort for getting end-of-life application to run just a little longer...🌈
+
+    **How to migrate**
+
+    > as a app developer, you should not be using this package! 🙄
+
+    as a portal developer, see code below 😎
+
+    _current_
+
+    ```ts
+    // before change
+    createLegacyRender(
+        manifest.key,
+        manifest.AppComponent as React.FunctionComponent,
+        legacyFusion // fusion context container
+    );
+    ```
+
+    _after_
+
+    ```ts
+    createLegacyRender(
+        manifest, // mutated legacy manifest
+        legacyFusion // fusion context container
+    );
+    ```
+
+## 4.0.14
+
+### Patch Changes
+
+-   [#929](https://github.com/equinor/fusion-framework/pull/929) [`32f4f5a3`](https://github.com/equinor/fusion-framework/commit/32f4f5a3073a703f536188da9f7cb548a1ae6b3e) Thanks [@odinr](https://github.com/odinr)! - **Prevent app registration death spiral**
+
+    Currently the application can register it self with a shared function in the fusion context (window), this modifies the manifest. if the portal and application has different app containers _(which they do if application bundle with a different version of fusion-api than the fusion-cli 🤯)_.
+
+    The 2 containers are connected threw a message bus and localStorage, which batch on `requestAnimationFrame`, which means that if there are miss-match between the application manifests, this would do a tic-toc as fast as your computer can render🧨
+
+    after this update only a few manifest properties will be checked:
+
+    -   `render`
+    -   `AppComponent`
+    -   `tags`
+    -   `category`
+    -   `publishedDate`
+
+    > we suggest that application ony register `appKey` plus `render` or `AppComponent` _(☠️ deprecated soon)_
+    >
+    > ```ts
+    > registerApp('my-app', { render: myRenderMethod });
+    > ```
+
+## 4.0.13
+
+### Patch Changes
+
+-   [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - update loading of legacy applications
+
+    -   when an application load from CJS with `registerApp` the manifest is mutated and should update in legacy app container
+    -   add strict `undefined` check of manifest app component
+    -   add check if miss match of appKey, output warn and error if current app is not in scope
+
+## 4.0.12
+
+### Patch Changes
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
+-   [`d6671bc5`](https://github.com/equinor/fusion-framework/commit/d6671bc526179f18a5290049728c9c5ac72da671) Thanks [@odinr](https://github.com/odinr)! - added missing [exhausted-deps](https://legacy.reactjs.org/docs/hooks-rules.html), this might cause rerender, since `ReactRouterDom.createBrowserHistory` might create history dynamicly.
+
+    this should be tested in portal when updating the `@equinor/fusion-framework-legacy-interopt`
+
+    https://github.com/equinor/fusion-framework/blob/7c0a475174f61ba02570614c237d5cfb3b009cb1/packages/react/legacy-interopt/src/create-legacy-render.tsx#L59
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

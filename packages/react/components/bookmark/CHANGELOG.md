@@ -1,5 +1,30 @@
 # Change Log
 
+## 0.1.15
+
+### Patch Changes
+
+-   [#958](https://github.com/equinor/fusion-framework/pull/958) [`e50acbb2`](https://github.com/equinor/fusion-framework/commit/e50acbb28ef10c83cf6e7913fa9f03ed971f0957) Thanks [@odinr](https://github.com/odinr)! - _refactor: only added missing deps for stand alone compile_
+
+## 0.1.14
+
+### Patch Changes
+
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+
+## 0.1.13
+
+### Patch Changes
+
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+
+-   Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+    -   @equinor/fusion-framework-react-module-bookmark@2.0.12
+
 ## 0.1.12
 
 ### Patch Changes
