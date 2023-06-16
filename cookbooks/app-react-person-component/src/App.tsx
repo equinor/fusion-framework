@@ -1,29 +1,31 @@
 import { PersonCard, PersonAvatar, AvatarSize } from '@equinor/fusion-react-person';
-import { createStyles, makeStyles } from '@equinor/fusion-react-styles';
-import { StrictMode } from 'react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 
-const useStyles = makeStyles(
-    (theme) =>
-        createStyles({
-            section: {
-                textAlign: 'center',
-            },
-            list: {
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: theme.spacing.comfortable.medium.getVariable('padding'),
-                justifyContent: 'center',
-            },
-            card: {
-                width: '100%',
-                maxWidth: '400px',
-            },
-        }),
-    { name: 'person' }
-);
+const Heading = styled.h1`
+    text-align: center;
+    margin-top: ${tokens.spacings.comfortable.x_large};
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+`;
+
+const Subheading = styled.p`
+    text-align: center;
+`;
+
+const CardList = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${tokens.spacings.comfortable.medium};
+    justify-content: center;
+    padding-bottom: ${tokens.spacings.comfortable.medium};
+`;
+
+const CardItem = styled.div`
+    width: '100%',
+    maxWidth: '400px',
+`;
 
 export const App = () => {
-    const styles = useStyles();
     const azureIds = [
         'b40a0024-5dfd-4a6b-bb33-8d80bd3a4dde',
         '49132c24-6ea4-41fe-8221-112f314573f0',
@@ -35,10 +37,10 @@ export const App = () => {
     ];
 
     return (
-        <StrictMode>
+        <>
             <div>
-                <h1 style={{ textAlign: 'center' }}>Person Cards</h1>
-                <p style={{ textAlign: 'center' }}>
+                <Heading>Person Cards</Heading>
+                <Subheading>
                     This is a working example of {'<PersonCard>'} component, for more information
                     visit{' '}
                     <a
@@ -47,20 +49,20 @@ export const App = () => {
                     >
                         PersonCard - Storybook
                     </a>
-                </p>
-                <div className={styles.list}>
+                </Subheading>
+                <CardList>
                     {azureIds.map((azureId) => {
                         return (
-                            <div key={azureId} className={styles.card}>
+                            <CardItem key={azureId}>
                                 <PersonCard size={AvatarSize.Medium} azureId={azureId} />
-                            </div>
+                            </CardItem>
                         );
                     })}
-                </div>
+                </CardList>
             </div>
-            <div className={styles.section}>
-                <h1>Person Avatars</h1>
-                <p>
+            <div>
+                <Heading>Person Avatars</Heading>
+                <Subheading>
                     This is a working example of {'<PersonAvatar>'} component, for more information
                     visit{' '}
                     <a
@@ -69,8 +71,8 @@ export const App = () => {
                     >
                         PersonAvatar - Storybook
                     </a>
-                </p>
-                <div className={styles.list}>
+                </Subheading>
+                <CardList>
                     {azureIds.map((azureId) => {
                         return (
                             <PersonAvatar
@@ -80,9 +82,9 @@ export const App = () => {
                             />
                         );
                     })}
-                </div>
+                </CardList>
             </div>
-        </StrictMode>
+        </>
     );
 };
 
