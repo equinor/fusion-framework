@@ -19,6 +19,26 @@ const createPersonClient = (client: IHttpClient) => {
         },
     });
 
+    const queryPerson = new Query({
+        expire,
+        queueOperator: 'merge',
+        key: (query) => query,
+        client: {
+            fn: (query: string) => {
+                return client.json<PersonDetails>(`/search/persons/query?api-version=1.0`, {
+                    method: 'POST',
+                    body: {
+                        matchAll: true,
+                        fullQueryMode: true,
+                        search: query,
+                        searchFields: ['name', 'mobilePhone', 'mail'],
+                        includeTotalResultCount: true,
+                    },
+                });
+            },
+        },
+    });
+
     const queryPresence = new Query({
         expire,
         queueOperator: 'merge',
@@ -30,6 +50,7 @@ const createPersonClient = (client: IHttpClient) => {
     });
 
     return {
+        getPerson: (query: string) => queryPerson.queryAsync(query).then((x) => x.value),
         getDetails: (azureId: string) => queryDetails.queryAsync(azureId).then((x) => x.value),
         getPresence: (azureId: string) => queryPresence.queryAsync(azureId).then((x) => x.value),
     };
