@@ -946,15 +946,15 @@
     eslint-plugin-prettier "^4.2.1"
 
 "@equinor/fusion-components@^2.10.5":
-  version "2.10.8"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.8.tgz#52d7e5f5211a9c5d87b9e8879bf4cb096c2af5c2"
-  integrity sha512-tmASSDHaem7CtKs9MqwVA3Pm20x2JXTfnU/rG4JDRJSEWFHiLjjimGDALlwwZcIBNgquepRAuSkVKIpSiSGoJg==
+  version "2.11.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.11.4.tgz#e12d919b9c95207fcda6b8603833fa62f6ebb4ec"
+  integrity sha512-n5d77SfFrrqn2TSgvUQj5Xwtj8jhiFv4JtE1FtJUPPW691b+r+7IGkPyLuY6rtSCHqjZhOhogyOOJams4cWCNw==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
     "@equinor/fusion-react-checkbox" "^0.4.0"
     "@equinor/fusion-react-divider" "^0.2.8"
     "@equinor/fusion-react-icon" "^0.2.6"
-    "@equinor/fusion-react-styles" "^0.4.0"
+    "@equinor/fusion-react-styles" "^0.5.6"
     "@equinor/fusion-wc-icon" "^1.0.17"
     "@reach/router" "^1.3.4"
     "@storybook/addon-jest" "^6.2.9"
@@ -1080,16 +1080,6 @@
   integrity sha512-xfgoTqDSJ3eRSUnR3WZpaIYum+kqOT42zR01VjhUeNvnQZtudkWNoPqTv9nNgwSUd+MTR0vglcnGzlp+VB0BGg==
   dependencies:
     re-resizable "^6.9.9"
-
-"@equinor/fusion-react-styles@^0.4.0":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.4.3.tgz#2a6845abd43719f287c08103f2324b241024ca57"
-  integrity sha512-GNwWQhJBNsKc3N4/DWZgVwFDEAinrpw4iX3tpoNzw8J3+vSl/cuJ6b+C41e7zEaGmQvnYcw03WZz5YDzxHn0/g==
-  dependencies:
-    "@equinor/fusion-wc-theme" "^0.2.19"
-    "@equinor/fusion-web-theme" "^0.1.7"
-    "@material-ui/styles" "^4.11.4"
-    clsx "^1.1.1"
 
 "@equinor/fusion-react-styles@^0.5.5", "@equinor/fusion-react-styles@^0.5.6":
   version "0.5.6"
@@ -1298,16 +1288,6 @@
     "@equinor/fusion-wc-core" "^1.0.5"
     "@equinor/fusion-wc-icon" "^1.0.30"
     "@material/mwc-textfield" "^0.27.0"
-    lit "2.7.0"
-
-"@equinor/fusion-wc-theme@^0.2.19":
-  version "0.2.31"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-theme/-/fusion-wc-theme-0.2.31.tgz#4b6ed6fc889c6ef30bfabe03baddb651f64a23f0"
-  integrity sha512-bqpeUVCDkdL7Tv6EFgNOFsHdWJVtAAO4BQhaSgt2mWSnPu6tcErrZzISYefj0oOPp4oehbmtAUYKYFdYI/KdIA==
-  dependencies:
-    "@equinor/fusion-wc-core" "^1.0.5"
-    "@equinor/fusion-web-theme" "^0.1.7"
-    "@material/theme" "^14.0.0"
     lit "2.7.0"
 
 "@equinor/fusion-wc-theme@^0.2.31":
