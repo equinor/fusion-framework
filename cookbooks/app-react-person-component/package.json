@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@equinor/eds-tokens": "^0.9.1",
     "@equinor/fusion-framework-cli": "^7.0.10",
     "@equinor/fusion-framework-react-app": "^4.0.16",
     "@equinor/fusion-react-person": "^0.2.1",
@@ -19,6 +20,7 @@
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.0.0-rc.3"
   }
 }
