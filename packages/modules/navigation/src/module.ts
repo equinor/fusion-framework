@@ -10,7 +10,7 @@ import { type INavigationConfigurator, NavigationConfigurator } from './configur
 import { createHistory } from './createHistory';
 import { type INavigationProvider, NavigationProvider } from './lib';
 
-import { version } from './version';
+import version from './version';
 
 export const moduleKey = 'navigation';
 
