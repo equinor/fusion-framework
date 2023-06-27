@@ -2,10 +2,24 @@
 # yarn lockfile v1
 
 
-"@ag-grid-community/core@~29.3.5":
+"@ag-grid-community/client-side-row-model@^29.3.5":
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/client-side-row-model/-/client-side-row-model-29.3.5.tgz#3895a778195bca17f86d0e7f90f80b207a283d8e"
+  integrity sha512-+uA28LTAummyYdZbEDys+cTECPn1Po1f6vX9QZOK9gpZdNzSpGjd3Vc1SKR/2brR6XMGlPeSRsX+FPZmG9uvHQ==
+  dependencies:
+    "@ag-grid-community/core" "~29.3.5"
+
+"@ag-grid-community/core@^29.3.5", "@ag-grid-community/core@~29.3.5":
   version "29.3.5"
   resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-29.3.5.tgz#f6fd10f5a612290c4dfbc8a78adc2af587008c99"
   integrity sha512-r86bOCscnKVtaYyKqlN2UCtfbjf4UcmxHfVuXzJ94iN8Jy3iiQVrbQnbNArnjR589Bt/1VR/m+SdAMsOLcdpag==
+
+"@ag-grid-community/react@^29.3.5":
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/react/-/react-29.3.5.tgz#e5f6ef9942b0ad5f550c2d2d82834b04978a554d"
+  integrity sha512-vetngHiWXptSsWLaXtmr89zaBKEIAUpl+P+QGup27oYiqjTtdZKAgT2lowZZOQ7dFxsjb1OxDOtmOZrZGxuMUw==
+  dependencies:
+    prop-types "^15.8.1"
 
 "@ag-grid-enterprise/core@~29.3.4":
   version "29.3.5"
@@ -985,6 +999,11 @@
     rxjs "^7.0.0"
   optionalDependencies:
     fsevents "^2.3.2"
+
+"@equinor/fusion-react-ag-grid-styles@^29.3.4":
+  version "29.3.6"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-ag-grid-styles/-/fusion-react-ag-grid-styles-29.3.6.tgz#403cacbee7788d87aa1bb0aab17ce8d097daff9d"
+  integrity sha512-nkukQSJgQjBZZfYRTyBLODMY9brbCEu7SGxHvZ6uluaThobdL+k+B58aHeGsno1tdb7lx5Lp3tb9G0r12Xcb3w==
 
 "@equinor/fusion-react-button@^0.8.1":
   version "0.8.1"
