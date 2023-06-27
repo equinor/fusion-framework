@@ -67,6 +67,7 @@ yarn dev
 - [an application with react router 6](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-router)
 - [an application with context](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-context)
 - [an application with bookmark](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-bookmark)
+- [an application with AG-grid](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-ag-grid)
 
 :::
 
