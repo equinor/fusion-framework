@@ -26,8 +26,8 @@ export const App = (): JSX.Element => {
             ...rowData,
             {
                 make: 'Lada',
-                model: `Turbo ${rowData.length}`,
-                price: 5320 + rowData.length,
+                model: `Turbo x ${rowData.length}`,
+                price: 53200 + rowData.length,
             },
         ]);
     }, [rowData, setRowData]);

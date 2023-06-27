@@ -22,6 +22,7 @@ export default defineUserConfig({
     registerComponentsPlugin({
       components: {
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),
+        AgGridVersion: path.resolve(__dirname, './components/AgGridVersion.vue'),
       }
     })
   ],
