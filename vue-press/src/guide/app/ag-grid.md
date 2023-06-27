@@ -13,7 +13,7 @@ tags:
 
 ## Ag-Grid Cookbook
 
-You can easily setup Ag Grid in fusion-framework enabled apps by following these steps:
+You can easily setup AG Grid in fusion-framework enabled apps by following these steps:
 
 - Setup Ag Grid lisencing according to the [enableAgGrid guide](/fusion-framework/modules/ag-grid/).
 - Install the required @ag-grid-community packages
@@ -21,7 +21,9 @@ You can easily setup Ag Grid in fusion-framework enabled apps by following these
   - @ag-grid-community/react
 - Install the package: [@equinor/fusion-react-ag-grid-styles](https://equinor.github.io/fusion-react-components/?path=/docs/data-ag-grid-styles--page) to use the ``alpine-fusion`` theme.
 
-NB: see the aggrid-moduel for which @ag-grid version to use. The current version is: `29.3.4`.
+::: tip AG Grid version
+The version of ag grid you install should be the same version as the license key or lower. The current licensed version is: <AgGridVersion />.
+:::
 
 See the [AG-Grid cookbok app](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-ag-grid) for a working example with modules.
 
