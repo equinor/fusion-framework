@@ -1,23 +1,13 @@
 // TODO - @AndrejNikolicEq fix export for react component
-import { PersonPresence, PersonDetails } from '@equinor/fusion-wc-person';
+import { PersonPresence, PersonDetails, PersonResolver } from '@equinor/fusion-wc-person';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Query } from '@equinor/fusion-query';
 import { useMemo, useState } from 'react';
 
-const createPersonClient = (client: IHttpClient) => {
+const createPersonClient = (client: IHttpClient): PersonResolver => {
     // TODO - good cache amount? 3min?
     const expire = 3 * 60 * 1000;
-    const queryDetails = new Query({
-        expire,
-        queueOperator: 'merge',
-        key: (azureId) => azureId,
-        client: {
-            fn: (azureId: string) => {
-                return client.json<PersonDetails>(`/persons/${azureId}?api-version=4.0`);
-            },
-        },
-    });
 
     const queryPerson = new Query({
         expire,
@@ -35,6 +25,17 @@ const createPersonClient = (client: IHttpClient) => {
                         includeTotalResultCount: true,
                     },
                 });
+            },
+        },
+    });
+
+    const queryDetails = new Query({
+        expire,
+        queueOperator: 'merge',
+        key: (azureId) => azureId,
+        client: {
+            fn: (azureId: string) => {
+                return client.json<PersonDetails>(`/persons/${azureId}?api-version=4.0`);
             },
         },
     });
@@ -57,15 +58,13 @@ const createPersonClient = (client: IHttpClient) => {
 };
 
 export const usePersonResolver = () => {
-    // TODO - make better 🐒
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [resolver, setResolver] = useState<any | undefined>(undefined);
+    const [resolver, setResolver] = useState<PersonResolver>();
     const framework = useFramework();
     useMemo(() => {
         framework.modules.serviceDiscovery
             .createClient('people')
             .then((httpClient) => createPersonClient(httpClient))
-            .then(setResolver);
+            .then((res) => setResolver(res));
     }, [framework]);
     return resolver;
 };
