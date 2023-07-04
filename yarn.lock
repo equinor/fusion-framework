@@ -1110,7 +1110,7 @@
     "@material-ui/styles" "^4.11.4"
     clsx "^1.1.1"
 
-"@equinor/fusion-react-styles@^0.5.5", "@equinor/fusion-react-styles@^0.5.6":
+"@equinor/fusion-react-styles@^0.5.6":
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.6.tgz#fd5322fa4345efdca154c20a37a64c1a14dfe40d"
   integrity sha512-gxM8q6MLRxEZ3WA+h/gmBfCmpXGztC2tU9a4quTRKvmAX9bgKCpOaVdx4TzVMq3fyalO2p+3C4ju5j4RT4IapA==
