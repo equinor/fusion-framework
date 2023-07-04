@@ -29,6 +29,17 @@ const createPersonClient = (client: IHttpClient): PersonResolver => {
         },
     });
 
+    const queryPhoto = new Query({
+        expire,
+        queueOperator: 'merge',
+        key: (azureId) => azureId,
+        client: {
+            fn: (azureId: string) => {
+                return client.json<PersonDetails>(`/persons/${azureId}/photo?api-version=2.0`);
+            },
+        },
+    });
+
     const queryDetails = new Query({
         expire,
         queueOperator: 'merge',
@@ -52,6 +63,7 @@ const createPersonClient = (client: IHttpClient): PersonResolver => {
 
     return {
         getPerson: (query: string) => queryPerson.queryAsync(query).then((x) => x.value),
+        getPhoto: (azureId: string) => queryPhoto.queryAsync(azureId).then((x) => x.value),
         getDetails: (azureId: string) => queryDetails.queryAsync(azureId).then((x) => x.value),
         getPresence: (azureId: string) => queryPresence.queryAsync(azureId).then((x) => x.value),
     };
