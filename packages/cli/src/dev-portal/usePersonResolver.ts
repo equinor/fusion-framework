@@ -34,8 +34,13 @@ const createPersonClient = (client: IHttpClient): PersonResolver => {
         queueOperator: 'merge',
         key: (azureId) => azureId,
         client: {
-            fn: (azureId: string) => {
-                return client.json<PersonDetails>(`/persons/${azureId}/photo?api-version=2.0`);
+            fn: async (azureId: string) => {
+                const response = await client.fetch(`/persons/${azureId}/photo?api-version=2.0`);
+                const imageBlob = await response.blob();
+                const imageSrc = URL.createObjectURL(imageBlob);
+                return {
+                    imageSrc,
+                };
             },
         },
     });
