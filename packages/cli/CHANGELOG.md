@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.13
+
+### Patch Changes
+
+-   [#1002](https://github.com/equinor/fusion-framework/pull/1002) [`7f506120`](https://github.com/equinor/fusion-framework/commit/7f506120c702f157f95f477ddfc514a906176870) Thanks [@eikeland](https://github.com/eikeland)! - # Updating @equinor/fusion-react-styles
+
+    Updating dependency @equinor/fusion-react-styles to version 0.5.6.
+
+    This ads the correct equinor-font cdn link to the themeprovider.
+
 ## 7.0.12
 
 ### Patch Changes

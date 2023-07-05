@@ -92,6 +92,10 @@ createFrameworkProvider((config) => {
 ```
 :::
 
+## AG-Grid Cookbook
+
+See the cookbook documentation for [AG-Grid](/fusion-framework/guide/app/ag-grid.html) for a basic example.
+
 ::: tip Legacy
 Some apps are created before the framework, read guid how to add modules to a [legacy app](/guide/app/legacy.md)
 :::

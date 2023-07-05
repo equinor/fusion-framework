@@ -9,12 +9,22 @@ export default sidebar({
                 'app/', 
                 'app/getting-started', 
                 'app/cli',
-                'app/cookbooks',
+                {
+                    text: 'Cookbooks',
+                    link: 'app/cookbooks.md',
+                    prefix: 'app',
+                    children: [
+                        {
+                            text: 'AG-Grid',
+                            link: 'ag-grid.md'
+                        }
+                    ]
+                },
                 'app/authentication',
                 'app/legacy',
                 'app/tips_and_tricks'
-            ],
-        },
+            ]
+        }
     ],
     '/modules/': [
         {

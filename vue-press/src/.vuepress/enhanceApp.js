@@ -11,4 +11,9 @@ export default ({
   siteData // site metadata
 }) => {
   // ...apply enhancements for the site.
+  Vue.mixin({
+    computed: {
+      agGridVersion: () => 'agGridModule.dependencies'
+    }
+  })
 }

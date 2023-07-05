@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "importHelpers": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "module": "ES6",
+    "strict": true,
+    "target": "ES6",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "rootDir": "src",
+    "baseUrl": "src",
+    "jsx": "react-jsxdev",
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}

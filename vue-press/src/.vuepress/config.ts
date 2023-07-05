@@ -15,13 +15,14 @@ export default defineUserConfig({
   title: [name, version].join('@'),
   description,
   head: [
-    ["link", { href:"https://eds-static.equinor.com/font/equinor-font.css", rel:"stylesheet"}]
+    ["link", { href:"https://cdn.eds.equinor.com/font/equinor-font.css", rel:"stylesheet"}]
   ],
   theme,
   plugins: [
     registerComponentsPlugin({
       components: {
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),
+        AgGridVersion: path.resolve(__dirname, './components/AgGridVersion.vue'),
       }
     })
   ],
