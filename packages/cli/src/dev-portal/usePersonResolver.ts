@@ -18,16 +18,36 @@ const createPersonClient = (client: IHttpClient) => {
                     `/persons/${azureId}?api-version=4.0&$expand=positions,manager`
                 );
 
-                try {
-                    const image = await client.json<string>(
-                        `/persons/${azureId}/photo?api-version=1.0`
-                    );
+                // Profile image
+                await client
+                    .fetch(`/persons/${azureId}/photo?api-version=2.0`)
+                    .then(async (response) => {
+                        if (response.ok) {
+                            const data = await response.blob();
+                            const result = URL.createObjectURL(data);
+                            user.pictureSrc = result;
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
 
-                    if (image) {
-                        user.pictureSrc = image;
-                    }
-                } catch (error) {
-                    console.error(error);
+                // Manager profile image
+                if (user.manager) {
+                    await client
+                        .fetch(`/persons/${user.manager.azureUniqueId}/photo?api-version=2.0`)
+                        .then(async (response) => {
+                            if (response.ok) {
+                                const data = await response.blob();
+                                const result = URL.createObjectURL(data);
+                                if (user.manager) {
+                                    user.manager.pictureSrc = result;
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
                 }
 
                 return user;
