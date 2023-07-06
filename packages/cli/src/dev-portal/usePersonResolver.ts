@@ -1,5 +1,5 @@
 // TODO - @AndrejNikolicEq fix export for react component
-import { PersonPresence, PersonDetails, PersonResolver } from '@equinor/fusion-wc-person';
+import { PersonPresence, PersonDetails, PersonResolver, PersonPicture, PersonSearchResult } from '@equinor/fusion-wc-person';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Query } from '@equinor/fusion-query';
@@ -15,7 +15,7 @@ const createPersonClient = (client: IHttpClient): PersonResolver => {
         key: (query) => query,
         client: {
             fn: (query: string) => {
-                return client.json<PersonDetails>(`/search/persons/query?api-version=1.0`, {
+                return client.json<PersonSearchResult>(`/search/persons/query?api-version=1.0`, {
                     method: 'POST',
                     body: {
                         matchAll: true,
@@ -40,7 +40,7 @@ const createPersonClient = (client: IHttpClient): PersonResolver => {
                 const imageSrc = URL.createObjectURL(imageBlob);
                 return {
                     imageSrc,
-                };
+                } as PersonPicture;
             },
         },
     });
