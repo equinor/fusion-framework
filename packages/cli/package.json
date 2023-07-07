@@ -29,7 +29,7 @@
         "@equinor/eds-tokens": "^0.9.0",
         "@equinor/fusion-framework-app": "^7.0.16",
         "@equinor/fusion-observable": "^8.0.1",
-        "@vitejs/plugin-react": "^3.1.0",
+        "@vitejs/plugin-react": "^4.0.2",
         "commander": "^10.0.0",
         "express": "^4.18.2",
         "find-up": "^6.3.0",
