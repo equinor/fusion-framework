@@ -242,12 +242,14 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 }
 
                 /** log entry to Fusion feature logger */
-                featureLogger.setCurrentApp(currentManifest?.key || null);
+                // CHANGE: switched from currentManifest to current since
+                // currentManifest only loads when app is visited twice
+                featureLogger.setCurrentApp(current?.appKey || null);
                 featureLogger.log('App selected', '0.0.1', {
-                    selectedApp: currentManifest
+                    selectedApp: current
                         ? {
-                              key: currentManifest.key,
-                              name: currentManifest.name,
+                              key: current.appKey,
+                              name: current.manifest?.name ?? null,
                           }
                         : null,
                     previousApps: Object.keys(previousApps.state).map((key) => ({
@@ -262,6 +264,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 }
 
                 /** log change in AI */
+                // TODO: will this logg property name?? manifest is of type {AppComponent, Render, key}
                 telemetryLogger.trackEvent({
                     name: 'App selected',
                     properties: {
