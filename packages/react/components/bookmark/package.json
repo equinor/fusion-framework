@@ -38,7 +38,7 @@
         "@equinor/fusion-framework-module-event": "^4.0.2",
         "@types/react": "^17.0.11",
         "react": "^17.0.2",
-        "styled-components": "^5.3.9",
+        "styled-components": "^6.0.3",
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
@@ -49,7 +49,7 @@
         "@equinor/eds-tokens": "^0.9.0",
         "@types/react": "^17.0.0 || ^18.0.0",
         "react": "^17.0.0 || ^18.0.0",
-        "styled-components": "^5.3.9"
+        "styled-components": "^6.0.3"
     },
     "peerDependenciesMeta": {
         "@types/react": {
