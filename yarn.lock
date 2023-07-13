@@ -965,15 +965,18 @@
     eslint-plugin-prettier "^4.2.1"
 
 "@equinor/fusion-components@^2.10.5":
-  version "2.10.8"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.10.8.tgz#52d7e5f5211a9c5d87b9e8879bf4cb096c2af5c2"
-  integrity sha512-tmASSDHaem7CtKs9MqwVA3Pm20x2JXTfnU/rG4JDRJSEWFHiLjjimGDALlwwZcIBNgquepRAuSkVKIpSiSGoJg==
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-components/-/fusion-components-2.11.6.tgz#828f7440829ddb37e7ad85df2494f20a071020c8"
+  integrity sha512-J/Othl6LgGxbQdVgQGz+3ngxw3Cjl550KRBNd7entoM0ak00lrWoIHtg+X8BWWRadKFP63cxxxauhzGJTG1BnA==
   dependencies:
     "@babel/plugin-proposal-nullish-coalescing-operator" "^7.12.13"
+    "@equinor/fusion-framework-module-app" "^5.2.1"
+    "@equinor/fusion-framework-react" "^5.2.2"
+    "@equinor/fusion-observable" "^8.0.2"
     "@equinor/fusion-react-checkbox" "^0.4.0"
     "@equinor/fusion-react-divider" "^0.2.8"
     "@equinor/fusion-react-icon" "^0.2.6"
-    "@equinor/fusion-react-styles" "^0.4.0"
+    "@equinor/fusion-react-styles" "^0.5.6"
     "@equinor/fusion-wc-icon" "^1.0.17"
     "@reach/router" "^1.3.4"
     "@storybook/addon-jest" "^6.2.9"
@@ -1105,16 +1108,6 @@
   dependencies:
     re-resizable "^6.9.9"
 
-"@equinor/fusion-react-styles@^0.4.0":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.4.3.tgz#2a6845abd43719f287c08103f2324b241024ca57"
-  integrity sha512-GNwWQhJBNsKc3N4/DWZgVwFDEAinrpw4iX3tpoNzw8J3+vSl/cuJ6b+C41e7zEaGmQvnYcw03WZz5YDzxHn0/g==
-  dependencies:
-    "@equinor/fusion-wc-theme" "^0.2.19"
-    "@equinor/fusion-web-theme" "^0.1.7"
-    "@material-ui/styles" "^4.11.4"
-    clsx "^1.1.1"
-
 "@equinor/fusion-react-styles@^0.5.6", "@equinor/fusion-react-styles@^0.5.7":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.7.tgz#7c9263de40985b3e6599d4daad3bfde5246f6dcb"
@@ -1201,16 +1194,7 @@
     "@material/mwc-formfield" "^0.27.0"
     lit "2.7.0"
 
-"@equinor/fusion-wc-icon@^1.0.17", "@equinor/fusion-wc-icon@^1.0.24", "@equinor/fusion-wc-icon@^1.0.30":
-  version "1.0.30"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.30.tgz#ff18216b7f6982a4523d9bb7ab875ba6994b21ec"
-  integrity sha512-DGM7e75w5CehpFfIklJA5REZfikQmheHIuaPerV5lCPuLGrZr1+8OjpSxFvAQe2d5M06hjKfZovcnOP3eLkFcw==
-  dependencies:
-    "@equinor/eds-icons" "^0.19.1"
-    "@equinor/fusion-wc-core" "^1.0.5"
-    lit "2.7.0"
-
-"@equinor/fusion-wc-icon@^1.0.31":
+"@equinor/fusion-wc-icon@^1.0.17", "@equinor/fusion-wc-icon@^1.0.24", "@equinor/fusion-wc-icon@^1.0.30", "@equinor/fusion-wc-icon@^1.0.31":
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-icon/-/fusion-wc-icon-1.0.31.tgz#d9ccaf5b17fd970a174f2f6e73798d95b2d4e2db"
   integrity sha512-oYMImmUOoHP4lJNl23MP/xHAzv2WZU7ZOhI8mLQN8Eczgk7EKkClEch5cpsAtkw5ybwssIdu98e1SsS2XcZMpg==
@@ -1333,7 +1317,7 @@
     "@material/mwc-textfield" "^0.27.0"
     lit "2.7.0"
 
-"@equinor/fusion-wc-theme@^0.2.19", "@equinor/fusion-wc-theme@^0.2.33":
+"@equinor/fusion-wc-theme@^0.2.33":
   version "0.2.33"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-theme/-/fusion-wc-theme-0.2.33.tgz#0550831afd950340d534bea5ba0e8f06cffcafb5"
   integrity sha512-tsNc8/9DTi55Ol50U21fOymrds6FREnhGy6oNTIWKH0NiySA2tR1JQkxR0Us3/5mxJoeckYj23YwkRLaS5CV4g==
