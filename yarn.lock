@@ -1006,9 +1006,9 @@
     fsevents "^2.3.2"
 
 "@equinor/fusion-react-ag-grid-styles@^29.3.4":
-  version "29.3.6"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-ag-grid-styles/-/fusion-react-ag-grid-styles-29.3.6.tgz#403cacbee7788d87aa1bb0aab17ce8d097daff9d"
-  integrity sha512-nkukQSJgQjBZZfYRTyBLODMY9brbCEu7SGxHvZ6uluaThobdL+k+B58aHeGsno1tdb7lx5Lp3tb9G0r12Xcb3w==
+  version "29.3.7"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-ag-grid-styles/-/fusion-react-ag-grid-styles-29.3.7.tgz#74b4308c52e0b938fd1206e43cc4618d05663398"
+  integrity sha512-+XNshYZTPPr88BxR7rtcFqzlCpP5TlTJ8efisH508pqHWuM75F+VgJb8ekowXmqvgk/m9ACo84d73ydeF427yw==
 
 "@equinor/fusion-react-button@^0.8.1", "@equinor/fusion-react-button@^0.8.2":
   version "0.8.2"
