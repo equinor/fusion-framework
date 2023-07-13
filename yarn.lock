@@ -1010,7 +1010,7 @@
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-ag-grid-styles/-/fusion-react-ag-grid-styles-29.3.6.tgz#403cacbee7788d87aa1bb0aab17ce8d097daff9d"
   integrity sha512-nkukQSJgQjBZZfYRTyBLODMY9brbCEu7SGxHvZ6uluaThobdL+k+B58aHeGsno1tdb7lx5Lp3tb9G0r12Xcb3w==
 
-"@equinor/fusion-react-button@^0.8.1":
+"@equinor/fusion-react-button@^0.8.1", "@equinor/fusion-react-button@^0.8.2":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-react-button/-/fusion-react-button-0.8.2.tgz#fcd494cf1f7c74a6b57fe59e8adce083679ddf87"
   integrity sha512-UiOHllXvgkS4ZLZHAEMwm0YnmnqnAwe6ZErChlnJlY4hm/oxYDieZWYJ4KUtTrH32O34Sshpm4yO7mNQPgBXsQ==
@@ -1064,21 +1064,21 @@
     "@equinor/fusion-wc-menu" "^0.1.0"
 
 "@equinor/fusion-react-person@^0.2.1":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-person/-/fusion-react-person-0.2.2.tgz#31019e8eff5f5f8eb263979131be1ea189b6fc26"
-  integrity sha512-8/eyqvZOxOHBQHdgXzX3hM1NB7GYXiGKavtKsLPB6K/4S7vnPWQLhgPjFxeVpXKEtTs92mbxPZ3OAR3VMQVxJg==
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-person/-/fusion-react-person-0.2.4.tgz#9610f5e40c160ae19d18053906fd509d06925077"
+  integrity sha512-AGBOGXEvj25AebSmHNBtQwYq74nsocwfqpVn+iqn+xi28QZJ5C45dmLcNHikGiqdFKicGmUrJsd3a6tp1KnJ8A==
   dependencies:
-    "@equinor/fusion-react-button" "^0.8.1"
-    "@equinor/fusion-react-popover" "^0.1.12"
+    "@equinor/fusion-react-button" "^0.8.2"
+    "@equinor/fusion-react-popover" "^0.1.13"
     "@equinor/fusion-wc-person" "^0.4.1"
 
-"@equinor/fusion-react-popover@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-popover/-/fusion-react-popover-0.1.12.tgz#26c14dac470addc7368ad861d8299eb0262cc8ba"
-  integrity sha512-4mRRjftN1fOQ8DFyBKJ0fUqDXcjuc67K0QAW0JX8v35d72Ff8Ze7J3lP3OxO6zNtyEZsbaYmabMRkJELxYT+eA==
+"@equinor/fusion-react-popover@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-popover/-/fusion-react-popover-0.1.13.tgz#5485936ccbe354db321329e256a3f5a0315141b6"
+  integrity sha512-eqN6pSp5jXogyv8LbNTg0K2aaz7U98eK/Tm9aupcrUzDuY/VHs0hTQmvEDzGx7a0XtaHzCIMoyNQTTNQnpwi1w==
   dependencies:
     "@equinor/fusion-react-icon" "^0.2.15"
-    "@equinor/fusion-react-styles" "^0.5.6"
+    "@equinor/fusion-react-styles" "^0.5.7"
     "@popperjs/core" "^2.11.0"
     react-popper "^2.2.5"
 
@@ -1121,6 +1121,16 @@
   integrity sha512-gxM8q6MLRxEZ3WA+h/gmBfCmpXGztC2tU9a4quTRKvmAX9bgKCpOaVdx4TzVMq3fyalO2p+3C4ju5j4RT4IapA==
   dependencies:
     "@equinor/fusion-wc-theme" "^0.2.31"
+    "@equinor/fusion-web-theme" "^0.1.7"
+    "@material-ui/styles" "^4.11.4"
+    clsx "^1.1.1"
+
+"@equinor/fusion-react-styles@^0.5.7":
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-styles/-/fusion-react-styles-0.5.7.tgz#7c9263de40985b3e6599d4daad3bfde5246f6dcb"
+  integrity sha512-P6HGpeyBie/xZz0aKGRF6xwoW3RzI6lmLBJPEUlZcn3K8A5qt32AbIbvV514er+sfLpcxjAEzpTQX6eI5P8j5w==
+  dependencies:
+    "@equinor/fusion-wc-theme" "^0.2.33"
     "@equinor/fusion-web-theme" "^0.1.7"
     "@material-ui/styles" "^4.11.4"
     clsx "^1.1.1"
@@ -1347,6 +1357,16 @@
   version "0.2.32"
   resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-theme/-/fusion-wc-theme-0.2.32.tgz#4d2c531c0d236dacc4f9efeaf958b705ae6d5a1b"
   integrity sha512-vzEcIkXHnxE+KYjBEY2QOe0/4LNzpP1tObugenIfJNb2sGXkaCgPxrByI0YiZhiTA2z53uAODrNQ9Fp9vDG7zA==
+  dependencies:
+    "@equinor/fusion-wc-core" "^1.0.5"
+    "@equinor/fusion-web-theme" "^0.1.7"
+    "@material/theme" "^14.0.0"
+    lit "2.7.0"
+
+"@equinor/fusion-wc-theme@^0.2.33":
+  version "0.2.33"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-wc-theme/-/fusion-wc-theme-0.2.33.tgz#0550831afd950340d534bea5ba0e8f06cffcafb5"
+  integrity sha512-tsNc8/9DTi55Ol50U21fOymrds6FREnhGy6oNTIWKH0NiySA2tR1JQkxR0Us3/5mxJoeckYj23YwkRLaS5CV4g==
   dependencies:
     "@equinor/fusion-wc-core" "^1.0.5"
     "@equinor/fusion-web-theme" "^0.1.7"
