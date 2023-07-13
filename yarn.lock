@@ -1029,13 +1029,13 @@
     "@lit-labs/react" "^1.0.0"
 
 "@equinor/fusion-react-context-selector@^0.4.3":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.4.4.tgz#a49fe05ca5e44b1bc9d8ab93b0bcc0c64e08ba14"
-  integrity sha512-AnlSzmV6Jr9ggfGMt+rp04/a8cHv0eWAthIwb9C+EOEzmBJqpn+30BekK/aC8CrG5hHopPMTc1fWp2GyPUd68Q==
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@equinor/fusion-react-context-selector/-/fusion-react-context-selector-0.4.5.tgz#5b52d617e73ea2133ce52dbc5cbad0824c9b5484"
+  integrity sha512-+x1YKkptv00glNKjfAERflJrxvmHAmz915/6s2B8GQ/HdIciaH4R3UPr/1fylGrgSX8IKCXmHoi3UPLOIN8c7Q==
   dependencies:
     "@equinor/fusion-react-icon" "^0.2.15"
     "@equinor/fusion-react-searchable-dropdown" "^0.3.4"
-    "@equinor/fusion-react-styles" "^0.5.6"
+    "@equinor/fusion-react-styles" "^0.5.7"
     "@equinor/fusion-react-utils" "^2.0.4"
 
 "@equinor/fusion-react-divider@^0.2.8":
