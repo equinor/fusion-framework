@@ -891,9 +891,9 @@
   integrity sha512-0GZqzLhJQGqAHsTmviUK9au+eRsT9z2BcJTbWWmG8EtxjWNq5dcTpeGSOv6pWNY5nfcGhLNtjOIjRlSidWMHnw==
 
 "@equinor/eds-icons@^0.19.1":
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.19.2.tgz#c1f47e8d1bff0805ce529b8510ed2dcdc569c1e6"
-  integrity sha512-i4Jet75jAnD7u8Fz/q+4rfnLyRFpYGaHmzaY239+kHvS4P87CqAS2Q9/wu/nFVwylr2TM26UdZvvDQMy8mCL6w==
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.19.3.tgz#08ce80c1ea6edf0b4144def73d1e5d0de392434f"
+  integrity sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==
 
 "@equinor/eds-tokens@0.5.5":
   version "0.5.5"
