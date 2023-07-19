@@ -17,6 +17,8 @@ const Root = () => {
 
     return (
         <div style={{ fontFamily: 'Equinor', height: '100%' }}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
             <PersonProvider resolve={personResolver}>
                 <Header />
                 <Outlet />
