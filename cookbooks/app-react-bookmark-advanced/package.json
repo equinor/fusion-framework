@@ -23,6 +23,6 @@
         "typescript": "^5.1.3"
     },
     "dependencies": {
-        "@remix-run/router": "^1.3.3"
+        "@remix-run/router": "^1.7.2"
     }
 }
