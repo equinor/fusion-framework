@@ -14,10 +14,10 @@
   resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-29.3.5.tgz#f6fd10f5a612290c4dfbc8a78adc2af587008c99"
   integrity sha512-r86bOCscnKVtaYyKqlN2UCtfbjf4UcmxHfVuXzJ94iN8Jy3iiQVrbQnbNArnjR589Bt/1VR/m+SdAMsOLcdpag==
 
-"@ag-grid-community/react@^29.3.5":
-  version "29.3.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/react/-/react-29.3.5.tgz#e5f6ef9942b0ad5f550c2d2d82834b04978a554d"
-  integrity sha512-vetngHiWXptSsWLaXtmr89zaBKEIAUpl+P+QGup27oYiqjTtdZKAgT2lowZZOQ7dFxsjb1OxDOtmOZrZGxuMUw==
+"@ag-grid-community/react@^30.0.5":
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/react/-/react-30.0.5.tgz#c66482ab2a3ee83ab0209039935dcb1a55ccc808"
+  integrity sha512-o9GvZRSsOiutwUlB1zdd4zPTw0DiC5t1f7JtC0P0ykeacRRSiwDlnd4k/SvPM4vO/1KcV+mAgp3UR+66xZ89Ig==
   dependencies:
     prop-types "^15.8.1"
 
