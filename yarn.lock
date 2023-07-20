@@ -2,17 +2,22 @@
 # yarn lockfile v1
 
 
-"@ag-grid-community/client-side-row-model@^29.3.5":
-  version "29.3.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/client-side-row-model/-/client-side-row-model-29.3.5.tgz#3895a778195bca17f86d0e7f90f80b207a283d8e"
-  integrity sha512-+uA28LTAummyYdZbEDys+cTECPn1Po1f6vX9QZOK9gpZdNzSpGjd3Vc1SKR/2brR6XMGlPeSRsX+FPZmG9uvHQ==
+"@ag-grid-community/client-side-row-model@^30.0.5":
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/client-side-row-model/-/client-side-row-model-30.0.5.tgz#7e3bbd471deff7baab8a99549ffa20c4c108d664"
+  integrity sha512-tRfG4v4RjzJTI+KjYid4vI1Q1uiIj3iajQxdP9d6dy8bmzKNlY9y7aWI8LzLVzoDuiEXcOzrHilPAQz7YvSn+Q==
   dependencies:
-    "@ag-grid-community/core" "~29.3.5"
+    "@ag-grid-community/core" "~30.0.5"
 
 "@ag-grid-community/core@^29.3.5", "@ag-grid-community/core@~29.3.5":
   version "29.3.5"
   resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-29.3.5.tgz#f6fd10f5a612290c4dfbc8a78adc2af587008c99"
   integrity sha512-r86bOCscnKVtaYyKqlN2UCtfbjf4UcmxHfVuXzJ94iN8Jy3iiQVrbQnbNArnjR589Bt/1VR/m+SdAMsOLcdpag==
+
+"@ag-grid-community/core@~30.0.5":
+  version "30.0.5"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-30.0.5.tgz#7f6c3b4f493edb7c2b0985678ea8480f278ca45c"
+  integrity sha512-IAgE4ZW1oZwCzWnBlm056/8axVLXVSPQkBAaRNotM1b7XFD6jTG2VVAtCVIhprUyfbdwrg6BV+UpDlGrMbesjA==
 
 "@ag-grid-community/react@^29.3.5":
   version "29.3.5"
