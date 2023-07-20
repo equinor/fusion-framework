@@ -1,7 +1,7 @@
 ---
 title: Navigation
 category: Module
-tags:
+tag:
   - navigation
   - routing
   - react-router
