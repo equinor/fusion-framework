@@ -955,9 +955,9 @@
     eslint-plugin-react-hooks "^4.6.0"
 
 "@equinor/eslint-config-fusion@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@equinor/eslint-config-fusion/-/eslint-config-fusion-2.0.0.tgz#92e3ee2020448f97cdb93933ddfd246325a2c937"
-  integrity sha512-+WrpwFqT+qL0RhOADfCJUCD2FG2IBgsL+UyrHAAo7pUUCyCNM6UMsPEmJ3KVU6jCsDwENkeWXor3vVplLAulNA==
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@equinor/eslint-config-fusion/-/eslint-config-fusion-2.1.3.tgz#7c587e649844fa167cb347b2101f23a999b620e7"
+  integrity sha512-udnVkSLBtMVSuRFzVJGfoW/h2yQMprKJTemPJr5G3rOPZUh/Kc/cxCg+16XdNAgww5DhOEbk9G6x/2KXDkw7Nw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.49.0"
     "@typescript-eslint/parser" "^5.49.0"
