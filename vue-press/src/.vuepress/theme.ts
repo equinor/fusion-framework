@@ -1,8 +1,8 @@
-import { hopeTheme, HopeThemeNavbarConfig } from "vuepress-theme-hope";
+import { hopeTheme, NavbarOptions } from "vuepress-theme-hope";
 
 import sidebar from './sidebar';
 
-const navbar: HopeThemeNavbarConfig = [
+const navbar: NavbarOptions = [
   {
     text: 'Guide',
     link: '/guide/app'
@@ -26,13 +26,14 @@ export default hopeTheme({
      navbar,
      sidebar,
      plugins:{
+      blog: true,
       mdEnhance: {
         mermaid: true,
         codetabs: true,
         tabs: true,
         tasklist: true,
         container: true,
-        imageSize: true,
+        imgSize: true,
         align: true,
       },
       comment: {

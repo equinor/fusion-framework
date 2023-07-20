@@ -1,7 +1,7 @@
 ---
 title: Getting started
 category: Guide
-tags:
+tag:
   - how to
   - basic
   - app
