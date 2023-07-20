@@ -7,7 +7,7 @@ import ora from 'ora';
 import { build, mergeConfig, UserConfig } from 'vite';
 
 import startDevServer from './serve.js';
-import createConfig from './create-config.js';
+import { createConfig, loadCustomConfig } from './create-config.js';
 import { resolveAppConfig } from './app-config.js';
 
 const program = new Command();
@@ -25,9 +25,17 @@ app.command('dev')
 
     .option('-p, --port <number>', 'dev-server port', '3000')
     .option('--portal <string>', 'fusion portal host')
-    .action(async ({ port, portal }) => {
+    .option(
+        '-c, --config <file>',
+        'Use specified config file, see https://vitejs.dev/guide/cli.html#build'
+    )
+    .action(async ({ port, portal, config }) => {
         const spinner = ora('Loading configuration').start();
-        const viteConfig = mergeConfig(await createConfig(), { server: { port } }) as UserConfig;
+        const customConfig = config ? await loadCustomConfig(config) : {};
+        const viteConfig = mergeConfig(await createConfig(), {
+            ...customConfig,
+            server: { port },
+        }) as UserConfig;
         const appConfig = await resolveAppConfig();
 
         appConfig.portalHost = portal
@@ -38,8 +46,20 @@ app.command('dev')
         startDevServer({ viteConfig, appConfig });
     });
 
-app.command('build').action(async () => {
-    build(mergeConfig(await createConfig(), { build: { emptyOutDir: true } }));
-});
+app.command('build')
+    .option(
+        '-c, --config <file>',
+        'Use specified config file, see https://vitejs.dev/guide/cli.html#build'
+    )
+    .action(async ({ config }) => {
+        const spinner = ora('Loading configuration').start();
+        const customConfig = config ? await loadCustomConfig(config) : {};
+        const viteConfig = mergeConfig(await createConfig({ mode: 'production' }), {
+            build: { emptyOutDir: true },
+            ...customConfig,
+        });
+        spinner.succeed('Configuration loaded');
+        build(viteConfig);
+    });
 
 program.parse();

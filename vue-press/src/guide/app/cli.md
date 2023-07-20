@@ -46,6 +46,31 @@ export default () => ({
 });
 ```
 
+### Vite
+
+by default the CLI will generate configuration required, but can be overridden by providing custom [Vite config](https://vitejs.dev/config/).
+
+```sh
+fusion-framework-cli app dev -c vite.config.js
+fusion-framework-cli app build -c vite.config.js
+fusion-framework-cli app build --config vite.config.js
+```
+
+__example__
+```js
+/** @type {import('vite').UserConfig} */
+export default {
+  build: {
+    minify: false,
+    terserOptions: {
+      mangle: false
+    },
+    sourcemap: true
+  }
+}
+```
+
+> only static `UserConfig` is allowed
 
 ## Dev
 
