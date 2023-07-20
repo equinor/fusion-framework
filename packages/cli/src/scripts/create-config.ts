@@ -31,7 +31,6 @@ export const loadCustomConfig = async (file: string) => {
     return (await import(filePath)).default;
 };
 
-
 export const createConfig = (opt?: CreateConfigOptions): UserConfig => {
     const { mode } = opt ?? { mode: 'development' };
     const { root, pkg } = resolvePackage();
@@ -54,7 +53,7 @@ export const createConfig = (opt?: CreateConfigOptions): UserConfig => {
                 entry: resolve(root, pkg.main),
                 fileName: 'app-bundle',
                 formats: ['es'],
-            }
+            },
         },
         customLogger: createCustomLogger(),
     }) as unknown as UserConfig;

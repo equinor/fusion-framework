@@ -2,16 +2,19 @@ import { FusionConfigurator } from '@equinor/fusion-framework';
 import { createFrameworkProvider } from './create-framework-provider';
 import { PropsWithChildren, ReactNode, Suspense, useMemo } from 'react';
 
+type ConfigureCallback = (configurator: FusionConfigurator) => void;
+
 export const Framework = (
     props: PropsWithChildren<{
-        configure: (configurator: FusionConfigurator) => void;
+        configure: ConfigureCallback;
         fallback: NonNullable<ReactNode> | null;
     }>
 ) => {
-    const Component = useMemo(() => createFrameworkProvider(props.configure), [props.configure]);
+    const { configure, fallback, children } = props;
+    const Component = useMemo(() => createFrameworkProvider(configure), [configure]);
     return (
-        <Suspense fallback={props.fallback}>
-            <Component>{props.children}</Component>
+        <Suspense fallback={fallback}>
+            <Component>{children}</Component>
         </Suspense>
     );
 };
