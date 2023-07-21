@@ -23,7 +23,7 @@
         "directory": "packages/react/components/bookmark"
     },
     "dependencies": {
-        "@equinor/eds-utils": "^0.7.0",
+        "@equinor/eds-utils": "^0.8.1",
         "@equinor/fusion-framework-react": "^5.2.2",
         "@equinor/fusion-framework-react-module-bookmark": "^2.0.12"
     },
