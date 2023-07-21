@@ -1692,21 +1692,21 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@lerna/child-process@7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@lerna/child-process/-/child-process-7.0.2.tgz#0ea270dcc34cbece6b5319f1d4a24733060883bd"
-  integrity sha512-15lMrNBL/pvREMJPSfIPieaBtyyapDco/TNjALLEL53JGzO9g8rj5PipfE9h5ILx8aq/GaP17XCh209aVCun/w==
+"@lerna/child-process@7.1.4":
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/@lerna/child-process/-/child-process-7.1.4.tgz#5ab64540b01a339ecc6787f4f06d29aee99d71d5"
+  integrity sha512-cSiMDx9oI9vvVT+V/WHcbqrksNoc9PIPFiks1lPS7zrVWkEbgA6REQyYmRd2H71kihzqhX5TJ20f2dWv6oEPdA==
   dependencies:
     chalk "^4.1.0"
     execa "^5.0.0"
     strong-log-transformer "^2.1.0"
 
-"@lerna/create@7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-7.0.2.tgz#a9335b889b54a456b3efc953f109aaf1d134b40a"
-  integrity sha512-1arGpEpWbWmci1MyaGKvP2SqCAPFWpLqZp0swckianX1kx1mso9B16BWFvcHhU57zCD0Co/z+jX+02UEzZGP7Q==
+"@lerna/create@7.1.4":
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-7.1.4.tgz#bfff377c36734ef9a95e3fe8cb030d6498844928"
+  integrity sha512-D5YWXsXIxWb1aGqcbtttczg86zMzkNhcs00/BleFNxdNYlTRdjLIReELOGBGrq3Hij05UN+7Dv9EKnPFJVbqAw==
   dependencies:
-    "@lerna/child-process" "7.0.2"
+    "@lerna/child-process" "7.1.4"
     dedent "0.7.0"
     fs-extra "^11.1.1"
     init-package-json "5.0.0"
@@ -2411,12 +2411,12 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@nrwl/devkit@16.3.2":
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/@nrwl/devkit/-/devkit-16.3.2.tgz#b45393dfd62dcb75554ff0c2dff6715a907e3877"
-  integrity sha512-EiDwVIvh6AcClXv22Q7auQh7Iy/ONISEFWzTswy/J6ZmVGCQesbiwg4cGV0MKiScr+awdVzqyNey+wD6IR5Lkw==
+"@nrwl/devkit@16.5.3":
+  version "16.5.3"
+  resolved "https://registry.yarnpkg.com/@nrwl/devkit/-/devkit-16.5.3.tgz#78e1170a173148c9af53fa4bb149e97cdac7ca70"
+  integrity sha512-a/XtuamF0PbiW8glJwI91Tx234qNYCF0PULyk2tjqp/idefiJlbb1eIkPz3kTWvZUG6tvPLdmwzpdHOqqH13Aw==
   dependencies:
-    "@nx/devkit" "16.3.2"
+    "@nx/devkit" "16.5.3"
 
 "@nrwl/nx-cloud@16.1.1", "@nrwl/nx-cloud@^16.0.5":
   version "16.1.1"
@@ -2432,15 +2432,15 @@
   dependencies:
     nx "16.5.3"
 
-"@nx/devkit@16.3.2", "@nx/devkit@>=16.1.3 < 17":
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/@nx/devkit/-/devkit-16.3.2.tgz#95d58d104449c54bdc276fa1c9166fcad867cfa8"
-  integrity sha512-1ev3EDm2Sx/ibziZroL1SheqxDR7UgC49tkBgJz1GrQLQnfdhBYroCPSyBSWGPMLHjIuHb3+hyGSV1Bz+BIYOA==
+"@nx/devkit@16.5.3", "@nx/devkit@>=16.5.1 < 17":
+  version "16.5.3"
+  resolved "https://registry.yarnpkg.com/@nx/devkit/-/devkit-16.5.3.tgz#df9bd5a4c0818d6d845e2f271e377c1217e7c292"
+  integrity sha512-szsBpO4ZYEwilUZMEjpmvg8ritl8C7jEAkAq3k2CxEdwE24cDBPwjXWnbc4YffvYW9gatDt+n93in5XYXWT5CA==
   dependencies:
-    "@nrwl/devkit" "16.3.2"
+    "@nrwl/devkit" "16.5.3"
     ejs "^3.1.7"
     ignore "^5.0.4"
-    semver "7.3.4"
+    semver "7.5.3"
     tmp "~0.2.1"
     tslib "^2.3.0"
 
@@ -7407,14 +7407,14 @@ lerna-update-wizard@^1.1.2:
     semver-compare "^1.0.0"
 
 lerna@^7.0.0:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-7.0.2.tgz#45e844bfca72d12cc285c9a00f6f2cfb341bed05"
-  integrity sha512-omFpf1pTiaObC2YOC7K+euaDwhQA9CyKN1kXxmlSwaSkh8b8QTs4SC8jp3oNeXfcHpVS1ttuuz98AvQvJD46wA==
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-7.1.4.tgz#0778732f4c77ead71a20ba1e9b0a77edc75cb383"
+  integrity sha512-/cabvmTTkmayyALIZx7OpHRex72i8xSOkiJchEkrKxAZHoLNaGSwqwKkj+x6WtmchhWl/gLlqwQXGRuxrJKiBw==
   dependencies:
-    "@lerna/child-process" "7.0.2"
-    "@lerna/create" "7.0.2"
+    "@lerna/child-process" "7.1.4"
+    "@lerna/create" "7.1.4"
     "@npmcli/run-script" "6.0.2"
-    "@nx/devkit" ">=16.1.3 < 17"
+    "@nx/devkit" ">=16.5.1 < 17"
     "@octokit/plugin-enterprise-rest" "6.0.1"
     "@octokit/rest" "19.0.11"
     byte-size "8.1.1"
@@ -7448,6 +7448,7 @@ lerna@^7.0.0:
     libnpmaccess "7.0.2"
     libnpmpublish "7.3.0"
     load-json-file "6.2.0"
+    lodash "^4.17.21"
     make-dir "3.1.0"
     minimatch "3.0.5"
     multimatch "5.0.0"
@@ -7456,7 +7457,7 @@ lerna@^7.0.0:
     npm-packlist "5.1.1"
     npm-registry-fetch "^14.0.5"
     npmlog "^6.0.2"
-    nx ">=16.1.3 < 17"
+    nx ">=16.5.1 < 17"
     p-map "4.0.0"
     p-map-series "2.1.0"
     p-pipe "3.1.0"
@@ -8469,7 +8470,7 @@ nx-cloud@16.1.1:
     tar "6.1.11"
     yargs-parser ">=21.1.1"
 
-nx@16.5.3, "nx@>=16.1.3 < 17":
+nx@16.5.3, "nx@>=16.5.1 < 17":
   version "16.5.3"
   resolved "https://registry.yarnpkg.com/nx/-/nx-16.5.3.tgz#6f90dba8c5cd17dedeea9e922487bafbcfe632ad"
   integrity sha512-VxhOijTT3evTsKEa2qsBqSroaFj/tSvRKOc1K7MPlhokB5wLEedehzbwICCjIkicPHLImiKExjPs0l290DJLwA==
@@ -9884,13 +9885,6 @@ semver-compare@^1.0.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
-semver@7.3.4:
-  version "7.3.4"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.4.tgz#27aaa7d2e4ca76452f98d3add093a72c943edc97"
-  integrity sha512-tCfb2WLjqFAtXn4KEdxIhalnRtoKFN7nAwj0B3ZXCbQloV2tq5eDbcTmT68JJD3nRJq24/XgxtQKFIpQdtvmVw==
-  dependencies:
-    lru-cache "^6.0.0"
-
 semver@7.5.2:
   version "7.5.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.2.tgz#5b851e66d1be07c1cdaf37dfc856f543325a2beb"
@@ -10733,12 +10727,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-"typescript@>=3 < 6", "typescript@^4.6.4 || ^5.0.0", typescript@^5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.3.tgz#8d84219244a6b40b6fb2b33cc1c062f715b9e826"
-  integrity sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==
-
-typescript@>=4.5:
+"typescript@>=3 < 6", typescript@>=4.5, "typescript@^4.6.4 || ^5.0.0", typescript@^5.1.3:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
   integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
