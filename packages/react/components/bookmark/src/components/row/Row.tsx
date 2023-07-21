@@ -51,7 +51,9 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
 
     useOutsideClick(pRef.current, () => onMenuOpen(''));
 
+    // TODO: @noggling fix this
     return (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
         <li
             className={styles.row}
             onClick={(e) => {
