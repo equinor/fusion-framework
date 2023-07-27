@@ -167,14 +167,58 @@ config.event.onBubble = (e) => {
 
 ## React
 
-<ModuleBadge module="react-module-event" />
+<ModuleBadge module="/react/modules/event" package="@equinor/fusion-framework-react-module-event"/>
+
+### EventProvider
+
+example app:
+```tsx
+import { EventProvider } = from '@equinor/fusion-framework-react-module-event';
+import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
+const Content = () => {
+  const framework = useFramework().modules.event;
+  return (
+    <EventProvider value={framework.modules.event}>
+      <InnerContent>
+    <EventProvider>
+  );
+};
+```
+```tsx
+const InnerContent = () => {
+  const eventProvider = useEventProvider();
+  useEventHandler('some_event', useCallback((event) => {
+    console.log('FRAMEWORK_EVENT', event.detail);
+  }, [eventProvider]));
+
+  const appEventProvider = useEventModuleProvider();
+  useEventHandler('some_event', useCallback((event) => {
+    console.log('APP_EVENT', event.detail);
+  }, [appEventProvider]));
+}
+```
+
+### Hooks
+
+#### useEventProvider
+
+use `IEventModuleProvider` from current context see [EventProvider](#EventProvider)
+```ts
+import { useEventHandler } from '@equinor/fusion-framework-react-module-event';
+```
+
+#### useEventModuleProvider
+
+use `IEventModuleProvider` from closes module provider
 
 ```ts
-/** 
- * default included in the app module,
- * alternative directly from @equinor/fusion-framework-react-module-event
- */
-import { useEventHandler } from '@equinor/fusion-framework-react-app/event';
+import { useEventModuleProvider } from '@equinor/fusion-framework-react-module-event';
+```
+
+
+#### useEventHandler
+```ts
+import { useEventHandler } from '@equinor/fusion-framework-react-module-event';
 
 const MyHook = () => {
   useEventHandler(
