@@ -41,7 +41,22 @@ export default sidebar({
                     link: 'context/',
                 },
                 'app/',
-                'event/',
+                {
+                    text: 'Event',
+                    prefix: 'event/',
+                    link: 'event/',
+                    children: [
+                        {
+                            text: 'module',
+                            link: 'README.md',
+                        },
+                        {
+                            text: 'React',
+                            link: 'react.md',
+                        },
+                    ]
+
+                },
                 'navigation/',
                 'bookmark/',
                 'ag-grid/',

@@ -1,12 +1,12 @@
 ---
-title: Events
+title: Event Module
 category: Module
 tag:
   - event
   - core
 ---
 
-<ModuleBadge module="module-event" />
+<ModuleBadge module="modules/event" package="@equinor/fusion-framework-module-event" />
 
 ## Concept
 
@@ -162,71 +162,5 @@ config.event.onBubble = undefined;
 config.event.onBubble = (e) => {
   console.log(`event [${e.type}] is bubbling`);
   ref.event.dispatch(e);
-}
-```
-
-## React
-
-<ModuleBadge module="/react/modules/event" package="@equinor/fusion-framework-react-module-event"/>
-
-### EventProvider
-
-example app:
-```tsx
-import { EventProvider } = from '@equinor/fusion-framework-react-module-event';
-import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
-const Content = () => {
-  const framework = useFramework().modules.event;
-  return (
-    <EventProvider value={framework.modules.event}>
-      <InnerContent>
-    <EventProvider>
-  );
-};
-```
-```tsx
-const InnerContent = () => {
-  const eventProvider = useEventProvider();
-  useEventHandler('some_event', useCallback((event) => {
-    console.log('FRAMEWORK_EVENT', event.detail);
-  }, [eventProvider]));
-
-  const appEventProvider = useEventModuleProvider();
-  useEventHandler('some_event', useCallback((event) => {
-    console.log('APP_EVENT', event.detail);
-  }, [appEventProvider]));
-}
-```
-
-### Hooks
-
-#### useEventProvider
-
-use `IEventModuleProvider` from current context see [EventProvider](#EventProvider)
-```ts
-import { useEventHandler } from '@equinor/fusion-framework-react-module-event';
-```
-
-#### useEventModuleProvider
-
-use `IEventModuleProvider` from closes module provider
-
-```ts
-import { useEventModuleProvider } from '@equinor/fusion-framework-react-module-event';
-```
-
-
-#### useEventHandler
-```ts
-import { useEventHandler } from '@equinor/fusion-framework-react-module-event';
-
-const MyHook = () => {
-  useEventHandler(
-    'onContextChange', 
-    /** note that callback must be memorized */
-    useCallback((e) => {
-      console.log(e.detail);
-    }, [deps]);
-  );
 }
 ```
