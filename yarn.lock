@@ -8,11 +8,11 @@
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
 "@ag-grid-community/client-side-row-model@~30.0.5":
-  version "30.0.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/client-side-row-model/-/client-side-row-model-30.0.5.tgz#7e3bbd471deff7baab8a99549ffa20c4c108d664"
-  integrity sha512-tRfG4v4RjzJTI+KjYid4vI1Q1uiIj3iajQxdP9d6dy8bmzKNlY9y7aWI8LzLVzoDuiEXcOzrHilPAQz7YvSn+Q==
+  version "30.0.6"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/client-side-row-model/-/client-side-row-model-30.0.6.tgz#267beade7e3af5980baeb25c63727cf5976b2f1f"
+  integrity sha512-0LQ8PpBtAIQM+cudqbnkU0ncd1fHbrdbdkXm3jb5YipGEISA1WEaXB6RvVxZxBYS0uhrpik2D2UeEQUjiHGUvA==
   dependencies:
-    "@ag-grid-community/core" "~30.0.5"
+    "@ag-grid-community/core" "~30.0.6"
 
 "@ag-grid-community/core@~30.0.5", "@ag-grid-community/core@~30.0.6":
   version "30.0.6"
