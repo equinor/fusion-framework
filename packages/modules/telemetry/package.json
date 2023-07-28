@@ -31,7 +31,7 @@
     "dependencies": {
         "@equinor/fusion-framework-module": "^4.2.1",
         "@equinor/fusion-framework-module-msal": "^3.0.4",
-        "@microsoft/applicationinsights-web": "^2.7.2"
+        "@microsoft/applicationinsights-web": "^3.0.2"
     },
     "devDependencies": {
         "typescript": "^5.1.3"
