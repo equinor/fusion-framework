@@ -8,6 +8,7 @@ import {
 
 /**
  * Hook for using the event module from the closes ModuleProvider
+ * @see {@link useModule}
  */
 export const useModulesEventProvider = (): IEventModuleProvider | undefined =>
     useModule<EventModule>(eventModuleKey);
