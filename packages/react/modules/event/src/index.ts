@@ -5,3 +5,4 @@ export { EventConsumer, EventProvider } from './eventContext';
 export { useEventProvider } from './useEventProvider';
 export { useModulesEventProvider } from './useModulesEventProvider';
 export { useEventHandler } from './useEventHandler';
+export { useEventStream, type EventStream } from './useEventStream';
