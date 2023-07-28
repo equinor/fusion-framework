@@ -57,17 +57,23 @@ class RequiredModuleTimeoutError extends Error {
     }
 }
 
-// const mapModuleNames = (modules: Array<AnyModule>) => modules.map((x) => x.name);
+/** entry for configuring a module */
+type ModulesConfiguratorConfigCallback<TRef> = (
+    config: ModulesConfig<[AnyModule]>,
+    ref?: TRef
+) => void | Promise<void>;
 
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
     implements IModulesConfigurator<TModules, TRef>
 {
     public logger: ModuleConsoleLogger = new ModuleConsoleLogger('ModulesConfigurator');
 
-    protected _configs: Array<
-        (config: ModulesConfig<[AnyModule]>, ref?: TRef) => void | Promise<void>
-    > = [];
+    protected _configs: Array<ModulesConfiguratorConfigCallback<TRef>> = [];
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _afterConfiguration: Array<(config: any) => void> = [];
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _afterInit: Array<(instance: any) => void> = [];
 
     protected _modules: Set<AnyModule>;

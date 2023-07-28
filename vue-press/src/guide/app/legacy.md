@@ -1,7 +1,7 @@
 ---
 title: Legacy
 category: Guide
-tags:
+tag:
   - guide
   - legacy
   - routing

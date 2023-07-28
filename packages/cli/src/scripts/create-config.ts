@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { defineConfig, UserConfig, createLogger } from 'vite';
+import { defineConfig, createLogger, type UserConfig } from 'vite';
 
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -8,6 +8,8 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolvePackage } from './app-config.js';
 
 import EnvironmentPlugin from 'vite-plugin-environment';
+
+type CreateConfigOptions = { mode: 'production' | 'development' };
 
 const createCustomLogger = () => {
     const logger = createLogger();
@@ -24,21 +26,26 @@ const createCustomLogger = () => {
     return logger;
 };
 
-export const createConfig = (): UserConfig => {
+export const loadCustomConfig = async (file: string) => {
+    const filePath = resolve(process.cwd(), file);
+    return (await import(filePath)).default;
+};
+
+export const createConfig = (opt?: CreateConfigOptions): UserConfig => {
+    const { mode } = opt ?? { mode: 'development' };
     const { root, pkg } = resolvePackage();
     return defineConfig({
         plugins: [
             react(),
             tsconfigPaths(),
             EnvironmentPlugin({
-                NODE_ENV: 'production',
+                NODE_ENV: mode,
             }),
         ],
         root: root,
         server: {
             middlewareMode: true,
         },
-        mode: 'development',
         appType: 'custom',
         build: {
             outDir: resolve(root, 'dist'),
@@ -47,10 +54,6 @@ export const createConfig = (): UserConfig => {
                 fileName: 'app-bundle',
                 formats: ['es'],
             },
-            // minify: false,
-            // terserOptions: {
-            //     mangle: false,
-            // },
         },
         customLogger: createCustomLogger(),
     }) as unknown as UserConfig;

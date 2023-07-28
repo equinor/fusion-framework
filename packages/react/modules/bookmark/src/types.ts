@@ -4,7 +4,7 @@ import {
     UpdateBookmarkOptions,
 } from '@equinor/fusion-framework-module-bookmark';
 
-export type CreateBookMarkFn<TData> = () => Partial<TData>;
+export type CreateBookMarkFn<TData> = () => Promise<Partial<TData>> | Partial<TData>;
 
 export interface Bookmarks<TData> extends CurrentBookmark<TData> {
     /**

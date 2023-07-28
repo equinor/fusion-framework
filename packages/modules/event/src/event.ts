@@ -77,6 +77,7 @@ export interface FrameworkEvent<TInit extends FrameworkEventInit> {
 /**
  * Event Object
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class FrameworkEvent<
     TInit extends FrameworkEventInit = FrameworkEventInit,
     TType extends string = keyof FrameworkEventMap

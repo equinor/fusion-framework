@@ -1,7 +1,7 @@
 ---
 title: Tips and Tricks
 category: Guide
-tags:
+tag:
   - how to
   - basic
   - app

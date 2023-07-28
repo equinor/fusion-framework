@@ -12,6 +12,8 @@ import {
 } from './event';
 
 export interface IEventModuleProvider {
+    readonly event$: Observable<IFrameworkEvent>;
+
     /** subscribe to a known mapped event @see {@link FrameworkEventMap} */
     addEventListener<TKey extends keyof FrameworkEventMap>(
         type: TKey,
@@ -68,6 +70,10 @@ export class EventModuleProvider
     private __event$ = new Subject<IFrameworkEvent>();
 
     private __dispatcher: FrameworkEventDispatcher<FrameworkEvent>;
+
+    get event$(): Observable<IFrameworkEvent> {
+        return this.__event$.asObservable();
+    }
 
     get closed() {
         return this.__event$.closed;

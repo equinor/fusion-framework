@@ -25,6 +25,12 @@ jobs:
         with:
           node-version: ${{ matrix.version }}
           cache: 'yarn'
+  
+      - name: restore node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ matrix.version }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Node Dependencies
         run: yarn install --frozen-lockfile
@@ -44,11 +50,11 @@ jobs:
         run: yarn nx affected:build --base=remotes/origin/main
 
       - name: Save Code Linting Report JSON
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' && matrix.version == 18 }}
         run: yarn lint:report
 
       - name: Annotate Code Linting Results
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' && matrix.version == 18 }}
         uses: ataylorme/eslint-annotate-action@1.1.2
         continue-on-error: true
         with:
@@ -56,7 +62,7 @@ jobs:
           report-json: "eslint-report.log.json"
 
       - name: Upload ESLint report
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' && matrix.version == 18 }}
         uses: actions/upload-artifact@v2
         continue-on-error: true
         with:
