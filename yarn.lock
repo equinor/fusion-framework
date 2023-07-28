@@ -14,10 +14,10 @@
   dependencies:
     "@ag-grid-community/core" "~30.0.5"
 
-"@ag-grid-community/core@~30.0.5":
-  version "30.0.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-30.0.5.tgz#7f6c3b4f493edb7c2b0985678ea8480f278ca45c"
-  integrity sha512-IAgE4ZW1oZwCzWnBlm056/8axVLXVSPQkBAaRNotM1b7XFD6jTG2VVAtCVIhprUyfbdwrg6BV+UpDlGrMbesjA==
+"@ag-grid-community/core@~30.0.5", "@ag-grid-community/core@~30.0.6":
+  version "30.0.6"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-30.0.6.tgz#ae6c9ffec73d983f000719c30ab0ca080242c89c"
+  integrity sha512-NRVKlLfQK/A0k78rg46z2CsiyKHrZr9TQP9CGalFc1rPk97YYesO0zxy59KYTzoZhxo/E0M16aW4gpS3SBD90A==
 
 "@ag-grid-community/react@~30.0.5":
   version "30.0.6"
@@ -27,11 +27,11 @@
     prop-types "^15.8.1"
 
 "@ag-grid-enterprise/core@~30.0.5":
-  version "30.0.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-30.0.5.tgz#fd145d288e54e22491d8f971f4587c541f0ece3e"
-  integrity sha512-1jmIxGyApuFldqcHYqZ0hs6TT/vgu75JqEz9wTxc7pGM3yR+N2kedic5LhnKUOaHtSBEVcVNFAVIY96JUfCruw==
+  version "30.0.6"
+  resolved "https://registry.yarnpkg.com/@ag-grid-enterprise/core/-/core-30.0.6.tgz#a7466d35797497d8e111eb9988e31a856a3cd5c9"
+  integrity sha512-uxSmWLspBmaABX0X/5ag8hrzTUWUqcQ1Hz6sSUbxZoDiOu+VfUS8J9azpYHJNQkOHdZ4a51kKgTnRzFlp/eqPA==
   dependencies:
-    "@ag-grid-community/core" "~30.0.5"
+    "@ag-grid-community/core" "~30.0.6"
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.1"
