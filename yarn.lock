@@ -15,9 +15,9 @@
     "@ag-grid-community/core" "~30.0.5"
 
 "@ag-grid-community/core@~30.0.5":
-  version "30.0.5"
-  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-30.0.5.tgz#7f6c3b4f493edb7c2b0985678ea8480f278ca45c"
-  integrity sha512-IAgE4ZW1oZwCzWnBlm056/8axVLXVSPQkBAaRNotM1b7XFD6jTG2VVAtCVIhprUyfbdwrg6BV+UpDlGrMbesjA==
+  version "30.0.6"
+  resolved "https://registry.yarnpkg.com/@ag-grid-community/core/-/core-30.0.6.tgz#ae6c9ffec73d983f000719c30ab0ca080242c89c"
+  integrity sha512-NRVKlLfQK/A0k78rg46z2CsiyKHrZr9TQP9CGalFc1rPk97YYesO0zxy59KYTzoZhxo/E0M16aW4gpS3SBD90A==
 
 "@ag-grid-community/react@~30.0.5":
   version "30.0.6"
