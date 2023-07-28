@@ -17,27 +17,38 @@ Add functionality for controlling which event provider which is used within the 
 
 example app:
 ```tsx
-import { EventProvider } = from '@equinor/fusion-framework-react-module-event';
+import { EventProvider, EventConsumer } = from '@equinor/fusion-framework-react-module-event';
 import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
 const Content = () => {
   const framework = useFramework().modules.event;
   return (
     <EventProvider value={framework.modules.event}>
-      <InnerContent>
+      <EventLogger />
+      <InlineEventConsumer />
     <EventProvider>
   );
 };
 ```
 ```tsx
-const InnerContent = () => {
-  const eventProvider = useEventProvider();
-  useEventHandler('some_event', useCallback((event) => {
-    console.log('FRAMEWORK_EVENT', event.detail);
-  }, [eventProvider]));
+import { useEventHandler } = from '@equinor/fusion-framework-react-module-event';
 
-  const appEventProvider = useEventModuleProvider();
-  useEventHandler('some_event', useCallback((event) => {
-    console.log('APP_EVENT', event.detail);
-  }, [appEventProvider]));
-}
+const eventHandler = (event: FrameworkEventMap['some_event']) => {
+  console.log(event.detail);
+}; 
+
+const EventLogger = () => useEventHandler('some_event', eventHandler);
 ```
+
+```tsx
+import { EventConsumer } = from '@equinor/fusion-framework-react-module-event';
+
+const InlineEventConsumer = () => (
+  <EventConsumer>
+    { 
+      (provider) => provider.dispatch(
+        'some_event'), 
+        { detail: { foo: 'bar' } } 
+    }
+  </EventConsumer>
+)
+``````
