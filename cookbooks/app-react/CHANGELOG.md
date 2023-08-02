@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.22
+
+### Patch Changes
+
+-   [#1058](https://github.com/equinor/fusion-framework/pull/1058) [`4eadd69f`](https://github.com/equinor/fusion-framework/commit/4eadd69f24dc69623086d40aa367a5c8e67b6518) Thanks [@odinr](https://github.com/odinr)! - Update dependency: @remix-run/router@^1.7.2
+
+-   [#1060](https://github.com/equinor/fusion-framework/pull/1060) [`3a2c3107`](https://github.com/equinor/fusion-framework/commit/3a2c3107b436c1eef7bc03c8225c32d40ed27e74) Thanks [@odinr](https://github.com/odinr)! - chore: update ag-grid to ~30.0
+
 ## 4.0.21
 
 ### Patch Changes

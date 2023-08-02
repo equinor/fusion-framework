@@ -1,5 +1,23 @@
 # Change Log
 
+## 8.0.3
+
+### Patch Changes
+
+-   [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - useObservable no longer need initial parameter if reducer is `ReducerWithInitialState`
+
+-   [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - observer is now optional in subscription hooks
+
+-   [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - renamed `useObservableEpic` to `useObservableFlow`
+
+    -   rename source file
+    -   mark `useObservableEpic` as **deprecated**
+    -   update index source file
+
+-   [#1045](https://github.com/equinor/fusion-framework/pull/1045) [`38869a87`](https://github.com/equinor/fusion-framework/commit/38869a87788c340d363e9be1e7fc6ce0e29efa63) Thanks [@eikeland](https://github.com/eikeland)! - # @equinor/fusion-observable
+
+    Adding Immer as dependecy to @equinor/fusion-observable
+
 ## 8.0.2
 
 ### Patch Changes

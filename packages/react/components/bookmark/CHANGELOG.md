@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.1.16
+
+### Patch Changes
+
+-   [#1047](https://github.com/equinor/fusion-framework/pull/1047) [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @typescript-eslint/eslint-plugin from 5.59.11 to 6.1.0
+
+    only style semantics updated
+
+-   Updated dependencies [[`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c), [`1749da29`](https://github.com/equinor/fusion-framework/commit/1749da290c98c0a43b9fdf2253dfb224e4ccdcd0)]:
+    -   @equinor/fusion-framework-react@5.2.3
+    -   @equinor/fusion-framework-react-module-bookmark@2.0.13
+
 ## 0.1.15
 
 ### Patch Changes

@@ -1,5 +1,40 @@
 # Change Log
 
+## 7.1.0
+
+### Minor Changes
+
+-   [#1093](https://github.com/equinor/fusion-framework/pull/1093) [`0a785d5c`](https://github.com/equinor/fusion-framework/commit/0a785d5c339ceec7cbbe2a6ff9e16053c86ce511) Thanks [@odinr](https://github.com/odinr)! - Allow options for `config.useFrameworkServiceClient`
+
+    Add optional configuration when using a predefined client from service discovery
+
+    **Changed interface**
+
+    ```ts
+    type useFrameworkServiceClient = (
+      service_name: string,
+      /** new, allows customize registration of http client from service discovery */
+      options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
+    )
+    ```
+
+    **example**
+
+    ```ts
+    config.useFrameworkServiceClient('some_fusion_service', {
+        onCreate(client: IHttpClient) {
+            /** make creation of http client add default request header */
+            client.requestHandler.setHeader('api-version', '2.0');
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+    -   @equinor/fusion-framework-module-event@4.0.3
+    -   @equinor/fusion-framework-module@4.2.2
+
 ## 7.0.16
 
 ### Patch Changes

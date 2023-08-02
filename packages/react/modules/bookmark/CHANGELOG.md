@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.0.13
+
+### Patch Changes
+
+-   [#783](https://github.com/equinor/fusion-framework/pull/783) [`1749da29`](https://github.com/equinor/fusion-framework/commit/1749da290c98c0a43b9fdf2253dfb224e4ccdcd0) Thanks [@Noggling](https://github.com/Noggling)! - updated `CreateBookMarkFn` type to support promise
+
+-   Updated dependencies [[`38869a87`](https://github.com/equinor/fusion-framework/commit/38869a87788c340d363e9be1e7fc6ce0e29efa63), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+    -   @equinor/fusion-query@3.0.4
+    -   @equinor/fusion-framework-react@5.2.3
+
 ## 2.0.12
 
 ### Patch Changes

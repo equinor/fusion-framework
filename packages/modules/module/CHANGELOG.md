@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+-   [#1047](https://github.com/equinor/fusion-framework/pull/1047) [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @typescript-eslint/eslint-plugin from 5.59.11 to 6.1.0
+
+    only style semantics updated
+
 ## 4.2.1
 
 ### Patch Changes
@@ -51,7 +59,7 @@
         // do some code
     } else {
         throw Error(
-            'this feature requires ContextModule of 7.2 or higher, please update depencies'
+            'this feature requires ContextModule of 7.2 or higher, please update depencies',
         );
     }
     ```
