@@ -14,7 +14,7 @@ import { GetWidgetError } from './errors';
 export interface IWidgetModuleProvider {
     getWidget(
         widgetKey: GetWidgetParameters['widgetKey'],
-        args: GetWidgetParameters['args']
+        args: GetWidgetParameters['args'],
     ): Observable<WidgetManifest>;
 }
 
@@ -49,7 +49,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
      */
     protected _getWidget(
         widgetKey: GetWidgetParameters['widgetKey'],
-        args?: GetWidgetParameters['args']
+        args?: GetWidgetParameters['args'],
     ): Observable<WidgetManifest> {
         return Query.extractQueryValue(
             this.#widgetClient.query({ widgetKey, args }).pipe(
@@ -63,8 +63,8 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
                         throw GetWidgetError.fromHttpResponse(cause.response, { cause });
                     }
                     throw new GetWidgetError('unknown', 'failed to load config', { cause });
-                })
-            )
+                }),
+            ),
         );
     }
 

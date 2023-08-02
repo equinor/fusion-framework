@@ -60,7 +60,7 @@ export class AuthClient extends PublicClientApplication {
     get account(): AccountInfo | undefined {
         const accounts = this.getAllAccounts();
         const account = accounts.find(
-            (a) => (a as AccountInfo).idTokenClaims?.aud === this.clientId
+            (a) => (a as AccountInfo).idTokenClaims?.aud === this.clientId,
         );
         return account as AccountInfo;
     }
@@ -89,7 +89,10 @@ export class AuthClient extends PublicClientApplication {
      * @param tenantId - tenant id for client domain
      * @param config - required [Configuration](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/src/config/Configuration.ts)
      */
-    constructor(readonly tenantId: string, config: Configuration) {
+    constructor(
+        readonly tenantId: string,
+        config: Configuration,
+    ) {
         super(config);
     }
 
@@ -107,7 +110,7 @@ export class AuthClient extends PublicClientApplication {
     async login(
         options?: AuthRequest,
         behavior: AuthBehavior = defaultBehavior,
-        silent = true
+        silent = true,
     ): Promise<AuthenticationResult | void> {
         const loginHint = options?.loginHint || this.account?.username;
         const scopes = options?.scopes || [];
@@ -151,7 +154,7 @@ export class AuthClient extends PublicClientApplication {
     public async acquireToken(
         options: AuthRequest = { scopes: [] },
         behavior: AuthBehavior = defaultBehavior,
-        silent = true
+        silent = true,
     ): Promise<AuthenticationResult | void> {
         const account = await this.account;
         if (silent && account) {
@@ -161,7 +164,7 @@ export class AuthClient extends PublicClientApplication {
                 return token;
             } catch (err) {
                 this.logger.info(
-                    'Expected to navigate away from the current page but timeout occurred.'
+                    'Expected to navigate away from the current page but timeout occurred.',
                 );
             }
         }

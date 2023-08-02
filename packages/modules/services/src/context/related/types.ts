@@ -55,14 +55,14 @@ export type RelatedContextFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = RelatedContextResponse<TVersion>
+    TResult = RelatedContextResponse<TVersion>,
 > = (
     args: RelatedContextArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => RelatedContextResult<TVersion, TMethod, TResult>;
 
 export type RelatedContextResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = RelatedContextResponse<TVersion>
+    TResult = RelatedContextResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

@@ -37,7 +37,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
                         return [value, ...acc].slice(0, 9);
                     }
                     return acc;
-                }, [] as Array<ContextItem>)
+                }, [] as Array<ContextItem>),
             )
             .subscribe((values) => {
                 const currentContext = values.shift();
@@ -77,12 +77,12 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
     getLinkedContextAsync() {
         throw Error(
-            '🤷 [getLinkedContextAsync] not implemented/supported, context fusion-core if needed'
+            '🤷 [getLinkedContextAsync] not implemented/supported, context fusion-core if needed',
         );
     }
     getCurrentContextAsync() {
         throw Error(
-            '🤷 [getCurrentContextAsync]  not implemented/supported, context fusion-core if needed'
+            '🤷 [getCurrentContextAsync]  not implemented/supported, context fusion-core if needed',
         );
     }
     getHistory() {
@@ -91,12 +91,12 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
     }
     exchangeContextAsync() {
         throw Error(
-            '🤷 [exchangeContextAsync]  not implemented/supported, context fusion-core if needed'
+            '🤷 [exchangeContextAsync]  not implemented/supported, context fusion-core if needed',
         );
     }
     exchangeCurrentContextAsync() {
         throw Error(
-            '🤷 [exchangeCurrentContextAsync]  not implemented/supported, context fusion-core if needed'
+            '🤷 [exchangeCurrentContextAsync]  not implemented/supported, context fusion-core if needed',
         );
     }
 }

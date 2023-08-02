@@ -65,7 +65,7 @@ const defaultCacheValidator =
 type QueueOperatorType = 'switch' | 'merge' | 'concat';
 
 const useQueueOperator = <TType, TArgs>(
-    type?: QueueOperatorType | QueryQueueFn<TArgs, TType>
+    type?: QueueOperatorType | QueryQueueFn<TArgs, TType>,
 ): QueryQueueFn<TArgs, TType> => {
     if (typeof type === 'function') {
         return type;
@@ -138,16 +138,16 @@ export class Query<TType, TArgs = any> {
                                 const { task, transaction } = this.#client.next(args, options);
                                 subscriber.add(
                                     // ignore errors, only emit new cache values
-                                    task.pipe(catchError(() => EMPTY)).subscribe(subscriber)
+                                    task.pipe(catchError(() => EMPTY)).subscribe(subscriber),
                                 );
                                 subscriber.add(() => {
                                     /** cancel transaction if switched */
                                     setTimeout(() => this.#client.cancel(transaction));
                                 });
-                            })
+                            }),
                     ),
                     filterQueryTaskComplete<TType, TArgs>(),
-                    takeWhile(() => !this.#client.closed)
+                    takeWhile(() => !this.#client.closed),
                 )
                 .subscribe((task) => {
                     const { args, value, transaction, ref } = task;
@@ -157,7 +157,7 @@ export class Query<TType, TArgs = any> {
                         args,
                         transaction,
                     });
-                })
+                }),
         );
     }
 
@@ -171,7 +171,7 @@ export class Query<TType, TArgs = any> {
      */
     public query(
         args: TArgs,
-        options?: QueryOptions<TType, TArgs>
+        options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
@@ -187,7 +187,7 @@ export class Query<TType, TArgs = any> {
      */
     public queryAsync(
         payload: TArgs,
-        opt?: QueryOptions<TType, TArgs> & { awaitResolve: boolean }
+        opt?: QueryOptions<TType, TArgs> & { awaitResolve: boolean },
     ): Promise<QueryTaskValue<TType, TArgs>> {
         const { awaitResolve, ...args } = opt || {};
         const fn = awaitResolve ? lastValueFrom : firstValueFrom;
@@ -200,7 +200,7 @@ export class Query<TType, TArgs = any> {
 
     protected _query(
         args: TArgs,
-        options?: QueryOptions<TType, TArgs>
+        options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
@@ -210,7 +210,7 @@ export class Query<TType, TArgs = any> {
     protected _createTask(
         ref: string,
         args: TArgs,
-        options?: QueryOptions<TType, TArgs>
+        options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskValue<TType, TArgs>> {
         const task = new ReplaySubject<QueryTaskValue<TType, TArgs>>();
 

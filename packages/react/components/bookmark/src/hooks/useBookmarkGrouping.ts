@@ -31,7 +31,7 @@ const groupBy = <T>(
     array: T[],
     getKey: (item: T) => string,
     searchText: string | null,
-    field: keyof T
+    field: keyof T,
 ) => {
     return (
         array

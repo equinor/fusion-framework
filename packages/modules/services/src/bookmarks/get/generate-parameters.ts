@@ -7,11 +7,11 @@ import { ApiVersions, GetBookmarkArgs } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends ApiVersions,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: GetBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
     return [path, init];

@@ -18,7 +18,10 @@ import {
 import { Bookmark, GetAllBookmarksParameters, GetBookmarkParameters, SourceSystem } from './types';
 
 export type BookmarkConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>(
-    builder: BookmarkConfigBuilder<TDeps, ModuleInitializerArgs<IBookmarkModuleConfigurator, TDeps>>
+    builder: BookmarkConfigBuilder<
+        TDeps,
+        ModuleInitializerArgs<IBookmarkModuleConfigurator, TDeps>
+    >,
 ) => void | Promise<void>;
 
 export class BookmarkConfigBuilder<
@@ -27,15 +30,18 @@ export class BookmarkConfigBuilder<
     TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
         BookmarkModuleConfigurator,
         TModules
-    >
+    >,
 > {
     #init: TInit;
-    constructor(init: TInit, public config: Partial<BookmarkModuleConfig> = {}) {
+    constructor(
+        init: TInit,
+        public config: Partial<BookmarkModuleConfig> = {},
+    ) {
         this.#init = init;
     }
 
     requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     requireInstance<T>(module: string): Promise<T>;
@@ -81,7 +87,7 @@ export class BookmarkConfigBuilder<
      * @memberof BookmarkConfigBuilder
      */
     serCustomBookmarkApiClient(
-        client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>
+        client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>,
     ) {
         if (this.config.clientConfiguration) {
             this.config.clientConfiguration.client = client;

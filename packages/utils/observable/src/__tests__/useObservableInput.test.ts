@@ -10,7 +10,7 @@ describe('useObservableInput.ts', () => {
     it('should resolve state of observable input', async () => {
         const expected = 11;
         const { result, waitFor } = renderHook(() =>
-            useObservableInputState(Promise.resolve(expected))
+            useObservableInputState(Promise.resolve(expected)),
         );
         await waitFor(() => {
             expect(result.current).toEqual(expected);

@@ -17,7 +17,7 @@ export function createState<TState, TActions extends ActionDefinitions>(
         | {
               builder: (builder: ActionReducerMapBuilder<TState>, actions: TActions) => void;
               initial: TState | (() => TState);
-          }
+          },
 ): {
     subject: FlowSubject<TState, ActionTypes<TActions>>;
     actions: TActions;
@@ -27,7 +27,7 @@ export function createState<TState, TActions extends ActionDefinitions>(
         typeof reducer_or_builder === 'function'
             ? reducer_or_builder
             : createReducer(reducer_or_builder.initial as TState, (builder) =>
-                  reducer_or_builder.builder(builder, actions)
+                  reducer_or_builder.builder(builder, actions),
               );
 
     const subject = new FlowSubject<TState, ActionTypes<TActions>>(reducer);

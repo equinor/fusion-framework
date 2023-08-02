@@ -14,7 +14,7 @@ import type { Fusion, FusionModules } from './types';
  */
 export const init = async <TModules extends Array<AnyModule>, TRef extends object>(
     configurator: FrameworkConfigurator<TModules>,
-    ref?: TRef
+    ref?: TRef,
 ): Promise<Fusion<TModules>> => {
     const modules = await configurator.initialize<FusionModules>(ref);
     const fusion = {

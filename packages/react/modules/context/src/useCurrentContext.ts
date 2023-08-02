@@ -18,7 +18,7 @@ export const useCurrentContext = (provider: IContextProvider) => {
             }
             return provider.setCurrentContextAsync(entry);
         },
-        [provider]
+        [provider],
     );
     return { currentContext, setCurrentContext };
 };

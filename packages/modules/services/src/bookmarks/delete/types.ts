@@ -14,17 +14,17 @@ export type DeleteBookmarkArgs<TVersion extends ApiVersions> =
 export type DeleteBookmarksResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = DeleteBookmarkResult<TVersion>
+    TResult = DeleteBookmarkResult<TVersion>,
 > = ClientMethod<TResult>[TMethod];
 
 export type DeleteBookmarksFn<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = DeleteBookmarkResult<TVersion>
+    TResult = DeleteBookmarkResult<TVersion>,
 > = (
     args: DeleteBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => DeleteBookmarksResult<TVersion, TMethod, TResult>;
 
 export type DeleteBookmarksVersions = {

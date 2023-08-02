@@ -6,13 +6,13 @@ import { PostBookmarksArgsV1 } from '../post';
 
 export type PatchBookmarkResult<
     TVersion extends ApiVersions,
-    TPayload
+    TPayload,
 > = PatchBookmarksVersions<TPayload>[TVersion]['result'];
 
 /** Returns args for PutBookmark based on version*/
 export type PatchBookmarkArgs<
     TVersion extends ApiVersions,
-    TPayload = unknown
+    TPayload = unknown,
 > = PatchBookmarksVersions<TPayload>[TVersion]['args'];
 
 /**Gets result type for PutBookmark call based on version and method */
@@ -20,7 +20,7 @@ export type PatchBookmarksResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TPayload = unknown,
-    TResult = PatchBookmarkResult<TVersion, TPayload>
+    TResult = PatchBookmarkResult<TVersion, TPayload>,
 > = ClientMethod<TResult>[TMethod];
 
 export type PatchBookmarkFn<
@@ -28,10 +28,10 @@ export type PatchBookmarkFn<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
     TPayload = unknown,
-    TResult = PatchBookmarkResult<TVersion, TPayload>
+    TResult = PatchBookmarkResult<TVersion, TPayload>,
 > = (
     args: PatchBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PatchBookmarksResult<TVersion, TMethod, TPayload, TResult>;
 
 export interface PatchBookmarksArgsV1<T = unknown> extends Partial<PostBookmarksArgsV1<T>> {

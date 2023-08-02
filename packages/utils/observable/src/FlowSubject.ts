@@ -77,7 +77,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     public addEffect(fn: Effect<A, S>): Subscription;
     public addEffect<TType extends ActionType<A>>(
         actionType: TType,
-        cb: Effect<ExtractAction<A, TType>, S>
+        cb: Effect<ExtractAction<A, TType>, S>,
     ): Subscription;
 
     /**
@@ -90,7 +90,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
      */
     public addEffect<TType extends ActionType<A>>(
         actionTypeOrFn: TType | Effect<A, S>,
-        fn?: Effect<ExtractAction<A, TType>, S>
+        fn?: Effect<ExtractAction<A, TType>, S>,
     ): Subscription {
         const action$ =
             typeof actionTypeOrFn === 'string'
@@ -107,16 +107,16 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
                             } catch (err) {
                                 reject(err);
                             }
-                        })
+                        }),
                     ).pipe(
                         catchError((err) => {
                             console.warn('unhandled effect', err);
                             return EMPTY;
-                        })
-                    )
+                        }),
+                    ),
                 ),
                 filter((x): x is A => !!x),
-                observeOn(asyncScheduler)
+                observeOn(asyncScheduler),
             )
             .subscribe(this.#action);
     }
@@ -132,7 +132,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
             throw new TypeError(
                 `addEpic: one of the provided effects "${
                     fn.name || '<anonymous>'
-                }" does not return a stream. Double check you're not missing a return statement!`
+                }" does not return a stream. Double check you're not missing a return statement!`,
             );
         }
         return epic$
@@ -141,7 +141,7 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
                     console.trace('unhandled exception, epic closed!', err);
                     return EMPTY;
                 }),
-                observeOn(asyncScheduler)
+                observeOn(asyncScheduler),
             )
             .subscribe(this.#action);
     }

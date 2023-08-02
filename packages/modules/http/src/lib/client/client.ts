@@ -19,7 +19,7 @@ import { HttpResponseError } from '../../errors';
 
 export type HttpClientCreateOptions<
     TRequest extends FetchRequest = FetchRequest,
-    TResponse = Response
+    TResponse = Response,
 > = {
     requestHandler: IHttpRequestHandler<TRequest>;
     responseHandler: IHttpResponseHandler<TResponse>;
@@ -51,7 +51,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     constructor(
         public uri: string,
-        options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>
+        options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>,
     ) {
         this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
         this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
@@ -65,14 +65,14 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     public fetch$<T = TResponse>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, TRequest, TResponse>,
     ): StreamResponse<T> {
         return this._fetch$(path, args);
     }
 
     public fetch<T = TResponse>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, TRequest, TResponse>,
     ): Promise<T> {
         return firstValueFrom(this.fetch$<T>(path, args));
     }
@@ -80,14 +80,14 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
     /** @deprecated */
     public fetchAsync<T = TResponse>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, TRequest, TResponse>,
     ): Promise<T> {
         return this.fetch(path, args);
     }
 
     public json$<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): StreamResponse<T> {
         const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
         const selector = args?.selector ?? jsonSelector;
@@ -103,7 +103,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     public json<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T> {
         return firstValueFrom(this.json$<T>(path, args));
     }
@@ -111,7 +111,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
     /** @deprecated */
     public jsonAsync<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T> {
         return this.json(path, args);
     }
@@ -119,7 +119,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
     public execute<T = TResponse, TMethod extends 'fetch' | 'fetch$' | 'json' | 'json$' = 'fetch'>(
         method: TMethod,
         path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
+        init?: FetchRequestInit<T, TRequest, TResponse>,
     ): ReturnType<IHttpClient[TMethod]> {
         return this[method](path, init) as ReturnType<IHttpClient[TMethod]>;
     }
@@ -130,7 +130,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
 
     protected _fetch$<T = TResponse>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, TRequest, TResponse>,
     ): Observable<T> {
         const { selector, ...options } = args || {};
         const response$ = of({
@@ -159,14 +159,14 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
                             response as Response,
                             {
                                 cause: err,
-                            }
+                            },
                         );
                     }
                 }
                 return of(response);
             }),
             /** cancel request on abort signal */
-            takeUntil(this._abort$)
+            takeUntil(this._abort$),
         );
         return response$ as unknown as Observable<T>;
     }

@@ -23,7 +23,7 @@ export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): 
             currentApp
                 ? (currentApp.instance$ as Observable<AppModulesInstance<TModules>>)
                 : of(null),
-        [currentApp]
+        [currentApp],
     );
     return {
         modules$,

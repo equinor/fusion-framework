@@ -33,7 +33,7 @@ export const actions = {
         (manifest: Record<string, LegacyAppManifest>) => ({
             payload: manifest,
             meta: { created: Date.now() },
-        })
+        }),
     ),
 };
 
@@ -152,14 +152,14 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                         const lastUpdated = action.meta.created - state.lastUpdated;
                         console.debug(
                             '🕥 LegacyAppContainer',
-                            `${lastUpdated}ms since last update`
+                            `${lastUpdated}ms since last update`,
                         );
                         if (lastUpdated < minManifestLastUpdated) {
                             return console.warn(
                                 '🚨 LegacyAppContainer',
                                 'loop detection! skipping updating of state!',
                                 currentState,
-                                nextState
+                                nextState,
                             );
                         }
 
@@ -174,33 +174,33 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                                     '🔥 LegacyAppContainer',
                                     `[${appKey}] manifest changed`,
                                     current,
-                                    next
+                                    next,
                                 );
                                 state.manifests[appKey] = { ...current, ...next };
                                 state.lastUpdated = action.meta.created;
                             }
                         }
-                    })
-            )
+                    }),
+            ),
         );
 
         /** legacy wrapper */
         const apps = new DistributedState<Record<string, LegacyAppManifest>>(
             'AppContainer.apps',
             {},
-            eventHub
+            eventHub,
         );
 
         /** legacy wrapper */
         const currentApp = new DistributedState<LegacyAppManifest | null>(
             'AppContainer.currentApp',
             null,
-            eventHub
+            eventHub,
         );
         const previousApps = new DistributedState<Record<string, LegacyAppManifest>>(
             'AppContainer.previousApps',
             {},
-            eventHub
+            eventHub,
         );
 
         /** this should not happen, this means there is a duplicate app manager */
@@ -209,7 +209,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             apps.on('change', (apps) => {
                 console.debug('🚨 LegacyAppContainer', 'manifest changed', apps);
                 return this.#state.next(actions.updateManifests(apps));
-            })
+            }),
         );
 
         this.#subscription.add(
@@ -217,7 +217,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 this.emit('update', value);
                 /** update legacy DistributedState */
                 apps.state = value.manifests;
-            })
+            }),
         );
 
         /** this is all legacy remove in future */
@@ -271,12 +271,12 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                         previousApp: previousManifest ? previousManifest.name : null,
                         selectedApp: currentManifest?.name,
                         previousApps: Object.keys(previousApps.state).map(
-                            (key) => previousApps.state[key].name
+                            (key) => previousApps.state[key].name,
                         ),
                         currentApp: currentManifest?.name,
                     },
                 });
-            })
+            }),
         );
 
         this.on('fetch', (fetching) => (this.#isUpdating = fetching));
@@ -302,13 +302,13 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 if (currentApp?.appKey !== appKey) {
                     console.warn(
                         'LegacyAppContainer::setCurrentAppAsync',
-                        'miss match of application keys!, should not happen'
+                        'miss match of application keys!, should not happen',
                     );
                 } else {
                     console.error(
                         '🚨',
                         'LegacyAppContainer::setCurrentAppAsync',
-                        'these lines should newer been reached'
+                        'these lines should newer been reached',
                     );
                 }
                 const newApp = appProvider.createApp({ appKey, manifest });
@@ -378,8 +378,8 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                 next: (value) =>
                     this.#state.next(
                         actions.updateManifests(
-                            indexManifests(value as unknown as LegacyAppManifest[])
-                        )
+                            indexManifests(value as unknown as LegacyAppManifest[]),
+                        ),
                     ),
             });
         });

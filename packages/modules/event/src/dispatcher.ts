@@ -1,7 +1,7 @@
 import { IFrameworkEvent } from './event';
 
 export type FrameworkEventHandler<TType extends IFrameworkEvent = IFrameworkEvent> = (
-    event: TType
+    event: TType,
 ) => Promise<void> | void;
 
 export interface IFrameworkDispatcher<TEvent extends IFrameworkEvent> {

@@ -7,7 +7,7 @@ import { useModule } from '@equinor/fusion-framework-react-module';
 import { createContext, useContext } from 'react';
 
 export const context = createContext<IEventModuleProvider>(
-    undefined as unknown as IEventModuleProvider
+    undefined as unknown as IEventModuleProvider,
 );
 
 const useModulesEventProvider = (): IEventModuleProvider | undefined =>

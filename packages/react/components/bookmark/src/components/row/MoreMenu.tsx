@@ -3,10 +3,10 @@ import { MutableRefObject } from 'react';
 import { MenuOption } from './Row';
 
 type MenuProps = {
-    pRef: MutableRefObject<HTMLElement | null>;
-    onClose: VoidFunction;
-    open: boolean;
-    options: MenuOption[];
+    readonly pRef: MutableRefObject<HTMLElement | null>;
+    readonly onClose: VoidFunction;
+    readonly open: boolean;
+    readonly options: MenuOption[];
 };
 
 export const MoreMenu = ({ pRef, onClose, open, options }: MenuProps) => {

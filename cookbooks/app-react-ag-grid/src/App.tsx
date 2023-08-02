@@ -18,7 +18,7 @@ export const App = (): JSX.Element => {
 
     const columnDefs = useMemo(
         () => [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
-        []
+        [],
     );
 
     const addRow = useCallback(() => {

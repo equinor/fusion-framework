@@ -17,7 +17,7 @@ export const render = (el: HTMLElement, args: { env: unknown }) => {
     root.render(
         <StrictMode>
             <Test env={args.env} />
-        </StrictMode>
+        </StrictMode>,
     );
     return () => root.unmount();
 };

@@ -32,14 +32,14 @@ export type PatchNotificationFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = PatchNotificationResponse<TVersion>
+    TResult = PatchNotificationResponse<TVersion>,
 > = (
     args: PatchNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PatchNotificationResult<TVersion, TMethod, TResult>;
 
 export type PatchNotificationResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = PatchNotificationResponse<TVersion>
+    TResult = PatchNotificationResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

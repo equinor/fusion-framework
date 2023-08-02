@@ -34,9 +34,9 @@ export const EditBookmarkModal = ({
     onClose,
     bookmarkId,
 }: {
-    isOpen: boolean;
-    onClose: (b: boolean) => void;
-    bookmarkId?: string;
+    readonly isOpen: boolean;
+    readonly onClose: (b: boolean) => void;
+    readonly bookmarkId?: string;
 }) => {
     const [state, setState] = useState<PatchBookmark>({
         id: '',

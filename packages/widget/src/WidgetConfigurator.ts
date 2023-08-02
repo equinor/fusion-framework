@@ -20,7 +20,7 @@ import { WidgetModules } from './types';
  */
 export interface IWidgetConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
-    TRef extends FusionModulesInstance = FusionModulesInstance
+    TRef extends FusionModulesInstance = FusionModulesInstance,
 > extends IModulesConfigurator<WidgetModules<TModules>, TRef> {
     /**
      * [optional]
@@ -74,7 +74,7 @@ export interface IWidgetConfigurator<
 
 export class WidgetConfigurator<
         TModules extends Array<AnyModule> | unknown = unknown,
-        TRef extends FusionModulesInstance = FusionModulesInstance
+        TRef extends FusionModulesInstance = FusionModulesInstance,
     >
     extends ModulesConfigurator<WidgetModules<TModules>, TRef>
     implements IWidgetConfigurator<TModules, TRef>

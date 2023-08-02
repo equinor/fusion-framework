@@ -8,7 +8,7 @@ export const requestProcessor =
     (action$: Observable<Actions>) =>
     (
         request: ReturnType<typeof actions.request>,
-        cb?: (subscriber: Subscriber<Actions>) => TeardownLogic
+        cb?: (subscriber: Subscriber<Actions>) => TeardownLogic,
     ): Observable<Actions> => {
         return new Observable((subscriber) => {
             const {
@@ -23,7 +23,7 @@ export const requestProcessor =
                     actions.cancel({
                         transaction,
                         reason: `request [${transaction}] was aborted!`,
-                    })
+                    }),
                 );
                 return subscriber.complete();
             }
@@ -38,7 +38,7 @@ export const requestProcessor =
                         }
                         subscriber.complete();
                     }
-                })
+                }),
             );
 
             /** subscribe to abort from the controller */
@@ -48,10 +48,10 @@ export const requestProcessor =
                         actions.cancel({
                             transaction,
                             reason: `request [${transaction}] was aborted!`,
-                        })
+                        }),
                     );
                     subscriber.complete();
-                })
+                }),
             );
 
             /** call callback and add to teardown */

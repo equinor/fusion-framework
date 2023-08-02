@@ -40,10 +40,10 @@ export interface IContextProvider {
     resolveContext: (current: ContextItem) => Observable<ContextItem>;
     resolveContextAsync: (current: ContextItem) => Promise<ContextItem>;
     relatedContexts: (
-        args: RelatedContextParameters
+        args: RelatedContextParameters,
     ) => Observable<Array<ContextItem<Record<string, unknown>>>>;
     relatedContextsAsync: (
-        args: RelatedContextParameters
+        args: RelatedContextParameters,
     ) => Promise<Array<ContextItem<Record<string, unknown>>>>;
     clearCurrentContext: VoidFunction;
 
@@ -52,12 +52,12 @@ export interface IContextProvider {
 
     setCurrentContext(
         context: ContextItem<Record<string, unknown>> | null,
-        opt?: { validate?: boolean; resolve?: boolean }
+        opt?: { validate?: boolean; resolve?: boolean },
     ): Observable<ContextItem<Record<string, unknown>> | null>;
 
     setCurrentContextAsync(
         context: ContextItem<Record<string, unknown>> | null,
-        opt?: { validate?: boolean; resolve?: boolean }
+        opt?: { validate?: boolean; resolve?: boolean },
     ): Promise<ContextItem<Record<string, unknown>> | null>;
 }
 
@@ -97,7 +97,7 @@ export class ContextProvider implements IContextProvider {
         console.warn(
             '@deprecated',
             'ContextProvider.currentContext',
-            'use setCurrentContextById|setCurrentContext|clearCurrentContext'
+            'use setCurrentContextById|setCurrentContext|clearCurrentContext',
         );
         if (context === undefined) {
             throw Error('not allowed to set current context as undefined undefined!');
@@ -116,7 +116,7 @@ export class ContextProvider implements IContextProvider {
         if (args.parentContext) {
             console.warn(
                 '@deprecated',
-                'parentContext as arg is deprecated, use ContextProvider.connectParentContext'
+                'parentContext as arg is deprecated, use ContextProvider.connectParentContext',
             );
         }
 
@@ -150,7 +150,7 @@ export class ContextProvider implements IContextProvider {
                         canBubble: true,
                         detail: { previous, next },
                     });
-                })
+                }),
             );
             this.#subscriptions.add(
                 /** observe event from child modules */
@@ -159,7 +159,7 @@ export class ContextProvider implements IContextProvider {
                     if (e.source !== this && e.detail.next !== undefined) {
                         this.setCurrentContext(e.detail.next);
                     }
-                })
+                }),
             );
         }
 
@@ -167,15 +167,15 @@ export class ContextProvider implements IContextProvider {
             this.#contextQueue
                 .pipe(
                     switchMap((next) => next),
-                    tap((x) => console.debug('ContextProvider::#contextQueue', x))
+                    tap((x) => console.debug('ContextProvider::#contextQueue', x)),
                 )
-                .subscribe((context) => this.#contextClient.setCurrentContext(context ?? null))
+                .subscribe((context) => this.#contextClient.setCurrentContext(context ?? null)),
         );
     }
 
     public connectParentContext(
         provider: IContextProvider,
-        opt?: { skipFirst: boolean }
+        opt?: { skipFirst: boolean },
     ): Subscription {
         const parentContext$ = provider.currentContext$.pipe(
             // do not set context if parent has not initialized
@@ -185,7 +185,7 @@ export class ContextProvider implements IContextProvider {
                     console.debug(
                         'ContextProvider::connectParentContext',
                         'skipping first item',
-                        next
+                        next,
                     );
                     return false;
                 }
@@ -199,7 +199,7 @@ export class ContextProvider implements IContextProvider {
                             source: this,
                             detail: next,
                             cancelable: true,
-                        }
+                        },
                     );
                     return { next, canceled: onParentContextChanged?.canceled };
                 }
@@ -215,16 +215,16 @@ export class ContextProvider implements IContextProvider {
                         console.warn(
                             'ContextProvider::onParentContextChanged',
                             'setCurrentContext',
-                            err
+                            err,
                         );
                         return EMPTY;
-                    })
+                    }),
                 );
             }),
             catchError((err) => {
                 console.warn('ContextProvider::onParentContextChanged', 'unhandled exception', err);
                 return EMPTY;
-            })
+            }),
         );
 
         const subscription = parentContext$.subscribe();
@@ -239,7 +239,7 @@ export class ContextProvider implements IContextProvider {
                     .resolveContext(id)
                     .pipe(
                         filter((item): item is ContextItem => !!item),
-                        switchMap((item) => this.setCurrentContext(item))
+                        switchMap((item) => this.setCurrentContext(item)),
                     )
                     .subscribe(subscriber);
             } catch (err) {
@@ -265,7 +265,7 @@ export class ContextProvider implements IContextProvider {
      */
     public setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
         context: T,
-        opt?: { validate?: boolean; resolve?: boolean }
+        opt?: { validate?: boolean; resolve?: boolean },
     ): Observable<T> {
         /** signal for aborting the queue entry */
         const abort$ = new Subject();
@@ -286,7 +286,7 @@ export class ContextProvider implements IContextProvider {
                 subject$.error(err);
                 /** skip setting any context */
                 return EMPTY;
-            })
+            }),
         );
 
         /** add task to internal queue */
@@ -294,13 +294,13 @@ export class ContextProvider implements IContextProvider {
 
         return subject$.pipe(
             /** if caller subscribes, unsubscribe should abort queue entry */
-            finalize(() => abort$.next(true))
+            finalize(() => abort$.next(true)),
         );
     }
 
     protected _setCurrentContext<T extends ContextItem<Record<string, unknown>> | null>(
         context: T,
-        opt?: { validate?: boolean; resolve?: boolean }
+        opt?: { validate?: boolean; resolve?: boolean },
     ): Observable<T> {
         return new Observable((subscriber) => {
             if (context === this.currentContext) {
@@ -327,7 +327,7 @@ export class ContextProvider implements IContextProvider {
                                         source: this,
                                         cancelable: true,
                                         detail: { context },
-                                    }
+                                    },
                                 );
                                 if (event?.canceled) {
                                     throw Error('resolving of context was canceled');
@@ -340,8 +340,8 @@ export class ContextProvider implements IContextProvider {
                                     map((resolved) => ({
                                         context,
                                         resolved,
-                                    }))
-                                )
+                                    })),
+                                ),
                             ),
                             /** notify event observers that context was resolved */
                             switchMap(async ({ context, resolved }) => {
@@ -351,7 +351,7 @@ export class ContextProvider implements IContextProvider {
                                         source: this,
                                         cancelable: true,
                                         detail: { context, resolved },
-                                    }
+                                    },
                                 );
                                 if (event?.canceled) {
                                     throw Error('resolving of context was canceled');
@@ -360,8 +360,8 @@ export class ContextProvider implements IContextProvider {
                             }),
                             /** recursive set current context without validation and resolve */
                             switchMap((resolved) =>
-                                this._setCurrentContext(resolved as unknown as T)
-                            )
+                                this._setCurrentContext(resolved as unknown as T),
+                            ),
                         )
                         .subscribe(subscriber);
                 }
@@ -382,7 +382,7 @@ export class ContextProvider implements IContextProvider {
                         }
 
                         return context;
-                    })
+                    }),
                 )
                 .subscribe((context) => {
                     subscriber.next(context);
@@ -393,7 +393,7 @@ export class ContextProvider implements IContextProvider {
 
     public async setCurrentContextAsync<T extends ContextItem<Record<string, unknown>> | null>(
         context: T,
-        opt?: { validate?: boolean; resolve?: boolean }
+        opt?: { validate?: boolean; resolve?: boolean },
     ): Promise<T> {
         return lastValueFrom(this.setCurrentContext(context, opt));
     }
@@ -404,7 +404,7 @@ export class ContextProvider implements IContextProvider {
                 // TODO
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
-                this.#contextParameterFn({ search, type: this.#contextType })
+                this.#contextParameterFn({ search, type: this.#contextType }),
             )
             .pipe(map((x) => x.value));
 
@@ -421,7 +421,7 @@ export class ContextProvider implements IContextProvider {
     }
 
     public resolveContext(
-        item: ContextItem<Record<string, unknown>>
+        item: ContextItem<Record<string, unknown>>,
     ): Observable<ContextItem<Record<string, unknown>>> {
         return this.relatedContexts({ item, filter: { type: this.#contextType } }).pipe(
             map((x) => x.filter((item) => this.validateContext(item))),
@@ -434,28 +434,28 @@ export class ContextProvider implements IContextProvider {
                     console.warn(
                         'ContextProvider::relatedContext',
                         'multiple items found 🤣',
-                        values
+                        values,
                     );
                 }
                 return value;
-            })
+            }),
         );
     }
 
     public resolveContextAsync(
-        item: ContextItem<Record<string, unknown>>
+        item: ContextItem<Record<string, unknown>>,
     ): Promise<ContextItem<Record<string, unknown>>> {
         return lastValueFrom(this.resolveContext(item));
     }
 
     public relatedContexts(
-        args: RelatedContextParameters
+        args: RelatedContextParameters,
     ): Observable<Array<ContextItem<Record<string, unknown>>>> {
         if (!this.#contextRelated) {
             return throwError(() =>
                 Error(
-                    'ContextProvider::relatedContexts - no client defined for resolving related context'
-                )
+                    'ContextProvider::relatedContexts - no client defined for resolving related context',
+                ),
             );
         }
         return this.#contextRelated.query(args).pipe(
@@ -465,12 +465,12 @@ export class ContextProvider implements IContextProvider {
                     throw err.cause;
                 }
                 throw err;
-            })
+            }),
         );
     }
 
     public relatedContextsAsync(
-        args: RelatedContextParameters
+        args: RelatedContextParameters,
     ): Promise<Array<ContextItem<Record<string, unknown>>>> {
         return lastValueFrom(this.relatedContexts(args));
     }

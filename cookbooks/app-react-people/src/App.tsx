@@ -28,14 +28,14 @@ export const App = () => {
                 },
                 key: (args) => JSON.stringify(args),
             }),
-        [peopleHttpClient]
+        [peopleHttpClient],
     );
 
     const { idle, next, value$ } = useDebounceQuery(peopleQuery, { debounce: 1000 });
 
     const { value: results } = useObservableSelectorState(
         value$,
-        useCallback((x) => x.value.results, [value$])
+        useCallback((x) => x.value.results, [value$]),
     );
 
     return (

@@ -6,12 +6,12 @@ export declare interface FrameworkEventMap {
 }
 
 export type FrameworkEventHandler<TType extends IFrameworkEvent = IFrameworkEvent> = (
-    event: TType
+    event: TType,
 ) => Promise<void> | void;
 
 export interface IFrameworkEvent<
     TInit extends FrameworkEventInit = FrameworkEventInit,
-    TType extends string = string
+    TType extends string = string,
 > {
     /** name of event */
     readonly type: TType;
@@ -80,7 +80,7 @@ export interface FrameworkEvent<TInit extends FrameworkEventInit> {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class FrameworkEvent<
     TInit extends FrameworkEventInit = FrameworkEventInit,
-    TType extends string = keyof FrameworkEventMap
+    TType extends string = keyof FrameworkEventMap,
 > implements IFrameworkEvent<TInit, TType>
 {
     #detail: FrameworkEventInitDetail<TInit>;
@@ -90,7 +90,10 @@ export class FrameworkEvent<
     #canBubble: boolean;
     #created: number = Date.now();
 
-    constructor(private __type: string, args: TInit) {
+    constructor(
+        private __type: string,
+        args: TInit,
+    ) {
         this.#detail = args.detail as FrameworkEventInitDetail<TInit>;
         this.#source = args.source as FrameworkEventInitSource<TInit>;
         this.#cancelable = !!args.cancelable;

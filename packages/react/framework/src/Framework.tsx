@@ -6,9 +6,9 @@ type ConfigureCallback = (configurator: FusionConfigurator) => void;
 
 export const Framework = (
     props: PropsWithChildren<{
-        configure: ConfigureCallback;
-        fallback: NonNullable<ReactNode> | null;
-    }>
+        readonly configure: ConfigureCallback;
+        readonly fallback: NonNullable<ReactNode> | null;
+    }>,
 ) => {
     const { configure, fallback, children } = props;
     const Component = useMemo(() => createFrameworkProvider(configure), [configure]);

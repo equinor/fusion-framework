@@ -9,11 +9,11 @@ import { GetNotificationArgs } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends string = keyof typeof ApiVersion,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: GetNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
     return [path, init];

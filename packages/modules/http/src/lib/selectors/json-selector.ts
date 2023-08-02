@@ -1,5 +1,5 @@
 export const jsonSelector = <TType = unknown, TResponse extends Response = Response>(
-    response: TResponse
+    response: TResponse,
 ): Promise<TType> => {
     if (!response.ok) {
         throw new Error('network response was not OK');

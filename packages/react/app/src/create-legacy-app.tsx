@@ -10,7 +10,7 @@ import { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
     Component: React.ElementType,
-    configure?: AppModuleInitiator<TModules>
+    configure?: AppModuleInitiator<TModules>,
 ) => {
     const LegacyComponent = (): JSX.Element => {
         const fusion = useFramework<[AppModule]>();

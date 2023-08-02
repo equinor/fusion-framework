@@ -27,7 +27,7 @@ app.command('dev')
     .option('--portal <string>', 'fusion portal host')
     .option(
         '-c, --config <file>',
-        'Use specified config file, see https://vitejs.dev/guide/cli.html#build'
+        'Use specified config file, see https://vitejs.dev/guide/cli.html#build',
     )
     .action(async ({ port, portal, config }) => {
         const spinner = ora('Loading configuration').start();
@@ -49,7 +49,7 @@ app.command('dev')
 app.command('build')
     .option(
         '-c, --config <file>',
-        'Use specified config file, see https://vitejs.dev/guide/cli.html#build'
+        'Use specified config file, see https://vitejs.dev/guide/cli.html#build',
     )
     .action(async ({ config }) => {
         const spinner = ora('Loading configuration').start();

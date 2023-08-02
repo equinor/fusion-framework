@@ -10,7 +10,7 @@ interface HttpClientConstructorOptions<TInit extends FetchRequest> {
 interface HttpClientConstructor<TClient extends IHttpClient> {
     new (
         uri: string,
-        options: HttpClientConstructorOptions<HttpClientRequestInitType<TClient>>
+        options: HttpClientConstructorOptions<HttpClientRequestInitType<TClient>>,
     ): TClient;
 }
 
@@ -50,7 +50,7 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
      */
     configureClient<T extends TClient>(
         name: string,
-        args: HttpClientOptions<T>
+        args: HttpClientOptions<T>,
     ): IHttpClientConfigurator<TClient>;
 
     /**
@@ -72,7 +72,7 @@ export interface IHttpClientConfigurator<TClient extends IHttpClient = IHttpClie
      */
     configureClient<T extends TClient>(
         name: string,
-        onCreate: (client: T) => void
+        onCreate: (client: T) => void,
     ): HttpClientConfigurator<TClient>;
 
     /**
@@ -116,7 +116,7 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
     /** @inheritdoc */
     configureClient<T extends TClient>(
         name: string,
-        args: string | HttpClientOptions<T> | HttpClientOptions<T>['onCreate']
+        args: string | HttpClientOptions<T> | HttpClientOptions<T>['onCreate'],
     ): HttpClientConfigurator<TClient> {
         const argFn = typeof args === 'string' ? (x: T) => (x.uri = String(args)) : args;
         const options = typeof argFn === 'function' ? { onCreate: argFn } : argFn;

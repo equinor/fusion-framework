@@ -10,7 +10,7 @@ import { module } from './module';
 export const enableWidgetModule = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    builder?: WidgetModuleConfigBuilderCallback
+    builder?: WidgetModuleConfigBuilderCallback,
 ): void => {
     configurator.addConfig({
         module,

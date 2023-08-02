@@ -39,10 +39,10 @@ export type WidgetEnv<TProps = unknown> = {
 export type WidgetModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
     TRef extends Fusion = Fusion,
-    TEnv = WidgetEnv
+    TEnv = WidgetEnv,
 > = (
     configurator: IWidgetConfigurator<TModules, TRef['modules']>,
-    args: { fusion: TRef; env: TEnv }
+    args: { fusion: TRef; env: TEnv },
 ) => void | Promise<void>;
 
 /**
@@ -55,7 +55,7 @@ export type WidgetModuleInitiator<
 export type WidgetModuleInit<
     TModules extends Array<AnyModule> | unknown,
     TRef extends Fusion = Fusion,
-    TEnv = WidgetEnv
+    TEnv = WidgetEnv,
 > = (
-    cb: WidgetModuleInitiator<TModules, TRef, TEnv>
+    cb: WidgetModuleInitiator<TModules, TRef, TEnv>,
 ) => (args: { fusion: TRef; env: TEnv }) => Promise<WidgetModulesInstance<TModules>>;

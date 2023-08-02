@@ -15,13 +15,16 @@ import {
 
 export class ContextApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 > {
     get Version(): typeof ApiVersion {
         return ApiVersion;
     }
 
-    constructor(protected _client: TClient, protected _method: TMethod) {}
+    constructor(
+        protected _client: TClient,
+        protected _method: TMethod,
+    ) {}
 
     /**
      * Fetch context by id
@@ -29,7 +32,7 @@ export class ContextApiClient<
      */
     public get<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = GetContextResponse<TVersion>
+        TResult = GetContextResponse<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<GetContextFn<TVersion, TMethod, TClient, TResult>>
@@ -44,7 +47,7 @@ export class ContextApiClient<
      */
     public query<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = QueryContextResponse<TVersion>
+        TResult = QueryContextResponse<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<QueryContextFn<TVersion, TMethod, TClient, TResult>>
@@ -59,7 +62,7 @@ export class ContextApiClient<
      */
     public related<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = RelatedContextResponse<TVersion>
+        TResult = RelatedContextResponse<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<RelatedContextFn<TVersion, TMethod, TClient, TResult>>

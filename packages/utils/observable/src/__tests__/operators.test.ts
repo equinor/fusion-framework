@@ -8,7 +8,7 @@ describe('operators', () => {
                 filterAction('b'),
                 tap((action) => {
                     expect(action.type).toBe('b');
-                })
+                }),
             )
             .subscribe({ complete });
     });

@@ -13,11 +13,11 @@ import type { AnyAction } from './types';
 export function createAsyncAction<
     PA extends PrepareAction<any>,
     PA_Success extends PrepareAction<any>,
-    T extends string
+    T extends string,
 >(
     type: T,
     request: PA,
-    success: PA_Success
+    success: PA_Success,
 ): PayloadActionCreator<ReturnType<PA>['payload'], `${T}::request`, PA> & {
     success: PayloadActionCreator<ReturnType<PA_Success>['payload'], `${T}::success`, PA_Success>;
 };
@@ -26,12 +26,12 @@ export function createAsyncAction<
     PA extends PrepareAction<any>,
     PA_Success extends PrepareAction<any>,
     PA_Failure extends PrepareAction<any>,
-    T extends string
+    T extends string,
 >(
     type: T,
     request: PA,
     success: PA_Success,
-    failure: PA_Failure
+    failure: PA_Failure,
 ): PayloadActionCreator<ReturnType<PA>['payload'], `${T}::request`, PA> & {
     success: PayloadActionCreator<ReturnType<PA_Success>['payload'], `${T}::success`, PA_Success>;
     failure: PayloadActionCreator<ReturnType<PA_Failure>['payload'], `${T}::failure`, PA_Failure>;
@@ -41,7 +41,7 @@ export function createAsyncAction(
     type: string,
     request: PrepareAction<any>,
     success: PrepareAction<any>,
-    failure?: PrepareAction<any>
+    failure?: PrepareAction<any>,
 ): any {
     const action = createAction([type, 'request'].join(actionSuffixDivider), request);
     if (success) {

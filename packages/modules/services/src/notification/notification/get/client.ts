@@ -16,18 +16,18 @@ export const getNotificationById =
     <
         TVersion extends string = keyof typeof ApiVersion,
         TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient
+        TClient extends IHttpClient = IHttpClient,
     >(
         client: TClient,
         version: TVersion,
-        method: TMethod = 'json' as TMethod
+        method: TMethod = 'json' as TMethod,
     ) =>
     <T = GetNotificationResponse<TVersion>>(
         args: GetNotificationArgs<TVersion>,
-        init?: ClientRequestInit<TClient, T>
+        init?: ClientRequestInit<TClient, T>,
     ): GetNotificationResult<TVersion, TMethod, T> =>
         client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init)
+            ...generateParameters<T, TVersion, TClient>(version, args, init),
         ) as GetNotificationResult<TVersion, TMethod, T>;
 
 export default getNotificationById;

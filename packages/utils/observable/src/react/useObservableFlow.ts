@@ -8,7 +8,7 @@ import { Action, Flow } from '../types';
  */
 export const useObservableFlow = <S, A extends Action = Action>(
     subject: FlowSubject<S, A>,
-    epic: Flow<A, S>
+    epic: Flow<A, S>,
 ): void => {
     useLayoutEffect(() => {
         const subscription = subject.addFlow(epic);

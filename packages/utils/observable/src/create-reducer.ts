@@ -34,7 +34,7 @@ interface TypedActionCreator<Type extends string> {
 
 type CaseReducer<S = unknown, A extends Action = AnyAction> = (
     state: Draft<S>,
-    action: A
+    action: A,
 ) => S | void | Draft<S>;
 
 type CaseReducers<S, AS extends Record<string, Action>> = {
@@ -67,12 +67,12 @@ type CaseReducers<S, AS extends Record<string, Action>> = {
  */
 export function createReducer<S extends NotFunction, A extends Action = AnyAction>(
     initialState: S | (() => S),
-    builderCallback: (builder: ActionReducerMapBuilder<S>) => void
+    builderCallback: (builder: ActionReducerMapBuilder<S>) => void,
 ): ReducerWithInitialState<S, A>;
 
 export function createReducer<S extends NotFunction, A extends Action = AnyAction>(
     initialState: S | (() => S),
-    mapOrBuilderCallback: (builder: ActionReducerMapBuilder<S>) => void
+    mapOrBuilderCallback: (builder: ActionReducerMapBuilder<S>) => void,
 ): ReducerWithInitialState<S, A> {
     const [actionsMap, finalActionMatchers, finalDefaultCaseReducer] =
         executeReducerBuilderCallback(mapOrBuilderCallback);
@@ -121,7 +121,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
                             return previousState;
                         }
                         throw Error(
-                            'A case reducer on a non-draftable value must not return undefined'
+                            'A case reducer on a non-draftable value must not return undefined',
                         );
                     }
 
@@ -162,7 +162,7 @@ export interface ActionReducerMapBuilder<State> {
      */
     addCase<ActionCreator extends TypedActionCreator<string>>(
         actionCreator: ActionCreator,
-        reducer: CaseReducer<State, ReturnType<ActionCreator>>
+        reducer: CaseReducer<State, ReturnType<ActionCreator>>,
     ): ActionReducerMapBuilder<State>;
     /**
      * Adds a case reducer to handle a single exact action type.
@@ -173,7 +173,7 @@ export interface ActionReducerMapBuilder<State> {
      */
     addCase<Type extends string, A extends Action<Type>>(
         type: Type,
-        reducer: CaseReducer<State, A>
+        reducer: CaseReducer<State, A>,
     ): ActionReducerMapBuilder<State>;
 
     /**
@@ -189,7 +189,7 @@ export interface ActionReducerMapBuilder<State> {
      */
     addMatcher<A>(
         matcher: TypeGuard<A> | ((action: AnyAction) => boolean),
-        reducer: CaseReducer<State, A extends AnyAction ? A : A & AnyAction>
+        reducer: CaseReducer<State, A extends AnyAction ? A : A & AnyAction>,
     ): Omit<ActionReducerMapBuilder<State>, 'addCase'>;
 
     /**
@@ -201,12 +201,12 @@ export interface ActionReducerMapBuilder<State> {
 }
 
 export function executeReducerBuilderCallback<TState>(
-    builderCallback: (builder: ActionReducerMapBuilder<TState>) => void
+    builderCallback: (builder: ActionReducerMapBuilder<TState>) => void,
 ): [
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CaseReducers<TState, any>,
     ActionMatcherDescriptionCollection<TState>,
-    CaseReducer<TState, AnyAction> | undefined
+    CaseReducer<TState, AnyAction> | undefined,
 ] {
     const actionsMap: CaseReducers<TState, Record<string, Action>> = {};
     const actionMatchers: ActionMatcherDescriptionCollection<TState> = [];
@@ -214,7 +214,7 @@ export function executeReducerBuilderCallback<TState>(
     const builder = {
         addCase(
             typeOrActionCreator: string | TypedActionCreator<string>,
-            reducer: CaseReducer<TState>
+            reducer: CaseReducer<TState>,
         ) {
             if (process.env.NODE_ENV !== 'production') {
                 /*
@@ -224,12 +224,12 @@ export function executeReducerBuilderCallback<TState>(
                  */
                 if (actionMatchers.length > 0) {
                     throw new Error(
-                        '`builder.addCase` should only be called before calling `builder.addMatcher`'
+                        '`builder.addCase` should only be called before calling `builder.addMatcher`',
                     );
                 }
                 if (defaultCaseReducer) {
                     throw new Error(
-                        '`builder.addCase` should only be called before calling `builder.addDefaultCase`'
+                        '`builder.addCase` should only be called before calling `builder.addDefaultCase`',
                     );
                 }
             }
@@ -239,7 +239,7 @@ export function executeReducerBuilderCallback<TState>(
                     : typeOrActionCreator.type;
             if (type in actionsMap) {
                 throw new Error(
-                    'addCase cannot be called with two reducers for the same action type'
+                    'addCase cannot be called with two reducers for the same action type',
                 );
             }
             actionsMap[type] = reducer;
@@ -248,12 +248,12 @@ export function executeReducerBuilderCallback<TState>(
         addMatcher<A>(
             matcher: TypeGuard<A>,
             // reducer: CaseReducer<TState, A>
-            reducer: CaseReducer<TState, A extends AnyAction ? A : A & AnyAction>
+            reducer: CaseReducer<TState, A extends AnyAction ? A : A & AnyAction>,
         ) {
             if (process.env.NODE_ENV !== 'production') {
                 if (defaultCaseReducer) {
                     throw new Error(
-                        '`builder.addMatcher` should only be called before calling `builder.addDefaultCase`'
+                        '`builder.addMatcher` should only be called before calling `builder.addDefaultCase`',
                     );
                 }
             }

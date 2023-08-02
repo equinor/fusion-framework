@@ -4,7 +4,7 @@ import { ISignalRProvider, Topic } from '@equinor/fusion-framework-module-signal
 export const useSignalRProvider = <T>(
     provider: ISignalRProvider,
     hubId: string,
-    topicId: string
+    topicId: string,
 ): Topic<T> => {
     const topic = useMemo(() => provider.connect<T>(hubId, topicId), [provider, hubId, topicId]);
     return topic;

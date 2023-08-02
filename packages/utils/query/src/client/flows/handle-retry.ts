@@ -5,5 +5,5 @@ import actions, { Actions } from '../actions';
 export const handleRetry: Flow<Actions> = (action$) =>
     action$.pipe(
         filter(actions.retry.match),
-        map((x) => x.payload)
+        map((x) => x.payload),
     );

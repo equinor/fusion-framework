@@ -21,7 +21,7 @@ const createActions = () => ({
         'fetch_manifest',
         (key: string, update?: boolean) => ({ payload: key, meta: { update } }),
         (manifest: AppManifest) => ({ payload: manifest }),
-        (error: unknown) => ({ payload: error })
+        (error: unknown) => ({ payload: error }),
     ),
     /** Config loading */
     setConfig: createAction('set_config', (config: AppConfig) => ({ payload: config })),
@@ -29,7 +29,7 @@ const createActions = () => ({
         'fetch_config',
         (key: string) => ({ payload: key }),
         (config: AppConfig) => ({ payload: config }),
-        (error: unknown) => ({ payload: error })
+        (error: unknown) => ({ payload: error }),
     ),
     /** App loading */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,7 +38,7 @@ const createActions = () => ({
         'import_app',
         (entrypoint: string) => ({ payload: entrypoint }),
         (module: AppScriptModule) => ({ payload: module }),
-        (error: unknown) => ({ payload: error })
+        (error: unknown) => ({ payload: error }),
     ),
 
     // App Instance
@@ -50,7 +50,7 @@ const createActions = () => ({
         'initialize_app',
         () => ({ payload: null }),
         () => ({ payload: null }),
-        (error: unknown) => ({ payload: error })
+        (error: unknown) => ({ payload: error }),
     ),
 });
 

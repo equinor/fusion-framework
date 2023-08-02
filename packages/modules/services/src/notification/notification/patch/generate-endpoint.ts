@@ -7,7 +7,7 @@ import type { PatchNotificationArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
     version: TVersion,
-    args: PatchNotificationArgs<TVersion>
+    args: PatchNotificationArgs<TVersion>,
 ) => {
     const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
     switch (apiVersion) {

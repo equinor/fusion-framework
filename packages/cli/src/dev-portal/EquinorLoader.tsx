@@ -4,7 +4,7 @@ import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 export const EquinorLoader = ({
     children,
     text,
-}: React.PropsWithChildren<{ text: string }>): JSX.Element => {
+}: React.PropsWithChildren<{ readonly text: string }>): JSX.Element => {
     return (
         <div
             style={{
