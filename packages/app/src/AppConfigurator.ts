@@ -1,13 +1,20 @@
-import { FusionModulesInstance } from '@equinor/fusion-framework';
+import { type FusionModulesInstance } from '@equinor/fusion-framework';
+
 import {
-    AnyModule,
-    IModulesConfigurator,
+    type AnyModule,
+    type IModulesConfigurator,
     ModuleConsoleLogger,
     ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
-import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
+
+import http, {
+    configureHttpClient,
+    configureHttp,
+    type HttpClientOptions,
+} from '@equinor/fusion-framework-module-http';
+
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
 import { AppModules } from './types';
@@ -92,7 +99,11 @@ export class AppConfigurator<
         this.addConfig(configureHttpClient(...args));
     }
 
-    public useFrameworkServiceClient(serviceName: string): void {
+    public useFrameworkServiceClient(
+        serviceName: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
+    ): void {
         this.addConfig({
             module: http,
             configure: async (config, ref) => {
@@ -101,6 +112,7 @@ export class AppConfigurator<
                     throw Error(`failed to configure service [${serviceName}]`);
                 }
                 config.configureClient(serviceName, {
+                    ...options,
                     baseUri: service.uri,
                     defaultScopes: service.defaultScopes,
                 });
