@@ -12,7 +12,7 @@ export const useObservableInput = <T>(input: ObservableInput<T>): Observable<T> 
 /** Observe state of an observable input */
 export const useObservableInputState = <T, E = unknown, I = undefined>(
     input: ObservableInput<T>,
-    initial: I
+    initial: I,
 ): ObservableStateReturnType<T | I, E> => {
     return useObservableState(useObservableInput(input), { initial });
 };

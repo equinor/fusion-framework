@@ -18,5 +18,5 @@ export type QueryCacheState<TType = unknown, TArgs = unknown> = QueryCacheStateD
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CacheSortFn<TType = any, TArgs = any> = (
     a: QueryCacheRecord<TType, TArgs>,
-    b: QueryCacheRecord<TType, TArgs>
+    b: QueryCacheRecord<TType, TArgs>,
 ) => number;

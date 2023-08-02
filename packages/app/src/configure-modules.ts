@@ -27,9 +27,9 @@ export const configureModules =
     <
         TModules extends Array<AnyModule> | never,
         TRef extends Fusion = Fusion,
-        TEnv extends AppEnv = AppEnv
+        TEnv extends AppEnv = AppEnv,
     >(
-        cb?: AppModuleInitiator<TModules, TRef, TEnv>
+        cb?: AppModuleInitiator<TModules, TRef, TEnv>,
     ): ((args: { fusion: TRef; env: TEnv }) => Promise<AppModulesInstance<TModules>>) =>
     /**
      *
@@ -44,7 +44,7 @@ export const configureModules =
             await Promise.resolve(cb(configurator, args));
         }
         const modules = (await configurator.initialize(
-            args.fusion.modules
+            args.fusion.modules,
             // TODO
         )) as unknown as AppModulesInstance<TModules>;
 

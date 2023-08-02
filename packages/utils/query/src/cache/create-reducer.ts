@@ -12,7 +12,7 @@ const sortCache: CacheSortFn = (a: QueryCacheRecord, b: QueryCacheRecord): numbe
 
 export default function <TType, TArgs>(
     actions: ActionBuilder<TType, TArgs>,
-    initial: QueryCacheStateData<TType, TArgs> = {}
+    initial: QueryCacheStateData<TType, TArgs> = {},
 ) {
     return createReducer<QueryCacheStateData<TType, TArgs>, Actions<TType, TArgs>>(
         initial,
@@ -48,7 +48,7 @@ export default function <TType, TArgs>(
                         .filter(
                             ([_, value]) =>
                                 !payload.validate ||
-                                payload.validate(value as QueryCacheRecord<TType, TArgs>)
+                                payload.validate(value as QueryCacheRecord<TType, TArgs>),
                         )
                         /** sort data records */
                         .sort((a, b) => sortFn(a[1], b[1]))
@@ -70,6 +70,6 @@ export default function <TType, TArgs>(
                             }
                         }
                     }
-                })
+                }),
     );
 }

@@ -30,7 +30,7 @@ import { FusionModules } from './types';
 export class FrameworkConfigurator<
     TModules extends Array<AnyModule> = [],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TRef = any
+    TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {
         super([event, auth, http, disco, services, context]);

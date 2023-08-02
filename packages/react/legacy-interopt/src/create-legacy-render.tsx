@@ -23,7 +23,11 @@ import { createComponent } from '@equinor/fusion-framework-react-app';
 import { useFramework } from '@equinor/fusion-framework-react';
 
 const AppWrapper = (
-    props: PropsWithChildren<{ history: History; basename: string; appKey: string }>
+    props: PropsWithChildren<{
+        readonly history: History;
+        readonly basename: string;
+        readonly appKey: string;
+    }>,
 ) => {
     const framework = useFramework<[NavigationModule]>();
     const { history, basename, appKey, children } = props;
@@ -42,7 +46,7 @@ const AppWrapper = (
                 location.pathname.replace(basename, ''),
                 location.state,
                 location.key,
-                history.location
+                history.location,
             );
 
             switch (action) {
@@ -110,15 +114,15 @@ export const createLegacyRender = (manifest: AppManifest, legacy: IFusionContext
                         return concat(
                             resolver(args),
                             from(
-                                legacy.contextManager.getAsync<'current', ContextItem>('current')
-                            ).pipe(filter((x): x is ContextItem => !!x))
+                                legacy.contextManager.getAsync<'current', ContextItem>('current'),
+                            ).pipe(filter((x): x is ContextItem => !!x)),
                         ).pipe(
                             filter((item): item is ContextItem => !!item),
-                            take(1)
+                            take(1),
                         );
                     });
                 });
             }
-        }
+        },
     );
 };

@@ -7,13 +7,13 @@ type MsalFetchRequest = FetchRequest & { scopes?: string[] };
 type MsalFetchRequestInit<
     TReturn = unknown,
     TRequest = FetchRequest,
-    TResponse = FetchResponse
+    TResponse = FetchResponse,
 > = FetchRequestInit<TReturn, TRequest, TResponse> & Pick<MsalFetchRequest, 'scopes'>;
 
 /** Default Client for MSAL */
 export class HttpClientMsal<
     TRequest extends MsalFetchRequest = MsalFetchRequest,
-    TResponse = FetchResponse
+    TResponse = FetchResponse,
 > extends HttpClient<TRequest, TResponse> {
     /** Scope that will be applied to all request if no scope is provided in request object */
     public defaultScopes: string[] = [];
@@ -21,7 +21,7 @@ export class HttpClientMsal<
     /** @inheritdoc */
     fetch$<T = TResponse>(
         path: string,
-        init?: MsalFetchRequestInit<T, TRequest, TResponse>
+        init?: MsalFetchRequestInit<T, TRequest, TResponse>,
     ): Observable<T> {
         const args = Object.assign(init || {}, {
             scopes: this.defaultScopes.concat(init?.scopes || []),

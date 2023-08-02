@@ -35,7 +35,7 @@ export const enableAgGrid = (
     config: IModulesConfigurator<any, any>,
     options?: {
         licenseKey: string;
-    }
+    },
 ): void => {
     options ? config.addConfig(configureAgGrid(options)) : config.configure({ module });
 };

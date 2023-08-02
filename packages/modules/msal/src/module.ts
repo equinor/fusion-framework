@@ -50,7 +50,7 @@ export const configureMsal = (
     args?: {
         clients?: Record<string, AuthClientOptions>;
         requiresAuth?: boolean;
-    }
+    },
 ): IModuleConfigurator<MsalModule, unknown> => ({
     module,
     configure: (config) => {

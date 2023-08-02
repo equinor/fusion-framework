@@ -21,7 +21,7 @@ import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
 
 export interface IModulesConfigurator<
     TModules extends Array<AnyModule> = Array<AnyModule>,
-    TRef = any
+    TRef = any,
 > {
     logger: IModuleConsoleLogger;
     configure(...configs: Array<IModuleConfigurator<any, TRef>>): void;
@@ -29,15 +29,15 @@ export interface IModulesConfigurator<
     addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>): void;
 
     initialize<T extends Array<AnyModule> | unknown>(
-        ref?: TRef
+        ref?: TRef,
     ): Promise<ModulesInstance<CombinedModules<T, TModules>>>;
 
     onConfigured<T>(
-        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>
+        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>,
     ): void;
 
     onInitialized<T extends Array<AnyModule> | unknown>(
-        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void
+        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
     ): void;
 
     dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void>;
@@ -60,7 +60,7 @@ class RequiredModuleTimeoutError extends Error {
 /** entry for configuring a module */
 type ModulesConfiguratorConfigCallback<TRef> = (
     config: ModulesConfig<[AnyModule]>,
-    ref?: TRef
+    ref?: TRef,
 ) => void | Promise<void>;
 
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
@@ -99,19 +99,19 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     }
 
     public onConfigured<T>(
-        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>
+        cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>,
     ) {
         this._afterConfiguration.push(cb);
     }
 
     public onInitialized<T>(
-        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void
+        cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
     ): void {
         this._afterInit.push(cb);
     }
 
     public async initialize<T, R extends TRef = TRef>(
-        ref?: R
+        ref?: R,
     ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
         const config = await this._configure<T, R>(ref);
         const instance = await this._initialize<T, R>(config, ref);
@@ -119,12 +119,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         return Object.seal(
             Object.assign({}, instance, {
                 dispose: () => this.dispose(instance as unknown as ModulesInstance<TModules>),
-            })
+            }),
         );
     }
 
     protected async _configure<T, R extends TRef = TRef>(
-        ref?: R
+        ref?: R,
     ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
         const config = await this._createConfig<T, R>(ref);
         await Promise.all(this._configs.map((x) => Promise.resolve(x(config, ref))));
@@ -133,7 +133,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     }
 
     protected _createConfig<T, R = TRef>(
-        ref?: R
+        ref?: R,
     ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
         const { modules, logger, _afterConfiguration, _afterInit } = this;
         const config$ = from(modules).pipe(
@@ -144,13 +144,13 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                     const configurator = await module.configure?.(ref);
                     logger.debug(
                         `🛠 created configurator for ${logger.formatModuleName(module)}`,
-                        configurator
+                        configurator,
                     );
                     return { [module.name]: configurator };
                 } catch (err) {
                     logger.error(
                         `🛠 Failed to created configurator for ${logger.formatModuleName(module)}`,
-                        err
+                        err,
                     );
                     throw err;
                 }
@@ -162,14 +162,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                 onAfterInit(cb) {
                     _afterInit.push(cb);
                 },
-            } as ModulesConfig<CombinedModules<T, TModules>>)
+            } as ModulesConfig<CombinedModules<T, TModules>>),
         );
 
         return lastValueFrom(config$);
     }
 
     protected async _postConfigure<T>(
-        config: ModulesConfigType<CombinedModules<T, TModules>>
+        config: ModulesConfigType<CombinedModules<T, TModules>>,
     ): Promise<void> {
         const { modules, logger, _afterConfiguration: afterConfiguration } = this;
         await Promise.allSettled(
@@ -180,12 +180,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                         await module.postConfigure?.(config);
                         logger.debug(
                             `🏗📌 post configured ${logger.formatModuleName(module)}`,
-                            module
+                            module,
                         );
                     } catch (err) {
-                        logger.warn(`🏗📌 post configure failed ${logger.formatModuleName(module)}`);
+                        logger.warn(
+                            `🏗📌 post configure failed ${logger.formatModuleName(module)}`,
+                        );
                     }
-                })
+                }),
         );
 
         /** call all added post config hooks  */
@@ -202,39 +204,39 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
     protected async _initialize<T, R = TRef>(
         config: ModulesConfigType<CombinedModules<T, TModules>>,
-        ref?: R
+        ref?: R,
     ): Promise<ModulesInstanceType<CombinedModules<T, TModules>>> {
         const { modules, logger } = this;
         const moduleNames = modules.map((m) => m.name);
 
         const instance$ = new BehaviorSubject<ModulesInstanceType<CombinedModules<T, TModules>>>(
-            {} as ModulesInstanceType<CombinedModules<T, TModules>>
+            {} as ModulesInstanceType<CombinedModules<T, TModules>>,
         );
 
         const hasModule = (name: string) => moduleNames.includes(name);
 
         const requireInstance = <
-            TKey extends keyof ModulesInstanceType<CombinedModules<T, TModules>>
+            TKey extends keyof ModulesInstanceType<CombinedModules<T, TModules>>,
         >(
             name: TKey,
-            wait = 60
+            wait = 60,
         ): Promise<ModulesInstanceType<CombinedModules<T, TModules>>[TKey]> => {
             if (!moduleNames.includes(name)) {
                 logger.error(
                     `🚀⌛️ Cannot not require ${logger.formatModuleName(
-                        String(name)
-                    )} since module is not defined!`
+                        String(name),
+                    )} since module is not defined!`,
                 );
                 throw Error(`cannot not require [${String(name)}] since module is not defined!`);
             }
             if (instance$.value[name]) {
                 logger.debug(
-                    `🚀⌛️ ${logger.formatModuleName(String(name))} is initiated, skipping queue`
+                    `🚀⌛️ ${logger.formatModuleName(String(name))} is initiated, skipping queue`,
                 );
                 return Promise.resolve(instance$.value[name]);
             }
             logger.debug(
-                `🚀⌛️ Awaiting init ${logger.formatModuleName(String(name))}, timeout ${wait}s`
+                `🚀⌛️ Awaiting init ${logger.formatModuleName(String(name))}, timeout ${wait}s`,
             );
             return firstValueFrom(
                 instance$.pipe(
@@ -243,8 +245,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                     timeout({
                         each: wait * 1000,
                         with: () => throwError(() => new RequiredModuleTimeoutError()),
-                    })
-                )
+                    }),
+                ),
             );
         };
 
@@ -263,8 +265,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                                 // @ts-ignore
                                 requireInstance,
                                 hasModule,
-                            }) as IModuleProvider
-                        )
+                            }) as IModuleProvider,
+                        ),
                     ).pipe(
                         map((instance) => {
                             if (
@@ -273,7 +275,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                             ) {
                                 // TODO change to warn in future
                                 logger.debug(
-                                    `🤷 module does not extends the [BaseModuleProvider] or exposes [SemanticVersion]`
+                                    `🤷 module does not extends the [BaseModuleProvider] or exposes [SemanticVersion]`,
                                 );
                                 try {
                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -282,7 +284,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                                         module.version instanceof SemanticVersion
                                             ? module.version
                                             : new SemanticVersion(
-                                                  module.version ?? '0.0.0-unknown'
+                                                  module.version ?? '0.0.0-unknown',
                                               );
                                 } catch (err) {
                                     logger.error(`🚨 failed to set module version`);
@@ -290,9 +292,9 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                             }
                             logger.debug(`🚀 initialized ${logger.formatModuleName(module)}`);
                             return [key, instance];
-                        })
+                        }),
                     );
-                })
+                }),
             )
             .subscribe({
                 next: ([name, module]) => {
@@ -312,14 +314,14 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
     protected async _postInitialize<T, R = TRef>(
         instance: ModulesInstanceType<CombinedModules<T, TModules>>,
-        ref?: R
+        ref?: R,
     ) {
         const { modules, logger, _afterInit: afterInit } = this;
 
         const postInitialize$ = from(modules).pipe(
             filter((module): module is Required<AnyModule> => !!module.postInitialize),
             tap((module) =>
-                logger.debug(`🚀📌 post initializing moule ${logger.formatModuleName(module)}`)
+                logger.debug(`🚀📌 post initializing moule ${logger.formatModuleName(module)}`),
             ),
             mergeMap((module) =>
                 from(
@@ -332,22 +334,22 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                                     CombinedModules<T, TModules>
                                 >
                             ],
-                    })
+                    }),
                 ).pipe(
                     tap(() => {
                         logger.debug(
-                            `🚀📌 post initialized moule ${logger.formatModuleName(module)}`
+                            `🚀📌 post initialized moule ${logger.formatModuleName(module)}`,
                         );
                     }),
                     catchError((err) => {
                         logger.warn(
                             `🚀📌 post initialize failed moule ${logger.formatModuleName(module)}`,
-                            err
+                            err,
                         );
                         return EMPTY;
-                    })
-                )
-            )
+                    }),
+                ),
+            ),
         );
 
         /** call all added post config hooks  */
@@ -378,7 +380,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                         modules: instance,
                         instance: instance[module.name as keyof typeof instance],
                     });
-                })
+                }),
         );
     }
 }

@@ -12,7 +12,7 @@ export interface IServiceDiscoveryConfigurator {
     clientCtor: IServiceDiscoveryClientCtor;
 
     createHttpClientClient: (
-        http: ModulesInstanceType<[HttpModule]>['http']
+        http: ModulesInstanceType<[HttpModule]>['http'],
     ) => Promise<IHttpClient>;
 
     createClient: (http: IHttpClient) => Promise<IServiceDiscoveryClient>;
@@ -34,7 +34,7 @@ export class ServiceDiscoveryConfigurator implements IServiceDiscoveryConfigurat
     }
 
     async createHttpClientClient(
-        http: ModulesInstanceType<[HttpModule]>['http']
+        http: ModulesInstanceType<[HttpModule]>['http'],
     ): Promise<IHttpClient> {
         if (!this.clientKey) {
             throw Error('no http client for service discovery is provided!');

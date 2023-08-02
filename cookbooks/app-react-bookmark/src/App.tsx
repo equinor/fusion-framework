@@ -24,10 +24,10 @@ export const App = () => {
         (newState: () => Partial<BookmarkState>) => {
             setState((s) => ({ ...s, ...newState() }));
         },
-        [setState]
+        [setState],
     );
     const currentBookmark = useCurrentBookmark<MyBookmark>(
-        useCallback(() => state.payload, [state.payload])
+        useCallback(() => state.payload, [state.payload]),
     );
 
     useEffect(() => {

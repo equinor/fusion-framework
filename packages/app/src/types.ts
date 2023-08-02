@@ -42,10 +42,10 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
 export type AppModuleInitiator<
     TModules extends Array<AnyModule> | unknown = unknown,
     TRef extends Fusion = Fusion,
-    TEnv = AppEnv
+    TEnv = AppEnv,
 > = (
     configurator: IAppConfigurator<TModules, TRef['modules']>,
-    args: { fusion: TRef; env: TEnv }
+    args: { fusion: TRef; env: TEnv },
 ) => void | Promise<void>;
 
 /**
@@ -58,7 +58,7 @@ export type AppModuleInitiator<
 export type AppModuleInit<
     TModules extends Array<AnyModule> | unknown,
     TRef extends Fusion = Fusion,
-    TEnv = AppEnv
+    TEnv = AppEnv,
 > = (
-    cb: AppModuleInitiator<TModules, TRef, TEnv>
+    cb: AppModuleInitiator<TModules, TRef, TEnv>,
 ) => (args: { fusion: TRef; env: TEnv }) => Promise<AppModulesInstance<TModules>>;

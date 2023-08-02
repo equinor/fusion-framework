@@ -5,7 +5,7 @@ import { ApiVersions, PatchBookmarkArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends ApiVersions>(
     version: TVersion,
-    _args: PatchBookmarkArgs<TVersion>
+    _args: PatchBookmarkArgs<TVersion>,
 ) => {
     switch (version) {
         case 'v1':

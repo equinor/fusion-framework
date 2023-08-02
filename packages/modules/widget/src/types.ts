@@ -41,7 +41,7 @@ export type WidgetRenderArgs<TFusion extends Fusion = Fusion, TEnv = WidgetEnv> 
 };
 
 export type WidgetScriptModule<
-    TProps extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>
+    TProps extends Record<PropertyKey, unknown> = Record<PropertyKey, unknown>,
 > = {
     default: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;
     renderWidget: (el: HTMLElement, args: WidgetRenderArgs, props?: TProps) => VoidFunction;

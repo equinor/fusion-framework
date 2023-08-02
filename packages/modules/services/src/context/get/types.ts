@@ -39,14 +39,14 @@ export type GetContextFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = GetContextResponse<TVersion>
+    TResult = GetContextResponse<TVersion>,
 > = (
     args: GetContextArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => GetContextResult<TVersion, TMethod, TResult>;
 
 export type GetContextResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = GetContextResponse<TVersion>
+    TResult = GetContextResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

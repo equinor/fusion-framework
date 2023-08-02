@@ -73,7 +73,7 @@ export class SignalRModuleProvider implements ISignalRProvider {
                 bufferSize: 1,
                 /** when no subscribers, teardown observable */
                 refCount: true,
-            })
+            }),
         );
 
         return this.#hubConnections[hubId];

@@ -19,8 +19,8 @@ export const enableContext = (
         builder: ContextConfigBuilder<
             TDeps,
             ModuleInitializerArgs<IContextModuleConfigurator, TDeps>
-        >
-    ) => void | Promise<void>
+        >,
+    ) => void | Promise<void>,
 ): void => {
     configurator.addConfig({
         module,

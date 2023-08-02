@@ -16,10 +16,10 @@ export type EventStream<TKey extends keyof FrameworkEventMap = keyof FrameworkEv
  */
 export const useEventStream = <
     TKey extends keyof FrameworkEventMap = keyof FrameworkEventMap,
-    TData = FrameworkEventMap[TKey]
+    TData = FrameworkEventMap[TKey],
 >(
     key: TKey,
-    operator?: OperatorFunction<FrameworkEventMap[TKey], TData>
+    operator?: OperatorFunction<FrameworkEventMap[TKey], TData>,
 ): Observable<TData> => {
     const provider = useEventProvider();
     return useMemo(() => {

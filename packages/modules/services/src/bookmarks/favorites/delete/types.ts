@@ -12,17 +12,17 @@ export type DeleteBookmarkFavoriteArgs<TVersion extends ApiVersions> =
 export type DeleteBookmarksFavoriteResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = DeleteBookmarkFavoriteResult<TVersion>
+    TResult = DeleteBookmarkFavoriteResult<TVersion>,
 > = ClientMethod<TResult>[TMethod];
 
 export type DeleteBookmarksFavoriteFn<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = DeleteBookmarkFavoriteResult<TVersion>
+    TResult = DeleteBookmarkFavoriteResult<TVersion>,
 > = (
     args: DeleteBookmarkFavoriteArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export type DeleteBookmarksFavoriteVersions = {

@@ -7,18 +7,18 @@ import { ApiVersions, DeleteBookmarkArgs } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends ApiVersions,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: DeleteBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
 
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
         { method: 'Delete' },
-        init
+        init,
     );
 
     return [path, requestParams];

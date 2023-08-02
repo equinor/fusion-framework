@@ -5,7 +5,7 @@ import { SignalRModuleConfigBuilder } from '../../SignalRModuleConfigurator';
 
 export const configureFromFramework = async (
     args: { name: string; service: string; path: string },
-    builder: SignalRModuleConfigBuilder<[MsalModule, ServiceDiscoveryModule]>
+    builder: SignalRModuleConfigBuilder<[MsalModule, ServiceDiscoveryModule]>,
 ) => {
     const authProvider = await builder.requireInstance('auth');
     const serviceDiscovery = await builder.requireInstance('serviceDiscovery');

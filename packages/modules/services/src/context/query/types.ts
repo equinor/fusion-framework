@@ -50,14 +50,14 @@ export type QueryContextFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = QueryContextResponse<TVersion>
+    TResult = QueryContextResponse<TVersion>,
 > = (
     args: QueryContextArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => QueryContextResult<TVersion, TMethod, TResult>;
 
 export type QueryContextResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = QueryContextResponse<TVersion>
+    TResult = QueryContextResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

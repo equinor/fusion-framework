@@ -22,5 +22,5 @@ export const switchQueue =
         source$.pipe(switchMap(cb));
 
 export const queryValue = <TType, TArgs>(
-    source$: ReturnType<Query<TType, TArgs>['query']>
+    source$: ReturnType<Query<TType, TArgs>['query']>,
 ): Observable<TType> => source$.pipe(map((entry) => entry.value));

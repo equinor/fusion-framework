@@ -6,7 +6,7 @@ import { AnyModule, CombinedModules, ModuleInitializerArgs, Modules, ModuleType 
 export abstract class ModuleConfigBuilder<
     TModules extends Array<AnyModule> | unknown = unknown,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TConfig = any
+    TConfig = any,
 > {
     #init: ModuleInitializerArgs<TConfig, CombinedModules<TModules, Array<Modules[keyof Modules]>>>;
 
@@ -19,7 +19,7 @@ export abstract class ModuleConfigBuilder<
             TConfig,
             CombinedModules<TModules, Array<Modules[keyof Modules]>>
         >,
-        protected _config: TConfig
+        protected _config: TConfig,
     ) {
         this.#init = init;
     }
@@ -33,7 +33,7 @@ export abstract class ModuleConfigBuilder<
      * @returns module instance
      */
     public requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     /**

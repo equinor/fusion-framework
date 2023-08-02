@@ -4,7 +4,7 @@ import Query, { QueryCtorOptions } from '../Query';
 
 export const useDebounceQuery = <TType, TArgs>(
     clientOrClientCtor: Query<TType, TArgs> | QueryCtorOptions<TType, TArgs>,
-    options: UseDebounceOptions<[TArgs]>
+    options: UseDebounceOptions<[TArgs]>,
 ) => {
     const [query] = useState<Query<TType, TArgs>['query']>(() => {
         const client =

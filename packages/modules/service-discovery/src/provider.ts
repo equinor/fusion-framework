@@ -26,19 +26,19 @@ export interface IServiceDiscoveryProvider {
 
     createClient(
         name: string,
-        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>
+        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
     ): Promise<IHttpClient>;
 
     configureClient(
         serviceName: string | { key: string; alias: string },
-        config: ModulesConfigurator<[HttpModule]>
+        config: ModulesConfigurator<[HttpModule]>,
     ): Promise<void>;
 }
 
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
         protected readonly _client: IServiceDiscoveryClient,
-        protected readonly _http: ModuleType<HttpModule>
+        protected readonly _http: ModuleType<HttpModule>,
     ) {}
 
     public get environment(): Environment {
@@ -55,7 +55,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
 
     public async createClient(
         name: string,
-        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>
+        opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
     ): Promise<IHttpClient> {
         const service = await this.resolveService(name);
         if (!service) {
@@ -70,7 +70,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
 
     public async configureClient(
         serviceName: string | { key: string; alias: string },
-        config: ModulesConfigurator<[HttpModule]>
+        config: ModulesConfigurator<[HttpModule]>,
     ): Promise<void> {
         const { key, alias } =
             typeof serviceName === 'string'

@@ -14,10 +14,10 @@ export const useDebounce = <
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     TType extends ObservableInput<any> = ReturnType<TFn>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TArgs extends any[] = Parameters<TFn>
+    TArgs extends any[] = Parameters<TFn>,
 >(
     fn: TFn,
-    options: UseDebounceOptions<TArgs>
+    options: UseDebounceOptions<TArgs>,
 ): {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value$: Observable<TType extends ObservableInput<any> ? ObservableType<TType> : TType>;
@@ -35,7 +35,7 @@ export const useDebounce = <
             typeof options.debounce === 'function'
                 ? debounce(options.debounce)
                 : debounceTime<TArgs>(options.debounce),
-        [options.debounce]
+        [options.debounce],
     );
 
     const value$ = useMemo(
@@ -44,9 +44,9 @@ export const useDebounce = <
                 debounceFn,
                 tap(() => setIdle(false)),
                 switchMap((args) => from(fn(...args))),
-                tap(() => setIdle(true))
+                tap(() => setIdle(true)),
             ),
-        [fn]
+        [fn],
     );
 
     return { idle, next, value$ };

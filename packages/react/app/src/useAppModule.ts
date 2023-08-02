@@ -13,9 +13,9 @@ import { useAppModules } from './useAppModules';
  */
 export const useAppModule = <
     TType extends AnyModule | unknown = unknown,
-    TKey extends string = ModuleKey<ModuleTypes<AppModules<[TType]>>>
+    TKey extends string = ModuleKey<ModuleTypes<AppModules<[TType]>>>,
 >(
-    module: TKey
+    module: TKey,
 ): TType extends AnyModule
     ? ModuleType<TType>
     : AppModulesInstance[Extract<keyof AppModulesInstance, TKey>] => {

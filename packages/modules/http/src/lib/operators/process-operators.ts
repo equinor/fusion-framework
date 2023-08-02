@@ -34,10 +34,10 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
                 // initial value
                 request,
                 // only allow concurrency of one operator
-                1
+                1,
             ),
             // output result of last operator
-            last()
+            last(),
         );
     }
 }

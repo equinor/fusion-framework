@@ -11,7 +11,7 @@ export const defer = <TType = void>(cb?: () => TType, timeout = 0) =>
             } catch (err) {
                 reject(err);
             }
-        }, timeout)
+        }, timeout),
     );
 
 export const sleep = (timeout?: number) => defer(noop, timeout);

@@ -44,14 +44,14 @@ export type PostNotificationFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = PostNotificationResponse<TVersion>
+    TResult = PostNotificationResponse<TVersion>,
 > = (
     args: PostNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PostNotificationResult<TVersion, TMethod, TResult>;
 
 export type PostNotificationResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = PostNotificationResponse<TVersion>
+    TResult = PostNotificationResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

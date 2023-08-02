@@ -26,12 +26,12 @@ const myHook = () => {
  */
 export const useSignalR = <T>(
     hubId: string,
-    topicId: string
+    topicId: string,
 ): ReturnType<typeof useProviderTopic<T>> => {
     const provider = useFramework<[SignalRModule]>().modules.signalR;
     if (!provider) {
         throw Error(
-            'SignalR is not configured, see @equinor/fusion-framework-react-module-signalr'
+            'SignalR is not configured, see @equinor/fusion-framework-react-module-signalr',
         );
     }
     return useProviderTopic(provider, hubId, topicId);

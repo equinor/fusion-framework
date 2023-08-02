@@ -19,7 +19,7 @@ export type FetchResponse<T = unknown> = Response & {
 export type FetchRequestInit<
     TReturn = unknown,
     TRequest = FetchRequest,
-    TResponse = FetchResponse<TReturn>
+    TResponse = FetchResponse<TReturn>,
 > = Omit<TRequest, 'uri' | 'path'> & {
     selector?: (response: TResponse) => ObservableInput<TReturn>;
 };
@@ -35,12 +35,12 @@ export type ExecutionMethod = 'fetch' | 'fetch$' | 'json' | 'json$';
 
 export type ExecutionMethodParameters<
     TMethod extends ExecutionMethod = 'fetch',
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 > = Parameters<TClient[TMethod]>;
 
 export type ExecutionResponse<
     TMethod extends ExecutionMethod = 'fetch',
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 > = ReturnType<TClient[TMethod]>;
 
 /**
@@ -96,7 +96,7 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
      */
     fetch$<T = TResponse>(
         path: string,
-        init?: FetchRequestInit<T, TRequest, TResponse>
+        init?: FetchRequestInit<T, TRequest, TResponse>,
     ): StreamResponse<T>;
 
     /**
@@ -132,22 +132,22 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
 
     fetchAsync<T = TResponse>(
         path: string,
-        args?: FetchRequestInit<T, TRequest, TResponse>
+        args?: FetchRequestInit<T, TRequest, TResponse>,
     ): Promise<T>;
 
     json$<T = unknown>(
         path: string,
-        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): StreamResponse<T>;
 
     json<T = unknown>(
         path: string,
-        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T>;
 
     jsonAsync<T = unknown>(
         path: string,
-        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T>;
 
     /**

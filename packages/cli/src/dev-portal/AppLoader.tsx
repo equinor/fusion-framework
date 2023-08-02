@@ -19,7 +19,7 @@ import EquinorLoader from './EquinorLoader';
  * when the appKey changes, this component will try to initialize the referred application
  * and render it.
  */
-export const AppLoader = (props: { appKey: string }) => {
+export const AppLoader = (props: { readonly appKey: string }) => {
     const { appKey } = props;
     const fusion = useFramework<[AppModule]>();
 
@@ -32,7 +32,7 @@ export const AppLoader = (props: { appKey: string }) => {
     // TODO change to `useCurrentApp`
     /** observe and use the current selected application from framework */
     const { value: currentApp } = useObservableState(
-        useMemo(() => fusion.modules.app.current$, [fusion.modules.app])
+        useMemo(() => fusion.modules.app.current$, [fusion.modules.app]),
     );
 
     useEffect(() => {
@@ -56,7 +56,7 @@ export const AppLoader = (props: { appKey: string }) => {
                 next: ({ manifest, script, config }) => {
                     /** generate basename for application */
                     const [basename] = window.location.pathname.match(
-                        /\/?apps\/[a-z|-]+(\/)?/g
+                        /\/?apps\/[a-z|-]+(\/)?/g,
                     ) ?? [''];
 
                     /** create a 'private' element for the application */
@@ -86,7 +86,7 @@ export const AppLoader = (props: { appKey: string }) => {
                     /** set error if initialization of application fails */
                     setError(err);
                 },
-            })
+            }),
         );
 
         /** teardown application when hook unmounts */

@@ -5,13 +5,13 @@ import { ApiBookmarkEntityV1 } from '../api-models';
 
 export type PostBookmarkResult<
     TVersion extends ApiVersions,
-    TPayload
+    TPayload,
 > = PostBookmarksVersions<TPayload>[TVersion]['result'];
 
 /** Returns args for GetBookmark based on version*/
 export type PostBookmarkArgs<
     TVersion extends ApiVersions,
-    TPayload = unknown
+    TPayload = unknown,
 > = PostBookmarksVersions<TPayload>[TVersion]['args'];
 
 /**Gets result type for GetBookmark call based on version and method */
@@ -19,7 +19,7 @@ export type PostBookmarksResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TPayload = unknown,
-    TResult = PostBookmarkResult<TVersion, TPayload>
+    TResult = PostBookmarkResult<TVersion, TPayload>,
 > = ClientMethod<TResult>[TMethod];
 
 export type PostBookmarkFn<
@@ -27,10 +27,10 @@ export type PostBookmarkFn<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
     TPayload = unknown,
-    TResult = PostBookmarkResult<TVersion, TPayload>
+    TResult = PostBookmarkResult<TVersion, TPayload>,
 > = (
     args: PostBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PostBookmarksResult<TVersion, TMethod, TPayload, TResult>;
 
 export interface PostBookmarksArgsV1<T = unknown> {

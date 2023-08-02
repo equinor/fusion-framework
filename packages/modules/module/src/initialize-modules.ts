@@ -12,7 +12,7 @@ import type { AnyModule } from './types';
  */
 export const initializeModules = <TModules extends Array<AnyModule>, TInstance = any>(
     configurator: IModulesConfigurator<TModules, TInstance>,
-    ref?: TInstance
+    ref?: TInstance,
 ) => configurator.initialize(ref);
 
 export default initializeModules;

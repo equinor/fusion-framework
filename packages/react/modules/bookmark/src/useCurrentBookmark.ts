@@ -15,7 +15,7 @@ import { CreateBookMarkFn, CurrentBookmark } from './types';
  * @return {*}  {CurrentBookmark<TData>}
  */
 export const useCurrentBookmark = <TData>(
-    createBookmarkState?: CreateBookMarkFn<TData>
+    createBookmarkState?: CreateBookMarkFn<TData>,
 ): CurrentBookmark<TData> => {
     const { currentBookmark, addBookmarkCreator } = useBookmark<TData>();
 

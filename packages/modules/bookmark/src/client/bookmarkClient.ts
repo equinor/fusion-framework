@@ -55,7 +55,7 @@ export class BookmarkClient {
     constructor(
         config: BookmarkClientConfig,
         sourceSystem: SourceSystem,
-        event?: IEventModuleProvider
+        event?: IEventModuleProvider,
     ) {
         this.#currentBookmark$ = new BehaviorSubject<Bookmark<unknown> | undefined>(undefined);
 
@@ -82,7 +82,7 @@ export class BookmarkClient {
                         canBubble: true,
                         source: this,
                     });
-                })
+                }),
             );
         }
     }
@@ -93,7 +93,7 @@ export class BookmarkClient {
 
     public get bookmarks$(): Observable<Bookmark[]> {
         return this.#state.subject.pipe(
-            map((state) => Object.values(state.bookmarks).map((bookmark) => bookmark))
+            map((state) => Object.values(state.bookmarks).map((bookmark) => bookmark)),
         );
     }
 
@@ -139,7 +139,7 @@ export class BookmarkClient {
             .pipe(
                 map((bookmark) => {
                     return bookmark.value;
-                })
+                }),
             ) as Observable<Bookmark<T>>;
     }
 
@@ -160,7 +160,7 @@ export class BookmarkClient {
                         detail: action.payload,
                         source: this,
                     });
-                })
+                }),
             );
         });
     }
@@ -182,18 +182,18 @@ export class BookmarkClient {
                 this.#state.subject.addEffect('create::success', (action) => {
                     subscriber.next(action.payload as Bookmark<unknown>);
                     subscriber.complete();
-                })
+                }),
             );
             subscriber.add(
                 this.#state.subject.addEffect('create::failure', (action) => {
                     subscriber.error(action.payload);
-                })
+                }),
             );
         });
     }
 
     public async createBookmarkAsync(
-        bookmark: CreateBookmark<unknown>
+        bookmark: CreateBookmark<unknown>,
     ): Promise<Bookmark<unknown>> {
         return lastValueFrom(this.createBookmark(bookmark));
     }
@@ -206,7 +206,7 @@ export class BookmarkClient {
                     subscriber.next(action.payload as Bookmark<T>);
                     subscriber.complete();
                     this.#queryBookmarkById.cache.invalidate(action.payload.id);
-                })
+                }),
             );
         });
     }
@@ -223,7 +223,7 @@ export class BookmarkClient {
                     subscriber.next(action.payload);
                     subscriber.complete();
                     this.#queryBookmarkById.cache.invalidate(action.payload);
-                })
+                }),
             );
         });
     }
@@ -295,20 +295,20 @@ export class BookmarkClient {
     #addSubjectFlows() {
         this.#subscriptions.add(
             this.#state.subject.addFlow(
-                handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem.identifier)
-            )
+                handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem.identifier),
+            ),
         );
         this.#subscriptions.add(
-            this.#state.subject.addFlow(handleCreateBookmark(this.#bookmarkAPiClient))
+            this.#state.subject.addFlow(handleCreateBookmark(this.#bookmarkAPiClient)),
         );
         this.#subscriptions.add(
-            this.#state.subject.addFlow(handleDeleteBookmark(this.#bookmarkAPiClient))
+            this.#state.subject.addFlow(handleDeleteBookmark(this.#bookmarkAPiClient)),
         );
         this.#subscriptions.add(
-            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient))
+            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient)),
         );
         this.#subscriptions.add(
-            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient))
+            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient)),
         );
     }
 }

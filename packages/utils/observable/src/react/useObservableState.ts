@@ -12,7 +12,7 @@ export type ObservableStateReturnType<S, E = unknown> = {
 };
 
 export function useObservableState<S>(
-    subject: Observable<S>
+    subject: Observable<S>,
 ): ObservableStateReturnType<S | undefined>;
 
 /**
@@ -25,17 +25,17 @@ export function useObservableState<S>(
  */
 export function useObservableState<S, E = unknown, I = undefined>(
     subject: Observable<S>,
-    opt: ObservableStateOptions<S> | ObservableStateOptions<I>
+    opt: ObservableStateOptions<S> | ObservableStateOptions<I>,
 ): ObservableStateReturnType<S | I, E>;
 
 export function useObservableState<S, E = unknown, I = undefined>(
     subject: Observable<S>,
-    opt: { initial: I; teardown?: VoidFunction }
+    opt: { initial: I; teardown?: VoidFunction },
 ): ObservableStateReturnType<S | I, E>;
 
 export function useObservableState<S, E = unknown>(
     subject: Observable<S>,
-    opt?: ObservableStateOptions<S>
+    opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
     const [initialValue] = useState<S | undefined>(opt?.initial);
 
@@ -61,7 +61,7 @@ export function useObservableState<S, E = unknown>(
             error: setError,
             complete: () => setComplete(true),
         }),
-        [setNext, setError, setComplete]
+        [setNext, setError, setComplete],
     );
 
     useObservableLayoutSubscription(subject, subscriber, opt?.teardown);

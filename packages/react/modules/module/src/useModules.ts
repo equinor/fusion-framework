@@ -9,9 +9,9 @@ export const useModules = <T>(): T => useContext(moduleContext) as T;
 /** Hook for use a single module in current context scope */
 export const useModule = <
     T extends AnyModule = Modules[keyof Modules],
-    TKey extends string = ModuleKey<T>
+    TKey extends string = ModuleKey<T>,
 >(
-    key: TKey
+    key: TKey,
 ): ModuleType<TKey extends keyof Modules ? Modules[TKey] : T> => useModules<ModuleType<T>>()[key];
 
 export default useModules;

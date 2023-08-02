@@ -27,7 +27,7 @@ export type PrepareAction<P> =
  */
 export type _ActionCreatorWithPreparedPayload<
     PA extends PrepareAction<any> | void,
-    T extends string = string
+    T extends string = string,
 > = PA extends PrepareAction<infer P>
     ? ActionCreatorWithPreparedPayload<
           Parameters<PA>,
@@ -74,7 +74,7 @@ export interface ActionCreatorWithPreparedPayload<
     P,
     T extends string = string,
     E = never,
-    M = never
+    M = never,
 > extends BaseActionCreator<P, T, M, E> {
     /**
      * Calling this {@link redux#ActionCreator} with `Args` will return
@@ -162,7 +162,7 @@ export interface ActionCreatorWithNonInferrablePayload<T extends string = string
 export type PayloadActionCreator<
     P = void,
     T extends string = string,
-    PA extends PrepareAction<P> | void = void
+    PA extends PrepareAction<P> | void = void,
 > = IfPrepareActionMethodProvided<
     PA,
     _ActionCreatorWithPreparedPayload<PA, T>,
@@ -203,7 +203,7 @@ export type PayloadActionCreator<
  * @public
  */
 export function createAction<P = void, T extends string = string>(
-    type: T
+    type: T,
 ): PayloadActionCreator<P, T>;
 
 /**
@@ -221,7 +221,7 @@ export function createAction<P = void, T extends string = string>(
  */
 export function createAction<PA extends PrepareAction<any>, T extends string = string>(
     type: T,
-    prepareAction: PA
+    prepareAction: PA,
 ): PayloadActionCreator<ReturnType<PA>['payload'], T, PA>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types

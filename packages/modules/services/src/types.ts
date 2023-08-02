@@ -6,12 +6,12 @@ import {
 } from '@equinor/fusion-framework-module-http/client';
 
 export type ApiClientFactory<TClient extends IHttpClient = IHttpClient> = (
-    name: string
+    name: string,
 ) => Promise<TClient>;
 
 export type ApiClientArguments<TClient extends IHttpClient, TResult = unknown> = [
     path: string,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ];
 
 /**

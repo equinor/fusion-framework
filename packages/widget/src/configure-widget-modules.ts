@@ -27,9 +27,9 @@ export const configureWidgetModules =
     <
         TModules extends Array<AnyModule> | never,
         TRef extends Fusion = Fusion,
-        TEnv extends WidgetEnv = WidgetEnv
+        TEnv extends WidgetEnv = WidgetEnv,
     >(
-        cb?: WidgetModuleInitiator<TModules, TRef, TEnv>
+        cb?: WidgetModuleInitiator<TModules, TRef, TEnv>,
     ): ((args: { fusion: TRef; env: TEnv }) => Promise<WidgetModulesInstance<TModules>>) =>
     /**
      *
@@ -44,7 +44,7 @@ export const configureWidgetModules =
             await Promise.resolve(cb(configurator, args));
         }
         const modules = (await configurator.initialize(
-            args.fusion.modules
+            args.fusion.modules,
             // TODO
         )) as unknown as WidgetModulesInstance<TModules>;
 

@@ -15,8 +15,8 @@ export const CreateBookmarkModal = ({
     isOpen,
     onClose,
 }: {
-    isOpen: boolean;
-    onClose: (b: boolean) => void;
+    readonly isOpen: boolean;
+    readonly onClose: (b: boolean) => void;
 }) => {
     const [state, setState] = useState<{ name: string; description: string; isShared: boolean }>({
         name: '',

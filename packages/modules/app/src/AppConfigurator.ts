@@ -34,7 +34,7 @@ export class AppConfigurator implements IAppConfigurator {
      * WARNING: this function will be remove in future
      */
     protected async _createHttpClient(
-        init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>
+        init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
     ): Promise<IHttpClient> {
         const http = await init.requireInstance('http');
         /** check if the http provider has configure a client */
@@ -55,14 +55,17 @@ export class AppConfigurator implements IAppConfigurator {
     }
 
     public async createConfig(
-        init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>
+        init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
     ): Promise<AppModuleConfig> {
-        const config = await this.#configBuilders.reduce(async (cur, cb) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const builder = new AppConfigBuilder(init, await cur);
-            await Promise.resolve(cb(builder));
-            return Object.assign(cur, builder.config);
-        }, Promise.resolve({} as Partial<AppModuleConfig>));
+        const config = await this.#configBuilders.reduce(
+            async (cur, cb) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const builder = new AppConfigBuilder(init, await cur);
+                await Promise.resolve(cb(builder));
+                return Object.assign(cur, builder.config);
+            },
+            Promise.resolve({} as Partial<AppModuleConfig>),
+        );
 
         // TODO - make less lazy
         config.client ??= await (async (): Promise<AppModuleConfig['client']> => {
@@ -87,7 +90,7 @@ export class AppConfigurator implements IAppConfigurator {
                     client: {
                         fn: ({ appKey, tag }) =>
                             httpClient.json$(
-                                `/api/apps/${appKey}/config${tag ? `?tag=${tag}` : ''}`
+                                `/api/apps/${appKey}/config${tag ? `?tag=${tag}` : ''}`,
                             ),
                     },
                     key: (args) => JSON.stringify(args),

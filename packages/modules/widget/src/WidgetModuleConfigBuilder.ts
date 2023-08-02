@@ -7,7 +7,7 @@ import type { WidgetManifest, ModuleDeps, GetWidgetParameters } from './types';
 
 export type WidgetModuleConfigBuilderCallback = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    builder: WidgetModuleConfigBuilder<ModuleInitializerArgs<IWidgetModuleConfigurator, any>>
+    builder: WidgetModuleConfigBuilder<ModuleInitializerArgs<IWidgetModuleConfigurator, any>>,
 ) => void | Promise<void>;
 
 export type WidgetEndpointBuilder = (args: GetWidgetParameters) => string;
@@ -17,15 +17,18 @@ export class WidgetModuleConfigBuilder<
     TInit extends ModuleInitializerArgs<IWidgetModuleConfigurator, any> = ModuleInitializerArgs<
         IWidgetModuleConfigurator,
         ModuleDeps
-    >
+    >,
 > {
     #init: TInit;
-    constructor(init: TInit, public config: Partial<WidgetModuleConfig> = {}) {
+    constructor(
+        init: TInit,
+        public config: Partial<WidgetModuleConfig> = {},
+    ) {
         this.#init = init;
     }
 
     requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     requireInstance<T>(module: string): Promise<T>;
@@ -45,7 +48,7 @@ export class WidgetModuleConfigBuilder<
                 | QueryFn<WidgetManifest, { widgetKey: string }>
                 | QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
         },
-        expire = 1 * 60 * 1000
+        expire = 1 * 60 * 1000,
     ) {
         client;
         expire;

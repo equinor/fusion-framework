@@ -10,7 +10,7 @@ const createTest = (initial: string) => {
         (state, action) => {
             return { value: action.payload, index: state.index + 1 };
         },
-        { value: initial, index: 0 }
+        { value: initial, index: 0 },
     );
     return subject;
 };
@@ -133,7 +133,7 @@ describe('Reactive observable', () => {
                     expect(action).toEqual(expectedActions[0]);
                     assertState(state);
                 }),
-                map(() => expectedActions[1])
+                map(() => expectedActions[1]),
             );
         });
 

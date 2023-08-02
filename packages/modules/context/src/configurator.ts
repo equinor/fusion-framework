@@ -50,12 +50,12 @@ export interface ContextModuleConfig {
 
     resolveContext?: (
         this: IContextProvider,
-        item: ContextItem | null
+        item: ContextItem | null,
     ) => ReturnType<IContextProvider['resolveContext']>;
 
     validateContext?: (
         this: IContextProvider,
-        item: ContextItem | null
+        item: ContextItem | null,
     ) => ReturnType<IContextProvider['validateContext']>;
 
     resolveInitialContext?: (args: {
@@ -79,7 +79,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
     }
 
     protected async _getServiceProvider(
-        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>
+        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>,
     ): Promise<IApiProvider> {
         if (init.hasModule('services')) {
             return init.requireInstance('services');
@@ -94,14 +94,17 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
     }
 
     public async createConfig(
-        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>
+        init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>,
     ): Promise<ContextModuleConfig> {
-        const config = await this.#configBuilders.reduce(async (cur, cb) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const builder = new ContextConfigBuilder<any, any>(init, await cur);
-            await Promise.resolve(cb(builder));
-            return Object.assign(cur, builder.config);
-        }, Promise.resolve({} as Partial<ContextModuleConfig>));
+        const config = await this.#configBuilders.reduce(
+            async (cur, cb) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const builder = new ContextConfigBuilder<any, any>(init, await cur);
+                await Promise.resolve(cb(builder));
+                return Object.assign(cur, builder.config);
+            },
+            Promise.resolve({} as Partial<ContextModuleConfig>),
+        );
 
         config.resolveInitialContext ??= resolveInitialContext();
 
@@ -124,7 +127,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
                             contextClient.query(
                                 'v1',
                                 { query },
-                                { selector: queryContextSelector }
+                                { selector: queryContextSelector },
                             ),
                     },
                     // TODO - might cast to checksum
@@ -137,7 +140,7 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
                             return contextClient.related(
                                 'v1',
                                 { id: args.item.id, query: { filter: args.filter } },
-                                { selector: relatedContextSelector }
+                                { selector: relatedContextSelector },
                             );
                         },
                     },

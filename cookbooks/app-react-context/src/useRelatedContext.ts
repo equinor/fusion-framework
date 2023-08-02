@@ -10,7 +10,7 @@ import { useModuleCurrentContext } from '@equinor/fusion-framework-react-module-
  * will create util functions for related context
  */
 export const useRelatedContext = (
-    type?: string[]
+    type?: string[],
 ): ReturnType<typeof useObservableState<ContextItem[]>> => {
     const { currentContext } = useModuleCurrentContext();
     const provider = useAppModule<ContextModule>('context');
@@ -21,7 +21,7 @@ export const useRelatedContext = (
                 item: currentContext,
                 filter: { type },
             });
-        }, [provider, currentContext])
+        }, [provider, currentContext]),
     );
 };
 

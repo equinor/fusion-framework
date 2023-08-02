@@ -52,7 +52,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
     public get success$(): Observable<TType> {
         return this.action$.pipe(
             filter(actions.success.match),
-            map(({ payload }) => payload as TType)
+            map(({ payload }) => payload as TType),
         );
     }
 
@@ -69,7 +69,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
                     message: `failed to process task [${transaction}]`,
                     cause: payload,
                 });
-            })
+            }),
         );
     }
 
@@ -99,7 +99,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
      */
     public next(
         args?: TArgs,
-        opt?: Partial<QueryClientOptions<TType, TArgs>>
+        opt?: Partial<QueryClientOptions<TType, TArgs>>,
     ): ActionMap<TType, TArgs>['request']['meta'] {
         const action = (actions as ActionBuilder<TType, TArgs>).request(args, opt);
         this.#state.next(action);
@@ -114,13 +114,13 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
      */
     public async nextAsync(
         args?: TArgs,
-        opt?: Partial<QueryClientOptions<TType, TArgs>>
+        opt?: Partial<QueryClientOptions<TType, TArgs>>,
     ): Promise<QueryTaskCompleted<TType, TArgs>> {
         return firstValueFrom(this.next(args, opt).task.pipe(filterQueryTaskComplete()));
     }
 
     public getTaskByTransaction(
-        transaction: string
+        transaction: string,
     ): Subject<QueryTaskValue<TType, TArgs>> | undefined {
         const entry = this.#state.value[transaction];
         return entry && entry.task;
@@ -152,7 +152,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
      */
     public on<TAction extends keyof ActionMap>(
         type: TAction,
-        cb: (action: ActionMap[TAction], subject: QueryClient<TType, TArgs>) => void
+        cb: (action: ActionMap[TAction], subject: QueryClient<TType, TArgs>) => void,
     ) {
         return this.#state.addEffect(actions[type].type, (action) => {
             cb(action as ActionMap[TAction], this);

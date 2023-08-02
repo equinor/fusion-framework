@@ -23,7 +23,7 @@ Icon.add({
 });
 
 type SectionListProps = {
-    bookmarkGroups: ReturnType<typeof useBookmarkGrouping>['bookmarkGroups'];
+    readonly bookmarkGroups: ReturnType<typeof useBookmarkGrouping>['bookmarkGroups'];
 };
 
 export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
@@ -47,7 +47,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
         (bookmarkId: string) => {
             event.dispatchEvent('onBookmarkEdit', { detail: { bookmarkId } });
         },
-        [event]
+        [event],
     );
 
     const shareBookmark = useCallback(
@@ -59,14 +59,14 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             }
             updateBookmark({ ...bookmark, isShared: !bookmark.isShared });
         },
-        [event, updateBookmark]
+        [event, updateBookmark],
     );
 
     const updateBookmarkWithCurrentView = useCallback(
         (bookmark: Bookmark) => {
             updateBookmark({ ...bookmark }, { updatePayload: true });
         },
-        [updateBookmark]
+        [updateBookmark],
     );
 
     const createMenuOptions = (bookmark: Bookmark) =>
@@ -78,7 +78,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             removeBookmarkFavorite,
             updateBookmarkWithCurrentView,
             getCurrentAppKey(),
-            user?.localAccountId
+            user?.localAccountId,
         );
 
     if (loading) return <Loading />;
@@ -120,7 +120,7 @@ function createBookmarkActions(
     removeBookmarkFavorite: (bookmarkId: string) => void,
     updateBookmarkWithCurrentView: (bookmark: Bookmark) => void,
     appKey?: string,
-    localAccountId?: string
+    localAccountId?: string,
 ) {
     if (bookmark.createdBy.azureUniqueId === localAccountId) {
         return [

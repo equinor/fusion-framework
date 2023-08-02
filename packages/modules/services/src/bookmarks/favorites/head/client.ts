@@ -18,18 +18,18 @@ export const verifyBookmarkFavorite =
     <
         TVersion extends ApiVersions = ApiVersions,
         TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient
+        TClient extends IHttpClient = IHttpClient,
     >(
         client: TClient,
         version: TVersion,
-        method: TMethod = 'json' as TMethod
+        method: TMethod = 'json' as TMethod,
     ) =>
     <TResult = HeadBookmarkFavoriteResult<TVersion>>(
         args: HeadBookmarkFavoriteArgs<TVersion>,
-        init?: ClientRequestInit<TClient, TResult>
+        init?: ClientRequestInit<TClient, TResult>,
     ): HeadBookmarksFavoriteResult<TVersion, TMethod, TResult> =>
         client[method](
-            ...generateParameters<TResult, TVersion, TClient>(version, args, init)
+            ...generateParameters<TResult, TVersion, TClient>(version, args, init),
         ) as HeadBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export default verifyBookmarkFavorite;

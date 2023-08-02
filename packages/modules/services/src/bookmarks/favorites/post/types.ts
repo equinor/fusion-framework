@@ -11,17 +11,17 @@ export type PostBookmarkFavoriteArgs<TVersion extends ApiVersions> =
 export type PostBookmarksFavoriteResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = PostBookmarkFavoriteResult<TVersion>
+    TResult = PostBookmarkFavoriteResult<TVersion>,
 > = ClientMethod<TResult>[TMethod];
 
 export type PostBookmarkFavoriteFn<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = PostBookmarkFavoriteResult<TVersion>
+    TResult = PostBookmarkFavoriteResult<TVersion>,
 > = (
     args: PostBookmarkFavoriteArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PostBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export interface PostBookmarksFavoriteArgsV1 {

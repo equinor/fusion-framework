@@ -66,7 +66,7 @@ const loadConfigFromJson = async (file: string): Promise<AppConfig> => {
 };
 
 export const loadConfig = async (
-    path: string
+    path: string,
 ): Promise<AppConfig & { configSource?: ConfigSource }> => {
     const configSource = getConfigType(path);
     const customConfig = await (() => {
@@ -103,7 +103,7 @@ export const resolveAppConfig = async (): Promise<LocalConfig> => {
             name: pkg.name,
             main: pkg.main.startsWith('/') ? pkg.main : `/${pkg.main}`,
             __DEV__: { root, configSource: appConfig.configSource, portal: appConfig.portalHost },
-        }
+        },
     );
 
     validateConfig(manifest);

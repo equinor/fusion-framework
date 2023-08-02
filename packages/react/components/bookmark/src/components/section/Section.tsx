@@ -41,8 +41,8 @@ Icon.add({
 });
 
 type SectionProps = {
-    name: string;
-    children: ReactNode;
+    readonly name: string;
+    readonly children: ReactNode;
 };
 export const Section = ({ children, name }: SectionProps) => {
     const [isExpanded, setIsExpanded] = useState(true);

@@ -4,7 +4,10 @@ import { Observable } from 'rxjs';
 export class Topic<T> extends Observable<T> {
     connection: HubConnection | undefined;
 
-    constructor(public topic: string, public hubConnection: Observable<HubConnection>) {
+    constructor(
+        public topic: string,
+        public hubConnection: Observable<HubConnection>,
+    ) {
         super((subscriber) => {
             const hubConnectionSubscription = hubConnection.subscribe((connection) => {
                 const cb = subscriber.next.bind(subscriber);

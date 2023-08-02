@@ -13,18 +13,18 @@ export const patchBookmark =
     <
         TClient extends IHttpClient = IHttpClient,
         TVersion extends ApiVersions = ApiVersions,
-        TMethod extends keyof ClientMethod = keyof ClientMethod
+        TMethod extends keyof ClientMethod = keyof ClientMethod,
     >(
         client: TClient,
         version: TVersion,
-        method: TMethod = 'json' as TMethod
+        method: TMethod = 'json' as TMethod,
     ) =>
     <TResult = PatchBookmarkResult<TVersion, unknown>>(
         args: PatchBookmarkArgs<TVersion>,
-        init?: ClientRequestInit<TClient, TResult>
+        init?: ClientRequestInit<TClient, TResult>,
     ): PatchBookmarksResult<TVersion, TMethod, unknown, TResult> =>
         client[method](
-            ...generateParameters<TResult, TVersion, TClient>(version, args, init)
+            ...generateParameters<TResult, TVersion, TClient>(version, args, init),
         ) as PatchBookmarksResult<TVersion, TMethod, unknown, TResult>;
 
 export default patchBookmark;

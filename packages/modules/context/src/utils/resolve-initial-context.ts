@@ -22,7 +22,7 @@ export const resolveInitialContext =
         const pathResolver = resolveContextFromPath(context, options?.path);
         return concat(
             navigation ? pathResolver(navigation.path.pathname) : EMPTY,
-            resolveContextFromParent({ ref, modules })
+            resolveContextFromParent({ ref, modules }),
         ).pipe(first());
     };
 

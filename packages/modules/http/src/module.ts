@@ -55,7 +55,7 @@ export const module: HttpMsalModule = {
 
 export const configureHttp = <TRef = unknown>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void
+    configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void,
 ): IModuleConfigurator<HttpMsalModule, TRef> => ({
     module,
     configure,
@@ -63,7 +63,7 @@ export const configureHttp = <TRef = unknown>(
 
 export const configureHttpClient = <TRef = unknown>(
     name: string,
-    args: HttpClientOptions<HttpClientMsal>
+    args: HttpClientOptions<HttpClientMsal>,
 ): IModuleConfigurator<HttpMsalModule, TRef> => ({
     module,
     configure: (config: ModuleConfigType<HttpMsalModule>) => {

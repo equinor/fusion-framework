@@ -13,10 +13,10 @@ interface useObservable<S, A extends Action = Action> {
 
 export const useObservable = <S, A extends Action = Action>(
     reducer: Reducer<S, A> | ReducerWithInitialState<S, A>,
-    initial?: S
+    initial?: S,
 ): FlowSubject<S, A> =>
     useState(
         initial
             ? new FlowSubject(reducer, initial)
-            : new FlowSubject(reducer as ReducerWithInitialState<S, A>)
+            : new FlowSubject(reducer as ReducerWithInitialState<S, A>),
     )[0];

@@ -27,32 +27,35 @@ const createActions = <TType, TArgs>() => {
             meta.controller ??= new AbortController();
             meta.task ??= new ReplaySubject<QueryTaskValue<TType, TArgs>>();
             return { payload, meta: meta as RequestMeta<TType, TArgs> };
-        }
+        },
     );
     return {
         request,
         retry: createAction('client/retry', (payload: ReturnType<typeof request>) => ({ payload })),
         success: createAction(
             'client/success',
-            (payload: unknown, meta: { request: ReturnType<typeof request> }) => ({ payload, meta })
+            (payload: unknown, meta: { request: ReturnType<typeof request> }) => ({
+                payload,
+                meta,
+            }),
         ),
         cancel: createAction(
             'client/cancel',
-            (payload: { transaction: string; reason?: string }) => ({ payload })
+            (payload: { transaction: string; reason?: string }) => ({ payload }),
         ),
         failure: createAction(
             'client/failure',
             (payload: Error, meta: { request: ReturnType<typeof request> }) => ({
                 payload,
                 meta,
-            })
+            }),
         ),
         error: createAction(
             'client/error',
             (payload: Error, meta: { request: ReturnType<typeof request> }) => ({
                 payload,
                 meta,
-            })
+            }),
         ),
     };
 };

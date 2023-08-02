@@ -14,12 +14,12 @@ export type MenuOption = {
 };
 
 type RowProps = {
-    name: string;
-    id: string;
-    menuOpen: boolean;
-    onMenuOpen: (id: string) => void;
-    menuOptions: MenuOption[];
-    children?: ReactNode;
+    readonly name: string;
+    readonly id: string;
+    readonly menuOpen: boolean;
+    readonly onMenuOpen: (id: string) => void;
+    readonly menuOptions: MenuOption[];
+    readonly children?: ReactNode;
 };
 
 const styles = {

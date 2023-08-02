@@ -8,7 +8,10 @@ export interface ITelemetryProvider {
 }
 
 export class TelemetryProvider implements ITelemetryProvider {
-    constructor(protected _config: ITelemetryConfigurator, protected _auth: IAuthProvider) {}
+    constructor(
+        protected _config: ITelemetryConfigurator,
+        protected _auth: IAuthProvider,
+    ) {}
 
     createClient(): ApplicationInsights {
         const { instrumentationKey } = this._config;

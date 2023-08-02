@@ -41,8 +41,8 @@ export const module: ContextModule = {
                               args.modules.context.setCurrentContext(item, {
                                   validate: true,
                                   resolve: true,
-                              })
-                          )
+                              }),
+                          ),
                       )
                     : EMPTY;
 
@@ -53,17 +53,17 @@ export const module: ContextModule = {
                                 console.warn(
                                     'ContextModule.postInitialize',
                                     'failed to resolve initial context',
-                                    err
+                                    err,
                                 );
                                 return EMPTY;
-                            })
+                            }),
                         )
                         .subscribe({
                             next: (item) => {
                                 console.debug(
                                     'ContextModule.postInitialize',
                                     `initial context was resolved to [${item ? item.id : 'none'}]`,
-                                    item
+                                    item,
                                 );
                             },
                             complete: () => {
@@ -72,7 +72,7 @@ export const module: ContextModule = {
                                 }
                                 subscriber.complete();
                             },
-                        })
+                        }),
                 );
             });
 

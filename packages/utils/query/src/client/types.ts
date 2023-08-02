@@ -38,5 +38,5 @@ export type RetryOptions = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryFn<TType = any, TArgs = any> = (
     args: TArgs,
-    signal?: AbortSignal
+    signal?: AbortSignal,
 ) => ObservableInput<TType>;

@@ -12,11 +12,11 @@ import moduleContext from './context';
 
 type ModuleProviderCreator = <
     TModules extends Array<AnyModule> = Array<AnyModule>,
-    TRef extends ModulesInstanceType<[AnyModule]> = any
+    TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
     configurator: ModulesConfigurator<TModules>,
     modules: TModules,
-    ref?: TRef
+    ref?: TRef,
 ) => Promise<React.LazyExoticComponent<React.FunctionComponent>>;
 
 /**
@@ -52,10 +52,10 @@ type ModuleProviderCreator = <
  */
 export const createModuleProvider: ModuleProviderCreator = async <
     TModules extends Array<AnyModule>,
-    TRef extends ModulesInstanceType<[AnyModule]> = any
+    TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
     configurator: ModulesConfigurator<TModules>,
-    ref?: TRef
+    ref?: TRef,
 ): Promise<React.LazyExoticComponent<React.FunctionComponent>> => {
     const Component = lazy(async () => {
         const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
@@ -65,7 +65,7 @@ export const createModuleProvider: ModuleProviderCreator = async <
                 useEffect(
                     () => dispose,
                     // eslint-disable-next-line  react-hooks/exhaustive-deps
-                    [instance]
+                    [instance],
                 );
                 return <ModuleProvider value={instance}>{children}</ModuleProvider>;
             },

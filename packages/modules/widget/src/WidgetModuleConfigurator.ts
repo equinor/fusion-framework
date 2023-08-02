@@ -48,7 +48,7 @@ const widgetSelector =
                 import(
                     new URL(
                         `${data.assetPath}/${data.entryPoint}?api-version=${args.apiVersion}`,
-                        args.uri
+                        args.uri,
                     ).toString()
                 ),
         } as WidgetManifest;
@@ -74,7 +74,10 @@ export class WidgetModuleConfigurator implements IWidgetModuleConfigurator {
      * WARNING: this function will be remove in future
      */
     protected async _createHttpClient(
-        init: ModuleInitializerArgs<IWidgetModuleConfigurator, [HttpModule, ServiceDiscoveryModule]>
+        init: ModuleInitializerArgs<
+            IWidgetModuleConfigurator,
+            [HttpModule, ServiceDiscoveryModule]
+        >,
     ): Promise<IHttpClient> {
         const http = await init.requireInstance('http');
         /** check if the http provider has configure a client */
@@ -91,14 +94,20 @@ export class WidgetModuleConfigurator implements IWidgetModuleConfigurator {
     }
 
     public async createConfig(
-        init: ModuleInitializerArgs<IWidgetModuleConfigurator, [HttpModule, ServiceDiscoveryModule]>
+        init: ModuleInitializerArgs<
+            IWidgetModuleConfigurator,
+            [HttpModule, ServiceDiscoveryModule]
+        >,
     ): Promise<WidgetModuleConfig> {
-        const config = await this.#configBuilders.reduce(async (cur, cb) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const builder = new WidgetModuleConfigBuilder(init, await cur);
-            await Promise.resolve(cb(builder));
-            return Object.assign(cur, builder.config);
-        }, Promise.resolve({} as Partial<WidgetModuleConfig>));
+        const config = await this.#configBuilders.reduce(
+            async (cur, cb) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const builder = new WidgetModuleConfigBuilder(init, await cur);
+                await Promise.resolve(cb(builder));
+                return Object.assign(cur, builder.config);
+            },
+            Promise.resolve({} as Partial<WidgetModuleConfig>),
+        );
 
         const { endpointBuilder = defaultEndpointBuilder } = config;
 

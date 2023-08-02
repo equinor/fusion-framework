@@ -5,7 +5,7 @@ import { Action, ActionType, ExtractAction, TypeConstant } from '../types';
 
 export const filterAction = <
     TAction extends Action,
-    TType extends TypeConstant = ActionType<TAction>
+    TType extends TypeConstant = ActionType<TAction>,
 >(
     ...types: TType[]
 ): OperatorFunction<TAction, ExtractAction<TAction, TType>> =>

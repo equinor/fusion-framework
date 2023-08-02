@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 type FusionLogoProps = {
-    scale?: number;
+    readonly scale?: number;
 };
 
 export const FusionLogo: FC<FusionLogoProps> = ({ scale = 1 }) => (

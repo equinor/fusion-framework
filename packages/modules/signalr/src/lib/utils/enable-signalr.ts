@@ -8,13 +8,13 @@ export interface enableSignalR {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         configurator: IModulesConfigurator<any, any>,
         name: string,
-        cb: SignalRModuleConfigBuilderCallback
+        cb: SignalRModuleConfigBuilderCallback,
     ): void;
     (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         configurator: IModulesConfigurator<any, any>,
         name: string,
-        options: { service: string; path: string }
+        options: { service: string; path: string },
     ): void;
 }
 
@@ -49,7 +49,7 @@ export function enableSignalR(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
     name: string,
-    optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string }
+    optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },
 ) {
     if (typeof optionsOrCallback === 'function') {
         configurator.addConfig({
@@ -63,7 +63,7 @@ export function enableSignalR(
             module,
             configure: (signalRConfigurator) => {
                 signalRConfigurator.onCreateConfig((builder) =>
-                    configureFromFramework({ name, ...optionsOrCallback }, builder)
+                    configureFromFramework({ name, ...optionsOrCallback }, builder),
                 );
             },
         });

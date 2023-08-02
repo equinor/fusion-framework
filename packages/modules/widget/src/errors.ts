@@ -7,7 +7,7 @@ export class GetWidgetError extends Error {
                 return new GetWidgetError(
                     'unauthorized',
                     'failed to load widget manifest, request not authorized',
-                    options
+                    options,
                 );
             case 404:
                 return new GetWidgetError('not_found', 'widget manifest not found', options);
@@ -15,16 +15,24 @@ export class GetWidgetError extends Error {
         return new GetWidgetError(
             'unknown',
             `failed to load widget manifest, status code ${response.status}`,
-            options
+            options,
         );
     }
-    constructor(public readonly type: WidgetErrorType, message?: string, options?: ErrorOptions) {
+    constructor(
+        public readonly type: WidgetErrorType,
+        message?: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
     }
 }
 
 export class WidgetScriptModuleError extends Error {
-    constructor(public readonly type: WidgetErrorType, message?: string, options?: ErrorOptions) {
+    constructor(
+        public readonly type: WidgetErrorType,
+        message?: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
     }
 }

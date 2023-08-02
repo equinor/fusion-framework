@@ -20,7 +20,7 @@ import { AppModules } from './types';
  */
 export interface IAppConfigurator<
     TModules extends Array<AnyModule> | unknown = unknown,
-    TRef extends FusionModulesInstance = FusionModulesInstance
+    TRef extends FusionModulesInstance = FusionModulesInstance,
 > extends IModulesConfigurator<AppModules<TModules>, TRef> {
     /**
      * [optional]
@@ -74,7 +74,7 @@ export interface IAppConfigurator<
 
 export class AppConfigurator<
         TModules extends Array<AnyModule> | unknown = unknown,
-        TRef extends FusionModulesInstance = FusionModulesInstance
+        TRef extends FusionModulesInstance = FusionModulesInstance,
     >
     extends ModulesConfigurator<AppModules<TModules>, TRef>
     implements IAppConfigurator<TModules, TRef>

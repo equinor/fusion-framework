@@ -30,7 +30,7 @@ export class ConsoleLogger extends Logger {
             `%c FUSION::MSAL %c %s`,
             'border: 1px solid;',
             'border: none;',
-            msg
+            msg,
         );
     }
 

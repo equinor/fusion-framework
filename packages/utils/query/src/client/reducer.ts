@@ -55,7 +55,7 @@ export const createReducer = (initial: State = {}) =>
                         new QueryClientError('abort', {
                             request,
                             message: reason ?? 'request was canceled',
-                        })
+                        }),
                     );
                     delete state[transaction];
                 }
@@ -79,11 +79,11 @@ export const createReducer = (initial: State = {}) =>
                             request,
                             message: `failed to process task [${transaction}]`,
                             cause: payload.cause,
-                        })
+                        }),
                     );
                     delete state[transaction];
                 }
-            })
+            }),
     );
 
 export default createReducer;

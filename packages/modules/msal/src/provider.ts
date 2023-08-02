@@ -83,7 +83,7 @@ export class AuthProvider implements IAuthProvider {
             config.tenantId,
             config.clientId,
             config.redirectUri,
-            config.config
+            config.config,
         );
         // TODO - fix with log streamer
         client.setLogger(new ConsoleLogger(0));
@@ -101,7 +101,7 @@ export class AuthProvider implements IAuthProvider {
             await client.handleRedirectPromise();
             if (requestOrigin === redirectUri) {
                 logger.warning(
-                    `detected callback loop from url ${redirectUri}, redirecting to root`
+                    `detected callback loop from url ${redirectUri}, redirecting to root`,
                 );
                 window.location.replace('/');
             } else {
