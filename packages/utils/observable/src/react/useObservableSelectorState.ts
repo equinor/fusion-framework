@@ -1,8 +1,16 @@
 import { useObservableSelector } from './useObservableSelector';
-import { ObservableStateReturnType, useObservableState } from './useObservableState';
+import { useObservableState } from './useObservableState';
 import { Observable } from '../types';
 
 /**
+ * @deprecated use useObservableState (since ^8.1)
+ *
+ * will be removed in next major
+ *
+ * ```ts
+ * const {value} = useObservableState(useObservableSelector(...));
+ * ```
+ *
  * Hook for extracting a property of an `Observable`
  * @param subject the subject to observe changes on
  * @param initial initial value of the state
@@ -10,10 +18,16 @@ import { Observable } from '../types';
  * @param compare **Memoize** function for comparing difference
  * @returns Observable property of subject
  */
-export const useObservableSelectorState = <S, P extends keyof S, R = S[P], E = unknown>(
-    subject: Observable<S>,
-    selector: P | ((state: S) => R),
-    initial?: R,
-    compare?: (x: R, y: R) => boolean,
-): ObservableStateReturnType<R | undefined, E> =>
-    useObservableState(useObservableSelector(subject, selector, compare), { initial });
+export function useObservableSelectorState<TType, TValue>(
+    subject: Observable<TType>,
+    selector: (state: TType) => TValue,
+    options?: {
+        initial?: TValue;
+        compare?: (x: TValue, y: TValue) => boolean;
+    },
+) {
+    const selector$ = useObservableSelector(subject, selector, options?.compare);
+    return useObservableState(selector$, {
+        initial: options?.initial,
+    });
+}
