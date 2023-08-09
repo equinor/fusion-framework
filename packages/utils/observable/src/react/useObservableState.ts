@@ -25,10 +25,14 @@ export function useObservableState<S, TError = unknown>(
  * use state of observable
  * @param subject [dep] Observable subject
  */
-export function useObservableState<TType, TError = unknown>(
+export function useObservableState<
+    TType,
+    TError = unknown,
+    TInitial extends TType | undefined = undefined,
+>(
     subject: Observable<TType>,
-    opt: ObservableStateOptions<TType>,
-): ObservableStateReturnType<TType | undefined, TError>;
+    opt: ObservableStateOptions<TInitial>,
+): ObservableStateReturnType<TType | TInitial, TError>;
 
 /** === StatefulObservable === */
 
