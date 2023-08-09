@@ -15,7 +15,7 @@ export interface AnyAction extends Action {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionCreator = (...args: any[]) => AnyAction;
+export type ActionCreator<T extends Action = AnyAction> = (...args: any[]) => T;
 
 export type AsyncActionCreator = ActionCreator & {
     success: ActionCreator;

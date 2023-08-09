@@ -1,7 +1,7 @@
 import { type OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { NestedKeys, NestedPropType } from 'src/react/types';
+import { NestedKeys, NestedPropType } from '../types';
 
 export const mapProp = <TObject extends Record<string, unknown>, TPath extends NestedKeys<TObject>>(
     path: TPath,

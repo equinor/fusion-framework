@@ -44,3 +44,19 @@ export interface TypeGuard<T> {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NotFunction<T = unknown> = T extends Function ? never : T;
+
+export type NestedKeys<TObject extends object> = {
+    [Key in keyof TObject & string]: TObject[Key] extends CallableFunction
+        ? never
+        : TObject[Key] extends object
+        ? `${Key}` | `${Key}.${NestedKeys<TObject[Key]>}`
+        : `${Key}`;
+}[keyof TObject & string];
+
+export type NestedPropType<TType, TPath extends string> = TPath extends keyof TType
+    ? TType[TPath]
+    : TPath extends `${infer K}.${infer R}`
+    ? K extends keyof TType
+        ? NestedPropType<TType[K], R>
+        : never
+    : never;
