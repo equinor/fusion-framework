@@ -9,10 +9,15 @@ export const useObservableInput = <T>(input: ObservableInput<T>): Observable<T> 
     return useMemo(() => from(input), [input]);
 };
 
+export function useObservableInputState<TType, E = unknown>(
+    input: ObservableInput<TType>,
+    initial: TType,
+): ObservableStateReturnType<TType, E>;
+
 /** Observe state of an observable input */
-export const useObservableInputState = <T, E = unknown, I = undefined>(
-    input: ObservableInput<T>,
-    initial: I,
-): ObservableStateReturnType<T | I, E> => {
+export function useObservableInputState<TType, E = unknown>(
+    input: ObservableInput<TType>,
+    initial?: TType,
+): ObservableStateReturnType<TType | undefined, E> {
     return useObservableState(useObservableInput(input), { initial });
-};
+}
