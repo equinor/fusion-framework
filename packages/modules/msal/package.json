@@ -31,7 +31,7 @@
         "directory": "packages/modules/msal"
     },
     "dependencies": {
-        "@azure/msal-browser": "^2.21.0",
+        "@azure/msal-browser": "^3.0.0",
         "@equinor/fusion-framework-module": "^4.2.1"
     },
     "devDependencies": {
