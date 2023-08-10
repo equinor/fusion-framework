@@ -41,7 +41,7 @@ const isURL = (url: string) => {
             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
             '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
             '(\\#[-a-z\\d_]*)?$',
-        'i'
+        'i',
     ); // fragment locator
     return pattern.test(url);
 };
@@ -80,7 +80,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     }
 
     protected _resolveConfig(
-        keyOrConfig: string | HttpClientOptions<TClient>
+        keyOrConfig: string | HttpClientOptions<TClient>,
     ): HttpClientOptions<TClient> {
         if (typeof keyOrConfig === 'string') {
             const config = this.config.clients[keyOrConfig];
@@ -88,7 +88,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
                 return { baseUri: keyOrConfig };
             } else if (!config) {
                 throw new ClientNotFoundException(
-                    `No registered http client for key [${keyOrConfig}]`
+                    `No registered http client for key [${keyOrConfig}]`,
                 );
             }
             return config;

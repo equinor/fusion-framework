@@ -55,8 +55,8 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
     public async fetchEnvironment(): Promise<T> {
         return firstValueFrom(
             Query.extractQueryValue(
-                this.#query.query(undefined, { cache: { suppressInvalid: true } })
-            )
+                this.#query.query(undefined, { cache: { suppressInvalid: true } }),
+            ),
         );
     }
 

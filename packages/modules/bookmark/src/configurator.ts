@@ -62,7 +62,7 @@ export type IBookmarkModuleConfigurator = {
             IBookmarkModuleConfigurator,
             [ServicesModule, AppModule, ContextModule]
         >,
-        parentProvider?: IBookmarkModuleProvider
+        parentProvider?: IBookmarkModuleProvider,
     ): Promise<BookmarkModuleConfig>;
 };
 
@@ -80,7 +80,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             IBookmarkModuleConfigurator,
             [ServicesModule, AppModule, ContextModule]
         >,
-        parentProvider?: IBookmarkModuleProvider
+        parentProvider?: IBookmarkModuleProvider,
     ): Promise<BookmarkModuleConfig> {
         const config: Partial<BookmarkModuleConfig> = await this.#configBuilders.reduce(
             async (cur, cb) => {
@@ -89,7 +89,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
                 await Promise.resolve(cb(builder));
                 return Object.assign(cur, builder.config);
             },
-            Promise.resolve({} as Partial<BookmarkModuleConfig>)
+            Promise.resolve({} as Partial<BookmarkModuleConfig>),
         );
 
         const appProvider = await this._getAppProvider(init);
@@ -118,7 +118,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
 
         config.clientConfiguration = await this._createClientConfiguration(
             init,
-            config.clientConfiguration
+            config.clientConfiguration,
         );
 
         if (!config.sourceSystem) {
@@ -130,7 +130,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
 
     #applyParentProviderConfiguration(
         parentProvider: IBookmarkModuleProvider | undefined,
-        config: Partial<BookmarkModuleConfig>
+        config: Partial<BookmarkModuleConfig>,
     ) {
         if (parentProvider) {
             config.clientConfiguration = parentProvider.config.clientConfiguration;
@@ -145,7 +145,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             IBookmarkModuleConfigurator,
             [ServicesModule, AppModule, ContextModule]
         >,
-        config: Partial<BookmarkClientConfig> = {}
+        config: Partial<BookmarkClientConfig> = {},
     ): Promise<BookmarkClientConfig> {
         if (!config.client) {
             const apiProvider = await this._getServiceProvider(init);
@@ -180,7 +180,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
     }
 
     protected async _getServiceProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ServicesModule]>
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ServicesModule]>,
     ): Promise<IApiProvider> {
         if (init.hasModule('services')) {
             return init.requireInstance('services');
@@ -195,7 +195,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
     }
 
     protected async _getContextProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ContextModule]>
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [ContextModule]>,
     ): Promise<IContextProvider> {
         if (init.hasModule('context')) {
             return init.requireInstance('context');
@@ -209,7 +209,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
     }
 
     protected async _getAppProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [AppModule]>
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [AppModule]>,
     ): Promise<AppModuleProvider> {
         if (init.hasModule('app')) {
             return init.requireInstance('app');
@@ -222,7 +222,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
         }
     }
     protected async _getEventProvider(
-        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [EventModule]>
+        init: ModuleInitializerArgs<IBookmarkModuleConfigurator, [EventModule]>,
     ): Promise<IEventModuleProvider> {
         if (init.hasModule('event')) {
             return init.requireInstance('event');

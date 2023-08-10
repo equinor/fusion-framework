@@ -31,14 +31,14 @@ export type GetNotificationFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = GetNotificationResponse<TVersion>
+    TResult = GetNotificationResponse<TVersion>,
 > = (
     args: GetNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => GetNotificationResult<TVersion, TMethod, TResult>;
 
 export type GetNotificationResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = GetNotificationResponse<TVersion>
+    TResult = GetNotificationResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

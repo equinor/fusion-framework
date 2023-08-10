@@ -18,18 +18,18 @@ export const deleteBookmarkFavorite =
     <
         TVersion extends ApiVersions = ApiVersions,
         TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient
+        TClient extends IHttpClient = IHttpClient,
     >(
         client: TClient,
         version: TVersion,
-        method: TMethod = 'fetch' as TMethod
+        method: TMethod = 'fetch' as TMethod,
     ) =>
     <TResult = DeleteBookmarkFavoriteResult<TVersion>>(
         args: DeleteBookmarkFavoriteArgs<TVersion>,
-        init?: ClientRequestInit<TClient, TResult>
+        init?: ClientRequestInit<TClient, TResult>,
     ): DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult> =>
         client[method](
-            ...generateParameters<TResult, TVersion, TClient>(version, args, init)
+            ...generateParameters<TResult, TVersion, TClient>(version, args, init),
         ) as DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export default deleteBookmarkFavorite;

@@ -10,7 +10,7 @@ import { actions, Actions } from './bookmarkActions';
 export const handleBookmarkGetAll =
     (
         queryAllBookmarks: Query<Array<Bookmark<unknown>>, GetAllBookmarksParameters>,
-        sourceSystemIdentifier: string
+        sourceSystemIdentifier: string,
     ) =>
     (action$: Observable<Actions>) =>
         action$.pipe(
@@ -22,13 +22,13 @@ export const handleBookmarkGetAll =
                         actions.getAll.success(
                             bookmarks.value.filter(
                                 (bookmark) =>
-                                    bookmark.sourceSystem.identifier === sourceSystemIdentifier
-                            )
-                        )
+                                    bookmark.sourceSystem.identifier === sourceSystemIdentifier,
+                            ),
+                        ),
                     ),
-                    catchError(() => EMPTY)
+                    catchError(() => EMPTY),
                 );
-            })
+            }),
         );
 
 export const handleCreateBookmark =
@@ -39,7 +39,7 @@ export const handleCreateBookmark =
             switchMap(async (action) => {
                 const response = await apiClient.post('v1', action.payload);
                 return actions.create.success(await response.json());
-            })
+            }),
         );
 
 export const handleUpdateBookmark =
@@ -51,7 +51,7 @@ export const handleUpdateBookmark =
                 // Should payload be partial? then api client wil need to change.
                 const response = await apiClient.patch('v1', action.payload);
                 return actions.update.success(await response.json());
-            })
+            }),
         );
 
 export const handleDeleteBookmark =
@@ -63,5 +63,5 @@ export const handleDeleteBookmark =
                 const response = await apiClient.delete('v1', { id: action.payload });
                 if (response.ok) return actions.delete.success(action.payload);
                 return actions.delete.success(action.payload);
-            })
+            }),
         );

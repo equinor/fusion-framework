@@ -5,7 +5,7 @@ import { ApiVersions, DeleteBookmarkArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends ApiVersions>(
     version: TVersion,
-    args: DeleteBookmarkArgs<TVersion>
+    args: DeleteBookmarkArgs<TVersion>,
 ) => {
     switch (version) {
         case 'v1': {

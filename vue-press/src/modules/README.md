@@ -1,7 +1,7 @@
 ---
 title: Intro
 category: Module
-tags:
+tag:
   - core
 ---
 

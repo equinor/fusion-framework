@@ -20,7 +20,7 @@ export enum QueryStatus {
 
 export type CacheValidator<TType, TArgs> = (
     entry: QueryCacheRecord<TType, TArgs>,
-    args: TArgs
+    args: TArgs,
 ) => boolean;
 
 export type CacheOptions<TType, TArgs> = {
@@ -55,5 +55,5 @@ export type RetryOpt = {
 export type QueryFn<TType, TArgs> = (args: TArgs, signal?: AbortSignal) => ObservableInput<TType>;
 
 export type QueryQueueFn<TArgs = unknown, TType = unknown> = (
-    fn: (args: QueryQueueItem<TArgs, TType>) => Observable<QueryTaskValue<TType, TArgs>>
+    fn: (args: QueryQueueItem<TArgs, TType>) => Observable<QueryTaskValue<TType, TArgs>>,
 ) => OperatorFunction<QueryQueueItem<TArgs, TType>, QueryTaskValue<TType, TArgs>>;

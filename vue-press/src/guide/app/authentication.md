@@ -1,7 +1,7 @@
 ---
 title: Authentication
 category: Guide
-tags:
+tag:
   - how to
   - basic
   - app

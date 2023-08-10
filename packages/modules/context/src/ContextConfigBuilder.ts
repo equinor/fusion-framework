@@ -18,7 +18,7 @@ import type {
 import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
 
 export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>(
-    builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>
+    builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>,
 ) => void | Promise<void>;
 
 export class ContextConfigBuilder<
@@ -27,15 +27,18 @@ export class ContextConfigBuilder<
     TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
         ContextModuleConfigurator,
         TModules
-    >
+    >,
 > {
     #init: TInit;
-    constructor(init: TInit, public config: Partial<ContextModuleConfig> = {}) {
+    constructor(
+        init: TInit,
+        public config: Partial<ContextModuleConfig> = {},
+    ) {
         this.#init = init;
     }
 
     requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     requireInstance<T>(module: string): Promise<T>;
@@ -85,7 +88,7 @@ export class ContextConfigBuilder<
                 | QueryFn<ContextItem[], RelatedContextParameters>
                 | QueryCtorOptions<ContextItem[], RelatedContextParameters>;
         },
-        expire = 1 * 60 * 1000
+        expire = 1 * 60 * 1000,
     ): void {
         this.config.client = {
             get:

@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+-   [#884](https://github.com/equinor/fusion-framework/pull/884) [`c36bbc6a`](https://github.com/equinor/fusion-framework/commit/c36bbc6a05169a08e85132697a8178227984eee0) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @microsoft/applicationinsights-web from 2.8.9 to 3.0.2
+
+    This module is not yet been implemented by portal, bumping version and fix potential breaking changes when implementing
+
+    see **[breaking changes from `@microsoft/applicationinsights-web`](https://microsoft.github.io/ApplicationInsights-JS/upgrade/v3_BreakingChanges.html)**
+
+### Patch Changes
+
+-   Updated dependencies [[`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+    -   @equinor/fusion-framework-module@4.2.2
+
 ## 3.0.8
 
 ### Patch Changes

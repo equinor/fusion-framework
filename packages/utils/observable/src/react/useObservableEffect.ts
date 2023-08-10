@@ -5,7 +5,7 @@ import { Action, Effect, ActionType, ExtractAction } from '../types';
 export interface useObservableEffect<
     S,
     A extends Action = Action,
-    TType extends ActionType<A> = ActionType<A>
+    TType extends ActionType<A> = ActionType<A>,
 > {
     (subject: FlowSubject<S, A>, type: TType, effect?: Effect<ExtractAction<A, TType>, S>): void;
 }
@@ -21,11 +21,11 @@ export interface useObservableEffect<S, A extends Action = Action> {
 export const useObservableEffect = <
     S,
     A extends Action = Action,
-    TType extends ActionType<A> = ActionType<A>
+    TType extends ActionType<A> = ActionType<A>,
 >(
     subject: FlowSubject<S, A>,
     effectOrType: Effect<A, S> | TType,
-    effect?: Effect<ExtractAction<A, TType>, S>
+    effect?: Effect<ExtractAction<A, TType>, S>,
 ): void => {
     const [type] = useState(() => (typeof effectOrType === 'string' ? effectOrType : undefined));
     const [fn] = useState(() => effect ?? effectOrType);

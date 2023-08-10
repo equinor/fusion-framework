@@ -39,7 +39,7 @@ export const createReducer = (value: AppBundleStateInitial) =>
             /** clear status {{type}} */
             .addMatcher(isCompleteAction, (state, action) => {
                 state.status.delete(actionBaseType(action));
-            })
+            }),
     );
 
 export default createReducer;

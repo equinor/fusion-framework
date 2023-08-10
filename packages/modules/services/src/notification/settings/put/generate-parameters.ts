@@ -9,11 +9,11 @@ import { PutUserNotificationSettingsArgs } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends string = keyof typeof ApiVersion,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: PutUserNotificationSettingsArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
     //add versions switch case later
@@ -25,7 +25,7 @@ export const generateParameters = <
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
         { method: 'put', body: JSON.stringify(args), headers: headers },
-        init
+        init,
     );
 
     return [path, requestParams];

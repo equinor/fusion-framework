@@ -14,7 +14,7 @@ export const useApps = (args?: {
 }): { apps: AppManifest[] | undefined; isLoading: boolean } => {
     const provider = useAppProvider();
     const { value: manifests, complete } = useObservableState(
-        useMemo(() => provider.getAllAppManifests(), [provider])
+        useMemo(() => provider.getAllAppManifests(), [provider]),
     );
 
     const apps = useMemo(() => {

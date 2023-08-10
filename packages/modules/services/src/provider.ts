@@ -11,20 +11,20 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
      * @param method - Version of the service to use
      */
     createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
-        method: TMethod
+        method: TMethod,
     ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>>;
 
     /**
      * @param method - Version of the service to use
      */
     createContextClient<TMethod extends keyof ClientMethod>(
-        method: TMethod
+        method: TMethod,
     ): Promise<ContextApiClient<TMethod, TClient>>;
     /**
      * @param method - Version of the service to use
      */
     createNotificationClient<TMethod extends keyof ClientMethod>(
-        method: TMethod
+        method: TMethod,
     ): Promise<NotificationApiClient<TMethod, TClient>>;
 }
 
@@ -80,7 +80,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     }
 
     public async createNotificationClient<TMethod extends keyof ClientMethod>(
-        method: TMethod
+        method: TMethod,
     ): Promise<NotificationApiClient<TMethod, TClient>> {
         const httpClient = await this._createClientFn('notification');
         httpClient.responseHandler.add('validate_api_request', validateResponse);
@@ -88,7 +88,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     }
 
     public async createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
-        method: TMethod
+        method: TMethod,
     ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>> {
         const httpClient = await this._createClientFn('bookmarks');
         httpClient.responseHandler.add('validate_api_request', validateResponse);
@@ -96,7 +96,7 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
     }
 
     public async createContextClient<TMethod extends keyof ClientMethod>(
-        method: TMethod
+        method: TMethod,
     ): Promise<ContextApiClient<TMethod, TClient>> {
         const httpClient = await this._createClientFn('context');
         httpClient.responseHandler.add('validate_api_request', validateResponse);

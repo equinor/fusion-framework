@@ -25,14 +25,14 @@ export type PutUserNotificationSettingsFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = PutUserNotificationSettingsResponse<TVersion>
+    TResult = PutUserNotificationSettingsResponse<TVersion>,
 > = (
     args: PutUserNotificationSettingsArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => PutUserNotificationSettingsResult<TVersion, TMethod, TResult>;
 
 export type PutUserNotificationSettingsResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = PutUserNotificationSettingsResponse<TVersion>
+    TResult = PutUserNotificationSettingsResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

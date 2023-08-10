@@ -37,7 +37,7 @@ export const Provider: FC<PropsWithChildren<unknown>> = ({ children }) => {
     const { getAllBookmarks } = useBookmark();
 
     const { currentBookmark } = useCurrentBookmark(
-        useCallback(() => state.payload, [state.payload])
+        useCallback(() => state.payload, [state.payload]),
     );
 
     const updateState = useCallback((cb: (state: BookmarkState) => Partial<BookmarkState>) => {

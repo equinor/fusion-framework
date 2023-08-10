@@ -8,13 +8,13 @@ import { Observable } from '../types';
  */
 export const useObservableRef = <S>(
     subject: Observable<S>,
-    initial?: S
+    initial?: S,
 ): React.RefObject<S | undefined> => {
     initial ??= (subject as BehaviorSubject<S>).value;
     const ref = useRef<S | undefined>(initial);
     useObservableLayoutSubscription(
         subject,
-        useCallback((x: S) => (ref.current = x), [])
+        useCallback((x: S) => (ref.current = x), []),
     );
     return ref;
 };

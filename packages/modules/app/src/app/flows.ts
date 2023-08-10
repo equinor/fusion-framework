@@ -16,20 +16,20 @@ export const handleFetchManifest =
             switchMap(({ payload: appKey, meta: { update } }) => {
                 const fetch$ = from(provider.getAppManifest(appKey)).pipe(
                     filter((x) => !!x),
-                    map((manifest) => actions.setManifest(manifest, update))
+                    map((manifest) => actions.setManifest(manifest, update)),
                 );
                 return merge(
                     fetch$,
                     fetch$.pipe(
                         last(),
-                        map(({ payload }) => actions.fetchManifest.success(payload))
-                    )
+                        map(({ payload }) => actions.fetchManifest.success(payload)),
+                    ),
                 ).pipe(
                     catchError((err) => {
                         return of(actions.fetchManifest.failure(err));
-                    })
+                    }),
                 );
-            })
+            }),
         );
 
 export const handleFetchConfig =
@@ -43,10 +43,10 @@ export const handleFetchConfig =
                     fetch$,
                     fetch$.pipe(
                         last(),
-                        map(({ payload }) => actions.fetchConfig.success(payload))
-                    )
+                        map(({ payload }) => actions.fetchConfig.success(payload)),
+                    ),
                 ).pipe(catchError((err) => of(actions.fetchConfig.failure(err))));
-            })
+            }),
         );
 
 export const handleImportApplication = (): Flow<Actions, AppBundleState> => (action$) =>
@@ -55,7 +55,7 @@ export const handleImportApplication = (): Flow<Actions, AppBundleState> => (act
         switchMap(({ payload }) => {
             return from(import(payload)).pipe(
                 map(actions.importApp.success),
-                catchError((err) => of(actions.importApp.failure(err)))
+                catchError((err) => of(actions.importApp.failure(err))),
             );
-        })
+        }),
     );

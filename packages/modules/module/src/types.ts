@@ -8,7 +8,7 @@ export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> 
     config: TConfig;
     requireInstance: <TKey extends keyof ModulesInstanceType<TDeps>>(
         name: TKey,
-        wait?: number
+        wait?: number,
     ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
     hasModule: (key: string) => boolean;
     // | ((key: Extract<keyof ModulesInstanceType<TDeps>, string>) => boolean)
@@ -60,7 +60,7 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
      * @returns void
      */
     postConfigure?: (
-        config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>
+        config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>,
     ) => void | Promise<void>;
 
     /**

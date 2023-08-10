@@ -31,14 +31,14 @@ export type DeleteNotificationFn<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = DeleteNotificationResponse<TVersion>
+    TResult = DeleteNotificationResponse<TVersion>,
 > = (
     args: DeleteNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => DeleteNotificationResult<TVersion, TMethod, TResult>;
 
 export type DeleteNotificationResult<
     TVersion extends string = keyof typeof ApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = DeleteNotificationResponse<TVersion>
+    TResult = DeleteNotificationResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];

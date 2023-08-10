@@ -98,7 +98,7 @@ export type ActionPayloadType<T> = ActionInstance<T> extends PayloadAction<any>
 
 export type ExtractAction<
     TAction extends Action,
-    TType extends TypeConstant = ActionType<TAction>
+    TType extends TypeConstant = ActionType<TAction>,
 > = Extract<TAction, Action<TType>>;
 
 export type ActionDefinitions = Record<string, ActionCreator>;

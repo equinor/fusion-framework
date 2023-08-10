@@ -31,7 +31,7 @@ export const createAuthClient = <T extends IPublicClientApplication = AuthClient
     clientId: string,
     redirectUri?: string,
     config?: AuthClientConfig,
-    ctor?: new (tenantId: string, config: Configuration) => T
+    ctor?: new (tenantId: string, config: Configuration) => T,
 ): T => {
     const auth: Configuration['auth'] = {
         clientId,

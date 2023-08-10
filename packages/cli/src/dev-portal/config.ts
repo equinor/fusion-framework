@@ -20,7 +20,7 @@ export const configure = async (config: FrameworkConfigurator) => {
             clientId: '9b707e3a-3e90-41ed-a47e-652a1e3b53d0',
             redirectUri: '/authentication/login-callback',
         },
-        { requiresAuth: true }
+        { requiresAuth: true },
     );
 
     enableAppModule(config);

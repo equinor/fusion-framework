@@ -8,7 +8,7 @@ export default function createActions<TType = any, TArgs = any>() {
             'cache/set',
             (key: string, entry: { value: TType; args: TArgs; transaction: string }) => {
                 return { payload: { key, entry } };
-            }
+            },
         ),
         remove: createAction('cache/remove', (key: string) => ({ payload: key })),
         invalidate: createAction('cache/invalidate', (key: string) => ({ payload: key })),
@@ -20,7 +20,7 @@ export default function createActions<TType = any, TArgs = any>() {
                 size?: number;
             }) => {
                 return { payload };
-            }
+            },
         ),
     };
 }

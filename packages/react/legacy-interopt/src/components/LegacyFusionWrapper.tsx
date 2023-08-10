@@ -16,17 +16,19 @@ import type { PortalFramework } from '../types';
 import { FusionContextOptions } from '../create-fusion-context';
 
 export type LegacyFusionWrapperProps = {
-    loader: NonNullable<ReactNode>;
-    framework: PortalFramework;
-    options?: FusionContextOptions;
+    readonly loader: NonNullable<ReactNode>;
+    readonly framework: PortalFramework;
+    readonly options?: FusionContextOptions;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
+    readonly RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const FallThrewComponent = ({ children }: { children: ReactChild }): ReactElement<any, any> => (
-    <>{children}</>
-);
+const FallThrewComponent = ({
+    children,
+}: {
+    readonly children: ReactChild;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}): ReactElement<any, any> => <>{children}</>;
 
 export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapperProps>) => {
     const { framework, options, loader, RootWrapper = FallThrewComponent } = props;
@@ -41,7 +43,7 @@ export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapper
                 options,
                 refs: { root, overlay, headerContent, headerAppAside },
             }),
-        [framework, options]
+        [framework, options],
     );
     return (
         <Suspense fallback={loader}>

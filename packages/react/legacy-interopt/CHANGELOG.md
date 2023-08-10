@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.1.1
+
+### Patch Changes
+
+-   [#1017](https://github.com/equinor/fusion-framework/pull/1017) [`0eac0480`](https://github.com/equinor/fusion-framework/commit/0eac0480b4743e2243a6349a3fb0352689fff075) Thanks [@eikeland](https://github.com/eikeland)! - # Featurelogger issue
+
+    Fixes FeatureLogger in LegacyAppContainer logging null as appKey.
+
 ## 5.1.0
 
 ### Minor Changes

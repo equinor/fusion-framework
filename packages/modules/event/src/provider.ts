@@ -12,33 +12,35 @@ import {
 } from './event';
 
 export interface IEventModuleProvider {
+    readonly event$: Observable<IFrameworkEvent>;
+
     /** subscribe to a known mapped event @see {@link FrameworkEventMap} */
     addEventListener<TKey extends keyof FrameworkEventMap>(
         type: TKey,
-        handler: FrameworkEventHandler<FrameworkEventMap[TKey]>
+        handler: FrameworkEventHandler<FrameworkEventMap[TKey]>,
     ): VoidFunction;
 
     /** subscribe to generic type */
     addEventListener<TType extends FrameworkEvent = FrameworkEvent>(
         type: string,
-        handler: FrameworkEventHandler<TType>
+        handler: FrameworkEventHandler<TType>,
     ): VoidFunction;
 
     /** dispatch a known mapped event type @see {@link FrameworkEventMap} */
     dispatchEvent<TType extends keyof FrameworkEventMap>(
         type: TType,
-        args: FrameworkEventInitType<FrameworkEventMap[TType]>
+        args: FrameworkEventInitType<FrameworkEventMap[TType]>,
     ): Promise<FrameworkEvent>;
 
     /** dispatch generic event */
     dispatchEvent<TDetail, TSource>(
         type: string,
-        args: FrameworkEventInit<TDetail, TSource>
+        args: FrameworkEventInit<TDetail, TSource>,
     ): Promise<FrameworkEvent>;
 
     /** dispatch event instance */
     dispatchEvent<TType extends IFrameworkEvent = FrameworkEvent>(
-        event: TType
+        event: TType,
     ): Promise<FrameworkEvent>;
 
     /**
@@ -69,6 +71,10 @@ export class EventModuleProvider
 
     private __dispatcher: FrameworkEventDispatcher<FrameworkEvent>;
 
+    get event$(): Observable<IFrameworkEvent> {
+        return this.__event$.asObservable();
+    }
+
     get closed() {
         return this.__event$.closed;
     }
@@ -97,7 +103,7 @@ export class EventModuleProvider
 
     public async dispatchEvent(
         typeOrEvent: string | FrameworkEvent,
-        init?: FrameworkEventInit
+        init?: FrameworkEventInit,
     ): Promise<FrameworkEvent> {
         if (typeof typeOrEvent === 'string') {
             if (!init) {

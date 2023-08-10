@@ -1,7 +1,7 @@
 ---
 title: MSAL
 category: Module
-tags:
+tag:
   - auth
   - msal
   - core

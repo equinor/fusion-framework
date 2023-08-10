@@ -29,7 +29,7 @@ type DotNestedKeys<T> = (
 const assignConfigValue = <T>(
     obj: Record<string, unknown>,
     prop: string | string[],
-    value: unknown
+    value: unknown,
 ): T => {
     const props = typeof prop === 'string' ? prop.split('.') : prop;
     const attr = props.shift();
@@ -58,7 +58,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
      * @argument module name of module
      */
     requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     /**
@@ -83,7 +83,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
  * @returns either a sync value or an observable input (async)
  */
 export type ConfigBuilderCallback<TReturn = unknown> = (
-    args: ConfigBuilderCallbackArgs
+    args: ConfigBuilderCallbackArgs,
 ) => TReturn | ObservableInput<TReturn>;
 
 /**
@@ -125,7 +125,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     public createConfig(
         init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>
+        initial?: Partial<TConfig>,
     ): Observable<TConfig> {
         return this._createConfig(init, initial);
     }
@@ -135,7 +135,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     public async createConfigAsync(
         init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>
+        initial?: Partial<TConfig>,
     ): Promise<TConfig> {
         return lastValueFrom(this.createConfig(init, initial));
     }
@@ -148,7 +148,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     protected _set<TTarget extends DotNestedKeys<TConfig>>(
         target: TTarget,
-        cb: ConfigBuilderCallback<ConfigPropType<TConfig, TTarget>>
+        cb: ConfigBuilderCallback<ConfigPropType<TConfig, TTarget>>,
     ) {
         this.#configCallbacks[target] = cb;
     }
@@ -158,10 +158,10 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     protected _createConfig(
         init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>
+        initial?: Partial<TConfig>,
     ): Observable<TConfig> {
         return this._buildConfig(init, initial).pipe(
-            mergeMap((config) => this._processConfig(config, init))
+            mergeMap((config) => this._processConfig(config, init)),
         );
     }
 
@@ -170,7 +170,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     protected _buildConfig(
         init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>
+        initial?: Partial<TConfig>,
     ): Observable<Partial<TConfig>> {
         return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
             mergeMap(async ([target, cb]) => {
@@ -179,9 +179,9 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
             }),
             scan(
                 (acc, { target, value }) => assignConfigValue(acc, target, value),
-                initial ?? ({} as TConfig)
+                initial ?? ({} as TConfig),
             ),
-            last()
+            last(),
         );
     }
 
@@ -194,7 +194,7 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      */
     protected _processConfig(
         config: Partial<TConfig>,
-        _init: ConfigBuilderCallbackArgs
+        _init: ConfigBuilderCallbackArgs,
     ): ObservableInput<TConfig> {
         return of(config as TConfig);
     }

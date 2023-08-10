@@ -25,9 +25,12 @@ import verifyBookmarkFavorite, {
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TPayload = unknown
+    TPayload = unknown,
 > {
-    constructor(protected _client: TClient, protected _method: TMethod) {}
+    constructor(
+        protected _client: TClient,
+        protected _method: TMethod,
+    ) {}
 
     /**
      * Fetch bookmark by id
@@ -45,7 +48,7 @@ export class BookmarksApiClient<
      * @see {@link get/client}
      */
     public getAll<TVersion extends ApiVersions, TResult = GetAllBookmarkResult<TVersion, TPayload>>(
-        version: TVersion
+        version: TVersion,
     ): GetAllBookmarksResult<TVersion, TMethod, TPayload, TResult> {
         const fn = getAllBookmarks(this._client, version, this._method);
         return fn<TResult>();

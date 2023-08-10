@@ -5,7 +5,7 @@ import { useHasBookmark } from '@equinor/fusion-framework-react-module-bookmark/
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 
 type BookmarkSideSheetProps = {
-    isOpen: boolean;
+    readonly isOpen: boolean;
     onClose(): void;
 };
 

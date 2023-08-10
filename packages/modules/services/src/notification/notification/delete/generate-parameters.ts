@@ -9,11 +9,11 @@ import { DeleteNotificationArgs } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends string = keyof typeof ApiVersion,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: DeleteNotificationArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
 
@@ -23,7 +23,7 @@ export const generateParameters = <
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
         { method: 'delete', headers: headers },
-        init
+        init,
     );
 
     return [path, requestParams];

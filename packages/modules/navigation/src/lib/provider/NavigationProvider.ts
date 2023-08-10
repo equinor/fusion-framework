@@ -25,13 +25,13 @@ export class NavigationProvider
         return this.#navigator.pipe(
             /** only push navigation state if the path is within the basename scope */
             filter((event) =>
-                this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true
+                this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true,
             ),
             /** map path to localized path */
             map(({ action, location }) => ({
                 action,
                 location: this._localizePath(location),
-            }))
+            })),
         );
     }
 
@@ -110,7 +110,7 @@ export class NavigationProvider
             pathname: normalizePathname(
                 [this.#basePathname, pathname === '/' ? undefined : pathname]
                     .filter((x) => !!x)
-                    .join('/')
+                    .join('/'),
             ),
             search,
             hash,

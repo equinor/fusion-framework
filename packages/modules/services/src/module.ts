@@ -51,7 +51,7 @@ export const module: ServicesModule = {
         if (!config.createClient) {
             const http = await requireInstance('http');
             const serviceDiscovery: ServiceDiscoveryProvider | undefined = hasModule(
-                'serviceDiscovery'
+                'serviceDiscovery',
             )
                 ? /** if the module is within module, await creation */
                   await requireInstance('serviceDiscovery')
@@ -73,7 +73,7 @@ export const module: ServicesModule = {
  */
 export const enableServices = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: IModulesConfigurator<any, any>
+    config: IModulesConfigurator<any, any>,
 ): void => {
     config.addConfig({ module });
 };
@@ -87,7 +87,7 @@ export const enableServices = (
  * @returns Configuration object
  */
 export const configureServices = (
-    configure: (configurator: IApiConfigurator) => void
+    configure: (configurator: IApiConfigurator) => void,
 ): IModuleConfigurator<ServicesModule> => {
     return {
         module,

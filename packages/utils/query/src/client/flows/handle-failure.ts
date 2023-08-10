@@ -35,7 +35,7 @@ export const handleFailures = (config?: Partial<RetryOptions>): Flow<Actions, St
                         const retryOptions = Object.assign(
                             {},
                             config,
-                            request.meta.retry
+                            request.meta.retry,
                         ) as RetryOptions;
 
                         if (retryCount >= retryOptions.count) {
@@ -49,14 +49,14 @@ export const handleFailures = (config?: Partial<RetryOptions>): Flow<Actions, St
                                 ? from(retryOptions.delay(action.payload.cause)).pipe(
                                       catchError((cause) => {
                                           throw Error('failed to resolve delay', { cause });
-                                      })
+                                      }),
                                   )
                                 : (timer(retryOptions.delay) as unknown as Observable<void>);
 
                         return delay$.pipe(map(() => actions.retry(request)));
-                    })
+                    }),
                 );
-            })
+            }),
         );
     };
 };

@@ -3,7 +3,7 @@ import { PortalFramework } from './types';
 
 export const createServiceResolver = async (
     provider: PortalFramework['modules']['serviceDiscovery'],
-    authContainer: LegacyAuthContainer
+    authContainer: LegacyAuthContainer,
 ) => {
     const { services, clientId } = await provider.resolveServices();
     /** register for legacy auth token */
@@ -12,7 +12,7 @@ export const createServiceResolver = async (
         Object.values(services)
             .map((x) => x.uri)
             .concat([window.location.origin]),
-        false
+        false,
     );
     return {
         getContextBaseUrl: () => services['context'].uri,

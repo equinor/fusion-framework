@@ -35,7 +35,7 @@ export const module: ServiceDiscoveryModule = {
 
 export const setupServiceDiscoveryModule = (
     config: ModulesConfigType<[ServiceDiscoveryModule]>,
-    callback: (config: IServiceDiscoveryConfigurator) => void
+    callback: (config: IServiceDiscoveryConfigurator) => void,
 ): void | Promise<void> => {
     callback(config.serviceDiscovery);
 };

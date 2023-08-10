@@ -1,12 +1,12 @@
 ---
-title: Events
+title: Event Module
 category: Module
 tag:
   - event
   - core
 ---
 
-<ModuleBadge module="module-event" />
+<ModuleBadge module="modules/event" package="@equinor/fusion-framework-module-event" />
 
 ## Concept
 
@@ -162,27 +162,5 @@ config.event.onBubble = undefined;
 config.event.onBubble = (e) => {
   console.log(`event [${e.type}] is bubbling`);
   ref.event.dispatch(e);
-}
-```
-
-## React
-
-<ModuleBadge module="react-module-event" />
-
-```ts
-/** 
- * default included in the app module,
- * alternative directly from @equinor/fusion-framework-react-module-event
- */
-import { useEventHandler } from '@equinor/fusion-framework-react-app/event';
-
-const MyHook = () => {
-  useEventHandler(
-    'onContextChange', 
-    /** note that callback must be memorized */
-    useCallback((e) => {
-      console.log(e.detail);
-    }, [deps]);
-  );
 }
 ```

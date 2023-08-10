@@ -8,10 +8,10 @@ import { ApiVersions } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends ApiVersions,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version);
     return [path, init];

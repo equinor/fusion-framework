@@ -77,7 +77,7 @@ export const createFusionContext = async (args: {
         resourceCache,
         abortControllerManager,
         telemetryLogger,
-        new EventHub()
+        new EventHub(),
     );
 
     const apiClients = createApiClients(httpClient, resourceCollections, serviceResolver);
@@ -95,8 +95,8 @@ export const createFusionContext = async (args: {
     history.listen = (
         cb: (
             eventOrLocation: NavigationUpdate | NavigationUpdate['location'],
-            action?: NavigationUpdate['action']
-        ) => void
+            action?: NavigationUpdate['action'],
+        ) => void,
     ) => {
         return historyListenFn((e: NavigationUpdate) => {
             const event = new Proxy(e, {
@@ -128,7 +128,7 @@ export const createFusionContext = async (args: {
         new EventHub(),
         {
             componentDisplayType: ComponentDisplayType.Comfortable,
-        }
+        },
     );
 
     const appContainer = new LegacyAppContainer({

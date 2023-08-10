@@ -5,7 +5,7 @@ import { ApiVersions, PostBookmarkFavoriteArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends ApiVersions>(
     version: TVersion,
-    _args: PostBookmarkFavoriteArgs<TVersion>
+    _args: PostBookmarkFavoriteArgs<TVersion>,
 ) => {
     switch (version) {
         case 'v1':

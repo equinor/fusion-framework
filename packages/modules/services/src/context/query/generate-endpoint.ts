@@ -45,7 +45,7 @@ const createSearchParameters = (args: string | QueryContextOdataParameters) => {
 
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
     version: TVersion,
-    args: QueryContextArgs<TVersion>
+    args: QueryContextArgs<TVersion>,
 ) => {
     const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
     switch (apiVersion) {

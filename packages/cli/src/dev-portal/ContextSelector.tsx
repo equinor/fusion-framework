@@ -59,7 +59,7 @@ const useQueryContext = (): [
     ContextResolver,
     (e: ContextSelectEvent) => void,
     ContextResultItem,
-    () => void
+    () => void,
 ] => {
     /* Framework modules */
     const framework = useFramework();
@@ -67,13 +67,13 @@ const useQueryContext = (): [
     // TODO change to `useCurrentContext`
     /* Current context observable */
     const { value: currentContext } = useObservableState(
-        useMemo(() => framework.modules.context.currentContext$, [framework.modules.context])
+        useMemo(() => framework.modules.context.currentContext$, [framework.modules.context]),
     );
 
     /* Set currentContext as initialResult in dropdown  */
     const preselected: ContextResult = useMemo(
         () => (currentContext ? mapper([currentContext]) : noPreselect),
-        [currentContext]
+        [currentContext],
     );
 
     /* context provider state */
@@ -93,7 +93,7 @@ const useQueryContext = (): [
                 setProvider(contextProvider);
             }
         },
-        [setProvider]
+        [setProvider],
     );
 
     /** clear the app provider */
@@ -146,7 +146,7 @@ const useQueryContext = (): [
             },
             initialResult: preselected,
         }),
-        [provider, preselected]
+        [provider, preselected],
     );
 
     /* Callback for setting current context to selected item id. */
@@ -154,11 +154,11 @@ const useQueryContext = (): [
         (e: ContextSelectEvent): void => {
             if (e.nativeEvent.detail?.selected.length) {
                 framework.modules.context.setCurrentContextByIdAsync(
-                    e.nativeEvent.detail.selected[0].id
+                    e.nativeEvent.detail.selected[0].id,
                 );
             }
         },
-        [framework]
+        [framework],
     );
 
     /* Clear current context */

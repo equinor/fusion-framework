@@ -11,17 +11,17 @@ export type HeadBookmarkFavoriteArgs<TVersion extends ApiVersions> =
 export type HeadBookmarksFavoriteResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TResult = HeadBookmarkFavoriteResult<TVersion>
+    TResult = HeadBookmarkFavoriteResult<TVersion>,
 > = ClientMethod<TResult>[TMethod];
 
 export type HeadBookmarkFavoriteFn<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TResult = HeadBookmarkFavoriteResult<TVersion>
+    TResult = HeadBookmarkFavoriteResult<TVersion>,
 > = (
     args: HeadBookmarkFavoriteArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ) => HeadBookmarksFavoriteResult<TVersion, TMethod, TResult>;
 
 export interface HeadBookmarksFavoriteArgsV1 {

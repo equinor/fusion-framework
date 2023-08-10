@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export type GroupingKeys = 'Group by app' | 'Created by' | 'Group by Context';
 
-const groupingModes: Record<GroupingKeys, (item: Bookmark) => string> = {
+const groupingModes: Record<GroupingKeys, (_item: Bookmark) => string> = {
     'Group by app': (item: Bookmark) => item.appKey,
     'Created by': (item: Bookmark) => item.createdBy.name,
     'Group by Context': (item: Bookmark) => item?.context?.name ?? 'Unknown',
@@ -31,7 +31,7 @@ const groupBy = <T>(
     array: T[],
     getKey: (item: T) => string,
     searchText: string | null,
-    field: keyof T
+    field: keyof T,
 ) => {
     return (
         array

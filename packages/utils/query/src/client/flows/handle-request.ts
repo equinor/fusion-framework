@@ -19,14 +19,14 @@ export const handleRequests =
                             actions.failure(
                                 Error(
                                     `failed to execute request for transaction ${request.meta.transaction}`,
-                                    { cause: err }
+                                    { cause: err },
                                 ),
-                                { request }
-                            )
-                        )
-                    )
-                )
-            )
+                                { request },
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         );
 
 export default handleRequests;

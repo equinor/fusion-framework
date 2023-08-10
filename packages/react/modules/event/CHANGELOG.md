@@ -1,5 +1,86 @@
 # Change Log
 
+## 3.1.0
+
+### Minor Changes
+
+-   [#1074](https://github.com/equinor/fusion-framework/pull/1074) [`40f41c58`](https://github.com/equinor/fusion-framework/commit/40f41c58533431a11f9b3ce7c11cd4a7054caa05) Thanks [@odinr](https://github.com/odinr)! - Expose the `IEventModuleProvider`
+
+    Add functionality for controlling which event provider which is used within the event hooks
+
+    -   create context for controlling the `IEventModuleProvider`
+    -   create a hook for using `IEventModuleProvider`,
+        -   uses the `IEventModuleProvider` from the `EventProvider` context
+        -   _fallbacks to event module from current module context_
+    -   update the `useEventHandler` to use `useEventProvider`
+        -   previously resolving `IEventModuleProvider` from module context
+    -   create a hook `useEventModuleProvider` which resolves `IEventModuleProvider` from module context
+
+    example app:
+
+    ```tsx
+    import { EventProvider, EventConsumer } = from '@equinor/fusion-framework-react-module-event';
+    import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
+    const Content = () => {
+      const framework = useFramework().modules.event;
+      return (
+        <EventProvider value={framework.modules.event}>
+          <EventLogger />
+          <InlineEventConsumer />
+        <EventProvider>
+      );
+    };
+    ```
+
+    ```tsx
+    import { useEventHandler } = from '@equinor/fusion-framework-react-module-event';
+
+    const eventHandler = (event: FrameworkEventMap['some_event']) => {
+      console.log(event.detail);
+    };
+
+    const EventLogger = () => useEventHandler('some_event', eventHandler);
+    ```
+
+    ```tsx
+    import { EventConsumer } = from '@equinor/fusion-framework-react-module-event';
+
+    const InlineEventConsumer = () => (
+      <EventConsumer>
+        {
+          (provider) => provider.dispatch(
+            'some_event'),
+            { detail: { foo: 'bar' } }
+        }
+      </EventConsumer>
+    )
+    ```
+
+-   [#1076](https://github.com/equinor/fusion-framework/pull/1076) [`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035) Thanks [@odinr](https://github.com/odinr)! - Add hook for observing event streams
+
+    ```ts
+    /* observe stream of events */
+    const someEvent$ = useEventStream(
+        'some_event',
+        useCallback((event$) =>
+            event$.pipe(
+                // only some events
+                filter((e) => e.detail.foo === dep.foo),
+                // mutate data
+                map((e) => e.detail),
+            ),
+        ),
+        [dep],
+    );
+    /* use state of stream */
+    const someEvent = useObservableState(someEvent$);
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+    -   @equinor/fusion-framework-module-event@4.0.3
+
 ## 3.0.3
 
 ### Patch Changes

@@ -15,7 +15,7 @@ export type ActionCalls<T extends ActionDefinitions> = {
 export const actionMapper = <T extends ActionDefinitions>(
     actions: T,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    subject: { next: (action: ActionTypes<T>) => void }
+    subject: { next: (action: ActionTypes<T>) => void },
 ): ActionCalls<T> =>
     Object.entries(actions).reduce(
         (cur, [prop, fnOrActions]) =>
@@ -28,7 +28,7 @@ export const actionMapper = <T extends ActionDefinitions>(
                         : /** extract child actions */
                           actionMapper(fnOrActions, subject),
             }),
-        {} as ActionCalls<T>
+        {} as ActionCalls<T>,
     );
 
 export default actionMapper;

@@ -52,7 +52,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
                 const response = JSON.parse(responseBuffer.toString('utf8'));
                 response.environmentName = 'DEVELOPMENT';
                 response.services = response.services.filter(
-                    (x: { key: string }) => x.key !== 'app'
+                    (x: { key: string }) => x.key !== 'app',
                 );
                 response.services.push({
                     key: 'app',
@@ -60,7 +60,7 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
                 });
                 return JSON.stringify(response);
             }),
-        })
+        }),
     );
 
     app.get(
@@ -80,13 +80,13 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
                         return JSON.stringify(response);
                     }
                     return JSON.stringify(
-                        Object.assign(JSON.parse(responseBuffer.toString('utf8')), response)
+                        Object.assign(JSON.parse(responseBuffer.toString('utf8')), response),
                     );
                 } else {
                     return responseBuffer;
                 }
             }),
-        })
+        }),
     );
 
     app.get(
@@ -107,13 +107,13 @@ export const server = async (config: { viteConfig: UserConfig; appConfig: any })
                         return JSON.stringify(response);
                     }
                     return JSON.stringify(
-                        Object.assign(JSON.parse(responseBuffer.toString('utf8')), response)
+                        Object.assign(JSON.parse(responseBuffer.toString('utf8')), response),
                     );
                 } else {
                     return responseBuffer;
                 }
             }),
-        })
+        }),
     );
 
     app.use('*', async (req, res) => {

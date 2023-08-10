@@ -67,11 +67,11 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
                         'Navigator::constructor',
                         'history changed',
                         update,
-                        this.#state.value
+                        this.#state.value,
                     );
                     this.#state.next(update as T);
                 }
-            })
+            }),
         );
     }
 
@@ -84,7 +84,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         const subscription = this.#state
             .pipe(
                 /** skip the first, since we only want up-coming events  */
-                skip(1)
+                skip(1),
                 // TODO filter only locations within this basename
             )
             .subscribe((x) => {

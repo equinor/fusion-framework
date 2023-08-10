@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.3
+
+### Patch Changes
+
+-   [#1058](https://github.com/equinor/fusion-framework/pull/1058) [`4eadd69f`](https://github.com/equinor/fusion-framework/commit/4eadd69f24dc69623086d40aa367a5c8e67b6518) Thanks [@odinr](https://github.com/odinr)! - Update dependency: @remix-run/router@^1.7.2
+
 ## 3.0.2
 
 ### Patch Changes

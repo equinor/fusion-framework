@@ -10,11 +10,11 @@ import type { QueryContextArgs, ApiClientArguments } from './types';
 export const generateParameters = <
     TResult,
     TVersion extends string = keyof typeof ApiVersion,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 >(
     version: TVersion,
     args: QueryContextArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>
+    init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
     const path = generateEndpoint(version, args);
     return [path, init];

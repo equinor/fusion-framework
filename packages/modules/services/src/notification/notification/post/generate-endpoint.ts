@@ -8,7 +8,7 @@ import type { PostNotificationArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
     version: TVersion,
-    args: PostNotificationArgs<TVersion>
+    args: PostNotificationArgs<TVersion>,
 ) => {
     const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
     switch (apiVersion) {

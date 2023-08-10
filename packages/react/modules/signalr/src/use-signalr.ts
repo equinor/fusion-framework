@@ -5,7 +5,7 @@ import { useSignalRProvider } from './use-signalr-provider';
 
 export const useTopic = <T>(
     hubId: string,
-    topicId: string
+    topicId: string,
 ): ReturnType<typeof useSignalRProvider<T>> =>
     useSignalRProvider(useModule(moduleKey), hubId, topicId);
 

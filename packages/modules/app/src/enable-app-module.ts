@@ -10,7 +10,7 @@ import { module } from './module';
 export const enableAppModule = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    builder?: AppConfigBuilderCallback
+    builder?: AppConfigBuilderCallback,
 ): void => {
     configurator.addConfig({
         module,

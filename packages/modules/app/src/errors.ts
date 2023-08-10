@@ -7,7 +7,7 @@ export class AppManifestError extends Error {
                 return new AppManifestError(
                     'unauthorized',
                     'failed to load application manifest, request not authorized',
-                    options
+                    options,
                 );
             case 404:
                 return new AppManifestError('not_found', 'application manifest not found', options);
@@ -15,10 +15,14 @@ export class AppManifestError extends Error {
         return new AppManifestError(
             'unknown',
             `failed to load application manifest, status code ${response.status}`,
-            options
+            options,
         );
     }
-    constructor(public readonly type: AppErrorType, message?: string, options?: ErrorOptions) {
+    constructor(
+        public readonly type: AppErrorType,
+        message?: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
     }
 }
@@ -30,7 +34,7 @@ export class AppConfigError extends Error {
                 return new AppConfigError(
                     'unauthorized',
                     'failed to load application config, request not authorized',
-                    options
+                    options,
                 );
             case 404:
                 return new AppConfigError('not_found', 'application config not found', options);
@@ -38,16 +42,24 @@ export class AppConfigError extends Error {
         return new AppConfigError(
             'unknown',
             `failed to load application config, status code ${response.status}`,
-            options
+            options,
         );
     }
-    constructor(public readonly type: AppErrorType, message?: string, options?: ErrorOptions) {
+    constructor(
+        public readonly type: AppErrorType,
+        message?: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
     }
 }
 
 export class AppScriptModuleError extends Error {
-    constructor(public readonly type: AppErrorType, message?: string, options?: ErrorOptions) {
+    constructor(
+        public readonly type: AppErrorType,
+        message?: string,
+        options?: ErrorOptions,
+    ) {
         super(message, options);
     }
 }

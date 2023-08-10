@@ -4,7 +4,7 @@ import {
     UpdateBookmarkOptions,
 } from '@equinor/fusion-framework-module-bookmark';
 
-export type CreateBookMarkFn<TData> = () => Partial<TData>;
+export type CreateBookMarkFn<TData> = () => Promise<Partial<TData>> | Partial<TData>;
 
 export interface Bookmarks<TData> extends CurrentBookmark<TData> {
     /**
@@ -45,7 +45,7 @@ export interface Bookmarks<TData> extends CurrentBookmark<TData> {
      */
     updateBookmark: <T>(
         bookmark: PatchBookmark<T>,
-        options?: UpdateBookmarkOptions
+        options?: UpdateBookmarkOptions,
     ) => Promise<Bookmark<T> | undefined>;
     /**
      * Function for deleting a bookmark, when successful this will update the bookmark list.

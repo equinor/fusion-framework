@@ -24,13 +24,16 @@ import getUserNotificationSettings, {
 
 export class NotificationApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TClient extends IHttpClient = IHttpClient
+    TClient extends IHttpClient = IHttpClient,
 > {
     get Version(): typeof ApiVersion {
         return ApiVersion;
     }
 
-    constructor(protected _client: TClient, protected _method: TMethod) {}
+    constructor(
+        protected _client: TClient,
+        protected _method: TMethod,
+    ) {}
 
     /**
      * Fetch all notifications
@@ -38,7 +41,7 @@ export class NotificationApiClient<
      */
     public getAll<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = GetNotificationsResult<TVersion>
+        TResult = GetNotificationsResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<GetNotificationsFn<TVersion, TMethod, TClient, TResult>>
@@ -46,7 +49,7 @@ export class NotificationApiClient<
         const fn = getNotifications<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -57,7 +60,7 @@ export class NotificationApiClient<
      */
     public getById<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = GetNotificationResult<TVersion>
+        TResult = GetNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<GetNotificationFn<TVersion, TMethod, TClient, TResult>>
@@ -65,7 +68,7 @@ export class NotificationApiClient<
         const fn = getNotificationById<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -76,7 +79,7 @@ export class NotificationApiClient<
      */
     public setSeenByUser<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = PatchNotificationResult<TVersion>
+        TResult = PatchNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<PatchNotificationFn<TVersion, TMethod, TClient, TResult>>
@@ -84,7 +87,7 @@ export class NotificationApiClient<
         const fn = updateSeenByUser<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -95,7 +98,7 @@ export class NotificationApiClient<
      */
     public create<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = PostNotificationResult<TVersion>
+        TResult = PostNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<PostNotificationFn<TVersion, TMethod, TClient, TResult>>
@@ -103,7 +106,7 @@ export class NotificationApiClient<
         const fn = createNotification<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -114,7 +117,7 @@ export class NotificationApiClient<
      */
     public delete<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = PostNotificationResult<TVersion>
+        TResult = PostNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<DeleteNotificationFn<TVersion, TMethod, TClient, TResult>>
@@ -122,7 +125,7 @@ export class NotificationApiClient<
         const fn = deleteNotification<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -132,7 +135,7 @@ export class NotificationApiClient<
      */
     public getSettings<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = PostNotificationResult<TVersion>
+        TResult = PostNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<GetUserNotificationSettingsFn<TVersion, TMethod, TClient, TResult>>
@@ -140,7 +143,7 @@ export class NotificationApiClient<
         const fn = getUserNotificationSettings<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }
@@ -150,7 +153,7 @@ export class NotificationApiClient<
      */
     public updateSettings<
         TVersion extends string = keyof typeof ApiVersion,
-        TResult = PostNotificationResult<TVersion>
+        TResult = PostNotificationResult<TVersion>,
     >(
         version: TVersion,
         ...args: Parameters<PutUserNotificationSettingsFn<TVersion, TMethod, TClient, TResult>>
@@ -158,7 +161,7 @@ export class NotificationApiClient<
         const fn = updateUserNotificationSettings<TVersion, TMethod, TClient>(
             this._client,
             version,
-            this._method
+            this._method,
         );
         return fn<TResult>(...args);
     }

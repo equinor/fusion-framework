@@ -46,7 +46,7 @@ describe('useObservableEpic', () => {
                     expect(state.value).toEqual(action1.payload);
                 }),
                 /** return action2 for dispatch in subject */
-                map(() => action2)
+                map(() => action2),
             );
         };
 

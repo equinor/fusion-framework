@@ -54,7 +54,7 @@ export class ContextClient extends Observable<ContextItem | null> {
                     throw err.cause;
                 }
                 throw err;
-            })
+            }),
         );
     }
 

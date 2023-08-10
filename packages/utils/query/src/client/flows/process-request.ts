@@ -10,7 +10,7 @@ import { mergeMap } from 'rxjs/operators';
 import { Actions, actions } from '../actions';
 
 export type RequestHandler = (
-    request: ReturnType<typeof actions.request>
+    request: ReturnType<typeof actions.request>,
 ) => ObservableInput<Actions>;
 
 export const processRequest =
@@ -33,7 +33,7 @@ export const processRequest =
                             actions.cancel({
                                 transaction,
                                 reason: `request [${transaction}] was aborted!`,
-                            })
+                            }),
                         );
                         return subscriber.complete();
                     }
@@ -48,7 +48,7 @@ export const processRequest =
                                 }
                                 subscriber.complete();
                             }
-                        })
+                        }),
                     );
 
                     /** subscribe to abort from the controller */
@@ -58,10 +58,10 @@ export const processRequest =
                                 actions.cancel({
                                     transaction,
                                     reason: `request [${transaction}] was aborted!`,
-                                })
+                                }),
                             );
                             subscriber.complete();
-                        })
+                        }),
                     );
 
                     subscriber.add(
@@ -69,10 +69,10 @@ export const processRequest =
                             next: (value) => subscriber.next(value),
                             error: (err) => subscriber.next(actions.error(err, { request })),
                             complete: () => subscriber.complete(),
-                        })
+                        }),
                     );
                 });
-            })
+            }),
         );
     };
 

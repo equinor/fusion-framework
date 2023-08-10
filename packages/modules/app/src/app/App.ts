@@ -73,28 +73,28 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     get manifest$(): Observable<AppManifest> {
         return this.#state.pipe(
             map(({ manifest }) => manifest),
-            filterEmpty()
+            filterEmpty(),
         );
     }
 
     get config$(): Observable<AppConfig<TEnv>> {
         return this.#state.pipe(
             map(({ config }) => config),
-            filterEmpty()
+            filterEmpty(),
         );
     }
 
     get modules$(): Observable<AppScriptModule> {
         return this.#state.pipe(
             map(({ modules }) => modules),
-            filterEmpty()
+            filterEmpty(),
         );
     }
 
     get instance$(): Observable<AppModulesInstance<TModules>> {
         return this.#state.pipe(
             map(({ instance }) => instance as AppModulesInstance<TModules>),
-            filterEmpty()
+            filterEmpty(),
         );
     }
 
@@ -134,7 +134,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         args: {
             provider: AppModuleProvider;
             event?: ModuleType<EventModule>;
-        }
+        },
     ) {
         this.#state = createState(value, args.provider);
 
@@ -153,7 +153,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
                     if (e.detail.appKey === appKey) {
                         this.#state.next(actions.setInstance(e.detail.modules));
                     }
-                })
+                }),
             );
         }
 
@@ -253,7 +253,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
                         this.#state.next(actions.initialize.success());
                         observer.complete();
                     },
-                })
+                }),
             );
         });
     }
@@ -286,22 +286,22 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 this.#state.addEffect('set_config', ({ payload }) => {
                     subscriber.next(payload);
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('fetch_config::success', ({ payload }) => {
                     subscriber.next(payload);
                     subscriber.complete();
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('fetch_config::failure', ({ payload }) => {
                     subscriber.error(
                         Error('failed to load application config', {
                             cause: payload,
-                        })
+                        }),
                     );
-                })
+                }),
             );
 
             this.loadConfig();
@@ -324,22 +324,22 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 this.#state.addEffect('set_manifest', ({ payload }) => {
                     subscriber.next(payload);
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('fetch_manifest::success', ({ payload }) => {
                     subscriber.next(payload);
                     subscriber.complete();
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('fetch_manifest::failure', ({ payload }) => {
                     subscriber.error(
                         Error('failed to load application manifest', {
                             cause: payload,
-                        })
+                        }),
                     );
-                })
+                }),
             );
 
             this.loadManifest();
@@ -362,28 +362,28 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 this.#state.addEffect('set_module', ({ payload }) => {
                     subscriber.next(payload);
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('import_app::success', ({ payload }) => {
                     subscriber.next(payload);
                     subscriber.complete();
-                })
+                }),
             );
             subscriber.add(
                 this.#state.addEffect('import_app::failure', ({ payload }) => {
                     subscriber.error(
                         Error('failed to load application modules from script', {
                             cause: payload,
-                        })
+                        }),
                     );
-                })
+                }),
             );
 
             subscriber.add(
                 this.getManifest().subscribe((manifest) =>
-                    of(this.#state.next(actions.importApp(manifest.entry)))
-                )
+                    of(this.#state.next(actions.importApp(manifest.entry))),
+                ),
             );
         });
     }

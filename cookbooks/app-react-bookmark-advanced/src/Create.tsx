@@ -109,7 +109,7 @@ export const Create = () => {
                             .filter(
                                 (b) =>
                                     b.appKey ===
-                                    'fusion-framework-cookbook-app-react-bookmark-advanced'
+                                    'fusion-framework-cookbook-app-react-bookmark-advanced',
                             )
                             .map((bookmark) => (
                                 <div key={bookmark.id} style={{ display: 'flex' }}>

@@ -7,7 +7,7 @@ import type { AppConfig, AppManifest, ModuleDeps } from './types';
 
 export type AppConfigBuilderCallback = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    builder: AppConfigBuilder<ModuleInitializerArgs<IAppConfigurator, any>>
+    builder: AppConfigBuilder<ModuleInitializerArgs<IAppConfigurator, any>>,
 ) => void | Promise<void>;
 
 export class AppConfigBuilder<
@@ -15,15 +15,18 @@ export class AppConfigBuilder<
     TInit extends ModuleInitializerArgs<IAppConfigurator, any> = ModuleInitializerArgs<
         IAppConfigurator,
         ModuleDeps
-    >
+    >,
 > {
     #init: TInit;
-    constructor(init: TInit, public config: Partial<AppModuleConfig> = {}) {
+    constructor(
+        init: TInit,
+        public config: Partial<AppModuleConfig> = {},
+    ) {
         this.#init = init;
     }
 
     requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey
+        module: TKey,
     ): Promise<ModuleType<Modules[TKey]>>;
 
     requireInstance<T>(module: string): Promise<T>;
@@ -43,7 +46,7 @@ export class AppConfigBuilder<
                 | QueryFn<AppConfig, { appKey: string }>
                 | QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
         },
-        expire = 1 * 60 * 1000
+        expire = 1 * 60 * 1000,
     ) {
         client;
         expire;

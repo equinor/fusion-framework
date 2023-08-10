@@ -3,11 +3,11 @@ import { Search, Autocomplete } from '@equinor/eds-core-react';
 import { GroupingKeys } from '../../hooks/useBookmarkGrouping';
 
 type BookmarkFilterProps = {
-    searchText: string;
-    setSearchText: (newVal: string | null) => void;
-    setGroupBy: (groupBy: GroupingKeys) => void;
-    groupingModes: string[];
-    groupBy: string;
+    readonly searchText: string;
+    readonly setSearchText: (newVal: string | null) => void;
+    readonly setGroupBy: (groupBy: GroupingKeys) => void;
+    readonly groupingModes: string[];
+    readonly groupBy: string;
 };
 
 const styles = {

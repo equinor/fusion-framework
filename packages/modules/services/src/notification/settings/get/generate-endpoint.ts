@@ -8,7 +8,7 @@ import type { GetUserNotificationSettingsArgs } from './types';
  */
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
     version: TVersion,
-    args: GetUserNotificationSettingsArgs<TVersion>
+    args: GetUserNotificationSettingsArgs<TVersion>,
 ) => {
     const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
     switch (apiVersion) {

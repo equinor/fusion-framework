@@ -53,7 +53,7 @@ export class AppModuleProvider {
                     return prev.appKey === next.appKey;
                 }
                 return prev === next;
-            })
+            }),
         );
     }
 
@@ -75,14 +75,14 @@ export class AppModuleProvider {
             this.current$
                 .pipe(
                     pairwise(),
-                    takeWhile(() => !!event)
+                    takeWhile(() => !!event),
                 )
                 .subscribe(([previous, next]) => {
                     event?.dispatchEvent('onCurrentAppChanged', {
                         source: this,
                         detail: { previous, next },
                     });
-                })
+                }),
         );
 
         this.#subscription.add(
@@ -90,9 +90,9 @@ export class AppModuleProvider {
                 .pipe(
                     pairwise(),
                     map(([previous]) => previous),
-                    filterEmpty()
+                    filterEmpty(),
                 )
-                .subscribe((app) => app.dispose())
+                .subscribe((app) => app.dispose()),
         );
     }
 
@@ -113,8 +113,8 @@ export class AppModuleProvider {
                         throw AppManifestError.fromHttpResponse(cause.response, { cause });
                     }
                     throw new AppManifestError('unknown', 'failed to load manifest', { cause });
-                })
-            )
+                }),
+            ),
         );
     }
 
@@ -131,7 +131,7 @@ export class AppModuleProvider {
      */
     public getAppConfig<TType = unknown>(
         appKey: string,
-        tag?: string
+        tag?: string,
     ): Observable<AppConfig<TType>> {
         return Query.extractQueryValue(
             this.#configClient.query({ appKey, tag }).pipe(
@@ -145,8 +145,8 @@ export class AppModuleProvider {
                         throw AppConfigError.fromHttpResponse(cause.response, { cause });
                     }
                     throw new AppConfigError('unknown', 'failed to load config', { cause });
-                })
-            )
+                }),
+            ),
         );
     }
 

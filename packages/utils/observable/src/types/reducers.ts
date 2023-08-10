@@ -11,7 +11,7 @@ export type ReducerAction<R extends Reducer<unknown, unknown>> = R extends Reduc
 
 export type ReducerWithInitialState<
     S extends NotFunction<unknown>,
-    A extends Action = AnyAction
+    A extends Action = AnyAction,
 > = Reducer<S, A> & {
     getInitialState: () => S;
 };

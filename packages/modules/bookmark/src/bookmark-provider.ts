@@ -88,7 +88,7 @@ export interface IBookmarkModuleProvider {
      */
     updateBookmarkAsync<T>(
         bookmark: PatchBookmark<T>,
-        options?: UpdateBookmarkOptions
+        options?: UpdateBookmarkOptions,
     ): Promise<Bookmark<T> | undefined>;
 
     /**
@@ -195,7 +195,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
 
         if (this.#event) {
             this.#subscriptions.add(
-                this.#event.addEventListener('onCurrentAppChanged', this.#clearStateCreators)
+                this.#event.addEventListener('onCurrentAppChanged', this.#clearStateCreators),
             );
         }
     }
@@ -222,7 +222,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
 
     public async updateBookmarkAsync<T>(
         bookmark: PatchBookmark<T>,
-        options?: UpdateBookmarkOptions
+        options?: UpdateBookmarkOptions,
     ): Promise<Bookmark<T> | undefined> {
         if (this.#getAppKey() !== bookmark.appKey) {
             return;

@@ -7,33 +7,33 @@ export const actions = {
         'getAll',
         (isValid: boolean) => ({ payload: isValid }),
         (bookmarks: Bookmark[]) => ({ payload: bookmarks }),
-        (err: unknown) => ({ payload: err })
+        (err: unknown) => ({ payload: err }),
     ),
     delete: createAsyncAction(
         'delete',
         (id: string) => ({ payload: id }),
-        (id: string) => ({ payload: id })
+        (id: string) => ({ payload: id }),
     ),
     addFavorite: createAsyncAction(
         'addFavorite',
         (bookmark: Bookmark) => ({ payload: bookmark }),
-        (bookmark: Bookmark) => ({ payload: bookmark })
+        (bookmark: Bookmark) => ({ payload: bookmark }),
     ),
     removeFavorite: createAsyncAction(
         'removeFavorite',
         (id: string) => ({ payload: id }),
-        (id: string) => ({ payload: id })
+        (id: string) => ({ payload: id }),
     ),
     update: createAsyncAction(
         'update',
         (bookmark: PatchBookmark) => ({ payload: bookmark }),
-        (bookmark: Bookmark) => ({ payload: bookmark })
+        (bookmark: Bookmark) => ({ payload: bookmark }),
     ),
     create: createAsyncAction(
         'create',
         (bookmark: CreateBookmark) => ({ payload: bookmark }),
         (bookmark: Bookmark) => ({ payload: bookmark }),
-        (err: unknown) => ({ payload: err })
+        (err: unknown) => ({ payload: err }),
     ),
 };
 

@@ -17,7 +17,7 @@ export interface ISignalRConfigurator {
 
 /** configuration callback */
 export type SignalRModuleConfigBuilderCallback<TDeps = unknown> = (
-    builder: SignalRModuleConfigBuilder<TDeps>
+    builder: SignalRModuleConfigBuilder<TDeps>,
 ) => void | Promise<void>;
 
 /**
@@ -46,7 +46,7 @@ export type SignalRConfig = {
  * builder utility class for generating configuration
  */
 export class SignalRModuleConfigBuilder<
-    TDeps extends AnyModule[] | unknown = unknown
+    TDeps extends AnyModule[] | unknown = unknown,
 > extends ModuleConfigBuilder<TDeps, ISignalRConfigurator> {
     async addHub(name: string, config: SignalRHubConfig) {
         this._config.addHub(name, config);
@@ -79,7 +79,7 @@ export class SignalRConfigurator implements ISignalRConfigurator {
      * await all registered hub configurations.
      */
     public async createConfig(
-        init: ModuleInitializerArgs<ISignalRConfigurator, [ServiceDiscoveryModule]>
+        init: ModuleInitializerArgs<ISignalRConfigurator, [ServiceDiscoveryModule]>,
     ): Promise<SignalRConfig> {
         /** trigger all builder callbacks */
         for (const cb of this.#builderCallbacks) {

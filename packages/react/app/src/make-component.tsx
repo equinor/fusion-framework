@@ -19,7 +19,7 @@ export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> 
 
 export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
     fusion: TFusion,
-    env: TEnv
+    env: TEnv,
 ) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
@@ -38,11 +38,11 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
 export const makeComponent = <
     TModules extends Array<AnyModule>,
     TRef extends Fusion = Fusion,
-    TEnv extends AppEnv = AppEnv
+    TEnv extends AppEnv = AppEnv,
 >(
     Component: React.ReactNode,
     args: { fusion: TRef; env: TEnv },
-    configure?: AppModuleInitiator<TModules, TRef, TEnv>
+    configure?: AppModuleInitiator<TModules, TRef, TEnv>,
 ) =>
     lazy(async () => {
         const init = configureModules<TModules, TRef, TEnv>(configure);

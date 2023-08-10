@@ -4,8 +4,8 @@ import { tokens } from '@equinor/eds-tokens';
 import { useFramework } from '@equinor/fusion-framework-react';
 
 type SharedIconProps = {
-    createdBy: string;
-    createdById: string;
+    readonly createdBy: string;
+    readonly createdById: string;
 };
 
 export const SharedIcon = ({ createdBy, createdById }: SharedIconProps) => {

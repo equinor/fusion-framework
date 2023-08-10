@@ -14,15 +14,17 @@ export const renderComponent = (renderer: ComponentRenderer) => {
 };
 
 const render = (el: Element, Component: FunctionComponent): RenderTeardown => {
+    // eslint-disable-next-line react/no-deprecated
     ReactDOM.render(
         <StrictMode>
             <Suspense fallback={<p>loading app</p>}>
                 <Component />
             </Suspense>
         </StrictMode>,
-        el
+        el,
     );
     return () => {
+        // eslint-disable-next-line react/no-deprecated
         ReactDOM.unmountComponentAtNode(el);
     };
 };

@@ -6,12 +6,12 @@ export type GetAllBookmarksResult<
     TVersion extends ApiVersions,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TPayload = unknown,
-    TResult = GetAllBookmarkResult<TVersion, TPayload>
+    TResult = GetAllBookmarkResult<TVersion, TPayload>,
 > = ClientMethod<TResult>[TMethod];
 
 export type GetAllBookmarkResult<
     TVersion extends ApiVersions,
-    TPayload
+    TPayload,
 > = GetAllBookmarksVersions<TPayload>[TVersion]['result'];
 
 export type GetAllBookmarksVersions<TPayload = unknown> = {

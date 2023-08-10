@@ -1,4 +1,4 @@
-export const ErrorViewer = ({ error }: { error: Error }) => {
+export const ErrorViewer = ({ error }: { readonly error: Error }) => {
     return (
         <>
             <div style={{ marginTop: 20, border: '1px solid' }}>

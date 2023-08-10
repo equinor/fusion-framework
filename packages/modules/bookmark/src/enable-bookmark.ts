@@ -20,8 +20,8 @@ export const enableBookmark = (
         builder: BookmarkConfigBuilder<
             TDeps,
             ModuleInitializerArgs<IBookmarkModuleConfigurator, TDeps>
-        >
-    ) => void | Promise<void>
+        >,
+    ) => void | Promise<void>,
 ): void => {
     configurator.addConfig({
         module,
