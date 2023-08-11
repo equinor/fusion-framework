@@ -1,5 +1,4 @@
-// TODO - @AndrejNikolicEq fix export for react component
-import { PersonPresence, PersonDetails } from '@equinor/fusion-wc-person';
+import { PersonDetails, PersonPresence } from '@equinor/fusion-react-person';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Query } from '@equinor/fusion-query';
@@ -13,8 +12,44 @@ const createPersonClient = (client: IHttpClient) => {
         queueOperator: 'merge',
         key: (azureId) => azureId,
         client: {
-            fn: (azureId: string) => {
-                return client.json<PersonDetails>(`/persons/${azureId}?api-version=4.0`);
+            fn: async (azureId: string) => {
+                const user = await client.json<PersonDetails>(
+                    `/persons/${azureId}?api-version=4.0&$expand=positions,manager`
+                );
+
+                // Profile image
+                await client
+                    .fetch(`/persons/${azureId}/photo?api-version=2.0`)
+                    .then(async (response) => {
+                        if (response.ok) {
+                            const data = await response.blob();
+                            const result = URL.createObjectURL(data);
+                            user.pictureSrc = result;
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+
+                // Manager profile image
+                if (user.managerAzureUniqueId) {
+                    await client
+                        .fetch(`/persons/${user.managerAzureUniqueId}/photo?api-version=2.0`)
+                        .then(async (response) => {
+                            if (response.ok) {
+                                const data = await response.blob();
+                                const result = URL.createObjectURL(data);
+                                if (user.manager) {
+                                    user.manager.pictureSrc = result;
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        });
+                }
+
+                return user;
             },
         },
     });
@@ -36,7 +71,7 @@ const createPersonClient = (client: IHttpClient) => {
 };
 
 export const usePersonResolver = () => {
-    // TODO - make better 🐒
+    // TODO - make better
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [resolver, setResolver] = useState<any | undefined>(undefined);
     const framework = useFramework();
