@@ -1,5 +1,4 @@
-// TODO - @AndrejNikolicEq fix export for react component
-import { PersonPresence, PersonDetails } from '@equinor/fusion-wc-person';
+import { PersonDetails, PersonPresence } from '@equinor/fusion-react-person';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Query } from '@equinor/fusion-query';
@@ -33,9 +32,9 @@ const createPersonClient = (client: IHttpClient) => {
                     });
 
                 // Manager profile image
-                if (user.manager) {
+                if (user.managerAzureUniqueId) {
                     await client
-                        .fetch(`/persons/${user.manager.azureUniqueId}/photo?api-version=2.0`)
+                        .fetch(`/persons/${user.managerAzureUniqueId}/photo?api-version=2.0`)
                         .then(async (response) => {
                             if (response.ok) {
                                 const data = await response.blob();
@@ -72,7 +71,7 @@ const createPersonClient = (client: IHttpClient) => {
 };
 
 export const usePersonResolver = () => {
-    // TODO - make better 🐒
+    // TODO - make better
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [resolver, setResolver] = useState<any | undefined>(undefined);
     const framework = useFramework();
