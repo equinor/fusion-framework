@@ -10,7 +10,7 @@ import { type INavigationConfigurator, NavigationConfigurator } from './configur
 import { createHistory } from './createHistory';
 import { type INavigationProvider, NavigationProvider } from './lib';
 
-import { version } from './version';
+import version from './version';
 
 export const moduleKey = 'navigation';
 
@@ -42,7 +42,7 @@ export const module: NavigationModule = {
 export const enableNavigation = <TRef = unknown>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>,
+    basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>
 ): void => {
     const options =
         typeof basenameOrOptions === 'string'
