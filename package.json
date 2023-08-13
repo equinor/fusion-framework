@@ -28,7 +28,7 @@
     "lint:report": "pnpm lint --output-file eslint-report.log.json --format json",
     "lint:staged": "lint-staged",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
-    "changeset:version": "changeset version && pnpm --lockfile-only",
+    "changeset:version": "changeset version && pnpm install --lockfile-only",
     "changeset:publish": "pnpm publish -r"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
