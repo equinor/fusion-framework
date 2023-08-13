@@ -1,6 +1,7 @@
-import { css } from '@emotion/css';
 import { Search, Autocomplete } from '@equinor/eds-core-react';
 import { GroupingKeys } from '../../hooks/useBookmarkGrouping';
+
+import styled from 'styled-components';
 
 type BookmarkFilterProps = {
     readonly searchText: string;
@@ -10,8 +11,8 @@ type BookmarkFilterProps = {
     readonly groupBy: string;
 };
 
-const styles = {
-    row: css`
+const Styled = {
+    Root: styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -26,7 +27,16 @@ export const BookmarkFilter = ({
     groupBy,
 }: BookmarkFilterProps) => {
     return (
-        <div className={styles.row}>
+        <Search
+            placeholder="Search in my bookmarks"
+            value={searchText ?? ''}
+            onChange={(e) => {
+                setSearchText(e.currentTarget.value.length ? e.currentTarget.value : null);
+            }}
+        />
+    );
+    return (
+        <Styled.Root>
             <Search
                 placeholder="Search in my bookmarks"
                 value={searchText ?? ''}
@@ -43,6 +53,6 @@ export const BookmarkFilter = ({
                 onOptionsChange={(changes) => setGroupBy(changes.selectedItems[0] as GroupingKeys)}
                 label={''}
             />
-        </div>
+        </Styled.Root>
     );
 };

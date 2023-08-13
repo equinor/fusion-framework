@@ -1,8 +1,8 @@
 import buildOdataQuery from 'odata-query';
 
-import { UnsupportedApiVersion } from '@equinor/fusion-framework-module-services/errors';
+import { UnsupportedApiVersion } from '../../errors';
 
-import { ApiVersion } from '@equinor/fusion-framework-module-services/context';
+import { ApiVersion } from '..';
 
 import type {
     RelatedContextArgs,

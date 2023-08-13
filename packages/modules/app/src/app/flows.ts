@@ -6,7 +6,7 @@ import { actions } from './actions';
 import type { Flow } from '@equinor/fusion-observable';
 import type { AppModuleProvider } from '../AppModuleProvider';
 import type { Actions } from './actions';
-import { AppBundleState } from './types';
+import type { AppBundleState } from './types';
 
 export const handleFetchManifest =
     (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>

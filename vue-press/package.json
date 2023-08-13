@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-docs",
   "version": "0.0.1",
   "description": "",
+  "type": "module",
   "private": true,
   "repository": {
     "type": "git",
@@ -14,8 +15,11 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@vuepress/client": "^2.0.0-beta.66",
     "@vuepress/plugin-register-components": "^2.0.0-beta.66",
+    "@vuepress/utils": "2.0.0-beta.66",
     "typescript": "^5.1.6",
+    "vue": "^3.3.4",
     "vuepress": "^2.0.0-beta.66",
     "vuepress-theme-hope": "^2.0.0-beta.233"
   }

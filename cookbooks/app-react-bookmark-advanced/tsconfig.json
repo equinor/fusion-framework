@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "jsx": "react-jsxdev",
   },
   "references": [

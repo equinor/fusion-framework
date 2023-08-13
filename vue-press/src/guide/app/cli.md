@@ -13,7 +13,7 @@ tag:
 <ModuleBadge module="cli" />
 
 ```sh
-yarn add --dev '@equinor/fusion-framework-cli'
+npm i -D '@equinor/fusion-framework-cli'
 ```
 
 ## Config

@@ -9,7 +9,7 @@
     "types": "./dist/types/index.d.ts",
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [
         "fusion",
@@ -32,12 +32,12 @@
         "directory": "packages/app"
     },
     "dependencies": {
-        "@equinor/fusion-framework": "^7.0.15",
-        "@equinor/fusion-framework-module": "^4.2.2",
-        "@equinor/fusion-framework-module-app": "^5.2.1",
-        "@equinor/fusion-framework-module-event": "^4.0.3",
-        "@equinor/fusion-framework-module-http": "^5.0.4",
-        "@equinor/fusion-framework-module-msal": "^3.0.4"
+        "@equinor/fusion-framework": "workspace:^",
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-app": "workspace:^",
+        "@equinor/fusion-framework-module-event": "workspace:^",
+        "@equinor/fusion-framework-module-http": "workspace:^",
+        "@equinor/fusion-framework-module-msal": "workspace:^"
     },
     "devDependencies": {
         "typescript": "^5.1.3"

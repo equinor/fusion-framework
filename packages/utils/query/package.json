@@ -51,13 +51,14 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "^8.0.3",
+        "@equinor/fusion-observable": "workspace:^",
+        "immer": "^9.0.16",
         "rxjs": "^7.5.7",
         "uuid": "^9.0.0"
     },

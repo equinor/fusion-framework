@@ -4,7 +4,9 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
+    "paths": {
+      "react": [ "./node_modules/@types/react" ],
+    },
   },
   "references": [
    

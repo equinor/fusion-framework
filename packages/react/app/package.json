@@ -33,7 +33,7 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -47,14 +47,18 @@
         "directory": "packages/react"
     },
     "dependencies": {
-        "@equinor/fusion-framework-app": "^7.0.16",
-        "@equinor/fusion-framework-module-navigation": "^3.0.1",
-        "@equinor/fusion-framework-react": "^5.2.2",
-        "@equinor/fusion-framework-react-module-http": "^3.0.3"
+        "@equinor/fusion-framework-app": "workspace:^",
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-app": "workspace:^",
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-framework-react": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@equinor/fusion-framework-react-module-http": "workspace:^"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-react-module-bookmark": "^2.0.12",
-        "@equinor/fusion-framework-react-module-context": "^6.0.9",
+        "@equinor/fusion-framework-module-event": "workspace:^",
+        "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
+        "@equinor/fusion-framework-react-module-context": "workspace:^",
         "@types/react": "^17.0.11",
         "@types/react-dom": "^17.0.7",
         "react": "^17.0.2",

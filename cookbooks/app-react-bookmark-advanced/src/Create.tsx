@@ -1,5 +1,5 @@
 import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { init, useBookmarkContext } from 'Provider';
+import { init, useBookmarkContext } from './Provider';
 
 export const Create = () => {
     const { updateState, ...state } = useBookmarkContext();

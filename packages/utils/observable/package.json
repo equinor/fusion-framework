@@ -45,7 +45,7 @@
         "build": "tsc -b",
         "lint": "eslint --ext .ts,.tsx,.js src/",
         "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
@@ -56,7 +56,9 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
+        "@testing-library/react": "^14.0.0",
         "@types/react": "^17.0.2",
+        "@types/node": "^20.4.9",
         "@types/uuid": "^8.3.4",
         "react": "^17.0.2",
         "typescript": "^5.1.3"
