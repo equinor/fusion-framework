@@ -1,6 +1,6 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { ClientMethod } from '@equinor/fusion-framework-module-services/context';
+import { ClientMethod } from '..';
 import deleteBookmark from './delete/client';
 import { DeleteBookmarkResult, DeleteBookmarksFn, DeleteBookmarksResult } from './delete/types';
 import getBookmark from './get/client';

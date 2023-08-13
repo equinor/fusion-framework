@@ -1,15 +1,8 @@
 import { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
-import {
-    ApiVersion,
-    ApiContextEntity,
-    ClientMethod,
-} from '@equinor/fusion-framework-module-services/context';
+import { ApiVersion, ApiContextEntity, ClientMethod } from '..';
 
-export {
-    ApiClientArguments,
-    ClientMethod,
-} from '@equinor/fusion-framework-module-services/context';
+export { ApiClientArguments, ClientMethod } from '..';
 
 type GetContextArgs_v1 = {
     id: string;

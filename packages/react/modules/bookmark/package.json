@@ -17,7 +17,7 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -31,14 +31,15 @@
         "directory": "packages/react/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-bookmark": "^1.0.6",
-        "@equinor/fusion-framework-module-context": "^4.0.9",
-        "@equinor/fusion-framework-react": "^5.2.3",
-        "@equinor/fusion-framework-react-module": "^3.0.3",
-        "@equinor/fusion-query": "^3.0.4"
+        "@equinor/fusion-framework-module-bookmark": "workspace:^",
+        "@equinor/fusion-framework-module-context": "workspace:^",
+        "@equinor/fusion-framework-react": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
+        "@equinor/fusion-query": "workspace:^"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module-navigation": "^3.0.3",
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@types/react": "^17.0.11",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",

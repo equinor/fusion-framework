@@ -22,7 +22,7 @@ The Fusion Portal only supports React@17
 <ModuleBadge module="cli" />
 
 ```sh
-yarn add --dev '@equinor/fusion-framework-cli'
+npm i -D '@equinor/fusion-framework-cli'
 ```
 
 ### Frameowork
@@ -30,7 +30,7 @@ yarn add --dev '@equinor/fusion-framework-cli'
 <ModuleBadge module="react/app" />
 
 ```sh
-yarn add --dev '@equinor/fusion-framework-react-app'
+npm i -D '@equinor/fusion-framework-react-app'
 ```
 
 ### Typescript
@@ -69,7 +69,7 @@ yarn add --dev '@equinor/fusion-framework-react-app'
 
 @tab required packages
 ```sh
-yarn add --dev @equinor/eslint-config-fusion eslint prettier
+npm i -D @equinor/eslint-config-fusion eslint prettier
 ```
 
 :::

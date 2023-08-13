@@ -1,7 +1,7 @@
-import { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
-import { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { QueryCtorOptions } from '@equinor/fusion-query';
+import type { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
+import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
+import type { QueryCtorOptions } from '@equinor/fusion-query';
 
 import { AppConfigBuilder, AppConfigBuilderCallback } from './AppConfigBuilder';
 

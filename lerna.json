@@ -1,6 +1,6 @@
 {
     "version": "independent",
-    "npmClient": "yarn",
+    "npmClient": "pnpm",
     "changelogPreset": "conventionalcommits",
     "command": {
         "version": {

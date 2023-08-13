@@ -18,9 +18,9 @@ Once you've installed Node.js (which includes the popular `npm` package manager)
   # clone repo
   git clone https://github.com/equinor/fusion-framework
   # install packages
-  yarn
+  pnpm install
   # build all packages
-  yarn build
+  pnpm build
 ```
 
 ## Repo structure

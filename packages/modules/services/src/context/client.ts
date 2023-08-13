@@ -1,6 +1,7 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { ClientMethod, ApiVersion } from '@equinor/fusion-framework-module-services/context';
+import type { ClientMethod } from './types';
+import { ApiVersion } from './static';
 
 import { getContext, GetContextFn, GetContextResponse, GetContextResult } from './get';
 

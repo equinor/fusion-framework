@@ -8,7 +8,7 @@ import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
 import { IContextProvider, ContextProvider } from './ContextProvider';
-import { ContextItem } from 'types';
+import { ContextItem } from './types';
 
 export type ContextModuleKey = 'context';
 

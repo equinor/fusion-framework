@@ -2,7 +2,12 @@
 .vscode
 node_modules
 
+*.Dockerfile
+
 **/node_modules
 
-packages/*/lib
-packages/*/dist
+packages/**/bin
+packages/**/lib
+packages/**/dist
+
+!packages/**/src/**

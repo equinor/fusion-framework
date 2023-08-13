@@ -25,7 +25,7 @@ HOW a consumer should update their code
 ### Creating from shell
 
 ```sh
-yarn changeset
+pnpm changeset
 ```
 
 ### From Bot

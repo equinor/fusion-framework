@@ -26,12 +26,12 @@ footer: Powered by Fusion
 ::: code-tabs#shell
 @tab Vanilla
 ```sh
-yarn add @equinor/fusion-framework-app
+npm i @equinor/fusion-framework-app
 ```
 
 @tab:active React
 ```sh
-yarn add @equinor/fusion-framework-react-app
+npm i @equinor/fusion-framework-react-app
 ```
 :::
 
@@ -39,11 +39,11 @@ yarn add @equinor/fusion-framework-react-app
 ::: code-tabs#shell
 @tab Vanilla
 ```sh
-yarn add @equinor/fusion-framework
+npm i @equinor/fusion-framework
 ```
 
 @tab:active React
 ```sh
-yarn add @equinor/fusion-framework-react
+npm i @equinor/fusion-framework-react
 ```
 :::

@@ -34,6 +34,8 @@ jobs:
         with:
           ref: docs
 
+      - uses: pnpm/action-setup@v2
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -43,14 +45,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-18-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-18-${{ hashFiles('**/pnpm-lock.yml') }}
 
       - name: Install Node Dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Build project
         run: |
-          yarn build
+          npm run build
           touch ../docs/.nojekyll
 
       - name: Config git user

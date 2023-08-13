@@ -1,5 +1,5 @@
-import { UnsupportedApiVersion } from '@equinor/fusion-framework-module-services/errors';
-import { ApiVersion } from '@equinor/fusion-framework-module-services/notification';
+import { UnsupportedApiVersion } from '../../../errors';
+import { ApiVersion } from '../..';
 
 import type { PostNotificationArgs } from './types';
 

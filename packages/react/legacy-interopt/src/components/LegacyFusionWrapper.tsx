@@ -32,7 +32,7 @@ const FallThrewComponent = ({
 
 export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapperProps>) => {
     const { framework, options, loader, RootWrapper = FallThrewComponent } = props;
-    const root = useRef(null);
+    const root = useRef<HTMLElement | null>(null);
     const overlay = useRef(null);
     const headerContent = useRef<HTMLElement | null>(null);
     const headerAppAside = useRef<HTMLElement | null>(null);

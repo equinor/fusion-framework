@@ -1,4 +1,4 @@
-export { ApiVersion, ApiContextEntity } from '@equinor/fusion-framework-module-services/context';
+export { ApiVersion, ApiContextEntity } from '..';
 
 export { generateEndpoint } from './generate-endpoint';
 export { generateParameters } from './generate-parameters';

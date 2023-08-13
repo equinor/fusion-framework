@@ -10,7 +10,7 @@ see [development](./development.md) for initial setup
 ### Running an existing cookbook
 ```sh
 cd cookbooks/app-react
-yarn dev
+pnpm dev
 ```
 
 ### Creating a new cookbook

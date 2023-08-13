@@ -1,10 +1,11 @@
-import { css } from '@emotion/css';
 import { Icon, Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { useOutsideClick } from '@equinor/eds-utils';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { MutableRefObject, ReactNode, useRef } from 'react';
 import { MoreMenu } from './MoreMenu';
+
+import styled from 'styled-components';
 
 export type MenuOption = {
     name: string;
@@ -22,14 +23,14 @@ type RowProps = {
     readonly children?: ReactNode;
 };
 
-const styles = {
-    iconRow: css`
+const Styled = {
+    Icons: styled.div`
         display: flex;
         flex-direction: row;
         gap: 0.2em;
         align-items: center;
     `,
-    row: css`
+    ListItem: styled.div`
         cursor: pointer;
         &:hover {
             background-color: ${tokens.colors.ui.background__light.hex};
@@ -53,9 +54,8 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
 
     // TODO: @noggling fix this
     return (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
-        <li
-            className={styles.row}
+        /* eslint-disable-next-line styled-components-a11y/click-events-have-key-events, styled-components-a11y/no-static-element-interactions*/
+        <Styled.ListItem
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -63,7 +63,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
             }}
         >
             <Typography>{name}</Typography>
-            <div className={styles.iconRow}>
+            <Styled.Icons>
                 {children}
                 {!!menuOptions?.length && (
                     <Icon
@@ -86,7 +86,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
                     }}
                     pRef={pRef}
                 />
-            </div>
-        </li>
+            </Styled.Icons>
+        </Styled.ListItem>
     );
 };

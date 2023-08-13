@@ -1,10 +1,11 @@
-import { css } from '@emotion/css';
 import { Button, Dialog } from '@equinor/eds-core-react';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { useEffect, useState } from 'react';
 
-const styles = {
-    actionWrapper: css`
+import styled from 'styled-components';
+
+const Styled = {
+    Actions: styled.div`
         display: flex;
         gap: 1rem;
     `,
@@ -31,7 +32,7 @@ export const ImportBookmarkModal = () => {
                 <p>Would you like to import it?</p>
             </Dialog.Content>
             <Dialog.Actions>
-                <div className={styles.actionWrapper}>
+                <Styled.Actions>
                     <Button
                         onClick={() => setIsOpen(false)}
                         variant={'ghost'}
@@ -49,7 +50,7 @@ export const ImportBookmarkModal = () => {
                     >
                         Import
                     </Button>
-                </div>
+                </Styled.Actions>
             </Dialog.Actions>
         </Dialog>
     );

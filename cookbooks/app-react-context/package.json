@@ -16,12 +16,15 @@
         "@equinor/fusion-framework-cli": "^8.0.0",
         "@equinor/fusion-framework-react-app": "^4.1.1",
         "@equinor/fusion-framework-react-module-context": "^6.0.7",
+        "@equinor/fusion-observable": "^8.0.3",
         "@types/react": "^18.0.24",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
+        "odata-query": "^7.0.3",
+        "rxjs": "^7.5.7",
         "typescript": "^5.1.3"
     }
 }

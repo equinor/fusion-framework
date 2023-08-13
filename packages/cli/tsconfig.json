@@ -4,7 +4,7 @@
     "outDir": "tmp",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "jsx": "react-jsx",
   },
   "references": [

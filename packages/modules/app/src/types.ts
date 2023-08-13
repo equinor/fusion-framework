@@ -1,7 +1,7 @@
 import { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
-import { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import IApp from './app';
 

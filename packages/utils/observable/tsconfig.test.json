@@ -5,7 +5,7 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "esModuleInterop": true,
-    "baseUrl": ".",
+    
     "paths": {
       "@equinor/fusion-observable": ["src"],
       "@equinor/fusion-observable/*": ["src/*"]
