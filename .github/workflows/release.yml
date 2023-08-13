@@ -35,7 +35,7 @@ jobs:
       #     key: ${{ runner.os }}-18-${{ hashFiles('**/pnpm-lock.yml') }}
 
       - name: Install Dependencies
-        run: pnpm --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
