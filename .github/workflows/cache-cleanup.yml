@@ -18,14 +18,15 @@ jobs:
           REPO=${{ github.repository }}
           BRANCH="refs/pull/${{ github.event.pull_request.number }}/merge"
 
-          echo "Fetching list of cache key"
           set +e
           echo "Deleting caches..."
           len=1
-          while [ len ]
+          while [ len -gt 0 ]
           do
+            echo "Fetching list of cache key"
             cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
             len=${#cacheKeysForPR[@]}
+            echo "Deleting ${len} items"
             for cacheKey in $cacheKeysForPR
             do
               gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
