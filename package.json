@@ -18,11 +18,11 @@
     "clean": "pnpm clean:build && pnpm clean:npm",
     "clean:npm": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:build": "pnpm -r exec rimraf dist bin tmp",
-    "build": "nx run-many -t build",
-    "build:cli": "pnpm --filter @equinor/fusion-framework-cli... build",
-    "build:packages": "pnpm --filter './packages/**' build",
-    "build:cookbooks": "pnpm --filter './cookbooks/**' build",
-    "build:affected": "pnpm --filter='...[origin/main]' build",
+    "build": "turbo build",
+    "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
+    "build:packages": "turbo build --filter './packages/**' build",
+    "build:cookbooks": "turbo build --filter './cookbooks/**' build",
+    "build:affected": "turbo build --filter=...origin/main build",
     "build:clean": "pnpm clean:build && pnpm build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "pnpm lint --output-file eslint-report.log.json --format json",
@@ -46,7 +46,6 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@nrwl/nx-cloud": "^16.0.5",
     "eslint-plugin-prettier": "^5.0.0",
     "genversion": "^3.1.1",
     "husky": "^8.0.3",
@@ -75,11 +74,10 @@
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "eslint": "^8.33.0",
     "eslint-plugin-rxjs": "^5.0.2",
-    "lerna": "^7.0.0",
-    "nx": "16.5.5",
     "prettier": "^3.0.0",
     "rimraf": "^5.0.1",
     "tslib": "^2.5.0",
+    "turbo": "^1.10.12",
     "typescript": "^5.1.6"
   }
 }

@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [16, 18]
+        version: [16,18]
 
     steps:
       - name: Checkout Repo
@@ -31,29 +31,27 @@ jobs:
         with:
           node-version: ${{ matrix.version }}
           cache: 'pnpm'
-  
-      # - name: restore node_modules
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: '**/node_modules'
-      #     key: ${{ runner.os }}-${{ matrix.version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
+        with:
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.version }}_
 
       - name: Install Node Dependencies
         run: pnpm install --frozen-lockfile
 
       # Cookbooks require CLI to be build for linking
-      - name: Build CLI
-        run: |
-          pnpm --filter @equinor/fusion-framework-cli... build
+      - run: |
+          pnpm build:cli
           pnpm install --offline --frozen-lockfile
-
+          
+      # TODO - dependabot should not have cache
       - name: Build project [dependabot]
         if: ${{ github.actor == 'dependabot[bot]' }}
         run: pnpm build
 
       - name: Build project [affected]
         if: ${{ github.actor != 'dependabot[bot]' }}
-        run: pnpm nx affected:build --base=remotes/origin/main
+        run: pnpm turbo run build --filter=...[origin/${{ github.base_ref }}]
 
       - name: Save Code Linting Report JSON
         if: ${{ github.actor != 'dependabot[bot]' && matrix.version == 18 }}
