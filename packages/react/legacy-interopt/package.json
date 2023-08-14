@@ -36,7 +36,7 @@
     },
     "devDependencies": {
         "@equinor/fusion": "^3.4.9",
-        "@equinor/fusion-components": "^2.10.5",
+        "@equinor/fusion-components": "^2.11.7",
         "@equinor/fusion-framework": "workspace:^",
         "@equinor/fusion-framework-app": "workspace:^",
         "@equinor/fusion-framework-module-app": "workspace:^",
