@@ -20,18 +20,23 @@ jobs:
 
           set +e
           echo "Deleting caches..."
-          len=1
-          while [ len -gt 0 ]
-          do
-            echo "Fetching list of cache key"
-            cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
-            len=${#cacheKeysForPR[@]}
-            echo "Deleting ${len} items"
-            for cacheKey in $cacheKeysForPR
+          echo "Fetching list of cache key..."
+
+          cacheKeysForPR=($(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1))
+          len=${#cacheKeysForPR[@]}
+
+          while [ $len -gt 0 ]
             do
-              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+              echo "Deleting $len items"
+              for cacheKey in "${cacheKeysForPR[@]}"
+                do
+                  gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+                done
+
+              cacheKeysForPR=($(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1))
+              len=${#cacheKeysForPR[@]}
+              
             done
-          done
 
           echo "Done"
         env:
