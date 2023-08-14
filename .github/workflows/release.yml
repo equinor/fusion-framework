@@ -43,25 +43,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-  prime_cache:
-    needs: release
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [16, 18]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.version }}
-          cache: 'pnpm'
-      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
-        with:
-          cache-prefix: ${{ runner.os }}-node-${{ matrix.version }}_
-      - run: |
-          pnpm install --frozen-lockfile
-          pnpm build:cli
-          pnpm install --offline --frozen-lockfile
-          pnpm build
 
