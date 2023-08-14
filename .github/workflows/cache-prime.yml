@@ -1,3 +1,5 @@
+name: prime caches by a branch
+
 on:
   workflow_run:
     workflows: [Release]
