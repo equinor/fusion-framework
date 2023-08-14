@@ -355,8 +355,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.30.0
-        version: 0.30.0(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
+        specifier: ^0.32.3
+        version: 0.32.3(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/eds-icons':
         specifier: ^0.19.1
         version: 0.19.1
@@ -462,7 +462,7 @@ importers:
         version: 0.1.6(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 0.1.0
-        version: 0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.30.0)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
+        version: 0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.32.3)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/fusion-react-styles':
         specifier: ^0.5.6
         version: 0.5.6(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -2172,28 +2172,6 @@ packages:
     resolution: {integrity: sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==}
     dev: true
 
-  /@equinor/eds-core-react@0.30.0(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
-    resolution: {integrity: sha512-CBSwNsn6LwDx99tYu2LuQAKP7f7JfcFPRSXG8AybU2zkCKBUU0e/rFV7THG2GztB3cDfppIuIB89UqEERfklfQ==}
-    engines: {node: '>=10.0.0', pnpm: '>=4'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-      styled-components: '>=4.2'
-    dependencies:
-      '@babel/runtime': 7.22.10
-      '@equinor/eds-icons': 0.19.1
-      '@equinor/eds-tokens': 0.9.0
-      '@equinor/eds-utils': 0.7.0(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
-      '@floating-ui/react': 0.19.2(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-virtual': 3.0.0-beta.45(react@18.2.0)
-      downshift: 7.6.2(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-components: 5.3.9(@babel/core@7.22.10)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
-
   /@equinor/eds-core-react@0.32.3(@babel/core@7.22.10)(react-dom@18.2.0)(react@17.0.2)(styled-components@5.3.9):
     resolution: {integrity: sha512-AO1UxfZ7QpU0YoQZ1OSJSdByYtGoSUiCYouudtrc/mYQ3I8CAvpcxCCF5OMwRM6z2NvOFaPJptinCfH93dGDPg==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
@@ -2217,6 +2195,28 @@ packages:
       - supports-color
     dev: true
 
+  /@equinor/eds-core-react@0.32.3(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
+    resolution: {integrity: sha512-AO1UxfZ7QpU0YoQZ1OSJSdByYtGoSUiCYouudtrc/mYQ3I8CAvpcxCCF5OMwRM6z2NvOFaPJptinCfH93dGDPg==}
+    engines: {node: '>=10.0.0', pnpm: '>=4'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+      styled-components: '>=4.2 < 6'
+    dependencies:
+      '@babel/runtime': 7.22.10
+      '@equinor/eds-icons': 0.19.3
+      '@equinor/eds-tokens': 0.9.2
+      '@equinor/eds-utils': 0.8.1(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
+      '@floating-ui/react': 0.24.8(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-virtual': 3.0.0-beta.54(react@18.2.0)
+      downshift: 7.6.2(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-components: 5.3.9(@babel/core@7.22.10)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
+
   /@equinor/eds-icons@0.19.1:
     resolution: {integrity: sha512-0GZqzLhJQGqAHsTmviUK9au+eRsT9z2BcJTbWWmG8EtxjWNq5dcTpeGSOv6pWNY5nfcGhLNtjOIjRlSidWMHnw==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
@@ -2224,7 +2224,6 @@ packages:
   /@equinor/eds-icons@0.19.3:
     resolution: {integrity: sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
-    dev: true
 
   /@equinor/eds-tokens@0.5.5:
     resolution: {integrity: sha512-PserXGVxf5Q7Z0o/AypudGWdh9Vangct3dQZsgiERfqRj8+a+mU0ObRa6bMm+JouQRV3WktNPJVWMjjJf8jQbw==}
@@ -2237,27 +2236,6 @@ packages:
   /@equinor/eds-tokens@0.9.2:
     resolution: {integrity: sha512-pDIFei0vsfN3GN12NKWqxskAkYBQd6+Dzjga2liuY81LfnlJs5g9NblamU9WY5w5YdVE5Z8FNjsMKDLs2JIWcw==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
-    dev: true
-
-  /@equinor/eds-utils@0.7.0(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
-    resolution: {integrity: sha512-Gy6QwH/wbq0o3Oa9M4iHb8Mlsd+25pjT8KvyfXMmQPlqe3DrSVAFJ1A+PP3SWyBoIMHHkHkW6SHlzhkfomA81g==}
-    engines: {node: '>=10.0.0', pnpm: '>=4'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-      styled-components: '>=4.2'
-    dependencies:
-      '@babel/runtime': 7.22.10
-      '@equinor/eds-tokens': 0.9.0
-      '@popperjs/core': 2.11.6
-      babel-jest: 29.6.2(@babel/core@7.22.10)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-popper: 2.3.0(@popperjs/core@2.11.6)(react-dom@18.2.0)(react@18.2.0)
-      styled-components: 5.3.9(@babel/core@7.22.10)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
 
   /@equinor/eds-utils@0.8.1(@babel/core@7.22.10)(react-dom@18.2.0)(react@17.0.2)(styled-components@5.3.9):
     resolution: {integrity: sha512-MqKqHhfOxGxbZPhHlZqiR58ei11CQ+UGJ/qEa7wC5pA/c+W9kyu7OveiK9OVvaswRiOmLaahnhSEC9JTFa7ICw==}
@@ -2277,6 +2255,24 @@ packages:
       - '@babel/core'
       - supports-color
     dev: true
+
+  /@equinor/eds-utils@0.8.1(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
+    resolution: {integrity: sha512-MqKqHhfOxGxbZPhHlZqiR58ei11CQ+UGJ/qEa7wC5pA/c+W9kyu7OveiK9OVvaswRiOmLaahnhSEC9JTFa7ICw==}
+    engines: {node: '>=10.0.0', pnpm: '>=4'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+      styled-components: '>=4.2'
+    dependencies:
+      '@babel/runtime': 7.22.10
+      '@equinor/eds-tokens': 0.9.2
+      babel-jest: 29.6.2(@babel/core@7.22.10)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-components: 5.3.9(@babel/core@7.22.10)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
 
   /@equinor/eslint-config-fusion-react@2.0.0(@equinor/eslint-config-fusion@2.1.3)(eslint@8.47.0):
     resolution: {integrity: sha512-nMfAQjzWiVeyjyymZPFrHQzRIt+XCQoMOpR7PcJBlG6+09qXoy6rtDcL1DWKtjfO8CHABuYDJwQ/rDsBNoq7zQ==}
@@ -2517,7 +2513,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.30.0)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
+  /@equinor/fusion-react-side-sheet@0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.32.3)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
     resolution: {integrity: sha512-xfgoTqDSJ3eRSUnR3WZpaIYum+kqOT42zR01VjhUeNvnQZtudkWNoPqTv9nNgwSUd+MTR0vglcnGzlp+VB0BGg==}
     peerDependencies:
       '@emotion/css': ^11.10.6
@@ -2537,7 +2533,7 @@ packages:
     dependencies:
       '@emotion/css': 11.10.6
       '@emotion/styled': 11.10.6(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0)
-      '@equinor/eds-core-react': 0.30.0(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
+      '@equinor/eds-core-react': 0.32.3(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/eds-icons': 0.19.1
       '@equinor/eds-tokens': 0.9.0
       '@types/react': 18.2.20
@@ -2685,7 +2681,7 @@ packages:
   /@equinor/fusion-wc-icon@1.0.31:
     resolution: {integrity: sha512-oYMImmUOoHP4lJNl23MP/xHAzv2WZU7ZOhI8mLQN8Eczgk7EKkClEch5cpsAtkw5ybwssIdu98e1SsS2XcZMpg==}
     dependencies:
-      '@equinor/eds-icons': 0.19.1
+      '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
     dev: true
@@ -3092,16 +3088,6 @@ packages:
       '@floating-ui/core': 1.4.1
       '@floating-ui/utils': 0.1.1
 
-  /@floating-ui/react-dom@1.3.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-htwHm67Ji5E/pROEAr7f8IKFShuiCKHwUC/UY4vC3I5jiSvGFAYnSYiZO5MlGmads+QqvUkR9ANHEguGrDv72g==}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@floating-ui/dom': 1.5.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   /@floating-ui/react-dom@2.0.1(react-dom@18.2.0)(react@17.0.2):
     resolution: {integrity: sha512-rZtAmSht4Lry6gdhAJDrCp/6rKN7++JnL1/Anbr/DdeyYXQPxvg/ivrbYvJulbRf4vL8b212suwMM2lxbv+RQA==}
     peerDependencies:
@@ -3113,17 +3099,15 @@ packages:
       react-dom: 18.2.0(react@17.0.2)
     dev: true
 
-  /@floating-ui/react@0.19.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-JyNk4A0Ezirq8FlXECvRtQOX/iBe5Ize0W/pLkrZjfHW9GUV7Xnq6zm6fyZuQzaHHqEnVizmvlA96e1/CkZv+w==}
+  /@floating-ui/react-dom@2.0.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-rZtAmSht4Lry6gdhAJDrCp/6rKN7++JnL1/Anbr/DdeyYXQPxvg/ivrbYvJulbRf4vL8b212suwMM2lxbv+RQA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@floating-ui/react-dom': 1.3.0(react-dom@18.2.0)(react@18.2.0)
-      aria-hidden: 1.2.3
+      '@floating-ui/dom': 1.5.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tabbable: 6.2.0
 
   /@floating-ui/react@0.24.8(react-dom@18.2.0)(react@17.0.2):
     resolution: {integrity: sha512-AuYeDoaR8jtUlUXtZ1IJ/6jtBkGnSpJXbGNzokBL87VDJ8opMq1Bgrc0szhK482ReQY6KZsMoZCVSb4xwalkBA==}
@@ -3137,6 +3121,18 @@ packages:
       react-dom: 18.2.0(react@17.0.2)
       tabbable: 6.2.0
     dev: true
+
+  /@floating-ui/react@0.24.8(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-AuYeDoaR8jtUlUXtZ1IJ/6jtBkGnSpJXbGNzokBL87VDJ8opMq1Bgrc0szhK482ReQY6KZsMoZCVSb4xwalkBA==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@floating-ui/react-dom': 2.0.1(react-dom@18.2.0)(react@18.2.0)
+      aria-hidden: 1.2.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tabbable: 6.2.0
 
   /@floating-ui/utils@0.1.1:
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
@@ -3420,26 +3416,26 @@ packages:
   /@material/animation@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-GBuR4VmcTQW1D0lPXEosf5Giho72LLbyGIydWGtaEUtLJoive/D9kFkwTN4Fsyt9Kkl7hbhs35vrNe6QkAH4/Q==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/base@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-UJKbXwZtkrA3sfQDmj8Zbw1Q3Tqtl6KdfVFws95Yf7TCUgTFzbZI/FSx1w7dVugQPOEnIBuZnzqZam/MtHkx4w==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/density@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-Eh/vZ3vVyqtpylg5Ci33qlgtToS4H1/ppd450Ib3tcdISIoodgijYY0w4XsRvrnZgbI/h/1STFdLxdzS0UNuFw==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/dom@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-aR+rfncF6oi2ivdOlKSJI4UXwNzWV5rXM88MLDoSJF1D7lXxhAKhge+tMUBodWGV/q0+FnXLuVAa0WYTrKjo+A==}
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/elevation@14.0.0-canary.53b3cad2f.0:
@@ -3450,18 +3446,18 @@ packages:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/feature-targeting@14.0.0:
     resolution: {integrity: sha512-a5WGgHEq5lJeeNL5yevtgoZjBjXWy6+klfVWQEh8oyix/rMJygGgO7gEc52uv8fB8uAIoYEB3iBMOv8jRq8FeA==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /@material/feature-targeting@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-fn7Af3PRyARtNeYqtjxXmE3Y/dCpnpQVWWys57MqiGR/nvc6qpgOfJ6rOdcu/MrOysOE/oebTUDmDnTmwpe9Hw==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/floating-label@14.0.0-canary.53b3cad2f.0:
@@ -3474,7 +3470,7 @@ packages:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/focus-ring@14.0.0-canary.53b3cad2f.0:
@@ -3494,7 +3490,7 @@ packages:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/line-ripple@14.0.0-canary.53b3cad2f.0:
@@ -3504,7 +3500,7 @@ packages:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/list@14.0.0-canary.53b3cad2f.0:
@@ -3519,7 +3515,7 @@ packages:
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/menu-surface@14.0.0-canary.53b3cad2f.0:
@@ -3532,7 +3528,7 @@ packages:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/menu@14.0.0-canary.53b3cad2f.0:
@@ -3547,7 +3543,7 @@ packages:
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-base@0.27.0:
@@ -3556,7 +3552,7 @@ packages:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-button@0.27.0:
@@ -3565,7 +3561,7 @@ packages:
       '@material/mwc-icon': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-checkbox@0.27.0:
@@ -3574,7 +3570,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-floating-label@0.27.0:
@@ -3582,7 +3578,7 @@ packages:
     dependencies:
       '@material/floating-label': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-formfield@0.27.0:
@@ -3591,7 +3587,7 @@ packages:
       '@material/form-field': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-icon-button-toggle@0.27.0:
@@ -3601,7 +3597,7 @@ packages:
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-icon-button@0.27.0:
@@ -3609,14 +3605,14 @@ packages:
     dependencies:
       '@material/mwc-ripple': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-icon@0.27.0:
     resolution: {integrity: sha512-Sul44I37M9Ewynn0A9DjkEBrmll2VtNbth6Pxj7I1A/EAwEfaCrPvryyGqfIu1T2hTsRcaojzQx6QjF+B5QW9A==}
     dependencies:
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-line-ripple@0.27.0:
@@ -3624,7 +3620,7 @@ packages:
     dependencies:
       '@material/line-ripple': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-list@0.27.0:
@@ -3638,7 +3634,7 @@ packages:
       '@material/mwc-radio': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-menu@0.27.0:
@@ -3651,7 +3647,7 @@ packages:
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-notched-outline@0.27.0:
@@ -3660,7 +3656,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/notched-outline': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-radio@0.27.0:
@@ -3670,7 +3666,7 @@ packages:
       '@material/mwc-ripple': 0.27.0
       '@material/radio': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-ripple@0.27.0:
@@ -3680,7 +3676,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/mwc-textfield@0.27.0:
@@ -3694,7 +3690,7 @@ packages:
       '@material/mwc-notched-outline': 0.27.0
       '@material/textfield': 14.0.0-canary.53b3cad2f.0
       lit: 2.7.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/notched-outline@14.0.0-canary.53b3cad2f.0:
@@ -3706,7 +3702,7 @@ packages:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/radio@14.0.0-canary.53b3cad2f.0:
@@ -3721,7 +3717,7 @@ packages:
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/touch-target': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/ripple@14.0.0-canary.53b3cad2f.0:
@@ -3733,14 +3729,14 @@ packages:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/rtl@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-f08LT0HSa0WYU+4Jz/tbm1TQ9Fcf2k+H6dPPYv0J1sZmX6hMgCEmNiUdUFLQFvszoXx2XrRi1/hIFjbz2e69Yg==}
     dependencies:
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/shape@14.0.0-canary.53b3cad2f.0:
@@ -3749,7 +3745,7 @@ packages:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/textfield@14.0.0-canary.53b3cad2f.0:
@@ -3769,20 +3765,20 @@ packages:
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/tokens': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/theme@14.0.0:
     resolution: {integrity: sha512-6/SENWNIFuXzeHMPHrYwbsXKgkvCtWuzzQ3cUu4UEt3KcQ5YpViazIM6h8ByYKZP8A9d8QpkJ0WGX5btGDcVoA==}
     dependencies:
       '@material/feature-targeting': 14.0.0
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /@material/theme@14.0.0-canary.53b3cad2f.0:
     resolution: {integrity: sha512-S06XAevDCDWMe+GgsEpITMS07imUidzadNaTbJsqssFajBLr53QWVZsG84BpjXKXoYvyEJvb0hX5U0lq6ip9UQ==}
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/tokens@14.0.0-canary.53b3cad2f.0:
@@ -3797,7 +3793,7 @@ packages:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@material/typography@14.0.0-canary.53b3cad2f.0:
@@ -3805,7 +3801,7 @@ packages:
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /@microsoft/applicationinsights-analytics-js@2.8.15(tslib@2.6.1):
@@ -4473,9 +4469,6 @@ packages:
       tslib: 2.6.1
     dev: true
 
-  /@popperjs/core@2.11.6:
-    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
-
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: true
@@ -4663,14 +4656,6 @@ packages:
       regenerator-runtime: 0.13.11
     dev: true
 
-  /@tanstack/react-virtual@3.0.0-beta.45(react@18.2.0):
-    resolution: {integrity: sha512-/VCBrs89i9s4cM9Ag9nFfu3PD5U50vmqdZqWyxgy2ljuLlDRvOkBXDcyRjP32tDpkYjAKbsqK0UEmHK+nbIPBA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@tanstack/virtual-core': 3.0.0-beta.45
-      react: 18.2.0
-
   /@tanstack/react-virtual@3.0.0-beta.54(react@17.0.2):
     resolution: {integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==}
     peerDependencies:
@@ -4680,12 +4665,16 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@tanstack/virtual-core@3.0.0-beta.45:
-    resolution: {integrity: sha512-RPEwL4BxsQlaO6F923WnElLnOIokJmdwVBK835s9JQPoY+CMJUotAXjJK2I/Gsy8AXLjdvTvS50uOiKHIUHBKw==}
+  /@tanstack/react-virtual@3.0.0-beta.54(react@18.2.0):
+    resolution: {integrity: sha512-D1mDMf4UPbrtHRZZriCly5bXTBMhylslm4dhcHqTtDJ6brQcgGmk8YD9JdWBGWfGSWPKoh2x1H3e7eh+hgPXtQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0-beta.54
+      react: 18.2.0
 
   /@tanstack/virtual-core@3.0.0-beta.54:
     resolution: {integrity: sha512-jtkwqdP2rY2iCCDVAFuaNBH3fiEi29aTn2RhtIoky8DTTiCdc48plpHHreLwmv1PICJ4AJUUESaq3xa8fZH8+g==}
-    dev: true
 
   /@testing-library/dom@9.3.1:
     resolution: {integrity: sha512-0DGPd9AR3+iDTjGoMpxIkAsUihHZ3Ai6CneU6bRRrffXMgzCdlNk43jTrD2/5LT6CBb3MWTP8v510JzYtahD2w==}
@@ -5532,7 +5521,7 @@ packages:
     resolution: {integrity: sha512-xcLxITLe2HYa1cnYnwCjkOO1PqUHQpozB8x9AR0OgWN2woOBi5kSDVxKfd0b7sb1hw5qFeJhXm9H1nu3xSfLeQ==}
     engines: {node: '>=10'}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /aria-query@5.1.3:
     resolution: {integrity: sha512-R5iJ5lkuHybztUfuOAznmboyjWq8O6sqNqtK7CLOqdydi54VNbORp49mb14KbWgG1QD3JFO9hJdZ+y4KutfdOQ==}
@@ -6449,7 +6438,7 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
       react-is: 17.0.2
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /downshift@7.6.2(react@18.2.0):
@@ -6462,7 +6451,7 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 17.0.2
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /earcut@2.2.4:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
@@ -9556,6 +9545,7 @@ packages:
 
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
+    dev: true
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -9569,19 +9559,6 @@ packages:
   /react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
-
-  /react-popper@2.3.0(@popperjs/core@2.11.6)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==}
-    peerDependencies:
-      '@popperjs/core': ^2.0.0
-      react: ^16.8.0 || ^17 || ^18
-      react-dom: ^16.8.0 || ^17 || ^18
-    dependencies:
-      '@popperjs/core': 2.11.6
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-fast-compare: 3.2.2
-      warning: 4.0.3
 
   /react-popper@2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==}
@@ -9961,7 +9938,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /safe-array-concat@1.0.0:
@@ -10432,7 +10409,7 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/utils': 2.4.2
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /tabbable@6.2.0:
@@ -11023,6 +11000,7 @@ packages:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
     dependencies:
       loose-envify: 1.4.0
+    dev: true
 
   /wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
