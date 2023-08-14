@@ -160,8 +160,8 @@ importers:
   cookbooks/app-react-bookmark-advanced:
     dependencies:
       '@remix-run/router':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.8.0
+        version: 1.8.0
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^8.0.0
@@ -306,8 +306,8 @@ importers:
         specifier: ^4.1.1
         version: link:../../packages/react/app
       '@remix-run/router':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.8.0
+        version: 1.8.0
       '@types/react':
         specifier: ^18.0.24
         version: 18.2.20
@@ -707,8 +707,8 @@ importers:
   packages/modules/navigation:
     dependencies:
       '@remix-run/router':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.8.0
+        version: 1.8.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -4499,9 +4499,9 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /@remix-run/router@1.7.2:
-    resolution: {integrity: sha512-7Lcn7IqGMV+vizMPoEl5F0XDshcdDYtMI6uJLQdQz5CfZAwy3vvGKYSUk789qndt5dEC4HfSjviSYlSoHGL2+A==}
-    engines: {node: '>=14'}
+  /@remix-run/router@1.8.0:
+    resolution: {integrity: sha512-mrfKqIHnSZRyIzBcanNJmVQELTnX+qagEDlcKO90RgRBVOZGSGvZKeDihTRfWcqoDn5N/NkUcwWTccnpN18Tfg==}
+    engines: {node: '>=14.0.0'}
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
