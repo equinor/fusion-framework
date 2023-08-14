@@ -23,8 +23,8 @@ importers:
         specifier: ^8.47.0
         version: 8.47.0
       eslint-plugin-rxjs:
-        specifier: ^5.0.2
-        version: 5.0.2(eslint@8.47.0)(typescript@5.1.6)
+        specifier: ^5.0.3
+        version: 5.0.3(eslint@8.47.0)(typescript@5.1.6)
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -6449,7 +6449,7 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
       react-is: 17.0.2
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /downshift@7.6.2(react@18.2.0):
@@ -6462,7 +6462,7 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 17.0.2
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /earcut@2.2.4:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
@@ -6842,11 +6842,11 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: false
 
-  /eslint-plugin-rxjs@5.0.2(eslint@8.47.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-Q2wsEHWInhZ3uz5df+YbD4g/NPQqAeYHjJuEsxqgVS+XAsYCuVE2pj9kADdMFy4GsQy2jt7KP+TOrnq1i6bI5Q==}
+  /eslint-plugin-rxjs@5.0.3(eslint@8.47.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-fcVkqLmYLRfRp+ShafjpUKuaZ+cw/sXAvM5dfSxiEr7M28QZ/NY7vaOr09FB4rSaZsQyLBnNPh5SL+4EgKjh8Q==}
     peerDependencies:
       eslint: ^8.0.0
-      typescript: ^4.0.0
+      typescript: '>=4.0.0'
     dependencies:
       '@typescript-eslint/experimental-utils': 5.62.0(eslint@8.47.0)(typescript@5.1.6)
       common-tags: 1.8.2
@@ -6855,7 +6855,7 @@ packages:
       eslint-etc: 5.2.1(eslint@8.47.0)(typescript@5.1.6)
       requireindex: 1.2.0
       rxjs-report-usage: 1.0.6
-      tslib: 2.5.0
+      tslib: 2.6.1
       tsutils: 3.21.0(typescript@5.1.6)
       tsutils-etc: 1.4.2(tsutils@3.21.0)(typescript@5.1.6)
       typescript: 5.1.6
@@ -9961,7 +9961,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /safe-array-concat@1.0.0:
@@ -10432,7 +10432,7 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     dependencies:
       '@pkgr/utils': 2.4.2
-      tslib: 2.5.0
+      tslib: 2.6.1
     dev: true
 
   /tabbable@6.2.0:
