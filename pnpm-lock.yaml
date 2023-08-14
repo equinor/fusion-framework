@@ -90,8 +90,8 @@ importers:
   cookbooks/app-react-ag-grid:
     dependencies:
       '@ag-grid-community/client-side-row-model':
-        specifier: ~30.0.5
-        version: 30.0.5
+        specifier: ~30.0.6
+        version: 30.0.6
       '@ag-grid-community/core':
         specifier: ~30.0.5
         version: 30.0.5
@@ -1286,14 +1286,18 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
 
-  /@ag-grid-community/client-side-row-model@30.0.5:
-    resolution: {integrity: sha512-tRfG4v4RjzJTI+KjYid4vI1Q1uiIj3iajQxdP9d6dy8bmzKNlY9y7aWI8LzLVzoDuiEXcOzrHilPAQz7YvSn+Q==}
+  /@ag-grid-community/client-side-row-model@30.0.6:
+    resolution: {integrity: sha512-0LQ8PpBtAIQM+cudqbnkU0ncd1fHbrdbdkXm3jb5YipGEISA1WEaXB6RvVxZxBYS0uhrpik2D2UeEQUjiHGUvA==}
     dependencies:
-      '@ag-grid-community/core': 30.0.5
+      '@ag-grid-community/core': 30.0.6
     dev: false
 
   /@ag-grid-community/core@30.0.5:
     resolution: {integrity: sha512-IAgE4ZW1oZwCzWnBlm056/8axVLXVSPQkBAaRNotM1b7XFD6jTG2VVAtCVIhprUyfbdwrg6BV+UpDlGrMbesjA==}
+    dev: false
+
+  /@ag-grid-community/core@30.0.6:
+    resolution: {integrity: sha512-NRVKlLfQK/A0k78rg46z2CsiyKHrZr9TQP9CGalFc1rPk97YYesO0zxy59KYTzoZhxo/E0M16aW4gpS3SBD90A==}
     dev: false
 
   /@ag-grid-community/react@30.0.5(@ag-grid-community/core@30.0.5)(react-dom@18.2.0)(react@18.2.0):
