@@ -1,26 +1,41 @@
-name: Dependabot auto-merge
-on: pull_request
+name: dependabot
 
-permissions:
-  contents: write
-  pull-requests: write
+on: 
+  pull_request:
+    branches: 
+      - 'dependabot/**'
 
 jobs:
-  dependabot:
+  build:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-    - name: Dependabot metadata
-      id: metadata
-      uses: dependabot/fetch-metadata@v1
-      with:
-        github-token: "${{ github.token }}"
+      - name: Checkout source files
+        uses: actions/checkout@v3
+
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+
+      - name: Build all packages
+        uses: ./.github/workflows/actions/build-packages
         
-    - name: Enable auto-merge for Dependabot PRs
-      if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
-      run: |
-        gh pr review --approve "$PR_URL"
-        gh pr merge --auto --squash "$PR_URL"
-      env:
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        GITHUB_TOKEN: ${{ github.token }}
+  auto-approve-patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ github.token }}"
+          
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ github.token }}
+

@@ -1,0 +1,14 @@
+name: pr cleanup
+on:
+  pull_request: 
+    types: 
+      - closed
+
+jobs:
+  cleanup:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: clear pull request cache
+        uses: ./.github/workflows/actions/clear-cache
+        with:
+          branch: refs/pull/${{ github.event.pull_request.number }}/merge

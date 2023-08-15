@@ -1,0 +1,8 @@
+name: configure git user
+
+runs:
+  using: composite
+    - shell: bash
+      run: |
+        git config --global user.name "${{ github.actor }}[bot]"
+        git config --global user.email "${{ github.actor }}[bot]@users.noreply.github.com"
