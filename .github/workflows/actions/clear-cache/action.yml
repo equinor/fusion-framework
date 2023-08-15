@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |-
+    - run: >-
         ${{ github.action_path }}/clear-cache.sh 
         -R ${{ inputs.repo || '' }} 
         -B ${{ inputs.branch || '' }} 
