@@ -1,11 +1,25 @@
-name: maintain cache
+name: cache
 
 on:
-  workflow_run:
-    workflows: 
-      - ci
-    types: 
-      - completed
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+      filter:
+        type: string
+      rebuild:
+        type: boolean
+        default: false
+
+  workflow_call: 
+    inputs:
+      branch:
+        type: string
+      filter:
+        type: string
+      rebuild:
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,10 +35,14 @@ jobs:
         uses: ./.github/workflows/actions/clear-cache
         continue-on-error: true
         with:
-          branch: main
+          branch: ${{ inputs.branch }}
+          filter: ${{ inputs.filter }}
 
       - name: Setup node and install deps
+        id: install
+        if: ${{ inputs.rebuild == 'true' }}
         uses: ./.github/workflows/actions/node-setup
 
       - name: Generate cache for source code
+        if: ${{ steps.install.outcome == 'success' }}
         uses: ./.github/workflows/actions/build-packages

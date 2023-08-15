@@ -1,0 +1,19 @@
+name: ci completed
+
+on:
+  workflow_run:
+    workflows: 
+      - ci
+    types: 
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild-main-cache:
+    uses: ./.github/workflows/cache.yml
+    with:
+      branch: main
+      rebuild: true
