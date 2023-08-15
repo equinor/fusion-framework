@@ -2,8 +2,9 @@
 while getopts r:b: flag
 do
     case "${flag}" in
-        r) REPO=${OPTARG};;
-        b) BRANCH=${OPTARG};;
+        R) REPO=${OPTARG};;
+        B) BRANCH=${OPTARG};;
+        F) FILTER=${OPTARG};;
     esac
 done
 
@@ -11,15 +12,14 @@ gh extension install actions/gh-actions-cache
 
 set +e
 
-echo "$BRANCH"
-echo "$REPO"
 echo "Deleting caches for $REPO on barch $BRANCH"
 
 LIMIT=100
+TOTAL=0
 
 function fetch_cache_records() {
   echo "Fetching list of cache keys..."
-  CACHE_HITS=($(gh actions-cache list -R $REPO -B $BRANCH -L $LIMIT | cut -f 1))
+  CACHE_HITS=($(gh actions-cache list -R $REPO -B $BRANCH -L $LIMIT --key $FILTER | cut -f 1))
   CACHE_HITS_COUNT=${#CACHE_HITS[@]}
 }
 
@@ -32,13 +32,13 @@ while [ $CACHE_HITS_COUNT -gt 0 ]
       do
         gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
       done
-
+    TOTAL=$TOTAL+$LIMIT
     if [[ "$CACHE_HITS_COUNT" == "$LIMIT" ]]; then
-      echo "Processed $LIMIT/$LIMIT, checking for more"
+      echo "Processed $TOTAL/$TOTAL, checking for more"
       fetch_cache_records
     else
       CACHE_HITS_COUNT=0
     fi
   done
 
-echo "Done"
+echo "Done, deleted $TOTAL cache records"
