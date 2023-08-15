@@ -10,5 +10,6 @@ runs:
   using: composite
   steps:
     - run: gh extension install actions/gh-actions-cache
+      shell: bash
     - run: ${{ github.action_path }}/clear-cache.sh -r ${{ inputs.repo }} -b ${{ inputs.branch }}
       shell: bash
