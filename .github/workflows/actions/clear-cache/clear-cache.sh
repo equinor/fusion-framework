@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts r:b: flag
+while getopts R:B:F: flag
 do
     case "${flag}" in
         R) REPO=${OPTARG};;
@@ -10,16 +10,18 @@ done
 
 gh extension install actions/gh-actions-cache
 
-set +e
-
-echo "Deleting caches for $REPO on barch $BRANCH"
-
 LIMIT=100
 TOTAL=0
 
+set +e
+
+echo "Repo: ${BRANCH:-[not provided, using current]}"
+echo "Branch: ${BRANCH:-[no branch]}"
+echo "Filter: ${FILTER:-[no filter]}"
+
 function fetch_cache_records() {
   echo "Fetching list of cache keys..."
-  CACHE_HITS=($(gh actions-cache list -R $REPO -B $BRANCH -L $LIMIT --key $FILTER | cut -f 1))
+  CACHE_HITS=($(gh actions-cache list -R ${REPO:-''} -B ${BRANCH:-''} --key ${FILTER:-''} -L $LIMIT | cut -f 1))
   CACHE_HITS_COUNT=${#CACHE_HITS[@]}
 }
 
