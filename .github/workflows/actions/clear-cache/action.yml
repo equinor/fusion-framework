@@ -1,0 +1,14 @@
+inputs:
+  repo:
+    description: 'Select another repository for finding actions cache'
+    required: false
+    default: ${{ github.repository }}
+  branch:
+    description: 'Filter by branch'
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: gh extension install actions/gh-actions-cache
+    - run: ${{ github.action_path }}/clear-cache.sh -r ${{ inputs.repo }} -b ${{ inputs.branch }}
+      shell: bash

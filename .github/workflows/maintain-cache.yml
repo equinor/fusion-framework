@@ -1,0 +1,31 @@
+name: maintain cache
+
+on:
+  workflow_run:
+    workflows: 
+      - ci
+    types: 
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  maintain:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Clear all cache on main branch
+        uses: ./.github/workflows/actions/clear-cache
+        continue-on-error: true
+        with:
+          branch: main
+
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+
+      - name: Generate cache for source code
+        uses: ./.github/workflows/actions/build-packages

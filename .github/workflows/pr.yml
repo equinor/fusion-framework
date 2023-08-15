@@ -1,0 +1,32 @@
+name: pr
+
+on: 
+  pull_request:
+    branches-ignore: 
+      - 'dependabot/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  check:
+    name: Check code quility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+
+      - name: Lint source files
+        uses: ./.github/workflows/actions/eslint
+        continue-on-error: true
+
+      - name: Build affected packages
+        uses: ./.github/workflows/actions/build-packages
+        with: 
+          only-affected: true
+
