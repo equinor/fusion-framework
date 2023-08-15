@@ -13,9 +13,9 @@ runs:
   steps:
     - run: |-
         ${{ github.action_path }}/clear-cache.sh 
-        -R ${{ inputs.repo || "''" }} 
-        -B ${{ inputs.branch || "''" }} 
-        -F ${{ inputs.filter || "''" }}
+        -R ${{ inputs.repo || "" }} 
+        -B ${{ inputs.branch || "" }} 
+        -F ${{ inputs.filter || "" }}
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
