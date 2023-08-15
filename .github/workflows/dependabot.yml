@@ -9,8 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source files
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
