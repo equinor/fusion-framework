@@ -537,8 +537,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~30.0.5
-        version: 30.0.5
+        specifier: ~30.0.6
+        version: 30.0.6
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1317,10 +1317,10 @@ packages:
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
     dev: false
 
-  /@ag-grid-enterprise/core@30.0.5:
-    resolution: {integrity: sha512-1jmIxGyApuFldqcHYqZ0hs6TT/vgu75JqEz9wTxc7pGM3yR+N2kedic5LhnKUOaHtSBEVcVNFAVIY96JUfCruw==}
+  /@ag-grid-enterprise/core@30.0.6:
+    resolution: {integrity: sha512-uxSmWLspBmaABX0X/5ag8hrzTUWUqcQ1Hz6sSUbxZoDiOu+VfUS8J9azpYHJNQkOHdZ4a51kKgTnRzFlp/eqPA==}
     dependencies:
-      '@ag-grid-community/core': 30.0.5
+      '@ag-grid-community/core': 30.0.6
     dev: false
 
   /@ampproject/remapping@2.2.1:
