@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import { eventContext } from './eventContext';
-import { useModulesEventProvider } from 'useModulesEventProvider';
+import { useModulesEventProvider } from './useModulesEventProvider';
 
 /**
  * Hook for using {@link IEventModuleProvider} from context

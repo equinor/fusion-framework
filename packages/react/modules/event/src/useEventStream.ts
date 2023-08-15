@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { Observable, OperatorFunction } from 'rxjs';
+import type { Observable, OperatorFunction } from 'rxjs';
 
 import { FrameworkEventMap, filterEvent } from '@equinor/fusion-framework-module-event';
-import { useEventProvider } from 'EventProvider';
+import { useEventProvider } from './EventProvider';
 
 export type EventStream<TKey extends keyof FrameworkEventMap = keyof FrameworkEventMap> =
     Observable<FrameworkEventMap[TKey]>;

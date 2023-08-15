@@ -41,9 +41,9 @@ gh repo clone equinor/fusion-framework
 
 @tab Run locally
 ```sh
-yarn && yarn build
+pnpm && pnpm build
 cd cookbooks/app-react
-yarn dev
+pnpm dev
 # follow link to http://localhost:3000/apps/app-react
 ```
 
@@ -53,8 +53,8 @@ yarn dev
 # $MY_APP_DIR = the directory you wish to develop in
 cp -r $FRAMEWORK_DIRECTORY/cookbooks/app-react $MY_APP_DIR
 cd $MY_APP_DIR
-yarn
-yarn dev
+npm i
+npm run dev
 # follow link to http://localhost:3000/apps/app-react
 ```
 

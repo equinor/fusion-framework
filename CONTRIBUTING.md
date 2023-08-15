@@ -64,8 +64,8 @@ Your commits should adhere to [conventional commit specification](https://www.co
 
 __Before open a new PR:__
 
-- make sure the the code build `yarn build`
-- make sure the code lints `yarn lint`
+- make sure the the code build `pnpm build`
+- make sure the code lints `pnpm lint`
 
 When you're finished with the changes, create a pull request.
 - Select a matching pull request template.

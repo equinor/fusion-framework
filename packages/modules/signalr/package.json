@@ -17,7 +17,7 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -35,15 +35,20 @@
         "rxjs": "^7.5.7"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^4.2.1",
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-msal": "workspace:^",
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.2",
-        "@equinor/fusion-framework-module-service-discovery": "^7.0.3"
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+        "@equinor/fusion-framework-module-msal": "workspace:^"
     },
     "peerDependenciesMeta": {
         "@equinor/fusion-framework-module-service-discovery": {
+            "optional": true
+        },
+        "@equinor/fusion-framework-module-msal": {
             "optional": true
         }
     }

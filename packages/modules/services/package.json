@@ -41,7 +41,7 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -58,13 +58,13 @@
         "odata-query": "^7.0.3"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^4.2.1",
-        "@equinor/fusion-framework-module-http": "^5.0.4",
-        "@equinor/fusion-framework-module-service-discovery": "^7.0.5",
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-http": "workspace:^",
+        "@equinor/fusion-framework-module-service-discovery": "workspace:^",
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.2",
+        "@equinor/fusion-framework-module": "workspace:^",
         "odata-query": "^7.0.3"
     }
 }

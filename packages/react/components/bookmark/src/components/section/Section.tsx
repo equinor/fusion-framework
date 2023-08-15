@@ -3,12 +3,27 @@ import { ReactNode } from 'react';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right } from '@equinor/eds-icons';
 
-import { css } from '@emotion/css';
 import { tokens } from '@equinor/eds-tokens';
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
-const styles = {
-    childrenFlex: css`
+const Styled = {
+    Button: styled(Button)`
+        width: 100%;
+        padding: 0;
+        padding-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: none;
+        border: none;
+        color: ${tokens.colors.infographic.primary__moss_green_100.hex};
+        cursor: pointer;
+        :hover {
+            background: none;
+        }
+    `,
+    List: styled.ol`
         margin-left: 0.7rem;
         padding-left: 1rem;
         display: flex;
@@ -17,23 +32,6 @@ const styles = {
         border-left: 1px solid ${tokens.colors.infographic.primary__moss_green_100.hex};
     `,
 };
-
-const StyledButton = styled(Button)`
-    width: 100%;
-    padding: 0;
-    padding-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: none;
-    border: none;
-    color: ${tokens.colors.infographic.primary__moss_green_100.hex};
-    cursor: pointer;
-    :hover {
-        background: none;
-    }
-`;
 
 Icon.add({
     chevron_down,
@@ -49,11 +47,11 @@ export const Section = ({ children, name }: SectionProps) => {
 
     return (
         <div>
-            <StyledButton variant="ghost" onClick={() => setIsExpanded((s) => !s)}>
+            <Styled.Button variant="ghost" onClick={() => setIsExpanded((s) => !s)}>
                 <Icon name={isExpanded ? chevron_down.name : chevron_right.name} />
                 <Typography variant="h6">{name}</Typography>
-            </StyledButton>
-            {isExpanded && <ol className={styles.childrenFlex}>{children}</ol>}
+            </Styled.Button>
+            {isExpanded && <Styled.List>{children}</Styled.List>}
         </div>
     );
 };

@@ -6,8 +6,7 @@ import {
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
-import { createState } from '@equinor/fusion-observable';
-import { FlowState } from '@equinor/fusion-observable/src/create-state';
+import { createState, FlowState } from '@equinor/fusion-observable';
 import Query, { type QueryCtorOptions } from '@equinor/fusion-query';
 
 import { BehaviorSubject, lastValueFrom, map, Observable, Subscription } from 'rxjs';

@@ -4,8 +4,7 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": "src",
-    "jsx": "react-jsx"
+    
   },
   "references": [
     {

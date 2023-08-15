@@ -10,9 +10,13 @@ export * from './types';
 /** @deprecated use {@link FlowSubject} */
 export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
-export { actionMapper, ActionCalls } from './action-mapper';
+export { actionMapper, type ActionCalls } from './action-mapper';
 
-export { createAction, actionBaseType, ActionCreatorWithPreparedPayload } from './create-action';
+export {
+    createAction,
+    actionBaseType,
+    type ActionCreatorWithPreparedPayload,
+} from './create-action';
 
 export {
     createAsyncAction,
@@ -24,4 +28,4 @@ export {
 
 export { createReducer, ActionReducerMapBuilder } from './create-reducer';
 
-export { createState } from './create-state';
+export { createState, type FlowState } from './create-state';

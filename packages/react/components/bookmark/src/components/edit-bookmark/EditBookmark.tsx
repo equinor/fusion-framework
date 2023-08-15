@@ -1,29 +1,29 @@
-import { css } from '@emotion/css';
-import styled from '@emotion/styled';
+import { ChangeEvent, useEffect, useState } from 'react';
+
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 // TODO - export from `@equinor/fusion-framework-react-module-bookmark`
 import type { PatchBookmark } from '@equinor/fusion-framework-module-bookmark';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import { ChangeEvent, useEffect, useState } from 'react';
 import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 
-const StyledContent = styled(Dialog.Content)`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-`;
-const StyledDialog = styled(Dialog)`
-    width: 500px;
-`;
+import styled from 'styled-components';
 
-const styles = {
-    checkboxWrapper: css`
+const Styled = {
+    Dialog: styled(Dialog)`
+        width: 500px;
+    `,
+    DialogContent: styled(Dialog.Content)`
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    `,
+    CheckboxWrapper: styled.div`
         display: flex;
         gap: 1rem;
     `,
-    actions: css`
+    Actions: styled.div`
         display: 'flex';
         gap: 0.2em;
     `,
@@ -61,9 +61,9 @@ export const EditBookmarkModal = ({
     }, [bookmarkId, bookmarks]);
 
     return (
-        <StyledDialog open={isOpen}>
+        <Styled.Dialog open={isOpen}>
             <Dialog.Header>Edit bookmark</Dialog.Header>
-            <StyledContent>
+            <Styled.DialogContent>
                 <div>
                     <Label htmlFor="name" label="Name" />
                     <Input
@@ -93,7 +93,7 @@ export const EditBookmarkModal = ({
                     <Input readOnly={true} value={current?.manifest?.name || ''} />
                 </div>
 
-                <div className={styles.checkboxWrapper}>
+                <Styled.CheckboxWrapper>
                     <Checkbox
                         label="Is Shared"
                         checked={state.isShared}
@@ -113,10 +113,10 @@ export const EditBookmarkModal = ({
                             setUpdatePayload((s) => !s);
                         }}
                     />
-                </div>
-            </StyledContent>
+                </Styled.CheckboxWrapper>
+            </Styled.DialogContent>
             <Dialog.Actions>
-                <div className={styles.actions}>
+                <Styled.Actions>
                     <Button onClick={() => onClose(false)} variant="ghost">
                         Cancel
                     </Button>
@@ -130,8 +130,8 @@ export const EditBookmarkModal = ({
                     >
                         Save
                     </Button>
-                </div>
+                </Styled.Actions>
             </Dialog.Actions>
-        </StyledDialog>
+        </Styled.Dialog>
     );
 };

@@ -21,7 +21,7 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -35,19 +35,19 @@
         "directory": "packages/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-query": "^3.0.2",
+        "@equinor/fusion-query": "workspace:^",
         "fast-deep-equal": "^3.1.3"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module": "^4.2.1",
-        "@equinor/fusion-framework-module-event": "^4.0.2",
-        "@equinor/fusion-framework-module-navigation": "^3.0.1",
-        "@equinor/fusion-framework-module-services": "^3.1.3",
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-event": "workspace:^",
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-framework-module-services": "workspace:^",
         "rxjs": "^7.5.7",
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.5",
+        "@equinor/fusion-framework-module": "workspace:^",
         "rxjs": "^7.5.7"
     }
 }

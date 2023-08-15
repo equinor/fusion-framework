@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "rootDir": "src",
-    "baseUrl": "src",
+    
     "jsx": "react-jsxdev",
   },
   "include": [

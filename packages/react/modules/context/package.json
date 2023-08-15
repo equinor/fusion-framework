@@ -9,7 +9,7 @@
     "types": "./dist/types/index.d.ts",
     "scripts": {
         "build": "tsc -b",
-        "prepack": "yarn build"
+        "prepack": "pnpm build"
     },
     "keywords": [],
     "author": "",
@@ -23,9 +23,10 @@
         "directory": "packages/react/modules/context"
     },
     "dependencies": {
-        "@equinor/fusion-framework-module-context": "^4.0.9",
-        "@equinor/fusion-framework-react-module": "^3.0.3",
-        "@equinor/fusion-query": "^3.0.2"
+        "@equinor/fusion-framework-module-context": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
+        "@equinor/fusion-query": "workspace:^"
     },
     "devDependencies": {
         "@types/react": "^17.0.11",
