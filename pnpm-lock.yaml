@@ -107,7 +107,7 @@ importers:
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^29.3.4
-        version: 29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.7)
+        version: 29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.8)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^8.0.0
@@ -459,8 +459,8 @@ importers:
         specifier: ^0.1.5
         version: 0.1.5(react@18.2.0)
       '@equinor/fusion-react-person':
-        specifier: ^0.2.7
-        version: 0.2.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.2.9
+        version: 0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.1.6
         version: 0.1.6(react@18.2.0)
@@ -2402,14 +2402,14 @@ packages:
       - typescript
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.7):
+  /@equinor/fusion-react-ag-grid-styles@29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.8):
     resolution: {integrity: sha512-DbSCh/DH7G7Kz2Errv6gZQhFx2DN6CWw5A+G4lgyuPHZ9eT7tyeehv+GTQTsL9IZV7HjGHncY1qQHF7z2uZxxA==}
     peerDependencies:
       '@ag-grid-community/styles': ~29.3.4
       '@equinor/fusion-react-styles': ^0.5.5
     dependencies:
       '@ag-grid-community/styles': 29.3.5
-      '@equinor/fusion-react-styles': 0.5.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.8(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@equinor/fusion-react-button@0.8.2(@types/react@18.2.20)(react@18.2.0):
@@ -2488,11 +2488,11 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-person@0.2.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YoeukoZHjyKJGW5MOVFZUKaBLj7EYIkTWRPgP4pA2yhRVrOG5yp9Ou9erVNQaSuIs1Ri9lZHTPPbOzB5s0CwUQ==}
+  /@equinor/fusion-react-person@0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-v/8u9yKz+uGUF+caxs1lEn45ihI+NRLVhs4W1/6esAdSdKZBunqyNZn59LXQv49vIjVivz4UjD9Z5ZFmapeKqA==}
     dependencies:
       '@equinor/fusion-react-button': 0.8.2(@types/react@18.2.20)(react@18.2.0)
-      '@equinor/fusion-react-popover': 0.1.14(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-popover': 0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-wc-person': 0.4.6
     transitivePeerDependencies:
       - '@types/react'
@@ -2500,11 +2500,11 @@ packages:
       - react-dom
     dev: true
 
-  /@equinor/fusion-react-popover@0.1.14(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9jwfnEtOLj4e3fuQY/s3SG1NqReHNmCnJk0GzoE6jTzMZk/GbbrWxfI0+8Gsvdr1wTuYObWSsKL9E6s+ZlHjmw==}
+  /@equinor/fusion-react-popover@0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RiCgHlzN8Cl9XoENcKyexO9Oyh3NxwvZwn3sIuSS7DDTBTT7PLCKMSFiuG+7VQmiXCf64tF4hUoyTprTHzs7pw==}
     dependencies:
       '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.8(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.8
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
@@ -2598,8 +2598,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@equinor/fusion-react-styles@0.5.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-P6HGpeyBie/xZz0aKGRF6xwoW3RzI6lmLBJPEUlZcn3K8A5qt32AbIbvV514er+sfLpcxjAEzpTQX6eI5P8j5w==}
+  /@equinor/fusion-react-styles@0.5.8(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-N1bymT6K4Cf/9sgLakFupVeOwnkJHJp0gYTL7gZnxTxEziuxi8100OAzZB0qtK2yCmXFFb1Y8+8+03V0AskGBw==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
@@ -2619,8 +2619,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@equinor/fusion-react-styles@0.5.8(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-N1bymT6K4Cf/9sgLakFupVeOwnkJHJp0gYTL7gZnxTxEziuxi8100OAzZB0qtK2yCmXFFb1Y8+8+03V0AskGBw==}
+  /@equinor/fusion-react-styles@0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-k+1HuN8Gxf9O8b0q71Ix25Vh4CCs5A/EfckWhijD64ah3LiuRSujB1AbHPZiGeCEAVwQmcA7kpu8iUdRpDAbyg==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
