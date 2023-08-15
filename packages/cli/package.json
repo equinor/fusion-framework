@@ -60,7 +60,7 @@
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
         "@equinor/fusion-react-button": "^0.8.2",
-        "@equinor/fusion-react-context-selector": "^0.4.3",
+        "@equinor/fusion-react-context-selector": "^0.4.7",
         "@equinor/fusion-react-icon": "^0.2.15",
         "@equinor/fusion-react-menu": "^0.1.5",
         "@equinor/fusion-react-person": "^0.2.1",

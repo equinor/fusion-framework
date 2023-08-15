@@ -103,7 +103,7 @@ importers:
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^29.3.4
-        version: 29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.7)
+        version: 29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.9)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^8.0.0
@@ -446,8 +446,8 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(@types/react@18.2.20)(react@18.2.0)
       '@equinor/fusion-react-context-selector':
-        specifier: ^0.4.3
-        version: 0.4.3(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.4.7
+        version: 0.4.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-icon':
         specifier: ^0.2.15
         version: 0.2.15(react@18.2.0)
@@ -2392,14 +2392,14 @@ packages:
       - typescript
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.7):
+  /@equinor/fusion-react-ag-grid-styles@29.3.4(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.9):
     resolution: {integrity: sha512-DbSCh/DH7G7Kz2Errv6gZQhFx2DN6CWw5A+G4lgyuPHZ9eT7tyeehv+GTQTsL9IZV7HjGHncY1qQHF7z2uZxxA==}
     peerDependencies:
       '@ag-grid-community/styles': ~29.3.4
       '@equinor/fusion-react-styles': ^0.5.5
     dependencies:
       '@ag-grid-community/styles': 29.3.5
-      '@equinor/fusion-react-styles': 0.5.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@equinor/fusion-react-button@0.8.2(@types/react@18.2.20)(react@18.2.0):
@@ -2426,12 +2426,12 @@ packages:
       '@lit-labs/react': 1.2.1
     dev: true
 
-  /@equinor/fusion-react-context-selector@0.4.3(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ceFv5vLwCmLgXS5kHuYHv3KdAKUW+GbYLP84yb0Zs0NO1ytUv7k+RRqIpKGGsfHD1ahmrc25iG05BbmqJNsuYA==}
+  /@equinor/fusion-react-context-selector@0.4.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Tu8qYdloM5OMqLtgfGxHaNnc4zEswaegd0vdFaVTYe3h7XgoB7HYvfkbNHhDKdPdfAX+gf1KZQVWhSF7fXLJlw==}
     dependencies:
       '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
       '@equinor/fusion-react-searchable-dropdown': 0.3.4(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.6(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-utils': 2.0.4(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -2494,7 +2494,7 @@ packages:
     resolution: {integrity: sha512-eqN6pSp5jXogyv8LbNTg0K2aaz7U98eK/Tm9aupcrUzDuY/VHs0hTQmvEDzGx7a0XtaHzCIMoyNQTTNQnpwi1w==}
     dependencies:
       '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.8
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
@@ -2588,8 +2588,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@equinor/fusion-react-styles@0.5.7(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-P6HGpeyBie/xZz0aKGRF6xwoW3RzI6lmLBJPEUlZcn3K8A5qt32AbIbvV514er+sfLpcxjAEzpTQX6eI5P8j5w==}
+  /@equinor/fusion-react-styles@0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-k+1HuN8Gxf9O8b0q71Ix25Vh4CCs5A/EfckWhijD64ah3LiuRSujB1AbHPZiGeCEAVwQmcA7kpu8iUdRpDAbyg==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
