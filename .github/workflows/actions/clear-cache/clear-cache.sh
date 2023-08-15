@@ -7,6 +7,8 @@ do
     esac
 done
 
+gh extension install actions/gh-actions-cache
+
 set +e
 
 echo "$BRANCH"
