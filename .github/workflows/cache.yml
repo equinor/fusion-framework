@@ -22,7 +22,7 @@ on:
         default: false
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: cache-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
