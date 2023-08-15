@@ -13,3 +13,5 @@ runs:
       shell: bash
     - run: ${{ github.action_path }}/clear-cache.sh -r ${{ inputs.repo }} -b ${{ inputs.branch }}
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
