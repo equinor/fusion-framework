@@ -1,7 +1,6 @@
 inputs:
   repo:
     description: 'Select another repository for finding actions cache'
-    required: false
     default: ${{ github.repository }}
   branch:
     description: 'Filter by branch'
@@ -12,7 +11,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: ${{ github.action_path }}/clear-cache.sh -R ${{ inputs.repo }} -B ${{ inputs.branch }} -F ${{ inputs.filter }}
+    - run: |-
+        ${{ github.action_path }}/clear-cache.sh 
+        -R ${{ inputs.repo || "''" }} 
+        -B ${{ inputs.branch || "''" }} 
+        -F ${{ inputs.filter || "''" }}
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}

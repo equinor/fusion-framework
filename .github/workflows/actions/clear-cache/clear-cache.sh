@@ -15,7 +15,7 @@ TOTAL=0
 
 set +e
 
-echo "Repo: ${BRANCH:-[not provided, using current]}"
+echo "Repo: ${REPO:-[not provided, using current]}"
 echo "Branch: ${BRANCH:-[no branch]}"
 echo "Filter: ${FILTER:-[no filter]}"
 
