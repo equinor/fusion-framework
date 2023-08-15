@@ -8,6 +8,7 @@ jobs:
   cleanup:
     runs-on: 'ubuntu-latest'
     steps:
+      - uses: actions/checkout@v3
       - name: clear pull request cache
         uses: ./.github/workflows/actions/clear-cache
         with:
