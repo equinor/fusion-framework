@@ -231,8 +231,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -497,8 +497,8 @@ importers:
         specifier: ^6.9.0
         version: 6.9.0(react-dom@18.2.0)(react@18.2.0)
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       styled-components:
         specifier: ^5.3.9
         version: 5.3.9(@babel/core@7.22.10)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
@@ -530,8 +530,8 @@ importers:
         specifier: workspace:^
         version: link:../modules/services
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       typescript:
         specifier: ^5.1.3
@@ -562,8 +562,8 @@ importers:
         specifier: ^9.0.16
         version: 9.0.16
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -596,8 +596,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/query
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -640,8 +640,8 @@ importers:
         specifier: workspace:^
         version: link:../services
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -653,8 +653,8 @@ importers:
         version: link:../module
     devDependencies:
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -668,8 +668,8 @@ importers:
         specifier: workspace:^
         version: link:../msal
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       typescript:
         specifier: ^5.1.3
@@ -678,8 +678,8 @@ importers:
   packages/modules/module:
     dependencies:
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       semver:
         specifier: ^7.5.4
         version: 7.5.4
@@ -717,8 +717,8 @@ importers:
         specifier: workspace:^
         version: link:../module
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -735,8 +735,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/query
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       typescript:
         specifier: ^5.1.3
@@ -770,8 +770,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -805,8 +805,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/query
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -937,8 +937,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/observable
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -1029,8 +1029,8 @@ importers:
         specifier: ^5
         version: 5.0.0(react@17.0.2)
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1069,8 +1069,8 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1128,8 +1128,8 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1205,8 +1205,8 @@ importers:
         specifier: ^9.0.16
         version: 9.0.16
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       uuid:
         specifier: ^8.3.2
         version: 8.3.2
@@ -1239,8 +1239,8 @@ importers:
         specifier: ^9.0.16
         version: 9.0.16
       rxjs:
-        specifier: ^7.5.7
-        version: 7.5.7
+        specifier: ^7.8.1
+        version: 7.8.1
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -2375,7 +2375,7 @@ packages:
       react: 17.0.2
       react-router-dom: 5.0.0(react@17.0.2)
       react-textarea-autosize: 8.5.2(@types/react@17.0.11)(react@17.0.2)
-      rxjs: 7.5.7
+      rxjs: 7.8.1
     optionalDependencies:
       fsevents: 2.3.2
     transitivePeerDependencies:
@@ -7760,7 +7760,7 @@ packages:
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1
-      rxjs: 7.5.7
+      rxjs: 7.8.1
       string-width: 4.2.3
       strip-ansi: 6.0.1
       through: 2.3.8
@@ -9884,18 +9884,11 @@ packages:
       tslib: 1.14.1
     dev: true
 
-  /rxjs@7.5.7:
-    resolution: {integrity: sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==}
-    dependencies:
-      tslib: 2.5.0
-
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     requiresBuild: true
     dependencies:
       tslib: 2.6.1
-    dev: true
-    optional: true
 
   /safe-array-concat@1.0.0:
     resolution: {integrity: sha512-9dVEFruWIsnie89yym+xWTAYASdpw3CJV7Li/6zBewGf9z2i1j31rP6jnY0pHEO4QZh6N0K11bFjWmdR8UGdPQ==}
