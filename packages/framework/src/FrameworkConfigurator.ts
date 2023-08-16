@@ -34,11 +34,11 @@ export class FrameworkConfigurator<
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {
         super([event, auth, http, disco, services, context]);
-            this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
+        this.logger = new ModuleConsoleLogger('FrameworkConfigurator');
     }
 
     public configureHttp(...args: Parameters<typeof configureHttp>) {
-            this.addConfig(configureHttp(...args));
+        this.addConfig(configureHttp(...args));
     }
 
     public configureHttpClient(...args: Parameters<typeof configureHttpClient>) {
