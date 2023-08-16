@@ -28,12 +28,23 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
 
+      - uses: reviewdog/action-setup@v1.0.6
+
       - name: Lint source files
         if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: ./.github/workflows/actions/eslint
-
+        run: reviewdog -reporter=github-pr-review -runners=eslint -fail-on-error
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+          
       - name: Build affected packages
+        if: ${{ !cancelled() }}
         uses: ./.github/workflows/actions/build-packages
         with: 
           only-affected: ${{ github.actor != 'dependabot[bot]' }}
-
+          
+      - name: Review build log
+        if: ${{ !cancelled() }} 
+        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=github-pr-review  -fail-on-error
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+    

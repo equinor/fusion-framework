@@ -17,9 +17,9 @@ runs:
     - name: Build project [all]
       if: ${{ inputs.only-affected == 'false' }}
       shell: bash
-      run: pnpm build
+      run: pnpm build --continue
 
     - name: Build project [affected]
       if: ${{ inputs.only-affected == 'true' }}
       shell: bash
-      run: pnpm turbo run build --filter=...[origin/${{ github.base_ref }}]
+      run: pnpm turbo run build --continue --filter=...[origin/${{ github.base_ref }}]
