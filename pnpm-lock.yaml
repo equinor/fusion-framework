@@ -47,6 +47,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^17.7.0
         version: 17.7.0
+      eslint-formatter-rdjson:
+        specifier: ^1.0.6
+        version: 1.0.6
       eslint-plugin-prettier:
         specifier: ^5.0.0
         version: 5.0.0(eslint@8.47.0)(prettier@3.0.2)
@@ -6667,6 +6670,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /eslint-formatter-rdjson@1.0.6:
+    resolution: {integrity: sha512-RiBsXfe340Mof5pVkg7u0UXiLTm3cRhF9XYUf4hVHEzpIwk5jAIbkifugPpn51CeNxj00RkJU1MfJYoHbUwLFg==}
+    dev: true
 
   /eslint-plugin-jsx-a11y@6.7.1(eslint@8.47.0):
     resolution: {integrity: sha512-63Bog4iIethyo8smBklORknVjB0T2dwB8Mr/hIC+fBS0uyHdYYpzM/Ed+YC8VxTjlXHEWFOdmgwcDn1U2L9VCA==}
