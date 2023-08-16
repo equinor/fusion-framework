@@ -2,6 +2,17 @@ name: cache
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: name of the branch to filter, example refs/pull/1136/merge
+        type: string
+      filter:
+        description: filter of keys to search for, example node-cache-Linux-
+        type: string
+      rebuild:
+        description: when enabled, cache will be generated in the branch which action was called from
+        type: boolean
+        default: false
   workflow_call: 
     inputs:
       branch:
@@ -30,7 +41,7 @@ jobs:
 
       - name: Setup node and install deps
         id: install
-        if: ${{ inputs.rebuild == 'true' }}
+        if: ${{ inputs.rebuild == 'true' || inputs.rebuild == true }}
         uses: ./.github/workflows/actions/node-setup
 
       - name: Generate cache for source code
