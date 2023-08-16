@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   rebuild-main-cache:
+    name: Clear all cache on main branch
     uses: ./.github/workflows/cache.yml
     with:
       branch: main
