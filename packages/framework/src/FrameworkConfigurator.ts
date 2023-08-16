@@ -38,7 +38,7 @@ export class FrameworkConfigurator<
     }
 
     public configureHttp(...args: Parameters<typeof configureHttp>) {
-                    this.addConfig(configureHttp(...args));
+        this.addConfig(configureHttp(...args));
     }
 
     public configureHttpClient(...args: Parameters<typeof configureHttpClient>) {
