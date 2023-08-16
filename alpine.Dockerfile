@@ -16,5 +16,5 @@ RUN pnpm i --frozen-lockfile
 
 RUN pnpm lint
 RUN pnpm --filter @equinor/fusion-framework-cli... build
-RUN pnpm i --offline --frozen-lockfile
+RUN pnpm link ./packages/cli
 RUN pnpm build
