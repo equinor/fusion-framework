@@ -12,7 +12,7 @@ runs:
       shell: bash
       run: |
         pnpm build:cli
-        pnpm install --offline --frozen-lockfile
+        pnpm link ./packages/cli
 
     - name: Build project [all]
       if: ${{ inputs.only-affected == 'false' }}
