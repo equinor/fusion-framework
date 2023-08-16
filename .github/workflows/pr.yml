@@ -14,18 +14,26 @@ jobs:
     name: Check code quility
     runs-on: ubuntu-latest
     steps:
+      - name: Determine Checkout Depth
+        uses: haya14busa/action-cond@v1
+        id: fetch-depth
+        with:
+          cond: ${{ github.actor != 'dependabot[bot]' }}
+          if_true: '0' 
+          if_false: '1'
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ steps.fetch-depth.outputs.value }}
       
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
 
       - name: Lint source files
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: ./.github/workflows/actions/eslint
 
       - name: Build affected packages
         uses: ./.github/workflows/actions/build-packages
         with: 
-          only-affected: true
+          only-affected: ${{ github.actor != 'dependabot[bot]' }}
 

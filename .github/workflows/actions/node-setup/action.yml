@@ -5,8 +5,6 @@ inputs:
     default: 18
   turbo-cache:
     default: true
-  pre-compile:
-    default: true
 
 runs:
   using: composite
@@ -28,3 +26,4 @@ runs:
     - name: install
       shell: bash
       run: pnpm install --frozen-lockfile
+        
