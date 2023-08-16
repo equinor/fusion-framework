@@ -1,0 +1,23 @@
+name: pr-teams
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  code-quality:
+    if: github.event.label.name == '🤞🏻 Ready for review'
+    uses: ./.github/workflows/code-quality.yml
+    with:
+      reporter: github-pr-review
+
+  notify:
+    if: github.event.label.name == '🤞🏻 Ready for review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify teams channel
+        uses: davidwengier/PostAdaptiveCard@v1.0.0
+        with:
+          webhook-uri: ${{ secrets.TEAMS_PR_WEBHOOK }}
+
+  

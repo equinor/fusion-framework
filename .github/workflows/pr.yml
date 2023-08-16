@@ -2,49 +2,29 @@ name: pr
 
 on: 
   pull_request:
-    branches-ignore: 
-      - 'dependabot/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
   
 jobs:
-  check:
-    name: Check code quility
+  config:
     runs-on: ubuntu-latest
+    outputs:
+      reporter: ${{ steps.reporter.outputs.value }}
     steps:
-      - name: Determine Checkout Depth
-        uses: haya14busa/action-cond@v1
-        id: fetch-depth
+      - uses: haya14busa/action-cond@v1
+        id: reporter
         with:
-          cond: ${{ github.actor != 'dependabot[bot]' }}
-          if_true: '0' 
-          if_false: '1'
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: ${{ steps.fetch-depth.outputs.value }}
-      
-      - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+          cond: ${{ contains(github.event.pull_request.labels.*.name, '🤞🏻 Ready for review') }}
+          if_true: "github-pr-check"
+          if_false: "github-pr-review"
 
-      - uses: reviewdog/action-setup@v1.0.6
-
-      - name: Lint source files
-        if: ${{ github.actor != 'dependabot[bot]' }}
-        run: reviewdog -reporter=github-pr-review -runners=eslint -fail-on-error
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
-          
-      - name: Build affected packages
-        if: ${{ !cancelled() }}
-        uses: ./.github/workflows/actions/build-packages
-        with: 
-          only-affected: ${{ github.actor != 'dependabot[bot]' }}
-          
-      - name: Review build log
-        if: ${{ !cancelled() }} 
-        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=github-pr-review  -fail-on-error
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
-    
+  code-quality:
+    needs: config
+    uses: ./.github/workflows/code-quality.yml
+    with:
+      reporter: ${{ needs.config.outputs.reporter }}
+      lint: ${{ github.actor != 'dependabot[bot]' }}
+      only-affected: ${{ github.actor != 'dependabot[bot]' }}
+ 
