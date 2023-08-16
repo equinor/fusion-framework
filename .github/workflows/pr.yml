@@ -17,8 +17,8 @@ jobs:
         id: reporter
         with:
           cond: ${{ contains(github.event.pull_request.labels.*.name, '🤞🏻 Ready for review') }}
-          if_true: "github-pr-check"
-          if_false: "github-pr-review"
+          if_true: "github-pr-review"
+          if_false: "github-pr-check"
 
   code-quality:
     needs: config
