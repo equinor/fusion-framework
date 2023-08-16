@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       branch:
+        description: name of the branch to filter, example refs/pull/1136/merge
         type: string
       filter:
+        description: filter of keys to search for, example node-cache-Linux-
         type: string
       rebuild:
+        description: when enabled, cache will be generated in the branch which action was called from
         type: boolean
         default: false
 
