@@ -455,8 +455,8 @@ importers:
         specifier: ^0.1.5
         version: 0.1.5(react@18.2.0)
       '@equinor/fusion-react-person':
-        specifier: ^0.2.1
-        version: 0.2.1(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.2.9
+        version: 0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.1.6
         version: 0.1.6(react@18.2.0)
@@ -2478,11 +2478,11 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-person@0.2.1(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-gd3amAWjurLToPmGZoAPtBza8P82HrHzO4DCUTRo2G2HFMHsFEgMxzrxubtfDFi8n2LfutX7zOsPhKfYsyLebA==}
+  /@equinor/fusion-react-person@0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-v/8u9yKz+uGUF+caxs1lEn45ihI+NRLVhs4W1/6esAdSdKZBunqyNZn59LXQv49vIjVivz4UjD9Z5ZFmapeKqA==}
     dependencies:
       '@equinor/fusion-react-button': 0.8.2(@types/react@18.2.20)(react@18.2.0)
-      '@equinor/fusion-react-popover': 0.1.13(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-popover': 0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-wc-person': 0.4.6
     transitivePeerDependencies:
       - '@types/react'
@@ -2490,8 +2490,8 @@ packages:
       - react-dom
     dev: true
 
-  /@equinor/fusion-react-popover@0.1.13(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-eqN6pSp5jXogyv8LbNTg0K2aaz7U98eK/Tm9aupcrUzDuY/VHs0hTQmvEDzGx7a0XtaHzCIMoyNQTTNQnpwi1w==}
+  /@equinor/fusion-react-popover@0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RiCgHlzN8Cl9XoENcKyexO9Oyh3NxwvZwn3sIuSS7DDTBTT7PLCKMSFiuG+7VQmiXCf64tF4hUoyTprTHzs7pw==}
     dependencies:
       '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
       '@equinor/fusion-react-styles': 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)

@@ -63,7 +63,7 @@
         "@equinor/fusion-react-context-selector": "^0.4.7",
         "@equinor/fusion-react-icon": "^0.2.15",
         "@equinor/fusion-react-menu": "^0.1.5",
-        "@equinor/fusion-react-person": "^0.2.1",
+        "@equinor/fusion-react-person": "^0.2.9",
         "@equinor/fusion-react-progress-indicator": "^0.1.6",
         "@equinor/fusion-react-side-sheet": "0.1.0",
         "@equinor/fusion-react-styles": "^0.5.6",
