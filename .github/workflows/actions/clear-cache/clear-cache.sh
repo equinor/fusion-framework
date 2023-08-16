@@ -12,6 +12,7 @@ gh extension install actions/gh-actions-cache
 
 LIMIT=100
 TOTAL=0
+FAILED=0
 
 set +e
 
@@ -27,20 +28,22 @@ function fetch_cache_records() {
 
 fetch_cache_records
 
-while [ $CACHE_HITS_COUNT -gt 0 ]
-  do
-    echo "Deleting $CACHE_HITS_COUNT items"
-    for cacheKey in "${CACHE_HITS[@]}"
-      do
-        gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
-      done
-    TOTAL=$TOTAL+$LIMIT
-    if [[ "$CACHE_HITS_COUNT" == "$LIMIT" ]]; then
-      echo "Processed $TOTAL/$TOTAL, checking for more"
-      fetch_cache_records
-    else
-      CACHE_HITS_COUNT=0
+while [ $CACHE_HITS_COUNT -gt 0 ]; do
+  echo "Deleting $CACHE_HITS_COUNT items"
+  for cacheKey in "${CACHE_HITS[@]}"; do
+    gh actions-cache delete $cacheKey -R ${REPO:-''} -B ${BRANCH:-''} --confirm
+    if [ $? -eq 0 ]; then 
+      ((TOTAL++))
+    else 
+      ((FAILED++))
     fi
   done
+  if [[ "$CACHE_HITS_COUNT" == "$LIMIT" ]]; then
+    echo "Processed $TOTAL/$TOTAL, checking for more"
+    fetch_cache_records
+  else
+    CACHE_HITS_COUNT=0
+  fi
+done
 
-echo "Done, deleted $TOTAL cache records"
+echo "Done, deleted $TOTAL cache records, $FAILED failed"
