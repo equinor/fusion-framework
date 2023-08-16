@@ -464,8 +464,8 @@ importers:
         specifier: 0.1.0
         version: 0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.11.0)(@equinor/eds-core-react@0.32.4)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/fusion-react-styles':
-        specifier: ^0.5.6
-        version: 0.5.6(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.5.9
+        version: 0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-wc-person':
         specifier: ^0.4.6
         version: 0.4.6
@@ -2561,27 +2561,6 @@ packages:
       clsx: 1.2.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
-    dev: true
-
-  /@equinor/fusion-react-styles@0.5.6(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-gxM8q6MLRxEZ3WA+h/gmBfCmpXGztC2tU9a4quTRKvmAX9bgKCpOaVdx4TzVMq3fyalO2p+3C4ju5j4RT4IapA==}
-    peerDependencies:
-      '@types/react': "^17.0.0 ||\_^18.0.0"
-      react: "^17.0.0 ||\_^18.0.0"
-      react-dom: "^17.0.0 ||\_^18.0.0"
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      '@equinor/fusion-wc-theme': 0.2.33
-      '@equinor/fusion-web-theme': 0.1.7
-      '@material-ui/styles': 4.11.5(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-      '@types/react': 18.2.20
-      clsx: 1.2.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: true
 
   /@equinor/fusion-react-styles@0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
