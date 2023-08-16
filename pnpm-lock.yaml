@@ -404,8 +404,8 @@ importers:
         specifier: ^11.10.6
         version: 11.10.6
       '@emotion/styled':
-        specifier: ^11.10.6
-        version: 11.10.6(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0)
+        specifier: ^11.11.0
+        version: 11.11.0(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../framework
@@ -462,7 +462,7 @@ importers:
         version: 0.1.6(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 0.1.0
-        version: 0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.32.4)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
+        version: 0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.11.0)(@equinor/eds-core-react@0.32.4)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/fusion-react-styles':
         specifier: ^0.5.6
         version: 0.5.6(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -2129,8 +2129,8 @@ packages:
     resolution: {integrity: sha512-0QBtGvaqtWi+nx6doRwDdBIzhNdZrXUppvTM4dtZZWEGTXL/XE/yJxLMGlDT1Gt+UHH5IX1n+jkXyytE/av7OA==}
     dev: true
 
-  /@emotion/styled@11.10.6(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0):
-    resolution: {integrity: sha512-OXtBzOmDSJo5Q0AFemHCfl+bUueT8BIcPSxu0EGTpGk6DmI5dnhSzQANm1e1ze0YZL7TDyAyy6s/b/zmGOS3Og==}
+  /@emotion/styled@11.11.0(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0):
+    resolution: {integrity: sha512-hM5Nnvu9P3midq5aaXj4I+lnSfNi7Pmd4EWk1fOZ3pxookaQTNew6bp4JaCBYM4HVFZF9g7UjJmsUmC2JlxOng==}
     peerDependencies:
       '@emotion/react': ^11.0.0-rc.0
       '@types/react': '*'
@@ -2517,7 +2517,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.10.6)(@equinor/eds-core-react@0.32.4)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
+  /@equinor/fusion-react-side-sheet@0.1.0(@emotion/css@11.10.6)(@emotion/styled@11.11.0)(@equinor/eds-core-react@0.32.4)(@equinor/eds-icons@0.19.1)(@equinor/eds-tokens@0.9.0)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9):
     resolution: {integrity: sha512-xfgoTqDSJ3eRSUnR3WZpaIYum+kqOT42zR01VjhUeNvnQZtudkWNoPqTv9nNgwSUd+MTR0vglcnGzlp+VB0BGg==}
     peerDependencies:
       '@emotion/css': ^11.10.6
@@ -2536,7 +2536,7 @@ packages:
         optional: true
     dependencies:
       '@emotion/css': 11.10.6
-      '@emotion/styled': 11.10.6(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0)
+      '@emotion/styled': 11.11.0(@emotion/react@11.10.6)(@types/react@18.2.20)(react@18.2.0)
       '@equinor/eds-core-react': 0.32.4(@babel/core@7.22.10)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.9)
       '@equinor/eds-icons': 0.19.1
       '@equinor/eds-tokens': 0.9.0
