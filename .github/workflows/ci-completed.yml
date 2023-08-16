@@ -17,4 +17,5 @@ jobs:
     uses: ./.github/workflows/cache.yml
     with:
       branch: main
+      filter: node-cache-
       rebuild: true
