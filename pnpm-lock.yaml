@@ -32,8 +32,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
+        specifier: ^2.6.1
+        version: 2.6.1
       turbo:
         specifier: ^1.10.12
         version: 1.10.12
@@ -8887,7 +8887,7 @@ packages:
   /odata-query@7.0.3:
     resolution: {integrity: sha512-Pgc4YK71Z2MNj5mDN8lwDxfNTdjAczw+g80QIUqeUhi3NLX6h4tm3V4Mamjin2Zuu1s5xGsaz1wF2LrzamyGfQ==}
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.1
 
   /on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
@@ -10508,9 +10508,6 @@ packages:
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
-
-  /tslib@2.5.0:
-    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
   /tslib@2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
