@@ -1,8 +1,8 @@
 name: cache
 
 on:
-  workflow_call: 
   workflow_dispatch:
+  workflow_call: 
     inputs:
       branch:
         description: name of the branch to filter, example refs/pull/1136/merge
