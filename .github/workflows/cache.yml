@@ -15,10 +15,6 @@ on:
         type: boolean
         default: false
 
-concurrency:
-  group: cache-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   maintain:
     runs-on: 'ubuntu-latest'
