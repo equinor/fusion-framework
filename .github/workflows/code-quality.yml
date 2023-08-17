@@ -1,0 +1,60 @@
+name: code-quality
+
+on: 
+  workflow_call: 
+    inputs:
+      reporter:
+        default: github-pr-check
+        type: string
+      lint:
+        default: 'true'
+        type: string
+      build:
+        default: 'true'
+        type: string
+      only-affected:
+        default: 'true'
+        type: string
+
+concurrency:
+  group: code-quality-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  check:
+    name: Check code quility
+    runs-on: ubuntu-latest
+    env:
+      REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+    steps:
+      - name: Determine Checkout Depth
+        uses: haya14busa/action-cond@v1
+        id: fetch-depth
+        with:
+          cond: ${{ inputs.only-affected == 'true' }}
+          if_true: '0' 
+          if_false: '1'
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: ${{ steps.fetch-depth.outputs.value }}
+      
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+
+      - uses: reviewdog/action-setup@v1.0.6
+
+      - name: Lint source files
+        if: ${{ inputs.lint == 'true' }}
+        run: reviewdog --runners=eslint -reporter=${{ inputs.reporter }}
+          
+      - name: Build affected packages
+        if: ${{ !cancelled() && inputs.build == 'true' }}
+        id: build
+        uses: ./.github/workflows/actions/build-packages
+        with: 
+          only-affected: ${{ inputs.only-affected }}
+          
+      - name: Review build log
+        if: ${{ !cancelled() && inputs.build == 'true' }} 
+        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ inputs.reporter }}
+    

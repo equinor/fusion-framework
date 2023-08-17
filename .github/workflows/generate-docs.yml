@@ -1,51 +1,39 @@
-name: Generate Docs
+name: generate docs
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - docs
     paths:
       - 'vue-press/**'
 
-jobs:
-  merge:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: devmasx/merge-branch@v1.3.1
-        with:
-          type: now
-          from_branch: main
-          target_branch: docs
-          github_token: ${{ github.token }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
   generate-docs:
     runs-on: ubuntu-latest
-    needs: merge
     defaults:
       run:
         working-directory: vue-press
-
     steps:
-
-      - name: Checkout docs
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           ref: docs
 
-      - uses: pnpm/action-setup@v2
+      - name: Configure git user (trigger actor) 
+        uses: ./.github/workflows/actions/config-git-user
 
       - name: Setup node
         uses: actions/setup-node@v3
-        with:
-          node-version: '18'
 
       - name: restore node_modules
         uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-18-${{ hashFiles('**/pnpm-lock.yml') }}
+          path: 'docs/node_modules'
+          key: docs-${{ runner.os }}-${{ hashFiles('docs/package-lock.json') }}
 
       - name: Install Node Dependencies
         run: npm ci
@@ -54,11 +42,6 @@ jobs:
         run: |
           npm run build
           touch ../docs/.nojekyll
-
-      - name: Config git user
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Commit changes
         run: |

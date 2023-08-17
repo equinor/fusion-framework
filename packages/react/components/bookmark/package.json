@@ -28,9 +28,9 @@
     },
     "devDependencies": {
         "@equinor/eds-utils": "^0.8.1",
-        "@equinor/eds-core-react": "^0.32.3",
+        "@equinor/eds-core-react": "^0.32.4",
         "@equinor/eds-icons": "^0.19.1",
-        "@equinor/eds-tokens": "^0.9.0",
+        "@equinor/eds-tokens": "^0.9.2",
         "@equinor/fusion-framework-module-app": "workspace:^",
         "@equinor/fusion-framework-module-bookmark": "workspace:^",
         "@equinor/fusion-framework-module-event": "workspace:^",
@@ -44,7 +44,7 @@
         "@equinor/eds-utils": "^0.8.1",
         "@equinor/eds-core-react": "^0.30.0",
         "@equinor/eds-icons": "^0.19.1",
-        "@equinor/eds-tokens": "^0.9.0",
+        "@equinor/eds-tokens": "^0.9.2",
         "@types/react": "^17.0.0 || ^18.0.0",
         "react": "^17.0.0 || ^18.0.0",
         "styled-components": "^5.3.9"

@@ -113,6 +113,8 @@ package-lock.json
 packages/**/yarn.lock
 **/src/version.ts
 
+.turbo 
+
 .yarn/*
 !.yarn/releases
 !.yarn/plugins

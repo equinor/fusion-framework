@@ -1,16 +1,17 @@
-name: PR Labeler
+name: pr labels
 on:
   pull_request_target:
-    types: [opened, synchronize]
-    branches: [main]
+    types: 
+      - opened 
+      - synchronize
 
 permissions: read-all
 
 jobs:
   labeler:
-    permissions:
-      pull-requests: write
     name: Auto-Label PRs
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: fuxingloh/multi-labeler@v2.0.3

@@ -35,7 +35,7 @@
         "@equinor/fusion-framework-module": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
-        "rxjs": "^7.5.7"
+        "rxjs": "^7.8.1"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-app": "workspace:^",

@@ -1,0 +1,30 @@
+name: pr
+
+on: 
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      reporter: ${{ steps.reporter.outputs.value }}
+    steps:
+      - uses: haya14busa/action-cond@v1
+        id: reporter
+        with:
+          cond: ${{ contains(github.event.pull_request.labels.*.name, '🤞🏻 Ready for review') }}
+          if_true: "github-pr-review"
+          if_false: "github-pr-check"
+
+  code-quality:
+    needs: config
+    uses: ./.github/workflows/code-quality.yml
+    with:
+      reporter: ${{ needs.config.outputs.reporter }}
+      lint: ${{ github.actor != 'dependabot[bot]' }}
+      only-affected: ${{ github.actor != 'dependabot[bot]' }}
+ 

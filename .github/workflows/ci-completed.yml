@@ -1,0 +1,21 @@
+name: ci completed
+
+on:
+  workflow_run:
+    workflows: 
+      - ci
+    types: 
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild-main-cache:
+    name: Clear all cache on main branch
+    uses: ./.github/workflows/cache.yml
+    with:
+      branch: main
+      filter: node-cache-
+      rebuild: true

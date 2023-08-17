@@ -1,0 +1,29 @@
+name: Setup Node
+Description: General setup of node
+inputs:
+  node-version:  
+    default: 18
+  turbo-cache:
+    default: true
+
+runs:
+  using: composite
+  steps:
+
+    - uses: pnpm/action-setup@v2
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'pnpm'
+
+    - name: enable turbo cache
+      if: ${{ inputs.turbo-cache == 'true' }} 
+      uses: dtinth/setup-github-actions-caching-for-turbo@v1
+      with:
+        cache-prefix: ${{ runner.os }}-node-${{ inputs.node-version }}_
+
+    - name: install
+      shell: bash
+      run: pnpm install --frozen-lockfile
+        

@@ -1,0 +1,10 @@
+name: configure git user
+
+runs:
+  using: composite
+  steps:
+    - name: Set workflow trigger as git user
+      shell: bash
+      run: |
+        git config --global user.name "${{ github.actor }}[bot]"
+        git config --global user.email "${{ github.actor }}[bot]@users.noreply.github.com"
