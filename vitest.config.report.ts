@@ -4,8 +4,8 @@ import baseConfig from './vitest.config';
 
 const ciConfig = defineConfig({
     test: {
-        outputFile: 'test-report.json',
-        reporters: ['json'],
+        outputFile: 'vitest-report.json',
+        reporters: ['json', 'verbose'],
     },
 });
 

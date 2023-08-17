@@ -28,7 +28,7 @@
     "lint:report": "pnpm lint --output-file eslint-report.log.json --format json",
     "lint:staged": "lint-staged",
     "test": "vitest",
-    "test:report": "vitest run --reporter json --outputFile=\"vitest-report.log.json\"",
+    "test:report": "vitest run -c vitest.config.report.ts",
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "changeset version && pnpm install --lockfile-only",

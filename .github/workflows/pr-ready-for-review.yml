@@ -1,4 +1,4 @@
-name: pr-teams
+name: pr ready for review
 
 on:
   pull_request:
@@ -7,9 +7,7 @@ on:
 jobs:
   code-quality:
     if: github.event.label.name == '🤞🏻 Ready for review'
-    uses: ./.github/workflows/code-quality.yml
-    with:
-      reporter: github-pr-review
+    uses: ./.github/workflows/pr.yml
 
   notify:
     if: github.event.label.name == '🤞🏻 Ready for review'
