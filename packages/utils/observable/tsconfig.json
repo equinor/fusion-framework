@@ -4,16 +4,11 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    
   },
   "include": [
-    "src/**/*"
+    "src/**/*", "tests/*",
   ],
   "exclude": [
     "src/__tests__",
-    "node_modules"
-  ],
-  "ts-node": {
-    "esm": true
-  }
+  ]
 }

@@ -1,59 +1,81 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { BehaviorSubject } from 'rxjs';
-import { Observable } from '../types';
+import { useLayoutEffect, useMemo, useState } from 'react';
+import { Observable, StatefulObservable } from '../types';
 import { useObservableLayoutSubscription } from './useObservableSubscription';
 
-type ObservableStateOptions<S = undefined> = { initial: S; teardown?: VoidFunction };
+type ObservableStateOptions<TType = undefined> = {
+    initial?: TType;
+    teardown?: VoidFunction;
+};
 
-export type ObservableStateReturnType<S, E = unknown> = {
-    value: S;
-    error: E | null;
+export type ObservableStateReturnType<TType, TError = unknown> = {
+    value: TType;
+    error: TError | null;
     complete: boolean;
 };
 
-export function useObservableState<S>(
+/**
+ * use state of observable
+ * @param subject [dep] Observable subject
+ */
+export function useObservableState<S, TError = unknown>(
     subject: Observable<S>,
-): ObservableStateReturnType<S | undefined>;
+): ObservableStateReturnType<S | undefined, TError>;
+
+/**
+ * use state of observable
+ * @param subject [dep] Observable subject
+ */
+export function useObservableState<
+    TType,
+    TError = unknown,
+    TInitial extends TType | undefined = undefined,
+>(
+    subject: Observable<TType>,
+    opt: ObservableStateOptions<TInitial>,
+): ObservableStateReturnType<TType | TInitial, TError>;
+
+/** === StatefulObservable === */
+
+/**
+ * use state of observable with value property (`FlowSubject`, `BehaviorSubject`)
+ * @param subject [dep] Observable subject
+ */
+export function useObservableState<TType, TError = unknown>(
+    subject: StatefulObservable<TType>,
+): ObservableStateReturnType<TType, TError>;
+
+/**
+ * use state of observable with value property (`FlowSubject`, `BehaviorSubject`)
+ * @param subject [dep] Observable subject
+ */
+export function useObservableState<TType, TError = unknown>(
+    subject: StatefulObservable<TType>,
+    options: ObservableStateOptions<TType>,
+): ObservableStateReturnType<TType, TError>;
 
 /**
  * Hook for extracting state of observable.
  * **note** when state changes the consumer of the hook will rerender
  *
- * @param subject Observable subject
+ * @param subject [dep] Observable subject
  * @param initial initial value
  * @returns current state of observable
  */
-export function useObservableState<S, E = unknown, I = undefined>(
-    subject: Observable<S>,
-    opt: ObservableStateOptions<S> | ObservableStateOptions<I>,
-): ObservableStateReturnType<S | I, E>;
-
-export function useObservableState<S, E = unknown, I = undefined>(
-    subject: Observable<S>,
-    opt: { initial: I; teardown?: VoidFunction },
-): ObservableStateReturnType<S | I, E>;
-
 export function useObservableState<S, E = unknown>(
-    subject: Observable<S>,
+    subject: Observable<S> | StatefulObservable<S>,
     opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
-    const [initialValue] = useState<S | undefined>(opt?.initial);
-
-    const [next, setNext] = useState<S | undefined>(initialValue);
+    const [next, setNext] = useState<S | undefined>(() => {
+        return opt?.initial ? ('value' in subject ? subject.value : opt.initial) : undefined;
+    });
     const [error, setError] = useState<E | null>(null);
     const [complete, setComplete] = useState<boolean>(false);
 
-    const resetState = useCallback(() => {
-        setError(null);
-        setNext(initialValue);
-        setComplete(false);
-    }, [setNext, setError, setComplete, initialValue]);
-
     useLayoutEffect(() => {
-        const subjectValue = (subject as BehaviorSubject<S>).value;
-        subjectValue && setNext(subjectValue);
-        return resetState;
-    }, [setNext, resetState, subject]);
+        setError(null);
+        setComplete(false);
+        setNext('value' in subject ? (subject as StatefulObservable<S>).value : undefined);
+    }, [setNext, setError, setComplete, subject]);
 
     const subscriber = useMemo(
         () => ({

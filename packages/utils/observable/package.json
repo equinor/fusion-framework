@@ -10,6 +10,7 @@
     ],
     "homepage": "https://equinor.github.io/fusion-framework/",
     "license": "ISC",
+    "type": "module",
     "main": "dist/esm/index.js",
     "exports": {
         ".": "./dist/esm/index.js",
@@ -45,7 +46,11 @@
         "build": "tsc -b",
         "lint": "eslint --ext .ts,.tsx,.js src/",
         "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
-        "prepack": "pnpm build"
+        "prepack": "pnpm build",
+        "test": "vitest",
+        "test:report": "vitest --report",
+        "test:coverage": "vitest run --coverage",
+        "test:coverage:all": "vitest run --coverage.enabled --coverage.all"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
@@ -60,8 +65,10 @@
         "@types/react": "^17.0.2",
         "@types/node": "^20.4.9",
         "@types/uuid": "^8.3.4",
-        "react": "^17.0.2",
-        "typescript": "^5.1.3"
+        "happy-dom": "^10.9.0",
+        "react": "^18.2.0",
+        "typescript": "^5.1.3",
+        "vitest": "^0.34.1"
     },
     "peerDependencies": {
         "@types/react": "^17.0.0 || ^18.0.0",

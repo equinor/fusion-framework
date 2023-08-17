@@ -1,0 +1,26 @@
+name: code quality report
+on:
+  workflow_run:
+    workflows: 
+      - code quality
+      - pr
+    types: 
+      - completed
+      
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: code-quality-results
+
+      - name: Publish test report
+        uses: dorny/test-reporter@v1
+        with:
+          name: Vitest                  
+          path: 'vitest-report.log.json'                     
+          reporter: mocha-json
+
+      - name: Publish test coverage
+        uses: davelosert/vitest-coverage-report-action@v2.1.1
