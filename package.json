@@ -29,6 +29,7 @@
     "lint:staged": "lint-staged",
     "test": "vitest",
     "test:report": "vitest run --reporter json --outputFile=\"vitest-report.log.json\"",
+    "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
     "changeset:publish": "pnpm publish -r"
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
+    "@vitest/coverage-v8": "^0.34.1",
     "eslint-formatter-rdjson": "^1.0.6",
     "eslint-plugin-prettier": "^5.0.0",
     "genversion": "^3.1.1",

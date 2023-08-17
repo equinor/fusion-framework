@@ -1,4 +1,4 @@
-name: code-quality
+name: code quality
 
 on: 
   workflow_call: 
@@ -10,6 +10,9 @@ on:
         default: 'true'
         type: string
       build:
+        default: 'true'
+        type: string
+      test:
         default: 'true'
         type: string
       only-affected:
@@ -49,7 +52,6 @@ jobs:
           
       - name: Build affected packages
         if: ${{ !cancelled() && inputs.build == 'true' }}
-        id: build
         uses: ./.github/workflows/actions/build-packages
         with: 
           only-affected: ${{ inputs.only-affected }}
@@ -57,4 +59,18 @@ jobs:
       - name: Review build log
         if: ${{ !cancelled() && inputs.build == 'true' }} 
         run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ inputs.reporter }}
+      
+      - name: Create Test Report
+        if: ${{ !cancelled() && inputs.test == 'true' }} 
+        run: | 
+          pnpm test:report
+          pnpm test:coverage
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: code-quality-results
+          path: |
+            vitest-report.log.json
+            coverage
     
