@@ -25,10 +25,9 @@
     "build:affected": "turbo build --filter=...origin/main build",
     "build:clean": "pnpm clean:build && pnpm build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
-    "lint:report": "pnpm lint --output-file eslint-report.log.json --format json",
+    "lint:report": "pnpm lint --output-file eslint.report.json --format json",
     "lint:staged": "lint-staged",
     "test": "vitest",
-    "test:report": "vitest run -c vitest.config.report.ts",
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
@@ -57,7 +56,8 @@
     "husky": "^8.0.3",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^14.0.0",
-    "vitest": "^0.34.1"
+    "vitest": "^0.34.1",
+    "vitest-github-actions-reporter": "^0.10.0"
   },
   "peerDependencies": {
     "typescript": ">=4.5"
