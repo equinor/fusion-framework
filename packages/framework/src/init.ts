@@ -18,9 +18,9 @@ export const init = async <TModules extends Array<AnyModule>, TRef extends objec
 ): Promise<Fusion<TModules>> => {
     const modules = await configurator.initialize<FusionModules>(ref);
     const fusion = {
-        modules,
+        moduless,
     };
-    window.Fusion = fusion as unknown as Fusion;
+            window.Fusion = fusion as unknown as Fusion;
     modules.event.dispatchEvent('onFrameworkLoaded', { detail: fusion });
 
     return fusion as unknown as Fusion<TModules>;
