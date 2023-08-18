@@ -92,6 +92,7 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         const body = typeof args?.body === 'object' ? JSON.stringify(args?.body) : args?.body;
         const selector = args?.selector ?? jsonSelector;
         const headers = new Headers(args?.headers);
+        headers.append('Accept', 'application/json');
         headers.append('Content-Type', 'application/json');
         return this.fetch$(path, {
             ...args,
