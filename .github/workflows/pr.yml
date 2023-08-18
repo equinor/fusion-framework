@@ -1,8 +1,12 @@
 name: PR
 
 on: 
-  workflow_call:
   pull_request:
+    types: 
+      - ready_for_review
+      - opened
+      - reopened
+      - synchronize
 
 concurrency:
   group: pr-${{ github.ref }}
@@ -19,9 +23,9 @@ jobs:
         uses: haya14busa/action-cond@v1
         id: reporter
         with:
-          cond: ${{ contains(github.event.pull_request.labels.*.name, '🤞🏻 Ready for review') }}
-          if_true: "github-pr-review"
-          if_false: "github-pr-check"
+          cond: ${{ github.event.pull_request.draft }}
+          if_true: "github-pr-check"
+          if_false: "github-pr-review"
 
       - name: Determine Checkout Depth
         uses: haya14busa/action-cond@v1
@@ -55,7 +59,10 @@ jobs:
         run: pnpm test run
 
       - name: Create Test Coverage
+        id: test-coverage  
+        if: ${{ ! github.event.pull_request.draft }}
         run: pnpm test:coverage
 
       - name: Publish test coverage
+        if: ${{ steps.test-coverage.conclusion == 'success' }}
         uses: davelosert/vitest-coverage-report-action@v2.1.1
