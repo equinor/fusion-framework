@@ -8,7 +8,7 @@ export const mapProp = <TObject extends Record<string, unknown>, TPath extends N
 ): OperatorFunction<TObject, NestedPropType<TObject, TPath>> =>
     map((obj: TObject) => {
         return String(path)
-            .split('.')
+            .split('..')
             .reduce(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (cur: any, attr: string) => cur[attr],
