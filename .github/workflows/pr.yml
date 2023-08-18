@@ -1,4 +1,4 @@
-name: pr
+name: PR
 
 on: 
   workflow_call:
@@ -9,20 +9,8 @@ concurrency:
   cancel-in-progress: true
   
 jobs:
-  config:
-    runs-on: ubuntu-latest
-    outputs:
-      reporter: ${{ steps.reporter.outputs.value }}
-    steps:
-      - uses: haya14busa/action-cond@v1
-        id: reporter
-        with:
-          cond: ${{ contains(github.event.pull_request.labels.*.name, '🤞🏻 Ready for review') }}
-          if_true: "github-pr-review"
-          if_false: "github-pr-check"
-
   code-quality:
-    name: Check code quility
+    name: Check Code
     runs-on: ubuntu-latest
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
@@ -52,28 +40,22 @@ jobs:
       - uses: reviewdog/action-setup@v1.0.6
 
       - name: Lint source files
-        run: reviewdog --runners=eslint -reporter=${{ steps.reporter.outputs.value }}
+        run: reviewdog --runners=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
           
       - name: Build affected packages
-        if: ${{ !cancelled() }}
+        continue-on-error: true
         uses: ./.github/workflows/actions/build-packages
         with: 
           only-affected: ${{ github.actor != 'dependabot[bot]' }}
           
       - name: Review build log
-        if: ${{ !cancelled() }} 
-        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }}
+        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
       
       - name: Create Test Report
-        if: ${{ !cancelled() }} 
-        run: | 
-          pnpm test:report
-          pnpm test:coverage
+        run: pnpm test run
 
-      - uses: actions/upload-artifact@v3
-        if: ${{ !cancelled() }} 
-        with:
-          name: code-quality-results
-          path: |
-            vitest-report.log.json
-            coverage
+      - name: Create Test Coverage
+        run: pnpm test:coverage
+
+      - name: Publish test coverage
+        uses: davelosert/vitest-coverage-report-action@v2.1.1
