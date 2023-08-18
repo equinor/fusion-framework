@@ -64,19 +64,31 @@ Your commits should adhere to [conventional commit specification](https://www.co
 
 __Before open a new PR:__
 
+- all affected packages has matching [changesets](./contributing/changeset.md)
 - make sure the the code build `pnpm build`
 - make sure the code lints `pnpm lint`
+- make sure tests `pnpm test run`
 
 When you're finished with the changes, create a pull request.
+> All PR should be created as __draft__
 - Select a matching pull request template.
 - Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
 - Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for a merge.
+
+> __when all checks are green, publish the PR__
+
+_pull request that trigger `ready_for_review` will post to our Teams channel_
+
 Once you submit your PR, a Fusion Core team member will review your proposal. We may ask questions or request additional information.
+
 - We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.
 - As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
 - If you run into any merge issues, checkout this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
 
-When all task checks are green and you are done with your PR, add the label `🤞🏻 Ready for review`
+> when a pull request review requests changes, the pull request is moved back to __draft__
+
+> when a pull request review is accepted, the pull request is set to auto merge _(will squash once all required checks are executed)_
+
 
 ### Your PR is merged!
 

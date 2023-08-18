@@ -12,7 +12,9 @@ It runs on macOS, Linux environments (should work on windows).
 
 You'll need Node.js to run the site. Check the version in `package.json`. To install Node.js, [download the "LTS" installer from nodejs.org](https://nodejs.org). If you're using [`nodenv`](https://github.com/nodenv/nodenv), read the [`nodenv` docs](https://github.com/nodenv/nodenv#readme) for instructions on switching Node.js versions.
 
-Once you've installed Node.js (which includes the popular `npm` package manager), open Terminal and run the following:
+This repo uses the package manger [pnpm](https://pnpm.io), see [installation guide](https://pnpm.io/installation)
+
+Once you've installed Node.js and pnpm, open Terminal and run the following:
 
 ```sh
   # clone repo
@@ -22,6 +24,7 @@ Once you've installed Node.js (which includes the popular `npm` package manager)
   # build all packages
   pnpm build
 ```
+
 
 ## Repo structure
 
