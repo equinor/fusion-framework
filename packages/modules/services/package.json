@@ -55,7 +55,7 @@
         "directory": "packages/modules/services"
     },
     "dependencies": {
-        "odata-query": "^7.0.3"
+        "odata-query": "^7.0.4"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
@@ -65,6 +65,6 @@
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
-        "odata-query": "^7.0.3"
+        "odata-query": "^7.0.4"
     }
 }

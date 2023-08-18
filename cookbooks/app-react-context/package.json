@@ -23,7 +23,7 @@
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "odata-query": "^7.0.3",
+        "odata-query": "^7.0.4",
         "rxjs": "^7.8.1",
         "typescript": "^5.1.3"
     }
