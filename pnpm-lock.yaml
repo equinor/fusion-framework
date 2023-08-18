@@ -779,8 +779,8 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       '@microsoft/signalr':
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.0.10
+        version: 7.0.10
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -4032,8 +4032,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@microsoft/signalr@7.0.0:
-    resolution: {integrity: sha512-9bHYqc0cjN0fL1KnK+MhlN0Qd/rp8Na4pzKYSV3wP8VC8p7188dvvmRTreYLXXh0srRLf9aMBj0ZbdZQwfnL/A==}
+  /@microsoft/signalr@7.0.10:
+    resolution: {integrity: sha512-tOEn32i5EatAx4sZbzmLgcBc2VbKQmx+F4rI2/Ioq2MnBaYcFxbDzOoZgISIS4IR9H1ij/sKoU8zQOAFC8GJKg==}
     dependencies:
       abort-controller: 3.0.0
       eventsource: 2.0.2
