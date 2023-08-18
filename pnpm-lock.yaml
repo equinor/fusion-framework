@@ -412,8 +412,8 @@ importers:
         specifier: ^1.1.3
         version: 1.1.3(vite@4.2.3)
       vite-tsconfig-paths:
-        specifier: ^4.0.7
-        version: 4.0.7(typescript@5.1.6)(vite@4.2.3)
+        specifier: ^4.2.0
+        version: 4.2.0(typescript@5.1.6)(vite@4.2.3)
     devDependencies:
       '@emotion/css':
         specifier: ^11.10.6
@@ -11160,8 +11160,8 @@ packages:
       vite: 4.2.3(@types/node@20.4.9)
     dev: false
 
-  /vite-tsconfig-paths@4.0.7(typescript@5.1.6)(vite@4.2.3):
-    resolution: {integrity: sha512-MwIYaby6kcbQGZqMH+gAK6h0UYQGOkjsuAgw4q6bP/5vWkn8VKvnmLuCQHA2+IzHAJHnE8OFTO4lnJLFMf9+7Q==}
+  /vite-tsconfig-paths@4.2.0(typescript@5.1.6)(vite@4.2.3):
+    resolution: {integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
