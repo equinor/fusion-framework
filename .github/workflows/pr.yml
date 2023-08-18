@@ -36,6 +36,7 @@ jobs:
           if_false: '1'
       - uses: actions/checkout@v3
         with:
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
       
       - name: Setup node and install deps
