@@ -240,8 +240,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       odata-query:
-        specifier: ^7.0.3
-        version: 7.0.3
+        specifier: ^7.0.4
+        version: 7.0.4
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -757,8 +757,8 @@ importers:
   packages/modules/services:
     dependencies:
       odata-query:
-        specifier: ^7.0.3
-        version: 7.0.3
+        specifier: ^7.0.4
+        version: 7.0.4
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -9096,8 +9096,8 @@ packages:
     dev: true
     optional: true
 
-  /odata-query@7.0.3:
-    resolution: {integrity: sha512-Pgc4YK71Z2MNj5mDN8lwDxfNTdjAczw+g80QIUqeUhi3NLX6h4tm3V4Mamjin2Zuu1s5xGsaz1wF2LrzamyGfQ==}
+  /odata-query@7.0.4:
+    resolution: {integrity: sha512-/Zq6xZMWEoMpWgpUg1MIeAUoqSzQBmvnci+eqXvySjVn9MN0R67xpLf75gpswRkbK2/u9hHltYsKOGu7WGlq8g==}
     dependencies:
       tslib: 2.6.1
 
