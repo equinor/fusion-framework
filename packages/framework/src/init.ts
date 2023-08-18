@@ -20,7 +20,7 @@ export const init = async <TModules extends Array<AnyModule>, TRef extends objec
     const fusion = {
         modules,
     };
-    window.Fusion = fusion as unknown as Fusion;
+    window.Fusions = fusion as unknown as Fusion;
     modules.event.dispatchEvent('onFrameworkLoaded', { detail: fusion });
 
     return fusion as unknown as Fusion<TModules>;
