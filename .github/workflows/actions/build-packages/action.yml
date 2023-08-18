@@ -8,11 +8,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: pre-compile
-      shell: bash
-      run: |
-        pnpm build:cli
-        pnpm link ./packages/cli
+    # - name: pre-compile
+    #   shell: bash
+    #   run: |
+    #     pnpm build:cli
+    #     pnpm link ./packages/cli
 
     - name: Build project [all]
       if: ${{ inputs.only-affected == 'false' }}
