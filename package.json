@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@8.0.0",
   "scripts": {
-    "pnpm:devPreinstall": "mkdir ./packages/cli/bin && echo > ./packages/cli/bin/main.js",
+    "pnpm:devPreinstall": "mkdir -p ./packages/cli/bin && echo > ./packages/cli/bin/main.js",
     "install": "pnpm -r exec genversion --es6 --semi src/version.ts",
     "install:clean": "pnpm clean && pnpm install",
     "clean": "pnpm clean:build && pnpm clean:npm",
