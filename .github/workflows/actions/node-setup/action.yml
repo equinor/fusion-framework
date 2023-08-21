@@ -25,5 +25,5 @@ runs:
 
     - name: install
       shell: bash
-      run: pnpm install --frozen-lockfile
+      run: pnpm install
         
