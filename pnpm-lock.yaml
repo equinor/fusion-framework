@@ -87,7 +87,7 @@ importers:
         specifier: ^4.1.1
         version: link:../../packages/react/app
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -127,7 +127,7 @@ importers:
         specifier: ^4.1.1
         version: link:../../packages/react/app
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -157,7 +157,7 @@ importers:
         specifier: ^4.1.1
         version: link:../../packages/react/app
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -194,7 +194,7 @@ importers:
         specifier: ^2.0.13
         version: link:../../packages/react/modules/bookmark
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -227,7 +227,7 @@ importers:
         specifier: ^8.0.3
         version: link:../../packages/utils/observable
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -264,7 +264,7 @@ importers:
         specifier: ^3.0.2
         version: link:../../packages/react/modules/module
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -294,7 +294,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/utils/query
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -324,7 +324,7 @@ importers:
         specifier: ^1.8.0
         version: 1.8.0
       '@types/react':
-        specifier: ^18.0.24
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.8
@@ -494,7 +494,7 @@ importers:
         specifier: ^20.4.9
         version: 20.4.9
       '@types/react':
-        specifier: ^18.0.28
+        specifier: ^18.2.20
         version: 18.2.20
       '@types/react-dom':
         specifier: ^18.0.11
@@ -870,17 +870,17 @@ importers:
         specifier: workspace:^
         version: link:../modules/context
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -956,17 +956,17 @@ importers:
         specifier: workspace:^
         version: link:../modules/context
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -988,7 +988,7 @@ importers:
         version: 3.4.10(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
       '@equinor/fusion-components':
         specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@17.0.11)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@17.0.2)(typescript@5.1.6)
+        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../../framework
@@ -1020,8 +1020,8 @@ importers:
         specifier: ^4.7.2
         version: 4.7.2
       '@types/react':
-        specifier: ^17.0.2
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-router-dom':
         specifier: ^5.3.3
         version: 5.3.3
@@ -1029,14 +1029,14 @@ importers:
         specifier: ^4.7.2
         version: 4.7.2
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       react-router-dom:
         specifier: ^5
-        version: 5.0.0(react@17.0.2)
+        version: 5.0.0(react@18.2.0)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -1069,14 +1069,14 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/navigation
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -1100,17 +1100,17 @@ importers:
         version: link:../../../utils/query
     devDependencies:
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1125,17 +1125,17 @@ importers:
         version: link:../module
     devDependencies:
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -1152,17 +1152,17 @@ importers:
         specifier: workspace:^
         version: link:../module
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1174,17 +1174,17 @@ importers:
         version: link:../../../modules/module
     devDependencies:
       '@types/react':
-        specifier: ^17.0.11
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/react-dom':
         specifier: ^17.0.7
         version: 17.0.7
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       react-dom:
         specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
+        version: 17.0.2(react@18.2.0)
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -1227,8 +1227,8 @@ importers:
         specifier: ^20.4.9
         version: 20.4.9
       '@types/react':
-        specifier: ^17.0.2
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/uuid':
         specifier: ^8.3.4
         version: 8.3.4
@@ -1261,14 +1261,14 @@ importers:
         version: 9.0.0
     devDependencies:
       '@types/react':
-        specifier: ^17.0.2
-        version: 17.0.11
+        specifier: ^18.2.20
+        version: 18.2.20
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.2
       react:
-        specifier: ^17.0.2
-        version: 17.0.2
+        specifier: ^18.2.0
+        version: 18.2.0
       typescript:
         specifier: ^5.1.3
         version: 5.1.6
@@ -3221,7 +3221,7 @@ packages:
       - supports-color
     dev: false
 
-  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@17.0.11)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@17.0.2)(typescript@5.1.6):
+  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6):
     resolution: {integrity: sha512-W9Ej+r2/xcDMaqUf3FonGjkOGf9QMDUcm7B3vcUxwjvpuQ4/w4we9tx+cdSchkkYFXiw47uyYU8Dc2nbTGgACw==}
     peerDependencies:
       '@equinor/fusion': ^3.2.4
@@ -3234,12 +3234,12 @@ packages:
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.22.10)
       '@equinor/fusion': 3.4.10(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
       '@equinor/fusion-react-checkbox': 0.4.0
-      '@equinor/fusion-react-divider': 0.2.12(react@17.0.2)
-      '@equinor/fusion-react-icon': 0.2.15(react@17.0.2)
-      '@equinor/fusion-react-styles': 0.4.3(@types/react@17.0.11)(react-dom@17.0.2)(react@17.0.2)
+      '@equinor/fusion-react-divider': 0.2.12(react@18.2.0)
+      '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.4.3(@types/react@18.2.20)(react-dom@17.0.2)(react@18.2.0)
       '@equinor/fusion-wc-icon': 1.0.31
-      '@reach/router': 1.3.4(react-dom@17.0.2)(react@17.0.2)
-      '@storybook/addon-jest': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@reach/router': 1.3.4(react-dom@17.0.2)(react@18.2.0)
+      '@storybook/addon-jest': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@types/lodash.throttle': 4.1.7
       '@types/prosemirror-model': 1.17.0
       '@types/prosemirror-state': 1.4.0
@@ -3255,7 +3255,7 @@ packages:
       npm-force-resolutions: 0.0.10
       pixi.js-legacy: 5.3.12
       powerbi-client: 2.22.3
-      powerbi-client-react: 1.4.0(react@17.0.2)
+      powerbi-client-react: 1.4.0(react@18.2.0)
       prosemirror-commands: 1.5.2
       prosemirror-history: 1.3.2
       prosemirror-inputrules: 1.2.1
@@ -3265,9 +3265,9 @@ packages:
       prosemirror-schema-list: 1.3.0
       prosemirror-state: 1.4.3
       prosemirror-view: 1.31.7
-      react: 17.0.2
-      react-router-dom: 5.0.0(react@17.0.2)
-      react-textarea-autosize: 8.5.2(@types/react@17.0.11)(react@17.0.2)
+      react: 18.2.0
+      react-router-dom: 5.0.0(react@18.2.0)
+      react-textarea-autosize: 8.5.2(@types/react@18.2.20)(react@18.2.0)
       rxjs: 7.8.1
     optionalDependencies:
       fsevents: 2.3.2
@@ -3327,24 +3327,14 @@ packages:
       - react-dom
     dev: true
 
-  /@equinor/fusion-react-divider@0.2.12(react@17.0.2):
+  /@equinor/fusion-react-divider@0.2.12(react@18.2.0):
     resolution: {integrity: sha512-oUtiPMOTcJO79mpvF5JfmhV0Nnyt3ZgyNmFQ41BlS+OZqvpwSwv6KsY0rzPL8/dJvfnwzAEhXGQ3UmvJFBe7Xg==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.4(react@17.0.2)
+      '@equinor/fusion-react-utils': 2.0.4(react@18.2.0)
       '@equinor/fusion-wc-divider': 0.2.21
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
       - react
-    dev: true
-
-  /@equinor/fusion-react-icon@0.2.15(react@17.0.2):
-    resolution: {integrity: sha512-Fx3it860/WTEp7GtnMQov33FhxlpTUd5aAtmtKdHAHIi6sJaH7tDkODdfUbiVRpjYZAKtUJwWxwBk6+vess5yg==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
-    dependencies:
-      '@equinor/fusion-react-utils': 2.0.4(react@17.0.2)
-      '@equinor/fusion-wc-icon': 1.0.31
-      react: 17.0.2
     dev: true
 
   /@equinor/fusion-react-icon@0.2.15(react@18.2.0):
@@ -3439,7 +3429,7 @@ packages:
       styled-components: 6.0.7(react-dom@18.2.0)(react@18.2.0)
     dev: true
 
-  /@equinor/fusion-react-styles@0.4.3(@types/react@17.0.11)(react-dom@17.0.2)(react@17.0.2):
+  /@equinor/fusion-react-styles@0.4.3(@types/react@18.2.20)(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-GNwWQhJBNsKc3N4/DWZgVwFDEAinrpw4iX3tpoNzw8J3+vSl/cuJ6b+C41e7zEaGmQvnYcw03WZz5YDzxHn0/g==}
     peerDependencies:
       '@types/react': ^17.0.36
@@ -3448,11 +3438,11 @@ packages:
     dependencies:
       '@equinor/fusion-wc-theme': 0.2.33
       '@equinor/fusion-web-theme': 0.1.7
-      '@material-ui/styles': 4.11.5(@types/react@17.0.11)(react-dom@17.0.2)(react@17.0.2)
-      '@types/react': 17.0.11
+      '@material-ui/styles': 4.11.5(@types/react@18.2.20)(react-dom@17.0.2)(react@18.2.0)
+      '@types/react': 18.2.20
       clsx: 1.2.1
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
     dev: true
 
   /@equinor/fusion-react-styles@0.5.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
@@ -3479,15 +3469,6 @@ packages:
     resolution: {integrity: sha512-Pnc6M/kFT/DKhUaSWri6f8nshJ6+Ot9kekLywNw+twpw2VB8pndkKWqzneIClIxYyYjBmbcFS9Bz05xe43BGng==}
     dependencies:
       date-fns: 2.30.0
-    dev: true
-
-  /@equinor/fusion-react-utils@2.0.4(react@17.0.2):
-    resolution: {integrity: sha512-4+nvmje698DOdkkNUQJyz9gxNnk3nospA1Ul1HKFV1beBm5aFbSDGj6LfYkCaIQYde1rzrswDInnMQIPnQj53w==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
-    dependencies:
-      date-fns: 2.30.0
-      react: 17.0.2
     dev: true
 
   /@equinor/fusion-react-utils@2.0.4(react@18.2.0):
@@ -4129,7 +4110,7 @@ packages:
       read-yaml-file: 1.1.0
     dev: false
 
-  /@material-ui/styles@4.11.5(@types/react@17.0.11)(react-dom@17.0.2)(react@17.0.2):
+  /@material-ui/styles@4.11.5(@types/react@18.2.20)(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-o/41ot5JJiUsIETME9wVLAJrmIWL3j0R0Bj2kCOLbSfqEkKf0fmaPt+5vtblUh5eXr2S+J/8J3DaCb10+CzPGA==}
     engines: {node: '>=8.0.0'}
     deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
@@ -4143,9 +4124,9 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.10
       '@emotion/hash': 0.8.0
-      '@material-ui/types': 5.1.0(@types/react@17.0.11)
-      '@material-ui/utils': 4.11.3(react-dom@17.0.2)(react@17.0.2)
-      '@types/react': 17.0.11
+      '@material-ui/types': 5.1.0(@types/react@18.2.20)
+      '@material-ui/utils': 4.11.3(react-dom@17.0.2)(react@18.2.0)
+      '@types/react': 18.2.20
       clsx: 1.2.1
       csstype: 2.6.21
       hoist-non-react-statics: 3.3.2
@@ -4158,8 +4139,8 @@ packages:
       jss-plugin-rule-value-function: 10.10.0
       jss-plugin-vendor-prefixer: 10.10.0
       prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
     dev: true
 
   /@material-ui/styles@4.11.5(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
@@ -4194,17 +4175,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  /@material-ui/types@5.1.0(@types/react@17.0.11):
-    resolution: {integrity: sha512-7cqRjrY50b8QzRSYyhSpx4WRw2YuO0KKIGQEVk5J8uoz2BanawykgZGoWEqKm7pVIbzFDN0SpPcVV4IhOFkl8A==}
-    peerDependencies:
-      '@types/react': '*'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@types/react': 17.0.11
-    dev: true
-
   /@material-ui/types@5.1.0(@types/react@18.2.20):
     resolution: {integrity: sha512-7cqRjrY50b8QzRSYyhSpx4WRw2YuO0KKIGQEVk5J8uoz2BanawykgZGoWEqKm7pVIbzFDN0SpPcVV4IhOFkl8A==}
     peerDependencies:
@@ -4215,7 +4185,7 @@ packages:
     dependencies:
       '@types/react': 18.2.20
 
-  /@material-ui/utils@4.11.3(react-dom@17.0.2)(react@17.0.2):
+  /@material-ui/utils@4.11.3(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-ZuQPV4rBK/V1j2dIkSSEcH5uT6AaHuKWFfotADHsC0wVL1NLd2WkFCm4ZZbX33iO4ydl6V0GPngKm8HZQ2oujg==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -4224,8 +4194,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.10
       prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       react-is: 17.0.2
     dev: true
 
@@ -5306,17 +5276,17 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: true
 
-  /@reach/router@1.3.4(react-dom@17.0.2)(react@17.0.2):
+  /@reach/router@1.3.4(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-+mtn9wjlB9NN2CNnnC/BRYtwdKBfSyyasPYraNAyvaV1occr/5NnB4CVzjEZipNHwYebQwcndGUmpFzxAUoqSA==}
     peerDependencies:
       react: 15.x || 16.x || 16.4.0-alpha.0911da3
       react-dom: 15.x || 16.x || 16.4.0-alpha.0911da3
     dependencies:
-      create-react-context: 0.3.0(prop-types@15.8.1)(react@17.0.2)
+      create-react-context: 0.3.0(prop-types@15.8.1)(react@18.2.0)
       invariant: 2.2.4
       prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       react-lifecycles-compat: 3.0.4
     dev: true
 
@@ -5332,7 +5302,7 @@ packages:
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  /@storybook/addon-jest@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/addon-jest@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-gPPvTKjue8vBuQ9oGuRQzhZVuZUmVuMZpJH8QQ48epdzoHbnl9XH15D/NwE7bpiXajo+hd3Vj8SeYRffC2euDg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5343,43 +5313,43 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@storybook/addons': 6.5.16(react-dom@17.0.2)(react@17.0.2)
-      '@storybook/api': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/addons': 6.5.16(react-dom@17.0.2)(react@18.2.0)
+      '@storybook/api': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@storybook/client-logger': 6.5.16
-      '@storybook/components': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/components': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@storybook/core-events': 6.5.16
-      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       core-js: 3.32.0
       global: 4.4.0
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       react-sizeme: 3.0.2
       regenerator-runtime: 0.13.11
       upath: 1.2.0
     dev: true
 
-  /@storybook/addons@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/addons@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-p3DqQi+8QRL5k7jXhXmJZLsE/GqHqyY6PcoA1oNTJr0try48uhTGUOYkgzmqtDaa/qPFO5LP+xCPzZXckGtquQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@storybook/api': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/api': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@storybook/channels': 6.5.16
       '@storybook/client-logger': 6.5.16
       '@storybook/core-events': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
-      '@storybook/router': 6.5.16(react-dom@17.0.2)(react@17.0.2)
-      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/router': 6.5.16(react-dom@17.0.2)(react@18.2.0)
+      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@types/webpack-env': 1.18.1
       core-js: 3.32.0
       global: 4.4.0
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       regenerator-runtime: 0.13.11
     dev: true
 
-  /@storybook/api@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/api@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-HOsuT8iomqeTMQJrRx5U8nsC7lJTwRr1DhdD0SzlqL4c80S/7uuCy4IZvOt4sYQjOzW5fOo/kamcoBXyLproTA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5389,16 +5359,16 @@ packages:
       '@storybook/client-logger': 6.5.16
       '@storybook/core-events': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
-      '@storybook/router': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/router': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       '@storybook/semver': 7.3.2
-      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       core-js: 3.32.0
       fast-deep-equal: 3.1.3
       global: 4.4.0
       lodash: 4.17.21
       memoizerific: 1.11.3
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       regenerator-runtime: 0.13.11
       store2: 2.14.2
       telejson: 6.0.8
@@ -5421,7 +5391,7 @@ packages:
       global: 4.4.0
     dev: true
 
-  /@storybook/components@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/components@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-LzBOFJKITLtDcbW9jXl0/PaG+4xAz25PK8JxPZpIALbmOpYWOAPcO6V9C2heX6e6NgWFMUxjplkULEk9RCQMNA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5429,12 +5399,12 @@ packages:
     dependencies:
       '@storybook/client-logger': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
-      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@17.0.2)
+      '@storybook/theming': 6.5.16(react-dom@17.0.2)(react@18.2.0)
       core-js: 3.32.0
       memoizerific: 1.11.3
       qs: 6.11.2
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       regenerator-runtime: 0.13.11
       util-deprecate: 1.0.2
     dev: true
@@ -5451,7 +5421,7 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@storybook/router@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/router@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-ZgeP8a5YV/iuKbv31V8DjPxlV4AzorRiR8OuSt/KqaiYXNXlOoQDz/qMmiNcrshrfLpmkzoq7fSo4T8lWo2UwQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5461,8 +5431,8 @@ packages:
       core-js: 3.32.0
       memoizerific: 1.11.3
       qs: 6.11.2
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       regenerator-runtime: 0.13.11
     dev: true
 
@@ -5475,7 +5445,7 @@ packages:
       find-up: 4.1.0
     dev: true
 
-  /@storybook/theming@6.5.16(react-dom@17.0.2)(react@17.0.2):
+  /@storybook/theming@6.5.16(react-dom@17.0.2)(react@18.2.0):
     resolution: {integrity: sha512-hNLctkjaYLRdk1+xYTkC1mg4dYz2wSv6SqbLpcKMbkPHTE0ElhddGPHQqB362md/w9emYXNkt1LSMD8Xk9JzVQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -5484,8 +5454,8 @@ packages:
       '@storybook/client-logger': 6.5.16
       core-js: 3.32.0
       memoizerific: 1.11.3
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
+      react: 18.2.0
+      react-dom: 17.0.2(react@18.2.0)
       regenerator-runtime: 0.13.11
     dev: true
 
@@ -5749,14 +5719,6 @@ packages:
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 18.2.20
-    dev: true
-
-  /@types/react@17.0.11:
-    resolution: {integrity: sha512-yFRQbD+whVonItSk7ZzP/L+gPTJVBkL/7shLEF+i9GC/1cV3JmUxEQz6+9ylhUpWSDuqo1N9qEvqS6vTj4USUA==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.3
-      csstype: 3.1.2
     dev: true
 
   /@types/react@18.2.20:
@@ -7044,7 +7006,7 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /create-react-context@0.2.3(prop-types@15.8.1)(react@17.0.2):
+  /create-react-context@0.2.3(prop-types@15.8.1)(react@18.2.0):
     resolution: {integrity: sha512-CQBmD0+QGgTaxDL3OX1IDXYqjkp2It4RIbcb99jS6AEg27Ga+a9G3JtK6SIu0HBwPLZlmwt9F7UwWA4Bn92Rag==}
     peerDependencies:
       prop-types: ^15.0.0
@@ -7053,10 +7015,10 @@ packages:
       fbjs: 0.8.18
       gud: 1.0.0
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.2.0
     dev: true
 
-  /create-react-context@0.3.0(prop-types@15.8.1)(react@17.0.2):
+  /create-react-context@0.3.0(prop-types@15.8.1)(react@18.2.0):
     resolution: {integrity: sha512-dNldIoSuNSvlTJ7slIKC/ZFGKexBMBrrcc+TTe1NdmROnaASuLPvqpwj9v4XS4uXZ8+YPu0sNmShX2rXI5LNsw==}
     peerDependencies:
       prop-types: ^15.0.0
@@ -7064,7 +7026,7 @@ packages:
     dependencies:
       gud: 1.0.0
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.2.0
       warning: 4.0.3
     dev: true
 
@@ -10200,14 +10162,14 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /powerbi-client-react@1.4.0(react@17.0.2):
+  /powerbi-client-react@1.4.0(react@18.2.0):
     resolution: {integrity: sha512-AfS96lP+emEc4drguCUqLG0s4cFa15OM9eqDaP1sJZ+ca0V+FdvFeI1bD6EyC3smPlpRcl862uSzYexVeUxdIQ==}
     peerDependencies:
       react: '>= 16'
     dependencies:
       lodash.isequal: 4.5.0
       powerbi-client: 2.22.3
-      react: 17.0.2
+      react: 18.2.0
     dev: true
 
   /powerbi-client@2.22.3:
@@ -10467,14 +10429,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /react-dom@17.0.2(react@17.0.2):
+  /react-dom@17.0.2(react@18.2.0):
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
       react: 17.0.2
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-      react: 17.0.2
+      react: 18.2.0
       scheduler: 0.20.2
     dev: true
 
@@ -10524,7 +10486,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-router-dom@5.0.0(react@17.0.2):
+  /react-router-dom@5.0.0(react@18.2.0):
     resolution: {integrity: sha512-wSpja5g9kh5dIteZT3tUoggjnsa+TPFHSMrpHXMpFsaHhQkm/JNVGh2jiF9Dkh4+duj4MKCkwO6H08u6inZYgQ==}
     peerDependencies:
       react: '>=15'
@@ -10533,8 +10495,8 @@ packages:
       history: 4.10.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 17.0.2
-      react-router: 5.0.0(react@17.0.2)
+      react: 18.2.0
+      react-router: 5.0.0(react@18.2.0)
       tiny-invariant: 1.3.1
       tiny-warning: 1.0.3
     dev: true
@@ -10569,19 +10531,19 @@ packages:
       react-router: 6.9.0(react@18.2.0)
     dev: true
 
-  /react-router@5.0.0(react@17.0.2):
+  /react-router@5.0.0(react@18.2.0):
     resolution: {integrity: sha512-6EQDakGdLG/it2x9EaCt9ZpEEPxnd0OCLBHQ1AcITAAx7nCnyvnzf76jKWG1s2/oJ7SSviUgfWHofdYljFexsA==}
     peerDependencies:
       react: '>=15'
     dependencies:
       '@babel/runtime': 7.22.10
-      create-react-context: 0.2.3(prop-types@15.8.1)(react@17.0.2)
+      create-react-context: 0.2.3(prop-types@15.8.1)(react@18.2.0)
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
       path-to-regexp: 1.8.0
       prop-types: 15.8.1
-      react: 17.0.2
+      react: 18.2.0
       react-is: 16.13.1
       tiny-invariant: 1.3.1
       tiny-warning: 1.0.3
@@ -10624,16 +10586,16 @@ packages:
       throttle-debounce: 3.0.1
     dev: true
 
-  /react-textarea-autosize@8.5.2(@types/react@17.0.11)(react@17.0.2):
+  /react-textarea-autosize@8.5.2(@types/react@18.2.20)(react@18.2.0):
     resolution: {integrity: sha512-uOkyjkEl0ByEK21eCJMHDGBAAd/BoFQBawYK5XItjAmCTeSbjxghd8qnt7nzsLYzidjnoObu6M26xts0YGKsGg==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@babel/runtime': 7.22.10
-      react: 17.0.2
-      use-composed-ref: 1.3.0(react@17.0.2)
-      use-latest: 1.2.1(@types/react@17.0.11)(react@17.0.2)
+      react: 18.2.0
+      use-composed-ref: 1.3.0(react@18.2.0)
+      use-latest: 1.2.1(@types/react@18.2.20)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: true
@@ -10641,10 +10603,12 @@ packages:
   /react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
     dev: true
+    optional: true
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -11847,15 +11811,15 @@ packages:
       qs: 6.11.2
     dev: true
 
-  /use-composed-ref@1.3.0(react@17.0.2):
+  /use-composed-ref@1.3.0(react@18.2.0):
     resolution: {integrity: sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      react: 17.0.2
+      react: 18.2.0
     dev: true
 
-  /use-isomorphic-layout-effect@1.1.2(@types/react@17.0.11)(react@17.0.2):
+  /use-isomorphic-layout-effect@1.1.2(@types/react@18.2.20)(react@18.2.0):
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
     peerDependencies:
       '@types/react': '*'
@@ -11864,11 +11828,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.11
-      react: 17.0.2
+      '@types/react': 18.2.20
+      react: 18.2.0
     dev: true
 
-  /use-latest@1.2.1(@types/react@17.0.11)(react@17.0.2):
+  /use-latest@1.2.1(@types/react@18.2.20)(react@18.2.0):
     resolution: {integrity: sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==}
     peerDependencies:
       '@types/react': '*'
@@ -11877,9 +11841,9 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 17.0.11
-      react: 17.0.2
-      use-isomorphic-layout-effect: 1.1.2(@types/react@17.0.11)(react@17.0.2)
+      '@types/react': 18.2.20
+      react: 18.2.0
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.20)(react@18.2.0)
     dev: true
 
   /util-deprecate@1.0.2:

@@ -59,9 +59,9 @@
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@types/react": "^17.0.11",
+        "@types/react": "^18.2.20",
         "@types/react-dom": "^17.0.7",
-        "react": "^17.0.2",
+        "react": "^18.2.0",
         "react-dom": "^17.0.2",
         "typescript": "^5.1.3"
     },
