@@ -9,6 +9,17 @@ import { usePersonResolver } from './usePersonResolver';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useState } from 'react';
+import { styled } from 'styled-components';
+
+const Styled = {
+    ContentContainer: styled.div`
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 48px 1fr;
+        height: 100vh;
+        overflow: hidden;
+    `,
+};
 
 const Root = () => {
     const personResolver = usePersonResolver();
@@ -16,12 +27,12 @@ const Root = () => {
     useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
 
     return (
-        <div style={{ fontFamily: 'Equinor', height: '100%' }}>
-            <PersonProvider resolve={personResolver}>
+        <PersonProvider resolve={personResolver}>
+            <Styled.ContentContainer>
                 <Header />
                 <Outlet />
-            </PersonProvider>
-        </div>
+            </Styled.ContentContainer>
+        </PersonProvider>
     );
 };
 
@@ -39,14 +50,6 @@ const routes = [
             {
                 path: 'apps/:appKey/*',
                 element: <AppRoute />,
-            },
-            {
-                path: 'apps/test',
-                element: <p>Bookmark Test Route ok</p>,
-            },
-            {
-                path: 'test',
-                element: <p>ok</p>,
             },
         ],
     },

@@ -1,17 +1,9 @@
-import { FC } from 'react';
-
-type FusionLogoProps = {
+type FusionLogoProps = Omit<React.SVGProps<SVGSVGElement>, 'viewBox'> & {
     readonly scale?: number;
 };
 
-export const FusionLogo: FC<FusionLogoProps> = ({ scale = 1 }) => (
-    <svg
-        width="50"
-        height="35"
-        viewBox="0 0 50 35"
-        fill="none"
-        style={{ transform: `scale(${scale})` }}
-    >
+export const FusionLogo = (props: FusionLogoProps) => (
+    <svg viewBox="0 0 50 35" style={{ height: '1em', ...props.style }}>
         <path
             d="M0 2V23.1776L7.05405 16.1235V7.05405H16.1235L23.1776 0H2C0.895431 0 0 0.89543 0 2Z"
             transform="translate(50 17.5) scale(0.92727 1.06779) rotate(135)"

@@ -7,9 +7,7 @@ import { EquinorLoader } from './EquinorLoader';
 import { configure } from './config';
 import { Router } from './Router';
 
-document.body.style.height = '100vh';
 const target = document.getElementById('root') as HTMLElement;
-target.style.height = '100%';
 
 ReactDOM.createRoot(target).render(
     <React.StrictMode>

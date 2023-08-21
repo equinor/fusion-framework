@@ -19,9 +19,21 @@
       }
     };
   </script>
+  <style>
+    html,
+    body {
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
 
-<body style="height: 100vh;">
-  <div id="root" style="height: 100%;"></div>
+    #application-content {
+      overflow: auto;
+    }
+  </style>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/main.tsx"></script>
 </body>
 
