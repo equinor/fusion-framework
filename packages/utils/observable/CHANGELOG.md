@@ -1,5 +1,78 @@
 # Change Log
 
+## 8.1.0
+
+### Minor Changes
+
+-   [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Use initial state from observable if observable has value property
+
+    -   update typing og arguments
+    -   update initial state to fallback to `observable.value`
+        -   _`opt.initial` will supersede `observable.value`_
+        -   internally `useLayoutEffect` subscribes to subject, so `opt.initial` will be overridden in next `tick`
+    -   when provided subject changes instance, subscription will set current state to `observable.value` of the new subject
+        -   only applies if new observable has value property
+
+    update typing when using stateful observable in `useObservableState`
+
+    if the source has a value property, the state will return the type of the observable
+
+    _previously the return type was observable type or `undefined`, since the initial state would be undefined before source emits values_
+
+    ```ts
+    /** value: {foo:string}|undefined  */
+    const { value } = useObservableState(source$ as Observable<{ foo: string }>);
+    /** value: {foo:string}  */
+    const { value } = useObservableState(source$ as BehaviorSubject<{ foo: string }>);
+
+    /* override initial value  */
+    const { value } = useObservableState(source$ as BehaviorSubject<{ foo: string }>, {
+        initial: 'bar',
+    });
+    ```
+
+-   [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Add operator for using string property selector on `Observable<Record<string, unknown>>`
+
+    example:
+
+    ```ts
+    // Observable<{foo: {bar: string}}>
+    observable.pipe(mapProp('foo')); // Observable<{bar:string}>
+    observable.pipe(mapProp('foo.bar')); // Observable<string>
+    ```
+
+-   [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Allow using string path for observable selector
+
+    > simplify usage of `useObservableSelector`
+
+    ```ts
+    // new
+    useObservableSelector(source$, 'foo.bar');
+    // existing
+    useObservableSelector(
+        source$,
+        useCallback((source) => source.foo.bar, []),
+    );
+    ```
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - fix typing of `useObservableInputState`
+
+-   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+
+    only dev deps updated should not affect any consumers
+
+    see [react changelog](https://github.com/facebook/react/releases) for details
+
+-   [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
+
 ## 8.0.3
 
 ### Patch Changes

@@ -1,5 +1,36 @@
 # Change Log
 
+## 0.2.0
+
+### Minor Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Removed emotion styling
+
+    issues whit conflicting package when using 3x jss frameworks (mui, styled-components, emotion)
+
+    _this might break jss class generation front-end, since classnames changes_
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   [#1129](https://github.com/equinor/fusion-framework/pull/1129) [`f672d0bb`](https://github.com/equinor/fusion-framework/commit/f672d0bba71a7ea6cd08135778fda67ff38f3ac3) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.30.0 to 0.32.4
+
+-   [#1122](https://github.com/equinor/fusion-framework/pull/1122) [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update styled-components to [^6.0.7](https://github.com/styled-components/styled-components/releases/tag/v6.0.7)
+
+    -   upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
+    -   removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
+
+    see style-components [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
+
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
+    -   @equinor/fusion-framework-react-module-bookmark@2.0.14
+    -   @equinor/fusion-framework-react@5.2.4
+
 ## 0.1.16
 
 ### Patch Changes
