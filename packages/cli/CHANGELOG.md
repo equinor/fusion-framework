@@ -1,5 +1,46 @@
 # Change Log
 
+## 8.0.1
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   [#1130](https://github.com/equinor/fusion-framework/pull/1130) [`542356ee`](https://github.com/equinor/fusion-framework/commit/542356eecfcc1bc8b896e71377308a1de29f4ab9) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @emotion/styled from 11.10.6 to 11.11.0
+
+-   [#1129](https://github.com/equinor/fusion-framework/pull/1129) [`f672d0bb`](https://github.com/equinor/fusion-framework/commit/f672d0bba71a7ea6cd08135778fda67ff38f3ac3) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.30.0 to 0.32.4
+
+-   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+
+    only dev deps updated should not affect any consumers
+
+    see [react changelog](https://github.com/facebook/react/releases) for details
+
+-   [#1122](https://github.com/equinor/fusion-framework/pull/1122) [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update styled-components to [^6.0.7](https://github.com/styled-components/styled-components/releases/tag/v6.0.7)
+
+    -   upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
+    -   removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
+
+    see style-components [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
+
+-   [#1148](https://github.com/equinor/fusion-framework/pull/1148) [`46201069`](https://github.com/equinor/fusion-framework/commit/46201069505f2526d1bdec05c134da17012b6d31) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 4.2.3 to 4.4.9
+
+    see [changelog](https://github.com/vitejs/vite/blob/create-vite@4.4.0/packages/create-vite/CHANGELOG.md)
+
+-   [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
+
+-   [#1156](https://github.com/equinor/fusion-framework/pull/1156) [`dfee1f79`](https://github.com/equinor/fusion-framework/commit/dfee1f79c9b70c2c2f27c12096000e6fc1e8ff7a) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite-tsconfig-paths from [4.0.7](https://github.com/aleclarson/vite-tsconfig-paths/releases/tag/v4.0.7) to [4.2.0](https://github.com/aleclarson/vite-tsconfig-paths/releases/tag/v4.2.0)
+
+-   [#1087](https://github.com/equinor/fusion-framework/pull/1087) [`6887c016`](https://github.com/equinor/fusion-framework/commit/6887c0164102e17b4a6d6f16193d9e34a0f41149) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @vitejs/plugin-react from 3.1.0 to 4.0.4
+
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
+    -   @equinor/fusion-observable@8.1.0
+    -   @equinor/fusion-framework-app@7.1.1
+
 ## 8.0.0
 
 ### Major Changes

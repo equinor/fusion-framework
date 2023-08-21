@@ -1,5 +1,24 @@
 # Change Log
 
+## 3.0.4
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+
+    only dev deps updated should not affect any consumers
+
+    see [react changelog](https://github.com/facebook/react/releases) for details
+
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
+    -   @equinor/fusion-framework-module@4.2.3
+
 ## 3.0.3
 
 ### Patch Changes

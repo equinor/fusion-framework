@@ -1,5 +1,23 @@
 # Change Log
 
+## 7.1.1
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
+    -   @equinor/fusion-framework-module@4.2.3
+    -   @equinor/fusion-framework-module-event@4.0.4
+    -   @equinor/fusion-framework-module-http@5.0.5
+    -   @equinor/fusion-framework-module-msal@3.0.5
+    -   @equinor/fusion-framework-module-app@5.2.2
+    -   @equinor/fusion-framework@7.0.16
+
 ## 7.1.0
 
 ### Minor Changes

@@ -1,5 +1,34 @@
 # Change Log
 
+## 5.1.2
+
+### Patch Changes
+
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+
+    conflicts of `@types/react` made random outcomes when using `yarn`
+
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+
+-   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+
+    only dev deps updated should not affect any consumers
+
+    see [react changelog](https://github.com/facebook/react/releases) for details
+
+-   [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
+
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
+    -   @equinor/fusion-framework-module-service-discovery@7.0.6
+    -   @equinor/fusion-framework-module-navigation@3.0.4
+    -   @equinor/fusion-observable@8.1.0
+    -   @equinor/fusion-framework-module-http@5.0.5
+    -   @equinor/fusion-framework-module-msal@3.0.5
+    -   @equinor/fusion-framework-module-app@5.2.2
+    -   @equinor/fusion-framework@7.0.16
+    -   @equinor/fusion-framework-react-app@4.1.3
+    -   @equinor/fusion-framework-app@7.1.1
+
 ## 5.1.1
 
 ### Patch Changes
@@ -58,7 +87,7 @@
     createLegacyRender(
         manifest.key,
         manifest.AppComponent as React.FunctionComponent,
-        legacyFusion // fusion context container
+        legacyFusion, // fusion context container
     );
     ```
 
@@ -67,7 +96,7 @@
     ```ts
     createLegacyRender(
         manifest, // mutated legacy manifest
-        legacyFusion // fusion context container
+        legacyFusion, // fusion context container
     );
     ```
 
