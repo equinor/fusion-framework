@@ -41,7 +41,7 @@ jobs:
     needs: changsets
     steps:
       - name: Update documentation
-        uses: devmasx/merge-branch@v1.3.1
+        uses: devmasx/merge-branch@1.4.0
         if: needs.changsets.outputs.published == 'true'
         with:
           type: now
