@@ -984,11 +984,11 @@ importers:
         version: 9.0.16
     devDependencies:
       '@equinor/fusion':
-        specifier: ^3.4.10
-        version: 3.4.10(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
+        specifier: ^3.4.11
+        version: 3.4.11(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
       '@equinor/fusion-components':
         specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6)
+        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../../framework
@@ -3221,7 +3221,7 @@ packages:
       - supports-color
     dev: false
 
-  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.10)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6):
+  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@17.0.2)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6):
     resolution: {integrity: sha512-W9Ej+r2/xcDMaqUf3FonGjkOGf9QMDUcm7B3vcUxwjvpuQ4/w4we9tx+cdSchkkYFXiw47uyYU8Dc2nbTGgACw==}
     peerDependencies:
       '@equinor/fusion': ^3.2.4
@@ -3232,7 +3232,7 @@ packages:
       react-router-dom: 5.x || ^6.0.0
     dependencies:
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.22.10)
-      '@equinor/fusion': 3.4.10(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
+      '@equinor/fusion': 3.4.11(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6)
       '@equinor/fusion-react-checkbox': 0.4.0
       '@equinor/fusion-react-divider': 0.2.12(react@18.2.0)
       '@equinor/fusion-react-icon': 0.2.15(react@18.2.0)
@@ -3659,8 +3659,8 @@ packages:
       '@equinor/eds-tokens': 0.5.5
       csstype: 3.1.2
 
-  /@equinor/fusion@3.4.10(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6):
-    resolution: {integrity: sha512-3dbGiPiTP5ogFe78SE1lu2ya6sDXeDtQY+lIfxa10VV2PeMZZe7uPqz3GKbevWBe+43j1qwoCpqU9wC7PN1WPA==}
+  /@equinor/fusion@3.4.11(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.1)(typescript@5.1.6):
+    resolution: {integrity: sha512-VNwx4ASiTcok02f66k70in0Vaq0bpUY8TW4wJsA+X9x7ovBvZV+SHC6dYkaMHWAeltT8Hj7TO5gy3FSNhOdWrQ==}
     dependencies:
       '@equinor/eslint-config-fusion': 0.1.3(eslint@8.0.0-rc.0)(prettier@2.8.8)(typescript@5.1.6)
       '@microsoft/applicationinsights-web': 2.8.15(tslib@2.6.1)
