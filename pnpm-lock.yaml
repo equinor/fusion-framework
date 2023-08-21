@@ -10498,7 +10498,6 @@ packages:
 
   /react-router-dom@5.3.4(react@17.0.2):
     resolution: {integrity: sha512-m4EqFMHv/Ih4kpcBCONHbkT68KoAeHN4p3lAGoNryfHi0dMy0kCzEZakiKRsvg5wHZ/JLrLW8o8KomWiz/qbYQ==}
-    requiresBuild: true
     peerDependencies:
       react: '>=15'
     dependencies:
