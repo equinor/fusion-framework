@@ -20,6 +20,14 @@ import {
 } from '@equinor/fusion-react-context-selector';
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-app';
+import { styled } from 'styled-components';
+
+const Styled = {
+    ContextSelectorWrapper: styled.div`
+        min-width: 25rem;
+        width: fit-content;
+    `,
+};
 
 /**
  * Map context query result to ContextSelectorResult.
@@ -179,19 +187,21 @@ export const ContextSelector = () => {
     const [resolver, setContext, currentContext, clearContext] = useQueryContext();
     return (
         <ContextProvider resolver={resolver}>
-            <ContextSearch
-                id="context-selector-header"
-                placeholder="Search for context"
-                initialText="Start typing to search"
-                dropdownHeight="300px"
-                variant="header"
-                onSelect={setContext}
-                autofocus={true}
-                onClearContext={clearContext}
-                previewItem={currentContext ?? null}
-                value={currentContext?.title}
-                selectedId={currentContext?.title}
-            />
+            <Styled.ContextSelectorWrapper>
+                <ContextSearch
+                    id="context-selector-header"
+                    placeholder="Search for context"
+                    initialText="Start typing to search"
+                    dropdownHeight="300px"
+                    variant="header"
+                    onSelect={setContext}
+                    autofocus={true}
+                    onClearContext={clearContext}
+                    previewItem={currentContext ?? null}
+                    value={currentContext?.title}
+                    selectedId={currentContext?.title}
+                />
+            </Styled.ContextSelectorWrapper>
         </ContextProvider>
     );
 };

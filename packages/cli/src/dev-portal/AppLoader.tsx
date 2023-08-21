@@ -61,13 +61,11 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
                     /** create a 'private' element for the application */
                     const el = document.createElement('div');
-                    el.style.height = '100%';
                     if (!ref.current) {
                         throw Error('Missing application mounting point');
                     }
 
                     ref.current.appendChild(el);
-                    ref.current.style.height = '100%';
 
                     /** extract render callback function from javascript module */
                     const render = script.renderApp ?? script.default;
@@ -111,7 +109,11 @@ export const AppLoader = (props: { readonly appKey: string }) => {
         );
     }
 
-    return <section ref={ref}>{loading && <EquinorLoader text="Loading Application" />}</section>;
+    return (
+        <section id="application-content" ref={ref}>
+            {loading && <EquinorLoader text="Loading Application" />}
+        </section>
+    );
 };
 
 export default AppLoader;
