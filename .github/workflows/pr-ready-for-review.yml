@@ -11,7 +11,7 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
       - name: Notify teams channel
-        uses: davidwengier/PostAdaptiveCard@v1.0.0
+        uses: davidwengier/PostAdaptiveCard@v1.0.4
         with:
           webhook-uri: ${{ secrets.TEAMS_PR_WEBHOOK }}
 
