@@ -24,7 +24,7 @@ const Styled = {
         gap: 1rem;
     `,
     Actions: styled.div`
-        display: 'flex';
+        display: flex;
         gap: 0.2em;
     `,
 };
