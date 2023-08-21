@@ -35,7 +35,7 @@
         "immer": "^9.0.16"
     },
     "devDependencies": {
-        "@equinor/fusion": "^3.4.10",
+        "@equinor/fusion": "^3.4.11",
         "@equinor/fusion-components": "^2.10.5",
         "@equinor/fusion-framework": "workspace:^",
         "@equinor/fusion-framework-app": "workspace:^",
