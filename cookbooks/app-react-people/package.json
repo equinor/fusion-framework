@@ -17,7 +17,7 @@
         "@equinor/fusion-framework-react-app": "^4.1.1",
         "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
-        "@types/react": "^18.0.24",
+        "@types/react": "^18.2.20",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
