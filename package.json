@@ -12,12 +12,11 @@
   },
   "packageManager": "pnpm@8.0.0",
   "scripts": {
-    "pnpm:devPreinstall": "mkdir -p ./packages/cli/bin && echo > ./packages/cli/bin/main.js",
     "install": "pnpm -r exec genversion --es6 --semi src/version.ts",
     "install:clean": "pnpm clean && pnpm install",
     "clean": "pnpm clean:build && pnpm clean:npm",
     "clean:npm": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
-    "clean:build": "pnpm -r exec rimraf dist bin tmp",
+    "clean:build": "pnpm -r exec rimraf dist tmp",
     "build": "turbo build",
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:packages": "turbo build --filter './packages/**' build",

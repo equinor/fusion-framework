@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "tmp",
+    "outDir": "dist",
     "rootDir": "src",
-    "declarationDir": "./dist/types",
+    "target": "ES6",
     "baseUrl": ".",
     "jsx": "react-jsx",
-  },
+      },
   "references": [
     {
       "path": "../utils/observable"
@@ -44,6 +44,5 @@
   ],
   "exclude": [
     "node_modules",
-    "lib"
   ],
 }
