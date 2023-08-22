@@ -11,7 +11,7 @@ export default defineConfig({
     plugins: [react(), viteTsconfigPaths()],
     root: fileURLToPath(new URL('./src/dev-portal', import.meta.url)),
     build: {
-        outDir: fileURLToPath(new URL('./bin/dev-portal', import.meta.url)),
+        outDir: fileURLToPath(new URL('./dist/scripts/dev-portal', import.meta.url)),
         emptyOutDir: true,
         // minify: false,
         // terserOptions: {
