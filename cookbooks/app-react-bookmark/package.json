@@ -18,7 +18,7 @@
         "@equinor/fusion-framework-module-context": "^4.0.11",
         "@equinor/fusion-framework-react-app": "^4.1.3",
         "@types/react": "^18.2.20",
-        "@types/react-dom": "^18.0.8",
+        "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "typescript": "^5.1.3"
