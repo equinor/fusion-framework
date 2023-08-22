@@ -49,6 +49,7 @@ export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapper
         <Suspense fallback={loader}>
             <LegacyContext>
                 <RootWrapper>
+                    {/* @ts-ignore */}
                     <FusionRoot rootRef={root} overlayRef={overlay}>
                         {props.children}
                     </FusionRoot>
