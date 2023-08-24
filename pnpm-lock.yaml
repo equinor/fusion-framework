@@ -3243,7 +3243,7 @@ packages:
     dependencies:
       '@equinor/fusion-react-button': 0.8.2(@types/react@18.2.20)(react@18.2.0)
       '@equinor/fusion-react-popover': 0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-      '@equinor/fusion-wc-person': 0.4.6
+      '@equinor/fusion-wc-person': 0.4.7
     transitivePeerDependencies:
       - '@types/react'
       - react
@@ -3459,6 +3459,19 @@ packages:
       '@equinor/fusion-wc-icon': 1.0.31
       '@equinor/fusion-wc-skeleton': 0.2.24
       '@lit-labs/task': 2.1.2
+      lit: 2.7.0
+    dev: true
+
+  /@equinor/fusion-wc-person@0.4.7:
+    resolution: {integrity: sha512-8jBGA6O254lforTCPq0nwCWL27u2mVoRLCya7Em38dnpfUHhPPxp1agw05sRCHvPcgUdYrg+Ojck2h86ZmRIOQ==}
+    dependencies:
+      '@equinor/fusion-wc-avatar': 1.0.42
+      '@equinor/fusion-wc-badge': 0.2.32
+      '@equinor/fusion-wc-button': 1.4.3
+      '@equinor/fusion-wc-core': 1.0.5
+      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-skeleton': 0.2.24
+      '@lit-labs/task': 3.0.1
       lit: 2.7.0
     dev: true
 
@@ -3959,6 +3972,12 @@ packages:
 
   /@lit-labs/task@2.1.2:
     resolution: {integrity: sha512-pDjPYojmCXnOezT/4BgqxHA2kahmSsCE0y6uPCYyVqigIx9DJav05s0KAtD9IImTY3LvWu5isSlq6nkWagAybA==}
+    dependencies:
+      '@lit/reactive-element': 1.6.3
+    dev: true
+
+  /@lit-labs/task@3.0.1:
+    resolution: {integrity: sha512-+VKnnVLRitDIpd/PBCTHAc012B5Xn43Sfq1scFt23aq0sxnAbTrapLR1ST2DgLRohBg/c4KlMIvgYf/5TZHqHw==}
     dependencies:
       '@lit/reactive-element': 1.6.3
     dev: true
