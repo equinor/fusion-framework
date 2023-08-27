@@ -22,12 +22,18 @@ export default function <TType, TArgs>(
                     const { key, entry } = action.payload;
 
                     const record = state[key];
-                    if (!record) {
-                        state[key] = castDraft({ ...entry, created: Date.now() });
-                    } else {
+                    if (record) {
                         record.updated = Date.now();
                         record.updates ??= 0;
                         record.updates++;
+                    } else {
+                        const created = Date.now();
+                        state[key] = castDraft({
+                            ...entry,
+                            created,
+                            /** `updated` = `created`, but `updates` is `undefined` */
+                            updated: created,
+                        });
                     }
                 })
                 .addCase(actions.remove, (state, action) => {
