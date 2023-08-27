@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.1.4
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.3
+    -   @equinor/fusion-framework-app@7.1.2
+    -   @equinor/fusion-framework-react@5.2.5
+
 ## 4.1.3
 
 ### Patch Changes
