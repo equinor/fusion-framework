@@ -38,8 +38,8 @@ jobs:
       - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false'
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
-
-      
+        env:
+          GH_TOKEN: ${{ github.token }}
           
   documentation:
     name: Merge main into docs
