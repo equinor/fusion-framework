@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.24
+
+### Patch Changes
+
+-   [`307dcda4`](https://github.com/equinor/fusion-framework/commit/307dcda453e12c2291883b06d33b106e492a7012) Thanks [@odinr](https://github.com/odinr)! - fixed broken imports after updating to react@18
+
 ## 4.0.23
 
 ### Patch Changes

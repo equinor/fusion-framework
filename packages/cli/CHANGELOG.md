@@ -1,5 +1,28 @@
 # Change Log
 
+## 8.1.0
+
+### Minor Changes
+
+-   [#1173](https://github.com/equinor/fusion-framework/pull/1173) [`571046fe`](https://github.com/equinor/fusion-framework/commit/571046fe1305c02eda0c2da46d33796f1cbcf5f1) Thanks [@odinr](https://github.com/odinr)! - Remove emotion decencies from CLI
+
+    align CLI with EDS and use style components instead of emotion 🥲
+    prevent conflict of react types dependent on both emotion and eds
+
+    -   remove @emotion/\*
+    -   convert emotion to styled-components
+    -   fix styling of cli
+        -   convert main placeholder to grid
+        -   remove unnecessary styling from header
+        -   set dynamic width of context selector (min 25rem)
+
+### Patch Changes
+
+-   [#1184](https://github.com/equinor/fusion-framework/pull/1184) [`59982e55`](https://github.com/equinor/fusion-framework/commit/59982e55e24a49f06d37334f1cefcc0048894fe7) Thanks [@odinr](https://github.com/odinr)! - fixed bin resolve for pnpm
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@7.1.2
+
 ## 8.0.1
 
 ### Patch Changes

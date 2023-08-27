@@ -1,5 +1,28 @@
 # Change Log
 
+## 3.0.6
+
+### Patch Changes
+
+-   [#1193](https://github.com/equinor/fusion-framework/pull/1193) [`05accaaa`](https://github.com/equinor/fusion-framework/commit/05accaaa72085b07483008fac822dd5e7c56a8b9) Thanks [@odinr](https://github.com/odinr)! - Query cache missed on first access since when creating a new cache record, updated was never set.
+
+    > when creating a cache item, `entry.created` and `entry.updated` are set to `Date.now()`, but `entry.updates` are only incremented when updating.
+
+    > when invalidating a cache record, `entry.updated` is deleted, which triggers the `defaultCacheValidator` to miss cache
+
+    ```ts
+    const defaultCacheValidator =
+        <TType, TArgs>(expires = 0): CacheValidator<TType, TArgs> =>
+        (entry) =>
+            (entry.updated ?? 0) + expires > Date.now();
+    ```
+
+    **IMPORTANT**
+
+    any consumer of this package should update ASAP to improve network performance.
+
+    _discovered when duplicate service discovery calls was executed from cli portal_
+
 ## 3.0.5
 
 ### Patch Changes
