@@ -1,10 +1,16 @@
-/** find cli package.json */
 import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+/** find cli package.json */
 import { readPackageUpSync } from 'read-pkg-up';
 const pkg = readPackageUpSync({ cwd: fileURLToPath(import.meta.url) });
 if (!pkg) {
     throw Error('failed to find program root');
 }
+process.env.CLI_BIN = resolve(
+    dirname(pkg.path),
+    String(pkg.packageJson.bin!['fusion-framework-cli']),
+);
 
 import { Command } from 'commander';
 

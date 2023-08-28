@@ -1,4 +1,4 @@
-import { readFile, access, constants as fsConstants } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
 
 import { findUpMultiple, Options } from 'find-up';
@@ -6,6 +6,7 @@ import { findUpMultiple, Options } from 'find-up';
 import * as tsImport from 'ts-import';
 import { assert } from 'node:console';
 import { AssertionError } from 'node:assert';
+import { fileExists } from './file-exists.js';
 
 export const supportedExt = ['.ts', '.js', '.json'] as const;
 
@@ -93,7 +94,7 @@ const configExtname = (file: string): SupportedExt => {
 };
 
 export const loadConfig = async <TType>(file: string): Promise<ConfigExecuter<TType>> => {
-    assert(access(file, fsConstants.F_OK), `failed to access file ${file}`);
+    assert(await fileExists(file, { assert: true }), `failed to access file ${file}`);
     switch (configExtname(file)) {
         case '.ts': {
             const result = (await tsImport.load(file)).default;

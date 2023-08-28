@@ -1,4 +1,5 @@
 import { writeFile } from 'fs/promises';
+import nodeFs from 'fs';
 
 import { chalk, formatPath } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
@@ -7,6 +8,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
+import { dirname } from 'node:path';
 
 export const createManifest = async (options?: {
     command?: ConfigExecuterEnv['command'];
@@ -32,6 +34,10 @@ export const createManifest = async (options?: {
     if (outputFile) {
         spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
         try {
+            const dir = dirname(outputFile).trim();
+            if (!nodeFs.existsSync(dirname(outputFile))) {
+                nodeFs.mkdirSync(dir, { recursive: true });
+            }
             writeFile(outputFile, JSON.stringify(manifest));
             spinner.succeed();
         } catch (err) {
@@ -41,6 +47,7 @@ export const createManifest = async (options?: {
     } else {
         console.log(manifest);
     }
+    return manifest;
 };
 
 export default createManifest;

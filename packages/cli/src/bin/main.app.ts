@@ -1,10 +1,11 @@
 import { Command } from 'commander';
 
-import { createDevServer } from './dev-serve.js';
+import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
 import createManifest from './create-manifest.js';
+import { bundleApplication } from './bundle-application.js';
 
 export default (program: Command) => {
     const app = program
@@ -56,12 +57,13 @@ export default (program: Command) => {
         });
 
     app.command('build')
+        .option('-o, --outDir, <string>', 'output directory of package', 'dist')
         .option(
-            '-c, --config <file>',
+            '-c, --config <string>',
             'Use specified config file, see https://vitejs.dev/guide/cli.html#build',
         )
         .option(
-            '    --vite <file>',
+            '    --vite <string>',
             `use specified Vite config file, by default search for ${formatPath(
                 'app.vite.{ts,js,json}',
             )}`,
@@ -78,13 +80,22 @@ export default (program: Command) => {
                 configSourceFiles: {
                     vite: opt.vite,
                 },
+                outDir: opt.outDir,
             });
         });
     app.command('manifest')
         .option('-o, --output <string>', 'output file')
+        .option('-c, --config <string>', 'manifest config file')
         .action((opt) => {
             createManifest({
                 outputFile: opt.output,
+                configFile: opt.config,
             });
+        });
+
+    app.command('pack')
+        .option('-o, --outDir, <string>', 'output directory of package', 'dist')
+        .action(async (opt) => {
+            bundleApplication({ archive: 'app.bundle.zip', outDir: opt.outDir });
         });
 };

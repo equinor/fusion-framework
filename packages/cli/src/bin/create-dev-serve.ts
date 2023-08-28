@@ -42,7 +42,7 @@ export const createDevServer = async (options: {
     spinner.info(`using portal 🔌${formatPath(portal)} as proxy target`);
 
     const env: ConfigExecuterEnv = {
-        command: 'build',
+        command: 'serve',
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };

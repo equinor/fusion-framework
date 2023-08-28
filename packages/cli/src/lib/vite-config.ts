@@ -1,5 +1,4 @@
 import nodePath from 'node:path';
-import nodeFs from 'node:fs';
 
 import { defineConfig, mergeConfig, type UserConfig, type UserConfigFn } from 'vite';
 
@@ -20,6 +19,7 @@ import {
 
 import viteEnv from 'vite-plugin-environment';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { fileExistsSync } from './utils/file-exists.js';
 
 const configFilename = 'app.vite.config';
 
@@ -73,14 +73,7 @@ export const resolveEntryPoint = (
     const files = opt?.files ?? ['index.ts', 'index.tsx', 'main.ts', 'main.tsx'];
     return files
         .map((file) => [dir, file].join('/'))
-        .find((file) => {
-            try {
-                nodeFs.accessSync(nodePath.resolve(cwd!, file), nodeFs.constants.F_OK);
-                return true;
-            } catch (_err) {
-                return false;
-            }
-        });
+        .find((file) => fileExistsSync(nodePath.resolve(cwd!, file)));
 };
 
 export const createViteConfig = async (

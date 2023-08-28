@@ -15,9 +15,10 @@ export const buildApplication = async (options: {
         manifest?: string;
         vite?: string;
     };
+    outDir: string;
     library?: 'react';
 }) => {
-    const { configSourceFiles, library } = options;
+    const { configSourceFiles, library, outDir } = options;
     const env: ConfigExecuterEnv = {
         command: 'build',
         mode: process.env.NODE_ENV ?? 'production',
@@ -46,5 +47,12 @@ export const buildApplication = async (options: {
         viteConfig.plugins!.push(reactPlugin.default());
     }
 
-    build(viteConfig);
+    viteConfig.build.outDir = outDir.trim();
+
+    const viteBuild = await build(viteConfig);
+
+    return {
+        viteConfig,
+        viteBuild,
+    };
 };
