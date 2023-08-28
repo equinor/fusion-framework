@@ -4,6 +4,7 @@ import { createDevServer } from './dev-serve.js';
 import { buildApplication } from './build-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
+import createManifest from './create-manifest.js';
 
 export default (program: Command) => {
     const app = program
@@ -77,6 +78,13 @@ export default (program: Command) => {
                 configSourceFiles: {
                     vite: opt.vite,
                 },
+            });
+        });
+    app.command('manifest')
+        .option('-o, --output <string>', 'output file')
+        .action((opt) => {
+            createManifest({
+                outputFile: opt.output,
             });
         });
 };

@@ -1,4 +1,3 @@
-import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { assert } from 'node:console';
@@ -18,9 +17,9 @@ import { Spinner } from './utils/spinner.js';
 import { chalk, formatPath } from './utils/format.js';
 
 import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
-import { resolveAppPackage } from '../lib/app-package.js';
 import { createManifest, manifestConfigFilename } from '../lib/app-manifest.js';
 import { appConfigFilename, createAppConfig } from '../lib/app-config.js';
+import { loadPackage } from './utils/load-package.js';
 
 const resolveRelativePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
@@ -38,24 +37,14 @@ export const createDevServer = async (options: {
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
-    spinner.start('resolve application package');
-    const pkg = await resolveAppPackage();
-    spinner.succeed();
-
-    spinner.info(
-        '📦',
-        chalk.yellowBright([pkg.packageJson.name, pkg.packageJson.version].join('@')),
-    );
-
-    const packageDirname = dirname(pkg.path);
-    spinner.info(`🏠 ${chalk.blueBright(packageDirname)}`);
+    const pkg = await loadPackage();
 
     spinner.info(`using portal 🔌${formatPath(portal)} as proxy target`);
 
     const env: ConfigExecuterEnv = {
         command: 'build',
         mode: process.env.NODE_ENV ?? 'development',
-        root: packageDirname,
+        root: pkg.root,
     };
 
     /**
