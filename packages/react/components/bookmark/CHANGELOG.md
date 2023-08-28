@@ -1,15 +1,5 @@
 # Change Log
 
-## 0.2.1
-
-### Patch Changes
-
--   [#1173](https://github.com/equinor/fusion-framework/pull/1173) [`571046fe`](https://github.com/equinor/fusion-framework/commit/571046fe1305c02eda0c2da46d33796f1cbcf5f1) Thanks [@odinr](https://github.com/odinr)! - fix typo in styled components
-
--   Updated dependencies []:
-    -   @equinor/fusion-framework-react-module-bookmark@2.0.15
-    -   @equinor/fusion-framework-react@5.2.5
-
 ## 0.2.0
 
 ### Minor Changes
