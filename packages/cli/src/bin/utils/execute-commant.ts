@@ -1,6 +1,5 @@
 import { fork } from 'node:child_process';
 import { assert } from 'node:console';
-import { fileURLToPath } from 'node:url';
 
 // TODO move
 type Commands = {

@@ -5,7 +5,6 @@ import { createAppConfig, createAppConfigFromPackage } from '../../lib/app-confi
 import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { type ResolvedAppPackage } from '../../lib/app-package.js';
 
-
 export const loadAppConfig = async (
     env: ConfigExecuterEnv,
     pkg: ResolvedAppPackage,

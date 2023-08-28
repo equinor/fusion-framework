@@ -1,5 +1,3 @@
-import { type AppManifest } from './app-manifest.js';
-
 import {
     loadConfig,
     type ResolvedConfig,

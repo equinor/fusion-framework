@@ -86,8 +86,6 @@ export function assertAppManifest(value: AppManifest): asserts value {
 //     });
 // }
 
-
-
 /**
  * @example
  * ```ts
