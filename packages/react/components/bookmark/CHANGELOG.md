@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.4
+
+### Patch Changes
+
+-   [`18b70b98`](https://github.com/equinor/fusion-framework/commit/18b70b98454df296a2a06fa5281ae9b6556d9a67) Thanks [@odinr](https://github.com/odinr)! - test 3
+
 ## 0.2.3
 
 ### Patch Changes
