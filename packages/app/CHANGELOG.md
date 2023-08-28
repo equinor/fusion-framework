@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.1.2
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.3
+    -   @equinor/fusion-framework@7.0.17
+
 ## 7.1.1
 
 ### Patch Changes

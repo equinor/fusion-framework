@@ -1,5 +1,18 @@
 # Change Log
 
+## 5.1.3
+
+### Patch Changes
+
+-   [`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594) Thanks [@odinr](https://github.com/odinr)! - fixed broken imports after updating to react@18
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.3
+    -   @equinor/fusion-framework-module-service-discovery@7.0.7
+    -   @equinor/fusion-framework-app@7.1.2
+    -   @equinor/fusion-framework-react-app@4.1.4
+    -   @equinor/fusion-framework@7.0.17
+
 ## 5.1.2
 
 ### Patch Changes
