@@ -21,6 +21,8 @@ import { createManifest, manifestConfigFilename } from '../lib/app-manifest.js';
 import { appConfigFilename, createAppConfig } from '../lib/app-config.js';
 import { loadPackage } from './utils/load-package.js';
 
+import { rateLimit } from 'express-rate-limit';
+
 const resolveRelativePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export const createDevServer = async (options: {
@@ -133,12 +135,18 @@ export const createDevServer = async (options: {
     server.use(vite.middlewares);
 
     /** redirect all request that miss to index.html, SPA logic */
-    server.use('*', async (req, res) => {
-        // TODO add check if file request
-        const htmlRaw = readFileSync(resolveRelativePath('public/index.html'), 'utf-8');
-        const html = await vite.transformIndexHtml(req.url, htmlRaw);
-        res.send(html);
-    });
+    server.use(
+        '*',
+        async (req, res) => {
+            // TODO add check if file request
+            const htmlRaw = readFileSync(resolveRelativePath('public/index.html'), 'utf-8');
+            const html = await vite.transformIndexHtml(req.url, htmlRaw);
+            res.send(html);
+        },
+        rateLimit({
+            max: 10,
+        }),
+    );
 
     /** use provided port or resolve available  */
     const serverPort = port ?? (await portFinder.getPortPromise({ port: 3000 }));
