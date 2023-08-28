@@ -30,7 +30,7 @@
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "changeset version && pnpm install --lockfile-only",
-    "changeset:publish": "pnpm publish -r"
+    "changeset:publish": "pnpm publish -r && pnpm changeset tag"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
   "keywords": [

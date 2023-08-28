@@ -14,11 +14,3 @@ jobs:
         run: gh pr ready ${{ github.event.pull_request.number }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
-          
-      - name: Enable auto-merge for Dependabot PRs
-        if: ${{ github.event.review.state == 'approved' }}
-        run: |
-          gh pr merge --auto --squash ${{ github.event.pull_request.number }}
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ github.token }}
