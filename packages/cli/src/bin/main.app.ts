@@ -4,7 +4,7 @@ import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
-import createManifest from './create-manifest.js';
+import createExportManifest from './create-export-manifest.js';
 import { bundleApplication } from './bundle-application.js';
 
 export default (program: Command) => {
@@ -87,7 +87,7 @@ export default (program: Command) => {
         .option('-o, --output <string>', 'output file')
         .option('-c, --config <string>', 'manifest config file')
         .action((opt) => {
-            createManifest({
+            createExportManifest({
                 outputFile: opt.output,
                 configFile: opt.config,
             });

@@ -39,8 +39,6 @@ export type AppManifestFn = (
     },
 ) => AppManifest | Promise<AppManifest>;
 
-// export type AppManifestExport = AppManifest | AppManifestFn;
-
 type FindManifestOptions = FindConfigOptions & {
     file?: string;
 };
@@ -104,14 +102,6 @@ export const mergeManifests = (
     return manifest;
 };
 
-// // TODO  why do we do this??? can`t backend parse semver?
-// export const parsePackageVersion = (manifest: AppManifest) => {
-//     assert(manifest.version, 'expected version in AppManifest');
-//     assert(manifest.version instanceof SemVer, 'expected version in AppManifest to be SemVer');
-//     const { major, minor, patch } = manifest.version;
-//     const version = { major, minor, patch };
-//     return version;
-// };
 
 /** loads manifestFn from file */
 export const loadManifest = (filename?: string) =>

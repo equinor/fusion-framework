@@ -6,7 +6,7 @@ import { loadPackage } from './utils/load-package.js';
 import { chalk, formatByteSize, formatPath } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { buildApplication } from './build-application.js';
-import createManifest from './create-manifest.js';
+import createExportManifest from './create-export-manifest.js';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
 export const bundleApplication = async (options: { outDir: string; archive: string }) => {
@@ -21,7 +21,7 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     spinner.succeed();
 
     spinner.start('generate manifest');
-    const manifest = await createManifest({ outputFile: `${outDir}-app-manifest.json` });
+    const manifest = await createExportManifest({ outputFile: `${outDir}-app-manifest.json` });
     spinner.succeed();
     console.log(chalk.dim(JSON.stringify(manifest, undefined, 2)));
 
