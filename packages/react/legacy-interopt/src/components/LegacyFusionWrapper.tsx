@@ -23,6 +23,10 @@ export type LegacyFusionWrapperProps = {
     readonly RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
 };
 
+const FusionRootExtended = FusionRoot as unknown as React.FC<
+    React.PropsWithChildren<React.ComponentProps<typeof FusionRoot>>
+>;
+
 const FallThrewComponent = ({
     children,
 }: {
@@ -49,11 +53,9 @@ export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapper
         <Suspense fallback={loader}>
             <LegacyContext>
                 <RootWrapper>
-                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                    {/* @ts-ignore */}
-                    <FusionRoot rootRef={root} overlayRef={overlay}>
+                    <FusionRootExtended rootRef={root} overlayRef={overlay}>
                         {props.children}
-                    </FusionRoot>
+                    </FusionRootExtended>
                 </RootWrapper>
             </LegacyContext>
         </Suspense>
