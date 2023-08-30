@@ -49,6 +49,7 @@ export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapper
         <Suspense fallback={loader}>
             <LegacyContext>
                 <RootWrapper>
+                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                     {/* @ts-ignore */}
                     <FusionRoot rootRef={root} overlayRef={overlay}>
                         {props.children}
