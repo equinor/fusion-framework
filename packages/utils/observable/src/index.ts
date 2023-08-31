@@ -3,6 +3,8 @@
  * @module
  */
 
+export { castDraft } from 'immer';
+
 export * from './FlowSubject';
 export * from './ActionError';
 export * from './types';
