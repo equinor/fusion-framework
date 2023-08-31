@@ -6,6 +6,7 @@ import { buildApplication } from './build-application.js';
 import { formatPath, chalk } from './utils/format.js';
 import createExportManifest from './create-export-manifest.js';
 import { bundleApplication } from './bundle-application.js';
+import { createExportConfig } from './create-export-config.js';
 
 export default (program: Command) => {
     const app = program
@@ -81,6 +82,16 @@ export default (program: Command) => {
                     vite: opt.vite,
                 },
                 outDir: opt.outDir,
+            });
+        });
+
+    app.command('config')
+        .option('-o, --output <string>', 'output file')
+        .option('-c, --config <string>', 'application config file')
+        .action((opt) => {
+            createExportConfig({
+                outputFile: opt.output,
+                configFile: opt.config,
             });
         });
     app.command('manifest')

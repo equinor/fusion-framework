@@ -102,7 +102,6 @@ export const mergeManifests = (
     return manifest;
 };
 
-
 /** loads manifestFn from file */
 export const loadManifest = (filename?: string) =>
     loadConfig<AppManifest>(filename ?? manifestConfigFilename);

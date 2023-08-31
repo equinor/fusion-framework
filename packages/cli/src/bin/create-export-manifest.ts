@@ -28,8 +28,8 @@ type AppManifestExport = Omit<AppManifest, 'version'> & {
         major: number;
         minor: number;
         patch: number;
-    }
-}
+    };
+};
 
 export const createExportManifest = async (options?: {
     command?: ConfigExecuterEnv['command'];
@@ -54,8 +54,8 @@ export const createExportManifest = async (options?: {
 
     const manifestExport: AppManifestExport = {
         ...manifest,
-        version: normalizeVersion(manifest.version)
-    } 
+        version: normalizeVersion(manifest.version),
+    };
 
     if (outputFile) {
         spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
