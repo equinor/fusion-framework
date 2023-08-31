@@ -13,14 +13,6 @@ import deepmerge from 'deepmerge/index.js';
 
 // TODO extend defined type in app-package
 export type AppConfig = {
-    // // root folder of the project
-    // root: string;
-    // /** source file @example `src/index.tsx` */
-    // entry: string;
-    // /** app-key */
-    // key: string;
-    // /** output folder of build (relative to root) @default `${AppConfig.root}/dist` */
-    // outDir?: string;
     /** application config */
     environment?: Record<string, unknown>;
     /** application urls @todo missing scope, use environment until further notice */
@@ -74,14 +66,6 @@ export const resolveAppConfig = async (
 };
 
 export const createAppConfigFromPackage = (_pkg: ResolvedAppPackage): AppConfig => {
-    // const { packageJson, path } = pkg;
-    // assertObject(packageJson, 'expected packageJson');
-    // assert(packageJson.name, 'expected [name] in packageJson');
-    // assert(semver.valid(packageJson.version), 'expected [version] to be semver');
-    // const { name, main: source = packageJson.module } = packageJson;
-    // assert(source, 'expected [main|module] in packageJson');
-    // const key = name.replace(/^@|\w.*\//gm, '');
-    // const entry = (source as string).startsWith('/') ? source : `/${source}`;
     const appConfig = {};
     assertAppConfig(appConfig);
     return appConfig;
