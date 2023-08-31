@@ -1,5 +1,5 @@
 import { from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
-import { last, mergeMap, scan } from 'rxjs/operators';
+import { mergeMap, reduce } from 'rxjs/operators';
 import { Modules, ModuleType } from './types';
 
 type ConfigPropType<T, Path extends string> = string extends Path
@@ -177,11 +177,10 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
                 const value = await cb(init);
                 return { target, value };
             }),
-            scan(
+            reduce(
                 (acc, { target, value }) => assignConfigValue(acc, target, value),
                 initial ?? ({} as TConfig),
             ),
-            last(),
         );
     }
 
