@@ -4,6 +4,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "target": "ES6",
+    "declarationDir": "./dist/types",
     "baseUrl": ".",
     "jsx": "react-jsx",
       },
@@ -41,6 +42,7 @@
   ],
   "include": [
     "src/**/*",
+    "types/*"
   ],
   "exclude": [
     "node_modules",
