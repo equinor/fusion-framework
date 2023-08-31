@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.0.5
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-http@5.0.6
+    -   @equinor/fusion-framework-react-module@3.0.5
+
 ## 3.0.4
 
 ### Patch Changes
