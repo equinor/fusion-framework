@@ -1,5 +1,104 @@
 # Change Log
 
+## 9.0.0
+
+### Major Changes
+
+-   [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - Rewrite fusion framework CLI
+
+    Rework of the Fusion Framework CLI to support future features
+
+    > the CLI was thrown together as a proof of concept, but grown un-manageable, because of lack of structure
+
+    **Main Features**
+
+    -   Separate logic and utilities from program (app/cli commands)
+    -   allow user to provide config files `app.{config,manifest,vite}.{ts,js,json}`
+        -   the cli will try to resolve from `.ts` then `.js` then `.json`
+        -   `app.config` is used to configure application environment configs (app-service config)
+        -   `app.manifest` application manifest, information about the application
+        -   `app.vite` override the CLI vite configuration
+    -   provide interface for `app.TYPE.ts` config
+        -   `define` and `merge` functionality
+        -   note that `app.config` and `app.manifest` needs to return full object _(will not be merged by CLI)_
+    -   allow providing config file in command
+    -   using config when resolving proxy request
+    -   improved CLI logging
+
+    **examples**
+
+    app.config.ts
+
+    ```ts
+    import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+    export default defineAppConfig((_nev, { base }) =>
+        mergeAppConfigs(base, {
+            environment: {
+                api: {
+                    foo: {
+                        baseUri: 'https://foo.bars',
+                        scopes: ['foobar'],
+                    },
+                },
+            },
+        }),
+    );
+    ```
+
+    app.manifest
+
+    ```ts
+    import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
+
+    export default defineAppManifest((env, { base }) => {
+        if (env.command === 'serve') {
+            return mergeManifests(base, {
+                key: 'simple',
+            });
+        }
+        return base;
+    });
+    ```
+
+    fusion-framework-cli app
+
+    ```sh
+    fusion-framework-cli app dev --manifest app.manifest.local.ts
+    ```
+
+### Minor Changes
+
+-   [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - add command for generating manifest
+
+    generate manifest for application
+
+    ```sh
+    fusion-framework-cli app manifest
+    #output to file
+    fusion-framework-cli app manifest -o manifest.json
+    #specify custom config
+    fusion-framework-cli app manifest -c app.manifest.custom.ts
+    ```
+
+-   [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - add pack command to cli
+
+    add method which will build, generate manifest and pack assets into a zip file (**just like the legacy @equinor/fusion-cli**)
+
+    ```sh
+    fusion-framework-cli app pack
+    ```
+
+### Patch Changes
+
+-   [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - Add command for outputting application configuration
+
+    **example**
+
+    ```sh
+    fusion-framework-cli app config -o my-app.config.json
+    fdev portal config -e ci -k my-app --config-file my-app.config.json set
+    ```
+
 ## 8.1.1
 
 ### Patch Changes
