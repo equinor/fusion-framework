@@ -1024,7 +1024,7 @@ importers:
         version: 3.4.11(eslint@8.0.0-rc.0)(prettier@2.8.8)(tslib@2.6.2)(typescript@5.1.6)
       '@equinor/fusion-components':
         specifier: ^2.10.5
-        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@18.2.0)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6)
+        version: 2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@5.3.0)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@18.2.0)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../../framework
@@ -1053,8 +1053,8 @@ importers:
         specifier: workspace:^
         version: link:../app
       '@types/history':
-        specifier: ^4.7.2
-        version: 4.7.2
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.20
@@ -1062,8 +1062,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       history:
-        specifier: ^4.7.2
-        version: 4.7.2
+        specifier: ^5.3.0
+        version: 5.3.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -3145,7 +3145,7 @@ packages:
       - supports-color
     dev: false
 
-  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@4.7.2)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@18.2.0)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6):
+  /@equinor/fusion-components@2.10.5(@babel/core@7.22.10)(@equinor/fusion@3.4.11)(@types/react@18.2.20)(eslint@8.0.0-rc.0)(history@5.3.0)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.3)(react-dom@18.2.0)(react-router-dom@5.0.0)(react@18.2.0)(typescript@5.1.6):
     resolution: {integrity: sha512-W9Ej+r2/xcDMaqUf3FonGjkOGf9QMDUcm7B3vcUxwjvpuQ4/w4we9tx+cdSchkkYFXiw47uyYU8Dc2nbTGgACw==}
     peerDependencies:
       '@equinor/fusion': ^3.2.4
@@ -3173,7 +3173,7 @@ packages:
       '@webcomponents/custom-elements': 1.6.0
       clsx: 1.2.1
       date-fns: 2.30.0
-      history: 4.7.2
+      history: 5.3.0
       loader-utils: 2.0.4
       lodash.throttle: 4.1.1
       npm-force-resolutions: 0.0.10
@@ -5482,8 +5482,11 @@ packages:
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
     dev: true
 
-  /@types/history@4.7.2:
-    resolution: {integrity: sha512-ui3WwXmjTaY73fOQ3/m3nnajU/Orhi6cEu5rzX+BrAAJxa3eITXZ5ch9suPqtM03OWhAHhPSyBGCN4UKoxO20Q==}
+  /@types/history@5.0.0:
+    resolution: {integrity: sha512-hy8b7Y1J8OGe6LbAjj3xniQrj3v6lsivCcrmf4TzSgPzLkhIeKgc5IZnT7ReIqmEuodjfO8EYAuoFvIrHi/+jQ==}
+    deprecated: This is a stub types definition. history provides its own type definitions, so you do not need this installed.
+    dependencies:
+      history: 5.3.0
     dev: true
 
   /@types/http-errors@2.0.1:
@@ -8455,14 +8458,10 @@ packages:
       value-equal: 1.0.1
     dev: true
 
-  /history@4.7.2:
-    resolution: {integrity: sha512-1zkBRWW6XweO0NBcjiphtVJVsIQ+SXF29z9DVkceeaSLVMFXHool+fdCZD4spDCfZJCILPILc3bm7Bc+HRi0nA==}
+  /history@5.3.0:
+    resolution: {integrity: sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==}
     dependencies:
-      invariant: 2.2.4
-      loose-envify: 1.4.0
-      resolve-pathname: 2.2.0
-      value-equal: 0.4.0
-      warning: 3.0.0
+      '@babel/runtime': 7.22.10
     dev: true
 
   /hoist-non-react-statics@3.3.2:
@@ -10838,10 +10837,6 @@ packages:
       global-dirs: 0.1.1
     dev: true
 
-  /resolve-pathname@2.2.0:
-    resolution: {integrity: sha512-bAFz9ld18RzJfddgrO2e/0S2O81710++chRMUxHjXOYKF6jTAMrUNZrEZ1PvV0zlhfjidm08iRPdTLPno1FuRg==}
-    dev: true
-
   /resolve-pathname@3.0.0:
     resolution: {integrity: sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==}
     dev: true
@@ -11985,10 +11980,6 @@ packages:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  /value-equal@0.4.0:
-    resolution: {integrity: sha512-x+cYdNnaA3CxvMaTX0INdTCN8m8aF2uY9BvEqmxuYp8bL09cs/kWVQPVGcA35fMktdOsP69IgU7wFj/61dJHEw==}
-    dev: true
-
   /value-equal@1.0.1:
     resolution: {integrity: sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==}
     dev: true
@@ -12173,12 +12164,6 @@ packages:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
     dependencies:
       makeerror: 1.0.12
-
-  /warning@3.0.0:
-    resolution: {integrity: sha512-jMBt6pUrKn5I+OGgtQ4YZLdhIeJmObddh6CsibPxyQ5yPZm1XExSyzC1LCNX7BzhxWgiHmizBWJTHJIjMjTQYQ==}
-    dependencies:
-      loose-envify: 1.4.0
-    dev: true
 
   /warning@4.0.3:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
