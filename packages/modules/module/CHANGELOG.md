@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.2.4
+
+### Patch Changes
+
+-   [`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f) Thanks [@odinr](https://github.com/odinr)! - replace `scan` + `last` whith `reduce` in `BaseConfigBuilder._buildConfig`
+
 ## 4.2.3
 
 ### Patch Changes

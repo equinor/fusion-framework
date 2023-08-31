@@ -1,5 +1,20 @@
 # Change Log
 
+## 5.1.4
+
+### Patch Changes
+
+-   Updated dependencies [[`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760), [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4)]:
+    -   @equinor/fusion-observable@8.1.1
+    -   @equinor/fusion-framework-module-app@5.2.4
+    -   @equinor/fusion-framework-app@7.1.3
+    -   @equinor/fusion-framework@7.0.18
+    -   @equinor/fusion-framework-module-http@5.0.6
+    -   @equinor/fusion-framework-module-msal@3.0.6
+    -   @equinor/fusion-framework-module-navigation@3.0.5
+    -   @equinor/fusion-framework-module-service-discovery@7.0.8
+    -   @equinor/fusion-framework-react-app@4.1.5
+
 ## 5.1.3
 
 ### Patch Changes

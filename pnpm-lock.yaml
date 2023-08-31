@@ -282,10 +282,10 @@ importers:
   cookbooks/app-react-people:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^8.1.0
+        specifier: ^8.1.1
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.4
+        specifier: ^4.1.5
         version: link:../../packages/react/app
       '@equinor/fusion-observable':
         specifier: workspace:^

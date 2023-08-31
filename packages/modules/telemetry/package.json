@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-telemetry",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "Fusion module for using Microsoft Telemetry",
     "main": "dist/esm/index.js",
     "exports": {

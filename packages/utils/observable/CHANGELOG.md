@@ -1,5 +1,15 @@
 # Change Log
 
+## 8.1.1
+
+### Patch Changes
+
+-   [#1213](https://github.com/equinor/fusion-framework/pull/1213) [`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760) Thanks [@eikeland](https://github.com/eikeland)! - # package.json setting type.module
+
+    Removing type.module from package config since it was causing issues in @equinor/fusion-cli
+
+-   [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4) Thanks [@odinr](https://github.com/odinr)! - expose `castDraft` from immer, since reused when creating reducers
+
 ## 8.1.0
 
 ### Minor Changes
