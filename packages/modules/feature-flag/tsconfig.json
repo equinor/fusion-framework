@@ -1,0 +1,26 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types"
+  },
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ],
+  "references": [
+    {
+      "path": "../module"
+    },
+    {
+      "path": "../navigation"
+    },
+    {
+      "path": "../../utils/observable"
+    },
+  ],
+}
