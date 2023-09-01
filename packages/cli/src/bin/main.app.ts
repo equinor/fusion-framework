@@ -26,13 +26,13 @@ export default (program: Command) => {
         .option(
             '    --manifest <file>',
             `use specified manifest, by default search for ${formatPath(
-                'app.manifest.{ts,js,json}',
+                'app.manifest.config.{ts,js,json}',
             )}`,
         )
         .option(
             '    --vite <file>',
             `use specified Vite config file, by default search for ${formatPath(
-                'app.vite.{ts,js,json}',
+                'app.vite.config.{ts,js,json}',
             )}`,
         )
         .option(
@@ -66,7 +66,7 @@ export default (program: Command) => {
         .option(
             '    --vite <string>',
             `use specified Vite config file, by default search for ${formatPath(
-                'app.vite.{ts,js,json}',
+                'app.config.vite.{ts,js,json}',
             )}`,
         )
         .option(

@@ -21,12 +21,12 @@ export type AppConfig = {
 
 **app.manifest**
 
-the cli will look for a `app.manifest.{ts,js,json}` which will be provided to the configuration step oas manifest
+the cli will look for a `app.manifest.config.{ts,js,json}` which will be provided to the configuration step oas manifest
 
 
 **app.vite**
 
-the cli will look for a `app.vite.{ts,js,json}` [Vite Configuration](https://vitejs.dev/config/)
+the cli will look for a `app.vite.config.{ts,js,json}` [Vite Configuration](https://vitejs.dev/config/)
 
 
 ### dev

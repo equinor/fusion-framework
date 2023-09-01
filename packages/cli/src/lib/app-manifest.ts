@@ -44,7 +44,7 @@ type FindManifestOptions = FindConfigOptions & {
 };
 
 /** base filename for configuration files */
-export const manifestConfigFilename = 'app.manifest';
+export const manifestConfigFilename = 'app.manifest.config';
 
 /**
  * Define a manifest for an application
