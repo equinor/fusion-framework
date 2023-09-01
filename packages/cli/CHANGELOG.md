@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+-   [`5d2df189`](https://github.com/equinor/fusion-framework/commit/5d2df189e022941f91ce7048f99f42f59d17c456) Thanks [@odinr](https://github.com/odinr)! - fixed naming convention of CLI config files
+
 ## 9.0.0
 
 ### Major Changes
