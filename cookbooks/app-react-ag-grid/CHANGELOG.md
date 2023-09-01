@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.1.0
+
+### Minor Changes
+
+-   [#1225](https://github.com/equinor/fusion-framework/pull/1225) [`31a4b06a`](https://github.com/equinor/fusion-framework/commit/31a4b06afcbb76b0a7584724a5bc061a3e2d98b3) Thanks [@odinr](https://github.com/odinr)! - updated ag-grid to 30.1
+
+    see [ag-grid changelog](https://github.com/ag-grid/ag-grid/releases/tag/v30.1.0)
+
+    see [📚doc](https://equinor.github.io/fusion-framework/modules/ag-grid/)
+
+### Patch Changes
+
+-   Updated dependencies [[`31a4b06a`](https://github.com/equinor/fusion-framework/commit/31a4b06afcbb76b0a7584724a5bc061a3e2d98b3)]:
+    -   @equinor/fusion-framework-module-ag-grid@30.1.0
+
 ## 0.0.3
 
 ### Patch Changes
