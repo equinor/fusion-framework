@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.0.19
+
+### Patch Changes
+
+-   Updated dependencies [[`e539e606`](https://github.com/equinor/fusion-framework/commit/e539e606d04bd8b7dc0c0bfed7cd4a7731996936)]:
+    -   @equinor/fusion-framework-module-service-discovery@7.0.9
+    -   @equinor/fusion-framework-module-services@3.1.5
+
 ## 7.0.18
 
 ### Patch Changes
