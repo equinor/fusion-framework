@@ -3,6 +3,7 @@ export type EnvironmentResponse = {
     services: Array<{
         key: string;
         uri: string;
+        defaultScopes?: Array<string>;
     }>;
 };
 
