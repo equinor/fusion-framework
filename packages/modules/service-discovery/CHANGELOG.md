@@ -1,5 +1,11 @@
 # Change Log
 
+## 7.0.9
+
+### Patch Changes
+
+-   [#1227](https://github.com/equinor/fusion-framework/pull/1227) [`e539e606`](https://github.com/equinor/fusion-framework/commit/e539e606d04bd8b7dc0c0bfed7cd4a7731996936) Thanks [@yusijs](https://github.com/yusijs)! - Use defaultScopes in service discovery if available, otherwise fall back to default scope
+
 ## 7.0.8
 
 ### Patch Changes
