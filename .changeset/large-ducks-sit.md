@@ -6,3 +6,5 @@
 updated ag-grid to 30.1
 
 see [ag-grid changelog](https://github.com/ag-grid/ag-grid/releases/tag/v30.1.0)
+
+see [📚doc](https://equinor.github.io/fusion-framework/modules/ag-grid/)
