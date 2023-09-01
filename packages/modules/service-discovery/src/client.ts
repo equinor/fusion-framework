@@ -67,7 +67,7 @@ export class ServiceDiscoveryClient<T extends Environment = Environment>
                 [service.key]: {
                     clientId: env.clientId,
                     uri: service.uri,
-                    defaultScopes: [env.clientId + '/.default'],
+                    defaultScopes: service.defaultScopes ?? [env.clientId + '/.default'],
                 },
             });
         }, {} as T);
