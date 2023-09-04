@@ -34,7 +34,7 @@ jobs:
           cond: ${{ github.actor != 'dependabot[bot]' }}
           if_true: '0' 
           if_false: '1'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: "${{ github.event.pull_request.merge_commit_sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
