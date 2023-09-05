@@ -745,8 +745,8 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^2.21.0
-        version: 2.21.0
+        specifier: ^3.0.2
+        version: 3.0.2
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -1393,15 +1393,15 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.19
 
-  /@azure/msal-browser@2.21.0:
-    resolution: {integrity: sha512-y+oAUJJ0m7gRUT505iGT4SDXktrRzOE3HZC0+nQyHDI+3O7BKK5NjQUwD/4V8FNNyrhxEtLk99iwJEo61epinQ==}
+  /@azure/msal-browser@3.0.2:
+    resolution: {integrity: sha512-a2lIzWGV8EJhxVTHu2Vd5sRdK6DTisueq2HCXt49CQqc1hG/j9pK+ds+hJi+QLlZHPo3FPMwiTCHEA9sNgX3HA==}
     engines: {node: '>=0.8.0'}
     dependencies:
-      '@azure/msal-common': 6.4.0
+      '@azure/msal-common': 14.0.2
     dev: false
 
-  /@azure/msal-common@6.4.0:
-    resolution: {integrity: sha512-WZdgq9f9O8cbxGzdRwLLMM5xjmLJ2mdtuzgXeiGxIRkVVlJ9nZ6sWnDFKa2TX8j72UXD1IfL0p/RYNoTXYoGfg==}
+  /@azure/msal-common@14.0.2:
+    resolution: {integrity: sha512-yvVP63oXe20JFzvooTVxiX9UorxcL8VFoVwEtKuGlQnEnNGzrOpQZ6lKa1lqwGqxMtwKpW7oAFQhbbskG5RbYA==}
     engines: {node: '>=0.8.0'}
     dev: false
 
