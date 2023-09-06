@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    
+    "noEmit": true,
     "jsx": "react-jsxdev",
   },
   "references": [
