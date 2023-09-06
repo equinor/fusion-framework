@@ -1,4 +1,4 @@
-import type { AppModuleInitiator } from '@equinor/fusion-framework-app';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableContext } from '@equinor/fusion-framework-react-module-context';
 import buildQuery from 'odata-query';
 
