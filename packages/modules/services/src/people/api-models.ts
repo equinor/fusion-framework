@@ -1,53 +1,60 @@
 import { ApiVersion } from './static';
 
-// TODO
+// TODO - some of these are nullable dunno which since all marked as nullable
 type ApiPersonDetailEntity_vX = {
-    azureId: string;
+    azureUniqueId: string;
+    fusionPersonId?: string;
+    mail?: string;
     name?: string;
-    pictureSrc?: string;
     jobTitle?: string;
     department?: string;
-    mail?: string;
-    company?: string;
+    fullDepartment?: string;
     mobilePhone?: string;
-    // TODO
-    accountType?: ApiPersonAccountType_vX;
     officeLocation?: string;
-    // TODO
-    positions?: ApiPersonPosition_vX[];
-    // TODO
-    manager?: ApiPersonManager_vX;
+    sapId?: string;
+    employeeId?: string;
+    isResourceOwner?: boolean;
+    isExpired?: boolean;
+    expiredDate?: string;
+    upn?: string;
     managerAzureUniqueId?: string;
-};
+    isPrimaryAccount?: boolean;
+    preferredContactMail?: string;
 
-// TODO
-enum ApiPersonAccountType_vX {
-    Employee = 'Employee',
-    Consultant = 'Consultant',
-    Enterprise = 'Enterprise',
-    External = 'External',
-    ExternalHire = 'External Hire',
-}
-
-// TODO
-type ApiPersonPosition_vX = {
-    id: string;
-    name: string;
-    project: {
-        id: string;
-        name: string;
-    };
-};
-
-// TODO
-type ApiPersonManager_vX = {
-    azureUniqueId: string;
-    name?: string;
-    pictureSrc?: string;
-    department?: string;
-    // TODO
+    // TODO - fix all
     accountType?: ApiPersonAccountType_vX;
+    invitationStatus?: unknown;
+    accountClassification?: unknown;
+    linkedAccounts?: unknown;
 };
+
+// TODO - are there more?
+type ApiPersonAccountType_vX =
+    | 'Employee'
+    | 'Consultant'
+    | 'Enterprise'
+    | 'External'
+    | 'External Hire';
+
+// TODO
+// type ApiPersonPosition_vX = {
+//     id: string;
+//     name: string;
+//     project: {
+//         id: string;
+//         name: string;
+//     };
+// };
+
+// TODO
+// type ApiPersonManager_vX = {
+//     azureUniqueId: string;
+//     name?: string;
+//     pictureSrc?: string;
+//     department?: string;
+//     // TODO
+//     accountType?: ApiPersonAccountType_vX;
+// };
 
 type ApiPersonDetailTypes = {
     // TODO

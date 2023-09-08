@@ -25,6 +25,18 @@
             "context/related": [
                 "dist/types/context/related/index"
             ],
+            "people": [
+                "dist/types/people/index"
+            ],
+            "people/get": [
+                "dist/types/people/person-details/index"
+            ],
+            "people/query": [
+                "dist/types/people/query/index"
+            ],
+            "people/photo": [
+                "dist/types/people/person-photo/index"
+            ],
             "bookmarks": [
                 "dist/types/bookmarks/index"
             ]
@@ -36,6 +48,10 @@
         "./bookmark": "./dist/esm/bookmarks/index.js",
         "./notification": "./dist/esm/notification/index.js",
         "./context/get": "./dist/esm/context/get-context/index.js",
+        "./people": "./dist/esm/people/index.js",
+        "./people/get": "./dist/esm/people/person-details/index.js",
+        "./people/query": "./dist/esm/people/query/index.js",
+        "./people/photo": "./dist/esm/people/person-photo/index.js",
         "./errors": "./dist/esm/errors.js",
         "./package.json": "./package.json"
     },
