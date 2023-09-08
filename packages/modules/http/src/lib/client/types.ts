@@ -145,10 +145,21 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
         init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T>;
 
+    /** @deprecated */
     jsonAsync<T = unknown>(
         path: string,
         args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T>;
+
+    blob(
+        path: string,
+        args?: FetchRequestInit<Blob, JsonRequest<TRequest>, TResponse>,
+    ): Promise<Blob>;
+
+    blob$(
+        path: string,
+        args?: FetchRequestInit<Blob, JsonRequest<TRequest>, TResponse>,
+    ): StreamResponse<Blob>;
 
     /**
      * Abort all ongoing request for current client

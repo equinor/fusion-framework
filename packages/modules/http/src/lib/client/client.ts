@@ -3,7 +3,7 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { fromFetch } from 'rxjs/fetch';
 
 import { HttpRequestHandler, HttpResponseHandler } from '../operators';
-import { jsonSelector } from '../selectors';
+import { blobSelector, jsonSelector } from '../selectors';
 
 import type { Observable, ObservableInput } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
@@ -26,8 +26,10 @@ export type HttpClientCreateOptions<
 };
 
 /** Base http client for executing requests */
-export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = FetchResponse>
-    implements IHttpClient<TRequest, TResponse>
+export class HttpClient<
+    TRequest extends FetchRequest = FetchRequest,
+    TResponse extends FetchResponse = FetchResponse,
+> implements IHttpClient<TRequest, TResponse>
 {
     readonly requestHandler: IHttpRequestHandler<TRequest>;
 
@@ -107,6 +109,21 @@ export class HttpClient<TRequest extends FetchRequest = FetchRequest, TResponse 
         args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T> {
         return firstValueFrom(this.json$<T>(path, args));
+    }
+
+    public blob$(
+        path: string,
+        args?: FetchRequestInit<Blob, TRequest, TResponse>,
+    ): StreamResponse<Blob> {
+        const selector = args?.selector ?? blobSelector;
+        return this.fetch$(path, {
+            ...args,
+            selector,
+        } as FetchRequestInit<Blob, TRequest, TResponse>);
+    }
+
+    public blob(path: string, args?: FetchRequestInit<Blob, TRequest, TResponse>): Promise<Blob> {
+        return firstValueFrom(this.blob$(path, args));
     }
 
     /** @deprecated */
