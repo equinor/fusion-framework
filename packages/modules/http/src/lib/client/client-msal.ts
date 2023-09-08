@@ -13,7 +13,7 @@ type MsalFetchRequestInit<
 /** Default Client for MSAL */
 export class HttpClientMsal<
     TRequest extends MsalFetchRequest = MsalFetchRequest,
-    TResponse = FetchResponse,
+    TResponse extends FetchResponse = FetchResponse,
 > extends HttpClient<TRequest, TResponse> {
     /** Scope that will be applied to all request if no scope is provided in request object */
     public defaultScopes: string[] = [];
