@@ -38,4 +38,9 @@ export type ClientMethod<T = unknown> = {
     json$: StreamResponse<T>;
 };
 
+export type ClientDataMethod = {
+    blob: Blob;
+    blob$: StreamResponse<Blob>;
+};
+
 export type ClientMethodType = keyof ClientMethod;

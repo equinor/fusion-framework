@@ -5,6 +5,7 @@ import { ApiClientFactory } from './types';
 import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';
+import { PeopleApiClient } from './people/client';
 
 export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     /**
@@ -26,6 +27,10 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     createNotificationClient<TMethod extends keyof ClientMethod>(
         method: TMethod,
     ): Promise<NotificationApiClient<TMethod, TClient>>;
+    /**
+     * @param method - Version of the service to use
+     */
+    createPeopleClient(): Promise<PeopleApiClient<TClient>>;
 }
 
 type ApiProviderCtorArgs<TClient extends IHttpClient = IHttpClient> = {
@@ -101,5 +106,10 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
         const httpClient = await this._createClientFn('context');
         httpClient.responseHandler.add('validate_api_request', validateResponse);
         return new ContextApiClient(httpClient, method);
+    }
+    public async createPeopleClient(): Promise<PeopleApiClient<TClient>> {
+        const httpClient = await this._createClientFn('people');
+        httpClient.responseHandler.add('validate_api_request', validateResponse);
+        return new PeopleApiClient(httpClient);
     }
 }
