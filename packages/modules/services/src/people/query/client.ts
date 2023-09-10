@@ -16,13 +16,14 @@ export const client =
         TVersion extends SupportedApiVersion,
         TMethod extends keyof ClientMethod = keyof ClientMethod,
         TClient extends IHttpClient = IHttpClient,
+        TArgs extends ApiRequestArgs<TVersion> = ApiRequestArgs<TVersion>,
     >(
         client: TClient,
         version: TVersion,
         method: TMethod = 'json' as TMethod,
     ) =>
     <T = ApiResponse<TVersion>>(
-        args: ApiRequestArgs<TVersion>,
+        args: TArgs,
         init?: ClientRequestInit<TClient, T>,
     ): ApiResult<TVersion, TMethod, T> =>
         client[method](
