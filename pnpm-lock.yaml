@@ -972,6 +972,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../../modules/module
+      '@equinor/fusion-framework-react-module':
+        specifier: workspace:^
+        version: link:../modules/module
       '@equinor/fusion-framework-react-module-http':
         specifier: workspace:^
         version: link:../modules/http
