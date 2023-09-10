@@ -38,6 +38,9 @@
     },
     {
       "path": "../react/components/bookmark"
+    },
+    {
+      "path": "../react/components/people-resolver"
     }
   ],
   "include": [

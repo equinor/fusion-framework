@@ -4,8 +4,6 @@ import { Outlet, RouterProvider, RouterProviderProps, useParams } from 'react-ro
 import AppLoader from './AppLoader';
 import Header from './Header';
 
-import { PersonProvider } from '@equinor/fusion-react-person';
-import { usePersonResolver } from './usePersonResolver';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useState } from 'react';
@@ -22,17 +20,12 @@ const Styled = {
 };
 
 const Root = () => {
-    const personResolver = usePersonResolver();
-
     useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
-
     return (
-        <PersonProvider resolve={personResolver}>
-            <Styled.ContentContainer>
-                <Header />
-                <Outlet />
-            </Styled.ContentContainer>
-        </PersonProvider>
+        <Styled.ContentContainer>
+            <Header />
+            <Outlet />
+        </Styled.ContentContainer>
     );
 };
 

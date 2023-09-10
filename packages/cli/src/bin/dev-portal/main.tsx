@@ -6,6 +6,7 @@ import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 import { EquinorLoader } from './EquinorLoader';
 import { configure } from './config';
 import { Router } from './Router';
+import { PeopleResolverProvider } from '@equinor/fusion-framework-react-components-people-provider';
 
 const target = document.getElementById('root') as HTMLElement;
 
@@ -13,7 +14,9 @@ ReactDOM.createRoot(target).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <Framework configure={configure} fallback={<EquinorLoader text="Loading framework" />}>
-                <Router />
+                <PeopleResolverProvider>
+                    <Router />
+                </PeopleResolverProvider>
             </Framework>
         </ThemeProvider>
     </React.StrictMode>,
