@@ -3,6 +3,7 @@ import { ConsoleLogger } from '@equinor/fusion-framework-module-msal/client';
 import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import { enableServices } from '@equinor/fusion-framework-module-services';
 
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;
@@ -26,6 +27,8 @@ export const configure = async (config: FrameworkConfigurator) => {
     enableAppModule(config);
 
     enableNavigation(config);
+
+    enableServices(config);
 
     enableBookmark(config, (builder) => {
         builder.setSourceSystem({
