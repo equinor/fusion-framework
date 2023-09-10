@@ -23,8 +23,8 @@ export class QueryCache<TType, TArgs> {
         return this.#state.asObservable();
     }
 
-    constructor(args: QueryCacheCtorArgs<TType, TArgs>) {
-        const { trimming, initial } = args;
+    constructor(args?: QueryCacheCtorArgs<TType, TArgs>) {
+        const { trimming, initial } = args ?? {};
 
         this.#state = new FlowSubject(createReducer(actions, initial));
         if (trimming) {
