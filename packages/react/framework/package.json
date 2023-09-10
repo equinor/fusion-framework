@@ -49,6 +49,7 @@
     "dependencies": {
         "@equinor/fusion-framework": "workspace:^",
         "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
         "@equinor/fusion-framework-react-module-http": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
         "rxjs": "^7.8.1"

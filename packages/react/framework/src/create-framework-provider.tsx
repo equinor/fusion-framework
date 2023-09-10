@@ -4,6 +4,7 @@ import { FusionConfigurator } from '@equinor/fusion-framework';
 
 import { FrameworkProvider } from './context';
 import type { AnyModule } from '@equinor/fusion-framework-module';
+import { ModuleProvider } from '@equinor/fusion-framework-react-module';
 
 /**
  * Create a framework provider for react.
@@ -33,7 +34,9 @@ export const createFrameworkProvider = <TModules extends Array<AnyModule> = []>(
         const framework = await initFusion(configurator);
         return {
             default: ({ children }: { children?: React.ReactNode }) => (
-                <FrameworkProvider value={framework}>{children}</FrameworkProvider>
+                <FrameworkProvider value={framework}>
+                    <ModuleProvider value={framework.modules}>{children}</ModuleProvider>
+                </FrameworkProvider>
             ),
         };
     });
