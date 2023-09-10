@@ -16,7 +16,7 @@ export const generateEndpoint = <TVersion extends SupportedApiVersion>(
             const { search } = args;
             const params = new URLSearchParams();
             params.append('api-version', apiVersion);
-            params.append('search', search);
+            params.append('$search', search);
             return `/persons?${String(params)}`;
         }
         default: {
