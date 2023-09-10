@@ -16,7 +16,7 @@ export const generateEndpoint = <TVersion extends SupportedApiVersion>(
             const { azureId } = args;
             const params = new URLSearchParams();
             params.append('api-version', apiVersion);
-            return `/persons/${azureId}?${String(params)}`;
+            return `/persons/${azureId}/photo?${String(params)}`;
         }
         default: {
             throw new UnsupportedApiVersion(version);
