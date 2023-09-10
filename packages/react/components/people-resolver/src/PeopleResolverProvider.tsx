@@ -17,4 +17,3 @@ export const PeopleResolverProvider = ({ children }: { readonly children?: React
 };
 
 export default PeopleResolverProvider;
-

@@ -22,5 +22,4 @@ export const PeopleResolver = (props: React.PropsWithChildren<{ resolver: Person
         }
     }, [ref, resolver]);
     return <fwc-person-provider ref={ref}>{children}</fwc-person-provider>;
-
 };
