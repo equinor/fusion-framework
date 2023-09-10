@@ -32,7 +32,7 @@ const personMatcher =
 export interface IPersonController {
     getPerson(args: MatcherArgs): Observable<GetPersonResult>;
     getPersonInfo(args: MatcherArgs): Observable<ApiPerson<'v2'>>;
-    getPhoto(args: MatcherArgs): Observable<string>;;
+    getPhoto(args: MatcherArgs): Observable<string>;
     search(args: { search: string }): Observable<PersonSearchResult>;
 }
 
