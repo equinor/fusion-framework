@@ -86,7 +86,7 @@
         "@equinor/fusion-react-progress-indicator": "^0.1.6",
         "@equinor/fusion-react-side-sheet": "1.0.1",
         "@equinor/fusion-react-styles": "^0.5.9",
-        "@equinor/fusion-wc-person": "^0.4.6",
+        "@equinor/fusion-wc-person": "^0.6.1",
         "@material-ui/styles": "^4.11.5",
         "@types/express": "^4.17.17",
         "@types/node": "^20.4.9",
