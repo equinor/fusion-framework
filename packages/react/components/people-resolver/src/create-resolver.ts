@@ -5,7 +5,6 @@ import { IPersonController } from './PersonController';
 
 export const createResolver = (controller: IPersonController): PersonResolver => ({
     getDetails(args) {
-        console.warn('resolve.getDetails is deprecated');
         return firstValueFrom(
             controller.getPerson(args).pipe(
                 /** TODO */

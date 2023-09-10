@@ -20,11 +20,14 @@ const personMatcher =
     <T extends { azureUniqueId?: string; upn?: string }>(value: T): value is T => {
         const { azureId, upn } = args;
         if (azureId && upn) {
-            return value.upn === upn && value.azureUniqueId === azureId;
+            return (
+                value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase() &&
+                value.azureUniqueId === azureId
+            );
         } else if (azureId) {
             return value.azureUniqueId === azureId;
         } else if (upn) {
-            return value.upn === upn;
+            return value.upn?.toLocaleLowerCase() === upn.toLocaleLowerCase();
         }
         return false;
     };
@@ -94,10 +97,14 @@ export class PersonController implements IPersonController {
         }
 
         if (!azureId && upn) {
+            const matcher = personMatcher({ upn });
             const cache$ = this._personCache$(args).pipe(raceWith(this._queryCache$(args)));
             return concat(
                 /** */
-                cache$.pipe(find((x) => x?.upn === upn)),
+                cache$.pipe(
+                    find(matcher),
+                    filter((x) => !!x),
+                ),
                 this.getPersonInfo({ upn }),
             ).pipe(
                 /** */
@@ -141,7 +148,7 @@ export class PersonController implements IPersonController {
 
     protected _getPersonInfoById(azureId: string): Observable<ApiPerson<'v2'>> {
         return concat(
-            this._personCache$({ azureId }).pipe(filter((x): x is GetPersonResult => !!x)),
+            this._personCache$({ azureId }),
             concat(
                 this._queryCache$({ azureId }),
                 this.#personQuery.query({ azureId }).pipe(
@@ -182,13 +189,14 @@ export class PersonController implements IPersonController {
     }
 
     protected _getPersonInfoByUpn(upn: string): Observable<ApiPerson<'v2'>> {
+        const matcher = personMatcher({ upn });
         return concat(
             this._personCache$({ upn }),
             concat(
                 this._queryCache$({ upn }),
                 this.#personSearchQuery.query({ search: upn }).pipe(
                     /** extract first match, should only be 0 or 1 */
-                    map((x) => x.value.find((x) => x.upn === upn)),
+                    map((x) => x.value.find(matcher)),
                     /** type cast and end stream */
                     find((x): x is ApiPerson<'v2'> => !!x),
                 ),
@@ -203,13 +211,14 @@ export class PersonController implements IPersonController {
         );
     }
 
-    protected _personCache$(args: MatcherArgs): Observable<GetPersonResult | undefined> {
+    protected _personCache$(args: MatcherArgs): Observable<GetPersonResult> {
         const mather = personMatcher(args);
         return this.#personQuery.cache.state$.pipe(
             /** make subscription cold */
             take(1),
             /** map out cached ApiPerson_v2 which matches upn  */
             map((x) => Object.values(x).find((x) => mather(x.value))?.value),
+            filter((x): x is GetPersonResult => !!x),
         );
     }
 
@@ -227,6 +236,7 @@ export class PersonController implements IPersonController {
                     find((x): x is ApiPerson<'v2'> => !!x),
                 ),
             ),
+            filter((x): x is ApiPerson<'v2'> => !!x),
         );
     }
 }
