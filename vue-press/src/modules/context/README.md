@@ -139,7 +139,8 @@ export const configure = (configurator) => {
 }
 ```
 
-array of context types which queries are filtered by
+array of context types which queries are filtered by.
+A complete list of valid context types can be fetched from [/contexts/types](https://fusion-s-context-ci.azurewebsites.net/swagger/index.html) endpoint
 
 #### setValidateContext
 By _default_ the provider will only check if the context item is within provided context types _(support legacy usage)_
