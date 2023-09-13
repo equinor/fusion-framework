@@ -11,8 +11,8 @@ export const handleRequests =
     (fetch: QueryFn): Flow<Actions, State> =>
     (action$) =>
         action$.pipe(
-            processRequest((request) =>
-                from(fetch(request.payload, request.meta.controller.signal)).pipe(
+            processRequest((request, signal) =>
+                from(fetch(request.payload, signal)).pipe(
                     map((result) => actions.success(result, { request })),
                     catchError((err) =>
                         of(

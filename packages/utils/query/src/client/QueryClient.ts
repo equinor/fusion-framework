@@ -19,7 +19,7 @@ import { State, RetryOptions, QueryFn, QueryTaskCompleted, QueryTaskValue } from
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type QueryClientOptions<TType = any, TArgs = any> = {
-    controller: AbortController;
+    signal?: AbortSignal;
     retry: Partial<RetryOptions>;
     /** reference to a query  */
     ref?: string;
@@ -101,7 +101,12 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
         args?: TArgs,
         opt?: Partial<QueryClientOptions<TType, TArgs>>,
     ): ActionMap<TType, TArgs>['request']['meta'] {
-        const action = (actions as ActionBuilder<TType, TArgs>).request(args, opt);
+        const { ref, retry, task } = opt ?? {};
+        const action = (actions as ActionBuilder<TType, TArgs>).request(args, {
+            ref,
+            retry,
+            task,
+        });
         this.#state.next(action);
         return action.meta;
     }
@@ -123,12 +128,19 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
         transaction: string,
     ): Subject<QueryTaskValue<TType, TArgs>> | undefined {
         const entry = this.#state.value[transaction];
-        return entry && entry.task;
+        return entry?.task;
     }
 
     public getTaskByRef(ref: string): Subject<QueryTaskValue<TType, TArgs>> | undefined {
         const entry = Object.values(this.#state.value).find((x) => x.ref === ref);
-        return entry && entry.task;
+        return entry?.task;
+    }
+
+    public cancelTaskByRef(ref: string, reason?: string): void {
+        const entry = Object.values(this.#state.value).find((x) => x.ref === ref);
+        if (entry?.ref) {
+            this.cancel(entry.transaction, reason);
+        }
     }
 
     /**
@@ -141,7 +153,7 @@ export class QueryClient<TType, TArgs> extends Observable<State<TType, TArgs>> {
             for (const key of Object.keys(this.#state.value)) {
                 this.cancel(key, `all transactions canceled`);
             }
-        } else if (transaction && this.#state.value[transaction]) {
+        } else if (this.#state.value[transaction]) {
             reason ??= `[${transaction}]: transaction canceled`;
             this.#state.next(actions.cancel({ transaction, reason }));
         }

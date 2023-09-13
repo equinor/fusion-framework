@@ -1,16 +1,16 @@
 import {
     filter,
-    fromEvent,
-    MonoTypeOperatorFunction,
-    Observable,
     from,
-    ObservableInput,
+    Observable,
+    type MonoTypeOperatorFunction,
+    type ObservableInput,
 } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Actions, actions } from '../actions';
 
 export type RequestHandler = (
     request: ReturnType<typeof actions.request>,
+    signal: AbortSignal,
 ) => ObservableInput<Actions>;
 
 export const processRequest =
@@ -19,53 +19,31 @@ export const processRequest =
         return source$.pipe(
             filter(actions.request.match),
             mergeMap((request) => {
-                const {
-                    meta: { controller, transaction },
-                } = request;
-
+                const { meta } = request;
+                const { transaction } = meta;
+                const controller = new AbortController();
+                const { signal } = controller;
                 return new Observable<Actions>((subscriber) => {
-                    /**
-                     * if the abort signal has been triggered,
-                     * create a cancel action and complete the observable
-                     */
-                    if (controller.signal.aborted) {
-                        subscriber.next(
-                            actions.cancel({
-                                transaction,
-                                reason: `request [${transaction}] was aborted!`,
-                            }),
-                        );
-                        return subscriber.complete();
-                    }
-
                     /** subscribe to cancel request on the action stream */
                     subscriber.add(
-                        source$.pipe(filter(actions.cancel.match)).subscribe((action) => {
-                            /** if no transaction specified or transaction match current */
-                            if (action.payload.transaction === transaction) {
-                                if (!controller.signal.aborted) {
-                                    controller.abort();
+                        source$
+                            .pipe(
+                                /** */
+                                filter(actions.cancel.match),
+                            )
+                            .subscribe((action) => {
+                                /** if no transaction specified or transaction match current */
+                                if (action.payload.transaction === transaction) {
+                                    if (!signal.aborted) {
+                                        controller.abort();
+                                    }
+                                    subscriber.complete();
                                 }
-                                subscriber.complete();
-                            }
-                        }),
-                    );
-
-                    /** subscribe to abort from the controller */
-                    subscriber.add(
-                        fromEvent(controller.signal, 'abort').subscribe(() => {
-                            subscriber.next(
-                                actions.cancel({
-                                    transaction,
-                                    reason: `request [${transaction}] was aborted!`,
-                                }),
-                            );
-                            subscriber.complete();
-                        }),
+                            }),
                     );
 
                     subscriber.add(
-                        from(handler(request)).subscribe({
+                        from(handler(request, signal)).subscribe({
                             next: (value) => subscriber.next(value),
                             error: (err) => subscriber.next(actions.error(err, { request })),
                             complete: () => subscriber.complete(),

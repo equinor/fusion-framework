@@ -1,6 +1,6 @@
 import type { Observable, ObservableInput, OperatorFunction } from 'rxjs';
 import type { QueryCacheRecord } from './cache';
-import type { QueryClientOptions, QueryTaskValue } from './client';
+import type { QueryClientOptions, QueryTaskValue, RetryOptions } from './client';
 
 export type QueryState = {
     status: QueryStatus;
@@ -29,7 +29,8 @@ export type CacheOptions<TType, TArgs> = {
 };
 
 export type QueryOptions<TType, TArgs = unknown> = {
-    client?: Partial<QueryClientOptions>;
+    signal?: AbortSignal;
+    retry?: Partial<RetryOptions>;
     cache?: {
         suppressInvalid: boolean;
         validate?: CacheValidator<TType, TArgs>;
@@ -40,6 +41,7 @@ export type QueryTaskCached<TValue, TArgs> = QueryTaskValue<TValue, TArgs> & {
     status: 'cache';
     updated?: number;
     updates?: number;
+    ref: string;
 };
 
 export type QueryQueueItem<TArgs, TType> = {
