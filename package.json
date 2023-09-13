@@ -51,7 +51,7 @@
     "eslint-formatter-rdjson": "^1.0.6",
     "eslint-plugin-prettier": "^5.0.0",
     "genversion": "^3.1.1",
-    "happy-dom": "^10.10.2",
+    "happy-dom": "^11.0.6",
     "husky": "^8.0.3",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^14.0.0",
