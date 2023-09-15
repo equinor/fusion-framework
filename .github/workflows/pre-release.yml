@@ -1,0 +1,37 @@
+name: pre release
+
+on: 
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Realse tag (PR)' 
+        default: 'next'    
+        required: true
+
+jobs:
+  changsets:
+    name: Version or publish packages
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user (trigger actor) 
+        uses: ./.github/workflows/actions/config-git-user
+      
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+
+      - name: Create Release Pull Request or Publish to npm
+        run: |
+          pnpm changeset version --snapshot next
+          pnpm publish -r --tag ${{ github.event.inputs.tag }} --no-git-checks --report-summary
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: changed versions
+        run: echo pnpm-publish-summary.json
