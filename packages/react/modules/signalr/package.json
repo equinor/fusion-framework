@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-module-signalr",
-    "version": "2.0.8",
+    "version": "2.0.9",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",

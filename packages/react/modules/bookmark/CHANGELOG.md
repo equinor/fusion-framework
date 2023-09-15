@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.0.19
+
+### Patch Changes
+
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework-module-bookmark@1.0.12
+    -   @equinor/fusion-framework-module-context@4.0.15
+    -   @equinor/fusion-framework-react@5.3.1
+    -   @equinor/fusion-framework-react-module@3.0.6
+    -   @equinor/fusion-observable@8.1.2
+    -   @equinor/fusion-query@4.0.1
+
 ## 2.0.18
 
 ### Patch Changes

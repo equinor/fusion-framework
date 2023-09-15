@@ -1,5 +1,19 @@
 # Change Log
 
+## 7.1.6
+
+### Patch Changes
+
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework@7.0.21
+    -   @equinor/fusion-framework-module-app@5.2.6
+    -   @equinor/fusion-framework-module-event@4.0.6
+    -   @equinor/fusion-framework-module-http@5.1.1
+    -   @equinor/fusion-framework-module@4.2.5
+    -   @equinor/fusion-framework-module-msal@3.0.7
+
 ## 7.1.5
 
 ### Patch Changes

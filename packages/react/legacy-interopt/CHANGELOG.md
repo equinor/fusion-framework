@@ -1,5 +1,22 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework-app@7.1.6
+    -   @equinor/fusion-framework@7.0.21
+    -   @equinor/fusion-framework-module-app@5.2.6
+    -   @equinor/fusion-framework-module-http@5.1.1
+    -   @equinor/fusion-framework-module-msal@3.0.7
+    -   @equinor/fusion-framework-module-navigation@3.0.6
+    -   @equinor/fusion-framework-module-service-discovery@7.0.11
+    -   @equinor/fusion-framework-react-app@4.1.8
+    -   @equinor/fusion-observable@8.1.2
+
 ## 6.0.0
 
 ### Patch Changes
