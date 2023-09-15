@@ -46,9 +46,10 @@ jobs:
 
   snapshot:
     uses: ./.github/workflows/pre-release.yml
+    secrets: inherit
     with:
       tag: 'next'
-      npm-token: ${{ secrets.NPM_AUTH_TOKEN }}
+    
 
   documentation:
     name: Merge main into docs

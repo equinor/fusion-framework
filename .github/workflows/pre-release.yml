@@ -13,9 +13,6 @@ on:
         type: string
         description: 'Realse tag (PR)' 
         required: true
-      npm-token:
-        type: string
-        description: 'Realse tag (PR)' 
 
 
 concurrency:
@@ -41,4 +38,4 @@ jobs:
         uses: ./.github/workflows/actions/changeset-snapshot
         with:
           tag: ${{ inputs.tag }}
-          npm-token: ${{ inputs.npm-token || secrets.NPM_AUTH_TOKEN }}
+          npm-token: ${{ secrets.NPM_AUTH_TOKEN }}
