@@ -8,7 +8,7 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  changsets:
+  changesets:
     name: Version or publish packages
     runs-on: ubuntu-latest
     outputs:
@@ -38,8 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - run: echo ${{ steps.changesets.outputs.pullRequestNumber }}
-
       - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
@@ -49,7 +47,7 @@ jobs:
   snapshot:
     name: Deploy snaphot of next version ready to be released
     runs-on: ubuntu-latest
-    needs: changsets
+    needs: changesets
     if: needs.changesets.outputs.published == 'false' && needs.changesets.outputs.hasChangesets
     steps:
       - uses: actions/checkout@v4
@@ -71,11 +69,11 @@ jobs:
   documentation:
     name: Merge main into docs
     runs-on: ubuntu-latest
-    needs: changsets
+    needs: changesets
     steps:
       - name: Update documentation
         uses: devmasx/merge-branch@1.4.0
-        if: needs.changsets.outputs.published == 'true'
+        if: needs.changesets.outputs.published == 'true'
         with:
           type: now
           from_branch: main
