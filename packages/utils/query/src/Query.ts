@@ -219,17 +219,7 @@ export class Query<TType, TArgs = any> {
 
         const cacheEntry = this.#cache.getItem(ref);
         if (cacheEntry) {
-            const { value, args, created, updated, updates, transaction } = cacheEntry;
-            const taskEntry: QueryTaskCached<TType, TArgs> = {
-                status: 'cache',
-                value,
-                args,
-                created,
-                updated,
-                updates,
-                transaction,
-            };
-            task.next(taskEntry);
+            task.next({ ...cacheEntry, status: 'cache' });
         }
 
         const validateCache = options?.cache?.validate || this.#validateCacheEntry;

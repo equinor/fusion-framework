@@ -7,12 +7,13 @@ on:
         description: 'Realse tag (PR)' 
         default: 'beta'    
         required: true
-  push: 
-    branches:
-      - changeset-release/main
+  workflow_call: 
+    inputs:
+      tag:
+        type: string
+        description: 'Realse tag (PR)' 
+        default: 'next'
 
-env:
-  TAG: ${{ github.event.inputs.tag || 'next' }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.tag || 'next' }}
@@ -41,7 +42,7 @@ jobs:
       - name: Create Release Pull Request or Publish to npm
         run: |
           pnpm changeset version --snapshot next
-          pnpm publish -r --tag ${{env.TAG}} --no-git-checks --report-summary
+          pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
