@@ -45,27 +45,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   snapshot:
-    name: Deploy snaphot of next version ready to be released
-    runs-on: ubuntu-latest
     needs: changesets
     if: needs.changesets.outputs.published == 'false' && needs.changesets.outputs.hasChangesets
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    uses: ./.github/workflows/pre-release.yml
 
-      - name: Configure git user (trigger actor) 
-        uses: ./.github/workflows/actions/config-git-user
-      
-      - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
-
-      - name: create a snapshot
-        uses: ./.github/workflows/actions/pre-release
-        with:
-          tag: next
-          npm-token: ${{ secrets.NPM_AUTH_TOKEN }}
-          
   documentation:
     name: Merge main into docs
     runs-on: ubuntu-latest

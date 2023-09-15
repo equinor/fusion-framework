@@ -12,11 +12,11 @@ on:
       tag:
         type: string
         description: 'Realse tag (PR)' 
-        default: 'next'
+        required: true
 
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.tag || 'next' }}
+  group: ${{ github.workflow }}-${{ inputs.tag }}
   cancel-in-progress: true
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
         uses: ./.github/workflows/actions/node-setup
 
       - name: Create snapshot
-        uses: ./.github/workflows/actions/pre-release
+        uses: ./.github/workflows/actions/changeset-snapshot
         with:
           tag: ${{  inputs.tag }}
           npm-token: ${{ secrets.NPM_AUTH_TOKEN }}
