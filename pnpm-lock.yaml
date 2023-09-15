@@ -60,8 +60,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       happy-dom:
-        specifier: ^11.0.6
-        version: 11.0.6
+        specifier: ^12.0.1
+        version: 12.0.1
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -73,7 +73,7 @@ importers:
         version: 14.0.1
       vitest:
         specifier: ^0.34.2
-        version: 0.34.2(happy-dom@11.0.6)
+        version: 0.34.2(happy-dom@12.0.1)
       vitest-github-actions-reporter:
         specifier: ^0.10.0
         version: 0.10.0(vitest@0.34.2)
@@ -1318,8 +1318,8 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4
       happy-dom:
-        specifier: ^11.0.6
-        version: 11.0.6
+        specifier: ^12.0.1
+        version: 12.0.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1328,7 +1328,7 @@ importers:
         version: 5.1.6
       vitest:
         specifier: ^0.34.2
-        version: 0.34.2(happy-dom@11.0.6)
+        version: 0.34.2(happy-dom@12.0.1)
 
   packages/utils/query:
     dependencies:
@@ -1346,7 +1346,7 @@ importers:
         version: 9.0.0
       vitest:
         specifier: ^0.34.2
-        version: 0.34.2(happy-dom@11.0.6)
+        version: 0.34.2(happy-dom@12.0.1)
     devDependencies:
       '@types/react':
         specifier: ^18.2.20
@@ -6347,7 +6347,7 @@ packages:
       std-env: 3.3.3
       test-exclude: 6.0.0
       v8-to-istanbul: 9.1.0
-      vitest: 0.34.2(happy-dom@11.0.6)
+      vitest: 0.34.2(happy-dom@12.0.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8608,8 +8608,8 @@ packages:
     resolution: {integrity: sha512-zGEOVKFM5sVPPrYs7J5/hYEw2Pof8KCyOwyhG8sAF26mCAeUFAcYPu1mwB7hhpIP29zOIBaDqwuHdLp0jvZXjw==}
     dev: true
 
-  /happy-dom@11.0.6:
-    resolution: {integrity: sha512-GiNIoNhc/ZAvB2r3tc1DRvRSUaMt4A4Ub0IVpxURxsIqks1Q1UnNsdY9uwVjAT4B6DGHVmSOdqL5S5BNim8o+g==}
+  /happy-dom@12.0.1:
+    resolution: {integrity: sha512-kBH54b92GFP3pn9tdMBAtjNHoddE4om6vfFoTme2PCG6u/YYiYKas2yxJCd5MAINX+pYfalfpUKQHVQDTljLnw==}
     dependencies:
       css.escape: 1.5.1
       entities: 4.5.0
@@ -12327,10 +12327,10 @@ packages:
       vitest: '>=0.28.5'
     dependencies:
       '@actions/core': 1.10.0
-      vitest: 0.34.2(happy-dom@11.0.6)
+      vitest: 0.34.2(happy-dom@12.0.1)
     dev: true
 
-  /vitest@0.34.2(happy-dom@11.0.6):
+  /vitest@0.34.2(happy-dom@12.0.1):
     resolution: {integrity: sha512-WgaIvBbjsSYMq/oiMlXUI7KflELmzM43BEvkdC/8b5CAod4ryAiY2z8uR6Crbi5Pjnu5oOmhKa9sy7uk6paBxQ==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -12374,7 +12374,7 @@ packages:
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
-      happy-dom: 11.0.6
+      happy-dom: 12.0.1
       local-pkg: 0.4.3
       magic-string: 0.30.2
       pathe: 1.1.1
