@@ -11,7 +11,6 @@ import type { QueryTaskValue, RetryOptions } from './types';
 type RequestMeta<TType, TArgs> = {
     transaction: string;
     created: number;
-    controller: AbortController;
     task: Subject<QueryTaskValue<TType, TArgs>>;
     retry?: Partial<RetryOptions>;
     ref?: string;
@@ -24,7 +23,6 @@ const createActions = <TType, TArgs>() => {
             meta ??= {};
             meta.transaction ??= generateGUID();
             meta.created ??= Date.now();
-            meta.controller ??= new AbortController();
             meta.task ??= new ReplaySubject<QueryTaskValue<TType, TArgs>>();
             return { payload, meta: meta as RequestMeta<TType, TArgs> };
         },

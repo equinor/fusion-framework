@@ -132,20 +132,20 @@ export class Query<TType, TArgs = any> {
         this.#subscription.add(
             this.#queryQueue$
                 .pipe(
-                    queueOperator(
-                        ({ args, options }) =>
-                            new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
-                                const { task, transaction } = this.#client.next(args, options);
-                                subscriber.add(
-                                    // ignore errors, only emit new cache values
-                                    task.pipe(catchError(() => EMPTY)).subscribe(subscriber),
-                                );
-                                subscriber.add(() => {
-                                    /** cancel transaction if switched */
-                                    setTimeout(() => this.#client.cancel(transaction));
-                                });
-                            }),
-                    ),
+                    queueOperator((request) => {
+                        const { args, options } = request;
+                        return new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
+                            const { task, transaction } = this.#client.next(args, options);
+                            subscriber.add(
+                                // ignore errors, only emit new cache values
+                                task.pipe(catchError(() => EMPTY)).subscribe(subscriber),
+                            );
+                            subscriber.add(() => {
+                                /** cancel transaction if switched */
+                                setTimeout(() => this.#client.cancel(transaction));
+                            });
+                        });
+                    }),
                     filterQueryTaskComplete<TType, TArgs>(),
                     takeWhile(() => !this.#client.closed),
                 )
@@ -173,9 +173,7 @@ export class Query<TType, TArgs = any> {
         args: TArgs,
         options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
-        const ref = this.#generateCacheKey(args);
-        const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
-        return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
+        return this._query(args, options);
     }
 
     /**
@@ -187,8 +185,8 @@ export class Query<TType, TArgs = any> {
      */
     public queryAsync(
         payload: TArgs,
-        opt?: QueryOptions<TType, TArgs> & { awaitResolve: boolean },
-    ): Promise<QueryTaskValue<TType, TArgs>> {
+        opt?: QueryOptions<TType, TArgs> & { awaitResolve?: boolean },
+    ): Promise<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const { awaitResolve, ...args } = opt || {};
         const fn = awaitResolve ? lastValueFrom : firstValueFrom;
         return fn(this._query(payload, args));
@@ -204,6 +202,11 @@ export class Query<TType, TArgs = any> {
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
         const ref = this.#generateCacheKey(args);
         const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
+        if (options?.signal) {
+            options.signal.addEventListener('abort', () => {
+                this.#client.cancelTaskByRef(ref, 'abort signal triggered by caller');
+            });
+        }
         return task as Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>>;
     }
 
@@ -233,7 +236,14 @@ export class Query<TType, TArgs = any> {
         const validCacheEntry = cacheEntry && validateCache(cacheEntry, args);
 
         if (!validCacheEntry) {
-            this.#queryQueue$.next({ args, options: { ref, task } });
+            this.#queryQueue$.next({
+                args,
+                options: {
+                    ref,
+                    task,
+                    retry: options?.retry,
+                },
+            });
         } else {
             task.complete();
         }

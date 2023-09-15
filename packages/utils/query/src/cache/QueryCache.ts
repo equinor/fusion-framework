@@ -19,6 +19,10 @@ export type QueryCacheCtorArgs<TType, TArgs> = {
 export class QueryCache<TType, TArgs> {
     #state: FlowSubject<QueryCacheStateData<TType, TArgs>, Actions<TType, TArgs>>;
 
+    get state(): Record<string, QueryCacheRecord<TType, TArgs>> {
+        return this.#state.value;
+    }
+
     get state$(): Observable<Record<string, QueryCacheRecord<TType, TArgs>>> {
         return this.#state.asObservable();
     }
