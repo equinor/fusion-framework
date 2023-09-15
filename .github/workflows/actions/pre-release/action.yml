@@ -15,11 +15,13 @@ runs:
   using: composite
   steps:
     - name: Set publishing config
+      shell: bash
       run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
       
     - name: Create Release Pull Request or Publish to npm
+      shell: bash
       run: |
         pnpm changeset version --snapshot next
         pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
@@ -27,5 +29,6 @@ runs:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
 
     - name: changed versions
+      shell: bash
       run: echo pnpm-publish-summary.json
           
