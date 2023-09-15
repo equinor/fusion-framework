@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.1.3
+
+### Patch Changes
+
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework-module-event@4.0.6
+    -   @equinor/fusion-framework-react-module@3.0.6
+
 ## 3.1.2
 
 ### Patch Changes

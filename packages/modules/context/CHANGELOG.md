@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.0.15
+
+### Patch Changes
+
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework-module@4.2.5
+    -   @equinor/fusion-query@4.0.1
+
 ## 4.0.14
 
 ### Patch Changes
