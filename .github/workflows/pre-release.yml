@@ -12,8 +12,6 @@ jobs:
   changsets:
     name: Version or publish packages
     runs-on: ubuntu-latest
-    outputs:
-      published: ${{ steps.changesets.outputs.published }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,6 +19,11 @@ jobs:
 
       - name: Configure git user (trigger actor) 
         uses: ./.github/workflows/actions/config-git-user
+        
+      - name: Set publishing config
+        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
@@ -31,7 +34,6 @@ jobs:
           pnpm publish -r --tag ${{ github.event.inputs.tag }} --no-git-checks --report-summary
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: changed versions
         run: echo pnpm-publish-summary.json
