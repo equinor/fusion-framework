@@ -45,9 +45,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   snapshot:
-    needs: changesets
-    if: needs.changesets.outputs.published == 'false' && needs.changesets.outputs.hasChangesets
     uses: ./.github/workflows/pre-release.yml
+    with:
+      tag: 'next'
 
   documentation:
     name: Merge main into docs
