@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.0.23
+
+### Patch Changes
+
+-   [#1237](https://github.com/equinor/fusion-framework/pull/1237) [`9075e84a`](https://github.com/equinor/fusion-framework/commit/9075e84ad5e9327d8adf8ffebaf51942da5a8773) Thanks [@odinr](https://github.com/odinr)! - updated typings
+
+    after type enhancement in [@equinor/fusion-observable](https://github.com/equinor/fusion-framework/blob/1b1a98a982323fe8384e8564e6229af7dc615839/packages/utils/observable/CHANGELOG.md#810), some type errors was discovered in `@equinor/fusion-framework-cookbook-app-react-context` mentioned in [issue 1212](https://github.com/equinor/fusion-framework/issues/1212)
+
+-   Updated dependencies [[`780b229a`](https://github.com/equinor/fusion-framework/commit/780b229a709d83b275e88473df0236b3f218c037), [`9f570356`](https://github.com/equinor/fusion-framework/commit/9f570356939f077e0a6ca101fa0b7e51d369f7b4), [`0d84d39e`](https://github.com/equinor/fusion-framework/commit/0d84d39ed9d452aa7bb8bc4dfc6ff2e46d3af82b)]:
+    -   @equinor/fusion-framework-cli@9.1.0
+
 ## 4.0.22
 
 ### Patch Changes

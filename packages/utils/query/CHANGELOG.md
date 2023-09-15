@@ -1,5 +1,113 @@
 # Change Log
 
+## 4.0.0
+
+### Major Changes
+
+-   [#1271](https://github.com/equinor/fusion-framework/pull/1271) [`ebcabd0e`](https://github.com/equinor/fusion-framework/commit/ebcabd0e6945e1420a0a9a7d82bd9255da1b8578) Thanks [@odinr](https://github.com/odinr)! - Change abort behavior of QueryClient
+
+    this also fixes the issue where only the first requester of a request could provide abort controller.
+
+    _success_:
+
+    ```ts
+    const controllerA = new AbortController();
+    const controllerB = new AbortController();
+    const tasks = Promise.All([
+        foo.query('bar', { controller: controllerA }),
+        foo.query('bar', { controller: controllerB }),
+    ]);
+    try {
+        setTimeout(() => controllerA.abort(), 10);
+        await tasks;
+    } catch (err) {
+        // success
+    }
+    ```
+
+    ```diff
+    - setTimeout(() => controllerA.abort(), 10);
+    + setTimeout(() => controllerB.abort(), 10);
+    ```
+
+    query wil no longer abort since task is attached to `controllerA`
+
+    > the query client will return the ongoing task _(if not completed)_ for matching query key.
+
+    ```ts
+    let calls = 0;
+    const query = new Query({
+        client: {
+            queueOperator: 'merge',
+            fn: (value) => {
+                return new Promise((resolve) =>
+                    setTimeout(() => {
+                        call++;
+                        resolve(value);
+                    }, 100),
+                );
+                value;
+            },
+        },
+        key: (value) => value,
+    });
+    setTimeout(
+        // calls = 1
+        () => query.queryAsync('foo').then(() => console.log(calls)),
+        0,
+    );
+    setTimeout(
+        // calls = 1, since sharing first request
+        () => query.queryAsync('foo').then(() => console.log(calls)),
+        50,
+    );
+    setTimeout(
+        // calls = 2
+        () => query.queryAsync('bar').then(() => console.log(calls)),
+        100,
+    );
+    setTimeout(
+        // calls = 3
+        () => query.queryAsync('foo').then(() => console.log(calls)),
+        150,
+    );
+    ```
+
+    -   expose current state of cache `QueryCache`
+    -   update request handler to support signal
+    -   update request processor to handle signal
+    -   remove `AbortController` from action meta
+    -   add functionality for aborting request by reference
+
+    **BREAKING_CHANGES:**
+
+    ```diff
+     export type QueryClientOptions<TType = any, TArgs = any> = {
+    -    controller: AbortControl
+    +    signal?: AbortSignal;
+         retry: Partial<RetryOptions>;
+         /** reference to a query  */
+         ref?: string;
+         task?: Subject<QueryTaskValue<TType, TArgs>>;
+    };
+    ```
+
+    migration
+
+    ```diff
+    const foo = new Query(...);
+    const controller = new AbortController();
+    foo.query(
+      args,
+    - {controller}
+    + {signal: controller.signal}
+    );
+    ```
+
+### Patch Changes
+
+-   [`8739a5a6`](https://github.com/equinor/fusion-framework/commit/8739a5a65d8aaa46ce9ef56cce013efeeb006e8a) Thanks [@odinr](https://github.com/odinr)! - Allow optionial ctor args in QueryCache
+
 ## 3.0.7
 
 ### Patch Changes

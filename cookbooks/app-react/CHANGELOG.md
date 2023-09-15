@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.24
+
+### Patch Changes
+
+-   [#1273](https://github.com/equinor/fusion-framework/pull/1273) [`9f570356`](https://github.com/equinor/fusion-framework/commit/9f570356939f077e0a6ca101fa0b7e51d369f7b4) Thanks [@Noggling](https://github.com/Noggling)! - Added display content to the div element that is provided to applications
+
 ## 4.0.23
 
 ### Patch Changes

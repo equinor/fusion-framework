@@ -1,5 +1,20 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+-   [#1242](https://github.com/equinor/fusion-framework/pull/1242) [`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa) Thanks [@odinr](https://github.com/odinr)! - add method for executing blob requests
+
+    -   added selector for extracting blob from response
+    -   added function for fetching blob as stream or promise on the http client
+
+    ```tsx
+    const data = await client.blob('/person/photo');
+    const url = URL.createObjectURL(blob);
+    return <img src={url} />;
+    ```
+
 ## 5.0.6
 
 ### Patch Changes
