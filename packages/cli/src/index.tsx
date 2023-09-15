@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 // import 'vite/modulepreload-polyfill';
@@ -14,11 +13,7 @@ const Test = (args: { env: unknown }) => {
 
 export const render = (el: HTMLElement, args: { env: unknown }) => {
     const root = ReactDOM.createRoot(el);
-    root.render(
-        <StrictMode>
-            <Test env={args.env} />
-        </StrictMode>,
-    );
+    root.render(<Test env={args.env} />);
     return () => root.unmount();
 };
 
