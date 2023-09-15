@@ -1,5 +1,20 @@
 # Change Log
 
+## 5.3.0
+
+### Minor Changes
+
+-   [`3896fbec`](https://github.com/equinor/fusion-framework/commit/3896fbec3458dbe2ebd66e772465d5f89cd20658) Thanks [@odinr](https://github.com/odinr)! - Create module provider when creating framework provider
+
+    `useModule(...)` did not work previously within framework (portal) context since no context provider was created
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework@7.0.20
+    -   @equinor/fusion-framework-react-module-http@4.0.0
+    -   @equinor/fusion-framework-react-module-signalr@2.0.8
+
 ## 5.2.7
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.1.5
+
+### Patch Changes
+
+-   Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa)]:
+    -   @equinor/fusion-framework-module-http@5.1.0
+    -   @equinor/fusion-framework@7.0.20
+    -   @equinor/fusion-framework-module-app@5.2.5
+
 ## 7.1.4
 
 ### Patch Changes

@@ -1,5 +1,33 @@
 # Change Log
 
+## 9.1.0
+
+### Minor Changes
+
+-   [#1257](https://github.com/equinor/fusion-framework/pull/1257) [`780b229a`](https://github.com/equinor/fusion-framework/commit/780b229a709d83b275e88473df0236b3f218c037) Thanks [@odinr](https://github.com/odinr)! - person resolving
+
+    the CLI now resolves persons from `azureId` or `upn`
+
+    ```tsx
+    const MyPage = () => {
+      return (
+        <fwc-person-avatar azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-avatar>
+        <fwc-person-card azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-card>
+        <fwc-person-list-item azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-list-item>
+      )
+    }
+    ```
+
+### Patch Changes
+
+-   [#1273](https://github.com/equinor/fusion-framework/pull/1273) [`9f570356`](https://github.com/equinor/fusion-framework/commit/9f570356939f077e0a6ca101fa0b7e51d369f7b4) Thanks [@Noggling](https://github.com/Noggling)! - Added display content to the div element that is provided to applications
+
+-   [`0d84d39e`](https://github.com/equinor/fusion-framework/commit/0d84d39ed9d452aa7bb8bc4dfc6ff2e46d3af82b) Thanks [@odinr](https://github.com/odinr)! - enable services for CLI portal
+
+-   Updated dependencies [[`de46f0a2`](https://github.com/equinor/fusion-framework/commit/de46f0a2ce93134fc32bf587d29dd32d7ab9a8d9)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.0.0
+    -   @equinor/fusion-framework-app@7.1.5
+
 ## 9.0.2
 
 ### Patch Changes
