@@ -48,6 +48,7 @@ jobs:
         uses: ./.github/workflows/actions/pre-release
         with:
           tag: next
+          npm-token: ${{ secrets.NPM_AUTH_TOKEN }}
           
   documentation:
     name: Merge main into docs

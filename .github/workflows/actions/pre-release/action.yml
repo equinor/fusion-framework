@@ -3,7 +3,13 @@ description: create a snapshot release
 inputs:
   tag:
     description: name of the tag to release
-    required: false
+    required: true
+  npm-token:
+    description: token for pushing to npm
+    required: true
+  gh-token:
+    desciption: github token
+    default:  ${{ github.token }}
 
 runs:
   using: composite
@@ -11,14 +17,14 @@ runs:
     - name: Set publishing config
       run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
       
     - name: Create Release Pull Request or Publish to npm
       run: |
         pnpm changeset version --snapshot next
         pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ inputs.gh-token }}
 
     - name: changed versions
       run: echo pnpm-publish-summary.json
