@@ -1302,8 +1302,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@testing-library/react':
         specifier: ^14.0.0
@@ -1315,8 +1315,8 @@ importers:
         specifier: ^18.2.20
         version: 18.2.20
       '@types/uuid':
-        specifier: ^8.3.4
-        version: 8.3.4
+        specifier: ^9.0.4
+        version: 9.0.4
       happy-dom:
         specifier: ^12.0.1
         version: 12.0.1
@@ -3765,9 +3765,9 @@ packages:
       '@equinor/fusion-wc-list': 0.3.5
       '@equinor/fusion-wc-textinput': 0.5.19
       '@lit-labs/task': 2.1.2
-      '@types/uuid': 9.0.2
+      '@types/uuid': 9.0.4
       lit: 2.7.0
-      uuid: 9.0.0
+      uuid: 9.0.1
     dev: true
 
   /@equinor/fusion-wc-skeleton@0.2.24:
@@ -5850,12 +5850,12 @@ packages:
   /@types/trusted-types@2.0.3:
     resolution: {integrity: sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==}
 
-  /@types/uuid@8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
-    dev: true
-
   /@types/uuid@9.0.2:
     resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+    dev: true
+
+  /@types/uuid@9.0.4:
+    resolution: {integrity: sha512-zAuJWQflfx6dYJM62vna+Sn5aeSWhh3OB+wfUEACNcqUSc0AGc5JKl+ycL1vrH7frGTXhJchYjE1Hak8L819dA==}
     dev: true
 
   /@types/webpack-env@1.18.1:
@@ -12188,9 +12188,15 @@ packages:
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+    dev: true
 
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
   /v8-compile-cache-lib@3.0.1:
