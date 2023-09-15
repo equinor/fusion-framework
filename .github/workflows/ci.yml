@@ -39,7 +39,7 @@ jobs:
 
       - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.hasChangesets
-        uses: ./.github/workflows/pre-release
+        uses: ./.github/workflows/pre-release.yml
 
       - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
