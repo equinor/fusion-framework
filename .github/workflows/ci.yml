@@ -38,6 +38,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
+      - run: echo ${{ steps.changesets.outputs.pullRequestNumber }}
+
       - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
