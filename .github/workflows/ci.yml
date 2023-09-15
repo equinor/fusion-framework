@@ -45,7 +45,7 @@ jobs:
 
       - name: create a snaphsot release
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.hasChangesets
-        uses: ./.github/workflows/pre-release
+        uses: ./.github/workflows/actions/pre-release
         with:
           tag: next
           
