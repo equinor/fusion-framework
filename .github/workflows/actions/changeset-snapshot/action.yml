@@ -15,24 +15,20 @@ runs:
   using: composite
   steps:
     - name: Generate status
+      id: status
       shell: bash
       run: |
         pnpm changeset status --output changeset.json
+        REALEASE_COUNT=$(cat changeset.json | jq '.releases | length')
+        echo "releases=${REALEASE_COUNT}" >> "$GITHUB_OUTPUT"
       env:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
 
-    - name: Extract release count
-      id: release-count
-      shell: bash
-      run: |
-        REALEASE_COUNT=$(cat changeset.json | jq '.releases | length')
-        echo "releases=${REALEASE_COUNT}" >> "$GITHUB_OUTPUT"
-
     - name: Create Release Pull Request or Publish to npm
       shell: bash
-      if: ${{ steps.release-count.outputs.releases > 0 }}
+      if: ${{ steps.status.outputs.releases > 0 }}
       run: |
-        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+        pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
         pnpm changeset version --snapshot next
         pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
       env:
@@ -40,7 +36,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
 
     - uses: actions/upload-artifact@v3
-      if: ${{ steps.release-count.outputs.releases > 0 }}
+      if: ${{ steps.status.outputs.releases > 0 }}
       with:
         name: changeset-status
         path: changeset.json
