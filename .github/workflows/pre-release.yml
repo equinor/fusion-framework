@@ -34,17 +34,7 @@ jobs:
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
 
-      - name: Set publishing config
-        run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        
-      - name: Create Release Pull Request or Publish to npm
-        run: |
-          pnpm changeset version --snapshot next
-          pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: changed versions
-        run: echo pnpm-publish-summary.json
+      - name: Create snapshot
+        uses: ./.github/workflows/actions/pre-release
+        with:
+          tag: ${{  inputs.tag }}

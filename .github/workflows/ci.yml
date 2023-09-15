@@ -38,14 +38,16 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: convert Changeset PR to draf
-        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.hasChangesets
-        uses: ./.github/workflows/pre-release.yml
-
-      - name: convert Changeset PR to draf
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: create a snaphsot release
+        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.hasChangesets
+        uses: ./.github/workflows/pre-release
+        with:
+          tag: next
           
   documentation:
     name: Merge main into docs

@@ -1,0 +1,25 @@
+name: release snapshot
+description: create a snapshot release
+inputs:
+  tag:
+    description: name of the tag to release
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Set publishing config
+      run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      
+    - name: Create Release Pull Request or Publish to npm
+      run: |
+        pnpm changeset version --snapshot next
+        pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: changed versions
+      run: echo pnpm-publish-summary.json
+          
