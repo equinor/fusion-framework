@@ -388,8 +388,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: 1.0.0-next.5
-        version: 1.0.0-next.5
+        specifier: 1.0.0-next.6
+        version: 1.0.0-next.6
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.0
@@ -998,8 +998,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/services
       '@equinor/fusion-wc-person':
-        specifier: 1.0.0-next.5
-        version: 1.0.0-next.5
+        specifier: 1.0.0-next.6
+        version: 1.0.0-next.6
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.20
@@ -3606,11 +3606,11 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-avatar@2.0.0-next.5:
-    resolution: {integrity: sha512-szuRlIInlJ/LNDDU0tMA1iCc9nU7RC8siWmzPB8Ak4/BqRjyEuEBgl7zJAs9fcuneE19ApYY5efSpA4PY2qHPw==}
+  /@equinor/fusion-wc-avatar@2.0.0-next.6:
+    resolution: {integrity: sha512-S7I4XUB7vPNE0dJszY2indvn3eDvKh0P+K0Jx++PHJeG33CKS6tP3LPP5pQZOC6KjNciPO1PF2liJbTb8VZtTA==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-picture': 2.0.0-next.5
+      '@equinor/fusion-wc-picture': 2.0.0-next.6
       '@equinor/fusion-wc-ripple': 0.2.19
       lit: 2.7.0
 
@@ -3706,10 +3706,10 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-person@1.0.0-next.5:
-    resolution: {integrity: sha512-oQLgRX3YN9dIa0WCJgM5lkd/7H421IrIcgOFEdnqBRIbg7Qg3cTHro/U4S/2/FAv/erLL1T6X9HMZz5lLXEn8Q==}
+  /@equinor/fusion-wc-person@1.0.0-next.6:
+    resolution: {integrity: sha512-cuJSGs32b5XF3h7qUYXelH5cTRsU9Yroy+QAl2htHYy09p3SJA9FVda4X6HeY/f6mNKXi1yCKZJqJAz5HvPJyw==}
     dependencies:
-      '@equinor/fusion-wc-avatar': 2.0.0-next.5
+      '@equinor/fusion-wc-avatar': 2.0.0-next.6
       '@equinor/fusion-wc-badge': 0.2.32
       '@equinor/fusion-wc-button': 1.4.3
       '@equinor/fusion-wc-core': 1.0.5
@@ -3728,8 +3728,8 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-picture@2.0.0-next.5:
-    resolution: {integrity: sha512-4eCaNwvQAUvU2ZfVOXf/XjupIvcd7YyPuKSTP/uuRkD5Fx/dS7ppTJm/BCx8F+A6Ne/hC59UUGKj1jnnn5VvEQ==}
+  /@equinor/fusion-wc-picture@2.0.0-next.6:
+    resolution: {integrity: sha512-TrSZU1qzIf/R6KLriUOoZ8L9jW+rxg0MBtoOewXt3EEXIMMriSJwBtUEZbKt7i9ZXGpYtkTTJQpeWvs4AgLanQ==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
