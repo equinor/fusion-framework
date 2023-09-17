@@ -1,12 +1,23 @@
 import {
     ApiAccountClassification,
     ApiInvitationStatus,
+    ApiManager,
     ApiProfileAccountLink,
     ApiProfileAccountType,
     ApiProjectMaster,
 } from './api-models';
 
-export type ApiPerson_v4 = {
+export type ApiPersonExpandMap_v4 = {
+    roles: Array<ApiPersonRole_v4>;
+    positions: Array<ApiPersonPosition_v4>;
+    contracts: Array<ApiPersonContract_v4>;
+    manager: ApiManager;
+    companies: Array<ApiCompanyInfo_v4>;
+};
+
+export type ApiPersonExpandProps_v4 = keyof ApiPersonExpandMap_v4;
+
+export type ApiPerson_v4<TExpand extends Array<ApiPersonExpandProps_v4> = []> = {
     azureUniqueId: string;
     mail?: string;
     name?: string;
@@ -30,7 +41,10 @@ export type ApiPerson_v4 = {
 
     // TODO is this default
     linkedAccounts?: Array<ApiProfileAccountLink>;
-};
+} & /** expanded */ Partial<ApiPersonExpandMap_v4> & {
+        /** Provided */
+        [K in TExpand[number]]: ApiPersonExpandMap_v4[K];
+    };
 
 export type ApiCompanyInfo_v4 = {
     id: string;
