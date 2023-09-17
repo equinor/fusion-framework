@@ -48,6 +48,7 @@ jobs:
         run: reviewdog --runners=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
           
       - name: Build affected packages
+        id: build
         continue-on-error: true
         uses: ./.github/workflows/actions/build-packages
         with: 
@@ -55,6 +56,10 @@ jobs:
           
       - name: Review build log
         run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+
+      - name: Check if build failed
+        if: steps.build.outcome == 'failure'
+        run: exit 1
       
       - name: Create Test Report
         run: pnpm test run
