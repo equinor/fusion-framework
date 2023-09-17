@@ -1,10 +1,12 @@
-import { Observable, concat, from } from 'rxjs';
-import { filter, find, map, raceWith, switchMap, take } from 'rxjs/operators';
+import { EMPTY, Observable, concat, from, fromEvent } from 'rxjs';
+import { filter, find, map, raceWith, switchMap, take, takeUntil } from 'rxjs/operators';
 
 import type { ApiPerson, PeopleApiClient } from '@equinor/fusion-framework-module-services/people';
+import { isApiPerson } from '@equinor/fusion-framework-module-services/people/utils';
 import type { ApiResponse as GetPersonApiResponse } from '@equinor/fusion-framework-module-services/people/get';
 import type { ApiResponse as QueryPersonApiResponse } from '@equinor/fusion-framework-module-services/people/query';
-import Query from '@equinor/fusion-query';
+import { Query } from '@equinor/fusion-query';
+import { queryValue } from '@equinor/fusion-query/operators';
 
 type GetPersonResult = GetPersonApiResponse<
     'v4',
@@ -14,6 +16,10 @@ type GetPersonResult = GetPersonApiResponse<
 type PersonSearchResult = QueryPersonApiResponse<'v2'>;
 
 type MatcherArgs = { upn: string; azureId?: string } | { upn?: string; azureId: string };
+
+type ResolverArgs<T> = T extends object
+    ? { [K in keyof T]: T[K] } & { signal?: AbortSignal }
+    : { signal?: AbortSignal };
 
 const personMatcher =
     (args: MatcherArgs) =>
@@ -33,16 +39,16 @@ const personMatcher =
     };
 
 export interface IPersonController {
-    getPerson(args: MatcherArgs): Observable<GetPersonResult>;
-    getPersonInfo(args: MatcherArgs): Observable<ApiPerson<'v2'>>;
-    getPhoto(args: MatcherArgs): Observable<string>;
-    search(args: { search: string }): Observable<PersonSearchResult>;
+    getPerson(args: ResolverArgs<MatcherArgs>): Observable<GetPersonResult>;
+    getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>>;
+    getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string>;
+    search(args: ResolverArgs<{ search: string }>): Observable<PersonSearchResult>;
 }
 
 export class PersonController implements IPersonController {
-    #personQuery: Query<GetPersonResult, { azureId: string }>;
-    #personSearchQuery: Query<PersonSearchResult, { search: string }>;
-    #personPhotoQuery: Query<Blob, { azureId: string }>;
+    #personQuery: Query<GetPersonResult, ResolverArgs<{ azureId: string }>>;
+    #personSearchQuery: Query<PersonSearchResult, ResolverArgs<{ search: string }>>;
+    #personPhotoQuery: Query<Blob, ResolverArgs<{ azureId: string }>>;
 
     constructor(client: PeopleApiClient) {
         const expire = 3 * 60 * 1000;
@@ -83,131 +89,129 @@ export class PersonController implements IPersonController {
         });
     }
 
-    /** TODO why does this need to have data?!? */
-    public getPhoto(args: MatcherArgs): Observable<string> {
-        const { azureId, upn } = args;
+    public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
+        return this.#personSearchQuery.query(args).pipe(queryValue);
+    }
 
-        const resolve = (azureId: string) =>
-            this.#personPhotoQuery
-                .query({ azureId })
-                .pipe(map((blob) => URL.createObjectURL(blob.value)));
+    /** TODO why does this need to have data?!? */
+    public getPhoto(args: ResolverArgs<MatcherArgs>): Observable<string> {
+        const { azureId, upn, signal } = args;
 
         if (azureId) {
-            return resolve(azureId);
-        }
-
-        if (!azureId && upn) {
-            const matcher = personMatcher({ upn });
-            const cache$ = this._personCache$(args).pipe(raceWith(this._queryCache$(args)));
-            return concat(
-                /** */
-                cache$.pipe(
-                    find(matcher),
-                    filter((x) => !!x),
-                ),
-                this.getPersonInfo({ upn }),
-            ).pipe(
-                /** */
-                filter((x): x is ApiPerson<'v2'> => {
-                    return !!x;
-                }),
-                switchMap((x) => resolve(x.azureUniqueId)),
-            );
+            return this._getPersonPhotoByAzureId(azureId, signal);
+        } else if (upn) {
+            return this._getPersonPhotoByUpn(upn, signal);
         }
         throw Error('invalid args provided');
     }
 
-    public getPerson(args: MatcherArgs): Observable<GetPersonResult> {
-        if (args.azureId) {
-            return this._getPersonById(args.azureId);
-        } else if (args.upn) {
-            return this._getPersonByUpn(args.upn);
+    public getPerson(args: ResolverArgs<MatcherArgs>): Observable<GetPersonResult> {
+        const { azureId, upn, signal } = args;
+        if (azureId) {
+            return this._getPersonByAzureId(azureId, signal);
+        } else if (upn) {
+            return this._getPersonByUpn(upn, signal);
         }
         throw Error('invalid args provided');
     }
 
-    public getPersonInfo(args: MatcherArgs): Observable<ApiPerson<'v2'>> {
-        if (args.azureId) {
-            return this._getPersonInfoById(args.azureId);
-        } else if (args.upn) {
-            return this._getPersonInfoByUpn(args.upn);
+    public getPersonInfo(args: ResolverArgs<MatcherArgs>): Observable<ApiPerson<'v2'>> {
+        const { azureId, upn, signal } = args;
+        if (azureId) {
+            return this._getPersonInfoById(azureId, signal);
+        } else if (upn) {
+            return this._getPersonInfoByUpn(upn, signal);
         }
         throw Error('invalid args provided');
     }
 
-    public search(args: { search: string }): Observable<PersonSearchResult> {
-        return this.#personSearchQuery.query(args).pipe(
-            /** extract value */
-            map((x) => x.value),
-        );
-    }
-
-    protected _getPersonById(azureId: string): Observable<GetPersonResult> {
-        return this.#personQuery.query({ azureId }).pipe(map((x) => x.value));
-    }
-
-    protected _getPersonInfoById(azureId: string): Observable<ApiPerson<'v2'>> {
-        return concat(
-            this._personCache$({ azureId }),
-            concat(
-                this._queryCache$({ azureId }),
-                this.#personQuery.query({ azureId }).pipe(
-                    // TODO add mapper from v4 -> v2
-                    map((x) => x.value as ApiPerson<'v2'>),
-                ),
-            ).pipe(filter((x): x is ApiPerson<'v2'> => !!x)),
-        ).pipe(
-            map((x) => {
-                if (!x) {
-                    throw Error(`upn [${azureId}] not found`);
-                }
-                return x as ApiPerson<'v2'>;
-            }),
-        );
-    }
-
-    protected _getPersonByUpn(upn: string): Observable<GetPersonResult> {
+    protected _getPersonByUpn(upn: string, signal?: AbortSignal): Observable<GetPersonResult> {
+        const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
         return concat(
             this._personCache$({ upn }),
-            this._getPersonInfoByUpn(upn).pipe(
-                filter((x): x is ApiPerson<'v2'> => !!x),
-                switchMap((x) =>
-                    this.#personQuery.query({ azureId: x!.azureUniqueId }).pipe(
-                        /** extract value */
-                        map((x) => x.value),
-                    ),
-                ),
+            this._getPersonInfoByUpn(upn, signal).pipe(
+                filter(isApiPerson('v2')),
+                switchMap(({ azureUniqueId: azureId }) => {
+                    return this._getPersonByAzureId(azureId, signal);
+                }),
             ),
         ).pipe(
-            map((x) => {
-                if (!x) {
-                    throw Error(`upn [${upn}] not found`);
-                }
-                return x;
-            }),
+            /** */
+            filter(isApiPerson('v4')),
+            takeUntil(abort$),
         );
     }
 
-    protected _getPersonInfoByUpn(upn: string): Observable<ApiPerson<'v2'>> {
-        const matcher = personMatcher({ upn });
+    public _getPersonByAzureId(azureId: string, signal?: AbortSignal): Observable<GetPersonResult> {
+        return this.#personQuery.query({ azureId, signal }).pipe(queryValue);
+    }
+
+    protected _getPersonInfoById(
+        azureId: string,
+        signal?: AbortSignal,
+    ): Observable<ApiPerson<'v2'>> {
+        const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
         return concat(
-            this._personCache$({ upn }),
+            this._personCache$({ azureId }),
+            this._queryCache$({ azureId }),
+            this._getPersonByAzureId(azureId, signal),
+        ).pipe(
+            /** */
+            filter(isApiPerson('v2')),
+            takeUntil(abort$),
+        );
+    }
+
+    protected _getPersonInfoByUpn(upn: string, signal?: AbortSignal): Observable<ApiPerson<'v2'>> {
+        const matcher = personMatcher({ upn });
+        const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
+        return concat(
+            this._cache$({ upn }),
             concat(
                 this._queryCache$({ upn }),
-                this.#personSearchQuery.query({ search: upn }).pipe(
+                this.#personSearchQuery.query({ search: upn, signal }).pipe(
                     /** extract first match, should only be 0 or 1 */
                     map((x) => x.value.find(matcher)),
                     /** type cast and end stream */
-                    find((x): x is ApiPerson<'v2'> => !!x),
+                    find(isApiPerson('v2')),
                 ),
-            ).pipe(filter((x): x is ApiPerson<'v2'> => !!x)),
+            ),
         ).pipe(
-            map((x) => {
-                if (!x) {
-                    throw Error(`upn [${upn}] not found`);
-                }
-                return x as ApiPerson<'v2'>;
+            /** */
+            filter(isApiPerson('v2')),
+            takeUntil(abort$),
+        );
+    }
+
+    protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
+        return this.#personPhotoQuery.query({ azureId, signal }).pipe(
+            /** */
+            map((result) => URL.createObjectURL(result.value)),
+        );
+    }
+
+    protected _getPersonPhotoByUpn(upn: string, signal?: AbortSignal) {
+        const matcher = personMatcher({ upn });
+        return concat(
+            /** */
+            this._cache$({ upn }).pipe(
+                find(matcher),
+                filter((x) => !!x),
+            ),
+            this.getPersonInfo({ upn }),
+        ).pipe(
+            /** */
+            filter((x): x is ApiPerson<'v2'> => {
+                return !!x;
             }),
+            switchMap((x) => this._getPersonPhotoByAzureId(x.azureUniqueId, signal)),
+        );
+    }
+
+    protected _cache$(args: MatcherArgs): Observable<GetPersonResult | ApiPerson<'v2'>> {
+        return this._personCache$(args).pipe(
+            /** */
+            raceWith(this._queryCache$(args)),
         );
     }
 
@@ -218,11 +222,11 @@ export class PersonController implements IPersonController {
             take(1),
             /** map out cached ApiPerson_v2 which matches upn  */
             map((x) => Object.values(x).find((x) => mather(x.value))?.value),
-            filter((x): x is GetPersonResult => !!x),
+            filter(isApiPerson('v4')),
         );
     }
 
-    protected _queryCache$(args: MatcherArgs) {
+    protected _queryCache$(args: MatcherArgs): Observable<ApiPerson<'v2'>> {
         const mather = personMatcher(args);
         return this.#personSearchQuery.cache.state$.pipe(
             /** make subscription cold */
@@ -233,10 +237,10 @@ export class PersonController implements IPersonController {
                     /** find matching cache record item */
                     map((x) => x.value.find((x) => mather(x))),
                     /** type cast and end stream */
-                    find((x): x is ApiPerson<'v2'> => !!x),
+                    find(isApiPerson('v2')),
                 ),
             ),
-            filter((x): x is ApiPerson<'v2'> => !!x),
+            filter(isApiPerson('v2')),
         );
     }
 }
