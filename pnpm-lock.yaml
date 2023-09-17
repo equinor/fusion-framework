@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -392,8 +388,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: 1.0.0-next.5
-        version: 1.0.0-next.5
+        specifier: 1.0.0-next.8
+        version: 1.0.0-next.8
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.0
@@ -3745,15 +3741,6 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-avatar@2.0.0-next.5:
-    resolution: {integrity: sha512-szuRlIInlJ/LNDDU0tMA1iCc9nU7RC8siWmzPB8Ak4/BqRjyEuEBgl7zJAs9fcuneE19ApYY5efSpA4PY2qHPw==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-picture': 2.0.0-next.5
-      '@equinor/fusion-wc-ripple': 0.2.19
-      lit: 2.7.0
-    dev: false
-
   /@equinor/fusion-wc-avatar@2.0.0-next.8:
     resolution: {integrity: sha512-+GvE73PnJ1SDGsnF9PtlPKZ+RMs6cOwGJfK3Nj7jWeFuS6fLBq/OeEndKvx+y+K2a53nFtKhd4RmUjC8tiB5iQ==}
     dependencies:
@@ -3761,7 +3748,6 @@ packages:
       '@equinor/fusion-wc-picture': 2.0.0-next.8
       '@equinor/fusion-wc-ripple': 0.2.19
       lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-badge@0.2.32:
     resolution: {integrity: sha512-kXUzgb6Dx76bSJ6/IytYSTnxjhpLl2QalkcA4TLpxkJLqC4hGCD6koR7WtAbronjpyLKYWuG4w4XK5RCTFr6Ng==}
@@ -3851,24 +3837,9 @@ packages:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-icon': 1.0.31
       '@equinor/fusion-wc-skeleton': 0.2.24
-      '@lit-labs/task': 3.0.1
+      '@lit-labs/task': 3.0.2
       lit: 2.7.0
     dev: true
-
-  /@equinor/fusion-wc-person@1.0.0-next.5:
-    resolution: {integrity: sha512-oQLgRX3YN9dIa0WCJgM5lkd/7H421IrIcgOFEdnqBRIbg7Qg3cTHro/U4S/2/FAv/erLL1T6X9HMZz5lLXEn8Q==}
-    dependencies:
-      '@equinor/fusion-wc-avatar': 2.0.0-next.5
-      '@equinor/fusion-wc-badge': 0.2.32
-      '@equinor/fusion-wc-button': 1.4.3
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
-      '@equinor/fusion-wc-skeleton': 0.2.24
-      '@floating-ui/dom': 1.5.1
-      '@lit-labs/observers': 2.0.0
-      '@lit-labs/task': 3.0.1
-      lit: 2.7.0
-    dev: false
 
   /@equinor/fusion-wc-person@1.0.0-next.8:
     resolution: {integrity: sha512-vS/eO/ZU3YlkdSKS1+9tNRBaB+6T+I61f2yjm67fgYaDWHAunDXFkOaJgzqWeq4zoaUhpzmE1t0M+dHiBk6N7g==}
@@ -3883,7 +3854,6 @@ packages:
       '@lit-labs/observers': 2.0.0
       '@lit-labs/task': 3.0.2
       lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-picture@1.0.29:
     resolution: {integrity: sha512-/oG648ymvxmznUj2QSheWatRjUBTRWYDpOcRJdSmOb//XNIC6rv7bJbuetM5ZDg+qRMxMoM9VMoop8xtMiSN7Q==}
@@ -3893,19 +3863,11 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-picture@2.0.0-next.5:
-    resolution: {integrity: sha512-4eCaNwvQAUvU2ZfVOXf/XjupIvcd7YyPuKSTP/uuRkD5Fx/dS7ppTJm/BCx8F+A6Ne/hC59UUGKj1jnnn5VvEQ==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      lit: 2.7.0
-    dev: false
-
   /@equinor/fusion-wc-picture@2.0.0-next.8:
     resolution: {integrity: sha512-622fO8FYzsYZbWeeO7hKmYeaATagtNVZrgcNnn2D2DIT1IeJPtAOPMSbVdv0aD0cB3KgdnMrcb9+FrofZbtTvQ==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-progress-indicator@0.4.9:
     resolution: {integrity: sha512-7Y5P0OlcGS9AjYItQPzIPhHS2nP5apkb27rpv2nQC6qmpg9z6JIBPdBM9kH3uIQkp8EQ7Ep7WUiU6NZtI4lZwA==}
@@ -4224,23 +4186,10 @@ packages:
     resolution: {integrity: sha512-1S8uAY/MTJqVx0SC4epBq+N2yhuwtNwLbJYNZyhL2pO1ZVKn5HFXav5T41Ryzy9K9V7ZId2JB2oy/W4aCd9/2w==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@floating-ui/core@1.4.1:
-    resolution: {integrity: sha512-jk3WqquEJRlcyu7997NtR5PibI+y5bi+LS3hPmguVClypenMsCY3CBa3LAQnozRCtCrYWSEtAdiskpamuJRFOQ==}
-    dependencies:
-      '@floating-ui/utils': 0.1.1
-    dev: false
-
   /@floating-ui/core@1.5.0:
     resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}
     dependencies:
       '@floating-ui/utils': 0.1.4
-
-  /@floating-ui/dom@1.5.1:
-    resolution: {integrity: sha512-KwvVcPSXg6mQygvA1TjbN/gh///36kKtllIF8SUm0qpFj8+rvYrpvlYdL1JoA71SHpDqgSSdGOSoQ0Mp3uY5aw==}
-    dependencies:
-      '@floating-ui/core': 1.4.1
-      '@floating-ui/utils': 0.1.1
-    dev: false
 
   /@floating-ui/dom@1.5.3:
     resolution: {integrity: sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==}
@@ -4265,13 +4214,10 @@ packages:
       react-dom: '>=16.8.0'
     dependencies:
       '@floating-ui/react-dom': 2.0.1(react-dom@18.2.0)(react@18.2.0)
-      '@floating-ui/utils': 0.1.1
+      '@floating-ui/utils': 0.1.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tabbable: 6.2.0
-
-  /@floating-ui/utils@0.1.1:
-    resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
 
   /@floating-ui/utils@0.1.4:
     resolution: {integrity: sha512-qprfWkn82Iw821mcKofJ5Pk9wgioHicxcQMxx+5zt5GSKoqdWvgG5AxVmpmUUjzTLPVSH5auBrhI93Deayn/DA==}
@@ -4419,16 +4365,10 @@ packages:
       '@lit/reactive-element': 1.6.3
     dev: true
 
-  /@lit-labs/task@3.0.1:
-    resolution: {integrity: sha512-+VKnnVLRitDIpd/PBCTHAc012B5Xn43Sfq1scFt23aq0sxnAbTrapLR1ST2DgLRohBg/c4KlMIvgYf/5TZHqHw==}
-    dependencies:
-      '@lit/reactive-element': 1.6.3
-
   /@lit-labs/task@3.0.2:
     resolution: {integrity: sha512-X6d+KWZR3q1ZrXs/auM5PbZcW3B5RlpU4gqk/upstwTZM6JN19P6o9Qgo+qjovIDsUZsYnlGQqtdPBwPrKzLUA==}
     dependencies:
       '@lit/reactive-element': 1.6.3
-    dev: true
 
   /@lit/reactive-element@1.6.3:
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
@@ -12822,3 +12762,7 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
