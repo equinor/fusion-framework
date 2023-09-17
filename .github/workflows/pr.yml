@@ -51,7 +51,7 @@ jobs:
         continue-on-error: true
         uses: ./.github/workflows/actions/build-packages
         with: 
-          only-affected: ${{ github.actor != 'dependabot[bot]' }}
+          only-affected: false
           
       - name: Review build log
         run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error

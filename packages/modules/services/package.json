@@ -28,6 +28,9 @@
             "people": [
                 "dist/types/people/index"
             ],
+            "people/utils": [
+                "dist/types/people/utils"
+            ],
             "people/get": [
                 "dist/types/people/person-details/index"
             ],
@@ -49,6 +52,7 @@
         "./notification": "./dist/esm/notification/index.js",
         "./context/get": "./dist/esm/context/get-context/index.js",
         "./people": "./dist/esm/people/index.js",
+        "./utils": "./dist/esm/people/utils.js",
         "./people/get": "./dist/esm/people/person-details/index.js",
         "./people/query": "./dist/esm/people/query/index.js",
         "./people/photo": "./dist/esm/people/person-photo/index.js",
