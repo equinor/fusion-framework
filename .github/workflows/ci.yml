@@ -44,13 +44,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-  snapshot:
-    uses: ./.github/workflows/pre-release.yml
-    secrets: inherit
-    with:
-      tag: 'next'
-    
-
   documentation:
     name: Merge main into docs
     runs-on: ubuntu-latest
