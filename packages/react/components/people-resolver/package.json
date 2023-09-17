@@ -23,10 +23,10 @@
         "directory": "packages/react/components/people-provider"
     },
     "dependencies": {
+        "@equinor/fusion-framework-module-services": "workspace:^",
         "@equinor/fusion-framework-react": "workspace:^",
         "@equinor/fusion-framework-react-module": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
-        "@equinor/fusion-framework-module-services": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
         "rxjs": "^7.8.1"
     },
@@ -34,7 +34,7 @@
         "@equinor/fusion-framework-module-app": "workspace:^",
         "@equinor/fusion-framework-module-bookmark": "workspace:^",
         "@equinor/fusion-framework-module-event": "workspace:^",
-        "@equinor/fusion-wc-person": "1.0.0-next.8",
+        "@equinor/fusion-wc-person": "1.0.0-next.10",
         "@types/react": "^18.2.20",
         "react": "^18.2.0",
         "typescript": "^5.1.3"
