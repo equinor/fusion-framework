@@ -16,7 +16,7 @@
     "install:clean": "pnpm clean && pnpm install",
     "clean": "pnpm clean:build && pnpm clean:npm",
     "clean:npm": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
-    "clean:build": "pnpm -r exec rimraf dist tmp",
+    "clean:build": "pnpm -r exec rimraf dist tmp .cache .turbo tsconfig.tsbuildinfo",
     "build": "turbo build",
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:packages": "turbo build --filter './packages/**' build",
