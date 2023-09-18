@@ -90,7 +90,8 @@ export class PersonController implements IPersonController {
     }
 
     public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
-        return this.#personSearchQuery.query(args).pipe(queryValue);
+        const {search, signal} = args;
+        return this.#personSearchQuery.query({search}, {signal}).pipe(queryValue);
     }
 
     /** TODO why does this need to have data?!? */
@@ -143,7 +144,7 @@ export class PersonController implements IPersonController {
     }
 
     public _getPersonByAzureId(azureId: string, signal?: AbortSignal): Observable<GetPersonResult> {
-        return this.#personQuery.query({ azureId, signal }).pipe(queryValue);
+        return this.#personQuery.query({ azureId }, { signal }).pipe(queryValue);
     }
 
     protected _getPersonInfoById(
@@ -169,7 +170,7 @@ export class PersonController implements IPersonController {
             this._cache$({ upn }),
             concat(
                 this._queryCache$({ upn }),
-                this.#personSearchQuery.query({ search: upn, signal }).pipe(
+                this.#personSearchQuery.query({ search: upn }, {signal}).pipe(
                     /** extract first match, should only be 0 or 1 */
                     map((x) => x.value.find(matcher)),
                     /** type cast and end stream */
@@ -184,7 +185,7 @@ export class PersonController implements IPersonController {
     }
 
     protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
-        return this.#personPhotoQuery.query({ azureId, signal }).pipe(
+        return this.#personPhotoQuery.query({ azureId }, {signal}).pipe(
             /** */
             map((result) => URL.createObjectURL(result.value)),
         );
