@@ -42,6 +42,7 @@ export default (program: Command) => {
             )}]`,
             'react',
         )
+        .option('-d, --dev-portal <string>', 'Location of dev-portal you want to use')
         .action(async (opt) => {
             await createDevServer({
                 portal:
@@ -54,6 +55,7 @@ export default (program: Command) => {
                 },
                 library: opt.framework,
                 port: opt.port,
+                devPortalPath: opt.devPortal,
             });
         });
 

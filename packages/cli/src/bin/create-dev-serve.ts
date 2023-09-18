@@ -32,6 +32,7 @@ export const createDevServer = async (options: {
         manifest?: string;
         vite?: string;
     };
+    devPortalPath?: string;
     port?: number;
     library?: 'react';
 }) => {
@@ -84,7 +85,12 @@ export const createDevServer = async (options: {
 
     spinner.info('💾 application entrypoint', formatPath(String(entry)));
 
-    const devPortalPath = resolveRelativePath('public');
+    let devPortalPath: string;
+    if (options.devPortalPath) {
+        devPortalPath = resolveRelativePath(options.devPortalPath);
+    } else {
+        devPortalPath = resolveRelativePath('public');
+    }
     spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
 
     /** add proxy handlers */
@@ -124,6 +130,30 @@ export const createDevServer = async (options: {
                     }
                 }
             },
+            onManifestListResponse: async (slug, message, data) => {
+                // TODO: Verify if we should always only return current app or all apps from API + current app.
+                if (!data) {
+                    const { manifest, path } = await loadAppManifest(env, pkg, {
+                        file: configSourceFiles.manifest,
+                    });
+                    manifest.entry = `/${entry}`;
+                    return { response: [manifest], path };
+                }
+                let path: string | undefined;
+                const atIndex = data?.findIndex((manifest) => manifest.key === appKey) ?? -1;
+                // If existing app, we need to change the entry-point.
+                if (atIndex > -1) {
+                    data[atIndex].entry = `/${entry}`;
+                } else {
+                    const { manifest, path: manifestPath } = await loadAppManifest(env, pkg, {
+                        file: configSourceFiles.manifest,
+                    });
+                    manifest.entry = `/${entry}`;
+                    path = manifestPath;
+                    data.push(manifest);
+                }
+                return { response: data, path };
+            },
         },
         {
             target: portal,
@@ -139,7 +169,10 @@ export const createDevServer = async (options: {
         '*',
         async (req, res) => {
             // TODO add check if file request
-            const htmlRaw = readFileSync(resolveRelativePath('public/index.html'), 'utf-8');
+            const htmlRaw = readFileSync(
+                resolveRelativePath(devPortalPath + '/index.html'),
+                'utf-8',
+            );
             const html = await vite.transformIndexHtml(req.url, htmlRaw);
             res.send(html);
         },
