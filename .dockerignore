@@ -2,11 +2,15 @@
 .vscode
 node_modules
 
+./test
+
 *.Dockerfile
 
 **/node_modules
 
 packages/**/bin
+!packages/cli/bin
+
 packages/**/lib
 packages/**/dist
 
