@@ -388,8 +388,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: 1.0.0-next.10
-        version: 1.0.0-next.10
+        specifier: 1.0.0-next.11
+        version: 1.0.0-next.11
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.0
@@ -998,8 +998,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: 1.0.0-next.10
-        version: 1.0.0-next.10
+        specifier: 1.0.0-next.11
+        version: 1.0.0-next.11
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.20
@@ -3631,11 +3631,11 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-avatar@2.0.0-next.10:
-    resolution: {integrity: sha512-71eFFeScAGsnED/YYf3YbI/c97ZVvytXPVpJBitI1XUnfAPabXS94NoQoMgiqLb2oEfrVjT218LvbOqwG48wVw==}
+  /@equinor/fusion-wc-avatar@2.0.0-next.11:
+    resolution: {integrity: sha512-OU4pbUxwToi25lLBMce01uMtJa9Rr1yTT33YDpmexjG5APwsAJmyFTj2tq6BppBrEYHRBnLEltpql8ipdd+dyw==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-picture': 2.0.0-next.10
+      '@equinor/fusion-wc-picture': 2.0.0-next.11
       '@equinor/fusion-wc-ripple': 0.2.19
       lit: 2.7.0
 
@@ -3727,14 +3727,14 @@ packages:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-icon': 1.0.31
       '@equinor/fusion-wc-skeleton': 0.2.24
-      '@lit-labs/task': 3.0.1
+      '@lit-labs/task': 3.0.2
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-person@1.0.0-next.10:
-    resolution: {integrity: sha512-Veryz1AtZ/P8M4t/s8jveye+lLg/67T3xw3CCuWVkkKVRbdOXqQgDqwKndjAor8Rxk068zsIdpdRfoYqhYqEXg==}
+  /@equinor/fusion-wc-person@1.0.0-next.11:
+    resolution: {integrity: sha512-IBaCCp5Db29Of84NlmY+1MhS8Cr38EmmvsatfIVNsySaV91jHX9rqmyXEfFXWVRgX7tZgRWwMX7xgPJqZvvnmA==}
     dependencies:
-      '@equinor/fusion-wc-avatar': 2.0.0-next.10
+      '@equinor/fusion-wc-avatar': 2.0.0-next.11
       '@equinor/fusion-wc-badge': 0.2.32
       '@equinor/fusion-wc-button': 1.4.3
       '@equinor/fusion-wc-core': 1.0.5
@@ -3753,8 +3753,8 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-picture@2.0.0-next.10:
-    resolution: {integrity: sha512-1bDWn1FMbgoXlSdJcF3+7Z5r8xS7Skqjme3ewP4DcGzGk4mNRm5yjLELWB6Z4QWT7FvQ4aICl4J2GK6V+zzzHg==}
+  /@equinor/fusion-wc-picture@2.0.0-next.11:
+    resolution: {integrity: sha512-e2D38zIzM4Y9aexhVDZvZ+Cc9iEWUQpTCI9QUb6qbFylSeJosN8uTD4LVqqyzqncdwSVoZ2pbNVasMe/zPnzGg==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
@@ -4104,13 +4104,10 @@ packages:
       react-dom: '>=16.8.0'
     dependencies:
       '@floating-ui/react-dom': 2.0.1(react-dom@18.2.0)(react@18.2.0)
-      '@floating-ui/utils': 0.1.1
+      '@floating-ui/utils': 0.1.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tabbable: 6.2.0
-
-  /@floating-ui/utils@0.1.1:
-    resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
 
   /@floating-ui/utils@0.1.4:
     resolution: {integrity: sha512-qprfWkn82Iw821mcKofJ5Pk9wgioHicxcQMxx+5zt5GSKoqdWvgG5AxVmpmUUjzTLPVSH5auBrhI93Deayn/DA==}
@@ -4254,12 +4251,6 @@ packages:
 
   /@lit-labs/task@2.1.2:
     resolution: {integrity: sha512-pDjPYojmCXnOezT/4BgqxHA2kahmSsCE0y6uPCYyVqigIx9DJav05s0KAtD9IImTY3LvWu5isSlq6nkWagAybA==}
-    dependencies:
-      '@lit/reactive-element': 1.6.3
-    dev: true
-
-  /@lit-labs/task@3.0.1:
-    resolution: {integrity: sha512-+VKnnVLRitDIpd/PBCTHAc012B5Xn43Sfq1scFt23aq0sxnAbTrapLR1ST2DgLRohBg/c4KlMIvgYf/5TZHqHw==}
     dependencies:
       '@lit/reactive-element': 1.6.3
     dev: true

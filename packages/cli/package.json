@@ -39,7 +39,7 @@
         "@equinor/fusion-framework-app": "workspace:^",
         "@equinor/fusion-framework-react-components-people-provider": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
-        "@equinor/fusion-wc-person": "1.0.0-next.10",
+        "@equinor/fusion-wc-person": "1.0.0-next.11",
         "@types/adm-zip": "^0.5.0",
         "@types/semver": "^7.5.0",
         "@vitejs/plugin-react": "^4.0.4",
