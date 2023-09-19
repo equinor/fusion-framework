@@ -3469,7 +3469,7 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.4(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
       '@equinor/fusion-wc-icon': 1.0.31
       react: 18.2.0
     dev: true
@@ -3520,7 +3520,7 @@ packages:
   /@equinor/fusion-react-searchable-dropdown@0.3.4(react@18.2.0):
     resolution: {integrity: sha512-WJZwswKJekp0kiH3TqEesB7aXvBTaUejqWFiDPTVMKdQJltn24Rjxj6Mwbx6qYeVAGrUwwzNFEvHzu1I5tI9zw==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.4(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
       '@equinor/fusion-wc-searchable-dropdown': 2.5.3
     transitivePeerDependencies:
       - react
@@ -3596,6 +3596,15 @@ packages:
 
   /@equinor/fusion-react-utils@2.0.4(react@18.2.0):
     resolution: {integrity: sha512-4+nvmje698DOdkkNUQJyz9gxNnk3nospA1Ul1HKFV1beBm5aFbSDGj6LfYkCaIQYde1rzrswDInnMQIPnQj53w==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      date-fns: 2.30.0
+      react: 18.2.0
+    dev: true
+
+  /@equinor/fusion-react-utils@2.0.5(react@18.2.0):
+    resolution: {integrity: sha512-WIK4v+zhSloh8+BEKfkc5yO8ZjmmqehPzakCnEeSviTSxr6i+BNTwYGFX7gzh75ANOHILlVnrao5QB/pKDWgKw==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
