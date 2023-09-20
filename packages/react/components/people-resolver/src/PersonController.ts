@@ -1,5 +1,5 @@
-import { EMPTY, Observable, concat, from, fromEvent } from 'rxjs';
-import { filter, find, map, raceWith, switchMap, take, takeUntil } from 'rxjs/operators';
+import { EMPTY, Observable, concat, from, fromEvent, of } from 'rxjs';
+import { catchError, filter, find, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 import type { ApiPerson, PeopleApiClient } from '@equinor/fusion-framework-module-services/people';
 import { isApiPerson } from '@equinor/fusion-framework-module-services/people/utils';
@@ -7,6 +7,8 @@ import type { ApiResponse as GetPersonApiResponse } from '@equinor/fusion-framew
 import type { ApiResponse as QueryPersonApiResponse } from '@equinor/fusion-framework-module-services/people/query';
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
+
+import { ApiProviderError } from '@equinor/fusion-framework-module-services/provider';
 
 type GetPersonResult = GetPersonApiResponse<
     'v4',
@@ -45,12 +47,16 @@ export interface IPersonController {
     search(args: ResolverArgs<{ search: string }>): Observable<PersonSearchResult>;
 }
 
+export type PersonControllerOptions = {
+    fallbackImage?: Blob;
+};
+
 export class PersonController implements IPersonController {
     #personQuery: Query<GetPersonResult, ResolverArgs<{ azureId: string }>>;
     #personSearchQuery: Query<PersonSearchResult, ResolverArgs<{ search: string }>>;
     #personPhotoQuery: Query<Blob, ResolverArgs<{ azureId: string }>>;
 
-    constructor(client: PeopleApiClient) {
+    constructor(client: PeopleApiClient, options?: PersonControllerOptions) {
         const expire = 3 * 60 * 1000;
         this.#personQuery = new Query({
             expire,
@@ -83,15 +89,23 @@ export class PersonController implements IPersonController {
             key: ({ azureId }) => azureId,
             client: {
                 fn: ({ azureId }, signal) => {
-                    return client.photo('v2', 'blob$', { azureId }, { signal });
+                    return client.photo('v2', 'blob$', { azureId }, { signal }).pipe(
+                        catchError((err) => {
+                            const apiError = err as ApiProviderError;
+                            if (apiError.response.status === 404 && options?.fallbackImage) {
+                                return of(options?.fallbackImage);
+                            }
+                            return of(err);
+                        }),
+                    );
                 },
             },
         });
     }
 
     public search(args: { search: string; signal?: AbortSignal }): Observable<PersonSearchResult> {
-        const {search, signal} = args;
-        return this.#personSearchQuery.query({search}, {signal}).pipe(queryValue);
+        const { search, signal } = args;
+        return this.#personSearchQuery.query({ search }, { signal }).pipe(queryValue);
     }
 
     /** TODO why does this need to have data?!? */
@@ -153,6 +167,7 @@ export class PersonController implements IPersonController {
     ): Observable<ApiPerson<'v2'>> {
         const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
         return concat(
+            /** */
             this._personCache$({ azureId }),
             this._queryCache$({ azureId }),
             this._getPersonByAzureId(azureId, signal),
@@ -167,52 +182,36 @@ export class PersonController implements IPersonController {
         const matcher = personMatcher({ upn });
         const abort$ = signal ? fromEvent(signal, 'abort') : EMPTY;
         return concat(
-            this._cache$({ upn }),
-            concat(
-                this._queryCache$({ upn }),
-                this.#personSearchQuery.query({ search: upn }, {signal}).pipe(
-                    /** extract first match, should only be 0 or 1 */
-                    map((x) => x.value.find(matcher)),
-                    /** type cast and end stream */
-                    find(isApiPerson('v2')),
-                ),
+            this._personCache$({ upn }),
+            this._queryCache$({ upn }),
+            this.#personSearchQuery.query({ search: upn }, { signal }).pipe(
+                /** extract first match, should only be 0 or 1 */
+                map((x) => x.value.find(matcher)),
+                /** type cast and end stream */
+                find(isApiPerson('v2')),
             ),
         ).pipe(
             /** */
+            find(isApiPerson('v2')),
+            filter(isApiPerson('v2')),
             filter(isApiPerson('v2')),
             takeUntil(abort$),
         );
     }
 
     protected _getPersonPhotoByAzureId(azureId: string, signal?: AbortSignal): Observable<string> {
-        return this.#personPhotoQuery.query({ azureId }, {signal}).pipe(
+        return this.#personPhotoQuery.query({ azureId }, { signal }).pipe(
             /** */
+            take(1),
             map((result) => URL.createObjectURL(result.value)),
         );
     }
 
     protected _getPersonPhotoByUpn(upn: string, signal?: AbortSignal) {
-        const matcher = personMatcher({ upn });
-        return concat(
+        return this._getPersonInfoByUpn(upn, signal).pipe(
             /** */
-            this._cache$({ upn }).pipe(
-                find(matcher),
-                filter((x) => !!x),
-            ),
-            this.getPersonInfo({ upn }),
-        ).pipe(
-            /** */
-            filter((x): x is ApiPerson<'v2'> => {
-                return !!x;
-            }),
+            take(1),
             switchMap((x) => this._getPersonPhotoByAzureId(x.azureUniqueId, signal)),
-        );
-    }
-
-    protected _cache$(args: MatcherArgs): Observable<GetPersonResult | ApiPerson<'v2'>> {
-        return this._personCache$(args).pipe(
-            /** */
-            raceWith(this._queryCache$(args)),
         );
     }
 
@@ -223,6 +222,7 @@ export class PersonController implements IPersonController {
             take(1),
             /** map out cached ApiPerson_v2 which matches upn  */
             map((x) => Object.values(x).find((x) => mather(x.value))?.value),
+            find(isApiPerson('v4')),
             filter(isApiPerson('v4')),
         );
     }
@@ -232,15 +232,16 @@ export class PersonController implements IPersonController {
         return this.#personSearchQuery.cache.state$.pipe(
             /** make subscription cold */
             take(1),
-            switchMap((entry) =>
+            switchMap((entry) => {
                 /** expand cache records */
-                from(Object.values(entry)).pipe(
+                return from(Object.values(entry)).pipe(
                     /** find matching cache record item */
                     map((x) => x.value.find((x) => mather(x))),
                     /** type cast and end stream */
                     find(isApiPerson('v2')),
-                ),
-            ),
+                );
+            }),
+            find(isApiPerson('v2')),
             filter(isApiPerson('v2')),
         );
     }
