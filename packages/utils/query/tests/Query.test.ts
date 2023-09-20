@@ -3,6 +3,11 @@ import { it, describe, expect, vi } from 'vitest';
 import { Query } from '../src/Query';
 import { QueryClientError } from '../src/client';
 
+import { TestScheduler } from 'rxjs/testing';
+import { interval, take, concat, lastValueFrom } from 'rxjs';
+import { map, mergeMap, reduce } from 'rxjs/operators';
+import { queryValue } from '../src/operators';
+
 describe('Query', () => {
     it('should execute an query', async () => {
         const expected = 'foo';
@@ -16,6 +21,7 @@ describe('Query', () => {
         expect(result.value).toEqual(expected);
     });
     it('should cache entry', async () => {
+        // vi.useFakeTimers();
         const expected = 'foo';
         let calls = 0;
         const query = new Query({
@@ -23,7 +29,10 @@ describe('Query', () => {
             client: {
                 fn: async (value: string) => {
                     calls++;
-                    return value;
+                    return new Promise((resolve) => {
+                        setTimeout(() => resolve(value), 100);
+                        // vi.runAllTimersAsync();
+                    });
                 },
             },
             key: (value) => value,
@@ -39,12 +48,70 @@ describe('Query', () => {
         expect(result2.value).toEqual(result.value);
         expect(calls).toBe(1);
     });
-    it('should cancel request on signal', async () => {
-        const query = new Query({
+    it('should only execute when observer', async () => {
+        vi.useFakeTimers();
+        const fn = vi.fn(
+            (value: string) =>
+                new Promise<string>((resolve) => {
+                    setTimeout(() => {
+                        resolve(value);
+                    }, 50);
+                }),
+        );
+        const queryClient = new Query({
             client: {
-                fn: (value: string) =>
-                    new Promise((resolve) => setTimeout(() => resolve(value), 1000)),
+                fn,
             },
+            key: (value) => value,
+        });
+        const job = lastValueFrom(
+            concat(
+                interval(100).pipe(
+                    take(1),
+                    map(() => 'foo'),
+                ),
+                queryClient.query('bar').pipe(queryValue),
+            ).pipe(reduce((acc, value) => [...acc, value], [] as string[])),
+        );
+        vi.runAllTimersAsync();
+        const result = await job;
+        expect(result).toMatchObject(['foo', 'bar']);
+        expect(fn).toHaveBeenCalledOnce();
+    });
+    it('should not execute when not observed', async () => {
+        vi.useFakeTimers();
+        const fn = vi.fn(
+            (value: string) =>
+                new Promise<string>((resolve) => {
+                    setTimeout(() => {
+                        resolve(value);
+                    }, 50);
+                }),
+        );
+        const queryClient = new Query({
+            client: { fn },
+            key: (value) => value,
+        });
+        const job = lastValueFrom(
+            concat(
+                interval(100).pipe(
+                    take(1),
+                    map(() => 'foo'),
+                ),
+                queryClient.query('bar').pipe(queryValue),
+            ).pipe(take(1)),
+        );
+        vi.runAllTimersAsync();
+        const result = await job;
+        expect(result).toBe('foo');
+        expect(fn).not.toHaveBeenCalled();
+    });
+    it('should cancel request on signal', async () => {
+        const fn = vi.fn(
+            (value: string) => new Promise((resolve) => setTimeout(() => resolve(value), 1000)),
+        );
+        const query = new Query({
+            client: { fn },
             key: (value) => value,
         });
         const controller = new AbortController();
@@ -56,22 +123,18 @@ describe('Query', () => {
             expect(err).instanceOf(QueryClientError);
             expect((err as QueryClientError).type === 'abort');
         }
+        expect(fn).toHaveBeenCalledOnce();
     });
     it('should combine multiple request when queue operator is `merge`', async () => {
         const expected = ['foo', 'bar'];
-        let calls = 0;
         vi.useFakeTimers();
+        const fn = vi.fn(
+            (value: string) => new Promise((resolve) => setTimeout(() => resolve(value), 1000)),
+        );
         const query = new Query({
             queueOperator: 'merge',
             expire: 1000,
-            client: {
-                fn: async (value: string) => {
-                    calls++;
-                    return new Promise((resolve) => {
-                        setTimeout(() => resolve(value), 100);
-                    });
-                },
-            },
+            client: { fn },
             key: (value) => value,
         });
         const task = Promise.all([
@@ -81,27 +144,21 @@ describe('Query', () => {
         ]);
         vi.runAllTimersAsync();
         const results = await task;
-        expect(calls).toBe(2);
+        expect(fn).toHaveBeenCalledTimes(2);
         expect(results[0]).toEqual(results[1]);
         expect(results[0].value).toEqual(expected[0]);
         expect(results[1].value).toEqual(expected[0]);
         expect(results[2].value).toEqual(expected[1]);
     });
     it('should switch to new request when queue operator is `switch`', async () => {
-        const expected = ['foo', 'bar', 'foobar'];
-        let calls = 0;
         vi.useFakeTimers();
+        const fn = vi.fn(
+            (value: string) => new Promise((resolve) => setTimeout(() => resolve(value), 100)),
+        );
         const query = new Query({
             queueOperator: 'switch',
             expire: 1000,
-            client: {
-                fn: async (value: string) => {
-                    calls++;
-                    return new Promise((resolve) => {
-                        setTimeout(() => resolve(value), 100);
-                    });
-                },
-            },
+            client: { fn },
             key: (value) => value,
         });
 
@@ -111,7 +168,7 @@ describe('Query', () => {
                 .queryAsync('foo')
                 .then(() => false)
                 .catch((err) => {
-                    expect(calls).toBe(2);
+                    expect(fn).toHaveBeenCalledTimes(2);
                     expect(err).toBeInstanceOf(QueryClientError);
                     expect((err as QueryClientError).type).toEqual('abort');
                     return true;
@@ -120,7 +177,7 @@ describe('Query', () => {
         tasks.push(
             new Promise((resolve) => {
                 setTimeout(async () => {
-                    expect(calls).toBe(1);
+                    expect(fn).toHaveBeenCalledTimes(1);
                     await query.queryAsync('bar');
                     resolve(true);
                 }, 50);
@@ -129,7 +186,7 @@ describe('Query', () => {
         tasks.push(
             new Promise((resolve) => {
                 setTimeout(async () => {
-                    expect(calls).toBe(2);
+                    expect(fn).toHaveBeenCalledTimes(2);
                     await query.queryAsync('foobar');
                     resolve(true);
                 }, 150);
@@ -137,9 +194,10 @@ describe('Query', () => {
         );
 
         const task = Promise.all(tasks);
-        vi.runAllTimersAsync();
+        await vi.runAllTimersAsync();
         const result = await task;
-        expect(calls).toBe(3);
+        expect(fn).toHaveBeenCalledTimes(3);
+        expect(result.length).toBe(3);
         result.forEach((e) => expect(e).toBeTruthy());
     });
     it.skip('should execute consecutive when queue operator is `concat`');

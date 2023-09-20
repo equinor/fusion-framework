@@ -1,5 +1,5 @@
-import { from, of, merge } from 'rxjs';
-import { catchError, filter, last, map, switchMap } from 'rxjs/operators';
+import { from, of, concat } from 'rxjs';
+import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from './actions';
 
@@ -13,16 +13,20 @@ export const handleFetchManifest =
     (action$) =>
         action$.pipe(
             filter(actions.fetchManifest.match),
-            switchMap(({ payload: appKey, meta: { update } }) => {
-                const fetch$ = from(provider.getAppManifest(appKey)).pipe(
+            switchMap((action) => {
+                const {
+                    payload: appKey,
+                    meta: { update },
+                } = action;
+                const subject = from(provider.getAppManifest(appKey)).pipe(
                     filter((x) => !!x),
-                    map((manifest) => actions.setManifest(manifest, update)),
+                    share(),
                 );
-                return merge(
-                    fetch$,
-                    fetch$.pipe(
+                return concat(
+                    subject.pipe(map((manifest) => actions.setManifest(manifest, update))),
+                    subject.pipe(
                         last(),
-                        map(({ payload }) => actions.fetchManifest.success(payload)),
+                        map((manifest) => actions.fetchManifest.success(manifest)),
                     ),
                 ).pipe(
                     catchError((err) => {
@@ -38,14 +42,21 @@ export const handleFetchConfig =
         action$.pipe(
             filter(actions.fetchConfig.match),
             switchMap(({ payload: appKey }) => {
-                const fetch$ = from(provider.getAppConfig(appKey)).pipe(map(actions.setConfig));
-                return merge(
-                    fetch$,
-                    fetch$.pipe(
+                const subject = from(provider.getAppConfig(appKey)).pipe(
+                    filter((x) => !!x),
+                    share(),
+                );
+                return concat(
+                    subject.pipe(map((manifest) => actions.setConfig(manifest))),
+                    subject.pipe(
                         last(),
-                        map(({ payload }) => actions.fetchConfig.success(payload)),
+                        map((manifest) => actions.fetchConfig.success(manifest)),
                     ),
-                ).pipe(catchError((err) => of(actions.fetchConfig.failure(err))));
+                ).pipe(
+                    catchError((err) => {
+                        return of(actions.fetchConfig.failure(err));
+                    }),
+                );
             }),
         );
 
