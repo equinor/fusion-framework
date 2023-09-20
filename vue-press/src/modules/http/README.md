@@ -142,7 +142,7 @@ The fetch request arguments are the same as [Web Fetch API](https://developer.mo
 
 An application can request one or more scopes, this information is then presented to the user in the consent screen, and the access token issued to the request will be limited to the scopes granted.
 
-> Scopes are normally configured for the client, so that by convinces all request done to that base URI will have that scope. But sometimes a endpoint on that URI requires other scopes.
+> Scopes are normally configured for the client, so that by conveniences all request done to that base URI will have that scope. But sometimes a endpoint on that URI requires other scopes.
 
 #### Selector <Badge type="info" text="optional"/>
 
@@ -191,7 +191,7 @@ client.json$('/api', {selector}).subscribe(x => console.log(x));
 ```
 :::
 
-Convinces method for json calls, internally calls [fetch](#fetch), but adds `Content-Type=application/json` to the request header. Also add a default selector if none provided `data = await response.json()`
+conveniences method for json calls, internally calls [fetch](#fetch), but adds `Content-Type=application/json` to the request header. Also add a default selector if none provided `data = await response.json()`
 ### Abort
 
 calling `client.abort()` will cancel all ongoing request that the client has.
@@ -228,7 +228,7 @@ When an operator is set/added to an `IHttpClient`, the operator will persist on 
 import type { ProcessOperator } from '@equinor/fusion-framework-module-http/operators';
 const logOperator = (logger: (...args: string[])): ProcessOperator => (x => logger(x));
 
-/** note that a convinces method for adding headers are included */
+/** note that a conveniences method for adding headers are included */
 client.requestHandler.setHeader('x-trace-id', 'my_foot_print')
 
 /** add a predefined operator */
