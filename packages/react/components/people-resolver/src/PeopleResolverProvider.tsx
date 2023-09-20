@@ -1,14 +1,20 @@
-import { Suspense, useMemo } from 'react';
+import { PropsWithChildren, Suspense, useMemo } from 'react';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { makeResolver } from './makeResolver';
+import { PersonControllerOptions } from './PersonController';
 
-export const PeopleResolverProvider = ({ children }: { readonly children?: React.ReactNode }) => {
+type PeopleResolverProviderProps = PropsWithChildren<{
+    readonly options?: PersonControllerOptions;
+}>;
+
+export const PeopleResolverProvider = (props: PeopleResolverProviderProps) => {
+    const { children, options } = props;
     const services = useModule<ServicesModule>('services');
     if (!services) {
         throw Error('missing service module');
     }
-    const Component = useMemo(() => makeResolver(services), [services]);
+    const Component = useMemo(() => makeResolver(services, options), [services, options]);
     return (
         <Suspense fallback={<span>TODO</span>}>
             <Component>{children}</Component>

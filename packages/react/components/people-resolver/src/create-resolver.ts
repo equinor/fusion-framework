@@ -16,7 +16,7 @@ export const createResolver = (controller: IPersonController): PersonResolver =>
         return firstValueFrom(
             controller.getPersonInfo(args).pipe(
                 /** TODO */
-                map((x) => ({ ...x, azureId: x.azureUniqueId }) as unknown as PersonDetails),
+                map((x) => ({ ...x, azureId: x.azureUniqueId }) as unknown as PersonInfo),
             ),
         );
     },

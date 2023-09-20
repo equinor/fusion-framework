@@ -10,11 +10,15 @@ import { PeopleResolverProvider } from '@equinor/fusion-framework-react-componen
 
 const target = document.getElementById('root') as HTMLElement;
 
+import fallbackSvg from './resources/fallback-photo.svg';
+
+const fallbackImage = new Blob([fallbackSvg], { type: 'image/svg+xml' });
+
 ReactDOM.createRoot(target).render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
             <Framework configure={configure} fallback={<EquinorLoader text="Loading framework" />}>
-                <PeopleResolverProvider>
+                <PeopleResolverProvider options={{ fallbackImage }}>
                     <Router />
                 </PeopleResolverProvider>
             </Framework>
