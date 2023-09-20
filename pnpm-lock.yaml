@@ -3814,7 +3814,7 @@ packages:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-icon': 1.0.31
       '@equinor/fusion-wc-skeleton': 0.2.24
-      '@lit-labs/task': 3.0.1
+      '@lit-labs/task': 3.0.2
       lit: 2.7.0
     dev: true
 
@@ -4388,12 +4388,6 @@ packages:
     resolution: {integrity: sha512-pDjPYojmCXnOezT/4BgqxHA2kahmSsCE0y6uPCYyVqigIx9DJav05s0KAtD9IImTY3LvWu5isSlq6nkWagAybA==}
     dependencies:
       '@lit/reactive-element': 1.6.3
-
-  /@lit-labs/task@3.0.1:
-    resolution: {integrity: sha512-+VKnnVLRitDIpd/PBCTHAc012B5Xn43Sfq1scFt23aq0sxnAbTrapLR1ST2DgLRohBg/c4KlMIvgYf/5TZHqHw==}
-    dependencies:
-      '@lit/reactive-element': 1.6.3
-    dev: true
 
   /@lit-labs/task@3.0.2:
     resolution: {integrity: sha512-X6d+KWZR3q1ZrXs/auM5PbZcW3B5RlpU4gqk/upstwTZM6JN19P6o9Qgo+qjovIDsUZsYnlGQqtdPBwPrKzLUA==}
