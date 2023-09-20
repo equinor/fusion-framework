@@ -20,7 +20,7 @@ export const PeopleResolver = (props: React.PropsWithChildren<{ resolver: Person
     const ref = useRef<PersonProviderElement | null>(null);
     useEffect(() => {
         if (ref.current && resolver) {
-            ref.current.setResolver(resolver);
+            ref.current.resolver = resolver;
         }
     }, [ref, resolver]);
     return <fwc-person-provider ref={ref}>{children}</fwc-person-provider>;
