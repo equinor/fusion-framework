@@ -1,13 +1,5 @@
-import {
-    EMPTY,
-    firstValueFrom,
-    lastValueFrom,
-    Observable,
-    ReplaySubject,
-    Subject,
-    Subscription,
-} from 'rxjs';
-import { catchError, takeWhile } from 'rxjs/operators';
+import { EMPTY, firstValueFrom, lastValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { catchError, finalize, shareReplay, takeWhile } from 'rxjs/operators';
 
 import { v4 as generateGUID, v5 as generateUniqueKey } from 'uuid';
 
@@ -89,6 +81,7 @@ export class Query<TType, TArgs = any> {
     #client: QueryClient<TType, TArgs>;
     #cache: QueryCache<TType, TArgs>;
     #queryQueue$ = new Subject<QueryQueueItem<TArgs, TType>>();
+    #tasks: Record<string, Observable<QueryTaskValue<TType, TArgs>>> = {};
 
     #generateCacheKey: QueryKeyBuilder<TArgs>;
     #validateCacheEntry: CacheValidator<TType, TArgs>;
@@ -200,10 +193,15 @@ export class Query<TType, TArgs = any> {
         args: TArgs,
         options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskCached<TType, TArgs> | QueryTaskCompleted<TType, TArgs>> {
+        /** create unique key for query be provided arguments */
         const ref = this.#generateCacheKey(args);
-        const task = this.#client.getTaskByRef(ref) ?? this._createTask(ref, args, options);
+        /** re-use existing query task or create a new */
+        const task = this.#tasks[ref] ?? this._createTask(ref, args, options);
+
         if (options?.signal) {
+            /** listen to abort signal  */
             options.signal.addEventListener('abort', () => {
+                /** cancel all ongoing request by reference */
                 this.#client.cancelTaskByRef(ref, 'abort signal triggered by caller');
             });
         }
@@ -215,30 +213,49 @@ export class Query<TType, TArgs = any> {
         args: TArgs,
         options?: QueryOptions<TType, TArgs>,
     ): Observable<QueryTaskValue<TType, TArgs>> {
-        const task = new ReplaySubject<QueryTaskValue<TType, TArgs>>();
+        /** this inner task is used by the `QueryClient` to push result back to the task */
+        const innerTask = new Subject<QueryTaskValue<TType, TArgs>>();
 
-        const cacheEntry = this.#cache.getItem(ref);
-        if (cacheEntry) {
-            task.next({ ...cacheEntry, status: 'cache' });
-        }
+        const task = new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
+            /** when task observed, add task to task queue reference */
+            this.#tasks[ref] = task;
 
-        const validateCache = options?.cache?.validate || this.#validateCacheEntry;
-        const validCacheEntry = cacheEntry && validateCache(cacheEntry, args);
+            /** connect `QueryClient` to `Query` task */
+            innerTask.subscribe(subscriber);
 
-        if (!validCacheEntry) {
-            this.#queryQueue$.next({
-                args,
-                options: {
-                    ref,
-                    task,
-                    retry: options?.retry,
-                },
-            });
-        } else {
-            task.complete();
-        }
+            /** check if there is a cache entry for the reference */
+            const cacheEntry = this.#cache.getItem(ref);
+            if (cacheEntry) {
+                innerTask.next({ ...cacheEntry, status: 'cache' });
+            }
 
-        return task.asObservable();
+            /** validate the cache entry */
+            const validateCache = options?.cache?.validate || this.#validateCacheEntry;
+            const validCacheEntry = cacheEntry && validateCache(cacheEntry, args);
+            if (!validCacheEntry) {
+                /** add request to queue */
+                this.#queryQueue$.next({
+                    args,
+                    options: {
+                        ref,
+                        task: innerTask,
+                        retry: options?.retry,
+                    },
+                });
+            } else {
+                /** no need for requesting new data, complete task */
+                innerTask.complete();
+            }
+        }).pipe(
+            finalize(() => {
+                /** when the task is done, remove from reference queue */
+                delete this.#tasks[ref];
+            }),
+            /** publish task */
+            shareReplay(),
+        );
+
+        return task;
     }
 }
 
