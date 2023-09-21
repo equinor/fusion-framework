@@ -29,7 +29,7 @@ runs:
       if: ${{ steps.status.outputs.releases > 0 }}
       run: |
         pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-        pnpm changeset version --snapshot next
+        pnpm changeset version --snapshot ${{  inputs.tag }} 
         pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
