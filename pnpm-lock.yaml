@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -510,8 +506,8 @@ importers:
         specifier: ^0.1.5
         version: 0.1.5(react@18.2.0)
       '@equinor/fusion-react-person':
-        specifier: ^0.2.9
-        version: 0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.4.2
+        version: 0.4.2(@types/react@18.2.20)(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.1.6
         version: 0.1.6(react@18.2.0)
@@ -3446,7 +3442,7 @@ packages:
         optional: true
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-button': 1.4.3
+      '@equinor/fusion-wc-button': 1.4.4
       '@types/react': 18.2.20
       react: 18.2.0
     dev: true
@@ -3499,7 +3495,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       react: 18.2.0
     dev: true
 
@@ -3512,29 +3508,14 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-person@0.2.9(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-v/8u9yKz+uGUF+caxs1lEn45ihI+NRLVhs4W1/6esAdSdKZBunqyNZn59LXQv49vIjVivz4UjD9Z5ZFmapeKqA==}
+  /@equinor/fusion-react-person@0.4.2(@types/react@18.2.20)(react@18.2.0):
+    resolution: {integrity: sha512-ZFdq8tprHYrEj3gJ7+Wt5iFd9crIupthe97/A0xK5IwXOJ8b4vLkm/Sw48NgpeNvTLWSFVeAaPRHUfeg4kxGmg==}
     dependencies:
       '@equinor/fusion-react-button': 0.8.3(@types/react@18.2.20)(react@18.2.0)
-      '@equinor/fusion-react-popover': 0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-      '@equinor/fusion-wc-person': 0.4.7
+      '@equinor/fusion-wc-person': 0.6.1
     transitivePeerDependencies:
       - '@types/react'
       - react
-      - react-dom
-    dev: true
-
-  /@equinor/fusion-react-popover@0.1.15(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-RiCgHlzN8Cl9XoENcKyexO9Oyh3NxwvZwn3sIuSS7DDTBTT7PLCKMSFiuG+7VQmiXCf64tF4hUoyTprTHzs7pw==}
-    dependencies:
-      '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.10(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-      '@popperjs/core': 2.11.8
-      react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - react
-      - react-dom
     dev: true
 
   /@equinor/fusion-react-progress-indicator@0.1.6(react@18.2.0):
@@ -3667,7 +3648,7 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-picture': 1.0.29
-      '@equinor/fusion-wc-ripple': 0.2.19
+      '@equinor/fusion-wc-ripple': 0.2.20
       lit: 2.7.0
     dev: true
 
@@ -3678,14 +3659,6 @@ packages:
       '@equinor/fusion-wc-picture': 2.0.0
       '@equinor/fusion-wc-ripple': 0.2.20
       lit: 2.7.0
-
-  /@equinor/fusion-wc-badge@0.2.32:
-    resolution: {integrity: sha512-kXUzgb6Dx76bSJ6/IytYSTnxjhpLl2QalkcA4TLpxkJLqC4hGCD6koR7WtAbronjpyLKYWuG4w4XK5RCTFr6Ng==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
-      lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-badge@0.2.33:
     resolution: {integrity: sha512-HYnP4whvXEugbpTFUsGPSxyPiScHKeksY4y4zHBUPZ9kVfH024IHjYSBhD6PzLViKxgGCsOxCqfh/z0fZW1jPw==}
@@ -3698,7 +3671,7 @@ packages:
     resolution: {integrity: sha512-bnVk7QXfB+QhGcDo0s5+2X/LyuM29XUNlMzRuZF4clRw5MUsPqh6jhyA6T6oD/DiTazxujCZaeaWhvW9XB0dBQ==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@material/mwc-button': 0.27.0
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-icon-button-toggle': 0.27.0
@@ -3783,7 +3756,7 @@ packages:
       '@equinor/fusion-wc-checkbox': 0.3.15
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-divider': 0.2.21
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@equinor/fusion-wc-radio': 0.2.25
       '@material/mwc-list': 0.27.0
       lit: 2.7.0
@@ -3809,16 +3782,17 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-person@0.4.7:
-    resolution: {integrity: sha512-8jBGA6O254lforTCPq0nwCWL27u2mVoRLCya7Em38dnpfUHhPPxp1agw05sRCHvPcgUdYrg+Ojck2h86ZmRIOQ==}
+  /@equinor/fusion-wc-person@0.6.1:
+    resolution: {integrity: sha512-HzpDOtAe9jVJXbN+GF4jqUJ5XI/O2M7ofaNQXRvJznkPLyrq/3Dk0AXHp9IU2wxDoIDKSKkjXDcSlFkinCKJrQ==}
     dependencies:
       '@equinor/fusion-wc-avatar': 1.0.42
-      '@equinor/fusion-wc-badge': 0.2.32
-      '@equinor/fusion-wc-button': 1.4.3
+      '@equinor/fusion-wc-badge': 0.2.33
+      '@equinor/fusion-wc-button': 1.4.4
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
-      '@equinor/fusion-wc-skeleton': 0.2.24
-      '@lit-labs/task': 3.0.1
+      '@equinor/fusion-wc-icon': 1.0.32
+      '@equinor/fusion-wc-skeleton': 0.2.25
+      '@floating-ui/dom': 1.5.3
+      '@lit-labs/task': 3.0.2
       lit: 2.7.0
     dev: true
 
@@ -3874,14 +3848,6 @@ packages:
       '@material/mwc-radio': 0.27.0
       lit: 2.7.0
 
-  /@equinor/fusion-wc-ripple@0.2.19:
-    resolution: {integrity: sha512-pLXReuSmhiTKwE8wAJ+o2KNomLvTa2npZE7fAqtxNDwLpbHwi8iFJblheRjtntzcZYi9sYdgu6e3JtI17I5Ljg==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@material/mwc-ripple': 0.27.0
-      lit: 2.7.0
-    dev: true
-
   /@equinor/fusion-wc-ripple@0.2.20:
     resolution: {integrity: sha512-YszqOF8lQHepWZfa63treGa64JxkHsoyxSaZGPi5JRtnC9Lp5YiSt/BK6GmRcDzWxblpe40eQoMbHTO8PAQk4g==}
     dependencies:
@@ -3894,7 +3860,7 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-divider': 0.2.21
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@equinor/fusion-wc-list': 0.3.5
       '@equinor/fusion-wc-textinput': 0.5.19
       '@lit-labs/task': 2.1.2
@@ -3916,13 +3882,6 @@ packages:
       lit: 2.7.0
       uuid: 9.0.1
 
-  /@equinor/fusion-wc-skeleton@0.2.24:
-    resolution: {integrity: sha512-yZS9TZnbDZ/KqMEO3RhLTQIPttVp9eoYebj9M/rqWXWWy2lWJc4pPFF8YmfxkG6bIAxHRplhBMnDKU7t+4f9mg==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      lit: 2.7.0
-    dev: true
-
   /@equinor/fusion-wc-skeleton@0.2.25:
     resolution: {integrity: sha512-4IXwLCbN2ycufY/jjoRaYqLn6RxKFQjjjGC5kGEr905xSLvtVzbMIzLFJSjc5DL702ko16b+MlXuYVIqSkLxtA==}
     dependencies:
@@ -3933,7 +3892,7 @@ packages:
     resolution: {integrity: sha512-hgoozle0A4IdLkvRvLLE++q4V3KA/oxiaS8NUjeEiLUNDQl8ZgESpMX984QEe5i6vDvbJsoVi/HjXIeMwy1z1w==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@material/mwc-textfield': 0.27.0
       lit: 2.7.0
     dev: true
@@ -4249,13 +4208,10 @@ packages:
       react-dom: '>=16.8.0'
     dependencies:
       '@floating-ui/react-dom': 2.0.1(react-dom@18.2.0)(react@18.2.0)
-      '@floating-ui/utils': 0.1.1
+      '@floating-ui/utils': 0.1.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tabbable: 6.2.0
-
-  /@floating-ui/utils@0.1.1:
-    resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
 
   /@floating-ui/utils@0.1.4:
     resolution: {integrity: sha512-qprfWkn82Iw821mcKofJ5Pk9wgioHicxcQMxx+5zt5GSKoqdWvgG5AxVmpmUUjzTLPVSH5auBrhI93Deayn/DA==}
@@ -4401,12 +4357,6 @@ packages:
     resolution: {integrity: sha512-pDjPYojmCXnOezT/4BgqxHA2kahmSsCE0y6uPCYyVqigIx9DJav05s0KAtD9IImTY3LvWu5isSlq6nkWagAybA==}
     dependencies:
       '@lit/reactive-element': 1.6.3
-
-  /@lit-labs/task@3.0.1:
-    resolution: {integrity: sha512-+VKnnVLRitDIpd/PBCTHAc012B5Xn43Sfq1scFt23aq0sxnAbTrapLR1ST2DgLRohBg/c4KlMIvgYf/5TZHqHw==}
-    dependencies:
-      '@lit/reactive-element': 1.6.3
-    dev: true
 
   /@lit-labs/task@3.0.2:
     resolution: {integrity: sha512-X6d+KWZR3q1ZrXs/auM5PbZcW3B5RlpU4gqk/upstwTZM6JN19P6o9Qgo+qjovIDsUZsYnlGQqtdPBwPrKzLUA==}
@@ -5519,10 +5469,6 @@ packages:
       open: 9.1.0
       picocolors: 1.0.0
       tslib: 2.6.2
-
-  /@popperjs/core@2.11.8:
-    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-    dev: true
 
   /@reach/router@1.3.4(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-+mtn9wjlB9NN2CNnnC/BRYtwdKBfSyyasPYraNAyvaV1occr/5NnB4CVzjEZipNHwYebQwcndGUmpFzxAUoqSA==}
@@ -10846,10 +10792,6 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-fast-compare@3.2.2:
-    resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
-    dev: true
-
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -10861,20 +10803,6 @@ packages:
 
   /react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
-    dev: true
-
-  /react-popper@2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==}
-    peerDependencies:
-      '@popperjs/core': ^2.0.0
-      react: ^16.8.0 || ^17 || ^18
-      react-dom: ^16.8.0 || ^17 || ^18
-    dependencies:
-      '@popperjs/core': 2.11.8
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-fast-compare: 3.2.2
-      warning: 4.0.3
     dev: true
 
   /react-refresh@0.14.0:
@@ -12790,3 +12718,7 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
