@@ -15,7 +15,9 @@ PersonCardElement;
 PersonListItemElement;
 PersonSelectElement;
 
-export const PeopleResolver = (props: React.PropsWithChildren<{ resolver: PersonResolver }>) => {
+export { PersonResolver };
+
+export const PeopleResolverComponent = (props: React.PropsWithChildren<{ resolver: PersonResolver }>) => {
     const { resolver, children } = props;
     const ref = useRef<PersonProviderElement | null>(null);
     useEffect(() => {

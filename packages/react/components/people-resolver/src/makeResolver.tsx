@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { PeopleResolver } from './PeopleResolver';
+import { PeopleResolverComponent } from './PeopleResolver';
 import { PersonController, PersonControllerOptions } from './PersonController';
 import { createResolver } from './create-resolver';
 import { IApiProvider } from '@equinor/fusion-framework-module-services';
@@ -10,7 +10,7 @@ export const makeResolver = (services: IApiProvider, options?: PersonControllerO
         const controller = new PersonController(client, options);
         const resolver = createResolver(controller);
         const Component = ({ children }: { readonly children?: React.ReactNode }) => (
-            <PeopleResolver resolver={resolver}>{children}</PeopleResolver>
+            <PeopleResolverComponent resolver={resolver}>{children}</PeopleResolverComponent>
         );
         return {
             default: Component,
