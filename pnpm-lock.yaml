@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -122,7 +118,7 @@ importers:
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^29.3.9
-        version: 29.3.9(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.10)
+        version: 29.3.9(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.11)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.0.0
@@ -3411,14 +3407,14 @@ packages:
       - typescript
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@29.3.9(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.10):
+  /@equinor/fusion-react-ag-grid-styles@29.3.9(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.11):
     resolution: {integrity: sha512-rXzy78m4P0fQ6Z3Wax+SQW6ZHwDV0bh4cKDZPSFKXHQDHM6jqB1f0BlNiWkLDFxicLfXkv5L+xb8xXNfFvcNSg==}
     peerDependencies:
       '@ag-grid-community/styles': ~29.3.4
       '@equinor/fusion-react-styles': ^0.5.5
     dependencies:
       '@ag-grid-community/styles': 29.3.5
-      '@equinor/fusion-react-styles': 0.5.10(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@equinor/fusion-react-button@0.8.2(@types/react@18.2.20)(react@18.2.0):
@@ -3465,7 +3461,7 @@ packages:
     dependencies:
       '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
       '@equinor/fusion-react-searchable-dropdown': 0.3.4(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.10(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-utils': 2.0.4(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -3528,7 +3524,7 @@ packages:
     resolution: {integrity: sha512-RiCgHlzN8Cl9XoENcKyexO9Oyh3NxwvZwn3sIuSS7DDTBTT7PLCKMSFiuG+7VQmiXCf64tF4hUoyTprTHzs7pw==}
     dependencies:
       '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.10(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.8
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
@@ -3588,7 +3584,7 @@ packages:
       react: ^17.0.2
       react-dom: ^17.0.2
     dependencies:
-      '@equinor/fusion-wc-theme': 0.2.33
+      '@equinor/fusion-wc-theme': 0.2.34
       '@equinor/fusion-web-theme': 0.1.7
       '@material-ui/styles': 4.11.5(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.20
@@ -3597,8 +3593,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@equinor/fusion-react-styles@0.5.10(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-fpfgTsatxXCVZRwZ+y0zRBkIdnmPydzb+XUVUNw2itzdnMPUyUhtHsn5pPdQPvbRD72lAPrKP/VkUbtjBle4GQ==}
+  /@equinor/fusion-react-styles@0.5.11(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-PB4zLLm5Cwli/b1aHsiFXqBeXWvAbzSMQBoFcxHm06IA5HqVK/xJL5PgrceQQr9YIVx69V5uaJsVsrjTjvZt5g==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
@@ -12790,3 +12786,7 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
