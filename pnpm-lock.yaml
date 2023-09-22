@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -3446,7 +3442,7 @@ packages:
         optional: true
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-button': 1.4.3
+      '@equinor/fusion-wc-button': 1.4.4
       '@types/react': 18.2.20
       react: 18.2.0
     dev: true
@@ -3499,7 +3495,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       react: 18.2.0
     dev: true
 
@@ -3683,7 +3679,7 @@ packages:
     resolution: {integrity: sha512-kXUzgb6Dx76bSJ6/IytYSTnxjhpLl2QalkcA4TLpxkJLqC4hGCD6koR7WtAbronjpyLKYWuG4w4XK5RCTFr6Ng==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       lit: 2.7.0
     dev: true
 
@@ -3698,7 +3694,7 @@ packages:
     resolution: {integrity: sha512-bnVk7QXfB+QhGcDo0s5+2X/LyuM29XUNlMzRuZF4clRw5MUsPqh6jhyA6T6oD/DiTazxujCZaeaWhvW9XB0dBQ==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@material/mwc-button': 0.27.0
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-icon-button-toggle': 0.27.0
@@ -3783,7 +3779,7 @@ packages:
       '@equinor/fusion-wc-checkbox': 0.3.15
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-divider': 0.2.21
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@equinor/fusion-wc-radio': 0.2.25
       '@material/mwc-list': 0.27.0
       lit: 2.7.0
@@ -3814,9 +3810,9 @@ packages:
     dependencies:
       '@equinor/fusion-wc-avatar': 1.0.42
       '@equinor/fusion-wc-badge': 0.2.32
-      '@equinor/fusion-wc-button': 1.4.3
+      '@equinor/fusion-wc-button': 1.4.4
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@equinor/fusion-wc-skeleton': 0.2.24
       '@lit-labs/task': 3.0.1
       lit: 2.7.0
@@ -3894,7 +3890,7 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-divider': 0.2.21
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@equinor/fusion-wc-list': 0.3.5
       '@equinor/fusion-wc-textinput': 0.5.19
       '@lit-labs/task': 2.1.2
@@ -3933,7 +3929,7 @@ packages:
     resolution: {integrity: sha512-hgoozle0A4IdLkvRvLLE++q4V3KA/oxiaS8NUjeEiLUNDQl8ZgESpMX984QEe5i6vDvbJsoVi/HjXIeMwy1z1w==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.31
+      '@equinor/fusion-wc-icon': 1.0.32
       '@material/mwc-textfield': 0.27.0
       lit: 2.7.0
     dev: true
@@ -12790,3 +12786,7 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
