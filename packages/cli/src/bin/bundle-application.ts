@@ -21,34 +21,35 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     spinner.succeed();
 
     spinner.start('generate manifest');
-    const manifest = await createExportManifest({ outputFile: `${outDir}-app-manifest.json` });
+    const manifest = await createExportManifest({ outputFile: `${outDir}/app-manifest.json` });
     spinner.succeed();
     console.log(chalk.dim(JSON.stringify(manifest, undefined, 2)));
 
-    spinner.start('compress content');
     const bundle = new AdmZip();
+
     bundle.addLocalFile(pkg.path);
     spinner.info(`added ./package.json`);
 
     bundle.addLocalFolder(outDir);
     spinner.info(`added ./${outDir}`);
 
-    const licenseFile = resolve(pkg.path, 'LICENSE');
+    const licenseFile = resolve(pkg.path, 'LICENSE.md');
     if (fileExistsSync(licenseFile)) {
         bundle.addLocalFile(licenseFile);
         spinner.info(`added ${licenseFile}`);
     } else {
-        spinner.warn(`missing ./LICENSE`);
+        spinner.warn(`missing ${licenseFile}`);
     }
 
-    const readmeFile = resolve(pkg.path, 'README');
+    const readmeFile = resolve(pkg.path, 'README.md');
     if (fileExistsSync(readmeFile)) {
         bundle.addLocalFile(readmeFile);
         spinner.info(`added ${readmeFile}`);
     } else {
-        spinner.warn(`missing ./README`);
+        spinner.warn(`missing ${readmeFile}`);
     }
 
+    spinner.start('compressing content');
     bundle.writeZip(archive);
 
     spinner.info(formatPath(archive), formatByteSize(archive));

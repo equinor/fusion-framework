@@ -107,6 +107,6 @@ export default (program: Command) => {
     app.command('pack')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
         .action(async (opt) => {
-            bundleApplication({ archive: 'app.bundle.zip', outDir: opt.outDir });
+            bundleApplication({ archive: 'app-bundle.zip', outDir: opt.outDir });
         });
 };

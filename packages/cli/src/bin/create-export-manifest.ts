@@ -64,7 +64,7 @@ export const createExportManifest = async (options?: {
             if (!nodeFs.existsSync(dirname(outputFile))) {
                 nodeFs.mkdirSync(dir, { recursive: true });
             }
-            writeFile(outputFile, JSON.stringify(manifestExport));
+            await writeFile(outputFile, JSON.stringify(manifestExport));
             spinner.succeed();
         } catch (err) {
             spinner.fail();
