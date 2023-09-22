@@ -6,14 +6,14 @@ import {
     PersonCardElement,
     PersonResolver,
     PersonListItemElement,
-    PersonSearchElement,
+    PersonSelectElement,
 } from '@equinor/fusion-wc-person';
 
 PersonProviderElement;
 PersonAvatarElement;
 PersonCardElement;
 PersonListItemElement;
-PersonSearchElement;
+PersonSelectElement;
 
 export const PeopleResolver = (props: React.PropsWithChildren<{ resolver: PersonResolver }>) => {
     const { resolver, children } = props;
