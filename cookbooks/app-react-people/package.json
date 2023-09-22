@@ -6,8 +6,9 @@
     "type": "module",
     "main": "src/index.ts",
     "scripts": {
-        "build": "fusion-framework-cli app build",
         "dev": "fusion-framework-cli app dev",
+        "build": "fusion-framework-cli app build",
+        "build:pack": "fusion-framework-cli app pack",
         "docker": "cd .. && sh docker-script.sh app-react"
     },
     "author": "",
