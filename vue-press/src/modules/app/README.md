@@ -1,7 +1,7 @@
 ---
 title: App
 category: Module
-tag: 
+tag:
   - application
   - manifest
   - application config
@@ -79,7 +79,7 @@ await lastValueFrom(app.initialize());
 Meta data description of application, loaded from the Fusion Application Store
 
 ### Config
-Configuration for the application 
+Configuration for the application
 
 
 ### Script Modules
@@ -109,7 +109,7 @@ export const configure = (configurator) => {
 const manifestMapper = (value: any): AppManifest => {
   const { appKey, name, entry, version } = value;
   return { appKey, name, entry, version };
-} 
+}
 
 export const configure = (configurator) => {
   enableAppModule(configurator, async(builder) => {
@@ -119,13 +119,13 @@ export const configure = (configurator) => {
     builder.setAppClient(() => {
       /** callback for fetching an applications */
       getAppManifest: ({ appKey: string }) => appClient.json$(
-        `/api/app/${appKey}`, 
+        `/api/app/${appKey}`,
         { selector: async(x) => manifestMapper(await res.json()) }
       ),
 
       /** callback for fetching all applications */
       getAppManifests: () => appClient.json$(
-        `/api/apps`, 
+        `/api/apps`,
         { selector: async(x) => (await res.json()).map(manifestMapper) }
       ),
 
@@ -151,5 +151,5 @@ export const configure = (configurator) => {
 
 ### Apploader
 
-@[code](@packages/cli/src/dev-portal/AppLoader.tsx)
+@[code](@packages/cli/src/bin/dev-portal/AppLoader.tsx)
 

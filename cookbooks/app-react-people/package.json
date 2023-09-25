@@ -6,8 +6,9 @@
     "type": "module",
     "main": "src/index.ts",
     "scripts": {
-        "build": "fusion-framework-cli app build",
         "dev": "fusion-framework-cli app dev",
+        "build": "fusion-framework-cli app build",
+        "build:pack": "fusion-framework-cli app pack",
         "docker": "cd .. && sh docker-script.sh app-react"
     },
     "author": "",
@@ -22,5 +23,11 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "typescript": "^5.1.3"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-react-person": "^0.4.2",
+        "@remix-run/router": "^1.8.0",
+        "react-router-dom": "^6.16.0"
     }
 }

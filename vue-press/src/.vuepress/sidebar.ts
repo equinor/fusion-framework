@@ -6,8 +6,8 @@ export default sidebar({
             text: 'App',
             prefix: '/guide/',
             children: [
-                'app/', 
-                'app/getting-started', 
+                'app/',
+                'app/getting-started',
                 'app/cli',
                 {
                     text: 'Cookbooks',
@@ -20,6 +20,7 @@ export default sidebar({
                         }
                     ]
                 },
+                'app/people',
                 'app/authentication',
                 'app/legacy',
                 'app/tips_and_tricks'
