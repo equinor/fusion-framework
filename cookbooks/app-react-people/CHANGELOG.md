@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+-   [#1335](https://github.com/equinor/fusion-framework/pull/1335) [`5bad9c87`](https://github.com/equinor/fusion-framework/commit/5bad9c87d6ab6d0a9a518ba7525f3eb5b659a9c0) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - add cookbooks and documentation for people react components
+
 ## 4.0.23
 
 ### Patch Changes

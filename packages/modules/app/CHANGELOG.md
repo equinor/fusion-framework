@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.2.7
+
+### Patch Changes
+
+-   [#1305](https://github.com/equinor/fusion-framework/pull/1305) [`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9) Thanks [@odinr](https://github.com/odinr)! - fixed duplicate calls from flows
+
+    alignment after changes to `@equinor/fusion-query`
+
+-   Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
+    -   @equinor/fusion-query@4.0.2
+
 ## 5.2.6
 
 ### Patch Changes

@@ -1,5 +1,31 @@
 # Change Log
 
+## 9.1.2
+
+### Patch Changes
+
+-   [#1306](https://github.com/equinor/fusion-framework/pull/1306) [`f65c4531`](https://github.com/equinor/fusion-framework/commit/f65c453178e2c581acb154d5839971c75f60fa86) Thanks [@odinr](https://github.com/odinr)! - add fallback image to person provider
+
+-   [#1335](https://github.com/equinor/fusion-framework/pull/1335) [`5bad9c87`](https://github.com/equinor/fusion-framework/commit/5bad9c87d6ab6d0a9a518ba7525f3eb5b659a9c0) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - add cookbooks and documentation for people react components
+
+-   [`cc7bcfb5`](https://github.com/equinor/fusion-framework/commit/cc7bcfb51187fb757b95793356da4a11b233d930) Thanks [@odinr](https://github.com/odinr)! - update @equinor/fusion-wc-person to 1.1.1
+
+-   [`6ec59f64`](https://github.com/equinor/fusion-framework/commit/6ec59f64f35e553cd68d6d6e03c1e5867aba87ce) Thanks [@odinr](https://github.com/odinr)! - fixed loading of config files for Windows
+
+    found internal [issues](https://github.com/radarsu/ts-import/issues/39) with `ts-import` where file url path crashed native `fs` command, but failed on imports since windows can`t handle absolute paths.
+
+    quick and dirty transpile code and eject of `ts-import`
+
+-   [#1264](https://github.com/equinor/fusion-framework/pull/1264) [`ace9fa37`](https://github.com/equinor/fusion-framework/commit/ace9fa379215fd75e37b140db5c8ea2d3680b0c0) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump express-rate-limit from 6.9.0 to [7.0.0](https://github.com/express-rate-limit/express-rate-limit/releases/tag/v7.0.0)
+
+-   [#1345](https://github.com/equinor/fusion-framework/pull/1345) [`9d9f629e`](https://github.com/equinor/fusion-framework/commit/9d9f629e007df38db75067781b251b7e5e9673da) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - update @equinor/fusion-wc-person to 2.0.1
+
+-   [`5b8c4ebc`](https://github.com/equinor/fusion-framework/commit/5b8c4ebc85f636e18e7666fd5dbbaf9ee10d8608) Thanks [@odinr](https://github.com/odinr)! - fixed packing of application
+
+-   Updated dependencies [[`cc7bcfb5`](https://github.com/equinor/fusion-framework/commit/cc7bcfb51187fb757b95793356da4a11b233d930), [`f65c4531`](https://github.com/equinor/fusion-framework/commit/f65c453178e2c581acb154d5839971c75f60fa86), [`9f121865`](https://github.com/equinor/fusion-framework/commit/9f121865254a0c76c4a812e6e42bfe3c7086c714), [`518b8476`](https://github.com/equinor/fusion-framework/commit/518b8476bb40255d05e937663d3a513de479a1f8), [`9d9f629e`](https://github.com/equinor/fusion-framework/commit/9d9f629e007df38db75067781b251b7e5e9673da), [`3e38c9cc`](https://github.com/equinor/fusion-framework/commit/3e38c9cc925fc0456837e42e7ee3ac55e9553bad), [`63592229`](https://github.com/equinor/fusion-framework/commit/63592229cea4d3606289738fe14b432e9978623f)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.0
+    -   @equinor/fusion-framework-app@7.1.7
+
 ## 9.1.1
 
 ### Patch Changes

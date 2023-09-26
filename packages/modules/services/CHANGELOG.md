@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.2.2
+
+### Patch Changes
+
+-   [#1282](https://github.com/equinor/fusion-framework/pull/1282) [`ddc31c35`](https://github.com/equinor/fusion-framework/commit/ddc31c3571e36be057095238cf22e78051f423b0) Thanks [@odinr](https://github.com/odinr)! - add util for checking if object is person
+
+    > extremely crude, but good enough until backend comes of with new models or endpoint
+
+    _updated typings for person v4_
+
 ## 3.2.1
 
 ### Patch Changes
