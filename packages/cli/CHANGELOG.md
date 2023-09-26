@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.1.4
+
+### Patch Changes
+
+-   [#1348](https://github.com/equinor/fusion-framework/pull/1348) [`0acc8827`](https://github.com/equinor/fusion-framework/commit/0acc8827e5e2df8b5b2aeac5e1a2cd29c4384e78) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.32.4 to 0.33.0
+
+    -   support for [styled-components@6](https://styled-components.com/releases#v6.0.0)
+
 ## 9.1.3
 
 ### Patch Changes
