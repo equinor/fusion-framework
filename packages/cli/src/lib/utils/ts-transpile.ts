@@ -19,8 +19,6 @@ export const transpile = async (file: string) => {
 
     const targetFile = join(cacheDir, file.replace(pkgRoot, '').replace(/.ts$/, '.mjs'));
 
-    console.debug(targetFile);
-
     if (await fileExists(targetFile)) {
         const sourceTouch = (await stat(sourceFile)).mtime;
         const targetTouch = (await stat(targetFile)).mtime;
