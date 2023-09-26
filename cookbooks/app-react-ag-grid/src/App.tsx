@@ -38,10 +38,11 @@ export const App = (): JSX.Element => {
                 <h4>Hello Fusion-framework Ag-Grid</h4>
                 <button onClick={addRow}>Add Row</button>
             </div>
-            <div className={styles.root}>
-                <div className="ag-theme-alpine-fusion" style={{ height: 400, width: 600 }}>
-                    <AgGridReact rowData={rowData} columnDefs={columnDefs}></AgGridReact>
-                </div>
+            <div
+                className={[styles.root, 'ag-theme-alpine-fusion'].join(' ')}
+                style={{ height: 500 }}
+            >
+                <AgGridReact rowData={rowData} columnDefs={columnDefs}></AgGridReact>
             </div>
         </>
     );
