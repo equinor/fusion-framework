@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -18,7 +22,7 @@ importers:
         version: 2.0.1(@equinor/eslint-config-fusion@2.1.4)(eslint@8.49.0)
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.4.0
-        version: 6.7.3(@typescript-eslint/parser@6.7.2)(eslint@8.49.0)(typescript@5.2.2)
+        version: 6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.49.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.47.0
         version: 8.49.0
@@ -601,8 +605,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~30.1.0
-        version: 30.1.0
+        specifier: ~30.2.0
+        version: 30.2.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1425,6 +1429,10 @@ packages:
     resolution: {integrity: sha512-UR/cqyV4r/fLi8w6x+okL9DGHMXtyxthQMgCFa5zBs4UzmRuJeg39NfcRsHoNg2LT2GPHWaE/8Qa+ae7pjXh4g==}
     dev: false
 
+  /@ag-grid-community/core@30.2.0:
+    resolution: {integrity: sha512-BdRavyYxyl0rx3w4VKQlV9KHRR9TIJ9RFt4FIsWUxC+VDC+VEL64J1PzgJqXqgkM7Zmb+rYbluA2UPmRrQQJ9A==}
+    dev: false
+
   /@ag-grid-community/react@30.1.0(@ag-grid-community/core@30.1.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-bhK9qUbFrZ6TXxt3EjDShL1/ccHIaGXWOl8LY5iQUw7sZzbCJk1d1w1qoyOedQMbVdV1KaN3I1rj2uWRM7xkXg==}
     peerDependencies:
@@ -1442,10 +1450,10 @@ packages:
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
     dev: false
 
-  /@ag-grid-enterprise/core@30.1.0:
-    resolution: {integrity: sha512-dZG0YVU3CWRsA1zUv8CrpJXthFBD2I/xFwA4NBqKnUKW4DbtyJ5VOlCusOJ4XoWs3X+NsC5z0DVHqei1AlVDfw==}
+  /@ag-grid-enterprise/core@30.2.0:
+    resolution: {integrity: sha512-0XZCBVoOCUmtOkaDr2g+r8ORbT+dV1UqA5dZMwPSC6P537RKPFFCe9YPjwGxPS06YB7VpQcnUF3Pw3TY6ibnyw==}
     dependencies:
-      '@ag-grid-community/core': 30.1.0
+      '@ag-grid-community/core': 30.2.0
     dev: false
 
   /@ampproject/remapping@2.2.1:
@@ -5937,6 +5945,35 @@ packages:
       - supports-color
     dev: false
 
+  /@typescript-eslint/eslint-plugin@6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.49.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-vntq452UHNltxsaaN+L9WyuMch8bMd9CqJ3zhzTPXXidwbf5mqqKCVXEuvRZUqLJSTLeWE65lQwyXsRGnXkCTA==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      '@typescript-eslint/parser': ^6.0.0 || ^6.0.0-alpha
+      eslint: ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@eslint-community/regexpp': 4.8.1
+      '@typescript-eslint/parser': 6.7.3(eslint@8.49.0)(typescript@5.2.2)
+      '@typescript-eslint/scope-manager': 6.7.3
+      '@typescript-eslint/type-utils': 6.7.3(eslint@8.49.0)(typescript@5.2.2)
+      '@typescript-eslint/utils': 6.7.3(eslint@8.49.0)(typescript@5.2.2)
+      '@typescript-eslint/visitor-keys': 6.7.3
+      debug: 4.3.4
+      eslint: 8.49.0
+      graphemer: 1.4.0
+      ignore: 5.2.4
+      natural-compare: 1.4.0
+      semver: 7.5.4
+      ts-api-utils: 1.0.3(typescript@5.2.2)
+      typescript: 5.2.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@typescript-eslint/experimental-utils@4.33.0(eslint@7.32.0)(typescript@5.2.2):
     resolution: {integrity: sha512-zeQjOoES5JFjTnAhI5QY7ZviczMzDptls15GFsI6jyUOq0kOf9+WonkhtlIhh0RgHRnqj5gdNxW5j1EvAyYg6Q==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -6002,6 +6039,27 @@ packages:
       '@typescript-eslint/types': 6.7.2
       '@typescript-eslint/typescript-estree': 6.7.2(typescript@5.2.2)
       '@typescript-eslint/visitor-keys': 6.7.2
+      debug: 4.3.4
+      eslint: 8.49.0
+      typescript: 5.2.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@typescript-eslint/parser@6.7.3(eslint@8.49.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-TlutE+iep2o7R8Lf+yoer3zU6/0EAUc8QIBB3GYBc1KGz4c4TRm83xwXUZVPlZ6YCLss4r77jbu6j3sendJoiQ==}
+    engines: {node: ^16.0.0 || >=18.0.0}
+    peerDependencies:
+      eslint: ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 6.7.3
+      '@typescript-eslint/types': 6.7.3
+      '@typescript-eslint/typescript-estree': 6.7.3(typescript@5.2.2)
+      '@typescript-eslint/visitor-keys': 6.7.3
       debug: 4.3.4
       eslint: 8.49.0
       typescript: 5.2.2
@@ -12510,7 +12568,3 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
