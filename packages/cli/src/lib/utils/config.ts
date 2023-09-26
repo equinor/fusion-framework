@@ -3,12 +3,13 @@ import { extname } from 'node:path';
 
 import { findUpMultiple, Options } from 'find-up';
 
-import * as tsImport from 'ts-import';
 import { assert } from 'node:console';
 import { AssertionError } from 'node:assert';
+import { pathToFileURL } from 'node:url';
+import { transpile } from './ts-transpile.js';
 import { fileExists } from './file-exists.js';
 
-export const supportedExt = ['.ts', '.js', '.json'] as const;
+export const supportedExt = ['.ts', '.mjs', '.js', '.json'] as const;
 
 export type SupportedExt = (typeof supportedExt)[number];
 
@@ -97,11 +98,11 @@ export const loadConfig = async <TType>(file: string): Promise<ConfigExecuter<TT
     assert(await fileExists(file, { assert: true }), `failed to access file ${file}`);
     switch (configExtname(file)) {
         case '.ts': {
-            const result = (await tsImport.load(file)).default;
-            return typeof result === 'function' ? result : () => result;
+            return loadConfig(await transpile(file));
         }
+        case '.mjs':
         case '.js': {
-            const result = (await import(file)).default;
+            const result = (await import(String(pathToFileURL(file)))).default;
             return typeof result === 'function' ? result : () => result;
         }
         case '.json': {
