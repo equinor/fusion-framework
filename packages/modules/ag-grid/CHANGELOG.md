@@ -1,5 +1,11 @@
 # Change Log
 
+## 30.2.0
+
+### Minor Changes
+
+-   [#1354](https://github.com/equinor/fusion-framework/pull/1354) [`a05a56c2`](https://github.com/equinor/fusion-framework/commit/a05a56c2e608d00c9083c345331751f31d415e1f) Thanks [@odinr](https://github.com/odinr)! - update [@ag-grid-enterprise/core to 30.2.0](https://github.com/ag-grid/ag-grid/releases/tag/v30.2.0)
+
 ## 30.1.1
 
 ### Patch Changes
