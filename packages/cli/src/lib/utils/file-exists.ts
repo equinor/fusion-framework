@@ -15,9 +15,9 @@ export const fileExistsSync = (file: string, options?: Options) => {
     }
 };
 
-export const fileExists = (file: string, options?: Options) => {
+export const fileExists = async (file: string, options?: Options): Promise<boolean> => {
     try {
-        access(file, constants.F_OK);
+        await access(file, constants.F_OK);
         return true;
     } catch (err) {
         if (options?.assert) {
