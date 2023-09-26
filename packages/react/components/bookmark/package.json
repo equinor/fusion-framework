@@ -27,7 +27,7 @@
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^"
     },
     "devDependencies": {
-        "@equinor/eds-core-react": "^0.32.4",
+        "@equinor/eds-core-react": "^0.33.0",
         "@equinor/eds-icons": "^0.19.3",
         "@equinor/eds-tokens": "^0.9.2",
         "@equinor/eds-utils": "^0.8.1",
