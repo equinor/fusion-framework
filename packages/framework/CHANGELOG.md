@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.0.22
+
+### Patch Changes
+
+-   Updated dependencies [[`ddc31c35`](https://github.com/equinor/fusion-framework/commit/ddc31c3571e36be057095238cf22e78051f423b0)]:
+    -   @equinor/fusion-framework-module-services@3.2.2
+    -   @equinor/fusion-framework-module-context@4.0.16
+    -   @equinor/fusion-framework-module-service-discovery@7.0.12
+
 ## 7.0.21
 
 ### Patch Changes

@@ -1,5 +1,49 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+-   [#1305](https://github.com/equinor/fusion-framework/pull/1305) [`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9) Thanks [@odinr](https://github.com/odinr)! - fixed issue where queries where executed before observed.
+
+    > **This fix might break existing code, if observation was wrongly implemented!**
+
+    ```ts
+    const queryClient = new Query({
+        client: {
+            fn: async (value: string) =>
+                new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(value);
+                    }, 50);
+                }),
+        },
+        key: (value) => value,
+    });
+
+    /** execute observables sequential */
+    concat(
+        /** after 100ms emits 'foo' */
+        interval(100).map(() => 'foo'),
+        /** after 50ms emits 'bar' */
+        queryClient.query('bar'),
+    ).subscribe(console.log);
+    ```
+
+    **expected result:**
+
+    ```diff
+    + 100ms 'foo' 50ms 'bar' |
+    ```
+
+    **actual result:**
+
+    ```diff
+    - 50ms 'bar' 50ms 'foo' |
+    ```
+
+    this is now resolved by having an inner task which is not add request to the queue before the task is observed
+
 ## 4.0.1
 
 ### Patch Changes
