@@ -601,8 +601,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~30.1.0
-        version: 30.1.0
+        specifier: ~30.2.0
+        version: 30.2.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1425,6 +1425,10 @@ packages:
     resolution: {integrity: sha512-UR/cqyV4r/fLi8w6x+okL9DGHMXtyxthQMgCFa5zBs4UzmRuJeg39NfcRsHoNg2LT2GPHWaE/8Qa+ae7pjXh4g==}
     dev: false
 
+  /@ag-grid-community/core@30.2.0:
+    resolution: {integrity: sha512-BdRavyYxyl0rx3w4VKQlV9KHRR9TIJ9RFt4FIsWUxC+VDC+VEL64J1PzgJqXqgkM7Zmb+rYbluA2UPmRrQQJ9A==}
+    dev: false
+
   /@ag-grid-community/react@30.1.0(@ag-grid-community/core@30.1.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-bhK9qUbFrZ6TXxt3EjDShL1/ccHIaGXWOl8LY5iQUw7sZzbCJk1d1w1qoyOedQMbVdV1KaN3I1rj2uWRM7xkXg==}
     peerDependencies:
@@ -1442,10 +1446,10 @@ packages:
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
     dev: false
 
-  /@ag-grid-enterprise/core@30.1.0:
-    resolution: {integrity: sha512-dZG0YVU3CWRsA1zUv8CrpJXthFBD2I/xFwA4NBqKnUKW4DbtyJ5VOlCusOJ4XoWs3X+NsC5z0DVHqei1AlVDfw==}
+  /@ag-grid-enterprise/core@30.2.0:
+    resolution: {integrity: sha512-0XZCBVoOCUmtOkaDr2g+r8ORbT+dV1UqA5dZMwPSC6P537RKPFFCe9YPjwGxPS06YB7VpQcnUF3Pw3TY6ibnyw==}
     dependencies:
-      '@ag-grid-community/core': 30.1.0
+      '@ag-grid-community/core': 30.2.0
     dev: false
 
   /@ampproject/remapping@2.2.1:
