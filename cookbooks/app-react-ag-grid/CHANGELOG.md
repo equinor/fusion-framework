@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.2
+
+### Patch Changes
+
+-   [#1357](https://github.com/equinor/fusion-framework/pull/1357) [`17cfe9bb`](https://github.com/equinor/fusion-framework/commit/17cfe9bb86acd996a99c93ff0b8a8da6151a3f8f) Thanks [@odinr](https://github.com/odinr)! - update ag-grid cookbook
+
 ## 0.1.1
 
 ### Patch Changes
