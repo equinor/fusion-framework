@@ -85,12 +85,7 @@ export const createDevServer = async (options: {
 
     spinner.info('💾 application entrypoint', formatPath(String(entry)));
 
-    let devPortalPath: string;
-    if (options.devPortalPath) {
-        devPortalPath = resolveRelativePath(options.devPortalPath);
-    } else {
-        devPortalPath = resolveRelativePath('public');
-    }
+    const devPortalPath = resolveRelativePath(options.devPortalPath ?? 'public');
     spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
 
     /** add proxy handlers */
