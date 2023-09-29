@@ -16,6 +16,11 @@ type ProxyHandlerResult<T> = { response?: T; statusCode?: number; path?: string 
 type ProxyHandlerReturn<T> = Promise<ProxyHandlerResult<T>> | ProxyHandlerResult<T>;
 
 export interface ProxyHandler {
+    onManifestListResponse(
+        slug: object,
+        message: IncomingMessage,
+        data?: Array<AppManifest>,
+    ): ProxyHandlerReturn<Array<AppManifest>>;
     onManifestResponse(
         slug: { appKey: string },
         message: IncomingMessage,
@@ -129,6 +134,14 @@ export const createDevProxy = (
         createProxyMiddleware('/api/apps/*', {
             ...proxyOptions,
             onProxyRes: createResponseInterceptor(handler.onManifestResponse),
+        }),
+    );
+
+    app.get(
+        '/api/apps',
+        createProxyMiddleware('/api/apps', {
+            ...proxyOptions,
+            onProxyRes: createResponseInterceptor(handler.onManifestListResponse),
         }),
     );
 

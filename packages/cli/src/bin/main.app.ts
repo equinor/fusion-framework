@@ -7,6 +7,8 @@ import { formatPath, chalk } from './utils/format.js';
 import createExportManifest from './create-export-manifest.js';
 import { bundleApplication } from './bundle-application.js';
 import { createExportConfig } from './create-export-config.js';
+import { fileURLToPath } from 'node:url';
+import { resolve, join } from 'node:path';
 
 export default (program: Command) => {
     const app = program
@@ -42,7 +44,11 @@ export default (program: Command) => {
             )}]`,
             'react',
         )
+        .option('-d, --dev-portal <string>', 'Location of dev-portal you want to use')
         .action(async (opt) => {
+            const devPortalPath = opt.devPortal
+                ? resolve(join(process.cwd(), opt.devPortal))
+                : fileURLToPath(new URL('public', import.meta.url));
             await createDevServer({
                 portal:
                     process.env.FUSION_PORTAL_HOST ??
@@ -54,6 +60,7 @@ export default (program: Command) => {
                 },
                 library: opt.framework,
                 port: opt.port,
+                devPortalPath: devPortalPath,
             });
         });
 
