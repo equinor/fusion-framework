@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.2.0
+
+### Minor Changes
+
+-   [#1323](https://github.com/equinor/fusion-framework/pull/1323) [`6a4c697f`](https://github.com/equinor/fusion-framework/commit/6a4c697fc255bd189a6e45e48f76c1c4e4e59c24) Thanks [@yusijs](https://github.com/yusijs)! - Allow using a custom dev-portal
+
 ## 9.1.4
 
 ### Patch Changes
