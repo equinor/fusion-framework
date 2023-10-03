@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.1.1
+
+### Patch Changes
+
+-   [#1375](https://github.com/equinor/fusion-framework/pull/1375) [`f50ea5da`](https://github.com/equinor/fusion-framework/commit/f50ea5dab449ce7a5e3071f65fac4e800a619eec) Thanks [@odinr](https://github.com/odinr)! - update people deps
+
 ## 1.1.0
 
 ### Minor Changes
