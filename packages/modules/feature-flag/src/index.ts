@@ -1,4 +1,5 @@
 export * from './types';
 
-export { FeatureFlagConfigurator } from './configurator';
-export { FeatureFlagModule, enableFeatureFlagging } from './module';
+export { type IFeatureFlagConfigurator, FeatureFlagConfigurator } from './FeatureFlagConfigurator';
+export { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider';
+export { FeatureFlagModule, enableFeatureFlagging } from './FeatureFlagModule';

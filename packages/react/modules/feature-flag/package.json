@@ -1,0 +1,50 @@
+{
+    "name": "@equinor/fusion-framework-react-module-feature-flag",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": "./dist/esm/index.js"
+    },
+    "types": "./dist/types/index.d.ts",
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "pnpm build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/react/modules/feature-flag"
+    },
+    "devDependencies": {
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
+        "@types/react": "^18.2.20",
+        "@types/react-dom": "^18.2.7",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.1.3"
+    },
+    "peerDependencies": {
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react-dom": "^16.9.0 || ^17.0.0 || ^18.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@types/react": {
+            "optional": true
+        },
+        "react-dom": {
+            "optional": true
+        }
+    }
+}

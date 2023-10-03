@@ -1,6 +1,5 @@
-import FeatureFlagConfigurator from './configurator';
-import { FeatureFlagProvider } from './provider';
-import { IFeatureFlagProvider, IFeatureFlagConfigurator } from './types';
+import { type IFeatureFlagConfigurator, FeatureFlagConfigurator } from './FeatureFlagConfigurator';
+import { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider';
 
 import { type Module, IModulesConfigurator } from '@equinor/fusion-framework-module';
 

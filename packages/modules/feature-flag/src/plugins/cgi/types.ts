@@ -1,10 +1,10 @@
-import { FeatureFlag } from '../../FeatureFlag';
+import { type IFeatureFlag } from '../../FeatureFlag';
 
 export type Path = Pick<Location, 'pathname' | 'hash' | 'search'>;
 
 export type CgiAssertionOptions = {
     /** name of the cgi parameter */
-    feature: FeatureFlag;
+    feature: IFeatureFlag;
     /** value of the cgi parameter */
     value: string | null;
     /** path of hit */

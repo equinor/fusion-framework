@@ -1,57 +1,47 @@
-import {
-    SemVer,
-    type Range as SemVerRange,
-    parse as parseSemVer,
-    satisfies as satisfiesSemVer,
-} from 'semver';
+import { immerable } from 'immer';
+/**
+ *  Feature flag entity
+ */
+export interface IFeatureFlag<T = unknown> {
+    /** unique name of the feature */
+    readonly key: string;
 
-export type FeatureFlagObj<T = unknown> = {
-    name: string;
-    version?: string | SemVer;
+    /** indicate that the flag cannot be toggled  */
+    readonly readonly?: boolean;
+
+    /** hint of the creator  */
+    readonly source?: string;
+
+    /** indicates if the feature is enabled */
     enabled?: boolean;
-    value?: T;
-};
 
-export class FeatureFlag<T = unknown> {
-    public version?: string | SemVer;
+    /** given value for the */
+    value?: T;
+}
+
+export class FeatureFlag<T = unknown> implements IFeatureFlag {
     public enabled?: boolean;
     public value?: T;
 
-    static Identify(flag: FeatureFlagObj) {
-        const { name, version } = flag;
-        if (name.includes('@') || version === undefined) {
-            return name;
-        }
-        return [name, name].join('@');
-    }
+    [immerable] = true;
 
-    static Parse<T>(obj: FeatureFlagObj<T>): FeatureFlag<T> {
-        if (obj instanceof FeatureFlag) {
-            return obj;
-        }
-        const attr: Array<keyof FeatureFlagObj> = ['version', 'enabled', 'value', 'version'];
-        return attr.reduce(
-            (acc, key) => Object.assign(acc, { [key]: obj[key] }),
-            new FeatureFlag<T>(obj.name),
+    static Parse<T>(objOrString: IFeatureFlag<T>): FeatureFlag<T> {
+                const obj = typeof objOrString === 'string' ? JSON.parse(objOrString) : objOrString;
+        const attrs: Array<keyof IFeatureFlag> = ['enabled', 'value', 'readonly', 'source'];
+        return attrs.reduce(
+            (acc, attr) => Object.assign(acc, { [attr]: obj[attr] }),
+            new FeatureFlag<T>(obj.key, obj.readonly, obj.source),
         );
     }
 
-    get semver() {
-        return parseSemVer(this.version);
-    }
+    constructor(
+        public readonly key: string,
+        public readonly readonly?: boolean,
+        public readonly source?: string,
+    ) {}
 
-    get key() {
-        return FeatureFlag.Identify(this);
-    }
-
-    constructor(public readonly name: string) {}
-
-    satisfies(range: string | SemVerRange) {
-        return this.version && satisfiesSemVer(this.version, range);
-    }
-
-    toJSON(): FeatureFlagObj {
-        const { name, version, enabled } = this;
-        return { name, version, enabled };
+    public toJSON(): IFeatureFlag {
+                const { key, enabled, value, readonly, source } = this;
+        return { key, enabled, value, readonly, source };
     }
 }

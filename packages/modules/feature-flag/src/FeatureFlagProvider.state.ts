@@ -1,10 +1,10 @@
 import { FlowSubject } from '@equinor/fusion-observable';
-import { FeatureFlag } from '../FeatureFlag';
-import { Actions } from './actions';
-import { makeReducer } from './reducer';
+import { type Actions } from './FeatureFlagProvider.actions';
+import { makeReducer } from './FeatureFlagProvider.reducer';
+import { type IFeatureFlag } from './FeatureFlag';
 
 export type State = {
-    features: Record<string, FeatureFlag>;
+    features: Record<string, IFeatureFlag>;
 };
 
 export type Store = FlowSubject<State, Actions>;

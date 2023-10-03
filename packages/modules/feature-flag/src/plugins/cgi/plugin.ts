@@ -1,11 +1,15 @@
 import { Subject, Subscription, from, of } from 'rxjs';
-import { concatMap, reduce, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { concatMap, filter, reduce, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 import { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 import type { AssertFeatureFlag, CgiFeatureFlagPlugin, Path } from './types';
 
-import type { FeatureFlag } from '../../FeatureFlag';
+import type { FeatureFlag, IFeatureFlag } from '../../FeatureFlag';
+
+import { name as namespace } from '../../FeatureFlagModule';
+import { normalizeFlags } from '../../utils/normalize-flags';
+import { type IStorageAdapter, createStorage } from '../../utils/storage';
 
 export const assertFeatureFlag: AssertFeatureFlag = (options) => {
     if (options.value === '0' || options.value === 'false') {
@@ -14,16 +18,35 @@ export const assertFeatureFlag: AssertFeatureFlag = (options) => {
     return true;
 };
 
+export type PluginOptions = {
+    isFeatureEnabled?: typeof assertFeatureFlag;
+    storage?: IStorageAdapter<IFeatureFlag>;
+};
+
 export const plugin = (
-    args: { navigation: INavigationProvider; initial?: Array<FeatureFlag> },
-    options: { onlyProvided?: boolean; isFeatureEnabled?: typeof assertFeatureFlag },
+    args: { name: string; navigation: INavigationProvider; initial?: Array<FeatureFlag> },
+    options?: PluginOptions,
 ): CgiFeatureFlagPlugin => {
-    const { navigation, initial = [] } = args;
-    const { isFeatureEnabled = assertFeatureFlag } = options ?? {};
+    const { name, navigation, initial = [] } = args;
+    const {
+        isFeatureEnabled = assertFeatureFlag,
+        storage: storageAdapter = createStorage<IFeatureFlag>(namespace, name, 'local'),
+    } = options ?? {};
+    // TODO - get / create from config
     return {
-        initial: async () => initial,
-        initialize: ({ provider }) => {
-            const features$ = options.onlyProvided ? of(initial) : provider.features$;
+        initial: async () => {
+            const gg = Object.values({
+                ...normalizeFlags(initial),
+                ...storageAdapter.getItems(),
+            });
+            return gg;
+        },
+        // onFeatureToggle: options.storageAdapter,
+        onFeatureToggle: ({ flags }) => {
+            flags.forEach((flag) => storageAdapter.setItem(flag.key, flag));
+        },
+        connect: ({ provider }) => {
+            const features$ = of(initial);
 
             const subscription = new Subscription();
             const teardown$ = new Subject();
@@ -48,10 +71,11 @@ export const plugin = (
                         ),
                     );
                 }),
+                filter((x) => !!x.length),
                 takeUntil(teardown$),
             );
 
-            subscription.add(change$.subscribe(provider.toggleFeatures));
+            subscription.add(change$.subscribe(provider.toggleFeatures.bind(provider)));
 
             /** when disposed, signal teardown of processes */
             subscription.add(() => path$.complete());
