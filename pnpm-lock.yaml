@@ -3524,7 +3524,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.32
+      '@equinor/fusion-wc-icon': 1.0.33
       react: 18.2.0
     dev: true
 
@@ -3640,7 +3640,7 @@ packages:
     resolution: {integrity: sha512-qJAaJF3YOjDN40zExbTegQN/t+zBUZ7kmbgMfOBLvPb1OsBX65XuJ4nuwxc0MDsQm6NH9QSkyU/FVZPADWZ3AQ==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.32
+      '@equinor/fusion-wc-icon': 1.0.33
       '@material/mwc-button': 0.27.0
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-icon-button-toggle': 0.27.0
