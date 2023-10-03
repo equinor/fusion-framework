@@ -3387,7 +3387,7 @@ packages:
       '@equinor/fusion-observable': 8.1.2(@types/react@18.2.22)(react@18.2.0)
       '@equinor/fusion-react-checkbox': 0.5.16(react@18.2.0)
       '@equinor/fusion-react-divider': 0.2.13(react@18.2.0)
-      '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
+      '@equinor/fusion-react-icon': 0.2.17(react@18.2.0)
       '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-wc-icon': 1.0.32
       '@storybook/addon-jest': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -3498,7 +3498,7 @@ packages:
   /@equinor/fusion-react-context-selector@0.4.9(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-r33z0r+9M83P/ML+NXvYF6Y7Xz4NDIKsxIs2PbNMbf8kiicrdrfiqOvfrrzqECEIyM0+1kIhEJI2Jxgk6T3dBw==}
     dependencies:
-      '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
+      '@equinor/fusion-react-icon': 0.2.17(react@18.2.0)
       '@equinor/fusion-react-searchable-dropdown': 0.3.5(react@18.2.0)
       '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
@@ -3525,6 +3525,16 @@ packages:
     dependencies:
       '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
       '@equinor/fusion-wc-icon': 1.0.33
+      react: 18.2.0
+    dev: true
+
+  /@equinor/fusion-react-icon@0.2.17(react@18.2.0):
+    resolution: {integrity: sha512-+a2FJpw2QG3O7akjA+JKPQrROmow9ZxyQ0c5hb0O1ZIZTIdIy+TlUqSXs9p9w/XLK1SpyDTKqbWQA3rO4lWo2A==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-wc-icon': 2.1.0
       react: 18.2.0
     dev: true
 
