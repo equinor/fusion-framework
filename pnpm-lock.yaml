@@ -519,8 +519,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1(@types/react@18.2.22)(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
-        specifier: ^0.1.6
-        version: 0.1.7(react@18.2.0)
+        specifier: ^0.2.0
+        version: 0.2.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.0.2
         version: 1.0.2(@equinor/eds-core-react@0.33.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
@@ -3480,7 +3480,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-button': 2.1.0
       '@types/react': 18.2.22
       react: 18.2.0
@@ -3488,7 +3488,7 @@ packages:
   /@equinor/fusion-react-checkbox@0.5.16(react@18.2.0):
     resolution: {integrity: sha512-gWKXhWxH5wWsEW7KA0vFX2tr5Ols3ZPcQJUM+SRIYhr4qtgh98Cm5c/MTBNoUmStjnyzYUFEtfLk8KugRGi2tQ==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-checkbox': 0.3.16
       '@equinor/fusion-wc-formfield': 0.2.19
     transitivePeerDependencies:
@@ -3511,7 +3511,7 @@ packages:
   /@equinor/fusion-react-divider@0.2.13(react@18.2.0):
     resolution: {integrity: sha512-e8ST0Np3TE2Wi+PWGV5JqFlCiaNGPnscn9GU0a862wwqjjSgInPV7Lo0kuQvC/hIP1adEkRc+gSjGMs70U7qZw==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-divider': 0.2.22
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -3533,7 +3533,7 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-icon': 2.1.0
       react: 18.2.0
     dev: true
@@ -3557,10 +3557,10 @@ packages:
       - '@types/react'
       - react
 
-  /@equinor/fusion-react-progress-indicator@0.1.7(react@18.2.0):
-    resolution: {integrity: sha512-oM7jHv2oVhE9wpFjYTuVRSUwxv4ADaI9zENhZR41bvGohvbfEr1U8fuQZXuNTnAjJKvWaMLPdlP6p5UcXLhZnQ==}
+  /@equinor/fusion-react-progress-indicator@0.2.0(react@18.2.0):
+    resolution: {integrity: sha512-D8FyVHGQwlDHHG8+fb7GgbshDdsg3zGke2oWmcOoAAgV4jxEaXQGPbVvFWBeCZJVSAdYGZGZhJcpawHP+Uky+Q==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-progress-indicator': 0.4.10
     transitivePeerDependencies:
       - react
@@ -3569,7 +3569,7 @@ packages:
   /@equinor/fusion-react-searchable-dropdown@0.3.5(react@18.2.0):
     resolution: {integrity: sha512-cLK0WDpbngQNLrc82YNwFpL2rBGyqU8KhzY2GJc5B+46t694mcXKfYu6RDdcj46sqGq44j/7M9wiDeLNQCNlqA==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-searchable-dropdown': 2.6.0
     transitivePeerDependencies:
       - react
@@ -3644,6 +3644,14 @@ packages:
 
   /@equinor/fusion-react-utils@2.0.5(react@18.2.0):
     resolution: {integrity: sha512-WIK4v+zhSloh8+BEKfkc5yO8ZjmmqehPzakCnEeSviTSxr6i+BNTwYGFX7gzh75ANOHILlVnrao5QB/pKDWgKw==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      date-fns: 2.30.0
+      react: 18.2.0
+
+  /@equinor/fusion-react-utils@2.1.0(react@18.2.0):
+    resolution: {integrity: sha512-qbQ8Unf8uX5+oVNOBRXq14eTRIiMr2GmShbzYcuZyHlH1Ri4zKns7Lzas/IjbUq/Wxv7uG0A2ssKZX2VipdZXA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
