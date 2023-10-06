@@ -4,7 +4,7 @@ about: Create a report to help us improve
 title: ''
 labels: 🕸️ browser, 🐞 bug
 assignees: ''
-
+projects: ["equinor/213"]
 ---
 
 **Describe the bug**
