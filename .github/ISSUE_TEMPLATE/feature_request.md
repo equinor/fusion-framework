@@ -4,7 +4,7 @@ about: Suggest an idea for this project
 title: ''
 labels: ✨ improvement, 🤷 question
 assignees: ''
-
+projects: ["equinor/213"]
 ---
 
 **Is your feature request related to a problem? Please describe.**

@@ -4,7 +4,7 @@ about: Describe which feature(s) that needs docuemnetation
 title: ''
 labels: 📚 documentation, ✨ improvement
 assignees: ''
-
+projects: ["equinor/213"]
 ---
 
 ** Package **
