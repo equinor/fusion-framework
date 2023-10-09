@@ -117,8 +117,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
-        specifier: ^29.3.9
-        version: 29.3.16(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.11)
+        specifier: ^30.0.0
+        version: 30.0.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.0)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.0.0
@@ -3446,14 +3446,14 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@29.3.16(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.5.11):
-    resolution: {integrity: sha512-gu7dj+iy6rR2LH/lYSa8i9BCaujJTI2soVogRTlgxghZjPNC9+ilzcf4oAjTPX2pGcJrEDw8jo5Kqhc9zaRBZQ==}
+  /@equinor/fusion-react-ag-grid-styles@30.0.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.0):
+    resolution: {integrity: sha512-mh8sWug7zKpHPuZ2xn6VMCGPwD5Kp9EwL0qsuxlnR1kXWyYcHMYycXGhG2C6sIxCXOedoRDpI8FM4W/66wxfQg==}
     peerDependencies:
       '@ag-grid-community/styles': ~29.3.4
-      '@equinor/fusion-react-styles': ^0.5.5
+      '@equinor/fusion-react-styles': ^0.6.0
     dependencies:
       '@ag-grid-community/styles': 29.3.5
-      '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@equinor/fusion-react-button@0.9.0(@types/react@18.2.22)(react@18.2.0):
@@ -3606,6 +3606,7 @@ packages:
       clsx: 1.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: true
 
   /@equinor/fusion-react-styles@0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-2IPUkjfEz5lth0qp13i1Ui4vOFc2P/yJo9MDhogg+aASJGBSJcfbYcZPRf8ypeoY4GivPH6SANS3+zF9Q3vfFA==}
@@ -3626,7 +3627,6 @@ packages:
       clsx: 1.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: true
 
   /@equinor/fusion-react-utils@2.0.5(react@18.2.0):
     resolution: {integrity: sha512-WIK4v+zhSloh8+BEKfkc5yO8ZjmmqehPzakCnEeSviTSxr6i+BNTwYGFX7gzh75ANOHILlVnrao5QB/pKDWgKw==}

@@ -26,6 +26,6 @@
         "@ag-grid-community/core": "~30.2.0",
         "@ag-grid-community/react": "~30.2.0",
         "@equinor/fusion-framework-module-ag-grid": "workspace:^",
-        "@equinor/fusion-react-ag-grid-styles": "^29.3.9"
+        "@equinor/fusion-react-ag-grid-styles": "^30.0.0"
     }
 }
