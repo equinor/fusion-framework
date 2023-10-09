@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.3
+
+### Patch Changes
+
+-   [#1410](https://github.com/equinor/fusion-framework/pull/1410) [`446b63ce`](https://github.com/equinor/fusion-framework/commit/446b63ce44b59a3aaab4399c0d877d3a1b560a0e) Thanks [@odinr](https://github.com/odinr)! - fixed queuing of query queue tasks
+
 ## 4.0.2
 
 ### Patch Changes
