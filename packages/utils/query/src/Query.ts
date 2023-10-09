@@ -196,7 +196,7 @@ export class Query<TType, TArgs = any> {
         /** create unique key for query be provided arguments */
         const ref = this.#generateCacheKey(args);
         /** re-use existing query task or create a new */
-        const task = this.#tasks[ref] ?? this._createTask(ref, args, options);
+        const task = this._createTask(ref, args, options);
 
         if (options?.signal) {
             /** listen to abort signal  */
@@ -218,10 +218,21 @@ export class Query<TType, TArgs = any> {
 
         const task = new Observable<QueryTaskValue<TType, TArgs>>((subscriber) => {
             /** when task observed, add task to task queue reference */
-            this.#tasks[ref] = task;
+            if (!this.#tasks[ref]) {
+                this.#tasks[ref] = task;
+            } else {
+                return this.#tasks[ref].subscribe(subscriber);
+            }
 
             /** connect `QueryClient` to `Query` task */
-            innerTask.subscribe(subscriber);
+            innerTask
+                .pipe(
+                    finalize(() => {
+                        /** when the task is done, remove from reference queue */
+                        delete this.#tasks[ref];
+                    }),
+                )
+                .subscribe(subscriber);
 
             /** check if there is a cache entry for the reference */
             const cacheEntry = this.#cache.getItem(ref);
@@ -247,10 +258,6 @@ export class Query<TType, TArgs = any> {
                 innerTask.complete();
             }
         }).pipe(
-            finalize(() => {
-                /** when the task is done, remove from reference queue */
-                delete this.#tasks[ref];
-            }),
             /** publish task */
             shareReplay(),
         );
