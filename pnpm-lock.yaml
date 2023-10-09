@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -511,8 +507,8 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0(@types/react@18.2.22)(react@18.2.0)
       '@equinor/fusion-react-context-selector':
-        specifier: ^0.4.7
-        version: 0.4.9(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.5.0
+        version: 0.5.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-icon':
         specifier: ^0.3.0
         version: 0.3.0(react@18.2.0)
@@ -3478,20 +3474,21 @@ packages:
   /@equinor/fusion-react-checkbox@0.5.16(react@18.2.0):
     resolution: {integrity: sha512-gWKXhWxH5wWsEW7KA0vFX2tr5Ols3ZPcQJUM+SRIYhr4qtgh98Cm5c/MTBNoUmStjnyzYUFEtfLk8KugRGi2tQ==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-checkbox': 0.3.16
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-checkbox': 0.3.17
       '@equinor/fusion-wc-formfield': 0.2.19
     transitivePeerDependencies:
       - react
     dev: true
 
-  /@equinor/fusion-react-context-selector@0.4.9(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-r33z0r+9M83P/ML+NXvYF6Y7Xz4NDIKsxIs2PbNMbf8kiicrdrfiqOvfrrzqECEIyM0+1kIhEJI2Jxgk6T3dBw==}
+  /@equinor/fusion-react-context-selector@0.5.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-uXtAludUbko3UK8NryCp6BAUPDukydKmNozq0IpfSnoohj6iYjQzSY8MrSiTAkKEm4jCI6SPFX+GPLLZrs5KDg==}
     dependencies:
-      '@equinor/fusion-react-icon': 0.2.16(react@18.2.0)
-      '@equinor/fusion-react-searchable-dropdown': 0.3.5(react@18.2.0)
-      '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-icon': 0.3.0(react@18.2.0)
+      '@equinor/fusion-react-searchable-dropdown': 0.4.0(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-searchable-dropdown': 2.6.0
     transitivePeerDependencies:
       - '@types/react'
       - react
@@ -3501,7 +3498,7 @@ packages:
   /@equinor/fusion-react-divider@0.2.13(react@18.2.0):
     resolution: {integrity: sha512-e8ST0Np3TE2Wi+PWGV5JqFlCiaNGPnscn9GU0a862wwqjjSgInPV7Lo0kuQvC/hIP1adEkRc+gSjGMs70U7qZw==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-divider': 0.2.22
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -3513,8 +3510,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.32
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-icon': 1.0.33
       react: 18.2.0
     dev: true
 
@@ -3556,11 +3553,12 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-searchable-dropdown@0.3.5(react@18.2.0):
-    resolution: {integrity: sha512-cLK0WDpbngQNLrc82YNwFpL2rBGyqU8KhzY2GJc5B+46t694mcXKfYu6RDdcj46sqGq44j/7M9wiDeLNQCNlqA==}
+  /@equinor/fusion-react-searchable-dropdown@0.4.0(react@18.2.0):
+    resolution: {integrity: sha512-/9ZuMX1wcU1dXqqXPAneyqwXjJIu8Hfhi1HfWAvIS8a80nkbX0BJGz64igBbsRFReSWvLyNmdvy3QHJKnPyOxg==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-searchable-dropdown': 2.6.0
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-icon': 2.1.0
+      '@equinor/fusion-wc-searchable-dropdown': 3.2.1
     transitivePeerDependencies:
       - react
     dev: true
@@ -3677,14 +3675,6 @@ packages:
       '@material/mwc-icon-button-toggle': 0.27.0
       lit: 2.7.0
 
-  /@equinor/fusion-wc-checkbox@0.3.16:
-    resolution: {integrity: sha512-ccCpa2ULXf0CVgCJeXkR/a5viBAK4a3/46QEhSXsQSiHU55u15Mg2NFJZwZagBgKS+FSgDWmdwpCOtVpRrXVQA==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@material/mwc-checkbox': 0.27.0
-      lit: 2.7.0
-    dev: true
-
   /@equinor/fusion-wc-checkbox@0.3.17:
     resolution: {integrity: sha512-rvNWXEZtxF+P2pAeQXFSTTa80viEDGKEavPfndMhZ5T1d/W+Hpac6xNeT6sxCQMscsMWN7Amla6XojN7sHey0A==}
     dependencies:
@@ -3751,18 +3741,6 @@ packages:
       '@equinor/fusion-wc-core': 2.0.0
       lit: 2.7.0
 
-  /@equinor/fusion-wc-list@0.4.0:
-    resolution: {integrity: sha512-2iGNOdaQ0VYqVFsCs2yeNIyuzx0NCc+74yguVO9wjISH0UuaOvlvaiUph8REhbcCM775xnPtT/Y8VSzaPNs5Ag==}
-    dependencies:
-      '@equinor/fusion-wc-checkbox': 0.3.16
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-divider': 0.2.22
-      '@equinor/fusion-wc-icon': 1.0.33
-      '@equinor/fusion-wc-radio': 0.2.26
-      '@material/mwc-list': 0.27.0
-      lit: 2.7.0
-    dev: true
-
   /@equinor/fusion-wc-list@0.4.1:
     resolution: {integrity: sha512-X0Hd9aIELZ4aljY3E+zBhgbgpg5Kg2hpsfbrtiHLJQjOmegIi2AZiXh/sC9lERbG2KvA2q6CPDWjFvt1q2xTIQ==}
     dependencies:
@@ -3791,7 +3769,7 @@ packages:
     resolution: {integrity: sha512-1D1YucKIl9jOYE+95Cq5Qhp0t+5zuKGg8i6elB/iAO593vrzGT2t7FhbKB7E8t6dEGFN1sJSUG5fRCGblzkF/w==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-list': 0.4.0
+      '@equinor/fusion-wc-list': 0.4.1
       '@material/mwc-menu': 0.27.0
       lit: 2.7.0
     dev: true
@@ -3824,14 +3802,6 @@ packages:
     resolution: {integrity: sha512-bypJNgd0g/DQczS0/QFEkzvOrz5x08h0qHjGsXDJ2mIsw82tHpUAUuPd1ZObDem23UvW9aXOtpm7JB+ig7+KTg==}
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
-      lit: 2.7.0
-    dev: true
-
-  /@equinor/fusion-wc-radio@0.2.26:
-    resolution: {integrity: sha512-IiW+JjAUXcItAuNxd9boKqzNFtqflKFa/5iZDrfGKYr1gkiLmmNEqpJoQjDeu/Zz+sFIVENEB119szkEXNG5YA==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@material/mwc-radio': 0.27.0
       lit: 2.7.0
     dev: true
 
@@ -12668,3 +12638,7 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
