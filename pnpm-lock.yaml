@@ -15,7 +15,7 @@ importers:
         version: 2.1.4(eslint@8.50.0)(prettier@3.0.3)(typescript@5.2.2)
       '@equinor/eslint-config-fusion-react':
         specifier: ^2.0.1
-        version: 2.0.1(@equinor/eslint-config-fusion@2.1.4)(eslint@8.50.0)
+        version: 2.0.2(@equinor/eslint-config-fusion@2.1.4)(eslint@8.50.0)
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.4.0
         version: 6.7.4(@typescript-eslint/parser@6.7.4)(eslint@8.50.0)(typescript@5.2.2)
@@ -3321,8 +3321,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.0.8(react-dom@18.2.0)(react@18.2.0)
 
-  /@equinor/eslint-config-fusion-react@2.0.1(@equinor/eslint-config-fusion@2.1.4)(eslint@8.50.0):
-    resolution: {integrity: sha512-yXpZT7Ck6Esrl7xt1pw6n5m+IJqD8/uNzTY10yi0Jd/gYhwaqlByn/+NmM4tbYIWaWQ9hJyXFxu91EvPBIBZiQ==}
+  /@equinor/eslint-config-fusion-react@2.0.2(@equinor/eslint-config-fusion@2.1.4)(eslint@8.50.0):
+    resolution: {integrity: sha512-hDkZ5G3ybwLXC1dyt0rHU5gNoqUvWhe2Vsu/IRogpmj22+xjHg1kEiXso0dl72pR7JfzprF4PYQGC2C2n4B/8Q==}
     peerDependencies:
       '@equinor/eslint-config-fusion': '*'
     dependencies:
