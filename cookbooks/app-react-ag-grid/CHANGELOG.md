@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.3
+
+### Patch Changes
+
+-   [#1389](https://github.com/equinor/fusion-framework/pull/1389) [`7bf396c4`](https://github.com/equinor/fusion-framework/commit/7bf396c4803f2045777329520fa88752406e1b32) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/fusion-react-ag-grid-styles from 29.3.16 to 30.0.0
+
 ## 0.1.2
 
 ### Patch Changes

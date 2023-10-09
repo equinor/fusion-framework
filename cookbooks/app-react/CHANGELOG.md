@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.26
+
+### Patch Changes
+
+-   [#1389](https://github.com/equinor/fusion-framework/pull/1389) [`7bf396c4`](https://github.com/equinor/fusion-framework/commit/7bf396c4803f2045777329520fa88752406e1b32) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/fusion-react-ag-grid-styles from 29.3.16 to 30.0.0
+
+-   [#1393](https://github.com/equinor/fusion-framework/pull/1393) [`f049479b`](https://github.com/equinor/fusion-framework/commit/f049479bfb51369a227eb432089d0da20be86529) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/fusion-react-person from 0.5.1 to 0.6.0
+
 ## 4.0.25
 
 ### Patch Changes
