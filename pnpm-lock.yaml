@@ -510,8 +510,8 @@ importers:
         specifier: ^0.4.7
         version: 0.4.9(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-icon':
-        specifier: ^0.2.15
-        version: 0.2.16(react@18.2.0)
+        specifier: ^0.3.0
+        version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-menu':
         specifier: ^0.1.5
         version: 0.1.6(react@18.2.0)
@@ -3519,18 +3519,18 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-icon@0.2.16(react@18.2.0):
-    resolution: {integrity: sha512-v558lvFY36YiZjDOuExqW3yIzxhZsoEpwkA6Ya06uKIlKq5MGBC/G4eQthsaBMUuYGscsfDko3txV4VK2coo6w==}
+  /@equinor/fusion-react-icon@0.2.17(react@18.2.0):
+    resolution: {integrity: sha512-+a2FJpw2QG3O7akjA+JKPQrROmow9ZxyQ0c5hb0O1ZIZTIdIy+TlUqSXs9p9w/XLK1SpyDTKqbWQA3rO4lWo2A==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.33
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-icon': 2.1.0
       react: 18.2.0
     dev: true
 
-  /@equinor/fusion-react-icon@0.2.17(react@18.2.0):
-    resolution: {integrity: sha512-+a2FJpw2QG3O7akjA+JKPQrROmow9ZxyQ0c5hb0O1ZIZTIdIy+TlUqSXs9p9w/XLK1SpyDTKqbWQA3rO4lWo2A==}
+  /@equinor/fusion-react-icon@0.3.0(react@18.2.0):
+    resolution: {integrity: sha512-vbiMl7BlrtySVPh4AxwQq3RdiJ0EtThQxPJzerMLYxmuCfEX8Mvehx61tfgqTAXem1lCaIqNTB516HIWeag4TA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
