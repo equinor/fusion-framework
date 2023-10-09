@@ -504,8 +504,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/query
       '@equinor/fusion-react-button':
-        specifier: ^0.8.2
-        version: 0.8.3(@types/react@18.2.22)(react@18.2.0)
+        specifier: ^0.9.0
+        version: 0.9.0(@types/react@18.2.22)(react@18.2.0)
       '@equinor/fusion-react-context-selector':
         specifier: ^0.4.7
         version: 0.4.9(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
@@ -3456,21 +3456,6 @@ packages:
       '@equinor/fusion-react-styles': 0.5.11(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@equinor/fusion-react-button@0.8.3(@types/react@18.2.22)(react@18.2.0):
-    resolution: {integrity: sha512-DMf3LHqSD8GYk7mC4fhD7WTBNtUE5pJH4L/pd7r0Px64ih0psT9UtWh1Ih70Upj/WV4sncLAy5MpeqeB6krhEA==}
-    peerDependencies:
-      '@types/react': "^17.0.0 ||\_^18.0.0"
-      react: "^17.0.0 ||\_^18.0.0"
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-button': 1.4.4
-      '@types/react': 18.2.22
-      react: 18.2.0
-    dev: true
-
   /@equinor/fusion-react-button@0.8.4(@types/react@18.2.22)(react@18.2.0):
     resolution: {integrity: sha512-gHMCtxCoxCILHQlMm4aFGnIq0lIILJqgDPs/9WuOM3Mwhfq2P14bgchS0EXWRvk+anK/4kaT17qIOiG5vaanqQ==}
     peerDependencies:
@@ -3484,6 +3469,22 @@ packages:
       '@equinor/fusion-wc-button': 2.1.0
       '@types/react': 18.2.22
       react: 18.2.0
+
+  /@equinor/fusion-react-button@0.9.0(@types/react@18.2.22)(react@18.2.0):
+    resolution: {integrity: sha512-dwdlj5q8cIrE4r0aKrR1TIx3yHYw+8Al0HeyKSlvy158WSBS4UXQ1gL7P7jVQQQ2GvK/IAmqAxdKdAVcXM3B3Q==}
+    peerDependencies:
+      '@types/react': '*'
+      react: "^17.0.0 ||\_^18.0.0"
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-button': 2.1.0
+      '@equinor/fusion-wc-icon': 1.0.33
+      '@types/react': 18.2.22
+      react: 18.2.0
+    dev: true
 
   /@equinor/fusion-react-checkbox@0.5.16(react@18.2.0):
     resolution: {integrity: sha512-gWKXhWxH5wWsEW7KA0vFX2tr5Ols3ZPcQJUM+SRIYhr4qtgh98Cm5c/MTBNoUmStjnyzYUFEtfLk8KugRGi2tQ==}
@@ -3674,17 +3675,6 @@ packages:
       '@equinor/fusion-wc-icon': 2.1.0
       '@equinor/fusion-web-theme': 0.1.7
       lit: 2.7.0
-
-  /@equinor/fusion-wc-button@1.4.4:
-    resolution: {integrity: sha512-qJAaJF3YOjDN40zExbTegQN/t+zBUZ7kmbgMfOBLvPb1OsBX65XuJ4nuwxc0MDsQm6NH9QSkyU/FVZPADWZ3AQ==}
-    dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-icon': 1.0.33
-      '@material/mwc-button': 0.27.0
-      '@material/mwc-icon-button': 0.27.0
-      '@material/mwc-icon-button-toggle': 0.27.0
-      lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-button@2.1.0:
     resolution: {integrity: sha512-tzFuPsR3FzRXhsDU2mWjd3w/1wQ5agmHufJs6WRE3B3i/sNdFb9jBOk76IdRBnb4CqvUTTA1FR2gwfBKxwZuaw==}
