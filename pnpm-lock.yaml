@@ -513,8 +513,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-menu':
-        specifier: ^0.1.5
-        version: 0.1.6(react@18.2.0)
+        specifier: ^0.2.0
+        version: 0.2.0(react@18.2.0)
       '@equinor/fusion-react-person':
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.22)(react@18.2.0)
@@ -3525,11 +3525,11 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@equinor/fusion-react-menu@0.1.6(react@18.2.0):
-    resolution: {integrity: sha512-TFKtOSdpJE2WNlMNAx7FIclidTpLj6ioHBWaRDOGsl72ZPGm/7uwA89AnxSXakEHTUUJW2fSI7pT6GmGLg8iXQ==}
+  /@equinor/fusion-react-menu@0.2.0(react@18.2.0):
+    resolution: {integrity: sha512-n2dOkaVau/4UgrYPjEbYTAbLQWLqbWx0fErNFXAinbN6t+1qhzFw7RMPkxcAAcBgQAEKb0C3UcCFy3PiOQHHvQ==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.0.5(react@18.2.0)
-      '@equinor/fusion-wc-menu': 0.1.9
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-menu': 1.0.2
     transitivePeerDependencies:
       - react
     dev: true
@@ -3629,15 +3629,6 @@ packages:
       clsx: 1.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  /@equinor/fusion-react-utils@2.0.5(react@18.2.0):
-    resolution: {integrity: sha512-WIK4v+zhSloh8+BEKfkc5yO8ZjmmqehPzakCnEeSviTSxr6i+BNTwYGFX7gzh75ANOHILlVnrao5QB/pKDWgKw==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
-    dependencies:
-      date-fns: 2.30.0
-      react: 18.2.0
-    dev: true
 
   /@equinor/fusion-react-utils@2.1.0(react@18.2.0):
     resolution: {integrity: sha512-qbQ8Unf8uX5+oVNOBRXq14eTRIiMr2GmShbzYcuZyHlH1Ri4zKns7Lzas/IjbUq/Wxv7uG0A2ssKZX2VipdZXA==}
@@ -3765,11 +3756,11 @@ packages:
       '@material/mwc-list': 0.27.0
       lit: 2.7.0
 
-  /@equinor/fusion-wc-menu@0.1.9:
-    resolution: {integrity: sha512-1D1YucKIl9jOYE+95Cq5Qhp0t+5zuKGg8i6elB/iAO593vrzGT2t7FhbKB7E8t6dEGFN1sJSUG5fRCGblzkF/w==}
+  /@equinor/fusion-wc-menu@1.0.2:
+    resolution: {integrity: sha512-UGzlvn7uIMZlPfJA/6Tm5AJRfWqTESW14lXIEiyu8RJxmq+WujnaBYra7b6DtoFwh5OtoRlDTgHVSuxsU1XAuA==}
     dependencies:
-      '@equinor/fusion-wc-core': 1.0.5
-      '@equinor/fusion-wc-list': 0.4.1
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-list': 1.0.2
       '@material/mwc-menu': 0.27.0
       lit: 2.7.0
     dev: true
