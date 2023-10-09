@@ -82,7 +82,7 @@
         "@equinor/fusion-react-button": "^0.9.0",
         "@equinor/fusion-react-context-selector": "^0.5.0",
         "@equinor/fusion-react-icon": "^0.3.0",
-        "@equinor/fusion-react-menu": "^0.1.5",
+        "@equinor/fusion-react-menu": "^0.2.0",
         "@equinor/fusion-react-person": "^0.6.0",
         "@equinor/fusion-react-progress-indicator": "^0.2.0",
         "@equinor/fusion-react-side-sheet": "1.1.0",
