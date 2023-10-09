@@ -1,5 +1,27 @@
 # Change Log
 
+## 9.3.0
+
+### Minor Changes
+
+-   [#1374](https://github.com/equinor/fusion-framework/pull/1374) [`a1eacf9f`](https://github.com/equinor/fusion-framework/commit/a1eacf9f30728bf96a17e60a5b7d7d08e85798f3) Thanks [@odinr](https://github.com/odinr)! - update `@equinor/fusion-wc-person` to ^2.1.0
+
+### Patch Changes
+
+-   [#1399](https://github.com/equinor/fusion-framework/pull/1399) [`52910a53`](https://github.com/equinor/fusion-framework/commit/52910a5322109ab729508432d9fab695e8dc7697) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-styles from 0.5.11 to 0.6.0
+
+-   [#1395](https://github.com/equinor/fusion-framework/pull/1395) [`dcd09dea`](https://github.com/equinor/fusion-framework/commit/dcd09dea7160cf85ababf827bc6ee32d9f9a0aca) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-icon from 0.2.16 to 0.3.0
+
+-   [#1409](https://github.com/equinor/fusion-framework/pull/1409) [`8b8ce0df`](https://github.com/equinor/fusion-framework/commit/8b8ce0dfc77bc592d3f525a2b09782fc2f570011) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-context-selector from 0.4.9 to 0.5.0
+
+-   [#1397](https://github.com/equinor/fusion-framework/pull/1397) [`15cb5a59`](https://github.com/equinor/fusion-framework/commit/15cb5a597fa0856bf56b7e618d3e974f3974a968) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-progress-indicator from 0.1.7 to 0.2.0
+
+-   [#1394](https://github.com/equinor/fusion-framework/pull/1394) [`710ea8a9`](https://github.com/equinor/fusion-framework/commit/710ea8a9574acfa55e8affb33a52594d6136d460) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-button from 0.8.3 to 0.9.0
+
+-   [#1393](https://github.com/equinor/fusion-framework/pull/1393) [`f049479b`](https://github.com/equinor/fusion-framework/commit/f049479bfb51369a227eb432089d0da20be86529) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/fusion-react-person from 0.5.1 to 0.6.0
+
+-   [#1392](https://github.com/equinor/fusion-framework/pull/1392) [`99f70720`](https://github.com/equinor/fusion-framework/commit/99f707205ad9f773f0672fabccfe52dec0c9b10f) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-side-sheet from 1.0.2 to 1.1.0
+
 ## 9.2.1
 
 ### Patch Changes
