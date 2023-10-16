@@ -3828,7 +3828,7 @@ packages:
       '@equinor/fusion-wc-list': 0.4.1
       '@equinor/fusion-wc-textinput': 0.5.21
       '@lit-labs/task': 2.1.2
-      '@types/uuid': 9.0.4
+      '@types/uuid': 9.0.5
       lit: 2.7.0
       uuid: 9.0.1
     dev: true
@@ -3844,7 +3844,7 @@ packages:
       '@equinor/fusion-web-theme': 0.1.7
       '@lit-labs/task': 2.1.2
       '@material/mwc-textfield': 0.27.0
-      '@types/uuid': 9.0.4
+      '@types/uuid': 9.0.5
       lit: 2.7.0
       uuid: 9.0.1
 
@@ -5901,6 +5901,10 @@ packages:
 
   /@types/uuid@9.0.4:
     resolution: {integrity: sha512-zAuJWQflfx6dYJM62vna+Sn5aeSWhh3OB+wfUEACNcqUSc0AGc5JKl+ycL1vrH7frGTXhJchYjE1Hak8L819dA==}
+    dev: true
+
+  /@types/uuid@9.0.5:
+    resolution: {integrity: sha512-xfHdwa1FMJ082prjSJpoEI57GZITiQz10r3vEJCHa2khEFQjKy91aWKz6+zybzssCvXUwE1LQWgWVwZ4nYUvHQ==}
 
   /@types/webpack-env@1.18.1:
     resolution: {integrity: sha512-D0HJET2/UY6k9L6y3f5BL+IDxZmPkYmPT4+qBrRdmRLYRuV0qNKizMgTvYxXZYn+36zjPeoDZAEYBCM6XB+gww==}
