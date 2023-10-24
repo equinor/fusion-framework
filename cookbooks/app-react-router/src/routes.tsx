@@ -1,18 +1,26 @@
 import { Link, Outlet, RouteObject } from 'react-router-dom';
 
+import { useLocation } from 'react-router-dom';
+
+const Root = () => {
+    const currentLocation = useLocation();
+    return (
+        <div>
+            <section style={{ display: 'inline-flex', gap: 10 }}>
+                <Link to={''}>Home</Link>
+                <Link to={'page1'}>Page 1</Link>
+                <Link to={'page2'}>Page 2</Link>
+            </section>
+            <pre>{JSON.stringify(currentLocation, null, 4)}</pre>
+            <Outlet></Outlet>
+        </div>
+    );
+};
+
 export const routes: RouteObject[] = [
     {
         path: '/',
-        element: (
-            <div>
-                <section style={{ display: 'inline-flex', gap: 10 }}>
-                    <Link to={''}>Home</Link>
-                    <Link to={'page1'}>Page 1</Link>
-                    <Link to={'page2'}>Page 2</Link>
-                </section>
-                <Outlet></Outlet>
-            </div>
-        ),
+        element: <Root />,
         children: [
             {
                 index: true,

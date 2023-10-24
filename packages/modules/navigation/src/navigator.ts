@@ -1,5 +1,5 @@
 import type { History, To, Path } from '@remix-run/router';
-import { BehaviorSubject, Observable, skip, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
 
@@ -48,10 +48,15 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         return this.value.action;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(args: { basename?: string; history: History; logger?: any }) {
+    constructor(args: {
+        basename?: string;
+        history: History;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        logger?: any;
+        mode?: 'MASTER' | 'SLAVE';
+    }) {
         super((subscriber) => this.#state.subscribe(subscriber));
-        const { basename, history } = args;
+        const { basename, history, mode } = args;
         this.#logger = args.logger || console;
         this.#baseName = basename;
         this.#history = history;
@@ -62,15 +67,22 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         } as T);
         this.#subscriptions.add(
             this.#history.listen((update) => {
-                if (update.location.key !== this.#state.value.location.key) {
-                    this.#logger.debug(
-                        'Navigator::constructor',
-                        'history changed',
-                        update,
-                        this.#state.value,
-                    );
-                    this.#state.next(update as T);
+                /** prevent duplicate navigation */
+                if (update.location.key === this.#state.value.location.key) {
+                    return;
                 }
+                this.#logger.debug('Navigator::#history.listen', {
+                    update,
+                    current: this.#state.value,
+                });
+                if (update.action === 'PUSH' && mode !== 'MASTER') {
+                    this.#logger.debug(
+                        'Navigator::#history.listen',
+                        'switching action ro [REPLACE], since navigator is not master',
+                    );
+                    this.#state.next({ ...update, action: 'REPLACE' } as T);
+                }
+                this.#state.next(update as T);
             }),
         );
     }
@@ -80,17 +92,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     }
 
     public listen(listener: NavigationListener): VoidFunction {
-        this.#logger.debug('Navigator::listen', listener);
-        const subscription = this.#state
-            .pipe(
-                /** skip the first, since we only want up-coming events  */
-                skip(1),
-                // TODO filter only locations within this basename
-            )
-            .subscribe((x) => {
-                this.#logger.debug('Navigator::listen[onchange]');
-                listener(x);
-            });
+        const subscription = this.#state.subscribe(listener);
         return () => {
             this.#logger.debug('Navigator::listen[unsubscribe]');
             return subscription.unsubscribe();
