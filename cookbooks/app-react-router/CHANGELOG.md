@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+-   [#1453](https://github.com/equinor/fusion-framework/pull/1453) [`6f542d4c`](https://github.com/equinor/fusion-framework/commit/6f542d4c7c01ae94c28b7e82efba800a902a7633) Thanks [@odinr](https://github.com/odinr)! - Prevent duplicate push event when navigating
+
+    Added `master` | `slave` property when creating navigator.
+    When configured as `slave`, the navigator will replace the action from `PUSH` to `REPLACE`
+    The result should be that only the `master` will execute the `PUSH` action to `window.location`
+
 ## 4.0.25
 
 ### Patch Changes
