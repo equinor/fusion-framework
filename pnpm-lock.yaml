@@ -328,7 +328,7 @@ importers:
         specifier: ^9.0.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-module-navigation':
-        specifier: ^3.0.4
+        specifier: ^3.1.0
         version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-react-app':
         specifier: ^4.1.4
