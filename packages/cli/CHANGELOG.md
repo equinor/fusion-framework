@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.3.2
+
+### Patch Changes
+
+-   [#1462](https://github.com/equinor/fusion-framework/pull/1462) [`e35d8e2b`](https://github.com/equinor/fusion-framework/commit/e35d8e2b69148a497c7acaa8e1e0bf86987f475e) Thanks [@odinr](https://github.com/odinr)! - silent error when failing to optimize pre-built assets
+
+    Vite tries to import optimize pre-built assets for the dev portal (which it should not).
+
+    see [fix: exclude external dependencies from html rewriting](https://github.com/vitejs/vite/pull/11854#issuecomment-1500453147)
+
+-   [#1442](https://github.com/equinor/fusion-framework/pull/1442) [`1173f715`](https://github.com/equinor/fusion-framework/commit/1173f71597b7b90c17d314188d83f46e1d81a2f3) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-side-sheet from 1.1.0 to 1.2.0
+
 ## 9.3.1
 
 ### Patch Changes
