@@ -27,9 +27,6 @@ export const module: NavigationModule = {
         const configurator = new NavigationConfigurator();
         if (ref) {
             configurator.history = (ref as ModuleInstance).navigation.navigator;
-            configurator.mode = 'SLAVE';
-        } else {
-            configurator.mode = 'MASTER';
         }
         return configurator;
     },
