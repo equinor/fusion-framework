@@ -78,11 +78,12 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
                 if (update.action === 'PUSH' && mode !== 'MASTER') {
                     this.#logger.debug(
                         'Navigator::#history.listen',
-                        'switching action ro [REPLACE], since navigator is not master',
+                        'switching action to [REPLACE], since navigator is not master',
                     );
                     this.#state.next({ ...update, action: 'REPLACE' } as T);
+                } else {
+                    this.#state.next(update as T);
                 }
-                this.#state.next(update as T);
             }),
         );
     }
