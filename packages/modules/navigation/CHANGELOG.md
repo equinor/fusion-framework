@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.1
+
+### Patch Changes
+
+-   [#1464](https://github.com/equinor/fusion-framework/pull/1464) [`e2ec89f4`](https://github.com/equinor/fusion-framework/commit/e2ec89f457135037e2a333a61ba546fee6d99cd8) Thanks [@odinr](https://github.com/odinr)! - fix double navigation
+
 ## 3.1.0
 
 ### Minor Changes

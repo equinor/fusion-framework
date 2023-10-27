@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.0.1
+
+### Patch Changes
+
+-   Updated dependencies [[`e2ec89f4`](https://github.com/equinor/fusion-framework/commit/e2ec89f457135037e2a333a61ba546fee6d99cd8)]:
+    -   @equinor/fusion-framework-module-navigation@3.1.1
+    -   @equinor/fusion-framework-react-app@4.1.12
+
 ## 7.0.0
 
 ### Patch Changes
