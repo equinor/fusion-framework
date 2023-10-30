@@ -1,5 +1,5 @@
 ---
-'@equinor/fusion-framework-module-navigation': patch
+'@equinor/fusion-framework-cli': patch
 ---
 
 rebuild cli (navigation module)
