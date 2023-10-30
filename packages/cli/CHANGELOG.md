@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.3.3
+
+### Patch Changes
+
+-   [`a56172c9`](https://github.com/equinor/fusion-framework/commit/a56172c9ec241550ce57b1ea1e6ffcc8848618d5) Thanks [@odinr](https://github.com/odinr)! - rebuild cli (navigation module)
+
 ## 9.3.2
 
 ### Patch Changes
