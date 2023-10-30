@@ -1,4 +1,4 @@
-import type { History, To, Path } from '@remix-run/router';
+import type { History, To, Path, Location } from '@remix-run/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import type { NavigationUpdate, NavigationListener } from './types';
@@ -12,6 +12,8 @@ export interface INavigator<T extends NavigationUpdate = NavigationUpdate>
     readonly location: NavigationUpdate['location'];
     dispose: VoidFunction;
 }
+
+const isLocation = (to: To): to is Location => typeof to === 'object' && 'key' in to;
 
 export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     extends Observable<T>
@@ -56,7 +58,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         mode?: 'MASTER' | 'SLAVE';
     }) {
         super((subscriber) => this.#state.subscribe(subscriber));
-        const { basename, history, mode } = args;
+        const { basename, history } = args;
         this.#logger = args.logger || console;
         this.#baseName = basename;
         this.#history = history;
@@ -67,21 +69,8 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
         } as T);
         this.#subscriptions.add(
             this.#history.listen((update) => {
-                /** prevent duplicate navigation */
-                if (update.location.key === this.#state.value.location.key) {
-                    return;
-                }
-                this.#logger.debug('Navigator::#history.listen', {
-                    update,
-                    current: this.#state.value,
-                });
-                if (update.action === 'PUSH' && mode !== 'MASTER') {
-                    this.#logger.debug(
-                        'Navigator::#history.listen',
-                        'switching action to [REPLACE], since navigator is not master',
-                    );
-                    this.#state.next({ ...update, action: 'REPLACE' } as T);
-                } else {
+                /** prevent duplicate state */
+                if (update.location.key !== this.#state.value.location.key) {
                     this.#state.next(update as T);
                 }
             }),
@@ -94,8 +83,9 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
 
     public listen(listener: NavigationListener): VoidFunction {
         const subscription = this.#state.subscribe(listener);
+        this.#logger.debug('Navigator::listen', listener);
         return () => {
-            this.#logger.debug('Navigator::listen[unsubscribe]');
+            this.#logger.debug('Navigator::listen[unsubscribe]', listener);
             return subscription.unsubscribe();
         };
     }
@@ -109,15 +99,26 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     }
 
     public push(to: To, state?: unknown): void {
-        return this.#history.push(to, state);
+        const skip = isLocation(to) && this._isDuplicateLocation(to);
+        if (!skip) {
+            return this.#history.push(to, state);
+        }
     }
 
     public replace(to: To, state?: unknown): void {
-        return this.#history.replace(to, state);
+        const skip = isLocation(to) && this._isDuplicateLocation(to);
+        if (!skip) {
+            return this.#history.replace(to, state);
+        }
     }
 
     public createURL(to: To): URL {
         return this.#history.createURL(to);
+    }
+
+    protected _isDuplicateLocation(location: Location) {
+        // TODO: might check if the are changes in url compared to current
+        return location.key === this.#state.value.location.key;
     }
 
     dispose() {
