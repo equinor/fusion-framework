@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.5
+
+### Patch Changes
+
+-   Updated dependencies [[`a8f0f061`](https://github.com/equinor/fusion-framework/commit/a8f0f061dbde9efb3e2faf11fdb9c886d2277723)]:
+    -   @equinor/fusion-framework-module-navigation@3.1.2
+
 ## 4.1.4
 
 ### Patch Changes

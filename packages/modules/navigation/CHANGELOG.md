@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.2
+
+### Patch Changes
+
+-   [#1467](https://github.com/equinor/fusion-framework/pull/1467) [`a8f0f061`](https://github.com/equinor/fusion-framework/commit/a8f0f061dbde9efb3e2faf11fdb9c886d2277723) Thanks [@odinr](https://github.com/odinr)! - checks when `push`|`replace` is called if to is identical to previous to
+
 ## 3.1.1
 
 ### Patch Changes
