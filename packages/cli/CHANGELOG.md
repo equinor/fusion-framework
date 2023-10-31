@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.3.5
+
+### Patch Changes
+
+-   [#1475](https://github.com/equinor/fusion-framework/pull/1475) [`9b22a14d`](https://github.com/equinor/fusion-framework/commit/9b22a14d791878a83b6df84190922d3143fdc0df) Thanks [@odinr](https://github.com/odinr)! - fix log loop
+
+    ```bash
+    if (msg.match(/^Failed to load url \/assets/)) {
+    RangeError: Maximum call stack size exceeded
+        at String.match (<anonymous>)
+    ```
+
 ## 9.3.4
 
 ### Patch Changes
