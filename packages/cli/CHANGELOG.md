@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.3.4
+
+### Patch Changes
+
+-   [#1465](https://github.com/equinor/fusion-framework/pull/1465) [`1cdc52ab`](https://github.com/equinor/fusion-framework/commit/1cdc52abbdf8aa714d4b4035a01e474fbe56d8f6) Thanks [@odinr](https://github.com/odinr)! - cli should no use provided config when developing an application which exists in Fusion App Service.
+
+    > when dev proxy server did not get 404 when requesting application config, it provided the manifest instead of config file path
+
 ## 9.3.3
 
 ### Patch Changes
