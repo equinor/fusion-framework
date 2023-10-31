@@ -97,7 +97,7 @@ export const createDevServer = async (options: {
                         return { response, path, statusCode: 200 };
                     } else if (data) {
                         const { config: response, path } = await createAppConfig(env, data, {
-                            file: configSourceFiles.manifest,
+                            file: configSourceFiles.app,
                         });
                         path && spinner.info('created config from ', formatPath(path));
                         return { response, path };
