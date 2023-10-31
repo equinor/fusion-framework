@@ -2,7 +2,7 @@ import { createLogger as _createLogger } from 'vite';
 
 export const createViteLogger = () => {
     const logger = _createLogger();
-    const originalLogger = logger;
+    const originalLogger = { ...logger };
 
     logger.error = (msg, opt) => {
         if (msg.match(/^Failed to load url \/assets/)) {
