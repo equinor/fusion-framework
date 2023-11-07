@@ -113,7 +113,9 @@ export default (program: Command) => {
 
     app.command('pack')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
+        .option('-a, --archive, <string>', 'output filename', 'app-bundle.zip')
         .action(async (opt) => {
-            bundleApplication({ archive: 'app-bundle.zip', outDir: opt.outDir });
+            const { outDir, archive } = opt;
+            bundleApplication({ archive, outDir });
         });
 };
