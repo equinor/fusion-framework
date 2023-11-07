@@ -2,7 +2,7 @@ import {
     PackageJson,
     readPackageUp,
     type NormalizeOptions as ResolveAppPackageOptions,
-} from 'read-pkg-up';
+} from 'read-package-up';
 
 import { AppManifest } from './app-manifest.js';
 import { assert } from './utils/assert.js';

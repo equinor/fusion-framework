@@ -1,6 +1,6 @@
 import tsc, { type CompilerOptions } from 'typescript';
 import { dirname, join, resolve } from 'node:path';
-import { readPackageUp } from 'read-pkg-up';
+import { readPackageUp } from 'read-package-up';
 import assert from 'node:assert';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';

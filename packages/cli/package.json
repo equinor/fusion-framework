@@ -55,7 +55,7 @@
         "ora": "^7.0.1",
         "portfinder": "^1.0.32",
         "pretty-bytes": "^6.1.1",
-        "read-pkg-up": "^10.0.0",
+        "read-package-up": "^11.0.0",
         "semver": "^7.5.4",
         "vite": "^4.4.9",
         "vite-plugin-environment": "^1.1.3",
