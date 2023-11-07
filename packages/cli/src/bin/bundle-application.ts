@@ -1,6 +1,7 @@
 import AdmZip from 'adm-zip';
 
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 
 import { loadPackage } from './utils/load-package.js';
 import { chalk, formatByteSize, formatPath } from './utils/format.js';
@@ -50,6 +51,9 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     }
 
     spinner.start('compressing content');
+    if (!fileExistsSync(dirname(archive))) {
+        await mkdir(dirname(archive), { recursive: true });
+    }
     bundle.writeZip(archive);
 
     spinner.info(formatPath(archive), formatByteSize(archive));
