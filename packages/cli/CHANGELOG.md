@@ -1,5 +1,19 @@
 # Change Log
 
+## 9.4.0
+
+### Minor Changes
+
+-   [#1491](https://github.com/equinor/fusion-framework/pull/1491) [`0f2b4e3a`](https://github.com/equinor/fusion-framework/commit/0f2b4e3a97aa08cac2644642b612cd3432d07be4) Thanks [@odinr](https://github.com/odinr)! - Allow setting archive name when packing bundle
+
+### Patch Changes
+
+-   [#1487](https://github.com/equinor/fusion-framework/pull/1487) [`0dfe5a94`](https://github.com/equinor/fusion-framework/commit/0dfe5a94c89b05da3ea94d5ec0180448ba0df392) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump [rollup](https://github.com/rollup/rollup/blob/master/CHANGELOG.md) from 3.29.2 to 4.3.0
+
+-   [#1478](https://github.com/equinor/fusion-framework/pull/1478) [`28bd0b8c`](https://github.com/equinor/fusion-framework/commit/28bd0b8c17fd6e7c5f5146ff490441d5b3caf602) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump [@equinor/fusion-react-side-sheet](https://github.com/equinor/fusion-react-components/releases/tag/%40equinor%2Ffusion-react-side-sheet%401.2.1) from 1.2.0 to 1.2.1
+
+-   [#1485](https://github.com/equinor/fusion-framework/pull/1485) [`24d02ddd`](https://github.com/equinor/fusion-framework/commit/24d02ddd532424462059a7465ac82df688e1bc6e) Thanks [@dependabot](https://github.com/apps/dependabot)! - [bump read-pkg-up from 10.1.0 to 11.0.0](https://github.com/sindresorhus/read-package-up/compare/v10.1.0...v11.0.0)
+
 ## 9.3.5
 
 ### Patch Changes
