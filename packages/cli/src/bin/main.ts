@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 /** find cli package.json */
-import { readPackageUpSync } from 'read-pkg-up';
+import { readPackageUpSync } from 'read-package-up';
 const pkg = readPackageUpSync({ cwd: fileURLToPath(import.meta.url) });
 if (!pkg) {
     throw Error('failed to find program root');
