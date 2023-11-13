@@ -3593,7 +3593,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
     dependencies:
       '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
-      '@equinor/fusion-wc-icon': 1.0.32
+      '@equinor/fusion-wc-icon': 1.0.33
       react: 18.2.0
     dev: true
 
