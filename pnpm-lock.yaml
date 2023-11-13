@@ -3847,7 +3847,7 @@ packages:
       '@equinor/fusion-wc-list': 0.4.1
       '@equinor/fusion-wc-textinput': 0.5.21
       '@lit-labs/task': 2.1.2
-      '@types/uuid': 9.0.6
+      '@types/uuid': 9.0.7
       lit: 2.7.0
       uuid: 9.0.1
     dev: true
@@ -6007,10 +6007,6 @@ packages:
 
   /@types/uuid@9.0.4:
     resolution: {integrity: sha512-zAuJWQflfx6dYJM62vna+Sn5aeSWhh3OB+wfUEACNcqUSc0AGc5JKl+ycL1vrH7frGTXhJchYjE1Hak8L819dA==}
-    dev: true
-
-  /@types/uuid@9.0.6:
-    resolution: {integrity: sha512-BT2Krtx4xaO6iwzwMFUYvWBWkV2pr37zD68Vmp1CDV196MzczBRxuEpD6Pr395HAgebC/co7hOphs53r8V7jew==}
     dev: true
 
   /@types/uuid@9.0.7:
