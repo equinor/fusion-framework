@@ -1,3 +1,4 @@
+import { immerable } from 'immer';
 /**
  *  Feature flag entity
  */
@@ -52,6 +53,8 @@ export class FeatureFlag<T = unknown> implements IFeatureFlag {
     get readonly(): boolean {
         return !!this.#options.readonly;
     }
+
+    [immerable] = true;
 
     static Parse<T>(objOrString: IFeatureFlag<T>): FeatureFlag<T> {
         const obj = typeof objOrString === 'string' ? JSON.parse(objOrString) : objOrString;
