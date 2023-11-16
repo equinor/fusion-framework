@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
@@ -9,6 +9,10 @@ import { Button, Icon, TopBar } from '@equinor/eds-core-react';
 import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
 import { add, menu, tag } from '@equinor/eds-icons';
 import { styled } from 'styled-components';
+
+import { PersonSideSheet } from './PersonSideSheet';
+import { PersonAvatarElement } from '@equinor/fusion-wc-person';
+PersonAvatarElement;
 
 Icon.add({ menu, add, tag });
 
@@ -23,9 +27,7 @@ const Styled = {
 };
 
 export const Header = () => {
-    const buttonRef = useRef(null);
-    const [open, setOpen] = useState(false);
-
+    const [isPersonOpen, setIsPersonOpen] = useState(false);
     const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
 
     function toggleBookmark() {
@@ -36,12 +38,9 @@ export const Header = () => {
         <>
             <TopBar id="cli-top-bar" sticky={false} style={{ padding: 0, height: 48 }}>
                 <TopBar.Header>
-                    <Button ref={buttonRef} onClick={() => setOpen(!open)} variant="ghost_icon">
-                        <Icon name="menu" />
-                    </Button>
                     <Styled.Title>
                         <FusionLogo />
-                        <span>Fusion CLI</span>
+                        <span>Fusion Framework CLI</span>
                     </Styled.Title>
                 </TopBar.Header>
                 <TopBar.CustomContent>
@@ -52,11 +51,20 @@ export const Header = () => {
                     <Button onClick={toggleBookmark} variant="ghost_icon">
                         <Icon name="tag" />
                     </Button>
+                    <Button onClick={() => setIsPersonOpen(!isPersonOpen)} variant="ghost_icon">
+                        <fwc-person-avatar
+                            azureId="49132c24-6ea4-41fe-8221-112f314573f0"
+                            clickable={false}
+                            disabled={true}
+                            size="small"
+                        ></fwc-person-avatar>
+                    </Button>
                 </TopBar.Actions>
             </TopBar>
             <BookmarkProvider>
                 <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={toggleBookmark} />
             </BookmarkProvider>
+            <PersonSideSheet isOpen={isPersonOpen} onClose={() => setIsPersonOpen(!isPersonOpen)} />
         </>
     );
 };
