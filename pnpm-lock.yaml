@@ -383,8 +383,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.33.0
-        version: 0.33.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.34.0
+        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.19.3
         version: 0.19.3
@@ -523,7 +523,7 @@ importers:
         version: 0.2.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.2.1
-        version: 1.2.1(@equinor/eds-core-react@0.33.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        version: 1.2.1(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
@@ -944,8 +944,8 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.33.0
-        version: 0.33.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.34.0
+        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.19.3
         version: 0.19.3
@@ -2814,6 +2814,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: true
 
   /@babel/runtime@7.23.2:
     resolution: {integrity: sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==}
@@ -3256,21 +3257,21 @@ packages:
   /@emotion/unitless@0.8.1:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
-  /@equinor/eds-core-react@0.33.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
-    resolution: {integrity: sha512-ms3OPNfButYknXjfemCXT6plOHyFLUg8QXJu1u18mzAVcKuuHToqSV0cOL+BCMih+JVGjOV/qATRx8VJCDN2+w==}
+  /@equinor/eds-core-react@0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+    resolution: {integrity: sha512-hkAuNhXk0/PylpEEtRobt3qeZyK7Hhu27pxMV6Y+StKi7ckuH7LJEisRAXxbUchFiv2tzNV7zxhdoPd5GjRp4w==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
       styled-components: '>=4.2'
     dependencies:
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.2
       '@equinor/eds-icons': 0.19.3
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/eds-utils': 0.8.2(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
-      '@floating-ui/react': 0.25.4(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/eds-utils': 0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+      '@floating-ui/react': 0.26.2(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-virtual': 3.0.0-beta.54(react@18.2.0)
-      downshift: 8.2.1(react@18.2.0)
+      downshift: 8.2.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.0.8(react-dom@18.2.0)(react@18.2.0)
@@ -3306,8 +3307,8 @@ packages:
       - supports-color
     dev: true
 
-  /@equinor/eds-utils@0.8.2(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
-    resolution: {integrity: sha512-nVWQQMxogk+94PVY3ZAUOYKzzhYwpqxuhSYxMuRaFUo/mH0Wl8vnb9omJ1Xx+aOWlmiZZGZ+JiLC2K51V++GGw==}
+  /@equinor/eds-utils@0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+    resolution: {integrity: sha512-+Xm+BsXMUqlxZpPeGAJExhf27WqcQDHmKY9e4s6hfFP8D2vj5VcS0cglY86cmH4N3bDb4LmHL8V2FSX9xHr9+g==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
@@ -3563,7 +3564,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@1.2.1(@equinor/eds-core-react@0.33.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+  /@equinor/fusion-react-side-sheet@1.2.1(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
     resolution: {integrity: sha512-fidynnHg4FxES6/i4A7ZjwefYG5TmA2RTEUVvg7IShY7z1t71r4uEM7lc3WMZ+IXjeByZsBYKe/LAgBL4snsZg==}
     peerDependencies:
       '@equinor/eds-core-react': ^0.33.0
@@ -3579,7 +3580,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@equinor/eds-core-react': 0.33.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+      '@equinor/eds-core-react': 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons': 0.19.3
       '@equinor/eds-tokens': 0.9.2
       '@types/react': 18.2.22
@@ -4169,8 +4170,8 @@ packages:
       '@floating-ui/core': 1.5.0
       '@floating-ui/utils': 0.1.6
 
-  /@floating-ui/react-dom@2.0.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-5qhlDvjaLmAst/rKb3VdlCinwTF4EYMiVxuuc/HVUjs46W0zgtbMmAZ1UTsDrRTxRmUEzl92mOtWbeeXL26lSQ==}
+  /@floating-ui/react-dom@2.0.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CF8k2rgKeh/49UrnIBs4BdxPUV6vize/Db1d/YbCLyp9GiVZ0BEwf5AiDSxJRCr6yOkGqTFHtmrULxkEfYZ7dQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -4179,13 +4180,13 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  /@floating-ui/react@0.25.4(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-lWRQ/UiTvSIBxohn0/2HFHEmnmOVRjl7j6XcRJuLH0ls6f/9AyHMWVzkAJFuwx0n9gaEeCmg9VccCSCJzbEJig==}
+  /@floating-ui/react@0.26.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ocpz3MxYoZlgsASiVFayiTnKukR8QZDQUMqxMdF0YFLbu8lw/IL6AHKLROI8SOpp6CxpUGPh9Q4a03eBAVEZNQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@floating-ui/react-dom': 2.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react-dom': 2.0.4(react-dom@18.2.0)(react@18.2.0)
       '@floating-ui/utils': 0.1.6
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -7607,8 +7608,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /downshift@8.2.1(react@18.2.0):
-    resolution: {integrity: sha512-mHQUQMWCliXkoWvhxlRyEyKcdlbs8rZjZ+nSqGi8dKIv26gWtbQ8yVTPuYSHT7X8ff+FkEcskT9ktLuNKNoEHA==}
+  /downshift@8.2.3(react@18.2.0):
+    resolution: {integrity: sha512-1HkvqaMTZpk24aqnXaRDnT+N5JCbpFpW+dCogB11+x+FCtfkFX0MbAO4vr/JdXi1VYQF174KjNUveBXqaXTPtg==}
     peerDependencies:
       react: '>=16.12.0'
     dependencies:
