@@ -6,7 +6,8 @@
     "exports": {
         ".": "./dist/esm/index.js",
         "./errors.js": "./dist/esm/errors.js",
-        "./app": "./dist/esm/app/index.js"
+        "./app": "./dist/esm/app/index.js",
+        "./app/*.js": "./dist/esm/app/*.js"
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
@@ -16,6 +17,9 @@
             ],
             "app": [
                 "dist/types/app/index.d.ts"
+            ],
+            "app/*.js": [
+                "dist/types/app/*.d.ts"
             ]
         }
     },

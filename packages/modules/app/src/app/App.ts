@@ -170,23 +170,59 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     #registerEvents(event: ModuleType<EventModule>): void {
         const { appKey } = this;
 
+        this.#state.addEffect(actions.fetchManifest.type, (action) => {
+            event.dispatchEvent('onAppManifestLoad', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
         this.#state.addEffect(actions.fetchManifest.success.type, (action) => {
             event.dispatchEvent('onAppManifestLoaded', {
                 detail: { appKey, manifest: action.payload },
                 source: this,
             });
         });
+        this.#state.addEffect(actions.fetchManifest.failure.type, (action) => {
+            event.dispatchEvent('onAppManifestFailure', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
 
+        this.#state.addEffect(actions.fetchConfig.type, (action) => {
+            event.dispatchEvent('onAppConfigLoad', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
         this.#state.addEffect(actions.fetchConfig.success.type, (action) => {
             event.dispatchEvent('onAppConfigLoaded', {
                 detail: { appKey, manifest: action.payload },
                 source: this,
             });
         });
+        this.#state.addEffect(actions.fetchConfig.failure.type, (action) => {
+            event.dispatchEvent('onAppConfigFailure', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
 
+        this.#state.addEffect(actions.importApp.type, (action) => {
+            event.dispatchEvent('onAppScriptLoad', {
+                detail: { appKey, manifest: action.payload },
+                source: this,
+            });
+        });
         this.#state.addEffect(actions.importApp.success.type, (action) => {
             event.dispatchEvent('onAppScriptLoaded', {
-                detail: { appKey, manifest: action.payload },
+                detail: { appKey, script: action.payload },
+                source: this,
+            });
+        });
+        this.#state.addEffect(actions.importApp.failure.type, (action) => {
+            event.dispatchEvent('onAppScriptFailure', {
+                detail: { appKey, error: action.payload },
                 source: this,
             });
         });
@@ -206,7 +242,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         });
 
         this.#state.addEffect(actions.initialize.failure.type, ({ payload }) => {
-            event.dispatchEvent('onAppInitializeFailed', {
+            event.dispatchEvent('onAppInitializeFailure', {
                 detail: { appKey, error: payload },
                 source: this,
             });
