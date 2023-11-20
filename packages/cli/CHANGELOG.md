@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.4.2
+
+### Patch Changes
+
+-   [#1533](https://github.com/equinor/fusion-framework/pull/1533) [`a571b640`](https://github.com/equinor/fusion-framework/commit/a571b640c9fe94519ce2ede22f1eb1c336ecdac9) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump find-up from 6.3.0 to 7.0.0
+
+-   [#1534](https://github.com/equinor/fusion-framework/pull/1534) [`8c77de20`](https://github.com/equinor/fusion-framework/commit/8c77de209df2f41a78636f1f6f85a81d653484d2) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite-plugin-restart from 0.3.1 to 0.4.0
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@7.1.9
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.3
+
 ## 9.4.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.2.9
+
+### Patch Changes
+
+-   [#1529](https://github.com/equinor/fusion-framework/pull/1529) [`8274dca1`](https://github.com/equinor/fusion-framework/commit/8274dca10a773e1d29ffbce82a6f6f2bae818316) Thanks [@odinr](https://github.com/odinr)! - - improved app event dispatch
+    -   added mapping for all app events
+
 ## 5.2.8
 
 ### Patch Changes
