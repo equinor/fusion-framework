@@ -1,0 +1,32 @@
+{
+    "name": "@equinor/fusion-framework-cookbook-app-react-feature-flag",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "type": "module",
+    "main": "src/index.ts",
+    "scripts": {
+        "dev": "fusion-framework-cli app dev",
+        "build": "fusion-framework-cli app build",
+        "build:pack": "fusion-framework-cli app pack",
+        "docker": "cd .. && sh docker-script.sh app-react"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@equinor/fusion-framework-cli": "workspace:^",
+        "@equinor/fusion-framework-react-app": "workspace:^",
+        "@types/react": "^18.2.20",
+        "@types/react-dom": "^18.2.7",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.1.3"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
+        "@remix-run/router": "^1.8.0",
+        "react-router-dom": "^6.16.0"
+    }
+}
