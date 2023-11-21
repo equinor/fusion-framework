@@ -25,7 +25,9 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
     }
 
     *[Symbol.iterator](): Generator<TType> {
-        Object.values(this.getItems()).forEach((item) => yield item);
+        for (const item of Object.values(this.getItems())) {
+            yield item;
+        }
     }
 
     get basename(): string {
@@ -68,9 +70,12 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
             .map(([key, value]) => ({
                 ...extractId(key),
                 key,
-                value: JSON.parse(value),
+                value,
             }))
-            .filter((x) => x.basename === basename);
+            .filter((x) => x.basename === basename)
+            .map((item) => {
+                return Object.assign(item, { value: JSON.parse(item.value) });
+            });
     }
 }
 

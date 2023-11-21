@@ -41,7 +41,6 @@ export const plugin = (
             });
             return gg;
         },
-        // onFeatureToggle: options.storageAdapter,
         onFeatureToggle: ({ flags }) => {
             flags.forEach((flag) => storageAdapter.setItem(flag.key, flag));
         },
@@ -74,7 +73,7 @@ export const plugin = (
                 takeUntil(teardown$),
             );
 
-            subscription.add(change$.subscribe(provider.toggleFeatures));
+            subscription.add(change$.subscribe((features) => provider.toggleFeatures(features)));
 
             /** when disposed, signal teardown of processes */
             subscription.add(() => path$.complete());

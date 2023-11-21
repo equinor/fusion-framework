@@ -74,8 +74,11 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
                 console.warn(`skipped toggling flag [${flag.key}], since readonly!`);
                 return false;
             }
+            return true;
         });
-        this.#state.next(actions.toggleFeatures(toggleValues));
+        if (toggleValues.length) {
+            this.#state.next(actions.toggleFeatures(toggleValues));
+        }
     }
 
     public getFeature(

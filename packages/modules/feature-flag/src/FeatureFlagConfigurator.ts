@@ -1,5 +1,5 @@
 import { Observable, forkJoin, from } from 'rxjs';
-import { concatMap, filter, map, mergeMap, reduce } from 'rxjs/operators';
+import { concatMap, filter, last, map, mergeMap, reduce, share } from 'rxjs/operators';
 import { BaseConfigBuilder, ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import type {
     FeatureFlagConfig,
@@ -33,6 +33,8 @@ export class FeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagConfig
                 acc.push(plugin);
                 return acc;
             }, [] as Array<FeatureFlagPlugin>),
+            last(),
+            share(),
         );
 
         return forkJoin({
