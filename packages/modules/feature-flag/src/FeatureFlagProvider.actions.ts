@@ -5,7 +5,7 @@ export const actions = {
     setFeatures: createAction('set_features_enabled', (payload: Array<IFeatureFlag>) => ({
         payload,
     })),
-    toggleFeatures: createAction('set_features_enabled', (payload: Array<IFeatureFlag>) => ({
+    toggleFeatures: createAction('toggle_features_enabled', (payload: Array<IFeatureFlag>) => ({
         payload,
     })),
 };
