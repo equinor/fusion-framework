@@ -249,6 +249,46 @@ importers:
         specifier: ^5.1.3
         version: 5.2.2
 
+  cookbooks/app-react-feature-flag:
+    dependencies:
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../../packages/modules/feature-flag
+      '@equinor/fusion-framework-module-navigation':
+        specifier: workspace:^
+        version: link:../../packages/modules/navigation
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../packages/utils/observable
+      '@remix-run/router':
+        specifier: ^1.8.0
+        version: 1.9.0
+      react-router-dom:
+        specifier: ^6.16.0
+        version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@types/react':
+        specifier: ^18.2.20
+        version: 18.2.22
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.7
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      typescript:
+        specifier: ^5.1.3
+        version: 5.2.2
+
   cookbooks/app-react-module:
     devDependencies:
       '@equinor/fusion-framework-cli':
