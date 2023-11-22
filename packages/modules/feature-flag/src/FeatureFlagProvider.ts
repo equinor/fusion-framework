@@ -48,6 +48,11 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
             const { onFeatureToggle } = plugin;
             if (onFeatureToggle) {
                 this.#subscription.add(
+                    this.#state.addEffect('toggle_features_enabled', (action) =>
+                        onFeatureToggle({ flags: action.payload }),
+                    ),
+                );
+                this.#subscription.add(
                     this.#state.addEffect('set_features_enabled', (action) =>
                         onFeatureToggle({ flags: action.payload }),
                     ),
