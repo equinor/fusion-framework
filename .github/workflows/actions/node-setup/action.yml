@@ -4,7 +4,7 @@ inputs:
   node-version:  
     default: 18
   turbo-cache:
-    default: true
+    default: false
 
 runs:
   using: composite
