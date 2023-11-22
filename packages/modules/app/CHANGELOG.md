@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.2.10
+
+### Patch Changes
+
+-   [#1545](https://github.com/equinor/fusion-framework/pull/1545) [`6d303787`](https://github.com/equinor/fusion-framework/commit/6d303787f647bb2fc3c90456eccac751abb264c4) Thanks [@odinr](https://github.com/odinr)! - fixed emittet event detials
+
 ## 5.2.9
 
 ### Patch Changes
