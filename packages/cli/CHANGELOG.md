@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.4.3
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@7.1.10
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.3
+
 ## 9.4.2
 
 ### Patch Changes
