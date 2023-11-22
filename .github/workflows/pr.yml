@@ -55,9 +55,17 @@ jobs:
         uses: ./.github/workflows/actions/build-packages
         with: 
           only-affected: false
+
+      - name: process-build-log
+        run: node process-turbo-build-log.cjs > tsc-build.log
+
+      - name: upload build log
+        uses: actions/upload-artifact@v3
+        with:
+          path: tsc-build.log
           
       - name: Review build log
-        run: node process-turbo-build-log.cjs | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+        run: cat tsc-build.log | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
 
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
