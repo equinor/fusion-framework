@@ -44,7 +44,6 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
             features: normalizeFlags(config.initial),
         });
         Object.values(config.plugins).forEach((plugin) => {
-            this.#subscription.add(plugin.connect({ provider: this }));
             const { onFeatureToggle } = plugin;
             if (onFeatureToggle) {
                 this.#subscription.add(
@@ -58,6 +57,7 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
                     ),
                 );
             }
+            this.#subscription.add(plugin.connect({ provider: this }));
         });
     }
 
