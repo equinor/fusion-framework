@@ -251,6 +251,9 @@ importers:
 
   cookbooks/app-react-feature-flag:
     dependencies:
+      '@equinor/eds-core-react':
+        specifier: ^0.34.0
+        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../../packages/modules/feature-flag
@@ -260,6 +263,9 @@ importers:
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../packages/utils/observable
+      '@faker-js/faker':
+        specifier: ^8.3.1
+        version: 8.3.1
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.9.0
@@ -1007,6 +1013,9 @@ importers:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../../modules/event
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../../modules/feature-flag
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../../modules/msal
@@ -1016,6 +1025,9 @@ importers:
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.22
@@ -4492,6 +4504,11 @@ packages:
   /@eslint/js@8.52.0:
     resolution: {integrity: sha512-mjZVbpaeMZludF2fsWLD0Z9gCref1Tk4i9+wddjRvpUNqqcndPkBD09N/Mapey0b3jaXbLm2kICwFv2E64QinA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
+  /@faker-js/faker@8.3.1:
+    resolution: {integrity: sha512-FdgpFxY6V6rLZE9mmIBb9hM0xpfvQOSNOLnzolzKwsE1DH+gC7lEKV1p1IbR0lAYyvYd5a4u3qWJzowUkw1bIw==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+    dev: false
 
   /@floating-ui/core@1.5.0:
     resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}

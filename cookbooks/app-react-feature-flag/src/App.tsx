@@ -1,7 +1,11 @@
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { IFeatureFlag } from '@equinor/fusion-framework-module-feature-flag';
+import { useFeatureFlag } from '@equinor/fusion-framework-react-app/feature-flag';
+import FeatureFlag from './FeatureFlag';
+
 export const App = () => {
     const provider = useAppModule<FeatureFlagModule>('featureFlag');
     const features$ = useMemo(() => {
@@ -10,29 +14,30 @@ export const App = () => {
 
     const { value: features } = useObservableState(features$);
 
+    const handleToggle = useCallback(
+        (flag: IFeatureFlag) => {
+            provider.toggleFeature({
+                key: flag.key,
+                enabled: !flag.enabled,
+            });
+        },
+        [provider],
+    );
+
+    const { feature: fooFlag, setFeatureEnabled } = useFeatureFlag('foo');
+
+    if (!fooFlag) {
+        return null;
+    }
+
     return (
-        <>
-            <h1>Feature flags</h1>
-            <pre>{JSON.stringify(features)}</pre>
-            <ul>
-                {features?.map((feature) => {
-                    return (
-                        <li key={feature.key}>
-                            <button
-                                onClick={() =>
-                                    provider.toggleFeature({
-                                        key: feature.key,
-                                        enabled: !feature.enabled,
-                                    })
-                                }
-                            >
-                                {feature.key} - {feature.enabled ? 'y' : 'n'}
-                            </button>
-                        </li>
-                    );
-                })}
-            </ul>
-        </>
+        <div style={{ display: 'flex', flexFlow: 'column', padding: '1rem' }}>
+            {features?.map((feature) => {
+                return <FeatureFlag key={feature.key} flag={feature} onToggle={handleToggle} />;
+            })}
+            <hr />
+            <button onClick={() => setFeatureEnabled(!fooFlag.enabled)}>Toggle 'foo' flag</button>
+        </div>
     );
 };
 
