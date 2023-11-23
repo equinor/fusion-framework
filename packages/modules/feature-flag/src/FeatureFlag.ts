@@ -24,34 +24,34 @@ export interface IFeatureFlag<T = unknown> {
 }
 
 export class FeatureFlag<T = unknown> implements IFeatureFlag {
-    #options: Omit<IFeatureFlag<T>, 'key'>;
+    _options: Omit<IFeatureFlag<T>, 'key'>;
 
     get enabled(): boolean {
-        return !!this.#options.enabled;
+        return !!this._options.enabled;
     }
 
     set enabled(value: boolean) {
-        this.#options.enabled = value;
+        this._options.enabled = value;
     }
 
     get value(): T | undefined {
-        return this.#options.value;
+        return this._options.value;
     }
 
     get title(): string | undefined {
-        return this.#options.title;
+        return this._options.title;
     }
 
     get description(): string | undefined {
-        return this.#options.description;
+        return this._options.description;
     }
 
     get source(): string | undefined {
-        return this.#options.source;
+        return this._options.source;
     }
 
     get readonly(): boolean {
-        return !!this.#options.readonly;
+        return !!this._options.readonly;
     }
 
     [immerable] = true;
@@ -74,11 +74,11 @@ export class FeatureFlag<T = unknown> implements IFeatureFlag {
         public readonly key: string,
         options: Omit<IFeatureFlag<T>, 'key'>,
     ) {
-        this.#options = options;
+        this._options = options;
     }
 
     public toJSON(): IFeatureFlag {
-        const { enabled, value, source } = this.#options;
+        const { enabled, value, source } = this._options;
         return { key: this.key, enabled, value, source };
     }
 }
