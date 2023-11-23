@@ -9,7 +9,8 @@
         "./context": "./dist/esm/context/index.js",
         "./framework": "./dist/esm/framework/index.js",
         "./http": "./dist/esm/http/index.js",
-        "./navigation": "./dist/esm/navigation/index.js"
+        "./navigation": "./dist/esm/navigation/index.js",
+        "./feature-flag": "./dist/esm/feature-flag/index.js"
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
@@ -28,6 +29,9 @@
             ],
             "navigation": [
                 "dist/types/navigation/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
             ]
         }
     },
@@ -59,6 +63,8 @@
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
         "@types/react": "^18.2.20",
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
@@ -78,6 +84,12 @@
             "optional": true
         },
         "@equinor/fusion-framework-react-module-bookmark": {
+            "optional": true
+        },
+        "@equinor/fusion-framework-module-feature-flag": {
+            "optional": true
+        },
+        "@equinor/fusion-observable": {
             "optional": true
         },
         "@types/react": {

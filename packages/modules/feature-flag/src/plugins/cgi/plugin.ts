@@ -35,11 +35,16 @@ export const plugin = (
     // TODO - get / create from config
     return {
         initial: async () => {
-            const gg = Object.values({
-                ...normalizeFlags(initial),
-                ...storageAdapter.getItems(),
+            const initialFlags = normalizeFlags(initial);
+
+            Object.values(storageAdapter.getItems()).forEach((flag) => {
+                const initialFlag = initialFlags[flag.key];
+                if (initialFlag && !initialFlag.readonly) {
+                    initialFlag.enabled = !!flag.enabled;
+                }
             });
-            return gg;
+
+            return Object.values(initialFlags);
         },
         onFeatureToggle: ({ flags }) => {
             flags.forEach((flag) => storageAdapter.setItem(flag.key, flag));
