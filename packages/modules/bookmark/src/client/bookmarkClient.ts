@@ -258,7 +258,6 @@ export class BookmarkClient {
     #addStateEffects() {
         this.#state.subject.addEffect('create::success', (action) => {
             this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
-            this.#currentBookmark$.next(action.payload);
             this.#event?.dispatchEvent('onBookmarkCreated', {
                 detail: action.payload,
                 canBubble: true,
