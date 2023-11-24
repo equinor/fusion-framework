@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.15
+
+### Patch Changes
+
+-   [`6f8c32b8`](https://github.com/equinor/fusion-framework/commit/6f8c32b8e0ae1f4431d09d201b2a305a883cf886) Thanks [@odinr](https://github.com/odinr)! - After creating a bookmark the bookmark module will no longer set it as current. This makes sense because the application is already in the correct state when the bookmark was created
+
+    see: #1547
+
+    https://github.com/equinor/fusion-framework/blob/main/packages/modules/navigation/src/module.ts#L13
+
 ## 1.0.14
 
 ### Patch Changes

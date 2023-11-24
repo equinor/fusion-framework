@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.5.0
+
+### Minor Changes
+
+-   [#1532](https://github.com/equinor/fusion-framework/pull/1532) [`f77c1169`](https://github.com/equinor/fusion-framework/commit/f77c11694adf3c96e86732818cbf05aaae06a695) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump vite from 4.4.9 to 5.0.0
+
+### Patch Changes
+
+-   Updated dependencies [[`22909e77`](https://github.com/equinor/fusion-framework/commit/22909e77488b099697dccec93e7ac8416dc4a5bd)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.4
+
 ## 9.4.3
 
 ### Patch Changes
