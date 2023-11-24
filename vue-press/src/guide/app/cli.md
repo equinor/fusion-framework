@@ -88,4 +88,12 @@ Building the application for `production` mode
 fusion-framework-cli app build
 ```
 
-> in the future the will come an option for building an standalone application (`ci` testing app)
+> To create zipped standalone app bundle see the ``app pack``command below
+
+## App bundle
+
+Create zipped standalone app bundle to upload to your portal.
+
+```sh
+fusion-framework-cli app pack
+```
