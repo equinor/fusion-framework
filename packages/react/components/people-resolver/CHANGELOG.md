@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.1.4
+
+### Patch Changes
+
+-   [`22909e77`](https://github.com/equinor/fusion-framework/commit/22909e77488b099697dccec93e7ac8416dc4a5bd) Thanks [@odinr](https://github.com/odinr)! - updated @equinor/fusion-wc-person to 2.2.0
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react-module-bookmark@2.0.22
+
 ## 1.1.3
 
 ### Patch Changes
