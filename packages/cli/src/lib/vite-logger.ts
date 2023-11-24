@@ -5,7 +5,8 @@ export const createViteLogger = () => {
     const originalLogger = { ...logger };
 
     logger.error = (msg, opt) => {
-        if (msg.match(/^Failed to load url \/assets/)) {
+        // TODO find a way to make these assets external 
+        if (msg.match(/^Pre-transform error: Failed to load url \/assets/)) {
             return;
         }
         originalLogger.error(msg, opt);
