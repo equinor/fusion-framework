@@ -97,3 +97,5 @@ Create zipped standalone app bundle to upload to your portal.
 ```sh
 fusion-framework-cli app pack
 ```
+
+> its important to set your package type to module to generate a proper app-bundle for use in the Fusion portal, add `"type": "module"` to your package.json.
