@@ -74,7 +74,7 @@
     ]
   },
   "dependencies": {
-    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.26.2",
     "@equinor/eslint-config-fusion": "^2.1.4",
     "@equinor/eslint-config-fusion-react": "^2.0.1",
