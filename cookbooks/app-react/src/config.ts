@@ -3,6 +3,7 @@ import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 export const configure: AppModuleInitiator = (configurator, env) => {
     /** print render environment arguments */
     console.log('configuring application', env);
+    configurator.useFrameworkServiceClient('people');
 
     /** callback when configurations is created */
     configurator.onConfigured((config) => {
