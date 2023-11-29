@@ -7,12 +7,11 @@ import { SharedIcon } from '../shared/SharedIcon';
 import type { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
-import { Loading } from '../loading/Loading';
 
 Icon.add({
     delete_to_trash,
@@ -30,18 +29,10 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
     const { deleteBookmarkById, getCurrentAppKey, updateBookmark, removeBookmarkFavorite } =
         useBookmark();
 
-    const [loading, setLoading] = useState(true);
-
     const user = useCurrentUser();
     const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
 
     const { event } = useFramework().modules;
-
-    useEffect(() => {
-        return event.addEventListener('onBookmarksChanged', () => {
-            setLoading(false);
-        });
-    }, [event]);
 
     const editBookmark = useCallback(
         (bookmarkId: string) => {
@@ -80,8 +71,6 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             getCurrentAppKey(),
             user?.localAccountId,
         );
-
-    if (loading) return <Loading />;
 
     return (
         <>
