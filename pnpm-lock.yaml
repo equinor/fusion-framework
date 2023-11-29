@@ -75,8 +75,8 @@ importers:
         specifier: ^0.34.2
         version: 0.34.5(happy-dom@12.1.5)
       vitest-github-actions-reporter:
-        specifier: ^0.10.0
-        version: 0.10.0(vitest@0.34.5)
+        specifier: ^0.11.0
+        version: 0.11.0(vitest@0.34.5)
 
   cookbooks/app-react:
     devDependencies:
@@ -12748,8 +12748,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitest-github-actions-reporter@0.10.0(vitest@0.34.5):
-    resolution: {integrity: sha512-ctFM1xlOVsXCNp5+LkaBZBhN1Iq5y9vVMZ9+Czls2CimOUKt0lH24MV1S0EzKysNUT7efs2OOSdmc6lgR8hqXg==}
+  /vitest-github-actions-reporter@0.11.0(vitest@0.34.5):
+    resolution: {integrity: sha512-zvWOGyGmyZUIJ/veyRkfiMaiktZYfiBsRVdkOP0CiZDhQPZYhoFO/nFwBPn3LLIlBROFfLT+QjRtivocwuyPww==}
     engines: {node: '>=14.16.0'}
     peerDependencies:
       vitest: '>=0.28.5'
