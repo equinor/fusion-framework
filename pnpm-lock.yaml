@@ -3527,7 +3527,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
     dependencies:
       '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
-      '@equinor/fusion-wc-icon': 2.1.0
+      '@equinor/fusion-wc-icon': 2.3.0
       react: 18.2.0
     dev: true
 
@@ -3772,14 +3772,6 @@ packages:
       '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
-
-  /@equinor/fusion-wc-icon@2.1.0:
-    resolution: {integrity: sha512-g2Ov2LzoMOTW9aQHSsufm0wBdI61o5SHlNkp5DsKAD9BhtnKLt6AWAvatzNH4b7HYTy3IiNq1gKBOnk3BC7OEQ==}
-    dependencies:
-      '@equinor/eds-icons': 0.19.3
-      '@equinor/fusion-wc-core': 2.0.0
-      lit: 2.7.0
-    dev: true
 
   /@equinor/fusion-wc-icon@2.2.0:
     resolution: {integrity: sha512-gcklHv0tdDBeshqyaJ9A9uDefXyO2kOIMITLo3nlXscZOh0Lm3a0We6tpQPE0/Cl8TLwGY/6Faf19DpdXpcHWQ==}
