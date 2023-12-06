@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.5.1
+
+### Patch Changes
+
+-   [#1553](https://github.com/equinor/fusion-framework/pull/1553) [`f4e02e9`](https://github.com/equinor/fusion-framework/commit/f4e02e93960ca3d1e8c1ee422c6fd8c6742bf755) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-side-sheet from 1.2.1 to 1.2.2
+
+-   [`72e12c8`](https://github.com/equinor/fusion-framework/commit/72e12c84efb6ac7f131a8d0f217076cbb9d5ab52) Thanks [@odinr](https://github.com/odinr)! - support for module resolution EsNext
+
 ## 9.5.0
 
 ### Minor Changes
