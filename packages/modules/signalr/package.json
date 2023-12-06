@@ -4,7 +4,7 @@
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
-    "types": "index.d.ts",
+    "types": "dist/types/index.d.ts",
     "typesVersions": {
         ">=4.2": {
             "*": [
@@ -13,7 +13,10 @@
         }
     },
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        }
     },
     "scripts": {
         "build": "tsc -b",

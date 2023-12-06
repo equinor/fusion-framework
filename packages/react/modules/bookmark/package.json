@@ -4,8 +4,14 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./portal": "./dist/esm/portal/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./portal": {
+            "import": "./dist/esm/portal/index.js",
+            "types": "./dist/types/portal/index.d.ts"
+        }
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {

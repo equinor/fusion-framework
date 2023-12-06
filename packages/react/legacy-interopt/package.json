@@ -4,8 +4,14 @@
     "description": "Library for interopt legacy fusion applications",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./components": "./dist/esm/components/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./components": {
+            "import": "./dist/esm/components/index.js",
+            "types": "./dist/types/components/index.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {

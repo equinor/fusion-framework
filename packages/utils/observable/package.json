@@ -12,9 +12,18 @@
     "license": "ISC",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./operators": "./dist/esm/operators/index.js",
-        "./react": "./dist/esm/react/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./operators": {
+            "import": "./dist/esm/operators/index.js",
+            "types": "./dist/types/operators/index.d.ts"
+        },
+        "./react": {
+            "import": "./dist/esm/react/index.js",
+            "types": "./dist/types/react/index.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {

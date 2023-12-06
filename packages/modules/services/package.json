@@ -46,17 +46,50 @@
         }
     },
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./context": "./dist/esm/context/index.js",
-        "./bookmark": "./dist/esm/bookmarks/index.js",
-        "./notification": "./dist/esm/notification/index.js",
-        "./context/get": "./dist/esm/context/get-context/index.js",
-        "./people": "./dist/esm/people/index.js",
-        "./people/utils": "./dist/esm/people/utils.js",
-        "./people/get": "./dist/esm/people/person-details/index.js",
-        "./people/query": "./dist/esm/people/query/index.js",
-        "./people/photo": "./dist/esm/people/person-photo/index.js",
-        "./errors": "./dist/esm/errors.js",
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./context": {
+            "import": "./dist/esm/context/index.js",
+            "types": "./dist/types/context/index.d.ts"
+        },
+        "./bookmark": {
+            "import": "./dist/esm/bookmarks/index.js",
+            "types": "./dist/types/bookmarks/index.d.ts"
+        },
+        "./notification": {
+            "import": "./dist/esm/notification/index.js",
+            "types": "./dist/types/notification/index.d.ts"
+        },
+        "./context/get": {
+            "import": "./dist/esm/context/get/index.js",
+            "types": "./dist/types/context/get/index.d.ts"
+        },
+        "./people": {
+            "import": "./dist/esm/people/index.js",
+            "types": "./dist/types/people/index.d.ts"
+        },
+        "./people/utils": {
+            "import": "./dist/esm/people/utils.js",
+            "types": "./dist/types/people/utils.d.ts"
+        },
+        "./people/get": {
+            "import": "./dist/esm/people/person-details/index.js",
+            "types": "./dist/types/people/person-details/index.d.ts"
+        },
+        "./people/query": {
+            "import": "./dist/esm/people/query/index.js",
+            "types": "./dist/types/people/query/index.d.ts"
+        },
+        "./people/photo": {
+            "import": "./dist/esm/people/person-photo/index.js",
+            "types": "./dist/types/people/person-photo/index.d.ts"
+        },
+        "./errors": {
+            "import": "./dist/esm/errors.js",
+            "types": "./dist/types/errors.d.ts"
+        },
         "./package.json": "./package.json"
     },
     "scripts": {
