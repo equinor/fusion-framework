@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cli",
-    "version": "9.5.0",
+    "version": "9.5.1",
     "keywords": [
         "Fusion",
         "Fusion Framework",
@@ -18,10 +18,8 @@
     },
     "exports": {
         ".": {
-            "import": {
-                "default": "./dist/lib/index.js",
-                "types": "./dist/types/lib/index.d.ts"
-            }
+            "types": "./dist/types/lib/index.d.ts",
+            "import": "./dist/lib/index.js"
         }
     },
     "types": "./dist/types/lib/index.d.ts",
