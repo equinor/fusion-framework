@@ -4,9 +4,15 @@
     "description": "",
     "main": "./dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
         "./package.json": "./package.json",
-        "./utils": "./dist/esm/utils/index.js"
+        "./utils": {
+            "import": "./dist/esm/utils/index.js",
+            "types": "./dist/types/utils/index.d.ts"
+        }
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
