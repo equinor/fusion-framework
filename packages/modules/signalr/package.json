@@ -8,6 +8,7 @@
     "typesVersions": {
         ">=4.2": {
             "*": [
+                "./dist/types/index.d.ts",
                 "dist/types/*"
             ]
         }
