@@ -513,8 +513,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-menu':
-        specifier: ^0.2.0
-        version: 0.2.0(react@18.2.0)
+        specifier: ^0.3.0
+        version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-person':
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.22)(react@18.2.0)
@@ -3553,8 +3553,8 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@equinor/fusion-react-menu@0.2.0(react@18.2.0):
-    resolution: {integrity: sha512-n2dOkaVau/4UgrYPjEbYTAbLQWLqbWx0fErNFXAinbN6t+1qhzFw7RMPkxcAAcBgQAEKb0C3UcCFy3PiOQHHvQ==}
+  /@equinor/fusion-react-menu@0.3.0(react@18.2.0):
+    resolution: {integrity: sha512-LqakXydisEYYmnnOP7/JeKTA6Hit5bQGnfe4X0UBTNfUge1UdXhPSc/SypYRX8safL4My+PcxXSflUhCnYiVRw==}
     dependencies:
       '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-menu': 1.0.2
