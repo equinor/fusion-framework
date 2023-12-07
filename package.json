@@ -56,7 +56,7 @@
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^15.0.2",
     "vitest": "^1.0.1",
-    "vitest-github-actions-reporter": "^0.10.0"
+    "vitest-github-actions-reporter": "^0.11.1"
   },
   "peerDependencies": {
     "typescript": ">=4.5"
