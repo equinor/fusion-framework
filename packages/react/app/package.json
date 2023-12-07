@@ -4,12 +4,30 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./bookmark": "./dist/esm/bookmark/index.js",
-        "./context": "./dist/esm/context/index.js",
-        "./framework": "./dist/esm/framework/index.js",
-        "./http": "./dist/esm/http/index.js",
-        "./navigation": "./dist/esm/navigation/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./bookmark": {
+            "import": "./dist/esm/bookmark/index.js",
+            "types": "./dist/types/bookmark/index.d.ts"
+        },
+        "./context": {
+            "import": "./dist/esm/context/index.js",
+            "types": "./dist/types/context/index.d.ts"
+        },
+        "./framework": {
+            "import": "./dist/esm/framework/index.js",
+            "types": "./dist/types/framework/index.d.ts"
+        },
+        "./http": {
+            "import": "./dist/esm/http/index.js",
+            "types": "./dist/types/http/index.d.ts"
+        },
+        "./navigation": {
+            "import": "./dist/esm/navigation/index.js",
+            "types": "./dist/types/navigation/index.d.ts"
+        }
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {

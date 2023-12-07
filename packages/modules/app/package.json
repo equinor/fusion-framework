@@ -4,10 +4,21 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./errors.js": "./dist/esm/errors.js",
-        "./app": "./dist/esm/app/index.js",
-        "./app/*.js": "./dist/esm/app/*.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./errors.js": {
+            "import": "./dist/esm/errors.js",
+            "types": "./dist/types/errors.d.ts"
+        },
+        "./app": {
+            "import": "./dist/esm/app/index.js",
+            "types": "./dist/types/app/index.d.ts"
+        },
+        "./app/*.js": {
+            "import": "./dist/esm/app/*.js"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
