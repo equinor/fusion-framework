@@ -13,10 +13,7 @@
         }
     },
     "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
+        ".": "./dist/esm/index.js"
     },
     "scripts": {
         "build": "tsc -b",
