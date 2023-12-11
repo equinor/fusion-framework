@@ -1,5 +1,18 @@
 # Change Log
 
+## 9.5.2
+
+### Patch Changes
+
+-   [#1579](https://github.com/equinor/fusion-framework/pull/1579) [`8aecfdd`](https://github.com/equinor/fusion-framework/commit/8aecfdd892c5e4cc6afbf6c736d7d46d0199611b) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-side-sheet from 1.2.2 to 1.2.3
+
+-   [#1578](https://github.com/equinor/fusion-framework/pull/1578) [`e6859bf`](https://github.com/equinor/fusion-framework/commit/e6859bf9604b1ac388c077db97cb7bd7127f59db) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-menu from 0.2.0 to 0.3.0
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-observable@8.1.3
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.5
+    -   @equinor/fusion-framework-app@7.1.11
+
 ## 9.5.1
 
 ### Patch Changes

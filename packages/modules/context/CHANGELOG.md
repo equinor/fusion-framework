@@ -1,5 +1,17 @@
 # Change Log
 
+## 4.0.18
+
+### Patch Changes
+
+-   [#1601](https://github.com/equinor/fusion-framework/pull/1601) [`4ab2df5`](https://github.com/equinor/fusion-framework/commit/4ab2df5c83439f7fe3fe0846c005427e1793b576) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - add missing `graphic` and `meta` props
+
+-   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module@4.2.6
+    -   @equinor/fusion-query@4.0.4
+
 ## 4.0.17
 
 ### Patch Changes
