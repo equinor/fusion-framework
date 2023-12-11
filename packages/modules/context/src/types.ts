@@ -10,6 +10,8 @@ export type ContextItem<TType extends Record<string, unknown> = Record<string, u
     isDeleted?: boolean;
     created?: Date;
     updated?: Date;
+    graphic?: string;
+    meta?: string;
 };
 
 export interface ContextItemType {
