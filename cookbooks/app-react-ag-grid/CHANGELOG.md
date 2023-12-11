@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.1.4
+
+### Patch Changes
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module-ag-grid@30.2.1
+
 ## 0.1.3
 
 ### Patch Changes

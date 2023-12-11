@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.2.11
+
+### Patch Changes
+
+-   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-observable@8.1.3
+    -   @equinor/fusion-query@4.0.4
+
 ## 5.2.10
 
 ### Patch Changes

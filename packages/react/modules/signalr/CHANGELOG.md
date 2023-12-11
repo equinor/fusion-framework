@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.12
+
+### Patch Changes
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module-signalr@2.0.13
+    -   @equinor/fusion-framework-react-module@3.0.7
+
 ## 2.0.11
 
 ### Patch Changes

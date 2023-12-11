@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.0.4
+
+### Patch Changes
+
+-   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module-service-discovery@7.0.14
+    -   @equinor/fusion-framework-module@4.2.6
+    -   @equinor/fusion-framework-module-http@5.1.2
+    -   @equinor/fusion-query@4.0.4
+    -   @equinor/fusion-framework-module-event@4.0.7
+
 ## 2.0.3
 
 ### Patch Changes

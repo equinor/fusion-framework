@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.0.23
+
+### Patch Changes
+
+-   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+
+-   Updated dependencies [[`4ab2df5`](https://github.com/equinor/fusion-framework/commit/4ab2df5c83439f7fe3fe0846c005427e1793b576), [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module-context@4.0.18
+    -   @equinor/fusion-framework-module-bookmark@1.0.16
+    -   @equinor/fusion-observable@8.1.3
+    -   @equinor/fusion-framework-react@5.3.4
+    -   @equinor/fusion-query@4.0.4
+    -   @equinor/fusion-framework-react-module@3.0.7
+
 ## 2.0.22
 
 ### Patch Changes
