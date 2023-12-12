@@ -5,6 +5,9 @@ import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 
+import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
+import { enableCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
+
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;
 
@@ -36,6 +39,10 @@ export const configure = async (config: FrameworkConfigurator) => {
             identifier: 'fusion-cli',
             name: 'Fusion CLI',
         });
+    });
+
+    enableFeatureFlagging(config, (builder) => {
+        builder.addPlugin(enableCgiPlugin('framework-cli-features', ['fusionDebug']));
     });
 
     config.onConfigured(() => {
