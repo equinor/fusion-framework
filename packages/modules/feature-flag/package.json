@@ -16,6 +16,14 @@
         "./README.md": "./README.md"
     },
     "types": "./dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "plugins": [
+                "dist/types/plugins/index.d.ts"
+            ]
+        }
+    },
+
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"

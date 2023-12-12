@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
-    "declarationDir": "./dist/types"
+    "declarationDir": "./dist/types",
+    "paths": {
+      "plugins/*": [
+        "./src/plugins/*"
+      ],
+    }
   },
   "include": [
     "src/**/*",
