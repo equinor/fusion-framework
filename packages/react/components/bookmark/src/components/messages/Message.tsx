@@ -44,19 +44,19 @@ const Styles = {
     `,
 };
 
-interface MessageProps {
-    title: string;
-    body?: React.FC | string;
-    type?: PortalMessageType;
-    color?: string;
-}
+type MessageProps = {
+    readonly title: string;
+    readonly body?: React.FC | string;
+    readonly type?: PortalMessageType;
+    readonly color?: string;
+};
 
-export function Message({
+export const Message = ({
     title,
     type = 'Info',
     color,
     children,
-}: PropsWithChildren<MessageProps>) {
+}: PropsWithChildren<MessageProps>) => {
     const currentType = getMessageType(type);
     return (
         <Styles.Wrapper>
@@ -79,4 +79,4 @@ export function Message({
             </Styles.Content>
         </Styles.Wrapper>
     );
-}
+};
