@@ -1,6 +1,9 @@
 import { Action } from './types';
 
-export class ActionError<TAction extends Action, TCause extends Error = Error> extends Error {
+export class ActionError<
+    TAction extends Action = Action,
+    TCause extends Error = Error,
+> extends Error {
     constructor(
         public action: TAction,
         public cause: TCause,
