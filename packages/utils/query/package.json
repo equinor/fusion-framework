@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-query",
-    "version": "4.0.3",
+    "version": "4.0.4",
     "description": "WIP",
     "keywords": [
         "observable",
@@ -12,11 +12,26 @@
     "license": "ISC",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./cache": "./dist/esm/cache/index.js",
-        "./client": "./dist/esm/client/index.js",
-        "./react": "./dist/esm/react/index.js",
-        "./operators": "./dist/esm/operators.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./cache": {
+            "import": "./dist/esm/cache/index.js",
+            "types": "./dist/types/cache/index.d.ts"
+        },
+        "./client": {
+            "import": "./dist/esm/client/index.js",
+            "types": "./dist/types/client/index.d.ts"
+        },
+        "./react": {
+            "import": "./dist/esm/react/index.js",
+            "types": "./dist/types/react/index.d.ts"
+        },
+        "./operators": {
+            "import": "./dist/esm/operators.js",
+            "types": "./dist/types/operators.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
@@ -61,7 +76,7 @@
         "immer": "^9.0.16",
         "rxjs": "^7.8.1",
         "uuid": "^9.0.0",
-        "vitest": "^0.34.2"
+        "vitest": "^1.0.1"
     },
     "devDependencies": {
         "@types/react": "^18.2.20",

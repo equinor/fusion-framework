@@ -1,15 +1,33 @@
 {
     "name": "@equinor/fusion-framework-react",
-    "version": "5.3.3",
+    "version": "5.3.4",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./app": "./dist/esm/app/index.js",
-        "./context": "./dist/esm/context/index.js",
-        "./hooks": "./dist/esm/hooks/index.js",
-        "./http": "./dist/esm/http/index.js",
-        "./signalr": "./dist/esm/signalr/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./app": {
+            "import": "./dist/esm/app/index.js",
+            "types": "./dist/types/app/index.d.ts"
+        },
+        "./context": {
+            "import": "./dist/esm/context/index.js",
+            "types": "./dist/types/context/index.d.ts"
+        },
+        "./hooks": {
+            "import": "./dist/esm/hooks/index.js",
+            "types": "./dist/types/hooks/index.d.ts"
+        },
+        "./http": {
+            "import": "./dist/esm/http/index.js",
+            "types": "./dist/types/http/index.d.ts"
+        },
+        "./signalr": {
+            "import": "./dist/esm/signalr/index.js",
+            "types": "./dist/types/signalr/index.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {

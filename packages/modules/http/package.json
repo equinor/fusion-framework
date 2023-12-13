@@ -1,14 +1,26 @@
 {
     "name": "@equinor/fusion-framework-module-http",
-    "version": "5.1.1",
+    "version": "5.1.2",
     "description": "",
     "main": "dist/esm/index.js",
     "types": "index.d.ts",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./client": "./dist/esm/lib/client/index.js",
-        "./operators": "./dist/esm/lib/operators/index.js",
-        "./selectors": "./dist/esm/lib/selectors/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./client": {
+            "import": "./dist/esm/lib/client/index.js",
+            "types": "./dist/types/lib/client/index.d.ts"
+        },
+        "./operators": {
+            "import": "./dist/esm/lib/operators/index.js",
+            "types": "./dist/types/lib/operators/index.d.ts"
+        },
+        "./selectors": {
+            "import": "./dist/esm/lib/selectors/index.js",
+            "types": "./dist/types/lib/selectors/index.d.ts"
+        }
     },
     "typesVersions": {
         ">=4.2": {

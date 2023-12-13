@@ -1,11 +1,17 @@
 {
     "name": "@equinor/fusion-framework-module-msal",
-    "version": "3.0.7",
+    "version": "3.0.8",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./client": "./dist/esm/client/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./client": {
+            "import": "./dist/esm/client/index.js",
+            "types": "./dist/types/client/index.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {

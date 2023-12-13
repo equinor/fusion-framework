@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-observable",
-    "version": "8.1.2",
+    "version": "8.1.3",
     "description": "WIP",
     "keywords": [
         "observable",
@@ -12,9 +12,18 @@
     "license": "ISC",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./operators": "./dist/esm/operators/index.js",
-        "./react": "./dist/esm/react/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./operators": {
+            "import": "./dist/esm/operators/index.js",
+            "types": "./dist/types/operators/index.d.ts"
+        },
+        "./react": {
+            "import": "./dist/esm/react/index.js",
+            "types": "./dist/types/react/index.d.ts"
+        }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
@@ -67,7 +76,7 @@
         "happy-dom": "^12.0.1",
         "react": "^18.2.0",
         "typescript": "^5.1.3",
-        "vitest": "^0.34.2"
+        "vitest": "^1.0.1"
     },
     "peerDependencies": {
         "@types/react": "^17.0.0 || ^18.0.0",

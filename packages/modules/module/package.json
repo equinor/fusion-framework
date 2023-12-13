@@ -1,11 +1,17 @@
 {
     "name": "@equinor/fusion-framework-module",
-    "version": "4.2.5",
+    "version": "4.2.6",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./provider": "./dist/esm/lib/provider/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./provider": {
+            "import": "./dist/esm/lib/provider/index.js",
+            "types": "./dist/types/lib/provider/index.d.ts"
+        }
     },
     "types": "index.d.ts",
     "typesVersions": {

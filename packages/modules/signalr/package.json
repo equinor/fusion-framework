@@ -1,19 +1,23 @@
 {
     "name": "@equinor/fusion-framework-module-signalr",
-    "version": "2.0.12",
+    "version": "2.0.13",
     "description": "",
     "sideEffects": false,
     "main": "dist/esm/index.js",
-    "types": "index.d.ts",
+    "types": "dist/types/index.d.ts",
     "typesVersions": {
         ">=4.2": {
             "*": [
+                "./dist/types/index.d.ts",
                 "dist/types/*"
             ]
         }
     },
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        }
     },
     "scripts": {
         "build": "tsc -b",

@@ -1,5 +1,22 @@
 # Change Log
 
+## 7.0.5
+
+### Patch Changes
+
+-   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module-service-discovery@7.0.14
+    -   @equinor/fusion-framework-module-navigation@3.1.3
+    -   @equinor/fusion-observable@8.1.3
+    -   @equinor/fusion-framework-module-http@5.1.2
+    -   @equinor/fusion-framework-module-msal@3.0.8
+    -   @equinor/fusion-framework-module-app@5.2.11
+    -   @equinor/fusion-framework@7.0.24
+    -   @equinor/fusion-framework-react-app@4.1.16
+    -   @equinor/fusion-framework-app@7.1.11
+
 ## 7.0.4
 
 ### Patch Changes
