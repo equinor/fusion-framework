@@ -83,7 +83,7 @@ export const Bookmark = () => {
                 ) : (
                     <Styled.NoContentWrapper>
                         <Message title="No Bookmarks" type="NoContent">
-                            You haven't created any bookmarks yet.
+                            You have not created any bookmarks yet.
                         </Message>
                     </Styled.NoContentWrapper>
                 )}
