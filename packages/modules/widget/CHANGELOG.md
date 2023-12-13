@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.5
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-query@4.0.5
+    -   @equinor/fusion-framework-module-service-discovery@7.0.15
+
 ## 2.0.4
 
 ### Patch Changes
