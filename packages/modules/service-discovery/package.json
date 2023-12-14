@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-service-discovery",
-    "version": "7.0.15",
+    "version": "7.0.16",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
