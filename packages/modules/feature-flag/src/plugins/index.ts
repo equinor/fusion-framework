@@ -1,1 +1,2 @@
-export { enablePlugin as enableCgiPlugin } from './cgi';
+export { createCgiPlugin } from './cgi';
+export { createApiPlugin } from './api';

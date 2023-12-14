@@ -1,3 +1,4 @@
+import { ObservableInput } from 'rxjs';
 import { type IFeatureFlag } from '../../FeatureFlag';
 
 export type Path = Pick<Location, 'pathname' | 'hash' | 'search'>;
@@ -14,3 +15,8 @@ export type CgiAssertionOptions = {
 export type AssertFeatureFlag = (options: CgiAssertionOptions) => boolean;
 
 export type { FeatureFlagPlugin as CgiFeatureFlagPlugin } from '../../types';
+
+export interface ICgiPluginClient {
+    getFeatureFlags(): ObservableInput<Record<string, IFeatureFlag>>;
+    storeFeatureFlags(flags: Array<IFeatureFlag>): void;
+}

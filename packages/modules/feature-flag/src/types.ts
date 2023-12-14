@@ -9,7 +9,7 @@ export interface FeatureFlagPlugin {
     /**
      * connect the plugin to the provider
      */
-    connect: (args: { provider: IFeatureFlagProvider }) => VoidFunction | Subscription;
+    connect?: (args: { provider: IFeatureFlagProvider }) => VoidFunction | Subscription;
 
     /**
      * generate initial value for the provider

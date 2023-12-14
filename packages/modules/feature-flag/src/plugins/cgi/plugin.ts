@@ -1,15 +1,10 @@
-import { Subject, Subscription, from, of } from 'rxjs';
-import { concatMap, reduce, takeUntil, withLatestFrom } from 'rxjs/operators';
-
 import { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
-
-import type { AssertFeatureFlag, CgiFeatureFlagPlugin, Path } from './types';
-
-import type { FeatureFlag, IFeatureFlag } from '../../FeatureFlag';
-
-import { name as namespace } from '../../FeatureFlagModule';
+import type { AssertFeatureFlag, CgiFeatureFlagPlugin, ICgiPluginClient, Path } from './types';
+import { Subject, Subscription, forkJoin, from, of } from 'rxjs';
+import { concatMap, map, reduce, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { FeatureFlag, IFeatureFlag } from '../../FeatureFlag';
+import { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 import { normalizeFlags } from '../../utils/normalize-flags';
-import { type IStorageAdapter, createStorage } from '../../utils/storage';
 
 export const assertFeatureFlag: AssertFeatureFlag = (options) => {
     if (options.value === '0' || options.value === 'false') {
@@ -18,85 +13,100 @@ export const assertFeatureFlag: AssertFeatureFlag = (options) => {
     return true;
 };
 
-export type PluginOptions = {
-    isFeatureEnabled?: typeof assertFeatureFlag;
-    storage?: IStorageAdapter<IFeatureFlag>;
-};
+export class CgiPlugin implements CgiFeatureFlagPlugin {
+    #cgiClient: ICgiPluginClient;
+    #navigation: INavigationProvider;
+    #isFeatureEnabled: typeof assertFeatureFlag;
+    #features: Array<IFeatureFlag>;
 
-export const plugin = (
-    args: { name: string; navigation: INavigationProvider; initial?: Array<FeatureFlag> },
-    options?: PluginOptions,
-): CgiFeatureFlagPlugin => {
-    const { name, navigation, initial = [] } = args;
-    const {
-        isFeatureEnabled = assertFeatureFlag,
-        storage: storageAdapter = createStorage<IFeatureFlag>(namespace, name, 'local'),
-    } = options ?? {};
-    // TODO - get / create from config
-    return {
-        initial: async () => {
-            const initialFlags = normalizeFlags(initial);
+    constructor(args: {
+        cgiClient: ICgiPluginClient;
+        features: Array<string | IFeatureFlag>;
+        navigation: INavigationProvider;
+        isFeatureEnabled?: typeof assertFeatureFlag;
+    }) {
+        const { cgiClient, features, navigation, isFeatureEnabled = assertFeatureFlag } = args;
 
-            Object.values(storageAdapter.getItems()).forEach((flag) => {
-                const initialFlag = initialFlags[flag.key];
-                if (initialFlag && !initialFlag.readonly) {
-                    initialFlag.enabled = !!flag.enabled;
-                }
-            });
+        this.#features = features
+            .map(
+                (feature): IFeatureFlag =>
+                    typeof feature === 'object' ? feature : { key: feature, enabled: false },
+            )
+            .map(FeatureFlag.Parse);
+        this.#cgiClient = cgiClient;
+        this.#navigation = navigation;
+        this.#isFeatureEnabled = isFeatureEnabled;
+    }
 
-            return Object.values(initialFlags);
-        },
-        onFeatureToggle: ({ flags }) => {
-            flags.forEach((flag) => storageAdapter.setItem(flag.key, flag));
-        },
-        connect: ({ provider }) => {
-            const features$ = of(initial);
+    initial() {
+        return forkJoin({
+            featureFlags: of(normalizeFlags(this.#features)),
+            storedFlags: this.#cgiClient.getFeatureFlags(),
+        }).pipe(
+            map(({ featureFlags, storedFlags }) => {
+                Object.values(storedFlags).forEach((flag) => {
+                    const initialFlag = featureFlags[flag.key];
+                    if (initialFlag && !initialFlag.readonly) {
+                        initialFlag.enabled = !!flag.enabled;
+                    }
+                });
 
-            const subscription = new Subscription();
-            const teardown$ = new Subject();
-            const path$ = new Subject<Path>();
+                return Object.values(featureFlags);
+            }),
+        );
+    }
 
-            const change$ = path$.pipe(
-                withLatestFrom(features$),
-                concatMap(([path, features]) => {
-                    const search = new URLSearchParams(path.search);
-                    return from(features).pipe(
-                        reduce(
-                            (acc, feature) => {
-                                const { key } = feature;
-                                if (search.has(key)) {
-                                    const value = search.get(key);
-                                    const enabled = isFeatureEnabled({ feature, value, path });
-                                    acc.push({ key, enabled });
-                                }
-                                return acc;
-                            },
-                            [] as Array<{ key: string; enabled: boolean }>,
-                        ),
-                    );
-                }),
-                takeUntil(teardown$),
-            );
+    onFeatureToggle(event: { flags: Array<IFeatureFlag> }) {
+        const { flags } = event;
+        this.#cgiClient.storeFeatureFlags(flags);
+    }
 
-            subscription.add(change$.subscribe((features) => provider.toggleFeatures(features)));
+    connect(args: { provider: IFeatureFlagProvider }) {
+        const { provider } = args;
 
-            /** when disposed, signal teardown of processes */
-            subscription.add(() => path$.complete());
+        const subscription = new Subscription();
+        const teardown$ = new Subject();
+        const path$ = new Subject<Path>();
 
-            /** subscribe to navigation events  */
-            subscription.add(
-                navigation.navigator.listen((e) => {
-                    path$.next(e.location);
-                }),
-            );
+        const change$ = path$.pipe(
+            concatMap((path) => {
+                const search = new URLSearchParams(path.search);
+                return from(this.#features).pipe(
+                    reduce(
+                        (acc, feature) => {
+                            const { key } = feature;
+                            if (search.has(key)) {
+                                const value = search.get(key);
+                                const enabled = this.#isFeatureEnabled({ feature, value, path });
+                                acc.push({ key, enabled });
+                            }
+                            return acc;
+                        },
+                        [] as Array<{ key: string; enabled: boolean }>,
+                    ),
+                );
+            }),
+            takeUntil(teardown$),
+        );
 
-            /** resolve initial */
-            path$.next(navigation.path);
+        subscription.add(change$.subscribe((features) => provider.toggleFeatures(features)));
 
-            /** teardown */
-            return subscription;
-        },
-    };
-};
+        /** when disposed, signal teardown of processes */
+        subscription.add(() => path$.complete());
 
-export default plugin;
+        /** subscribe to navigation events  */
+        subscription.add(
+            this.#navigation.navigator.listen((e) => {
+                path$.next(e.location);
+            }),
+        );
+
+        /** resolve initial */
+        path$.next(this.#navigation.path);
+
+        /** teardown */
+        return subscription;
+    }
+}
+
+export default CgiPlugin;
