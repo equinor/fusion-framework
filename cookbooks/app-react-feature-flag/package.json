@@ -16,6 +16,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-cli": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
+        "@types/express": "^4.17.17",
         "@types/react": "^18.2.20",
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
@@ -25,10 +26,12 @@
     "dependencies": {
         "@equinor/eds-core-react": "^0.34.0",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+        "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
         "@faker-js/faker": "^8.3.1",
         "@remix-run/router": "^1.8.0",
+        "express": "^4.18.2",
         "react-router-dom": "^6.16.0"
     }
 }
