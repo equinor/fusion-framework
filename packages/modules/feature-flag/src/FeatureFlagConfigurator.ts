@@ -6,6 +6,7 @@ import type {
     FeatureFlagPlugin,
     FeatureFlagPluginConfigCallback,
 } from './types.js';
+import { IFeatureFlag } from './FeatureFlag.js';
 
 // TODO allow configurator to have array
 // TODO fix .dot type
@@ -44,6 +45,10 @@ export class FeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagConfig
                         /** only get initial value from plugins that support functionality */
                         filter((x) => !!x.initial),
                         concatMap((x) => x.initial!()),
+                        reduce((acc, items) => {
+                            acc.push(...items);
+                            return acc;
+                        }, [] as IFeatureFlag[]),
                     ),
                 ),
             ),

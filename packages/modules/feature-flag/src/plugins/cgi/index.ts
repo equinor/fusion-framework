@@ -1,5 +1,5 @@
-export { enablePlugin, default } from './enable-plugin';
-
-export { plugin } from './plugin';
+export { CgiPlugin } from './plugin';
+export { createCgiPlugin } from './create-plugin';
+export { createCgiPluginClient } from './create-client';
 
 export * from './types';

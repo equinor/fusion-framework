@@ -1,7 +1,10 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
-import { enableCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
+import {
+    createCgiPlugin,
+    createApiPlugin,
+} from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { faker } from '@faker-js/faker';
 
 faker.seed(123);
@@ -10,9 +13,13 @@ export const configure: AppModuleInitiator = (configurator, args) => {
     const { basename } = args.env;
     enableNavigation(configurator, basename);
 
-    enableFeatureFlagging(configurator, (_builder) => {
-        _builder.addPlugin(
-            enableCgiPlugin('cookbook-feature-flag', [
+    configurator.configureHttpClient('feature-flag-api', {
+        baseUri: 'http://localhost:12321',
+    });
+
+    enableFeatureFlagging(configurator, (builder) => {
+        builder.addPlugin(
+            createCgiPlugin('cookbook-feature-flag', [
                 'foo',
                 {
                     key: faker.animal.type(),
@@ -41,6 +48,13 @@ export const configure: AppModuleInitiator = (configurator, args) => {
                     readonly: true,
                 },
             ]),
+        );
+
+        builder.addPlugin(
+            createApiPlugin({
+                httpClientName: 'feature-flag-api',
+                path: 'api/flags',
+            }),
         );
     });
 };
