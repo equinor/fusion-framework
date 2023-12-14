@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+-   [#1615](https://github.com/equinor/fusion-framework/pull/1615) [`750a7f5`](https://github.com/equinor/fusion-framework/commit/750a7f5f96104e33d4a436ff858044516e269c68) Thanks [@Noggling](https://github.com/Noggling)! - Implement a "No Content" message and relocate the "Loading" indicator to the bookmarks component. Additionally, incorporate an effect to handle cases where the "onBookmarksChanged" event is not triggered.
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react@5.3.6
+    -   @equinor/fusion-framework-react-module-bookmark@2.0.25
+
 ## 0.2.14
 
 ### Patch Changes

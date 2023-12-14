@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.0.3
+
+### Patch Changes
+
+-   [`cce198d`](https://github.com/equinor/fusion-framework/commit/cce198d6a91fb7912265d4383246dc405cf17a17) Thanks [@odinr](https://github.com/odinr)! - export http errors from `@equinor/fusion-framework-module-http/errors`
+
+-   [#1623](https://github.com/equinor/fusion-framework/pull/1623) [`f85316f`](https://github.com/equinor/fusion-framework/commit/f85316f2344258896a77ef602bd4047dfa553788) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - Fix package exports in react-module-http
+
+-   Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
+    -   @equinor/fusion-framework-module-http@5.1.3
+
 ## 4.0.2
 
 ### Patch Changes
