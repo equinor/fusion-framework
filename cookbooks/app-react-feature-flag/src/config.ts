@@ -22,27 +22,27 @@ export const configure: AppModuleInitiator = (configurator, args) => {
             createCgiPlugin('cookbook-feature-flag', [
                 'foo',
                 {
-                    key: faker.animal.type(),
+                    key: faker.lorem.word(),
                     readonly: true,
                 },
                 {
-                    key: faker.animal.type(),
+                    key: faker.lorem.word(),
                     description: faker.lorem.sentence(5),
                     enabled: false,
                     value: faker.lorem.word(),
                 },
                 {
-                    key: faker.animal.type(),
+                    key: faker.lorem.word(),
                     title: faker.animal.bear(),
                 },
                 {
-                    key: faker.animal.type(),
+                    key: faker.lorem.word(),
                     title: faker.animal.bear(),
                     description: faker.lorem.sentence(5),
                     enabled: true,
                 },
                 {
-                    key: faker.animal.type(),
+                    key: faker.lorem.word(),
                     enabled: false,
                     value: faker.lorem.word(),
                     readonly: true,
