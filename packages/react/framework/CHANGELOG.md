@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.3.5
+
+### Patch Changes
+
+-   Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
+    -   @equinor/fusion-observable@8.1.4
+    -   @equinor/fusion-framework@7.0.25
+    -   @equinor/fusion-framework-react-module-signalr@2.0.13
+
 ## 5.3.4
 
 ### Patch Changes

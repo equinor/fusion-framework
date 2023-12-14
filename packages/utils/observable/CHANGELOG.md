@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.1.4
+
+### Patch Changes
+
+-   [`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a) Thanks [@odinr](https://github.com/odinr)! - added default action type to ActionError
+
 ## 8.1.3
 
 ### Patch Changes

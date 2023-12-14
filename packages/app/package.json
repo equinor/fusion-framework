@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-app",
-    "version": "7.1.11",
+    "version": "7.1.12",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {

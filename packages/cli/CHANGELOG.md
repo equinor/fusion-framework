@@ -1,5 +1,14 @@
 # Change Log
 
+## 9.5.3
+
+### Patch Changes
+
+-   Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
+    -   @equinor/fusion-observable@8.1.4
+    -   @equinor/fusion-framework-app@7.1.12
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.6
+
 ## 9.5.2
 
 ### Patch Changes
