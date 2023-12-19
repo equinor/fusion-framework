@@ -20,6 +20,10 @@
         "./selectors": {
             "import": "./dist/esm/lib/selectors/index.js",
             "types": "./dist/types/lib/selectors/index.d.ts"
+        },
+        "./errors": {
+            "import": "./dist/esm/errors.js",
+            "types": "./dist/types/errors.d.ts"
         }
     },
     "typesVersions": {
