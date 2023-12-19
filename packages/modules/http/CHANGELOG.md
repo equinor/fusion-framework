@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.1.4
+
+### Patch Changes
+
+-   [#1625](https://github.com/equinor/fusion-framework/pull/1625) [`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - fix import from non specified export (moduleResolution: bundler)
+
 ## 5.1.3
 
 ### Patch Changes
