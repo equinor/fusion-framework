@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.3.7
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework@7.0.27
+    -   @equinor/fusion-framework-react-module-http@4.0.4
+    -   @equinor/fusion-framework-react-module-signalr@2.0.15
+
 ## 5.3.6
 
 ### Patch Changes
