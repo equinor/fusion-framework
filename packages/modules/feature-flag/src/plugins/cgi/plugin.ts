@@ -1,7 +1,7 @@
 import { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 import type { AssertFeatureFlag, CgiFeatureFlagPlugin, ICgiPluginClient, Path } from './types';
 import { Subject, Subscription, forkJoin, from, of } from 'rxjs';
-import { concatMap, map, reduce, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { concatMap, map, reduce, takeUntil } from 'rxjs/operators';
 import { FeatureFlag, IFeatureFlag } from '../../FeatureFlag';
 import { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 import { normalizeFlags } from '../../utils/normalize-flags';
