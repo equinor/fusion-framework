@@ -3492,6 +3492,22 @@ packages:
       '@equinor/fusion-wc-icon': 1.0.33
       '@types/react': 18.2.22
       react: 18.2.0
+    dev: true
+
+  /@equinor/fusion-react-button@0.9.1(@types/react@18.2.22)(react@18.2.0):
+    resolution: {integrity: sha512-2rISCx7ZNU/pqcgZMdtEao+fRDVQadc0SBEiN9rH3KbCC6K5186jrqG0GHVqXBzfmID9WtUz5MiFPZcymFeJqw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: "^17.0.0 ||\_^18.0.0"
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-wc-button': 2.4.0
+      '@equinor/fusion-wc-icon': 2.3.0
+      '@types/react': 18.2.22
+      react: 18.2.0
 
   /@equinor/fusion-react-checkbox@0.5.16(react@18.2.0):
     resolution: {integrity: sha512-gWKXhWxH5wWsEW7KA0vFX2tr5Ols3ZPcQJUM+SRIYhr4qtgh98Cm5c/MTBNoUmStjnyzYUFEtfLk8KugRGi2tQ==}
@@ -3561,7 +3577,7 @@ packages:
   /@equinor/fusion-react-person@0.6.0(@types/react@18.2.22)(react@18.2.0):
     resolution: {integrity: sha512-XyFCAmVFhSPXt/6LFKMVxpJjCFIwVkPhLg+WMl6huOXhNudUDZ2HSf+nztIG7klFecIxgSJ1TYiNL/MiJOsaeg==}
     dependencies:
-      '@equinor/fusion-react-button': 0.9.0(@types/react@18.2.22)(react@18.2.0)
+      '@equinor/fusion-react-button': 0.9.1(@types/react@18.2.22)(react@18.2.0)
       '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
       '@equinor/fusion-wc-person': 2.2.1
     transitivePeerDependencies:
@@ -3708,6 +3724,7 @@ packages:
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-icon-button-toggle': 0.27.0
       lit: 2.7.0
+    dev: true
 
   /@equinor/fusion-wc-button@2.3.0:
     resolution: {integrity: sha512-/emsOPUzAF7jPL8qNtMQl1ao4VxMCmBNM3H7zoK2lM0wctzLtHMB6JxtPN04bRPzjyDRdfwMYbpJrP0VK3mJOQ==}
@@ -3790,6 +3807,7 @@ packages:
       '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
+    dev: true
 
   /@equinor/fusion-wc-icon@2.1.0:
     resolution: {integrity: sha512-g2Ov2LzoMOTW9aQHSsufm0wBdI61o5SHlNkp5DsKAD9BhtnKLt6AWAvatzNH4b7HYTy3IiNq1gKBOnk3BC7OEQ==}
