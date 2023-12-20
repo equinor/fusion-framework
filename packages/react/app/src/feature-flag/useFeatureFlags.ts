@@ -1,0 +1,40 @@
+import { useFramework } from '@equinor/fusion-framework-react';
+import { useAppModule } from '../useAppModule';
+import { useCallback, useMemo } from 'react';
+import { useObservableState } from '@equinor/fusion-observable/react';
+import {
+    FeatureFlagModule,
+    IFeatureFlagProvider,
+} from '@equinor/fusion-framework-module-feature-flag';
+
+export const useFeatureFlags = () => {
+    const provider = useAppModule<FeatureFlagModule>('featureFlag');
+    return _useFeatureFlags(provider);
+};
+
+export const useFrameworkFeatureFlags = () => {
+    const provider = useFramework<[FeatureFlagModule]>().modules.featureFlag;
+    return _useFeatureFlags(provider);
+};
+
+export const _useFeatureFlags = (provider: IFeatureFlagProvider) => {
+    if (!provider) {
+        throw new Error('You must enable the featureFlag module to use this hook');
+    }
+    const features$ = useMemo(() => {
+        return provider.getFeatures('_');
+    }, [provider]);
+
+    const { value: features } = useObservableState(features$);
+
+    const setFeatureEnabled = useCallback(
+        (key: string, enabled: boolean) => {
+            provider.toggleFeature({ key, enabled });
+        },
+        [provider],
+    );
+
+    return { features, setFeatureEnabled };
+};
+
+export default useFeatureFlags;
