@@ -4,6 +4,8 @@ import { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
+import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
+import { enableCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;
@@ -36,6 +38,18 @@ export const configure = async (config: FrameworkConfigurator) => {
             identifier: 'fusion-cli',
             name: 'Fusion CLI',
         });
+    });
+
+    enableFeatureFlagging(config, (builder) => {
+        builder.addPlugin(
+            enableCgiPlugin('cookbook-feature-flag', [
+                {
+                    key: 'fusionDebug',
+                    title: 'Fusion debug log',
+                    description: 'Show Fusion debug log in console',
+                },
+            ]),
+        );
     });
 
     config.onConfigured(() => {
