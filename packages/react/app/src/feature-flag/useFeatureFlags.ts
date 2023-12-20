@@ -21,11 +21,11 @@ export const _useFeatureFlags = (provider: IFeatureFlagProvider) => {
     if (!provider) {
         throw new Error('You must enable the featureFlag module to use this hook');
     }
-    const features$ = useMemo(() => {
-        return provider.getFeatures('_');
+    const feature$ = useMemo(() => {
+        return provider.getFeatures((_) => true);
     }, [provider]);
 
-    const { value: features } = useObservableState(features$);
+    const { value: features } = useObservableState(feature$);
 
     const setFeatureEnabled = useCallback(
         (key: string, enabled: boolean) => {
