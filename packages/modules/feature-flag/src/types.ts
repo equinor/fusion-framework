@@ -5,6 +5,8 @@ import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module
 import { IFeatureFlagProvider } from './FeatureFlagProvider';
 import { IFeatureFlag } from './FeatureFlag';
 
+export type { IFeatureFlag } from './FeatureFlag';
+
 export interface FeatureFlagPlugin {
     /**
      * connect the plugin to the provider
