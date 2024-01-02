@@ -19,27 +19,67 @@ import type {
 import { SemanticVersion } from './lib/semantic-version';
 import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
 
+/**
+ * Represents a configurator for modules.
+ *
+ * @template TModules - The array of modules.
+ * @template TRef - The reference type.
+ */
 export interface IModulesConfigurator<
     TModules extends Array<AnyModule> = Array<AnyModule>,
     TRef = any,
 > {
     logger: IModuleConsoleLogger;
+
+    /**
+     * Configures the modules using the provided module configurators.
+     *
+     * @param configs - The array of module configurators.
+     */
     configure(...configs: Array<IModuleConfigurator<any, TRef>>): void;
 
+    /**
+     * Adds a module configurator to the list of configurators.
+     *
+     * @param config - The module configurator to add.
+     */
     addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>): void;
 
+    /**
+     * Initializes the modules with the specified reference.
+     *
+     * @param ref - The reference object.
+     * @returns A promise that resolves to the initialized modules instance.
+     */
     initialize<T extends Array<AnyModule> | unknown>(
         ref?: TRef,
     ): Promise<ModulesInstance<CombinedModules<T, TModules>>>;
 
+    /**
+     * Registers a callback function to be called when the modules are configured.
+     *
+     * @param cb - The callback function.
+     */
     onConfigured<T>(
         cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>,
     ): void;
 
+    /**
+     * Registers a callback function to be called when the modules are initialized.
+     *
+     * @param cb - The callback function.
+     */
     onInitialized<T extends Array<AnyModule> | unknown>(
         cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
     ): void;
 
+    /**
+     * Disposes the modules instance with the specified reference.
+     *
+     * @param instance - The modules instance to dispose.
+     * @param ref - The reference object.
+     * @returns A promise that resolves when the disposal is complete.
+     */
     dispose(instance: ModulesInstanceType<TModules>, ref?: TRef): Promise<void>;
 }
 
@@ -50,6 +90,9 @@ export interface IModuleConfigurator<TModule extends AnyModule = AnyModule, TRef
     afterInit?: (instance: ModuleType<TModule>) => void | Promise<void>;
 }
 
+/**
+ * Error thrown when a required module times out.
+ */
 class RequiredModuleTimeoutError extends Error {
     constructor() {
         super('It was too slow');
@@ -57,39 +100,78 @@ class RequiredModuleTimeoutError extends Error {
     }
 }
 
-/** entry for configuring a module */
+/**
+ * Callback function type for configuring modules.
+ * @template TRef The reference type.
+ * @param config The modules configuration.
+ * @param ref Optional reference parameter.
+ */
 type ModulesConfiguratorConfigCallback<TRef> = (
     config: ModulesConfig<[AnyModule]>,
     ref?: TRef,
 ) => void | Promise<void>;
 
+/**
+ * Configurator class for modules.
+ * @template TModules - Array of modules.
+ * @template TRef - Reference type.
+ */
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
     implements IModulesConfigurator<TModules, TRef>
 {
+    /**
+     * Logger instance for the configurator.
+     */
     public logger: ModuleConsoleLogger = new ModuleConsoleLogger('ModulesConfigurator');
 
+    /**
+     * Array of configuration callbacks.
+     */
     protected _configs: Array<ModulesConfiguratorConfigCallback<TRef>> = [];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /**
+     * Array of callbacks to be executed after configuration.
+     */
     protected _afterConfiguration: Array<(config: any) => void> = [];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /**
+     * Array of callbacks to be executed after initialization.
+     */
     protected _afterInit: Array<(instance: any) => void> = [];
 
+    /**
+     * Set of modules.
+     */
     protected _modules: Set<AnyModule>;
 
+    /**
+     * Constructs a new ModulesConfigurator instance.
+     * @param modules - Array of modules.
+     */
     constructor(modules?: Array<AnyModule>) {
         this._modules = new Set(modules);
     }
 
+    /**
+     * Gets the array of modules.
+     * @returns Array of modules.
+     */
     get modules(): Array<AnyModule> {
         return [...this._modules];
     }
 
+    /**
+     * Configures the modules with the provided configurators.
+     * @param configs - Array of module configurators.
+     */
     public configure(...configs: Array<IModuleConfigurator<any, TRef>>) {
         configs.forEach((x) => this.addConfig(x));
     }
 
+    /**
+     * Adds a module configurator.
+     * @param config - Module configurator.
+     */
     public addConfig<T extends AnyModule>(config: IModuleConfigurator<T, TRef>) {
         const { module, afterConfig, afterInit, configure } = config;
         this._modules.add(module);
@@ -98,18 +180,31 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         afterInit && this._afterInit.push((instances) => afterInit(instances[module.name]));
     }
 
+    /**
+     * Registers a callback to be executed after configuration.
+     * @param cb - Callback function.
+     */
     public onConfigured<T>(
         cb: (config: ModulesConfigType<CombinedModules<T, TModules>>) => void | Promise<void>,
     ) {
         this._afterConfiguration.push(cb);
     }
 
+    /**
+     * Registers a callback to be executed after initialization.
+     * @param cb - Callback function.
+     */
     public onInitialized<T>(
         cb: (instance: ModulesInstanceType<CombinedModules<T, TModules>>) => void,
     ): void {
         this._afterInit.push(cb);
     }
 
+    /**
+     * Initializes the modules with the provided reference.
+     * @param ref - Reference object.
+     * @returns Promise that resolves to the initialized module instance.
+     */
     public async initialize<T, R extends TRef = TRef>(
         ref?: R,
     ): Promise<ModulesInstance<CombinedModules<T, TModules>>> {
@@ -123,6 +218,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         );
     }
 
+    /**
+     * Configures the modules with the provided reference.
+     * @param ref - Reference object.
+     * @returns Promise that resolves to the module configuration.
+     */
     protected async _configure<T, R extends TRef = TRef>(
         ref?: R,
     ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
@@ -132,6 +232,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         return config;
     }
 
+    /**
+     * Creates the module configuration with the provided reference.
+     * @param ref - Reference object.
+     * @returns Promise that resolves to the module configuration.
+     */
     protected _createConfig<T, R = TRef>(
         ref?: R,
     ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
@@ -168,6 +273,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         return lastValueFrom(config$);
     }
 
+    /**
+     * Executes post-configuration tasks.
+     * @param config - Module configuration.
+     * @returns Promise that resolves when post-configuration tasks are complete.
+     */
     protected async _postConfigure<T>(
         config: ModulesConfigType<CombinedModules<T, TModules>>,
     ): Promise<void> {
@@ -202,6 +312,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         }
     }
 
+    /**
+     * Initializes the modules with the provided configuration and reference.
+     * @param config - Module configuration.
+     * @param ref - Reference object.
+     * @returns Promise that resolves to the initialized module instance.
+     */
     protected async _initialize<T, R = TRef>(
         config: ModulesConfigType<CombinedModules<T, TModules>>,
         ref?: R,
@@ -215,6 +331,16 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
         const hasModule = (name: string) => moduleNames.includes(name);
 
+        /**
+         * Requires an instance of a module by name.
+         * 
+         * @template TKey - The key type of the module.
+         * @param name - The name of the module to require.
+         * @param wait - The timeout duration in seconds for waiting the module to be initialized. Default is 60 seconds.
+         * @returns A promise that resolves to the instance of the required module.
+         * @throws Error if the module is not defined.
+         * @throws RequiredModuleTimeoutError if the module initialization times out.
+         */
         const requireInstance = <
             TKey extends keyof ModulesInstanceType<CombinedModules<T, TModules>>,
         >(
@@ -312,6 +438,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         return instance;
     }
 
+    /**
+     * Executes post-initialization tasks.
+     * @param instance - Initialized module instance.
+     * @param ref - Reference object.
+     */
     protected async _postInitialize<T, R = TRef>(
         instance: ModulesInstanceType<CombinedModules<T, TModules>>,
         ref?: R,

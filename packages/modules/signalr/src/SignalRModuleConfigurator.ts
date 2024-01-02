@@ -47,6 +47,7 @@ export type SignalRConfig = {
  */
 export class SignalRModuleConfigBuilder<
     TDeps extends AnyModule[] | unknown = unknown,
+    // TODO - use BaseConfigBuilder
 > extends ModuleConfigBuilder<TDeps, ISignalRConfigurator> {
     async addHub(name: string, config: SignalRHubConfig) {
         this._config.addHub(name, config);
