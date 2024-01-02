@@ -912,6 +912,9 @@ importers:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../../modules/event
+      '@equinor/fusion-framework-module-msal':
+        specifier: workspace:^
+        version: link:../../modules/msal
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: workspace:^
         version: link:../modules/bookmark
