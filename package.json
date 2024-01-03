@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^16 || ^18 || ^20 || ^21",
+    "node": "^16 || ^18 || ^20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": ">=4"
