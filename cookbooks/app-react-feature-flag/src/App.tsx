@@ -1,30 +1,9 @@
-import { useAppModule } from '@equinor/fusion-framework-react-app';
-import { useObservableState } from '@equinor/fusion-observable/react';
-import { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
-import { useCallback, useMemo } from 'react';
-import { IFeatureFlag } from '@equinor/fusion-framework-module-feature-flag';
-import { useFeatureFlag } from '@equinor/fusion-framework-react-app/feature-flag';
+import { useFeatureFlag, useFeatureFlags } from '@equinor/fusion-framework-react-app/feature-flag';
 import FeatureFlag from './FeatureFlag';
 
 export const App = () => {
-    const provider = useAppModule<FeatureFlagModule>('featureFlag');
-    const features$ = useMemo(() => {
-        return provider.getFeatures((_) => true);
-    }, [provider]);
-
-    const { value: features } = useObservableState(features$);
-
-    const handleToggle = useCallback(
-        (flag: IFeatureFlag) => {
-            provider.toggleFeature({
-                key: flag.key,
-                enabled: !flag.enabled,
-            });
-        },
-        [provider],
-    );
-
-    const { feature: fooFlag, setFeatureEnabled } = useFeatureFlag('foo');
+    const { features, setFeatureEnabled } = useFeatureFlags();
+    const { feature: fooFlag } = useFeatureFlag('foo');
 
     if (!fooFlag) {
         return null;
@@ -33,10 +12,18 @@ export const App = () => {
     return (
         <div style={{ display: 'flex', flexFlow: 'column', padding: '1rem' }}>
             {features?.map((feature) => {
-                return <FeatureFlag key={feature.key} flag={feature} onToggle={handleToggle} />;
+                return (
+                    <FeatureFlag
+                        key={feature.key}
+                        flag={feature}
+                        onToggle={() => setFeatureEnabled(feature.key, !feature.enabled)}
+                    />
+                );
             })}
             <hr />
-            <button onClick={() => setFeatureEnabled(!fooFlag.enabled)}>Toggle 'foo' flag</button>
+            <button onClick={() => setFeatureEnabled('foo', !fooFlag.enabled)}>
+                Toggle 'foo' flag
+            </button>
         </div>
     );
 };

@@ -3,7 +3,7 @@ import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
 import {
     createCgiPlugin,
-    createApiPlugin,
+    // createApiPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { faker } from '@faker-js/faker';
 
@@ -50,12 +50,12 @@ export const configure: AppModuleInitiator = (configurator, args) => {
             ]),
         );
 
-        builder.addPlugin(
-            createApiPlugin({
-                httpClientName: 'feature-flag-api',
-                path: 'api/flags',
-            }),
-        );
+        // builder.addPlugin(
+        //     createApiPlugin({
+        //         httpClientName: 'feature-flag-api',
+        //         path: 'api/flags',
+        //     }),
+        // );
     });
 };
 
