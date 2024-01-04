@@ -118,7 +118,7 @@ importers:
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^30.2.0
-        version: 30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.0)
+        version: 30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.1)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.3.0
@@ -3473,14 +3473,14 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.0):
+  /@equinor/fusion-react-ag-grid-styles@30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.1):
     resolution: {integrity: sha512-h2wUe9XHYDGPe2B34D/RijCwi5Fub5A8MbersMwRNO7QKr1q5xqy89m/NE9ZPfK3FnRt/6E3EQ0HXT9JEvxXEA==}
     peerDependencies:
       '@ag-grid-community/styles': ~29.3.4
       '@equinor/fusion-react-styles': ^0.6.0
     dependencies:
       '@ag-grid-community/styles': 29.3.5
-      '@equinor/fusion-react-styles': 0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+      '@equinor/fusion-react-styles': 0.6.1(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@equinor/fusion-react-button@0.9.0(@types/react@18.2.22)(react@18.2.0):
@@ -3658,6 +3658,28 @@ packages:
       clsx: 1.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: true
+
+  /@equinor/fusion-react-styles@0.6.1(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OMhlwLwfl6DFiIs8cnJkwNR3CjxO/D+Q/z2pQN62vQFynlqiCYLBiNb7bRmLnpUtPs90gaf1K/dzfrYYqGcwFA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@equinor/fusion-wc-theme': 1.1.0
+      '@equinor/fusion-web-theme': 0.1.7
+      '@material-ui/styles': 4.11.5(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.22
+      clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@equinor/fusion-react-utils@2.1.0(react@18.2.0):
     resolution: {integrity: sha512-qbQ8Unf8uX5+oVNOBRXq14eTRIiMr2GmShbzYcuZyHlH1Ri4zKns7Lzas/IjbUq/Wxv7uG0A2ssKZX2VipdZXA==}
@@ -4052,6 +4074,16 @@ packages:
       '@equinor/fusion-web-theme': 0.1.7
       '@material/theme': 14.0.0
       lit: 2.7.0
+    dev: true
+
+  /@equinor/fusion-wc-theme@1.1.0:
+    resolution: {integrity: sha512-V8ECVXAz2BcKoAFZxTUja0x1ujY+2TbVqpOf3Nwh+7DoIucSqv7PBxr2JmDXQW4r88m+YChtxcp8rVthXwKxIg==}
+    dependencies:
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-web-theme': 0.1.7
+      '@material/theme': 14.0.0
+      lit: 3.0.2
+    dev: false
 
   /@equinor/fusion-web-theme@0.1.7:
     resolution: {integrity: sha512-avEw9LqHUe2CpD6AHxjLScWTWicRzO1VrTk/eAL90gBTvUssUU7F0w8GEh3V0/hovszbZsl0LTkMbFopLLnIjg==}
