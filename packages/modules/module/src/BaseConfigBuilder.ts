@@ -5,12 +5,12 @@ import { Modules, ModuleType } from './types';
 type ConfigPropType<T, Path extends string> = string extends Path
     ? unknown
     : Path extends keyof T
-    ? T[Path]
-    : Path extends `${infer K}.${infer R}`
-    ? K extends keyof T
-        ? ConfigPropType<T[K], R>
-        : unknown
-    : unknown;
+      ? T[Path]
+      : Path extends `${infer K}.${infer R}`
+        ? K extends keyof T
+            ? ConfigPropType<T[K], R>
+            : unknown
+        : unknown;
 
 type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
 
