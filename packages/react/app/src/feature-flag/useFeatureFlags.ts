@@ -17,7 +17,7 @@ export const useFrameworkFeatureFlags = () => {
     return _useFeatureFlags(provider);
 };
 
-export const _useFeatureFlags = (provider: IFeatureFlagProvider) => {
+const _useFeatureFlags = (provider: IFeatureFlagProvider) => {
     if (!provider) {
         throw new Error('You must enable the featureFlag module to use this hook');
     }
