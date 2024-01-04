@@ -51,12 +51,10 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
     return (
         <SideSheet isOpen={isOpen} onClose={onClose} isDismissable={true}>
             <SideSheet.Title title="User settings" />
-            <SideSheet.SubTitle
-                subTitle={'Settings for your user experience in the amazing Fusion portal'}
-            />
+            <SideSheet.SubTitle subTitle={'Settings for your user in Fusion portal'} />
             <SideSheet.Actions></SideSheet.Actions>
             <SideSheet.Content>
-                <section>
+                <section style={{ paddingLeft: '0.5em' }}>
                     <div>
                         <PersonListItem azureId={azureId}></PersonListItem>
                     </div>

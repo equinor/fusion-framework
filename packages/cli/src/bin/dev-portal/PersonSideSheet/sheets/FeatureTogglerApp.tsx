@@ -18,15 +18,19 @@ export const FeatureTogglerApp = () => {
                             <Typography variant="body_short_bold">
                                 {feature.title ?? feature.key}
                             </Typography>
-                            <Typography variant="body_short_italic">
-                                {feature.description ?? ''}
-                            </Typography>
+                            {feature.description && (
+                                <Typography variant="body_short_italic">
+                                    {feature.description}
+                                </Typography>
+                            )}
                         </Styled.SwitchLabel>
-                        <Switch
-                            checked={feature.enabled}
-                            disabled={feature.readonly}
-                            onChange={(e) => console.log(e)}
-                        />
+                        <Styled.Switch>
+                            <Switch
+                                checked={feature.enabled}
+                                disabled={feature.readonly}
+                                onChange={(e) => console.log(e)}
+                            />
+                        </Styled.Switch>
                     </Styled.SwitchListItem>
                 );
             })}

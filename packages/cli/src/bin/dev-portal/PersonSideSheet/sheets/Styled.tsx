@@ -9,13 +9,21 @@ export const Styled = {
         flex-flow: row nowrap;
         justify-content: space-between;
         margin: 1em 0;
-        line-height: 1;
-        border-left: 5px solid var(--eds_interactive_primary__resting, rgba(0, 112, 121, 1));
-        padding-top: 0.5em;
-        padding-left: 0.5em;
+        border-left: 3px solid var(--eds_interactive_primary__resting, rgba(0, 112, 121, 1));
         cursor: pointer;
     `,
     SwitchLabel: styled.div`
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: center;
+        width: 85%;
+        transform: scale(0.9);
+    `,
+    Switch: styled.div`
+        width: 15%;
+        display: flex;
+        justify-content: flex-end;
         transform: scale(0.9);
     `,
 };
