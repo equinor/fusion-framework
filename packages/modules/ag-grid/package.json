@@ -29,7 +29,7 @@
         "directory": "packages/modules/ag-grid"
     },
     "dependencies": {
-        "@ag-grid-enterprise/core": "~30.2.0"
+        "@ag-grid-enterprise/core": "~31.0.1"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
