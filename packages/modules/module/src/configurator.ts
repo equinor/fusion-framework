@@ -333,7 +333,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
         /**
          * Requires an instance of a module by name.
-         * 
+         *
          * @template TKey - The key type of the module.
          * @param name - The name of the module to require.
          * @param wait - The timeout duration in seconds for waiting the module to be initialized. Default is 60 seconds.
