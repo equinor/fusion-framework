@@ -1130,6 +1130,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../../modules/module
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../../modules/feature-flag
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
         version: link:../modules/module
