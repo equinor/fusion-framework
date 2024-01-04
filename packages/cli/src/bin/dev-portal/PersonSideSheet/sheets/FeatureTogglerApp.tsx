@@ -1,11 +1,11 @@
-import { useFeatureFlags } from '@equinor/fusion-framework-react-app/feature-flag';
+import { useCurrentAppFeatureFlags } from '@equinor/fusion-framework-react/app';
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
 import { Styled } from './Styled';
 
 export const FeatureTogglerApp = () => {
-    const { features, setFeatureEnabled } = useFeatureFlags();
+    const { features, setFeatureEnabled } = useCurrentAppFeatureFlags();
     return (
         <Styled.SwitchList>
             {features?.map((feature) => {

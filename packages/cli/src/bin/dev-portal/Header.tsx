@@ -38,9 +38,6 @@ export const Header = () => {
         }
     }, [currentUser]);
 
-    console.log('currentUser', currentUser);
-    console.log('azureId', azureId);
-
     function toggleBookmark() {
         setIsBookmarkOpen((s) => !s);
     }
