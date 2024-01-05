@@ -7,11 +7,25 @@ import {
     IFeatureFlagProvider,
 } from '@equinor/fusion-framework-module-feature-flag';
 
+/**
+ * useFeatureflag
+ *
+ * Hook for getting single featureflag from app.
+ *
+ * @param key string
+ */
 export const useFeatureFlag = (key: string) => {
     const provider = useAppModule<FeatureFlagModule>('featureFlag');
     return _useFeatureFlag(provider, key);
 };
 
+/**
+ * useFrameworkFeatureflag
+ *
+ * Hook for getting single featureflag from portal.
+ *
+ * @param key string
+ */
 export const useFrameworkFeatureFlag = (key: string) => {
     const provider = useFramework<[FeatureFlagModule]>().modules.featureFlag;
     return _useFeatureFlag(provider, key);
