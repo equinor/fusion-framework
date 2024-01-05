@@ -3,8 +3,8 @@ import { FeatureTogglerApp } from './FeatureTogglerApp';
 import { FeatureTogglerPortal } from './FeatureTogglerPortal';
 
 import { Divider, Icon, Button, Tabs } from '@equinor/eds-core-react';
-import { category } from '@equinor/eds-icons';
-Icon.add({ category });
+import { arrow_back, category } from '@equinor/eds-icons';
+Icon.add({ arrow_back, category });
 
 import type { SheetContentProps } from './types';
 
