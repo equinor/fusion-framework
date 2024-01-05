@@ -5,6 +5,13 @@ import { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag
 import { useCurrentAppModules } from './useCurrentAppModules';
 import { EMPTY, map } from 'rxjs';
 
+/**
+ * useCurrentAppFeatureFlags.
+ *
+ * Hook for getting current app's featureFlags from framework/portal.
+ *
+ * if in an app setting use hook "useFeatureFlags" from \@equinor/fusion-framework-react-app/feature-flag package.
+ */
 export const useCurrentAppFeatureFlags = () => {
     const provider$ = useCurrentAppModules<[FeatureFlagModule]>().modules$.pipe(
         map((val) => val?.featureFlag),
@@ -25,6 +32,5 @@ export const useCurrentAppFeatureFlags = () => {
         [provider],
     );
 
-    console.log('VALUE', features);
     return { features, setFeatureEnabled };
 };
