@@ -48,6 +48,11 @@ export const configure = async (config: FrameworkConfigurator) => {
                     title: 'Fusion debug log',
                     description: 'Show Fusion debug log in console',
                 },
+                {
+                    key: 'pinkBg',
+                    title: 'Use pink bg?',
+                    description: 'When enabled the background should be pink',
+                },
             ]),
         );
     });
