@@ -1,4 +1,8 @@
-import { useFeatureFlag, useFeatureFlags, useFrameworkFeatureFlag } from '@equinor/fusion-framework-react-app/feature-flag';
+import {
+    useFeatureFlag,
+    useFeatureFlags,
+    useFrameworkFeatureFlag,
+} from '@equinor/fusion-framework-react-app/feature-flag';
 import FeatureFlag from './FeatureFlag';
 
 export const App = () => {
