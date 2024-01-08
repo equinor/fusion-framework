@@ -42,7 +42,7 @@ export const configure = async (config: FrameworkConfigurator) => {
 
     enableFeatureFlagging(config, (builder) => {
         builder.addPlugin(
-            createCgiPlugin('cookbook-feature-flag', [
+            createCgiPlugin('dev-portal', [
                 {
                     key: 'fusionDebug',
                     title: 'Fusion debug log',

@@ -19,7 +19,7 @@ export const configure: AppModuleInitiator = (configurator, args) => {
 
     enableFeatureFlagging(configurator, (builder) => {
         builder.addPlugin(
-            createCgiPlugin('cookbook-feature-flag', [
+            createCgiPlugin('app-react-feature-flag', [
                 {
                     key: 'redHeader',
                     title: 'Use red header?',
