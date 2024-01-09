@@ -1,85 +1,92 @@
 # Change Log
 
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@5.1.5
+
 ## 4.0.4
 
 ### Patch Changes
 
--   Updated dependencies [[`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e)]:
-    -   @equinor/fusion-framework-module-http@5.1.4
+- Updated dependencies [[`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e)]:
+  - @equinor/fusion-framework-module-http@5.1.4
 
 ## 4.0.3
 
 ### Patch Changes
 
--   [`cce198d`](https://github.com/equinor/fusion-framework/commit/cce198d6a91fb7912265d4383246dc405cf17a17) Thanks [@odinr](https://github.com/odinr)! - export http errors from `@equinor/fusion-framework-module-http/errors`
+- [`cce198d`](https://github.com/equinor/fusion-framework/commit/cce198d6a91fb7912265d4383246dc405cf17a17) Thanks [@odinr](https://github.com/odinr)! - export http errors from `@equinor/fusion-framework-module-http/errors`
 
--   [#1623](https://github.com/equinor/fusion-framework/pull/1623) [`f85316f`](https://github.com/equinor/fusion-framework/commit/f85316f2344258896a77ef602bd4047dfa553788) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - Fix package exports in react-module-http
+- [#1623](https://github.com/equinor/fusion-framework/pull/1623) [`f85316f`](https://github.com/equinor/fusion-framework/commit/f85316f2344258896a77ef602bd4047dfa553788) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - Fix package exports in react-module-http
 
--   Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
-    -   @equinor/fusion-framework-module-http@5.1.3
+- Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
+  - @equinor/fusion-framework-module-http@5.1.3
 
 ## 4.0.2
 
 ### Patch Changes
 
--   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    -   @equinor/fusion-framework-module-http@5.1.2
-    -   @equinor/fusion-framework-react-module@3.0.7
+- Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+  - @equinor/fusion-framework-module-http@5.1.2
+  - @equinor/fusion-framework-react-module@3.0.7
 
 ## 4.0.1
 
 ### Patch Changes
 
--   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
--   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    -   @equinor/fusion-framework-module-http@5.1.1
-    -   @equinor/fusion-framework-react-module@3.0.6
+- Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+  - @equinor/fusion-framework-module-http@5.1.1
+  - @equinor/fusion-framework-react-module@3.0.6
 
 ## 4.0.0
 
 ### Patch Changes
 
--   Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa)]:
-    -   @equinor/fusion-framework-module-http@5.1.0
+- Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa)]:
+  - @equinor/fusion-framework-module-http@5.1.0
 
 ## 3.0.5
 
 ### Patch Changes
 
--   Updated dependencies []:
-    -   @equinor/fusion-framework-module-http@5.0.6
-    -   @equinor/fusion-framework-react-module@3.0.5
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@5.0.6
+  - @equinor/fusion-framework-react-module@3.0.5
 
 ## 3.0.4
 
 ### Patch Changes
 
--   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
--   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+- [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
--   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
-    -   @equinor/fusion-framework-react-module@3.0.4
-    -   @equinor/fusion-framework-module-http@5.0.5
+- Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
+  - @equinor/fusion-framework-react-module@3.0.4
+  - @equinor/fusion-framework-module-http@5.0.5
 
 ## 3.0.3
 
 ### Patch Changes
 
--   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+- [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    -   align all versions of typescript
-    -   update types to build
-        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -160,7 +167,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
+- update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
 
 ## 1.0.19 (2022-11-11)
 
@@ -218,7 +225,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-http:** improve hierarchy ([3603347](https://github.com/equinor/fusion-framework/commit/36033474991288983490f250726a551f7ce3dcbd))
+- **module-http:** improve hierarchy ([3603347](https://github.com/equinor/fusion-framework/commit/36033474991288983490f250726a551f7ce3dcbd))
 
 ## [1.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-react-module-http@1.0.4...@equinor/fusion-framework-react-module-http@1.0.5) (2022-09-14)
 
@@ -272,4 +279,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **rect-module-http:** create hook for using http client ([7a88b7a](https://github.com/equinor/fusion-framework/commit/7a88b7aeb246bc37c3a10927beaa2ec48f8515fc))
+- **rect-module-http:** create hook for using http client ([7a88b7a](https://github.com/equinor/fusion-framework/commit/7a88b7aeb246bc37c3a10927beaa2ec48f8515fc))

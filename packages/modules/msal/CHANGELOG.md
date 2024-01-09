@@ -1,64 +1,70 @@
 # Change Log
 
+## 3.0.9
+
+### Patch Changes
+
+- [#1646](https://github.com/equinor/fusion-framework/pull/1646) [`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1) Thanks [@odinr](https://github.com/odinr)! - re-export `AuthenticationResult` from `@azure/msal-browser`
+
 ## 3.0.8
 
 ### Patch Changes
 
--   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+- [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
--   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    -   @equinor/fusion-framework-module@4.2.6
+- Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+  - @equinor/fusion-framework-module@4.2.6
 
 ## 3.0.7
 
 ### Patch Changes
 
--   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
--   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    -   @equinor/fusion-framework-module@4.2.5
+- Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+  - @equinor/fusion-framework-module@4.2.5
 
 ## 3.0.6
 
 ### Patch Changes
 
--   Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    -   @equinor/fusion-framework-module@4.2.4
+- Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.0.5
 
 ### Patch Changes
 
--   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
--   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    -   @equinor/fusion-framework-module@4.2.3
+- Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.0.4
 
 ### Patch Changes
 
--   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+- [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
--   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    -   @equinor/fusion-framework-module@4.2.1
+- Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+  - @equinor/fusion-framework-module@4.2.1
 
 ## 3.0.3
 
 ### Patch Changes
 
--   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+- [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    -   align all versions of typescript
-    -   update types to build
-        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
--   Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    -   @equinor/fusion-framework-module@4.2.0
+- Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+  - @equinor/fusion-framework-module@4.2.0
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -107,13 +113,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-msal:** await redirect handling ([92686d2](https://github.com/equinor/fusion-framework/commit/92686d2ae054d7f507093b839edb2fe5775c7449))
+- **module-msal:** await redirect handling ([92686d2](https://github.com/equinor/fusion-framework/commit/92686d2ae054d7f507093b839edb2fe5775c7449))
 
 ## 1.0.18 (2022-11-11)
 
 ### Bug Fixes
 
--   **module-auth:** make http module await auth ([18a0ed9](https://github.com/equinor/fusion-framework/commit/18a0ed947e128bf1cdc86aa45d31e73c1f8c4bbb))
+- **module-auth:** make http module await auth ([18a0ed9](https://github.com/equinor/fusion-framework/commit/18a0ed947e128bf1cdc86aa45d31e73c1f8c4bbb))
 
 ## 1.0.17 (2022-11-03)
 
@@ -155,7 +161,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
+- update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
 
 ## 1.0.7 (2022-09-20)
 
@@ -197,21 +203,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **module-msal:** expose simple config ([596c4c2](https://github.com/equinor/fusion-framework/commit/596c4c222a75bfef67e2e129792f6132cbceb47c))
+- **module-msal:** expose simple config ([596c4c2](https://github.com/equinor/fusion-framework/commit/596c4c222a75bfef67e2e129792f6132cbceb47c))
 
 ### Bug Fixes
 
--   **module-msal:** set default logging to errors ([1b53be8](https://github.com/equinor/fusion-framework/commit/1b53be816600c838257f0b3c6f3a338466938a3f))
+- **module-msal:** set default logging to errors ([1b53be8](https://github.com/equinor/fusion-framework/commit/1b53be816600c838257f0b3c6f3a338466938a3f))
 
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.4.2...@equinor/fusion-framework-module-msal@1.0.0-alpha.0) (2022-09-12)
 
 ### Features
 
--   **module-msal:** expose simple config ([596c4c2](https://github.com/equinor/fusion-framework/commit/596c4c222a75bfef67e2e129792f6132cbceb47c))
+- **module-msal:** expose simple config ([596c4c2](https://github.com/equinor/fusion-framework/commit/596c4c222a75bfef67e2e129792f6132cbceb47c))
 
 ### Bug Fixes
 
--   **module-msal:** set default logging to errors ([1b53be8](https://github.com/equinor/fusion-framework/commit/1b53be816600c838257f0b3c6f3a338466938a3f))
+- **module-msal:** set default logging to errors ([1b53be8](https://github.com/equinor/fusion-framework/commit/1b53be816600c838257f0b3c6f3a338466938a3f))
 
 ## 0.4.2 (2022-09-05)
 
@@ -225,23 +231,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### ⚠ BREAKING CHANGES
 
--   rename fetch
+- rename fetch
 
--   fix(module-service-discovery): update http client consumer
+- fix(module-service-discovery): update http client consumer
 
--   build: update allowed branches
+- build: update allowed branches
 
--   build: add conventional commit
+- build: add conventional commit
 
--   build: use conventionalcommits
+- build: use conventionalcommits
 
--   build(module-http): push major
+- build(module-http): push major
 
--   build: update deps
+- build: update deps
 
 ### Features
 
--   rename fetch method ([#226](https://github.com/equinor/fusion-framework/issues/226)) ([f02df7c](https://github.com/equinor/fusion-framework/commit/f02df7cdd2b9098b0da49c5ea56ac3b6a17e9e32))
+- rename fetch method ([#226](https://github.com/equinor/fusion-framework/issues/226)) ([f02df7c](https://github.com/equinor/fusion-framework/commit/f02df7cdd2b9098b0da49c5ea56ac3b6a17e9e32))
 
 ## 0.3.2 (2022-08-19)
 
@@ -253,17 +259,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [0.3.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.2.0...@equinor/fusion-framework-module-msal@0.3.0) (2022-08-11)
 
--   feat!: allow modules to displose ([32b69fb](https://github.com/equinor/fusion-framework/commit/32b69fb7cc61e78e503e67d0e77f21fb44b600b9))
+- feat!: allow modules to displose ([32b69fb](https://github.com/equinor/fusion-framework/commit/32b69fb7cc61e78e503e67d0e77f21fb44b600b9))
 
 ### BREAKING CHANGES
 
--   module.initialize now has object as arg
+- module.initialize now has object as arg
 
 # 0.2.0 (2022-08-08)
 
 ### Features
 
--   **module-service-discovery:** resolve service to config ([3fa088d](https://github.com/equinor/fusion-framework/commit/3fa088d2ced8136447df6949928f1af9fc83407a))
+- **module-service-discovery:** resolve service to config ([3fa088d](https://github.com/equinor/fusion-framework/commit/3fa088d2ced8136447df6949928f1af9fc83407a))
 
 ## [0.1.24](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.23...@equinor/fusion-framework-module-msal@0.1.24) (2022-08-04)
 
@@ -277,7 +283,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   change typo of exports ([b049503](https://github.com/equinor/fusion-framework/commit/b049503511fb1b37b920b00aed1468ed8385a67e))
+- change typo of exports ([b049503](https://github.com/equinor/fusion-framework/commit/b049503511fb1b37b920b00aed1468ed8385a67e))
 
 ## [0.1.21](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.20...@equinor/fusion-framework-module-msal@0.1.21) (2022-07-01)
 
@@ -331,31 +337,31 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-msal:** prevent redirect loop ([2d0f57c](https://github.com/equinor/fusion-framework/commit/2d0f57c737282f485099ff2562b4c4c956f8e30a))
+- **module-msal:** prevent redirect loop ([2d0f57c](https://github.com/equinor/fusion-framework/commit/2d0f57c737282f485099ff2562b4c4c956f8e30a))
 
 ## 0.1.8 (2022-03-25)
 
 ### Bug Fixes
 
--   **modules-msal:** change regex group selector ([ebaa118](https://github.com/equinor/fusion-framework/commit/ebaa11849303e68f67544f8db57727673f821744))
+- **modules-msal:** change regex group selector ([ebaa118](https://github.com/equinor/fusion-framework/commit/ebaa11849303e68f67544f8db57727673f821744))
 
 ## [0.1.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.6...@equinor/fusion-framework-module-msal@0.1.7) (2022-02-23)
 
 ### Bug Fixes
 
--   **module-msal:** await auth ([#33](https://github.com/equinor/fusion-framework/issues/33)) ([d4c3dbd](https://github.com/equinor/fusion-framework/commit/d4c3dbd0afc6a3adebe23853ccd363d1bf37f131))
+- **module-msal:** await auth ([#33](https://github.com/equinor/fusion-framework/issues/33)) ([d4c3dbd](https://github.com/equinor/fusion-framework/commit/d4c3dbd0afc6a3adebe23853ccd363d1bf37f131))
 
 ## [0.1.6](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.5...@equinor/fusion-framework-module-msal@0.1.6) (2022-02-23)
 
 ### Bug Fixes
 
--   deps ([2f2938b](https://github.com/equinor/fusion-framework/commit/2f2938b554610a068ed451623dd13480cae27302))
+- deps ([2f2938b](https://github.com/equinor/fusion-framework/commit/2f2938b554610a068ed451623dd13480cae27302))
 
 ## [0.1.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.4...@equinor/fusion-framework-module-msal@0.1.5) (2022-02-23)
 
 ### Bug Fixes
 
--   add missing deps ([d689a02](https://github.com/equinor/fusion-framework/commit/d689a025613401eadf693bdd52694ba462dcfea3))
+- add missing deps ([d689a02](https://github.com/equinor/fusion-framework/commit/d689a025613401eadf693bdd52694ba462dcfea3))
 
 ## [0.1.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-msal@0.1.3...@equinor/fusion-framework-module-msal@0.1.4) (2022-02-23)
 
@@ -369,7 +375,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-msal:** auth client id check ([#27](https://github.com/equinor/fusion-framework/issues/27)) ([907460e](https://github.com/equinor/fusion-framework/commit/907460e3e63e777f6766dcc044cad7078d7ab747))
+- **module-msal:** auth client id check ([#27](https://github.com/equinor/fusion-framework/issues/27)) ([907460e](https://github.com/equinor/fusion-framework/commit/907460e3e63e777f6766dcc044cad7078d7ab747))
 
 ## 0.1.1 (2022-02-09)
 
@@ -379,10 +385,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-msal:** invert bool check of scopes ([3d9fb50](https://github.com/equinor/fusion-framework/commit/3d9fb50e4b3d408cab4f6e68c44ca9045e8ce40d))
+- **module-msal:** invert bool check of scopes ([3d9fb50](https://github.com/equinor/fusion-framework/commit/3d9fb50e4b3d408cab4f6e68c44ca9045e8ce40d))
 
 ### Features
 
--   add client for msal ([41e6b13](https://github.com/equinor/fusion-framework/commit/41e6b1378f41b1e03023186d480460a0189878c6))
--   **module-msal:** change behavoir to redirect ([9f2193f](https://github.com/equinor/fusion-framework/commit/9f2193f21a7056cb6b42513845fdc19910522628))
--   **module-msal:** expose account ([f4b27b3](https://github.com/equinor/fusion-framework/commit/f4b27b3db7cf5133afbaf366ba953561dd23c113))
+- add client for msal ([41e6b13](https://github.com/equinor/fusion-framework/commit/41e6b1378f41b1e03023186d480460a0189878c6))
+- **module-msal:** change behavoir to redirect ([9f2193f](https://github.com/equinor/fusion-framework/commit/9f2193f21a7056cb6b42513845fdc19910522628))
+- **module-msal:** expose account ([f4b27b3](https://github.com/equinor/fusion-framework/commit/f4b27b3db7cf5133afbaf366ba953561dd23c113))
