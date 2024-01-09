@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-module-widget",
-    "version": "2.0.7",
+    "version": "2.0.8",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
