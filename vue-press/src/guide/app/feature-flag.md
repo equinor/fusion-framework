@@ -37,16 +37,14 @@ export const configure: AppModuleInitiator = (configurator, args) => {
     enableNavigation(configurator, basename);
 
     enableFeatureFlagging(configurator, (builder) => {
-        builder.addPlugin(
-            createCgiPlugin('app-react-feature-flag', [
-                {
-                    key: 'redHeader',
-                    title: 'Use red header?',
-                    description: 'When enabled, the header will be colored red',
-                },
-                'foo',
-            ]),
-        );
+        builder.enableCgi('app-react-feature-flag', [
+            {
+                key: 'redHeader',
+                title: 'Use red header?',
+                description: 'When enabled, the header will be colored red',
+            },
+            'foo',
+        ]);
     });
 };
 
