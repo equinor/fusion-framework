@@ -14,6 +14,12 @@ interface FeatureFlag<T> {
 
 ## Configuration
 
+### Limitations and future planning
+
+- Simplify configuration of featureflags for app and portal.
+
+- Resolve CGI Conflict when portal and app specicfies the same feature key.
+
 ### Plugins
 
 ```mermaid
@@ -84,6 +90,8 @@ export interface FeatureFlagPlugin {
 }
 
 ```
+
+-
 
 #### CGI
 
