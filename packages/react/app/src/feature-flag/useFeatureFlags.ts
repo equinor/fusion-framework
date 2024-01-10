@@ -5,46 +5,106 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 import {
     FeatureFlagModule,
     IFeatureFlagProvider,
+    IFeatureFlag,
 } from '@equinor/fusion-framework-module-feature-flag';
+import { EMPTY } from 'rxjs';
 
 /**
- * useFeatureFlags
+ * useFeatureflag
  *
- * Hook for getting current apps featureFlags as array.
+ * Hook for getting single featureflag from app.
+ *
+ * @param key string
  */
-export const useFeatureFlags = () => {
+export const useFeatureFlag = (
+    key: string,
+): {
+    feature: IFeatureFlag<unknown> | undefined;
+    error: unknown;
+    setFeatureEnabled: (key: string, enabled: boolean) => void;
+} => {
     const provider = useAppModule<FeatureFlagModule>('featureFlag');
-    return _useFeatureFlags(provider);
+    const { value: feature, error } = useObservableState(_useFeatureFlag(key, provider));
+    const setFeatureEnabled = _useSetFeatureflag(provider);
+    return { feature, error, setFeatureEnabled };
 };
 
 /**
- * useFrameworkFeatureFlags
+ * useFeatureflags
  *
- * Hook for getting portals featureFlags as array.
+ * Hook for getting all featureflags from app.
+ *
+ * @param key string
  */
-export const useFrameworkFeatureFlags = () => {
-    const provider = useFramework<[FeatureFlagModule]>().modules.featureFlag;
-    return _useFeatureFlags(provider);
+export const useFeatureFlags = (): {
+    features: IFeatureFlag<unknown>[] | undefined;
+    error: unknown;
+    setFeatureEnabled: (key: string, enabled: boolean) => void;
+} => {
+    const provider = useAppModule<FeatureFlagModule>('featureFlag');
+    const { value: features, error } = useObservableState(_useFeatureFlags(provider));
+    const setFeatureEnabled = _useSetFeatureflag(provider);
+    return { features, error, setFeatureEnabled };
 };
 
-const _useFeatureFlags = (provider: IFeatureFlagProvider) => {
-    if (!provider) {
-        throw new Error('You must enable the featureFlag module to use this hook');
-    }
-    const feature$ = useMemo(() => {
-        return provider.getFeatures((_) => true);
+/**
+ * useFrameworkFeatureflag
+ *
+ * Hook for getting single featureflag from portal.
+ *
+ * @param key string
+ */
+export const useFrameworkFeatureFlag = (
+    key: string,
+): {
+    feature: IFeatureFlag<unknown> | undefined;
+    error: unknown;
+    setFeatureEnabled: (key: string, enabled: boolean) => void;
+} => {
+    const provider = useFramework<[FeatureFlagModule]>().modules.featureFlag;
+    const { value: feature, error } = useObservableState(_useFeatureFlag(key, provider));
+    const setFeatureEnabled = _useSetFeatureflag(provider);
+    return { feature, error, setFeatureEnabled };
+};
+
+/**
+ * useFrameworkFeatureflags
+ *
+ * Hook for getting all featureflags from portal.
+ *
+ * @param key string
+ */
+export const useFrameworkFeatureFlags = (): {
+    features: IFeatureFlag<unknown>[] | undefined;
+    error: unknown;
+    setFeatureEnabled: (key: string, enabled: boolean) => void;
+} => {
+    const provider = useFramework<[FeatureFlagModule]>().modules.featureFlag;
+    const { value: features, error } = useObservableState(_useFeatureFlags(provider));
+    const setFeatureEnabled = _useSetFeatureflag(provider);
+    return { features, error, setFeatureEnabled };
+};
+
+const _useFeatureFlag = ( key: string, provider?: IFeatureFlagProvider) => {
+    return useMemo(() => {
+        return provider ? provider.getFeature(key) : EMPTY;
+    }, [provider, key]);
+};
+
+const _useFeatureFlags = (provider?: IFeatureFlagProvider ) => {
+    return useMemo(() => {
+        return provider ? provider.getFeatures((_) => true) : EMPTY;
     }, [provider]);
+};
 
-    const { value: features } = useObservableState(feature$);
-
-    const setFeatureEnabled = useCallback(
+const _useSetFeatureflag = (provider?: IFeatureFlagProvider) => {
+    return useCallback(
         (key: string, enabled: boolean) => {
+            if (!provider) {
+                throw new Error('Missing IFeatureFlagProvider.');
+            }
             provider.toggleFeature({ key, enabled });
         },
         [provider],
     );
-
-    return { features, setFeatureEnabled };
 };
-
-export default useFeatureFlags;
