@@ -77,7 +77,6 @@
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-framework-module-services": "workspace:^",
         "@equinor/fusion-framework-react": "workspace:^",
-        "@equinor/fusion-framework-react-app": "workspace:^",
         "@equinor/fusion-framework-react-components-bookmark": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
