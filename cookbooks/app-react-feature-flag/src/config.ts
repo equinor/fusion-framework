@@ -1,10 +1,6 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
-import {
-    createCgiPlugin,
-    // createApiPlugin,
-} from '@equinor/fusion-framework-module-feature-flag/plugins';
 import { faker } from '@faker-js/faker';
 
 faker.seed(123);

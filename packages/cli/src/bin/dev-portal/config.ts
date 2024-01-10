@@ -5,7 +5,6 @@ import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
-import { createCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;

@@ -30,7 +30,6 @@ being active for every user.
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
-import { createCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure: AppModuleInitiator = (configurator, args) => {
     const { basename } = args.env;
