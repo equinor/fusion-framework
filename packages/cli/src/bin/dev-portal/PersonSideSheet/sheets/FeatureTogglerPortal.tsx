@@ -1,4 +1,4 @@
-import { useFrameworkFeatureFlags } from '@equinor/fusion-framework-react/app';
+import { useFrameworkFeatureFlags } from '@equinor/fusion-framework-react/feature-flag';
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
