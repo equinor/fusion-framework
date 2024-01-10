@@ -40,7 +40,7 @@ export interface IFeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagC
      * ```
      * @param args - The arguments to be passed to the createCgiPlugin function.
      */
-    enableCgi(args: Parameters<typeof createCgiPlugin>): void;
+    enableCgi(...args: Parameters<typeof createCgiPlugin>): void;
 
     /**
      * Enables the API plugin with the specified arguments.
@@ -55,7 +55,7 @@ export interface IFeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagC
      * ```
      * @param args - The arguments to pass to the createApiPlugin function.
      */
-    enableApi(args: Parameters<typeof createApiPlugin>): void;
+    enableApi(...args: Parameters<typeof createApiPlugin>): void;
 }
 
 export class FeatureFlagConfigurator
@@ -71,11 +71,11 @@ export class FeatureFlagConfigurator
         this.#plugins.push(handler);
     }
 
-    public enableCgi(args: Parameters<typeof createCgiPlugin>) {
+    public enableCgi(...args: Parameters<typeof createCgiPlugin>) {
         this.addPlugin(createCgiPlugin(...args));
     }
 
-    public enableApi(args: Parameters<typeof createApiPlugin>) {
+    public enableApi(...args: Parameters<typeof createApiPlugin>) {
         this.addPlugin(createApiPlugin(...args));
     }
 

@@ -18,49 +18,45 @@ export const configure: AppModuleInitiator = (configurator, args) => {
     });
 
     enableFeatureFlagging(configurator, (builder) => {
-        builder.addPlugin(
-            createCgiPlugin('app-react-feature-flag', [
-                {
-                    key: 'redHeader',
-                    title: 'Use red header?',
-                    description: 'When enabled, the header will be colored red',
-                },
-                'foo',
-                {
-                    key: faker.lorem.word(),
-                    readonly: true,
-                },
-                {
-                    key: faker.lorem.word(),
-                    description: faker.lorem.sentence(5),
-                    enabled: false,
-                    value: faker.lorem.word(),
-                },
-                {
-                    key: faker.lorem.word(),
-                    title: faker.animal.bear(),
-                },
-                {
-                    key: faker.lorem.word(),
-                    title: faker.animal.bear(),
-                    description: faker.lorem.sentence(5),
-                    enabled: true,
-                },
-                {
-                    key: faker.lorem.word(),
-                    enabled: false,
-                    value: faker.lorem.word(),
-                    readonly: true,
-                },
-            ]),
-        );
+        builder.enableCgi('app-react-feature-flag', [
+            {
+                key: 'redHeader',
+                title: 'Use red header?',
+                description: 'When enabled, the header will be colored red',
+            },
+            'foo',
+            {
+                key: faker.lorem.word(),
+                readonly: true,
+            },
+            {
+                key: faker.lorem.word(),
+                description: faker.lorem.sentence(5),
+                enabled: false,
+                value: faker.lorem.word(),
+            },
+            {
+                key: faker.lorem.word(),
+                title: faker.animal.bear(),
+            },
+            {
+                key: faker.lorem.word(),
+                title: faker.animal.bear(),
+                description: faker.lorem.sentence(5),
+                enabled: true,
+            },
+            {
+                key: faker.lorem.word(),
+                enabled: false,
+                value: faker.lorem.word(),
+                readonly: true,
+            },
+        ]);
 
-        // builder.addPlugin(
-        //     createApiPlugin({
-        //         httpClientName: 'feature-flag-api',
-        //         path: 'api/flags',
-        //     }),
-        // );
+        // builder.enableApi({
+        //     httpClientName: 'feature-flag-api',
+        //     path: 'api/flags',
+        // });
     });
 };
 

@@ -41,20 +41,18 @@ export const configure = async (config: FrameworkConfigurator) => {
     });
 
     enableFeatureFlagging(config, (builder) => {
-        builder.addPlugin(
-            createCgiPlugin('dev-portal', [
-                {
-                    key: 'fusionDebug',
-                    title: 'Fusion debug log',
-                    description: 'Show Fusion debug log in console',
-                },
-                {
-                    key: 'pinkBg',
-                    title: 'Use pink bg?',
-                    description: 'When enabled the background should be pink',
-                },
-            ]),
-        );
+        builder.enableCgi('dev-portal', [
+            {
+                key: 'fusionDebug',
+                title: 'Fusion debug log',
+                description: 'Show Fusion debug log in console',
+            },
+            {
+                key: 'pinkBg',
+                title: 'Use pink bg?',
+                description: 'When enabled the background should be pink',
+            },
+        ]);
     });
 
     config.onConfigured(() => {
