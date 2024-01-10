@@ -6,6 +6,7 @@
     "exports": {
         ".": "./dist/esm/index.js",
         "./app": "./dist/esm/app/index.js",
+        "./feature-flag": "./dist/esm/feature-flag/index.js",
         "./context": "./dist/esm/context/index.js",
         "./hooks": "./dist/esm/hooks/index.js",
         "./http": "./dist/esm/http/index.js",
@@ -16,6 +17,9 @@
         "*": {
             "app": [
                 "dist/types/app/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
             ],
             "context": [
                 "dist/types/context/index.d.ts"
@@ -49,7 +53,6 @@
     "dependencies": {
         "@equinor/fusion-framework": "workspace:^",
         "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module": "workspace:^",
         "@equinor/fusion-framework-react-module-http": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
@@ -57,6 +60,7 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-app": "workspace:^",
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
         "@types/react": "^18.2.20",
         "@types/react-dom": "^18.2.7",
@@ -65,16 +69,20 @@
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
+        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module-signalr": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@equinor/fusion-framework-react-module-context": {
             "optional": true
         },
         "@equinor/fusion-framework-react-module-signalr": {
+            "optional": true
+        },
+        "@equinor/fusion-framework-module-feature-flag": {
             "optional": true
         },
         "@types/react": {
