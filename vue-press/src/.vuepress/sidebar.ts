@@ -20,6 +20,7 @@ export default sidebar({
                         }
                     ]
                 },
+                'app/feature-flag',
                 'app/people',
                 'app/authentication',
                 'app/legacy',
@@ -58,7 +59,6 @@ export default sidebar({
                     ]
 
                 },
-                'feature-flag/',
                 'navigation/',
                 'bookmark/',
                 'ag-grid/',
