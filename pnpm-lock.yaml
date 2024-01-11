@@ -473,6 +473,9 @@ importers:
       '@equinor/fusion-framework-app':
         specifier: workspace:^
         version: link:../app
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../modules/feature-flag
       '@equinor/fusion-framework-react-components-people-provider':
         specifier: workspace:^
         version: link:../react/components/people-resolver
@@ -1049,6 +1052,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
       typescript:
         specifier: ^5.1.3
         version: 5.2.2
@@ -1166,6 +1172,9 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../modules/app
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../../modules/feature-flag
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context

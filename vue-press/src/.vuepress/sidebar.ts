@@ -20,6 +20,7 @@ export default sidebar({
                         }
                     ]
                 },
+                'app/feature-flag',
                 'app/people',
                 'app/authentication',
                 'app/legacy',
