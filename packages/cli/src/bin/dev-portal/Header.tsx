@@ -7,6 +7,7 @@ import '@material-ui/styles';
 import { BookmarkSideSheet } from './BookMarkSideSheet';
 import { Button, Icon, TopBar } from '@equinor/eds-core-react';
 import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
+import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { add, menu, tag } from '@equinor/eds-icons';
 import { styled } from 'styled-components';
 
@@ -27,8 +28,11 @@ const Styled = {
 };
 
 export const Header = () => {
-    const [isPersonOpen, setIsPersonOpen] = useState(false);
+    const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
     const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
+    const currentUser = useCurrentUser();
+
+    const azureId: string | undefined = currentUser?.localAccountId;
 
     function toggleBookmark() {
         setIsBookmarkOpen((s) => !s);
@@ -51,11 +55,13 @@ export const Header = () => {
                     <Button onClick={toggleBookmark} variant="ghost_icon">
                         <Icon name="tag" />
                     </Button>
-                    <Button onClick={() => setIsPersonOpen(!isPersonOpen)} variant="ghost_icon">
+                    <Button
+                        onClick={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
+                        variant="ghost_icon"
+                    >
                         <fwc-person-avatar
-                            azureId="49132c24-6ea4-41fe-8221-112f314573f0"
+                            azureId={azureId}
                             clickable={false}
-                            disabled={true}
                             size="small"
                         ></fwc-person-avatar>
                     </Button>
@@ -64,7 +70,11 @@ export const Header = () => {
             <BookmarkProvider>
                 <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={toggleBookmark} />
             </BookmarkProvider>
-            <PersonSideSheet isOpen={isPersonOpen} onClose={() => setIsPersonOpen(!isPersonOpen)} />
+            <PersonSideSheet
+                azureId={azureId}
+                isOpen={isPersonSheetOpen}
+                onClose={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
+            />
         </>
     );
 };

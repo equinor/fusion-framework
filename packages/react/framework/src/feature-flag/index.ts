@@ -1,6 +1,6 @@
 export {
-    useFeatureFlag,
+    useCurrentAppFeatureFlag,
+    useCurrentAppFeatureFlags,
     useFrameworkFeatureFlag,
-    useFeatureFlags,
     useFrameworkFeatureFlags,
 } from './useFeatureFlags';
