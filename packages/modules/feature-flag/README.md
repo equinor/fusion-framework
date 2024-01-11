@@ -16,9 +16,9 @@ interface FeatureFlag<T> {
 
 ### Limitations and future planning
 
-- Simplify configuration of featureflags for app and portal.
+- [x] Simplify configuration of featureflags for app and portal.
 
-- Resolve CGI Conflict when portal and app specicfies the same feature key.
+- [ ] Resolve CGI Conflict when portal and app specicfies the same feature key.
 
 ### Plugins
 
