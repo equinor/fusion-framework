@@ -7,10 +7,11 @@
         ".": "./dist/esm/index.js",
         "./bookmark": "./dist/esm/bookmark/index.js",
         "./context": "./dist/esm/context/index.js",
+        "./feature-flag": "./dist/esm/feature-flag/index.js",
         "./framework": "./dist/esm/framework/index.js",
         "./http": "./dist/esm/http/index.js",
-        "./navigation": "./dist/esm/navigation/index.js",
-        "./feature-flag": "./dist/esm/feature-flag/index.js"
+        "./msal": "./dist/esm/msal/index.js",
+        "./navigation": "./dist/esm/navigation/index.js"
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
@@ -20,6 +21,9 @@
             ],
             "context": [
                 "dist/types/context/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
             ],
             "framework": [
                 "dist/types/framework/index.d.ts"
@@ -32,9 +36,6 @@
             ],
             "navigation": [
                 "dist/types/navigation/index.d.ts"
-            ],
-            "feature-flag": [
-                "dist/types/feature-flag/index.d.ts"
             ]
         }
     },
