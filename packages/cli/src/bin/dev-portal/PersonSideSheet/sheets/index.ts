@@ -1,2 +1,2 @@
-export * from './FeatureSheetContent';
-export * from './LandingSheetContent';
+export { FeatureSheetContent } from './FeatureSheetContent';
+export { LandingSheetContent } from './LandingSheetContent';
