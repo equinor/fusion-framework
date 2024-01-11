@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
@@ -32,11 +32,7 @@ export const Header = () => {
     const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
     const currentUser = useCurrentUser();
 
-    const azureId: string | undefined = useMemo(() => {
-        if (currentUser) {
-            return currentUser.localAccountId;
-        }
-    }, [currentUser]);
+    const azureId: string | undefined = currentUser?.localAccountId;
 
     function toggleBookmark() {
         setIsBookmarkOpen((s) => !s);
