@@ -85,13 +85,13 @@ export const useFrameworkFeatureFlags = (): {
     return { features, error, setFeatureEnabled };
 };
 
-const _useFeatureFlag = ( key: string, provider?: IFeatureFlagProvider) => {
+const _useFeatureFlag = (key: string, provider?: IFeatureFlagProvider) => {
     return useMemo(() => {
         return provider ? provider.getFeature(key) : EMPTY;
     }, [provider, key]);
 };
 
-const _useFeatureFlags = (provider?: IFeatureFlagProvider ) => {
+const _useFeatureFlags = (provider?: IFeatureFlagProvider) => {
     return useMemo(() => {
         return provider ? provider.getFeatures((_) => true) : EMPTY;
     }, [provider]);
