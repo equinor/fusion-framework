@@ -32,7 +32,7 @@ export const Header = () => {
     const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
     const currentUser = useCurrentUser();
 
-    const azureId: string | undefined = currentUser?.localAccountId;
+    const { localAccountId: azureId } = currentUser ?? {};
 
     function toggleBookmark() {
         setIsBookmarkOpen((s) => !s);
