@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.5.7
+
+### Patch Changes
+
+- [`cb39579`](https://github.com/equinor/fusion-framework/commit/cb39579d8845df2f8b2a8e0b1afc04e1cc8dd8a6) Thanks [@odinr](https://github.com/odinr)! - prevent code splitting in the CLI
+
 ## 9.5.6
 
 ### Patch Changes
