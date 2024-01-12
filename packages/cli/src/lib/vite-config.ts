@@ -100,6 +100,11 @@ export const createViteConfig = async (
                 fileName: 'app-bundle',
                 formats: ['es'],
             },
+            rollupOptions: {
+                output: {
+                    manualChunks: undefined,
+                },
+            },
         },
         customLogger: createViteLogger(),
     });
