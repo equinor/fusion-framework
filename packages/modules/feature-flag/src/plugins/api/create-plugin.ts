@@ -4,6 +4,11 @@ import { FeatureFlagPluginConfigCallback } from '../../types';
 import { createApiPluginClient } from './create-client';
 import { ApiPlugin } from './plugin';
 
+/**
+ * Default selector to map response to an array of FeatureFlags.
+ *
+ * @param response A HTTP Response
+ */
 const defaultSelector: ApiResponseSelector = async (response: Response) => {
     const flags = (await response.json()) as IFeatureFlag[];
 
@@ -19,8 +24,20 @@ const defaultSelector: ApiResponseSelector = async (response: Response) => {
     });
 };
 
+/**
+ * Procuces an api plugin to use for FeatureFlag provider.
+ *
+ * @example
+ * ```ts
+ * createApiPlugin({
+ *   httpClientName: 'foo',
+ *   path: '/bar',
+ * }));
+ * ```
+ */
 export const createApiPlugin = (args: {
     httpClientName: string;
+    /** Relative HTTP client path */
     path: string;
     selector?: ApiResponseSelector;
 }): FeatureFlagPluginConfigCallback<ApiFeatureFlagPlugin> => {

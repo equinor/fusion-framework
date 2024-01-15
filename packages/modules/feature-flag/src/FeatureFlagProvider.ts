@@ -15,15 +15,38 @@ import { normalizeFlags } from './utils/normalize-flags';
 
 export type CompareFeature = (a: IFeatureFlag | undefined, b: IFeatureFlag | undefined) => boolean;
 
+/**
+ * Interface for feature flag provider.
+ */
 export interface IFeatureFlagProvider {
     readonly features$: Observable<Array<IFeatureFlag>>;
+
+    /**
+     * Changes feature flag's enabled flag.
+     */
     toggleFeature(feature: { key: string; enabled: boolean }): void;
+
+    /**
+     * Changes feature flags's enabled flag.
+     */
     toggleFeatures(features: Array<{ key: string; enabled: boolean }>): void;
+
+    /**
+     * Sets the feature flags for this provider.
+     */
     setFeatures(features: Array<IFeatureFlag>): void;
+
+    /**
+     * Provides the matching feature flag if found.
+     */
     getFeature(
         selector: FeatureSelector,
         compare?: CompareFeature,
     ): Observable<IFeatureFlag | undefined>;
+
+    /**
+     * Provides all feature flags for this provider.
+     */
     getFeatures(selector: FeatureSelector): Observable<Array<IFeatureFlag>>;
 }
 
