@@ -14,22 +14,13 @@ const BtnListItem = styled.li`
     margin: 1em 0;
 `;
 
+/**
+ * Content for the main  tab in the PersonSidesheet.
+ */
 export const LandingSheetContent = ({ azureId, navigate }: SheetContentProps) => {
     return (
         <section>
             <BtnList>
-                {/* <BtnListItem>
-                    <Button variant="ghost" onClick={() => navigate('allocations')}>
-                        <Icon name="work_outline"></Icon>
-                        My Allocations
-                    </Button>
-                </BtnListItem>
-                <BtnListItem>
-                    <Button variant="ghost" onClick={() => navigate('roles')}>
-                        <Icon name="security"></Icon>
-                        My Roles
-                    </Button>
-                </BtnListItem> */}
                 <BtnListItem>
                     <Button variant="ghost" onClick={() => navigate('features')}>
                         <Icon name="category"></Icon>

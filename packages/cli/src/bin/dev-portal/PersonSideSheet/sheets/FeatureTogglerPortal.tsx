@@ -4,6 +4,9 @@ import { Typography, Switch } from '@equinor/eds-core-react';
 
 import { Styled } from './Styled';
 
+/**
+ * Content for Feature toggler tab for portal features in the PersonSidesheet's Feature page.
+ */
 export const FeatureTogglerPortal = () => {
     const { features, setFeatureEnabled } = useFrameworkFeatureFlags();
     return (
@@ -22,11 +25,7 @@ export const FeatureTogglerPortal = () => {
                                 {feature.description ?? ''}
                             </Typography>
                         </Styled.SwitchLabel>
-                        <Switch
-                            checked={feature.enabled}
-                            disabled={feature.readonly}
-                            onChange={(e) => console.log(e)}
-                        />
+                        <Switch checked={feature.enabled} disabled={feature.readonly} />
                     </Styled.SwitchListItem>
                 );
             })}
