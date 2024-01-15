@@ -8,6 +8,10 @@ Icon.add({ arrow_back, category });
 
 import type { SheetContentProps } from './types';
 
+/**
+ * JSX structure for the content of the PersonSidesheet's Features page.
+ * @param SheetContentProps
+ */
 export const FeatureSheetContent = ({ navigate }: SheetContentProps) => {
     const [tab, setTab] = useState<number>(0);
 

@@ -4,6 +4,9 @@ import { Typography, Switch } from '@equinor/eds-core-react';
 
 import { Styled } from './Styled';
 
+/**
+ * JSX structure for Feature toggler tab for app features in the PersonSidesheet's Feature page.
+ */
 export const FeatureTogglerApp = () => {
     const { features, setFeatureEnabled } = useCurrentAppFeatureFlags();
     return (
@@ -25,11 +28,7 @@ export const FeatureTogglerApp = () => {
                             )}
                         </Styled.SwitchLabel>
                         <Styled.Switch>
-                            <Switch
-                                checked={feature.enabled}
-                                disabled={feature.readonly}
-                                onChange={(e) => console.log(e)}
-                            />
+                            <Switch checked={feature.enabled} disabled={feature.readonly} />
                         </Styled.Switch>
                     </Styled.SwitchListItem>
                 );

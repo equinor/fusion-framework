@@ -1,16 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { PersonListItem } from '@equinor/fusion-react-person';
-// import type { ApiPerson_v4 } from '@equinor/fusion-framework-module-services/people/api-models.v4';
 
 import { Divider } from '@equinor/eds-core-react';
 
-import {
-    LandingSheetContent,
-    // AllocationSheetContent,
-    // RoleSheetContent,
-    FeatureSheetContent,
-} from './sheets';
+import { LandingSheetContent, FeatureSheetContent } from './sheets';
 
 type PersonSideSheetProps = {
     readonly azureId?: string;
@@ -18,18 +12,16 @@ type PersonSideSheetProps = {
     onClose(): void;
 };
 
+/**
+ * Add Sidesheet with settings for the current user.
+ * @param PersonSideSheetProps
+ */
 export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetProps) => {
     const [currentSheet, setCurrentSheet] = useState<string>('landing');
 
     const Component = useMemo(() => {
         let Comp;
         switch (currentSheet) {
-            // case 'allocations':
-            //     Comp = AllocationSheetContent;
-            //     break;
-            // case 'roles':
-            //     Comp = RoleSheetContent;
-            //     break;
             case 'features':
                 Comp = FeatureSheetContent;
                 break;

@@ -39,6 +39,7 @@ export const configure = async (config: FrameworkConfigurator) => {
         });
     });
 
+    /* Adds demo portal features to cli */
     enableFeatureFlagging(config, (builder) => {
         builder.enableCgi('dev-portal', [
             {
@@ -60,9 +61,7 @@ export const configure = async (config: FrameworkConfigurator) => {
 
     config.onInitialized(async (fusion) => {
         fusion.auth.defaultClient.setLogger(new ConsoleLogger(0));
-
         console.debug('📒 subscribing to all events');
-        // fusion.event.subscribe((e) => console.debug(`🔔🌍 [${e.type}]`, e));
     });
 };
 
