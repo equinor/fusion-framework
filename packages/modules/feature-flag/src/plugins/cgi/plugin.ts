@@ -61,6 +61,9 @@ export class CgiPlugin implements CgiFeatureFlagPlugin {
         this.#cgiClient.storeFeatureFlags(flags);
     }
 
+    /**
+     * Connect the plugin to the provider.
+     */
     connect(args: { provider: IFeatureFlagProvider }) {
         const { provider } = args;
 
@@ -68,13 +71,16 @@ export class CgiPlugin implements CgiFeatureFlagPlugin {
         const teardown$ = new Subject();
         const path$ = new Subject<Path>();
 
+        /** Observes path changes of the navigator and toggles feature flags */
         const change$ = path$.pipe(
             concatMap((path) => {
                 const search = new URLSearchParams(path.search);
                 return from(this.#features).pipe(
+                    /** Cycle through all features */
                     reduce(
                         (acc, feature) => {
                             const { key } = feature;
+                            /** Checks if url contains feature flag key */
                             if (search.has(key)) {
                                 const value = search.get(key);
                                 const enabled = this.#isFeatureEnabled({ feature, value, path });

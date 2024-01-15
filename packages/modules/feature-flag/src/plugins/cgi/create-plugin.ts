@@ -5,6 +5,14 @@ import CgiPlugin from './plugin';
 import { createCgiPluginClient } from './create-client';
 import { IFeatureFlag } from '../../FeatureFlag';
 
+/**
+ * Procuces an cgi plugin to use for FeatureFlag provider.
+ *
+ * @example
+ * ```ts
+ * createCgiPlugin('foo', ['bar', baz']);
+ * ```
+ */
 export const createCgiPlugin = (
     name: string,
     features: Array<IFeatureFlag | string>,

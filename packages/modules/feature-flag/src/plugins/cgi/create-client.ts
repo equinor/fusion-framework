@@ -7,6 +7,16 @@ export type PluginOptions = {
     storage?: IStorageAdapter<IFeatureFlag>;
 };
 
+/**
+ * Produces an cgi plugin client.
+ *
+ * @example
+ * ```ts
+ * const navigation: INavigationProvider = await configArgs.requireInstance('navigation');
+ * const cgiClient = createCgiPluginClient({ name });
+ * return new CgiPlugin({ cgiClient, features, navigation });
+ * ```
+ */
 export const createCgiPluginClient = (
     args: {
         name: string;
