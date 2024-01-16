@@ -30,11 +30,14 @@ export const createDevServer = async (options: {
         manifest?: string;
         vite?: string;
     };
-    devPortalPath: string;
+    devPortal: {
+        path: string,
+        static: boolean,
+    }
     port?: number;
     library?: 'react';
 }) => {
-    const { configSourceFiles, library, portal, port, devPortalPath } = options;
+    const { configSourceFiles, library, portal, port, devPortal } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
@@ -83,7 +86,7 @@ export const createDevServer = async (options: {
 
     spinner.info('💾 application entrypoint', formatPath(String(entry)));
 
-    spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
+    spinner.info('resolving cli internal assets from ', formatPath(devPortal.path));
 
     /** add proxy handlers */
     const server = createDevProxy(
@@ -149,7 +152,7 @@ export const createDevServer = async (options: {
         },
         {
             target: portal,
-            staticAssets: [{ path: devPortalPath }],
+            staticAssets: devPortal?.static ? [{ path: devPortal.path }]: [],
         },
     );
 
@@ -161,7 +164,7 @@ export const createDevServer = async (options: {
         '*',
         async (req, res) => {
             // TODO add check if file request
-            const htmlRaw = readFileSync(join(devPortalPath + '/index.html'), 'utf-8');
+            const htmlRaw = readFileSync(join(devPortal.path + '/index.html'), 'utf-8');
             const html = await vite.transformIndexHtml(req.url, htmlRaw);
             res.send(html);
         },

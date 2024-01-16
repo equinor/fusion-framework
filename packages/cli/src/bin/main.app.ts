@@ -60,7 +60,7 @@ export default (program: Command) => {
                 },
                 library: opt.framework,
                 port: opt.port,
-                devPortalPath: devPortalPath,
+                devPortal: {path: devPortalPath, static: true},
             });
         });
 

@@ -21,7 +21,9 @@ program.version(pkg.packageJson.version);
 
 /** add app commands */
 import app from './main.app.js';
+import portal from './main.portal.js';
 app(program);
+portal(program);
 
 /** read action and options and start programs */
 program.parse();
