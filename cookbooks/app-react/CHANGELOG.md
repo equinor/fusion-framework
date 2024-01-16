@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.27
+
+### Patch Changes
+
+-   [#1215](https://github.com/equinor/fusion-framework/pull/1215) [`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d) Thanks [@odinr](https://github.com/odinr)! - Adding PersonSidesheet to cli with featuretoggler
+
 ## 4.0.26
 
 ### Patch Changes
