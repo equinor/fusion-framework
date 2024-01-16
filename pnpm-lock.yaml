@@ -3526,7 +3526,7 @@ packages:
     resolution: {integrity: sha512-gWKXhWxH5wWsEW7KA0vFX2tr5Ols3ZPcQJUM+SRIYhr4qtgh98Cm5c/MTBNoUmStjnyzYUFEtfLk8KugRGi2tQ==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-checkbox': 0.3.17
       '@equinor/fusion-wc-formfield': 0.2.19
     transitivePeerDependencies:
@@ -3551,7 +3551,7 @@ packages:
     resolution: {integrity: sha512-e8ST0Np3TE2Wi+PWGV5JqFlCiaNGPnscn9GU0a862wwqjjSgInPV7Lo0kuQvC/hIP1adEkRc+gSjGMs70U7qZw==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-divider': 0.2.22
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -3563,7 +3563,7 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-icon': 1.0.33
       react: 18.2.0
     dev: true
@@ -3609,7 +3609,7 @@ packages:
   /@equinor/fusion-react-searchable-dropdown@0.4.0(react@18.2.0):
     resolution: {integrity: sha512-/9ZuMX1wcU1dXqqXPAneyqwXjJIu8Hfhi1HfWAvIS8a80nkbX0BJGz64igBbsRFReSWvLyNmdvy3QHJKnPyOxg==}
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-wc-searchable-dropdown': 3.6.0
     transitivePeerDependencies:
@@ -3712,6 +3712,15 @@ packages:
     dependencies:
       date-fns: 2.30.0
       react: 18.2.0
+
+  /@equinor/fusion-react-utils@2.1.1(react@18.2.0):
+    resolution: {integrity: sha512-UU3afQMaKeiUseEfOwigTZqV0J6+2PTNFzqhOb0MAAwYsNthQWn77puHVjomsi4tbh8MsxqEIdq4303RA8x2lw==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      date-fns: 3.2.0
+      react: 18.2.0
+    dev: true
 
   /@equinor/fusion-wc-avatar@3.1.1:
     resolution: {integrity: sha512-4OMfn5hoHN5urBetxrN/4h7rgxj7sisb2P0NldkQAhfGTJN9hlv6Q2xOpa3x2zhF0zYdtLVeYim7pATfVd+NGQ==}
@@ -7723,6 +7732,10 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.7
+
+  /date-fns@3.2.0:
+    resolution: {integrity: sha512-E4KWKavANzeuusPi0jUjpuI22SURAznGkx7eZV+4i6x2A+IZxAMcajgkvuDAU1bg40+xuhW1zRdVIIM/4khuIg==}
+    dev: true
 
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
