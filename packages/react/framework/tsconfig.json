@@ -16,6 +16,9 @@
       "path": "../../modules/app"
     },
     {
+      "path": "../../modules/feature-flag"
+    },
+    {
       "path": "../../modules/service-discovery"
     },
     {
@@ -26,7 +29,7 @@
     },
     {
       "path": "../modules/signalr"
-    }
+    },
   ],
   "include": [
     "src/**/*",
