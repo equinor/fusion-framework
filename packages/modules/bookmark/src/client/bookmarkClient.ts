@@ -43,7 +43,7 @@ export class BookmarkClient {
 
     #currentBookmark$: BehaviorSubject<Bookmark<unknown> | undefined>;
 
-    #sourceSystem: SourceSystem;
+    #sourceSystem?: SourceSystem;
     #event?: IEventModuleProvider;
 
     #state: FlowState<State, ActionBuilder>;
@@ -53,7 +53,7 @@ export class BookmarkClient {
 
     constructor(
         config: BookmarkClientConfig,
-        sourceSystem: SourceSystem,
+        sourceSystem?: SourceSystem,
         event?: IEventModuleProvider,
     ) {
         this.#currentBookmark$ = new BehaviorSubject<Bookmark<unknown> | undefined>(undefined);
@@ -293,7 +293,7 @@ export class BookmarkClient {
     #addSubjectFlows() {
         this.#subscriptions.add(
             this.#state.subject.addFlow(
-                handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem.identifier),
+                handleBookmarkGetAll(this.#queryAllBookmarks, this.#sourceSystem?.identifier),
             ),
         );
         this.#subscriptions.add(

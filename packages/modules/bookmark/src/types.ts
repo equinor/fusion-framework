@@ -16,7 +16,7 @@ export interface Bookmark<TData = unknown> {
     updatedBy: CreatedBy;
     created: string;
     updated: string;
-    sourceSystem: SourceSystem;
+    sourceSystem?: SourceSystem;
 }
 
 export type CreateBookmark<TData = unknown> = {
