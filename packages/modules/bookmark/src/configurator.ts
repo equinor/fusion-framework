@@ -16,7 +16,7 @@ export interface BookmarkModuleConfig {
      *  SourceSystem used when creating a new bookmark,
      *  used as the identifier for the current client. Only used in app shell / portal configuration.
      */
-    sourceSystem: SourceSystem;
+    sourceSystem?: SourceSystem;
 
     /**
      *  The clintConfiguration consist of both Api client configuration and query client configuration
@@ -120,10 +120,6 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
             init,
             config.clientConfiguration,
         );
-
-        if (!config.sourceSystem) {
-            throw Error('missing sourceSystem configuration');
-        }
 
         return config as BookmarkModuleConfig;
     }

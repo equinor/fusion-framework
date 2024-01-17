@@ -10,7 +10,7 @@ import { actions, Actions } from './bookmarkActions';
 export const handleBookmarkGetAll =
     (
         queryAllBookmarks: Query<Array<Bookmark<unknown>>, GetAllBookmarksParameters>,
-        sourceSystemIdentifier: string,
+        sourceSystemIdentifier?: string,
     ) =>
     (action$: Observable<Actions>) =>
         action$.pipe(
@@ -22,7 +22,7 @@ export const handleBookmarkGetAll =
                         actions.getAll.success(
                             bookmarks.value.filter(
                                 (bookmark) =>
-                                    bookmark.sourceSystem.identifier === sourceSystemIdentifier,
+                                    bookmark.sourceSystem?.identifier === sourceSystemIdentifier,
                             ),
                         ),
                     ),
