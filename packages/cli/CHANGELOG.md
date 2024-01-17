@@ -1,5 +1,12 @@
 # Change Log
 
+## 9.5.9
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react-components-people-provider@1.1.11
+
 ## 9.5.8
 
 ### Patch Changes

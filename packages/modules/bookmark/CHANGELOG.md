@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.0
+
+### Minor Changes
+
+-   [#1693](https://github.com/equinor/fusion-framework/pull/1693) [`7fea31b`](https://github.com/equinor/fusion-framework/commit/7fea31b049cd7dcce9336ed1bc339165729b0d99) Thanks [@Noggling](https://github.com/Noggling)! - Fixing the infinite loading if a bookmark is created in classic fusion and allowing for sourceSystem to be undefined.
+
 ## 1.0.17
 
 ### Patch Changes
