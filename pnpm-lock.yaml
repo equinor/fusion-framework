@@ -1546,11 +1546,15 @@ packages:
   /@ag-grid-community/client-side-row-model@31.0.1:
     resolution: {integrity: sha512-QBY68ZweXheCwazKpgenJcWRWceAckClgg/AS4HbfO2AY4RFKiJfVOyTv8n3MFT9V3aR+3TgdBiQdVC4U3027g==}
     dependencies:
-      '@ag-grid-community/core': 31.0.1
+      '@ag-grid-community/core': 31.0.2
     dev: false
 
   /@ag-grid-community/core@31.0.1:
     resolution: {integrity: sha512-wnovNtzLTOOUo0BypUGFUwswjlvmFZVidP9G9Pl/R0NO5TpKktW8rz9hUjOEnQ/0XUtUc6MYKwvelmKttJpYCw==}
+    dev: false
+
+  /@ag-grid-community/core@31.0.2:
+    resolution: {integrity: sha512-iAKQgS5GXJ85ib8aPfrIMWPVUrrSzPV7neii6nZitVS4zoqEYx7ommMi7viUmSMjUAwPF0QE5TbExBiDB3hSmA==}
     dev: false
 
   /@ag-grid-community/react@31.0.1(@ag-grid-community/core@31.0.1)(react-dom@18.2.0)(react@18.2.0):
@@ -1573,7 +1577,7 @@ packages:
   /@ag-grid-enterprise/core@31.0.1:
     resolution: {integrity: sha512-4WVIRrxEVzJtAiFa8nDzeb5xn9J+OKMcW9Sxj7/ZwZgkzaWdydZt02tuYy1pUJEID2UGRpPbigHI7iZP/rHHDQ==}
     dependencies:
-      '@ag-grid-community/core': 31.0.1
+      '@ag-grid-community/core': 31.0.2
     dev: false
 
   /@ampproject/remapping@2.2.1:
