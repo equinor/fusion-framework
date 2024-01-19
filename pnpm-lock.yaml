@@ -252,8 +252,8 @@ importers:
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../../packages/modules/feature-flag
@@ -462,8 +462,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.19.3
         version: 0.19.3
@@ -605,7 +605,7 @@ importers:
         version: 0.2.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.2.5
-        version: 1.2.5(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        version: 1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
@@ -1069,8 +1069,8 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.19.3
         version: 0.19.3
@@ -3467,8 +3467,8 @@ packages:
   /@emotion/unitless@0.8.1:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
-  /@equinor/eds-core-react@0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
-    resolution: {integrity: sha512-hkAuNhXk0/PylpEEtRobt3qeZyK7Hhu27pxMV6Y+StKi7ckuH7LJEisRAXxbUchFiv2tzNV7zxhdoPd5GjRp4w==}
+  /@equinor/eds-core-react@0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+    resolution: {integrity: sha512-eGGpaIOfL873dsiPodHx6xTx7vKVIW+cQwZk8Q1cLjMIROMvQCGsIY4UDKi/b1V2TQy7YMmajTOfii9zPbU1HA==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
@@ -3476,7 +3476,7 @@ packages:
       styled-components: '>=4.2'
     dependencies:
       '@babel/runtime': 7.23.2
-      '@equinor/eds-icons': 0.19.3
+      '@equinor/eds-icons': 0.20.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@floating-ui/react': 0.26.2(react-dom@18.2.0)(react@18.2.0)
@@ -3488,6 +3488,10 @@ packages:
 
   /@equinor/eds-icons@0.19.3:
     resolution: {integrity: sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==}
+    engines: {node: '>=10.0.0', pnpm: '>=4'}
+
+  /@equinor/eds-icons@0.20.0:
+    resolution: {integrity: sha512-Xk+Ghx46iBBPHF1zmesPlmSqivoxdKlBEuwvo2v5c6T+quQ6twkkIri2qMqkCTuqe2bgmlAvsCw1iGpUoQlr3A==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
 
   /@equinor/eds-tokens@0.5.5:
@@ -3774,7 +3778,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
     resolution: {integrity: sha512-cx+ilNw2LFHpMaE1lqj29sa0RarZf0GxgpGKqckpWkx+MVDXtD0JY12E03Ep75jD0OVYaD26GEVhijwOqBAVnQ==}
     peerDependencies:
       '@equinor/eds-core-react': ^0.34.0
@@ -3790,7 +3794,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@equinor/eds-core-react': 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+      '@equinor/eds-core-react': 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons': 0.19.3
       '@equinor/eds-tokens': 0.9.2
       '@types/react': 18.2.22

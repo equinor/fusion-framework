@@ -24,7 +24,7 @@
         "typescript": "^5.1.3"
     },
     "dependencies": {
-        "@equinor/eds-core-react": "^0.34.0",
+        "@equinor/eds-core-react": "^0.35.1",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
