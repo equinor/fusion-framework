@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.5.10
+
+### Patch Changes
+
+-   [#1738](https://github.com/equinor/fusion-framework/pull/1738) [`1241772`](https://github.com/equinor/fusion-framework/commit/124177256696f2d83f739a1bbc9022c9840db106) Thanks [@eikeland](https://github.com/eikeland)! - Updating fwc-person
+
 ## 9.5.9
 
 ### Patch Changes
