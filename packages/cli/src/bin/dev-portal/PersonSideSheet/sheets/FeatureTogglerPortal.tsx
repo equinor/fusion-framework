@@ -1,4 +1,4 @@
-import { useFrameworkFeatureFlags } from '@equinor/fusion-framework-react/feature-flag';
+import { useFrameworkFeatures } from '@equinor/fusion-framework-react/feature-flag';
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
@@ -8,14 +8,14 @@ import { Styled } from './Styled';
  * Content for Feature toggler tab for portal features in the PersonSidesheet's Feature page.
  */
 export const FeatureTogglerPortal = () => {
-    const { features, setFeatureEnabled } = useFrameworkFeatureFlags();
+    const { features, setEnabled } = useFrameworkFeatures();
     return (
         <Styled.SwitchList>
             {features?.map((feature) => {
                 return (
                     <Styled.SwitchListItem
                         key={`feat-${feature.key}`}
-                        onClick={() => setFeatureEnabled(feature.key, !feature.enabled)}
+                        onClick={() => setEnabled(feature.key, !feature.enabled)}
                     >
                         <Styled.SwitchLabel>
                             <Typography variant="body_short_bold">

@@ -5,6 +5,10 @@ import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
+import {
+    createLocalStoragePlugin,
+    createUrlPlugin,
+} from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;
@@ -41,18 +45,21 @@ export const configure = async (config: FrameworkConfigurator) => {
 
     /* Adds demo portal features to cli */
     enableFeatureFlagging(config, (builder) => {
-        builder.enableCgi('dev-portal', [
-            {
-                key: 'fusionDebug',
-                title: 'Fusion debug log',
-                description: 'Show Fusion debug log in console',
-            },
-            {
-                key: 'pinkBg',
-                title: 'Use pink bg?',
-                description: 'When enabled the background should be pink',
-            },
-        ]);
+        builder.addPlugin(
+            createLocalStoragePlugin([
+                {
+                    key: 'fusionDebug',
+                    title: 'Fusion debug log',
+                    description: 'Show Fusion debug log in console',
+                },
+                {
+                    key: 'pinkBg',
+                    title: 'Use pink bg?',
+                    description: 'When enabled the background should be pink',
+                },
+            ]),
+        );
+        builder.addPlugin(createUrlPlugin(['fusionDebug']));
     });
 
     config.onConfigured(() => {
