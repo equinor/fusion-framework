@@ -1,9 +1,8 @@
 const ID_SEPARATOR = '::';
-const NAME_SEPARATOR = '_';
 
-const extractId = (key: string): { basename: string; id: string } => {
-    const [basename, id] = key.split(ID_SEPARATOR);
-    return { basename, id };
+const extractId = (key: string): { namespace: string; id: string } => {
+    const [namespace, id] = key.split(ID_SEPARATOR);
+    return { namespace, id };
 };
 
 export interface IStorageAdapter<TType = unknown> extends Iterable<TType> {
@@ -18,7 +17,6 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
     #storage: Storage;
     constructor(
         public readonly namespace: string,
-        public readonly name: string,
         storage: Storage,
     ) {
         this.#storage = storage;
@@ -30,12 +28,8 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
         }
     }
 
-    get basename(): string {
-        return [this.namespace, this.name].join(NAME_SEPARATOR);
-    }
-
     generateId(key: string): string {
-        return [this.basename, key].join(ID_SEPARATOR);
+        return [this.namespace, key].join(ID_SEPARATOR);
     }
 
     setItem(key: string, item: TType) {
@@ -64,15 +58,15 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
         });
     }
 
-    protected _getItems(): Array<{ basename: string; id: string; key: string; value: TType }> {
-        const { basename } = this;
+    protected _getItems(): Array<{ namespace: string; id: string; key: string; value: TType }> {
+        const { namespace } = this;
         return Object.entries(this.#storage)
             .map(([key, value]) => ({
                 ...extractId(key),
                 key,
                 value,
             }))
-            .filter((x) => x.basename === basename)
+            .filter((x) => x.namespace === namespace)
             .map((item) => {
                 return Object.assign(item, { value: JSON.parse(item.value) });
             });

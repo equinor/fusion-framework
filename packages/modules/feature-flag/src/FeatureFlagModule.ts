@@ -6,25 +6,30 @@ import { type Module, IModulesConfigurator } from '@equinor/fusion-framework-mod
 export const name = 'featureFlag';
 export type FeatureFlagModule = Module<typeof name, IFeatureFlagProvider, IFeatureFlagConfigurator>;
 
+export type FeatureFlagBuilderCallback = (
+    builder: IFeatureFlagConfigurator,
+) => void | Promise<void>;
+
 export const module: FeatureFlagModule = {
     name,
     configure: () => new FeatureFlagConfigurator(),
     initialize: async (init) => {
         const config = await init.config.createConfigAsync(init);
-        return new FeatureFlagProvider(config);
+        const event = init.hasModule('event') ? await init.requireInstance('event') : undefined;
+        return new FeatureFlagProvider({ config, event });
     },
 };
 
 export const enableFeatureFlagging = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    builder?: (builder: IFeatureFlagConfigurator) => void | Promise<void>,
+    callback?: FeatureFlagBuilderCallback,
 ): void => {
     configurator.addConfig({
         module,
         configure: async (config) => {
-            if (builder) {
-                return Promise.resolve(builder(config));
+            if (callback) {
+                return Promise.resolve(callback(config));
             }
         },
     });

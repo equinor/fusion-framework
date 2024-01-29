@@ -1,4 +1,10 @@
-# Feature Flag Module
+---
+title: Feature flag module
+---
+
+## Concept
+
+This module enables the usage of feature flags.
 
 ```ts
 interface FeatureFlag<T> {
@@ -14,13 +20,41 @@ interface FeatureFlag<T> {
 
 ## Configuration
 
-### Limitations and future planning
+```ts
+import { enableFeatureFlags } from '@equinor/fusion-framework-module-feature-flag';
 
-- [x] Simplify configuration of featureflags for app and portal.
+import { 
+  createLocalStoragePlugin,
+  createUrlPlugin
+} from '@equinor/fusion-framework-module-feature-flag/plugins';
 
-- [ ] Resolve CGI Conflict when portal and app specicfies the same feature key.
+export const configure: ModuleInitiator = (configurator, args) => {
+  enableFeatureFlags(configurator, builder => {
+    builder.addPlugin(
+      /** define flags that will be stored in local storage when toggled */
+      createLocalStoragePlugin([
+        {
+          key: MyFeatures.MyFlag,
+          title: 'this is a flag',
+        },
+        {
+          key: MyFeatures.MyUrlFlag,
+          title: 'this feature can be toggled by ?my-url-flag=true',
+        }
+      ])
+    );
+    builder.addPlugin(
+      /** define flags which are allowed to be toggled from url */
+      createUrlPlugin([ MyFeatures.MyUrlFlag ])
+    )
+  });
+}
+```
 
-### Plugins
+> [!NOTE]
+> In the near future, features will be as an API service
+
+## Plugins
 
 ```mermaid
 sequenceDiagram
@@ -64,7 +98,6 @@ sequenceDiagram
 9. Plugin instance
     - the plugin creates initial flags, like read stored flags or fetch flags from a service
     - the plugin returns a callback function for connecting the plugin to the provider
-    - the plugin returns a callback function for subscribing to toggle changes of flags
 10. the configurator return an instance of the config
 11. the module create a provider instance
 12. the provider connects the plugins
@@ -82,90 +115,103 @@ export interface FeatureFlagPlugin {
      * generate initial value for the provider
      */
     initial?: () => ObservableInput<Array<IFeatureFlag>>;
-
-    /**
-     * callback function for handling changes in provider feature flags
-     */
-    onFeatureToggle?: (event: { flags: Array<IFeatureFlag> }) => void;
 }
-
 ```
 
--
+### Local Storage
 
-#### CGI
+`import { createLocalStoragePlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';`
 
-Plugin for enable/disable features by url search parameters 
+plugin for allowing to store the toggled state of a feature flag
+
+
+### Url
+
+`import { createUrlPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';`
+
+plugin for toggling features threw url search params
+
+### Custom
+
+__initial__
+
+async callback function which returns the initial feature flags of the plugin
+
+__connect__
+
+async callback which allows the plugin to connect to the feature flag provider
 
 ```ts
-import { enableCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
-enableFeatureFlagging(builder => {
-  /** simple */
-  enableCgiPlugin('my-app', ['foo', 'bar']);
+import { 
+  enableFeatureFlagging, 
+  type FeatureFlagPluginConfigCallback 
+} from '@equinor/fusion-framework-module-feature-flag';
 
-  /** with flags */
-  enableCgiPlugin(
-    'my-app', 
-    [{ key: 'bar', enabled: true, value: 'bar' }],
-  );
-
-  /** custom */
-  enableCgiPlugin(
-    'my-app', 
-    [
-      'foo',
-      { key: 'bar', enabled: true, value: 'bar' }
-    ],
-    {
-      storage: window.sessionStorage,
-      isFeatureEnabled: (args) => args.value === '1'
-    }
-  );
-});
-```
-
-#### CUSTOM
-```ts
-import { enableCgiPlugin } from '@equinor/fusion-framework-module-feature-flag/plugins';
-
-
+const customPlugin: FeatureFlagPluginConfigCallback = async (args) => {
+  const myModule = await args.requireModule('my-module');
+  return {
+    initial: () => fetch('/api/features')
+      .then(res => res.json())
+      .then(features => features.map(feature => feature.source = 'my-source')),
+    connect: ({provider}) => {
+      /** subscribe to changes of feature flags */
+      provider.onFeatureToggle: async({flags}) => {
+        await fetch(
+          '/api/me/features', 
+          { 
+            method: 'PATCH', 
+            body: flags.filter(feature => feature.source === 'my-source')
+          }
+        )
+      }
+      /** update feature flags */
+      signalR.received(data => {
+        provider.setFeatures(data.map(feature => feature.source = 'my-source'));
+      });
+    },
+  }
+}
 
 // ...configuration
 enableFeatureFlagging(builder => {
-  builder.addPlugin(
-  /** setup callback */
-  (args: ConfigBuilderCallbackArgs) => {
-    const serviceDiscovery = await args.requireModule('service-discover');
-    const httpClient = await serviceDiscovery.createClient('portal');
-    const source = 'api-flags';
-    return {
-      onFeatureToggle: ({flags}) => {
-          httpClient.json(
-            '/api/me/features', 
-            { 
-              method: 'PATCH', 
-              body: flags
-            }
-          )
-      },
-      initial: () => httpClient.fetch(
-        '/api/me/features', 
-        {
-          selector: (response: HttpResponse) => {
-            const flags = await response.json();
-            return flags.map(flag => {
-              source
-              name: flag.name,
-              enabled: !!flag.enabled,
-              value: JSON.parse(flag.value),
-            })
-          }
-        }
-      )
-    }
-  });
+  builder.addPlugin(customPlugin);
 })
 ```
+
+## Selectors
+
+### Filter features
+
+Operator function for filtering out specific features 
+
+```ts
+import { filterFeatures } from '@equinor/fusion-framework-module-feature-flag/selectors';
+const features$ = modules.featureFlag.feature$.pipe(
+  filterFeatures(x => x.enabled = true);
+);
+```
+
+### Find feature
+
+Operator for selecting a specific feature
+
+> [!IMPORTANT]
+> The operator will not re-emit unless value or selector changes
+
+```ts
+import { findFeature } from '@equinor/fusion-framework-module-feature-flag/selectors';
+const feature$ = modules.featureFlag.feature$.pipe('my-key');
+```
+
+## Events
+
+### onFeatureFlagToggle
+
+Event fired before a feature is toggled
+
+### onFeatureFlagsToggled
+
+Event fired after features are toggled _(state updated)_
 
 ## Usage
 
@@ -174,26 +220,5 @@ enableFeatureFlagging(builder => {
 // my-code.ts
 const provider = modules.featureFlag;
 const fooEnabled = provider.getFeatures('foo').enabled;
-return <p>feature foo is { fooEnabled ? <span>enabled</span> : <span>disabled</span> }</p> 
-```
-> __TBA:__ @equinor/fusion-framework-react-module-feature-flag
-
-```tsx
-const myButton = () => {
-  const theme = usePortalFeature('theme');
-  if(theme.enabled) {
-    return <ThemedButton />
-  }
-  return <Button />
-}
-
-// @equinor/fusion-framework-react-app/feature-flagging
-const usePortalFeature =(name: string) => {
-  const provider = useFrameworkModule('featureFlag');
-  provider.getFeatureFlag(name);
-}
-const useAppFeature =(name: string) => {
-  const provider = useModule('featureFlag');
-  provider.getFeatureFlag(name);
-}
+console.log('feature foo is ', fooEnabled ? 'enabled' : 'disabled');
 ```

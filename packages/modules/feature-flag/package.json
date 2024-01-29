@@ -12,6 +12,10 @@
             "import": "./dist/esm/plugins/index.js",
             "types": "./dist/types/plugins/index.d.ts"
         },
+        "./selectors": {
+            "import": "./dist/esm/utils/selectors.js",
+            "types": "./dist/types/utils/selectors.d.ts"
+        },
         "./package.json": "./package.json",
         "./README.md": "./README.md"
     },
@@ -23,6 +27,9 @@
             ],
             "plugins": [
                 "dist/types/plugins/index.d.ts"
+            ],
+            "selectors": [
+                "dist/types/utils/selectors.d.ts"
             ]
         }
     },
@@ -51,6 +58,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-framework-module-event": "workspace:^",
         "@types/uuid": "^9.0.2",
         "typescript": "^5.2.2"
     }
