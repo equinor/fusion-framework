@@ -10,36 +10,46 @@ import type { GetWidgetParameters, WidgetManifest } from './types';
 
 import { WidgetModuleConfig } from './WidgetModuleConfigurator';
 import { GetWidgetError } from './errors';
+import { Widget } from './Widget';
 
 export interface IWidgetModuleProvider {
     getWidget(
         widgetKey: GetWidgetParameters['widgetKey'],
-        args: GetWidgetParameters['args'],
+        args?: GetWidgetParameters['args'],
+    ): Widget;
+    getWidgetManifest(
+        widgetKey: GetWidgetParameters['widgetKey'],
+        args?: GetWidgetParameters['args'],
     ): Observable<WidgetManifest>;
 }
 
 export class WidgetModuleProvider implements IWidgetModuleProvider {
     #widgetClient: Query<WidgetManifest, GetWidgetParameters>;
     #subscription = new Subscription();
+    #config: WidgetModuleConfig;
+    #event?: ModuleType<EventModule>;
 
     constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
-        const { config } = args;
-
+        const { config, event } = args;
+        this.#event = event;
+        this.#config = config;
         this.#widgetClient = new Query(config.client.getWidget);
 
         this.#subscription.add(() => this.#widgetClient.complete());
     }
 
-    public getWidget(name: string): Observable<WidgetManifest> {
-        return this._getWidget(name);
+    public getWidget(name: string, widgetPrams?: GetWidgetParameters['args']): Widget {
+        return new Widget(
+            { name },
+            { provider: this, event: this.#event, widgetPrams, config: this.#config },
+        );
     }
 
-    public getWidgetByVersion(name: string, version: string): Observable<WidgetManifest> {
-        return this._getWidget(name, { type: 'version', value: version });
-    }
-
-    public getWidgetByTag(name: string, tag: string): Observable<WidgetManifest> {
-        return this._getWidget(name, { type: 'tag', value: tag });
+    public getWidgetManifest(
+        name: string,
+        widgetPrams?: GetWidgetParameters['args'],
+    ): Observable<WidgetManifest> {
+        return this._getWidget(name, widgetPrams);
     }
 
     /**
@@ -51,11 +61,13 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
         widgetKey: GetWidgetParameters['widgetKey'],
         args?: GetWidgetParameters['args'],
     ): Observable<WidgetManifest> {
+        const client = new Query(this.#config.client.getWidget);
         return Query.extractQueryValue(
-            this.#widgetClient.query({ widgetKey, args }).pipe(
+            client.query({ widgetKey, args }).pipe(
                 catchError((err) => {
                     /** extract cause, since error will be a `QueryError` */
                     const { cause } = err;
+                    console.log('query', err);
                     if (cause instanceof GetWidgetError) {
                         throw cause;
                     }

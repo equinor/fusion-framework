@@ -1,7 +1,7 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigBuilder';
 
 import { module } from './module';
+import { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator';
 
 /**
  * Method for enabling the widget module
@@ -15,7 +15,7 @@ export const enableWidgetModule = (
     configurator.addConfig({
         module,
         configure: (widgetConfigurator) => {
-            builder && widgetConfigurator.addConfigBuilder(builder);
+            builder && builder(widgetConfigurator);
         },
     });
 };

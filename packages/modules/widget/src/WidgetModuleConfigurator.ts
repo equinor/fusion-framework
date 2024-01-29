@@ -1,88 +1,42 @@
-import { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
-import { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { QueryCtorOptions } from '@equinor/fusion-query';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import {
-    WidgetModuleConfigBuilder,
-    WidgetModuleConfigBuilderCallback,
-    WidgetEndpointBuilder,
-} from './WidgetModuleConfigBuilder';
+import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 
-import { moduleKey } from './module';
+import type { Client, WidgetEndpointBuilder } from './types';
+import { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { defaultEndpointBuilder, removeTrailingSlashFromURI } from './utils';
 
-import type { GetWidgetParameters, WidgetManifest } from './types';
-
-export interface WidgetModuleConfig {
-    client: {
-        // getWidgetManifest: QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
-        getWidget: QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
-    };
+export type WidgetModuleConfig = {
+    client: Client;
+    apiVersion: string;
+    baseImportUrl: string;
     endpointBuilder: WidgetEndpointBuilder;
-}
-
-export interface IWidgetModuleConfigurator {
-    addConfigBuilder: (init: WidgetModuleConfigBuilderCallback) => void;
-}
-
-const defaultEndpointBuilder: WidgetEndpointBuilder = (params) => {
-    const { widgetKey, args } = params;
-    const { type, value } = args ?? {};
-    switch (type) {
-        case 'tag':
-        case 'version':
-            return `/widgets/${widgetKey}/versions/${value}`;
-        default:
-            return `/widgets/${widgetKey}`;
-    }
 };
 
-const widgetSelector =
-    (args: { apiVersion: string; uri: string }) =>
-    async (response: Response): Promise<WidgetManifest> => {
-        const data = await response.json();
+export type WidgetModuleConfigBuilderCallback = (
+    builder: WidgetModuleConfigurator,
+) => void | Promise<void>;
 
-        return {
-            ...data,
-            importBundle: async () =>
-                import(
-                    new URL(
-                        `${data.assetPath}/${data.entryPoint}?api-version=${args.apiVersion}`,
-                        args.uri,
-                    ).toString()
-                ),
-        } as WidgetManifest;
-    };
-
-export class WidgetModuleConfigurator implements IWidgetModuleConfigurator {
+export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConfig> {
     defaultExpireTime = 1 * 60 * 1000;
 
-    #configBuilders: Array<WidgetModuleConfigBuilderCallback> = [];
-    #apiVersion = '1.0';
-
-    addConfigBuilder(init: WidgetModuleConfigBuilderCallback): void {
-        this.#configBuilders.push(init);
+    public setApiVersion(apiVision: string) {
+        // @ts-expect-error
+        this._set('apiVersion', () => apiVision);
+    }
+    public setBaseImportUrl(url: string) {
+        this._set('baseImportUrl', () => url);
     }
 
-    constructor(apiVersion?: string) {
-        if (apiVersion) {
-            this.#apiVersion = apiVersion;
-        }
+    public setClient(cb: ConfigBuilderCallback<Client>) {
+        this._set('client', cb);
     }
 
-    /**
-     * WARNING: this function will be remove in future
-     */
-    protected async _createHttpClient(
-        init: ModuleInitializerArgs<
-            IWidgetModuleConfigurator,
-            [HttpModule, ServiceDiscoveryModule]
-        >,
-    ): Promise<IHttpClient> {
+    protected async _createHttpClient(init: ConfigBuilderCallbackArgs) {
         const http = await init.requireInstance('http');
-        /** check if the http provider has configure a client */
-        if (http.hasClient(moduleKey)) {
-            return http.createClient(moduleKey);
+
+        if (http.hasClient('apps')) {
+            return http.createClient('apps');
         } else {
             /** load service discovery module */
             const serviceDiscovery = await init.requireInstance('serviceDiscovery');
@@ -93,45 +47,35 @@ export class WidgetModuleConfigurator implements IWidgetModuleConfigurator {
         }
     }
 
-    public async createConfig(
-        init: ModuleInitializerArgs<
-            IWidgetModuleConfigurator,
-            [HttpModule, ServiceDiscoveryModule]
-        >,
-    ): Promise<WidgetModuleConfig> {
-        const config = await this.#configBuilders.reduce(
-            async (cur, cb) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const builder = new WidgetModuleConfigBuilder(init, await cur);
-                await Promise.resolve(cb(builder));
-                return Object.assign(cur, builder.config);
-            },
-            Promise.resolve({} as Partial<WidgetModuleConfig>),
-        );
+    protected async _processConfig(
+        config: Partial<WidgetModuleConfig>,
+        _init: ConfigBuilderCallbackArgs,
+    ) {
+        const httpClient = await this._createHttpClient(_init);
 
-        const { endpointBuilder = defaultEndpointBuilder } = config;
+        if (!config.apiVersion) {
+            config.apiVersion = '1.0-preview';
+        }
 
-        // TODO - make less lazy
-        config.client ??= await (async (): Promise<WidgetModuleConfig['client']> => {
-            const httpClient = await this._createHttpClient(init);
-            httpClient.requestHandler.setHeader('api-version', this.#apiVersion);
-            return {
+        if (!config.endpointBuilder) {
+            config.endpointBuilder = defaultEndpointBuilder(config.apiVersion);
+        }
+
+        if (!config.baseImportUrl) {
+            config.baseImportUrl = removeTrailingSlashFromURI(httpClient.uri);
+        }
+
+        if (!config.client) {
+            config.client = {
                 getWidget: {
                     client: {
                         fn: (args) =>
-                            httpClient.json$(endpointBuilder(args), {
-                                selector: widgetSelector({
-                                    apiVersion: this.#apiVersion,
-                                    uri: httpClient.uri,
-                                }),
-                            }),
+                            httpClient.json$((config as WidgetModuleConfig).endpointBuilder(args)),
                     },
-                    key: (args) => JSON.stringify(args),
-                    expire: this.defaultExpireTime,
+                    key: (args) => JSON.stringify(args.widgetKey),
                 },
             };
-        })();
-
+        }
         return config as WidgetModuleConfig;
     }
 }

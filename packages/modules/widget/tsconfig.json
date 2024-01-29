@@ -4,6 +4,7 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
+    "removeComments": false
     
   },
   "references": [
@@ -12,9 +13,6 @@
     },
     {
       "path": "../module"
-    },
-    {
-      "path": "../http"
     },
     {
       "path": "../event"

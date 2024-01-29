@@ -34,5 +34,6 @@ export class WidgetScriptModuleError extends Error {
         options?: ErrorOptions,
     ) {
         super(message, options);
+        this.name = WidgetScriptModuleError.toString();
     }
 }
