@@ -32,7 +32,7 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
         this._set('client', cb);
     }
 
-    protected async _createHttpClient(init: ConfigBuilderCallbackArgs) {
+    private async _createHttpClient(init: ConfigBuilderCallbackArgs) {
         const http = await init.requireInstance('http');
 
         if (http.hasClient('apps')) {
