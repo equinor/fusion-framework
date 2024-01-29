@@ -1,0 +1,35 @@
+{
+  "extends": "../tsconfig.react.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "paths": {
+      "react": [ "./node_modules/@types/react" ],
+    },
+  },
+  "references": [
+    {
+      "path": "../../modules/module"
+    },
+    {
+      "path": "../../react/framework"
+    },
+    {
+      "path": "../../modules/event"
+    },
+    {
+      "path": "../../modules/widget"
+    },
+    {
+      "path": "../../widget"
+    },
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}

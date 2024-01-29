@@ -3,6 +3,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import { WidgetConfigurator } from './WidgetConfigurator';
 import type { WidgetModulesInstance, WidgetModuleInitiator, WidgetEnv } from './types';
+import { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
 
 /**
  * 
@@ -30,7 +31,7 @@ export const configureWidgetModules =
         TEnv extends WidgetEnv = WidgetEnv,
     >(
         cb?: WidgetModuleInitiator<TModules, TRef, TEnv>,
-    ): ((args: { fusion: TRef; env: TEnv }) => Promise<WidgetModulesInstance<TModules>>) =>
+    ): ((args: WidgetRenderArgs<TRef, TEnv>) => Promise<WidgetModulesInstance<TModules>>) =>
     /**
      *
      * Callback for initializing application modules
@@ -38,7 +39,7 @@ export const configureWidgetModules =
      * @param args - Fusion and application  environments (manifest, config ...)
      * @returns initialized app modules
      */
-    async (args: { fusion: TRef; env: TEnv }): Promise<WidgetModulesInstance<TModules>> => {
+    async (args: WidgetRenderArgs<TRef, TEnv>): Promise<WidgetModulesInstance<TModules>> => {
         const configurator = new WidgetConfigurator<TModules, TRef['modules']>();
         if (cb) {
             await Promise.resolve(cb(configurator, args));
