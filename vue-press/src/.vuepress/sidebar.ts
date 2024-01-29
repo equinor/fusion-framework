@@ -16,17 +16,17 @@ export default sidebar({
                     children: [
                         {
                             text: 'AG-Grid',
-                            link: 'ag-grid.md'
-                        }
-                    ]
+                            link: 'ag-grid.md',
+                        },
+                    ],
                 },
                 'app/feature-flag',
                 'app/people',
                 'app/authentication',
                 'app/legacy',
-                'app/tips_and_tricks'
-            ]
-        }
+                'app/tips_and_tricks',
+            ],
+        },
     ],
     '/cli/': [
         {
@@ -37,8 +37,8 @@ export default sidebar({
                 {
                     text: 'configuration',
                     link: 'app-config.md',
-                }
-            ]
+                },
+            ],
         },
     ],
     '/modules/': [
@@ -65,14 +65,25 @@ export default sidebar({
                     text: 'React',
                     link: 'react.md',
                 },
-            ]
-
-        },
-        {
-            text: 'Feature flag',
-            prefix: 'feature-flag/',
-            link: 'feature-flag/module.md',
-            children: [
+                'app/',
+                {
+                    text: 'Event',
+                    prefix: 'event/',
+                    link: 'event/',
+                    children: [
+                        {
+                            text: 'module',
+                            link: 'README.md',
+                        },
+                        {
+                            text: 'React',
+                            link: 'react.md',
+                        },
+                    ],
+                },
+                'navigation/',
+                'bookmark/',
+                'ag-grid/',
                 {
                     text: 'module',
                     link: 'module.md',
@@ -81,8 +92,7 @@ export default sidebar({
                     text: 'react',
                     link: 'react.md',
                 },
-            ]
-            
+            ],
         },
         'navigation/',
         'bookmark/',
@@ -108,6 +118,7 @@ export default sidebar({
                     text: 'bookmarks',
                     link: 'bookmarks.md',
                 },
+                'widget/',
             ],
         },
     ],
