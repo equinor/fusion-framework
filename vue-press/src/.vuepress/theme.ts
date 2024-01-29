@@ -32,9 +32,11 @@ export default hopeTheme({
         codetabs: true,
         tabs: true,
         tasklist: true,
-        container: true,
+        hint: true,
         imgSize: true,
         align: true,
+        gfm: true,
+        include: true,
       },
       comment: {
         provider: "Giscus",
