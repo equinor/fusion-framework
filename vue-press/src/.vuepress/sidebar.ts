@@ -27,6 +27,11 @@ export default sidebar({
                 'app/tips_and_tricks',
             ],
         },
+        {
+            text: 'Portal',
+            prefix: '/guide/portal',
+            children: ['widget/'],
+        },
     ],
     '/cli/': [
         {
