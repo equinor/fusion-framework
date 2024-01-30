@@ -8,14 +8,14 @@ import { Styled } from './Styled';
  * JSX structure for Feature toggler tab for app features in the PersonSidesheet's Feature page.
  */
 export const FeatureTogglerApp = () => {
-    const { features, setEnabled } = useCurrentAppFeatures();
+    const { features, toggleFeature } = useCurrentAppFeatures();
     return (
         <Styled.SwitchList>
             {features?.map((feature) => {
                 return (
                     <Styled.SwitchListItem
                         key={`feat-${feature.key}`}
-                        onClick={() => setEnabled(feature.key, !feature.enabled)}
+                        onClick={() => toggleFeature(feature.key)}
                     >
                         <Styled.SwitchLabel>
                             <Typography variant="body_short_bold">

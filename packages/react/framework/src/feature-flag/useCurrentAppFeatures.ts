@@ -1,26 +1,19 @@
-import {
-    type IFeatureFlag,
-    type FeatureFlagModule,
-} from '@equinor/fusion-framework-module-feature-flag';
+import { type FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 import { useCurrentAppModule } from '../app';
-import { useFeatures } from './useFeatures';
+import { useFeatures, type UseFeaturesResult } from './useFeatures';
 
 /**
- * Custom hook that provides the current application features and related functionality.
- * @returns An object containing the current application features, an error object, and a function to set the enabled state of a feature.
+ * Custom hook that returns the current app features and provides a function to toggle a feature.
+ * @returns An object containing the current app features, a function to toggle a feature, and any error that occurred.
  */
-export const useCurrentAppFeatures = (): {
-    features: IFeatureFlag<unknown>[] | undefined;
-    error: unknown;
-    setEnabled: (key: string, enabled: boolean) => void;
-} => {
+export const useCurrentAppFeatures = (): UseFeaturesResult => {
     const { module, error: moduleError } = useCurrentAppModule<FeatureFlagModule>('featureFlag');
 
-    const { features, setEnabled, error } = useFeatures(module);
+    const { features, toggleFeature, error } = useFeatures(module);
 
     return {
         features,
-        setEnabled,
+        toggleFeature,
         error: error ?? moduleError,
     };
 };

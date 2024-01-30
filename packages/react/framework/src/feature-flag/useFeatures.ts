@@ -12,6 +12,12 @@ import { type FeatureSelectorFn } from '@equinor/fusion-framework-module-feature
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
+export interface UseFeaturesResult {
+    features: IFeatureFlag[];
+    error: unknown;
+    toggleFeature: (key: string, enable?: boolean) => void;
+}
+
 /**
  * Custom hook that provides access to the feature flags and their values.
  *
@@ -23,11 +29,7 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 export const useFeatures = (
     provider?: IFeatureFlagProvider | null,
     selector?: FeatureSelectorFn,
-): {
-    features: IFeatureFlag[];
-    error: unknown;
-    setEnabled: (key: string, enabled: boolean) => void;
-} => {
+): UseFeaturesResult => {
     /**
      * Custom hook that provides access to the feature flags and their values.
      *
@@ -51,19 +53,21 @@ export const useFeatures = (
      * Sets the enabled state of a feature flag.
      *
      * @param key - The key of the feature flag.
-     * @param enabled - The new enabled state of the feature flag.
+     * @param enable - The new enabled state of the feature flag.
      * @throws Error if IFeatureFlagProvider is missing.
      */
-    const setEnabled = useCallback(
-        (key: string, enabled: boolean) => {
+    const toggleFeature = useCallback(
+        (key: string, enable?: boolean) => {
             if (!provider) {
                 throw new Error('Missing IFeatureFlagProvider.');
             }
+            const enabled = enable === undefined ? !provider.getFeature(key)?.enabled : enable;
+
             provider.toggleFeature({ key, enabled });
         },
         [provider],
     );
-    return { features, error, setEnabled };
+    return { features, error, toggleFeature };
 };
 
 export default useFeatures;

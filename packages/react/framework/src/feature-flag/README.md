@@ -15,7 +15,7 @@ const Component =  () => {
           <button
             key={feature.key}
             disabled={ appFeatures.readOnly }
-            onClick={ () => appFeatures.setEnabled( feature.key, feature.enabled) }
+            onClick={ () => appFeatures.toggle( feature.key ) }
           >
             { feature.enabled ? 'disable' : 'enable' } feature { feature.title }
           </button>
