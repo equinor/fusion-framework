@@ -4082,7 +4082,7 @@ packages:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-divider': 1.1.0
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-radio': 1.0.1
+      '@equinor/fusion-wc-radio': 1.1.0
       '@equinor/fusion-web-theme': 0.1.7
       '@material/mwc-list': 0.27.0
       lit: 2.7.0
@@ -4180,15 +4180,6 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-radio@1.0.1:
-    resolution: {integrity: sha512-SPxzv3zUtw+5+P7LtwbRBKRTnu454QkQkfFelj/seK2f45Hn33lsuGvLCjQVyrE66CEd17iKezgeKue+2JKKyQ==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
-      '@material/mwc-radio': 0.27.0
-      lit: 2.7.0
-    dev: true
-
   /@equinor/fusion-wc-radio@1.1.0:
     resolution: {integrity: sha512-ZyFnylCMU/YqT9vnrltTv7bqVW7zOhe5z8Q1xKhquLPtfUehzzRNKxDBIg+W1LgIJiNxzgxvgSjracrjUXGmfQ==}
     dependencies:
@@ -4224,8 +4215,8 @@ packages:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-divider': 1.1.0
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-list': 1.0.5
-      '@equinor/fusion-wc-textinput': 1.0.3
+      '@equinor/fusion-wc-list': 1.1.1
+      '@equinor/fusion-wc-textinput': 1.1.0
       '@equinor/fusion-web-theme': 0.1.7
       '@lit-labs/task': 3.1.0
       '@material/mwc-textfield': 0.27.0
@@ -4240,7 +4231,7 @@ packages:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-divider': 1.1.0
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-list': 1.1.0
+      '@equinor/fusion-wc-list': 1.1.1
       '@equinor/fusion-wc-textinput': 1.1.0
       '@equinor/fusion-web-theme': 0.1.7
       '@lit-labs/task': 3.1.0
@@ -4277,16 +4268,6 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 1.0.5
       '@equinor/fusion-wc-icon': 1.0.33
-      '@material/mwc-textfield': 0.27.0
-      lit: 2.7.0
-    dev: true
-
-  /@equinor/fusion-wc-textinput@1.0.3:
-    resolution: {integrity: sha512-+VggvuKHvwvCsteW4n/YzjsQsRF4l9EXW5TnxHcJmAMV6Rf3er/ilIPLmYes0haFWfDN/QIt0aykQiTTBaI/6A==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-web-theme': 0.1.7
       '@material/mwc-textfield': 0.27.0
       lit: 2.7.0
     dev: true
