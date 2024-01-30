@@ -12,12 +12,12 @@
       "path": "../../packages/cli"
     },
     {
-        "path": "../../packages/modules/feature-flag"
+      "path": "../../packages/modules/feature-flag"
     }
   ],
   "include": [
     "src/**/*"
-, "app.manifest.config.ts"  ],
+  ],
   "exclude": [
     "node_modules",
     "lib"
