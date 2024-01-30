@@ -15,6 +15,10 @@ import { useObservableState } from '@equinor/fusion-observable/react';
 export interface UseFeaturesResult {
     features: IFeatureFlag[];
     error: unknown;
+    /**
+     * @param key - The key of the feature flag.
+     * @param enable - Optional provide new enabled state of the feature flag. _Defaults to inversion of current feature flag state_
+     */
     toggleFeature: (key: string, enable?: boolean) => void;
 }
 
