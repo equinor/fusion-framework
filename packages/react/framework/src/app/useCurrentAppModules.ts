@@ -4,6 +4,7 @@ import useCurrentApp from './useCurrentApp';
 import { AppModulesInstance } from '@equinor/fusion-framework-module-app';
 import { Observable, of } from 'rxjs';
 import { type AnyModule } from '@equinor/fusion-framework-module';
+import { useObservableState } from '@equinor/fusion-observable/react';
 
 /**
  * Observers the stream of current app initialized modules
@@ -14,10 +15,11 @@ import { type AnyModule } from '@equinor/fusion-framework-module';
  * @returns the observable instance of initialized modules of the application
  */
 export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): {
-    modules$: Observable<AppModulesInstance<TModules> | null>;
+    modules: AppModulesInstance<TModules> | null;
     error?: unknown;
+    complete: boolean;
 } => {
-    const { currentApp, error } = useCurrentApp<TModules>();
+    const { currentApp, error: appError } = useCurrentApp<TModules>();
     const modules$ = useMemo(
         () =>
             currentApp
@@ -25,9 +27,17 @@ export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): 
                 : of(null),
         [currentApp],
     );
-    return {
-        modules$,
+    const {
+        value: modules,
         error,
+        complete,
+    } = useObservableState(modules$, {
+        initial: (currentApp?.state.modules as unknown as AppModulesInstance<TModules>) ?? null,
+    });
+    return {
+        modules,
+        error: error ?? appError,
+        complete,
     };
 };
 

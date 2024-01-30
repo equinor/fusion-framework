@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useFrameworkFeatures } from '@equinor/fusion-framework-react/feature-flag';
 
 import { Typography, Switch } from '@equinor/eds-core-react';

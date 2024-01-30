@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-react": minor
+"@equinor/fusion-framework-react": major
 ---
 
 refactor framework feature flag hooks
@@ -9,3 +9,6 @@ refactor framework feature flag hooks
 - _useFeatures (internal)_
 - useFrameworkFeature
 - useFrameworkFeatures
+
+> [!CAUTION]
+> `useCurrentAppModules` does no longer return `Observable<AppModulesInstance>`, but current state of `AppModulesInstance | null`
