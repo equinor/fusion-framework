@@ -1,6 +1,7 @@
 import { ModuleType } from '@equinor/fusion-framework-module';
 import {
     GetWidgetParameters,
+    WidgetConfig,
     WidgetManifest,
     WidgetScriptModule,
     WidgetState,
@@ -139,6 +140,43 @@ export class Widget {
         });
     }
 
+    public getConfig(force_refresh = false): Observable<WidgetConfig> {
+        return new Observable((subscriber) => {
+            if (this.#state.value.manifest) {
+                subscriber.next(this.#state.value.config);
+                if (!force_refresh) {
+                    return subscriber.complete();
+                }
+            }
+            subscriber.add(
+                this.#state.addEffect('set_config', ({ payload }) => {
+                    subscriber.next(payload);
+                }),
+            );
+            subscriber.add(
+                this.#state.addEffect('fetch_config::success', ({ payload }) => {
+                    subscriber.next(payload);
+                    subscriber.complete();
+                }),
+            );
+            subscriber.add(
+                this.#state.addEffect('fetch_config::failure', ({ payload }) => {
+                    subscriber.error(
+                        Error('failed to load widget manifest', {
+                            cause: payload,
+                        }),
+                    );
+                }),
+            );
+
+            this.loadConfig();
+        });
+    }
+
+    public loadConfig(update?: boolean) {
+        this.#state.next(actions.fetchConfig({ key: this.name, ...this.widgetPrams }, update));
+    }
+
     public loadManifest(update?: boolean) {
         this.#state.next(actions.fetchManifest({ key: this.name, ...this.widgetPrams }, update));
     }
@@ -174,11 +212,13 @@ export class Widget {
 
             subscriber.add(
                 this.getManifest().subscribe((manifest) => {
-                    const importURI = manifest.assetPath
-                        ? `${this.config?.baseImportUrl}${manifest.assetPath}/${manifest.entryPoint}?api-version=${this.config?.apiVersion}`
-                        : `${this.config?.baseImportUrl}${manifest.entryPoint}?api-version=${this.config?.apiVersion}`;
+                    const path = manifest.assetPath
+                        ? `${manifest.assetPath}/${manifest.entryPoint}?api-version=${this.config?.apiVersion}`
+                        : `${manifest.entryPoint}?api-version=${this.config?.apiVersion}`;
 
-                    return of(this.#state.next(actions.importWidget(importURI)));
+                    const url = new URL(path, this.config?.baseImportUrl);
+
+                    return of(this.#state.next(actions.importWidget(url.href)));
                 }),
             );
         });
@@ -187,15 +227,22 @@ export class Widget {
     public initialize(): Observable<{
         manifest: WidgetManifest;
         script: WidgetScriptModule;
+        config: WidgetConfig;
     }> {
+        //Add back Config to widget!!
         return new Observable((observer) => {
             this.#state.next(actions.initialize());
             observer.add(
-                combineLatest([this.getManifest(), this.getWidgetModule()]).subscribe({
-                    next: ([manifest, script]) =>
+                combineLatest([
+                    this.getManifest(),
+                    this.getWidgetModule(),
+                    this.getConfig(),
+                ]).subscribe({
+                    next: ([manifest, script, config]) =>
                         observer.next({
                             manifest,
                             script,
+                            config,
                         }),
                     error: (err) => {
                         observer.error(err), this.#state.next(actions.initialize.failure(err));
@@ -209,7 +256,7 @@ export class Widget {
         });
     }
 
-    public getAppModuleAsync(allow_cache = true): Promise<WidgetScriptModule> {
+    public getWidgetModuleAsync(allow_cache = true): Promise<WidgetScriptModule> {
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
         return operator(this.getWidgetModule(!allow_cache));
     }
@@ -222,3 +269,5 @@ export class Widget {
         this.#subscription.unsubscribe();
     }
 }
+
+// Todo Define All Events

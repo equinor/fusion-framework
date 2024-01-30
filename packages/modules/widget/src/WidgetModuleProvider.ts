@@ -33,6 +33,8 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
         const { config, event } = args;
         this.#event = event;
         this.#config = config;
+
+        // Todo fix 2 next liens
         this.#widgetClient = new Query(config.client.getWidget);
 
         this.#subscription.add(() => this.#widgetClient.complete());
@@ -67,7 +69,7 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
                 catchError((err) => {
                     /** extract cause, since error will be a `QueryError` */
                     const { cause } = err;
-                    console.log('query', err);
+                    console.error('query', err);
                     if (cause instanceof GetWidgetError) {
                         throw cause;
                     }

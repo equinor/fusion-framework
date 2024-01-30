@@ -1,5 +1,6 @@
 import { GetWidgetParameters, WidgetEndpointBuilder } from './types';
 
+// Toto Do not use string Use URL!!!!!
 export const removeTrailingSlashFromURI = (uri: string): string => {
     return uri.at(-1) === '/' ? uri.slice(0, -1) : uri;
 };

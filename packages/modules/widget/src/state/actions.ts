@@ -6,6 +6,7 @@ import {
 } from '@equinor/fusion-observable';
 import {
     GetWidgetParameters,
+    WidgetConfig,
     WidgetManifest,
     WidgetModulesInstance,
     WidgetScriptModule,
@@ -27,6 +28,17 @@ const createActions = () => ({
             meta: { update },
         }),
         (manifest: WidgetManifest) => ({ payload: manifest }),
+        (error: unknown) => ({ payload: error }),
+    ),
+    /** Config loading */
+    setConfig: createAction('set_config', (config: WidgetConfig) => ({ payload: config })),
+    fetchConfig: createAsyncAction(
+        'fetch_config',
+        (payload: { key: string; args?: GetWidgetParameters['args'] }, update?: boolean) => ({
+            payload,
+            meta: { update },
+        }),
+        (config: WidgetConfig) => ({ payload: config }),
         (error: unknown) => ({ payload: error }),
     ),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

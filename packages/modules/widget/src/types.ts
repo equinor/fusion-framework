@@ -13,7 +13,7 @@ export type WidgetEnv<TProps = unknown> = {
     props?: TProps;
 };
 
-export type Client = {
+export type IClient = {
     getWidget: QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
 };
 
@@ -34,6 +34,13 @@ export type WidgetManifest = {
     maintainers?: string[];
     entryPoint: string;
     assetPath: string;
+};
+
+export type Endpoint = { name: string; uri: string; scopes?: string[] };
+
+export type WidgetConfig<TEnvironment = unknown> = {
+    environment: TEnvironment;
+    endpoints: Record<string, string | Endpoint>;
 };
 
 export type WidgetModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
@@ -68,6 +75,7 @@ export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = 
 export type WidgetState<TModules = any> = {
     name: string;
     status: Set<string>;
+    config?: WidgetConfig;
     manifest?: WidgetManifest;
     modules?: WidgetScriptModule;
     instance?: WidgetModulesInstance<TModules>;

@@ -9,6 +9,6 @@ export type {
     WidgetRenderArgs,
     WidgetStateInitial,
 } from '@equinor/fusion-framework-module-widget';
-export { Widget } from './components/widget';
-export { Widget as default } from './components/widget';
+export { Widget } from './components/Widget';
+export { Widget as default } from './components/Widget';
 export { makeWidgetComponent } from './util/make-widget-component';

@@ -2,12 +2,12 @@
 
 import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 
-import type { Client, WidgetEndpointBuilder } from './types';
+import type { IClient, WidgetEndpointBuilder } from './types';
 import { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import { defaultEndpointBuilder, removeTrailingSlashFromURI } from './utils';
 
 export type WidgetModuleConfig = {
-    client: Client;
+    client: IClient;
     apiVersion: string;
     baseImportUrl: string;
     endpointBuilder: WidgetEndpointBuilder;
@@ -28,7 +28,7 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
         this._set('baseImportUrl', () => url);
     }
 
-    public setClient(cb: ConfigBuilderCallback<Client>) {
+    public setClient(cb: ConfigBuilderCallback<IClient>) {
         this._set('client', cb);
     }
 
@@ -53,6 +53,7 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
     ) {
         const httpClient = await this._createHttpClient(_init);
 
+        // Todo mak function that returns IClient
         if (!config.apiVersion) {
             config.apiVersion = '1.0-preview';
         }

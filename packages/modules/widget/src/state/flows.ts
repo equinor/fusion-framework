@@ -39,6 +39,30 @@ export const handleFetchManifest =
             }),
         );
 
+export const handleFetchConfig =
+    (provider: WidgetModuleProvider): Flow<Actions, WidgetState> =>
+    (action$) =>
+        action$.pipe(
+            filter(actions.fetchConfig.match),
+            switchMap(({ payload: key }) => {
+                const subject = from(provider.getWidgetConfig(key)).pipe(
+                    filter((x) => !!x),
+                    share(),
+                );
+                return concat(
+                    subject.pipe(map((manifest) => actions.setConfig(manifest))),
+                    subject.pipe(
+                        last(),
+                        map((manifest) => actions.fetchConfig.success(manifest)),
+                    ),
+                ).pipe(
+                    catchError((err) => {
+                        return of(actions.fetchConfig.failure(err));
+                    }),
+                );
+            }),
+        );
+
 export const handleImportWidget = (): Flow<Actions, WidgetState> => (action$) =>
     action$.pipe(
         filter(actions.importWidget.match),

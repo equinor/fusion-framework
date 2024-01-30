@@ -22,7 +22,9 @@ export const createReducer = (value: WidgetStateInitial) =>
                     state.manifest = action.payload;
                 }
             })
-
+            .addCase(actions.setConfig, (state, action) => {
+                state.config = action.payload;
+            })
             .addCase(actions.setModule, (state, action) => {
                 state.modules = action.payload;
             })

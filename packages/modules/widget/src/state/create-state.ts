@@ -2,7 +2,7 @@ import { FlowSubject } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer';
 
-import { handleFetchManifest, handleImportWidget } from './flows';
+import { handleFetchManifest, handleImportWidget, handleFetchConfig } from './flows';
 
 import type { Actions } from './actions';
 import { WidgetState, WidgetStateInitial } from '../types';
@@ -16,5 +16,6 @@ export const createState = (
     const state = new FlowSubject<WidgetState, Actions>(reducer);
     state.addFlow(handleFetchManifest(provider));
     state.addFlow(handleImportWidget());
+    state.addFlow(handleFetchConfig(provider));
     return state;
 };
