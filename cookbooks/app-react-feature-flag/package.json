@@ -18,7 +18,7 @@
         "express": "^4.18.2"
     },
     "dependencies": {
-        "@equinor/eds-core-react": "^0.34.0",
+        "@equinor/eds-core-react": "^0.35.1",
         "@equinor/fusion-framework-cli": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
