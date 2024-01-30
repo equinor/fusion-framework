@@ -64,7 +64,7 @@ export default sidebar({
         {
             text: 'Feature flag',
             prefix: 'feature-flag/',
-            link: 'feature-flag/',
+            link: 'feature-flag/module.md',
             children: [
                 {
                     text: 'module',
