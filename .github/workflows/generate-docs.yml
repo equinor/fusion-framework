@@ -1,52 +1,50 @@
-name: generate docs
+name: Generate Docs
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - docs
-    paths:
-      - 'vue-press/**'
+  workflow_call: 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: 'generate-documentation'
   cancel-in-progress: true
 
 jobs:
-  generate-docs:
+  build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: vue-press
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: docs
+      - name: Checkout docs
+        uses: actions/checkout@v2
 
-      - name: Configure git user (trigger actor) 
-        uses: ./.github/workflows/actions/config-git-user
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-
-      - name: restore node_modules
-        uses: actions/cache@v3
-        with:
-          path: 'docs/node_modules'
-          key: docs-${{ runner.os }}-${{ hashFiles('docs/package-lock.json') }}
-
-      - name: Install Node Dependencies
-        run: npm ci
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
 
       - name: Build project
-        run: |
-          npm run build
-          touch ../docs/.nojekyll
+        run: pnpm build
 
-      - name: Commit changes
-        run: |
-            cd ..
-            echo "!docs/" >> .gitignore
-            git add docs 
-            git commit -m'docs: updated docs'
-            git push --force
+      - name: Generate version
+        run: npx changeset version
+
+      - name: Build storybook
+        run: pnpm build:docs
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./storybook/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
