@@ -255,7 +255,7 @@ export function createAction(type: string, prepareAction?: PrepareAction<any>): 
 export const actionSuffixDivider = '::';
 
 export const matchActionSuffix = (suffix: string) =>
-    new RegExp(`${actionSuffixDivider}\\${suffix}$`);
+    new RegExp(`${actionSuffixDivider}${suffix}$`);
 
 export const actionBaseType = (action: Action) =>
     action.type.replace(matchActionSuffix('\\w+$'), '');
