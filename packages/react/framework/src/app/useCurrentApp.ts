@@ -16,7 +16,7 @@ import { useFramework } from '../useFramework';
  * @template TEnv type hint what kind of environment config the application has
  */
 export const useCurrentApp = <TModules extends Array<AnyModule> = [], TEnv = unknown>(): {
-    currentApp: CurrentApp<TModules, TEnv>;
+    currentApp?: CurrentApp<TModules, TEnv> | null;
     setCurrentApp: (appKey: string) => void;
     clearCurrentApp: () => void;
     error?: unknown;
@@ -26,7 +26,7 @@ export const useCurrentApp = <TModules extends Array<AnyModule> = [], TEnv = unk
         throw Error('Current framework does not have AppModule configured');
     }
     const currentApp$ = useMemo(() => provider.current$, [provider]);
-    const { value, error } = useObservableState(currentApp$);
+    const { value, error } = useObservableState(currentApp$, { initial: provider.current });
     return {
         currentApp: value as CurrentApp<TModules, TEnv>,
         setCurrentApp: useMemo(() => provider.setCurrentApp.bind(provider), [provider]),
