@@ -35,8 +35,10 @@ export const useCurrentAppModule = <
     const module =
         modules === null
             ? null
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (modules[moduleKey as keyof typeof modules] as any);
+            : modules === undefined
+              ? undefined
+              : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (modules[moduleKey as keyof typeof modules] as any);
     return { module, error, complete };
 };
 

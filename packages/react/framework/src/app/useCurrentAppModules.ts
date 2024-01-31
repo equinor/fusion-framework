@@ -15,7 +15,7 @@ import { useObservableState } from '@equinor/fusion-observable/react';
  * @returns the observable instance of initialized modules of the application
  */
 export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): {
-    modules: AppModulesInstance<TModules> | null;
+    modules?: AppModulesInstance<TModules> | null;
     error?: unknown;
     complete: boolean;
 } => {
@@ -32,7 +32,7 @@ export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): 
         error,
         complete,
     } = useObservableState(modules$, {
-        initial: (currentApp?.state.modules as unknown as AppModulesInstance<TModules>) ?? null,
+        initial: currentApp === undefined ? undefined : currentApp?.instance ?? null,
     });
     return {
         modules,
