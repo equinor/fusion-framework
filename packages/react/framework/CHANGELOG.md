@@ -1,5 +1,22 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+- [#1766](https://github.com/equinor/fusion-framework/pull/1766) [`fdbe12f`](https://github.com/equinor/fusion-framework/commit/fdbe12f258aeb98d91094f16f2d8ce229d7b13ee) Thanks [@odinr](https://github.com/odinr)! - - The return type of the `useCurrentApp` function has been changed. The `currentApp` property can now be `undefined` or `null`, in addition to `CurrentApp<TModules, TEnv>`.
+
+  - The initial value for `useObservableState` has been set to `provider.current`.
+  - The assignment of `module` has been updated to handle the case where `modules` is `undefined`.
+  - The return type of the `useCurrentAppModules` function has been changed. The `modules` property can now be `undefined` or `null`, in addition to `AppModulesInstance<TModules>`.
+  - The initial value for `useObservableState` has been updated to handle the case where `currentApp` is `undefined`.
+
+- Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-framework-module-feature-flag@1.0.1
+  - @equinor/fusion-framework@7.0.29
+  - @equinor/fusion-framework-react-module-signalr@2.0.17
+
 ## 6.0.0
 
 ### Major Changes
