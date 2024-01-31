@@ -23,6 +23,9 @@
       "path": "../navigation"
     },
     {
+      "path": "../event"
+    },
+    {
       "path": "../../utils/observable"
     },
   ],
