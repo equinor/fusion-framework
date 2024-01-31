@@ -44,7 +44,7 @@ jobs:
         with:
           turbo-cache: true
 
-      - uses: reviewdog/action-setup@v1.1.0
+      - uses: reviewdog/action-setup@v1.2.0
 
       - name: Lint source files
         run: reviewdog --runners=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
