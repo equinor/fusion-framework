@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-framework-module-app@5.2.13
+  - @equinor/fusion-framework-react-app@4.3.1
+  - @equinor/fusion-framework-app@8.0.1
+  - @equinor/fusion-framework-module-service-discovery@7.0.19
+  - @equinor/fusion-framework@7.0.29
+
 ## 9.0.0
 
 ### Patch Changes
