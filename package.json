@@ -5,12 +5,12 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^16 || ^18 || ^20",
+    "node": "^18 || ^20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": ">=4"
   },
-  "packageManager": "pnpm@8.0.0",
+  "packageManager": "pnpm@8.15.1",
   "scripts": {
     "install": "pnpm -r exec genversion --es6 --semi src/version.ts",
     "install:clean": "pnpm clean && pnpm install",

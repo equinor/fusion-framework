@@ -2,7 +2,7 @@ name: Setup Node
 Description: General setup of node
 inputs:
   node-version:  
-    default: 18
+    default: 20
   turbo-cache:
     default: true
 
