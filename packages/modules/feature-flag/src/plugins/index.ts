@@ -1,2 +1,3 @@
-export { createCgiPlugin } from './cgi';
-export { createApiPlugin } from './api';
+// export { createApiPlugin } from './api';
+export { createLocalStoragePlugin } from './local';
+export { createUrlPlugin } from './url';

@@ -28,62 +28,78 @@ export default sidebar({
             ]
         }
     ],
-    '/modules/': [
+    '/test/': [
         {
-            text: 'Modules',
-            prefix: '/modules/',
+            text: 'Foo',
+            link: 'gg'
+        }
+    ],
+    '/modules/': [
+        '',
+        {
+            text: 'HTTP',
+            link: 'http/',
+        },
+        {
+            text: 'Context',
+            link: 'context/',
+        },
+        'app/',
+        {
+            text: 'Event',
+            prefix: 'event/',
+            link: 'event/',
             children: [
-                '',
                 {
-                    text: 'HTTP',
-                    link: 'http/',
+                    text: 'module',
+                    link: 'README.md',
                 },
                 {
-                    text: 'Context',
-                    link: 'context/',
+                    text: 'React',
+                    link: 'react.md',
                 },
-                'app/',
-                {
-                    text: 'Event',
-                    prefix: 'event/',
-                    link: 'event/',
-                    children: [
-                        {
-                            text: 'module',
-                            link: 'README.md',
-                        },
-                        {
-                            text: 'React',
-                            link: 'react.md',
-                        },
-                    ]
+            ]
 
-                },
-                'navigation/',
-                'bookmark/',
-                'ag-grid/',
+        },
+        {
+            text: 'Feature flag',
+            prefix: 'feature-flag/',
+            link: 'feature-flag/module.md',
+            children: [
                 {
-                    text: 'Service Discovery',
-                    link: 'service-discovery/',
+                    text: 'module',
+                    link: 'module.md',
                 },
                 {
-                    text: 'Services',
-                    prefix: 'services/',
-                    link: 'services/',
-                    children: [
-                        {
-                            text: 'module',
-                            link: 'README.md',
-                        },
-                        {
-                            text: 'context',
-                            link: 'context.md',
-                        },
-                        {
-                            text: 'bookmarks',
-                            link: 'bookmarks.md',
-                        },
-                    ],
+                    text: 'react',
+                    link: 'react.md',
+                },
+            ]
+            
+        },
+        'navigation/',
+        'bookmark/',
+        'ag-grid/',
+        {
+            text: 'Service Discovery',
+            link: 'service-discovery/',
+        },
+        {
+            text: 'Services',
+            prefix: 'services/',
+            link: 'services/',
+            children: [
+                {
+                    text: 'module',
+                    link: 'README.md',
+                },
+                {
+                    text: 'context',
+                    link: 'context.md',
+                },
+                {
+                    text: 'bookmarks',
+                    link: 'bookmarks.md',
                 },
             ],
         },

@@ -1,59 +1,33 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
-import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
-import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
-import { faker } from '@faker-js/faker';
 
-faker.seed(123);
+import { Feature } from './static';
 
-export const configure: AppModuleInitiator = (configurator, args) => {
-    const { basename } = args.env;
-    enableNavigation(configurator, basename);
-
-    configurator.configureHttpClient('feature-flag-api', {
-        baseUri: 'http://localhost:12321',
-    });
-
-    enableFeatureFlagging(configurator, (builder) => {
-        builder.enableCgi('app-react-feature-flag', [
-            {
-                key: 'redHeader',
-                title: 'Use red header?',
-                description: 'When enabled, the header will be colored red',
+export const configure: AppModuleInitiator = (appConfigurator) => {
+    appConfigurator.useFeatureFlags([
+        {
+            key: Feature.Basic,
+            title: 'Basic',
+        },
+        {
+            key: Feature.WithDescription,
+            title: 'With description',
+            description: 'Pancetta pork chop burgdoggen',
+        },
+        {
+            key: Feature.ReadOnly,
+            title: 'Read only feature',
+            description: 'Kielbasa doner ham hock',
+            readonly: true,
+        },
+        {
+            key: Feature.WithValue,
+            title: 'Feature with value',
+            get description() {
+                return `When enabled, the header will be colored ${this.value}`;
             },
-            'foo',
-            {
-                key: faker.lorem.word(),
-                readonly: true,
-            },
-            {
-                key: faker.lorem.word(),
-                description: faker.lorem.sentence(5),
-                enabled: false,
-                value: faker.lorem.word(),
-            },
-            {
-                key: faker.lorem.word(),
-                title: faker.animal.bear(),
-            },
-            {
-                key: faker.lorem.word(),
-                title: faker.animal.bear(),
-                description: faker.lorem.sentence(5),
-                enabled: true,
-            },
-            {
-                key: faker.lorem.word(),
-                enabled: false,
-                value: faker.lorem.word(),
-                readonly: true,
-            },
-        ]);
-
-        // builder.enableApi({
-        //     httpClientName: 'feature-flag-api',
-        //     path: 'api/flags',
-        // });
-    });
+            value: '#392',
+        },
+    ]);
 };
 
 export default configure;

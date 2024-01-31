@@ -39,7 +39,7 @@ export const configureModules =
      * @returns initialized app modules
      */
     async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
-        const configurator = new AppConfigurator<TModules, TRef['modules']>();
+        const configurator = new AppConfigurator<TModules, TRef['modules'], TEnv>(args.env);
         if (cb) {
             await Promise.resolve(cb(configurator, args));
         }

@@ -1,4 +1,5 @@
-import { defineUserConfig } from "vuepress";
+import { defineUserConfig } from "@vuepress/cli";
+import { viteBundler } from '@vuepress/bundler-vite'
 import { getDirname, path } from '@vuepress/utils'
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 
@@ -8,7 +9,7 @@ const __repoRoot = path.resolve(__dirname, '../../../');
 
 const { description, name, version } = require('../../../package.json');
 
-import theme from './theme';
+import theme from './theme.js';
 
 export default defineUserConfig({
   base: '/fusion-framework/',
@@ -18,6 +19,16 @@ export default defineUserConfig({
     ["link", { href:"https://cdn.eds.equinor.com/font/equinor-font.css", rel:"stylesheet"}]
   ],
   theme,
+  bundler: viteBundler({
+    viteOptions: {
+      optimizeDeps: {
+        include: [
+          'mermaid'
+        ]
+      }
+    },
+    vuePluginOptions: {},
+  }),
   plugins: [
     registerComponentsPlugin({
       components: {
@@ -35,6 +46,6 @@ export default defineUserConfig({
         return str.replace(/^@cookbooks/, path.resolve(__repoRoot, 'cookbooks')).replace(/^@packages/, path.resolve(__repoRoot, 'packages'));
       }
     }
-  }
+  },
 });
 

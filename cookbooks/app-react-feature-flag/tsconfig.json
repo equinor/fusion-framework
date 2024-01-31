@@ -12,7 +12,7 @@
       "path": "../../packages/cli"
     },
     {
-        "path": "../../packages/modules/feature-flag"
+      "path": "../../packages/modules/feature-flag"
     }
   ],
   "include": [

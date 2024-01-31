@@ -23,6 +23,9 @@
       "path": "../modules/app"
     },
     {
+      "path": "../modules/feature-flag"
+    },
+    {
       "path": "../framework"
     },
   ],

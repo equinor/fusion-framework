@@ -1,4 +1,4 @@
-import { useCurrentAppFeatureFlags } from '@equinor/fusion-framework-react/feature-flag';
+import { useCurrentAppFeatures } from '@equinor/fusion-framework-react/feature-flag';
 
 import { Typography, Switch } from '@equinor/eds-core-react';
 
@@ -8,14 +8,14 @@ import { Styled } from './Styled';
  * JSX structure for Feature toggler tab for app features in the PersonSidesheet's Feature page.
  */
 export const FeatureTogglerApp = () => {
-    const { features, setFeatureEnabled } = useCurrentAppFeatureFlags();
+    const { features, toggleFeature } = useCurrentAppFeatures();
     return (
         <Styled.SwitchList>
             {features?.map((feature) => {
                 return (
                     <Styled.SwitchListItem
                         key={`feat-${feature.key}`}
-                        onClick={() => setFeatureEnabled(feature.key, !feature.enabled)}
+                        onClick={() => toggleFeature(feature.key)}
                     >
                         <Styled.SwitchLabel>
                             <Typography variant="body_short_bold">

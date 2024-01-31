@@ -7,8 +7,7 @@ import type {
     FeatureFlagPluginConfigCallback,
 } from './types.js';
 import { IFeatureFlag } from './FeatureFlag.js';
-
-import { createApiPlugin, createCgiPlugin } from './plugins';
+import { createLocalStoragePlugin, createUrlPlugin } from './plugins/index.js';
 
 // TODO allow configurator to have array
 // TODO fix .dot type
@@ -22,40 +21,6 @@ export interface IFeatureFlagConfigurator extends BaseConfigBuilder<FeatureFlagC
      * @param handler The callback function that configures the feature flag plugin.
      */
     addPlugin(handler: FeatureFlagPluginConfigCallback): void;
-    /**
-     * Enables the CGI plugin with the specified arguments.
-     *
-     * @example
-     * ```ts
-     *  configurator.enableCgi(
-     *     'foo-features',
-     *     [
-     *         {
-     *             key: 'foo',
-     *             title: 'Foo Feature',
-     *             description: 'this is the feature',
-     *         }
-     *     ]
-     *  );
-     * ```
-     * @param args - The arguments to be passed to the createCgiPlugin function.
-     */
-    enableCgi(...args: Parameters<typeof createCgiPlugin>): void;
-
-    /**
-     * Enables the API plugin with the specified arguments.
-     * @example
-     * ```ts
-     * configurator.enableCgi({
-     *  // see http-module
-     *  httpClientName: 'my-api-client',
-     *  path: '/api/features',
-     *  selector: myHttpResponseSelector
-     * });
-     * ```
-     * @param args - The arguments to pass to the createApiPlugin function.
-     */
-    enableApi(...args: Parameters<typeof createApiPlugin>): void;
 }
 
 export class FeatureFlagConfigurator
@@ -66,17 +31,22 @@ export class FeatureFlagConfigurator
      * Array of feature flag plugin configuration callbacks.
      */
     #plugins: FeatureFlagPluginConfigCallback[] = [];
+    #flags: IFeatureFlag[] = [];
 
     public addPlugin(handler: FeatureFlagPluginConfigCallback) {
         this.#plugins.push(handler);
+        return this;
     }
 
-    public enableCgi(...args: Parameters<typeof createCgiPlugin>) {
-        this.addPlugin(createCgiPlugin(...args));
+    /**
+     * this method will be deprecated when api
+     */
+    public enableLocalFeatures(...args: Parameters<typeof createLocalStoragePlugin>) {
+        return this.addPlugin(createLocalStoragePlugin(...args));
     }
 
-    public enableApi(...args: Parameters<typeof createApiPlugin>) {
-        this.addPlugin(createApiPlugin(...args));
+    public enableUrlToggle(...args: Parameters<typeof createUrlPlugin>) {
+        return this.addPlugin(createUrlPlugin(...args));
     }
 
     protected _processConfig(
@@ -89,6 +59,8 @@ export class FeatureFlagConfigurator
         const plugins$: Observable<Array<FeatureFlagPlugin>> = from(this.#plugins).pipe(
             /** initialize plugins */
             mergeMap((plugin) => plugin(init)),
+            /** skip empty plugin definitions */
+            filter((plugin) => Object.keys(plugin).length > 0),
             reduce((acc, plugin) => {
                 acc.push(plugin);
                 return acc;
@@ -102,11 +74,19 @@ export class FeatureFlagConfigurator
          */
         const initial$: Observable<IFeatureFlag[]> = plugins$.pipe(
             concatMap((plugins) =>
-                from(plugins).pipe(
+                from(plugins.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))).pipe(
                     /** only get initial value from plugins that support functionality */
                     filter((x) => !!x.initial),
                     concatMap((x) => x.initial!()),
                     reduce((acc, items) => {
+                        for (const key in items) {
+                            if (key in acc) {
+                                console.warn(
+                                    'FeatureFlagConfigurator',
+                                    `duplicate entry of ${key}`,
+                                );
+                            }
+                        }
                         acc.push(...items);
                         return acc;
                     }, [] as IFeatureFlag[]),

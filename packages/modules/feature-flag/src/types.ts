@@ -8,6 +8,7 @@ import { IFeatureFlag } from './FeatureFlag';
 export type { IFeatureFlag } from './FeatureFlag';
 
 export interface FeatureFlagPlugin {
+    order?: number;
     /**
      * connect the plugin to the provider
      */
@@ -17,11 +18,6 @@ export interface FeatureFlagPlugin {
      * generate initial value for the provider
      */
     initial?: () => ObservableInput<Array<IFeatureFlag>>;
-
-    /**
-     * callback function for handling changes in provider feature flags
-     */
-    onFeatureToggle?: (event: { flags: Array<IFeatureFlag> }) => void;
 }
 
 export type FeatureFlagPluginConfigCallback<T extends FeatureFlagPlugin = FeatureFlagPlugin> = (
