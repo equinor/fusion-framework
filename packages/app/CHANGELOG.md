@@ -1,5 +1,33 @@
 # Change Log
 
+## 8.0.0
+
+### Minor Changes
+
+- [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - Added method to `AppConfigurator` to enabled `Feature Flag Module`
+
+  ```ts
+  export const configure: ModuleInitiator = (appConfigurator, args) => {
+    /** provide a list of features that should be available in the application */
+    appConfigurator.useFeatureFlags([
+      {
+        key: MyFeatures.MyFlag,
+        title: "this is a flag",
+      },
+      {
+        key: MyFeatures.MyUrlFlag,
+        title: "this feature can be toggled by ?my-url-flag=true",
+        allowUrl: true,
+      },
+    ]);
+  };
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
+  - @equinor/fusion-framework-module-feature-flag@1.0.0
+
 ## 7.1.15
 
 ### Patch Changes
