@@ -21,6 +21,7 @@
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:packages": "turbo build --filter './packages/**' build",
     "build:cookbooks": "turbo build --filter './cookbooks/**' build",
+    "build:docs": "turbo build --filter './vue-press' build",
     "build:affected": "turbo build --filter=...origin/main build",
     "build:clean": "pnpm clean:build && pnpm build",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",

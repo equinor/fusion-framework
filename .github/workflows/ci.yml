@@ -8,7 +8,7 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  changesets:
+  release-pkg:
     name: Version or publish packages
     runs-on: ubuntu-latest
     outputs:
@@ -45,18 +45,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   documentation:
-    name: Merge main into docs
-    runs-on: ubuntu-latest
-    needs: changesets
-    steps:
-      - name: Update documentation
-        uses: devmasx/merge-branch@1.4.0
-        if: needs.changesets.outputs.published == 'true'
-        with:
-          type: now
-          from_branch: main
-          target_branch: docs
-          github_token: ${{ github.token }}
+    name: Update documentation
+    needs: release-pkg
+    if: needs.release-pkg.outputs.published == 'true'
+    uses: ./.github/workflows/generate-docs.yml
+    secrets: inherit
 
 
 
