@@ -219,13 +219,13 @@ importers:
   cookbooks/app-react-context:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.1.0
+        specifier: workspace:^
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.3
+        specifier: workspace:^
         version: link:../../packages/react/app
       '@equinor/fusion-framework-react-module-context':
-        specifier: ^6.0.10
+        specifier: workspace:^
         version: link:../../packages/react/modules/context
       '@equinor/fusion-observable':
         specifier: ^8.1.0

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
+import { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors';
 import {
     ContextItem,
     ContextModule,
@@ -21,6 +22,7 @@ import {
 
 import type { AppModulesInstance } from '@equinor/fusion-framework-app';
 import { styled } from 'styled-components';
+import { QueryClientError } from '@equinor/fusion-query/src/client';
 
 const Styled = {
     ContextSelectorWrapper: styled.div`
@@ -56,6 +58,35 @@ const singleItem = (props: Partial<ContextResultItem>): ContextResultItem => {
 };
 
 const noPreselect: ContextResult = [];
+
+const processError = (err: Error): ContextResult => {
+    if (err.name === 'QueryClientError') {
+        return processError((err as QueryClientError).cause as Error);
+    }
+
+    if (err.name === 'FusionContextSearchError') {
+        const error = err as FusionContextSearchError;
+        return [
+            singleItem({
+                id: error.name,
+                title: error.title,
+                subTitle: error.description,
+                isDisabled: true,
+            }),
+        ];
+    }
+
+    if (err.name === '') {
+        return [
+            singleItem({
+                title: err.name,
+                isDisabled: true,
+            }),
+        ];
+    }
+
+    return [] as ContextResult;
+};
 
 /**
  * Hook for querying context and setting resolver for ContextSelector component
@@ -148,8 +179,9 @@ const useQueryContext = (): [
                         }),
                     ];
                 } catch (e) {
+                    const err = e as Error;
                     console.log('ContextResolver query was cancelled');
-                    return [];
+                    return processError(err);
                 }
             },
             initialResult: preselected,
