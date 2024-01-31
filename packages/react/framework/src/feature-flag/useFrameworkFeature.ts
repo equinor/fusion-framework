@@ -14,7 +14,7 @@ import { useFeature } from './useFeature';
 export const useFrameworkFeature = <T>(key: string): ReturnType<typeof useFeature<T>> => {
     const provider = useFrameworkModule<FeatureFlagModule>('featureFlag');
     if (!provider) {
-        throw Error('Feature flagging is not enabled by in the framework');
+        throw Error('Feature flagging is not enabled in the framework');
     }
     return useFeature(provider, key);
 };
