@@ -32,7 +32,7 @@ export class AppModuleProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
-    #current$: BehaviorSubject<CurrentApp>;
+    #current$: BehaviorSubject<CurrentApp | null>;
 
     #subscription = new Subscription();
 
@@ -41,12 +41,15 @@ export class AppModuleProvider {
     /**
      * fetch an application by key
      * @param appKey - application key
+     * @remarks
+     * - null when current app is cleared
+     * - undefined if application never set
      */
-    get current(): CurrentApp {
+    get current(): CurrentApp | null | undefined {
         return this.#current$.value;
     }
 
-    get current$(): Observable<CurrentApp> {
+    get current$(): Observable<CurrentApp | null> {
         return this.#current$.pipe(
             distinctUntilChanged((prev, next) => {
                 if (prev && next) {
