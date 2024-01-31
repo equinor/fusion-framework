@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -36,7 +40,7 @@ importers:
         version: 2.6.2
       turbo:
         specifier: ^1.10.12
-        version: 1.12.0
+        version: 1.11.3
       typescript:
         specifier: ^5.1.6
         version: 5.3.3
@@ -70,7 +74,7 @@ importers:
         version: 1.1.2
       lint-staged:
         specifier: ^15.0.2
-        version: 15.2.1
+        version: 15.2.0
       vitest:
         specifier: ^1.0.1
         version: 1.2.1(@types/node@20.11.6)(happy-dom@13.3.8)
@@ -252,8 +256,8 @@ importers:
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -456,11 +460,11 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@equinor/eds-icons':
-        specifier: ^0.19.3
-        version: 0.19.3
+        specifier: ^0.21.0
+        version: 0.21.0
       '@equinor/eds-tokens':
         specifier: ^0.9.2
         version: 0.9.2
@@ -599,7 +603,7 @@ importers:
         version: 0.2.1(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.2.5
-        version: 1.2.5(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+        version: 1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.1(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -1066,16 +1070,16 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.34.0
-        version: 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+        specifier: ^0.35.1
+        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@equinor/eds-icons':
-        specifier: ^0.19.3
-        version: 0.19.3
+        specifier: ^0.21.0
+        version: 0.21.0
       '@equinor/eds-tokens':
         specifier: ^0.9.2
         version: 0.9.2
       '@equinor/eds-utils':
-        specifier: ^0.8.1
+        specifier: ^0.8.3
         version: 0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -2237,8 +2241,8 @@ packages:
   /@emotion/unitless@0.8.0:
     resolution: {integrity: sha512-VINS5vEYAscRl2ZUDiT3uMPlrFQupiKgHz5AA4bCH1miKBg4qtwkim1qPmJj/4WG6TreYMY111rEFsjupcOKHw==}
 
-  /@equinor/eds-core-react@0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8):
-    resolution: {integrity: sha512-hkAuNhXk0/PylpEEtRobt3qeZyK7Hhu27pxMV6Y+StKi7ckuH7LJEisRAXxbUchFiv2tzNV7zxhdoPd5GjRp4w==}
+  /@equinor/eds-core-react@0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8):
+    resolution: {integrity: sha512-eGGpaIOfL873dsiPodHx6xTx7vKVIW+cQwZk8Q1cLjMIROMvQCGsIY4UDKi/b1V2TQy7YMmajTOfii9zPbU1HA==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
@@ -2246,7 +2250,7 @@ packages:
       styled-components: '>=4.2'
     dependencies:
       '@babel/runtime': 7.23.8
-      '@equinor/eds-icons': 0.19.3
+      '@equinor/eds-icons': 0.20.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
       '@floating-ui/react': 0.26.6(react-dom@18.2.0)(react@18.2.0)
@@ -2258,6 +2262,14 @@ packages:
 
   /@equinor/eds-icons@0.19.3:
     resolution: {integrity: sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==}
+    engines: {node: '>=10.0.0', pnpm: '>=4'}
+
+  /@equinor/eds-icons@0.20.0:
+    resolution: {integrity: sha512-Xk+Ghx46iBBPHF1zmesPlmSqivoxdKlBEuwvo2v5c6T+quQ6twkkIri2qMqkCTuqe2bgmlAvsCw1iGpUoQlr3A==}
+    engines: {node: '>=10.0.0', pnpm: '>=4'}
+
+  /@equinor/eds-icons@0.21.0:
+    resolution: {integrity: sha512-k2keACHou9h9D5QLfSBeojTApqbPCkHNBWplUA/B9FQv8FMCMSBbjJAo2L/3yAExMylQN9LdwKo81T2tijRXoA==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
 
   /@equinor/eds-tokens@0.5.5:
@@ -2535,7 +2547,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.34.0)(@equinor/eds-icons@0.19.3)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8):
+  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8):
     resolution: {integrity: sha512-cx+ilNw2LFHpMaE1lqj29sa0RarZf0GxgpGKqckpWkx+MVDXtD0JY12E03Ep75jD0OVYaD26GEVhijwOqBAVnQ==}
     peerDependencies:
       '@equinor/eds-core-react': ^0.34.0
@@ -2551,8 +2563,8 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@equinor/eds-core-react': 0.34.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
-      '@equinor/eds-icons': 0.19.3
+      '@equinor/eds-core-react': 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+      '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@types/react': 18.2.48
       re-resizable: 6.9.11(react-dom@18.2.0)(react@18.2.0)
@@ -9533,8 +9545,8 @@ packages:
       uc.micro: 2.0.0
     dev: true
 
-  /lint-staged@15.2.1:
-    resolution: {integrity: sha512-dhwAPnM85VdshybV9FWI/9ghTvMLoQLEXgVMx+ua2DN7mdfzd/tRfoU2yhMcBac0RHkofoxdnnJUokr8s4zKmQ==}
+  /lint-staged@15.2.0:
+    resolution: {integrity: sha512-TFZzUEV00f+2YLaVPWBWGAMq7So6yQx+GG8YRMDeOEIf95Zn5RyiLMsEiX4KTNl9vq/w+NqRJkLA1kPIo15ufQ==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     dependencies:
@@ -9543,7 +9555,7 @@ packages:
       debug: 4.3.4
       execa: 8.0.1
       lilconfig: 3.0.0
-      listr2: 8.0.1
+      listr2: 8.0.0
       micromatch: 4.0.5
       pidtree: 0.6.0
       string-argv: 0.3.2
@@ -9552,8 +9564,8 @@ packages:
       - supports-color
     dev: true
 
-  /listr2@8.0.1:
-    resolution: {integrity: sha512-ovJXBXkKGfq+CwmKTjluEqFi3p4h8xvkxGQQAQan22YCgef4KZ1mKGjzfGh6PL6AW5Csw0QiQPNuQyH+6Xk3hA==}
+  /listr2@8.0.0:
+    resolution: {integrity: sha512-u8cusxAcyqAiQ2RhYvV7kRKNLgUvtObIbhOX2NCXqvp1UU32xIg5CT22ykS2TPKJXZWJwtK3IKLiqAGlGNE+Zg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       cli-truncate: 4.0.0
@@ -12305,64 +12317,64 @@ packages:
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
     dev: true
 
-  /turbo-darwin-64@1.12.0:
-    resolution: {integrity: sha512-z3zZPFQAPO+vBks7Ybir33ovaJP8U/Ikr/NMGsewHsL5SjetHsd9ZAs6G1zBbAgWXcy7COpgWZbQF0Giq/6hJA==}
+  /turbo-darwin-64@1.11.3:
+    resolution: {integrity: sha512-IsOOg2bVbIt3o/X8Ew9fbQp5t1hTHN3fGNQYrPQwMR2W1kIAC6RfbVD4A9OeibPGyEPUpwOH79hZ9ydFH5kifw==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-darwin-arm64@1.12.0:
-    resolution: {integrity: sha512-vVDDjw7rjVHB+S/CrHiDoAMXWsqjG7mVCCXWvL8AhDhTT1u4a3KS2dWsqUFprbzC1X4cHnzmGktXfAo8ro5Mng==}
+  /turbo-darwin-arm64@1.11.3:
+    resolution: {integrity: sha512-FsJL7k0SaPbJzI/KCnrf/fi3PgCDCjTliMc/kEFkuWVA6Httc3Q4lxyLIIinz69q6JTx8wzh6yznUMzJRI3+dg==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-64@1.12.0:
-    resolution: {integrity: sha512-CQMr/B9T1d5JCOgCQk/EX3oUzlNlgUdMaH1is7eU8lBz+NIc1vbC9bunNwgFcM+WsjZORk4ffvYjKx49VtmOkQ==}
+  /turbo-linux-64@1.11.3:
+    resolution: {integrity: sha512-SvW7pvTVRGsqtSkII5w+wriZXvxqkluw5FO/MNAdFw0qmoov+PZ237+37/NgArqE3zVn1GX9P6nUx9VO+xcQAg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-linux-arm64@1.12.0:
-    resolution: {integrity: sha512-sDHezEXcZjZ+aRIN5gzCH0qQjfSnHvnmN5Rr/V+TAk+SeyALh7uRcUxzTrWcl85sK4qDLna9o7bkllgtXXy8LA==}
+  /turbo-linux-arm64@1.11.3:
+    resolution: {integrity: sha512-YhUfBi1deB3m+3M55X458J6B7RsIS7UtM3P1z13cUIhF+pOt65BgnaSnkHLwETidmhRh8Dl3GelaQGrB3RdCDw==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-64@1.12.0:
-    resolution: {integrity: sha512-yPkL+mRmG22q5V1qRWJkt/U/qK3dYUUiw4aHrmaNm9+5vzDxcZo2Ft60AZsyrl2HMFI6aHBZOjCct/a2Jmc14g==}
+  /turbo-windows-64@1.11.3:
+    resolution: {integrity: sha512-s+vEnuM2TiZuAUUUpmBHDr6vnNbJgj+5JYfnYmVklYs16kXh+EppafYQOAkcRIMAh7GjV3pLq5/uGqc7seZeHA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo-windows-arm64@1.12.0:
-    resolution: {integrity: sha512-v0O71TaAja9l3W7DEnHRhehUatgNfu4B24QNBEkHyR6B0w8pxNB1Vorv9auubXMcZzP/nhwtsQTM6U2ZINAd6A==}
+  /turbo-windows-arm64@1.11.3:
+    resolution: {integrity: sha512-ZR5z5Zpc7cASwfdRAV5yNScCZBsgGSbcwiA/u3farCacbPiXsfoWUkz28iyrx21/TRW0bi6dbsB2v17swa8bjw==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: false
     optional: true
 
-  /turbo@1.12.0:
-    resolution: {integrity: sha512-gOrh05sU7Njws7MMklBH71TZNx0LLGD+sjp+o4d/m4cngQ6r9/l7/+fZichXd4suh8Id700p9aTMiF80uh69Xg==}
+  /turbo@1.11.3:
+    resolution: {integrity: sha512-RCJOUFcFMQNIGKSjC9YmA5yVP1qtDiBA0Lv9VIgrXraI5Da1liVvl3VJPsoDNIR9eFMyA/aagx1iyj6UWem5hA==}
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.12.0
-      turbo-darwin-arm64: 1.12.0
-      turbo-linux-64: 1.12.0
-      turbo-linux-arm64: 1.12.0
-      turbo-windows-64: 1.12.0
-      turbo-windows-arm64: 1.12.0
+      turbo-darwin-64: 1.11.3
+      turbo-darwin-arm64: 1.11.3
+      turbo-linux-64: 1.11.3
+      turbo-linux-arm64: 1.11.3
+      turbo-windows-64: 1.11.3
+      turbo-windows-arm64: 1.11.3
     dev: false
 
   /type-check@0.4.0:
@@ -13786,7 +13798,3 @@ packages:
   /yocto-queue@1.0.0:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
