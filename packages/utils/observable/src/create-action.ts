@@ -28,23 +28,24 @@ export type PrepareAction<P> =
 export type _ActionCreatorWithPreparedPayload<
     PA extends PrepareAction<any> | void,
     T extends string = string,
-> = PA extends PrepareAction<infer P>
-    ? ActionCreatorWithPreparedPayload<
-          Parameters<PA>,
-          P,
-          T,
-          ReturnType<PA> extends {
-              error: infer E;
-          }
-              ? E
-              : never,
-          ReturnType<PA> extends {
-              meta: infer M;
-          }
-              ? M
-              : never
-      >
-    : void;
+> =
+    PA extends PrepareAction<infer P>
+        ? ActionCreatorWithPreparedPayload<
+              Parameters<PA>,
+              P,
+              T,
+              ReturnType<PA> extends {
+                  error: infer E;
+              }
+                  ? E
+                  : never,
+              ReturnType<PA> extends {
+                  meta: infer M;
+              }
+                  ? M
+                  : never
+          >
+        : void;
 
 /**
  * Basic type for all action creators.

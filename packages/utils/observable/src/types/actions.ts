@@ -36,27 +36,29 @@ export type ActionInstance<T> = T extends ActionCreator
 
 // export type ActionInstanceMap<T> = { [K in keyof T]: ActionInstance<T[K]> };
 
-export type ActionInstanceMap<T> = T extends Record<string, ActionCreator>
-    ? {
-          [K in keyof T]: T[K] extends AsyncActionCreator
-              ? AsyncActionTypes<T[K]>
-              : ActionInstance<T[K]>;
-          //   [K in keyof T]: ActionInstance<T[K]>;
-      }
-    : {
-          [K in keyof T]: ActionInstanceMap<T[K]>;
-      };
+export type ActionInstanceMap<T> =
+    T extends Record<string, ActionCreator>
+        ? {
+              [K in keyof T]: T[K] extends AsyncActionCreator
+                  ? AsyncActionTypes<T[K]>
+                  : ActionInstance<T[K]>;
+              //   [K in keyof T]: ActionInstance<T[K]>;
+          }
+        : {
+              [K in keyof T]: ActionInstanceMap<T[K]>;
+          };
 
 // export type ActionTypes<T> = T extends Record<string, Record<string, ActionCreator>>
-export type ActionTypes<T> = T extends Record<string, ActionCreator>
-    ? ActionTypes<ActionInstanceMap<T>>
-    : T extends Record<string, Action>
-      ? T[keyof T]
-      : T extends Record<string, unknown>
-        ? {
-              [K in keyof T]: ActionTypes<T[K]>;
-          }[keyof T]
-        : never;
+export type ActionTypes<T> =
+    T extends Record<string, ActionCreator>
+        ? ActionTypes<ActionInstanceMap<T>>
+        : T extends Record<string, Action>
+          ? T[keyof T]
+          : T extends Record<string, unknown>
+            ? {
+                  [K in keyof T]: ActionTypes<T[K]>;
+              }[keyof T]
+            : never;
 
 /**
  * An action with a string type and an associated payload. This is the
@@ -91,10 +93,9 @@ export type ActionType<T> = T extends ActionCreator
       ? T['type']
       : never;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionPayloadType<T> = ActionInstance<T> extends PayloadAction<any>
-    ? ActionInstance<T>['payload']
-    : never;
+export type ActionPayloadType<T> =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ActionInstance<T> extends PayloadAction<any> ? ActionInstance<T>['payload'] : never;
 
 export type ExtractAction<
     TAction extends Action,
