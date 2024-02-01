@@ -41,7 +41,7 @@
         "immer": "^9.0.16"
     },
     "devDependencies": {
-        "@equinor/fusion": "^3.4.11",
+        "@equinor/fusion": "^3.4.15",
         "@equinor/fusion-components": "^2.10.5",
         "@equinor/fusion-framework": "workspace:^",
         "@equinor/fusion-framework-app": "workspace:^",
@@ -53,7 +53,7 @@
         "@equinor/fusion-framework-react": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
         "@types/history": "^4.7.2",
-        "@types/react": "^18.2.20",
+        "@types/react": "^18.2.50",
         "@types/react-router-dom": "^5.3.3",
         "history": "^4.7.2",
         "react": "^18.2.0",

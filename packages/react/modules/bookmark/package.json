@@ -46,7 +46,7 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-navigation": "workspace:^",
-        "@types/react": "^18.2.20",
+        "@types/react": "^18.2.50",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "rxjs": "^7.8.1",
