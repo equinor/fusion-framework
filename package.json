@@ -65,7 +65,8 @@
   "workspaces": {
     "packages": [
       "packages/**",
-      "cookbooks/*"
+      "cookbooks/*",
+      "vue-press"
     ]
   },
   "lint-staged": {
