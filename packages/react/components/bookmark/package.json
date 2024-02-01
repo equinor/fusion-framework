@@ -34,7 +34,7 @@
         "@equinor/fusion-framework-module-app": "workspace:^",
         "@equinor/fusion-framework-module-bookmark": "workspace:^",
         "@equinor/fusion-framework-module-event": "workspace:^",
-        "@types/react": "^18.2.20",
+        "@types/react": "^18.2.50",
         "react": "^18.2.0",
         "styled-components": "^6.0.7",
         "typescript": "^5.1.3"

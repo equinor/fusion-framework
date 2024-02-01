@@ -76,11 +76,11 @@
         "immer": "^9.0.16",
         "rxjs": "^7.8.1",
         "uuid": "^9.0.0",
-        "vitest": "^1.0.1"
+        "vitest": "^1.2.2"
     },
     "devDependencies": {
-        "@types/react": "^18.2.20",
-        "@types/uuid": "^9.0.2",
+        "@types/react": "^18.2.50",
+        "@types/uuid": "^9.0.8",
         "react": "^18.2.0",
         "typescript": "^5.1.3"
     },

@@ -4,13 +4,17 @@
     "@changesets/changelog-github",
     { "repo": "equinor/fusion-framework" }
   ],
-  "commit": false,
   "fixed": [],
   "linked": [],
+  "ignore": [],
+  "commit": false,
   "access": "public",
   "baseBranch": "origin/main",
   "updateInternalDependencies": "minor",
-  "ignore": [],
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}-{commit}"
+  },
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true
   }
