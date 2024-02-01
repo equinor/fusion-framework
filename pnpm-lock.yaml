@@ -1528,8 +1528,8 @@ importers:
   vue-press:
     devDependencies:
       '@vuepress/bundler-vite':
-        specifier: 2.0.0-rc.0
-        version: 2.0.0-rc.0(@types/node@20.11.6)(typescript@5.3.3)
+        specifier: 2.0.0-rc.2
+        version: 2.0.0-rc.2(@types/node@20.11.6)(typescript@5.3.3)
       '@vuepress/cli':
         specifier: 2.0.0-rc.0
         version: 2.0.0-rc.0(typescript@5.3.3)
@@ -3718,6 +3718,13 @@ packages:
       markdown-it: 13.0.2
     dev: true
 
+  /@mdit-vue/plugin-component@2.0.0:
+    resolution: {integrity: sha512-cTRxlocav/+mfgDcp0P2z/gWuWBez+iNuN4D+b74LpX4AR6UAx2ZvWtCrUZ8VXrO4eCt1/G0YC/Af7mpIb3aoQ==}
+    dependencies:
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
+    dev: true
+
   /@mdit-vue/plugin-frontmatter@1.0.0:
     resolution: {integrity: sha512-MMA7Ny+YPZA7eDOY1t4E+rKuEWO39mzDdP/M68fKdXJU6VfcGkPr7gnpnJfW2QBJ5qIvMrK/3lDAA2JBy5TfpA==}
     dependencies:
@@ -3725,6 +3732,15 @@ packages:
       '@types/markdown-it': 13.0.7
       gray-matter: 4.0.3
       markdown-it: 13.0.2
+    dev: true
+
+  /@mdit-vue/plugin-frontmatter@2.0.0:
+    resolution: {integrity: sha512-/LrT6E60QI4XV4mqx3J87hqYXlR7ZyMvndmftR2RGz7cRAwa/xL+kyFLlgrMxkBIKitOShKa3LS/9Ov9b0fU+g==}
+    dependencies:
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      gray-matter: 4.0.3
+      markdown-it: 14.0.0
     dev: true
 
   /@mdit-vue/plugin-headers@1.0.0:
@@ -3736,12 +3752,29 @@ packages:
       markdown-it: 13.0.2
     dev: true
 
+  /@mdit-vue/plugin-headers@2.0.0:
+    resolution: {integrity: sha512-ITMMPCnLEYHHgj3XEUL2l75jsNn8guxNqr26YrMSi1f5zcgq4XVy1LIvfwvJ1puqM6Cc5v4BHk3oAyorAi7l1A==}
+    dependencies:
+      '@mdit-vue/shared': 2.0.0
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
+    dev: true
+
   /@mdit-vue/plugin-sfc@1.0.0:
     resolution: {integrity: sha512-agMUe0fY4YHxsZivSvplBwRwrFvsIf/JNUJCAYq1+2Sg9+2hviTBZwjZDxYqHDHOVLtiNr+wuo68tE24mAx3AQ==}
     dependencies:
       '@mdit-vue/types': 1.0.0
       '@types/markdown-it': 13.0.7
       markdown-it: 13.0.2
+    dev: true
+
+  /@mdit-vue/plugin-sfc@2.0.0:
+    resolution: {integrity: sha512-OXrMXOyk0iwdIou2jRoIHIbjskwghkO14C9/OjgVHXSSX+iM/WQ4l4yi1aWmNlbQNjtP8IXcVAyJB9K0DFYmLg==}
+    dependencies:
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
     dev: true
 
   /@mdit-vue/plugin-title@1.0.0:
@@ -3753,6 +3786,15 @@ packages:
       markdown-it: 13.0.2
     dev: true
 
+  /@mdit-vue/plugin-title@2.0.0:
+    resolution: {integrity: sha512-eqBoETPVkMXNLvwFshz/A2+Cz81VB5HEkXDm0tt6RBW/rTvnoWmGJ1Z+mvcjR5ck5W4nYdIyT68oHxX2JI2M4g==}
+    dependencies:
+      '@mdit-vue/shared': 2.0.0
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
+    dev: true
+
   /@mdit-vue/plugin-toc@1.0.0:
     resolution: {integrity: sha512-WN8blfX0X/5Nolic0ClDWP7eVo9IB+U4g0jbycX3lolIZX5Bai1UpsD3QYZr5VVsPbQJMKMGvTrCEtCNTGvyWQ==}
     dependencies:
@@ -3762,12 +3804,29 @@ packages:
       markdown-it: 13.0.2
     dev: true
 
+  /@mdit-vue/plugin-toc@2.0.0:
+    resolution: {integrity: sha512-PKQ8sZna3D5chTnt2lxL+ddpyXd++6Nyc0l8VXCeDgStlySQwiP9jaLeeC88oqY4BtRu4cAmILmxDrvuX0Rrdg==}
+    dependencies:
+      '@mdit-vue/shared': 2.0.0
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
+    dev: true
+
   /@mdit-vue/shared@1.0.0:
     resolution: {integrity: sha512-nbYBfmEi+pR2Lm0Z6TMVX2/iBjfr/kGEsHW8CC0rQw+3+sG5dY6VG094HuFAkiAmmvZx9DZZb+7ZMWp9vkwCRw==}
     dependencies:
       '@mdit-vue/types': 1.0.0
       '@types/markdown-it': 13.0.7
       markdown-it: 13.0.2
+    dev: true
+
+  /@mdit-vue/shared@2.0.0:
+    resolution: {integrity: sha512-PdxpQpbyTazeo2JT87qms6RPZIzyJd+gwuB+1jSwLDI7+0u5g79y2XgTAbZromSVgY2f3UU5HWdwaLbV9w4uOw==}
+    dependencies:
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
     dev: true
 
   /@mdit-vue/types@1.0.0:
@@ -5662,6 +5721,17 @@ packages:
       vue: 3.4.15(typescript@5.3.3)
     dev: true
 
+  /@vitejs/plugin-vue@5.0.3(vite@5.0.12)(vue@3.4.15):
+    resolution: {integrity: sha512-b8S5dVS40rgHdDrw+DQi/xOM9ed+kSRZzfm1T74bMmBDCd8XO87NKlFYInzCtwvtWwXZvo1QxE2OSspTATWrbA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0
+      vue: ^3.2.25
+    dependencies:
+      vite: 5.0.12(@types/node@20.11.6)
+      vue: 3.4.15(typescript@5.3.3)
+    dev: true
+
   /@vitest/coverage-v8@1.2.1(vitest@1.2.1):
     resolution: {integrity: sha512-fJEhKaDwGMZtJUX7BRcGxooGwg1Hl0qt53mVup/ZJeznhvL5EodteVnb/mcByhEcvVWbK83ZF31c7nPEDi4LOQ==}
     peerDependencies:
@@ -5826,6 +5896,36 @@ packages:
       - typescript
     dev: true
 
+  /@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.11.6)(typescript@5.3.3):
+    resolution: {integrity: sha512-bjkn0krtucciUkGGdckCkGGg+wlv3Pj7s1lO/ChACLQncDwc3GgMTuMm0JyaCDKzTXE8sufjHHGWMftRL8qFOg==}
+    dependencies:
+      '@vitejs/plugin-vue': 5.0.3(vite@5.0.12)(vue@3.4.15)
+      '@vuepress/client': 2.0.0-rc.2(typescript@5.3.3)
+      '@vuepress/core': 2.0.0-rc.2(typescript@5.3.3)
+      '@vuepress/shared': 2.0.0-rc.2
+      '@vuepress/utils': 2.0.0-rc.2
+      autoprefixer: 10.4.17(postcss@8.4.33)
+      connect-history-api-fallback: 2.0.0
+      postcss: 8.4.33
+      postcss-load-config: 5.0.2(postcss@8.4.33)
+      rollup: 4.9.6
+      vite: 5.0.12(@types/node@20.11.6)
+      vue: 3.4.15(typescript@5.3.3)
+      vue-router: 4.2.5(vue@3.4.15)
+    transitivePeerDependencies:
+      - '@types/node'
+      - '@vue/composition-api'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - typescript
+    dev: true
+
   /@vuepress/cli@2.0.0-rc.0(typescript@5.3.3):
     resolution: {integrity: sha512-XWSIFO9iOR7N4O2lXIwS5vZuLjU9WU/aGAtmhMWEMxrdMx7TQaJbgrfpTUEbHMf+cPI1DXBbUbtmkqIvtfOV0w==}
     hasBin: true
@@ -5856,6 +5956,19 @@ packages:
       - typescript
     dev: true
 
+  /@vuepress/client@2.0.0-rc.2(typescript@5.3.3):
+    resolution: {integrity: sha512-gQ4CfBhzWYOCW4OcAUd6S8Jr9m/8UkZZuN/70t12GltbX/cdm6zrGnf89GiVjgvoK8+OYoc7luoBuWbyc/X5sg==}
+    dependencies:
+      '@vue/devtools-api': 6.5.1
+      '@vuepress/shared': 2.0.0-rc.2
+      '@vueuse/core': 10.7.2(vue@3.4.15)
+      vue: 3.4.15(typescript@5.3.3)
+      vue-router: 4.2.5(vue@3.4.15)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - typescript
+    dev: true
+
   /@vuepress/core@2.0.0-rc.0(typescript@5.3.3):
     resolution: {integrity: sha512-uoOaZP1MdxZYJIAJcRcmYKKeCIVnxZeOuLMOOB9CPuAKSalT1RvJ1lztw6RX3q9SPnlqtSZPQXDncPAZivw4pA==}
     dependencies:
@@ -5863,6 +5976,20 @@ packages:
       '@vuepress/markdown': 2.0.0-rc.0
       '@vuepress/shared': 2.0.0-rc.0
       '@vuepress/utils': 2.0.0-rc.0
+      vue: 3.4.15(typescript@5.3.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - supports-color
+      - typescript
+    dev: true
+
+  /@vuepress/core@2.0.0-rc.2(typescript@5.3.3):
+    resolution: {integrity: sha512-C/bHG0y+v5oeCrfaesy2yFa0dyCah05g1w7vArZk8ABsVECjZKAC5/ev39UFQm2dCdNzsj2E3KgLIxYWqpcKeg==}
+    dependencies:
+      '@vuepress/client': 2.0.0-rc.2(typescript@5.3.3)
+      '@vuepress/markdown': 2.0.0-rc.2
+      '@vuepress/shared': 2.0.0-rc.2
+      '@vuepress/utils': 2.0.0-rc.2
       vue: 3.4.15(typescript@5.3.3)
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5889,6 +6016,29 @@ packages:
       markdown-it-anchor: 8.6.7(@types/markdown-it@13.0.7)(markdown-it@13.0.2)
       markdown-it-emoji: 2.0.2
       mdurl: 1.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@vuepress/markdown@2.0.0-rc.2:
+    resolution: {integrity: sha512-5/RmJnap+MGKxDhSO+Mv6zB8PoPHhhBujnNKKO3PnyfPrj0LyL0AuTm8m3Ea271wMp9956WINjw8jlpn+Z1sBg==}
+    dependencies:
+      '@mdit-vue/plugin-component': 2.0.0
+      '@mdit-vue/plugin-frontmatter': 2.0.0
+      '@mdit-vue/plugin-headers': 2.0.0
+      '@mdit-vue/plugin-sfc': 2.0.0
+      '@mdit-vue/plugin-title': 2.0.0
+      '@mdit-vue/plugin-toc': 2.0.0
+      '@mdit-vue/shared': 2.0.0
+      '@mdit-vue/types': 2.0.0
+      '@types/markdown-it': 13.0.7
+      '@types/markdown-it-emoji': 2.0.4
+      '@vuepress/shared': 2.0.0-rc.2
+      '@vuepress/utils': 2.0.0-rc.2
+      markdown-it: 14.0.0
+      markdown-it-anchor: 8.6.7(@types/markdown-it@13.0.7)(markdown-it@14.0.0)
+      markdown-it-emoji: 3.0.0
+      mdurl: 2.0.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9876,12 +10026,26 @@ packages:
       markdown-it: 13.0.2
     dev: true
 
+  /markdown-it-anchor@8.6.7(@types/markdown-it@13.0.7)(markdown-it@14.0.0):
+    resolution: {integrity: sha512-FlCHFwNnutLgVTflOYHPW2pPcl2AACqVzExlkGQNsi4CJgqOHN7YTgDd4LuhgN1BFO3TS0vLAruV1Td6dwWPJA==}
+    peerDependencies:
+      '@types/markdown-it': '*'
+      markdown-it: '*'
+    dependencies:
+      '@types/markdown-it': 13.0.7
+      markdown-it: 14.0.0
+    dev: true
+
   /markdown-it-container@3.0.0:
     resolution: {integrity: sha512-y6oKTq4BB9OQuY/KLfk/O3ysFhB3IMYoIWhGJEidXt1NQFocFK2sA2t0NYZAMyMShAGL6x5OPIbrmXPIqaN9rw==}
     dev: true
 
   /markdown-it-emoji@2.0.2:
     resolution: {integrity: sha512-zLftSaNrKuYl0kR5zm4gxXjHaOI3FAOEaloKmRA5hijmJZvSjmxcokOLlzycb/HXlUFWzXqpIEoyEMCE4i9MvQ==}
+    dev: true
+
+  /markdown-it-emoji@3.0.0:
+    resolution: {integrity: sha512-+rUD93bXHubA4arpEZO3q80so0qgoFJEKRkRbjKX8RTdca89v2kfyF+xR3i2sQTwql9tpPZPOQN5B+PunspXRg==}
     dev: true
 
   /markdown-it@13.0.2:
@@ -10893,6 +11057,23 @@ packages:
       postcss:
         optional: true
       ts-node:
+        optional: true
+    dependencies:
+      lilconfig: 3.0.0
+      postcss: 8.4.33
+      yaml: 2.3.4
+    dev: true
+
+  /postcss-load-config@5.0.2(postcss@8.4.33):
+    resolution: {integrity: sha512-Q8QR3FYbqOKa0bnC1UQ2bFq9/ulHX5Bi34muzitMr8aDtUelO5xKeJEYC/5smE0jNE9zdB/NBnOwXKexELbRlw==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      jiti: '>=1.21.0'
+      postcss: '>=8.0.9'
+    peerDependenciesMeta:
+      jiti:
+        optional: true
+      postcss:
         optional: true
     dependencies:
       lilconfig: 3.0.0
