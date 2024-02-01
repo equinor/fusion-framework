@@ -1528,8 +1528,8 @@ importers:
   vue-press:
     devDependencies:
       '@vuepress/bundler-vite':
-        specifier: 2.0.0-rc.0
-        version: 2.0.0-rc.0(@types/node@20.11.6)(typescript@5.3.3)
+        specifier: 2.0.0-rc.2
+        version: 2.0.0-rc.2(@types/node@20.11.6)(typescript@5.3.3)
       '@vuepress/cli':
         specifier: 2.0.0-rc.2
         version: 2.0.0-rc.2(typescript@5.3.3)
@@ -5721,6 +5721,17 @@ packages:
       vue: 3.4.15(typescript@5.3.3)
     dev: true
 
+  /@vitejs/plugin-vue@5.0.3(vite@5.0.12)(vue@3.4.15):
+    resolution: {integrity: sha512-b8S5dVS40rgHdDrw+DQi/xOM9ed+kSRZzfm1T74bMmBDCd8XO87NKlFYInzCtwvtWwXZvo1QxE2OSspTATWrbA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0
+      vue: ^3.2.25
+    dependencies:
+      vite: 5.0.12(@types/node@20.11.6)
+      vue: 3.4.15(typescript@5.3.3)
+    dev: true
+
   /@vitest/coverage-v8@1.2.1(vitest@1.2.1):
     resolution: {integrity: sha512-fJEhKaDwGMZtJUX7BRcGxooGwg1Hl0qt53mVup/ZJeznhvL5EodteVnb/mcByhEcvVWbK83ZF31c7nPEDi4LOQ==}
     peerDependencies:
@@ -5882,6 +5893,36 @@ packages:
       - supports-color
       - terser
       - ts-node
+      - typescript
+    dev: true
+
+  /@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.11.6)(typescript@5.3.3):
+    resolution: {integrity: sha512-bjkn0krtucciUkGGdckCkGGg+wlv3Pj7s1lO/ChACLQncDwc3GgMTuMm0JyaCDKzTXE8sufjHHGWMftRL8qFOg==}
+    dependencies:
+      '@vitejs/plugin-vue': 5.0.3(vite@5.0.12)(vue@3.4.15)
+      '@vuepress/client': 2.0.0-rc.2(typescript@5.3.3)
+      '@vuepress/core': 2.0.0-rc.2(typescript@5.3.3)
+      '@vuepress/shared': 2.0.0-rc.2
+      '@vuepress/utils': 2.0.0-rc.2
+      autoprefixer: 10.4.17(postcss@8.4.33)
+      connect-history-api-fallback: 2.0.0
+      postcss: 8.4.33
+      postcss-load-config: 5.0.2(postcss@8.4.33)
+      rollup: 4.9.6
+      vite: 5.0.12(@types/node@20.11.6)
+      vue: 3.4.15(typescript@5.3.3)
+      vue-router: 4.2.5(vue@3.4.15)
+    transitivePeerDependencies:
+      - '@types/node'
+      - '@vue/composition-api'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
       - typescript
     dev: true
 
@@ -11033,6 +11074,23 @@ packages:
       postcss:
         optional: true
       ts-node:
+        optional: true
+    dependencies:
+      lilconfig: 3.0.0
+      postcss: 8.4.33
+      yaml: 2.3.4
+    dev: true
+
+  /postcss-load-config@5.0.2(postcss@8.4.33):
+    resolution: {integrity: sha512-Q8QR3FYbqOKa0bnC1UQ2bFq9/ulHX5Bi34muzitMr8aDtUelO5xKeJEYC/5smE0jNE9zdB/NBnOwXKexELbRlw==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      jiti: '>=1.21.0'
+      postcss: '>=8.0.9'
+    peerDependenciesMeta:
+      jiti:
+        optional: true
+      postcss:
         optional: true
     dependencies:
       lilconfig: 3.0.0
