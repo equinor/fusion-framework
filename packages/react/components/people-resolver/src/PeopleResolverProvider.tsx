@@ -6,17 +6,18 @@ import { PersonControllerOptions } from './PersonController';
 
 type PeopleResolverProviderProps = PropsWithChildren<{
     readonly options?: PersonControllerOptions;
+    readonly fallback?: React.ReactNode;
 }>;
 
 export const PeopleResolverProvider = (props: PeopleResolverProviderProps) => {
-    const { children, options } = props;
+    const { children, options, fallback } = props;
     const services = useModule<ServicesModule>('services');
     if (!services) {
         throw Error('missing service module');
     }
     const Component = useMemo(() => makeResolver(services, options), [services, options]);
     return (
-        <Suspense fallback={<span>TODO</span>}>
+        <Suspense fallback={fallback || <></>}>
             <Component>{children}</Component>
         </Suspense>
     );
