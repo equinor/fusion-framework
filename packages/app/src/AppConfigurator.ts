@@ -17,16 +17,6 @@ import http, {
 
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-import {
-    enableFeatureFlagging,
-    type IFeatureFlag,
-    type FeatureFlagBuilderCallback,
-} from '@equinor/fusion-framework-module-feature-flag';
-import {
-    createLocalStoragePlugin,
-    createUrlPlugin,
-} from '@equinor/fusion-framework-module-feature-flag/plugins';
-
 import { AppEnv, AppModules } from './types';
 
 /**
@@ -87,27 +77,6 @@ export interface IAppConfigurator<
      */
     // TODO - rename
     useFrameworkServiceClient(serviceName: string): void;
-
-    /**
-     * enable feature flagging with predefined flags
-     * @param flags array of flags
-     * @remarks
-     * this will store defined flags in local storage
-     */
-    useFeatureFlags(flags: Array<IFeatureFlag & { allowUrl?: boolean }>): void;
-
-    /**
-     * enable feature flagging with callback
-     * @param cb callback for configuring module
-     */
-    useFeatureFlags(cb: FeatureFlagBuilderCallback): void;
-
-    /**
-     * enable feature flags
-     * @remarks
-     * this function does nothing atm since api is not implemented yet
-     */
-    useFeatureFlags(): void;
 }
 
 export class AppConfigurator<
@@ -154,38 +123,6 @@ export class AppConfigurator<
 
     public configureMsal(...args: Parameters<typeof configureMsal>) {
         this.addConfig(configureMsal(...args));
-    }
-
-    useFeatureFlags(
-        flags_cb?:
-            | Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>
-            | FeatureFlagBuilderCallback,
-    ): void {
-        switch (typeof flags_cb) {
-            case 'function': {
-                enableFeatureFlagging(this, flags_cb);
-                break;
-            }
-            case 'object': {
-                const urlFlags: IFeatureFlag[] = [];
-                const localFlags = (flags_cb ?? []).map((flag) => {
-                    const { allowUrl, ...localFlag } = flag;
-                    if (allowUrl) {
-                        urlFlags.push(flag);
-                    }
-                    return localFlag;
-                });
-                enableFeatureFlagging(this, async (builder) => {
-                    builder.addPlugin(
-                        createLocalStoragePlugin(localFlags, {
-                            name: this.env.manifest.key,
-                        }),
-                    );
-                    builder.addPlugin(createUrlPlugin(urlFlags));
-                });
-                break;
-            }
-        }
     }
 }
 

@@ -40,7 +40,6 @@
         "@equinor/fusion-framework-module-msal": "workspace:^"
     },
     "devDependencies": {
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
