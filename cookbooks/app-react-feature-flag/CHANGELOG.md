@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.1.2
+
+### Patch Changes
+
+- [#1781](https://github.com/equinor/fusion-framework/pull/1781) [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9) Thanks [@odinr](https://github.com/odinr)! - updated storybook for enabling feature flag
+
+- Updated dependencies [[`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9)]:
+  - @equinor/fusion-framework-react-app@4.3.2
+  - @equinor/fusion-framework-cli@9.6.2
+
 ## 1.1.1
 
 ### Patch Changes

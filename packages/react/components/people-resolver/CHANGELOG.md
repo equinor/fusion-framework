@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.1.14
+
+### Patch Changes
+
+- [#1745](https://github.com/equinor/fusion-framework/pull/1745) [`09f8dd2`](https://github.com/equinor/fusion-framework/commit/09f8dd2dad31e8de47409e6bd751f74e3dd02607) Thanks [@Noggling](https://github.com/Noggling)! - Removed todo and add fallback to PeopleResolveProvider
+
 ## 1.1.13
 
 ### Patch Changes

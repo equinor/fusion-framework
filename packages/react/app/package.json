@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-react-app",
-    "version": "4.3.1",
+    "version": "4.3.2",
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
