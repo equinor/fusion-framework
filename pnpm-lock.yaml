@@ -1175,12 +1175,21 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../modules/app
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:^
+        version: link:../../modules/event
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../../modules/feature-flag
+      '@equinor/fusion-framework-module-widget':
+        specifier: workspace:^
+        version: link:../../modules/widget
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
+      '@equinor/fusion-framework-widget':
+        specifier: workspace:^
+        version: link:../../widget
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.50
@@ -1449,15 +1458,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../../modules/module
-      '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
-        version: link:../../modules/event
       '@equinor/fusion-framework-react':
         specifier: workspace:^
         version: link:../framework
-      '@equinor/fusion-framework-react-app':
-        specifier: workspace:^
-        version: link:../app
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.50

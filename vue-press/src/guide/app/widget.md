@@ -10,13 +10,13 @@ tag:
 ## Installation
 
 ```sh
-npm install @equinor/fusion-framework-react
+npm install @equinor/fusion-framework-react-app
 ```
 
 Fist one ned to enable the widget module
 
 ```ts
-import { enableWidgetModule } from '@equinor/fusion-framework-react/widget';
+import { enableWidgetModule } from '@equinor/fusion-framework-react-app/widget';
 export default (configurator: IAppConfigurator) => {
     enableWidgetModule(configurator);
 };
@@ -29,14 +29,14 @@ Utilizing the widget component is straightforward; only the essential "name" par
 ::: code-tabs
 @tab:active Basic
 ```jsx
-import { Widget } from "@equinor/fusion-framework-react/widget"
+import { Widget } from "@equinor/fusion-framework-react-app/widget"
 
 <Widget name='my-widget-id' />
 ```
 
 @tab Version Select 
 ```jsx
-import { Widget } from "@equinor/fusion-framework-react/widget"
+import { Widget } from "@equinor/fusion-framework-react-app/widget"
 
 <Widget name='my-widget-id' widgetVersion={{
         type: 'version' 
@@ -46,7 +46,7 @@ import { Widget } from "@equinor/fusion-framework-react/widget"
 
 @tab With Props 
 ```jsx
-import { Widget } from "@equinor/fusion-framework-react/widget"
+import { Widget } from "@equinor/fusion-framework-react-app/widget"
 
 <Widget name='my-widget-id' props={{ someWidgetProp: 'Hello Widget' }} />
 ```

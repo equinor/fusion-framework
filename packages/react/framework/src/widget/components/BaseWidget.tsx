@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useRef } from 'react';
 import { usePortalWidgets } from '../hooks/use-portal-widgets';
-import { WidgetProps } from '@equinor/fusion-framework-module-widget';
+import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
+import { Fusion } from '@equinor/fusion-framework';
 
 interface WidgetComponentProps<TProps extends WidgetProps> {
     readonly props?: TProps;
@@ -9,17 +10,25 @@ interface WidgetComponentProps<TProps extends WidgetProps> {
         type: 'version' | 'tag';
         value: string;
     };
+    readonly fusion: Fusion<[WidgetModule]>;
 }
 
-export const Widget = <TProps extends WidgetProps>({
+export const BaseWidget = <TProps extends WidgetProps>({
     name,
     children,
     props,
     widgetVersion,
+    fusion,
 }: PropsWithChildren<WidgetComponentProps<TProps>>) => {
     const ref = useRef<HTMLElement>(null);
 
-    const { loading, error, widgetRef, widget } = usePortalWidgets(name, props, widgetVersion);
+    const provider = fusion.modules.widget;
+    const { loading, error, widgetRef, widget } = usePortalWidgets(provider, () => ({
+        name,
+        props,
+        widgetVersion,
+        fusion,
+    }));
 
     useEffect(() => {
         const refEl = ref.current;
@@ -38,7 +47,8 @@ export const Widget = <TProps extends WidgetProps>({
                 console.error(err);
             }
         };
-    }, [ref.current, widgetRef.current, widget]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [widget, ref.current, widgetRef]);
 
     if (error) {
         throw error;
@@ -51,4 +61,4 @@ export const Widget = <TProps extends WidgetProps>({
     return <section ref={ref} />;
 };
 
-export default Widget;
+export default BaseWidget;

@@ -1,9 +1,7 @@
 import React, { lazy } from 'react';
 
-import { FrameworkProvider } from '@equinor/fusion-framework-react';
-import type { Fusion } from '@equinor/fusion-framework-react';
-
 import { WidgetEnv, configureWidgetModules } from '@equinor/fusion-framework-widget';
+
 import type {
     WidgetModuleInitiator,
     WidgetModulesInstance,
@@ -15,6 +13,8 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 
 import { ModuleProvider as WidgetModuleProvider } from '@equinor/fusion-framework-react-module';
 import { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
+import { Fusion } from '@equinor/fusion-framework';
+import { FrameworkProvider } from '../../context';
 
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = WidgetEnv> = {
     fusion: TFusion;

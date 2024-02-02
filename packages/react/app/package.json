@@ -11,7 +11,8 @@
         "./framework": "./dist/esm/framework/index.js",
         "./http": "./dist/esm/http/index.js",
         "./msal": "./dist/esm/msal/index.js",
-        "./navigation": "./dist/esm/navigation/index.js"
+        "./navigation": "./dist/esm/navigation/index.js",
+        "./widget": "./dist/esm/widget/index.js"
     },
     "types": "./dist/types/index.d.ts",
     "typesVersions": {
@@ -34,8 +35,8 @@
             "msal": [
                 "dist/types/msal/index.d.ts"
             ],
-            "navigation": [
-                "dist/types/navigation/index.d.ts"
+            "widget": [
+                "dist/types/widget/index.d.ts"
             ]
         }
     },

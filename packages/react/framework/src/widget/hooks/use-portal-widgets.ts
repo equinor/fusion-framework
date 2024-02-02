@@ -1,31 +1,28 @@
-import { useFramework } from '@equinor/fusion-framework-react';
-
 import { useMemo, useRef, useState } from 'react';
 import { createElement } from '../util/element';
 import { widgetRender } from '../render/render';
-import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
-import { useAppModule } from '@equinor/fusion-framework-react-app';
+import { IWidgetModuleProvider, WidgetProps } from '@equinor/fusion-framework-module-widget';
+import { Fusion } from '@equinor/fusion-framework';
 
 export const usePortalWidgets = <TProps extends WidgetProps>(
-    name: string,
-    props?: TProps,
-    widgetVersion?: {
-        type: 'version' | 'tag';
-        value: string;
+    provider: IWidgetModuleProvider,
+    cb: () => {
+        name: string;
+        props?: TProps;
+        fusion: Fusion;
+        widgetVersion?: {
+            type: 'version' | 'tag';
+            value: string;
+        };
     },
 ) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | undefined>();
 
-    const fusion = useFramework<[WidgetModule]>();
-    const widgetModule = useAppModule<WidgetModule>('widget');
-
-    const module = fusion.modules.widget || widgetModule;
-
     const widgetRef = useRef<HTMLDivElement>(createElement());
-
+    const { name, props, widgetVersion, fusion } = cb();
     const widget = useMemo(() => {
-        const widget = module.getWidget(name, widgetVersion);
+        const widget = provider.getWidget(name, widgetVersion);
         if (widget) {
             widget?.initialize().subscribe({
                 next: ({ manifest, script }) => {
@@ -51,7 +48,7 @@ export const usePortalWidgets = <TProps extends WidgetProps>(
             });
             return widget;
         }
-    }, [name, props, widgetVersion, module, fusion]);
+    }, [name, props, widgetVersion, provider, fusion]);
 
     return {
         widget,

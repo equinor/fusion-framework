@@ -4,7 +4,7 @@ import {
     WidgetRenderArgs,
     WidgetScriptModule,
 } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework-react';
+import { Fusion } from '@equinor/fusion-framework';
 
 export const widgetRender = <TProps extends WidgetProps>(args: {
     script?: WidgetScriptModule<TProps>;
