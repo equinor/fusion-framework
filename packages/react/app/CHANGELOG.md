@@ -1,5 +1,24 @@
 # Change Log
 
+## 4.3.2
+
+### Patch Changes
+
+- [#1781](https://github.com/equinor/fusion-framework/pull/1781) [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9) Thanks [@odinr](https://github.com/odinr)! - Added functionality for enabling feature flagging
+
+  ```ts
+  import { enableFeatureFlag } from `@equinor/fusion-framework-react-app/feature-flag`
+  enableFeatureFlag(confgurator, [{
+    id: 'my-flag',
+    title: 'My flag'
+  }])
+  ```
+
+  the user still needs to install `@equinor/fusion-framework-module-feature-flag`
+
+- Updated dependencies [[`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9)]:
+  - @equinor/fusion-framework-app@8.1.0
+
 ## 4.3.1
 
 ### Patch Changes

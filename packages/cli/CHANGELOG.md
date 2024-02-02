@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`09f8dd2`](https://github.com/equinor/fusion-framework/commit/09f8dd2dad31e8de47409e6bd751f74e3dd02607), [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.1.14
+  - @equinor/fusion-framework-app@8.1.0
+
 ## 9.6.1
 
 ### Patch Changes
