@@ -6,10 +6,10 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import type { GetWidgetParameters, WidgetManifest } from './types';
+import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types';
 
 import { WidgetModuleConfig } from './WidgetModuleConfigurator';
-import { GetWidgetError } from './errors';
+import { GetWidgetConfigError, GetWidgetManifestError } from './errors';
 import { Widget } from './Widget';
 
 export interface IWidgetModuleProvider {
@@ -21,25 +21,37 @@ export interface IWidgetModuleProvider {
         widgetKey: GetWidgetParameters['widgetKey'],
         args?: GetWidgetParameters['args'],
     ): Observable<WidgetManifest>;
+    getWidgetConfig(
+        widgetKey: GetWidgetParameters['widgetKey'],
+        args?: GetWidgetParameters['args'],
+    ): Observable<WidgetConfig>;
 }
 
+/**
+ * The `WidgetModuleProvider` class implements the `IWidgetModuleProvider` interface and serves as a provider for managing widgets.
+ */
 export class WidgetModuleProvider implements IWidgetModuleProvider {
-    #widgetClient: Query<WidgetManifest, GetWidgetParameters>;
+    // Private fields
     #subscription = new Subscription();
     #config: WidgetModuleConfig;
     #event?: ModuleType<EventModule>;
 
+    /**
+     * Constructs a new `WidgetModuleProvider` instance.
+     * @param args - An object containing configuration and optional event module for the widget provider.
+     */
     constructor(args: { config: WidgetModuleConfig; event?: ModuleType<EventModule> }) {
         const { config, event } = args;
         this.#event = event;
         this.#config = config;
-
-        // Todo fix 2 next liens
-        this.#widgetClient = new Query(config.client.getWidget);
-
-        this.#subscription.add(() => this.#widgetClient.complete());
     }
 
+    /**
+     * Retrieves a widget instance based on the provided name and optional parameters.
+     * @param name - The name of the widget.
+     * @param widgetParams - Optional parameters for the widget.
+     * @returns A new `Widget` instance.
+     */
     public getWidget(name: string, widgetPrams?: GetWidgetParameters['args']): Widget {
         return new Widget(
             { name },
@@ -47,6 +59,12 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
         );
     }
 
+    /**
+     * Retrieves the manifest of a widget as an observable stream.
+     * @param name - The name of the widget.
+     * @param widgetParams - Optional parameters for the widget.
+     * @returns An observable stream of the widget manifest.
+     */
     public getWidgetManifest(
         name: string,
         widgetPrams?: GetWidgetParameters['args'],
@@ -55,33 +73,83 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
     }
 
     /**
-     * fetch configuration for a widget
-     * @param widgetKey - widget key
-     * @param version - version of widget to use
+     * Retrieves the config of a widget as an observable stream.
+     * @param name - The name of the widget.
+     * @param widgetParams - Optional parameters for the widget.
+     * @returns An observable stream of the widget config.
      */
-    protected _getWidget(
+    public getWidgetConfig(
+        name: string,
+        widgetPrams?: GetWidgetParameters['args'],
+    ): Observable<WidgetConfig> {
+        return this._getWidgetConfig(name, widgetPrams);
+    }
+
+    protected _getWidgetConfig(
         widgetKey: GetWidgetParameters['widgetKey'],
         args?: GetWidgetParameters['args'],
-    ): Observable<WidgetManifest> {
-        const client = new Query(this.#config.client.getWidget);
+    ): Observable<WidgetConfig> {
+        const client = new Query(this.#config.client.getWidgetConfig);
+        this.#subscription.add(() => client.complete());
         return Query.extractQueryValue(
             client.query({ widgetKey, args }).pipe(
                 catchError((err) => {
-                    /** extract cause, since error will be a `QueryError` */
+                    // Extract the cause since the error will be a `QueryError`
                     const { cause } = err;
                     console.error('query', err);
-                    if (cause instanceof GetWidgetError) {
+                    // Handle specific errors and throw a `GetWidgetManifestError` if applicable
+                    if (cause instanceof GetWidgetManifestError) {
                         throw cause;
                     }
                     if (cause instanceof HttpResponseError) {
-                        throw GetWidgetError.fromHttpResponse(cause.response, { cause });
+                        throw GetWidgetManifestError.fromHttpResponse(cause.response, { cause });
                     }
-                    throw new GetWidgetError('unknown', 'failed to load config', { cause });
+                    // Throw a generic `GetWidgetManifestError` for unknown errors
+                    throw new GetWidgetManifestError('unknown', 'failed to load config', { cause });
                 }),
             ),
         );
     }
 
+    /**
+     * Fetches the configuration for a widget using a query.
+     * @param widgetKey - The key identifying the widget.
+     * @param args - Optional arguments for the widget.
+     * @returns An observable stream of the widget manifest.
+     * @protected
+     */
+    protected _getWidget(
+        widgetKey: GetWidgetParameters['widgetKey'],
+        args?: GetWidgetParameters['args'],
+    ): Observable<WidgetManifest> {
+        // Create a new query using the configured client
+        const client = new Query(this.#config.client.getWidgetManifest);
+        this.#subscription.add(() => client.complete());
+
+        // Execute the query and handle errors
+        return Query.extractQueryValue(
+            client.query({ widgetKey, args }).pipe(
+                catchError((err) => {
+                    // Extract the cause since the error will be a `QueryError`
+                    const { cause } = err;
+                    console.error('query', err);
+                    // Handle specific errors and throw a `GetWidgetConfigError` if applicable
+                    if (cause instanceof GetWidgetConfigError) {
+                        throw cause;
+                    }
+                    if (cause instanceof HttpResponseError) {
+                        throw GetWidgetConfigError.fromHttpResponse(cause.response, { cause });
+                    }
+                    // Throw a generic `GetWidgetManifestError` for unknown errors
+                    throw new GetWidgetConfigError('unknown', 'failed to load config', { cause });
+                }),
+            ),
+        );
+    }
+
+    /**
+     * Disposes of the widget provider by unsubscribing from any active subscriptions.
+     */
     public dispose() {
         this.#subscription.unsubscribe();
     }

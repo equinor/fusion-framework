@@ -16,6 +16,7 @@ import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom,
 import WidgetModuleProvider from './WidgetModuleProvider';
 import { WidgetModuleConfig } from './WidgetModuleConfigurator';
 
+// Class representing a fusion widget
 export class Widget {
     #state: FlowSubject<WidgetState, Actions>;
     name: string;
@@ -24,10 +25,16 @@ export class Widget {
 
     #subscription = new Subscription();
 
+    // Getter for accessing the current state of the widget
     get state(): WidgetState {
         return this.#state.value;
     }
 
+    /**
+     * Constructs a new Widget instance.
+     * @param value - Initial state of the widget.
+     * @param args - Configuration and event parameters for the widget.
+     */
     constructor(
         value: WidgetStateInitial,
         args: {
@@ -44,6 +51,10 @@ export class Widget {
         args.event && this.#registerEvents(args.event);
     }
 
+    /**
+     * Registers event listeners for various actions in the widget's state.
+     * @param event - The event module to dispatch events.
+     */
     #registerEvents(event: ModuleType<EventModule>): void {
         const { name } = this;
 
@@ -107,6 +118,11 @@ export class Widget {
         });
     }
 
+    /**
+     * Retrieves the manifest of the widget as an observable stream.
+     * @param force_refresh - Flag to force refresh the manifest.
+     * @returns An observable stream of the widget manifest.
+     */
     public getManifest(force_refresh = false): Observable<WidgetManifest> {
         return new Observable((subscriber) => {
             if (this.#state.value.manifest) {
@@ -140,6 +156,11 @@ export class Widget {
         });
     }
 
+    /**
+     * Retrieves the configuration of the widget as an observable stream.
+     * @param force_refresh - Flag to force refresh the configuration.
+     * @returns An observable stream of the widget configuration.
+     */
     public getConfig(force_refresh = false): Observable<WidgetConfig> {
         return new Observable((subscriber) => {
             if (this.#state.value.manifest) {
@@ -173,14 +194,25 @@ export class Widget {
         });
     }
 
+    /**
+     * Loads the configuration for the widget.
+     * @param update - Flag to force an update of the configuration.
+     */
     public loadConfig(update?: boolean) {
         this.#state.next(actions.fetchConfig({ key: this.name, ...this.widgetPrams }, update));
     }
 
-    public loadManifest(update?: boolean) {
+    /**
+     * Loads the manifest for the widget.
+     * @param update - Flag to force an update of the manifest.
+     */ public loadManifest(update?: boolean) {
         this.#state.next(actions.fetchManifest({ key: this.name, ...this.widgetPrams }, update));
     }
-
+    /**
+     * Retrieves the widget module as an observable stream.
+     * @param force_refresh - Flag to force refresh the widget module.
+     * @returns An observable stream of the widget module.
+     */
     public getWidgetModule(force_refresh = false): Observable<WidgetScriptModule> {
         return new Observable((subscriber) => {
             if (this.#state.value.modules) {
@@ -213,36 +245,42 @@ export class Widget {
             subscriber.add(
                 this.getManifest().subscribe((manifest) => {
                     const path = manifest.assetPath
-                        ? `${manifest.assetPath}/${manifest.entryPoint}?api-version=${this.config?.apiVersion}`
-                        : `${manifest.entryPoint}?api-version=${this.config?.apiVersion}`;
+                        ? `${manifest.assetPath}/${manifest.entryPoint}?api-version=${this.config?.client.apiVersion}`
+                        : `${manifest.entryPoint}?api-version=${this.config?.client.apiVersion}`;
 
-                    const url = new URL(path, this.config?.baseImportUrl);
+                    const url = new URL(path, this.config?.client.baseImportUrl);
 
                     return of(this.#state.next(actions.importWidget(url.href)));
                 }),
             );
         });
     }
-
+    /**
+     * Initializes the widget and returns an observable stream with the combined results.
+     * @returns An observable stream with the manifest, script, and configuration.
+     */
     public initialize(): Observable<{
         manifest: WidgetManifest;
         script: WidgetScriptModule;
-        config: WidgetConfig;
+        config?: WidgetConfig;
     }> {
-        //Add back Config to widget!!
         return new Observable((observer) => {
             this.#state.next(actions.initialize());
             observer.add(
                 combineLatest([
                     this.getManifest(),
                     this.getWidgetModule(),
-                    this.getConfig(),
+                    // this.getConfig(),
                 ]).subscribe({
-                    next: ([manifest, script, config]) =>
+                    next: ([manifest, script]) =>
                         observer.next({
                             manifest,
                             script,
-                            config,
+                            //Todo: uncomment the getConfig on line #273 and replace config when backend support widget config.
+                            config: {
+                                environment: {},
+                                endpoints: {},
+                            },
                         }),
                     error: (err) => {
                         observer.error(err), this.#state.next(actions.initialize.failure(err));
@@ -255,19 +293,28 @@ export class Widget {
             );
         });
     }
-
+    /**
+     * Retrieves the widget module asynchronously as a Promise.
+     * @param allow_cache - Flag to allow caching of the widget module.
+     * @returns A Promise containing the widget module.
+     */
     public getWidgetModuleAsync(allow_cache = true): Promise<WidgetScriptModule> {
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
         return operator(this.getWidgetModule(!allow_cache));
     }
-
+    /**
+     * Updates the manifest of the widget.
+     * @param manifest - The new manifest for the widget.
+     * @param replace - Flag to replace the existing manifest.
+     */
     public updateManifest(manifest: WidgetManifest, replace?: false) {
         this.#state.next(actions.setManifest(manifest, !replace));
     }
 
+    /**
+     * Disposes of the widget by unsubscribing from any active subscriptions.
+     */
     public dispose() {
         this.#subscription.unsubscribe();
     }
 }
-
-// Todo Define All Events
