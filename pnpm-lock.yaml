@@ -443,6 +443,9 @@ importers:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../modules/event
+      '@equinor/fusion-framework-module-feature-flag':
+        specifier: workspace:^
+        version: link:../modules/feature-flag
       '@equinor/fusion-framework-module-http':
         specifier: workspace:^
         version: link:../modules/http
@@ -450,9 +453,6 @@ importers:
         specifier: workspace:^
         version: link:../modules/msal
     devDependencies:
-      '@equinor/fusion-framework-module-feature-flag':
-        specifier: workspace:^
-        version: link:../modules/feature-flag
       typescript:
         specifier: ^5.1.3
         version: 5.3.3

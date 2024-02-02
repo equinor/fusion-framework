@@ -1,9 +1,10 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+import { enableFeatureFlag } from '@equinor/fusion-framework-react-app/feature-flag';
 
 import { Feature } from './static';
 
 export const configure: AppModuleInitiator = (appConfigurator) => {
-    appConfigurator.useFeatureFlags([
+    enableFeatureFlag(appConfigurator, [
         {
             key: Feature.Basic,
             title: 'Basic',
