@@ -25,6 +25,7 @@ export default sidebar({
                 'app/authentication',
                 'app/legacy',
                 'app/tips_and_tricks',
+                'app/widget',
             ],
         },
         {
@@ -70,25 +71,13 @@ export default sidebar({
                     text: 'React',
                     link: 'react.md',
                 },
-                'app/',
-                {
-                    text: 'Event',
-                    prefix: 'event/',
-                    link: 'event/',
-                    children: [
-                        {
-                            text: 'module',
-                            link: 'README.md',
-                        },
-                        {
-                            text: 'React',
-                            link: 'react.md',
-                        },
-                    ],
-                },
-                'navigation/',
-                'bookmark/',
-                'ag-grid/',
+            ],
+        },
+        {
+            text: 'Feature flag',
+            prefix: 'feature-flag/',
+            link: 'feature-flag/module.md',
+            children: [
                 {
                     text: 'module',
                     link: 'module.md',
@@ -102,6 +91,7 @@ export default sidebar({
         'navigation/',
         'bookmark/',
         'ag-grid/',
+        'widget/',
         {
             text: 'Service Discovery',
             link: 'service-discovery/',
@@ -123,7 +113,6 @@ export default sidebar({
                     text: 'bookmarks',
                     link: 'bookmarks.md',
                 },
-                'widget/',
             ],
         },
     ],

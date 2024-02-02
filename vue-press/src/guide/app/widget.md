@@ -1,5 +1,5 @@
 ---
-title: Widget Component
+title: App Widget Component
 category: Guide
 tag:
     - widget
