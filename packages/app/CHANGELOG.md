@@ -1,5 +1,18 @@
 # Change Log
 
+## 8.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework@7.0.30
+  - @equinor/fusion-framework-module-app@5.2.13
+  - @equinor/fusion-framework-module-event@4.0.8
+  - @equinor/fusion-framework-module-feature-flag@1.0.2
+  - @equinor/fusion-framework-module-http@5.1.6
+  - @equinor/fusion-framework-module-msal@3.0.10
+
 ## 8.1.0
 
 ### Minor Changes

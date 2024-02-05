@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-legacy-interopt",
-    "version": "11.0.0",
+    "version": "11.0.1",
     "description": "Library for interopt legacy fusion applications",
     "main": "dist/esm/index.js",
     "exports": {

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.7
+
+### Patch Changes
+
+- Updated dependencies [[`2a813bc`](https://github.com/equinor/fusion-framework/commit/2a813bc0a32f53e7515f16f8b5cba1cf1e5018a3)]:
+  - @equinor/fusion-framework-react@6.0.2
+  - @equinor/fusion-framework-react-module-bookmark@2.0.32
+
 ## 0.3.6
 
 ### Patch Changes
