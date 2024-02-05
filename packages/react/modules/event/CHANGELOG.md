@@ -1,146 +1,154 @@
 # Change Log
 
+## 3.1.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-event@4.0.8
+  - @equinor/fusion-framework-react-module@3.0.8
+
 ## 3.1.4
 
 ### Patch Changes
 
--   Updated dependencies []:
-    -   @equinor/fusion-framework-module-event@4.0.7
-    -   @equinor/fusion-framework-react-module@3.0.7
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-event@4.0.7
+  - @equinor/fusion-framework-react-module@3.0.7
 
 ## 3.1.3
 
 ### Patch Changes
 
--   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
--   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    -   @equinor/fusion-framework-module-event@4.0.6
-    -   @equinor/fusion-framework-react-module@3.0.6
+- Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+  - @equinor/fusion-framework-module-event@4.0.6
+  - @equinor/fusion-framework-react-module@3.0.6
 
 ## 3.1.2
 
 ### Patch Changes
 
--   Updated dependencies []:
-    -   @equinor/fusion-framework-module-event@4.0.5
-    -   @equinor/fusion-framework-react-module@3.0.5
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-event@4.0.5
+  - @equinor/fusion-framework-react-module@3.0.5
 
 ## 3.1.1
 
 ### Patch Changes
 
--   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
--   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+- [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
--   [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
+- [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
--   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    -   @equinor/fusion-framework-react-module@3.0.4
-    -   @equinor/fusion-framework-module-event@4.0.4
+- Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
+  - @equinor/fusion-framework-react-module@3.0.4
+  - @equinor/fusion-framework-module-event@4.0.4
 
 ## 3.1.0
 
 ### Minor Changes
 
--   [#1074](https://github.com/equinor/fusion-framework/pull/1074) [`40f41c58`](https://github.com/equinor/fusion-framework/commit/40f41c58533431a11f9b3ce7c11cd4a7054caa05) Thanks [@odinr](https://github.com/odinr)! - Expose the `IEventModuleProvider`
+- [#1074](https://github.com/equinor/fusion-framework/pull/1074) [`40f41c58`](https://github.com/equinor/fusion-framework/commit/40f41c58533431a11f9b3ce7c11cd4a7054caa05) Thanks [@odinr](https://github.com/odinr)! - Expose the `IEventModuleProvider`
 
-    Add functionality for controlling which event provider which is used within the event hooks
+  Add functionality for controlling which event provider which is used within the event hooks
 
-    -   create context for controlling the `IEventModuleProvider`
-    -   create a hook for using `IEventModuleProvider`,
-        -   uses the `IEventModuleProvider` from the `EventProvider` context
-        -   _fallbacks to event module from current module context_
-    -   update the `useEventHandler` to use `useEventProvider`
-        -   previously resolving `IEventModuleProvider` from module context
-    -   create a hook `useEventModuleProvider` which resolves `IEventModuleProvider` from module context
+  - create context for controlling the `IEventModuleProvider`
+  - create a hook for using `IEventModuleProvider`,
+    - uses the `IEventModuleProvider` from the `EventProvider` context
+    - _fallbacks to event module from current module context_
+  - update the `useEventHandler` to use `useEventProvider`
+    - previously resolving `IEventModuleProvider` from module context
+  - create a hook `useEventModuleProvider` which resolves `IEventModuleProvider` from module context
 
-    example app:
+  example app:
 
-    ```tsx
-    import { EventProvider, EventConsumer } = from '@equinor/fusion-framework-react-module-event';
-    import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
-    const Content = () => {
-      const framework = useFramework().modules.event;
-      return (
-        <EventProvider value={framework.modules.event}>
-          <EventLogger />
-          <InlineEventConsumer />
-        <EventProvider>
-      );
-    };
-    ```
-
-    ```tsx
-    import { useEventHandler } = from '@equinor/fusion-framework-react-module-event';
-
-    const eventHandler = (event: FrameworkEventMap['some_event']) => {
-      console.log(event.detail);
-    };
-
-    const EventLogger = () => useEventHandler('some_event', eventHandler);
-    ```
-
-    ```tsx
-    import { EventConsumer } = from '@equinor/fusion-framework-react-module-event';
-
-    const InlineEventConsumer = () => (
-      <EventConsumer>
-        {
-          (provider) => provider.dispatch(
-            'some_event'),
-            { detail: { foo: 'bar' } }
-        }
-      </EventConsumer>
-    )
-    ```
-
--   [#1076](https://github.com/equinor/fusion-framework/pull/1076) [`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035) Thanks [@odinr](https://github.com/odinr)! - Add hook for observing event streams
-
-    ```ts
-    /* observe stream of events */
-    const someEvent$ = useEventStream(
-        'some_event',
-        useCallback((event$) =>
-            event$.pipe(
-                // only some events
-                filter((e) => e.detail.foo === dep.foo),
-                // mutate data
-                map((e) => e.detail),
-            ),
-        ),
-        [dep],
+  ```tsx
+  import { EventProvider, EventConsumer } = from '@equinor/fusion-framework-react-module-event';
+  import { useFramework } = from '@equinor/fusion-framework-react-app/framework';
+  const Content = () => {
+    const framework = useFramework().modules.event;
+    return (
+      <EventProvider value={framework.modules.event}>
+        <EventLogger />
+        <InlineEventConsumer />
+      <EventProvider>
     );
-    /* use state of stream */
-    const someEvent = useObservableState(someEvent$);
-    ```
+  };
+  ```
+
+  ```tsx
+  import { useEventHandler } = from '@equinor/fusion-framework-react-module-event';
+
+  const eventHandler = (event: FrameworkEventMap['some_event']) => {
+    console.log(event.detail);
+  };
+
+  const EventLogger = () => useEventHandler('some_event', eventHandler);
+  ```
+
+  ```tsx
+  import { EventConsumer } = from '@equinor/fusion-framework-react-module-event';
+
+  const InlineEventConsumer = () => (
+    <EventConsumer>
+      {
+        (provider) => provider.dispatch(
+          'some_event'),
+          { detail: { foo: 'bar' } }
+      }
+    </EventConsumer>
+  )
+  ```
+
+- [#1076](https://github.com/equinor/fusion-framework/pull/1076) [`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035) Thanks [@odinr](https://github.com/odinr)! - Add hook for observing event streams
+
+  ```ts
+  /* observe stream of events */
+  const someEvent$ = useEventStream(
+    "some_event",
+    useCallback((event$) =>
+      event$.pipe(
+        // only some events
+        filter((e) => e.detail.foo === dep.foo),
+        // mutate data
+        map((e) => e.detail),
+      ),
+    ),
+    [dep],
+  );
+  /* use state of stream */
+  const someEvent = useObservableState(someEvent$);
+  ```
 
 ### Patch Changes
 
--   Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
-    -   @equinor/fusion-framework-module-event@4.0.3
+- Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+  - @equinor/fusion-framework-module-event@4.0.3
 
 ## 3.0.3
 
 ### Patch Changes
 
--   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+- [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    -   align all versions of typescript
-    -   update types to build
-        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
--   Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    -   @equinor/fusion-framework-react-module@3.0.3
+- Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+  - @equinor/fusion-framework-react-module@3.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -197,7 +205,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
+- update typing of useModule hook ([958dd04](https://github.com/equinor/fusion-framework/commit/958dd0401667e9ebb1a51bced128ae43369cd6c4))
 
 ## 1.0.19 (2022-11-11)
 
@@ -307,4 +315,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **react-module-event:** create hook for handling events ([d05f539](https://github.com/equinor/fusion-framework/commit/d05f539cd48d19f113dc5b73a34b225d191796e5))
+- **react-module-event:** create hook for handling events ([d05f539](https://github.com/equinor/fusion-framework/commit/d05f539cd48d19f113dc5b73a34b225d191796e5))

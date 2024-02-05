@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.21
+
+### Patch Changes
+
+- Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
+  - @equinor/fusion-framework-module@4.2.7
+
 ## 4.0.20
 
 ### Patch Changes

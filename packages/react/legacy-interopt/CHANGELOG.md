@@ -1,5 +1,19 @@
 # Change Log
 
+## 11.0.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-app@4.3.3
+  - @equinor/fusion-framework-app@8.1.1
+  - @equinor/fusion-framework@7.0.30
+  - @equinor/fusion-framework-module-app@5.2.13
+  - @equinor/fusion-framework-module-http@5.1.6
+  - @equinor/fusion-framework-module-msal@3.0.10
+  - @equinor/fusion-framework-module-navigation@3.1.4
+  - @equinor/fusion-framework-module-service-discovery@7.0.20
+
 ## 11.0.0
 
 ### Major Changes

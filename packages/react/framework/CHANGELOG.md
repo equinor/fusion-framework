@@ -1,5 +1,19 @@
 # Change Log
 
+## 6.0.2
+
+### Patch Changes
+
+- [#1791](https://github.com/equinor/fusion-framework/pull/1791) [`2a813bc`](https://github.com/equinor/fusion-framework/commit/2a813bc0a32f53e7515f16f8b5cba1cf1e5018a3) Thanks [@yusijs](https://github.com/yusijs)! - propagate error from useApps if it fails
+
+- Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework@7.0.30
+  - @equinor/fusion-framework-module-feature-flag@1.0.2
+  - @equinor/fusion-framework-react-module@3.0.8
+  - @equinor/fusion-framework-react-module-http@4.0.6
+  - @equinor/fusion-framework-react-module-signalr@2.0.18
+
 ## 6.0.1
 
 ### Patch Changes

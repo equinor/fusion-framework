@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module-event@4.0.8
+  - @equinor/fusion-framework-module-http@5.1.6
+  - @equinor/fusion-framework-module-service-discovery@7.0.20
+
 ## 2.0.9
 
 ### Patch Changes
