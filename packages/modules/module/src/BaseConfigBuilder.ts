@@ -1,29 +1,7 @@
 import { from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
 import { mergeMap, reduce } from 'rxjs/operators';
 import { Modules, ModuleType } from './types';
-
-type ConfigPropType<T, Path extends string> = string extends Path
-    ? unknown
-    : Path extends keyof T
-      ? T[Path]
-      : Path extends `${infer K}.${infer R}`
-        ? K extends keyof T
-            ? ConfigPropType<T[K], R>
-            : unknown
-        : unknown;
-
-type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
-
-type DotNestedKeys<T> = (
-    T extends object
-        ? { [K in Exclude<keyof T, symbol>]: K | `${K}${DotPrefix<DotNestedKeys<T[K]>>}` }[Exclude<
-              keyof T,
-              symbol
-          >]
-        : ''
-) extends infer D
-    ? Extract<D, string>
-    : never;
+import { type DotPath, type DotPathType } from './utils/dot-path';
 
 /** helper function for extracting multilevel attribute keys */
 const assignConfigValue = <T>(
@@ -113,7 +91,7 @@ export type ConfigBuilderCallback<TReturn = unknown> = (
  * ```
  * @template TConfig expected config the builder will create
  */
-export abstract class BaseConfigBuilder<TConfig = unknown> {
+export abstract class BaseConfigBuilder<TConfig extends object = Record<string, unknown>> {
     /** internal hashmap of registered callback functions */
     #configCallbacks = {} as Record<string, ConfigBuilderCallback>;
 
@@ -146,9 +124,9 @@ export abstract class BaseConfigBuilder<TConfig = unknown> {
      * @param cb callback function for setting the attribute
      * @template TKey keyof config
      */
-    protected _set<TTarget extends DotNestedKeys<TConfig>>(
+    protected _set<TTarget extends DotPath<TConfig>>(
         target: TTarget,
-        cb: ConfigBuilderCallback<ConfigPropType<TConfig, TTarget>>,
+        cb: ConfigBuilderCallback<DotPathType<TConfig, TTarget>>,
     ) {
         this.#configCallbacks[target] = cb;
     }
