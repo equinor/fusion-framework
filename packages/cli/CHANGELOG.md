@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.6.3
+
+### Patch Changes
+
+- [#1786](https://github.com/equinor/fusion-framework/pull/1786) [`a5f74f2`](https://github.com/equinor/fusion-framework/commit/a5f74f2096a55c4dab4b1d263bd39cd0dc39ac7a) Thanks [@odinr](https://github.com/odinr)! - support resources in `defineAppManifest`
+
+  ref [issue 286](https://github.com/equinor/fusion/issues/286#issuecomment-1923401234)
+
 ## 9.6.2
 
 ### Patch Changes

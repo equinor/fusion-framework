@@ -1,5 +1,13 @@
 # Change Log
 
+## 11.0.0
+
+### Major Changes
+
+- [#1789](https://github.com/equinor/fusion-framework/pull/1789) [`8f2939e`](https://github.com/equinor/fusion-framework/commit/8f2939e32da3d128e4749abd9e4b57d52145ac36) Thanks [@odinr](https://github.com/odinr)! - `LegacyAppContainer` no longer injects script for loading application when setting current application
+
+  > the application should be loaded by the app loader component, not the state container
+
 ## 10.0.0
 
 ### Patch Changes
