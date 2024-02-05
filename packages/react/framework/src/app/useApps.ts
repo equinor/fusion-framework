@@ -11,11 +11,13 @@ import { useAppProvider } from './useAppProvider';
  */
 export const useApps = (args?: {
     includeHidden: boolean;
-}): { apps: AppManifest[] | undefined; isLoading: boolean } => {
+}): { apps: AppManifest[] | undefined; isLoading: boolean; error: unknown } => {
     const provider = useAppProvider();
-    const { value: manifests, complete } = useObservableState(
-        useMemo(() => provider.getAllAppManifests(), [provider]),
-    );
+    const {
+        value: manifests,
+        complete,
+        error,
+    } = useObservableState(useMemo(() => provider.getAllAppManifests(), [provider]));
 
     const apps = useMemo(() => {
         if (manifests && !args?.includeHidden) {
@@ -24,7 +26,7 @@ export const useApps = (args?: {
         return manifests;
     }, [args, manifests]);
 
-    return { apps, isLoading: !complete };
+    return { apps, isLoading: !complete, error };
 };
 
 export default useApps;
