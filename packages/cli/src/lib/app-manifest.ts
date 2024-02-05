@@ -30,6 +30,8 @@ export type AppManifest = {
     owners?: string[];
     main?: string;
     icon?: string;
+    /** this will be deprecated when new app management is live  */
+    resource?: string[];
 };
 
 export type AppManifestFn = (
