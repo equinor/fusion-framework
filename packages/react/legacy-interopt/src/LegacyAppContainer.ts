@@ -284,14 +284,6 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
 
     async setCurrentAppAsync(appKey: string | null): Promise<void> {
         if (appKey) {
-            const { AppComponent, render } = this.get(appKey) || {};
-            /**
-             * assume if the manifest missing AppComponent or render, that loading is required
-             */
-            if (!!AppComponent && !!render) {
-                await this.#loadScript(appKey);
-            }
-            await new Promise((resolve) => window.requestAnimationFrame(resolve));
             const manifest = this.get(appKey) as unknown as AppManifest;
             const appProvider = this.#framework.modules.app;
             const currentApp = appProvider.current;
@@ -347,8 +339,6 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
     }
 
     async #loadScript(appKey: string): Promise<void> {
-        // const { uri } = await this.#framework.modules.serviceDiscovery.resolveService('portal');
-        // const source = new URL(`/bundles/apps/${appKey}.js`, uri);
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.async = true;
