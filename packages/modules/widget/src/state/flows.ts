@@ -44,8 +44,8 @@ export const handleFetchConfig =
     (action$) =>
         action$.pipe(
             filter(actions.fetchConfig.match),
-            switchMap(({ payload: key }) => {
-                const subject = from(provider.getWidgetConfig(key)).pipe(
+            switchMap(({ payload: { key, args } }) => {
+                const subject = from(provider.getWidgetConfig(key, args)).pipe(
                     filter((x) => !!x),
                     share(),
                 );

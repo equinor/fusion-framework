@@ -76,6 +76,7 @@
         "typescript": "^5.1.3"
     },
     "peerDependencies": {
+        "@equinor/fusion-framework-module-widget": "workspace:^",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module-signalr": "workspace:^",
         "@types/react": "^17.0.0 || ^18.0.0",
