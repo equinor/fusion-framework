@@ -85,7 +85,6 @@ jobs:
   generate-docs:
     name: Docs preview
     runs-on: ubuntu-latest
-    secrets: inherit
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
