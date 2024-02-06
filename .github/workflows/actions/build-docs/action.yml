@@ -7,12 +7,15 @@ runs:
       uses: ./.github/workflows/actions/node-setup
 
     - name: Build project
+      shell: bash
       run: pnpm build
 
     - name: Generate version
+      shell: bash
       run: npx changeset version
 
     - name: Build storybook
+      shell: bash
       run: pnpm build:docs
 
     - name: Upload artifact
