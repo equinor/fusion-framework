@@ -1,0 +1,22 @@
+name: Build documents
+
+runs:
+  using: composite
+  steps:
+    - name: Setup node and install deps
+      uses: ./.github/workflows/actions/node-setup
+
+    - name: Build project
+      run: pnpm build
+
+    - name: Generate version
+      run: npx changeset version
+
+    - name: Build storybook
+      run: pnpm build:docs
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./storybook/dist
+    

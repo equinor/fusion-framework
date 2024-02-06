@@ -25,28 +25,10 @@ concurrency:
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout docs
-        uses: actions/checkout@v4
-
-      - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
-
-      - name: Build project
-        run: pnpm build
-
-      - name: Generate version
-        run: npx changeset version
-
-      - name: Build storybook
-        run: pnpm build:docs
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./storybook/dist
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/actions/build-docs
 
   deploy:
     environment:
@@ -59,4 +41,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          preview: ${{ inputs.preview }}
+          preview: ${{ inputs.preview || github.ref != 'refs/heads/main' }}
