@@ -205,9 +205,11 @@ export class Widget {
     /**
      * Loads the manifest for the widget.
      * @param update - Flag to force an update of the manifest.
-     */ public loadManifest(update?: boolean) {
+     */
+    public loadManifest(update?: boolean) {
         this.#state.next(actions.fetchManifest({ key: this.name, ...this.widgetPrams }, update));
     }
+
     /**
      * Retrieves the widget module as an observable stream.
      * @param force_refresh - Flag to force refresh the widget module.

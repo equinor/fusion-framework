@@ -1,11 +1,6 @@
 import { GetWidgetParameters, IClient, WidgetEndpointBuilder } from './types';
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-// Toto Do not use string Use URL!!!!!
-export const removeTrailingSlashFromURI = (uri: string): string => {
-    return uri.at(-1) === '/' ? uri.slice(0, -1) : uri;
-};
-
 export const defaultManifestEndpointBuilder =
     (apiVersion: string): WidgetEndpointBuilder =>
     (params: GetWidgetParameters) => {
@@ -39,7 +34,7 @@ export const createDefaultClient = (httpClient: IHttpClient): IClient => {
     const apiVersion = '1.0-preview';
     return {
         apiVersion,
-        baseImportUrl: removeTrailingSlashFromURI(httpClient.uri),
+        baseImportUrl: httpClient.uri,
         getWidgetManifest: {
             client: {
                 fn: (args) => httpClient.json$(defaultManifestEndpointBuilder(apiVersion)(args)),

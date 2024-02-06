@@ -9,7 +9,7 @@ import { Query } from '@equinor/fusion-query';
 import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types';
 
 import { WidgetModuleConfig } from './WidgetModuleConfigurator';
-import { GetWidgetConfigError, GetWidgetManifestError } from './errors';
+import { GetWidgetLoadConfigError, GetWidgetLoadManifestError } from './errors';
 import { Widget } from './Widget';
 
 export interface IWidgetModuleProvider {
@@ -98,14 +98,18 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
                     const { cause } = err;
                     console.error('query', err);
                     // Handle specific errors and throw a `GetWidgetManifestError` if applicable
-                    if (cause instanceof GetWidgetManifestError) {
+                    if (cause instanceof GetWidgetLoadManifestError) {
                         throw cause;
                     }
                     if (cause instanceof HttpResponseError) {
-                        throw GetWidgetManifestError.fromHttpResponse(cause.response, { cause });
+                        throw GetWidgetLoadManifestError.fromHttpResponse(cause.response, {
+                            cause,
+                        });
                     }
                     // Throw a generic `GetWidgetManifestError` for unknown errors
-                    throw new GetWidgetManifestError('unknown', 'failed to load config', { cause });
+                    throw new GetWidgetLoadManifestError('unknown', 'failed to load config', {
+                        cause,
+                    });
                 }),
             ),
         );
@@ -134,14 +138,16 @@ export class WidgetModuleProvider implements IWidgetModuleProvider {
                     const { cause } = err;
                     console.error('query', err);
                     // Handle specific errors and throw a `GetWidgetConfigError` if applicable
-                    if (cause instanceof GetWidgetConfigError) {
+                    if (cause instanceof GetWidgetLoadConfigError) {
                         throw cause;
                     }
                     if (cause instanceof HttpResponseError) {
-                        throw GetWidgetConfigError.fromHttpResponse(cause.response, { cause });
+                        throw GetWidgetLoadConfigError.fromHttpResponse(cause.response, { cause });
                     }
                     // Throw a generic `GetWidgetManifestError` for unknown errors
-                    throw new GetWidgetConfigError('unknown', 'failed to load config', { cause });
+                    throw new GetWidgetLoadConfigError('unknown', 'failed to load config', {
+                        cause,
+                    });
                 }),
             ),
         );

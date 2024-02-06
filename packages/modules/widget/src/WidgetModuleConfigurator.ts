@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 import { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import { createDefaultClient } from './utils';
@@ -24,7 +23,6 @@ export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConf
      * @param cb - Callback function to configure the client.
      */
     public setClient(cb: ConfigBuilderCallback<IClient>) {
-        // @ts-expect-error
         this._set('client', cb);
     }
 

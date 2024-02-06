@@ -1,22 +1,22 @@
 type WidgetErrorType = 'not_found' | 'unauthorized' | 'unknown';
 
-export class GetWidgetManifestError extends Error {
+export class GetWidgetLoadManifestError extends Error {
     static fromHttpResponse(response: Response, options?: ErrorOptions) {
         switch (response.status) {
             case 401:
-                return new GetWidgetManifestError(
+                return new GetWidgetLoadManifestError(
                     'unauthorized',
                     'failed to load widget manifest, request not authorized',
                     options,
                 );
             case 404:
-                return new GetWidgetManifestError(
+                return new GetWidgetLoadManifestError(
                     'not_found',
                     'widget manifest not found',
                     options,
                 );
         }
-        return new GetWidgetManifestError(
+        return new GetWidgetLoadManifestError(
             'unknown',
             `failed to load widget manifest, status code ${response.status}`,
             options,
@@ -28,22 +28,27 @@ export class GetWidgetManifestError extends Error {
         options?: ErrorOptions,
     ) {
         super(message, options);
+        this.name = 'GetWidgetLoadManifestErrors';
     }
 }
 
-export class GetWidgetConfigError extends Error {
+export class GetWidgetLoadConfigError extends Error {
     static fromHttpResponse(response: Response, options?: ErrorOptions) {
         switch (response.status) {
             case 401:
-                return new GetWidgetManifestError(
+                return new GetWidgetLoadConfigError(
                     'unauthorized',
                     'failed to load widget config, request not authorized',
                     options,
                 );
             case 404:
-                return new GetWidgetManifestError('not_found', 'widget config not found', options);
+                return new GetWidgetLoadConfigError(
+                    'not_found',
+                    'widget config not found',
+                    options,
+                );
         }
-        return new GetWidgetManifestError(
+        return new GetWidgetLoadConfigError(
             'unknown',
             `failed to load widget config, status code ${response.status}`,
             options,
@@ -55,6 +60,7 @@ export class GetWidgetConfigError extends Error {
         options?: ErrorOptions,
     ) {
         super(message, options);
+        this.name = 'GetWidgetLoadConfigError';
     }
 }
 
