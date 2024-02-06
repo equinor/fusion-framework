@@ -1,0 +1,27 @@
+name: Build documents
+
+runs:
+  using: composite
+  steps:
+    - name: Setup node and install deps
+      uses: ./.github/workflows/actions/node-setup
+
+    - name: Build project
+      shell: bash
+      run: pnpm build
+
+    - name: Generate version
+      shell: bash
+      run: npx changeset version
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Build storybook
+      shell: bash
+      run: pnpm build:docs
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./vue-press/dist
+    

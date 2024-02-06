@@ -11,6 +11,12 @@ on:
 concurrency:
   group: pr-${{ github.event.pull_request.id }}
   cancel-in-progress: true
+
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
   
 jobs:
   code-quality:
@@ -18,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
-    outputs:
-      has-docs: ${{ steps.filter.outputs.docs }}
     steps:
       - name: Determin reporter type
         uses: haya14busa/action-cond@v1
@@ -40,13 +44,6 @@ jobs:
         with:
           ref: "${{ github.event.pull_request.merge_commit_sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
-
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            docs:
-              - 'vue-press/**'
       
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
@@ -91,11 +88,40 @@ jobs:
       - name: Publish test coverage
         if: ${{ steps.test-coverage.conclusion == 'success' }}
         uses: davelosert/vitest-coverage-report-action@v2.2.0
+
   generate-docs:
     name: Docs preview
-    needs: code-quality
-    if: ${{ needs.code-quality.outputs.has-docs }}
-    uses: ./.github/workflows/generate-docs.yml
-    with:
-      preview: true
-    secrets: inherit
+    if: false
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'vue-press/**'
+
+      - name: Generate docs
+        if: steps.filter.outputs.docs == 'true'
+        uses: ./.github/workflows/actions/build-docs
+
+      - uses: actions/deploy-pages@v4
+        if: steps.filter.outputs.docs == 'true'
+        id: deployment
+        with:
+          preview: true
+
+      - uses: thollander/actions-comment-pull-request@v2
+        if: steps.filter.outputs.docs == 'true'
+        with:
+          comment_tag: docs_preview
+          message: |
+            ${{ steps.deployment.outputs.page_url }}
