@@ -56,9 +56,19 @@ Your commits should adhere to [conventional commit specification](https://www.co
 [optional footer(s)]
 ```
 
-☠️ do __not__ include files in your commit which are outside the `scope` of the commit!
+> [!CAUTION] 
+> ☠️ do __not__ include files in your commit which are outside the `scope` of the commit!
 
+> [!IMPORTANT]
 > Don't forget to [self-review](contributing/self-review.md) to speed up the review process⚡️.
+
+> [!TIP]
+> Rebase your commits 😍
+> 
+> The important part is to provide a good history.
+> Git should not be used as a 'backup'. Commit frequency should not be determined by a time etc.
+>
+> Be smart and think how you would have wanted to visit the history at a later time.
 
 ### Pull Request
 
@@ -67,9 +77,10 @@ __Before open a new PR:__
 - all affected packages has matching [changesets](./contributing/changeset.md)
 - make sure the the code build `pnpm build`
 - make sure the code lints `pnpm lint`
-- make sure tests `pnpm test run`
+- make sure tests passes `pnpm test run`
 
 When you're finished with the changes, create a pull request.
+> [!WARNING]
 > All PR should be created as __draft__
 - Select a matching pull request template.
 - Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
@@ -85,9 +96,16 @@ Once you submit your PR, a Fusion Core team member will review your proposal. We
 - As you update your PR and apply changes, mark each conversation as [resolved](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/commenting-on-a-pull-request#resolving-conversations).
 - If you run into any merge issues, checkout this [git tutorial](https://github.com/skills/resolve-merge-conflicts) to help you resolve merge conflicts and other issues.
 
+> [!WARNING]
 > when a pull request review requests changes, the pull request is moved back to __draft__
+>
+> _When a pull request is moved back to draft, it is __the creator__ responsibility to request a re-review_
 
-> when a pull request review is accepted, the pull request is set to auto merge _(will squash once all required checks are executed)_
+> [!CAUTION]
+> when a pull request review is accepted, the creator is normally responsible for merging in the code.
+
+> [!TIP]
+> Set your PR to "auto-merge"
 
 
 ### Your PR is merged!

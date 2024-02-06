@@ -16,6 +16,3 @@ closes:
 
 - [ ] Confirm that my changes meet our [code of conduct](https://github.com/equinor/fusion-framework/blob/main/CODE_OF_CONDUCT.md).
 
-#### Conditional
-- [ ] Confirm project selected and category, actual, iteration are set
-- [ ] Confirm Milestone selected _(if any)_
