@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+    outputs:
+      has-docs: ${{ steps.filter.outputs.docs }}
     steps:
       - name: Determin reporter type
         uses: haya14busa/action-cond@v1
@@ -38,6 +40,13 @@ jobs:
         with:
           ref: "${{ github.event.pull_request.merge_commit_sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'vue-press/**'
       
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
@@ -84,16 +93,9 @@ jobs:
         uses: davelosert/vitest-coverage-report-action@v2.2.0
   generate-docs:
     name: Docs preview
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            docs:
-              - 'vue-press/**'
-      - if: steps.filter.outputs.docs == 'true'
-        uses: ./.github/workflows/generate-docs.yml
-        with:
-          preview: true
+    needs: code-quality
+    if: ${{ needs.code-quality.outputs.has-docs }}
+    uses: ./.github/workflows/generate-docs.yml
+    with:
+      preview: true
+    secrets: inherit
