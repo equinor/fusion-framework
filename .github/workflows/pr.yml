@@ -85,6 +85,7 @@ jobs:
   generate-docs:
     name: Docs preview
     runs-on: ubuntu-latest
+    secrets: inherit
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -95,6 +96,5 @@ jobs:
               - 'vue-press/**'
       - if: steps.filter.outputs.docs == 'true'
         uses: ./.github/workflows/generate-docs.yml
-        secrets: inherit
         with:
           preview: true
