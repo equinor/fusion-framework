@@ -2,7 +2,17 @@ name: Generate Docs
 
 on:
   workflow_dispatch:
+    inputs:
+      preview:
+        description: should be preview
+        type: boolean
+        default: false
   workflow_call: 
+    inputs:
+      preview:
+        description: should be preview
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -48,3 +58,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          preview: ${{ inputs.preview }}

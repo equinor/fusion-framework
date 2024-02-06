@@ -82,3 +82,19 @@ jobs:
       - name: Publish test coverage
         if: ${{ steps.test-coverage.conclusion == 'success' }}
         uses: davelosert/vitest-coverage-report-action@v2.2.0
+  generate-docs:
+    name: Docs preview
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'vue-press/**'
+      - if: steps.filter.outputs.docs == 'true'
+        uses: ./.github/workflows/generate-docs.yml
+        secrets: inherit
+        with:
+          preview: true
