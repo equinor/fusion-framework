@@ -108,8 +108,11 @@ jobs:
             docs:
               - 'vue-press/**'
 
-      - uses: ./.github/workflows/actions/build-docs
+      - name: Generate docs
         if: steps.filter.outputs.docs == 'true'
+        uses: ./.github/workflows/actions/build-docs
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - uses: actions/deploy-pages@v4
         if: steps.filter.outputs.docs == 'true'
