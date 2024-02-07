@@ -91,6 +91,7 @@ jobs:
 
   generate-docs:
     name: Docs preview
+    if: false
     runs-on: ubuntu-latest
     environment:
       name: github-pages
