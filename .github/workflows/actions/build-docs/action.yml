@@ -13,6 +13,8 @@ runs:
     - name: Generate version
       shell: bash
       run: npx changeset version
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
 
     - name: Build storybook
       shell: bash
