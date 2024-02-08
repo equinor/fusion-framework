@@ -91,11 +91,10 @@ jobs:
 
   generate-docs:
     name: Docs preview
-    if: false
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    # environment:
+    #   name: github-pages
+    #   url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -111,17 +110,17 @@ jobs:
 
       - name: Generate docs
         if: steps.filter.outputs.docs == 'true'
+        id: build
         uses: ./.github/workflows/actions/build-docs
 
-      - uses: actions/deploy-pages@v4
-        if: steps.filter.outputs.docs == 'true'
-        id: deployment
-        with:
-          preview: true
+      # - uses: actions/deploy-pages@v4
+      #   id: deployment
+      #   with:
+      #     preview: true
 
-      - uses: thollander/actions-comment-pull-request@v2
-        if: steps.filter.outputs.docs == 'true'
-        with:
-          comment_tag: docs_preview
-          message: |
-            ${{ steps.deployment.outputs.page_url }}
+      # - uses: thollander/actions-comment-pull-request@v2
+      #   if: steps.deployment.outcome == 'success'
+      #   with:
+      #     comment_tag: docs_preview
+      #     message: |
+      #       ${{ steps.deployment.outputs.page_url }}
