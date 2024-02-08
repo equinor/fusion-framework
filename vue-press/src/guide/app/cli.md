@@ -10,67 +10,56 @@ tag:
 
 ![CLI](./cli.png)
 
-<ModuleBadge module="cli" />
-
 ```sh
 npm i -D '@equinor/fusion-framework-cli'
 ```
 
-## Config
+## Config (optional)
 
-> Currently these configuration are only for local development.
 
-```js
-// app.config.js
-export default () => ({
-  /** override name from package.json */
-  "appKey": "my-key",
 
-  /** custom properties */
-  "environment": {
-    "foo": "bar"
-  },
+```ts
+// app.config.ts
+import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig((_env, { base }) =>
+    mergeAppConfigs(base, {
+        environment: {
+            endpoints: {
+              api: {
+                baseUri: 'https://foo.bar',
+                defaultScopes: ['default']
+              }
+            }
+        },
+    }),
+);
 
-  /** custom endpoints */
-  "endpoints": {
-    "api": "https://foo.barz"
-  }
+// src/config.ts
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+export const configure: AppModuleInitiator = (configurator, { env }) => {
+    const { endpoints } = env.config.environment;
+    configurator.configureClient( 'api', endpoints.api );
+};
+```
+
+### Manifest (optional)
+
+By default the CLI will create a manifest on best effort from `package.json`
+
+```ts
+// app.manifest.config.ts
+import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
+
+export default defineAppManifest((env, { base }) => {
+  return mergeManifests(
+    base,
+    {
+      /** override name from package.json */
+        "appKey": "my-key",
+    }
+  )
 });
 ```
-
-> WIP: config for local dev server
-```js
-// dev-server.config.js
-export default () => ({
-  /** feature coming soon */
-});
-```
-
-### Vite
-
-by default the CLI will generate configuration required, but can be overridden by providing custom [Vite config](https://vitejs.dev/config/).
-
-```sh
-fusion-framework-cli app dev -c vite.config.js
-fusion-framework-cli app build -c vite.config.js
-fusion-framework-cli app build --config vite.config.js
-```
-
-__example__
-```js
-/** @type {import('vite').UserConfig} */
-export default {
-  build: {
-    minify: false,
-    terserOptions: {
-      mangle: false
-    },
-    sourcemap: true
-  }
-}
-```
-
-> only static `UserConfig` is allowed
 
 ## Dev
 
@@ -99,3 +88,5 @@ fusion-framework-cli app pack
 ```
 
 > its important to set your package type to module to generate a proper app-bundle for use in the Fusion portal, add `"type": "module"` to your package.json.
+
+[read more about CLI](../../cli/docs/app.md)
