@@ -12,6 +12,10 @@ const navbar: NavbarOptions = [
     link: '/modules/'
   },
   {
+    text: 'CLI',
+    link: '/cli/'
+  },
+  {
     text: 'Roadmap',
     link: '/roadmap/'
   },

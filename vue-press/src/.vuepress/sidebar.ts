@@ -28,11 +28,18 @@ export default sidebar({
             ]
         }
     ],
-    '/test/': [
+    '/cli/': [
         {
-            text: 'Foo',
-            link: 'gg'
-        }
+            text: 'App',
+            link: 'docs/app.md',
+            prefix: 'docs/',
+            children: [
+                {
+                    text: 'configuration',
+                    link: 'app-config.md',
+                }
+            ]
+        },
     ],
     '/modules/': [
         '',
