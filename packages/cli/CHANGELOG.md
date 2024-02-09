@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.7.0
+
+### Minor Changes
+
+- [#1801](https://github.com/equinor/fusion-framework/pull/1801) [`6e8fb78`](https://github.com/equinor/fusion-framework/commit/6e8fb78698fe11402ceef8d8ab48530bb8866699) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump commander from 11.1.0 to 12.0.0
+
+  see [changelog](https://github.com/tj/commander.js/releases/tag/v12.0.0)
+
+### Patch Changes
+
+- [#1719](https://github.com/equinor/fusion-framework/pull/1719) [`5658d04`](https://github.com/equinor/fusion-framework/commit/5658d04bac8957fd3741083385bc2d7871da7df9) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-context-selector from 0.5.0 to 0.6.0
+
 ## 9.6.4
 
 ### Patch Changes
