@@ -1,5 +1,18 @@
 # Change Log
 
+## 9.8.0
+
+### Minor Changes
+
+- [#1827](https://github.com/equinor/fusion-framework/pull/1827) [`91a5782`](https://github.com/equinor/fusion-framework/commit/91a5782d22b25c562a1c65cc702bee1c96b97737) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update @equinor/fusion-react-person to 0.7.0 and @equinor/fusion-wc-person to 2.4.0
+
+### Patch Changes
+
+- [#1823](https://github.com/equinor/fusion-framework/pull/1823) [`9733563`](https://github.com/equinor/fusion-framework/commit/9733563ad072a6c21d61952d6d71978b88612ac5) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump @equinor/eds-core-react from 0.35.1 to 0.36.0
+
+- Updated dependencies [[`91a5782`](https://github.com/equinor/fusion-framework/commit/91a5782d22b25c562a1c65cc702bee1c96b97737)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.2.0
+
 ## 9.7.0
 
 ### Minor Changes
