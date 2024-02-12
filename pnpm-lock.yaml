@@ -252,8 +252,8 @@ importers:
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.35.1
-        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6)
+        specifier: ^0.36.0
+        version: 0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6)
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -355,8 +355,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
-        specifier: ^0.6.0
-        version: 0.6.0(@types/react@18.2.50)(react@18.2.0)
+        specifier: ^0.7.0
+        version: 0.7.0(react@18.2.0)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.9.0
@@ -456,8 +456,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.35.1
-        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.36.0
+        version: 0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -592,14 +592,14 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-person':
-        specifier: ^0.6.0
-        version: 0.6.0(@types/react@18.2.50)(react@18.2.0)
+        specifier: ^0.7.0
+        version: 0.7.0(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.2.1
         version: 0.2.1(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.2.5
-        version: 1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        version: 1.2.5(@equinor/eds-core-react@0.36.0)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)
@@ -1075,8 +1075,8 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.35.1
-        version: 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+        specifier: ^0.36.0
+        version: 0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -1460,12 +1460,6 @@ importers:
       '@equinor/fusion-framework-widget':
         specifier: workspace:^
         version: link:../../widget
-      '@equinor/fusion-observable':
-        specifier: workspace:^
-        version: link:../../utils/observable
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.1
     devDependencies:
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
@@ -1700,7 +1694,7 @@ packages:
       slash: 2.0.0
     optionalDependencies:
       '@nicolo-ribaudo/chokidar-2': 2.1.8-no-fsevents.3
-      chokidar: 3.5.3
+      chokidar: 3.6.0
 
   /@babel/code-frame@7.12.11:
     resolution: {integrity: sha512-Zt1yodBx1UcyiePMSkWnU4hPqhwq7hGi2nFL1LeA3EUl+q2LQx16MISgJ0+z7dnmgvP9QtIleuETGOiOH1RcIw==}
@@ -2894,6 +2888,12 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.0
 
+  /@babel/runtime@7.23.9:
+    resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.0
+
   /@babel/template@7.22.15:
     resolution: {integrity: sha512-QPErUVm4uyJa60rkI73qneDacvdvzxshT3kksGqlGWYdOTIUOwJ7RDUL8sGqslY1uXWSL6xMFKEXDS3ox2uF0w==}
     engines: {node: '>=6.9.0'}
@@ -3350,35 +3350,35 @@ packages:
   /@emotion/unitless@0.8.1:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
-  /@equinor/eds-core-react@0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
-    resolution: {integrity: sha512-eGGpaIOfL873dsiPodHx6xTx7vKVIW+cQwZk8Q1cLjMIROMvQCGsIY4UDKi/b1V2TQy7YMmajTOfii9zPbU1HA==}
+  /@equinor/eds-core-react@0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+    resolution: {integrity: sha512-O/WihrcxM2EjO5b/ZHFKmZ6w6NK0we6H/nvvYvmPu4iXt7Ci7lJrrEqGZfj9KeGfoX7T4wCYFEBP/nBqN7ndpQ==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
       styled-components: '>=4.2'
     dependencies:
-      '@babel/runtime': 7.23.2
-      '@equinor/eds-icons': 0.20.0
+      '@babel/runtime': 7.23.9
+      '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/eds-utils': 0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+      '@equinor/eds-utils': 0.8.4(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@floating-ui/react': 0.26.2(react-dom@18.2.0)(react@18.2.0)
-      '@tanstack/react-virtual': 3.0.0-beta.54(react@18.2.0)
+      '@tanstack/react-virtual': 3.0.4(react-dom@18.2.0)(react@18.2.0)
       downshift: 8.2.3(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.0.8(react-dom@18.2.0)(react@18.2.0)
 
-  /@equinor/eds-core-react@0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6):
-    resolution: {integrity: sha512-eGGpaIOfL873dsiPodHx6xTx7vKVIW+cQwZk8Q1cLjMIROMvQCGsIY4UDKi/b1V2TQy7YMmajTOfii9zPbU1HA==}
+  /@equinor/eds-core-react@0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6):
+    resolution: {integrity: sha512-O/WihrcxM2EjO5b/ZHFKmZ6w6NK0we6H/nvvYvmPu4iXt7Ci7lJrrEqGZfj9KeGfoX7T4wCYFEBP/nBqN7ndpQ==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
       styled-components: '>=4.2'
     dependencies:
-      '@babel/runtime': 7.23.2
-      '@equinor/eds-icons': 0.20.0
+      '@babel/runtime': 7.23.9
+      '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.4(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6)
       '@floating-ui/react': 0.26.2(react-dom@18.2.0)(react@18.2.0)
@@ -3406,20 +3406,6 @@ packages:
     engines: {node: '>=10.0.0', pnpm: '>=4'}
 
   /@equinor/eds-utils@0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
-    resolution: {integrity: sha512-+Xm+BsXMUqlxZpPeGAJExhf27WqcQDHmKY9e4s6hfFP8D2vj5VcS0cglY86cmH4N3bDb4LmHL8V2FSX9xHr9+g==}
-    engines: {node: '>=10.0.0', pnpm: '>=4'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-      styled-components: '>=4.2'
-    dependencies:
-      '@babel/runtime': 7.23.2
-      '@equinor/eds-tokens': 0.9.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-components: 6.0.8(react-dom@18.2.0)(react@18.2.0)
-
-  /@equinor/eds-utils@0.8.3(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.6):
     resolution: {integrity: sha512-+Xm+BsXMUqlxZpPeGAJExhf27WqcQDHmKY9e4s6hfFP8D2vj5VcS0cglY86cmH4N3bDb4LmHL8V2FSX9xHr9+g==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
     peerDependencies:
@@ -3578,21 +3564,6 @@ packages:
       '@equinor/fusion-react-styles': 0.6.1(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@equinor/fusion-react-button@0.9.0(@types/react@18.2.50)(react@18.2.0):
-    resolution: {integrity: sha512-dwdlj5q8cIrE4r0aKrR1TIx3yHYw+8Al0HeyKSlvy158WSBS4UXQ1gL7P7jVQQQ2GvK/IAmqAxdKdAVcXM3B3Q==}
-    peerDependencies:
-      '@types/react': '*'
-      react: "^17.0.0 ||\_^18.0.0"
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
-      '@equinor/fusion-wc-button': 2.1.0
-      '@equinor/fusion-wc-icon': 1.0.33
-      '@types/react': 18.2.50
-      react: 18.2.0
-
   /@equinor/fusion-react-button@0.9.1(@types/react@18.2.50)(react@18.2.0):
     resolution: {integrity: sha512-2rISCx7ZNU/pqcgZMdtEao+fRDVQadc0SBEiN9rH3KbCC6K5186jrqG0GHVqXBzfmID9WtUz5MiFPZcymFeJqw==}
     peerDependencies:
@@ -3679,14 +3650,12 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-person@0.6.0(@types/react@18.2.50)(react@18.2.0):
-    resolution: {integrity: sha512-XyFCAmVFhSPXt/6LFKMVxpJjCFIwVkPhLg+WMl6huOXhNudUDZ2HSf+nztIG7klFecIxgSJ1TYiNL/MiJOsaeg==}
+  /@equinor/fusion-react-person@0.7.0(react@18.2.0):
+    resolution: {integrity: sha512-yvs6ubxwI5+ETongTsYPR8dO0JZ3f0r5ANdxnsRI910M7pjOuiYQP2VqxFPabQMJ5DV1yL+nYlJHjQe2rj9NhQ==}
     dependencies:
-      '@equinor/fusion-react-button': 0.9.0(@types/react@18.2.50)(react@18.2.0)
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
-      '@equinor/fusion-wc-person': 2.3.3
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
+      '@equinor/fusion-wc-person': 2.4.0
     transitivePeerDependencies:
-      - '@types/react'
       - react
 
   /@equinor/fusion-react-progress-indicator@0.2.1(react@18.2.0):
@@ -3709,7 +3678,7 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.35.1)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
+  /@equinor/fusion-react-side-sheet@1.2.5(@equinor/eds-core-react@0.36.0)(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8):
     resolution: {integrity: sha512-cx+ilNw2LFHpMaE1lqj29sa0RarZf0GxgpGKqckpWkx+MVDXtD0JY12E03Ep75jD0OVYaD26GEVhijwOqBAVnQ==}
     peerDependencies:
       '@equinor/eds-core-react': ^0.34.0
@@ -3725,7 +3694,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@equinor/eds-core-react': 0.35.1(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
+      '@equinor/eds-core-react': 0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.0.8)
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@types/react': 18.2.50
@@ -3804,6 +3773,7 @@ packages:
     dependencies:
       date-fns: 2.30.0
       react: 18.2.0
+    dev: true
 
   /@equinor/fusion-react-utils@2.1.1(react@18.2.0):
     resolution: {integrity: sha512-UU3afQMaKeiUseEfOwigTZqV0J6+2PTNFzqhOb0MAAwYsNthQWn77puHVjomsi4tbh8MsxqEIdq4303RA8x2lw==}
@@ -3812,7 +3782,6 @@ packages:
     dependencies:
       date-fns: 3.3.1
       react: 18.2.0
-    dev: true
 
   /@equinor/fusion-wc-avatar@3.2.0:
     resolution: {integrity: sha512-kQrEVPRjkBf3uHbs5aMigoqqBOlwoe6xehCRhnwsrOKUXWcNMa3U7NH7Txg5fzs4jaE5vHHTkGdOAPrA2DCDWg==}
@@ -3830,17 +3799,6 @@ packages:
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-web-theme': 0.1.7
       lit: 3.0.2
-
-  /@equinor/fusion-wc-button@2.1.0:
-    resolution: {integrity: sha512-tzFuPsR3FzRXhsDU2mWjd3w/1wQ5agmHufJs6WRE3B3i/sNdFb9jBOk76IdRBnb4CqvUTTA1FR2gwfBKxwZuaw==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.2.0
-      '@equinor/fusion-web-theme': 0.1.7
-      '@material/mwc-button': 0.27.0
-      '@material/mwc-icon-button': 0.27.0
-      '@material/mwc-icon-button-toggle': 0.27.0
-      lit: 2.7.0
 
   /@equinor/fusion-wc-button@2.4.0:
     resolution: {integrity: sha512-dwwabWlF9rnjkXGSNNVnzRyOpXPbUrOP+f7+7nUY66M0oTmmmGVwDdFrNSQnigTHRQz8TqNWEbCzljw/mEeSsg==}
@@ -3880,6 +3838,7 @@ packages:
 
   /@equinor/fusion-wc-core@1.0.5:
     resolution: {integrity: sha512-VKvsJQqiyBjz/qTGirSiJDrwHYc0rXyIXa5VtaGkeQ13bSxrGM1djOwvqMjkeNh+zImBR27yDqqBz+8zvBIxvw==}
+    dev: true
 
   /@equinor/fusion-wc-core@2.0.0:
     resolution: {integrity: sha512-yxUepfQhMIkKNYn2Vc73R6/cyvyO0hde3LXFitCCaa8QR9woK0UXZlxP+RwnEYzve528l9K1t7SnEsX6x5eyPg==}
@@ -3928,6 +3887,7 @@ packages:
       '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 1.0.5
       lit: 2.7.0
+    dev: true
 
   /@equinor/fusion-wc-icon@2.1.0:
     resolution: {integrity: sha512-g2Ov2LzoMOTW9aQHSsufm0wBdI61o5SHlNkp5DsKAD9BhtnKLt6AWAvatzNH4b7HYTy3IiNq1gKBOnk3BC7OEQ==}
@@ -3943,6 +3903,7 @@ packages:
       '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 2.0.0
       lit: 2.7.0
+    dev: true
 
   /@equinor/fusion-wc-icon@2.3.0:
     resolution: {integrity: sha512-CRyIHnvmZ/WOzZwhsoxNL3DkN30wk7jskEa6i+YsiqFkV1xAGgMPQJjhmXI1jhewRoT4o09WcUjnLaYQ6CUdsQ==}
@@ -4683,7 +4644,7 @@ packages:
   /@lit-labs/observers@2.0.2:
     resolution: {integrity: sha512-eZb5+W9Cb0e/Y5m1DNxBSGTvGB2TAVTGMnTxL/IzFhPQEcZIAHewW1eVBhN8W07A5tirRaAmmF6fGL1V20p3gQ==}
     dependencies:
-      '@lit/reactive-element': 1.6.3
+      '@lit/reactive-element': 2.0.4
 
   /@lit-labs/react@1.2.1:
     resolution: {integrity: sha512-DiZdJYFU0tBbdQkfwwRSwYyI/mcWkg3sWesKRsHUd4G+NekTmmeq9fzsurvcKTNVa0comNljwtg4Hvi1ds3V+A==}
@@ -8219,12 +8180,6 @@ packages:
     dependencies:
       run-applescript: 5.0.0
 
-  /bundle-name@3.0.0:
-    resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==}
-    engines: {node: '>=12'}
-    dependencies:
-      run-applescript: 5.0.0
-
   /bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
@@ -8354,6 +8309,21 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /chokidar@3.6.0:
+    resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
+    engines: {node: '>= 8.10.0'}
+    dependencies:
+      anymatch: 3.1.3
+      braces: 3.0.2
+      glob-parent: 5.1.2
+      is-binary-path: 2.1.0
+      is-glob: 4.0.3
+      normalize-path: 3.0.0
+      readdirp: 3.6.0
+    optionalDependencies:
+      fsevents: 2.3.3
 
   /ci-info@3.8.0:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
@@ -8443,10 +8413,6 @@ packages:
     resolution: {integrity: sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==}
     engines: {node: '>=18'}
     dev: false
-
-  /commander@4.1.1:
-    resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
-    engines: {node: '>= 6'}
 
   /commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -8985,11 +8951,11 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
+    dev: true
 
   /date-fns@3.3.1:
     resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
-    dev: true
 
   /dayjs@1.11.10:
     resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
@@ -9238,7 +9204,7 @@ packages:
     peerDependencies:
       react: '>=16.12.0'
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       compute-scroll-into-view: 3.0.3
       prop-types: 15.8.1
       react: 18.2.0
@@ -11604,17 +11570,6 @@ packages:
       uc.micro: 1.0.6
     dev: true
 
-  /markdown-it@13.0.2:
-    resolution: {integrity: sha512-FtwnEuuK+2yVU7goGn/MJ0WBZMM9ZPgU9spqlFs7/A/pDIUNSOQZhUgOqYCficIuR2QaFnrt8LHqBWsbTAoI5w==}
-    hasBin: true
-    dependencies:
-      argparse: 2.0.1
-      entities: 3.0.1
-      linkify-it: 4.0.1
-      mdurl: 1.0.1
-      uc.micro: 1.0.6
-    dev: true
-
   /markdown-it@14.0.0:
     resolution: {integrity: sha512-seFjF0FIcPt4P9U39Bq1JYblX0KZCjDLFFQPHpL5AzHpqPEKtosxmdq/LTVZnjfH7tjt9BxStm+wXcDBNuYmzw==}
     hasBin: true
@@ -12638,14 +12593,6 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /postcss@8.4.32:
-    resolution: {integrity: sha512-D/kj5JNu6oo2EIy+XL/26JEDTlIbB8hw85G8StOE6L74RQAVVP5rej6wxCNqyMbR4RkPfqvezVbPw81Ngd6Kcw==}
-    engines: {node: ^10 || ^12 || >=14}
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-
   /postcss@8.4.33:
     resolution: {integrity: sha512-Kkpbhhdjw2qQs2O2DGX+8m5OVqEcbB9HRBvuYM9pgrjEFUg30A9LmXNlTAUj4S9kgtGyrMbTzVjH7E+s5Re2yg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -13062,7 +13009,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
       use-latest: 1.2.1(@types/react@18.2.50)(react@18.2.0)
@@ -13724,13 +13671,6 @@ packages:
   /std-env@3.6.0:
     resolution: {integrity: sha512-aFZ19IgVmhdB2uX599ve2kE6BIE3YMnQ6Gp6BURhW/oIzpXGKr878TQfAQZn1+i0Flcc/UKUy1gOlcfaUBCryg==}
 
-  /stdin-discarder@0.1.0:
-    resolution: {integrity: sha512-xhV7w8S+bUwlPTb4bAOUQhv8/cSS5offJuX8GQGq32ONF0ZtDWKfkdomM3HMRA+LhX6um/FZ0COqlwsjD53LeQ==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      bl: 5.1.0
-    dev: true
-
   /stdin-discarder@0.2.2:
     resolution: {integrity: sha512-UhDfHmA92YAlNnCfhmq0VeNL5bDbiZGg7sZ2IvPsXubGkiNa9EC+tUTsjBRsYUAz87btI6/1wf4XoVvQ3uRnmQ==}
     engines: {node: '>=18'}
@@ -13773,15 +13713,6 @@ packages:
       emoji-regex: 9.2.2
       strip-ansi: 7.1.0
     dev: false
-
-  /string-width@6.1.0:
-    resolution: {integrity: sha512-k01swCJAgQmuADB0YIc+7TuatfNvTBVOoaUWJjTB9R4VJzR5vNWzf5t42ESVZFPS8xTySF7CAdV4t/aaIm3UnQ==}
-    engines: {node: '>=16'}
-    dependencies:
-      eastasianwidth: 0.2.0
-      emoji-regex: 10.3.0
-      strip-ansi: 7.1.0
-    dev: true
 
   /string-width@7.0.0:
     resolution: {integrity: sha512-GPQHj7row82Hjo9hKZieKcHIhaAIKOJvFSIZXuCU9OASVZrMNUaZuz++SPVrBjnLsnk4k+z9f2EIypgxf2vNFw==}
