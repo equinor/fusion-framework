@@ -1040,6 +1040,9 @@ importers:
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
+      '@equinor/fusion-framework-react-widget':
+        specifier: workspace:^
+        version: link:../widget
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
@@ -1181,15 +1184,9 @@ importers:
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../../modules/feature-flag
-      '@equinor/fusion-framework-module-widget':
-        specifier: workspace:^
-        version: link:../../modules/widget
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
-      '@equinor/fusion-framework-widget':
-        specifier: workspace:^
-        version: link:../../widget
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.50
@@ -1442,6 +1439,52 @@ importers:
       typescript:
         specifier: ^5.1.3
         version: 5.2.2
+
+  packages/react/widget:
+    dependencies:
+      '@equinor/fusion-framework':
+        specifier: workspace:^
+        version: link:../../framework
+      '@equinor/fusion-framework-module':
+        specifier: workspace:^
+        version: link:../../modules/module
+      '@equinor/fusion-framework-module-widget':
+        specifier: workspace:^
+        version: link:../../modules/widget
+      '@equinor/fusion-framework-react':
+        specifier: workspace:^
+        version: link:../framework
+      '@equinor/fusion-framework-react-module':
+        specifier: workspace:^
+        version: link:../modules/module
+      '@equinor/fusion-framework-widget':
+        specifier: workspace:^
+        version: link:../../widget
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../utils/observable
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
+    devDependencies:
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:^
+        version: link:../../modules/event
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.2.50
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.7
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      typescript:
+        specifier: ^5.1.3
+        version: 5.3.3
 
   packages/utils/observable:
     dependencies:
@@ -11146,7 +11189,7 @@ packages:
     resolution: {integrity: sha512-cqsOTS7jqPsPMjtKYDUpdFC0AbhYFLTcuGRqymgmdJIeQ8cH7+AgX7YSgQy79wXloZq2VvATYxUOUQEvS1V/Zw==}
     dependencies:
       '@babel/runtime': 7.23.2
-      csstype: 3.1.2
+      csstype: 3.1.3
       is-in-browser: 1.1.3
       tiny-warning: 1.0.3
 

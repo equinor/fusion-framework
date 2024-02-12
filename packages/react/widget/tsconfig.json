@@ -9,31 +9,18 @@
     },
   },
   "references": [
-   
-    {
-      "path": "../../app"
-    },
     {
       "path": "../framework"
     },
     {
-      "path": "../modules/module"
+      "path": "../../modules/module"
     },
     {
-      "path": "../modules/http"
+      "path": "../../modules/widget"
     },
     {
-      "path": "../modules/context"
+      "path": "../../widget"
     },
-    {
-      "path": "../modules/bookmark"
-    },
-    {
-      "path": "../../modules/navigation"
-    },
-    {
-      "path": "../widget"
-    }
   ],
   "include": [
     "src/**/*"
