@@ -2686,19 +2686,6 @@ packages:
       '@equinor/fusion-wc-core': 2.0.0
       lit: 3.0.2
 
-  /@equinor/fusion-wc-list@1.1.0:
-    resolution: {integrity: sha512-dwyI7PC90jhU+mObj5BDoda0JWIhCj7rRuk4qo/5s08REXZR3gW52VXJY9qSRrdwbI48GbP9cY4v66q87ViW1g==}
-    dependencies:
-      '@equinor/fusion-wc-checkbox': 1.1.0
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-divider': 1.1.0
-      '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-radio': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
-      '@material/mwc-list': 0.27.0
-      lit: 3.0.2
-    dev: true
-
   /@equinor/fusion-wc-list@1.1.1:
     resolution: {integrity: sha512-+pBtqfGLvOEA2Fs4rw/A2r7onaRKl44y92upFdPq5mH4EOKuCe1Pzose1njVNxnmNhBbADwjWRsya47QlKlLZg==}
     dependencies:
@@ -2715,7 +2702,7 @@ packages:
     resolution: {integrity: sha512-SNlRC/hVDpBSNhedJgQ2Q2kjFLh8ZpuQuEvL9MRUzbiJFxk/IleIZDUs3F1WF8QW8n0I35inaSap1TkY9ZH3Dw==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-list': 1.1.0
+      '@equinor/fusion-wc-list': 1.1.1
       '@material/mwc-menu': 0.27.0
       lit: 3.0.2
     dev: true
