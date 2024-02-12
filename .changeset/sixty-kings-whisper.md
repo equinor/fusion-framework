@@ -1,6 +1,6 @@
 ---
 '@equinor/fusion-framework-module-widget': major
-'@equinor/fusion-react-widget': major
+'@equinor/fusion-framework-react-widget': major
 '@equinor/fusion-framework-widget': patch
 ---
 
