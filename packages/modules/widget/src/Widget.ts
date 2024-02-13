@@ -16,6 +16,8 @@ import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom,
 import WidgetModuleProvider from './WidgetModuleProvider';
 import { WidgetModuleConfig } from './WidgetModuleConfigurator';
 
+import './events';
+
 // Class representing a fusion widget
 export class Widget {
     #state: FlowSubject<WidgetState, Actions>;

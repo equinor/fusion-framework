@@ -39,13 +39,13 @@ export const createDefaultClient = (httpClient: IHttpClient): IClient => {
             client: {
                 fn: (args) => httpClient.json$(defaultManifestEndpointBuilder(apiVersion)(args)),
             },
-            key: (args) => JSON.stringify(args.widgetKey),
+            key: (args) => JSON.stringify(args),
         },
         getWidgetConfig: {
             client: {
                 fn: (args) => httpClient.json$(defaultConfigEndpointBuilder(apiVersion)(args)),
             },
-            key: (args) => JSON.stringify(args.widgetKey),
+            key: (args) => JSON.stringify(args),
         },
     };
 };

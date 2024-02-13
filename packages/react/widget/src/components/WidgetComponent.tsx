@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
 import { Fusion } from '@equinor/fusion-framework';
 import { useFramework } from '@equinor/fusion-framework-react';
@@ -12,14 +11,15 @@ interface WidgetComponentProps<TProps extends WidgetProps> {
         value: string;
     };
     readonly fusion: Fusion<[WidgetModule]>;
+    readonly fallback?: React.ReactNode;
 }
 
 export const Widget = <TProps extends WidgetProps>({
     name,
-    children,
+    fallback,
     props,
     widgetVersion,
-}: PropsWithChildren<WidgetComponentProps<TProps>>) => {
+}: WidgetComponentProps<TProps>) => {
     const fusion = useFramework<[WidgetModule]>();
     return (
         <BaseWidget
@@ -30,7 +30,7 @@ export const Widget = <TProps extends WidgetProps>({
                 fusion,
             }}
         >
-            {children}
+            {fallback}
         </BaseWidget>
     );
 };

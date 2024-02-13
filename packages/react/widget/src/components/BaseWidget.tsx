@@ -1,5 +1,5 @@
-import { PropsWithChildren, useEffect, useRef } from 'react';
-import { usePortalWidgets } from '../hooks/use-portal-widgets';
+import { useEffect, useRef } from 'react';
+import { useLoadWidget } from '../hooks/use-portal-widgets';
 import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
 import { Fusion } from '@equinor/fusion-framework';
 
@@ -11,24 +11,25 @@ interface WidgetComponentProps<TProps extends WidgetProps> {
         value: string;
     };
     readonly fusion: Fusion<[WidgetModule]>;
+    readonly fallback?: React.ReactNode;
 }
 
 export const BaseWidget = <TProps extends WidgetProps>({
     name,
-    children,
+    fallback,
     props,
     widgetVersion,
     fusion,
-}: PropsWithChildren<WidgetComponentProps<TProps>>) => {
+}: WidgetComponentProps<TProps>) => {
     const ref = useRef<HTMLElement>(null);
 
     const provider = fusion.modules.widget;
-    const { loading, error, widgetRef, widget } = usePortalWidgets(provider, () => ({
+    const { loading, error, widgetRef, widget } = useLoadWidget(provider, {
         name,
         props,
         widgetVersion,
         fusion,
-    }));
+    });
 
     useEffect(() => {
         const refEl = ref.current;
@@ -55,7 +56,7 @@ export const BaseWidget = <TProps extends WidgetProps>({
     }
 
     if (loading) {
-        return <>{children}</>;
+        return <>{fallback}</>;
     }
 
     return <section ref={ref} />;

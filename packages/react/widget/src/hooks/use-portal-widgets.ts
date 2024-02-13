@@ -4,9 +4,9 @@ import { widgetRender } from '../render/render';
 import { IWidgetModuleProvider, WidgetProps } from '@equinor/fusion-framework-module-widget';
 import { Fusion } from '@equinor/fusion-framework';
 
-export const usePortalWidgets = <TProps extends WidgetProps>(
+export const useLoadWidget = <TProps extends WidgetProps>(
     provider: IWidgetModuleProvider,
-    cb: () => {
+    config: {
         name: string;
         props?: TProps;
         fusion: Fusion;
@@ -20,7 +20,7 @@ export const usePortalWidgets = <TProps extends WidgetProps>(
     const [error, setError] = useState<Error | undefined>();
 
     const widgetRef = useRef<HTMLDivElement>(createElement());
-    const { name, props, widgetVersion, fusion } = cb();
+    const { name, props, widgetVersion, fusion } = config;
     const widget = useMemo(() => {
         const widget = provider.getWidget(name, widgetVersion);
         if (widget) {
