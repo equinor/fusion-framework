@@ -5,6 +5,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import type {
     WidgetManifest,
     WidgetModulesInstance,
+    WidgetRenderArgs,
 } from '@equinor/fusion-framework-module-widget';
 
 import type { IWidgetConfigurator } from './WidgetConfigurator';
@@ -42,7 +43,7 @@ export type WidgetModuleInitiator<
     TEnv = WidgetEnv,
 > = (
     configurator: IWidgetConfigurator<TModules, TRef['modules']>,
-    args: { fusion: TRef; env: TEnv },
+    args: WidgetRenderArgs<TRef, TEnv>,
 ) => void | Promise<void>;
 
 /**

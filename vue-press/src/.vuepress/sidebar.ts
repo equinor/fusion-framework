@@ -16,17 +16,23 @@ export default sidebar({
                     children: [
                         {
                             text: 'AG-Grid',
-                            link: 'ag-grid.md'
-                        }
-                    ]
+                            link: 'ag-grid.md',
+                        },
+                    ],
                 },
                 'app/feature-flag',
                 'app/people',
                 'app/authentication',
                 'app/legacy',
-                'app/tips_and_tricks'
-            ]
-        }
+                'app/tips_and_tricks',
+                'app/widget',
+            ],
+        },
+        {
+            text: 'Portal',
+            prefix: '/guide/portal',
+            children: ['widget/'],
+        },
     ],
     '/cli/': [
         {
@@ -37,8 +43,8 @@ export default sidebar({
                 {
                     text: 'configuration',
                     link: 'app-config.md',
-                }
-            ]
+                },
+            ],
         },
     ],
     '/modules/': [
@@ -65,8 +71,7 @@ export default sidebar({
                     text: 'React',
                     link: 'react.md',
                 },
-            ]
-
+            ],
         },
         {
             text: 'Feature flag',
@@ -81,12 +86,12 @@ export default sidebar({
                     text: 'react',
                     link: 'react.md',
                 },
-            ]
-            
+            ],
         },
         'navigation/',
         'bookmark/',
         'ag-grid/',
+        'widget/',
         {
             text: 'Service Discovery',
             link: 'service-discovery/',

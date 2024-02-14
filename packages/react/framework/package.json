@@ -62,6 +62,7 @@
         "@equinor/fusion-framework-module-app": "workspace:^",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
+        "@equinor/fusion-framework-module-event": "workspace:^",
         "@types/react": "^18.2.50",
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
@@ -76,6 +77,9 @@
         "react-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
+        "@equinor/fusion-framework-module-event": {
+            "optional": true
+        },
         "@equinor/fusion-framework-react-module-context": {
             "optional": true
         },

@@ -1,137 +1,67 @@
-import { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
-import { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { QueryCtorOptions } from '@equinor/fusion-query';
+import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { createDefaultClient } from './utils';
+import type { IClient } from './types';
 
-import {
-    WidgetModuleConfigBuilder,
-    WidgetModuleConfigBuilderCallback,
-    WidgetEndpointBuilder,
-} from './WidgetModuleConfigBuilder';
-
-import { moduleKey } from './module';
-
-import type { GetWidgetParameters, WidgetManifest } from './types';
-
-export interface WidgetModuleConfig {
-    client: {
-        // getWidgetManifest: QueryCtorOptions<WidgetManifest, { widgetKey: string }>;
-        getWidget: QueryCtorOptions<WidgetManifest, GetWidgetParameters>;
-    };
-    endpointBuilder: WidgetEndpointBuilder;
-}
-
-export interface IWidgetModuleConfigurator {
-    addConfigBuilder: (init: WidgetModuleConfigBuilderCallback) => void;
-}
-
-const defaultEndpointBuilder: WidgetEndpointBuilder = (params) => {
-    const { widgetKey, args } = params;
-    const { type, value } = args ?? {};
-    switch (type) {
-        case 'tag':
-        case 'version':
-            return `/widgets/${widgetKey}/versions/${value}`;
-        default:
-            return `/widgets/${widgetKey}`;
-    }
+// Define the configuration type for the WidgetModule
+export type WidgetModuleConfig = {
+    client: IClient;
 };
 
-const widgetSelector =
-    (args: { apiVersion: string; uri: string }) =>
-    async (response: Response): Promise<WidgetManifest> => {
-        const data = await response.json();
+// Define a callback type for configuring the WidgetModule
+export type WidgetModuleConfigBuilderCallback = (
+    builder: WidgetModuleConfigurator,
+) => void | Promise<void>;
 
-        return {
-            ...data,
-            importBundle: async () =>
-                import(
-                    new URL(
-                        `${data.assetPath}/${data.entryPoint}?api-version=${args.apiVersion}`,
-                        args.uri,
-                    ).toString()
-                ),
-        } as WidgetManifest;
-    };
-
-export class WidgetModuleConfigurator implements IWidgetModuleConfigurator {
+// Class responsible for configuring the WidgetModule
+export class WidgetModuleConfigurator extends BaseConfigBuilder<WidgetModuleConfig> {
+    // Default expiration time for configurations (1 minute)
     defaultExpireTime = 1 * 60 * 1000;
 
-    #configBuilders: Array<WidgetModuleConfigBuilderCallback> = [];
-    #apiVersion = '1.0';
-
-    addConfigBuilder(init: WidgetModuleConfigBuilderCallback): void {
-        this.#configBuilders.push(init);
+    /**
+     * Set the client for the WidgetModule configuration.
+     * @param cb - Callback function to configure the client.
+     */
+    public setClient(cb: ConfigBuilderCallback<IClient>) {
+        this._set('client', cb);
     }
 
-    constructor(apiVersion?: string) {
-        if (apiVersion) {
-            this.#apiVersion = apiVersion;
+    /**
+     * Create an HTTP client based on the provided parameters.
+     * @param clientId - Identifier for the client.
+     * @param init - Configuration builder callback arguments.
+     * @returns An instance of the HTTP client.
+     */
+    private async _createHttpClient(clientId: string, init: ConfigBuilderCallbackArgs) {
+        const http = await init.requireInstance('http');
+
+        if (http.hasClient(clientId)) {
+            return http.createClient(clientId);
+        } else {
+            /** load service discovery module */
+            const serviceDiscovery = await init.requireInstance('serviceDiscovery');
+            return await serviceDiscovery.createClient(clientId);
         }
     }
 
     /**
-     * WARNING: this function will be remove in future
+     * Process the WidgetModule configuration and create an HTTP client if needed.
+     * @param config - Partial configuration for the WidgetModule.
+     * @param _init - Configuration builder callback arguments.
+     * @returns The processed WidgetModule configuration.
      */
-    protected async _createHttpClient(
-        init: ModuleInitializerArgs<
-            IWidgetModuleConfigurator,
-            [HttpModule, ServiceDiscoveryModule]
-        >,
-    ): Promise<IHttpClient> {
-        const http = await init.requireInstance('http');
-        /** check if the http provider has configure a client */
-        if (http.hasClient(moduleKey)) {
-            return http.createClient(moduleKey);
-        } else {
-            /** load service discovery module */
-            const serviceDiscovery = await init.requireInstance('serviceDiscovery');
+    protected async _processConfig(
+        config: Partial<WidgetModuleConfig>,
+        _init: ConfigBuilderCallbackArgs,
+    ) {
+        // Create an HTTP client using the specified client ID and initialization parameters
+        const httpClient = await this._createHttpClient('apps', _init);
 
-            const discoClient = await serviceDiscovery.createClient('apps');
-
-            return discoClient;
+        // If the configuration does not have a client, use the default client
+        if (!config.client) {
+            config.client = createDefaultClient(httpClient);
         }
-    }
-
-    public async createConfig(
-        init: ModuleInitializerArgs<
-            IWidgetModuleConfigurator,
-            [HttpModule, ServiceDiscoveryModule]
-        >,
-    ): Promise<WidgetModuleConfig> {
-        const config = await this.#configBuilders.reduce(
-            async (cur, cb) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const builder = new WidgetModuleConfigBuilder(init, await cur);
-                await Promise.resolve(cb(builder));
-                return Object.assign(cur, builder.config);
-            },
-            Promise.resolve({} as Partial<WidgetModuleConfig>),
-        );
-
-        const { endpointBuilder = defaultEndpointBuilder } = config;
-
-        // TODO - make less lazy
-        config.client ??= await (async (): Promise<WidgetModuleConfig['client']> => {
-            const httpClient = await this._createHttpClient(init);
-            httpClient.requestHandler.setHeader('api-version', this.#apiVersion);
-            return {
-                getWidget: {
-                    client: {
-                        fn: (args) =>
-                            httpClient.json$(endpointBuilder(args), {
-                                selector: widgetSelector({
-                                    apiVersion: this.#apiVersion,
-                                    uri: httpClient.uri,
-                                }),
-                            }),
-                    },
-                    key: (args) => JSON.stringify(args),
-                    expire: this.defaultExpireTime,
-                },
-            };
-        })();
-
+        // Return the processed configuration as a WidgetModuleConfig object
         return config as WidgetModuleConfig;
     }
 }

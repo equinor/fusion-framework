@@ -1,8 +1,4 @@
-export {
-    WidgetModuleConfigurator,
-    IWidgetModuleConfigurator,
-    WidgetModuleConfig,
-} from './WidgetModuleConfigurator';
+export { WidgetModuleConfigurator, WidgetModuleConfig } from './WidgetModuleConfigurator';
 
 export { WidgetModuleProvider } from './WidgetModuleProvider';
 

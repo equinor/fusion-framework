@@ -37,11 +37,14 @@
         "directory": "packages/modules/widget"
     },
     "dependencies": {
+        "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
+        "immer": "^9.0.16",
         "rxjs": "^7.8.1"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-query": "workspace:^",
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-service-discovery": "workspace:^",
