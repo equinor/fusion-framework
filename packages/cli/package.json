@@ -77,7 +77,7 @@
         "@equinor/fusion-query": "workspace:^",
         "@equinor/fusion-react-button": "^0.9.1",
         "@equinor/fusion-react-context-selector": "^0.6.0",
-        "@equinor/fusion-react-icon": "^0.3.0",
+        "@equinor/fusion-react-icon": "^0.4.0",
         "@equinor/fusion-react-menu": "^0.3.0",
         "@equinor/fusion-react-person": "^0.7.0",
         "@equinor/fusion-react-progress-indicator": "^0.2.1",

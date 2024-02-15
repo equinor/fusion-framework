@@ -590,8 +590,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0(@types/react@18.2.50)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-react-icon':
-        specifier: ^0.3.0
-        version: 0.3.0(react@18.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@18.2.0)
       '@equinor/fusion-react-menu':
         specifier: ^0.3.0
         version: 0.3.0(react@18.2.0)
@@ -3636,6 +3636,7 @@ packages:
 
   /@equinor/fusion-react-icon@0.2.16(react@18.2.0):
     resolution: {integrity: sha512-v558lvFY36YiZjDOuExqW3yIzxhZsoEpwkA6Ya06uKIlKq5MGBC/G4eQthsaBMUuYGscsfDko3txV4VK2coo6w==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
@@ -3644,13 +3645,14 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@equinor/fusion-react-icon@0.3.0(react@18.2.0):
-    resolution: {integrity: sha512-vbiMl7BlrtySVPh4AxwQq3RdiJ0EtThQxPJzerMLYxmuCfEX8Mvehx61tfgqTAXem1lCaIqNTB516HIWeag4TA==}
+  /@equinor/fusion-react-icon@0.4.0(react@18.2.0):
+    resolution: {integrity: sha512-dGel9FB3VLqsMujg1UOpXT6t8Gp0FA/+POeC37s6RH1uwPKvppUGjIADkY3CqEiO4hOVmRtZPN3XaoMYKfwO4A==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.0(react@18.2.0)
-      '@equinor/fusion-wc-icon': 2.1.0
+      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
+      '@equinor/fusion-wc-icon': 2.3.0
       react: 18.2.0
     dev: true
 
@@ -3874,14 +3876,6 @@ packages:
     dependencies:
       '@equinor/eds-icons': 0.19.3
       '@equinor/fusion-wc-core': 1.0.5
-      lit: 2.7.0
-    dev: true
-
-  /@equinor/fusion-wc-icon@2.1.0:
-    resolution: {integrity: sha512-g2Ov2LzoMOTW9aQHSsufm0wBdI61o5SHlNkp5DsKAD9BhtnKLt6AWAvatzNH4b7HYTy3IiNq1gKBOnk3BC7OEQ==}
-    dependencies:
-      '@equinor/eds-icons': 0.19.3
-      '@equinor/fusion-wc-core': 2.0.0
       lit: 2.7.0
     dev: true
 
@@ -4653,9 +4647,6 @@ packages:
     resolution: {integrity: sha512-DiZdJYFU0tBbdQkfwwRSwYyI/mcWkg3sWesKRsHUd4G+NekTmmeq9fzsurvcKTNVa0comNljwtg4Hvi1ds3V+A==}
     dev: true
 
-  /@lit-labs/ssr-dom-shim@1.1.1:
-    resolution: {integrity: sha512-kXOeFbfCm4fFf2A3WwVEeQj55tMZa8c8/f9AKHMobQMkzNUfUj+antR3fRPaZJawsa1aZiP/Da3ndpZrwEe4rQ==}
-
   /@lit-labs/ssr-dom-shim@1.2.0:
     resolution: {integrity: sha512-yWJKmpGE6lUURKAaIltoPIE/wrbY3TEkqQt+X0m+7fQNnAv0keydnYvbiJFP1PnMhizmIWRWOG5KLhYyc/xl+g==}
 
@@ -4667,7 +4658,7 @@ packages:
   /@lit/reactive-element@1.6.3:
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.1.1
+      '@lit-labs/ssr-dom-shim': 1.2.0
 
   /@lit/reactive-element@2.0.4:
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
@@ -4882,7 +4873,7 @@ packages:
     dependencies:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/dom': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-button@0.27.0:
@@ -4898,7 +4889,7 @@ packages:
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-floating-label@0.27.0:
@@ -4913,7 +4904,7 @@ packages:
     dependencies:
       '@material/form-field': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
     dev: true
 
@@ -4968,7 +4959,7 @@ packages:
       '@material/mwc-list': 0.27.0
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
     dev: true
 
@@ -4986,7 +4977,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
       '@material/radio': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-ripple@0.27.0:
@@ -4995,7 +4986,7 @@ packages:
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-textfield@0.27.0:
@@ -6790,9 +6781,6 @@ packages:
 
   /@types/stylis@4.2.0:
     resolution: {integrity: sha512-n4sx2bqL0mW1tvDf/loQ+aMX7GQD3lc3fkCMC55VFNDu/vBOabO+LTIeXKM14xK0ppk5TUGcWRjiSpIlUpghKw==}
-
-  /@types/trusted-types@2.0.4:
-    resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
 
   /@types/trusted-types@2.0.7:
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -11304,7 +11292,7 @@ packages:
   /lit-element@3.3.3:
     resolution: {integrity: sha512-XbeRxmTHubXENkV4h8RIPyr8lXc+Ff28rkcQzw3G6up2xg5E8Zu1IgOWIwBLEQsu3cOVFqdYwiVi0hv0SlpqUA==}
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.1.1
+      '@lit-labs/ssr-dom-shim': 1.2.0
       '@lit/reactive-element': 1.6.3
       lit-html: 2.8.0
 
@@ -11318,7 +11306,7 @@ packages:
   /lit-html@2.8.0:
     resolution: {integrity: sha512-o9t+MQM3P4y7M7yNzqAyjp7z+mQGa4NS4CxiyLqFPyFWyc4O+nodLrkrxSaCTrla6M5YOLaT3RpbbqjszB5g3Q==}
     dependencies:
-      '@types/trusted-types': 2.0.4
+      '@types/trusted-types': 2.0.7
 
   /lit-html@3.1.2:
     resolution: {integrity: sha512-3OBZSUrPnAHoKJ9AMjRL/m01YJxQMf+TMHanNtTHG68ubjnZxK0RFl102DPzsw4mWnHibfZIBJm3LWCZ/LmMvg==}
@@ -11331,6 +11319,7 @@ packages:
       '@lit/reactive-element': 1.6.3
       lit-element: 3.3.3
       lit-html: 2.8.0
+    dev: true
 
   /lit@2.8.0:
     resolution: {integrity: sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==}
