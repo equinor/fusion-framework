@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.3.5
+
+### Patch Changes
+
+-   [#1852](https://github.com/equinor/fusion-framework/pull/1852) [`bdc50b0`](https://github.com/equinor/fusion-framework/commit/bdc50b035b9c20301105d17509937ff3d91ea027) Thanks [@odinr](https://github.com/odinr)! - chore: add missing exported type
+
 ## 4.3.4
 
 ### Patch Changes
