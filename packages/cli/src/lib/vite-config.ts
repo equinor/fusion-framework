@@ -98,7 +98,7 @@ export const createViteConfig = async (
         build: {
             lib: {
                 entry: {
-                    [env.outputFileName || 'bundle']: entry,
+                    [env.outputFileName || 'app-bundle']: entry,
                 },
                 formats: ['es'],
             },
