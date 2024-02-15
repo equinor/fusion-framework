@@ -24,6 +24,9 @@ export type ConfigExecuterEnv = {
     mode: string;
     /** root of the package */
     root?: string;
+    widget?: boolean;
+    port?: number;
+    outputFileName?: string;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ConfigExecuterArgs = [ConfigExecuterEnv, ...any[]];
