@@ -1,5 +1,12 @@
 # Change Log
 
+## 11.0.3
+
+### Patch Changes
+
+-   Updated dependencies [[`bdc50b0`](https://github.com/equinor/fusion-framework/commit/bdc50b035b9c20301105d17509937ff3d91ea027)]:
+    -   @equinor/fusion-framework-react-app@4.3.5
+
 ## 11.0.2
 
 ### Patch Changes
