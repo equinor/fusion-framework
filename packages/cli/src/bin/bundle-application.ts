@@ -10,15 +10,19 @@ import { buildApplication } from './build-application.js';
 import createExportManifest from './create-export-manifest.js';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
-export const bundleApplication = async (options: { outDir: string; archive: string }) => {
-    const { outDir, archive } = options;
+export const bundleApplication = async (options: {
+    outDir: string;
+    archive: string;
+    outputFileName: string;
+}) => {
+    const { outDir, archive, outputFileName } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('pack') });
 
     const pkg = await loadPackage();
 
     spinner.start('build application');
-    await buildApplication({ outDir });
+    await buildApplication({ outDir, outputFileName });
     spinner.succeed();
 
     spinner.start('generate manifest');

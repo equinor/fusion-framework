@@ -45,6 +45,11 @@ export default (program: Command) => {
             'react',
         )
         .option('-d, --dev-portal <string>', 'Location of dev-portal you want to use')
+        .option(
+            '-n, --outputFileName, <string>',
+            'output file name of package, default app-bundle',
+            'app-bundle',
+        )
         .action(async (opt) => {
             const devPortalPath = opt.devPortal
                 ? resolve(join(process.cwd(), opt.devPortal))
@@ -57,7 +62,9 @@ export default (program: Command) => {
                     app: opt.config,
                     manifest: opt.manifest,
                     vite: opt.vite,
+                    widgetPath: opt.widgetPath,
                 },
+                outputFileName: opt.outputFileName,
                 library: opt.framework,
                 port: opt.port,
                 devPortalPath: devPortalPath,
@@ -66,6 +73,11 @@ export default (program: Command) => {
 
     app.command('build')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
+        .option(
+            '-n, --outputFileName, <string>',
+            'output file name of package, default app-bundle',
+            'app-bundle',
+        )
         .option(
             '-c, --config <string>',
             'Use specified config file, see https://vitejs.dev/guide/cli.html#build',
@@ -88,6 +100,7 @@ export default (program: Command) => {
                 configSourceFiles: {
                     vite: opt.vite,
                 },
+                outputFileName: opt.outputFileName,
                 outDir: opt.outDir,
             });
         });
@@ -114,8 +127,13 @@ export default (program: Command) => {
     app.command('pack')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
         .option('-a, --archive, <string>', 'output filename', 'app-bundle.zip')
+        .option(
+            '-n, --outputFileName, <string>',
+            'output file name of package, default app-bundle',
+            'app-bundle',
+        )
         .action(async (opt) => {
-            const { outDir, archive } = opt;
-            bundleApplication({ archive, outDir });
+            const { outDir, archive, outputFileName } = opt;
+            bundleApplication({ archive, outDir, outputFileName });
         });
 };

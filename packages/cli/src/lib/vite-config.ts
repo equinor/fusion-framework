@@ -87,6 +87,7 @@ export const createViteConfig = async (
             tsconfigPaths(),
             viteEnv({
                 NODE_ENV: env.mode,
+                ENV_PORT: env.port?.toString() || '3000',
             }),
         ],
         root,
@@ -96,8 +97,9 @@ export const createViteConfig = async (
         appType: 'custom',
         build: {
             lib: {
-                entry,
-                fileName: 'app-bundle',
+                entry: {
+                    [env.outputFileName || 'bundle']: entry,
+                },
                 formats: ['es'],
             },
             rollupOptions: {
