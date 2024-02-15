@@ -11,6 +11,8 @@ import { type IncomingMessage } from 'node:http';
 import { type AppConfig } from '../lib/app-config.js';
 import { Spinner } from './utils/spinner.js';
 import chalk, { formatPath } from './utils/format.js';
+import { WidgetManifest } from '../lib/widget-manifest.js';
+import { ConfigExecuterEnv } from '../lib/utils/config.js';
 
 type ProxyHandlerResult<T> = { response?: T; statusCode?: number; path?: string } | void;
 type ProxyHandlerReturn<T> = Promise<ProxyHandlerResult<T>> | ProxyHandlerResult<T>;
@@ -31,6 +33,11 @@ export interface ProxyHandler {
         message: IncomingMessage,
         data?: AppConfig,
     ): ProxyHandlerReturn<AppConfig>;
+    onWidgetManifestResponse(
+        slug: { widgetKey: string },
+        message: IncomingMessage,
+        data?: WidgetManifest,
+    ): ProxyHandlerReturn<WidgetManifest>;
 }
 
 const createResponseInterceptor = <TArgs, TType>(
@@ -61,12 +68,16 @@ const createResponseInterceptor = <TArgs, TType>(
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createDevProxy = (
+export const createDevProxy = async (
     handler: ProxyHandler,
     options: Pick<ProxyOptions, 'target'> & {
         staticAssets?: { path: string; options?: Parameters<typeof express.static>[1] }[];
     },
-): Express => {
+    config?: {
+        configurator: (env: ConfigExecuterEnv, app: Express) => Promise<express.Express>;
+        env: ConfigExecuterEnv;
+    },
+): Promise<Express> => {
     const proxyOptions: ProxyOptions = Object.assign(
         {
             changeOrigin: true,
@@ -93,7 +104,7 @@ export const createDevProxy = (
         options,
     );
 
-    const app = express();
+    const app = config ? await config.configurator(config.env, express()) : express();
 
     app.disable('x-powered-by');
 
@@ -110,11 +121,22 @@ export const createDevProxy = (
                 response.services = response.services.filter(
                     (x: { key: string }) => x.key !== 'app',
                 );
+
+                // Todo if widget dev
+                response.services = response.services.filter(
+                    (x: { key: string }) => x.key !== 'apps',
+                );
+                response.services.push({
+                    key: 'apps',
+                    uri: new URL('/', req.headers.referer).href,
+                });
+
                 /** refer service [app] to vite middleware */
                 response.services.push({
                     key: 'app',
                     uri: new URL('/', req.headers.referer).href,
                 });
+
                 return JSON.stringify(response);
             }),
         }),
@@ -142,6 +164,23 @@ export const createDevProxy = (
         createProxyMiddleware('/api/apps', {
             ...proxyOptions,
             onProxyRes: createResponseInterceptor(handler.onManifestListResponse),
+        }),
+    );
+
+    app.get(
+        '/widgets/*/versions/**',
+        createProxyMiddleware('/widgets/*/versions/**', {
+            changeOrigin: true,
+            target: 'https://fusion-s-apps-ci.azurewebsites.net',
+        }),
+    );
+
+    app.get(
+        '/widgets/:widgetId',
+        createProxyMiddleware('/widgets/*', {
+            ...proxyOptions,
+            target: 'https://fusion-s-apps-ci.azurewebsites.net',
+            onProxyRes: createResponseInterceptor(handler.onWidgetManifestResponse),
         }),
     );
 

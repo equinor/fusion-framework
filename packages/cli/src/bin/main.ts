@@ -23,5 +23,9 @@ program.version(pkg.packageJson.version);
 import app from './main.app.js';
 app(program);
 
+/** add widget commands */
+import widget from './main.widget.js';
+widget(program);
+
 /** read action and options and start programs */
 program.parse();
