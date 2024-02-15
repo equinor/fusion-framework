@@ -1,5 +1,4 @@
 import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { BaseWidget } from './BaseWidget';
 
@@ -10,7 +9,6 @@ interface WidgetComponentProps<TProps extends WidgetProps> {
         type: 'version' | 'tag';
         value: string;
     };
-    readonly fusion: Fusion<[WidgetModule]>;
     readonly fallback?: React.ReactNode;
 }
 
