@@ -12,7 +12,7 @@ type Fusion = any;
  */
 export type WidgetEnv<TProps = unknown> = {
     basename?: string;
-    manifest?: WidgetManifest;
+    manifest: WidgetManifest;
     props?: TProps;
 };
 
