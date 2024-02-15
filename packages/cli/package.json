@@ -75,7 +75,7 @@
         "@equinor/fusion-framework-react-components-bookmark": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
-        "@equinor/fusion-react-button": "^0.9.1",
+        "@equinor/fusion-react-button": "^0.10.0",
         "@equinor/fusion-react-context-selector": "^0.6.0",
         "@equinor/fusion-react-icon": "^0.3.0",
         "@equinor/fusion-react-menu": "^0.3.0",
