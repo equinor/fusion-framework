@@ -1,4 +1,3 @@
-import { enablePortalServices } from '@equinor/fusion-framework-portal-service';
 import { WidgetModuleInitiator, enableWidgetModule } from '@equinor/fusion-framework-react-widget';
 
 export const configure: WidgetModuleInitiator = (configurator, env) => {

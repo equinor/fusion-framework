@@ -9,10 +9,8 @@ import { Widget } from './Widget';
 /** create a render component */
 const widgetComponent = createElement(Widget);
 
-type Test = {};
-
 /** create React render root component */
-const createWidget = (args: WidgetRenderArgs<any, any>) =>
+const createWidget = (args: WidgetRenderArgs) =>
     makeWidgetComponent(widgetComponent, args, configure);
 
 /** Render function */
