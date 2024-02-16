@@ -15,13 +15,15 @@ export const buildApplication = async (options: {
         manifest?: string;
         vite?: string;
     };
+    outputFileName: string;
     outDir: string;
     library?: 'react';
 }) => {
-    const { configSourceFiles, library, outDir } = options;
+    const { configSourceFiles, library, outDir, outputFileName } = options;
     const env: ConfigExecuterEnv = {
         command: 'build',
         mode: process.env.NODE_ENV ?? 'production',
+        outputFileName: outputFileName,
     };
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('build') });

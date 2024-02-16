@@ -9,6 +9,7 @@ import {
     createLocalStoragePlugin,
     createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
+import { enableWidgetModule } from '@equinor/fusion-framework-react-widget';
 
 export const configure = async (config: FrameworkConfigurator) => {
     config.logger.level = 0;
@@ -34,6 +35,7 @@ export const configure = async (config: FrameworkConfigurator) => {
     enableNavigation(config);
 
     enableServices(config);
+    enableWidgetModule(config);
 
     enableBookmark(config, (builder) => {
         builder.setSourceSystem({

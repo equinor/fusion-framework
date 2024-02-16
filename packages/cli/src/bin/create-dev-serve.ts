@@ -22,6 +22,7 @@ import { appConfigFilename, createAppConfig } from '../lib/app-config.js';
 import { loadPackage } from './utils/load-package.js';
 
 import { rateLimit } from 'express-rate-limit';
+import { devAppConfig } from './utils/load-dev-proxy.js';
 
 export const createDevServer = async (options: {
     portal: string;
@@ -29,12 +30,16 @@ export const createDevServer = async (options: {
         app?: string;
         manifest?: string;
         vite?: string;
+        widgetPath: string;
     };
+    widget?: boolean;
+    outputFileName?: string;
     devPortalPath: string;
     port?: number;
     library?: 'react';
 }) => {
-    const { configSourceFiles, library, portal, port, devPortalPath } = options;
+    const { configSourceFiles, library, portal, port, devPortalPath, outputFileName, widget } =
+        options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
@@ -46,6 +51,9 @@ export const createDevServer = async (options: {
         command: 'serve',
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
+        widget: widget,
+        outputFileName: outputFileName,
+        port,
     };
 
     /**
@@ -79,14 +87,17 @@ export const createDevServer = async (options: {
 
     const vite = await createServer({ ...env, ...viteConfig });
     assert(vite.config.build.lib, 'expected vite build to have library defined');
-    const { entry } = vite.config.build.lib as LibraryOptions;
+    let { entry } = vite.config.build.lib as LibraryOptions;
 
+    if (typeof entry === 'object' && !Array.isArray(entry)) {
+        entry = entry[env.outputFileName || 'bundle´'];
+    }
     spinner.info('💾 application entrypoint', formatPath(String(entry)));
 
     spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
 
     /** add proxy handlers */
-    const server = createDevProxy(
+    const server = await createDevProxy(
         {
             onConfigResponse: async (slug, message, data) => {
                 if (slug.appKey === appKey) {
@@ -146,10 +157,22 @@ export const createDevServer = async (options: {
                 }
                 return { response: data, path };
             },
+            onWidgetManifestResponse: async (slug, message, data) => {
+                return {
+                    response: data,
+                    statusCode: 200,
+                    ok: true,
+                    statusText: 'OK',
+                };
+            },
         },
         {
             target: portal,
             staticAssets: [{ path: devPortalPath }],
+        },
+        {
+            configurator: devAppConfig,
+            env,
         },
     );
 

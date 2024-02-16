@@ -4,21 +4,26 @@ import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
-import createExportManifest from './create-export-manifest.js';
-import { bundleApplication } from './bundle-application.js';
-import { createExportConfig } from './create-export-config.js';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
+import { bundleWidget } from './bundle-widget.js';
 
 export default (program: Command) => {
-    const app = program
-        .command('app')
-        .description('Tooling for developing applications build on Fusion Framework');
+    const widget = program
+        .command('widget')
+        .description('Tooling for developing widget build on Fusion Framework');
 
-    app.command('dev')
+    widget
+        .command('dev')
         .description('Create a development server')
         .option('-p, --port <number>', 'dev-server port')
+        .option('-w, --widget <boolean>', 'widget serve')
         .option('-P, --portal <string>', 'fusion portal host')
+        .option(
+            '-n, --outputFileName, <string>',
+            'output file name of package, default widget-bundle',
+            'widget-bundle',
+        )
         .option(
             '-c, --config <file>',
             `use specified application config, by default search for ${formatPath(
@@ -45,11 +50,6 @@ export default (program: Command) => {
             'react',
         )
         .option('-d, --dev-portal <string>', 'Location of dev-portal you want to use')
-        .option(
-            '-n, --outputFileName, <string>',
-            'output file name of package, default app-bundle',
-            'app-bundle',
-        )
         .action(async (opt) => {
             const devPortalPath = opt.devPortal
                 ? resolve(join(process.cwd(), opt.devPortal))
@@ -64,6 +64,7 @@ export default (program: Command) => {
                     vite: opt.vite,
                     widgetPath: opt.widgetPath,
                 },
+                widget: true,
                 outputFileName: opt.outputFileName,
                 library: opt.framework,
                 port: opt.port,
@@ -71,12 +72,13 @@ export default (program: Command) => {
             });
         });
 
-    app.command('build')
+    widget
+        .command('build')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
         .option(
             '-n, --outputFileName, <string>',
-            'output file name of package, default app-bundle',
-            'app-bundle',
+            'output file name of package, default widget-bundle',
+            'widget-bundle',
         )
         .option(
             '-c, --config <string>',
@@ -105,35 +107,17 @@ export default (program: Command) => {
             });
         });
 
-    app.command('config')
-        .option('-o, --output <string>', 'output file')
-        .option('-c, --config <string>', 'application config file')
-        .action((opt) => {
-            createExportConfig({
-                outputFile: opt.output,
-                configFile: opt.config,
-            });
-        });
-    app.command('manifest')
-        .option('-o, --output <string>', 'output file')
-        .option('-c, --config <string>', 'manifest config file')
-        .action((opt) => {
-            createExportManifest({
-                outputFile: opt.output,
-                configFile: opt.config,
-            });
-        });
-
-    app.command('pack')
+    widget
+        .command('pack')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
-        .option('-a, --archive, <string>', 'output filename', 'app-bundle.zip')
+        .option('-a, --archive, <string>', 'output filename', 'widget-bundle.zip')
         .option(
-            '-n, --outputFileName, <string>',
-            'output file name of package, default app-bundle',
-            'app-bundle',
+            '-n, --outFileName, <string>',
+            'output file name of package, default widget-bundle',
+            'widget-bundle',
         )
         .action(async (opt) => {
             const { outDir, archive, outputFileName } = opt;
-            bundleApplication({ archive, outDir, outputFileName });
+            bundleWidget({ archive, outDir, outputFileName });
         });
 };

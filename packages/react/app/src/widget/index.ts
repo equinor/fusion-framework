@@ -9,5 +9,5 @@ export type {
     WidgetRenderArgs,
     WidgetStateInitial,
 } from '@equinor/fusion-framework-react-widget';
-export { Widget } from '@equinor/fusion-framework-react-widget';
+export { Widget, makeWidgetComponent } from '@equinor/fusion-framework-react-widget';
 export { Widget as default } from '@equinor/fusion-framework-react-widget';
