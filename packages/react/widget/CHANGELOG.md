@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-widget
 
+## 1.0.1
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react@6.0.3
+    -   @equinor/fusion-framework@7.0.31
+    -   @equinor/fusion-framework-widget@1.0.30
+
 ## 1.0.0
 
 ### Major Changes
