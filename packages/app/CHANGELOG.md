@@ -1,273 +1,280 @@
 # Change Log
 
+## 8.1.2
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework@7.0.31
+
 ## 8.1.1
 
 ### Patch Changes
 
-- Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-  - @equinor/fusion-framework-module@4.2.7
-  - @equinor/fusion-framework@7.0.30
-  - @equinor/fusion-framework-module-app@5.2.13
-  - @equinor/fusion-framework-module-event@4.0.8
-  - @equinor/fusion-framework-module-feature-flag@1.0.2
-  - @equinor/fusion-framework-module-http@5.1.6
-  - @equinor/fusion-framework-module-msal@3.0.10
+-   Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
+    -   @equinor/fusion-framework-module@4.2.7
+    -   @equinor/fusion-framework@7.0.30
+    -   @equinor/fusion-framework-module-app@5.2.13
+    -   @equinor/fusion-framework-module-event@4.0.8
+    -   @equinor/fusion-framework-module-feature-flag@1.0.2
+    -   @equinor/fusion-framework-module-http@5.1.6
+    -   @equinor/fusion-framework-module-msal@3.0.10
 
 ## 8.1.0
 
 ### Minor Changes
 
-- [#1781](https://github.com/equinor/fusion-framework/pull/1781) [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9) Thanks [@odinr](https://github.com/odinr)! - removed `useFeatureFlags` from `AppConfigurator` since caused issued for users without installing feature-flag module
+-   [#1781](https://github.com/equinor/fusion-framework/pull/1781) [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9) Thanks [@odinr](https://github.com/odinr)! - removed `useFeatureFlags` from `AppConfigurator` since caused issued for users without installing feature-flag module
 
 ## 8.0.1
 
 ### Patch Changes
 
-- Updated dependencies [[`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12)]:
-  - @equinor/fusion-framework-module-app@5.2.13
-  - @equinor/fusion-framework-module-feature-flag@1.0.1
-  - @equinor/fusion-framework@7.0.29
+-   Updated dependencies [[`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12)]:
+    -   @equinor/fusion-framework-module-app@5.2.13
+    -   @equinor/fusion-framework-module-feature-flag@1.0.1
+    -   @equinor/fusion-framework@7.0.29
 
 ## 8.0.0
 
 ### Minor Changes
 
-- [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - Added method to `AppConfigurator` to enabled `Feature Flag Module`
+-   [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - Added method to `AppConfigurator` to enabled `Feature Flag Module`
 
-  ```ts
-  export const configure: ModuleInitiator = (appConfigurator, args) => {
-    /** provide a list of features that should be available in the application */
-    appConfigurator.useFeatureFlags([
-      {
-        key: MyFeatures.MyFlag,
-        title: "this is a flag",
-      },
-      {
-        key: MyFeatures.MyUrlFlag,
-        title: "this feature can be toggled by ?my-url-flag=true",
-        allowUrl: true,
-      },
-    ]);
-  };
-  ```
+    ```ts
+    export const configure: ModuleInitiator = (appConfigurator, args) => {
+        /** provide a list of features that should be available in the application */
+        appConfigurator.useFeatureFlags([
+            {
+                key: MyFeatures.MyFlag,
+                title: 'this is a flag',
+            },
+            {
+                key: MyFeatures.MyUrlFlag,
+                title: 'this feature can be toggled by ?my-url-flag=true',
+                allowUrl: true,
+            },
+        ]);
+    };
+    ```
 
 ### Patch Changes
 
-- Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
-  - @equinor/fusion-framework-module-feature-flag@1.0.0
+-   Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
+    -   @equinor/fusion-framework-module-feature-flag@1.0.0
 
 ## 7.1.15
 
 ### Patch Changes
 
-- Updated dependencies [[`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1)]:
-  - @equinor/fusion-framework-module-msal@3.0.9
-  - @equinor/fusion-framework@7.0.28
-  - @equinor/fusion-framework-module-app@5.2.12
-  - @equinor/fusion-framework-module-http@5.1.5
+-   Updated dependencies [[`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1)]:
+    -   @equinor/fusion-framework-module-msal@3.0.9
+    -   @equinor/fusion-framework@7.0.28
+    -   @equinor/fusion-framework-module-app@5.2.12
+    -   @equinor/fusion-framework-module-http@5.1.5
 
 ## 7.1.14
 
 ### Patch Changes
 
-- Updated dependencies [[`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e)]:
-  - @equinor/fusion-framework-module-http@5.1.4
-  - @equinor/fusion-framework@7.0.27
-  - @equinor/fusion-framework-module-app@5.2.12
+-   Updated dependencies [[`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e)]:
+    -   @equinor/fusion-framework-module-http@5.1.4
+    -   @equinor/fusion-framework@7.0.27
+    -   @equinor/fusion-framework-module-app@5.2.12
 
 ## 7.1.13
 
 ### Patch Changes
 
-- Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
-  - @equinor/fusion-framework-module-http@5.1.3
-  - @equinor/fusion-framework@7.0.26
-  - @equinor/fusion-framework-module-app@5.2.12
+-   Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
+    -   @equinor/fusion-framework-module-http@5.1.3
+    -   @equinor/fusion-framework@7.0.26
+    -   @equinor/fusion-framework-module-app@5.2.12
 
 ## 7.1.12
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-app@5.2.12
-  - @equinor/fusion-framework@7.0.25
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.12
+    -   @equinor/fusion-framework@7.0.25
 
 ## 7.1.11
 
 ### Patch Changes
 
-- Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-  - @equinor/fusion-framework-module@4.2.6
-  - @equinor/fusion-framework-module-http@5.1.2
-  - @equinor/fusion-framework-module-msal@3.0.8
-  - @equinor/fusion-framework-module-app@5.2.11
-  - @equinor/fusion-framework@7.0.24
-  - @equinor/fusion-framework-module-event@4.0.7
+-   Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
+    -   @equinor/fusion-framework-module@4.2.6
+    -   @equinor/fusion-framework-module-http@5.1.2
+    -   @equinor/fusion-framework-module-msal@3.0.8
+    -   @equinor/fusion-framework-module-app@5.2.11
+    -   @equinor/fusion-framework@7.0.24
+    -   @equinor/fusion-framework-module-event@4.0.7
 
 ## 7.1.10
 
 ### Patch Changes
 
-- Updated dependencies [[`6d303787`](https://github.com/equinor/fusion-framework/commit/6d303787f647bb2fc3c90456eccac751abb264c4)]:
-  - @equinor/fusion-framework-module-app@5.2.10
+-   Updated dependencies [[`6d303787`](https://github.com/equinor/fusion-framework/commit/6d303787f647bb2fc3c90456eccac751abb264c4)]:
+    -   @equinor/fusion-framework-module-app@5.2.10
 
 ## 7.1.9
 
 ### Patch Changes
 
-- Updated dependencies [[`8274dca1`](https://github.com/equinor/fusion-framework/commit/8274dca10a773e1d29ffbce82a6f6f2bae818316)]:
-  - @equinor/fusion-framework-module-app@5.2.9
+-   Updated dependencies [[`8274dca1`](https://github.com/equinor/fusion-framework/commit/8274dca10a773e1d29ffbce82a6f6f2bae818316)]:
+    -   @equinor/fusion-framework-module-app@5.2.9
 
 ## 7.1.8
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-app@5.2.8
-  - @equinor/fusion-framework@7.0.23
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.8
+    -   @equinor/fusion-framework@7.0.23
 
 ## 7.1.7
 
 ### Patch Changes
 
-- Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-  - @equinor/fusion-framework-module-app@5.2.7
-  - @equinor/fusion-framework@7.0.22
+-   Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
+    -   @equinor/fusion-framework-module-app@5.2.7
+    -   @equinor/fusion-framework@7.0.22
 
 ## 7.1.6
 
 ### Patch Changes
 
-- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
-- Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-  - @equinor/fusion-framework@7.0.21
-  - @equinor/fusion-framework-module-app@5.2.6
-  - @equinor/fusion-framework-module-event@4.0.6
-  - @equinor/fusion-framework-module-http@5.1.1
-  - @equinor/fusion-framework-module@4.2.5
-  - @equinor/fusion-framework-module-msal@3.0.7
+-   Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
+    -   @equinor/fusion-framework@7.0.21
+    -   @equinor/fusion-framework-module-app@5.2.6
+    -   @equinor/fusion-framework-module-event@4.0.6
+    -   @equinor/fusion-framework-module-http@5.1.1
+    -   @equinor/fusion-framework-module@4.2.5
+    -   @equinor/fusion-framework-module-msal@3.0.7
 
 ## 7.1.5
 
 ### Patch Changes
 
-- Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa)]:
-  - @equinor/fusion-framework-module-http@5.1.0
-  - @equinor/fusion-framework@7.0.20
-  - @equinor/fusion-framework-module-app@5.2.5
+-   Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa)]:
+    -   @equinor/fusion-framework-module-http@5.1.0
+    -   @equinor/fusion-framework@7.0.20
+    -   @equinor/fusion-framework-module-app@5.2.5
 
 ## 7.1.4
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework@7.0.19
-  - @equinor/fusion-framework-module-app@5.2.4
+-   Updated dependencies []:
+    -   @equinor/fusion-framework@7.0.19
+    -   @equinor/fusion-framework-module-app@5.2.4
 
 ## 7.1.3
 
 ### Patch Changes
 
-- Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-  - @equinor/fusion-framework-module@4.2.4
-  - @equinor/fusion-framework-module-app@5.2.4
-  - @equinor/fusion-framework@7.0.18
-  - @equinor/fusion-framework-module-event@4.0.5
-  - @equinor/fusion-framework-module-http@5.0.6
-  - @equinor/fusion-framework-module-msal@3.0.6
+-   Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
+    -   @equinor/fusion-framework-module@4.2.4
+    -   @equinor/fusion-framework-module-app@5.2.4
+    -   @equinor/fusion-framework@7.0.18
+    -   @equinor/fusion-framework-module-event@4.0.5
+    -   @equinor/fusion-framework-module-http@5.0.6
+    -   @equinor/fusion-framework-module-msal@3.0.6
 
 ## 7.1.2
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-app@5.2.3
-  - @equinor/fusion-framework@7.0.17
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-app@5.2.3
+    -   @equinor/fusion-framework@7.0.17
 
 ## 7.1.1
 
 ### Patch Changes
 
-- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-  conflicts of `@types/react` made random outcomes when using `yarn`
+    conflicts of `@types/react` made random outcomes when using `yarn`
 
-  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
-- Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
-  - @equinor/fusion-framework-module@4.2.3
-  - @equinor/fusion-framework-module-event@4.0.4
-  - @equinor/fusion-framework-module-http@5.0.5
-  - @equinor/fusion-framework-module-msal@3.0.5
-  - @equinor/fusion-framework-module-app@5.2.2
-  - @equinor/fusion-framework@7.0.16
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
+    -   @equinor/fusion-framework-module@4.2.3
+    -   @equinor/fusion-framework-module-event@4.0.4
+    -   @equinor/fusion-framework-module-http@5.0.5
+    -   @equinor/fusion-framework-module-msal@3.0.5
+    -   @equinor/fusion-framework-module-app@5.2.2
+    -   @equinor/fusion-framework@7.0.16
 
 ## 7.1.0
 
 ### Minor Changes
 
-- [#1093](https://github.com/equinor/fusion-framework/pull/1093) [`0a785d5c`](https://github.com/equinor/fusion-framework/commit/0a785d5c339ceec7cbbe2a6ff9e16053c86ce511) Thanks [@odinr](https://github.com/odinr)! - Allow options for `config.useFrameworkServiceClient`
+-   [#1093](https://github.com/equinor/fusion-framework/pull/1093) [`0a785d5c`](https://github.com/equinor/fusion-framework/commit/0a785d5c339ceec7cbbe2a6ff9e16053c86ce511) Thanks [@odinr](https://github.com/odinr)! - Allow options for `config.useFrameworkServiceClient`
 
-  Add optional configuration when using a predefined client from service discovery
+    Add optional configuration when using a predefined client from service discovery
 
-  **Changed interface**
+    **Changed interface**
 
-  ```ts
-  type useFrameworkServiceClient = (
-    service_name: string,
-    /** new, allows customize registration of http client from service discovery */
-    options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
-  )
-  ```
+    ```ts
+    type useFrameworkServiceClient = (
+      service_name: string,
+      /** new, allows customize registration of http client from service discovery */
+      options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
+    )
+    ```
 
-  **example**
+    **example**
 
-  ```ts
-  config.useFrameworkServiceClient("some_fusion_service", {
-    onCreate(client: IHttpClient) {
-      /** make creation of http client add default request header */
-      client.requestHandler.setHeader("api-version", "2.0");
-    },
-  });
-  ```
+    ```ts
+    config.useFrameworkServiceClient('some_fusion_service', {
+        onCreate(client: IHttpClient) {
+            /** make creation of http client add default request header */
+            client.requestHandler.setHeader('api-version', '2.0');
+        },
+    });
+    ```
 
 ### Patch Changes
 
-- Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
-  - @equinor/fusion-framework-module-event@4.0.3
-  - @equinor/fusion-framework-module@4.2.2
+-   Updated dependencies [[`7aee3cf0`](https://github.com/equinor/fusion-framework/commit/7aee3cf01764a272e7b0a09045ff674575b15035), [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c)]:
+    -   @equinor/fusion-framework-module-event@4.0.3
+    -   @equinor/fusion-framework-module@4.2.2
 
 ## 7.0.16
 
 ### Patch Changes
 
-- [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
-- Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-  - @equinor/fusion-framework@7.0.15
-  - @equinor/fusion-framework-module-app@5.2.1
-  - @equinor/fusion-framework-module-event@4.0.2
-  - @equinor/fusion-framework-module-http@5.0.4
-  - @equinor/fusion-framework-module@4.2.1
-  - @equinor/fusion-framework-module-msal@3.0.4
+-   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+    -   @equinor/fusion-framework@7.0.15
+    -   @equinor/fusion-framework-module-app@5.2.1
+    -   @equinor/fusion-framework-module-event@4.0.2
+    -   @equinor/fusion-framework-module-http@5.0.4
+    -   @equinor/fusion-framework-module@4.2.1
+    -   @equinor/fusion-framework-module-msal@3.0.4
 
 ## 7.0.15
 
 ### Patch Changes
 
-- [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+-   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-  - align all versions of typescript
-  - update types to build
-    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+    -   align all versions of typescript
+    -   update types to build
+        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
-- Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-  - @equinor/fusion-framework-module@4.2.0
-  - @equinor/fusion-framework@7.0.14
-  - @equinor/fusion-framework-module-app@5.1.3
-  - @equinor/fusion-framework-module-http@5.0.3
-  - @equinor/fusion-framework-module-msal@3.0.3
+-   Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
+    -   @equinor/fusion-framework-module@4.2.0
+    -   @equinor/fusion-framework@7.0.14
+    -   @equinor/fusion-framework-module-app@5.1.3
+    -   @equinor/fusion-framework-module-http@5.0.3
+    -   @equinor/fusion-framework-module-msal@3.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -432,29 +439,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **module-app:** update deps ([3e956c4](https://github.com/equinor/fusion-framework/commit/3e956c4b66b012988e68c2f4633ccdb692dc9bc9))
+-   **module-app:** update deps ([3e956c4](https://github.com/equinor/fusion-framework/commit/3e956c4b66b012988e68c2f4633ccdb692dc9bc9))
 
 ## 5.0.0 (2023-01-04)
 
 ### ⚠ BREAKING CHANGES
 
-- **module-app:** manifest prop rename
+-   **module-app:** manifest prop rename
 
 ### Bug Fixes
 
-- **module-app:** rename `appKey` to `key` ([9ee97b1](https://github.com/equinor/fusion-framework/commit/9ee97b149b9167a3747da371de76490e287d9514))
+-   **module-app:** rename `appKey` to `key` ([9ee97b1](https://github.com/equinor/fusion-framework/commit/9ee97b149b9167a3747da371de76490e287d9514))
 
 ## 4.0.20 (2022-12-21)
 
 ### Bug Fixes
 
-- import export of app types ([6adeabe](https://github.com/equinor/fusion-framework/commit/6adeabecd1d261f3fda18a1cf93e5be4e374cbb5))
+-   import export of app types ([6adeabe](https://github.com/equinor/fusion-framework/commit/6adeabecd1d261f3fda18a1cf93e5be4e374cbb5))
 
 ## 4.0.19 (2022-12-19)
 
 ### Bug Fixes
 
-- **react-app:** check if manifest is provided in env ([e41b6d1](https://github.com/equinor/fusion-framework/commit/e41b6d1c9006f7d55933a6375861d96126498015))
+-   **react-app:** check if manifest is provided in env ([e41b6d1](https://github.com/equinor/fusion-framework/commit/e41b6d1c9006f7d55933a6375861d96126498015))
 
 ## 4.0.18 (2022-12-16)
 
@@ -520,7 +527,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **app:** adding type contextModule in event details for app package ([abea386](https://github.com/equinor/fusion-framework/commit/abea386c76c6297934a236d1bba9c71a12425065))
+-   **app:** adding type contextModule in event details for app package ([abea386](https://github.com/equinor/fusion-framework/commit/abea386c76c6297934a236d1bba9c71a12425065))
 
 ## [4.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@4.0.1...@equinor/fusion-framework-app@4.0.2) (2022-12-05)
 
@@ -666,7 +673,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- **framework:** implement module-app ([dc917f0](https://github.com/equinor/fusion-framework/commit/dc917f019da852fbd93eaf6ed7bc4a3a7e6f0d68))
+-   **framework:** implement module-app ([dc917f0](https://github.com/equinor/fusion-framework/commit/dc917f019da852fbd93eaf6ed7bc4a3a7e6f0d68))
 
 ## 3.0.10 (2022-11-01)
 
@@ -680,7 +687,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **react-app:** :fire: update render env args with typing ([06bd3c7](https://github.com/equinor/fusion-framework/commit/06bd3c75218981f54216f76d3b7a667110dac3ae))
+-   **react-app:** :fire: update render env args with typing ([06bd3c7](https://github.com/equinor/fusion-framework/commit/06bd3c75218981f54216f76d3b7a667110dac3ae))
 
 ## [3.0.7](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@3.0.6...@equinor/fusion-framework-app@3.0.7) (2022-10-21)
 
@@ -710,28 +717,28 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **app:** update interfaces ([9b833bf](https://github.com/equinor/fusion-framework/commit/9b833bf53ea0cdcb8d4dfec7da1c42440c6ebe2d))
+-   **app:** update interfaces ([9b833bf](https://github.com/equinor/fusion-framework/commit/9b833bf53ea0cdcb8d4dfec7da1c42440c6ebe2d))
 
 ## [3.0.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@2.0.0...@equinor/fusion-framework-app@3.0.0) (2022-09-27)
 
 ### ⚠ BREAKING CHANGES
 
-- **module-service-discovery:** order of arguments for configuring client in service discovery
+-   **module-service-discovery:** order of arguments for configuring client in service discovery
 
 ### Bug Fixes
 
-- **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
-- update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
+-   **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
+-   update registering of configuration ([20942ce](https://github.com/equinor/fusion-framework/commit/20942ce1c7a853ea3b55c031a242646e378db8c9))
 
 ## 2.0.0 (2022-09-26)
 
 ### ⚠ BREAKING CHANGES
 
-- **module-service-discovery:** order of arguments for configuring client in service discovery
+-   **module-service-discovery:** order of arguments for configuring client in service discovery
 
 ### Bug Fixes
 
-- **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
+-   **module-service-discovery:** change order of arguments ([a1240c6](https://github.com/equinor/fusion-framework/commit/a1240c6360da5e919623bc31a51ced4c5ce1c2e3))
 
 ## 1.0.7 (2022-09-20)
 
@@ -745,19 +752,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
+-   update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
 
 ## [1.0.4](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@1.0.3...@equinor/fusion-framework-app@1.0.4) (2022-09-13)
 
 ### Bug Fixes
 
-- update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
+-   update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
 
 ## [1.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@1.0.2...@equinor/fusion-framework-app@1.0.3) (2022-09-13)
 
 ### Bug Fixes
 
-- update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
+-   update typings and linting ([7d2056b](https://github.com/equinor/fusion-framework/commit/7d2056b7866850b7efdfd4567385b5dbbcdf8761))
 
 ## [1.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@1.0.1...@equinor/fusion-framework-app@1.0.2) (2022-09-13)
 
@@ -779,29 +786,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### ⚠ BREAKING CHANGES
 
-- **app:** config is now object
+-   **app:** config is now object
 
 ### Features
 
-- **app:** update init ([528d77f](https://github.com/equinor/fusion-framework/commit/528d77f30430242d05bf9a7fbed3ea68171df39d))
+-   **app:** update init ([528d77f](https://github.com/equinor/fusion-framework/commit/528d77f30430242d05bf9a7fbed3ea68171df39d))
 
 ### Bug Fixes
 
-- **app:** expect fusion modules ([301fcab](https://github.com/equinor/fusion-framework/commit/301fcab23e857bf87440b4212513a7eea2641aea))
+-   **app:** expect fusion modules ([301fcab](https://github.com/equinor/fusion-framework/commit/301fcab23e857bf87440b4212513a7eea2641aea))
 
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@0.2.3...@equinor/fusion-framework-app@1.0.0-alpha.0) (2022-09-12)
 
 ### ⚠ BREAKING CHANGES
 
-- **app:** config is now object
+-   **app:** config is now object
 
 ### Features
 
-- **app:** update init ([528d77f](https://github.com/equinor/fusion-framework/commit/528d77f30430242d05bf9a7fbed3ea68171df39d))
+-   **app:** update init ([528d77f](https://github.com/equinor/fusion-framework/commit/528d77f30430242d05bf9a7fbed3ea68171df39d))
 
 ### Bug Fixes
 
-- **app:** expect fusion modules ([301fcab](https://github.com/equinor/fusion-framework/commit/301fcab23e857bf87440b4212513a7eea2641aea))
+-   **app:** expect fusion modules ([301fcab](https://github.com/equinor/fusion-framework/commit/301fcab23e857bf87440b4212513a7eea2641aea))
 
 ## 0.2.3 (2022-09-05)
 
@@ -819,23 +826,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### ⚠ BREAKING CHANGES
 
-- rename fetch
+-   rename fetch
 
-- fix(module-service-discovery): update http client consumer
+-   fix(module-service-discovery): update http client consumer
 
-- build: update allowed branches
+-   build: update allowed branches
 
-- build: add conventional commit
+-   build: add conventional commit
 
-- build: use conventionalcommits
+-   build: use conventionalcommits
 
-- build(module-http): push major
+-   build(module-http): push major
 
-- build: update deps
+-   build: update deps
 
 ### Features
 
-- rename fetch method ([#226](https://github.com/equinor/fusion-framework/issues/226)) ([f02df7c](https://github.com/equinor/fusion-framework/commit/f02df7cdd2b9098b0da49c5ea56ac3b6a17e9e32))
+-   rename fetch method ([#226](https://github.com/equinor/fusion-framework/issues/226)) ([f02df7c](https://github.com/equinor/fusion-framework/commit/f02df7cdd2b9098b0da49c5ea56ac3b6a17e9e32))
 
 ## [0.1.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-app@0.1.1...@equinor/fusion-framework-app@0.1.2) (2022-08-23)
 
@@ -845,10 +852,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **app:** fix typing of configurator ([5b71bea](https://github.com/equinor/fusion-framework/commit/5b71beadb34d3dc26bde23d93409008f2292e42b))
+-   **app:** fix typing of configurator ([5b71bea](https://github.com/equinor/fusion-framework/commit/5b71beadb34d3dc26bde23d93409008f2292e42b))
 
 # 0.1.0 (2022-08-22)
 
 ### Features
 
-- **app:** create base module for fusion apps ([9bd3f2f](https://github.com/equinor/fusion-framework/commit/9bd3f2f1ff51d18f2a8989f2d2a1f5045720b7e0))
+-   **app:** create base module for fusion apps ([9bd3f2f](https://github.com/equinor/fusion-framework/commit/9bd3f2f1ff51d18f2a8989f2d2a1f5045720b7e0))
