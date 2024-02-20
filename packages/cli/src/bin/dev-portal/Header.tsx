@@ -12,7 +12,7 @@ import { add, menu, tag } from '@equinor/eds-icons';
 import { styled } from 'styled-components';
 
 import { PersonSideSheet } from './PersonSideSheet';
-import { PersonAvatarElement } from '@equinor/fusion-wc-person';
+import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement;
 
 Icon.add({ menu, add, tag });
@@ -60,9 +60,9 @@ export const Header = () => {
                         variant="ghost_icon"
                     >
                         <fwc-person-avatar
+                            size="small"
                             azureId={azureId}
                             clickable={false}
-                            size="small"
                         ></fwc-person-avatar>
                     </Button>
                 </TopBar.Actions>
