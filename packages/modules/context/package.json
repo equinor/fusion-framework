@@ -8,6 +8,10 @@
             "import": "./dist/esm/index.js",
             "types": "./dist/types/index.d.ts"
         },
+        "./errors.js": {
+            "import": "./dist/esm/errors.js",
+            "types": "./dist/types/errors.d.ts"
+        },
         "./package.json": "./package.json",
         "./utils": {
             "import": "./dist/esm/utils/index.js",
@@ -22,6 +26,9 @@
             ],
             "utils": [
                 "dist/types/utils/index.d.ts"
+            ],
+            "./errors.js": [
+                ".dist/types/errors.d.ts"
             ]
         }
     },

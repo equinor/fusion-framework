@@ -406,7 +406,15 @@ export class ContextProvider implements IContextProvider {
                 /* @ts-ignore */
                 this.#contextParameterFn({ search, type: this.#contextType }),
             )
-            .pipe(map((x) => x.value));
+            .pipe(
+                catchError((err) => {
+                    if (err.name === 'QueryClientError') {
+                        throw err.cause;
+                    }
+                    throw err;
+                }),
+                map((x) => x.value),
+            );
 
         return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
     }

@@ -219,13 +219,13 @@ importers:
   cookbooks/app-react-context:
     dependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.1.0
+        specifier: workspace:^
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.3
+        specifier: workspace:^
         version: link:../../packages/react/app
       '@equinor/fusion-framework-react-module-context':
-        specifier: ^6.0.10
+        specifier: workspace:^
         version: link:../../packages/react/modules/context
       '@equinor/fusion-observable':
         specifier: ^8.1.0
@@ -481,8 +481,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: ^2.5.1
-        version: 2.5.1
+        specifier: ^2.6.0
+        version: 2.6.0
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.1
@@ -1143,8 +1143,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: ^2.5.1
-        version: 2.5.1
+        specifier: ^2.6.0
+        version: 2.6.0
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.50
@@ -3944,8 +3944,8 @@ packages:
       '@lit-labs/task': 3.1.0
       lit: 3.0.2
 
-  /@equinor/fusion-wc-person@2.5.1:
-    resolution: {integrity: sha512-wIARM3jSt58dm2q5LEyzkv4xk1I0umoYXWEspE4RxNCvUyIbikJqbbhHf+EpLvVYEJeBuG+grm+6FhCgJNpUVA==}
+  /@equinor/fusion-wc-person@2.6.0:
+    resolution: {integrity: sha512-CGgPdp38RN06Nj+yAlEQPnFp01CFvwO4j2YLvz5cudSXX/laG25EcndhgWKuRzRp6CqV2GdJtuVk3mylwko5xA==}
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.0
       '@equinor/fusion-wc-badge': 1.3.0
@@ -3960,7 +3960,7 @@ packages:
       '@floating-ui/dom': 1.6.3
       '@lit-labs/observers': 2.0.2
       '@lit-labs/task': 3.1.0
-      lit: 3.0.2
+      lit: 3.1.2
 
   /@equinor/fusion-wc-picture@3.1.0:
     resolution: {integrity: sha512-3RQmbd0ZBJ4IBI93EP5e7P535qCG8BMKYkEAi67O9vKPOppzijtRenrdKQKHLAZ7jBtW7bRPTsW8dl6hyunjig==}
@@ -11486,7 +11486,6 @@ packages:
       '@lit/reactive-element': 2.0.4
       lit-element: 4.0.4
       lit-html: 3.1.2
-    dev: true
 
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
