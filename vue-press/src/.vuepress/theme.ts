@@ -5,7 +5,7 @@ import sidebar from './sidebar';
 const navbar: NavbarOptions = [
   {
     text: 'Guide',
-    link: '/guide/app'
+    link: '/guide/app/'
   },
   {
     text: 'Modules',
