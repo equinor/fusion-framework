@@ -76,16 +76,12 @@ const processError = (err: Error): ContextResult => {
         ];
     }
 
-    if (err.name === '') {
-        return [
-            singleItem({
-                title: err.name,
-                isDisabled: true,
-            }),
-        ];
-    }
-
-    return [] as ContextResult;
+    return [
+        singleItem({
+            title: 'Unhandled exception occured',
+            isDisabled: true,
+        }),
+    ];
 };
 
 /**
