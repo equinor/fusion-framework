@@ -115,8 +115,8 @@ importers:
         specifier: ~31.0.3
         version: 31.0.3
       '@ag-grid-community/react':
-        specifier: ~31.0.3
-        version: 31.0.3(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ~31.1.1
+        version: 31.1.1(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
@@ -1636,10 +1636,10 @@ packages:
     resolution: {integrity: sha512-xZEMMIp3zyLsFXg3p1xF62bhd5v2Sl5L3wou+GOdfNVHDLCN8TyPCXLpPgMzP4lHVsEQ6zLIxYTN+X3Vo8xBYQ==}
     dev: false
 
-  /@ag-grid-community/react@31.0.3(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ApaxldsvaaeqRTPFo9yhYLr6v9wBPEY1y3EmNZA3KCS2AosbxxkLSZ681jpBGl7hrURC6ntTvwfb3LIFDtuYrg==}
+  /@ag-grid-community/react@31.1.1(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-b2htrkndkCx86Ze0LppG+Oc7em/19nMKvzaLzi0hO6lFGueL+xW24ALLu2nSyqsgAePSZLZpUNyM3BnhrTcFwQ==}
     peerDependencies:
-      '@ag-grid-community/core': ~31.0.3
+      '@ag-grid-community/core': 31.1.1
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
     dependencies:
