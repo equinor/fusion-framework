@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.26
+
+### Patch Changes
+
+-   Updated dependencies [[`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2), [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f), [`b7504d1`](https://github.com/equinor/fusion-framework/commit/b7504d1352a0107383f8f76f9ed7f77744d1f99b)]:
+    -   @equinor/fusion-framework-cli@9.8.3
+
 ## 4.0.25
 
 ### Patch Changes
