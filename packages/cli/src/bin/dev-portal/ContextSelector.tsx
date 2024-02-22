@@ -71,6 +71,7 @@ const processError = (err: Error): ContextResult => {
                 id: error.name,
                 title: error.title,
                 subTitle: error.description,
+                graphic: 'error_outlined',
                 isDisabled: true,
             }),
         ];
@@ -78,7 +79,9 @@ const processError = (err: Error): ContextResult => {
 
     return [
         singleItem({
-            title: 'Unhandled exception occured',
+            title: 'Unexpected error occured',
+            subTitle: 'Please try again or report the issue in Services@Equinor',
+            graphic: 'error_outlined',
             isDisabled: true,
         }),
     ];
@@ -171,6 +174,7 @@ const useQueryContext = (): [
                         singleItem({
                             id: 'no-results',
                             title: 'No results found',
+                            graphic: 'info_circle',
                             isDisabled: true,
                         }),
                     ];
