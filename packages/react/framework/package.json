@@ -4,37 +4,36 @@
     "description": "",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js",
-        "./app": "./dist/esm/app/index.js",
-        "./feature-flag": "./dist/esm/feature-flag/index.js",
-        "./context": "./dist/esm/context/index.js",
-        "./hooks": "./dist/esm/hooks/index.js",
-        "./http": "./dist/esm/http/index.js",
-        "./signalr": "./dist/esm/signalr/index.js"
-    },
-    "types": "dist/types/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "app": [
-                "dist/types/app/index.d.ts"
-            ],
-            "feature-flag": [
-                "dist/types/feature-flag/index.d.ts"
-            ],
-            "context": [
-                "dist/types/context/index.d.ts"
-            ],
-            "hooks": [
-                "dist/types/hooks/index.d.ts"
-            ],
-            "http": [
-                "dist/types/http/index.d.ts"
-            ],
-            "signalr": [
-                "dist/types/signalr/index.d.ts"
-            ]
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        },
+        "./app": {
+            "import": "./dist/esm/app/index.js",
+            "types": "./dist/types/app/index.d.ts"
+        },
+        "./feature-flag": {
+            "import": "./dist/esm/feature-flag/index.js",
+            "types": "./dist/types/feature-flag/index.d.ts"
+        },
+        "./context": {
+            "import": "./dist/esm/context/index.js",
+            "types": "./dist/types/context/index.d.ts"
+        },
+        "./hooks": {
+            "import": "./dist/esm/hooks/index.js",
+            "types": "./dist/types/hooks/index.d.ts"
+        },
+        "./http": {
+            "import": "./dist/esm/http/index.js",
+            "types": "./dist/types/http/index.d.ts"
+        },
+        "./signalr": {
+            "import": "./dist/esm/signalr/index.js",
+            "types": "./dist/types/signalr/index.d.ts"
         }
     },
+    "types": "dist/types/index.d.ts",
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"
