@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
-import { PersonListItem } from '@equinor/fusion-react-person';
+import PersonListItem from '@equinor/fusion-wc-person/list-item';
+PersonListItem;
 
 import { Divider } from '@equinor/eds-core-react';
 
@@ -48,7 +49,7 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
             <SideSheet.Content>
                 <section style={{ paddingLeft: '0.5em' }}>
                     <div>
-                        <PersonListItem azureId={azureId}></PersonListItem>
+                        <fwc-person-list-item azureId={azureId}></fwc-person-list-item>
                     </div>
                     <Divider></Divider>
                     <Component
