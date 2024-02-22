@@ -9,8 +9,8 @@
             "types": "./dist/types/index.d.ts"
         },
         "./bookmark": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
+            "import": "./dist/esm/bookmark/index.js",
+            "types": "./dist/types/bookmark/index.d.ts"
         },
         "./context": {
             "import": "./dist/esm/context/index.js",
@@ -42,6 +42,34 @@
         }
     },
     "types": "./dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "bookmark": [
+                "dist/types/bookmark/index.d.ts"
+            ],
+            "context": [
+                "dist/types/context/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
+            ],
+            "framework": [
+                "dist/types/framework/index.d.ts"
+            ],
+            "http": [
+                "dist/types/http/index.d.ts"
+            ],
+            "msal": [
+                "dist/types/msal/index.d.ts"
+            ],
+            "navigation": [
+                "dist/types/navigation/index.d.ts"
+            ],
+            "widget": [
+                "dist/types/widget/index.d.ts"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"

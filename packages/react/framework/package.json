@@ -34,6 +34,28 @@
         }
     },
     "types": "dist/types/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "app": [
+                "dist/types/app/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
+            ],
+            "context": [
+                "dist/types/context/index.d.ts"
+            ],
+            "hooks": [
+                "dist/types/hooks/index.d.ts"
+            ],
+            "http": [
+                "dist/types/http/index.d.ts"
+            ],
+            "signalr": [
+                "dist/types/signalr/index.d.ts"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"
