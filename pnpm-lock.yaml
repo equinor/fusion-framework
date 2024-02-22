@@ -109,14 +109,14 @@ importers:
   cookbooks/app-react-ag-grid:
     dependencies:
       '@ag-grid-community/client-side-row-model':
-        specifier: ~31.0.3
-        version: 31.0.3
+        specifier: ~31.1.1
+        version: 31.1.1
       '@ag-grid-community/core':
-        specifier: ~31.0.3
-        version: 31.0.3
+        specifier: ~31.1.1
+        version: 31.1.1
       '@ag-grid-community/react':
-        specifier: ~31.0.3
-        version: 31.0.3(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ~31.1.1
+        version: 31.1.1(@ag-grid-community/core@31.1.1)(react-dom@18.2.0)(react@18.2.0)
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
@@ -678,8 +678,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~31.0.3
-        version: 31.0.3
+        specifier: ~31.1.1
+        version: 31.1.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1626,24 +1626,24 @@ packages:
       tunnel: 0.0.6
     dev: true
 
-  /@ag-grid-community/client-side-row-model@31.0.3:
-    resolution: {integrity: sha512-GN5z9iRDefIzMShoHV9zfZWCtqlfyE4Ai4m0tlVmegMOOFeolgkvmcyO8RwlAXX5KPpEfSoC86JVPOzkgHegWA==}
+  /@ag-grid-community/client-side-row-model@31.1.1:
+    resolution: {integrity: sha512-KBSPaEJ1q97xooJd7U6W8PUfzUDecnsvE+Y05Xg/s6i61fLKyDTxDVJB/kETxdST0+T8FgjFMaPjY0hAZBOhWg==}
     dependencies:
-      '@ag-grid-community/core': 31.0.3
+      '@ag-grid-community/core': 31.1.1
     dev: false
 
-  /@ag-grid-community/core@31.0.3:
-    resolution: {integrity: sha512-xZEMMIp3zyLsFXg3p1xF62bhd5v2Sl5L3wou+GOdfNVHDLCN8TyPCXLpPgMzP4lHVsEQ6zLIxYTN+X3Vo8xBYQ==}
+  /@ag-grid-community/core@31.1.1:
+    resolution: {integrity: sha512-WFN3yXpFR0uMJQZak6x4kzLl7nJPrrorUWf/KWH4ToP6PMZcc6cKT3jge3bJ0SBkzs2m7oQGnmi8rfTaHuXI4Q==}
     dev: false
 
-  /@ag-grid-community/react@31.0.3(@ag-grid-community/core@31.0.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ApaxldsvaaeqRTPFo9yhYLr6v9wBPEY1y3EmNZA3KCS2AosbxxkLSZ681jpBGl7hrURC6ntTvwfb3LIFDtuYrg==}
+  /@ag-grid-community/react@31.1.1(@ag-grid-community/core@31.1.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-b2htrkndkCx86Ze0LppG+Oc7em/19nMKvzaLzi0hO6lFGueL+xW24ALLu2nSyqsgAePSZLZpUNyM3BnhrTcFwQ==}
     peerDependencies:
-      '@ag-grid-community/core': ~31.0.3
+      '@ag-grid-community/core': 31.1.1
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@ag-grid-community/core': 31.0.3
+      '@ag-grid-community/core': 31.1.1
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -1653,10 +1653,10 @@ packages:
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
     dev: false
 
-  /@ag-grid-enterprise/core@31.0.3:
-    resolution: {integrity: sha512-I4P6XHjC8F8JH5UeqIMA4ivq1t1sASoykUzoS6GFmcmR5YOpmsLhDxo1dyD30lB8LCDQJ1zqVxFTnfCBB25y2w==}
+  /@ag-grid-enterprise/core@31.1.1:
+    resolution: {integrity: sha512-jbLXQqfgZCTh1FQ6Dbsbmn/+EWAhPu+4stECLxdP3zVXPxJh1vOw717GjGQrduo5jWWdncj7mC9zOMSLMyzW1Q==}
     dependencies:
-      '@ag-grid-community/core': 31.0.3
+      '@ag-grid-community/core': 31.1.1
     dev: false
 
   /@ampproject/remapping@2.2.1:
@@ -2902,7 +2902,7 @@ packages:
     resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.14.0
+      regenerator-runtime: 0.14.1
 
   /@babel/template@7.22.15:
     resolution: {integrity: sha512-QPErUVm4uyJa60rkI73qneDacvdvzxshT3kksGqlGWYdOTIUOwJ7RDUL8sGqslY1uXWSL6xMFKEXDS3ox2uF0w==}
@@ -4699,7 +4699,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       '@emotion/hash': 0.8.0
       '@material-ui/types': 5.1.0(@types/react@18.2.50)
       '@material-ui/utils': 4.11.3(react-dom@18.2.0)(react@18.2.0)
@@ -4736,7 +4736,7 @@ packages:
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -8717,7 +8717,7 @@ packages:
   /css-vendor@2.0.8:
     resolution: {integrity: sha512-x9Aq0XTInxrkuFeHKbYC7zWY8ai7qJ04Kxd9MnvbC1uO5DagxoHQjm4JvG+vCdXOoFtCjbL2XSZfxmoYa9uQVQ==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       is-in-browser: 1.1.3
 
   /css-what@6.1.0:
@@ -11234,53 +11234,53 @@ packages:
   /jss-plugin-camel-case@10.10.0:
     resolution: {integrity: sha512-z+HETfj5IYgFxh1wJnUAU8jByI48ED+v0fuTuhKrPR+pRBYS2EDwbusU8aFOpCdYhtRc9zhN+PJ7iNE8pAWyPw==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       hyphenate-style-name: 1.0.4
       jss: 10.10.0
 
   /jss-plugin-default-unit@10.10.0:
     resolution: {integrity: sha512-SvpajxIECi4JDUbGLefvNckmI+c2VWmP43qnEy/0eiwzRUsafg5DVSIWSzZe4d2vFX1u9nRDP46WCFV/PXVBGQ==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       jss: 10.10.0
 
   /jss-plugin-global@10.10.0:
     resolution: {integrity: sha512-icXEYbMufiNuWfuazLeN+BNJO16Ge88OcXU5ZDC2vLqElmMybA31Wi7lZ3lf+vgufRocvPj8443irhYRgWxP+A==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       jss: 10.10.0
 
   /jss-plugin-nested@10.10.0:
     resolution: {integrity: sha512-9R4JHxxGgiZhurDo3q7LdIiDEgtA1bTGzAbhSPyIOWb7ZubrjQe8acwhEQ6OEKydzpl8XHMtTnEwHXCARLYqYA==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       jss: 10.10.0
       tiny-warning: 1.0.3
 
   /jss-plugin-props-sort@10.10.0:
     resolution: {integrity: sha512-5VNJvQJbnq/vRfje6uZLe/FyaOpzP/IH1LP+0fr88QamVrGJa0hpRRyAa0ea4U/3LcorJfBFVyC4yN2QC73lJg==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       jss: 10.10.0
 
   /jss-plugin-rule-value-function@10.10.0:
     resolution: {integrity: sha512-uEFJFgaCtkXeIPgki8ICw3Y7VMkL9GEan6SqmT9tqpwM+/t+hxfMUdU4wQ0MtOiMNWhwnckBV0IebrKcZM9C0g==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       jss: 10.10.0
       tiny-warning: 1.0.3
 
   /jss-plugin-vendor-prefixer@10.10.0:
     resolution: {integrity: sha512-UY/41WumgjW8r1qMCO8l1ARg7NHnfRVWRhZ2E2m0DMYsr2DD91qIXLyNhiX83hHswR7Wm4D+oDYNC1zWCJWtqg==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       css-vendor: 2.0.8
       jss: 10.10.0
 
   /jss@10.10.0:
     resolution: {integrity: sha512-cqsOTS7jqPsPMjtKYDUpdFC0AbhYFLTcuGRqymgmdJIeQ8cH7+AgX7YSgQy79wXloZq2VvATYxUOUQEvS1V/Zw==}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
       csstype: 3.1.3
       is-in-browser: 1.1.3
       tiny-warning: 1.0.3
@@ -13290,6 +13290,9 @@ packages:
 
   /regenerator-runtime@0.14.0:
     resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
+
+  /regenerator-runtime@0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
 
   /regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==}
