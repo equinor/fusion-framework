@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.8.3
+
+### Patch Changes
+
+-   [#1878](https://github.com/equinor/fusion-framework/pull/1878) [`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add error icon for errors
+
+    -   Add info icon for no result
+
+-   [#1875](https://github.com/equinor/fusion-framework/pull/1875) [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Show message when unhandled error occurs in context selector
+
+-   [#1867](https://github.com/equinor/fusion-framework/pull/1867) [`b7504d1`](https://github.com/equinor/fusion-framework/commit/b7504d1352a0107383f8f76f9ed7f77744d1f99b) Thanks [@eikeland](https://github.com/eikeland)! - Removes person react components from cli
+
 ## 9.8.2
 
 ### Patch Changes
