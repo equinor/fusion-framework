@@ -481,8 +481,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^2.6.1
+        version: 2.6.1
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.1
@@ -1140,8 +1140,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^2.6.1
+        version: 2.6.1
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.50
@@ -3941,6 +3941,25 @@ packages:
       '@lit-labs/observers': 2.0.2
       '@lit-labs/task': 3.1.0
       lit: 3.1.2
+    dev: false
+
+  /@equinor/fusion-wc-person@2.6.1:
+    resolution: {integrity: sha512-JSKmOdlFjG+XoSBD1SIjy6d/7mEREuXIeG3muurI3EeYbtbLci6uTzpDEbN34OFN6kO6T3ql0ze5/e06CyIEgg==}
+    dependencies:
+      '@equinor/fusion-wc-avatar': 3.2.0
+      '@equinor/fusion-wc-badge': 1.3.0
+      '@equinor/fusion-wc-button': 2.4.0
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-icon': 2.3.0
+      '@equinor/fusion-wc-list': 1.1.1
+      '@equinor/fusion-wc-searchable-dropdown': 3.7.1
+      '@equinor/fusion-wc-skeleton': 2.1.0
+      '@equinor/fusion-wc-textinput': 1.1.0
+      '@equinor/fusion-web-theme': 0.1.7
+      '@floating-ui/dom': 1.6.3
+      '@lit-labs/observers': 2.0.2
+      '@lit-labs/task': 3.1.0
+      lit: 3.1.2
 
   /@equinor/fusion-wc-picture@3.1.0:
     resolution: {integrity: sha512-3RQmbd0ZBJ4IBI93EP5e7P535qCG8BMKYkEAi67O9vKPOppzijtRenrdKQKHLAZ7jBtW7bRPTsW8dl6hyunjig==}
@@ -4955,7 +4974,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
       '@material/radio': 14.0.0-canary.53b3cad2f.0
-      lit: 2.8.0
+      lit: 2.7.0
       tslib: 2.6.2
 
   /@material/mwc-ripple@0.27.0:
@@ -4964,7 +4983,7 @@ packages:
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-textfield@0.27.0:
