@@ -16,6 +16,7 @@ import { AppBundleState, AppBundleStateInitial } from './types';
 export const createReducer = (value: AppBundleStateInitial) =>
     makeReducer({ ...value, status: new Set() } as AppBundleState, (builder) =>
         builder
+            // update or set manifest
             .addCase(actions.setManifest, (state, action) => {
                 if (action.meta.update) {
                     state.manifest = { ...state.manifest, ...action.payload };
@@ -32,11 +33,11 @@ export const createReducer = (value: AppBundleStateInitial) =>
             .addCase(actions.setInstance, (state, action) => {
                 state.instance = action.payload;
             })
-            /** mark status as loading {{type}} */
+            // add status which indicates that a request is in progress
             .addMatcher(isRequestAction, (state, action) => {
                 state.status.add(actionBaseType(action));
             })
-            /** clear status {{type}} */
+            // remove status when a request is complete
             .addMatcher(isCompleteAction, (state, action) => {
                 state.status.delete(actionBaseType(action));
             }),
