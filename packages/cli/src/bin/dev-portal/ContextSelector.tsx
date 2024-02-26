@@ -79,7 +79,7 @@ const processError = (err: Error): ContextResult => {
 
     return [
         singleItem({
-            title: 'Unexpected error occured',
+            title: 'Unexpected error occurred',
             subTitle: 'Please try again or report the issue in Services@Equinor',
             graphic: 'error_outlined',
             isDisabled: true,
