@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module-navigation": "workspace:^",
-        "@equinor/fusion-react-person": "^0.7.0",
+        "@equinor/fusion-react-person": "^0.8.2",
         "@remix-run/router": "^1.8.0",
         "react-router-dom": "^6.16.0"
     }
