@@ -21,12 +21,20 @@ export const devAppConfig = async (env: ConfigExecuterEnv, app: Express) => {
             if (appConfig.widgets) {
                 appConfig.widgets.forEach((widget) => {
                     const serverPath = `/widgets/${widget.name}`;
+                    const entryPoint = `/bundle/widgets/${widget.name}`;
 
-                    app.get(serverPath, async (req, res) => {
-                        const entryPoint = path.resolve(
-                            env.root!,
-                            `${widget.assetPath}${widget.entryPoint}`,
-                        );
+                    const asset = path.resolve(
+                        env.root!,
+                        `${widget.assetPath}${widget.entryPoint}`,
+                    );
+
+                    app.get(entryPoint, async (_req, res) => {
+                        spinner.info(entryPoint + ' proxy file: ' + asset);
+                        res.setHeader('Content-Type', 'application/javascript');
+                        res.sendFile(asset);
+                    });
+
+                    app.get(serverPath, async (_req, res) => {
                         spinner.info(serverPath + ' proxy request: ' + entryPoint);
                         res.json({
                             widget,
