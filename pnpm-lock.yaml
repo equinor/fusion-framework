@@ -49,8 +49,8 @@ importers:
         specifier: ^18.6.0
         version: 18.6.0(@types/node@20.11.19)(typescript@5.2.2)
       '@commitlint/config-conventional':
-        specifier: ^18.1.0
-        version: 18.1.0
+        specifier: ^19.0.0
+        version: 19.0.0
       '@vitest/coverage-v8':
         specifier: ^1.2.2
         version: 1.2.2(vitest@1.2.2)
@@ -3198,10 +3198,11 @@ packages:
       - typescript
     dev: true
 
-  /@commitlint/config-conventional@18.1.0:
-    resolution: {integrity: sha512-8vvvtV3GOLEMHeKc8PjRL1lfP1Y4B6BG0WroFd9PJeRiOc3nFX1J0wlJenLURzl9Qus6YXVGWf+a/ZlbCKT3AA==}
+  /@commitlint/config-conventional@19.0.0:
+    resolution: {integrity: sha512-d8lPm+slPUdA8Zof2Y36RqAm/MmAYx/QQIEd2gKbpfLThQK1oYLs+0C3sMPD+4LIq2kh4cnbV9WnPA0P5sN8Ig==}
     engines: {node: '>=v18'}
     dependencies:
+      '@commitlint/types': 19.0.0
       conventional-changelog-conventionalcommits: 7.0.2
     dev: true
 
@@ -3340,6 +3341,13 @@ packages:
     engines: {node: '>=v18'}
     dependencies:
       chalk: 4.1.2
+    dev: true
+
+  /@commitlint/types@19.0.0:
+    resolution: {integrity: sha512-qLjLUdYXKi0TIavONrjBkxrElp7KguqDbvzIRbqTdJBV/cAAr8QEhHe1qUq8OcCM3gFWTlUrDz3ISZbkRoGsAg==}
+    engines: {node: '>=v18'}
+    dependencies:
+      chalk: 5.3.0
     dev: true
 
   /@emotion/hash@0.8.0:
