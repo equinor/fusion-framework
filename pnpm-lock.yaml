@@ -47,7 +47,7 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: ^18.6.0
-        version: 18.6.0(@types/node@20.11.19)(typescript@5.2.2)
+        version: 18.6.0(@types/node@20.11.23)(typescript@5.2.2)
       '@commitlint/config-conventional':
         specifier: ^18.1.0
         version: 18.1.0
@@ -77,7 +77,7 @@ importers:
         version: 15.2.2
       vitest:
         specifier: ^1.2.2
-        version: 1.2.2(@types/node@20.11.19)(happy-dom@13.3.8)
+        version: 1.2.2(@types/node@20.11.23)(happy-dom@13.3.8)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
         version: 0.11.1(vitest@1.2.2)
@@ -355,18 +355,27 @@ importers:
 
   cookbooks/app-react-people:
     dependencies:
+      '@equinor/eds-core-react':
+        specifier: ^0.36.0
+        version: 0.36.0(react-dom@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+      '@equinor/eds-icons':
+        specifier: ^0.21.0
+        version: 0.21.0
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
-        specifier: ^0.7.0
-        version: 0.7.0(react@18.2.0)
+        specifier: ^0.8.3
+        version: 0.8.3(react@18.2.0)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.9.0
       react-router-dom:
         specifier: ^6.16.0
         version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+      styled-components:
+        specifier: ^6.0.7
+        version: 6.1.8(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.8.0
@@ -481,8 +490,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.6.2
+        version: 2.6.2
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.1
@@ -1140,8 +1149,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.6.2
+        version: 2.6.2
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.50
@@ -1534,7 +1543,7 @@ importers:
         version: 9.0.1
       vitest:
         specifier: ^1.2.2
-        version: 1.2.2(@types/node@20.11.19)(happy-dom@13.3.8)
+        version: 1.2.2(@types/node@20.11.23)(happy-dom@13.3.8)
     devDependencies:
       '@types/react':
         specifier: ^18.2.50
@@ -1578,7 +1587,7 @@ importers:
     devDependencies:
       '@vuepress/bundler-vite':
         specifier: 2.0.0-rc.8
-        version: 2.0.0-rc.8(@types/node@20.11.19)(typescript@5.3.3)
+        version: 2.0.0-rc.8(@types/node@20.11.23)(typescript@5.3.3)
       '@vuepress/cli':
         specifier: 2.0.0-rc.8
         version: 2.0.0-rc.8(typescript@5.3.3)
@@ -3178,14 +3187,14 @@ packages:
       prettier: 2.8.8
     dev: false
 
-  /@commitlint/cli@18.6.0(@types/node@20.11.19)(typescript@5.2.2):
+  /@commitlint/cli@18.6.0(@types/node@20.11.23)(typescript@5.2.2):
     resolution: {integrity: sha512-FiH23cr9QG8VdfbmvJJZmdfHGVMCouOOAzoXZ3Cd7czGC52RbycwNt8YCI7SA69pAl+t30vh8LMaO/N+kcel6w==}
     engines: {node: '>=v18'}
     hasBin: true
     dependencies:
       '@commitlint/format': 18.6.0
       '@commitlint/lint': 18.6.0
-      '@commitlint/load': 18.6.0(@types/node@20.11.19)(typescript@5.2.2)
+      '@commitlint/load': 18.6.0(@types/node@20.11.23)(typescript@5.2.2)
       '@commitlint/read': 18.6.0
       '@commitlint/types': 18.6.0
       execa: 5.1.1
@@ -3256,7 +3265,7 @@ packages:
       '@commitlint/types': 18.6.0
     dev: true
 
-  /@commitlint/load@18.6.0(@types/node@20.11.19)(typescript@5.2.2):
+  /@commitlint/load@18.6.0(@types/node@20.11.23)(typescript@5.2.2):
     resolution: {integrity: sha512-RRssj7TmzT0bowoEKlgwg8uQ7ORXWkw7lYLsZZBMi9aInsJuGNLNWcMxJxRZbwxG3jkCidGUg85WmqJvRjsaDA==}
     engines: {node: '>=v18'}
     dependencies:
@@ -3266,7 +3275,7 @@ packages:
       '@commitlint/types': 18.6.0
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.2.2)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.11.19)(cosmiconfig@8.3.6)(typescript@5.2.2)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.11.23)(cosmiconfig@8.3.6)(typescript@5.2.2)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -3553,9 +3562,6 @@ packages:
     peerDependencies:
       '@types/react': "^17.0.0 ||\_^18.0.0"
       react: "^17.0.0 ||\_^18.0.0"
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
     dependencies:
       '@types/react': 18.2.50
       immer: 9.0.21
@@ -3660,11 +3666,11 @@ packages:
       - react
     dev: true
 
-  /@equinor/fusion-react-person@0.7.0(react@18.2.0):
-    resolution: {integrity: sha512-yvs6ubxwI5+ETongTsYPR8dO0JZ3f0r5ANdxnsRI910M7pjOuiYQP2VqxFPabQMJ5DV1yL+nYlJHjQe2rj9NhQ==}
+  /@equinor/fusion-react-person@0.8.3(react@18.2.0):
+    resolution: {integrity: sha512-TCC9kj7ZCSdlvXODLOm8OWVrvoDFjRQpVhZOsCDB30lEFYoSR8RiGkZK4jUmMzIQWPQmDW7MOs74npOWOqBxNg==}
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-person': 2.6.0
+      '@equinor/fusion-wc-person': 2.6.2
     transitivePeerDependencies:
       - react
     dev: false
@@ -3924,27 +3930,8 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-person@2.6.0:
-    resolution: {integrity: sha512-CGgPdp38RN06Nj+yAlEQPnFp01CFvwO4j2YLvz5cudSXX/laG25EcndhgWKuRzRp6CqV2GdJtuVk3mylwko5xA==}
-    dependencies:
-      '@equinor/fusion-wc-avatar': 3.2.0
-      '@equinor/fusion-wc-badge': 1.3.0
-      '@equinor/fusion-wc-button': 2.4.0
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-list': 1.1.1
-      '@equinor/fusion-wc-searchable-dropdown': 3.7.1
-      '@equinor/fusion-wc-skeleton': 2.1.0
-      '@equinor/fusion-wc-textinput': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
-      '@floating-ui/dom': 1.6.3
-      '@lit-labs/observers': 2.0.2
-      '@lit-labs/task': 3.1.0
-      lit: 3.1.2
-    dev: false
-
-  /@equinor/fusion-wc-person@2.6.1:
-    resolution: {integrity: sha512-JSKmOdlFjG+XoSBD1SIjy6d/7mEREuXIeG3muurI3EeYbtbLci6uTzpDEbN34OFN6kO6T3ql0ze5/e06CyIEgg==}
+  /@equinor/fusion-wc-person@2.6.2:
+    resolution: {integrity: sha512-MQBp/ZHBOyWGsozwcN9bXDh2SiCn02HQ6cTtrggR1HOtsZfxFxcHbsG4VDQwpp0RAKJou8Lr0f0kwAc8t+cfhw==}
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.0
       '@equinor/fusion-wc-badge': 1.3.0
@@ -4886,7 +4873,7 @@ packages:
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-floating-label@0.27.0:
@@ -4974,7 +4961,7 @@ packages:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
       '@material/radio': 14.0.0-canary.53b3cad2f.0
-      lit: 2.7.0
+      lit: 2.8.0
       tslib: 2.6.2
 
   /@material/mwc-ripple@0.27.0:
@@ -6680,6 +6667,12 @@ packages:
     resolution: {integrity: sha512-7xMnVEcZFu0DikYjWOlRq7NTPETrm7teqUT2WkQjrTIkEgUyyGdWsj/Zg8bEJt5TNklzbPD1X3fqfsHw3SpapQ==}
     dependencies:
       undici-types: 5.26.5
+    dev: true
+
+  /@types/node@20.11.23:
+    resolution: {integrity: sha512-ZUarKKfQuRILSNYt32FuPL20HS7XwNT7/uRwSV8tiHWfyyVwDLYZNF6DZKc2bove++pgfsXn9sUwII/OsQ82cQ==}
+    dependencies:
+      undici-types: 5.26.5
 
   /@types/normalize-package-data@2.4.3:
     resolution: {integrity: sha512-ehPtgRgaULsFG8x0NeYJvmyH1hmlfsNLujHe9dQEia/7MAJYdzMSi19JtchUHjmBA6XC/75dK55mzZH+RyieSg==}
@@ -6950,10 +6943,6 @@ packages:
     engines: {node: ^16.0.0 || >=18.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
     dependencies:
       '@typescript-eslint/scope-manager': 6.21.0
       '@typescript-eslint/types': 6.21.0
@@ -6964,6 +6953,7 @@ packages:
       typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
+      - typescript
     dev: false
 
   /@typescript-eslint/parser@6.7.4(eslint@8.52.0)(typescript@5.2.2):
@@ -7139,11 +7129,6 @@ packages:
   /@typescript-eslint/typescript-estree@6.21.0(typescript@5.2.2):
     resolution: {integrity: sha512-6npJTkZcO+y2/kr+z0hc4HwNfrrP4kNYh57ek7yCNlrBjWQ1Y0OS7jiZTkgumrvkX5HkEKXFZkkdFNkaW2wmUQ==}
     engines: {node: ^16.0.0 || >=18.0.0}
-    peerDependencies:
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
     dependencies:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/visitor-keys': 6.21.0
@@ -7156,6 +7141,7 @@ packages:
       typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
+      - typescript
     dev: false
 
   /@typescript-eslint/typescript-estree@6.7.4(typescript@5.2.2):
@@ -7283,7 +7269,7 @@ packages:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.1.3(@types/node@20.11.19)
+      vite: 5.1.3(@types/node@20.11.23)
       vue: 3.4.19(typescript@5.3.3)
     dev: true
 
@@ -7305,7 +7291,7 @@ packages:
       std-env: 3.6.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.2.2(@types/node@20.11.19)(happy-dom@13.3.8)
+      vitest: 1.2.2(@types/node@20.11.23)(happy-dom@13.3.8)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7388,7 +7374,7 @@ packages:
       '@vue/shared': 3.4.15
       estree-walker: 2.0.2
       magic-string: 0.30.5
-      postcss: 8.4.33
+      postcss: 8.4.35
       source-map-js: 1.0.2
     dev: true
 
@@ -7498,7 +7484,7 @@ packages:
     resolution: {integrity: sha512-/KliRRHMF6LoiThEy+4c1Z4KB/gbPrGjWwJR+crg2otgrf/egKzRaCPvJ51S5oetgsgXLfc4Rm5ZgrKHZrtMSw==}
     dev: true
 
-  /@vuepress/bundler-vite@2.0.0-rc.8(@types/node@20.11.19)(typescript@5.3.3):
+  /@vuepress/bundler-vite@2.0.0-rc.8(@types/node@20.11.23)(typescript@5.3.3):
     resolution: {integrity: sha512-q2NAcbH6dNPpl7JFpaF9V8lPP9zWPFFsVJLDqLFWqiNqNIzKgXzJJ7dGui4J0YXDFbKoe3/CWxeErpn72V6Tgg==}
     dependencies:
       '@vitejs/plugin-vue': 5.0.4(vite@5.1.3)(vue@3.4.19)
@@ -7511,7 +7497,7 @@ packages:
       postcss: 8.4.35
       postcss-load-config: 5.0.3(postcss@8.4.35)
       rollup: 4.12.0
-      vite: 5.1.3(@types/node@20.11.19)
+      vite: 5.1.3(@types/node@20.11.23)
       vue: 3.4.19(typescript@5.3.3)
       vue-router: 4.2.5(vue@3.4.19)
     transitivePeerDependencies:
@@ -8643,7 +8629,7 @@ packages:
       layout-base: 2.0.1
     dev: true
 
-  /cosmiconfig-typescript-loader@5.0.0(@types/node@20.11.19)(cosmiconfig@8.3.6)(typescript@5.2.2):
+  /cosmiconfig-typescript-loader@5.0.0(@types/node@20.11.23)(cosmiconfig@8.3.6)(typescript@5.2.2):
     resolution: {integrity: sha512-+8cK7jRAReYkMwMiG+bxhcNKiHJDM6bR9FD/nGBXOWdMLuYawjF5cGrtLilJ+LGd3ZjCXnJjR5DkfWPoIVlqJA==}
     engines: {node: '>=v16'}
     peerDependencies:
@@ -8651,7 +8637,7 @@ packages:
       cosmiconfig: '>=8.2'
       typescript: '>=4'
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.11.23
       cosmiconfig: 8.3.6(typescript@5.2.2)
       jiti: 1.20.0
       typescript: 5.2.2
@@ -12732,15 +12718,6 @@ packages:
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
-  /postcss@8.4.33:
-    resolution: {integrity: sha512-Kkpbhhdjw2qQs2O2DGX+8m5OVqEcbB9HRBvuYM9pgrjEFUg30A9LmXNlTAUj4S9kgtGyrMbTzVjH7E+s5Re2yg==}
-    engines: {node: ^10 || ^12 || >=14}
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-    dev: true
-
   /postcss@8.4.35:
     resolution: {integrity: sha512-u5U8qYpBCpN13BsiEB0CbR1Hhh4Gc0zLFuedrHJKMctHCHAGrMdG0PRM/KErzAL3CU6/eckEtmHNB3x6e3c0vA==}
     engines: {node: ^10 || ^12 || >=14}
@@ -12748,7 +12725,6 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: true
 
   /powerbi-client-react@1.4.0(react@18.2.0):
     resolution: {integrity: sha512-AfS96lP+emEc4drguCUqLG0s4cFa15OM9eqDaP1sJZ+ca0V+FdvFeI1bD6EyC3smPlpRcl862uSzYexVeUxdIQ==}
@@ -14666,7 +14642,7 @@ packages:
       - terser
     dev: true
 
-  /vite-node@1.2.2(@types/node@20.11.19):
+  /vite-node@1.2.2(@types/node@20.11.23):
     resolution: {integrity: sha512-1as4rDTgVWJO3n1uHmUYqq7nsFgINQ9u+mRcXpjeOMJUmviqNKjcZB7UfRZrlM7MjYXMKpuWp5oGkjaFLnjawg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -14675,7 +14651,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.12(@types/node@20.11.19)
+      vite: 5.0.12(@types/node@20.11.23)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -14755,7 +14731,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@5.0.12(@types/node@20.11.19):
+  /vite@5.0.12(@types/node@20.11.23):
     resolution: {integrity: sha512-4hsnEkG3q0N4Tzf1+t6NdN9dg/L3BM+q8SWgbSPnJvrgH2kgdyzfVJwbR1ic69/4uMJJ/3dqDZZE5/WwqW8U1w==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -14783,14 +14759,14 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.11.23
       esbuild: 0.19.10
-      postcss: 8.4.32
+      postcss: 8.4.35
       rollup: 4.3.0
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@5.1.3(@types/node@20.11.19):
+  /vite@5.1.3(@types/node@20.11.23):
     resolution: {integrity: sha512-UfmUD36DKkqhi/F75RrxvPpry+9+tTkrXfMNZD+SboZqBCMsxKtO52XeGzzuh7ioz+Eo/SYDBbdb0Z7vgcDJew==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -14818,7 +14794,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.11.23
       esbuild: 0.19.12
       postcss: 8.4.35
       rollup: 4.12.0
@@ -14833,7 +14809,7 @@ packages:
       vitest: '>=0.28.5'
     dependencies:
       '@actions/core': 1.10.1
-      vitest: 1.2.2(@types/node@20.11.19)(happy-dom@13.3.8)
+      vitest: 1.2.2(@types/node@20.11.23)(happy-dom@13.3.8)
     dev: true
 
   /vitest@1.2.2(@types/node@20.11.14)(happy-dom@13.3.8):
@@ -14894,7 +14870,7 @@ packages:
       - terser
     dev: true
 
-  /vitest@1.2.2(@types/node@20.11.19)(happy-dom@13.3.8):
+  /vitest@1.2.2(@types/node@20.11.23)(happy-dom@13.3.8):
     resolution: {integrity: sha512-d5Ouvrnms3GD9USIK36KG8OZ5bEvKEkITFtnGv56HFaSlbItJuYr7hv2Lkn903+AvRAgSixiamozUVfORUekjw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -14919,7 +14895,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.11.23
       '@vitest/expect': 1.2.2
       '@vitest/runner': 1.2.2
       '@vitest/snapshot': 1.2.2
@@ -14939,8 +14915,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.8.2
-      vite: 5.0.12(@types/node@20.11.19)
-      vite-node: 1.2.2(@types/node@20.11.19)
+      vite: 5.0.12(@types/node@20.11.23)
+      vite-node: 1.2.2(@types/node@20.11.23)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
@@ -15314,7 +15290,7 @@ packages:
       '@vuepress/bundler-webpack':
         optional: true
     dependencies:
-      '@vuepress/bundler-vite': 2.0.0-rc.8(@types/node@20.11.19)(typescript@5.3.3)
+      '@vuepress/bundler-vite': 2.0.0-rc.8(@types/node@20.11.23)(typescript@5.3.3)
       '@vuepress/cli': 2.0.0-rc.8(typescript@5.3.3)
       '@vuepress/client': 2.0.0-rc.8(typescript@5.3.3)
       '@vuepress/core': 2.0.0-rc.8(typescript@5.3.3)
