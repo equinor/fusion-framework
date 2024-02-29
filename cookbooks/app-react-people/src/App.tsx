@@ -2,10 +2,10 @@ import { AppRouter } from './Router';
 
 export const App = () => {
     return (
-        <>
-            <h1>People</h1>
+        <div style={{ width: '860px', margin: '5em auto' }}>
+            <h1>Person Components</h1>
             <AppRouter />
-        </>
+        </div>
     );
 };
 

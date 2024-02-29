@@ -1,4 +1,5 @@
-import { Link, Outlet, RouteObject } from 'react-router-dom';
+import { RouteObject } from 'react-router-dom';
+import { Navigation } from './pages/Navigation';
 import { AvatarPage } from './pages/AvatarPage';
 import { CardPage } from './pages/CardPage';
 import { ListItemPage } from './pages/ListItemPage';
@@ -8,18 +9,7 @@ import { SelectorPage } from './pages/SelectorPage';
 export const routes: RouteObject[] = [
     {
         path: '/',
-        element: (
-            <div>
-                <section style={{ display: 'inline-flex', gap: 10 }}>
-                    <Link to={''}>Home</Link>
-                    <Link to={'avatar'}>Avatar</Link>
-                    <Link to={'card'}>Card</Link>
-                    <Link to={'list-item'}>List item</Link>
-                    <Link to={'selector'}>Selector</Link>
-                </section>
-                <Outlet></Outlet>
-            </div>
-        ),
+        Component: Navigation,
         children: [
             {
                 index: true,
