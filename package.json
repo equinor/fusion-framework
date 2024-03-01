@@ -47,7 +47,7 @@
   "homepage": "https://github.com/equinor/fusion-framwork#readme",
   "devDependencies": {
     "@commitlint/cli": "^18.6.0",
-    "@commitlint/config-conventional": "^18.1.0",
+    "@commitlint/config-conventional": "^19.0.3",
     "@vitest/coverage-v8": "^1.2.2",
     "eslint-formatter-rdjson": "^1.0.6",
     "eslint-plugin-prettier": "^5.0.0",
