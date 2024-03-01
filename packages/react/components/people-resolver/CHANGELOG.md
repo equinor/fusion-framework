@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.2.3
+
+### Patch Changes
+
+-   [#1902](https://github.com/equinor/fusion-framework/pull/1902) [`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli dep fwc-person and improve people cookbook
+
 ## 1.2.2
 
 ### Patch Changes

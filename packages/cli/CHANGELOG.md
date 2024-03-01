@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.8.4
+
+### Patch Changes
+
+-   [#1890](https://github.com/equinor/fusion-framework/pull/1890) [`722f43f`](https://github.com/equinor/fusion-framework/commit/722f43f01c7a46175ad72e84c22fb3562d21bc26) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Fix typo
+
+-   [#1902](https://github.com/equinor/fusion-framework/pull/1902) [`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli dep fwc-person and improve people cookbook
+
+-   Updated dependencies [[`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.2.3
+
 ## 9.8.3
 
 ### Patch Changes
