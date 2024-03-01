@@ -26,27 +26,26 @@ const actions = {
 
 /** initial users to display in reducer */
 const initial: Record<string, PersonInfo> = {
-    'f59e967d-8422-41ae-8980-a47f3ac0b70c': {
-        mail: 'handah@equinor.com',
-        name: 'Hans Våga Dahle',
+    'f59e967d-8422-41ae-9000-a47f3ac0b70c': {
+        mail: 'ola@equinor.com',
+        name: 'Ola Nordman',
         jobTitle: 'Prin Analyst Digital SW Arch',
         department: 'FOS FOIT PDP',
-        mobilePhone: '+47 93042741',
+        mobilePhone: '+47 55555555',
         officeLocation: 'ST-FV E3',
-        upn: 'HANDAH@equinor.com',
+        upn: 'ola@equinor.com',
         accountType: 'Employee',
-        azureId: 'f59e967d-8422-41ae-8980-a47f3ac0b70c',
+        azureId: 'f59e967d-8422-41ae-9000-a47f3ac0b70c',
     },
-    'cbc6480d-12c1-467e-b0b8-cfbb22612daa': {
-        mail: 'OROC@equinor.com',
-        name: 'Odin Thomas Rochmann (Bouvet ASA)',
+    'cbc6480d-12c1-467e-9000-cfbb22612daa': {
+        mail: 'per@equinor.com',
+        name: 'Per Person',
         jobTitle: 'X-Bouvet ASA (PX)',
         department: 'FOIT CON PDP',
-        mobilePhone: '+47 97574503',
-        upn: 'OROC@equinor.com',
+        mobilePhone: '+47 55555555',
+        upn: 'per@equinor.com',
         accountType: 'Consultant',
-        managerAzureUniqueId: '0c30c249-2f02-4fbc-abfa-77cbddeb4230',
-        azureId: 'cbc6480d-12c1-467e-b0b8-cfbb22612daa',
+        azureId: 'cbc6480d-12c1-467e-9000-cfbb22612daa',
     },
 };
 /** Reducer attched to useReducer hook, */
@@ -81,7 +80,7 @@ export const SelectorPage = () => {
             <section>
                 <Story>
                     <p>Standard</p>
-                    <PersonSelect placeholder="Search away matey"></PersonSelect>
+                    <PersonSelect placeholder="Search for person"></PersonSelect>
                 </Story>
                 <Story>
                     <p>Property: selectedPerson upn</p>
@@ -97,6 +96,7 @@ export const SelectorPage = () => {
                     <p>Controlled component:</p>
                     <PersonSelect
                         selectedPerson={null}
+                        placeholder="Search for person"
                         onSelect={selectPersonCallback}
                     ></PersonSelect>
                     <p>Selected persons:</p>

@@ -8,5 +8,5 @@ export const FlexGrid = styled.div`
 export const FlexGridColumn = styled.div`
     display: flex;
     gap: 10px;
-    flex-
+    flex-direction: column;
 `;
