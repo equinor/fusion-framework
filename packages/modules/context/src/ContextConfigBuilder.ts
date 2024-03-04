@@ -21,6 +21,8 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
     builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>,
 ) => void | Promise<void>;
 
+// TODO - this should extend the BaseConfigBuilder
+
 export class ContextConfigBuilder<
     TModules extends Array<AnyModule> = [],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
