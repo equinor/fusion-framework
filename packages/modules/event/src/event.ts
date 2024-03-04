@@ -44,21 +44,25 @@ export type FrameworkEventInit<TDetail = any, TSource = any> = {
 export type FrameworkEventInitType<T> = T extends IFrameworkEvent<infer U> ? U : never;
 
 /** defer name type of event */
-export type FrameworkEventType<T> =
-    T extends IFrameworkEvent<FrameworkEventInit, infer U> ? U : never;
+export type FrameworkEventType<T> = T extends IFrameworkEvent<FrameworkEventInit, infer U>
+    ? U
+    : never;
 
 export type FrameworkEventInitDetail<T> = T extends FrameworkEventInit<infer U> ? U : never;
 
-export type FrameworkEventInitSource<T> =
-    T extends FrameworkEventInit<unknown, infer U> ? U : never;
+export type FrameworkEventInitSource<T> = T extends FrameworkEventInit<unknown, infer U>
+    ? U
+    : never;
 
 /** defer detail type of event */
-export type FrameworkEventDetail<T> =
-    T extends IFrameworkEvent<infer U> ? FrameworkEventInitDetail<U> : never;
+export type FrameworkEventDetail<T> = T extends IFrameworkEvent<infer U>
+    ? FrameworkEventInitDetail<U>
+    : never;
 
 /** defer source type of event */
-export type FrameworkEventSource<T> =
-    T extends IFrameworkEvent<infer U> ? FrameworkEventInitSource<U> : never;
+export type FrameworkEventSource<T> = T extends IFrameworkEvent<infer U>
+    ? FrameworkEventInitSource<U>
+    : never;
 
 /** event constructor of mapped event  */
 export interface FrameworkEvent<TInit extends FrameworkEventInit> {
