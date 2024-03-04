@@ -1,7 +1,7 @@
 ---
 title: Context Module
 category: Module
-tag: 
+tag:
   - context
 ---
 
@@ -13,7 +13,7 @@ By design all instances of the context module is synced by derived modules `obse
 
 > - a module might choose to `stopPropagation` which will not share it`s context with ancestors and sibling
 > - a module might choose to `preventDefault` when an ancestor changes context
-> - a module might not be able to validate and resolve provided context 
+> - a module might not be able to validate and resolve provided context
 
 ```mermaid
 flowchart TD
@@ -71,16 +71,16 @@ flowchart TD
 ```
 
 :::danger
-by default context `bubbles`up to ancestors (which is a feature, to allow context between instances), 
+by default context `bubbles`up to ancestors (which is a feature, to allow context between instances),
 __BUT__ if need to constrain context within runtime scope of current modules instance use:
 ```ts
 modules.event.addEventListener('onCurrentContextChange', e => {
   if(e.source === modules.context){
     e.stopPropagation();
-  }
+    }
 })
 ```
-_we might in future include config flag for propagation_  
+_we might in future include config flag for propagation_
 :::
 
 ### Resolving context
@@ -125,6 +125,36 @@ import { enableContext } from '@equinor/fusion-framework-react-module-context';
 ```ts
 export const configure = (configurator) => enableContext(configurator);
 ```
+
+::: info Custom error
+You can set your own error message by throwing `FusionContextSearchError` in
+`setContextClient`'s `query`.
+
+```tsx
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+import {
+    ContextItem,
+    FusionContextSearchError,
+    enableContext,
+} from '@equinor/fusion-framework-react-module-context';
+
+export const configure: AppModuleInitiator = (configurator) => {
+    enableContext(configurator, async (builder) => {
+        builder.setContextClient({
+            get: async () => {
+                return undefined as unknown as ContextItem;
+            },
+            query: async () => {
+                throw new FusionContextSearchError({
+                    title: 'This is a custom error',
+                    description: 'This error is intentional',
+                });
+            },
+        });
+    });
+};
+```
+:::
 
 ### Options
 
@@ -213,7 +243,7 @@ export const configure = (configurator) => {
               externalId: 'foobar36-8890-4b16-b973-9e13b9a72c26'
           }
       };
-    } 
+    }
   });
 }
 ```
@@ -235,19 +265,19 @@ export const configure = (configurator) => {
               },
           },
       });
-    } 
+    }
   });
 }
 ```
 :::
 
 ::: info QueryClient
-currently `setContextParameterFn` requires an return type of `string | QueryContextParameters`, 
-but this method is creating the parameters to the query function. 
+currently `setContextParameterFn` requires an return type of `string | QueryContextParameters`,
+but this method is creating the parameters to the query function.
 
-If using a custom client with custom parameters, use this method to generate the custom parameters. 
+If using a custom client with custom parameters, use this method to generate the custom parameters.
 
-If there is a demand for generic query parameters we will in the future make the return type more generic. 
+If there is a demand for generic query parameters we will in the future make the return type more generic.
 :::
 
 
@@ -260,10 +290,10 @@ export const configure = (configurator) => {
     const httpProvider = await builder.requireInstance('http');
     const client = httpProvider.createClient('my-api');
 
-    /** 
+    /**
      * By default the Framework will resolve the context service
      * @see {@link QueryCtorOptions} for advance configuration of query client
-     * @see [ObservableInput - RxJS](https://rxjs.dev/api/index/type-alias/ObservableInput) 
+     * @see [ObservableInput - RxJS](https://rxjs.dev/api/index/type-alias/ObservableInput)
      * @return object for getting and querying context
      */
     return builder.setContextClient({
@@ -274,7 +304,7 @@ export const configure = (configurator) => {
                 body: JSON.stringify(args),
             }),
         /** optional, note will clear context if invalid context provided **/
-        resolve: (item, filter) => 
+        resolve: (item, filter) =>
             client.json$(`/api/context/${item.id}/resolve/`, {
                 method: 'post',
                 body: JSON.stringify(filter),
@@ -284,7 +314,7 @@ export const configure = (configurator) => {
 }
 ```
 
-query post request processor, called after query is executed 
+query post request processor, called after query is executed
 
 ## Events
 
