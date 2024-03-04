@@ -5595,7 +5595,7 @@ packages:
   /@microsoft/applicationinsights-shims@3.0.1:
     resolution: {integrity: sha512-DKwboF47H1nb33rSUfjqI6ryX29v+2QWcTrRvcQDA32AZr5Ilkr7whOOSsD1aBzwqX0RJEIP1Z81jfE3NBm/Lg==}
     dependencies:
-      '@nevware21/ts-utils': 0.10.1
+      '@nevware21/ts-utils': 0.10.5
     dev: false
 
   /@microsoft/applicationinsights-web@2.8.16(tslib@2.6.2):
@@ -5674,11 +5674,15 @@ packages:
   /@nevware21/ts-async@0.3.0:
     resolution: {integrity: sha512-ZUcgUH12LN/F6nzN0cYd0F/rJaMLmXr0EHVTyYfaYmK55bdwE4338uue4UiVoRqHVqNW4KDUrJc49iGogHKeWA==}
     dependencies:
-      '@nevware21/ts-utils': 0.10.1
+      '@nevware21/ts-utils': 0.10.5
     dev: false
 
   /@nevware21/ts-utils@0.10.1:
     resolution: {integrity: sha512-pMny25NnF2/MJwdqC3Iyjm2pGIXNxni4AROpcqDeWa+td9JMUY4bUS9uU9XW+BoBRqTLUL+WURF9SOd/6OQzRg==}
+    dev: false
+
+  /@nevware21/ts-utils@0.10.5:
+    resolution: {integrity: sha512-+TEvP0+l/VBR5bJZoYFV+o6aQQ1O6y80uys5AVyyCKeWvrgWu/yNydqSBQNsk4BuEfkayg7R9+HCJRRRIvptTA==}
     dev: false
 
   /@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3:
