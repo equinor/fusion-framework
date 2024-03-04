@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "jsx": "react-jsxdev",
+  },
+  "references": [
+    {
+      "path": "../../packages/react/app"
+    },
+    {
+      "path": "../../packages/react/modules/context"
+    },
+    {
+      "path": "../../packages/cli"
+    },
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}
