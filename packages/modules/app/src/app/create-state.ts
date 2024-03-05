@@ -13,9 +13,18 @@ export const createState = (
     provider: AppModuleProvider,
 ): FlowSubject<AppBundleState, Actions> => {
     const reducer = createReducer(value);
+
+    // create state
     const state = new FlowSubject<AppBundleState, Actions>(reducer);
+
+    // add handler for fetching manifest
     state.addFlow(handleFetchManifest(provider));
+
+    // add handler for fetching config
     state.addFlow(handleFetchConfig(provider));
+
+    // add handler for loading application script
     state.addFlow(handleImportApplication());
+
     return state;
 };
