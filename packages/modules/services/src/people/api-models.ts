@@ -48,5 +48,5 @@ export type ApiPersonMap = {
 export type ApiPerson<T extends keyof typeof ApiVersion | ApiVersion> = T extends ApiVersion
     ? ApiPersonMap[T]
     : T extends keyof typeof ApiVersion
-      ? ApiPersonMap[(typeof ApiVersion)[T]]
-      : unknown;
+    ? ApiPersonMap[(typeof ApiVersion)[T]]
+    : unknown;
