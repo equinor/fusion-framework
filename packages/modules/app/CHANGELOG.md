@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.2.14
+
+### Patch Changes
+
+- [#1879](https://github.com/equinor/fusion-framework/pull/1879) [`2acd475`](https://github.com/equinor/fusion-framework/commit/2acd47532fe680f498fdf7229309cddb2594e391) Thanks [@odinr](https://github.com/odinr)! - improved documentation
+
 ## 5.2.13
 
 ### Patch Changes

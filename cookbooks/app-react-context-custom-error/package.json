@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-context-custom-error",
-    "version": "4.0.27",
+    "version": "4.0.28",
     "description": "React application using framework context with a custom error",
     "private": true,
     "type": "module",
