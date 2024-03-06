@@ -629,18 +629,9 @@ importers:
       '@equinor/fusion-query':
         specifier: workspace:^
         version: link:../utils/query
-      '@equinor/fusion-react-button':
-        specifier: ^0.9.1
-        version: 0.9.1(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-react-context-selector':
         specifier: ^0.6.0
         version: 0.6.1(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)
-      '@equinor/fusion-react-icon':
-        specifier: ^0.3.0
-        version: 0.3.0(react@18.2.0)
-      '@equinor/fusion-react-menu':
-        specifier: ^0.3.0
-        version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.2.1
         version: 0.2.1(react@18.2.0)
@@ -683,9 +674,6 @@ importers:
       styled-components:
         specifier: ^6.0.7
         version: 6.1.8(react-dom@18.2.0)(react@18.2.0)
-      types:
-        specifier: link:./types
-        version: link:types
       typescript:
         specifier: ^5.1.3
         version: 5.3.3
@@ -2498,23 +2486,6 @@ packages:
       '@equinor/fusion-react-styles': 0.6.1(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
-  /@equinor/fusion-react-button@0.9.1(@types/react@18.2.61)(react@18.2.0):
-    resolution: {integrity: sha512-2rISCx7ZNU/pqcgZMdtEao+fRDVQadc0SBEiN9rH3KbCC6K5186jrqG0GHVqXBzfmID9WtUz5MiFPZcymFeJqw==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      '@types/react': '*'
-      react: "^17.0.0 ||\_^18.0.0"
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-button': 2.4.0
-      '@equinor/fusion-wc-icon': 2.3.0
-      '@types/react': 18.2.61
-      react: 18.2.0
-    dev: true
-
   /@equinor/fusion-react-checkbox@0.5.17(react@18.2.0):
     resolution: {integrity: sha512-5IDy1sBgTS3l/SE2wCuKeY6a5/0sarx5iB6hDVGP5X5P5PNW5w+c9JFvwvmw0ISeaO2qNsTT/SFu9i5GYIuW8w==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
@@ -2566,26 +2537,6 @@ packages:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-icon': 2.3.0
       react: 18.2.0
-    dev: true
-
-  /@equinor/fusion-react-icon@0.3.0(react@18.2.0):
-    resolution: {integrity: sha512-vbiMl7BlrtySVPh4AxwQq3RdiJ0EtThQxPJzerMLYxmuCfEX8Mvehx61tfgqTAXem1lCaIqNTB516HIWeag4TA==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
-    dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-icon': 2.3.0
-      react: 18.2.0
-    dev: true
-
-  /@equinor/fusion-react-menu@0.3.0(react@18.2.0):
-    resolution: {integrity: sha512-LqakXydisEYYmnnOP7/JeKTA6Hit5bQGnfe4X0UBTNfUge1UdXhPSc/SypYRX8safL4My+PcxXSflUhCnYiVRw==}
-    dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-menu': 1.1.1
-    transitivePeerDependencies:
-      - react
     dev: true
 
   /@equinor/fusion-react-person@0.8.3(react@18.2.0):
@@ -2776,15 +2727,6 @@ packages:
       '@equinor/fusion-web-theme': 0.1.7
       '@material/mwc-list': 0.27.0
       lit: 3.0.2
-
-  /@equinor/fusion-wc-menu@1.1.1:
-    resolution: {integrity: sha512-v68k7f+8zSltYz+Bi4qZZ7yLyC3/yme//nTDV33J4USEm5QlBJ+lDT7pX2MZj6c3pTw3DDm6ycAy/KDu4TwDOw==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-list': 1.1.1
-      '@material/mwc-menu': 0.27.0
-      lit: 3.0.2
-    dev: true
 
   /@equinor/fusion-wc-person@2.6.2:
     resolution: {integrity: sha512-MQBp/ZHBOyWGsozwcN9bXDh2SiCn02HQ6cTtrggR1HOtsZfxFxcHbsG4VDQwpp0RAKJou8Lr0f0kwAc8t+cfhw==}
@@ -3465,34 +3407,6 @@ packages:
       '@material/typography': 14.0.0-canary.53b3cad2f.0
       tslib: 2.6.2
 
-  /@material/menu-surface@14.0.0-canary.53b3cad2f.0:
-    resolution: {integrity: sha512-IQWb/n15FpLnn+kHp0EqzLE+UoWSPumq3eze2QifiowvGb37bNFR9oSe7CaOzPMrHdkrZ5SBWnDU41wPZN5kOg==}
-    dependencies:
-      '@material/animation': 14.0.0-canary.53b3cad2f.0
-      '@material/base': 14.0.0-canary.53b3cad2f.0
-      '@material/elevation': 14.0.0-canary.53b3cad2f.0
-      '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      '@material/rtl': 14.0.0-canary.53b3cad2f.0
-      '@material/shape': 14.0.0-canary.53b3cad2f.0
-      '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
-    dev: true
-
-  /@material/menu@14.0.0-canary.53b3cad2f.0:
-    resolution: {integrity: sha512-MmYKVrMIqOtP3TN4vdrrnQrS8P81+tMaA6bKiT9V79R1U6+mKsBYTzaLtLbzyem5vF8O0q7bSwyPwhWPtJr75Q==}
-    dependencies:
-      '@material/base': 14.0.0-canary.53b3cad2f.0
-      '@material/dom': 14.0.0-canary.53b3cad2f.0
-      '@material/elevation': 14.0.0-canary.53b3cad2f.0
-      '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      '@material/list': 14.0.0-canary.53b3cad2f.0
-      '@material/menu-surface': 14.0.0-canary.53b3cad2f.0
-      '@material/ripple': 14.0.0-canary.53b3cad2f.0
-      '@material/rtl': 14.0.0-canary.53b3cad2f.0
-      '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
-    dev: true
-
   /@material/mwc-base@0.27.0:
     resolution: {integrity: sha512-oCWWtjbyQ52AaUbzINLGBKScIPyqhps2Y7c8t6Gu6fcFeDxhKXMV1Cqvtj/OMhtAt53XjHfD2XruWwYv3cYYUA==}
     dependencies:
@@ -3574,19 +3488,6 @@ packages:
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
       tslib: 2.6.2
-
-  /@material/mwc-menu@0.27.0:
-    resolution: {integrity: sha512-K+L/t267ZGrlhjK/iSKUVZQKRMkWELArKVglfS5of93ALP4in0RGnj1sOG2u3IFI2F/mEZxRi+wr7HgNxpe0wA==}
-    dependencies:
-      '@material/menu': 14.0.0-canary.53b3cad2f.0
-      '@material/menu-surface': 14.0.0-canary.53b3cad2f.0
-      '@material/mwc-base': 0.27.0
-      '@material/mwc-list': 0.27.0
-      '@material/shape': 14.0.0-canary.53b3cad2f.0
-      '@material/theme': 14.0.0-canary.53b3cad2f.0
-      lit: 2.8.0
-      tslib: 2.6.2
-    dev: true
 
   /@material/mwc-notched-outline@0.27.0:
     resolution: {integrity: sha512-IlqfQVaEd1RAHqhOG0Xk5JhTDgBe/P9og0pnACglK6bPE0vUhYKwibJiHcr4ACTPtGWHO9o92aktR+7AIEAKtQ==}
