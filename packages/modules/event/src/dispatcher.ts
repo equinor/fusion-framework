@@ -4,13 +4,27 @@ export type FrameworkEventHandler<TType extends IFrameworkEvent = IFrameworkEven
     event: TType,
 ) => Promise<void> | void;
 
+/**
+ * Interface for dispatching framework events.
+ * @template TEvent - The type of event to dispatch.
+ */
 export interface IFrameworkDispatcher<TEvent extends IFrameworkEvent> {
+    /**
+     * Dispatches the given event to the given listeners.
+     * @param event - The event to dispatch.
+     * @param listeners - The listeners to dispatch the event to.
+     */
     dispatch(event: TEvent, listeners: Array<FrameworkEventHandler<TEvent>>): Promise<void>;
 }
 
-type FrameworkDispatchEvent<TEvent extends IFrameworkEvent> = IFrameworkEvent & {
+/**
+ * Interface for dispatching framework events.
+ *
+ *
+ */
+interface FrameworkDispatchEvent<TEvent extends IFrameworkEvent> extends IFrameworkEvent {
     dispatcher: IFrameworkDispatcher<TEvent>;
-};
+}
 
 export type FrameworkEventDispatcherCtorArgs<TEvent extends IFrameworkEvent> = {
     onDispatch?: FrameworkEventHandler<TEvent>;

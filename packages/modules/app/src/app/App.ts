@@ -8,7 +8,6 @@ import {
     firstValueFrom,
     lastValueFrom,
     map,
-    of,
     OperatorFunction,
     Subscription,
 } from 'rxjs';
