@@ -24,12 +24,10 @@ export type FetchRequestInit<
     selector?: (response: TResponse) => ObservableInput<TReturn>;
 };
 
-export type ClientRequestInit<T extends IHttpClient, TReturn = unknown> = T extends IHttpClient<
-    infer TRequest,
-    infer TResponse
->
-    ? FetchRequestInit<TReturn, TRequest, TResponse>
-    : never;
+export type ClientRequestInit<T extends IHttpClient, TReturn = unknown> =
+    T extends IHttpClient<infer TRequest, infer TResponse>
+        ? FetchRequestInit<TReturn, TRequest, TResponse>
+        : never;
 
 export type ExecutionMethod = 'fetch' | 'fetch$' | 'json' | 'json$';
 
