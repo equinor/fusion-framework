@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.8.6
+
+### Patch Changes
+
+- [#1926](https://github.com/equinor/fusion-framework/pull/1926) [`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues with multiple tasks
+
+- [#1919](https://github.com/equinor/fusion-framework/pull/1919) [`666780c`](https://github.com/equinor/fusion-framework/commit/666780cb2f6e5b3d5b861a179220362c1bf4b0ad) Thanks [@odinr](https://github.com/odinr)! - removed unused packages
+
+- Updated dependencies [[`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.2.5
+
 ## 9.8.5
 
 ### Patch Changes
