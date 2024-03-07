@@ -402,8 +402,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
-        specifier: ^0.8.3
-        version: 0.8.3(react@18.2.0)
+        specifier: ^0.8.4
+        version: 0.8.4(react@18.2.0)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.15.2
@@ -2539,11 +2539,11 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@equinor/fusion-react-person@0.8.3(react@18.2.0):
-    resolution: {integrity: sha512-TCC9kj7ZCSdlvXODLOm8OWVrvoDFjRQpVhZOsCDB30lEFYoSR8RiGkZK4jUmMzIQWPQmDW7MOs74npOWOqBxNg==}
+  /@equinor/fusion-react-person@0.8.4(react@18.2.0):
+    resolution: {integrity: sha512-Rqvp2fLYplJgFLfK5DeRrjoJflM4gP4gr7VpTPU07nsVPek6JTL/MIllY6hu8TZkOzfPbRBOoF/m9Pp+X8j4yA==}
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-person': 2.6.2
+      '@equinor/fusion-wc-person': 2.6.4
     transitivePeerDependencies:
       - react
     dev: false
@@ -2728,25 +2728,6 @@ packages:
       '@material/mwc-list': 0.27.0
       lit: 3.0.2
 
-  /@equinor/fusion-wc-person@2.6.2:
-    resolution: {integrity: sha512-MQBp/ZHBOyWGsozwcN9bXDh2SiCn02HQ6cTtrggR1HOtsZfxFxcHbsG4VDQwpp0RAKJou8Lr0f0kwAc8t+cfhw==}
-    dependencies:
-      '@equinor/fusion-wc-avatar': 3.2.0
-      '@equinor/fusion-wc-badge': 1.3.0
-      '@equinor/fusion-wc-button': 2.4.0
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-list': 1.1.1
-      '@equinor/fusion-wc-searchable-dropdown': 3.7.1
-      '@equinor/fusion-wc-skeleton': 2.1.0
-      '@equinor/fusion-wc-textinput': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
-      '@floating-ui/dom': 1.6.3
-      '@lit-labs/observers': 2.0.2
-      '@lit-labs/task': 3.1.0
-      lit: 3.1.2
-    dev: false
-
   /@equinor/fusion-wc-person@2.6.4:
     resolution: {integrity: sha512-pIEFWrdqNvSHHlq+za1xaIO6zcSfgvu0D0DPCxhXWFZOk6PsUIsNRXGMGncKIsO0czHAuhvPTGWzEiSn6C2S4w==}
     dependencies:
@@ -2808,6 +2789,7 @@ packages:
       '@types/uuid': 9.0.8
       lit: 3.0.2
       uuid: 9.0.1
+    dev: true
 
   /@equinor/fusion-wc-searchable-dropdown@3.7.2:
     resolution: {integrity: sha512-5fc6SaWUf2EOy0Kh9WJ8WHSP7TPFhpo7UWDGZZbzv8aq0Czt7nNDeFN+60zwkTXP94RQhyBD3MAUvlhn/xeW0Q==}
