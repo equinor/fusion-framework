@@ -2563,7 +2563,7 @@ packages:
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-wc-searchable-dropdown': 3.7.1
+      '@equinor/fusion-wc-searchable-dropdown': 3.7.2
     transitivePeerDependencies:
       - react
     dev: true
