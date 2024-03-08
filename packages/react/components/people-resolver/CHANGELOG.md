@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.2.5
+
+### Patch Changes
+
+- [#1926](https://github.com/equinor/fusion-framework/pull/1926) [`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues with multiple tasks
+
 ## 1.2.4
 
 ### Patch Changes
