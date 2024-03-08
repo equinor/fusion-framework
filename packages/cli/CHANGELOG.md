@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.8.7
+
+### Patch Changes
+
+- [#1930](https://github.com/equinor/fusion-framework/pull/1930) [`057f204`](https://github.com/equinor/fusion-framework/commit/057f204fc01ee6579280b621bc83ca74589acd6b) Thanks [@eikeland](https://github.com/eikeland)! - update fusion-react-context-selector
+
 ## 9.8.6
 
 ### Patch Changes
