@@ -75,7 +75,7 @@
         "@equinor/fusion-framework-react-components-bookmark": "workspace:^",
         "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
-        "@equinor/fusion-react-context-selector": "^0.6.0",
+        "@equinor/fusion-react-context-selector": "^0.6.3",
         "@equinor/fusion-react-progress-indicator": "^0.2.1",
         "@equinor/fusion-react-side-sheet": "1.2.5",
         "@equinor/fusion-react-styles": "^0.6.0",
