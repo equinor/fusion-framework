@@ -1,5 +1,25 @@
 # Change Log
 
+## 9.9.0
+
+### Minor Changes
+
+- [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - CLI will now update pathname when current context changes
+
+  CLI will now resolve initial context _(if context module enabled)_
+
+  Fixes: https://github.com/equinor/fusion/issues/307
+
+  Will work even if not application has not enabled navigation
+
+### Patch Changes
+
+- [#1929](https://github.com/equinor/fusion-framework/pull/1929) [`86e7556`](https://github.com/equinor/fusion-framework/commit/86e7556b212f42501ef5e885fea36d20002e43ac) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update to latest fusion-react-context-selector
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@8.1.4
+  - @equinor/fusion-framework-react-components-people-provider@1.2.6
+
 ## 9.8.7
 
 ### Patch Changes

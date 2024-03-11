@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.0.6
+
+### Patch Changes
+
+- [#1936](https://github.com/equinor/fusion-framework/pull/1936) [`1f6eced`](https://github.com/equinor/fusion-framework/commit/1f6ecede1f27698c725a4150181291d58704d638) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps-dev): bump vuepress-theme-hope from 2.0.0-rc.25 to 2.0.0-rc.31
+
 ## 0.0.5
 
 ### Patch Changes
