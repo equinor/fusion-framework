@@ -15,6 +15,7 @@
     "license": "ISC",
     "dependencies": {
         "@equinor/fusion-framework-cli": "workspace:^",
+        "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
         "@equinor/fusion-observable": "^8.1.0",

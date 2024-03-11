@@ -8,6 +8,7 @@ import { useFramework } from '@equinor/fusion-framework-react';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useState } from 'react';
 import { styled } from 'styled-components';
+import { useAppContextNavigation } from './useAppContextNavigation';
 
 const Styled = {
     ContentContainer: styled.div`
@@ -52,6 +53,8 @@ const routes = [
 export const Router = () => {
     const { navigation } = useFramework<[NavigationModule]>().modules;
     const [router] = useState(() => navigation.createRouter(routes));
+    // observe the context changes and navigate when the context changes
+    useAppContextNavigation();
     return (
         <RouterProvider
             router={router as unknown as RouterProviderProps['router']}
