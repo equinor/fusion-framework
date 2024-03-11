@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.0.31
+
+### Patch Changes
+
+- [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - updated cookbook with test if navigation module is enabled with context path update
+
+- Updated dependencies [[`86e7556`](https://github.com/equinor/fusion-framework/commit/86e7556b212f42501ef5e885fea36d20002e43ac), [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098)]:
+  - @equinor/fusion-framework-cli@9.9.0
+  - @equinor/fusion-framework-react-module-context@6.1.2
+  - @equinor/fusion-framework-react-app@4.3.8
+
 ## 4.0.30
 
 ### Patch Changes

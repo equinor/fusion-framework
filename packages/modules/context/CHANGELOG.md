@@ -1,5 +1,17 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+- [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - updated method for resolving context from path, will now search all path fragments for context id by default
+
+  updated documentation of utility functions
+
+### Patch Changes
+
+- [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - Export of utility function for extracting context id from path
+
 ## 4.1.1
 
 ### Patch Changes
