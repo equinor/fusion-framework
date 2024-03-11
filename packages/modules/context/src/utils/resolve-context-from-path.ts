@@ -12,7 +12,7 @@ export type ContextPathResolveArgs = {
 const matchGUID =
     /^(?:(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12})$/;
 
-const extractContextIdFromPath = (path: string): string | undefined =>
+export const extractContextIdFromPath = (path: string): string | undefined =>
     path.replace(/^\/+/, '').split('/').shift();
 
 const validateContextId = (contextId: string): boolean => !!contextId.match(matchGUID);
