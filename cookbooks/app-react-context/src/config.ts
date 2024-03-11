@@ -1,8 +1,9 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableContext } from '@equinor/fusion-framework-react-module-context';
+// import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import buildQuery from 'odata-query';
 
-export const configure: AppModuleInitiator = (configurator) => {
+export const configure: AppModuleInitiator = (configurator, {env}) => {
     enableContext(configurator, async (builder) => {
         builder.setContextType(['orgchart']); // set contextType to match against
         builder.setContextParameterFn(({ search, type }) => {
@@ -16,6 +17,8 @@ export const configure: AppModuleInitiator = (configurator) => {
             });
         });
     });
+    // include this line to enable navigation
+    // enableNavigation(configurator, env.basename);
 };
 
 export default configure;
