@@ -3,7 +3,8 @@ import { enableContext } from '@equinor/fusion-framework-react-module-context';
 // import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import buildQuery from 'odata-query';
 
-export const configure: AppModuleInitiator = (configurator, {env}) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const configure: AppModuleInitiator = (configurator, { env }) => {
     enableContext(configurator, async (builder) => {
         builder.setContextType(['orgchart']); // set contextType to match against
         builder.setContextParameterFn(({ search, type }) => {
