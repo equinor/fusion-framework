@@ -49,8 +49,8 @@ on: [pull_request]
 jobs:
   eslint:
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - name: Install Node Dependencies
         run: npm ci
       - name: Save Code Linting Report JSON
