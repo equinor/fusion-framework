@@ -25,6 +25,9 @@ export const configure = async (config: FrameworkConfigurator) => {
             tenantId: '3aa4a235-b6e2-48d5-9195-7fcf05b459b0',
             clientId: '9b707e3a-3e90-41ed-a47e-652a1e3b53d0',
             redirectUri: '/authentication/login-callback',
+            config: {
+                behavior: window.parent === window ? 'redirect' : 'popup',
+            },
         },
         { requiresAuth: true },
     );
