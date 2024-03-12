@@ -530,8 +530,8 @@ importers:
         specifier: workspace:^
         version: link:../utils/observable
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.4
-        version: 2.6.4
+        specifier: ^2.6.5
+        version: 2.6.5
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.5
@@ -1177,8 +1177,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: ^2.6.4
-        version: 2.6.4
+        specifier: ^2.6.5
+        version: 2.6.5
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -2734,6 +2734,25 @@ packages:
 
   /@equinor/fusion-wc-person@2.6.4:
     resolution: {integrity: sha512-pIEFWrdqNvSHHlq+za1xaIO6zcSfgvu0D0DPCxhXWFZOk6PsUIsNRXGMGncKIsO0czHAuhvPTGWzEiSn6C2S4w==}
+    dependencies:
+      '@equinor/fusion-wc-avatar': 3.2.0
+      '@equinor/fusion-wc-badge': 1.3.0
+      '@equinor/fusion-wc-button': 2.4.0
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-icon': 2.3.0
+      '@equinor/fusion-wc-list': 1.1.1
+      '@equinor/fusion-wc-searchable-dropdown': 3.7.2
+      '@equinor/fusion-wc-skeleton': 2.1.0
+      '@equinor/fusion-wc-textinput': 1.1.0
+      '@equinor/fusion-web-theme': 0.1.7
+      '@floating-ui/dom': 1.6.3
+      '@lit-labs/observers': 2.0.2
+      '@lit-labs/task': 3.1.0
+      lit: 3.1.2
+    dev: false
+
+  /@equinor/fusion-wc-person@2.6.5:
+    resolution: {integrity: sha512-ZqZ14+FpQDljqBSzd1lSx2UyYOHtj3mRNP6GzZGsJ0QKlYyt90IRD7gVh9bFCd87N5r9vD49lJseRCY+PxV58A==}
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.0
       '@equinor/fusion-wc-badge': 1.3.0
