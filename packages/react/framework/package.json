@@ -60,14 +60,14 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-app": "workspace:^",
+        "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@equinor/fusion-framework-module-event": "workspace:^",
         "@types/react": "^18.2.50",
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "typescript": "^5.1.3"
+        "typescript": "^5.4.2"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",

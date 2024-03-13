@@ -60,6 +60,6 @@
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@types/uuid": "^9.0.8",
-        "typescript": "^5.2.2"
+        "typescript": "^5.4.2"
     }
 }

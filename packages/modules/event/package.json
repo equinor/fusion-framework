@@ -26,7 +26,7 @@
     },
     "devDependencies": {
         "rxjs": "^7.8.1",
-        "typescript": "^5.1.3"
+        "typescript": "^5.4.2"
     },
     "types": "index.d.ts",
     "typesVersions": {

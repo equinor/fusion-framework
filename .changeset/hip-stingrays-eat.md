@@ -1,0 +1,49 @@
+---
+"@equinor/fusion-framework-react-components-people-provider": minor
+"@equinor/fusion-framework-cookbook-app-react-context-custom-error": minor
+"@equinor/fusion-framework-cookbook-app-react-bookmark-advanced": minor
+"@equinor/fusion-framework-module-service-discovery": minor
+"@equinor/fusion-framework-react-components-bookmark": minor
+"@equinor/fusion-framework-cookbook-app-react-feature-flag": minor
+"@equinor/fusion-framework-react-module-bookmark": minor
+"@equinor/fusion-framework-legacy-interopt": minor
+"@equinor/fusion-framework-react-module-context": minor
+"@equinor/fusion-framework-react-module-signalr": minor
+"@equinor/fusion-framework-module-feature-flag": minor
+"@equinor/fusion-framework-react-module": minor
+"@equinor/fusion-framework-cookbook-app-react-bookmark": minor
+"@equinor/fusion-framework-react-module-event": minor
+"@equinor/fusion-framework-cookbook-app-react-ag-grid": minor
+"@equinor/fusion-framework-cookbook-app-react-context": minor
+"@equinor/fusion-framework-module-navigation": minor
+"@equinor/fusion-framework-react-module-http": minor
+"@equinor/fusion-framework-cookbook-app-react-module": minor
+"@equinor/fusion-framework-cookbook-app-react-people": minor
+"@equinor/fusion-framework-cookbook-app-react-router": minor
+"@equinor/fusion-framework-module-telemetry": minor
+"@equinor/fusion-framework-module-bookmark": minor
+"@equinor/fusion-framework-module-services": minor
+"@equinor/fusion-observable": minor
+"@equinor/fusion-framework-cookbook-app-react-msal": minor
+"@equinor/fusion-framework-module-ag-grid": minor
+"@equinor/fusion-framework-module-context": minor
+"@equinor/fusion-framework-module-signalr": minor
+"@equinor/fusion-framework-react": minor
+"@equinor/fusion-framework-module": minor
+"@equinor/fusion-framework-module-widget": minor
+"@equinor/fusion-framework-module-event": minor
+"@equinor/fusion-framework-module-http": minor
+"@equinor/fusion-framework-module-msal": minor
+"@equinor/fusion-framework-react-widget": minor
+"@equinor/fusion-framework-module-app": minor
+"@equinor/fusion-query": minor
+"@equinor/fusion-framework-cookbook-app-react": minor
+"@equinor/fusion-framework": minor
+"@equinor/fusion-framework-react-app": minor
+"@equinor/fusion-framework-widget": minor
+"@equinor/fusion-framework-app": minor
+"@equinor/fusion-framework-cli": minor
+"@equinor/fusion-framework-docs": minor
+---
+
+updated typescript to 5.4.2

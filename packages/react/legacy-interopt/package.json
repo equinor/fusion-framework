@@ -60,7 +60,7 @@
         "react-dom": "^18.2.0",
         "react-router-dom": "^5",
         "rxjs": "^7.8.1",
-        "typescript": "^5.1.3"
+        "typescript": "^5.4.2"
     },
     "peerDependencies": {
         "@equinor/fusion": "*",
