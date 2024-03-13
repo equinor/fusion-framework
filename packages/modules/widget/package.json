@@ -44,11 +44,11 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-query": "workspace:^",
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-        "typescript": "^5.1.3"
+        "@equinor/fusion-query": "workspace:^",
+        "typescript": "^5.4.2"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",

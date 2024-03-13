@@ -37,7 +37,7 @@
         "@equinor/fusion-wc-person": "^2.6.5",
         "@types/react": "^18.2.50",
         "react": "^18.2.0",
-        "typescript": "^5.1.3"
+        "typescript": "^5.4.2"
     },
     "peerDependencies": {
         "@types/react": "^17.0.0 || ^18.0.0",
