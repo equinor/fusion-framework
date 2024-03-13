@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.3.0
+
+### Minor Changes
+
+- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
+
+### Patch Changes
+
+- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - Reworked `DotPath` since previous method used recursive typing
+
 ## 4.2.7
 
 ### Patch Changes
