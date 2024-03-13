@@ -85,10 +85,10 @@ importers:
   cookbooks/app-react:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.8.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.3
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@types/react':
         specifier: ^18.2.50
@@ -125,10 +125,10 @@ importers:
         version: 30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.1)
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.3.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.2.0
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@types/react':
         specifier: ^18.2.50
@@ -149,16 +149,16 @@ importers:
   cookbooks/app-react-bookmark:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.0.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-module-bookmark':
-        specifier: ^1.0.8
+        specifier: ^1.2.0
         version: link:../../packages/modules/bookmark
       '@equinor/fusion-framework-module-context':
-        specifier: ^4.0.11
+        specifier: ^5.0.0
         version: link:../../packages/modules/context
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.3
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@types/react':
         specifier: ^18.2.50
@@ -183,19 +183,19 @@ importers:
         version: 1.15.2
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.0.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-module-context':
-        specifier: ^4.0.12
+        specifier: ^5.0.0
         version: link:../../packages/modules/context
       '@equinor/fusion-framework-module-navigation':
-        specifier: ^3.0.4
+        specifier: ^4.0.0
         version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.4
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@equinor/fusion-framework-react-module-bookmark':
-        specifier: ^2.0.15
+        specifier: ^2.1.0
         version: link:../../packages/react/modules/bookmark
       '@types/react':
         specifier: ^18.2.50
@@ -231,7 +231,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/react/modules/context
       '@equinor/fusion-observable':
-        specifier: ^8.1.0
+        specifier: ^8.2.0
         version: link:../../packages/utils/observable
       '@types/react':
         specifier: ^18.2.50
@@ -268,7 +268,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/react/modules/context
       '@equinor/fusion-observable':
-        specifier: ^8.1.0
+        specifier: ^8.2.0
         version: link:../../packages/utils/observable
       '@types/react':
         specifier: ^18.2.50
@@ -342,16 +342,16 @@ importers:
   cookbooks/app-react-module:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.0.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-module':
-        specifier: ^4.2.3
+        specifier: ^4.3.0
         version: link:../../packages/modules/module
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.3
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@equinor/fusion-framework-react-module':
-        specifier: ^3.0.4
+        specifier: ^3.1.0
         version: link:../../packages/react/modules/module
       '@types/react':
         specifier: ^18.2.50
@@ -372,10 +372,10 @@ importers:
   cookbooks/app-react-msal:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.3.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.2.0
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@types/react':
         specifier: ^18.2.50
@@ -418,10 +418,10 @@ importers:
         version: 6.1.8(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.8.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.5
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@equinor/fusion-observable':
         specifier: workspace:^
@@ -448,13 +448,13 @@ importers:
   cookbooks/app-react-router:
     devDependencies:
       '@equinor/fusion-framework-cli':
-        specifier: ^9.0.0
+        specifier: ^9.10.0
         version: link:../../packages/cli
       '@equinor/fusion-framework-module-navigation':
-        specifier: ^3.1.0
+        specifier: ^4.0.0
         version: link:../../packages/modules/navigation
       '@equinor/fusion-framework-react-app':
-        specifier: ^4.1.4
+        specifier: ^5.0.0
         version: link:../../packages/react/app
       '@remix-run/router':
         specifier: ^1.8.0

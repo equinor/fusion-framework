@@ -1,5 +1,19 @@
 # Change Log
 
+## 6.2.0
+
+### Minor Changes
+
+- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
+
+### Patch Changes
+
+- Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
+  - @equinor/fusion-framework-react-module@3.1.0
+  - @equinor/fusion-observable@8.2.0
+  - @equinor/fusion-framework-module-context@5.0.0
+  - @equinor/fusion-query@4.1.0
+
 ## 6.1.2
 
 ### Patch Changes

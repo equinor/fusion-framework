@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.3.0
+
+### Minor Changes
+
+- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
+
+### Patch Changes
+
+- [#1945](https://github.com/equinor/fusion-framework/pull/1945) [`b59d314`](https://github.com/equinor/fusion-framework/commit/b59d3142a551574117d3cdeb274cceb996459000) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - bump @equinor/fusion-wc-person from 2.6.4 to 2.6.5
+
+- Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
+  - @equinor/fusion-framework-react-module-bookmark@2.1.0
+  - @equinor/fusion-framework-react-module@3.1.0
+  - @equinor/fusion-framework-module-services@4.0.0
+  - @equinor/fusion-framework-react@7.0.0
+  - @equinor/fusion-query@4.1.0
+
 ## 1.2.6
 
 ### Patch Changes
