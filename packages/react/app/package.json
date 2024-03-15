@@ -1,46 +1,45 @@
 {
     "name": "@equinor/fusion-framework-react-app",
-    "version": "5.0.0",
+    "version": "5.0.2",
     "description": "",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": "./dist/esm/index.js",
-        "./bookmark": "./dist/esm/bookmark/index.js",
-        "./context": "./dist/esm/context/index.js",
-        "./feature-flag": "./dist/esm/feature-flag/index.js",
-        "./framework": "./dist/esm/framework/index.js",
-        "./http": "./dist/esm/http/index.js",
-        "./msal": "./dist/esm/msal/index.js",
-        "./navigation": "./dist/esm/navigation/index.js",
-        "./widget": "./dist/esm/widget/index.js"
-    },
+    "main": "./dist/esm/index.js",
     "types": "./dist/types/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "bookmark": [
-                "dist/types/bookmark/index.d.ts"
-            ],
-            "context": [
-                "dist/types/context/index.d.ts"
-            ],
-            "feature-flag": [
-                "dist/types/feature-flag/index.d.ts"
-            ],
-            "framework": [
-                "dist/types/framework/index.d.ts"
-            ],
-            "http": [
-                "dist/types/http/index.d.ts"
-            ],
-            "msal": [
-                "dist/types/msal/index.d.ts"
-            ],
-            "navigation": [
-                "dist/types/navigation/index.d.ts"
-            ],
-            "widget": [
-                "dist/types/widget/index.d.ts"
-            ]
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/esm/index.js"
+        },
+        "./bookmark": {
+            "types": "./dist/types/bookmark/index.d.ts",
+            "import": "./dist/esm/bookmark/index.js"
+        },
+        "./context": {
+            "types": "./dist/types/context/index.d.ts",
+            "import": "./dist/esm/context/index.js"
+        },
+        "./feature-flag": {
+            "types": "./dist/types/feature-flag/index.d.ts",
+            "import": "./dist/esm/feature-flag/index.js"
+        },
+        "./framework": {
+            "types": "./dist/types/framework/index.d.ts",
+            "import": "./dist/esm/framework/index.js"
+        },
+        "./http": {
+            "types": "./dist/types/http/index.d.ts",
+            "import": "./dist/esm/http/index.js"
+        },
+        "./msal": {
+            "types": "./dist/types/msal/index.d.ts",
+            "import": "./dist/esm/msal/index.js"
+        },
+        "./navigation": {
+            "types": "./dist/types/navigation/index.d.ts",
+            "import": "./dist/esm/navigation/index.js"
+        },
+        "./widget": {
+            "types": "./dist/types/widget/index.d.ts",
+            "import": "./dist/esm/widget/index.js"
         }
     },
     "scripts": {
