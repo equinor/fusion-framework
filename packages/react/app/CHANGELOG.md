@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.3
+
+### Patch Changes
+
+- [#1963](https://github.com/equinor/fusion-framework/pull/1963) [`e0b95f1`](https://github.com/equinor/fusion-framework/commit/e0b95f1879ecfc108987073a58c3c3150c156aa8) Thanks [@eikeland](https://github.com/eikeland)! - Fixes type exports in package
+
 ## 5.0.0
 
 ### Minor Changes
