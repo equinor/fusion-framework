@@ -1,9 +1,11 @@
 import { Configuration, IPublicClientApplication } from '@azure/msal-browser';
 import { AuthClient } from './client';
 import { normalizeUri } from './util/url';
+import { AuthBehavior } from './behavior';
 
-export type AuthClientConfig = Configuration & {
-    auth: Partial<Configuration['auth']>;
+export type AuthClientConfig = Omit<Configuration, 'auth'> & {
+    auth?: Partial<Configuration['auth']>;
+    behavior?: AuthBehavior;
 };
 
 /**
@@ -31,7 +33,7 @@ export const createAuthClient = <T extends IPublicClientApplication = AuthClient
     clientId: string,
     redirectUri?: string,
     config?: AuthClientConfig,
-    ctor?: new (tenantId: string, config: Configuration) => T,
+    ctor?: new (tenantId: string, config: Configuration, defaultBehavior?: AuthBehavior) => T,
 ): T => {
     const auth: Configuration['auth'] = {
         clientId,
@@ -41,8 +43,8 @@ export const createAuthClient = <T extends IPublicClientApplication = AuthClient
         ...config?.auth,
     };
     const cache = { cacheLocation: 'localStorage', ...config?.cache };
-    const system = config?.system;
-    return new (ctor || AuthClient)(tenantId, { auth, cache, system }) as T;
+    const { behavior, system } = config ?? {};
+    return new (ctor || AuthClient)(tenantId, { auth, cache, system }, behavior) as T;
 };
 
 export default createAuthClient;

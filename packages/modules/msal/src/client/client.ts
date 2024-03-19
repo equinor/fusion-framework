@@ -85,6 +85,8 @@ export class AuthClient extends PublicClientApplication {
         return this.browserStorage.getTemporaryCache('request.origin', true);
     }
 
+    #behavior: AuthBehavior;
+
     /**
      * @param tenantId - tenant id for client domain
      * @param config - required [Configuration](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/src/config/Configuration.ts)
@@ -92,8 +94,10 @@ export class AuthClient extends PublicClientApplication {
     constructor(
         readonly tenantId: string,
         config: Configuration,
+        behavior: AuthBehavior = defaultBehavior,
     ) {
         super(config);
+        this.#behavior = behavior;
     }
 
     /**
@@ -109,7 +113,7 @@ export class AuthClient extends PublicClientApplication {
      */
     async login(
         options?: AuthRequest,
-        behavior: AuthBehavior = defaultBehavior,
+        behavior: AuthBehavior = this.#behavior,
         silent = true,
     ): Promise<AuthenticationResult | void> {
         const loginHint = options?.loginHint || this.account?.username;
@@ -153,7 +157,7 @@ export class AuthClient extends PublicClientApplication {
      */
     public async acquireToken(
         options: AuthRequest = { scopes: [] },
-        behavior: AuthBehavior = defaultBehavior,
+        behavior: AuthBehavior = this.#behavior,
         silent = true,
     ): Promise<AuthenticationResult | void> {
         const account = await this.account;
