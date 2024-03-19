@@ -1,5 +1,18 @@
 # Change Log
 
+## 5.0.4
+
+### Patch Changes
+
+- [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
+
+- Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
+  - @equinor/fusion-framework-react-module@3.1.1
+  - @equinor/fusion-framework-react@7.0.1
+  - @equinor/fusion-framework-app@9.0.1
+  - @equinor/fusion-framework-react-module-http@5.0.1
+  - @equinor/fusion-framework-module-app@5.3.0
+
 ## 5.0.3
 
 ### Patch Changes

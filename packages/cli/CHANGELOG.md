@@ -1,5 +1,16 @@
 # Change Log
 
+## 9.10.1
+
+### Patch Changes
+
+- [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
+
+- Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.3.1
+  - @equinor/fusion-framework-app@9.0.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
+
 ## 9.10.0
 
 ### Minor Changes

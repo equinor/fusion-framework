@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.3.1
+
+### Patch Changes
+
+- [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
+
+- Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
+  - @equinor/fusion-framework-react-module@3.1.1
+  - @equinor/fusion-framework-module-services@4.0.1
+  - @equinor/fusion-framework-react@7.0.1
+  - @equinor/fusion-framework-react-module-bookmark@2.1.1
+
 ## 1.3.0
 
 ### Minor Changes
