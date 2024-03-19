@@ -906,8 +906,8 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^2.21.0
-        version: 2.38.3
+        specifier: ^3.10.0
+        version: 3.10.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -1704,16 +1704,15 @@ packages:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  /@azure/msal-browser@2.38.3:
-    resolution: {integrity: sha512-2WuLFnWWPR1IdvhhysT18cBbkXx1z0YIchVss5AwVA95g7CU5CpT3d+5BcgVGNXDXbUU7/5p0xYHV99V5z8C/A==}
+  /@azure/msal-browser@3.10.0:
+    resolution: {integrity: sha512-mnmi8dCXVNZI+AGRq0jKQ3YiodlIC4W9npr6FCB9WN6NQT+6rq+cIlxgUb//BjLyzKsnYo+i4LROGeMyU+6v1A==}
     engines: {node: '>=0.8.0'}
-    deprecated: A newer major version of this library is available. Please upgrade to the latest available version.
     dependencies:
-      '@azure/msal-common': 13.3.1
+      '@azure/msal-common': 14.7.1
     dev: false
 
-  /@azure/msal-common@13.3.1:
-    resolution: {integrity: sha512-Lrk1ozoAtaP/cp53May3v6HtcFSVxdFrg2Pa/1xu5oIvsIwhxW6zSPibKefCOVgd5osgykMi5jjcZHv8XkzZEQ==}
+  /@azure/msal-common@14.7.1:
+    resolution: {integrity: sha512-v96btzjM7KrAu4NSEdOkhQSTGOuNUIIsUdB8wlyB9cdgl5KqEKnTonHUZ8+khvZ6Ap542FCErbnTyDWl8lZ2rA==}
     engines: {node: '>=0.8.0'}
     dev: false
 
