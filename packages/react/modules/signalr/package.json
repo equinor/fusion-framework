@@ -13,7 +13,10 @@
         }
     },
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        }
     },
     "scripts": {
         "build": "tsc -b",
@@ -40,8 +43,8 @@
     },
     "peerDependencies": {
         "@equinor/fusion-framework-react-module": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {

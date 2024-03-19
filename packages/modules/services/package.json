@@ -54,17 +54,25 @@
             "import": "./dist/esm/context/index.js",
             "types": "./dist/types/context/index.d.ts"
         },
-        "./bookmark": {
+        "./context/get": {
+            "import": "./dist/esm/context/get/index.js",
+            "types": "./dist/types/context/get/index.d.ts"
+        },
+        "./context/query": {
+            "import": "./dist/esm/context/query/index.js",
+            "types": "./dist/types/context/query/index.d.ts"
+        },
+        "./context/related": {
+            "import": "./dist/esm/context/related/index.js",
+            "types": "./dist/types/context/related/index.d.ts"
+        },
+        "./bookmarks": {
             "import": "./dist/esm/bookmarks/index.js",
             "types": "./dist/types/bookmarks/index.d.ts"
         },
         "./notification": {
             "import": "./dist/esm/notification/index.js",
             "types": "./dist/types/notification/index.d.ts"
-        },
-        "./context/get": {
-            "import": "./dist/esm/context/get/index.js",
-            "types": "./dist/types/context/get/index.d.ts"
         },
         "./people": {
             "import": "./dist/esm/people/index.js",
