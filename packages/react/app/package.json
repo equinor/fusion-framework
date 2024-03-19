@@ -42,6 +42,34 @@
             "import": "./dist/esm/widget/index.js"
         }
     },
+    "typesVersions": {
+        "*": {
+            "bookmark": [
+                "dist/types/bookmark/index.d.ts"
+            ],
+            "context": [
+                "dist/types/context/index.d.ts"
+            ],
+            "feature-flag": [
+                "dist/types/feature-flag/index.d.ts"
+            ],
+            "framework": [
+                "dist/types/framework/index.d.ts"
+            ],
+            "http": [
+                "dist/types/http/index.d.ts"
+            ],
+            "msal": [
+                "dist/types/msal/index.d.ts"
+            ],
+            "navigation": [
+                "dist/types/navigation/index.d.ts"
+            ],
+            "widget": [
+                "dist/types/widget/index.d.ts"
+            ]
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"
@@ -83,9 +111,9 @@
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0",
         "rxjs": "^7.8.1"
     },
     "peerDependenciesMeta": {

@@ -12,17 +12,17 @@
         "access": "public"
     },
     "type": "module",
-    "main": "./bin/main.js",
     "bin": {
         "fusion-framework-cli": "./bin/cli.mjs"
     },
+    "main": "./bin/main.js",
+    "types": "./dist/types/lib/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/types/lib/index.d.ts",
             "import": "./dist/lib/index.js"
         }
     },
-    "types": "./dist/types/lib/index.d.ts",
     "scripts": {
         "prebuild": "pnpm build:source",
         "build": "pnpm build:source && pnpm build:dev-server",

@@ -3,7 +3,10 @@
     "version": "3.1.0",
     "main": "dist/esm/index.js",
     "exports": {
-        ".": "./dist/esm/index.js"
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        }
     },
     "types": "./dist/types/index.d.ts",
     "scripts": {
@@ -36,9 +39,9 @@
         "typescript": "^5.4.2"
     },
     "peerDependencies": {
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
+        "@types/react": "^17.0.0 || ^18.0.0",
+        "react": "^17.0.0 || ^18.0.0",
+        "react-dom": "^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {
