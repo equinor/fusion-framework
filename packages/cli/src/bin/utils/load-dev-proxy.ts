@@ -6,6 +6,7 @@ import path from 'path';
 import { chalk } from '../utils/format.js';
 
 export const devAppConfig = async (env: ConfigExecuterEnv, app: Express) => {
+    const returnData = { app, hasWidgetConfig: false };
     if (proxyFileExist(env.root)) {
         const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
         try {
@@ -19,6 +20,7 @@ export const devAppConfig = async (env: ConfigExecuterEnv, app: Express) => {
             }
 
             if (appConfig.widgets) {
+                returnData.hasWidgetConfig = true;
                 appConfig.widgets.forEach((widget) => {
                     const serverPath = `/widgets/${widget.name}`;
                     const entryPoint = `/bundle/widgets/${widget.name}`;
@@ -50,5 +52,5 @@ export const devAppConfig = async (env: ConfigExecuterEnv, app: Express) => {
             throw err;
         }
     }
-    return app;
+    return returnData;
 };

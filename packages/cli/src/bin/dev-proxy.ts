@@ -74,7 +74,10 @@ export const createDevProxy = async (
         staticAssets?: { path: string; options?: Parameters<typeof express.static>[1] }[];
     },
     config?: {
-        configurator: (env: ConfigExecuterEnv, app: Express) => Promise<express.Express>;
+        configurator: (
+            env: ConfigExecuterEnv,
+            app: Express,
+        ) => Promise<{ app: express.Express; hasWidgetConfig: boolean }>;
         env: ConfigExecuterEnv;
     },
 ): Promise<Express> => {
@@ -104,7 +107,9 @@ export const createDevProxy = async (
         options,
     );
 
-    const app = config ? await config.configurator(config.env, express()) : express();
+    const { app, hasWidgetConfig } = config
+        ? await config.configurator(config.env, express())
+        : { app: express(), hasWidgetConfig: false };
 
     app.disable('x-powered-by');
 
@@ -122,14 +127,15 @@ export const createDevProxy = async (
                     (x: { key: string }) => x.key !== 'app',
                 );
 
-                // Todo if widget dev
-                response.services = response.services.filter(
-                    (x: { key: string }) => x.key !== 'apps',
-                );
-                response.services.push({
-                    key: 'apps',
-                    uri: new URL('/', req.headers.referer).href,
-                });
+                if (hasWidgetConfig) {
+                    response.services = response.services.filter(
+                        (x: { key: string }) => x.key !== 'apps',
+                    );
+                    response.services.push({
+                        key: 'apps',
+                        uri: new URL('/', req.headers.referer).href,
+                    });
+                }
 
                 /** refer service [app] to vite middleware */
                 response.services.push({
