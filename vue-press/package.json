@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.8",
+    "@vuepress/bundler-vite": "2.0.0-rc.9",
     "@vuepress/cli": "2.0.0-rc.9",
     "@vuepress/client": "2.0.0-rc.8",
     "@vuepress/plugin-register-components": "2.0.0-rc.15",
