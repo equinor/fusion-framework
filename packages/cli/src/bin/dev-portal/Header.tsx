@@ -40,7 +40,7 @@ export const Header = () => {
 
     return (
         <>
-            <TopBar id="cli-top-bar" sticky={false} style={{ padding: 0, height: 48 }}>
+            <TopBar id="cli-top-bar" sticky={false} style={{ padding: '0 1em', height: 48 }}>
                 <TopBar.Header>
                     <Styled.Title>
                         <FusionLogo />

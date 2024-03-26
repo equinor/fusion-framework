@@ -38,6 +38,7 @@
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-react-components-people-provider": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
+        "@equinor/fusion-wc-chip": "^1.2.1",
         "@equinor/fusion-wc-person": "^2.6.5",
         "@types/adm-zip": "^0.5.0",
         "@types/semver": "^7.5.0",

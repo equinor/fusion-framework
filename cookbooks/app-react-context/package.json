@@ -18,7 +18,7 @@
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@equinor/fusion-observable": "^8.2.0",
+        "@equinor/fusion-observable": "workspace:^",
         "@types/react": "^18.2.50",
         "@types/react-dom": "^18.0.8",
         "react": "^18.2.0",
