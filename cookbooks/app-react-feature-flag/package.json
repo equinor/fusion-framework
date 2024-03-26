@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-feature-flag",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "",
     "private": true,
     "type": "module",
