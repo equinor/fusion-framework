@@ -22,7 +22,7 @@
         "typescript": "^5.4.2"
     },
     "dependencies": {
-        "@ag-grid-community/client-side-row-model": "~31.1.1",
+        "@ag-grid-community/client-side-row-model": "~31.2.0",
         "@ag-grid-community/core": "~31.1.1",
         "@ag-grid-community/react": "~31.1.1",
         "@equinor/fusion-framework-module-ag-grid": "workspace:^",
