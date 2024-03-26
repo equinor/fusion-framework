@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.11.0
+
+### Minor Changes
+
+- [#1998](https://github.com/equinor/fusion-framework/pull/1998) [`14530fa`](https://github.com/equinor/fusion-framework/commit/14530fa2d8d7afd45b6849cec2665f2f396bb27f) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli contextselector and resolver
+
 ## 9.10.1
 
 ### Patch Changes
