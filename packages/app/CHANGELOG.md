@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.0.2
+
+### Patch Changes
+
+- [#2033](https://github.com/equinor/fusion-framework/pull/2033) [`036ec15`](https://github.com/equinor/fusion-framework/commit/036ec151ace9c051ded41798ab94b8ee5e3d4461) Thanks [@odinr](https://github.com/odinr)! - Added interface for application render callback
+
 ## 9.0.1
 
 ### Patch Changes

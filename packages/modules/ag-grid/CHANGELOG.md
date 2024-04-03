@@ -1,5 +1,11 @@
 # Change Log
 
+## 31.2.1
+
+### Patch Changes
+
+- [#2037](https://github.com/equinor/fusion-framework/pull/2037) [`20d929f`](https://github.com/equinor/fusion-framework/commit/20d929f87e6b68e1d1df0de114dd46583502a871) Thanks [@odinr](https://github.com/odinr)! - updated @ag-grid-enterprise/core to 31.2.0
+
 ## 31.2.0
 
 ### Minor Changes
