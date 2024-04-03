@@ -478,6 +478,18 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
 
+  cookbooks/app-vanilla:
+    devDependencies:
+      '@equinor/fusion-framework-app':
+        specifier: workspace:^
+        version: link:../../packages/app
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      typescript:
+        specifier: ^5.4.2
+        version: 5.4.2
+
   packages/app:
     dependencies:
       '@equinor/fusion-framework':
