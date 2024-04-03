@@ -1,0 +1,20 @@
+{
+    "name": "@equinor/fusion-framework-cookbook-app-vanilla",
+    "version": "0.0.0",
+    "description": "",
+    "private": true,
+    "type": "module",
+    "main": "src/index.ts",
+    "scripts": {
+        "build": "fusion-framework-cli app build",
+        "dev": "fusion-framework-cli app dev",
+        "docker": "cd .. && sh docker-script.sh app-react"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@equinor/fusion-framework-cli": "workspace:^",
+        "@equinor/fusion-framework-app": "workspace:^",
+        "typescript": "^5.4.2"
+    }
+}
