@@ -11,14 +11,14 @@ import { type ContextItem } from '../types';
 export type ContextPathResolveArgs = {
     /**
      * Callback to extract a context id from a path.
-     * @param path string - the path to extract the context id from
-     * @returns string | undefined - the context id or undefined
+     * @param path - The path to extract the context id from.
+     * @returns The context id or undefined if not found.
      */
     extract?: (path: string) => string | undefined;
     /**
      * Callback to validate a context id.
-     * @param contextId string - the context id to validate
-     * @returns boolean - true if the context id is valid
+     * @param contextId - The context id to validate.
+     * @returns True if the context id is valid, false otherwise.
      */
     validate?: (contextId: string) => boolean;
 };
@@ -28,9 +28,9 @@ const matchGUID =
     /^(?:(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12})$/;
 
 /**
- * Method will try to extract a context id from a path.
- * The default matcher is a GUID pattern.
- * Will iterate over the path and return the first match.
+ * Extracts a context id from a given path using a specified regular expression pattern.
+ * By default, the function uses a GUID pattern to match context ids.
+ * It removes leading slashes, splits the path by slashes, and returns the first path segment that matches the pattern.
  *
  * @example
  * ```ts
@@ -38,79 +38,55 @@ const matchGUID =
  * const contextId = extractContextIdFromPath(path); // '7fd97952-7fe6-409b-a6dc-292dbf0e50d7'
  * ```
  *
- * @param path string - the path to extract the context id from
- * @param matcher RegExp - the pattern to match against
- * @returns string | undefined - the context id or undefined
+ * @param path - The path to extract the context id from.
+ * @param matcher - The regular expression pattern to match against.
+ * @returns The extracted context id or undefined if no match is found.
  */
 export const extractContextIdFromPath = (
     path: string,
     matcher: RegExp = matchGUID,
 ): string | undefined =>
     path
-        // remove leading slashes
-        .replace(/^\/+/, '')
-        // split path by slashes
-        .split('/')
-        // find the first path fragment that matches the matcher
-        .find((x) => x.match(matcher));
-
-const validateContextId = (contextId: string): boolean => !!contextId.match(matchGUID);
+        .replace(/^\/+/, '') // remove leading slashes
+        .split('/') // split path by slashes
+        .find((x) => x.match(matcher)); // find the first segment that matches the pattern
 
 /**
- * Method will try to resolve a context from a path.
- * The method will return a function that takes a path and returns an observable of the resolved context.
- * The method will use the context module to resolve the context.
- * The method will use the extract and validate methods from the args to extract and validate the context id.
- * If the context id is not valid, the method will throw an error.
- * If the context id is valid, the method will return an observable of the resolved context.
- * If the context id is not found, the method will return an empty observable.
+ * Validates whether a given context id matches the GUID pattern.
+ *
+ * @param contextId - The context id to validate.
+ * @returns True if the context id matches the GUID pattern, false otherwise.
+ */
+export const validateContextId = (contextId: string): boolean => !!contextId.match(matchGUID);
+
+/**
+ * Creates a function that resolves a context item from a given path.
+ * The function uses the provided context module to perform the resolution.
+ * Custom extract and validate functions can be supplied to tailor the context id processing.
+ * If the context id is not found or fails validation, an error is thrown.
+ * If the context id is valid but cannot be resolved, an EMPTY observable is returned.
+ * Otherwise, an Observable of the resolved context item is returned.
  *
  * @example
  * ```ts
  * const resolve = resolveContextFromPath(modules.context);
  * resolve(
  *  '/apps/context/7fd97952-7fe6-409b-a6dc-292dbf0e50d7?foobar#example'
- * ).subscribe(console.log);
- * ```
- *
- * @param context The context module.
- * @returns A function that takes a path and returns an Observable of the resolved context item.
- */
-export interface resolveContextFromPath {
-    (context: ModuleType<ContextModule>): (path: string) => Observable<ContextItem>;
-}
-
-/**
- *
- * @example
- * ```ts
- * const resolve = resolveContextFromPath(
- *      modules.context,
- *       {
- *          extract: (path) => path.find(extractingContextFromPath),
- *          validate: (id) => isValidContextId(id)
+ * ).subscribe({
+ *   next: contextItem => console.log(contextItem),
+ *   error: err => console.error(err),
  * });
- * resolve(
- *      '/apps/context/7fd97952-7fe6-409b-a6dc-292dbf0e50d7?foobar#example'
- * ).subscribe(console.log);
  * ```
  *
- * @param context The context module.
- * @param args The arguments for resolving the path.
+ * @param context - The context module used to resolve the context.
+ * @param args - Optional arguments for custom extraction and validation of the context id.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
  */
-export interface resolveContextFromPath {
-    (
-        context: ModuleType<ContextModule>,
-        args: ContextPathResolveArgs,
-    ): (path: string) => Observable<ContextItem>;
-}
-
 export function resolveContextFromPath(
     context: ModuleType<ContextModule>,
     args?: ContextPathResolveArgs,
-) {
-    return (path: string) => {
+): (path: string) => Observable<ContextItem> {
+    return (path) => {
         const { extract = extractContextIdFromPath, validate = validateContextId } = args ?? {};
         const contextId = extract(path);
         if (!contextId) {

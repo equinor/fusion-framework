@@ -21,43 +21,79 @@ import { ContextConfigBuilder, ContextConfigBuilderCallback } from './ContextCon
 import { type IContextProvider } from './ContextProvider';
 import resolveInitialContext from './utils/resolve-initial-context';
 
+/**
+ * Configuration options for the ContextModule.
+ */
 export interface ContextModuleConfig {
+    /**
+     * Configuration for client queries.
+     */
     client: {
+        /**
+         * Configuration for the "get" query for fetching a single context item.
+         */
         get: QueryCtorOptions<ContextItem, GetContextParameters>;
+
+        /**
+         * Configuration for the "query" query for fetching multiple context items.
+         */
         query: QueryCtorOptions<ContextItem[], QueryContextParameters>;
+
+        /**
+         * Optional configuration for the "related" query for fetching related context items.
+         */
         related?: QueryCtorOptions<ContextItem[], RelatedContextParameters>;
     };
+
+    /**
+     * Optional array of context types to filter the contexts.
+     */
     contextType?: string[];
+
+    /**
+     * Optional filter function to apply additional filtering to contexts.
+     */
     contextFilter?: ContextFilterFn;
 
     /**
-     * connect context module to paren context module.
-     *
-     * _default: `true`_
+     * Whether to connect the context module to the parent context module.
+     * Default value is `true`.
      */
     connectParentContext?: boolean;
 
-    /** set initial context from parent, will await resolve */
+    /**
+     * Whether to skip setting the initial context from the parent.
+     * If `true`, will not await to resolve the initial context.
+     */
     skipInitialContext?: boolean;
 
     /**
-     * Method for generating context query parameters.
+     * Optional method for generating context query parameters based on the provided arguments.
      */
     contextParameterFn?: (args: {
         search: string;
         type: ContextModuleConfig['contextType'];
     }) => string | QueryContextParameters;
 
+    /**
+     * Optional method to resolve the current context item.
+     */
     resolveContext?: (
         this: IContextProvider,
         item: ContextItem | null,
     ) => ReturnType<IContextProvider['resolveContext']>;
 
+    /**
+     * Optional method to validate the current context item.
+     */
     validateContext?: (
         this: IContextProvider,
         item: ContextItem | null,
     ) => ReturnType<IContextProvider['validateContext']>;
 
+    /**
+     * Optional method to resolve the initial context based on the provided arguments.
+     */
     resolveInitialContext?: (args: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref?: AnyModuleInstance | any;
@@ -65,19 +101,43 @@ export interface ContextModuleConfig {
     }) => ObservableInput<ContextItem | void>;
 }
 
+/**
+ * Interface for the ContextModule configurator.
+ */
 export interface IContextModuleConfigurator {
+    /**
+     * Adds a configuration builder callback to the configurator.
+     */
     addConfigBuilder: (init: ContextConfigBuilderCallback) => void;
 }
 
+/**
+ * Class responsible for configuring the ContextModule.
+ */
 export class ContextModuleConfigurator implements IContextModuleConfigurator {
+    /**
+     * Default expiration time for queries.
+     */
     defaultExpireTime = 1 * 60 * 1000;
 
+    /**
+     * Private array of configuration builder callbacks.
+     */
     #configBuilders: Array<ContextConfigBuilderCallback> = [];
 
+    /**
+     * Adds a configuration builder callback to the configurator.
+     * @param init The configuration builder callback to add.
+     */
     addConfigBuilder(init: ContextConfigBuilderCallback): void {
         this.#configBuilders.push(init);
     }
 
+    /**
+     * Protected method to get the service provider from the module initializer arguments.
+     * @param init The module initializer arguments.
+     * @returns A promise that resolves to the IApiProvider instance.
+     */
     protected async _getServiceProvider(
         init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule]>,
     ): Promise<IApiProvider> {
@@ -93,6 +153,11 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
         }
     }
 
+    /**
+     * Public method to create the configuration for the ContextModule.
+     * @param init The module initializer arguments.
+     * @returns A promise that resolves to the ContextModuleConfig instance.
+     */
     public async createConfig(
         init: ModuleInitializerArgs<IContextModuleConfigurator, [ServicesModule, NavigationModule]>,
     ): Promise<ContextModuleConfig> {

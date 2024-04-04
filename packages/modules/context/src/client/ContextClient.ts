@@ -9,29 +9,48 @@ import { ContextItem } from '../types';
 
 export type GetContextParameters = { id: string };
 
+/**
+ * ContextClient provides an Observable interface for ContextItem entities and manages their state.
+ */
 export class ContextClient extends Observable<ContextItem | null> {
     #client: Query<ContextItem, { id: string }>;
-    /** might change to reactive state, for comparing state with reducer */
     #currentContext$: BehaviorSubject<ContextItem | null | undefined>;
 
+    /**
+     * Gets the current context value.
+     */
     get currentContext(): ContextItem | null | undefined {
         return this.#currentContext$.value;
     }
 
+    /**
+     * Returns an Observable of the current context value.
+     */
     get currentContext$(): Observable<ContextItem | null | undefined> {
         return this.#currentContext$.asObservable();
     }
 
+    /**
+     * Gets the underlying Query client.
+     */
     get client(): Query<ContextItem, { id: string }> {
         return this.#client;
     }
 
+    /**
+     * Initializes a new instance of the ContextClient class.
+     * @param options - The constructor options for the Query.
+     */
     constructor(options: QueryCtorOptions<ContextItem, GetContextParameters>) {
         super((observer) => this.#currentContext$.subscribe(observer));
         this.#client = new Query(options);
         this.#currentContext$ = new BehaviorSubject<ContextItem | null | undefined>(undefined);
     }
 
+    /**
+     * Sets the current context based on the provided id or ContextItem.
+     * @param idOrItem - The context id or ContextItem to set as the current context.
+     */
     public setCurrentContext(idOrItem?: string | ContextItem | null) {
         if (typeof idOrItem === 'string') {
             // TODO - compare context
@@ -45,6 +64,11 @@ export class ContextClient extends Observable<ContextItem | null> {
         }
     }
 
+    /**
+     * Resolves a context by its id and returns an Observable of the ContextItem.
+     * @param id - The id of the context to resolve.
+     * @returns An Observable of the resolved ContextItem.
+     */
     public resolveContext(id: string): Observable<ContextItem> {
         return this.#client.query({ id }).pipe(
             map((x) => x.value),
@@ -58,11 +82,20 @@ export class ContextClient extends Observable<ContextItem | null> {
         );
     }
 
+    /**
+     * Resolves a context asynchronously by its id and returns a Promise of the ContextItem.
+     * @param id - The id of the context to resolve.
+     * @param opt - Optional settings for the resolution process.
+     * @returns A Promise of the resolved ContextItem.
+     */
     public resolveContextAsync(id: string, opt?: { awaitResolve: boolean }): Promise<ContextItem> {
         const fn = opt?.awaitResolve ? lastValueFrom : firstValueFrom;
         return fn(this.resolveContext(id));
     }
 
+    /**
+     * Disposes of the resources held by the client.
+     */
     public dispose(): void {
         this.#currentContext$.complete();
     }

@@ -1,9 +1,17 @@
-import { useModuleCurrentContext } from '@equinor/fusion-framework-react-module-context';
+import { useCurrentContext } from '@equinor/fusion-framework-react-app/context';
 import { useRelatedContext } from './useRelatedContext';
 
+/**
+ * App Component
+ *
+ * This component is responsible for displaying the current context and related context
+ * obtained from the `useCurrentContext` and `useRelatedContext` hooks respectively.
+ *
+ * The current context and related context are displayed in their own sections,
+ * each with a heading and the context data formatted in JSON.
+ */
 export const App = () => {
-    const { currentContext } = useModuleCurrentContext();
-    // const { value: relatedContext } = useRelatedContext(['EquinorTask']);
+    const { currentContext } = useCurrentContext();
     const { value: relatedContext } = useRelatedContext();
     return (
         <>

@@ -28,6 +28,8 @@ import Query from '@equinor/fusion-query';
  */
 /**
  * Represents a context provider that manages the current context and provides methods for querying and manipulating context items.
+ * It offers both synchronous and asynchronous methods to interact with the context.
+ * The provider is responsible for validating, resolving, and maintaining the state of context items within an application.
  */
 export interface IContextProvider {
     /** DANGER */

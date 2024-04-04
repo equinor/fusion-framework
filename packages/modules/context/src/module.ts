@@ -40,17 +40,17 @@ export const module: ContextModule = {
         // create subscription for disposing the provider
         const subscription = new Subscription(() => provider.dispose());
 
-        // setup post initialize to module
-        this.postInitialize = (args) =>
+        // setup post initialization to module
+        this.postInitialize = (args) => {
             // create observable for resolving initial context
-            new Observable((subscriber) => {
+            return new Observable((subscriber) => {
                 // resolve initial context if available from config if available
                 const resolveInitialContext$ = config.resolveInitialContext
                     ? from(config.resolveInitialContext(args)).pipe(
                           // filter out invalid context items
                           filter((item): item is ContextItem => !!item),
+                          // attempt to set the current context with validation and resolution
                           switchMap((item) =>
-                              // set current context with validation and resolution
                               args.modules.context.setCurrentContext(item, {
                                   validate: true,
                                   resolve: true,
@@ -59,10 +59,11 @@ export const module: ContextModule = {
                       )
                     : EMPTY; // if no initial context is available, complete immediately
 
-                // add teardown to resolve initial context
+                // add teardown logic for the resolve initial context operation
                 subscriber.add(
                     resolveInitialContext$
                         .pipe(
+                            // handle errors during initial context resolution
                             catchError((err) => {
                                 console.warn(
                                     'ContextModule.postInitialize',
@@ -73,6 +74,7 @@ export const module: ContextModule = {
                                 return EMPTY;
                             }),
                         )
+                        // subscribe to the initial context resolution process
                         .subscribe({
                             next: (item) => {
                                 console.debug(
@@ -82,7 +84,7 @@ export const module: ContextModule = {
                                 );
                             },
                             complete: () => {
-                                // connect parent context if available when stream completes
+                                // connect to parent context if configured to do so and a parent provider is available
                                 if (config.connectParentContext !== false && parentProvider) {
                                     provider.connectParentContext(parentProvider);
                                 }
@@ -91,10 +93,12 @@ export const module: ContextModule = {
                         }),
                 );
             });
+        };
 
-        // add teardown to module
+        // add teardown logic to module for cleanup
         this.dispose = () => subscription.unsubscribe();
 
+        // return the created context provider
         return provider;
     },
 };
