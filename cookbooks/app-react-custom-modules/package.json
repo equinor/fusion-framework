@@ -19,5 +19,12 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "typescript": "^5.4.2"
+    },
+    "dependencies": {
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-module-http": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
+        "rxjs": "^7.8.1"
     }
 }
