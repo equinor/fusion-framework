@@ -55,8 +55,8 @@ export class HttpClient<
         public uri: string,
         options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>,
     ) {
-        this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
-        this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
+        this.requestHandler = new HttpRequestHandler<TRequest>(options?.requestHandler);
+        this.responseHandler = new HttpResponseHandler<TResponse>(options?.responseHandler);
         this._init();
     }
 

@@ -7,24 +7,44 @@ export type ProcessOperator<T, R = T> = (request: T) => R | void | Promise<R | v
  * Container for sync/async operators.
  * Pipes each operator sequential
  */
+/**
+ * Represents a collection of process operators.
+ * @template T The type of the request being processed.
+ */
 export interface IProcessOperators<T> {
     /**
-     * Add a new operator (throw error if already defined)
+     * Gets the operators registered in the collection.
+     */
+    get operators(): Record<string, ProcessOperator<T>>;
+
+    /**
+     * Adds a new operator to the collection.
+     * @param key The key to identify the operator.
+     * @param operator The process operator to add.
+     * @returns The updated collection of process operators.
+     * @throws An error if the operator is already defined.
      */
     add(key: string, operator: ProcessOperator<T>): IProcessOperators<T>;
 
     /**
-     * Add or sets a operator
+     * Adds or sets a process operator in the collection.
+     * @param key The key to identify the operator.
+     * @param operator The process operator to add or set.
+     * @returns The updated collection of process operators.
      */
     set(key: string, operator: ProcessOperator<T>): IProcessOperators<T>;
 
     /**
-     * Get a operator, will return undefined on invalid key.
+     * Gets a process operator from the collection.
+     * @param key The key of the operator to retrieve.
+     * @returns The process operator associated with the key, or undefined if the key is invalid.
      */
     get(key: string): ProcessOperator<T>;
 
     /**
-     *  Process registered processors.
+     * Processes the registered process operators.
+     * @param request The request to process.
+     * @returns An observable that emits the processed request.
      */
     process(request: T): Observable<T>;
 }
