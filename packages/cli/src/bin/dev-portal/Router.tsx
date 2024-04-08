@@ -17,6 +17,14 @@ const Styled = {
         grid-template-rows: 48px 1fr;
         height: 100vh;
         overflow: hidden;
+        grid-template-areas: 'head' 'main';
+    `,
+    Head: styled.section`
+        grid-area: head;
+    `,
+    Main: styled.section`
+        grid-area: main;
+        overflow: hidden;
     `,
 };
 
@@ -24,8 +32,12 @@ const Root = () => {
     useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
     return (
         <Styled.ContentContainer>
-            <Header />
-            <Outlet />
+            <Styled.Head>
+                <Header />
+            </Styled.Head>
+            <Styled.Main>
+                <Outlet />
+            </Styled.Main>
         </Styled.ContentContainer>
     );
 };
