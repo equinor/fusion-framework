@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.3.1
+
+### Patch Changes
+
+- [#2050](https://github.com/equinor/fusion-framework/pull/2050) [`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Person component update
+
 ## 4.3.0
 
 ### Minor Changes

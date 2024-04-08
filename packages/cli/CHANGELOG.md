@@ -1,5 +1,26 @@
 # Change Log
 
+## 9.12.0
+
+### Minor Changes
+
+- [#2051](https://github.com/equinor/fusion-framework/pull/2051) [`3eba53a`](https://github.com/equinor/fusion-framework/commit/3eba53a7eb113a9985092a3c6166ab6bdd44c02f) Thanks [@odinr](https://github.com/odinr)! - Aligned CLI dev-portal more to fusion classic portal layout
+
+  > the dev-portal is a generic portal for developing application, not a 100% replica of the environment _(this will be a feature in future, which the developer kan test the application in different simulated portals)_
+
+  **No functionality changed, only the markup of dev-portal**
+
+### Patch Changes
+
+- [#2050](https://github.com/equinor/fusion-framework/pull/2050) [`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Person component update
+
+- [#2052](https://github.com/equinor/fusion-framework/pull/2052) [`545a090`](https://github.com/equinor/fusion-framework/commit/545a0902bc670724498add3f4fd82f251e9156e6) Thanks [@odinr](https://github.com/odinr)! - fix for #2051
+
+- Updated dependencies [[`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c)]:
+  - @equinor/fusion-framework-react-components-people-provider@1.3.2
+  - @equinor/fusion-framework-app@9.0.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
+
 ## 9.11.1
 
 ### Patch Changes

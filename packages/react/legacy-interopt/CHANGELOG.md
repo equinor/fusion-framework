@@ -1,5 +1,17 @@
 # Change Log
 
+## 12.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`4af517f`](https://github.com/equinor/fusion-framework/commit/4af517f107f960aa1dc7459451d99e2e83d350ee), [`4af517f`](https://github.com/equinor/fusion-framework/commit/4af517f107f960aa1dc7459451d99e2e83d350ee)]:
+  - @equinor/fusion-framework-module-http@5.2.1
+  - @equinor/fusion-framework-app@9.0.3
+  - @equinor/fusion-framework@7.1.2
+  - @equinor/fusion-framework-module-app@5.3.0
+  - @equinor/fusion-framework-module-service-discovery@7.1.1
+  - @equinor/fusion-framework-react-app@5.0.6
+
 ## 12.0.3
 
 ### Patch Changes
