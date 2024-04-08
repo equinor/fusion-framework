@@ -61,7 +61,8 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
                     /** create a 'private' element for the application */
                     const el = document.createElement('div');
-                    el.style.display = 'contents';
+                    el.style.height = '100%';
+                    el.style.overflow = 'hidden';
                     if (!ref.current) {
                         throw Error('Missing application mounting point');
                     }
@@ -98,20 +99,20 @@ export const AppLoader = (props: { readonly appKey: string }) => {
                 <div>
                     <h2>🔥 Failed to load application manifest 🤬</h2>
                     <h3>{error.cause.type}</h3>
-                    <ErrorViewer error={error} />;
+                    <ErrorViewer error={error} />
                 </div>
             );
         }
         return (
             <div>
                 <h2>🔥 Failed to load application 🤬</h2>
-                <ErrorViewer error={error} />;
+                <ErrorViewer error={error} />
             </div>
         );
     }
 
     return (
-        <section id="application-content" ref={ref}>
+        <section id="application-content" ref={ref} style={{ display: 'contents' }}>
             {loading && <EquinorLoader text="Loading Application" />}
         </section>
     );
