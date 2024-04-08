@@ -61,8 +61,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
                     /** create a 'private' element for the application */
                     const el = document.createElement('div');
-                    el.style.height = '100%';
-                    el.style.overflow = 'hidden';
+                    el.style.display = 'contents';
                     if (!ref.current) {
                         throw Error('Missing application mounting point');
                     }
