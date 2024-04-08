@@ -24,7 +24,11 @@ const Styled = {
     `,
     Main: styled.section`
         grid-area: main;
-        overflow: hidden;
+        overflow: auto;
+        position: relative;
+        max-width: 100%;
+        z-index: 1;
+        display: grid;
     `,
 };
 
