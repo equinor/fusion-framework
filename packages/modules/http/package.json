@@ -4,6 +4,7 @@
     "description": "",
     "main": "dist/esm/index.js",
     "types": "index.d.ts",
+    "type": "module",
     "exports": {
         ".": {
             "import": "./dist/esm/index.js",
@@ -44,7 +45,8 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "pnpm build"
+        "prepack": "pnpm build",
+        "test": "vitest"
     },
     "keywords": [],
     "author": "",
@@ -63,6 +65,7 @@
         "rxjs": "^7.8.1"
     },
     "devDependencies": {
-        "typescript": "^5.4.2"
+        "typescript": "^5.4.2",
+        "vitest": "^1.2.2"
     }
 }
