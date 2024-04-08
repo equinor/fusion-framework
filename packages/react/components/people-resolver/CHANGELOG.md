@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.3.2
+
+### Patch Changes
+
+- [#2050](https://github.com/equinor/fusion-framework/pull/2050) [`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Person component update
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-services@4.0.1
+  - @equinor/fusion-framework-react@7.0.2
+  - @equinor/fusion-framework-react-module-bookmark@2.1.2
+
 ## 1.3.1
 
 ### Patch Changes
