@@ -2446,7 +2446,7 @@ packages:
       react-router-dom: 5.x || ^6.0.0
     dependencies:
       '@equinor/fusion': 3.4.15(tslib@2.6.2)
-      '@equinor/fusion-observable': 8.2.0(@types/react@18.2.61)(react@18.2.0)
+      '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-react-checkbox': 0.5.17(react@18.2.0)
       '@equinor/fusion-react-divider': 0.2.13(react@18.2.0)
       '@equinor/fusion-react-icon': 0.2.17(react@18.2.0)
@@ -2492,8 +2492,8 @@ packages:
       - typescript
     dev: true
 
-  /@equinor/fusion-observable@8.2.0(@types/react@18.2.61)(react@18.2.0):
-    resolution: {integrity: sha512-AwguSQr800f2iOlCf2sgvvYgqJg/1QAWmzWs62lEsZeJ7GGaKmZwG4SJQjTRqcC0tXzUP6u+3g/R3YzJHrhAeQ==}
+  /@equinor/fusion-observable@8.3.0(@types/react@18.2.61)(react@18.2.0):
+    resolution: {integrity: sha512-z9pUQPVFwzX8SqWKClEXJW65HFwmKbgshCsZhV5Pc0LdSP9sJOyZOGzXo1hGcG4Udx/CetNxoBJ7NmojVJxhxg==}
     peerDependencies:
       '@types/react': "^17.0.0 ||\_^18.0.0"
       react: "^17.0.0 ||\_^18.0.0"
