@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.12.1
+
+### Patch Changes
+
+- [#2059](https://github.com/equinor/fusion-framework/pull/2059) [`303c962`](https://github.com/equinor/fusion-framework/commit/303c96234e381ddc3ad86daeff9baaec5ade6bbe) Thanks [@eikeland](https://github.com/eikeland)! - Removes z-index from apploader section to make ContextSelector dropdown usable again
+
+- Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a)]:
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-react-components-people-provider@1.3.3
+  - @equinor/fusion-framework-app@9.0.4
+
 ## 9.12.0
 
 ### Minor Changes

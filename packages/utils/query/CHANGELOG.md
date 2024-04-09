@@ -1,5 +1,40 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+- [#2053](https://github.com/equinor/fusion-framework/pull/2053) [`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883) Thanks [@odinr](https://github.com/odinr)! - `QueryCache` now supports invalidation of all entries
+
+  When not providing key for `QueryCache.invalidate`, all records will be set to invalid
+
+  ```diff
+  QueryCache.ts
+  -     public invalidate(key: string) {
+  +     public invalidate(key?: string) {
+    this.#state.next(actions.invalidate(key));
+  }
+  ```
+
+  ```diff
+  create-reducer.ts
+  .addCase(actions.invalidate, (state, action) => {
+  +   const invalidKey = action.payload ? [action.payload] : Object.keys(state);
+  -   const entry = state[action.payload];
+  +   for (const key of invalidKey) {
+  +       const entry = state[key];
+          if (entry) {
+             delete entry.updated;
+          }
+  +   }
+  })
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a)]:
+  - @equinor/fusion-observable@8.3.0
+
 ## 4.1.0
 
 ### Minor Changes

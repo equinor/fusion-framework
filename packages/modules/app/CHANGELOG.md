@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a), [`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883)]:
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-query@4.2.0
+
 ## 5.3.0
 
 ### Minor Changes
