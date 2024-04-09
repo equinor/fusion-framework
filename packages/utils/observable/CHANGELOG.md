@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.3.0
+
+### Minor Changes
+
+- [#2054](https://github.com/equinor/fusion-framework/pull/2054) [`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a) Thanks [@odinr](https://github.com/odinr)! - Effects now support multiple triggers
+
 ## 8.2.0
 
 ### Minor Changes

@@ -268,7 +268,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/react/modules/context
       '@equinor/fusion-observable':
-        specifier: ^8.2.0
+        specifier: ^8.3.0
         version: link:../../packages/utils/observable
       '@types/react':
         specifier: ^18.2.50
