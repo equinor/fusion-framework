@@ -27,7 +27,6 @@ const Styled = {
         overflow: auto;
         position: relative;
         max-width: 100%;
-        z-index: 1;
         display: grid;
     `,
 };
