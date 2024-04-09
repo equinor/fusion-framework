@@ -48,7 +48,7 @@ export class QueryCache<TType, TArgs> {
         this.#state.next(actions.remove(key));
     }
 
-    public invalidate(key: string) {
+    public invalidate(key?: string) {
         this.#state.next(actions.invalidate(key));
     }
 

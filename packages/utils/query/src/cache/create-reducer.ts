@@ -6,10 +6,22 @@ import type { CacheSortFn, QueryCacheRecord, QueryCacheStateData } from './types
 
 import { ActionBuilder, Actions } from './actions';
 
+/**
+ * Default sorting function for caching, which sorts based on the 'updated' timestamp.
+ * @param a - The first QueryCacheRecord to compare.
+ * @param b - The second QueryCacheRecord to compare.
+ * @returns A number indicating the sort order.
+ */
 const sortCache: CacheSortFn = (a: QueryCacheRecord, b: QueryCacheRecord): number => {
     return (b.updated ?? 0) - (a.updated ?? 0);
 };
 
+/**
+ * Creates a reducer for managing query cache state.
+ * @param actions - An instance of ActionBuilder containing action creators.
+ * @param initial - The initial state of the query cache.
+ * @returns A reducer function for the query cache state.
+ */
 export default function <TType, TArgs>(
     actions: ActionBuilder<TType, TArgs>,
     initial: QueryCacheStateData<TType, TArgs> = {},
@@ -40,9 +52,12 @@ export default function <TType, TArgs>(
                     delete state[action.payload];
                 })
                 .addCase(actions.invalidate, (state, action) => {
-                    const entry = state[action.payload];
-                    if (entry) {
-                        delete entry.updated;
+                    const invalidKey = action.payload ? [action.payload] : Object.keys(state);
+                    for (const key of invalidKey) {
+                        const entry = state[key];
+                        if (entry) {
+                            delete entry.updated;
+                        }
                     }
                 })
                 .addCase(actions.trim, (state, action) => {
