@@ -1977,7 +1977,7 @@ packages:
   /@changesets/apply-release-plan@7.0.0:
     resolution: {integrity: sha512-vfi69JR416qC9hWmFGSxj7N6wA5J222XNBmezSVATPWDVPIF7gkd4d8CpbEbXmRWbVrkoli3oerGS6dcL/BGsQ==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/config': 3.0.0
       '@changesets/get-version-range-type': 0.4.0
       '@changesets/git': 3.0.0
@@ -1995,7 +1995,7 @@ packages:
   /@changesets/assemble-release-plan@6.0.0:
     resolution: {integrity: sha512-4QG7NuisAjisbW4hkLCmGW2lRYdPrKzro+fCtZaILX+3zdUELSvYjpL4GTv0E4aM9Mef3PuIQp89VmHJ4y2bfw==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/errors': 0.2.0
       '@changesets/get-dependents-graph': 2.0.0
       '@changesets/types': 6.0.0
@@ -2097,7 +2097,7 @@ packages:
   /@changesets/get-release-plan@4.0.0:
     resolution: {integrity: sha512-9L9xCUeD/Tb6L/oKmpm8nyzsOzhdNBBbt/ZNcjynbHC07WW4E1eX8NMGC5g5SbM5z/V+MOrYsJ4lRW41GCbg3w==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/assemble-release-plan': 6.0.0
       '@changesets/config': 3.0.0
       '@changesets/pre': 2.0.0
@@ -2113,7 +2113,7 @@ packages:
   /@changesets/git@3.0.0:
     resolution: {integrity: sha512-vvhnZDHe2eiBNRFHEgMiGd2CT+164dfYyrJDhwwxTVD/OW0FUD6G7+4DIx1dNwkwjHyzisxGAU96q0sVNBns0w==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -2138,7 +2138,7 @@ packages:
   /@changesets/pre@2.0.0:
     resolution: {integrity: sha512-HLTNYX/A4jZxc+Sq8D1AMBsv+1qD6rmmJtjsCJa/9MSRybdxh0mjbTvE6JYZQ/ZiQ0mMlDOlGPXTm9KLTU3jyw==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -2148,7 +2148,7 @@ packages:
   /@changesets/read@0.6.0:
     resolution: {integrity: sha512-ZypqX8+/im1Fm98K4YcZtmLKgjs1kDQ5zHpc2U1qdtNBmZZfo/IBiG162RoP0CUF05tvp2y4IspH11PLnPxuuw==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/git': 3.0.0
       '@changesets/logger': 0.1.0
       '@changesets/parse': 0.4.0
@@ -2169,7 +2169,7 @@ packages:
   /@changesets/write@0.3.0:
     resolution: {integrity: sha512-slGLb21fxZVUYbyea+94uFiD6ntQW0M2hIKNznFizDhZPDgn2c/fv1UzzlW43RVzh1BEDuIqW6hzlJ1OflNmcw==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/types': 6.0.0
       fs-extra: 7.0.1
       human-id: 1.0.2
@@ -2397,7 +2397,7 @@ packages:
       react-dom: '>=16.8'
       styled-components: '>=4.2'
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@equinor/eds-tokens': 0.9.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -2446,7 +2446,7 @@ packages:
       react-router-dom: 5.x || ^6.0.0
     dependencies:
       '@equinor/fusion': 3.4.15(tslib@2.6.2)
-      '@equinor/fusion-observable': 8.2.0(@types/react@18.2.61)(react@18.2.0)
+      '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-react-checkbox': 0.5.17(react@18.2.0)
       '@equinor/fusion-react-divider': 0.2.13(react@18.2.0)
       '@equinor/fusion-react-icon': 0.2.17(react@18.2.0)
@@ -2492,8 +2492,8 @@ packages:
       - typescript
     dev: true
 
-  /@equinor/fusion-observable@8.2.0(@types/react@18.2.61)(react@18.2.0):
-    resolution: {integrity: sha512-AwguSQr800f2iOlCf2sgvvYgqJg/1QAWmzWs62lEsZeJ7GGaKmZwG4SJQjTRqcC0tXzUP6u+3g/R3YzJHrhAeQ==}
+  /@equinor/fusion-observable@8.3.0(@types/react@18.2.61)(react@18.2.0):
+    resolution: {integrity: sha512-z9pUQPVFwzX8SqWKClEXJW65HFwmKbgshCsZhV5Pc0LdSP9sJOyZOGzXo1hGcG4Udx/CetNxoBJ7NmojVJxhxg==}
     peerDependencies:
       '@types/react': "^17.0.0 ||\_^18.0.0"
       react: "^17.0.0 ||\_^18.0.0"
@@ -2523,7 +2523,7 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-checkbox': 1.1.0
+      '@equinor/fusion-wc-checkbox': 1.1.1
       '@equinor/fusion-wc-formfield': 1.1.0
     transitivePeerDependencies:
       - react
@@ -2726,15 +2726,6 @@ packages:
       '@material/mwc-icon-button-toggle': 0.27.0
       lit: 3.1.2
 
-  /@equinor/fusion-wc-checkbox@1.1.0:
-    resolution: {integrity: sha512-zXCNJew3YohTlTYOQEQl8t4iwpU3uYPztYHi+oTvIeGFvopgo5nMgmd+adZuNPRjVtQwJAiFfd7dB6/PDjaMcg==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-checkbox': 0.27.0
-      lit: 3.0.2
-    dev: true
-
   /@equinor/fusion-wc-checkbox@1.1.1:
     resolution: {integrity: sha512-anLfHPuyO9VIsByGp5BAZEMo/wRy/YiCilnE0dlqi4AY5/DxfnjHkvMEinbQ9yeu2y3r/Mp3Oi6TBmYN4cIBXw==}
     dependencies:
@@ -2767,14 +2758,6 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-divider@1.1.0:
-    resolution: {integrity: sha512-tKp1NuZC+SINUYBMbyUghVWnOZBa0PcXTBxjCH+GXqOL/bpqx31qJH3Rq52qEVjcoaJ193OazRftbtZnf+GQxA==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
-      lit: 3.0.2
-    dev: true
-
   /@equinor/fusion-wc-divider@1.1.1:
     resolution: {integrity: sha512-vM09tJy8yoGXVSwCVlptb1uu/9PeOON84vZiSmsuWySkNiDM3xpRARjLhT83XWW/rO7Y8oyM/3D61LVvX274gA==}
     dependencies:
@@ -2801,12 +2784,12 @@ packages:
   /@equinor/fusion-wc-list@1.1.1:
     resolution: {integrity: sha512-+pBtqfGLvOEA2Fs4rw/A2r7onaRKl44y92upFdPq5mH4EOKuCe1Pzose1njVNxnmNhBbADwjWRsya47QlKlLZg==}
     dependencies:
-      '@equinor/fusion-wc-checkbox': 1.1.0
+      '@equinor/fusion-wc-checkbox': 1.1.1
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-divider': 1.1.0
+      '@equinor/fusion-wc-divider': 1.1.1
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-wc-radio': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
       lit: 3.0.2
     dev: true
@@ -2851,7 +2834,7 @@ packages:
     resolution: {integrity: sha512-uKKbU2vjd2gFuVNxAn11NNdYhARDO88l9FRCC4XKxeRtnS/odt+fzY4A5/HZhbt/9fxb3OL06iCbFZxYw7hlag==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       lit: 3.0.2
     dev: true
 
@@ -2883,11 +2866,11 @@ packages:
     resolution: {integrity: sha512-5fc6SaWUf2EOy0Kh9WJ8WHSP7TPFhpo7UWDGZZbzv8aq0Czt7nNDeFN+60zwkTXP94RQhyBD3MAUvlhn/xeW0Q==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-divider': 1.1.0
+      '@equinor/fusion-wc-divider': 1.1.1
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-wc-list': 1.1.1
       '@equinor/fusion-wc-textinput': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@lit-labs/task': 3.1.0
       '@material/mwc-textfield': 0.27.0
       '@types/uuid': 9.0.8
@@ -2922,7 +2905,7 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-textfield': 0.27.0
       lit: 3.0.2
     dev: true
@@ -2949,7 +2932,7 @@ packages:
     resolution: {integrity: sha512-V8ECVXAz2BcKoAFZxTUja0x1ujY+2TbVqpOf3Nwh+7DoIucSqv7PBxr2JmDXQW4r88m+YChtxcp8rVthXwKxIg==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/theme': 14.0.0
       lit: 3.0.2
     dev: true
@@ -3594,7 +3577,7 @@ packages:
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -3603,7 +3586,7 @@ packages:
   /@manypkg/get-packages@1.1.3:
     resolution: {integrity: sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@changesets/types': 4.1.0
       '@manypkg/find-root': 1.1.0
       fs-extra: 8.1.0
@@ -3763,6 +3746,7 @@ packages:
 
   /@material/mwc-base@0.27.0:
     resolution: {integrity: sha512-oCWWtjbyQ52AaUbzINLGBKScIPyqhps2Y7c8t6Gu6fcFeDxhKXMV1Cqvtj/OMhtAt53XjHfD2XruWwYv3cYYUA==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/dom': 14.0.0-canary.53b3cad2f.0
@@ -3779,6 +3763,7 @@ packages:
 
   /@material/mwc-checkbox@0.27.0:
     resolution: {integrity: sha512-EY0iYZLwo8qaqMwR5da4fdn0xI0BZNAvKTcwoubYWpDDHlGxDcqwvjp/40ChGo3Q/zv8/4/A0Qp7cwapI82EkA==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
@@ -3794,6 +3779,7 @@ packages:
 
   /@material/mwc-formfield@0.27.0:
     resolution: {integrity: sha512-XGZtC1MTyGQ8b2osnaygGzS3qe2QvlWfXZepcFs9i6MW+b6VimQQ4c/KsKIF7dHmeY6N0o4k9pAZ086EGesXOQ==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/form-field': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
@@ -3862,6 +3848,7 @@ packages:
 
   /@material/mwc-ripple@0.27.0:
     resolution: {integrity: sha512-by0O8d8g3Rd96/sUB8hxy6MrDx1QTstqOsA64vqypWd526hMTBGRik08jTNap5sVIyrN9Vq17jb4NJLWQLnNHQ==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
@@ -5405,7 +5392,7 @@ packages:
       '@storybook/theming': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       core-js: 3.36.0
       memoizerific: 1.11.3
-      qs: 6.11.2
+      qs: 6.12.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       regenerator-runtime: 0.13.11
@@ -5433,7 +5420,7 @@ packages:
       '@storybook/client-logger': 6.5.16
       core-js: 3.36.0
       memoizerific: 1.11.3
-      qs: 6.11.2
+      qs: 6.12.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       regenerator-runtime: 0.13.11
@@ -5480,7 +5467,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.23.5
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       '@types/aria-query': 5.0.4
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -7864,7 +7851,7 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
     dev: true
 
   /date-fns@3.3.1:
@@ -8098,7 +8085,7 @@ packages:
     peerDependencies:
       react: '>=16.12.0'
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       compute-scroll-into-view: 3.1.0
       prop-types: 15.8.1
       react: 18.2.0
@@ -8421,7 +8408,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       aria-query: 5.3.0
       array-includes: 3.1.7
       array.prototype.flatmap: 1.3.2
@@ -11651,13 +11638,6 @@ packages:
     dependencies:
       side-channel: 1.0.6
 
-  /qs@6.11.2:
-    resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
-    engines: {node: '>=0.6'}
-    dependencies:
-      side-channel: 1.0.6
-    dev: true
-
   /qs@6.12.0:
     resolution: {integrity: sha512-trVZiI6RMOkO476zLGaBIzszOdFPnCCXHPG9kn0yuS1uz6xdVxPfZdB3vUig9pxPFDM9BRAgz/YUIVQ1/vuiUg==}
     engines: {node: '>=0.6'}
@@ -11779,7 +11759,7 @@ packages:
     peerDependencies:
       react: '>=15'
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
@@ -11797,7 +11777,7 @@ packages:
     peerDependencies:
       react: '>=15'
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
@@ -11833,7 +11813,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.24.0
+      '@babel/runtime': 7.24.1
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
       use-latest: 1.2.1(@types/react@18.2.61)(react@18.2.0)
