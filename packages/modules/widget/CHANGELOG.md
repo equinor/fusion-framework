@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`fab2d22`](https://github.com/equinor/fusion-framework/commit/fab2d22f56772c02b1c1e5688cea1dd376edfcb3)]:
+  - @equinor/fusion-framework-module-http@5.2.2
+  - @equinor/fusion-framework-module-service-discovery@7.1.3
+
 ## 4.0.3
 
 ### Patch Changes

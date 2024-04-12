@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-context",
-    "version": "4.1.6",
+    "version": "4.1.7",
     "description": "React application using framework context",
     "private": true,
     "type": "module",

@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.0.5
+  - @equinor/fusion-framework-module-app@5.3.1
+  - @equinor/fusion-framework-react-module-http@5.0.3
+  - @equinor/fusion-framework-react@7.0.4
+
 ## 5.0.7
 
 ### Patch Changes

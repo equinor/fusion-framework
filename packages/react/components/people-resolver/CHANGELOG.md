@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.3.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-services@4.0.1
+  - @equinor/fusion-framework-react@7.0.4
+  - @equinor/fusion-framework-react-module-bookmark@2.1.4
+
 ## 1.3.3
 
 ### Patch Changes
