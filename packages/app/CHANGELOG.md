@@ -1,5 +1,15 @@
 # Change Log
 
+## 9.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`fab2d22`](https://github.com/equinor/fusion-framework/commit/fab2d22f56772c02b1c1e5688cea1dd376edfcb3)]:
+  - @equinor/fusion-framework-module-http@5.2.2
+  - @equinor/fusion-framework@7.1.4
+  - @equinor/fusion-framework-module-app@5.3.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+
 ## 9.0.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.2.2
+
+### Patch Changes
+
+- [#2073](https://github.com/equinor/fusion-framework/pull/2073) [`fab2d22`](https://github.com/equinor/fusion-framework/commit/fab2d22f56772c02b1c1e5688cea1dd376edfcb3) Thanks [@eikeland](https://github.com/eikeland)! - Removing type module in package.json
+
 ## 5.2.1
 
 ### Patch Changes
