@@ -3,7 +3,7 @@ import { Query } from '../src/Query';
 import { reduce } from 'rxjs';
 
 describe('invalidation of queries', () => {
-    it.only('should invalidate the cache', async () => {
+    it('should invalidate the cache', async () => {
         // Initializes a new Query instance with a mock client, a key generator function, and an expiration time.
         const query = new Query({
             client: { fn: vi.fn(async (value) => value) }, // Mock client function that resolves immediately with the provided value.
