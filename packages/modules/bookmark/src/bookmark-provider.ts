@@ -8,7 +8,7 @@ import {
 
 import { BookmarkClient } from './client/bookmarkClient';
 
-import { BookmarkModuleConfig } from './configurator';
+import { BookmarkModuleConfig } from './types';
 import { Observable, Subscription } from 'rxjs';
 import { Bookmark, CreateBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
 
@@ -72,7 +72,7 @@ export interface IBookmarkModuleProvider {
     /**
      * Function for updating bookmark a bookmark when successful this will update the bookmark list.
      * @template T - Payload Type
-     * @param {string} bookmarkId
+     * @param {string} bookmark
      * @param {Bookmark<T>} bookmark
      * @return {Observable<Bookmark<T>>} - An observable of the updated Bookmark.
      */
@@ -81,7 +81,7 @@ export interface IBookmarkModuleProvider {
     /**
      * Function for updating bookmark a bookmark when successful this will update the bookmark list.
      * @template T - Payload Type
-     * @param {string} bookmarkId
+     * @param {string} bookmark
      * @param {Bookmark<T>} bookmark
      * @param {UpdateBookmarkOptions} options - optional options that allow for configuration of bookmark payload update.
      * @return {Promise<Bookmark<T>>} - Promise of a Bookmark
@@ -158,6 +158,7 @@ export interface IBookmarkModuleProvider {
     bookmarkCreators: Record<string, CreateBookmarkFn<unknown>>;
 }
 
+// @TODO: Odin says it should be a ObservableInput.
 export type CreateBookmarkFn<T> = () => Promise<Partial<T>> | Partial<T>;
 
 export class BookmarkModuleProvider implements IBookmarkModuleProvider {
@@ -182,16 +183,17 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
 
     constructor(config: BookmarkModuleConfig, ref?: IBookmarkModuleProvider) {
         this.config = config;
-        this.#event = config.event;
+        this.#event = config.eventProvider;
         this._bookmarkClient = ref
             ? (ref as unknown as BookmarkModuleProvider)._bookmarkClient
-            : new BookmarkClient(config.clientConfiguration, config.sourceSystem, config.event);
+            : new BookmarkClient(config.client, config.sourceSystem, config.eventProvider); // @TODO
 
-        const initialBookmarkId = config.resolveBookmarkId && config.resolveBookmarkId();
+        // // @TODO: Odin: What to do here?
+        // const initialBookmarkId = config.resolveBookmarkId && config.resolveBookmarkId();
 
-        if (initialBookmarkId) {
-            this._bookmarkClient.setCurrentBookmark(initialBookmarkId);
-        }
+        // if (initialBookmarkId) {
+        //     this._bookmarkClient.setCurrentBookmark(initialBookmarkId);
+        // }
 
         if (this.#event) {
             this.#subscriptions.add(
@@ -258,6 +260,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
         return await this._bookmarkClient.verifyBookmarkFavoriteAsync(bookmarkId);
     }
 
+    // @TODO: why can key be undefined? It can possibly override other stateCreators ('#creator')
     public addStateCreator<T>(cb: CreateBookmarkFn<T>, key?: keyof T): VoidFunction {
         const bookmarkCreatorKey = key ? key : '#creator';
 
@@ -282,7 +285,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
     }): Promise<Bookmark<T>> {
         const payload = await this.#createPayload();
 
-        const contextId = this.config.getContextId && this.config.getContextId();
+        const contextId = this.config.resolveContextId && this.config.resolveContextId();
         const appKey = this.#getAppKey();
         const bookmark: CreateBookmark<unknown> = {
             ...args,
@@ -305,18 +308,21 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
             throw Error('No creator registered on this BookmarkProvider');
         }
 
+        // @TODO: if there is a callback on the default creator, the function
+        // will early-exit and not run the other creators.
+        // @TODO: Sounds strange.. By design? if true - why?
         if (typeof creator['#creator'] === 'function') {
             return creator['#creator']();
         }
 
         return await Object.entries(creator).reduce(async (cur, [key, fn]) => {
+            // @TODO: If converted to a ObservableInput, this needs to change as well
             return Object.assign(await cur, { [key]: await fn() });
         }, Promise.resolve({}));
     }
 
     #getAppKey() {
-        const appKey =
-            this.config.getCurrentAppIdentification && this.config.getCurrentAppIdentification();
+        const appKey = this.config.resolveApplicationKey && this.config.resolveApplicationKey();
 
         if (!appKey)
             throw new Error(`There is noe current application selected, can't create bookmark.`);

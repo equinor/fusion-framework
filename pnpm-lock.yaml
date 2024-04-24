@@ -829,6 +829,9 @@ importers:
       '@equinor/fusion-query':
         specifier: workspace:^
         version: link:../../utils/query
+      bookmarks:
+        specifier: link:@equinor/fusion-framework-module-services/src/bookmarks
+        version: link:@equinor/fusion-framework-module-services/src/bookmarks
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1

@@ -1,4 +1,6 @@
 import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
+import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+import { type ObservableInput } from 'rxjs';
 
 export interface PatchBookmark<TData = unknown> extends Partial<Bookmark<TData>> {
     id: string;
@@ -53,6 +55,27 @@ interface Context {
     id: string;
     name: string;
     type: string;
+}
+
+export interface BookmarksApiClient<TType = unknown> {
+    getAll: <T = TType>() => ObservableInput<Array<Bookmark<T>>>;
+    getById: <T = TType>(id: string) => ObservableInput<Bookmark<T>>;
+    addFavorite: (bookmarkId: string) => ObservableInput<void>;
+    removeFavorite: (bookmarkId: string) => ObservableInput<void>;
+    verifyFavorite: (bookmarkId: string) => ObservableInput<boolean>;
+    create: <T = TType>(bookmark: Bookmark) => ObservableInput<Bookmark<T>>;
+    update: <T = TType>(
+        bookmark: Partial<Bookmark> & Pick<Bookmark, 'id'>,
+    ) => ObservableInput<Bookmark<T>>;
+    delete: (bookmarkId: string) => ObservableInput<boolean>;
+}
+
+export interface BookmarkModuleConfig {
+    sourceSystem?: SourceSystem;
+    client: BookmarksApiClient;
+    resolveContextId: () => string | undefined;
+    resolveApplicationKey: () => string | undefined;
+    eventProvider?: IEventModuleProvider;
 }
 
 export type GetBookmarkParameters = { id: string };

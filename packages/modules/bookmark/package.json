@@ -41,6 +41,7 @@
         "@equinor/fusion-framework-module": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
+        "bookmarks": "link:@equinor/fusion-framework-module-services/src/bookmarks",
         "rxjs": "^7.8.1"
     },
     "devDependencies": {
