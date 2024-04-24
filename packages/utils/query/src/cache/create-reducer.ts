@@ -1,15 +1,12 @@
 import { castDraft } from 'immer';
-
 import { createReducer } from '@equinor/fusion-observable';
-
 import type { CacheSortFn, QueryCacheRecord, QueryCacheStateData } from './types';
-
 import { ActionBuilder, Actions } from './actions';
 
 /**
- * Default sorting function for caching, which sorts based on the 'updated' timestamp.
- * @param a - The first QueryCacheRecord to compare.
- * @param b - The second QueryCacheRecord to compare.
+ * Sort function for ordering cache records based on their update time.
+ * @param a First QueryCacheRecord for comparison.
+ * @param b Second QueryCacheRecord for comparison.
  * @returns A number indicating the sort order.
  */
 const sortCache: CacheSortFn = (a: QueryCacheRecord, b: QueryCacheRecord): number => {
@@ -17,10 +14,10 @@ const sortCache: CacheSortFn = (a: QueryCacheRecord, b: QueryCacheRecord): numbe
 };
 
 /**
- * Creates a reducer for managing query cache state.
- * @param actions - An instance of ActionBuilder containing action creators.
- * @param initial - The initial state of the query cache.
- * @returns A reducer function for the query cache state.
+ * Creates a reducer for managing the state of a query cache.
+ * @param actions An object containing action creators for the cache.
+ * @param initial The initial state data of the query cache.
+ * @returns A reducer function tailored for the query cache state.
  */
 export default function <TType, TArgs>(
     actions: ActionBuilder<TType, TArgs>,
@@ -30,27 +27,32 @@ export default function <TType, TArgs>(
         initial,
         (builder) =>
             builder
+                // Handles the 'set' action to update or add a cache record.
                 .addCase(actions.set, (state, action) => {
                     const { key, entry } = action.payload;
-
                     const record = state[key];
+
                     if (record) {
+                        // If the record exists, update the timestamp and increment the update count.
                         record.updated = Date.now();
                         record.updates ??= 0;
                         record.updates++;
+                        delete record.mutated;
                     } else {
+                        // If the record does not exist, create a new one with the current timestamp.
                         const created = Date.now();
                         state[key] = castDraft({
                             ...entry,
                             created,
-                            /** `updated` = `created`, but `updates` is `undefined` */
-                            updated: created,
+                            updated: created, // Set `updated` to the creation time.
                         });
                     }
                 })
+                // Handles the 'remove' action to delete a cache record.
                 .addCase(actions.remove, (state, action) => {
                     delete state[action.payload];
                 })
+                // Handles the 'invalidate' action to invalidate a cache record.
                 .addCase(actions.invalidate, (state, action) => {
                     const invalidKey = action.payload ? [action.payload] : Object.keys(state);
                     for (const key of invalidKey) {
@@ -60,33 +62,47 @@ export default function <TType, TArgs>(
                         }
                     }
                 })
+                // Handles the 'mutate' action to modify a cache record's value and metadata.
+                .addCase(actions.mutate, (state, action) => {
+                    const { key, value, updated } = action.payload;
+                    const record = state[key];
+                    if (record) {
+                        // Update the record with the new value and metadata.
+                        record.value = castDraft(value);
+                        record.updated = updated;
+                        record.mutated = Date.now();
+                        record.updates ??= 0;
+                        record.updates++;
+                    }
+                })
+                // Handles the 'trim' action to limit the number of cache records and remove invalid ones.
                 .addCase(actions.trim, (state, action) => {
                     const { payload } = action;
-                    const sortFn: CacheSortFn = payload.sort ?? sortCache;
+                    const sortFn: CacheSortFn = payload.sort ?? sortCache; // Use custom sort function if provided.
                     const currentKeys = Object.keys(state);
                     const validKeys = Object.entries(state)
-                        /** remove entries which are no longer valid */
+                        // Filter out invalid entries based on the provided validation function.
                         .filter(
                             ([_, value]) =>
                                 !payload.validate ||
                                 payload.validate(value as QueryCacheRecord<TType, TArgs>),
                         )
-                        /** sort data records */
+                        // Sort the remaining entries using the provided sort function.
                         .sort((a, b) => sortFn(a[1], b[1]))
-                        /** remove buffer overflow */
+                        // Limit the number of entries based on the specified size or default to MAX_SAFE_INTEGER.
                         .slice(0, payload.size ?? Number.MAX_SAFE_INTEGER)
-                        /** minimize to only keys */
+                        // Map the entries to their keys.
                         .map(([key]) => key);
 
+                    // Remove keys that are not in the list of valid keys.
                     if (currentKeys.length !== validKeys.length) {
                         for (const key of currentKeys) {
-                            /** get index of valid key */
-                            const validKey = validKeys.indexOf(key);
-                            if (validKey !== -1) {
-                                /** valid, no need to keep in search */
-                                validKeys.splice(validKey, 1);
+                            const validKeyIndex = validKeys.indexOf(key);
+                            if (validKeyIndex !== -1) {
+                                // If the key is valid, remove it from the search list.
+                                validKeys.splice(validKeyIndex, 1);
                             } else {
-                                /** invalid, remove from state */
+                                // If the key is not valid, remove it from the state.
                                 delete state[key];
                             }
                         }
