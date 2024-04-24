@@ -3,19 +3,16 @@ import {
     FrameworkEventInit,
     IEventModuleProvider,
 } from '@equinor/fusion-framework-module-event';
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
 import { createState, FlowState } from '@equinor/fusion-observable';
-import Query, { type QueryCtorOptions } from '@equinor/fusion-query';
+import Query from '@equinor/fusion-query';
 
-import { BehaviorSubject, lastValueFrom, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, from, lastValueFrom, map, Observable, ObservableInput, Subscription } from 'rxjs';
 
 import {
     Bookmark,
+    BookmarksApiClient,
     CreateBookmark,
-    GetAllBookmarksParameters,
-    GetBookmarkParameters,
     PatchBookmark,
     SourceSystem,
 } from '../types';
@@ -29,17 +26,13 @@ import {
 } from './bookmarkFlows';
 
 export type BookmarkClientConfig = {
-    client: BookmarksApiClient<'fetch', IHttpClient, Bookmark<unknown>>;
-    queryClientConfig: {
-        getAllBookmarks: QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
-        getBookmarkById: QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
-    };
+    client: BookmarksApiClient;
 };
 
 export class BookmarkClient {
-    #queryBookmarkById: Query<Bookmark<unknown>, GetBookmarkParameters>;
-    #queryAllBookmarks: Query<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
-    #bookmarkAPiClient: BookmarksApiClient<'fetch', IHttpClient, unknown>;
+    #queryBookmarkById: Query<Bookmark<unknown>, string>;
+    #queryAllBookmarks: Query<Array<Bookmark<unknown>>, void>;
+    #bookmarkAPiClient: BookmarksApiClient;
 
     #currentBookmark$: BehaviorSubject<Bookmark<unknown> | undefined>;
 
@@ -58,9 +51,22 @@ export class BookmarkClient {
     ) {
         this.#currentBookmark$ = new BehaviorSubject<Bookmark<unknown> | undefined>(undefined);
 
+        const expire: number = 5 * 60 * 1000;
         this.#bookmarkAPiClient = config.client;
-        this.#queryBookmarkById = new Query(config.queryClientConfig.getBookmarkById);
-        this.#queryAllBookmarks = new Query(config.queryClientConfig.getAllBookmarks);
+        this.#queryBookmarkById = new Query({
+            client: {
+                fn: config.client.getById,
+            },
+            key: (id: string) => id,
+            expire,
+        });
+        this.#queryAllBookmarks = new Query({
+            client: {
+                fn: config.client.getAll,
+            },
+            key: () => 'all-bookmarks',
+            expire,
+        });
 
         this.#sourceSystem = sourceSystem;
         this.#event = event;
@@ -130,22 +136,6 @@ export class BookmarkClient {
         }
     }
 
-    public resolverBookmark<T>(bookmarkId: string): Observable<Bookmark<T>> {
-        return this.#queryBookmarkById
-            .query({
-                id: bookmarkId,
-            })
-            .pipe(
-                map((bookmark) => {
-                    return bookmark.value;
-                }),
-            ) as Observable<Bookmark<T>>;
-    }
-
-    public resolverBookmarkAsync<T>(bookmarkId: string): Promise<Bookmark<T>> {
-        return lastValueFrom(this.resolverBookmark<T>(bookmarkId));
-    }
-
     public getAllBookmarks(args = { isValid: false }): Observable<Array<Bookmark>> {
         const { isValid } = args;
         return new Observable((subscriber) => {
@@ -168,10 +158,14 @@ export class BookmarkClient {
         return lastValueFrom(this.getAllBookmarks(args));
     }
 
-    public async getBookmarkById<T>(bookmarkId: string): Promise<Bookmark<T>> {
-        const result = await this.#bookmarkAPiClient.get('v1', { id: bookmarkId });
-        const bookmark = (await result.json()) as Bookmark<T>;
-        return bookmark;
+    public getBookmarkById<T>(bookmarkId: string): Observable<Bookmark<T>> {
+        return this.#queryBookmarkById
+            .query(bookmarkId)
+            .pipe(map((result) => result.value as Bookmark<T>));
+    }
+
+    public async getBookmarkByIdAsync<T>(bookmarkId: string): Promise<Bookmark<T>> {
+        return lastValueFrom(this.getBookmarkById(bookmarkId));
     }
 
     public createBookmark(bookmark: CreateBookmark<unknown>): Observable<Bookmark<unknown>> {
@@ -179,6 +173,7 @@ export class BookmarkClient {
             this.#state.dispatch.create(bookmark);
             subscriber.add(
                 this.#state.subject.addEffect('create::success', (action) => {
+                    this.#queryAllBookmarks.cache.invalidate();
                     subscriber.next(action.payload as Bookmark<unknown>);
                     subscriber.complete();
                 }),
@@ -205,6 +200,12 @@ export class BookmarkClient {
                     subscriber.next(action.payload as Bookmark<T>);
                     subscriber.complete();
                     this.#queryBookmarkById.cache.invalidate(action.payload.id);
+                    this.#queryAllBookmarks.cache.invalidate();
+                }),
+            );
+            subscriber.add(
+                this.#state.subject.addEffect('update::failure', (action) => {
+                    subscriber.error(action.payload);
                 }),
             );
         });
@@ -222,6 +223,11 @@ export class BookmarkClient {
                     subscriber.next(action.payload);
                     subscriber.complete();
                     this.#queryBookmarkById.cache.invalidate(action.payload);
+                }),
+            );
+            subscriber.add(
+                this.#state.subject.addEffect('delete::failure', (action) => {
+                    subscriber.error(action.payload);
                 }),
             );
         });
@@ -257,7 +263,7 @@ export class BookmarkClient {
 
     #addStateEffects() {
         this.#state.subject.addEffect('create::success', (action) => {
-            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+            this.#queryAllBookmarks.cache.invalidate();
             this.#event?.dispatchEvent('onBookmarkCreated', {
                 detail: action.payload,
                 canBubble: true,
@@ -265,8 +271,8 @@ export class BookmarkClient {
             });
         });
         this.#state.subject.addEffect('delete::success', (action) => {
-            console.log('here');
-            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+            this.#queryAllBookmarks.cache.invalidate();
+            this.#queryBookmarkById.cache.removeItem(action.payload);
             this.#event?.dispatchEvent('onBookmarkDeleted', {
                 detail: action.payload,
                 canBubble: true,
@@ -274,7 +280,8 @@ export class BookmarkClient {
             });
         });
         this.#state.subject.addEffect('update::success', (action) => {
-            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+            this.#queryAllBookmarks.cache.invalidate();
+            this.#queryBookmarkById.cache.invalidate(action.payload.id);
             this.#event?.dispatchEvent('onBookmarkUpdated', {
                 detail: action.payload,
                 canBubble: true,
@@ -282,11 +289,11 @@ export class BookmarkClient {
             });
         });
         this.#state.subject.addEffect('addFavorite::request', () => {
-            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+            this.#queryAllBookmarks.cache.invalidate();
         });
 
         this.#state.subject.addEffect('removeFavorite::request', () => {
-            this.#queryAllBookmarks.cache.invalidate('all-bookmarks');
+            this.#queryAllBookmarks.cache.invalidate();
         });
     }
 
@@ -301,9 +308,6 @@ export class BookmarkClient {
         );
         this.#subscriptions.add(
             this.#state.subject.addFlow(handleDeleteBookmark(this.#bookmarkAPiClient)),
-        );
-        this.#subscriptions.add(
-            this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient)),
         );
         this.#subscriptions.add(
             this.#state.subject.addFlow(handleUpdateBookmark(this.#bookmarkAPiClient)),

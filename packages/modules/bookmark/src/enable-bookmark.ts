@@ -1,13 +1,7 @@
-import type {
-    AnyModule,
-    IModulesConfigurator,
-    ModuleInitializerArgs,
-} from '@equinor/fusion-framework-module';
-import { BookmarkConfigBuilder } from './bookmark-config-builder';
-
-import { IBookmarkModuleConfigurator } from './configurator';
+import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './module';
+import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 
 /**
  * Method for enabling Bookmark module
@@ -16,12 +10,7 @@ import { module } from './module';
 export const enableBookmark = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    builder?: <TDeps extends Array<AnyModule> = []>(
-        builder: BookmarkConfigBuilder<
-            TDeps,
-            ModuleInitializerArgs<IBookmarkModuleConfigurator, TDeps>
-        >,
-    ) => void | Promise<void>,
+    builder?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {
     configurator.addConfig({
         module,

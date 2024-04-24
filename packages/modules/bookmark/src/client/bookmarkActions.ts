@@ -13,21 +13,25 @@ export const actions = {
         'delete',
         (id: string) => ({ payload: id }),
         (id: string) => ({ payload: id }),
+        (err: unknown) => ({ payload: err }),
     ),
     addFavorite: createAsyncAction(
         'addFavorite',
         (bookmark: Bookmark) => ({ payload: bookmark }),
         (bookmark: Bookmark) => ({ payload: bookmark }),
+        (err: unknown) => ({ payload: err }),
     ),
     removeFavorite: createAsyncAction(
         'removeFavorite',
         (id: string) => ({ payload: id }),
         (id: string) => ({ payload: id }),
+        (err: unknown) => ({ payload: err }),
     ),
     update: createAsyncAction(
         'update',
         (bookmark: PatchBookmark) => ({ payload: bookmark }),
         (bookmark: Bookmark) => ({ payload: bookmark }),
+        (err: unknown) => ({ payload: err }),
     ),
     create: createAsyncAction(
         'create',
