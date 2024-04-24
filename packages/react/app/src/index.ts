@@ -1,8 +1,3 @@
-/**
- * [[include:react-app/README.MD]]
- * @module
- */
-
 export type {
     AppConfig,
     AppEnv,
@@ -10,6 +5,7 @@ export type {
     AppModules,
     AppModulesInstance,
     AppManifest,
+    AppRenderFn,
     IAppConfigurator,
 } from '@equinor/fusion-framework-app';
 
