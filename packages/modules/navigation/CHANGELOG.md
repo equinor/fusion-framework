@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.1
+
+### Patch Changes
+
+- [#2096](https://github.com/equinor/fusion-framework/pull/2096) [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5) Thanks [@odinr](https://github.com/odinr)! - update documentation
+
 ## 4.0.0
 
 ### Minor Changes

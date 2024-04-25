@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.1.1
+
+### Patch Changes
+
+- [#2104](https://github.com/equinor/fusion-framework/pull/2104) [`35dd1fb`](https://github.com/equinor/fusion-framework/commit/35dd1fba61fb3ee0f3bfd0ecb81c53cff5f31142) Thanks [@odinr](https://github.com/odinr)! - bumped vue to 3.4.25
+
 ## 0.1.0
 
 ### Minor Changes

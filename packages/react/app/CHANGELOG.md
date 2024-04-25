@@ -1,5 +1,17 @@
 # Change Log
 
+## 5.0.9
+
+### Patch Changes
+
+- [#2096](https://github.com/equinor/fusion-framework/pull/2096) [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5) Thanks [@odinr](https://github.com/odinr)! - update documentation
+
+- Updated dependencies [[`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5)]:
+  - @equinor/fusion-framework-module-navigation@4.0.1
+  - @equinor/fusion-framework-module-app@5.3.2
+  - @equinor/fusion-framework-app@9.0.6
+  - @equinor/fusion-framework-react@7.0.5
+
 ## 5.0.8
 
 ### Patch Changes
