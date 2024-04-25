@@ -2535,7 +2535,7 @@ packages:
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
-      '@equinor/fusion-wc-checkbox': 1.1.0
+      '@equinor/fusion-wc-checkbox': 1.1.1
       '@equinor/fusion-wc-formfield': 1.1.0
     transitivePeerDependencies:
       - react
@@ -2738,15 +2738,6 @@ packages:
       '@material/mwc-icon-button-toggle': 0.27.0
       lit: 3.1.2
 
-  /@equinor/fusion-wc-checkbox@1.1.0:
-    resolution: {integrity: sha512-zXCNJew3YohTlTYOQEQl8t4iwpU3uYPztYHi+oTvIeGFvopgo5nMgmd+adZuNPRjVtQwJAiFfd7dB6/PDjaMcg==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-checkbox': 0.27.0
-      lit: 3.0.2
-    dev: true
-
   /@equinor/fusion-wc-checkbox@1.1.1:
     resolution: {integrity: sha512-anLfHPuyO9VIsByGp5BAZEMo/wRy/YiCilnE0dlqi4AY5/DxfnjHkvMEinbQ9yeu2y3r/Mp3Oi6TBmYN4cIBXw==}
     dependencies:
@@ -2779,14 +2770,6 @@ packages:
       lit: 2.7.0
     dev: true
 
-  /@equinor/fusion-wc-divider@1.1.0:
-    resolution: {integrity: sha512-tKp1NuZC+SINUYBMbyUghVWnOZBa0PcXTBxjCH+GXqOL/bpqx31qJH3Rq52qEVjcoaJ193OazRftbtZnf+GQxA==}
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
-      lit: 3.0.2
-    dev: true
-
   /@equinor/fusion-wc-divider@1.1.1:
     resolution: {integrity: sha512-vM09tJy8yoGXVSwCVlptb1uu/9PeOON84vZiSmsuWySkNiDM3xpRARjLhT83XWW/rO7Y8oyM/3D61LVvX274gA==}
     dependencies:
@@ -2813,12 +2796,12 @@ packages:
   /@equinor/fusion-wc-list@1.1.1:
     resolution: {integrity: sha512-+pBtqfGLvOEA2Fs4rw/A2r7onaRKl44y92upFdPq5mH4EOKuCe1Pzose1njVNxnmNhBbADwjWRsya47QlKlLZg==}
     dependencies:
-      '@equinor/fusion-wc-checkbox': 1.1.0
+      '@equinor/fusion-wc-checkbox': 1.1.1
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-divider': 1.1.0
+      '@equinor/fusion-wc-divider': 1.1.1
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-wc-radio': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
       lit: 3.0.2
     dev: true
@@ -2863,7 +2846,7 @@ packages:
     resolution: {integrity: sha512-uKKbU2vjd2gFuVNxAn11NNdYhARDO88l9FRCC4XKxeRtnS/odt+fzY4A5/HZhbt/9fxb3OL06iCbFZxYw7hlag==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       lit: 3.0.2
     dev: true
 
@@ -2895,11 +2878,11 @@ packages:
     resolution: {integrity: sha512-5fc6SaWUf2EOy0Kh9WJ8WHSP7TPFhpo7UWDGZZbzv8aq0Czt7nNDeFN+60zwkTXP94RQhyBD3MAUvlhn/xeW0Q==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-divider': 1.1.0
+      '@equinor/fusion-wc-divider': 1.1.1
       '@equinor/fusion-wc-icon': 2.3.0
       '@equinor/fusion-wc-list': 1.1.1
       '@equinor/fusion-wc-textinput': 1.1.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@lit-labs/task': 3.1.0
       '@material/mwc-textfield': 0.27.0
       '@types/uuid': 9.0.8
@@ -2934,7 +2917,7 @@ packages:
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-icon': 2.3.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-textfield': 0.27.0
       lit: 3.0.2
     dev: true
@@ -2961,7 +2944,7 @@ packages:
     resolution: {integrity: sha512-V8ECVXAz2BcKoAFZxTUja0x1ujY+2TbVqpOf3Nwh+7DoIucSqv7PBxr2JmDXQW4r88m+YChtxcp8rVthXwKxIg==}
     dependencies:
       '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.7
+      '@equinor/fusion-web-theme': 0.1.10
       '@material/theme': 14.0.0
       lit: 3.0.2
     dev: true
@@ -3825,6 +3808,7 @@ packages:
 
   /@material/mwc-base@0.27.0:
     resolution: {integrity: sha512-oCWWtjbyQ52AaUbzINLGBKScIPyqhps2Y7c8t6Gu6fcFeDxhKXMV1Cqvtj/OMhtAt53XjHfD2XruWwYv3cYYUA==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/dom': 14.0.0-canary.53b3cad2f.0
@@ -3841,6 +3825,7 @@ packages:
 
   /@material/mwc-checkbox@0.27.0:
     resolution: {integrity: sha512-EY0iYZLwo8qaqMwR5da4fdn0xI0BZNAvKTcwoubYWpDDHlGxDcqwvjp/40ChGo3Q/zv8/4/A0Qp7cwapI82EkA==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
@@ -3856,6 +3841,7 @@ packages:
 
   /@material/mwc-formfield@0.27.0:
     resolution: {integrity: sha512-XGZtC1MTyGQ8b2osnaygGzS3qe2QvlWfXZepcFs9i6MW+b6VimQQ4c/KsKIF7dHmeY6N0o4k9pAZ086EGesXOQ==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/form-field': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
@@ -3924,6 +3910,7 @@ packages:
 
   /@material/mwc-ripple@0.27.0:
     resolution: {integrity: sha512-by0O8d8g3Rd96/sUB8hxy6MrDx1QTstqOsA64vqypWd526hMTBGRik08jTNap5sVIyrN9Vq17jb4NJLWQLnNHQ==}
+    deprecated: MWC beta is longer supported. Please upgrade to @material/web
     dependencies:
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
@@ -6625,7 +6612,7 @@ packages:
       '@storybook/client-logger': 6.5.16
       core-js: 3.36.0
       memoizerific: 1.11.3
-      qs: 6.11.2
+      qs: 6.12.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       regenerator-runtime: 0.13.11
