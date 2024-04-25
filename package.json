@@ -80,7 +80,7 @@
     "@changesets/cli": "^2.26.2",
     "@equinor/eslint-config-fusion": "^2.1.4",
     "@equinor/eslint-config-fusion-react": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
     "eslint": "^8.47.0",
     "eslint-plugin-rxjs": "^5.0.3",
     "prettier": "^3.0.2",
