@@ -121,8 +121,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
-        specifier: ^30.2.0
-        version: 30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.2)
+        specifier: ^31.2.0
+        version: 31.2.0(@ag-grid-community/styles@31.2.0)(@equinor/fusion-react-styles@0.6.2)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
@@ -1714,8 +1714,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@ag-grid-community/styles@29.3.5:
-    resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
+  /@ag-grid-community/styles@31.2.0:
+    resolution: {integrity: sha512-fU6wDpK0//dJLp5pwojuTUQPi4nVZ4iTBF1yaQw+6NXeGi0ma7rz7IOS6Idw0XXE3ELKGTuO7QUJmxxdL7kykw==}
     dev: false
 
   /@ag-grid-enterprise/core@31.2.0:
@@ -2520,13 +2520,13 @@ packages:
       uuid: 9.0.1
     dev: true
 
-  /@equinor/fusion-react-ag-grid-styles@30.2.0(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.2):
-    resolution: {integrity: sha512-h2wUe9XHYDGPe2B34D/RijCwi5Fub5A8MbersMwRNO7QKr1q5xqy89m/NE9ZPfK3FnRt/6E3EQ0HXT9JEvxXEA==}
+  /@equinor/fusion-react-ag-grid-styles@31.2.0(@ag-grid-community/styles@31.2.0)(@equinor/fusion-react-styles@0.6.2):
+    resolution: {integrity: sha512-Q+jEWRTfl6vL4XOyzduj3kFD1COHqw5GAia8iQtYK0KxNvRObI1v6z59qCmpih2rRmR7+iH3u1ebdBCMOZLaWQ==}
     peerDependencies:
-      '@ag-grid-community/styles': ~29.3.4
+      '@ag-grid-community/styles': 31.2.0
       '@equinor/fusion-react-styles': ^0.6.0
     dependencies:
-      '@ag-grid-community/styles': 29.3.5
+      '@ag-grid-community/styles': 31.2.0
       '@equinor/fusion-react-styles': 0.6.2(@types/react@18.2.61)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
