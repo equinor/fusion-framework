@@ -7354,14 +7354,14 @@ packages:
       - supports-color
     dev: false
 
-  /@vitejs/plugin-vue@5.0.4(vite@5.2.6)(vue@3.4.21):
+  /@vitejs/plugin-vue@5.0.4(vite@5.2.7)(vue@3.4.21):
     resolution: {integrity: sha512-WS3hevEszI6CEVEx28F8RjTX97k3KsrcY6kvTg7+Whm5y3oYvcqzVeGCU3hxSAn4uY2CLCkeokkGKpoctccilQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.2.6(@types/node@20.11.26)
+      vite: 5.2.7(@types/node@20.11.26)
       vue: 3.4.21(typescript@5.4.2)
     dev: true
 
@@ -7502,7 +7502,7 @@ packages:
   /@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.11.26)(typescript@5.4.2):
     resolution: {integrity: sha512-GcM2eSqW2mPY5xXX4i5kuZujvwUeiTpsLX5kgau9LzPox+FdA3SMUkppCY3hsou2o2RxXPTfjocE7OlYQrUqvA==}
     dependencies:
-      '@vitejs/plugin-vue': 5.0.4(vite@5.2.6)(vue@3.4.21)
+      '@vitejs/plugin-vue': 5.0.4(vite@5.2.7)(vue@3.4.21)
       '@vuepress/client': 2.0.0-rc.9(typescript@5.4.2)
       '@vuepress/core': 2.0.0-rc.9(typescript@5.4.2)
       '@vuepress/shared': 2.0.0-rc.9
@@ -7512,7 +7512,7 @@ packages:
       postcss: 8.4.38
       postcss-load-config: 5.0.3(postcss@8.4.38)
       rollup: 4.14.1
-      vite: 5.2.6(@types/node@20.11.26)
+      vite: 5.2.7(@types/node@20.11.26)
       vue: 3.4.21(typescript@5.4.2)
       vue-router: 4.3.0(vue@3.4.21)
     transitivePeerDependencies:
@@ -12592,7 +12592,7 @@ packages:
     dependencies:
       nanoid: 3.3.7
       picocolors: 1.0.0
-      source-map-js: 1.0.2
+      source-map-js: 1.2.0
 
   /postcss@8.4.35:
     resolution: {integrity: sha512-u5U8qYpBCpN13BsiEB0CbR1Hhh4Gc0zLFuedrHJKMctHCHAGrMdG0PRM/KErzAL3CU6/eckEtmHNB3x6e3c0vA==}
@@ -13672,10 +13672,6 @@ packages:
       yargs: 15.4.1
     dev: false
 
-  /source-map-js@1.0.2:
-    resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
-    engines: {node: '>=0.10.0'}
-
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
@@ -14497,7 +14493,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.7(@types/node@20.11.26)
+      vite: 5.2.10(@types/node@20.11.26)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -14578,8 +14574,8 @@ packages:
       fsevents: 2.3.3
     dev: false
 
-  /vite@5.2.6(@types/node@20.11.26):
-    resolution: {integrity: sha512-FPtnxFlSIKYjZ2eosBQamz4CbyrTizbZ3hnGJlh/wMtCrlp1Hah6AzBLjGI5I2urTfNnpovpHdrL6YRuBOPnCA==}
+  /vite@5.2.10(@types/node@20.11.26):
+    resolution: {integrity: sha512-PAzgUZbP7msvQvqdSD+ErD5qGnSFiGOoWmV5yAKUEI0kdhjbH6nMWVyZQC/hSc4aXwc0oJ9aEdIiF9Oje0JFCw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -14609,10 +14605,9 @@ packages:
       '@types/node': 20.11.26
       esbuild: 0.20.2
       postcss: 8.4.38
-      rollup: 4.14.1
+      rollup: 4.16.4
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vite@5.2.7(@types/node@20.11.24):
     resolution: {integrity: sha512-k14PWOKLI6pMaSzAuGtT+Cf0YmIx12z9YGon39onaJNy8DLBfBJrzg9FQEmkAM5lpHBZs9wksWAsyF/HkpEwJA==}
@@ -14684,6 +14679,7 @@ packages:
       rollup: 4.16.4
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vitest-github-actions-reporter@0.11.1(vitest@1.3.1):
     resolution: {integrity: sha512-ZHHB0wBgOPhMYCB17WKVlJZa+5SdudBZFoVoebwfq3ioIUTeLQGYHwh85vpdJAxRghLP8d0qI/6eCTueGyDVXA==}
@@ -14796,7 +14792,7 @@ packages:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.2.7(@types/node@20.11.26)
+      vite: 5.2.10(@types/node@20.11.26)
       vite-node: 1.3.1(@types/node@20.11.26)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
