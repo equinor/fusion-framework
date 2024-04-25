@@ -25,7 +25,7 @@
         "typescript": "^5.4.2"
     },
     "dependencies": {
-        "@equinor/eds-core-react": "^0.36.0",
+        "@equinor/eds-core-react": "^0.37.0",
         "@equinor/eds-icons": "^0.21.0",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-react-person": "^0.8.5",
