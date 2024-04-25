@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2)]:
+  - @equinor/fusion-query@5.0.0
+  - @equinor/fusion-framework-module-bookmark@1.2.2
+  - @equinor/fusion-framework-module-context@5.0.2
+  - @equinor/fusion-framework-react@7.0.5
+
 ## 2.1.4
 
 ### Patch Changes

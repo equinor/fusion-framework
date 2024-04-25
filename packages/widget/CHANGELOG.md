@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-widget@4.0.5
+  - @equinor/fusion-framework@7.1.5
+
 ## 1.1.4
 
 ### Patch Changes

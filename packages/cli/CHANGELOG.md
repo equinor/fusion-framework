@@ -1,5 +1,20 @@
 # Change Log
 
+## 9.12.3
+
+### Patch Changes
+
+- [#2098](https://github.com/equinor/fusion-framework/pull/2098) [`5093391`](https://github.com/equinor/fusion-framework/commit/5093391eabda84873041ee89632f26770734b03c) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump @equinor/eds-core-react from 0.36.1 to 0.37.0
+
+- [#2103](https://github.com/equinor/fusion-framework/pull/2103) [`975f65c`](https://github.com/equinor/fusion-framework/commit/975f65cdae9882279f18e1f9f8d243df03218650) Thanks [@odinr](https://github.com/odinr)! - bumped vite to 5.2.10
+
+- [`cf4a17a`](https://github.com/equinor/fusion-framework/commit/cf4a17a07540b05b0d44de7e188aaaa8f9fef8f8) Thanks [@odinr](https://github.com/odinr)! - updated Query, ref #2095
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-components-people-provider@1.3.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-app@9.0.6
+
 ## 9.12.2
 
 ### Patch Changes

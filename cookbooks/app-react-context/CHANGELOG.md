@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`5093391`](https://github.com/equinor/fusion-framework/commit/5093391eabda84873041ee89632f26770734b03c), [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5), [`975f65c`](https://github.com/equinor/fusion-framework/commit/975f65cdae9882279f18e1f9f8d243df03218650), [`cf4a17a`](https://github.com/equinor/fusion-framework/commit/cf4a17a07540b05b0d44de7e188aaaa8f9fef8f8)]:
+  - @equinor/fusion-framework-cli@9.12.3
+  - @equinor/fusion-framework-module-navigation@4.0.1
+  - @equinor/fusion-framework-react-app@5.0.9
+  - @equinor/fusion-framework-react-module-context@6.2.3
+
 ## 4.1.7
 
 ### Patch Changes
