@@ -1,62 +1,70 @@
-import { ReplaySubject, Subject } from 'rxjs';
-
 import { v4 as generateGUID } from 'uuid';
 
-import { ActionInstanceMap, createAction } from '@equinor/fusion-observable';
+import { ActionInstanceMap, createAction, createAsyncAction } from '@equinor/fusion-observable';
 
 import type { ActionTypes } from '@equinor/fusion-observable';
 
-import type { QueryTaskValue, RetryOptions } from './types';
+import type { QueryClientResult, RetryOptions } from './types';
 
-type RequestMeta<TType, TArgs> = {
-    transaction: string;
-    created: number;
-    task: Subject<QueryTaskValue<TType, TArgs>>;
-    retry?: Partial<RetryOptions>;
-    ref?: string;
-};
-
-const createActions = <TType, TArgs>() => {
-    const request = createAction(
+const createActions = <TType, TArgs>() => ({
+    /**
+     * Action to initiate a request.
+     *
+     * @param args - The arguments for the request.
+     * @param options - Optional parameters including a reference and retry options.
+     * @returns An action with the request details and metadata.
+     */
+    request: createAction(
         'client/request',
-        (payload: unknown, meta?: Partial<RequestMeta<TType, TArgs>>) => {
-            meta ??= {};
-            meta.transaction ??= generateGUID();
-            meta.created ??= Date.now();
-            meta.task ??= new ReplaySubject<QueryTaskValue<TType, TArgs>>();
-            return { payload, meta: meta as RequestMeta<TType, TArgs> };
-        },
-    );
-    return {
-        request,
-        retry: createAction('client/retry', (payload: ReturnType<typeof request>) => ({ payload })),
-        success: createAction(
-            'client/success',
-            (payload: unknown, meta: { request: ReturnType<typeof request> }) => ({
-                payload,
-                meta,
-            }),
-        ),
-        cancel: createAction(
-            'client/cancel',
-            (payload: { transaction: string; reason?: string }) => ({ payload }),
-        ),
-        failure: createAction(
-            'client/failure',
-            (payload: Error, meta: { request: ReturnType<typeof request> }) => ({
-                payload,
-                meta,
-            }),
-        ),
-        error: createAction(
-            'client/error',
-            (payload: Error, meta: { request: ReturnType<typeof request> }) => ({
-                payload,
-                meta,
-            }),
-        ),
-    };
-};
+        (args: TArgs, options?: { ref?: string; retry?: Partial<RetryOptions> }) => ({
+            payload: { args, options },
+            meta: { transaction: generateGUID(), created: Date.now() },
+        }),
+    ),
+    /**
+     * Async action to execute a request.
+     *
+     * @param transaction - The unique identifier for the transaction.
+     * @returns An async action with the transaction details and metadata.
+     */
+    execute: createAsyncAction(
+        'client/execute',
+        (transaction: string) => ({
+            payload: transaction,
+            meta: { transaction, created: Date.now() },
+        }),
+        (result: QueryClientResult<TType, TArgs>) => ({
+            payload: result,
+            meta: { transaction: result.transaction, created: Date.now() },
+        }),
+        (error: Error, transaction: string) => ({
+            payload: error,
+            meta: { transaction, created: Date.now() },
+        }),
+    ),
+    /**
+     * Action to cancel a request.
+     *
+     * @param transaction - The unique identifier for the transaction to cancel.
+     * @param reason - Optional reason for cancellation.
+     * @returns An action with the cancellation details and metadata.
+     */
+    cancel: createAction('client/cancel', (transaction: string, reason?: string) => ({
+        payload: { transaction, reason },
+        meta: { transaction, created: Date.now() },
+    })),
+    /**
+     * Action to report an error.
+     *
+     * @param transaction - The unique identifier for the transaction that errored.
+     * @param error - The error that occurred.
+     * @returns An action with the error details and metadata.
+     */
+    error: createAction('client/error', (transaction: string, error: unknown) => ({
+        payload: { transaction, error },
+        meta: { transaction, created: Date.now() },
+    })),
+});
 
 export const actions = createActions();
 
