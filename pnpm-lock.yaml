@@ -4351,7 +4351,7 @@ packages:
       '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4365,7 +4365,7 @@ packages:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4391,7 +4391,7 @@ packages:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4414,7 +4414,7 @@ packages:
       '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4436,7 +4436,7 @@ packages:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4462,7 +4462,7 @@ packages:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4487,7 +4487,7 @@ packages:
       '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.10.5
+      '@nevware21/ts-utils': 0.11.0
       tslib: 2.6.2
     dev: false
 
@@ -4498,7 +4498,7 @@ packages:
   /@microsoft/applicationinsights-shims@3.0.1:
     resolution: {integrity: sha512-DKwboF47H1nb33rSUfjqI6ryX29v+2QWcTrRvcQDA32AZr5Ilkr7whOOSsD1aBzwqX0RJEIP1Z81jfE3NBm/Lg==}
     dependencies:
-      '@nevware21/ts-utils': 0.11.0
+      '@nevware21/ts-utils': 0.11.2
     dev: false
 
   /@microsoft/applicationinsights-web@2.8.17(tslib@2.6.2):
@@ -4543,7 +4543,7 @@ packages:
   /@microsoft/dynamicproto-js@2.0.3:
     resolution: {integrity: sha512-JTWTU80rMy3mdxOjjpaiDQsTLZ6YSGGqsjURsY6AUQtIj0udlF/jYmhdLZu8693ZIC0T1IwYnFa0+QeiMnziBA==}
     dependencies:
-      '@nevware21/ts-utils': 0.11.0
+      '@nevware21/ts-utils': 0.11.2
     dev: false
 
   /@microsoft/signalr@7.0.14:
@@ -4586,6 +4586,10 @@ packages:
 
   /@nevware21/ts-utils@0.11.0:
     resolution: {integrity: sha512-3yrohCSKYBLKrW41fYkZorN2rf9GYr/4Cb4Xu9fWCyXgVDyt1uLgMaCinhx0kEkEUfME3Smqs+2itJRhXgCo8Q==}
+    dev: false
+
+  /@nevware21/ts-utils@0.11.2:
+    resolution: {integrity: sha512-80W8BkS09kkGuUHJX50Fqq+QqAslxUaOQytH+3JhRacXs1EpEt2JOOkYKytqFZAYir3SeH9fahniEaDzIBxlUw==}
     dev: false
 
   /@nodelib/fs.scandir@2.1.5:
