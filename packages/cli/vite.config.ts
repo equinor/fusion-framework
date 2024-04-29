@@ -13,10 +13,5 @@ export default defineConfig({
     build: {
         outDir: fileURLToPath(new URL('./dist/bin/public', import.meta.url)),
         emptyOutDir: true,
-        // minify: false,
-        // terserOptions: {
-            //     mangle: false,
-        // },
     },
-    // mode: 'development',
 });

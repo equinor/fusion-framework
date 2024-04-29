@@ -43,9 +43,15 @@ export interface ILogger {
     createSubLogger(domain: string): ILogger;
 }
 
+const defaultLogLevel = process.env.FUSION_LOG_LEVEL
+    ? (Number(process.env.FUSION_LOG_LEVEL) as 0 | 1 | 2 | 3 | 4)
+    : process.env.NODE_ENV === 'development'
+      ? 3
+      : 1;
+
 export class ConsoleLogger implements ILogger {
-    /** - 0-1-2-3 (error-warning-info-debug) if not provided only errors are logged */
-    public level: 0 | 1 | 2 | 3 | 4;
+    /** - 0-1-2-3 (off-error-warning-info-debug) if not provided only errors are logged */
+    public level: 0 | 1 | 2 | 3 | 4 = defaultLogLevel;
 
     /**
      * Constructs a new ConsoleLogger instance.
@@ -55,13 +61,7 @@ export class ConsoleLogger implements ILogger {
     constructor(
         protected title: string,
         protected subtitle?: string,
-    ) {
-        if (process.env.FUSION_LOG_LEVEL) {
-            this.level = parseInt(process.env.FUSION_LOG_LEVEL) as 0 | 1 | 2 | 3 | 4;
-        } else {
-            this.level = process.env.NODE_ENV === 'development' ? 3 : 1;
-        }
-    }
+    ) {}
 
     /**
      * Generates the formatted message to log, including the title, subtitle (if any), and the messages provided.

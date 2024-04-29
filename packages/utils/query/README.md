@@ -187,6 +187,22 @@ subscription.unsubscribe();
 query.complete();
 ```
 
+## Setup
+
+When compiling code the `FUSION_LOG_LEVEL` must be set (depending on build util, example shown for Vite)
+
+`Uncaught ReferenceError: process is not defined`
+
+```ts
+defineConfig({
+    plugins: [
+        tsconfigPaths(),
+        viteEnv({
+            FUSION_LOG_LEVEL: process.env.FUSION_LOG_LEVEL ?? process.env.NODE_ENV === 'development' ? '3' : '1'
+        }),
+    ]
+})
+
 ## Advanced Usage
 
 ### Queue Operators
