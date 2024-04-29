@@ -12,10 +12,18 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModuleConfig> {
     defaultExpireTime = 1 * 60 * 1000;
 
-    public setClient(cb: (init: ConfigBuilderCallbackArgs) => BookmarkModuleConfig['client']) {
+    /**
+     * Set the event provider for the bookmark module
+     * @param cb - A callback function that returns the client for the bookmark module
+     */
+    public setClient(cb: (init: ConfigBuilderCallbackArgs) => BookmarkModuleConfig['client'] ) {
         this._set('client', cb);
     }
 
+    /**
+     * Set the source system for the bookmark module
+     * @param cbOrSourceSystem - A callback function that returns the source system or a string value of the source system
+     */
     public setSourceSystem(
         cbOrSourceSystem: (
             init: ConfigBuilderCallbackArgs,
@@ -28,6 +36,10 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         }
     }
 
+    /**
+     * Set the event provider for the bookmark module
+     * @param cb - A callback function that returns the event provider for the bookmark module
+     */
     public setContextIdResolver(
         cb: (init: ConfigBuilderCallbackArgs) => BookmarkModuleConfig['resolveContextId'],
     ) {
@@ -106,9 +118,11 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
             addFavorite: (bookmarkId: string) => bookmarkClient.addFavorite('v1', { bookmarkId }),
             removeFavorite: (bookmarkId: string) =>
                 bookmarkClient.removeFavorite('v1', { bookmarkId }),
-            verifyFavorite: (bookmarkId: string) => bookmarkClient.verifyFavorite('v1', { bookmarkId }),
+            verifyFavorite: (bookmarkId: string) =>
+                bookmarkClient.verifyFavorite('v1', { bookmarkId }),
             create: (bookmark: Bookmark) => bookmarkClient.post('v1', bookmark),
-            update: (bookmark: Partial<Bookmark> & Pick<Bookmark, 'id'>) => bookmarkClient.patch('v1', bookmark),
+            update: (bookmark: Partial<Bookmark> & Pick<Bookmark, 'id'>) =>
+                bookmarkClient.patch('v1', bookmark),
             delete: (bookmarkId: string) => bookmarkClient.delete('v1', { id: bookmarkId }),
         };
 
