@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+- [#2107](https://github.com/equinor/fusion-framework/pull/2107) [`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197) Thanks [@odinr](https://github.com/odinr)! - Fixed issue with missing process env `FUSION_LOG_LEVEL`
+
+  - added default resolve value when generating base vite configuration
+  - moved default query log level resolve outside class
+
+  fixes: https://github.com/equinor/fusion/issues/343
+
 ## 5.0.0
 
 ### Major Changes
