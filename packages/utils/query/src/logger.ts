@@ -56,7 +56,7 @@ export class ConsoleLogger implements ILogger {
         protected title: string,
         protected subtitle?: string,
     ) {
-        if (process.env.FUSION_LOG_LEVEL) {
+        if (process?.env?.FUSION_LOG_LEVEL) {
             this.level = parseInt(process.env.FUSION_LOG_LEVEL) as 0 | 1 | 2 | 3 | 4;
         } else {
             this.level = process.env.NODE_ENV === 'development' ? 3 : 1;
