@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.1.2
+
+### Patch Changes
+
+- [#2119](https://github.com/equinor/fusion-framework/pull/2119) [`6f3dc37`](https://github.com/equinor/fusion-framework/commit/6f3dc3755b72c3928012b7010c5a61cc03213602) Thanks [@odinr](https://github.com/odinr)! - minor updates to doc
+
 ## 0.1.1
 
 ### Patch Changes
