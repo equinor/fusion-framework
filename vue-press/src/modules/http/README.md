@@ -7,7 +7,7 @@ tag:
   - core
 ---
 
-<ModuleBadge module="module-http" />
+<ModuleBadge module="modules/http" />
 
 |Namespace|description|
 |---------|-----------|
@@ -269,7 +269,7 @@ client.response$.subscribe(
 
 ## React
 
-<ModuleBadge module="react-module-http" />
+<ModuleBadge module="react/modules/http" />
 
 ::: code-tabs#scope
 @tab Vanilla
