@@ -37,24 +37,12 @@ gh repo clone equinor/fusion-framework
 :::
 
 
-::: code-tabs
-
-@tab Run locally
 ```sh
-pnpm && pnpm build
+# install and build fusion framework
+pnpm i
+pnpm build:packages
 cd cookbooks/app-react
 pnpm dev
-# follow link to http://localhost:3000/apps/app-react
-```
-
-@tab Run in own folder
-```sh
-# $FRAMEWORK_DIRECTORY = the directory which you cloned/forked the repo to
-# $MY_APP_DIR = the directory you wish to develop in
-cp -r $FRAMEWORK_DIRECTORY/cookbooks/app-react $MY_APP_DIR
-cd $MY_APP_DIR
-npm i
-npm run dev
 # follow link to http://localhost:3000/apps/app-react
 ```
 
@@ -62,12 +50,20 @@ npm run dev
 
 ::: tabs
 
-@tab React
+@tab:active React
 - [a simple plain react app](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react)
 - [an application with react router 6](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-router)
 - [an application with context](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-context)
 - [an application with bookmark](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-bookmark)
 - [an application with AG-grid](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-ag-grid)
+- [an application with Context](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-context)
+- [an application with Context error](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-context-custom-error)
+- [an application with custom module](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-custom-modules)
+- [an application with custom module](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-feature-flag)
+- [an application with custom module](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-msal)
+- [an application with custom module](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-people)
 
+@tab Vanilla
+- [a plain application](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-vanilla)
 :::
 

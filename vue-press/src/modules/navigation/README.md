@@ -9,6 +9,10 @@ tag:
 
 Simple module which allows to monitor navigation events
 
+> [!CAUTION]
+> using `createBrowserRouter` from `React Router` will cause unpredictable links and history behavior,
+> since it will create its own wrapper on browser history which is __NOT__ connected to the framework
+
 ## Configuration
 
 ### Options
@@ -40,3 +44,6 @@ callback function for creating history based on selected `historyType`
 
 ### Router.tsx
 @[code](@cookbooks/app-react-router/src/Router.tsx)
+
+### Router.tsx
+@[code](@cookbooks/app-react-router/src/routes.tsx)

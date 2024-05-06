@@ -316,6 +316,12 @@ export const configure = (configurator) => {
 
 query post request processor, called after query is executed
 
+##### FusionContextSearchError
+
+When configuring the client, one could customize the error message when the client fails to resolve context
+
+@[code](@cookbooks/app-react-context-custom-error/src/config.ts)
+
 ## Events
 
 #### onCurrentContextChange
@@ -339,6 +345,10 @@ dispatch when failed to resolve context when setting current context
 ### onSetContextValidationFailed
 dispatch when failed to validate context when setting current context
 > will only trigger when not resolving context
+
+
+
+
 
 ## React
 
