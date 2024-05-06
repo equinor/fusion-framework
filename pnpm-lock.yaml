@@ -924,8 +924,8 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^2.21.0
-        version: 2.38.3
+        specifier: ^3.13.0
+        version: 3.13.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -1703,17 +1703,20 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@azure/msal-browser@2.38.3':
-    resolution: {integrity: sha512-2WuLFnWWPR1IdvhhysT18cBbkXx1z0YIchVss5AwVA95g7CU5CpT3d+5BcgVGNXDXbUU7/5p0xYHV99V5z8C/A==}
-    engines: {node: '>=0.8.0'}
-    deprecated: A newer major version of this library is available. Please upgrade to the latest available version.
-
   '@azure/msal-browser@2.38.4':
     resolution: {integrity: sha512-d1qSanWO9fRKurrxhiyMOIj2jMoGw+2pHb51l2PXNwref7xQO+UeOP2q++5xfHQoUmgTtNuERhitynHla+dvhQ==}
     engines: {node: '>=0.8.0'}
 
+  '@azure/msal-browser@3.13.0':
+    resolution: {integrity: sha512-fD906nmJei3yE7la6DZTdUtXKvpwzJURkfsiz9747Icv4pit77cegSm6prJTKLQ1fw4iiZzrrWwxnhMLrTf5gQ==}
+    engines: {node: '>=0.8.0'}
+
   '@azure/msal-common@13.3.1':
     resolution: {integrity: sha512-Lrk1ozoAtaP/cp53May3v6HtcFSVxdFrg2Pa/1xu5oIvsIwhxW6zSPibKefCOVgd5osgykMi5jjcZHv8XkzZEQ==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-common@14.9.0':
+    resolution: {integrity: sha512-yzBPRlWPnTBeixxLNI3BBIgF5/bHpbhoRVuuDBnYjCyWRavaPUsKAHUDYLqpGkBLDciA6TCc6GOxN4/S3WiSxg==}
     engines: {node: '>=0.8.0'}
 
   '@babel/code-frame@7.24.2':
@@ -8944,15 +8947,17 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@azure/msal-browser@2.38.3':
-    dependencies:
-      '@azure/msal-common': 13.3.1
-
   '@azure/msal-browser@2.38.4':
     dependencies:
       '@azure/msal-common': 13.3.1
 
+  '@azure/msal-browser@3.13.0':
+    dependencies:
+      '@azure/msal-common': 14.9.0
+
   '@azure/msal-common@13.3.1': {}
+
+  '@azure/msal-common@14.9.0': {}
 
   '@babel/code-frame@7.24.2':
     dependencies:
