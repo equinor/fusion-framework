@@ -129,7 +129,7 @@ importers:
         version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.0)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -159,7 +159,7 @@ importers:
         version: 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.0)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -349,7 +349,7 @@ importers:
         version: 4.3.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.0)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
       '@equinor/fusion-framework-react-module':
         specifier: ^3.1.0
         version: 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -376,7 +376,7 @@ importers:
         version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.0)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -3810,6 +3810,10 @@ packages:
 
   '@remix-run/router@1.15.2':
     resolution: {integrity: sha512-+Rnav+CaoTE5QJc4Jcwh5toUpnVLKYbpU6Ys0zqbakqbaLQHeglLVHPfxOiQqdNmUy5C2lXz5dwC6tQNX2JW2Q==}
+    engines: {node: '>=14.0.0'}
+
+  '@remix-run/router@1.16.0':
+    resolution: {integrity: sha512-Quz1KOffeEf/zwkCBM3kBtH4ZoZ+pT3xIXBG4PPW/XFtDP7EGhtTiC2+gpL9GnR7+Qdet5Oa6cYSvwKYg6kN9Q==}
     engines: {node: '>=14.0.0'}
 
   '@rollup/rollup-android-arm-eabi@4.12.0':
@@ -9757,6 +9761,12 @@ snapshots:
       '@remix-run/router': 1.15.2
       rxjs: 7.8.1
 
+  '@equinor/fusion-framework-module-navigation@4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.16.0)(rxjs@7.8.1)':
+    dependencies:
+      '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
+      '@remix-run/router': 1.16.0
+      rxjs: 7.8.1
+
   '@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
@@ -9859,6 +9869,43 @@ snapshots:
     optionalDependencies:
       '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
       '@equinor/fusion-observable': link:packages/utils/observable
+      '@types/react': 18.2.61
+      react-dom: 18.2.0(react@18.2.0)
+      rxjs: 7.8.1
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@equinor/fusion-framework-module-event'
+      - '@equinor/fusion-framework-module-http'
+      - '@equinor/fusion-framework-react-module-signalr'
+      - '@remix-run/router'
+      - '@types/node'
+      - '@types/semver'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - odata-query
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  ? '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.0)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
+  : dependencies:
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
+      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
+      '@equinor/fusion-framework-module-navigation': 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.16.0)(rxjs@7.8.1)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@equinor/fusion-framework-react-module-http': 5.0.3(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+    optionalDependencies:
+      '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
       '@types/react': 18.2.61
       react-dom: 18.2.0(react@18.2.0)
       rxjs: 7.8.1
@@ -12781,6 +12828,8 @@ snapshots:
       react: 18.2.0
 
   '@remix-run/router@1.15.2': {}
+
+  '@remix-run/router@1.16.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.12.0':
     optional: true
