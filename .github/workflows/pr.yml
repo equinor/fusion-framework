@@ -51,10 +51,17 @@ jobs:
         with:
           turbo-cache: true
 
-      - uses: reviewdog/action-setup@v1.2.1
+      - uses: reviewdog/action-setup@v1
+
+      - name: Delete outdated ReviewDog comments
+        uses: Ardiannn08/resolve-outdated-comment@v1.1
+        with:
+          token: ${{ github.token }}
+          filter-user: "reviewdog"
+          mode: "delete"
 
       - name: Lint source files
-        run: reviewdog --runners=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+        run: reviewdog --runners=eslint -name=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
           
       - name: Build affected packages
         id: build
@@ -72,7 +79,7 @@ jobs:
           path: tsc-build.log
           
       - name: Review build log
-        run: cat tsc-build.log | reviewdog -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
 
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
