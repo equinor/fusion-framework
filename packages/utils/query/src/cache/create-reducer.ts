@@ -37,6 +37,8 @@ export default function <TType, TArgs>(
                         record.updated = Date.now();
                         record.updates ??= 0;
                         record.updates++;
+                        record.value = castDraft(entry.value);
+                        record.transaction = entry.transaction;
                         delete record.mutated;
                     } else {
                         // If the record does not exist, create a new one with the current timestamp.
