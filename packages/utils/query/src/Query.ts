@@ -169,6 +169,64 @@ const useQueueOperator = <TType, TArgs>(
     })() as QueryQueueFn<TType, TArgs>;
 };
 
+/**
+ * The primary use case for `Query` involves:
+ * - Asynchronous Data Fetching: Seamlessly fetching data from APIs or databases asynchronously without blocking the UI, improving the user experience.
+ * - Caching: Storing fetched data in a cache to improve performance by reducing the number of redundant requests to the server.
+ * - Automatic Updates: Automatically updating the UI when the underlying data changes, without requiring explicit refresh actions from the user.
+ * - Concurrent Requests Management: Efficiently handling multiple, concurrent data fetches through strategies like merging, switching, or concatenating requests.
+ * - Retry and Error Handling: Automatically retrying failed requests and handling errors gracefully to ensure application stability.
+ *
+ * ## Benefits
+ *
+ * Using a `Query` mechanism offers numerous benefits, including:
+ * 1. Improved Performance and Efficiency: By caching responses and reducing unnecessary server requests, applications load faster and use fewer resources, both on the client and server side.
+ * 2. Simplified Data Fetching Logic: It abstracts away the boilerplate code associated with fetching data, handling errors, and managing response states, leading to cleaner and more maintainable code.
+ * 3. Automatic Synchronization: `Query` libraries often come with features to automatically refetch data on certain triggers (e.g., window focus), ensuring the UI is always up-to-date with the latest server state without manual intervention.
+ * 4. Built-in Asynchronous Management: Handling asynchronous data fetches becomes straightforward, with built-in support for loading states, error handling, and data updates.
+ * 5. Scalability: Easily scalable for complex applications, supporting various fetching strategies to manage multiple data sources, endpoints, and concurrent requests effectively.
+ * 6. Developer Experience: By standardizing the approach to data fetching and state management, it enhances developer experience, reducing the cognitive load and making it easier to onboard new developers.
+ * 7. Robust Error and Retry Handling: Features to automatically retry requests and sophisticated mechanisms for error handling improve application reliability.
+ * 8. Customizable and Extendable: While offering sensible defaults for most use cases, `Query` implementations are usually highly customizable, allowing developers to tailor their behavior for specific needs, such as custom caching strategies, query deduplication, and more.
+ *
+ * ## Examples
+ * Example of creating a basic query with a query function:
+ * @example
+ * ```typescript
+ * import { Query, QueryFn } from '@equinor/fusion-query';
+ *
+ * type ExampleData = {
+ *  id: string;
+ *  name: string;
+ *  value: number;
+ * }
+ *
+ * // create a query function
+ * const queryFn: QueryFn<ExampleData, {id: string}>  = async (args, signal) => {
+ *   const response = await fetch(`https://api.example.com/data?id=${args.id}`, {signal});
+ *   return response.json();
+ * };
+ *
+ * const queryOptions = QueryCtorOptions<ExampleData, {id: string}> = {
+ *  client: { fn: queryFn },
+ *  key: (args) => args.id,
+ *  // optional cache options
+ *  // optional queue operator
+ *  // optional logger
+ * };
+ *
+ * // create a new Query instance with the options
+ * const query = new Query(queryOptions);
+ *
+ * ```
+ *
+ * @see {@link QueryCtorOptions} for more details on the constructor options.
+ * @see {@link Query.query} for more details on executing a query.
+ * @see {@link Query.queryAsync} for more details on executing a query asynchronously.
+ * @see {@link Query.mutate} for more details on mutating cache entries.
+ * @see {@link Query.invalidate} for more details on invalidating cache entries.
+ * @see {@link QueueOperatorType} for more details on the available queue operators.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Query<TType, TArgs = any> {
     /**
@@ -256,7 +314,7 @@ export class Query<TType, TArgs = any> {
      *
      * @param options - The constructor options for the Query instance.
      */
-    constructor(options: QueryCtorOptions<TType, TArgs>) {
+constructor(options: QueryCtorOptions<TType, TArgs>) {
         this.#logger = options.logger ?? new ConsoleLogger('Query', this.#namespace);
 
         this.#generateCacheKey = (args: TArgs) => {
@@ -430,6 +488,16 @@ export class Query<TType, TArgs = any> {
      * If `skipResolve` is false or not provided, the Promise resolves with the final result of the query (using `lastValueFrom`).
      * This method is useful for cases where an asynchronous, one-time result is needed rather than a stream of updates.
      * Note that skipping resolution may result in returning invalid cache.
+     *
+     * @example
+     * ```typescript
+     * try{
+     *  const result = await query.queryAsync({ id: '123' });
+     * console.log(result);
+     * } catch (error) {
+     *  console.error(error);
+     * }
+     * ```
      *
      * @param payload - The arguments to be passed to the query function.
      * @param opt - Optional additional options for the query. The `skipResolve` option determines the resolution behavior of the Promise.
