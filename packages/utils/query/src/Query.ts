@@ -33,38 +33,67 @@ import { ConsoleLogger, ILogger } from './logger';
 import { QueryTask } from './QueryTask';
 
 /**
+ * Defines the constructor options for a QueryClient object.
+ * It includes a query function and optional additional options for the client.
+ *
+ * @template TDataType - The type of the data returned by the query.
+ * @template TQueryArguments - The type of the arguments passed to the query function.
+ *
+ * @property fn - The query function to be used for fetching data.
+ * @property options - Optional additional options for the client.
+ *
+ * @see {@link QueryClient} - The QueryClient class.
+ * @see {@link QueryClientCtorOptions} - The constructor options for the QueryClient class.
+ */
+interface QueryClientOptions<TDataType, TQueryArguments> {
+    fn: QueryFn<TDataType, TQueryArguments>;
+    options?: QueryClientCtorOptions;
+}
+
+/**
  * Defines the constructor options for a Query object.
  *
- * @typeParam TType - The type of the data returned by the query.
- * @typeParam TArgs - The type of the arguments passed to the query function.
+ * @template TDataType - The type of the data returned by the query.
+ * @template TQueryArguments - The type of the arguments passed to the query function.
+ *
+ * @property client - The client instance or configuration to be used for fetching data.
+ * @property key - A function that generates a unique key for caching query results based on the arguments.
+ * @property cache - The cache instance or configuration to be used for caching query results.
+ * @property validate - A function that validates a cache entry before it is used.
+ * @property expire - The number of milliseconds before a cache entry expires.
+ * @property queue - The queueing strategy to use for the query.
+ * @property logger - The logger instance to use for logging events and operations within the Query class.
+ *
+ * @see {@link QueryClient} - The QueryClient class.
+ * @see {@link CacheOptions} - The options for the cache instance.
+ * @see {@link QueryCache} - The QueryCache class.
+ * @see {@link QueueOperatorType} - The type of queueing strategy.
+ * @see {@link QueryQueueFn} - The type of the queueing strategy function.
  */
-export type QueryCtorOptions<TType, TArgs> = {
+export type QueryCtorOptions<TDataType, TQueryArguments> = {
     /**
      * The client instance or configuration to be used for fetching data.
      * It can either be an instance of QueryClient or an object with a 'fn' property
      * that is a query function and an optional 'options' object for additional QueryClient options.
      */
     client:
-        | QueryClient<TType, TArgs>
-        | {
-              fn: QueryFn<TType, TArgs>;
-              options?: QueryClientCtorOptions;
-          };
+        | QueryClient<TDataType, TQueryArguments>
+        | QueryClientOptions<TDataType, TQueryArguments>;
     /**
      * A function that generates a unique key for caching query results based on the arguments.
      * This key is used to store and retrieve cache entries.
      */
-    key: CacheOptions<TType, TArgs>['key'];
+    key: CacheOptions<TDataType, TQueryArguments>['key'];
     /**
      * An optional function to validate cache entries. It receives a cache entry and the arguments
      * and returns a boolean indicating whether the cache entry is still valid.
      */
-    validate?: CacheOptions<TType, TArgs>['validate'];
+    validate?: CacheOptions<TDataType, TQueryArguments>['validate'];
     /**
      * An optional instance of QueryCache or constructor arguments for creating a new QueryCache instance.
      * If not provided, a new QueryCache will be created with default options.
      */
-    cache?: QueryCache<TType, TArgs> | QueryCacheCtorArgs<TType, TArgs>;
+    cache?: QueryCache<TDataType, TQueryArguments> | QueryCacheCtorArgs<TDataType, TQueryArguments>;
     /**
      * The expiration time of the cache in milliseconds.
      * If undefined or 0, caching is disabled.
@@ -85,7 +114,7 @@ export type QueryCtorOptions<TType, TArgs> = {
      *   A new request will only start after the previous one has completed. This is useful when the order of
      *   execution is important and each request must be completed before the next begins.
      */
-    queueOperator?: QueueOperatorType | QueryQueueFn<TType, TArgs>;
+    queueOperator?: QueueOperatorType | QueryQueueFn<TDataType, TQueryArguments>;
 
     /**
      * An optional logger instance for logging events and operations within the Query class.
@@ -99,9 +128,9 @@ export type QueryCtorOptions<TType, TArgs> = {
  * This function is responsible for generating a unique string key that represents the query arguments.
  * This key is used to cache and retrieve results, ensuring that each set of arguments has a distinct cache entry.
  *
- * @typeParam T - The type of the arguments used to build the query key.
+ * @template TQueryArguments - The type of the arguments used to build the query key.
  */
-type QueryKeyBuilder<T> = (args: T) => string;
+type QueryKeyBuilder<TQueryArguments> = (args: TQueryArguments) => string;
 
 /**
  * A type alias for a function that validates a cache entry.
@@ -109,23 +138,28 @@ type QueryKeyBuilder<T> = (args: T) => string;
  * It receives the cache entry and the arguments that were used to create it, and returns a boolean
  * indicating whether the cache entry can be used or should be considered stale and discarded.
  *
- * @typeParam TType - The type of the data in the cache entry.
- * @typeParam TArgs - The type of the arguments used to validate the cache entry.
+ * @template TDataType - The type of the data in the cache entry.
+ * @template TQueryArguments - The type of the arguments used to validate the cache entry.
  */
-type CacheValidator<TType, TArgs> = (entry: QueryCacheRecord<TType, TArgs>, args: TArgs) => boolean;
+type CacheValidator<TDataType, TQueryArguments> = (
+    entry: QueryCacheRecord<TDataType, TQueryArguments>,
+    args: TQueryArguments,
+) => boolean;
 
 /**
  * The default function for validating cache entries based on expiration time.
  * This function generates a validator that checks whether the cache entry has expired based on the current time
  * and the expiration time provided. If the expiration time is 0, the cache entry is always considered invalid.
  *
- * @typeParam TType - The type of the data in the cache entry.
- * @typeParam TArgs - The type of the arguments used to validate the cache entry.
+ * @template TDataType - The type of the data in the cache entry.
+ * @template TQueryArguments - The type of the arguments used to validate the cache entry.
+ *
  * @param expires - The expiration time in milliseconds. If 0, the cache entry is always considered invalid.
+ *
  * @returns A function that takes a cache entry and returns a boolean indicating whether the entry is still valid.
  */
 const defaultCacheValidator =
-    <TType, TArgs>(expires = 0): CacheValidator<TType, TArgs> =>
+    <TDataType, TQueryArguments>(expires = 0): CacheValidator<TDataType, TQueryArguments> =>
     (entry) =>
         (entry.updated ?? 0) + expires > Date.now();
 
@@ -144,14 +178,16 @@ type QueueOperatorType = 'switch' | 'merge' | 'concat';
  * The 'merge' operator allows multiple requests to be processed in parallel without waiting for any to complete.
  * The 'concat' operator processes requests one after another, in the order they were added to the queue, waiting for each to complete before starting the next.
  *
- * @typeParam TType - The type of the data returned by the query.
- * @typeParam TArgs - The type of the arguments passed to the query function.
+ * @template TDataType - The type of the data returned by the query.
+ * @template TQueryArguments - The type of the arguments passed to the query function.
+ *
  * @param type - The operator type ('switch', 'merge', 'concat') or custom function to use for queuing requests. Defaults to 'switch'.
+ *
  * @returns A function that takes a query request and returns an Observable representing the queued request.
  */
-const useQueueOperator = <TType, TArgs>(
-    type: QueueOperatorType | QueryQueueFn<TType, TArgs> = 'switch',
-): QueryQueueFn<TType, TArgs> => {
+const useQueueOperator = <TDataType, TQueryArguments>(
+    type: QueueOperatorType | QueryQueueFn<TDataType, TQueryArguments> = 'switch',
+): QueryQueueFn<TDataType, TQueryArguments> => {
     if (typeof type === 'function') {
         return type;
     }
@@ -166,7 +202,7 @@ const useQueueOperator = <TType, TArgs>(
             default:
                 throw new Error(`Invalid queue operator: ${type}`);
         }
-    })() as QueryQueueFn<TType, TArgs>;
+    })() as QueryQueueFn<TDataType, TQueryArguments>;
 };
 
 /**
@@ -228,7 +264,7 @@ const useQueueOperator = <TType, TArgs>(
  * @see {@link QueueOperatorType} for more details on the available queue operators.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class Query<TType, TArgs = any> {
+export class Query<TDataType, TQueryArguments = any> {
     /**
      * A static method that extracts the value from a query task.
      * It is a utility function that can be used externally to access the result of a task.
@@ -245,12 +281,12 @@ export class Query<TType, TArgs = any> {
      * A private instance of QueryClient that is used to fetch data.
      * This client encapsulates the logic for making the actual query requests and handling their responses.
      */
-    #client: QueryClient<TType, TArgs>;
+    #client: QueryClient<TDataType, TQueryArguments>;
     /**
      * A private instance of QueryCache that is used to cache query results.
      * This cache stores the results of queries, allowing for quick retrieval of data without the need to make additional network requests.
      */
-    #cache: QueryCache<TType, TArgs>;
+    #cache: QueryCache<TDataType, TQueryArguments>;
     /**
      * A private Subject that represents the queue of query requests.
      * This queue is used to manage the execution of concurrent query requests according to the chosen queuing strategy.
@@ -260,18 +296,18 @@ export class Query<TType, TArgs = any> {
      * A private record object that stores ongoing query tasks, indexed by a unique reference key.
      * This record keeps track of all active query tasks, allowing for management and coordination of their execution.
      */
-    #tasks: Record<string, QueryTask<TType, TArgs>> = {};
+    #tasks: Record<string, QueryTask<TDataType, TQueryArguments>> = {};
 
     /**
      * A private function that generates a unique cache key for the provided arguments.
      * This key is used to store and retrieve cache entries, ensuring that each set of arguments has its own distinct entry.
      */
-    #generateCacheKey: QueryKeyBuilder<TArgs>;
+    #generateCacheKey: QueryKeyBuilder<TQueryArguments>;
     /**
      * A private function that validates cache entries.
      * This function is called to determine whether a cache entry is still valid or if it should be considered stale and discarded.
      */
-    #validateCacheEntry: CacheValidator<TType, TArgs>;
+    #validateCacheEntry: CacheValidator<TDataType, TQueryArguments>;
 
     /**
      * A private unique namespace string generated using a UUID.
@@ -291,7 +327,7 @@ export class Query<TType, TArgs = any> {
      * TODO: Implement a proxy to control access to the client.
      * This proxy would allow for additional functionality or restrictions when accessing the client instance.
      */
-    public get client(): QueryClient<TType, TArgs> {
+    public get client(): QueryClient<TDataType, TQueryArguments> {
         // TODO: Proxy
         return this.#client;
     }
@@ -301,7 +337,7 @@ export class Query<TType, TArgs = any> {
      * TODO: Implement a proxy to control access to the cache.
      * This proxy would allow for additional functionality or restrictions when accessing the cache instance.
      */
-    public get cache(): QueryCache<TType, TArgs> {
+    public get cache(): QueryCache<TDataType, TQueryArguments> {
         // TODO: Proxy
         return this.#cache;
     }
@@ -314,16 +350,16 @@ export class Query<TType, TArgs = any> {
      *
      * @param options - The constructor options for the Query instance.
      */
-constructor(options: QueryCtorOptions<TType, TArgs>) {
+    constructor(options: QueryCtorOptions<TDataType, TQueryArguments>) {
         this.#logger = options.logger ?? new ConsoleLogger('Query', this.#namespace);
 
-        this.#generateCacheKey = (args: TArgs) => {
+        this.#generateCacheKey = (args: TQueryArguments) => {
             // Use the provided key generation function from options and namespace to ensure unique cache keys across instances
             return generateUniqueKey(options.key(args), this.#namespace);
         };
         // Set the cache entry validation function. Use the provided one or the default based on expiration time
         this.#validateCacheEntry =
-            options?.validate ?? defaultCacheValidator<TType, TArgs>(options?.expire);
+            options?.validate ?? defaultCacheValidator<TDataType, TQueryArguments>(options?.expire);
 
         // Initialize the query client. Use the provided client instance or create a new one with provided function and options
         if (options.client instanceof QueryClient) {
@@ -433,7 +469,7 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
                                         ({
                                             result,
                                             task,
-                                        }) satisfies QueryQueueResult<TType, TArgs>,
+                                        }) satisfies QueryQueueResult<TDataType, TQueryArguments>,
                                 ),
                                 // Catch any errors that occur during the job processing and complete the observable to prevent hanging subscriptions.
                                 // This ensures that errors are handled gracefully and do not prevent the completion of the observable chain.
@@ -476,9 +512,9 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      * @returns An Observable that emits the result of the query.
      */
     public query(
-        args: TArgs,
-        options?: QueryOptions<TType, TArgs>,
-    ): Observable<QueryTaskCached<TType> | QueryTaskCompleted<TType>> {
+        args: TQueryArguments,
+        options?: QueryOptions<TDataType, TQueryArguments>,
+    ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
         return this._query(args, options);
     }
 
@@ -504,9 +540,9 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      * @returns A Promise that resolves with the result of the query or rejects with an Error.
      */
     public queryAsync(
-        payload: TArgs,
-        opt?: QueryOptions<TType, TArgs> & { skipResolve?: boolean },
-    ): Promise<QueryTaskCached<TType> | QueryTaskCompleted<TType>> {
+        payload: TQueryArguments,
+        opt?: QueryOptions<TDataType, TQueryArguments> & { skipResolve?: boolean },
+    ): Promise<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
         const { skipResolve, ...args } = opt || {};
         const fn = skipResolve ? firstValueFrom : lastValueFrom;
         return new Promise((resolve, reject) => {
@@ -525,7 +561,10 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      * @param args - The arguments that identify the specific cache entry to be mutated.
      * @param changes - A function that defines the changes to be applied to the cache entry.
      */
-    public mutate(args: TArgs, changes: Parameters<QueryCache<TType, TArgs>['mutate']>[1]): void {
+    public mutate(
+        args: TQueryArguments,
+        changes: Parameters<QueryCache<TDataType, TQueryArguments>['mutate']>[1],
+    ): void {
         const key = this.#generateCacheKey(args);
         this.#cache.mutate(key, changes);
     }
@@ -538,7 +577,7 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      * @param args - Optional arguments that identify the specific cache record to be invalidated.
      *             If not provided, all cache records will be invalidated.
      */
-    public invalidate(args?: TArgs): void {
+    public invalidate(args?: TQueryArguments): void {
         this.#cache.invalidate(args && this.#generateCacheKey(args));
     }
 
@@ -579,7 +618,10 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      */
     onMutate(
         cb: (e: {
-            detail: { changes: QueryCacheMutation; current?: QueryCacheRecord<TType, TArgs> };
+            detail: {
+                changes: QueryCacheMutation;
+                current?: QueryCacheRecord<TDataType, TQueryArguments>;
+            };
         }) => void,
     ): VoidFunction {
         const subscription = this.#cache.action$
@@ -599,9 +641,9 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      * @returns An Observable that emits the result of the query.
      */
     protected _query(
-        args: TArgs,
-        options?: QueryOptions<TType, TArgs>,
-    ): Observable<QueryTaskCached<TType> | QueryTaskCompleted<TType>> {
+        args: TQueryArguments,
+        options?: QueryOptions<TDataType, TQueryArguments>,
+    ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
         const key = this.#generateCacheKey(args);
         const task = this._createTask(key, args, options);
 
@@ -647,9 +689,9 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
      */
     protected _createTask(
         key: string,
-        args: TArgs,
-        options?: QueryOptions<TType, TArgs>,
-    ): Observable<QueryTaskCached<TType> | QueryTaskCompleted<TType>> {
+        args: TQueryArguments,
+        options?: QueryOptions<TDataType, TQueryArguments>,
+    ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
         // Create a new Observable that represents the query task and will be returned to the caller.
         return new Observable((subscriber) => {
             if (options?.signal) {
@@ -688,7 +730,7 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
                     key,
                     status: 'cache',
                     hasValidCache,
-                } satisfies QueryTaskCached<TType>;
+                } satisfies QueryTaskCached<TDataType>;
 
                 this.#logger.info('Query cache valid, completing', {
                     hasValidCache,
@@ -718,7 +760,7 @@ constructor(options: QueryCtorOptions<TType, TArgs>) {
 
             // If the cache entry does not exist or is invalid, proceed to queue a new query request.
             const isExistingTask = key in this.#tasks;
-            this.#tasks[key] ??= new QueryTask<TType, TArgs>(key, args, options);
+            this.#tasks[key] ??= new QueryTask<TDataType, TQueryArguments>(key, args, options);
             const task = this.#tasks[key];
 
             // Connect the subscriber to the task to receive updates on the query's execution and results.
