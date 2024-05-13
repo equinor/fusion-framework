@@ -54,7 +54,7 @@ jobs:
       - uses: reviewdog/action-setup@v1
 
       - name: Delete outdated ReviewDog comments
-        uses: Ardiannn08/resolve-outdated-comment@v1.1
+        uses: Ardiannn08/resolve-outdated-comment@v1.3
         with:
           token: ${{ github.token }}
           filter-user: "reviewdog"
