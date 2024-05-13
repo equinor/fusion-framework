@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995)]:
+  - @equinor/fusion-query@5.0.2
+
 ## 5.0.3
 
 ### Patch Changes

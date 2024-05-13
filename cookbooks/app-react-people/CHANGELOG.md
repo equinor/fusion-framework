@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.3.3
+
+### Patch Changes
+
+- [#2135](https://github.com/equinor/fusion-framework/pull/2135) [`3cd63d5`](https://github.com/equinor/fusion-framework/commit/3cd63d58e4e3ffd15bccdebaa94b391e3e3d12f0) Thanks [@odinr](https://github.com/odinr)! - Updated the React people cookbook to handle content height correctly in the dev portal
+
+  The React people cookbook previously had an issue where the content height was not calculated correctly when running in the dev portal environment. This changeset fixes that issue by adjusting the height calculation logic to work properly in the dev portal.
+
 ## 4.3.2
 
 ### Patch Changes

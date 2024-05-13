@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.2
+
+### Patch Changes
+
+- [#2145](https://github.com/equinor/fusion-framework/pull/2145) [`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995) Thanks [@odinr](https://github.com/odinr)! - Added some examples to documentation
+
 ## 5.0.1
 
 ### Patch Changes
