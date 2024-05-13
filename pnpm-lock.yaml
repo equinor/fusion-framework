@@ -53,7 +53,7 @@ importers:
         version: 19.1.0
       '@vitest/coverage-v8':
         specifier: ^1.2.2
-        version: 1.3.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 1.3.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8))
       eslint-formatter-rdjson:
         specifier: ^1.0.6
         version: 1.0.6
@@ -77,10 +77,10 @@ importers:
         version: 15.2.2
       vitest:
         specifier: ^1.2.2
-        version: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 0.11.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8))
 
   cookbooks/app-react:
     devDependencies:
@@ -126,10 +126,10 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -150,16 +150,16 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-module-bookmark':
         specifier: ^1.2.0
-        version: 1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-context':
         specifier: ^5.0.0
-        version: 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -184,19 +184,19 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-module-context':
         specifier: ^5.0.0
-        version: 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-navigation':
         specifier: ^4.0.0
         version: 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.15.2)(rxjs@7.8.1)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: ^2.1.0
-        version: 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -343,13 +343,13 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-module':
         specifier: ^4.3.0
         version: 4.3.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module':
         specifier: ^3.1.0
         version: 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -373,10 +373,10 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@types/react':
         specifier: ^18.2.50
         version: 18.2.61
@@ -419,10 +419,10 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.12.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../packages/utils/observable
@@ -449,13 +449,13 @@ importers:
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: ^9.10.0
-        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)
+        version: 9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)
       '@equinor/fusion-framework-module-navigation':
         specifier: ^4.0.0
         version: 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.15.2)(rxjs@7.8.1)
       '@equinor/fusion-framework-react-app':
         specifier: ^5.0.0
-        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.15.2
@@ -555,7 +555,7 @@ importers:
         version: 7.5.8
       '@vitejs/plugin-react':
         specifier: ^4.0.4
-        version: 4.2.1(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 4.2.1(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8))
       adm-zip:
         specifier: ^0.5.10
         version: 0.5.10
@@ -600,16 +600,16 @@ importers:
         version: 7.6.0
       vite:
         specifier: ^5.2.10
-        version: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
       vite-plugin-environment:
         specifier: ^1.1.3
-        version: 1.1.3(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 1.1.3(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8))
       vite-plugin-restart:
         specifier: ^0.4.0
-        version: 0.4.0(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 0.4.0(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8))
       vite-tsconfig-paths:
         specifier: ^4.2.0
-        version: 4.3.1(typescript@5.4.2)(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+        version: 4.3.1(typescript@5.4.2)(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8))
     devDependencies:
       '@equinor/fusion-framework':
         specifier: workspace:^
@@ -730,8 +730,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~31.2.0
-        version: 31.2.0
+        specifier: ~31.3.1
+        version: 31.3.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -900,7 +900,7 @@ importers:
         version: 5.4.2
       vitest:
         specifier: ^1.2.2
-        version: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
 
   packages/modules/module:
     dependencies:
@@ -1571,7 +1571,7 @@ importers:
         version: 5.4.2
       vitest:
         specifier: ^1.2.2
-        version: 1.3.1(@types/node@20.11.24)(happy-dom@14.7.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 1.3.1(@types/node@20.11.24)(happy-dom@14.7.1)(sass@1.75.0)(stylus@0.54.8)
 
   packages/utils/query:
     dependencies:
@@ -1592,7 +1592,7 @@ importers:
         version: 9.0.1
       vitest:
         specifier: ^1.2.2
-        version: 1.3.1(@types/node@20.11.26)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+        version: 1.3.1(@types/node@20.11.26)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
     devDependencies:
       '@types/node':
         specifier: ^20.11.14
@@ -1639,7 +1639,7 @@ importers:
     devDependencies:
       '@vuepress/bundler-vite':
         specifier: 2.0.0-rc.9
-        version: 2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5)
+        version: 2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5)
       '@vuepress/cli':
         specifier: 2.0.0-rc.9
         version: 2.0.0-rc.9(typescript@5.4.5)
@@ -1648,7 +1648,7 @@ importers:
         version: 2.0.0-rc.9(typescript@5.4.5)
       '@vuepress/plugin-register-components':
         specifier: 2.0.0-rc.21
-        version: 2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+        version: 2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vuepress/utils':
         specifier: 2.0.0-rc.9
         version: 2.0.0-rc.9
@@ -1663,10 +1663,10 @@ importers:
         version: 3.4.25(typescript@5.4.5)
       vuepress:
         specifier: 2.0.0-rc.9
-        version: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+        version: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
       vuepress-theme-hope:
         specifier: 2.0.0-rc.37
-        version: 2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+        version: 2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
 
 packages:
 
@@ -1686,6 +1686,9 @@ packages:
   '@ag-grid-community/core@31.2.0':
     resolution: {integrity: sha512-297AR2Z0i6zdpo+d1riWE9TpbsQ956Sd3rkgnjDaFzgGClsdy0SwInBs2281CHjaLQAhPzFelZ5XwcDTxHl4Tw==}
 
+  '@ag-grid-community/core@31.3.1':
+    resolution: {integrity: sha512-B7mzUWfU7ksojKjQyOuT4R6vlp3J2jbMjBlQ5xqLAxanM46b8tv0tVo29mES41dBhQwOEf7ElQpvvXqRsND6+g==}
+
   '@ag-grid-community/react@31.2.0':
     resolution: {integrity: sha512-lOAoH0c2pGMQqxtEzhzXswf3HLeEVCnDM/TlHJpqKTcydhyW1Cfulr4/uJuZL7h28gLSpLawu+rlGCTgac8NKw==}
     peerDependencies:
@@ -1696,8 +1699,8 @@ packages:
   '@ag-grid-community/styles@29.3.5':
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
 
-  '@ag-grid-enterprise/core@31.2.0':
-    resolution: {integrity: sha512-YJaTsX10WPMqu9v1BzPgoLEypLVk1nMUcUCKyzaO0yU6920C+i1RaZJvf2fwUy7xTJs0Wb+1VF+ukEh7J6q7Iw==}
+  '@ag-grid-enterprise/core@31.3.1':
+    resolution: {integrity: sha512-SCAaRhC8AveqIlQhSbSfGt0ln8wmpIWwnMj/Ml4Lfa/f1ccA5bpVSgxl5OTbk367M7O/svi0eSXA2ibAx9kTkw==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -2100,12 +2103,12 @@ packages:
       '@equinor/fusion-framework-module': ^4.3.0
       odata-query: ^7.0.4
 
-  '@equinor/fusion-framework-module-signalr@3.0.3':
-    resolution: {integrity: sha512-wQ3WeUN8dgX19BX6fIIfKmQRNADR0XdFzEAFdoyjByzokNG6JGaNQ8nty7gji+OC3kQMVkFG4KW5N+u9AUBtOA==}
+  '@equinor/fusion-framework-module-signalr@3.0.6':
+    resolution: {integrity: sha512-mcZ5RJWgPEiVIMIgxgE1X9NpOITLHhYSO10cIM4QUQlR8xR074LiW7VPp81OsWynNK0QWzsmURzIkW6hiqUwWg==}
     peerDependencies:
       '@equinor/fusion-framework-module': ^4.3.0
       '@equinor/fusion-framework-module-msal': ^3.1.0
-      '@equinor/fusion-framework-module-service-discovery': ^7.1.3
+      '@equinor/fusion-framework-module-service-discovery': ^7.1.6
     peerDependenciesMeta:
       '@equinor/fusion-framework-module-msal':
         optional: true
@@ -2187,8 +2190,8 @@ packages:
       react-dom:
         optional: true
 
-  '@equinor/fusion-framework-react-module-signalr@3.0.4':
-    resolution: {integrity: sha512-TYqv13+X2ivL806LK9r5MSv8mp8NBch64/sWDPx6q1bZsscmV5yo31Hb1VI/bC9B7XvC4+yjkhBMCEnpQDRi0A==}
+  '@equinor/fusion-framework-react-module-signalr@3.0.7':
+    resolution: {integrity: sha512-iNftNVA3gi7ySo0X/q8WKY/YhnR1PyiULyGJpJ9WhyFhTuQK2qXxPttzneszYr3O86/WBE8HdcY5BK5/AKdzig==}
     peerDependencies:
       '@equinor/fusion-framework-react-module': ^3.1.1
       '@types/react': ^17.0.0 || ^18.0.0
@@ -5128,9 +5131,6 @@ packages:
   commander@12.0.0:
     resolution: {integrity: sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==}
     engines: {node: '>=18'}
-
-  commander@2.20.3:
-    resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
 
   commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
@@ -8145,11 +8145,6 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  terser@4.8.1:
-    resolution: {integrity: sha512-4GnLC0x667eJG0ewJTa6z/yXrbLGv80D9Ru6HIpCQmO+Q4PfEtBFi0ObSckqwL6VyQv/7ENJieXHo2ANmdQwgw==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
   test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
@@ -8989,6 +8984,10 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@ag-grid-community/core@31.3.1':
+    dependencies:
+      tslib: 2.6.2
+
   '@ag-grid-community/react@31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@ag-grid-community/core': 31.2.0
@@ -8998,9 +8997,9 @@ snapshots:
 
   '@ag-grid-community/styles@29.3.5': {}
 
-  '@ag-grid-enterprise/core@31.2.0':
+  '@ag-grid-enterprise/core@31.3.1':
     dependencies:
-      '@ag-grid-community/core': 31.2.0
+      '@ag-grid-community/core': 31.3.1
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -9661,11 +9660,11 @@ snapshots:
       - supports-color
       - typescript
 
-  '@equinor/fusion-framework-app@9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-app@9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
-      '@equinor/fusion-framework': 7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework': 7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-event': 4.1.1(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-http': 5.2.2(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
@@ -9690,20 +9689,20 @@ snapshots:
       - supports-color
       - terser
 
-  '@equinor/fusion-framework-cli@9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)':
+  '@equinor/fusion-framework-cli@9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)':
     dependencies:
       '@equinor/eds-core-react': 0.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
-      '@equinor/fusion-framework-react-components-people-provider': 1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react-components-people-provider': 1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-wc-chip': 1.2.1
       '@equinor/fusion-wc-person': 2.6.7
       '@types/adm-zip': 0.5.5
       '@types/semver': 7.5.8
-      '@vitejs/plugin-react': 4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+      '@vitejs/plugin-react': 4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
       adm-zip: 0.5.12
       chalk: 5.3.0
       commander: 12.0.0
@@ -9718,10 +9717,10 @@ snapshots:
       pretty-bytes: 6.1.1
       read-package-up: 11.0.0
       semver: 7.6.0
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-plugin-environment: 1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
-      vite-plugin-restart: 0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
-      vite-tsconfig-paths: 4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
+      vite-plugin-environment: 1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
+      vite-plugin-restart: 0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
+      vite-tsconfig-paths: 4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@equinor/fusion-framework-module'
@@ -9750,20 +9749,20 @@ snapshots:
       - terser
       - typescript
 
-  '@equinor/fusion-framework-cli@9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.2)':
+  '@equinor/fusion-framework-cli@9.12.2(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/express@4.17.21)(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(stylus@0.54.8)(typescript@5.4.2)':
     dependencies:
       '@equinor/eds-core-react': 0.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
-      '@equinor/fusion-framework-react-components-people-provider': 1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react-components-people-provider': 1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-wc-chip': 1.2.1
       '@equinor/fusion-wc-person': 2.6.7
       '@types/adm-zip': 0.5.5
       '@types/semver': 7.5.8
-      '@vitejs/plugin-react': 4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+      '@vitejs/plugin-react': 4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
       adm-zip: 0.5.12
       chalk: 5.3.0
       commander: 12.0.0
@@ -9778,10 +9777,10 @@ snapshots:
       pretty-bytes: 6.1.1
       read-package-up: 11.0.0
       semver: 7.6.0
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-plugin-environment: 1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
-      vite-plugin-restart: 0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
-      vite-tsconfig-paths: 4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
+      vite-plugin-environment: 1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
+      vite-plugin-restart: 0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
+      vite-tsconfig-paths: 4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@equinor/fusion-framework-module'
@@ -9810,10 +9809,10 @@ snapshots:
       - terser
       - typescript
 
-  '@equinor/fusion-framework-module-app@5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-module-app@5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       immer: 9.0.21
       rxjs: 7.8.1
     transitivePeerDependencies:
@@ -9833,11 +9832,11 @@ snapshots:
       - supports-color
       - terser
 
-  '@equinor/fusion-framework-module-bookmark@1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-module-bookmark@1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       rxjs: 7.8.1
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -9857,10 +9856,10 @@ snapshots:
       - supports-color
       - terser
 
-  '@equinor/fusion-framework-module-context@5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-module-context@5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       fast-deep-equal: 3.1.3
       rxjs: 7.8.1
     transitivePeerDependencies:
@@ -9925,11 +9924,11 @@ snapshots:
       '@remix-run/router': 1.16.1
       rxjs: 7.8.1
 
-  '@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-http': 5.2.2(@types/semver@7.5.8)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       rxjs: 7.8.1
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -9954,14 +9953,13 @@ snapshots:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
       odata-query: 7.0.6
 
-  '@equinor/fusion-framework-module-signalr@3.0.3(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))':
+  '@equinor/fusion-framework-module-signalr@3.0.6(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
       '@microsoft/signalr': 7.0.14
       rxjs: 7.8.1
     optionalDependencies:
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-service-discovery': 7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -9975,20 +9973,20 @@ snapshots:
     optionalDependencies:
       '@types/semver': 7.5.8
 
-  ? '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
+  ? '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)'
   : dependencies:
-      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-navigation': 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.15.2)(rxjs@7.8.1)
-      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-framework-react-module-http': 5.0.3(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
     optionalDependencies:
       '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
-      '@equinor/fusion-framework-react-module-bookmark': 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react-module-bookmark': 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@types/react': 18.2.61
       react-dom: 18.2.0(react@18.2.0)
       rxjs: 7.8.1
@@ -10013,14 +10011,14 @@ snapshots:
       - supports-color
       - terser
 
-  ? '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
-  : dependencies:
-      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+  '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@equinor/fusion-observable@packages+utils+observable)(@remix-run/router@1.15.2)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)':
+    dependencies:
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-navigation': 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.15.2)(rxjs@7.8.1)
-      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-framework-react-module-http': 5.0.3(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -10051,14 +10049,14 @@ snapshots:
       - supports-color
       - terser
 
-  ? '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
-  : dependencies:
-      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+  '@equinor/fusion-framework-react-app@5.0.8(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@remix-run/router@1.16.1)(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)':
+    dependencies:
+      '@equinor/fusion-framework-app': 9.0.5(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-app': 5.3.1(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-navigation': 4.0.0(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@remix-run/router@1.16.1)(rxjs@7.8.1)
-      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-framework-react-module-http': 5.0.3(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
@@ -10088,13 +10086,13 @@ snapshots:
       - supports-color
       - terser
 
-  ? '@equinor/fusion-framework-react-components-people-provider@1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
-  : dependencies:
+  '@equinor/fusion-framework-react-components-people-provider@1.3.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
+    dependencies:
       '@equinor/fusion-framework-module-services': 4.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(odata-query@7.0.6)
-      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@equinor/fusion-framework-react-module-bookmark': 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-react-module-bookmark': 2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       react: 18.2.0
       rxjs: 7.8.1
     optionalDependencies:
@@ -10123,14 +10121,14 @@ snapshots:
       - supports-color
       - terser
 
-  ? '@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)'
-  : dependencies:
-      '@equinor/fusion-framework-module-bookmark': 1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      '@equinor/fusion-framework-module-context': 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+  '@equinor/fusion-framework-react-module-bookmark@2.1.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)':
+    dependencies:
+      '@equinor/fusion-framework-module-bookmark': 1.2.1(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
+      '@equinor/fusion-framework-module-context': 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
+      '@equinor/fusion-framework-react': 7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
-      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-query': 4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       react: 18.2.0
       rxjs: 7.8.1
     optionalDependencies:
@@ -10168,9 +10166,9 @@ snapshots:
       '@types/react': 18.2.61
       react-dom: 18.2.0(react@18.2.0)
 
-  '@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0)':
+  '@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0)':
     dependencies:
-      '@equinor/fusion-framework-module-signalr': 3.0.3(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))
+      '@equinor/fusion-framework-module-signalr': 3.0.6(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
     optionalDependencies:
@@ -10194,9 +10192,9 @@ snapshots:
     transitivePeerDependencies:
       - '@types/semver'
 
-  '@equinor/fusion-framework-react@7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework-react@7.0.4(@equinor/fusion-framework-module-feature-flag@1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0))(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module-signalr@3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0))(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
-      '@equinor/fusion-framework': 7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework': 7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
       '@equinor/fusion-framework-react-module': 3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-framework-react-module-http': 5.0.3(@equinor/fusion-framework-module-http@5.2.2(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -10205,7 +10203,7 @@ snapshots:
       rxjs: 7.8.1
     optionalDependencies:
       '@equinor/fusion-framework-module-feature-flag': 1.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react@18.2.0)
-      '@equinor/fusion-framework-react-module-signalr': 3.0.4(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module-service-discovery@7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0)
+      '@equinor/fusion-framework-react-module-signalr': 3.0.7(@equinor/fusion-framework-module-msal@3.1.0(@types/semver@7.5.8))(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@equinor/fusion-framework-react-module@3.1.1(@types/react@18.2.61)(@types/semver@7.5.8)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@types/react@18.2.61)(react@18.2.0)
       '@types/react': 18.2.61
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -10226,14 +10224,14 @@ snapshots:
       - supports-color
       - terser
 
-  '@equinor/fusion-framework@7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-framework@7.1.4(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(odata-query@7.0.6)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-framework-module': 4.3.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-context': 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-context': 5.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(rxjs@7.8.1)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-event': 4.1.1(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-http': 5.2.2(@types/semver@7.5.8)
       '@equinor/fusion-framework-module-msal': 3.1.0(@types/semver@7.5.8)
-      '@equinor/fusion-framework-module-service-discovery': 7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      '@equinor/fusion-framework-module-service-discovery': 7.1.3(@types/node@20.12.7)(@types/react@18.2.61)(@types/semver@7.5.8)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)
       '@equinor/fusion-framework-module-services': 4.0.1(@equinor/fusion-framework-module@4.3.0(@types/semver@7.5.8))(odata-query@7.0.6)
       rxjs: 7.8.1
     transitivePeerDependencies:
@@ -10264,13 +10262,13 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.61
 
-  '@equinor/fusion-query@4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)':
+  '@equinor/fusion-query@4.2.0(@types/node@20.12.7)(@types/react@18.2.61)(happy-dom@14.10.1)(react@18.2.0)(sass@1.75.0)(stylus@0.54.8)':
     dependencies:
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       immer: 9.0.21
       rxjs: 7.8.1
       uuid: 9.0.1
-      vitest: 1.5.2(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vitest: 1.5.2(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
     optionalDependencies:
       '@types/react': 18.2.61
       react: 18.2.0
@@ -13751,34 +13749,34 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@4.2.1(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))':
+  '@vitejs/plugin-react@4.2.1(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8))':
     dependencies:
       '@babel/core': 7.24.0
       '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.24.0)
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-react@4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))':
+  '@vitejs/plugin-react@4.2.1(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))':
     dependencies:
       '@babel/core': 7.24.0
       '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.24.0)
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.0.4(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(vue@3.4.25(typescript@5.4.5))':
+  '@vitejs/plugin-vue@5.0.4(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))(vue@3.4.25(typescript@5.4.5))':
     dependencies:
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
       vue: 3.4.25(typescript@5.4.5)
 
-  '@vitest/coverage-v8@1.3.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))':
+  '@vitest/coverage-v8@1.3.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -13793,7 +13791,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 6.0.0
       v8-to-istanbul: 9.2.0
-      vitest: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vitest: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -13910,9 +13908,9 @@ snapshots:
 
   '@vue/shared@3.4.25': {}
 
-  '@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5)':
+  '@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5)':
     dependencies:
-      '@vitejs/plugin-vue': 5.0.4(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1))(vue@3.4.25(typescript@5.4.5))
+      '@vitejs/plugin-vue': 5.0.4(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8))(vue@3.4.25(typescript@5.4.5))
       '@vuepress/client': 2.0.0-rc.9(typescript@5.4.5)
       '@vuepress/core': 2.0.0-rc.9(typescript@5.4.5)
       '@vuepress/shared': 2.0.0-rc.9
@@ -13922,7 +13920,7 @@ snapshots:
       postcss: 8.4.38
       postcss-load-config: 5.0.3(jiti@1.21.0)(postcss@8.4.38)
       rollup: 4.14.1
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
       vue: 3.4.25(typescript@5.4.5)
       vue-router: 4.3.0(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
@@ -13970,14 +13968,14 @@ snapshots:
       - supports-color
       - typescript
 
-  '@vuepress/helper@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/helper@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       '@vue/shared': 3.4.25
       cheerio: 1.0.0-rc.12
       fflate: 0.8.2
       gray-matter: 4.0.3
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
@@ -14002,153 +14000,153 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vuepress/plugin-active-header-links@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-active-header-links@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  '@vuepress/plugin-back-to-top@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-back-to-top@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  '@vuepress/plugin-blog@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-blog@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       chokidar: 3.6.0
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-catalog@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-catalog@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-comment@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-comment@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       giscus: 1.5.0
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-copy-code@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-copy-code@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  '@vuepress/plugin-copyright@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-copyright@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  '@vuepress/plugin-external-link-icon@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-external-link-icon@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-git@2.0.0-rc.22(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-git@2.0.0-rc.22(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       execa: 8.0.1
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
 
-  '@vuepress/plugin-links-check@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-links-check@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-nprogress@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-nprogress@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-photo-swipe@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-photo-swipe@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       photoswipe: 5.4.3
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  '@vuepress/plugin-prismjs@2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-prismjs@2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       prismjs: 1.29.0
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
 
-  '@vuepress/plugin-reading-time@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-reading-time@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-register-components@2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-register-components@2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       chokidar: 3.6.0
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
 
-  '@vuepress/plugin-rtl@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-rtl@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-seo@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-seo@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-sitemap@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-sitemap@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       sitemap: 7.1.1
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-theme-data@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
+  '@vuepress/plugin-theme-data@2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))':
     dependencies:
       '@vue/devtools-api': 6.6.1
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - typescript
 
@@ -14614,9 +14612,6 @@ snapshots:
   commander@11.1.0: {}
 
   commander@12.0.0: {}
-
-  commander@2.20.3:
-    optional: true
 
   commander@7.2.0: {}
 
@@ -18321,14 +18316,6 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser@4.8.1:
-    dependencies:
-      acorn: 8.11.3
-      commander: 2.20.3
-      source-map: 0.6.1
-      source-map-support: 0.5.21
-    optional: true
-
   test-exclude@6.0.0:
     dependencies:
       '@istanbuljs/schema': 0.1.3
@@ -18624,13 +18611,13 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@1.3.1(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite-node@1.3.1(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18641,13 +18628,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.3.1(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite-node@1.3.1(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18658,13 +18645,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.3.1(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite-node@1.3.1(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18675,13 +18662,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.5.2(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite-node@1.5.2(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -18692,47 +18679,47 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-environment@1.1.3(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-plugin-environment@1.1.3(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
-      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
 
-  vite-plugin-environment@1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-plugin-environment@1.1.3(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
 
-  vite-plugin-restart@0.4.0(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-plugin-restart@0.4.0(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
       micromatch: 4.0.5
-      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
 
-  vite-plugin-restart@0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-plugin-restart@0.4.0(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
       micromatch: 4.0.5
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
 
-  vite-tsconfig-paths@4.3.1(typescript@5.4.2)(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-tsconfig-paths@4.3.1(typescript@5.4.2)(vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.2(typescript@5.4.2)
     optionalDependencies:
-      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite-tsconfig-paths@4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vite-tsconfig-paths@4.3.2(typescript@5.4.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.2)
     optionalDependencies:
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite@5.2.10(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -18742,9 +18729,8 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.75.0
       stylus: 0.54.8
-      terser: 4.8.1
 
-  vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite@5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -18754,9 +18740,8 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.75.0
       stylus: 0.54.8
-      terser: 4.8.1
 
-  vite@5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite@5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -18766,9 +18751,8 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.75.0
       stylus: 0.54.8
-      terser: 4.8.1
 
-  vite@5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite@5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -18778,9 +18762,8 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.75.0
       stylus: 0.54.8
-      terser: 4.8.1
 
-  vite@5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vite@5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -18790,14 +18773,13 @@ snapshots:
       fsevents: 2.3.3
       sass: 1.75.0
       stylus: 0.54.8
-      terser: 4.8.1
 
-  vitest-github-actions-reporter@0.11.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)):
+  vitest-github-actions-reporter@0.11.1(vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)):
     dependencies:
       '@actions/core': 1.10.1
-      vitest: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vitest: 1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)
 
-  vitest@1.3.1(@types/node@20.11.24)(happy-dom@14.7.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vitest@1.3.1(@types/node@20.11.24)(happy-dom@14.7.1)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.3.1
       '@vitest/runner': 1.3.1
@@ -18816,8 +18798,8 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-node: 1.3.1(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
+      vite-node: 1.3.1(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.11.24
@@ -18831,7 +18813,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.3.1(@types/node@20.11.26)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vitest@1.3.1(@types/node@20.11.26)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.3.1
       '@vitest/runner': 1.3.1
@@ -18850,8 +18832,8 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-node: 1.3.1(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)
+      vite-node: 1.3.1(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.11.26
@@ -18865,7 +18847,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vitest@1.3.1(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.3.1
       '@vitest/runner': 1.3.1
@@ -18884,8 +18866,8 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-node: 1.3.1(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.11(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
+      vite-node: 1.3.1(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7
@@ -18899,7 +18881,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.5.2(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1):
+  vitest@1.5.2(@types/node@20.12.7)(happy-dom@14.10.1)(sass@1.75.0)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.5.2
       '@vitest/runner': 1.5.2
@@ -18918,8 +18900,8 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.8.0
       tinypool: 0.8.4
-      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
-      vite-node: 1.5.2(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)
+      vite: 5.2.10(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
+      vite-node: 1.5.2(@types/node@20.12.7)(sass@1.75.0)(stylus@0.54.8)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7
@@ -18952,23 +18934,23 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.5
 
-  vuepress-plugin-components@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
+  vuepress-plugin-components@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
     dependencies:
       '@stackblitz/sdk': 1.9.0
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       balloon-css: 1.2.0
       create-codepen: 1.0.1
       qrcode: 1.5.3
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
-      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  vuepress-plugin-md-enhance@2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
+  vuepress-plugin-md-enhance@2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
     dependencies:
       '@mdit/plugin-alert': 0.9.0(markdown-it@14.1.0)
       '@mdit/plugin-align': 0.9.0(markdown-it@14.1.0)
@@ -18993,14 +18975,14 @@ snapshots:
       '@mdit/plugin-tex': 0.9.0(markdown-it@14.1.0)
       '@mdit/plugin-uml': 0.9.0(markdown-it@14.1.0)
       '@types/markdown-it': 14.0.1
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       balloon-css: 1.2.0
       js-yaml: 4.1.0
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
-      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
     optionalDependencies:
       katex: 0.16.10
       mermaid: 10.9.0
@@ -19009,20 +18991,20 @@ snapshots:
       - markdown-it
       - typescript
 
-  vuepress-plugin-sass-palette@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
+  vuepress-plugin-sass-palette@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       chokidar: 3.6.0
       sass: 1.75.0
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
-      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  vuepress-shared@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
+  vuepress-shared@2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       cheerio: 1.0.0-rc.12
       dayjs: 1.11.10
@@ -19031,32 +19013,32 @@ snapshots:
       gray-matter: 4.0.3
       semver: 7.6.0
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - typescript
 
-  vuepress-theme-hope@2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
+  vuepress-theme-hope@2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))):
     dependencies:
-      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-active-header-links': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-back-to-top': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-blog': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-catalog': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-comment': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-copy-code': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-copyright': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-external-link-icon': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-git': 2.0.0-rc.22(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-links-check': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-nprogress': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-photo-swipe': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-prismjs': 2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-reading-time': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-rtl': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-seo': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-sitemap': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      '@vuepress/plugin-theme-data': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/helper': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-active-header-links': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-back-to-top': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-blog': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-catalog': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-comment': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-copy-code': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-copyright': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-external-link-icon': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-git': 2.0.0-rc.22(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-links-check': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-nprogress': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-photo-swipe': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-prismjs': 2.0.0-rc.21(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-reading-time': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-rtl': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-seo': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-sitemap': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      '@vuepress/plugin-theme-data': 2.0.0-rc.26(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vueuse/core': 10.9.0(vue@3.4.25(typescript@5.4.5))
       balloon-css: 1.2.0
       bcrypt-ts: 5.0.2
@@ -19064,11 +19046,11 @@ snapshots:
       chokidar: 3.6.0
       gray-matter: 4.0.3
       vue: 3.4.25(typescript@5.4.5)
-      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
-      vuepress-plugin-components: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress-plugin-md-enhance: 2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
-      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5))
+      vuepress-plugin-components: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress-plugin-md-enhance: 2.0.0-rc.37(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress-plugin-sass-palette: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
+      vuepress-shared: 2.0.0-rc.37(typescript@5.4.5)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
     transitivePeerDependencies:
       - '@types/reveal.js'
       - '@vue/composition-api'
@@ -19096,7 +19078,7 @@ snapshots:
       - typescript
       - vidstack
 
-  vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)):
+  vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)):
     dependencies:
       '@vuepress/cli': 2.0.0-rc.9(typescript@5.4.5)
       '@vuepress/client': 2.0.0-rc.9(typescript@5.4.5)
@@ -19106,7 +19088,7 @@ snapshots:
       '@vuepress/utils': 2.0.0-rc.9
       vue: 3.4.25(typescript@5.4.5)
     optionalDependencies:
-      '@vuepress/bundler-vite': 2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(terser@4.8.1)(typescript@5.4.5)
+      '@vuepress/bundler-vite': 2.0.0-rc.9(@types/node@20.12.7)(jiti@1.21.0)(sass@1.75.0)(stylus@0.54.8)(typescript@5.4.5)
     transitivePeerDependencies:
       - supports-color
       - typescript
