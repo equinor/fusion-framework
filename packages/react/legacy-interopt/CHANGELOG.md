@@ -1,5 +1,16 @@
 # Change Log
 
+## 12.0.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-app@5.3.4
+  - @equinor/fusion-framework-module-service-discovery@7.1.6
+  - @equinor/fusion-framework-app@9.0.8
+  - @equinor/fusion-framework-react-app@5.0.11
+  - @equinor/fusion-framework@7.1.7
+
 ## 12.0.8
 
 ### Patch Changes
