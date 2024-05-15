@@ -2,6 +2,7 @@ import { Command } from 'commander';
 
 import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';
+import { publishApplication } from './publish-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
 import createExportManifest from './create-export-manifest.js';
@@ -117,5 +118,12 @@ export default (program: Command) => {
         .action(async (opt) => {
             const { outDir, archive } = opt;
             bundleApplication({ archive, outDir });
+        });
+
+    app.command('publish')
+        .option('-t, --tag, <string>', 'Tagname to publish this build as', 'latest')
+        .action(async (opt) => {
+            const { tag } = opt;
+            publishApplication({ tag });
         });
 };
