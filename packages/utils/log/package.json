@@ -36,7 +36,8 @@
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build",
-        "test": "vitest"
+        "test": "vitest",
+        "test:coverage": "vitest --coverage"
     },
     "bugs": {
         "url": "https://github.com/equinor/fusion-framework/issues"
