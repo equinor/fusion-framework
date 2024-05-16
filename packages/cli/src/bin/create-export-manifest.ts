@@ -1,6 +1,7 @@
 import nodeFs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import assert from 'node:assert';
+import { execSync } from 'node:child_process';
 
 import { SemVer, parse as parseSemver } from 'semver';
 
@@ -12,7 +13,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
-import { AppManifest } from '../lib/app-manifest.js';
+import type { AppManifest } from '../lib/app-manifest.js';
 
 // TODO  why do we do this??? can`t backend parse semver?
 export const normalizeVersion = (version: string) => {
@@ -23,12 +24,11 @@ export const normalizeVersion = (version: string) => {
     return { major, minor, patch };
 };
 
-type AppManifestExport = Omit<AppManifest, 'version'> & {
-    version: {
-        major: number;
-        minor: number;
-        patch: number;
-    };
+type AppManifestExport = AppManifest & {
+    entryPoint: string;
+    commitSha?: string;
+    githubRepo?: string;
+    timestamp?: string;
 };
 
 export const createExportManifest = async (options?: {
@@ -52,9 +52,23 @@ export const createExportManifest = async (options?: {
         file: options?.configFile,
     });
 
+    const commitSha = execSync('git rev-parse HEAD').toString().trim();
+    const repoUrl = execSync('git remote get-url origin').toString().trim();
+
+    const githubRepo = repoUrl
+        ? repoUrl.indexOf('git') === 0
+            ? encodeURIComponent(
+                  repoUrl.replace('git@github.com:', 'https://github.com/').replace('.git', ''),
+              )
+            : encodeURIComponent(repoUrl)
+        : '';
+
     const manifestExport: AppManifestExport = {
         ...manifest,
-        version: normalizeVersion(manifest.version),
+        entryPoint: 'app-bundle.js',
+        commitSha,
+        githubRepo,
+        timestamp: new Date().toDateString(),
     };
 
     if (outputFile) {

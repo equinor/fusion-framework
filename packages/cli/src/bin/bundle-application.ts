@@ -10,8 +10,12 @@ import { buildApplication } from './build-application.js';
 import createExportManifest from './create-export-manifest.js';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
-export const bundleApplication = async (options: { outDir: string; archive: string }) => {
-    const { outDir, archive } = options;
+export const bundleApplication = async (options: {
+    outDir: string;
+    archive: string;
+    getBuffer?: boolean;
+}) => {
+    const { outDir, archive, getBuffer } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('pack') });
 
@@ -54,9 +58,13 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     if (!fileExistsSync(dirname(archive))) {
         await mkdir(dirname(archive), { recursive: true });
     }
-    bundle.writeZip(archive);
 
-    spinner.info(formatPath(archive), formatByteSize(archive));
-
-    spinner.succeed();
+    if (getBuffer) {
+        spinner.succeed();
+        return bundle.toBuffer();
+    } else {
+        bundle.writeZip(archive);
+        spinner.info(formatPath(archive), formatByteSize(archive));
+        spinner.succeed();
+    }
 };
