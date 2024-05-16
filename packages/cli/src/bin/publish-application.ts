@@ -1,44 +1,48 @@
-import { dirname } from 'node:path';
 import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
-import { resolveAppPackage } from '../lib/app-package.js';
-
-import { HttpClient } from '@equinor/fusion-framework-module-http/client';
-
-import { bundleApplication } from './bundle-application.js';
+import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
+import { uploadBundle, appRegistered, validateToken, tagBundle } from './utils/app-api.js';
 
 export const publishApplication = async (options: { tag: string }) => {
     const { tag } = options;
 
-    const client = new HttpClient('https://fusion-s-apps-ci.azurewebsites.net/');
-
     const spinner = Spinner.Global({ prefixText: chalk.dim('Publish') });
-    spinner.info('Verifying FUSION_TOKEN env exists');
-    if (!process?.env?.FUSION_TOKEN) {
-        spinner.fail('😞', chalk.yellowBright('Missing FUSION_TOKEN env variable'));
+
+    const validToken = validateToken();
+    if (!validToken) {
         return;
     }
-    spinner.succeed('Token found');
 
-    client.json('apps/one-equinor').then((response: unknown) => {
-        console.log('Fishy', response);
-    });
-
-    spinner.start('resolve application package');
     const pkg = await resolveAppPackage();
-    spinner.succeed();
+    const appKey = resolveAppKey(pkg.packageJson);
 
-    spinner.info(
-        '📦',
-        chalk.yellowBright([pkg.packageJson.name, pkg.packageJson.version].join('@') + `@${tag}`),
+    spinner.info(`Publishing appkey: ${appKey}`);
+
+    spinner.info('Verifying App is registered');
+    const appResponse = await appRegistered(appKey);
+    if (!appResponse) {
+        return;
+    }
+
+    /* Zip and upload  app bundle */
+    spinner.info('Create bundle and publish');
+    const uploadedBundle = await uploadBundle(appKey);
+    if (!uploadedBundle) {
+        return;
+    }
+
+    spinner.info(`Tag bundle with: ${tag}`);
+
+    const tagd = await tagBundle(tag, appKey, uploadedBundle.version);
+
+    if (!tagd) {
+        return;
+    }
+
+    spinner.succeed(
+        '✅',
+        `Published app: "${appKey}"`,
+        `With version: "${tagd.version}"`,
+        `Tag: "${tagd.tagName}"`,
     );
-
-    const packageDirname = dirname(pkg.path);
-    spinner.info(`🏠 ${chalk.blueBright(packageDirname)}`);
-
-    const viteBuild = bundleApplication({ archive: 'app-bundle.zip', outDir: 'dist' });
-
-    return {
-        viteBuild,
-    };
 };
