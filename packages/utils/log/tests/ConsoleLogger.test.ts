@@ -2,8 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import chalk from 'chalk';
 
-import { ConsoleLogger } from '../src/ConsoleLogger';
-import { LogLevel } from '../src/static';
+import { ConsoleLogger, LogLevel } from '../src';
 
 describe('Console logger', () => {
     it('should log debug messages', () => {
