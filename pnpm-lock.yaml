@@ -19,7 +19,7 @@ importers:
         version: 2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5)
       '@equinor/eslint-config-fusion-react':
         specifier: ^2.0.1
-        version: 2.1.0(@equinor/eslint-config-fusion@2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5))(eslint@8.57.0)
+        version: 2.1.1(@equinor/eslint-config-fusion@2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5))(eslint@8.57.0)
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.7.1
         version: 7.10.0(@typescript-eslint/parser@7.2.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -2045,8 +2045,8 @@ packages:
       react-dom: '>=16.8'
       styled-components: '>=4.2'
 
-  '@equinor/eslint-config-fusion-react@2.1.0':
-    resolution: {integrity: sha512-A7sQn+u5bdmPb8lMYPTA9FXLKBclnCznf82uUZTXUSjz/olq/XRsP7mQNU77Cvlk50GDPOgv48SUxVtw0brLog==}
+  '@equinor/eslint-config-fusion-react@2.1.1':
+    resolution: {integrity: sha512-c7eKI7wxycpf3Y8EqOow0dd5yM0MLdQhil5iKjyMkYQIZrieMiPuXIcXXEXelA1k6m6P2KiTGwLfA/Dvv9i+bg==}
     peerDependencies:
       '@equinor/eslint-config-fusion': '*'
 
@@ -5770,14 +5770,14 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-react-hooks@4.6.0:
-    resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
+  eslint-plugin-react-hooks@4.6.2:
+    resolution: {integrity: sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
 
-  eslint-plugin-react@7.34.0:
-    resolution: {integrity: sha512-MeVXdReleBTdkz/bvcQMSnCXGi+c9kvy51IpinjnJgutl3YTHWsDdke7Z1ufZpGfDG8xduBDKyjtB9JH1eBKIQ==}
+  eslint-plugin-react@7.34.1:
+    resolution: {integrity: sha512-N97CxlouPT1AHt8Jn0mhhN2RrADlUAsk1/atcT2KyA/l9Q/E6ll7OIGwNumFmWfZ9skV3XXccYS19h80rHtgkw==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
@@ -9547,11 +9547,11 @@ snapshots:
       react-dom: 18.3.1(react@18.2.0)
       styled-components: 6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
 
-  '@equinor/eslint-config-fusion-react@2.1.0(@equinor/eslint-config-fusion@2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5))(eslint@8.57.0)':
+  '@equinor/eslint-config-fusion-react@2.1.1(@equinor/eslint-config-fusion@2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5))(eslint@8.57.0)':
     dependencies:
       '@equinor/eslint-config-fusion': 2.2.0(eslint@8.57.0)(prettier@3.2.5)(typescript@5.4.5)
-      eslint-plugin-react: 7.34.0(eslint@8.57.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
+      eslint-plugin-react: 7.34.1(eslint@8.57.0)
+      eslint-plugin-react-hooks: 4.6.2(eslint@8.57.0)
       eslint-plugin-styled-components-a11y: 2.1.32(eslint@8.57.0)
     transitivePeerDependencies:
       - eslint
@@ -15258,11 +15258,11 @@ snapshots:
     optionalDependencies:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
 
-  eslint-plugin-react-hooks@4.6.0(eslint@8.57.0):
+  eslint-plugin-react-hooks@4.6.2(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
 
-  eslint-plugin-react@7.34.0(eslint@8.57.0):
+  eslint-plugin-react@7.34.1(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.7
       array.prototype.findlast: 1.2.4
