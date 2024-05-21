@@ -1,0 +1,58 @@
+{
+    "name": "@equinor/fusion-log",
+    "version": "0.0.0",
+    "description": "Log utils for Fusion front-end development",
+    "keywords": [
+        "equinor",
+        "fusion",
+        "log",
+        "console",
+        "util"
+    ],
+    "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/utils/log/#readme",
+    "license": "ISC",
+    "main": "dist/esm/index.js",
+    "exports": {
+        ".": {
+            "import": "./dist/esm/index.js",
+            "types": "./dist/types/index.d.ts"
+        }
+    },
+    "types": "dist/types/index.d.ts",
+    "directories": {
+        "dist": "dist"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/equinor/fusion-framework.git",
+        "directory": "packages/utils/log"
+    },
+    "scripts": {
+        "build": "tsc -b",
+        "prepack": "pnpm build",
+        "test": "vitest",
+        "test:coverage": "vitest --coverage"
+    },
+    "bugs": {
+        "url": "https://github.com/equinor/fusion-framework/issues"
+    },
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "rxjs": "^7.8.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.14",
+        "typescript": "^5.4.2",
+        "vitest": "^1.6.0"
+    },
+    "peerDependencies": {
+        "chalk": ">5",
+        "rxjs": ">7"
+    }
+}
