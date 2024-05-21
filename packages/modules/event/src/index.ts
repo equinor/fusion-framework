@@ -6,6 +6,7 @@ export type {
     FrameworkEventSource,
     FrameworkEventMap,
     FrameworkEventHandler,
+    FrameworkEventInitType,
 } from './event';
 
 export { IEventModuleConfigurator } from './configurator';
