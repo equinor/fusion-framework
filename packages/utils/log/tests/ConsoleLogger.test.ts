@@ -51,7 +51,7 @@ describe('Console logger', () => {
         );
     });
 
-    it('should log messages with a custom title', () => {
+    it('should log messages with a custom sub-title', () => {
         const spy = vi.spyOn(console, 'info');
         const logger = new ConsoleLogger('MainLogger', 'CustomTitle');
         logger.info('This is a debug message');

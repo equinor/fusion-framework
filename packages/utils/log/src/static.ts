@@ -3,11 +3,11 @@ import { resolveLogLevel } from './resolve-log-level';
 /**
  * Defines the different log levels that can be used to control the verbosity of logging.
  *
- * - `Debug`: Detailed information, typically of interest only when diagnosing problems.
- * - `Info`: Confirmation that things are working as expected.
- * - `Warning`: An indication that something unexpected happened, or indicative of some problem in the near future.
- * - `Error`: Due to a more serious problem, the software has not been able to perform some function.
  * - `None`: No logging will be performed.
+ * - `Error`: Due to a more serious problem, the software has not been able to perform some function.
+ * - `Warning`: An indication that something unexpected happened, or indicative of some problem in the near future.
+ * - `Info`: Confirmation that things are working as expected.
+ * - `Debug`: Detailed information, typically of interest only when diagnosing problems.
  */
 export enum LogLevel {
     None = 0, // No logging will be performed.

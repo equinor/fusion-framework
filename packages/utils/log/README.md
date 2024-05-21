@@ -11,6 +11,12 @@ The logging utilities in this package are designed to provide a flexible and ext
 - `LogLevel` (enum): Defines the different log levels that can be used to control the verbosity of logging.
 - `resolveLogLevel` (function): Resolves a log level from a string or number representation.
 
+> [!WARNING]
+> Ensure that `FUSION_LOG_LEVEL` is set in your package manager's environment variables before compiling the code for production.
+> [Learn more about setting the log level as an environment variable](#setting-log-level-as-environment-variable)
+
+
+
 ## ConsoleLogger
 The `ConsoleLogger` class is a concrete implementation of the `Logger` class. It logs messages to the console using the appropriate console methods (`console.debug`, `console.info`, `console.warn`, `console.error`). The `ConsoleLogger` class also supports creating sub-loggers with a new title and optional subtitle.
 
@@ -47,9 +53,6 @@ The `LogLevel` enum represents the different log levels that can be used to cont
 #### Setting log level as Environment Variable
 
 The logging level can be configured using the `FUSION_LOG_LEVEL` environment variable. If the environment variable is set, the resolveDefaultLogLevel function will attempt to parse the log level from it. If the parsing fails, it will default to LogLevel.Debug in development environments or LogLevel.Error in production environments.
-
-> [!WARNING]
-> be sure to set `FUSION_LOG_LEVEL` in your package managers environment variables, before compiling code for production.'
 
 ```sh
 # .env file

@@ -82,15 +82,16 @@ export class ConsoleLogger extends Logger {
     }
 
     /**
-     * Creates a sub-logger with a new title and optionally a new subtitle.
-     * Inherits the logging level from the parent logger.
-     * @param title The title for the new sub-logger.
-     * @param subtitle An optional subtitle for the new sub-logger. If not provided, the parent's subtitle is used.
+     * Creates a new `ConsoleLogger` instance with a specific title and subtitle, and an optional log level.
+     *
+     * @param title - The title of the new logger, which will be prefixed to the log messages.
+     * @param subtitle - The subtitle of the new logger, which will be appended to the log messages.
+     * @param logLevel - The log level for the new logger. If not provided, the log level of the parent logger will be used.
      * @returns A new ConsoleLogger instance as an ILogger.
      */
-    public createSubLogger(title: string, subtitle?: string): ILogger {
+    public createSubLogger(title: string, subtitle?: string, logLevel?: LogLevel): ILogger {
         const logger = new ConsoleLogger(`${this.title}::${title}`, subtitle ?? this.subtitle);
-        logger.level = this.level;
+        logger.level = logLevel === undefined ? this.level : logLevel;
         return logger;
     }
 }
