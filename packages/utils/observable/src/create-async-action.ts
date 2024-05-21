@@ -8,7 +8,7 @@ import {
 } from './create-action';
 
 import type { PrepareAction } from './create-action';
-import type { AnyAction } from './types';
+import type { Action, ActionWithSuffix, AnyAction } from './types';
 
 export function createAsyncAction<
     PA extends PrepareAction<any>,
@@ -57,14 +57,26 @@ export function createAsyncAction(
     return action as unknown as any;
 }
 
-export const isRequestAction = <A extends AnyAction>(action: A): action is A =>
-    !!action.type.match(/::request$/);
+export function isActionWithSuffix<A extends Action, Suffix extends string>(
+    action: A,
+    suffix: Suffix,
+): action is ActionWithSuffix<A, Suffix> {
+    return !!action.type.match(matchActionSuffix(suffix));
+}
 
-export const isSuccessAction = <A extends AnyAction>(action: A): action is A =>
-    !!action.type.match(matchActionSuffix('success'));
+export const isRequestAction = <A extends AnyAction>(
+    action: A,
+): action is ActionWithSuffix<A, 'request'> => isActionWithSuffix(action, 'request');
 
-export const isFailureAction = <A extends AnyAction>(action: A): action is A =>
-    !!action.type.match(matchActionSuffix('failure'));
+export const isSuccessAction = <A extends AnyAction>(
+    action: A,
+): action is ActionWithSuffix<A, 'success'> => isActionWithSuffix(action, 'success');
 
-export const isCompleteAction = <A extends AnyAction>(action: A): action is A =>
+export const isFailureAction = <A extends AnyAction>(
+    action: A,
+): action is ActionWithSuffix<A, 'failure'> => isActionWithSuffix(action, 'failure');
+
+export const isCompleteAction = <A extends AnyAction>(
+    action: A,
+): action is ActionWithSuffix<A, 'success' | 'failure'> =>
     isSuccessAction(action) || isFailureAction(action);

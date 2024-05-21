@@ -102,4 +102,13 @@ export type ExtractAction<
     TType extends TypeConstant = ActionType<TAction>,
 > = Extract<TAction, Action<TType>>;
 
+export type ActionWithSuffix<TAction extends Action, Suffix extends string> = TAction extends Action
+    ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      TAction['type'] extends `${infer AName}::${infer ASuffix}`
+        ? ASuffix extends Suffix
+            ? TAction
+            : never
+        : never
+    : never;
+
 export type ActionDefinitions = Record<string, ActionCreator>;
