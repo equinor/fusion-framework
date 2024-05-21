@@ -1594,12 +1594,12 @@ importers:
 
   packages/utils/query:
     dependencies:
+      '@equinor/fusion-log':
+        specifier: workspace:^
+        version: link:../log
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../observable
-      chalk:
-        specifier: ^5.3.0
-        version: 5.3.0
       immer:
         specifier: ^9.0.16
         version: 9.0.21
@@ -6572,9 +6572,6 @@ packages:
   js-tokens@8.0.3:
     resolution: {integrity: sha512-UfJMcSJc+SEXEl9lH/VLHSZbThQyLpw1vLO1Lb+j4RWDvG3N2f7yj3PVQA3cmkTBNldJ9eFnM+xEXxHIXrYiJw==}
 
-  js-tokens@9.0.0:
-    resolution: {integrity: sha512-WriZw1luRMlmV3LGJaR6QOJjWwgLUTf89OwT2lUOyjX2dJGBwgmIkbcz+7WFZjrZM635JOIR517++e/67CP9dQ==}
-
   js-yaml@3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
     hasBin: true
@@ -8096,9 +8093,6 @@ packages:
   strip-literal@2.0.0:
     resolution: {integrity: sha512-f9vHgsCWBq2ugHAkGMiiYY+AYG0D/cbloKKg0nhaaaSNsujdGIpVXCNsrJpCKr5M0f4aI31mr13UjY6GAuXCKA==}
 
-  strip-literal@2.1.0:
-    resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
-
   styled-components@6.1.11:
     resolution: {integrity: sha512-Ui0jXPzbp1phYij90h12ksljKGqF8ncGx+pjrNPsSPhbUUjWT2tD1FwGo2LF6USCnbrsIhNngDfodhxbegfEOA==}
     engines: {node: '>= 16'}
@@ -8175,9 +8169,6 @@ packages:
 
   tinybench@2.6.0:
     resolution: {integrity: sha512-N8hW3PG/3aOoZAN5V/NSAEDz0ZixDSSt5b/a05iqtpgfLWMSVuCo7w0k2vVvEjdrIoeGqZzweX2WlyioNIHchA==}
-
-  tinybench@2.8.0:
-    resolution: {integrity: sha512-1/eK7zUnIklz4JUUlL+658n58XO2hHLQfSk1Zf2LKieUjxidN16eKFEoDEfjHc3ohofSSqK3X5yO6VGb6iW8Lw==}
 
   tinypool@0.8.4:
     resolution: {integrity: sha512-i11VH5gS6IFeLY3gMBQ00/MmLncVP7JLXOw1vlgkytLmJK7QnEr7NXf0LBdxfmNPAeyetukOk0bOYrJrFGjYJQ==}
@@ -16200,8 +16191,6 @@ snapshots:
 
   js-tokens@8.0.3: {}
 
-  js-tokens@9.0.0: {}
-
   js-yaml@3.14.1:
     dependencies:
       argparse: 1.0.10
@@ -18156,10 +18145,6 @@ snapshots:
     dependencies:
       js-tokens: 8.0.3
 
-  strip-literal@2.1.0:
-    dependencies:
-      js-tokens: 9.0.0
-
   styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@emotion/is-prop-valid': 1.2.2
@@ -18269,8 +18254,6 @@ snapshots:
   tiny-warning@1.0.3: {}
 
   tinybench@2.6.0: {}
-
-  tinybench@2.8.0: {}
 
   tinypool@0.8.4: {}
 
@@ -18706,12 +18689,12 @@ snapshots:
       debug: 4.3.4
       execa: 8.0.1
       local-pkg: 0.5.0
-      magic-string: 0.30.10
+      magic-string: 0.30.8
       pathe: 1.1.2
       picocolors: 1.0.0
       std-env: 3.7.0
-      strip-literal: 2.1.0
-      tinybench: 2.8.0
+      strip-literal: 2.0.0
+      tinybench: 2.6.0
       tinypool: 0.8.4
       vite: 5.2.11(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
       vite-node: 1.6.0(@types/node@20.11.24)(sass@1.75.0)(stylus@0.54.8)
@@ -18740,12 +18723,12 @@ snapshots:
       debug: 4.3.4
       execa: 8.0.1
       local-pkg: 0.5.0
-      magic-string: 0.30.10
+      magic-string: 0.30.8
       pathe: 1.1.2
       picocolors: 1.0.0
       std-env: 3.7.0
-      strip-literal: 2.1.0
-      tinybench: 2.8.0
+      strip-literal: 2.0.0
+      tinybench: 2.6.0
       tinypool: 0.8.4
       vite: 5.2.11(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)
       vite-node: 1.6.0(@types/node@20.11.26)(sass@1.75.0)(stylus@0.54.8)

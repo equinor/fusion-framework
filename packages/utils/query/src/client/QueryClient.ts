@@ -17,7 +17,7 @@ import {
     QueryClientResult,
     QueryClientRequest,
 } from './types';
-import { ConsoleLogger, ILogger } from '../logger';
+import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
 import { QueryClientJob } from './QueryClientJob';
 
 /**

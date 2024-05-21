@@ -29,7 +29,7 @@ import { QueryCacheCtorArgs } from './cache/QueryCache';
 import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
 
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { ConsoleLogger, ILogger } from './logger';
+import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
 import { QueryTask } from './QueryTask';
 
 /**
