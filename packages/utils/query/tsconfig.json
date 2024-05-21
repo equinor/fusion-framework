@@ -8,6 +8,9 @@
   "references": [
     {
       "path": "../observable"
+    },
+    {
+      "path": "../log"
     }
   ],
   "include": [
