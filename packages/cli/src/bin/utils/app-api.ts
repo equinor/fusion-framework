@@ -1,6 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { Spinner } from './spinner.js';
 import { chalk } from './format.js';
-import { bundleApplication } from '../bundle-application.js';
+import { AppConfig } from '../../lib/app-config.js';
 
 /* build api endpoint url */
 export const getEndpointUrl = (
@@ -20,8 +21,6 @@ export const validateToken = () => {
         spinner.fail('😞', chalk.yellowBright('FUSION_TOKEN not found'));
         return false;
     }
-
-    spinner.info('Token found');
 
     const tokenPayload = process.env.FUSION_TOKEN.split('.')[1];
     const buffer = Buffer.from(tokenPayload, 'base64');
@@ -75,43 +74,48 @@ export const appRegistered = async (appKey: string) => {
     return await requestApp.json();
 };
 
-export const uploadBundle = async (appKey: string) => {
+export const uploadAppBundle = async (appKey: string, bundle: string) => {
     const spinner = Spinner.Current;
 
-    /* Create zipped bundle */
-    const zipBuffer = await bundleApplication({
-        archive: 'app-bundle.zip',
-        outDir: 'dist',
-        getBuffer: true,
-    });
+    const state: {buffer: Buffer | null} = {
+        buffer: null
+    };
 
-    if (!zipBuffer) {
-        spinner.fail('😞', 'Could not retreive zip from app pack');
+    try {
+        state.buffer = readFileSync(bundle);
+    } catch {
+        spinner.fail('😞', 'Could not retreive app bundle, does it exist?');
         return;
     }
 
     const requestBundle = await fetch(getEndpointUrl(`bundles/apps/${appKey}`), {
         method: 'POST',
-        body: zipBuffer,
+        body: state.buffer,
         headers: {
             Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
             'Content-Type': 'application/zip',
         },
     });
 
-    if (!requestBundle.ok) {
+    if (requestBundle.status === 409) {
+        spinner.info('🤯', chalk.yellowBright(`This app version is already uploaded`));
         spinner.fail('😞', chalk.redBright('Failed to publish bundle'));
+        return;
+    }
+
+    if (!requestBundle.ok) {
         spinner.info(
             '🤯',
             chalk.yellowBright(`HTTP status ${requestBundle.status}, ${requestBundle.statusText}`),
         );
+        spinner.fail('😞', chalk.redBright('Failed to publish bundle'));
         return;
     }
 
     return await requestBundle.json();
 };
 
-export const tagBundle = async (tag: string, appKey: string, version: string) => {
+export const tagAppBundle = async (tag: string, appKey: string, version: string) => {
     const spinner = Spinner.Current;
 
     const requestTag = await fetch(getEndpointUrl(`apps/${appKey}/tags/${tag}`), {
@@ -133,4 +137,46 @@ export const tagBundle = async (tag: string, appKey: string, version: string) =>
     }
 
     return await requestTag.json();
+};
+
+export const publishAppConfig = async (appKey: string, version: string, config: AppConfig) => {
+    const spinner = Spinner.Current;
+
+    if (!validateToken()) {
+        return;
+    }
+
+    const isAppRegistered = appRegistered(appKey);
+    if (!isAppRegistered) {
+        return;
+    }
+
+    const requestConfig = await fetch(getEndpointUrl(`apps/${appKey}/builds/${version}/config`), {
+        method: 'PUT',
+        body: JSON.stringify(config),
+        headers: {
+            Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (requestConfig.status === 404) {
+        spinner.fail('😞', chalk.redBright('App version is not published'));
+        spinner.info(
+            '🤯',
+            chalk.yellowBright(`HTTP status ${requestConfig.status}, ${requestConfig.statusText}`),
+        );
+        return;
+    }
+
+    if (!requestConfig.ok) {
+        spinner.fail('😞', chalk.redBright('Failed to upload config'));
+        spinner.info(
+            '🤯',
+            chalk.yellowBright(`HTTP status ${requestConfig.status}, ${requestConfig.statusText}`),
+        );
+        return;
+    }
+
+    return await requestConfig.json();
 };
