@@ -174,6 +174,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param init config builder callback arguments
      * @param initial optional initial config
      * @returns observable configuration object
+     * @sealed
      */
     public createConfig(
         init: ConfigBuilderCallbackArgs,
@@ -189,6 +190,8 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param init - A callback function that is responsible for initializing the configuration object.
      * @param initial - An optional partial configuration object that will be merged with the result of the `init` callback.
      * @returns A Promise that resolves to the created configuration object of type `TConfig`.
+     * @protected
+     * @sealed
      */
     public async createConfigAsync(
         init: ConfigBuilderCallbackArgs,
@@ -203,7 +206,8 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param target - The target path in the configuration to set the callback for.
      * @param cb - The callback function to be executed when the configuration for the specified target path is updated.
      * @template TKey - a key of the config object
-     * @internal
+     * @protected
+     * @sealed
      */
     protected _set<TTarget extends DotPath<TConfig>>(
         target: TTarget,
@@ -217,6 +221,8 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      *
      * @param target - The target path in the configuration to retrieve the callback for.
      * @returns The configuration builder callback for the specified target, or `undefined` if no callback is registered.
+     * @protected
+     * @sealed
      */
     protected _get<TTarget extends DotPath<TConfig>>(
         target: TTarget,
@@ -230,6 +236,8 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * Checks if the given target path exists in the configuration callbacks.
      * @param target - The target path to check.
      * @returns `true` if the target path exists in the configuration callbacks, `false` otherwise.
+     * @protected
+     * @sealed
      */
     protected _has<TTarget extends DotPath<TConfig>>(target: TTarget): boolean {
         return target in this.#configCallbacks;
@@ -258,6 +266,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param init - The configuration builder callback arguments, which include the module context and other relevant data.
      * @param initial - An optional partial configuration object to use as the initial base for the configuration.
      * @returns An observable that emits the processed configuration.
+     * @protected
      */
     protected _createConfig(
         init: ConfigBuilderCallbackArgs,
@@ -281,6 +290,9 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param init - The initialization arguments passed to the configuration callbacks.
      * @param initial - An optional partial configuration object to use as the initial state.
      * @returns An observable that emits the final configuration object.
+     * @protected
+     * @sealed
+     * @readonly
      */
     protected _buildConfig(
         init: ConfigBuilderCallbackArgs,
@@ -330,6 +342,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
      * @param config - The partial configuration object to process.
      * @param _init - Additional configuration arguments (not used in this implementation).
      * @returns An observable input that emits the processed configuration object.
+     * @protected
      */
     protected _processConfig(
         config: Partial<TConfig>,
