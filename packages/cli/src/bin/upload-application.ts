@@ -30,8 +30,6 @@ export const uploadApplication = async (options: { bundle: string }) => {
         return;
     }
 
-    // console.log(chalk.dim(JSON.stringify(uploadedBundle, undefined, 2)));
-
     spinner.succeed(
         '✅',
         `Uploaded app: "${chalk.greenBright(appKey)}"`,
