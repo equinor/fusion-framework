@@ -105,7 +105,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
         init: ConfigBuilderCallbackArgs,
         initial?: Partial<TConfig>,
     ): Observable<TConfig> {
-        return this._createConfig(init, initial);
+        return from(this._createConfig(init, initial));
     }
 
     /**
@@ -137,9 +137,8 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     protected _createConfig(
         init: ConfigBuilderCallbackArgs,
         initial?: Partial<TConfig>,
-    ): Observable<TConfig> {
-        return this._buildConfig(init, initial).pipe(
-            mergeMap((config) => this._processConfig(config, init)),
+    ): ObservableInput<TConfig> {
+        return from(this._buildConfig(init, initial)).pipe(
         );
     }
 
@@ -149,7 +148,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     protected _buildConfig(
         init: ConfigBuilderCallbackArgs,
         initial?: Partial<TConfig>,
-    ): Observable<Partial<TConfig>> {
+    ): ObservableInput<Partial<TConfig>> {
         return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
             mergeMap(async ([target, cb]) => {
                 const value = await cb(init);
