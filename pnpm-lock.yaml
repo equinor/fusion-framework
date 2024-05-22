@@ -15004,7 +15004,7 @@ snapshots:
       compute-scroll-into-view: 3.1.0
       prop-types: 15.8.1
       react: 18.2.0
-      react-is: 18.2.0
+      react-is: 18.3.1
       tslib: 2.6.2
 
   downshift@9.0.4(react@18.2.0):
