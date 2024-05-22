@@ -132,6 +132,29 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     }
 
     /**
+     * Retrieves the configuration callback for the specified target path in the configuration.
+     *
+     * @param target - The target path in the configuration to retrieve the callback for.
+     * @returns The configuration builder callback for the specified target, or `undefined` if no callback is registered.
+     */
+    protected _get<TTarget extends DotPath<TConfig>>(
+        target: TTarget,
+    ): ConfigBuilderCallback<DotPathType<TConfig, TTarget>> | undefined {
+        return this.#configCallbacks[target] as ConfigBuilderCallback<
+            DotPathType<TConfig, TTarget>
+        >;
+    }
+
+    /**
+     * Checks if the given target path exists in the configuration callbacks.
+     * @param target - The target path to check.
+     * @returns `true` if the target path exists in the configuration callbacks, `false` otherwise.
+     */
+    protected _has<TTarget extends DotPath<TConfig>>(target: TTarget): boolean {
+        return target in this.#configCallbacks;
+    }
+
+    /**
      * @private internal creation of config
      */
     protected _createConfig(
