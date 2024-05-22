@@ -77,8 +77,8 @@ export const appRegistered = async (appKey: string) => {
 export const uploadAppBundle = async (appKey: string, bundle: string) => {
     const spinner = Spinner.Current;
 
-    const state: {buffer: Buffer | null} = {
-        buffer: null
+    const state: { buffer: Buffer | null } = {
+        buffer: null,
     };
 
     try {
