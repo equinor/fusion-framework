@@ -257,8 +257,27 @@ export const actionSuffixDivider = '::';
 
 export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixDivider}${suffix}$`);
 
-export const actionBaseType = (action: Action) =>
-    action.type.replace(matchActionSuffix('\\w+$'), '');
+/**
+ * Extracts the base action type from an action or action creator.
+ *
+ * Action types consist of {ACTION_TYPE_NAME}{DIVIDER}{SUFFIX}.
+ * where:
+ * - ACTION_TYPE_NAME is the name of the action creator function
+ * - DIVIDER is the actionSuffixDivider, default ::
+ * - SUFFIX is the suffix passed to the action creator function, like 'request'|'success'|'error'
+ *
+ * @example
+ * ```typescript
+ * const actionBaseTypeName = actionBaseType('update_my_stuff::request'); // 'update_my_stuff'
+ * ```
+ *
+ * @param action The action or action creator to extract the base type from.
+ * @returns The base action type, without any suffixes.
+ */
+export const actionBaseType = (action: Action | string) => {
+    const type = typeof action === 'string' ? action : action.type;
+    return type.replace(matchActionSuffix('\\w+$'), '');
+};
 
 /**
  * Returns the action type of the actions created by the passed
