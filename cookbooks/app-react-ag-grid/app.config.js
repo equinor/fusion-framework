@@ -5,9 +5,12 @@ export default () => ({
     "key": "ag-grid"
   },
   "environment": {},
-  "endpoints": {
-    "api": "https://foo.barz"
-  },
+  "endpoints": [
+    {
+      name: 'api',
+      url: 'https://foo.barz'
+    }
+  ],
   // override portal lookup
   "portalHost": undefined
 });
