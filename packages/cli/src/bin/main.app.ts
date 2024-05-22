@@ -3,6 +3,8 @@ import { Command } from 'commander';
 import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';
 import { publishApplication } from './publish-application.js';
+import { uploadApplication } from './upload-application.js';
+import { tagApplication } from './tag-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
 import createExportManifest from './create-export-manifest.js';
@@ -96,10 +98,15 @@ export default (program: Command) => {
     app.command('config')
         .option('-o, --output <string>', 'output file')
         .option('-c, --config <string>', 'application config file')
+        .option(
+            '-p, --publish <string>',
+            `Publish app config to version [${chalk.yellowBright('(semver | current)')}]`,
+        )
         .action((opt) => {
             createExportConfig({
                 outputFile: opt.output,
                 configFile: opt.config,
+                publish: opt.publish,
             });
         });
     app.command('manifest')
@@ -121,9 +128,39 @@ export default (program: Command) => {
         });
 
     app.command('publish')
-        .option('-t, --tag, <string>', 'Tagname to publish this build as', 'latest')
+        .option(
+            '-t, --tag, <string>',
+            `Tagname to publish this build as [${chalk.yellowBright('(latest | preview)')}]`,
+            'latest',
+        )
         .action(async (opt) => {
             const { tag } = opt;
             publishApplication({ tag });
+        });
+
+    app.command('upload')
+        .option(
+            '-b, --bundle, <string>',
+            'The packaged app bundle file to upload',
+            'app-bundle.zip',
+        )
+        .action(async (opt) => {
+            const { bundle } = opt;
+            uploadApplication({ bundle });
+        });
+
+    app.command('tag')
+        .option(
+            '-t, --tag, <string>',
+            `Tag the published version with tagname [${chalk.yellowBright('(latest | preview)')}]`,
+            'latest',
+        )
+        .option(
+            '-v, --version, <string>',
+            'Version number to tag, must be a published version number',
+        )
+        .action(async (opt) => {
+            const { tag, version } = opt;
+            tagApplication({ tag, version });
         });
 };
