@@ -98,7 +98,7 @@ export const uploadAppBundle = async (appKey: string, bundle: string) => {
     });
 
     if (requestBundle.status === 409) {
-        spinner.info('🤯', chalk.yellowBright(`This app version is already uploaded`));
+        spinner.info('🤯', chalk.yellowBright(`This app version is already published`));
         spinner.fail('😞', chalk.redBright('Failed to publish bundle'));
         return;
     }
