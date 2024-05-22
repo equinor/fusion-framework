@@ -5,8 +5,11 @@ export default defineAppConfig((_nev, { base }) =>
         environment: {
             scope: 'foobar',
         },
-        endpoints: {
-            api: 'https://foo.bars',
-        },
+        endpoints: [
+            {
+                name: 'api',
+                url: 'https://foo.bars'
+            },
+        ],
     }),
 );
