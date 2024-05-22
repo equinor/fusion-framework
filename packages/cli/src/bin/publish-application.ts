@@ -1,7 +1,8 @@
 import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
+import { bundleApplication } from './bundle-application.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
-import { uploadBundle, appRegistered, validateToken, tagBundle } from './utils/app-api.js';
+import { uploadAppBundle, appRegistered, validateToken, tagAppBundle } from './utils/app-api.js';
 
 export const publishApplication = async (options: { tag: string }) => {
     const { tag } = options;
@@ -16,24 +17,30 @@ export const publishApplication = async (options: { tag: string }) => {
     const pkg = await resolveAppPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
-    spinner.info(`Publishing appkey: ${appKey}`);
+    spinner.info(`Publishing app: "${appKey}" with tag: "${tag}"`);
 
-    spinner.info('Verifying App is registered');
+    spinner.info('Verifying that App is registered in api.');
     const appResponse = await appRegistered(appKey);
     if (!appResponse) {
         return;
     }
 
-    /* Zip and upload  app bundle */
-    spinner.info('Create bundle and publish');
-    const uploadedBundle = await uploadBundle(appKey);
+    /* Zip app bundle */
+    spinner.info('Create bundle');
+    await bundleApplication({
+        archive: 'app-bundle.zip',
+        outDir: 'dist',
+    });
+
+    spinner.info('Upload bundle');
+    const uploadedBundle = await uploadAppBundle(appKey, 'app-bundle.zip');
     if (!uploadedBundle) {
         return;
     }
 
-    spinner.info(`Tag bundle with: ${tag}`);
+    spinner.info(`Tag app bundle with: ${tag}`);
 
-    const tagd = await tagBundle(tag, appKey, uploadedBundle.version);
+    const tagd = await tagAppBundle(tag, appKey, uploadedBundle.version);
 
     if (!tagd) {
         return;
@@ -41,8 +48,8 @@ export const publishApplication = async (options: { tag: string }) => {
 
     spinner.succeed(
         '✅',
-        `Published app: "${appKey}"`,
-        `With version: "${tagd.version}"`,
-        `Tag: "${tagd.tagName}"`,
+        `Published app: "${chalk.greenBright(appKey)}"`,
+        `With version: "${chalk.greenBright(tagd.version)}"`,
+        `Tag: "${chalk.greenBright(tagd.tagName)}"`,
     );
 };
