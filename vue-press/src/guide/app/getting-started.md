@@ -122,6 +122,31 @@ export default () => ({
 
 :::
 
+#### Environment variables
+
+To access the environment variables in the application, use the hook `useAppEnvironmentVariables` from `@equinor/fusion-framework-react-app`.
+
+```ts
+import { useAppEnvironmentVariables } from '@equinor/fusion-framework-react-app';
+
+type AppEnvironmentVariables = {
+  API_URL: string;
+  API_SCOPE: string;
+}
+
+const MyComponent = () => {
+  const env = useAppEnvironmentVariables<AppEnvironmentVariables>();
+  console.log(env); // { API_URL: 'https://foo.bar', API_SCOPE: 'c5161f15-9930-4cfc-b233-e9dfc5f8ad82/.default' }
+}
+```
+
+> [!INFO]
+> The `useAppEnvironmentVariables` hook consumes asyncronous data from the app service.
+> In theory the value should always be available, since loaded during configuration.
+>
+> There will be a future module which manages application state, where during the configuration the 
+> desired environment variables can be picked.
+
 ## Creating Application
 
 ### Main
