@@ -16,8 +16,10 @@ import { Command } from 'commander';
 
 const program = new Command();
 program.name(pkg.packageJson.name);
-program.description(pkg.packageJson.description ?? 'CLI for Fusion Framework');
-program.version(pkg.packageJson.version);
+program.description(
+    `fusion-framework-cli@${pkg.packageJson.version}.\nCLI for the Fusion Framework`,
+);
+program.version(pkg.packageJson.version, '-V, --vers', 'CLI version');
 
 /** add app commands */
 import app from './main.app.js';
