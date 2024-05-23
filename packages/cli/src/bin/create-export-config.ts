@@ -8,30 +8,31 @@ import { Spinner } from './utils/spinner.js';
 
 import { loadPackage } from './utils/load-package.js';
 import { loadAppConfig } from './utils/load-app-config.js';
-import { publishAppConfig } from './utils/app-api.js';
+import { publishAppConfig, type FusionEnv } from './utils/app-api.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { resolveAppKey } from '../lib/app-package.js';
 
-export const createExportConfig = async (options?: {
+export const createExportConfig = async (options: {
     command?: ConfigExecuterEnv['command'];
     configFile?: string;
     publish?: string;
     outputFile?: string;
+    env: FusionEnv;
 }) => {
-    const { command = 'build', outputFile, configFile, publish } = options ?? {};
+    const { command = 'build', outputFile, configFile, publish, env } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('config') });
 
     const pkg = await loadPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
-    const env: ConfigExecuterEnv = {
+    const viteEnv: ConfigExecuterEnv = {
         command,
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };
 
-    const { config } = await loadAppConfig(env, pkg, {
+    const { config } = await loadAppConfig(viteEnv, pkg, {
         file: configFile,
     });
 
@@ -65,7 +66,7 @@ export const createExportConfig = async (options?: {
             return;
         }
 
-        const published = await publishAppConfig(appKey, version, config);
+        const published = await publishAppConfig(appKey, version, config, env);
         if (published) {
             spinner.succeed('✅', 'Published config to version', chalk.yellowBright(version));
         }

@@ -102,11 +102,17 @@ export default (program: Command) => {
             '-p, --publish <string>',
             `Publish app config to version [${chalk.yellowBright('(semver | current)')}]`,
         )
+        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .addHelpText(
+            'after',
+            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+        )
         .action((opt) => {
             createExportConfig({
                 outputFile: opt.output,
                 configFile: opt.config,
                 publish: opt.publish,
+                env: opt.env,
             });
         });
     app.command('manifest')
@@ -133,9 +139,14 @@ export default (program: Command) => {
             `Tagname to publish this build as [${chalk.yellowBright('(latest | preview)')}]`,
             'latest',
         )
+        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .addHelpText(
+            'after',
+            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+        )
         .action(async (opt) => {
-            const { tag } = opt;
-            publishApplication({ tag });
+            const { tag, env } = opt;
+            publishApplication({ tag, env });
         });
 
     app.command('upload')
@@ -144,9 +155,14 @@ export default (program: Command) => {
             'The packaged app bundle file to upload',
             'app-bundle.zip',
         )
+        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .addHelpText(
+            'after',
+            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+        )
         .action(async (opt) => {
-            const { bundle } = opt;
-            uploadApplication({ bundle });
+            const { bundle, env } = opt;
+            uploadApplication({ bundle, env });
         });
 
     app.command('tag')
@@ -159,8 +175,13 @@ export default (program: Command) => {
             '-v, --version, <string>',
             'Version number to tag, must be a published version number',
         )
+        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .addHelpText(
+            'after',
+            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+        )
         .action(async (opt) => {
-            const { tag, version } = opt;
-            tagApplication({ tag, version });
+            const { tag, version, env } = opt;
+            tagApplication({ tag, version, env });
         });
 };
