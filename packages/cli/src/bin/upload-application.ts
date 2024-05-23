@@ -1,10 +1,10 @@
 import { Spinner } from './utils/spinner.js';
 import { chalk } from './utils/format.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
-import { uploadAppBundle, appRegistered, validateToken } from './utils/app-api.js';
+import { uploadAppBundle, appRegistered, validateToken, type FusionEnv } from './utils/app-api.js';
 
-export const uploadApplication = async (options: { bundle: string }) => {
-    const { bundle } = options;
+export const uploadApplication = async (options: { bundle: string, env: FusionEnv }) => {
+    const { bundle, env } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('Upload') });
 
@@ -17,7 +17,7 @@ export const uploadApplication = async (options: { bundle: string }) => {
     const appKey = resolveAppKey(pkg.packageJson);
 
     spinner.info('Verifying App is registered');
-    const appResponse = await appRegistered(appKey);
+    const appResponse = await appRegistered(appKey, env);
     if (!appResponse) {
         return;
     }
@@ -25,7 +25,7 @@ export const uploadApplication = async (options: { bundle: string }) => {
     /* Upload app bundle */
     spinner.info(`Uploading appkey: ${chalk.yellowBright(appKey)}`);
     spinner.info(`Uploading bundle ${chalk.yellowBright(bundle)}`);
-    const uploadedBundle = await uploadAppBundle(appKey, bundle);
+    const uploadedBundle = await uploadAppBundle(appKey, bundle, env);
     if (!uploadedBundle) {
         return;
     }
