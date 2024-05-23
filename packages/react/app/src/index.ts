@@ -11,6 +11,7 @@ export type {
 
 export { useAppModule } from './useAppModule';
 export { useAppModules } from './useAppModules';
+export { useAppEnvironmentVariables } from './useAppEnvironmentVariables';
 
 export { makeComponent, ComponentRenderArgs } from './make-component';
 
