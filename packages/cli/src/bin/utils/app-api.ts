@@ -3,14 +3,19 @@ import { Spinner } from './spinner.js';
 import { chalk } from './format.js';
 import { AppConfig } from '../../lib/app-config.js';
 
+export type FusionEnv = 'ci' | 'fqa' | 'fprd';
+
 /* build api endpoint url */
 export const getEndpointUrl = (
     endpoint: string,
-    env: 'ci' | 'fqa' | 'fprd' = 'ci',
+    fusionEnv: FusionEnv,
     version: string = '1.0-preview',
 ) => {
-    const apiurl = `https://fusion-s-apps-${env}.azurewebsites.net`;
-    return `${apiurl}/${endpoint}?api-version=${version}`;
+    const { FUSION_APP_API: appApiUrl } = process.env;
+    return (
+        appApiUrl ??
+        `https://fusion-s-apps-${fusionEnv}.azurewebsites.net/${endpoint}?api-version=${version}`
+    );
 };
 
 export const validateToken = () => {
@@ -41,10 +46,10 @@ export const validateToken = () => {
     return true;
 };
 
-export const appRegistered = async (appKey: string) => {
+export const appRegistered = async (appKey: string, env: FusionEnv) => {
     const spinner = Spinner.Current;
 
-    const requestApp = await fetch(getEndpointUrl(`apps/${appKey}`), {
+    const requestApp = await fetch(getEndpointUrl(`apps/${appKey}`, env), {
         headers: {
             Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
         },
@@ -74,7 +79,7 @@ export const appRegistered = async (appKey: string) => {
     return await requestApp.json();
 };
 
-export const uploadAppBundle = async (appKey: string, bundle: string) => {
+export const uploadAppBundle = async (appKey: string, bundle: string, env: FusionEnv) => {
     const spinner = Spinner.Current;
 
     const state: { buffer: Buffer | null } = {
@@ -88,7 +93,7 @@ export const uploadAppBundle = async (appKey: string, bundle: string) => {
         return;
     }
 
-    const requestBundle = await fetch(getEndpointUrl(`bundles/apps/${appKey}`), {
+    const requestBundle = await fetch(getEndpointUrl(`bundles/apps/${appKey}`, env), {
         method: 'POST',
         body: state.buffer,
         headers: {
@@ -115,10 +120,15 @@ export const uploadAppBundle = async (appKey: string, bundle: string) => {
     return await requestBundle.json();
 };
 
-export const tagAppBundle = async (tag: string, appKey: string, version: string) => {
+export const tagAppBundle = async (
+    tag: string,
+    appKey: string,
+    version: string,
+    env: FusionEnv,
+) => {
     const spinner = Spinner.Current;
 
-    const requestTag = await fetch(getEndpointUrl(`apps/${appKey}/tags/${tag}`), {
+    const requestTag = await fetch(getEndpointUrl(`apps/${appKey}/tags/${tag}`, env), {
         method: 'PUT',
         body: JSON.stringify({ version }),
         headers: {
@@ -139,26 +149,34 @@ export const tagAppBundle = async (tag: string, appKey: string, version: string)
     return await requestTag.json();
 };
 
-export const publishAppConfig = async (appKey: string, version: string, config: AppConfig) => {
+export const publishAppConfig = async (
+    appKey: string,
+    version: string,
+    config: AppConfig,
+    env: FusionEnv,
+) => {
     const spinner = Spinner.Current;
 
     if (!validateToken()) {
         return;
     }
 
-    const isAppRegistered = appRegistered(appKey);
+    const isAppRegistered = appRegistered(appKey, env);
     if (!isAppRegistered) {
         return;
     }
 
-    const requestConfig = await fetch(getEndpointUrl(`apps/${appKey}/builds/${version}/config`), {
-        method: 'PUT',
-        body: JSON.stringify(config),
-        headers: {
-            Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
-            'Content-Type': 'application/json',
+    const requestConfig = await fetch(
+        getEndpointUrl(`apps/${appKey}/builds/${version}/config`, env),
+        {
+            method: 'PUT',
+            body: JSON.stringify(config),
+            headers: {
+                Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
         },
-    });
+    );
 
     if (requestConfig.status === 404) {
         spinner.fail('😞', chalk.redBright('App version is not published'));
