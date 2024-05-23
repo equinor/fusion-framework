@@ -12,6 +12,13 @@ export type JsonRequest<TRequest extends FetchRequest = FetchRequest> = Omit<TRe
     body?: object | string | null;
 };
 
+/**
+ * Represents the result of a blob operation, including the filename (if available) and the blob itself.
+ * @property {string} [filename] - The filename of the blob, if available.
+ * @property {Blob} blob - The blob data.
+ */
+export type BlobResult = { filename?: string; blob: Blob };
+
 export type FetchResponse<T = unknown> = Response & {
     json(): Promise<T>;
 };
@@ -149,15 +156,29 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
         args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): Promise<T>;
 
-    blob(
+    /**
+     * Fetches a blob resource from the specified path.
+     *
+     * @param path - The path to the blob resource.
+     * @param args - Optional arguments for the fetch request, including the request body, headers, and response type.
+     * @returns A Promise that resolves to the fetched blob data.
+     */
+    blob<T = BlobResult>(
         path: string,
-        args?: FetchRequestInit<Blob, JsonRequest<TRequest>, TResponse>,
-    ): Promise<Blob>;
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
+    ): Promise<T>;
 
-    blob$(
+    /**
+     * Fetches a blob from the specified path and returns a stream response.
+     *
+     * @param path - The path to fetch the blob from.
+     * @param args - Optional arguments for the fetch request, including the request body, headers, and response type.
+     * @returns A stream response containing the fetched blob.
+     */
+    blob$<T = BlobResult>(
         path: string,
-        args?: FetchRequestInit<Blob, JsonRequest<TRequest>, TResponse>,
-    ): StreamResponse<Blob>;
+        args?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
+    ): StreamResponse<T>;
 
     /**
      * Abort all ongoing request for current client
