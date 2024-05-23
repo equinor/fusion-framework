@@ -293,6 +293,30 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
 
+  cookbooks/app-react-environment-variables:
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.2.61
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.19
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.2.0)
+      typescript:
+        specifier: ^5.4.2
+        version: 5.4.5
+
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
