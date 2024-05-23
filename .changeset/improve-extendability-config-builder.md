@@ -1,8 +1,8 @@
 ---
-"@equinor/modules": patch
+"@equinor/fusion-framework-module": patch
 ---
 
-## @equinor/modules
+## @equinor/fusion-framework-module
 
 ### Changes to `BaseConfigBuilder`
 
