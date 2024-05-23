@@ -41,7 +41,8 @@ export type FrameworkEventInit<TDetail = any, TSource = any> = {
 };
 
 /** defer init type args of event */
-export type FrameworkEventInitType<T> = T extends IFrameworkEvent<infer U> ? U : never;
+export type FrameworkEventInitType<T> =
+    T extends IFrameworkEvent<infer U> ? U : T extends FrameworkEvent<infer U> ? U : never;
 
 /** defer name type of event */
 export type FrameworkEventType<T> =
