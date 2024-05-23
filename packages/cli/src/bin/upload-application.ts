@@ -13,6 +13,7 @@ export const uploadApplication = async (options: { bundle: string; env: FusionEn
         return;
     }
 
+    /* get package.json */
     const pkg = await resolveAppPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
