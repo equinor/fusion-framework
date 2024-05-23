@@ -9,7 +9,9 @@
     },
   },
   "references": [
-   
+    {
+      "path": "../../utils/observable"
+    },
     {
       "path": "../../app"
     },
@@ -33,7 +35,7 @@
     },
     {
       "path": "../widget"
-    }
+    },
   ],
   "include": [
     "src/**/*"
