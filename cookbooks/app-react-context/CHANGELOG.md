@@ -1,241 +1,251 @@
 # Change Log
 
+## 4.1.11
+
+### Patch Changes
+
+-   Updated dependencies [[`060a1aa`](https://github.com/equinor/fusion-framework/commit/060a1aa7f4f2ce6b1ddef527a219bf267e488500)]:
+    -   @equinor/fusion-framework-react-app@5.1.0
+    -   @equinor/fusion-framework-module-navigation@4.0.2
+    -   @equinor/fusion-framework-cli@9.12.6
+    -   @equinor/fusion-framework-react-module-context@6.2.6
+
 ## 4.1.10
 
 ### Patch Changes
 
-- Updated dependencies [[`3cd63d5`](https://github.com/equinor/fusion-framework/commit/3cd63d58e4e3ffd15bccdebaa94b391e3e3d12f0)]:
-  - @equinor/fusion-framework-cli@9.12.5
-  - @equinor/fusion-framework-react-module-context@6.2.5
-  - @equinor/fusion-framework-react-app@5.0.11
+-   Updated dependencies [[`3cd63d5`](https://github.com/equinor/fusion-framework/commit/3cd63d58e4e3ffd15bccdebaa94b391e3e3d12f0)]:
+    -   @equinor/fusion-framework-cli@9.12.5
+    -   @equinor/fusion-framework-react-module-context@6.2.5
+    -   @equinor/fusion-framework-react-app@5.0.11
 
 ## 4.1.9
 
 ### Patch Changes
 
-- Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
-  - @equinor/fusion-framework-cli@9.12.4
-  - @equinor/fusion-framework-react-module-context@6.2.4
-  - @equinor/fusion-framework-react-app@5.0.10
+-   Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
+    -   @equinor/fusion-framework-cli@9.12.4
+    -   @equinor/fusion-framework-react-module-context@6.2.4
+    -   @equinor/fusion-framework-react-app@5.0.10
 
 ## 4.1.8
 
 ### Patch Changes
 
-- Updated dependencies [[`5093391`](https://github.com/equinor/fusion-framework/commit/5093391eabda84873041ee89632f26770734b03c), [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5), [`975f65c`](https://github.com/equinor/fusion-framework/commit/975f65cdae9882279f18e1f9f8d243df03218650), [`cf4a17a`](https://github.com/equinor/fusion-framework/commit/cf4a17a07540b05b0d44de7e188aaaa8f9fef8f8)]:
-  - @equinor/fusion-framework-cli@9.12.3
-  - @equinor/fusion-framework-module-navigation@4.0.1
-  - @equinor/fusion-framework-react-app@5.0.9
-  - @equinor/fusion-framework-react-module-context@6.2.3
+-   Updated dependencies [[`5093391`](https://github.com/equinor/fusion-framework/commit/5093391eabda84873041ee89632f26770734b03c), [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5), [`975f65c`](https://github.com/equinor/fusion-framework/commit/975f65cdae9882279f18e1f9f8d243df03218650), [`cf4a17a`](https://github.com/equinor/fusion-framework/commit/cf4a17a07540b05b0d44de7e188aaaa8f9fef8f8)]:
+    -   @equinor/fusion-framework-cli@9.12.3
+    -   @equinor/fusion-framework-module-navigation@4.0.1
+    -   @equinor/fusion-framework-react-app@5.0.9
+    -   @equinor/fusion-framework-react-module-context@6.2.3
 
 ## 4.1.7
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@9.12.2
-  - @equinor/fusion-framework-react-app@5.0.8
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-cli@9.12.2
+    -   @equinor/fusion-framework-react-app@5.0.8
 
 ## 4.1.6
 
 ### Patch Changes
 
-- Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a), [`303c962`](https://github.com/equinor/fusion-framework/commit/303c96234e381ddc3ad86daeff9baaec5ade6bbe)]:
-  - @equinor/fusion-observable@8.3.0
-  - @equinor/fusion-framework-cli@9.12.1
-  - @equinor/fusion-framework-react-app@5.0.7
-  - @equinor/fusion-framework-react-module-context@6.2.2
+-   Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a), [`303c962`](https://github.com/equinor/fusion-framework/commit/303c96234e381ddc3ad86daeff9baaec5ade6bbe)]:
+    -   @equinor/fusion-observable@8.3.0
+    -   @equinor/fusion-framework-cli@9.12.1
+    -   @equinor/fusion-framework-react-app@5.0.7
+    -   @equinor/fusion-framework-react-module-context@6.2.2
 
 ## 4.1.5
 
 ### Patch Changes
 
-- Updated dependencies [[`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c), [`545a090`](https://github.com/equinor/fusion-framework/commit/545a0902bc670724498add3f4fd82f251e9156e6), [`3eba53a`](https://github.com/equinor/fusion-framework/commit/3eba53a7eb113a9985092a3c6166ab6bdd44c02f)]:
-  - @equinor/fusion-framework-cli@9.12.0
-  - @equinor/fusion-framework-react-app@5.0.6
+-   Updated dependencies [[`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c), [`545a090`](https://github.com/equinor/fusion-framework/commit/545a0902bc670724498add3f4fd82f251e9156e6), [`3eba53a`](https://github.com/equinor/fusion-framework/commit/3eba53a7eb113a9985092a3c6166ab6bdd44c02f)]:
+    -   @equinor/fusion-framework-cli@9.12.0
+    -   @equinor/fusion-framework-react-app@5.0.6
 
 ## 4.1.4
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@9.11.1
-  - @equinor/fusion-framework-react-app@5.0.5
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-cli@9.11.1
+    -   @equinor/fusion-framework-react-app@5.0.5
 
 ## 4.1.3
 
 ### Patch Changes
 
-- [#1998](https://github.com/equinor/fusion-framework/pull/1998) [`14530fa`](https://github.com/equinor/fusion-framework/commit/14530fa2d8d7afd45b6849cec2665f2f396bb27f) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli contextselector and resolver
+-   [#1998](https://github.com/equinor/fusion-framework/pull/1998) [`14530fa`](https://github.com/equinor/fusion-framework/commit/14530fa2d8d7afd45b6849cec2665f2f396bb27f) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli contextselector and resolver
 
-- Updated dependencies [[`14530fa`](https://github.com/equinor/fusion-framework/commit/14530fa2d8d7afd45b6849cec2665f2f396bb27f)]:
-  - @equinor/fusion-framework-cli@9.11.0
+-   Updated dependencies [[`14530fa`](https://github.com/equinor/fusion-framework/commit/14530fa2d8d7afd45b6849cec2665f2f396bb27f)]:
+    -   @equinor/fusion-framework-cli@9.11.0
 
 ## 4.1.2
 
 ### Patch Changes
 
-- Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
-  - @equinor/fusion-framework-react-app@5.0.4
-  - @equinor/fusion-framework-cli@9.10.1
-  - @equinor/fusion-framework-react-module-context@6.2.1
+-   Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
+    -   @equinor/fusion-framework-react-app@5.0.4
+    -   @equinor/fusion-framework-cli@9.10.1
+    -   @equinor/fusion-framework-react-module-context@6.2.1
 
 ## 4.1.1
 
 ### Patch Changes
 
-- Updated dependencies [[`e0b95f1`](https://github.com/equinor/fusion-framework/commit/e0b95f1879ecfc108987073a58c3c3150c156aa8)]:
-  - @equinor/fusion-framework-react-app@5.0.3
+-   Updated dependencies [[`e0b95f1`](https://github.com/equinor/fusion-framework/commit/e0b95f1879ecfc108987073a58c3c3150c156aa8)]:
+    -   @equinor/fusion-framework-react-app@5.0.3
 
 ## 4.1.0
 
 ### Minor Changes
 
-- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
+-   [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
 
 ### Patch Changes
 
-- Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`b59d314`](https://github.com/equinor/fusion-framework/commit/b59d3142a551574117d3cdeb274cceb996459000), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-  - @equinor/fusion-framework-react-module-context@6.2.0
-  - @equinor/fusion-framework-module-navigation@4.0.0
-  - @equinor/fusion-observable@8.2.0
-  - @equinor/fusion-framework-react-app@5.0.0
-  - @equinor/fusion-framework-cli@9.10.0
+-   Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`b59d314`](https://github.com/equinor/fusion-framework/commit/b59d3142a551574117d3cdeb274cceb996459000), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
+    -   @equinor/fusion-framework-react-module-context@6.2.0
+    -   @equinor/fusion-framework-module-navigation@4.0.0
+    -   @equinor/fusion-observable@8.2.0
+    -   @equinor/fusion-framework-react-app@5.0.0
+    -   @equinor/fusion-framework-cli@9.10.0
 
 ## 4.0.31
 
 ### Patch Changes
 
-- [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - updated cookbook with test if navigation module is enabled with context path update
+-   [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - updated cookbook with test if navigation module is enabled with context path update
 
-- Updated dependencies [[`86e7556`](https://github.com/equinor/fusion-framework/commit/86e7556b212f42501ef5e885fea36d20002e43ac), [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098)]:
-  - @equinor/fusion-framework-cli@9.9.0
-  - @equinor/fusion-framework-react-module-context@6.1.2
-  - @equinor/fusion-framework-react-app@4.3.8
+-   Updated dependencies [[`86e7556`](https://github.com/equinor/fusion-framework/commit/86e7556b212f42501ef5e885fea36d20002e43ac), [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098)]:
+    -   @equinor/fusion-framework-cli@9.9.0
+    -   @equinor/fusion-framework-react-module-context@6.1.2
+    -   @equinor/fusion-framework-react-app@4.3.8
 
 ## 4.0.30
 
 ### Patch Changes
 
-- Updated dependencies [[`057f204`](https://github.com/equinor/fusion-framework/commit/057f204fc01ee6579280b621bc83ca74589acd6b)]:
-  - @equinor/fusion-framework-cli@9.8.7
+-   Updated dependencies [[`057f204`](https://github.com/equinor/fusion-framework/commit/057f204fc01ee6579280b621bc83ca74589acd6b)]:
+    -   @equinor/fusion-framework-cli@9.8.7
 
 ## 4.0.29
 
 ### Patch Changes
 
-- Updated dependencies [[`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72), [`666780c`](https://github.com/equinor/fusion-framework/commit/666780cb2f6e5b3d5b861a179220362c1bf4b0ad)]:
-  - @equinor/fusion-framework-cli@9.8.6
+-   Updated dependencies [[`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72), [`666780c`](https://github.com/equinor/fusion-framework/commit/666780cb2f6e5b3d5b861a179220362c1bf4b0ad)]:
+    -   @equinor/fusion-framework-cli@9.8.6
 
 ## 4.0.28
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@9.8.5
-  - @equinor/fusion-framework-react-app@4.3.7
-  - @equinor/fusion-framework-react-module-context@6.1.1
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-cli@9.8.5
+    -   @equinor/fusion-framework-react-app@4.3.7
+    -   @equinor/fusion-framework-react-module-context@6.1.1
 
 ## 4.0.27
 
 ### Patch Changes
 
-- Updated dependencies [[`722f43f`](https://github.com/equinor/fusion-framework/commit/722f43f01c7a46175ad72e84c22fb3562d21bc26), [`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8)]:
-  - @equinor/fusion-framework-cli@9.8.4
+-   Updated dependencies [[`722f43f`](https://github.com/equinor/fusion-framework/commit/722f43f01c7a46175ad72e84c22fb3562d21bc26), [`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8)]:
+    -   @equinor/fusion-framework-cli@9.8.4
 
 ## 4.0.26
 
 ### Patch Changes
 
-- Updated dependencies [[`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2), [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f), [`b7504d1`](https://github.com/equinor/fusion-framework/commit/b7504d1352a0107383f8f76f9ed7f77744d1f99b)]:
-  - @equinor/fusion-framework-cli@9.8.3
+-   Updated dependencies [[`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2), [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f), [`b7504d1`](https://github.com/equinor/fusion-framework/commit/b7504d1352a0107383f8f76f9ed7f77744d1f99b)]:
+    -   @equinor/fusion-framework-cli@9.8.3
 
 ## 4.0.25
 
 ### Patch Changes
 
-- Updated dependencies [[`6e6ee6b`](https://github.com/equinor/fusion-framework/commit/6e6ee6b7ce280820111e8b98ac8377efb15808ef)]:
-  - @equinor/fusion-framework-react-module-context@6.1.0
-  - @equinor/fusion-framework-react-app@4.3.6
-  - @equinor/fusion-framework-cli@9.8.2
+-   Updated dependencies [[`6e6ee6b`](https://github.com/equinor/fusion-framework/commit/6e6ee6b7ce280820111e8b98ac8377efb15808ef)]:
+    -   @equinor/fusion-framework-react-module-context@6.1.0
+    -   @equinor/fusion-framework-react-app@4.3.6
+    -   @equinor/fusion-framework-cli@9.8.2
 
 ## 4.0.24
 
 ### Patch Changes
 
-- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+-   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 ## 4.0.23
 
 ### Patch Changes
 
-- [#1237](https://github.com/equinor/fusion-framework/pull/1237) [`9075e84a`](https://github.com/equinor/fusion-framework/commit/9075e84ad5e9327d8adf8ffebaf51942da5a8773) Thanks [@odinr](https://github.com/odinr)! - updated typings
+-   [#1237](https://github.com/equinor/fusion-framework/pull/1237) [`9075e84a`](https://github.com/equinor/fusion-framework/commit/9075e84ad5e9327d8adf8ffebaf51942da5a8773) Thanks [@odinr](https://github.com/odinr)! - updated typings
 
-  after type enhancement in [@equinor/fusion-observable](https://github.com/equinor/fusion-framework/blob/1b1a98a982323fe8384e8564e6229af7dc615839/packages/utils/observable/CHANGELOG.md#810), some type errors was discovered in `@equinor/fusion-framework-cookbook-app-react-context` mentioned in [issue 1212](https://github.com/equinor/fusion-framework/issues/1212)
+    after type enhancement in [@equinor/fusion-observable](https://github.com/equinor/fusion-framework/blob/1b1a98a982323fe8384e8564e6229af7dc615839/packages/utils/observable/CHANGELOG.md#810), some type errors was discovered in `@equinor/fusion-framework-cookbook-app-react-context` mentioned in [issue 1212](https://github.com/equinor/fusion-framework/issues/1212)
 
-- Updated dependencies [[`780b229a`](https://github.com/equinor/fusion-framework/commit/780b229a709d83b275e88473df0236b3f218c037), [`9f570356`](https://github.com/equinor/fusion-framework/commit/9f570356939f077e0a6ca101fa0b7e51d369f7b4), [`0d84d39e`](https://github.com/equinor/fusion-framework/commit/0d84d39ed9d452aa7bb8bc4dfc6ff2e46d3af82b)]:
-  - @equinor/fusion-framework-cli@9.1.0
+-   Updated dependencies [[`780b229a`](https://github.com/equinor/fusion-framework/commit/780b229a709d83b275e88473df0236b3f218c037), [`9f570356`](https://github.com/equinor/fusion-framework/commit/9f570356939f077e0a6ca101fa0b7e51d369f7b4), [`0d84d39e`](https://github.com/equinor/fusion-framework/commit/0d84d39ed9d452aa7bb8bc4dfc6ff2e46d3af82b)]:
+    -   @equinor/fusion-framework-cli@9.1.0
 
 ## 4.0.22
 
 ### Patch Changes
 
-- Updated dependencies [[`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3)]:
-  - @equinor/fusion-framework-cli@9.0.0
+-   Updated dependencies [[`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3), [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3)]:
+    -   @equinor/fusion-framework-cli@9.0.0
 
 ## 4.0.21
 
 ### Patch Changes
 
-- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+-   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-  conflicts of `@types/react` made random outcomes when using `yarn`
+    conflicts of `@types/react` made random outcomes when using `yarn`
 
-  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
-- [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
+-   [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-  only dev deps updated should not affect any consumers
+    only dev deps updated should not affect any consumers
 
-  see [react changelog](https://github.com/facebook/react/releases) for details
+    see [react changelog](https://github.com/facebook/react/releases) for details
 
-- [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
+-   [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
-- Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`542356ee`](https://github.com/equinor/fusion-framework/commit/542356eecfcc1bc8b896e71377308a1de29f4ab9), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`f672d0bb`](https://github.com/equinor/fusion-framework/commit/f672d0bba71a7ea6cd08135778fda67ff38f3ac3), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`46201069`](https://github.com/equinor/fusion-framework/commit/46201069505f2526d1bdec05c134da17012b6d31), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`dfee1f79`](https://github.com/equinor/fusion-framework/commit/dfee1f79c9b70c2c2f27c12096000e6fc1e8ff7a), [`6887c016`](https://github.com/equinor/fusion-framework/commit/6887c0164102e17b4a6d6f16193d9e34a0f41149)]:
-  - @equinor/fusion-framework-react-module-context@6.0.10
-  - @equinor/fusion-observable@8.1.0
-  - @equinor/fusion-framework-react-app@4.1.3
-  - @equinor/fusion-framework-cli@8.0.1
+-   Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`542356ee`](https://github.com/equinor/fusion-framework/commit/542356eecfcc1bc8b896e71377308a1de29f4ab9), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`f672d0bb`](https://github.com/equinor/fusion-framework/commit/f672d0bba71a7ea6cd08135778fda67ff38f3ac3), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`46201069`](https://github.com/equinor/fusion-framework/commit/46201069505f2526d1bdec05c134da17012b6d31), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`dfee1f79`](https://github.com/equinor/fusion-framework/commit/dfee1f79c9b70c2c2f27c12096000e6fc1e8ff7a), [`6887c016`](https://github.com/equinor/fusion-framework/commit/6887c0164102e17b4a6d6f16193d9e34a0f41149)]:
+    -   @equinor/fusion-framework-react-module-context@6.0.10
+    -   @equinor/fusion-observable@8.1.0
+    -   @equinor/fusion-framework-react-app@4.1.3
+    -   @equinor/fusion-framework-cli@8.0.1
 
 ## 4.0.20
 
 ### Patch Changes
 
-- Updated dependencies [[`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c), [`713c94d9`](https://github.com/equinor/fusion-framework/commit/713c94d9a493f5aecb9fefa44942f83bd30ae29c)]:
-  - @equinor/fusion-framework-cli@8.0.0
+-   Updated dependencies [[`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c), [`713c94d9`](https://github.com/equinor/fusion-framework/commit/713c94d9a493f5aecb9fefa44942f83bd30ae29c)]:
+    -   @equinor/fusion-framework-cli@8.0.0
 
 ## 4.0.19
 
 ### Patch Changes
 
-- [#955](https://github.com/equinor/fusion-framework/pull/955) [`b0310b3b`](https://github.com/equinor/fusion-framework/commit/b0310b3b3668f72bdc973e5fee50118dbe17823f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Remove leading `/` in package's main property for the cookbooks.
+-   [#955](https://github.com/equinor/fusion-framework/pull/955) [`b0310b3b`](https://github.com/equinor/fusion-framework/commit/b0310b3b3668f72bdc973e5fee50118dbe17823f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Remove leading `/` in package's main property for the cookbooks.
 
 ## 4.0.18
 
 ### Patch Changes
 
-- [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+-   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
-- Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-  - @equinor/fusion-framework-cli@7.0.12
-  - @equinor/fusion-framework-react-app@4.1.1
+-   Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
+    -   @equinor/fusion-framework-cli@7.0.12
+    -   @equinor/fusion-framework-react-app@4.1.1
 
 ## 4.0.17
 
 ### Patch Changes
 
-- [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - **add build script**
-  this is not required, but nice to know that cookbooks builds...
+-   [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - **add build script**
+    this is not required, but nice to know that cookbooks builds...
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -308,13 +318,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **cookbooks/app-react-context:** update cookbook ([aa57521](https://github.com/equinor/fusion-framework/commit/aa57521de3c51ae3521177dedd380801570cf6db))
+-   **cookbooks/app-react-context:** update cookbook ([aa57521](https://github.com/equinor/fusion-framework/commit/aa57521de3c51ae3521177dedd380801570cf6db))
 
 ## [3.1.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.42...@equinor/fusion-framework-cookbook-app-react-context@3.1.0) (2023-04-14)
 
 ### Features
 
-- **cookbooks/app-react-context:** add related context ([52e9e96](https://github.com/equinor/fusion-framework/commit/52e9e9682e92c5824f42118ea0ce573d1c00f87e))
+-   **cookbooks/app-react-context:** add related context ([52e9e96](https://github.com/equinor/fusion-framework/commit/52e9e9682e92c5824f42118ea0ce573d1c00f87e))
 
 ## [3.0.42](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.39...@equinor/fusion-framework-cookbook-app-react-context@3.0.42) (2023-04-14)
 
@@ -352,13 +362,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **coockbooks:** pre-fixing package name with forward slash in package.json ([671785d](https://github.com/equinor/fusion-framework/commit/671785de0283b01c0852fe23d1231d30d295f4ec))
+-   **coockbooks:** pre-fixing package name with forward slash in package.json ([671785d](https://github.com/equinor/fusion-framework/commit/671785de0283b01c0852fe23d1231d30d295f4ec))
 
 ## [3.0.33](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.32...@equinor/fusion-framework-cookbook-app-react-context@3.0.33) (2023-03-31)
 
 ### Bug Fixes
 
-- **coockbooks:** pre-fixing package name with forward slash in package.json ([671785d](https://github.com/equinor/fusion-framework/commit/671785de0283b01c0852fe23d1231d30d295f4ec))
+-   **coockbooks:** pre-fixing package name with forward slash in package.json ([671785d](https://github.com/equinor/fusion-framework/commit/671785de0283b01c0852fe23d1231d30d295f4ec))
 
 ## [3.0.32](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.31...@equinor/fusion-framework-cookbook-app-react-context@3.0.32) (2023-03-28)
 
@@ -472,7 +482,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **cookbooks:** fixing path to references ([0cf722c](https://github.com/equinor/fusion-framework/commit/0cf722c395f03542fef32a72069d8ff1f1943276))
+-   **cookbooks:** fixing path to references ([0cf722c](https://github.com/equinor/fusion-framework/commit/0cf722c395f03542fef32a72069d8ff1f1943276))
 
 ## [3.0.5](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@3.0.4...@equinor/fusion-framework-cookbook-app-react-context@3.0.5) (2023-01-30)
 
@@ -610,13 +620,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **context:** method for contextParameterFn on enableContext ([398658d](https://github.com/equinor/fusion-framework/commit/398658de26355a8ca99aea291963b8c302df3ddc))
+-   **context:** method for contextParameterFn on enableContext ([398658d](https://github.com/equinor/fusion-framework/commit/398658de26355a8ca99aea291963b8c302df3ddc))
 
 ## [2.1.10](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.9...@equinor/fusion-framework-cookbook-app-react-context@2.1.10) (2022-12-12)
 
 ### Bug Fixes
 
-- **cookbooks/app-react-context:** update context content ([7120315](https://github.com/equinor/fusion-framework/commit/7120315750543e61e2291e4075b007310b8894fb))
+-   **cookbooks/app-react-context:** update context content ([7120315](https://github.com/equinor/fusion-framework/commit/7120315750543e61e2291e4075b007310b8894fb))
 
 ## [2.1.9](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.1.8...@equinor/fusion-framework-cookbook-app-react-context@2.1.9) (2022-12-08)
 
@@ -658,12 +668,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- **contextselector:** set context type in app-react-context ([99d0b37](https://github.com/equinor/fusion-framework/commit/99d0b37a676f485646d5a55e872efeba53e48233))
-- header with contextselector and logo ([174ed3d](https://github.com/equinor/fusion-framework/commit/174ed3d14383b6a813d2264ad5dfd9397fe17185))
+-   **contextselector:** set context type in app-react-context ([99d0b37](https://github.com/equinor/fusion-framework/commit/99d0b37a676f485646d5a55e872efeba53e48233))
+-   header with contextselector and logo ([174ed3d](https://github.com/equinor/fusion-framework/commit/174ed3d14383b6a813d2264ad5dfd9397fe17185))
 
 ### Bug Fixes
 
-- **cookbooks:** update render initialize ([dedcfea](https://github.com/equinor/fusion-framework/commit/dedcfea1099adf380cc84418feb899dfe53fcd92))
+-   **cookbooks:** update render initialize ([dedcfea](https://github.com/equinor/fusion-framework/commit/dedcfea1099adf380cc84418feb899dfe53fcd92))
 
 ## [2.0.3](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@2.0.2...@equinor/fusion-framework-cookbook-app-react-context@2.0.3) (2022-12-05)
 
@@ -681,13 +691,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- update exiting debounce hooks ([27e716c](https://github.com/equinor/fusion-framework/commit/27e716ca253206d532e0f02233beb6f29c10de22))
+-   update exiting debounce hooks ([27e716c](https://github.com/equinor/fusion-framework/commit/27e716ca253206d532e0f02233beb6f29c10de22))
 
 ## [2.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@1.0.18...@equinor/fusion-framework-cookbook-app-react-context@2.0.0-alpha.0) (2022-12-02)
 
 ### Features
 
-- update exiting debounce hooks ([dd3eb5f](https://github.com/equinor/fusion-framework/commit/dd3eb5ff1a05edd6c25fd1ad65c0b68d50f5799a))
+-   update exiting debounce hooks ([dd3eb5f](https://github.com/equinor/fusion-framework/commit/dd3eb5ff1a05edd6c25fd1ad65c0b68d50f5799a))
 
 ## [1.0.18](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@1.0.17...@equinor/fusion-framework-cookbook-app-react-context@1.0.18) (2022-12-01)
 
@@ -753,7 +763,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **cookbooks:** update render initialize ([dedcfea](https://github.com/equinor/fusion-framework/commit/dedcfea1099adf380cc84418feb899dfe53fcd92))
+-   **cookbooks:** update render initialize ([dedcfea](https://github.com/equinor/fusion-framework/commit/dedcfea1099adf380cc84418feb899dfe53fcd92))
 
 ## [1.0.2](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-cookbook-app-react-context@1.0.1...@equinor/fusion-framework-cookbook-app-react-context@1.0.2) (2022-11-20)
 
