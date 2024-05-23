@@ -2,10 +2,16 @@ import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { bundleApplication } from './bundle-application.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
-import { uploadAppBundle, appRegistered, validateToken, tagAppBundle } from './utils/app-api.js';
+import {
+    uploadAppBundle,
+    appRegistered,
+    validateToken,
+    tagAppBundle,
+    type FusionEnv,
+} from './utils/app-api.js';
 
-export const publishApplication = async (options: { tag: string }) => {
-    const { tag } = options;
+export const publishApplication = async (options: { tag: string; env: FusionEnv }) => {
+    const { tag, env } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('Publish') });
 
@@ -20,7 +26,7 @@ export const publishApplication = async (options: { tag: string }) => {
     spinner.info(`Publishing app: "${appKey}" with tag: "${tag}"`);
 
     spinner.info('Verifying that App is registered in api.');
-    const appResponse = await appRegistered(appKey);
+    const appResponse = await appRegistered(appKey, env);
     if (!appResponse) {
         return;
     }
@@ -33,14 +39,14 @@ export const publishApplication = async (options: { tag: string }) => {
     });
 
     spinner.info('Upload bundle');
-    const uploadedBundle = await uploadAppBundle(appKey, 'app-bundle.zip');
+    const uploadedBundle = await uploadAppBundle(appKey, 'app-bundle.zip', env);
     if (!uploadedBundle) {
         return;
     }
 
     spinner.info(`Tag app bundle with: ${tag}`);
 
-    const tagd = await tagAppBundle(tag, appKey, uploadedBundle.version);
+    const tagd = await tagAppBundle(tag, appKey, uploadedBundle.version, env);
 
     if (!tagd) {
         return;
