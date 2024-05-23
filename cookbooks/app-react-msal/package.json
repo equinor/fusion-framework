@@ -13,8 +13,8 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "^9.10.0",
-        "@equinor/fusion-framework-react-app": "^5.0.0",
+        "@equinor/fusion-framework-cli": "workspace:^",
+        "@equinor/fusion-framework-react-app": "workspace:^",
         "@types/react": "^18.2.50",
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
