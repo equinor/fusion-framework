@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-event": patch
+"@equinor/fusion-framework-module-event": patch
 ---
 
 ## @equinor/fusion-event
