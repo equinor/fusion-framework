@@ -3,7 +3,7 @@ import { chalk } from './utils/format.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
 import { uploadAppBundle, appRegistered, validateToken, type FusionEnv } from './utils/app-api.js';
 
-export const uploadApplication = async (options: { bundle: string, env: FusionEnv }) => {
+export const uploadApplication = async (options: { bundle: string; env: FusionEnv }) => {
     const { bundle, env } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('Upload') });
