@@ -26,13 +26,13 @@ export const createExportConfig = async (options: {
     const pkg = await loadPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
-    const viteEnv: ConfigExecuterEnv = {
+    const appEnv: ConfigExecuterEnv = {
         command,
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };
 
-    const { config } = await loadAppConfig(viteEnv, pkg, {
+    const { config } = await loadAppConfig(appEnv, pkg, {
         file: configFile,
     });
 
