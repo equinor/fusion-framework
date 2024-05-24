@@ -16,7 +16,7 @@
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.9",
     "@vuepress/cli": "2.0.0-rc.9",
-    "@vuepress/client": "2.0.0-rc.9",
+    "@vuepress/client": "2.0.0-rc.11",
     "@vuepress/plugin-register-components": "2.0.0-rc.21",
     "@vuepress/utils": "2.0.0-rc.9",
     "mermaid": "^10.9.0",
