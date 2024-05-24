@@ -105,7 +105,7 @@ export default (program: Command) => {
         .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
         .addHelpText(
             'after',
-            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+            'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action((opt) => {
             createExportConfig({
@@ -142,7 +142,7 @@ export default (program: Command) => {
         .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
         .addHelpText(
             'after',
-            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+            'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action(async (opt) => {
             const { tag, env } = opt;
@@ -158,7 +158,7 @@ export default (program: Command) => {
         .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
         .addHelpText(
             'after',
-            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+            'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action(async (opt) => {
             const { bundle, env } = opt;
@@ -171,14 +171,14 @@ export default (program: Command) => {
             `Tag the published version with tagname [${chalk.yellowBright('(latest | preview)')}]`,
             'latest',
         )
-        .option(
+        .requiredOption(
             '-v, --version, <string>',
             'Version number to tag, must be a published version number',
         )
         .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
         .addHelpText(
             'after',
-            'To use custom endpoints for app api, define env variable "FUSION_APP_API" with the url to you desired app service, this command will then ignore the --env parameter',
+            'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action(async (opt) => {
             const { tag, version, env } = opt;

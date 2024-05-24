@@ -25,16 +25,17 @@ export const tagApplication = async (options: {
     const pkg = await resolveAppPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
-    spinner.info(`Tag app "${appKey}" with "${tag}"`);
-
+    // if (!['preview', 'latest'].includes(tag)) {
     if (!Object.values(Tags).includes(tag as Tags)) {
         spinner.fail('😞', `Tag must match (${Tags.latest} | ${Tags.preview})`);
         return;
     }
 
+    spinner.info(`Tag app "${appKey}@${version}" with: "${tag}"`);
+
     spinner.info('Verifying that App is registered');
-    const appResponse = await appRegistered(appKey, env);
-    if (!appResponse) {
+    const registered = await appRegistered(appKey, env);
+    if (!registered) {
         return;
     }
 

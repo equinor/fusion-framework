@@ -8,7 +8,7 @@ import { Spinner } from './utils/spinner.js';
 
 import { loadPackage } from './utils/load-package.js';
 import { loadAppConfig } from './utils/load-app-config.js';
-import { publishAppConfig, type FusionEnv } from './utils/app-api.js';
+import { publishAppConfig, validateToken, type FusionEnv } from './utils/app-api.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { resolveAppKey } from '../lib/app-package.js';
 
@@ -55,6 +55,12 @@ export const createExportConfig = async (options: {
 
     if (publish) {
         spinner.info('Publishing config');
+
+        const validToken = validateToken();
+        if (!validToken) {
+            return;
+        }
+
         const version = publish === 'current' ? pkg.packageJson.version : publish;
         if (!version || !semverValid(version)) {
             spinner.fail(
