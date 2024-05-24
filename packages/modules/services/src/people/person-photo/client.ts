@@ -1,4 +1,7 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import {
+    type ClientRequestInit,
+    type IHttpClient,
+} from '@equinor/fusion-framework-module-http/client';
 
 import { generateParameters } from './generate-parameters';
 
@@ -22,12 +25,13 @@ export const client =
         version: TVersion,
         method: TMethod = 'blob' as TMethod,
     ) =>
-    <T extends Blob = ApiResponse<TVersion>>(
+    <T extends ApiResponse<TVersion> = ApiResponse<TVersion>>(
         args: TArgs,
         init?: ClientRequestInit<TClient, T>,
-    ): ClientDataMethod[TMethod] =>
-        client[method](
+    ): ClientDataMethod<T>[TMethod] => {
+        return client[method](
             ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as ClientDataMethod[TMethod];
+        ) as ClientDataMethod<T>[TMethod];
+    };
 
 export default client;

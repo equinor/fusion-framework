@@ -1,3 +1,4 @@
+import { BlobResult } from '@equinor/fusion-framework-module-http/client';
 import { ApiVersion } from '../static';
 import { ClientDataMethod } from '../../types';
 
@@ -15,7 +16,7 @@ export type ApiRequestArgs<T extends SupportedApiVersion> =
     ApiRequestArgsMap[(typeof ApiVersion)[T]];
 
 type ApiResponseTypes = {
-    [ApiVersion.v2]: Blob;
+    [ApiVersion.v2]: BlobResult;
 };
 
 export type ApiResponse<T extends SupportedApiVersion> = ApiResponseTypes[(typeof ApiVersion)[T]];
