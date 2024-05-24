@@ -11,10 +11,6 @@ tag:
 
 - [React 17+](https://reactjs.org/)
 
-::: warning Dependencies
-The Fusion Portal only supports React@17
-:::
-
 ## Setup
 
 ### CLI
