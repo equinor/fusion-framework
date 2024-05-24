@@ -6,16 +6,55 @@ import { AppConfig } from '../../lib/app-config.js';
 export type FusionEnv = 'ci' | 'fqa' | 'fprd';
 
 /* build api endpoint url */
-export const getEndpointUrl = (
+export const getEndpointUrl = async (
     endpoint: string,
     fusionEnv: FusionEnv,
     version: string = '1.0-preview',
 ) => {
-    const { FUSION_APP_API: appApiUrl } = process.env;
-    return (
-        appApiUrl ??
-        `https://fusion-s-apps-${fusionEnv}.azurewebsites.net/${endpoint}?api-version=${version}`
-    );
+    const { CUSTOM_APPAPI, FUSION_CLI_ENV, FUSION_TOKEN } = process.env;
+
+    const spinner = Spinner.Current;
+
+    /* use consumer provided api url */
+    if (CUSTOM_APPAPI) {
+        return CUSTOM_APPAPI;
+    }
+
+    /* Env has changed get new api url */
+    if (FUSION_CLI_ENV !== fusionEnv || !process.env.FUSION_CLI_APPAPI) {
+        process.env.FUSION_CLI_ENV = fusionEnv;
+
+        const requestService = await fetch(
+            `https://discovery.ci.fusion-dev.net/service-registry/environments/${fusionEnv}/services/apps`,
+            {
+                headers: {
+                    Authorization: `Bearer ${FUSION_TOKEN}`,
+                },
+            },
+        );
+        if (!requestService.ok) {
+            spinner.fail(
+                '😞',
+                chalk.redBright('Could not resolve app api endpoint from service discovery api'),
+            );
+            spinner.info(
+                '🤯',
+                chalk.yellowBright(
+                    `HTTP status ${requestService.status}, ${requestService.statusText}`,
+                ),
+            );
+            return;
+        }
+
+        const responseService = await requestService.json();
+        process.env.FUSION_CLI_APPAPI = responseService.uri;
+    }
+
+    const uri = new URL(`${process.env.FUSION_CLI_APPAPI}/${endpoint}`);
+    uri.searchParams.set('api-version', version);
+
+    /* return fresh/cached endpoint url */
+    return uri.href;
 };
 
 export const validateToken = () => {
@@ -23,7 +62,11 @@ export const validateToken = () => {
     spinner.info('Validating FUSION_TOKEN');
 
     if (!process?.env?.FUSION_TOKEN) {
-        spinner.fail('😞', chalk.yellowBright('FUSION_TOKEN not found'));
+        spinner.fail(
+            '😞',
+            `Missing environment variable "${chalk.yellowBright('FUSION_TOKEN')}"`,
+            `\n\nThe "${chalk.yellowBright('FUSION_TOKEN')}" variable is required to perform any actions towards the app api. \nDefine the variable with a valid accessToken in you pipeline|shell before running commands using the app api.`,
+        );
         return false;
     }
 
@@ -49,7 +92,12 @@ export const validateToken = () => {
 export const appRegistered = async (appKey: string, env: FusionEnv) => {
     const spinner = Spinner.Current;
 
-    const requestApp = await fetch(getEndpointUrl(`apps/${appKey}`, env), {
+    const endpoint = await getEndpointUrl(`apps/${appKey}`, env);
+    if (!endpoint) {
+        return;
+    }
+
+    const requestApp = await fetch(endpoint, {
         headers: {
             Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
         },
@@ -93,7 +141,12 @@ export const uploadAppBundle = async (appKey: string, bundle: string, env: Fusio
         return;
     }
 
-    const requestBundle = await fetch(getEndpointUrl(`bundles/apps/${appKey}`, env), {
+    const endpointUrl = await getEndpointUrl(`bundles/apps/${appKey}`, env);
+    if (!endpointUrl) {
+        return;
+    }
+
+    const requestBundle = await fetch(endpointUrl, {
         method: 'POST',
         body: state.buffer,
         headers: {
@@ -128,7 +181,12 @@ export const tagAppBundle = async (
 ) => {
     const spinner = Spinner.Current;
 
-    const requestTag = await fetch(getEndpointUrl(`apps/${appKey}/tags/${tag}`, env), {
+    const endpointUrl = await getEndpointUrl(`apps/${appKey}/tags/${tag}`, env);
+    if (!endpointUrl) {
+        return;
+    }
+    console.log('enpoint', endpointUrl);
+    const requestTag = await fetch(endpointUrl, {
         method: 'PUT',
         body: JSON.stringify({ version }),
         headers: {
@@ -157,26 +215,24 @@ export const publishAppConfig = async (
 ) => {
     const spinner = Spinner.Current;
 
-    if (!validateToken()) {
-        return;
-    }
-
     const isAppRegistered = appRegistered(appKey, env);
     if (!isAppRegistered) {
         return;
     }
 
-    const requestConfig = await fetch(
-        getEndpointUrl(`apps/${appKey}/builds/${version}/config`, env),
-        {
-            method: 'PUT',
-            body: JSON.stringify(config),
-            headers: {
-                Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
+    const endpointUrl = await getEndpointUrl(`apps/${appKey}/builds/${version}/config`, env);
+    if (!endpointUrl) {
+        return;
+    }
+
+    const requestConfig = await fetch(endpointUrl, {
+        method: 'PUT',
+        body: JSON.stringify(config),
+        headers: {
+            Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
+            'Content-Type': 'application/json',
         },
-    );
+    });
 
     if (requestConfig.status === 404) {
         spinner.fail('😞', chalk.redBright('App version is not published'));
