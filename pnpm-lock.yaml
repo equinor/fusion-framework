@@ -112,11 +112,11 @@ importers:
         specifier: ~31.2.0
         version: 31.2.0
       '@ag-grid-community/core':
-        specifier: ~31.2.0
-        version: 31.2.0
+        specifier: ~31.3.2
+        version: 31.3.2
       '@ag-grid-community/react':
         specifier: ~31.2.0
-        version: 31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 31.2.0(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
@@ -1728,6 +1728,9 @@ packages:
 
   '@ag-grid-community/core@31.2.0':
     resolution: {integrity: sha512-297AR2Z0i6zdpo+d1riWE9TpbsQ956Sd3rkgnjDaFzgGClsdy0SwInBs2281CHjaLQAhPzFelZ5XwcDTxHl4Tw==}
+
+  '@ag-grid-community/core@31.3.2':
+    resolution: {integrity: sha512-iab+xIPCvjzGkIBgo12IQNa9/ZGI4BmjsQz65+aipNXISbtGketkN5iO4OFQgafgf0f9JZVFOZ3EzCnMiVWLiQ==}
 
   '@ag-grid-community/react@31.2.0':
     resolution: {integrity: sha512-lOAoH0c2pGMQqxtEzhzXswf3HLeEVCnDM/TlHJpqKTcydhyW1Cfulr4/uJuZL7h28gLSpLawu+rlGCTgac8NKw==}
@@ -8700,9 +8703,13 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  '@ag-grid-community/react@31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ag-grid-community/core@31.3.2':
     dependencies:
-      '@ag-grid-community/core': 31.2.0
+      tslib: 2.6.2
+
+  '@ag-grid-community/react@31.2.0(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
