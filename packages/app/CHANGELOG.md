@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.1.1
+
+### Patch Changes
+
+-   [#2208](https://github.com/equinor/fusion-framework/pull/2208) [`b8d52ad`](https://github.com/equinor/fusion-framework/commit/b8d52adb2ca1f9857c672a3deb774409ff2bdb37) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add optional option to `useFrameworkServiceClient`
+
 ## 9.1.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 14.0.1
+
+### Patch Changes
+
+-   Updated dependencies [[`b8d52ad`](https://github.com/equinor/fusion-framework/commit/b8d52adb2ca1f9857c672a3deb774409ff2bdb37)]:
+    -   @equinor/fusion-framework-app@9.1.1
+    -   @equinor/fusion-framework-react-app@5.2.1
+
 ## 14.0.0
 
 ### Patch Changes
