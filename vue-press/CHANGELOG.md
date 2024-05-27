@@ -1,5 +1,32 @@
 # @equinor/fusion-framework-docs
 
+## 0.1.4
+
+### Patch Changes
+
+-   [#2200](https://github.com/equinor/fusion-framework/pull/2200) [`d63b99e`](https://github.com/equinor/fusion-framework/commit/d63b99efa83b328354a0c437f70839ed733a63e4) Thanks [@odinr](https://github.com/odinr)! - **Updated the following dependencies:**
+
+    -   Bumped @vuepress/bundler-vite from 2.0.0-rc.9 to 2.0.0-rc.11
+    -   Bumped @vuepress/cli from 2.0.0-rc.9 to 2.0.0-rc.11
+    -   Bumped @vuepress/client from 2.0.0-rc.9 to 2.0.0-rc.11
+    -   Bumped @vuepress/plugin-register-components from 2.0.0-rc.21 to 2.0.0-rc.30
+    -   Bumped @vuepress/utils from 2.0.0-rc.9 to 2.0.0-rc.11
+    -   Bumped mermaid from ^10.9.0 to ^10.9.1
+    -   Bumped vuepress from 2.0.0-rc.9 to 2.0.0-rc.11
+    -   Bumped vuepress-theme-hope from 2.0.0-rc.37 to 2.0.0-rc.43
+
+-   [#2199](https://github.com/equinor/fusion-framework/pull/2199) [`c568a06`](https://github.com/equinor/fusion-framework/commit/c568a06ba1715d1294bf4e453c00c91e001a12c6) Thanks [@odinr](https://github.com/odinr)! - ## @equinor/fusion-framework-docs
+
+    Removed an outdated warning message about React version support in the Fusion Portal getting started guide.
+
+    ### Why
+
+    The warning message stated:
+
+    > The Fusion Portal only supports React@17
+
+    However, this is no longer accurate, as the Fusion Portal now supports newer versions of React beyond 17.
+
 ## 0.1.3
 
 ### Patch Changes

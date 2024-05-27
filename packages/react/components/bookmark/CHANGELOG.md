@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.9
+
+### Patch Changes
+
+-   [#2205](https://github.com/equinor/fusion-framework/pull/2205) [`4e64552`](https://github.com/equinor/fusion-framework/commit/4e64552a3c1b0324e1deda93779eab16dbebbed3) Thanks [@odinr](https://github.com/odinr)! - Updated `@equinor/eds-core-react` dependency to version `^0.38.0`
+    Updated `@equinor/eds-utils` dependency to version `^0.8.5`
+-   Updated dependencies [[`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8)]:
+    -   @equinor/fusion-framework-react@7.1.0
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.9
+
 ## 0.4.8
 
 ### Patch Changes

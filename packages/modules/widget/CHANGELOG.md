@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.0
+
+### Patch Changes
+
+-   Updated dependencies [[`1e60919`](https://github.com/equinor/fusion-framework/commit/1e60919e83fb65528c88f604d7bd43299ec412e1), [`1681940`](https://github.com/equinor/fusion-framework/commit/16819401db191321637fb2a17390abd98738c103), [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
+    -   @equinor/fusion-framework-module-http@6.0.0
+    -   @equinor/fusion-query@5.0.4
+    -   @equinor/fusion-observable@8.3.1
+    -   @equinor/fusion-framework-module-service-discovery@7.1.8
+
 ## 4.0.8
 
 ### Patch Changes
