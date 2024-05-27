@@ -82,6 +82,15 @@ export class QueryCache<TType, TArgs> {
     }
 
     /**
+     * Checks if an item exists in the query cache by key.
+     * @param {string} key - The key of the item to check.
+     * @returns {boolean} True if the item exists, otherwise false.
+     */
+    public has(key: string): boolean {
+        return key in this.#state.value;
+    }
+
+    /**
      * Sets the value of an item in the query cache.
      * @param {string} key - The key of the item to set.
      * @param {Pick<QueryCacheRecord<TType, TArgs>, 'value' | 'args' | 'transaction'>} record - The new value of the item.

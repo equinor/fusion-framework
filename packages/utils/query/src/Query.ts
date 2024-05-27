@@ -8,7 +8,15 @@ import {
     Subject,
     Subscription,
 } from 'rxjs';
-import { catchError, filter, map, takeWhile, tap, throwIfEmpty } from 'rxjs/operators';
+import {
+    catchError,
+    distinctUntilChanged,
+    filter,
+    map,
+    takeWhile,
+    tap,
+    throwIfEmpty,
+} from 'rxjs/operators';
 
 import { v4 as generateGUID, v5 as generateUniqueKey } from 'uuid';
 
@@ -551,6 +559,52 @@ export class Query<TDataType, TQueryArguments = any> {
             }
             fn(this._query(payload, args).pipe(throwIfEmpty())).then(resolve, reject);
         });
+    }
+
+    public persistentQuery(
+        args: TQueryArguments,
+        options?: QueryOptions<TDataType, TQueryArguments>,
+    ): Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>> {
+        const key = this.#generateCacheKey(args);
+        const original = this._query(args, options);
+        return new Observable<QueryTaskCached<TDataType> | QueryTaskCompleted<TDataType>>(
+            (subscriber) => {
+                subscriber.add(
+                    original.subscribe({
+                        next: subscriber.next.bind(subscriber),
+                        error: subscriber.error.bind(subscriber),
+                    }),
+                );
+                // Use the provided validation function or the default cache validator to determine if the cache entry is valid.
+                const validateCache = options?.cache?.validate || this.#validateCacheEntry;
+
+                // Subscribe to the cache state and filter for the specific cache entry based on the key.
+                subscriber.add(
+                    this.cache.state$
+                        .pipe(
+                            filter((x) => key in x),
+                            map(
+                                (x) =>
+                                    ({
+                                        ...x[key],
+                                        key,
+                                        status: 'cache',
+                                        hasValidCache: validateCache(x[key], args),
+                                    }) satisfies QueryTaskCached<TDataType>,
+                            ),
+                        )
+                        .subscribe(subscriber),
+                );
+            },
+        ).pipe(
+            // only emit when the transaction changes
+            distinctUntilChanged(
+                (a, b) =>
+                    a.transaction === b.transaction &&
+                    (a as QueryTaskCached<TDataType>).mutated ===
+                        (b as QueryTaskCached<TDataType>).mutated,
+            ),
+        );
     }
 
     /**
