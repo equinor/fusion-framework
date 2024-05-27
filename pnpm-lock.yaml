@@ -109,8 +109,8 @@ importers:
   cookbooks/app-react-ag-grid:
     dependencies:
       '@ag-grid-community/client-side-row-model':
-        specifier: ~31.2.0
-        version: 31.2.0
+        specifier: ~31.3.2
+        version: 31.3.2
       '@ag-grid-community/core':
         specifier: ~31.2.0
         version: 31.2.0
@@ -1723,11 +1723,14 @@ packages:
   '@actions/http-client@2.2.0':
     resolution: {integrity: sha512-q+epW0trjVUUHboliPb4UF9g2msf+w61b32tAkFEwL/IwP0DQWgbCMM0Hbe3e3WXSKz5VcUXbzJQgy8Hkra/Lg==}
 
-  '@ag-grid-community/client-side-row-model@31.2.0':
-    resolution: {integrity: sha512-fiXFGUaOCZdJ5QSJaWIyeA+hzjOe0+KzU1PdxqUdUZiNmDv/MFQQd99Biyk76OS6i8eWDFcC1O/V7owfVTWflw==}
+  '@ag-grid-community/client-side-row-model@31.3.2':
+    resolution: {integrity: sha512-XFzq4BvPPEjf5HtC1VpruBESqvsJYfIcY1EC5CaY1hqV1NRp1JVImFrMdoxUuw9NsoucGneDT/DOj42WHweFIg==}
 
   '@ag-grid-community/core@31.2.0':
     resolution: {integrity: sha512-297AR2Z0i6zdpo+d1riWE9TpbsQ956Sd3rkgnjDaFzgGClsdy0SwInBs2281CHjaLQAhPzFelZ5XwcDTxHl4Tw==}
+
+  '@ag-grid-community/core@31.3.2':
+    resolution: {integrity: sha512-iab+xIPCvjzGkIBgo12IQNa9/ZGI4BmjsQz65+aipNXISbtGketkN5iO4OFQgafgf0f9JZVFOZ3EzCnMiVWLiQ==}
 
   '@ag-grid-community/react@31.2.0':
     resolution: {integrity: sha512-lOAoH0c2pGMQqxtEzhzXswf3HLeEVCnDM/TlHJpqKTcydhyW1Cfulr4/uJuZL7h28gLSpLawu+rlGCTgac8NKw==}
@@ -8691,12 +8694,16 @@ snapshots:
       tunnel: 0.0.6
       undici: 5.28.3
 
-  '@ag-grid-community/client-side-row-model@31.2.0':
+  '@ag-grid-community/client-side-row-model@31.3.2':
     dependencies:
-      '@ag-grid-community/core': 31.2.0
+      '@ag-grid-community/core': 31.3.2
       tslib: 2.6.2
 
   '@ag-grid-community/core@31.2.0':
+    dependencies:
+      tslib: 2.6.2
+
+  '@ag-grid-community/core@31.3.2':
     dependencies:
       tslib: 2.6.2
 
