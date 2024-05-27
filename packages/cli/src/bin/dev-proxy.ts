@@ -71,23 +71,25 @@ export const createDevProxy = (
         {
             changeOrigin: true,
             selfHandleResponse: true,
-            onProxyReq: (proxyReq) => {
-                const spinner = Spinner.Clone();
-                spinner.ora.suffixText = formatPath(
-                    [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
-                );
-                spinner.start('proxy request');
-                proxyReq.on('response', (res) => {
-                    if (Number(res.statusCode) < 400) {
-                        spinner.succeed();
-                    } else {
-                        spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
-                    }
-                    spinner.stop();
-                });
-                proxyReq.on('error', () => {
-                    spinner.fail();
-                });
+            on: {
+                proxyReq: (proxyReq) => {
+                    const spinner = Spinner.Clone();
+                    spinner.ora.suffixText = formatPath(
+                        [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
+                    );
+                    spinner.start('proxy request');
+                    proxyReq.on('response', (res) => {
+                        if (Number(res.statusCode) < 400) {
+                            spinner.succeed();
+                        } else {
+                            spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
+                        }
+                        spinner.stop();
+                    });
+                    proxyReq.on('error', () => {
+                        spinner.fail();
+                    });
+                },
             },
         } satisfies ProxyOptions,
         options,
@@ -102,46 +104,58 @@ export const createDevProxy = (
     });
 
     app.use(
-        createProxyMiddleware('/_discovery/environments/current', {
+        createProxyMiddleware({
             ...proxyOptions,
-            onProxyRes: responseInterceptor(async (responseBuffer, _proxyRes, req) => {
-                const response = JSON.parse(responseBuffer.toString('utf8'));
-                response.environmentName = 'DEVELOPMENT';
-                response.services = response.services.filter(
-                    (x: { key: string }) => x.key !== 'app',
-                );
-                /** refer service [app] to vite middleware */
-                response.services.push({
-                    key: 'app',
-                    uri: new URL('/', req.headers.referer).href,
-                });
-                return JSON.stringify(response);
-            }),
+            pathFilter: '/_discovery/environments/current',
+            on: {
+                proxyRes: responseInterceptor(async (responseBuffer, _proxyRes, req) => {
+                    const response = JSON.parse(responseBuffer.toString('utf8'));
+                    response.environmentName = 'DEVELOPMENT';
+                    response.services = response.services.filter(
+                        (x: { key: string }) => x.key !== 'app',
+                    );
+                    /** refer service [app] to vite middleware */
+                    response.services.push({
+                        key: 'app',
+                        uri: new URL('/', req.headers.referer).href,
+                    });
+                    return JSON.stringify(response);
+                }),
+            },
         }),
     );
 
     app.get(
         '/api/apps/:appKey/config',
         // '/api/widget/:appKey/config',
-        createProxyMiddleware('/api/apps/*/config', {
+        createProxyMiddleware({
             ...proxyOptions,
-            onProxyRes: createResponseInterceptor(handler.onConfigResponse),
+            pathFilter: '/api/apps/*/config',
+            on: {
+                proxyRes: createResponseInterceptor(handler.onConfigResponse),
+            },
         }),
     );
 
     app.get(
         '/api/apps/:appKey',
-        createProxyMiddleware('/api/apps/*', {
+        createProxyMiddleware({
             ...proxyOptions,
-            onProxyRes: createResponseInterceptor(handler.onManifestResponse),
+            pathFilter: '/api/apps/*',
+            on: {
+                proxyRes: createResponseInterceptor(handler.onManifestResponse),
+            },
         }),
     );
 
     app.get(
         '/api/apps',
-        createProxyMiddleware('/api/apps', {
+        createProxyMiddleware({
             ...proxyOptions,
-            onProxyRes: createResponseInterceptor(handler.onManifestListResponse),
+            pathFilter: '/api/apps',
+            on: {
+                proxyRes: createResponseInterceptor(handler.onManifestListResponse),
+            },
         }),
     );
 
