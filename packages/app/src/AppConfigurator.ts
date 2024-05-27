@@ -41,10 +41,10 @@ export interface IAppConfigurator<
      * @example
      * ```ts
      configurator.configureHttpClient(
-        'myClient', 
-        { 
-            baseUri: 'https://foo.bar', 
-            defaultScopes: ['client-id/.default'] 
+        'myClient',
+        {
+            baseUri: 'https://foo.bar',
+            defaultScopes: ['client-id/.default']
         }
     );
      * ```
@@ -76,7 +76,11 @@ export interface IAppConfigurator<
      * @param serviceName - name of the service to use
      */
     // TODO - rename
-    useFrameworkServiceClient(serviceName: string): void;
+    useFrameworkServiceClient(
+        serviceName: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
+    ): void;
 }
 
 export class AppConfigurator<
