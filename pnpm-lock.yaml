@@ -15325,7 +15325,7 @@ snapshots:
 
   jss-plugin-vendor-prefixer@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.6
       css-vendor: 2.0.8
       jss: 10.10.0
 
