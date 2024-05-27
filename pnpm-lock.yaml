@@ -675,8 +675,8 @@ importers:
         specifier: ^0.6.3
         version: 0.6.3(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@equinor/fusion-react-progress-indicator':
-        specifier: ^0.2.1
-        version: 0.2.1(react@18.2.0)
+        specifier: ^0.3.0
+        version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.3.2
         version: 1.3.2(@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
@@ -2137,8 +2137,8 @@ packages:
   '@equinor/fusion-react-person@0.8.5':
     resolution: {integrity: sha512-T5DDG/aqnUevZ96/Qu3FAhqh2t+aUpDL0Zf6LATqozi+Y0gfmg38Z7av65MVz21+GmXOeqEk23vki1ooBEjThA==}
 
-  '@equinor/fusion-react-progress-indicator@0.2.1':
-    resolution: {integrity: sha512-Q+ge4BMYObaWq2lR1MeikbzpO63dk/5JxMqve0XsKnnQXoZgbTW45ZyTcD4M7o0nrBSUSFnjFDnEI+Yk6a9KOA==}
+  '@equinor/fusion-react-progress-indicator@0.3.0':
+    resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@equinor/fusion-react-searchable-dropdown@0.5.2':
@@ -9419,7 +9419,7 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-progress-indicator@0.2.1(react@18.2.0)':
+  '@equinor/fusion-react-progress-indicator@0.3.0(react@18.2.0)':
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.2.0)
       '@equinor/fusion-wc-progress-indicator': 1.1.0
