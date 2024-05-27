@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 1.1.3
+
+### Patch Changes
+
+-   Updated dependencies [[`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
+    -   @equinor/fusion-observable@8.3.1
+
 ## 1.1.2
 
 ### Patch Changes

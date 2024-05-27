@@ -1,5 +1,33 @@
 # Change Log
 
+## 7.1.0
+
+### Minor Changes
+
+-   [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - If you were previously using the `blob` or `blob# Change Log methods from the `IHttpClient`and expecting a`Blob`result, you must now use the new`BlobResult` type, which includes the filename (if available) and the blob data.
+
+    **Migration Guide:**
+
+    ```typescript
+    // Before
+    const blob = await httpClient.blob('/path/to/blob');
+    console.log(blob); // Blob instance
+
+    // After
+    const blobResult = await httpClient.blob<Blob>('/path/to/blob');
+    console.log(blobResult.filename); // 'example.pdf'
+    console.log(blobResult.blob); // Blob instance
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [[`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
+    -   @equinor/fusion-framework@7.2.0
+    -   @equinor/fusion-observable@8.3.1
+    -   @equinor/fusion-framework-module-feature-flag@1.1.3
+    -   @equinor/fusion-framework-react-module-http@6.0.0
+    -   @equinor/fusion-framework-react-module-signalr@3.0.9
+
 ## 7.0.8
 
 ### Patch Changes

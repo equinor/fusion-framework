@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+-   [#2197](https://github.com/equinor/fusion-framework/pull/2197) [`5426b23`](https://github.com/equinor/fusion-framework/commit/5426b232656ce7a87517fae61e50bb43743e6372) Thanks [@odinr](https://github.com/odinr)! - - Added documentation and examples for using components from the `@equinor/fusion-react-person` package.
+
+    -   Implemented a `useSearchPersons` hook to search for persons using the People API.
+    -   Added a `searchPerson` function to perform person searches with an HTTP client.
+    -   Created new types for the person search API response and error handling.
+    -   Updated the `HomePage` component with an overview of working with the People API.
+    -   Enhanced the `ListItemPage` component to fetch and display a list of persons based on a search query.
+
+    The `@equinor/fusion-framework-cookbook-app-react-people` package lacked documentation and examples for consuming the `@equinor/fusion-react-person` components. The changes aim to provide clear guidance and showcase how to interact with the People API to fetch and display person information.
+
+    By adding the `useSearchPersons` hook and `searchPerson` function, developers how to implement functionality to their applications. The new types for the API response and error handling improve type safety and provide a structured way to handle different error scenarios.
+
+    The updates to the `HomePage` and `ListItemPage` components demonstrate practical usage of the People API and components, making it easier for developers to understand and implement similar functionality in their own applications.
+
+### Patch Changes
+
+-   [#2205](https://github.com/equinor/fusion-framework/pull/2205) [`4e64552`](https://github.com/equinor/fusion-framework/commit/4e64552a3c1b0324e1deda93779eab16dbebbed3) Thanks [@odinr](https://github.com/odinr)! - Updated `@equinor/eds-core-react` dependency to version `^0.38.0`
+    Updated `@equinor/eds-utils` dependency to version `^0.8.5`
+
 ## 4.3.4
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.2.3
+
+### Patch Changes
+
+-   [#2207](https://github.com/equinor/fusion-framework/pull/2207) [`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module-ag-grid**
+
+    Updated ag-grid dependencies to latest minor versions:
+
+    -   `@ag-grid-community/client-side-row-model` from `~31.2.0` to `~31.3.2`
+    -   `@ag-grid-community/core` from `~31.2.0` to `~31.3.2`
+    -   `@ag-grid-community/react` from `~31.2.0` to `~31.3.2`
+
+-   Updated dependencies [[`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d)]:
+    -   @equinor/fusion-framework-module-ag-grid@31.3.0
+
 ## 0.2.2
 
 ### Patch Changes
