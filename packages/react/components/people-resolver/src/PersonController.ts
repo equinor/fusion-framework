@@ -88,14 +88,20 @@ export class PersonController implements IPersonController {
             queueOperator: 'merge',
             key: ({ azureId }) => azureId,
             client: {
-                fn: ({ azureId }, signal) => {
+                fn: ({ azureId }, signal): Observable<Blob> => {
                     return client.photo('v2', 'blob$', { azureId }, { signal }).pipe(
+                        map((result) => {
+                            return result.blob;
+                        }),
                         catchError((err) => {
-                            const apiError = err as ApiProviderError;
-                            if (apiError.response.status === 404 && options?.fallbackImage) {
+                            if (
+                                (err as Error).name === 'ApiProviderError' &&
+                                (err as ApiProviderError).response?.status === 404 &&
+                                options?.fallbackImage
+                            ) {
                                 return of(options?.fallbackImage);
                             }
-                            return of(err);
+                            throw err;
                         }),
                     );
                 },

@@ -1,8 +1,9 @@
 import {
     ClientRequestInit,
     IHttpClient,
-    FetchResponse,
     StreamResponse,
+    BlobResult,
+    FetchResponse,
 } from '@equinor/fusion-framework-module-http/client';
 
 export type ApiClientFactory<TClient extends IHttpClient = IHttpClient> = (
@@ -38,9 +39,9 @@ export type ClientMethod<T = unknown> = {
     json$: StreamResponse<T>;
 };
 
-export type ClientDataMethod = {
-    blob: Blob;
-    blob$: StreamResponse<Blob>;
+export type ClientDataMethod<T extends BlobResult = BlobResult> = {
+    blob: Promise<T>;
+    blob$: StreamResponse<T>;
 };
 
 export type ClientMethodType = keyof ClientMethod;

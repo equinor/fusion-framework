@@ -83,7 +83,7 @@ export class PeopleApiClient<
     public photo<
         TVersion extends PersonPhotoSupportedApiVersion,
         TArgs extends PersonPhotoApiRequestArgs<TVersion>,
-        TResult extends Blob = PersonPhotoApiResponse<TVersion>,
+        TResult extends PersonPhotoApiResponse<TVersion> = PersonPhotoApiResponse<TVersion>,
         TMethod extends keyof ClientDataMethod = keyof ClientDataMethod,
     >(
         version: TVersion,

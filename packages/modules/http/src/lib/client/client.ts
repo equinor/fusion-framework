@@ -8,13 +8,14 @@ import { blobSelector, jsonSelector } from '../selectors';
 import type { Observable, ObservableInput } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators';
 import type {
+    BlobResult,
     FetchRequest,
     FetchRequestInit,
     FetchResponse,
     IHttpClient,
     JsonRequest,
     StreamResponse,
-} from '.';
+} from './types';
 import { HttpResponseError } from '../../errors';
 
 export type HttpClientCreateOptions<
@@ -111,18 +112,41 @@ export class HttpClient<
         return firstValueFrom(this.json$<T>(path, args));
     }
 
-    public blob$(
+    /**
+     * Fetches a blob resource from the specified path and returns a stream response.
+     *
+     * @param path - The path to the blob resource.
+     * @param args - Optional request initialization options, including a custom selector function.
+     * @returns A stream response containing the fetched blob data.
+     */
+    public blob$<T = BlobResult>(
         path: string,
-        args?: FetchRequestInit<Blob, TRequest, TResponse>,
-    ): StreamResponse<Blob> {
+        args?: FetchRequestInit<T, TRequest, TResponse>,
+    ): StreamResponse<T> {
+        // Get the selector value from the provided args, or use the default blobSelector
         const selector = args?.selector ?? blobSelector;
-        return this.fetch$(path, {
+
+        // Create the FetchRequestInit object with the provided args and the selector
+        const init = {
             ...args,
             selector,
-        } as FetchRequestInit<Blob, TRequest, TResponse>);
+        } as FetchRequestInit<T, TRequest, TResponse>;
+
+        // Call the fetch$ method with the provided path and the constructed init object
+        return this.fetch$(path, init);
     }
 
-    public blob(path: string, args?: FetchRequestInit<Blob, TRequest, TResponse>): Promise<Blob> {
+    /**
+     * Fetches a blob from the specified path and returns a Promise that resolves to the blob result.
+     *
+     * @param path - The path to fetch the blob from.
+     * @param args - Optional arguments for the fetch request, including request body, headers, and response type.
+     * @returns A Promise that resolves to the blob result.
+     */
+    public blob<T = BlobResult>(
+        path: string,
+        args?: FetchRequestInit<T, TRequest, TResponse>,
+    ): Promise<T> {
         return firstValueFrom(this.blob$(path, args));
     }
 
