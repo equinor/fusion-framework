@@ -754,8 +754,8 @@ importers:
   packages/modules/ag-grid:
     dependencies:
       '@ag-grid-enterprise/core':
-        specifier: ~31.2.0
-        version: 31.2.0
+        specifier: ~31.3.2
+        version: 31.3.2
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1729,6 +1729,9 @@ packages:
   '@ag-grid-community/core@31.2.0':
     resolution: {integrity: sha512-297AR2Z0i6zdpo+d1riWE9TpbsQ956Sd3rkgnjDaFzgGClsdy0SwInBs2281CHjaLQAhPzFelZ5XwcDTxHl4Tw==}
 
+  '@ag-grid-community/core@31.3.2':
+    resolution: {integrity: sha512-iab+xIPCvjzGkIBgo12IQNa9/ZGI4BmjsQz65+aipNXISbtGketkN5iO4OFQgafgf0f9JZVFOZ3EzCnMiVWLiQ==}
+
   '@ag-grid-community/react@31.2.0':
     resolution: {integrity: sha512-lOAoH0c2pGMQqxtEzhzXswf3HLeEVCnDM/TlHJpqKTcydhyW1Cfulr4/uJuZL7h28gLSpLawu+rlGCTgac8NKw==}
     peerDependencies:
@@ -1739,8 +1742,8 @@ packages:
   '@ag-grid-community/styles@29.3.5':
     resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
 
-  '@ag-grid-enterprise/core@31.2.0':
-    resolution: {integrity: sha512-YJaTsX10WPMqu9v1BzPgoLEypLVk1nMUcUCKyzaO0yU6920C+i1RaZJvf2fwUy7xTJs0Wb+1VF+ukEh7J6q7Iw==}
+  '@ag-grid-enterprise/core@31.3.2':
+    resolution: {integrity: sha512-eCcUsQNyIV7oh12HB2Fv8QiBIEwZUbIjKUZgOzgHwmjqzxuPk2r4Gg6/fg8agRgdaCBa5f4jeLSFzBRm1FTHVQ==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -8700,6 +8703,10 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@ag-grid-community/core@31.3.2':
+    dependencies:
+      tslib: 2.6.2
+
   '@ag-grid-community/react@31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@ag-grid-community/core': 31.2.0
@@ -8709,9 +8716,9 @@ snapshots:
 
   '@ag-grid-community/styles@29.3.5': {}
 
-  '@ag-grid-enterprise/core@31.2.0':
+  '@ag-grid-enterprise/core@31.3.2':
     dependencies:
-      '@ag-grid-community/core': 31.2.0
+      '@ag-grid-community/core': 31.3.2
 
   '@ampproject/remapping@2.3.0':
     dependencies:
