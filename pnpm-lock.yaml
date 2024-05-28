@@ -1693,8 +1693,8 @@ importers:
         specifier: 2.0.0-rc.30
         version: 2.0.0-rc.30(vuepress@2.0.0-rc.11(@vuepress/bundler-vite@2.0.0-rc.11(@types/node@20.12.7)(jiti@1.21.0)(sass@1.77.2)(stylus@0.54.8)(typescript@5.4.5))(typescript@5.4.5)(vue@3.4.25(typescript@5.4.5)))
       '@vuepress/utils':
-        specifier: 2.0.0-rc.11
-        version: 2.0.0-rc.11
+        specifier: 2.0.0-rc.12
+        version: 2.0.0-rc.12
       mermaid:
         specifier: ^10.9.1
         version: 10.9.1
@@ -4512,8 +4512,14 @@ packages:
   '@vuepress/shared@2.0.0-rc.11':
     resolution: {integrity: sha512-CRKGztAyzCDwdhg/UuOehNIlVm2SHSja9n5YR/zRfaMk9c3W552VQvWjlCSIfE8657q4UTcLdKQ8sOCHUiAWKA==}
 
+  '@vuepress/shared@2.0.0-rc.12':
+    resolution: {integrity: sha512-JPBygsjmtP9I4I7ESsQrebW6PXIxKktWAFWGDG85RCIiUFklEN792vEJ2XbDZvF5XaU/8H8fadApb6xqRB7Lww==}
+
   '@vuepress/utils@2.0.0-rc.11':
     resolution: {integrity: sha512-38YgNPJVphMMfEerNEb1XWJyxCk2Jf42xyb70C4LzMZI6NM0gKSOot9/+b2oXl8smNl0bvSbrNtwb6ZgasXVkg==}
+
+  '@vuepress/utils@2.0.0-rc.12':
+    resolution: {integrity: sha512-ChItNTdPdpXZyMkxHWNcH6JWVBzOyKPYZvFkr8eWhOcT2uLEE8B8Ypkj6kvEzCsqmNWgj8iQzEa4hcUubO5vgg==}
 
   '@vueuse/core@10.9.0':
     resolution: {integrity: sha512-/1vjTol8SXnx6xewDEKfS0Ra//ncg4Hb0DaZiwKf7drgfMsKFExQ+FnnENcN6efPen+1kIzhLQoGSy0eDUVOMg==}
@@ -13194,12 +13200,32 @@ snapshots:
     dependencies:
       '@mdit-vue/types': 2.1.0
 
+  '@vuepress/shared@2.0.0-rc.12':
+    dependencies:
+      '@mdit-vue/types': 2.1.0
+
   '@vuepress/utils@2.0.0-rc.11':
     dependencies:
       '@types/debug': 4.1.12
       '@types/fs-extra': 11.0.4
       '@types/hash-sum': 1.0.2
       '@vuepress/shared': 2.0.0-rc.11
+      debug: 4.3.4
+      fs-extra: 11.2.0
+      globby: 14.0.1
+      hash-sum: 2.0.0
+      ora: 8.0.1
+      picocolors: 1.0.1
+      upath: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vuepress/utils@2.0.0-rc.12':
+    dependencies:
+      '@types/debug': 4.1.12
+      '@types/fs-extra': 11.0.4
+      '@types/hash-sum': 1.0.2
+      '@vuepress/shared': 2.0.0-rc.12
       debug: 4.3.4
       fs-extra: 11.2.0
       globby: 14.0.1
@@ -13404,7 +13430,7 @@ snapshots:
       caniuse-lite: 1.0.30001600
       fraction.js: 4.3.7
       normalize-range: 0.1.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
 
@@ -16279,7 +16305,7 @@ snapshots:
   postcss@8.4.31:
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       source-map-js: 1.0.2
 
   postcss@8.4.38:
@@ -17556,7 +17582,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       vite: 5.2.11(@types/node@20.11.24)(sass@1.77.2)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
@@ -17573,7 +17599,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       vite: 5.2.11(@types/node@20.11.26)(sass@1.77.2)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
