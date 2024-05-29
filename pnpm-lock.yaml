@@ -53,7 +53,7 @@ importers:
         version: 19.1.0
       '@vitest/coverage-v8':
         specifier: ^1.2.2
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8))
       eslint-formatter-rdjson:
         specifier: ^1.0.6
         version: 1.0.6
@@ -65,7 +65,7 @@ importers:
         version: 3.2.0
       happy-dom:
         specifier: ^14.7.1
-        version: 14.11.0
+        version: 14.11.4
       husky:
         specifier: ^9.0.7
         version: 9.0.11
@@ -77,10 +77,10 @@ importers:
         version: 15.2.5
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8))
+        version: 0.11.1(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8))
 
   cookbooks/app-react:
     devDependencies:
@@ -924,7 +924,7 @@ importers:
         version: 5.4.2
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
 
   packages/modules/module:
     dependencies:
@@ -1577,7 +1577,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+        version: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
 
   packages/utils/observable:
     dependencies:
@@ -1635,7 +1635,7 @@ importers:
         version: 9.0.1
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.11.26)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+        version: 1.6.0(@types/node@20.11.26)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
     devDependencies:
       '@types/node':
         specifier: ^20.11.14
@@ -5918,8 +5918,8 @@ packages:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
 
-  happy-dom@14.11.0:
-    resolution: {integrity: sha512-vu25dY7YJqLuTG/3ADC0FZRRF0yNBp3q2K0YTN08opXdZi8V/YzIJDNJWFiCnDIuyc+RrCIE093+H5fa9Trlxg==}
+  happy-dom@14.11.4:
+    resolution: {integrity: sha512-n7p9GYkl9j5wfGtJSw3Xl0rpM2NRMIC+/WVLPi+uThI9Fe+viGnxpL4ce256LRCruvHnBWckEOm2YAyUD0hjxA==}
     engines: {node: '>=16.0.0'}
 
   happy-dom@14.7.1:
@@ -12770,7 +12770,7 @@ snapshots:
       vite: 5.2.11(@types/node@20.12.7)(sass@1.77.2)(stylus@0.54.8)
       vue: 3.4.27(typescript@5.4.5)
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -12785,7 +12785,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.0.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+      vitest: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -14845,7 +14845,7 @@ snapshots:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
 
-  happy-dom@14.11.0:
+  happy-dom@14.11.4:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -17666,10 +17666,10 @@ snapshots:
       sass: 1.77.2
       stylus: 0.54.8
 
-  vitest-github-actions-reporter@0.11.1(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)):
+  vitest-github-actions-reporter@0.11.1(vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)):
     dependencies:
       '@actions/core': 1.10.1
-      vitest: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8)
+      vitest: 1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8)
 
   vitest@1.6.0(@types/node@20.11.24)(happy-dom@14.7.1)(sass@1.77.2)(stylus@0.54.8):
     dependencies:
@@ -17705,7 +17705,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.6.0(@types/node@20.11.26)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8):
+  vitest@1.6.0(@types/node@20.11.26)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -17729,7 +17729,7 @@ snapshots:
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.11.26
-      happy-dom: 14.11.0
+      happy-dom: 14.11.4
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -17739,7 +17739,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.0)(sass@1.77.2)(stylus@0.54.8):
+  vitest@1.6.0(@types/node@20.12.7)(happy-dom@14.11.4)(sass@1.77.2)(stylus@0.54.8):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -17763,7 +17763,7 @@ snapshots:
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7
-      happy-dom: 14.11.0
+      happy-dom: 14.11.4
     transitivePeerDependencies:
       - less
       - lightningcss
