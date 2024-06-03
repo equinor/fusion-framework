@@ -1,35 +1,42 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
-import { generateParameters } from './generate-parameters';
-import {
-    ApiVersions,
-    DeleteBookmarkArgs,
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod, ExtractApiVersion } from '../types';
+import type {
+    DeleteBookmarkApiVersion,
+    DeleteBookmarkRequest,
+    DeleteBookmarkResponse,
     DeleteBookmarkResult,
-    DeleteBookmarksResult,
 } from './types';
 
+import { extractApiVersion } from '../utils';
+
+import { generateParameters } from './generate-parameters';
+
+type Version<TVersion extends string> = ExtractApiVersion<TVersion, DeleteBookmarkApiVersion>;
+
 /**
- * Method for fetching bookmark by it`s id from bookmark service
- * @param client - client for execution of request
- * @param version - version of API to call
- * @param method - client method to call
+ * Deletes a bookmark from the server.
+ *
+ * @param version - The API version to use for the request.
+ * @param method - The HTTP method to use for the request (default is 'json').
+ * @returns A function that can be called to execute the delete bookmark request.
  */
-export const deleteBookmark =
-    <
-        TVersion extends ApiVersions = ApiVersions,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
+export const deleteBookmark = <
+    TVersion extends DeleteBookmarkApiVersion,
+    TMethod extends keyof ClientMethod,
+>(
+    version: TVersion,
+    client: IHttpClient,
+    method: TMethod = 'json' as TMethod,
+) => {
+    const apiVersion = extractApiVersion<DeleteBookmarkApiVersion>(version);
+    const execute = client[method];
+    return <
+        TResponse = DeleteBookmarkResponse<Version<TVersion>>,
+        TResult = DeleteBookmarkResult<Version<TVersion>, TMethod, TResponse>,
     >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'fetch' as TMethod,
-    ) =>
-    <TResult = DeleteBookmarkResult<TVersion>>(
-        args: DeleteBookmarkArgs<TVersion>,
-        init?: ClientRequestInit<TClient, TResult>,
-    ): DeleteBookmarksResult<TVersion, TMethod, TResult> =>
-        client[method](
-            ...generateParameters<TResult, TVersion, TClient>(version, args, init),
-        ) as DeleteBookmarksResult<TVersion, TMethod, TResult>;
+        args: DeleteBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<IHttpClient, TResponse>,
+    ): TResult => execute(...generateParameters(apiVersion, args, init)) as TResult;
+};
 
 export default deleteBookmark;

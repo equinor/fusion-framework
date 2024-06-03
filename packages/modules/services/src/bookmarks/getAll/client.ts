@@ -1,30 +1,39 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type {
+    GetAllBookmarksApiVersion,
+    GetAllBookmarksRequest,
+    GetAllBookmarksResponse,
+    GetAllBookmarksResult,
+} from './types';
+import type { ClientMethod, ExtractApiVersion } from '../types';
 
+import { extractApiVersion } from '../utils';
 import { generateParameters } from './generate-parameters';
-import { ApiVersions, GetAllBookmarkResult, GetAllBookmarksResult } from './types';
+
+type Version<TVersion extends string> = ExtractApiVersion<TVersion, GetAllBookmarksApiVersion>;
 
 /**
- * Method for fetching all bookmarks for the current user from bookmark service
- * @param client - client for execution of request
- * @param version - version of API to call
- * @param method - client method to call
+ * Method for fetching all bookmarks for the current user from bookmark service.
+ * The method returns a function that can be used to fetch the bookmarks.
+ *
+ * @template TVersion - The version of the API to call.
+ * @template TMethod - The client method to use for the request, defaults to 'json'.
  */
-export const getAllBookmarks =
-    <
-        TVersion extends ApiVersions = ApiVersions,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
+export const getAllBookmarks = <
+    TVersion extends GetAllBookmarksApiVersion = GetAllBookmarksApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+>(
+    version: TVersion,
+    client: IHttpClient,
+    method: TMethod = 'json' as TMethod,
+) => {
+    const apiVersion = extractApiVersion<GetAllBookmarksApiVersion>(version);
+    const execute = client[method];
+    return <
+        TResponse = GetAllBookmarksResponse<Version<TVersion>>,
+        TResult = GetAllBookmarksResult<Version<TVersion>, TMethod, TResponse>,
     >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <TResult = GetAllBookmarkResult<TVersion, unknown>>(
-        init?: ClientRequestInit<TClient, TResult>,
-    ): GetAllBookmarksResult<TVersion, TMethod, unknown, TResult> =>
-        client[method](
-            ...generateParameters<TResult, TVersion, TClient>(version, init),
-        ) as GetAllBookmarksResult<TVersion, TMethod, unknown, TResult>;
-
-export default getAllBookmarks;
+        request?: GetAllBookmarksRequest<TVersion>,
+        init?: ClientRequestInit<IHttpClient, TResponse>,
+    ): TResult => execute(...generateParameters(apiVersion, request, init)) as TResult;
+};

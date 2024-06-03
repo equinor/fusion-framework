@@ -1,6 +1,9 @@
-export * from './types';
+export type {
+    GetAllBookmarksApiModels,
+    GetAllBookmarksApiVersion,
+    GetAllBookmarksRequest,
+    GetAllBookmarksResponse,
+    GetAllBookmarksResult,
+} from './types';
 
-export { getAllBookmarks, default } from './client';
-
-export { generateEndpoint } from './generate-endpoint';
-export { generateParameters } from './generate-parameters';
+export { getAllBookmarks } from './client';

@@ -1,28 +1,29 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ApiClientArguments } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ApiClientArguments } from '../types';
+import type { PatchBookmarkRequest, PatchBookmarksApiVersion } from './types';
+
 import { generateEndpoint } from './generate-endpoint';
-import { ApiVersions, PatchBookmarkArgs } from './types';
 
-/** function for creating http client arguments  */
-export const generateParameters = <
-    TResult,
-    TVersion extends ApiVersions,
-    TClient extends IHttpClient = IHttpClient,
->(
+/**
+ * Generates the necessary parameters for a PATCH request to the Bookmarks API.
+ *
+ * @template TResult - The expected response type from the API.
+ * @template TVersion - The version of the Bookmarks API to use.
+ * @param version - The version of the Bookmarks API to use.
+ * @param args - The arguments to include in the PATCH request.
+ * @param init - Optional additional request initialization options.
+ * @returns An array containing the API endpoint path and the request parameters.
+ */
+export const generateParameters = <TResult, TVersion extends PatchBookmarksApiVersion>(
     version: TVersion,
-    args: PatchBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>,
-): ApiClientArguments<TClient, TResult> => {
+    args: PatchBookmarkRequest<TVersion>,
+    init?: ClientRequestInit<IHttpClient, TResult>,
+): ApiClientArguments<IHttpClient, TResult> => {
     const path = generateEndpoint(version, args);
-
-    const headers = new Headers();
-    headers.append('content-type', 'application/json');
-
-    const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
+    const params: ClientRequestInit<IHttpClient, TResult> = Object.assign(
         {},
-        { method: 'patch', body: JSON.stringify(args), headers: headers },
+        { method: 'patch' },
         init,
     );
-
-    return [path, requestParams];
+    return [path, params];
 };

@@ -1,131 +1,315 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../types';
 
-import { ClientMethod } from '..';
-import deleteBookmark from './delete/client';
-import { DeleteBookmarkResult, DeleteBookmarksFn, DeleteBookmarksResult } from './delete/types';
-import getBookmark from './get/client';
-import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
-import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
-import postBookmark from './post/client';
-import patchBookmark, { PatchBookmarkFn, PatchBookmarkResult, PatchBookmarksResult } from './patch';
-import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
-import addBookmarkFavorite, {
-    PostBookmarkFavoriteFn,
-    PostBookmarksFavoriteResult,
-} from './favorites/post';
-import deleteBookmarkFavorite, {
-    DeleteBookmarksFavoriteFn,
-    DeleteBookmarksFavoriteResult,
-} from './favorites/delete';
-import verifyBookmarkFavorite, {
-    HeadBookmarkFavoriteFn,
-    HeadBookmarksFavoriteResult,
-} from './favorites/head';
+import {
+    createBookmark,
+    type CreateBookmarkApiVersion,
+    type CreateBookmarkRequest,
+    type CreateBookmarkResponse,
+    type CreateBookmarkResult,
+} from './create';
 
+import {
+    getBookmark,
+    type GetBookmarkApiVersion,
+    type GetBookmarkRequest,
+    type GetBookmarkResponse,
+    type GetBookmarkResult,
+} from './get';
+
+import {
+    getBookmarkPayload,
+    type GetBookmarkPayloadApiVersion,
+    type GetBookmarkPayloadRequest,
+    type GetBookmarkPayloadResponse,
+    type GetBookmarkPayloadResult,
+} from './payload';
+
+import {
+    getAllBookmarks,
+    type GetAllBookmarksResponse,
+    type GetAllBookmarksApiVersion,
+    type GetAllBookmarksResult,
+    type GetAllBookmarksRequest,
+} from './getAll';
+
+import {
+    patchBookmark,
+    type PatchBookmarkRequest,
+    type PatchBookmarksApiVersion,
+    type PatchBookmarkResponse,
+    type PatchBookmarksResult,
+} from './patch';
+
+import {
+    deleteBookmark,
+    type DeleteBookmarkApiVersion,
+    type DeleteBookmarkRequest,
+    type DeleteBookmarkResponse,
+    type DeleteBookmarkResult,
+} from './delete';
+
+import {
+    addFavouriteBookmark,
+    type AddFavouriteBookmarkApiVersion,
+    type AddFavouriteBookmarkRequest,
+    type AddFavouriteBookmarkResponse,
+    type AddFavouriteBookmarkResult,
+} from './add-favourite';
+import {
+    isFavoriteBookmark,
+    type IsFavoriteBookmarkRequest,
+    type IsFavoriteBookmarkApiVersion,
+    type IsFavoriteBookmarkResponse,
+    type IsFavoriteBookmarkResult,
+} from './is-favourite';
+
+import {
+    RemoveFavouriteBookmarkApiVersion,
+    RemoveFavouriteBookmarkRequest,
+    RemoveFavouriteBookmarkResponse,
+    RemoveFavouriteBookmarkResult,
+    removeFavouriteBookmark,
+} from './remove-favorite';
+
+/**
+ * Provides a client interface for interacting with the bookmarks API.
+ * This class abstracts the details of making API requests and handling responses.
+ * It provides methods for fetching, creating, updating, and deleting bookmarks,
+ * as well as managing bookmark favorites.
+ *
+ * @example
+ * ```typescript
+ * import { BookmarksApiClient } from '@equinor/fusion';
+ * import { HttpClient } from '@equinor/fusion-framework-module-http';
+ *
+ * const httpClient = new HttpClient({ baseUri: 'https://my-bookmarks-api.com/' });
+ *
+ * // create a bookmarks API client using a custom HTTP client
+ * const client = new BookmarksApiClient(httpClient, 'json');
+ *
+ * // fetch a bookmark by its ID
+ * const bookmark = await client.getBookmark('my-bookmark-id');
+ *
+ * // fetch all bookmarks for the current user
+ * const bookmarks = await client.getAllBookmarks();
+ *
+ * // update a bookmark by its ID
+ * await client.patch({
+ *  id: 'my-bookmark-id',
+ *  payload: JSON.stringify(data}
+ * });
+ *
+ * // delete a bookmark by its ID
+ * await client.deleteBookmark('my-bookmark-id');
+ *
+ * // add or remove a bookmark to the current user's favorites
+ * await client.addFavorite({ bookmarkId:'my-bookmark-id' });
+ * await client.removeFavorite({ bookmarkId:'my-bookmark-id' });
+ * ```
+ *
+ * @template TMethod - The client method to use for the request, defaults to 'json'.
+ * @template TClient - The HTTP client to use for executing the request.
+ */
 export class BookmarksApiClient<
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
     TClient extends IHttpClient = IHttpClient,
-    TPayload = unknown,
 > {
+    /**
+     * Constructs a new instance of the BookmarksClient class.
+     *
+     * @param _client - The client instance to use for making API requests.
+     * @param _method - The client method to use for API requests.
+     */
     constructor(
         protected _client: TClient,
         protected _method: TMethod,
     ) {}
 
     /**
-     * Fetch bookmark by id
-     * @see {@link get/client}
+     * Fetch a single bookmark
+     *
+     * @template TVersion - The version of the API to call
+     * @template TResponse - The type of the result of the `getBookmark` function
+     * @param version - The API version to use
+     * @param request - Additional parameters to pass to the `getBookmark` function
+     * @returns The result of the `getBookmark` function
      */
-    public get<TVersion extends ApiVersions, TResult = GetBookmarkResult<TVersion, TPayload>>(
+    public get<TVersion extends GetBookmarkApiVersion, TResponse = GetBookmarkResponse<TVersion>>(
         version: TVersion,
-        ...args: Parameters<GetBookmarksFn<TVersion, TMethod, TClient, TPayload, TResult>>
-    ): GetBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = getBookmark(this._client, version, this._method);
-        return fn<TResult>(...args);
-    }
-    /**
-     * Fetch all bookmarks
-     * @see {@link get/client}
-     */
-    public getAll<TVersion extends ApiVersions, TResult = GetAllBookmarkResult<TVersion, TPayload>>(
-        version: TVersion,
-    ): GetAllBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = getAllBookmarks(this._client, version, this._method);
-        return fn<TResult>();
+        request: GetBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): GetBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = getBookmark(version, this._client, this._method);
+        return fn(request, init);
     }
 
     /**
-     * Create a new bookmark
-     * @see {@link get/client}
+     * Retrieves the payload for a bookmark using the specified API version.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResult - The type of the result of the `getBookmarkPayload` function.
+     * @param version - The API version to use for the bookmark payload.
+     * @param args - The arguments to pass to the `getBookmarkPayload` function.
+     * @returns The result of the `getBookmarkPayload` function.
      */
-    public post<TVersion extends ApiVersions, TResult = PostBookmarkResult<TVersion, TPayload>>(
+    public getPayload<
+        TVersion extends GetBookmarkPayloadApiVersion,
+        TResponse = GetBookmarkPayloadResponse<TVersion>,
+    >(
         version: TVersion,
-        ...args: Parameters<PostBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
-    ): PostBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = postBookmark(this._client, version, this._method);
-        return fn<TResult>(...args);
+        request: GetBookmarkPayloadRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): GetBookmarkPayloadResult<TVersion, TMethod, TResponse> {
+        const fn = getBookmarkPayload(version, this._client, this._method);
+        return fn(request, init);
+    }
+
+    /**
+     * Get all bookmarks.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResult - The type of the result of the `getAllBookmarks` function.
+     * @param version - The API version to use.
+     * @param args - Additional arguments to pass to the `getAllBookmarks` function.
+     * @returns The result of calling the `getAllBookmarks` function.
+     */
+    public getAll<
+        TVersion extends GetAllBookmarksApiVersion,
+        TResponse = GetAllBookmarksResponse<TVersion>,
+    >(
+        version: TVersion,
+        request?: GetAllBookmarksRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): GetAllBookmarksResult<TVersion, TMethod, TResponse> {
+        const fn = getAllBookmarks(version, this._client, this._method);
+        return fn(request, init);
     }
 
     /**
      * Update a bookmark
-     * @see {@link get/client}
-     */
-    public patch<TVersion extends ApiVersions, TResult = PatchBookmarkResult<TVersion, TPayload>>(
-        version: TVersion,
-        ...args: Parameters<PatchBookmarkFn<TVersion, TMethod, TClient, TPayload, TResult>>
-    ): PatchBookmarksResult<TVersion, TMethod, TPayload, TResult> {
-        const fn = patchBookmark(this._client, version, this._method);
-        return fn<TResult>(...args);
-    }
-
-    /**
-     * Delete a bookmark
-     * @see {@link delete/client}
-     */
-    public delete<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
-        version: TVersion,
-        ...args: Parameters<DeleteBookmarksFn<TVersion, TMethod, TClient, TResult>>
-    ): DeleteBookmarksResult<TVersion, TMethod, TResult> {
-        const fn = deleteBookmark(this._client, version, this._method);
-        return fn<TResult>(...args);
-    }
-
-    /**
-     * Add bookmark to favorites by bookmark id
-     * @see {@link addFavorite/client}
-     */
-    public addFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
-        version: TVersion,
-        ...args: Parameters<PostBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
-    ): PostBookmarksFavoriteResult<TVersion, TMethod, TResult> {
-        const fn = addBookmarkFavorite(this._client, version, this._method);
-        return fn<TResult>(...args);
-    }
-
-    /**
      *
-     * Remove bookmark from favorites by bookmark id
-     * @see {@link removeFavorite/client}
+     * @template TVersion - The version of the API to call
+     * @template TResponse - The type of the result of the `patchBookmark` function
+     * @param version - The API version to use
+     * @param request - The parameters to pass to the `patchBookmark` function
+     * @returns The result of the `patchBookmark` function
      */
-    public removeFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+    public patch<
+        TVersion extends PatchBookmarksApiVersion,
+        TResponse = PatchBookmarkResponse<TVersion>,
+    >(
         version: TVersion,
-        ...args: Parameters<DeleteBookmarksFavoriteFn<TVersion, TMethod, TClient, TResult>>
-    ): DeleteBookmarksFavoriteResult<TVersion, TMethod, TResult> {
-        const fn = deleteBookmarkFavorite(this._client, version, this._method);
-        return fn<TResult>(...args);
+        request: PatchBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): PatchBookmarksResult<TVersion, TMethod, TResponse> {
+        const fn = patchBookmark(version, this._client, this._method);
+        return fn(request, init);
     }
 
     /**
+     * Create a new bookmark
      *
-     * Verify that the current bookmark is present in the users collection of bookmarks.
-     * @see {@link verifyFavorite/client}
+     * @template TVersion - The version of the API to call
+     * @template TResult - The type of the result of the `postBookmark` function
+     * @param version - The API version to use
+     * @param request - The parameters to pass to the `postBookmark` function
+     * @returns The result of creating the bookmark
      */
-    public verifyFavorite<TVersion extends ApiVersions, TResult = DeleteBookmarkResult<TVersion>>(
+    public create<
+        TVersion extends CreateBookmarkApiVersion,
+        TResponse = CreateBookmarkResponse<TVersion>,
+    >(
         version: TVersion,
-        ...args: Parameters<HeadBookmarkFavoriteFn<TVersion, TMethod, TClient, TResult>>
-    ): HeadBookmarksFavoriteResult<TVersion, TMethod, TResult> {
-        const fn = verifyBookmarkFavorite(this._client, version, this._method);
-        return fn<TResult>(...args);
+        request: CreateBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): CreateBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = createBookmark(version, this._client, this._method);
+        return fn(request, init);
+    }
+
+    /**
+     * Deletes a bookmark.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResponse - The type of the result of the `deleteBookmark` function.
+     * @param version - The version of the delete bookmark API to use.
+     * @param request - The arguments to pass to the `deleteBookmark` function.
+     * @returns The result of the delete bookmark operation.
+     */
+    public delete<
+        TVersion extends DeleteBookmarkApiVersion,
+        TResponse = DeleteBookmarkResponse<TVersion>,
+    >(
+        version: TVersion,
+        request: DeleteBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): DeleteBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = deleteBookmark(version, this._client, this._method);
+        return fn(request, init);
+    }
+
+    /**
+     * Check if a bookmark is a favorite.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResult - The type of the result of the `verifyBookmarkFavorite` function.
+     * @param version - The API version to use.
+     * @param request - The arguments to pass to the `HeadBookmarkFavoriteFn` function.
+     * @returns The result of the `HeadBookmarksFavoriteResult` function.
+     */
+    public isFavorite<
+        TVersion extends IsFavoriteBookmarkApiVersion,
+        TResponse = IsFavoriteBookmarkResponse<TVersion>,
+    >(
+        version: TVersion,
+        request: IsFavoriteBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): IsFavoriteBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = isFavoriteBookmark(version, this._client, this._method);
+        return fn(request, init);
+    }
+
+    /**
+     * Add a bookmark to the user's favorites.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResponse - The type of the result of the `addBookmarkFavorite` function.
+     * @param version - The API version to use.
+     * @param request - The parameters to pass to the `PostBookmarkFavoriteFn` function.
+     * @returns The result of adding the bookmark to the user's favorites.
+     */
+    public addFavourite<
+        TVersion extends AddFavouriteBookmarkApiVersion,
+        TResponse = AddFavouriteBookmarkResponse<TVersion>,
+    >(
+        version: TVersion,
+        request: AddFavouriteBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): AddFavouriteBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = addFavouriteBookmark(version, this._client, this._method);
+        return fn(request, init);
+    }
+
+    /**
+     * Removes the current bookmark from the user's collection of bookmarks.
+     *
+     * @template TVersion - The version of the API to call.
+     * @template TResult - The type of the result of the `deleteBookmarkFavorite` function.
+     * @param version - The API version to use for the request.
+     * @param request - The parameters to pass to the `deleteBookmarkFavorite` function.
+     * @returns The result of the `deleteBookmarkFavorite` function.
+     */
+    public removeFavorite<
+        TVersion extends RemoveFavouriteBookmarkApiVersion,
+        TResponse = RemoveFavouriteBookmarkResponse<TVersion>,
+    >(
+        version: TVersion,
+        request: RemoveFavouriteBookmarkRequest<TVersion>,
+        init?: ClientRequestInit<TClient, TResponse>,
+    ): RemoveFavouriteBookmarkResult<TVersion, TMethod, TResponse> {
+        const fn = removeFavouriteBookmark(version, this._client, this._method);
+        return fn(request, init);
     }
 }
 

@@ -1,6 +1,9 @@
-export * from './types';
+export type {
+    DeleteBookmarkApiModels,
+    DeleteBookmarkApiVersion,
+    DeleteBookmarkRequest,
+    DeleteBookmarkResponse,
+    DeleteBookmarkResult,
+} from './types';
 
-export { deleteBookmark, default } from './client';
-
-export { generateEndpoint } from './generate-endpoint';
-export { generateParameters } from './generate-parameters';
+export { deleteBookmark } from './client';

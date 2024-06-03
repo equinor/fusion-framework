@@ -1,24 +1,26 @@
-import { ApiVersions, DeleteBookmarkArgs } from './types';
+import { ApiVersion } from '../static';
+import { extractApiVersion } from '../utils';
+import type { DeleteBookmarkApiVersion, DeleteBookmarkRequest } from './types';
 
 /**
- * Method for generating endpoint for deleting a bookmark.
+ * Generates the endpoint URL for deleting a bookmark.
+ *
+ * @param version - The API version to use for the endpoint.
+ * @param args - The request arguments for deleting the bookmark.
+ * @returns The generated endpoint URL for deleting the bookmark.
+ * @throws Error if the API version is unknown.
  */
-export const generateEndpoint = <TVersion extends ApiVersions>(
+export const generateEndpoint = <TVersion extends DeleteBookmarkApiVersion>(
     version: TVersion,
-    args: DeleteBookmarkArgs<TVersion>,
+    args: DeleteBookmarkRequest<TVersion>,
 ) => {
-    switch (version) {
-        case 'v1': {
-            const { id } = args as { id: string };
-            const params = new URLSearchParams();
-            params.append('api-version', '1.0');
-            return `/bookmarks/${id}/?${String(params)}`;
-        }
-        default: {
-            const { id } = args as { id: string };
+    const apiVersion = extractApiVersion<DeleteBookmarkApiVersion>(version);
+    switch (apiVersion) {
+        case ApiVersion.v1: {
+            const { bookmarkId } = args;
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/bookmarks/${id}/?${String(params)}`;
+            return `/bookmarks/${bookmarkId}/?${String(params)}`;
         }
     }
 };
