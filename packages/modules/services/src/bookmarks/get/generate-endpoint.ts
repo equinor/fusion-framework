@@ -1,24 +1,26 @@
-import { ApiVersions, GetBookmarkArgs } from './types';
+import type { GetBookmarkApiVersion, GetBookmarkRequest } from './types';
+
+import { ApiVersion } from '../static';
+import { extractApiVersion } from '../utils';
 
 /**
- * Method for generating endpoint for getting bookmark by id
+ * Generates the endpoint URL for retrieving a bookmark based on the specified API version and request arguments.
+ *
+ * @param version - The API version to use for the endpoint.
+ * @param args - The request arguments, including the bookmark ID.
+ * @returns The generated endpoint URL.
  */
-export const generateEndpoint = <TVersion extends ApiVersions>(
+export const generateEndpoint = <TVersion extends GetBookmarkApiVersion>(
     version: TVersion,
-    args: GetBookmarkArgs<TVersion>,
+    args: GetBookmarkRequest<TVersion>,
 ) => {
-    switch (version) {
-        case 'v1': {
-            const { id } = args as { id: string };
-            const params = new URLSearchParams();
-            params.append('api-version', '1.0');
-            return `/bookmarks/${id}/?${String(params)}`;
-        }
-        default: {
-            const { id } = args as { id: string };
+    const apiVersion = extractApiVersion<GetBookmarkApiVersion>(version);
+    switch (apiVersion) {
+        case ApiVersion.v1: {
+            const { bookmarkId } = args;
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/bookmarks/${id}/?${String(params)}`;
+            return `/bookmarks/${bookmarkId}/?${String(params)}`;
         }
     }
 };

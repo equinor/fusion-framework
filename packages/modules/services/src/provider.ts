@@ -11,9 +11,9 @@ export interface IApiProvider<TClient extends IHttpClient = IHttpClient> {
     /**
      * @param method - Version of the service to use
      */
-    createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
+    createBookmarksClient<TMethod extends keyof ClientMethod>(
         method: TMethod,
-    ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>>;
+    ): Promise<BookmarksApiClient<TMethod, TClient>>;
 
     /**
      * @param method - Version of the service to use
@@ -92,9 +92,9 @@ export class ApiProvider<TClient extends IHttpClient = IHttpClient>
         return new NotificationApiClient(httpClient, method);
     }
 
-    public async createBookmarksClient<TMethod extends keyof ClientMethod, TPayload = unknown>(
+    public async createBookmarksClient<TMethod extends keyof ClientMethod>(
         method: TMethod,
-    ): Promise<BookmarksApiClient<TMethod, TClient, TPayload>> {
+    ): Promise<BookmarksApiClient<TMethod, TClient>> {
         const httpClient = await this._createClientFn('bookmarks');
         httpClient.responseHandler.add('validate_api_request', validateResponse);
         return new BookmarksApiClient(httpClient, method);

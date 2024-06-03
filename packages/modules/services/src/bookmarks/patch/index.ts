@@ -1,6 +1,9 @@
-export * from './types';
+export {
+    PatchBookmarkRequest,
+    PatchBookmarkResponse,
+    PatchBookmarkVersion,
+    PatchBookmarksApiVersion,
+    PatchBookmarksResult,
+} from './types';
 
-export { patchBookmark, default } from './client';
-
-export { generateEndpoint as generatePatchEndpoint } from './generate-endpoint';
-export { generateParameters as generatePatchParameters } from './generate-parameters';
+export { patchBookmark } from './client';

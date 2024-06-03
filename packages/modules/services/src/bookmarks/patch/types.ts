@@ -1,45 +1,43 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
-import { ApiBookmarkEntityV1 } from '../api-models';
-import { PostBookmarksArgsV1 } from '../post';
+import type { PatchBookmarksApiModels } from './api-models';
+import type { ClientMethod, FilterAllowedApiVersions, ExtractApiVersion } from '../types';
 
-export type PatchBookmarkResult<
-    TVersion extends ApiVersions,
-    TPayload,
-> = PatchBookmarksVersions<TPayload>[TVersion]['result'];
+/**
+ * Represents the available versions of the Patch Bookmarks API.
+ * This type is a key of the `PatchBookmarksApiModels` object, which defines the
+ * models for each API version.
+ */
+export type PatchBookmarksApiVersion = FilterAllowedApiVersions<keyof PatchBookmarksApiModels>;
 
-/** Returns args for PutBookmark based on version*/
-export type PatchBookmarkArgs<
-    TVersion extends ApiVersions,
-    TPayload = unknown,
-> = PatchBookmarksVersions<TPayload>[TVersion]['args'];
+/**
+ * Represents the allowed API versions for patching bookmarks.
+ */
+export type PatchBookmarkVersion = FilterAllowedApiVersions<PatchBookmarksApiVersion>;
 
-/**Gets result type for PutBookmark call based on version and method */
+/**
+ * Represents the response type for the `PatchBookmarks` API endpoint.
+ * The specific response type depends on the `TVersion` type parameter, which
+ * corresponds to the API version being used.
+ */
+export type PatchBookmarkResponse<TVersion extends PatchBookmarksApiVersion> =
+    PatchBookmarksApiModels[ExtractApiVersion<TVersion>]['response'];
+
+/**
+ * Represents the arguments for patching a bookmark.
+ * The type parameter `TVersion` specifies the version of the Patch Bookmarks API to use.
+ * The actual arguments are defined in the `PatchBookmarksApiModels` type, which is indexed by the `TVersion` parameter.
+ */
+export type PatchBookmarkRequest<TVersion extends PatchBookmarksApiVersion> =
+    PatchBookmarksApiModels[ExtractApiVersion<TVersion>]['request'];
+
+/**
+ * Represents the result of a patch operation on bookmarks, which can be performed using a specific API version and method.
+ *
+ * @template TVersion - The version of the bookmarks API being used.
+ * @template TMethod - The specific method being used to perform the patch operation, which must be a key of the `ClientMethod` type.
+ * @template TResult - The expected response type for the patch operation, which is typically `PatchBookmarkResponse<TVersion>`.
+ */
 export type PatchBookmarksResult<
-    TVersion extends ApiVersions,
+    TVersion extends PatchBookmarksApiVersion,
     TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TPayload = unknown,
-    TResult = PatchBookmarkResult<TVersion, TPayload>,
+    TResult = PatchBookmarkResponse<TVersion>,
 > = ClientMethod<TResult>[TMethod];
-
-export type PatchBookmarkFn<
-    TVersion extends ApiVersions,
-    TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TClient extends IHttpClient = IHttpClient,
-    TPayload = unknown,
-    TResult = PatchBookmarkResult<TVersion, TPayload>,
-> = (
-    args: PatchBookmarkArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>,
-) => PatchBookmarksResult<TVersion, TMethod, TPayload, TResult>;
-
-export interface PatchBookmarksArgsV1<T = unknown> extends Partial<PostBookmarksArgsV1<T>> {
-    id: string;
-}
-
-export type PatchBookmarksVersions<TPayload = unknown> = {
-    ['v1']: { args: PatchBookmarksArgsV1<TPayload>; result: ApiBookmarkEntityV1<TPayload> };
-};
-
-export type ApiVersions = keyof PatchBookmarksVersions<unknown>;
