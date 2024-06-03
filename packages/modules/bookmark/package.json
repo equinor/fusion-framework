@@ -39,6 +39,7 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-log": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
         "bookmarks": "link:@equinor/fusion-framework-module-services/src/bookmarks",
@@ -50,6 +51,7 @@
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-services": "workspace:^",
-        "typescript": "^5.4.2"
+        "typescript": "^5.4.2",
+        "zod": "^3.23.8"
     }
 }
