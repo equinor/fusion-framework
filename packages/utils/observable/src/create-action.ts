@@ -257,27 +257,25 @@ export const actionSuffixDivider = '::';
 
 export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixDivider}${suffix}$`);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
+    ? A
+    : never;
+
 /**
- * Extracts the base action type from an action or action creator.
+ * Extracts the base type from an action type string.
  *
- * Action types consist of {ACTION_TYPE_NAME}{DIVIDER}{SUFFIX}.
- * where:
- * - ACTION_TYPE_NAME is the name of the action creator function
- * - DIVIDER is the actionSuffixDivider, default ::
- * - SUFFIX is the suffix passed to the action creator function, like 'request'|'success'|'error'
+ * The action type string is expected to be in the format `${baseType}${actionSuffixDivider}${actionSuffix}`,
+ * where `${actionSuffixDivider}` is a special character that separates the base type from the action suffix.
  *
- * @example
- * ```typescript
- * const actionBaseTypeName = actionBaseType('update_my_stuff::request'); // 'update_my_stuff'
- * ```
+ * This function returns the `baseType` part of the action type string.
  *
- * @param action The action or action creator to extract the base type from.
- * @returns The base action type, without any suffixes.
+ * @param type - The action type string to extract the base type from.
+ * @returns The base type of the action type string, or `never` if the input string does not match the expected format.
  */
-export const actionBaseType = (action: Action | string) => {
-    const type = typeof action === 'string' ? action : action.type;
-    return type.replace(matchActionSuffix('\\w+$'), '');
-};
+export function getBaseType<T extends string>(type: T): BaseType<T> {
+    return type.replace(matchActionSuffix('\\w+$'), '') as BaseType<T>;
+}
 
 /**
  * Returns the action type of the actions created by the passed
