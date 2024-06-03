@@ -14,11 +14,7 @@ export { FlowSubject as ReactiveObservable } from './FlowSubject';
 
 export { actionMapper, type ActionCalls } from './action-mapper';
 
-export {
-    createAction,
-    actionBaseType,
-    type ActionCreatorWithPreparedPayload,
-} from './create-action';
+export { createAction, getBaseType, type ActionCreatorWithPreparedPayload } from './create-action';
 
 export {
     createAsyncAction,
