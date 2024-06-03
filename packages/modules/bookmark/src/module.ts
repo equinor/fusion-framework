@@ -3,8 +3,10 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { AppModule } from '@equinor/fusion-framework-module-app';
 import { ContextModule } from '@equinor/fusion-framework-module-context';
-import { BookmarkModuleProvider, IBookmarkModuleProvider } from './bookmark-provider';
-import { BookmarkModuleConfigurator, IBookmarkModuleConfigurator } from './configurator';
+import { BookmarkProvider } from './BookmarkProvider';
+import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
+import { lastValueFrom } from 'rxjs';
 
 export type BookmarkModuleKey = 'bookmark';
 
@@ -12,22 +14,41 @@ export const moduleKey: BookmarkModuleKey = 'bookmark';
 
 export type BookmarkModule = Module<
     BookmarkModuleKey,
-    IBookmarkModuleProvider,
-    IBookmarkModuleConfigurator,
+    BookmarkProvider,
+    BookmarkModuleConfigurator,
     [EventModule, ServicesModule, AppModule, ContextModule]
 >;
 
+// TODO - remove when all framework uses log
+const fallbackLogger: ILogger = new ConsoleLogger('BookmarkModule');
+
 export const module: BookmarkModule = {
     name: moduleKey,
-    configure: () => new BookmarkModuleConfigurator(),
-    initialize: async (args) => {
-        const ref = (args.ref as ModulesInstance<[BookmarkModule]>)?.bookmark;
-        const config = await (args.config as BookmarkModuleConfigurator).createConfig(args, ref);
+    configure: (args) => {
+        // use parent logger if available, else fallback to console logger
+        const log: ILogger =
+            (args?.log as ILogger)?.createSubLogger('BookmarkModule') || fallbackLogger;
 
-        return new BookmarkModuleProvider(config, ref);
+        // create a configurator instance
+        const configurator = new BookmarkModuleConfigurator({ log });
+
+        // Set client from parent module if available
+        const parent = (args as ModulesInstance<[BookmarkModule]>).bookmark;
+        if (parent) {
+            configurator.setClient(parent.client);
+        }
+
+        return configurator;
+    },
+    initialize: async (args) => {
+        const config = await lastValueFrom(
+            (args.config as BookmarkModuleConfigurator).createConfig(args),
+        );
+
+        return new BookmarkProvider(config);
     },
     dispose: (args) => {
-        (args.instance as BookmarkModuleProvider).dispose();
+        (args.instance as BookmarkProvider).dispose();
     },
 };
 

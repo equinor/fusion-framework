@@ -1,8 +1,6 @@
-export {
-    BookmarkModuleConfigurator,
-    IBookmarkModuleConfigurator,
-    BookmarkModuleConfig,
-} from './configurator';
+export { BookmarkModuleConfigurator, BookmarkModuleConfig } from './BookmarkConfigurator';
+
+export { IBookmarkClient } from './BookmarkClient.interface';
 
 export {
     default,
@@ -11,7 +9,7 @@ export {
     moduleKey as bookmarkModuleKey,
 } from './module';
 
-export { IBookmarkModuleProvider, BookmarkModuleProvider } from './bookmark-provider';
+export { BookmarkProvider } from './BookmarkProvider';
 
 export { enableBookmark } from './enable-bookmark';
 

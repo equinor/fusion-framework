@@ -6,11 +6,11 @@ import {
     FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
 
-import { BookmarkClient } from './client/bookmarkClient';
+import { BookmarkClient } from './__client/bookmarkClient';
 
 import { BookmarkModuleConfig } from './types';
 import { Observable, Subscription } from 'rxjs';
-import { Bookmark, CreateBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
+import { Bookmark, NewBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
 
 export interface IBookmarkModuleProvider {
     /**
@@ -287,7 +287,7 @@ export class BookmarkModuleProvider implements IBookmarkModuleProvider {
 
         const contextId = this.config.resolveContextId && this.config.resolveContextId();
         const appKey = this.#getAppKey();
-        const bookmark: CreateBookmark<unknown> = {
+        const bookmark: NewBookmark<unknown> = {
             ...args,
             appKey,
             contextId,
