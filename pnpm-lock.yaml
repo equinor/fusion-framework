@@ -117,12 +117,33 @@ importers:
       '@ag-grid-community/react':
         specifier: ~31.3.2
         version: 31.3.2(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@ag-grid-community/styles':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/clipboard':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/column-tool-panel':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/excel-export':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/filter-tool-panel':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/menu':
+        specifier: ^31.3.2
+        version: 31.3.2
+      '@ag-grid-enterprise/range-selection':
+        specifier: ^31.3.2
+        version: 31.3.2
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
-        specifier: ^31.2.1
-        version: 31.2.1(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.2(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^31.2.3
+        version: 31.2.3(@ag-grid-community/styles@31.3.2)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -1729,6 +1750,9 @@ packages:
   '@ag-grid-community/core@31.3.2':
     resolution: {integrity: sha512-iab+xIPCvjzGkIBgo12IQNa9/ZGI4BmjsQz65+aipNXISbtGketkN5iO4OFQgafgf0f9JZVFOZ3EzCnMiVWLiQ==}
 
+  '@ag-grid-community/csv-export@31.3.2':
+    resolution: {integrity: sha512-AjQAvW84SXzGSzoSgmpSDCPrqYHZNRRDEVFi47N0iW44AxelCIVSjFRF8nkUky6On6bQ+Mv8+6JNtVmjki5p6w==}
+
   '@ag-grid-community/react@31.3.2':
     resolution: {integrity: sha512-pGxW60itcWAKNBKOfi5oi0R9z6fEPME7V7vajz6cPafZCJ25ylTWxW4XLO2391tYNqorUbR5U3rOpaXkCtFCRQ==}
     peerDependencies:
@@ -1736,11 +1760,35 @@ packages:
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
 
-  '@ag-grid-community/styles@29.3.5':
-    resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
+  '@ag-grid-community/styles@31.3.2':
+    resolution: {integrity: sha512-FP1FxUGKHCUdu081eptYg1g5FdDHjluTt2w6Jm5/KmC2XISUzdhhxJATsNM4Nu0h6fwxhQICsJl0xsTvXG/rxw==}
+
+  '@ag-grid-enterprise/clipboard@31.3.2':
+    resolution: {integrity: sha512-nsEgYGYu559ROHGXmEBdlbSQhdHaEeJ7fKgQ58IGt7KZdt+fYuW5W6Ys1sDxBGUsXKr/cim0bZkhQoZpoq1aLg==}
+
+  '@ag-grid-enterprise/column-tool-panel@31.3.2':
+    resolution: {integrity: sha512-pofFckVthYmec9LUEhrOaIHr1G8kXxb8XIfzQpq7rX2bJA7yUK4RFN4tSZWyNIDX+UOfqOBP748A3KNo/kGXxA==}
 
   '@ag-grid-enterprise/core@31.3.2':
     resolution: {integrity: sha512-eCcUsQNyIV7oh12HB2Fv8QiBIEwZUbIjKUZgOzgHwmjqzxuPk2r4Gg6/fg8agRgdaCBa5f4jeLSFzBRm1FTHVQ==}
+
+  '@ag-grid-enterprise/excel-export@31.3.2':
+    resolution: {integrity: sha512-oz8UduHgV/Exbo/BsM1XEeELvQSCi1MfbHwqMmx1dxEd1qAvRky04VMWjLJZ3SrgfGRf6U/oPrEGlYC8ov0UPA==}
+
+  '@ag-grid-enterprise/filter-tool-panel@31.3.2':
+    resolution: {integrity: sha512-Xrt0Qn6iP53d7hWyC5+AuZdFuULBZHTJdI0TsjGIGYt5Imzfatyv7P5Vrq+njbmxBXHZAKzSUHT2+wLepEuXKQ==}
+
+  '@ag-grid-enterprise/menu@31.3.2':
+    resolution: {integrity: sha512-B3lqMpsOMswrCQHcg09+7qpIvY3woq84ThWNIbPbWasyjFu6c9+oVDb5UshPlOJ0HhlAltbVLu2RMRmu5Wh+tw==}
+
+  '@ag-grid-enterprise/range-selection@31.3.2':
+    resolution: {integrity: sha512-FT2077qwzXMBJ/XiXMi1790dMMQQkL00BfOE6++gFbAeB0nI7OKcQFbXLVqBoaXpdH1jD86y3PEooKByYoWFUQ==}
+
+  '@ag-grid-enterprise/row-grouping@31.3.2':
+    resolution: {integrity: sha512-Okiv2JsYXO5KYuUAYisdq7McZqwEMdixkoD/M32KjLsozlJ0Xf6r+cUrIQijn/2mq8TK86X4+M2ptISiGYAAsw==}
+
+  '@ag-grid-enterprise/side-bar@31.3.2':
+    resolution: {integrity: sha512-JiK0WsKIuVV+Antp1FRuztACpV8i84haTSxolwsotul61EPu6XMKnivokQNlsXKQ1nQyHNVCpfTo9dNu8AMg7A==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -2105,11 +2153,12 @@ packages:
       '@types/react':
         optional: true
 
-  '@equinor/fusion-react-ag-grid-styles@31.2.1':
-    resolution: {integrity: sha512-AX52K3IV3FW10WMUYKc18JlAp2HPj12/ttawxalkBsPz4/Ebkte3m6ciaK5Ja70JjBMkbGiVCIwRa0sSrHpnSA==}
+  '@equinor/fusion-react-ag-grid-styles@31.2.3':
+    resolution: {integrity: sha512-dPM060YSwkGoxEBi27rG9isZgIwTLO5AzSMmPIkdpm2DkHY4h3LpICdeP82KaVLvQ9e1BYBKWPf0QwnX23kLtA==}
     peerDependencies:
-      '@ag-grid-community/styles': 31.2.0
-      '@equinor/fusion-react-styles': ^0.6.0
+      '@ag-grid-community/styles': 31.3.2
+      '@equinor/eds-tokens': ^0.9.2
+      '@equinor/fusion-react-styles': ^0.6.2
 
   '@equinor/fusion-react-checkbox@0.5.17':
     resolution: {integrity: sha512-5IDy1sBgTS3l/SE2wCuKeY6a5/0sarx5iB6hDVGP5X5P5PNW5w+c9JFvwvmw0ISeaO2qNsTT/SFu9i5GYIuW8w==}
@@ -8704,6 +8753,11 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
+  '@ag-grid-community/csv-export@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      tslib: 2.6.2
+
   '@ag-grid-community/react@31.3.2(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@ag-grid-community/core': 31.3.2
@@ -8711,11 +8765,57 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@ag-grid-community/styles@29.3.5': {}
+  '@ag-grid-community/styles@31.3.2': {}
+
+  '@ag-grid-enterprise/clipboard@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-community/csv-export': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+
+  '@ag-grid-enterprise/column-tool-panel@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+      '@ag-grid-enterprise/row-grouping': 31.3.2
+      '@ag-grid-enterprise/side-bar': 31.3.2
 
   '@ag-grid-enterprise/core@31.3.2':
     dependencies:
       '@ag-grid-community/core': 31.3.2
+
+  '@ag-grid-enterprise/excel-export@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-community/csv-export': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+
+  '@ag-grid-enterprise/filter-tool-panel@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+      '@ag-grid-enterprise/side-bar': 31.3.2
+
+  '@ag-grid-enterprise/menu@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/column-tool-panel': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+
+  '@ag-grid-enterprise/range-selection@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+
+  '@ag-grid-enterprise/row-grouping@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
+
+  '@ag-grid-enterprise/side-bar@31.3.2':
+    dependencies:
+      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-enterprise/core': 31.3.2
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -9372,9 +9472,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.61
 
-  '@equinor/fusion-react-ag-grid-styles@31.2.1(@ag-grid-community/styles@29.3.5)(@equinor/fusion-react-styles@0.6.2(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/fusion-react-ag-grid-styles@31.2.3(@ag-grid-community/styles@31.3.2)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@ag-grid-community/styles': 29.3.5
+      '@ag-grid-community/styles': 31.3.2
+      '@equinor/eds-tokens': 0.9.2
       '@equinor/fusion-react-styles': 0.6.2(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@equinor/fusion-react-checkbox@0.5.17(react@18.2.0)':

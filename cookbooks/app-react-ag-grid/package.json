@@ -25,7 +25,14 @@
         "@ag-grid-community/client-side-row-model": "~31.3.2",
         "@ag-grid-community/core": "~31.3.2",
         "@ag-grid-community/react": "~31.3.2",
+        "@ag-grid-community/styles": "^31.3.2",
+        "@ag-grid-enterprise/clipboard": "^31.3.2",
+        "@ag-grid-enterprise/column-tool-panel": "^31.3.2",
+        "@ag-grid-enterprise/excel-export": "^31.3.2",
+        "@ag-grid-enterprise/filter-tool-panel": "^31.3.2",
+        "@ag-grid-enterprise/menu": "^31.3.2",
+        "@ag-grid-enterprise/range-selection": "^31.3.2",
         "@equinor/fusion-framework-module-ag-grid": "workspace:^",
-        "@equinor/fusion-react-ag-grid-styles": "^31.2.1"
+        "@equinor/fusion-react-ag-grid-styles": "^31.2.3"
     }
 }
