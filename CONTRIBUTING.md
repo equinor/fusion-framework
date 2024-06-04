@@ -46,15 +46,7 @@ Scan through our [existing issues](https://github.com/equinor/fusion-framework/i
 
 ### Commit your update
 
-Your commits should adhere to [conventional commit specification](https://www.conventionalcommits.org/en/v1.0.0/) and follow a linear history.
-
-```sh
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
+Your commits should adhere to [our guidelines](contributing/conventional-commits.md) and follow a linear history.
 
 > [!CAUTION] 
 > ☠️ do __not__ include files in your commit which are outside the `scope` of the commit!

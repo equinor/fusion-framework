@@ -1,5 +1,5 @@
 import {
-    actionBaseType,
+    getBaseType,
     createReducer as makeReducer,
     isCompleteAction,
     isRequestAction,
@@ -35,11 +35,11 @@ export const createReducer = (value: AppBundleStateInitial) =>
             })
             // add status which indicates that a request is in progress
             .addMatcher(isRequestAction, (state, action) => {
-                state.status.add(actionBaseType(action));
+                state.status.add(getBaseType(action));
             })
             // remove status when a request is complete
             .addMatcher(isCompleteAction, (state, action) => {
-                state.status.delete(actionBaseType(action));
+                state.status.delete(getBaseType(action));
             }),
     );
 

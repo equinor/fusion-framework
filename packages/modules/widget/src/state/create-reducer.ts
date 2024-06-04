@@ -1,5 +1,5 @@
 import {
-    actionBaseType,
+    getBaseType,
     createReducer as makeReducer,
     isCompleteAction,
     isRequestAction,
@@ -33,11 +33,11 @@ export const createReducer = (value: WidgetStateInitial) =>
             })
             /** mark status as loading {{type}} */
             .addMatcher(isRequestAction, (state, action) => {
-                state.status.add(actionBaseType(action));
+                state.status.add(getBaseType(action));
             })
             /** clear status {{type}} */
             .addMatcher(isCompleteAction, (state, action) => {
-                state.status.delete(actionBaseType(action));
+                state.status.delete(getBaseType(action));
             }),
     );
 
