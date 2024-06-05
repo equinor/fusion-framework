@@ -271,7 +271,7 @@ export class BookmarksApiClient<
     }
 
     /**
-     * Add a bookmark to the user's favorites.
+     * Add the provided bookmark to the user's favorites.
      *
      * @template TVersion - The version of the API to call.
      * @template TResponse - The type of the result of the `addBookmarkFavorite` function.
@@ -292,7 +292,7 @@ export class BookmarksApiClient<
     }
 
     /**
-     * Removes the current bookmark from the user's collection of bookmarks.
+     * Removes the provided bookmark from the user's collection of bookmarks.
      *
      * @template TVersion - The version of the API to call.
      * @template TResult - The type of the result of the `deleteBookmarkFavorite` function.
@@ -300,7 +300,7 @@ export class BookmarksApiClient<
      * @param request - The parameters to pass to the `deleteBookmarkFavorite` function.
      * @returns The result of the `deleteBookmarkFavorite` function.
      */
-    public removeFavorite<
+    public removeFavourite<
         TVersion extends RemoveFavouriteBookmarkApiVersion,
         TResponse = RemoveFavouriteBookmarkResponse<TVersion>,
     >(

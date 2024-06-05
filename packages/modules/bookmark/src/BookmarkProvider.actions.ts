@@ -1,9 +1,17 @@
-import { createAsyncAction, type ActionTypes } from '@equinor/fusion-observable';
+import { createAction, createAsyncAction, type ActionTypes } from '@equinor/fusion-observable';
 
-import type { Bookmark, BookmarkData, NewBookmark, PatchBookmark } from './types';
+import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark, PatchBookmark } from './types';
 
 import { type BookmarksFilter } from './BookmarkClient.interface';
 import { type BookmarkFlowError } from './BookmarkProvider.error';
+
+/**
+ * Represents the metadata associated with a bookmark action.
+ */
+type BookmarkActionMeta = {
+    // A reference identifier for the request.
+    ref: string;
+};
 
 /**
  * Actions related to the BookmarkProvider provider state.
@@ -11,66 +19,102 @@ import { type BookmarkFlowError } from './BookmarkProvider.error';
  * Exports a set of actions that can be used to manage bookmarks.
  */
 export const bookmarkActions = {
+    clearActiveBookmark: createAction('clear_active_bookmark'),
     setActiveBookmark: createAsyncAction(
         'set_active_bookmark',
-        (bookmarkId: string | null) => ({
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
             payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
         }),
-        (data: BookmarkData | null) => ({ payload: data }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        (data: BookmarkData, meta: BookmarkActionMeta) => ({
+            payload: data,
+            meta,
+        }),
+        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({
+            payload: error,
+            meta,
+        }),
     ),
     fetchBookmark: createAsyncAction(
         'fetch_bookmark',
-        (bookmarkId: string) => ({ payload: bookmarkId }),
-        (bookmark: Bookmark) => ({ payload: bookmark }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (bookmark: Bookmark, meta: BookmarkActionMeta) => ({ payload: bookmark, meta }),
+        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
     fetchBookmarks: createAsyncAction(
         'fetch_bookmarks',
-        (filter?: BookmarksFilter) => ({ payload: filter }),
-        (bookmarks: Bookmark[]) => ({ payload: bookmarks }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        (filter?: BookmarksFilter, meta?: BookmarkActionMeta) => ({ payload: filter, meta }),
+        (bookmarks: Bookmark[], meta?: BookmarkActionMeta) => ({ payload: bookmarks, meta }),
+        (error: BookmarkFlowError, meta?: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
     updateBookmark: createAsyncAction(
         'update_bookmark',
-        (bookmark: PatchBookmark) => ({ payload: bookmark }),
-        (bookmark: Bookmark) => ({ payload: bookmark }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        (payload: PatchBookmark, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: Bookmark, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload, meta }),
     ),
     createBookmark: createAsyncAction(
         'create_bookmark',
-        (bookmark: NewBookmark) => ({ payload: bookmark }),
-        (bookmark: Bookmark) => ({ payload: bookmark }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        <T>(payload: NewBookmark<T>, meta: BookmarkActionMeta) => ({ payload, meta }),
+        <T>(payload: BookmarkWithData<T>, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload, meta }),
     ),
     deleteBookmark: createAsyncAction(
         'delete_bookmark',
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload, meta }),
     ),
     removeBookmark: createAsyncAction(
         'remove_bookmark',
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (payload: {
-            type: 'delete_bookmark' | 'remove_bookmark_favorite';
-            bookmarkID: string;
-        }) => ({ payload }),
-        (payload: BookmarkFlowError) => ({
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (
+            payload: {
+                type: 'delete_bookmark' | 'remove_favourite_bookmark';
+                bookmarkId: string;
+            },
+            meta: BookmarkActionMeta,
+        ) => ({ payload, meta }),
+        (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({
             payload,
+            meta,
         }),
     ),
-    addBookmarkAsFavorite: createAsyncAction(
-        'add_bookmark',
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+    addBookmarkAsFavourite: createAsyncAction(
+        'add_favourite_bookmark',
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
-    removeBookmarkAsFavorite: createAsyncAction(
-        'remove_bookmark_favorite',
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (bookmarkID: string) => ({ payload: bookmarkID }),
-        (error: BookmarkFlowError) => ({ payload: error }),
+    removeBookmarkAsFavourite: createAsyncAction(
+        'remove_favourite_bookmark',
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta: { ref: bookmarkId, ...meta },
+        }),
+        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
 };
 

@@ -109,7 +109,7 @@ export type NewBookmark<T = unknown> = {
     isShared?: boolean;
     appKey?: string;
     contextId?: string;
-    payload: T;
+    data: T;
     sourceSystem?: {
         identifier: string;
         name: string;

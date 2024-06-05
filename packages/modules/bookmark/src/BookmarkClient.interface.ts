@@ -11,6 +11,10 @@ export type BookmarksFilter = {
     };
 };
 
+/**
+ * Represents a partial update for a bookmark, including the bookmark ID and optional updates to the name, description, sharing status, and associated data.
+ * @template T - The type of the bookmark data.
+ */
 export type BookmarkUpdate<T = unknown> = Pick<Bookmark, 'id'> &
     Partial<Pick<BookmarkWithData<T>, 'name' | 'description' | 'isShared' | 'data'>>;
 

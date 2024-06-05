@@ -6,7 +6,7 @@ import { ApiVersion } from '../static';
  * Defines the API models for removing a favorite bookmark.
  */
 export type RemoveFavouriteBookmarkApiModels = {
-    [ApiVersion.v1]: { request: { bookmarkId: string }; response: undefined };
+    [ApiVersion.v1]: { request: { bookmarkId: string }; response: boolean };
 };
 
 /**

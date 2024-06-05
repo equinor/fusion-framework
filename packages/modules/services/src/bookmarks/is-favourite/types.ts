@@ -6,7 +6,7 @@ import { ApiVersion } from '../static';
  * Defines the request and response types for the `isFavorite` bookmark API endpoint.
  */
 export type IsFavoriteBookmarkModels = {
-    [ApiVersion.v1]: { request: { bookmarkId: string }; response: undefined };
+    [ApiVersion.v1]: { request: { bookmarkId: string }; response: boolean };
 };
 
 /**
