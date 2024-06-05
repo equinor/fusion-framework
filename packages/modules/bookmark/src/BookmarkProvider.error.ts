@@ -12,3 +12,10 @@ export class BookmarkFlowError extends Error {
         this.name = 'BookmarkProcessError';
     }
 }
+
+export class BookmarkProviderError extends Error {
+    constructor(message: string, options?: ErrorOptions) {
+        super(message, options);
+        this.name = 'BookmarkProviderError';
+    }
+}

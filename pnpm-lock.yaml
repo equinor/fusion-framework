@@ -803,18 +803,27 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-log':
+        specifier: workspace:^
+        version: link:../../utils/log
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
       '@equinor/fusion-query':
         specifier: workspace:^
         version: link:../../utils/query
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       bookmarks:
         specifier: link:@equinor/fusion-framework-module-services/src/bookmarks
         version: link:@equinor/fusion-framework-module-services/src/bookmarks
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
@@ -834,6 +843,9 @@ importers:
       typescript:
         specifier: ^5.4.2
         version: 5.4.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
 
   packages/modules/context:
     dependencies:
@@ -8683,6 +8695,9 @@ packages:
   yoctocolors@2.0.2:
     resolution: {integrity: sha512-Ct97huExsu7cWeEjmrXlofevF8CvzUglJ4iGUet5B8xn1oumtAZBpHU4GzYuoE6PVqcZ5hghtBrSlhwHuR1Jmw==}
     engines: {node: '>=18'}
+
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -18118,3 +18133,5 @@ snapshots:
   yocto-queue@1.0.0: {}
 
   yoctocolors@2.0.2: {}
+
+  zod@3.23.8: {}

@@ -8,7 +8,7 @@ import { ApiVersion } from '../static';
  * The `DeleteBookmarksApiModels` type is an object that maps API versions to their corresponding request and response types.
  */
 export type DeleteBookmarkApiModels = {
-    [ApiVersion.v1]: { request: { bookmarkId: string }; response: undefined };
+    [ApiVersion.v1]: { request: { bookmarkId: string }; response: boolean };
 };
 
 /**

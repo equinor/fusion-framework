@@ -12,6 +12,7 @@ import {
     catchError,
     distinctUntilChanged,
     filter,
+    map,
     mergeMap,
     observeOn,
     scan,
@@ -61,6 +62,8 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
         return this.#state.closed || this.#action.closed;
     }
 
+    constructor(reducer: ReducerWithInitialState<S, A>);
+    constructor(reducer: Reducer<S, A>, initialState: S);
     /**
      * Initializes a new instance of the FlowSubject class.
      *
@@ -71,11 +74,13 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
         super((subscriber) => {
             return this.#state.subscribe(subscriber);
         });
-        const initial =
+        initialState ??=
             'getInitialState' in reducer ? reducer.getInitialState() : (initialState as S);
-        this.#state = new BehaviorSubject(initial);
-        this.#action.pipe(scan(reducer, initial), distinctUntilChanged()).subscribe(this.#state);
-        this.reset = () => this.#state.next(initial);
+        this.#state = new BehaviorSubject(initialState);
+        this.#action
+            .pipe(scan(reducer, initialState), distinctUntilChanged())
+            .subscribe(this.#state);
+        this.reset = () => this.#state.next(initialState);
     }
 
     /**
@@ -90,6 +95,20 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
      */
     public next(action: A): void {
         this.#action.next(action);
+    }
+
+    /**
+     * Selects a derived state from the observable state and emits only when the selected state changes.
+     *
+     * @param selector - A function that takes the current state and returns a derived state.
+     * @param comparator - An optional function that compares the previous and current derived states to determine if a change has occurred.
+     * @returns An observable that emits the derived state whenever it changes.
+     */
+    public select<T>(
+        selector: (state: S) => T,
+        comparator?: (previous: T, current: T) => boolean,
+    ): Observable<T> {
+        return this.#state.pipe(map(selector), distinctUntilChanged(comparator));
     }
 
     /**

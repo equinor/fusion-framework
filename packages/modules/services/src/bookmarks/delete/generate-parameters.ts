@@ -1,7 +1,41 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ApiClientArguments } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ApiClientArguments } from '../types';
+import type { DeleteBookmarkApiVersion, DeleteBookmarkRequest } from './types';
+
+import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http';
 import { generateEndpoint } from './generate-endpoint';
-import { DeleteBookmarkApiVersion, DeleteBookmarkRequest } from './types';
+
+/**
+ * Generates the default parameters for a client request to delete a bookmark.
+ *
+ * The `selector` function checks the response status and returns `true` if the
+ * bookmark was successfully deleted. If the response is not successful, it
+ * throws an error with the appropriate error message and cause.
+ *
+ * @returns The default parameters for a client request to delete a bookmark.
+ */
+const defaultParams: ClientRequestInit<IHttpClient, boolean> = {
+    method: 'DELETE',
+    selector: async (res) => {
+        if (res.ok) {
+            return true;
+        }
+        const message = `Could not delete bookmark. Status code: ${res.status}`;
+        let cause: unknown;
+        let data: unknown;
+        switch (res.status) {
+            case 403:
+            case 404: {
+                try {
+                    data = await res.json();
+                } catch (error) {
+                    cause = error;
+                }
+            }
+        }
+        throw new HttpJsonResponseError(message, res, { cause, data });
+    },
+};
 
 /**
  * Generates the API client arguments for deleting bookmarks.
@@ -20,7 +54,7 @@ export const generateParameters = <TResult, TVersion extends DeleteBookmarkApiVe
 
     const requestParams: ClientRequestInit<IHttpClient, TResult> = Object.assign(
         {},
-        { method: 'Delete' },
+        defaultParams,
         init,
     );
 

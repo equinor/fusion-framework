@@ -4,18 +4,21 @@ import { module } from './module';
 import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 
 /**
- * Method for enabling Bookmark module
- * @param configurator - configuration object
+ * Enables the Bookmark module
+ *
+ * @param configurator - The configuration object for the modules.
+ * @param callback - An optional callback function that receives the `BookmarkModuleConfigurator` instance, allowing for further configuration.
  */
 export const enableBookmark = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configurator: IModulesConfigurator<any, any>,
-    builder?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
+    configurator: IModulesConfigurator,
+    callback?: (builder: BookmarkModuleConfigurator) => void | Promise<void>,
 ): void => {
     configurator.addConfig({
         module,
-        configure: (contextConfigurator) => {
-            builder && contextConfigurator.addConfigBuilder(builder);
+        configure: async (builder) => {
+            if (callback) {
+                Promise.resolve(callback(builder));
+            }
         },
     });
 };

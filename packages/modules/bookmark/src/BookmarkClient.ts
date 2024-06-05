@@ -13,12 +13,12 @@ import { Query } from '@equinor/fusion-query';
  */
 import type {
     BookmarksApiClient,
-    ApiBookmark_V1,
+    ApiBookmark,
 } from '@equinor/fusion-framework-module-services/bookmarks';
 
 import type { IBookmarkClient, BookmarksFilter } from './BookmarkClient.interface';
 
-import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark } from './types';
+import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark, PatchBookmark } from './types';
 /**
  * Normalizes an API bookmark entity into a `Bookmark` object.
  *
@@ -26,7 +26,7 @@ import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark } from './ty
  * @param res - The API bookmark entity to normalize.
  * @returns The normalized `Bookmark` object.
  */
-const normalizeBookmark = (res: ApiBookmark_V1): Bookmark =>
+const normalizeBookmark = (res: ApiBookmark<'v1'>): Bookmark =>
     ({
         appKey: res.appKey,
         id: res.id,
@@ -74,7 +74,7 @@ const normalizeBookmark = (res: ApiBookmark_V1): Bookmark =>
 export class BookmarkClient implements IBookmarkClient {
     #api: BookmarksApiClient<'json$'>;
 
-    #queryBookmark: Query<Bookmark, { id: string }>;
+    #queryBookmark: Query<Bookmark, { bookmarkId: string }>;
     #queryBookmarks: Query<Array<Bookmark>, BookmarksFilter | undefined>;
 
     /**
@@ -90,10 +90,10 @@ export class BookmarkClient implements IBookmarkClient {
         // set up the query for fetching a single bookmark
         this.#queryBookmark = new Query({
             client: {
-                fn: (args: { id: string }) =>
+                fn: (args: { bookmarkId: string }) =>
                     this.#api.get('v1', args).pipe(map(normalizeBookmark)),
             },
-            key: (args) => args.id,
+            key: (args) => args.bookmarkId,
             expire,
         });
 
@@ -103,7 +103,7 @@ export class BookmarkClient implements IBookmarkClient {
                 fn: (filter?: BookmarksFilter) =>
                     this.#api
                         .getAll('v1', { filter })
-                        .pipe(map((res) => res.result.map(normalizeBookmark))),
+                        .pipe(map((res) => res.map(normalizeBookmark))),
             },
             key: (args) => JSON.stringify(args),
             expire,
@@ -120,7 +120,7 @@ export class BookmarkClient implements IBookmarkClient {
     ): TExpand extends true
         ? ObservableInput<BookmarkWithData<TPayload>>
         : ObservableInput<Bookmark> {
-        const query$ = this.#queryBookmark.query({ id: bookmarkId }).pipe(map((res) => res.value));
+        const query$ = this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
         return includeData
             ? query$.pipe(
                   withLatestFrom(from(this.getBookmarkData<TPayload>(bookmarkId))),
@@ -132,7 +132,7 @@ export class BookmarkClient implements IBookmarkClient {
     public getBookmarkData<TPayload = unknown>(
         bookmarkId: string,
     ): ObservableInput<BookmarkData<TPayload>> {
-        return this.#api.getPayload('v1', { id: bookmarkId }).pipe(
+        return this.#api.getPayload('v1', { bookmarkId }).pipe(
             map((res) => {
                 const { id, context, payload } = res;
                 let data: TPayload | Error | undefined;
@@ -149,91 +149,64 @@ export class BookmarkClient implements IBookmarkClient {
     }
 
     public createBookmark<T>(bookmark: NewBookmark<T>): ObservableInput<BookmarkWithData<T>> {
-        return this.#api.post('v1', bookmark).pipe(
+        // convert the data to a string and remove the data property from the bookmark
+        const { data, ...rest } = bookmark;
+        const payload = data ? JSON.stringify(data) : undefined;
+        return this.#api.create('v1', { ...rest, payload: JSON.stringify(payload) }).pipe(
             map(normalizeBookmark),
-            map((res) => ({ ...res, data: bookmark.payload }) as BookmarkWithData<T>),
+            // add the bookmark to the cache
+            tap((updatedBookmark) => {
+                // Update the cache with the new bookmark value and timestamp
+                this.#queryBookmark.mutate(
+                    { bookmarkId: updatedBookmark.id },
+                    { value: updatedBookmark, updated: Date.now() },
+                );
+                // Invalidate the bookmarks query cache
+                this.#queryBookmarks.invalidate();
+            }),
+            // assume that the payload that we send is the data that we want to store
+            map((response) => ({ ...response, data: payload }) as BookmarkWithData<T>),
         );
     }
 
-    public updateBookmark<T = unknown>(
-        bookmark: Pick<Bookmark, 'id'> &
-            Partial<Pick<Bookmark, 'name' | 'description' | 'isShared' | 'sourceSystem'>> & {
-                payload?: T;
-            },
-    ): ObservableInput<Bookmark> {
-        return this.#api.patch('v1', bookmark).pipe(
-            map((updatedBookmark) => normalizeBookmark(updatedBookmark as ApiBookmark_V1)),
+    public updateBookmark<T = unknown>(bookmark: PatchBookmark<T>): ObservableInput<Bookmark> {
+        // convert the data to a string and remove the data property from the bookmark
+        const { data, ...rest } = bookmark;
+        const payload = data ? JSON.stringify(data) : undefined;
+
+        return this.#api.patch('v1', { ...rest, payload }).pipe(
+            // map api response to bookmark
+            map((updatedBookmark) => normalizeBookmark(updatedBookmark)),
+            // Update the query cache for the specific bookmark
             tap((updatedBookmark) => {
+                // Update the cache with the new bookmark value and timestamp
                 this.#queryBookmark.mutate(
-                    { id: updatedBookmark.id },
+                    { bookmarkId: updatedBookmark.id },
                     { value: updatedBookmark, updated: Date.now() },
                 );
+                // Invalidate the bookmarks query cache
                 this.#queryBookmarks.invalidate();
             }),
         );
     }
 
-    public deleteBookmark(id: string): ObservableInput<boolean> {
-        return this.#api.delete(
-            'v1',
-            { id },
-            {
-                selector: async (response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to delete bookmark');
-                    }
-                    return response.ok;
-                },
-            },
-        );
+    public deleteBookmark(bookmarkId: string): ObservableInput<boolean> {
+        return this.#api.delete('v1', { bookmarkId });
     }
 
     public addBookmarkToFavorites(bookmarkId: string): ObservableInput<boolean> {
         return this.#api
-            .addFavorite(
-                'v1',
-                { bookmarkId },
-                {
-                    selector: async (response) => {
-                        if (!response.ok) {
-                            throw new Error('Failed to add favorite');
-                        }
-                        return response.ok;
-                    },
-                },
-            )
+            .addFavourite('v1', { bookmarkId })
             .pipe(tap(() => this.#queryBookmarks.invalidate()));
     }
 
     public removeBookmarkFromFavorites(bookmarkId: string): ObservableInput<boolean> {
         return this.#api
-            .removeFavorite(
-                'v1',
-                { bookmarkId },
-                {
-                    selector: async (response) => {
-                        if (!response.ok) {
-                            throw new Error('Failed to remove favorite');
-                        }
-                        return response.ok;
-                    },
-                },
-            )
+            .removeFavourite('v1', { bookmarkId })
             .pipe(tap(() => this.#queryBookmarks.invalidate()));
     }
 
     public isBookmarkFavorite(bookmarkId: string): ObservableInput<boolean> {
-        return this.#api.verifyFavorite(
-            'v1',
-            { bookmarkId },
-            {
-                selector: async (response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to verify favorite');
-                    }
-                    return response.ok;
-                },
-            },
-        );
+        return this.#api.isFavorite('v1', { bookmarkId });
     }
 }

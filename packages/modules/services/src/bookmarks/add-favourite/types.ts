@@ -6,7 +6,7 @@ import { ApiVersion } from '../static';
  * Defines the API models for adding a favourite bookmark.
  */
 export type AddFavouriteBookmarkApiModels = {
-    [ApiVersion.v1]: { request: { bookmarkId: string }; response: undefined };
+    [ApiVersion.v1]: { request: { bookmarkId: string }; response: boolean };
 };
 
 /**
