@@ -1,3 +1,4 @@
+// Example of column definition
 export const defaultColDef = {
     resizable: true,
     filter: true,
