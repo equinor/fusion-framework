@@ -9,11 +9,11 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-import { actions } from './actions';
+import { Actions, actions } from './actions';
 import { WidgetStateInitial, WidgetState } from '../types';
 
 export const createReducer = (value: WidgetStateInitial) =>
-    makeReducer({ ...value, status: new Set() } as WidgetState, (builder) =>
+    makeReducer<WidgetState, Actions>({ ...value, status: new Set() } as WidgetState, (builder) =>
         builder
             .addCase(actions.setManifest, (state, action) => {
                 if (action.meta.update) {
@@ -33,11 +33,11 @@ export const createReducer = (value: WidgetStateInitial) =>
             })
             /** mark status as loading {{type}} */
             .addMatcher(isRequestAction, (state, action) => {
-                state.status.add(getBaseType(action));
+                state.status.add(getBaseType(action.type));
             })
             /** clear status {{type}} */
             .addMatcher(isCompleteAction, (state, action) => {
-                state.status.delete(getBaseType(action));
+                state.status.delete(getBaseType(action.type));
             }),
     );
 
