@@ -1,3 +1,4 @@
+// Example of side bar definition
 export const sideBar = {
     toolPanels: [
         {
