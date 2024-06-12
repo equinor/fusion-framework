@@ -1,14 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { Spinner } from './spinner.js';
 import { chalk } from './format.js';
-import { AppConfig } from '../../lib/app-config.js';
+import type { AppConfig } from '@equinor/fusion-framework-module-app';
 
-export type FusionEnv = 'ci' | 'fqa' | 'fprd';
+export type FusionEnv = 'ci' | 'fqa' | 'tr' | 'fprd';
 
 /* build api endpoint url */
 export const getEndpointUrl = async (
     endpoint: string,
     fusionEnv: FusionEnv,
+    service: string,
     version: string = '1.0-preview',
 ) => {
     const { CUSTOM_APPAPI, FUSION_CLI_ENV, FUSION_TOKEN } = process.env;
@@ -16,8 +17,8 @@ export const getEndpointUrl = async (
     const spinner = Spinner.Current;
 
     /* use consumer provided api url */
-    if (CUSTOM_APPAPI) {
-        return CUSTOM_APPAPI;
+    if (service || CUSTOM_APPAPI) {
+        return service ?? CUSTOM_APPAPI;
     }
 
     /* Env has changed get new api url */
@@ -89,10 +90,10 @@ export const validateToken = () => {
     return true;
 };
 
-export const appRegistered = async (appKey: string, env: FusionEnv) => {
+export const appRegistered = async (appKey: string, env: FusionEnv, service: string) => {
     const spinner = Spinner.Current;
 
-    const endpoint = await getEndpointUrl(`apps/${appKey}`, env);
+    const endpoint = await getEndpointUrl(`apps/${appKey}`, env, service);
     if (!endpoint) {
         return;
     }
@@ -127,7 +128,12 @@ export const appRegistered = async (appKey: string, env: FusionEnv) => {
     return await requestApp.json();
 };
 
-export const uploadAppBundle = async (appKey: string, bundle: string, env: FusionEnv) => {
+export const uploadAppBundle = async (
+    appKey: string,
+    bundle: string,
+    env: FusionEnv,
+    service: string,
+) => {
     const spinner = Spinner.Current;
 
     const state: { buffer: Buffer | null } = {
@@ -141,10 +147,12 @@ export const uploadAppBundle = async (appKey: string, bundle: string, env: Fusio
         return;
     }
 
-    const endpointUrl = await getEndpointUrl(`bundles/apps/${appKey}`, env);
+    const endpointUrl = await getEndpointUrl(`bundles/apps/${appKey}`, env, service);
     if (!endpointUrl) {
         return;
     }
+
+    spinner.info(`Posting bundle to => ${endpointUrl}`);
 
     const requestBundle = await fetch(endpointUrl, {
         method: 'POST',
@@ -178,14 +186,17 @@ export const tagAppBundle = async (
     appKey: string,
     version: string,
     env: FusionEnv,
+    service: string,
 ) => {
     const spinner = Spinner.Current;
 
-    const endpointUrl = await getEndpointUrl(`apps/${appKey}/tags/${tag}`, env);
+    const endpointUrl = await getEndpointUrl(`apps/${appKey}/tags/${tag}`, env, service);
     if (!endpointUrl) {
         return;
     }
-    console.log('enpoint', endpointUrl);
+
+    spinner.info(`Tagging in app api => ${endpointUrl}`);
+
     const requestTag = await fetch(endpointUrl, {
         method: 'PUT',
         body: JSON.stringify({ version }),
@@ -212,18 +223,25 @@ export const publishAppConfig = async (
     version: string,
     config: AppConfig,
     env: FusionEnv,
+    service: string,
 ) => {
     const spinner = Spinner.Current;
 
-    const isAppRegistered = appRegistered(appKey, env);
+    const isAppRegistered = appRegistered(appKey, env, service);
     if (!isAppRegistered) {
         return;
     }
 
-    const endpointUrl = await getEndpointUrl(`apps/${appKey}/builds/${version}/config`, env);
+    const endpointUrl = await getEndpointUrl(
+        `apps/${appKey}/builds/${version}/config`,
+        env,
+        service,
+    );
     if (!endpointUrl) {
         return;
     }
+
+    spinner.info(`Publishing app config to => ${endpointUrl}`);
 
     const requestConfig = await fetch(endpointUrl, {
         method: 'PUT',

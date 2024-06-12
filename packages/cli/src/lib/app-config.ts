@@ -11,19 +11,7 @@ import { AssertionError, assertObject } from './utils/assert.js';
 import { ResolvedAppPackage } from './app-package.js';
 import deepmerge from 'deepmerge/index.js';
 
-type Endpoints = {
-    name: string;
-    url: string;
-    scopes?: string[];
-};
-
-// TODO extend defined type in app-package
-export type AppConfig = {
-    /** application config */
-    environment?: Record<string, unknown>;
-    /** application urls @todo missing scope, use environment until further notice */
-    endpoints?: Endpoints[];
-};
+import type { AppConfig } from '@equinor/fusion-framework-module-app';
 
 type FindAppConfigOptions = FindConfigOptions & {
     file?: string;

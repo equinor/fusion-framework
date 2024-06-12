@@ -102,7 +102,14 @@ export default (program: Command) => {
             '-p, --publish <string>',
             `Publish app config to version [${chalk.yellowBright('(semver | current)')}]`,
         )
-        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .requiredOption(
+            '-e, --env, <ci | fqa | tr | fprd>',
+            'Fusion environment to build api urls from',
+        )
+        .option(
+            '-s, --service, <string>',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands',
+        )
         .addHelpText(
             'after',
             'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
@@ -113,6 +120,7 @@ export default (program: Command) => {
                 configFile: opt.config,
                 publish: opt.publish,
                 env: opt.env,
+                service: opt.service,
             });
         });
     app.command('manifest')
@@ -139,14 +147,21 @@ export default (program: Command) => {
             `Tagname to publish this build as [${chalk.yellowBright('(latest | preview)')}]`,
             'latest',
         )
-        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .requiredOption(
+            '-e, --env, <ci | fqa | tr | fprd>',
+            'Fusion environment to build api urls from',
+        )
+        .option(
+            '-s, --service, <string>',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands',
+        )
         .addHelpText(
             'after',
             'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action(async (opt) => {
-            const { tag, env } = opt;
-            publishApplication({ tag, env });
+            const { tag, env, service } = opt;
+            publishApplication({ tag, env, service });
         });
 
     app.command('upload')
@@ -155,14 +170,21 @@ export default (program: Command) => {
             'The packaged app bundle file to upload',
             'app-bundle.zip',
         )
-        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .requiredOption(
+            '-e, --env, <ci | fqa | tr | fprd>',
+            'Fusion environment to build api urls from',
+        )
+        .option(
+            '-s, --service, <string>',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands',
+        )
         .addHelpText(
             'after',
             'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
         )
         .action(async (opt) => {
-            const { bundle, env } = opt;
-            uploadApplication({ bundle, env });
+            const { bundle, env, service } = opt;
+            uploadApplication({ bundle, env, service });
         });
 
     app.command('tag')
@@ -175,13 +197,20 @@ export default (program: Command) => {
             '-v, --version, <string>',
             'Version number to tag, must be a published version number',
         )
-        .option('-e, --env, <string>', 'Fusion environment to build api urls from', 'ci')
+        .requiredOption(
+            '-e, --env, <ci | fqa | tr | fprd>',
+            'Fusion environment to build api urls from',
+        )
+        .option(
+            '-s, --service, <string>',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands',
+        )
         .addHelpText(
             'after',
-            'To use custom endpoints for app api, define env variable "CUSTOM_APPAPI" with the url to you desired app service, this command will then ignore the --env parameter',
+            'To use custom endpoints for app api provide the \'--service\' option to provide the endpoint. You can also define env variable "CUSTOM_APPAPI" with your endpoint to be used with all cli app commands.',
         )
         .action(async (opt) => {
-            const { tag, version, env } = opt;
-            tagApplication({ tag, version, env });
+            const { tag, version, env, service } = opt;
+            tagApplication({ tag, version, env, service });
         });
 };

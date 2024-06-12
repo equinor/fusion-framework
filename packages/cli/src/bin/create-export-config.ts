@@ -18,8 +18,9 @@ export const createExportConfig = async (options: {
     publish?: string;
     outputFile?: string;
     env: FusionEnv;
+    service: string;
 }) => {
-    const { command = 'build', outputFile, configFile, publish, env } = options;
+    const { command = 'build', outputFile, configFile, publish, env, service } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('config') });
 
@@ -72,7 +73,7 @@ export const createExportConfig = async (options: {
             return;
         }
 
-        const published = await publishAppConfig(appKey, version, config, env);
+        const published = await publishAppConfig(appKey, version, config, env, service);
         if (published) {
             spinner.succeed('✅', 'Published config to version', chalk.yellowBright(version));
         }

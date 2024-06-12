@@ -111,12 +111,21 @@ export const createDevServer = async (options: {
                             file: configSourceFiles.manifest,
                         });
                         response.entry = `/${entry}`;
+                        if (response.build) {
+                            response.build.entryPoint = `/${entry}`;
+                        }
                         return { response, path, statusCode: 200 };
                     } else if (data) {
                         const { manifest: response, path } = await createManifest(env, data, {
                             file: configSourceFiles.manifest,
                         });
+
+                        /* add package entry point for local development */
                         response.entry = `/${entry}`;
+                        if (response.build) {
+                            response.build.entryPoint = `/${entry}`;
+                        }
+
                         path && spinner.info('created manifest from ', formatPath(path));
                         return { response, path };
                     }
@@ -136,11 +145,19 @@ export const createDevServer = async (options: {
                 // If existing app, we need to change the entry-point.
                 if (atIndex > -1) {
                     data[atIndex].entry = `/${entry}`;
+                    data[atIndex].build = Object.assign(data[atIndex].build ?? {}, {
+                        entryPoint: `/${entry}`,
+                    });
                 } else {
                     const { manifest, path: manifestPath } = await loadAppManifest(env, pkg, {
                         file: configSourceFiles.manifest,
                     });
+
+                    /* add package entry point for local development */
                     manifest.entry = `/${entry}`;
+                    if (manifest.build) {
+                        manifest.build.entryPoint = `/${entry}`;
+                    }
                     path = manifestPath;
                     data.push(manifest);
                 }
