@@ -1,10 +1,11 @@
-import type { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
+import { ApplicationManifest } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AppBundleState<TConfig = any, TModules = any> = {
     appKey: string;
     status: Set<string>;
-    manifest?: AppManifest;
+    manifest?: ApplicationManifest;
     config?: AppConfig<TConfig>;
     modules?: AppScriptModule;
     instance?: AppModulesInstance<TModules>;

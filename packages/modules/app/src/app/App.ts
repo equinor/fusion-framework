@@ -1,4 +1,4 @@
-import { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
 import { FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
@@ -18,6 +18,7 @@ import { actions, Actions } from './actions';
 import { AppBundleState, AppBundleStateInitial } from './types';
 
 import './events';
+import { ApplicationManifest } from '../helpers';
 
 // TODO - move globally
 export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
@@ -35,7 +36,7 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
      * Returns an observable that emits the app manifest.
      * @returns An observable of type AppManifest.
      */
-    get manifest$(): Observable<AppManifest>;
+    get manifest$(): Observable<ApplicationManifest>;
 
     /**
      * Observable that emits the configuration of the app.
@@ -71,13 +72,13 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
      * Gets the manifest of the app.
      * @returns The manifest of the app, or undefined if it doesn't exist.
      */
-    get manifest(): AppManifest | undefined;
+    get manifest(): Readonly<ApplicationManifest> | undefined;
 
     /**
      * Retrieves the manifest asynchronously.
      * @returns A promise that resolves to the AppManifest.
      */
-    get manifestAsync(): Promise<AppManifest>;
+    get manifestAsync(): Promise<Readonly<ApplicationManifest>>;
 
     /**
      * Gets the configuration of the app.
@@ -107,7 +108,7 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
      * ```
      */
     initialize(): Observable<{
-        manifest: AppManifest;
+        manifest: ApplicationManifest;
         script: AppScriptModule;
         config: AppConfig;
     }>;
@@ -147,14 +148,14 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
      * @param force_refresh Whether to force refreshing the manifest.
      * @returns An observable that emits the app manifest.
      */
-    getManifest(force_refresh?: boolean): Observable<AppManifest>;
+    getManifest(force_refresh?: boolean): Observable<ApplicationManifest>;
 
     /**
      * Retrieves the app manifest asynchronously.
      * @param allow_cache Whether to allow loading from cache.
      * @returns A promise that resolves to the AppManifest.
      */
-    getManifestAsync(allow_cache?: boolean): Promise<AppManifest>;
+    getManifestAsync(allow_cache?: boolean): Promise<ApplicationManifest>;
 
     /**
      * Gets the app module.
@@ -180,7 +181,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     //#region === streams ===
 
-    get manifest$(): Observable<AppManifest> {
+    get manifest$(): Observable<ApplicationManifest> {
         return this.#state.pipe(
             map(({ manifest }) => manifest),
             filterEmpty(),
@@ -219,11 +220,11 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         return this.#state.value.appKey;
     }
 
-    get manifest(): Readonly<AppManifest> | undefined {
+    get manifest(): Readonly<ApplicationManifest> | undefined {
         return this.state.manifest;
     }
 
-    get manifestAsync(): Promise<Readonly<AppManifest>> {
+    get manifestAsync(): Promise<Readonly<ApplicationManifest>> {
         return firstValueFrom(this.manifest$);
     }
 
@@ -402,7 +403,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     }
 
     public initialize(): Observable<{
-        manifest: AppManifest;
+        manifest: ApplicationManifest;
         script: AppScriptModule;
         config: AppConfig;
     }> {
@@ -445,20 +446,20 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         this.#state.next(actions.fetchManifest(this.appKey, update));
     }
 
-    public updateManifest(manifest: AppManifest, replace?: false) {
+    public updateManifest(manifest: ApplicationManifest, replace?: false) {
         this.#state.next(actions.setManifest(manifest, !replace));
     }
 
     public async loadAppModule(allow_cache = true) {
         const manifest = await this.getManifestAsync(allow_cache);
-        if (!manifest.entry) {
+        if (!manifest.build.entryPoint) {
             console.log(
-                `The ${manifest.key} is missing entry point, please upload a build for the app before continuing`,
+                `The ${manifest.key} is missing entryPoint, please upload a build for the app before continuing`,
             );
             return;
         }
 
-        this.#state.next(actions.importApp(manifest.entry));
+        this.#state.next(actions.importApp(manifest.build.entryPoint));
     }
 
     public getConfig(force_refresh = false): Observable<AppConfig> {
@@ -513,7 +514,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         return operator(this.getConfig(!allow_cache));
     }
 
-    public getManifest(force_refresh = false): Observable<AppManifest> {
+    public getManifest(force_refresh = false): Observable<ApplicationManifest> {
         return new Observable((subscriber) => {
             if (this.#state.value.manifest) {
                 // emit current manifest to the subscriber
@@ -557,7 +558,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         });
     }
 
-    public getManifestAsync(allow_cache = true): Promise<AppManifest> {
+    public getManifestAsync(allow_cache = true): Promise<ApplicationManifest> {
         // when allow_cache is true, use first emitted value, otherwise use last emitted value
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
         return operator(this.getManifest(!allow_cache));
@@ -609,14 +610,14 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 // fetch application latest manifest and request loading of the application script
                 this.getManifest().subscribe((manifest) => {
-                    if (!manifest.entry) {
+                    if (!manifest.build.entryPoint) {
                         console.error(
                             `The ${manifest.key} app is missing a entry in the manifest, upload a build for your app before continuing`,
                         );
                         return;
                     }
                     // dispatch import_app action to load the application script
-                    this.#state.next(actions.importApp(manifest.entry));
+                    this.#state.next(actions.importApp(manifest.build.entryPoint));
                 }),
             );
         });

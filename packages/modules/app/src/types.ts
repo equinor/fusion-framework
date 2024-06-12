@@ -4,6 +4,7 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import IApp from './app';
+import { ApplicationManifest } from './helpers';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +12,7 @@ type Fusion = any;
 
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     basename?: string;
-    manifest?: AppManifest;
+    manifest?: ApplicationManifest;
     config?: AppConfig<TConfig>;
     props?: TProps;
 };
@@ -122,7 +123,7 @@ export type AppConfig<TEnvironment = unknown> = {
  * @template TModule - ES module type (import return type)
  */
 export type AppBundle<TEnvironment = unknown, TModule = unknown> = {
-    manifest: AppManifest;
+    manifest: ApplicationManifest;
     config: AppConfig<TEnvironment>;
     module: TModule;
 };
@@ -147,11 +148,13 @@ export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unk
 
 export type ApiAppVersionConfig = {
     environment: string;
-    endpoints: {
-        name: string;
-        url: string;
-        scopes: string[];
-    }[];
+    endpoints: Record<
+        string,
+        {
+            url: string;
+            scopes: string[];
+        }
+    >;
 };
 
 export type ApiApp = {

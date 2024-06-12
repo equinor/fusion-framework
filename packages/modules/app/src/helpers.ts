@@ -1,20 +1,5 @@
 import type { AppManifest, ApiApp, AppOwnerOrAdmin, AppBuild, AzureId } from './types';
 
-// manifest properties to compare
-const compareKey: Array<keyof AppManifest> = ['key', 'version'];
-
-/**
- * Compares two app manifests for equality.
- *
- * @template T - The type of the app manifest.
- * @param a - The first app manifest.
- * @param b - The second app manifest.
- * @returns True if the app manifests are equal, false otherwise.
- */
-export const compareAppManifest = <T extends AppManifest>(a?: T, b?: T): boolean => {
-    // use compareKey to compare only the keys that are important for equality
-    return compareKey.every((key) => a?.[key] === b?.[key]);
-};
 export class ApplicationManifest implements AppManifest {
     constructor(protected model: ApiApp) {}
 
@@ -75,6 +60,16 @@ export class ApplicationManifest implements AppManifest {
 
     get visualization() {
         return this.model.visualization;
+    }
+
+    /**
+     * The app build version
+     * @see {@link ApplicationManifest.build.version}
+     * @deprecated use build.version instead
+     * @since 5.3.6
+     */
+    get version() {
+        return this.build.version;
     }
 
     /**
@@ -168,7 +163,6 @@ export class ApplicationManifest implements AppManifest {
     }
 
     /**
-     * 
      * @see {@link ApplicationManifest.build}
      * @deprecated use tags from build
      * @since v5.3.6

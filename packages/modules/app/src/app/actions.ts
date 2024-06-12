@@ -4,23 +4,27 @@ import {
     createAction,
     createAsyncAction,
 } from '@equinor/fusion-observable';
-import { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
+import { ApplicationManifest } from '../helpers';
 
 const createActions = () => ({
     /** Manifest loading */
-    setManifest: createAction('set_manifest', (manifest: AppManifest, update?: boolean) => ({
-        payload: manifest,
-        meta: {
-            // TODO when updating
-            created: Date.now(),
-            update,
-        },
-    })),
+    setManifest: createAction(
+        'set_manifest',
+        (manifest: ApplicationManifest, update?: boolean) => ({
+            payload: manifest,
+            meta: {
+                // TODO when updating
+                created: Date.now(),
+                update,
+            },
+        }),
+    ),
 
     fetchManifest: createAsyncAction(
         'fetch_manifest',
         (key: string, update?: boolean) => ({ payload: key, meta: { update } }),
-        (manifest: AppManifest) => ({ payload: manifest }),
+        (manifest: ApplicationManifest) => ({ payload: manifest }),
         (error: unknown) => ({ payload: error }),
     ),
     /** Config loading */
