@@ -2,6 +2,8 @@ import deepmerge from 'deepmerge';
 
 import { ResolvedAppPackage, resolveAppKey, resolveEntryPoint } from './app-package.js';
 
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
+
 import {
     loadConfig,
     initiateConfig,
@@ -13,26 +15,6 @@ import {
 
 import { AssertionError, assert, assertObject } from './utils/assert.js';
 import { RecursivePartial } from './utils/types.js';
-
-export type AppManifest = {
-    // version: {
-    //     major: number;
-    //     minor: number;
-    //     patch: number;
-    // };
-    version: string;
-    key: string;
-    entry: string;
-    name: string;
-    shortName: string;
-    description?: string;
-    admins?: string[];
-    owners?: string[];
-    main?: string;
-    icon?: string;
-    /** this will be deprecated when new app management is live  */
-    resource?: string[];
-};
 
 export type AppManifestFn = (
     env: ConfigExecuterEnv,
