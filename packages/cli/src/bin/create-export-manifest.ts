@@ -13,7 +13,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
-import type { AppManifest } from '../lib/app-manifest.js';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 // TODO  why do we do this??? can`t backend parse semver?
 export const normalizeVersion = (version: string) => {
@@ -68,7 +68,7 @@ export const createExportManifest = async (options?: {
         entryPoint: 'app-bundle.js',
         commitSha,
         githubRepo,
-        timestamp: new Date().toDateString(),
+        timestamp: new Date().toISOString(),
     };
 
     if (outputFile) {
