@@ -21,7 +21,7 @@ export const createReducer = (value: AppBundleStateInitial) =>
                 // update or set manifest
                 .addCase(actions.setManifest, (state, action) => {
                     if (action.meta.update) {
-                        state.manifest = { ...state.manifest, ...action.payload };
+                        state.manifest = Object.assign(state.manifest ?? {}, action.payload);
                     } else {
                         state.manifest = action.payload;
                     }

@@ -9,14 +9,14 @@ import type { QueryCtorOptions } from '@equinor/fusion-query';
 
 import { moduleKey } from './module';
 
+import type { AppConfig, ApiApp, ApiAppVersionConfig } from './types';
 import { ApplicationManifest } from './helpers';
-import type { AppConfig, AppManifest, ApiApp, ApiAppVersionConfig } from './types';
 import { map } from 'rxjs/operators';
 
 export interface AppModuleConfig {
     client: {
-        getAppManifest: QueryCtorOptions<AppManifest, { appKey: string }>;
-        getAppManifests: QueryCtorOptions<AppManifest[], void>;
+        getAppManifest: QueryCtorOptions<ApplicationManifest, { appKey: string }>;
+        getAppManifests: QueryCtorOptions<ApplicationManifest[], void>;
         getAppConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
     };
     baseUrl?: string;
@@ -103,24 +103,9 @@ export class AppConfigurator
                     getAppConfig: {
                         client: {
                             fn: ({ appKey, tag = 'latest' }) =>
-                                httpClient
-                                    .json$<ApiAppVersionConfig>(
-                                        `/apps-proxy/apps/${appKey}/builds/${tag}/config`,
-                                    )
-                                    .pipe(
-                                        map((x) => {
-                                            const { endpoints, ...rest } = x;
-                                            const t = {
-                                                ...rest,
-                                                endpoints: endpoints.reduce(
-                                                    (acc, curr) =>
-                                                        Object.assign(acc, { [curr.name]: curr }),
-                                                    {},
-                                                ),
-                                            };
-                                            return t;
-                                        }),
-                                    ),
+                                httpClient.json$<ApiAppVersionConfig>(
+                                    `/apps-proxy/apps/${appKey}/builds/${tag}/config`,
+                                ),
                         },
                         key: (args) => JSON.stringify(args),
                         expire: this.defaultExpireTime,
