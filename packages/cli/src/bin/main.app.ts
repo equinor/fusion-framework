@@ -102,13 +102,13 @@ export default (program: Command) => {
             '-p, --publish <string>',
             `Publish app config to version [${chalk.yellowBright('(semver | current)')}]`,
         )
-        .requiredOption(
+        .option(
             '-e, --env, <ci | fqa | tr | fprd>',
-            'Fusion environment to build api urls from',
+            'Fusion environment to build api urls from. used when publishing config.',
         )
         .option(
             '-s, --service, <string>',
-            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands. used when publishing config',
         )
         .addHelpText(
             'after',
