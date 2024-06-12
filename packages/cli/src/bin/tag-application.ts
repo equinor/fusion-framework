@@ -12,8 +12,9 @@ export const tagApplication = async (options: {
     tag: keyof typeof Tags;
     version: string;
     env: FusionEnv;
+    service: string;
 }) => {
-    const { tag, version, env } = options;
+    const { tag, version, env, service } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('Tag') });
 
@@ -34,12 +35,12 @@ export const tagApplication = async (options: {
     spinner.info(`Tag app "${appKey}@${version}" with: "${tag}"`);
 
     spinner.info('Verifying that App is registered');
-    const registered = await appRegistered(appKey, env);
+    const registered = await appRegistered(appKey, env, service);
     if (!registered) {
         return;
     }
 
-    const tagd = await tagAppBundle(tag, appKey, version, env);
+    const tagd = await tagAppBundle(tag, appKey, version, env, service);
 
     if (!tagd) {
         return;

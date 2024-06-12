@@ -451,6 +451,13 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     public async loadAppModule(allow_cache = true) {
         const manifest = await this.getManifestAsync(allow_cache);
+        if (!manifest.entry) {
+            console.log(
+                `The ${manifest.key} is missing entry point, please upload a build for the app before continuing`,
+            );
+            return;
+        }
+
         this.#state.next(actions.importApp(manifest.entry));
     }
 
@@ -602,6 +609,12 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 // fetch application latest manifest and request loading of the application script
                 this.getManifest().subscribe((manifest) => {
+                    if (!manifest.entry) {
+                        console.error(
+                            `The ${manifest.key} app is missing a entry in the manifest, upload a build for your app before continuing`,
+                        );
+                        return;
+                    }
                     // dispatch import_app action to load the application script
                     this.#state.next(actions.importApp(manifest.entry));
                 }),
