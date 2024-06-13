@@ -3,7 +3,7 @@ import type { AppManifest, ApiApp, AppOwnerOrAdmin, AppBuild, AzureId } from './
 export class ApplicationManifest implements AppManifest {
     constructor(protected model: ApiApp) {}
 
-    #convertAzureId(user: AppOwnerOrAdmin) {
+    protected convertAzureId(user: AppOwnerOrAdmin) {
         const { azureUniqueId: azureId, ...rest } = user;
         return {
             azureId,
@@ -12,11 +12,11 @@ export class ApplicationManifest implements AppManifest {
     }
 
     get admins() {
-        return this.model.admins?.map(this.#convertAzureId);
+        return this.model.admins?.map(this.convertAzureId);
     }
 
     get owners() {
-        return this.model.owners?.map(this.#convertAzureId);
+        return this.model.owners?.map(this.convertAzureId);
     }
 
     get key() {

@@ -5,7 +5,7 @@ import {
     createAsyncAction,
 } from '@equinor/fusion-observable';
 import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
-import { ApplicationManifest } from '../helpers';
+import { ApplicationManifest } from '../ApplicationManifest';
 
 const createActions = () => ({
     /** Manifest loading */

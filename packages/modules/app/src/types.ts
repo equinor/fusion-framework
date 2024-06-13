@@ -4,7 +4,7 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import IApp from './app';
-import { ApplicationManifest } from './helpers';
+import { ApplicationManifest } from './ApplicationManifest';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
