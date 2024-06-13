@@ -8,6 +8,8 @@ export { AppModuleProvider } from './AppModuleProvider';
 
 export { IApp } from './app/App';
 
+export { ApplicationManifest } from './ApplicationManifest';
+
 export * from './events';
 export * from './types';
 

@@ -10,7 +10,7 @@ import type { QueryCtorOptions } from '@equinor/fusion-query';
 import { moduleKey } from './module';
 
 import type { AppConfig, ApiApp, ApiAppVersionConfig } from './types';
-import { ApplicationManifest } from './helpers';
+import { ApplicationManifest } from './ApplicationManifest';
 import { map } from 'rxjs/operators';
 
 export interface AppModuleConfig {

@@ -18,7 +18,7 @@ import { actions, Actions } from './actions';
 import { AppBundleState, AppBundleStateInitial } from './types';
 
 import './events';
-import { ApplicationManifest } from '../helpers';
+import { ApplicationManifest } from '../ApplicationManifest';
 
 // TODO - move globally
 export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {

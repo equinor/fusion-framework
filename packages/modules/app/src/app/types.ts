@@ -1,5 +1,5 @@
 import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
-import { ApplicationManifest } from '../helpers';
+import { ApplicationManifest } from '../ApplicationManifest';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AppBundleState<TConfig = any, TModules = any> = {
