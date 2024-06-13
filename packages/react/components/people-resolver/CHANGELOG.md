@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.4.1
+
+### Patch Changes
+
+-   [#2270](https://github.com/equinor/fusion-framework/pull/2270) [`b739416`](https://github.com/equinor/fusion-framework/commit/b7394165a573e545152cfcedc2ddae186ec94112) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Update fusion-wc-person to resolve issue with positioning
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react@7.1.1
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.10
+    -   @equinor/fusion-query@5.0.5
+    -   @equinor/fusion-framework-module-services@4.1.0
+
 ## 1.4.0
 
 ### Minor Changes

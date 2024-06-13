@@ -1,5 +1,12 @@
 # Change Log
 
+## 8.3.2
+
+### Patch Changes
+
+-   [#2235](https://github.com/equinor/fusion-framework/pull/2235) [`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb) Thanks [@odinr](https://github.com/odinr)! - - **Refactored**: The `actionBaseType` function has been renamed to `getBaseType` and its implementation has been updated.
+    -   **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
+
 ## 8.3.1
 
 ### Patch Changes
