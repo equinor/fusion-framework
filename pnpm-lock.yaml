@@ -786,9 +786,6 @@ importers:
 
   packages/modules/app:
     dependencies:
-      '@equinor/fusion-log':
-        specifier: workspace:^
-        version: link:../../utils/log
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
