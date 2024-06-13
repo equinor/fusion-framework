@@ -1,5 +1,20 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+-   [#2235](https://github.com/equinor/fusion-framework/pull/2235) [`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb) Thanks [@odinr](https://github.com/odinr)! - - **Refactored**: The `actionBaseType` function has been renamed to `getBaseType` and its implementation has been updated.
+
+    -   **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
+
+-   [#2248](https://github.com/equinor/fusion-framework/pull/2248) [`da9dd83`](https://github.com/equinor/fusion-framework/commit/da9dd83c9352def5365b6c962dc8443589ac9526) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - #2235 renamed a method and changed type. This PR forgot to change to the correct param when using this method. Fixes typo - update to use actions `type` in the reducer.
+
+-   Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb)]:
+    -   @equinor/fusion-observable@8.3.2
+    -   @equinor/fusion-query@5.0.5
+    -   @equinor/fusion-framework-module-service-discovery@7.1.9
+
 ## 5.0.0
 
 ### Patch Changes

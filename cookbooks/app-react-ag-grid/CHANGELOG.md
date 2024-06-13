@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+-   [#2240](https://github.com/equinor/fusion-framework/pull/2240) [`211be8f`](https://github.com/equinor/fusion-framework/commit/211be8f24265725cc37b3b067109f6d99827ae7e) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Update cookbook with new look and latest AgGrid version
+
+### Patch Changes
+
+-   [#2247](https://github.com/equinor/fusion-framework/pull/2247) [`1b11082`](https://github.com/equinor/fusion-framework/commit/1b1108256c7a0d4c9d69bb813c22e9c4c673b2c3) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Add code comment
+
 ## 0.2.3
 
 ### Patch Changes
