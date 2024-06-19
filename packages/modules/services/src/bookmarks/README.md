@@ -53,9 +53,11 @@ To update an existing bookmark, use the `patch` method.
 
 ```typescript
 const updatedBookmark = await bookmarksClient.patch('v1', {
-    id: 'bookmark-id',
-    name: 'Updated Bookmark Name',
-    payload: { key: 'new value' },
+    bookmarkId: 'bookmark-id',
+    data: {
+        name: 'Updated Bookmark Name',
+        payload: { key: 'new value' },
+    }
 });
 console.log(updatedBookmark);
 ```
@@ -64,7 +66,7 @@ console.log(updatedBookmark);
 To delete a bookmark by its ID, use the `delete` method.
 
 ```typescript
-const deletedBookmarkId = await bookmarksClient.delete('v1', { id: 'bookmark-id' });
+const deletedBookmarkId = await bookmarksClient.delete('v1', { bookmarkId: 'bookmark-id' });
 console.log(`Deleted bookmark with ID: ${deletedBookmarkId}`);
 ```
 
@@ -83,6 +85,6 @@ await bookmarksClient.removeFavorite('v1', { bookmarkId: 'bookmark-id' });
 To fetch the payload of a specific bookmark, use the `getPayload` method.
 
 ```typescript
-const bookmarkPayload = await bookmarksClient.getPayload('v1', { id: 'bookmark-id' });
+const bookmarkPayload = await bookmarksClient.getPayload('v1', { bookmarkId: 'bookmark-id' });
 console.log(bookmarkPayload);
 ```

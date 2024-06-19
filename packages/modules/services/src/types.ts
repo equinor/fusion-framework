@@ -32,20 +32,10 @@ export type ApiClientArguments<TClient extends IHttpClient, TResult = unknown> =
  * Execute methods on the IHttpClient
  */
 export type ClientMethod<T = unknown> = {
-    // /**
-    //  * Fetch data async
-    //  * NOTE: data needs to be extracted from the response
-    //  */
-    // fetch: Promise<FetchResponse<T>>;
     /**
      * Fetch JSON data from a service
      */
     json: Promise<T>;
-    // /**
-    //  * Fetch data as an observable
-    //  * NOTE: data needs to be extracted from the response
-    //  */
-    // fetch$: StreamResponse<FetchResponse<T>>;
     /**
      * Fetch JSON data from a service as observable
      */
