@@ -1,4 +1,4 @@
 export { BookmarksApiClient, default } from './client';
-export { ApiVersion } from './static';
-export type * from './api-models';
+export { ApiVersion } from './api-version';
+export type * from './schemas';
 export type * from './types';
