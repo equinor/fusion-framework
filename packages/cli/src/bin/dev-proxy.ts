@@ -1,5 +1,7 @@
 import express, { type Request, type Express } from 'express';
 
+import cors from 'cors';
+
 import {
     createProxyMiddleware,
     responseInterceptor,
@@ -14,8 +16,8 @@ import chalk, { formatPath } from './utils/format.js';
 type ProxyHandlerResult<T> = { response?: T; statusCode?: number; path?: string } | void;
 type ProxyHandlerReturn<T> = Promise<ProxyHandlerResult<T>> | ProxyHandlerResult<T>;
 
-const appsProxyName = 'apps-proxy';
-const appsProxyURI = 'https://fusion-s-apps-ci.azurewebsites.net/';
+const appServiceName = 'apps';
+const appServiceURI = 'https://fusion-s-apps-ci.azurewebsites.net/';
 
 type Slug = { appKey: string };
 export interface ProxyHandler {
@@ -49,7 +51,7 @@ const createResponseInterceptor = <TArgs, TType>(
                     proxyRes,
                     // might check??
                     Number(proxyRes.statusCode) < 400 &&
-                        JSON.parse(responseBuffer.toString('utf8')),
+                         JSON.parse(responseBuffer.toString('utf8')),
                 ),
             )) ?? {};
         if (statusCode) {
@@ -68,40 +70,40 @@ export const createDevProxy = (
     handler: ProxyHandler,
     options: Pick<ProxyOptions, 'target'> & {
         staticAssets?: { path: string; options?: Parameters<typeof express.static>[1] }[];
+        port?: number;
     },
 ): Express => {
-    const proxyOptions: ProxyOptions = Object.assign(
-        {
-            changeOrigin: true,
-            selfHandleResponse: true,
-            onProxyReq: (proxyReq) => {
-                // @TODO: Update version when app api is published
-                proxyReq.appendHeader('api-version', '1.0-preview');
-                const spinner = Spinner.Clone();
-                spinner.ora.suffixText = formatPath(
-                    [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
-                );
-                spinner.start('proxy request');
-                proxyReq.on('response', (res) => {
-                    if (Number(res.statusCode) < 400) {
-                        spinner.succeed();
-                    } else {
-                        spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
-                    }
-                    spinner.stop();
-                });
-                proxyReq.on('error', () => {
-                    spinner.fail();
-                });
-            },
-        } satisfies ProxyOptions,
-        { staticAssets: options.staticAssets },
-    );
+    const proxyOptions: ProxyOptions = Object.assign({
+        changeOrigin: true,
+        selfHandleResponse: true,
+        onProxyReq: (proxyReq) => {
+            const spinner = Spinner.Clone();
+            spinner.ora.suffixText = formatPath(
+                [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
+            );
+            spinner.start('proxy request');
+            proxyReq.on('response', (res) => {
+                if (Number(res.statusCode) < 400) {
+                    spinner.succeed();
+                } else {
+                    spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
+                }
+                spinner.stop();
+            });
+            proxyReq.on('error', () => {
+                spinner.fail();
+            });
+        },
+    } satisfies ProxyOptions);
 
     const app = express();
 
-    app.disable('x-powered-by');
+    // create a proxi for calling apps-service
+    const proxyApi = express();
+    const appServicePort = 3031;
+    proxyApi.use(cors({ origin: `http://localhost:${options.port ?? 3000}` }));
 
+    app.disable('x-powered-by');
     options.staticAssets?.forEach((asset) => {
         app.use(express.static(asset.path, asset.options));
     });
@@ -110,31 +112,34 @@ export const createDevProxy = (
         '/_discovery/environments/current',
         createProxyMiddleware({
             target: options.target,
-            ...proxyOptions,
+            ...{ ...proxyOptions, staticAssets: options.staticAssets },
             onProxyRes: responseInterceptor(async (responseBuffer, _proxyRes, req) => {
                 const response = JSON.parse(responseBuffer.toString('utf8'));
                 response.environmentName = 'DEVELOPMENT';
+                const apiProxy = new URL(new URL('/', req.headers.referer).href);
+                apiProxy.port = String(appServicePort);
+
                 // find the key for apps-proxy
                 const appProxy = response.services.find(
-                    (x: { key: string }) => x.key === appsProxyName,
+                    (x: { key: string }) => x.key === appServiceName,
                 );
                 if (appProxy) {
-                    appProxy.uri = appsProxyURI;
+                    appProxy.uri = appServiceURI;
                     /* Remove apps-proxy from service response */
                     response.services = response.services.filter(
-                        (x: { key: string }) => x.key !== appsProxyName,
+                        (x: { key: string }) => x.key !== appServiceName,
                     );
                     /** refer service [app] to vite middleware */
                     response.services.push({
                         ...appProxy,
-                        uri: new URL('/', req.headers.referer).href,
+                        uri: apiProxy.href,
                     });
                 } else {
                     response.services.push({
-                        key: appsProxyName,
+                        key: appServiceName,
                         type: 'Service',
                         serviceName: null,
-                        uri: new URL('/', req.headers.referer).href,
+                        uri: apiProxy.href,
                         internal: false,
                     });
                 }
@@ -144,35 +149,30 @@ export const createDevProxy = (
     );
 
     /* The order of the use statements is important since we need the most specific to trigger first */
-    app.use(
-        `/apps-proxy/apps/:appKey/builds/:tag/config`,
+    proxyApi.use(
+        `/apps/:appKey/builds/:tag/config`,
         createProxyMiddleware({
-            pathRewrite: { '^/apps-proxy': '' },
             ...proxyOptions,
-            target: appsProxyURI,
+            target: appServiceURI,
             onProxyRes: createResponseInterceptor(handler.onConfigResponse),
         }),
     );
 
-    app.use(
-        `/apps-proxy/apps/:appKey`,
+    proxyApi.get(
+        `/apps/:appKey`,
         createProxyMiddleware({
-            pathRewrite: { '^/apps-proxy': '' },
             ...proxyOptions,
-            target: appsProxyURI,
+            target: appServiceURI,
             onProxyRes: createResponseInterceptor(handler.onManifestResponse),
         }),
     );
 
-    app.use(
-        `/apps-proxy/apps`,
-        createProxyMiddleware({
-            pathRewrite: { '^/apps-proxy': '' },
-            ...proxyOptions,
-            target: appsProxyURI,
-            onProxyRes: createResponseInterceptor(handler.onManifestListResponse),
-        }),
-    );
+    proxyApi.listen(appServicePort, () => {
+        console.log(
+            chalk.green(`[apps-service]`),
+            `Proxying to ${chalk.blue(appServiceURI)} on port ${chalk.blue(appServicePort)}`,
+        );
+    });
 
     return app;
 };

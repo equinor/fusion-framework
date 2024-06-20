@@ -30,6 +30,7 @@ export class AppModuleProvider {
 
     public appClient: Query<ApplicationManifest, { appKey: string }>;
     #appsClient: Query<ApplicationManifest[], void>;
+    #myAppsClient: Query<ApplicationManifest[], void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
@@ -70,10 +71,12 @@ export class AppModuleProvider {
 
         this.appClient = new Query(config.client.getAppManifest);
         this.#appsClient = new Query(config.client.getAppManifests);
+        this.#myAppsClient = new Query(config.client.getMyAppManifests);
         this.#configClient = new Query(config.client.getAppConfig);
 
         this.#subscription.add(() => this.appClient.complete());
         this.#subscription.add(() => this.#appsClient.complete());
+        this.#subscription.add(() => this.#myAppsClient.complete());
         this.#subscription.add(() => this.#configClient.complete());
         this.#subscription.add(
             this.current$
@@ -127,6 +130,13 @@ export class AppModuleProvider {
      */
     public getAllAppManifests(): Observable<ApplicationManifest[]> {
         return Query.extractQueryValue(this.#appsClient.query());
+    }
+
+    /**
+     * fetch all current users applications
+     */
+    public getMyAppManifests(): Observable<ApplicationManifest[]> {
+        return Query.extractQueryValue(this.#myAppsClient.query());
     }
 
     /**

@@ -13,7 +13,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
-import type { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifestExport } from '../lib/app-manifest.js';
 
 // TODO  why do we do this??? can`t backend parse semver?
 export const normalizeVersion = (version: string) => {
@@ -24,18 +24,11 @@ export const normalizeVersion = (version: string) => {
     return { major, minor, patch };
 };
 
-type AppManifestExport = AppManifest & {
-    entryPoint: string;
-    commitSha?: string;
-    githubRepo?: string;
-    timestamp?: string;
-};
-
 export const createExportManifest = async (options?: {
     command?: ConfigExecuterEnv['command'];
     configFile?: string;
     outputFile?: string;
-}) => {
+}): Promise<AppManifestExport> => {
     const { command = 'build', outputFile } = options ?? {};
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('manifest') });
@@ -52,24 +45,14 @@ export const createExportManifest = async (options?: {
         file: options?.configFile,
     });
 
-    const commitSha = execSync('git rev-parse HEAD').toString().trim();
-    const repoUrl = execSync('git remote get-url origin').toString().trim();
-
-    const githubRepo = repoUrl
-        ? repoUrl.indexOf('git') === 0
-            ? encodeURIComponent(
-                  repoUrl.replace('git@github.com:', 'https://github.com/').replace('.git', ''),
-              )
-            : encodeURIComponent(repoUrl)
-        : '';
-
-    const manifestExport: AppManifestExport = {
-        ...manifest,
-        entryPoint: 'app-bundle.js',
-        commitSha,
-        githubRepo,
-        timestamp: new Date().toISOString(),
-    };
+    // TODO - mutation is the mother of all f* ups
+    manifest.githubRepo ??= execSync('git remote get-url origin')
+        .toString()
+        .trim()
+        .replace('git@github.com:', 'https://github.com/')
+        .replace(/.git$/, '');
+    manifest.commitSha = execSync('git rev-parse HEAD').toString().trim();
+    manifest.timestamp = new Date().toISOString();
 
     if (outputFile) {
         spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
@@ -78,16 +61,16 @@ export const createExportManifest = async (options?: {
             if (!nodeFs.existsSync(dirname(outputFile))) {
                 nodeFs.mkdirSync(dir, { recursive: true });
             }
-            await writeFile(outputFile, JSON.stringify(manifestExport));
+            await writeFile(outputFile, JSON.stringify(manifest));
             spinner.succeed();
         } catch (err) {
             spinner.fail();
             throw err;
         }
     } else {
-        console.log(manifestExport);
+        console.log(manifest);
     }
-    return manifestExport;
+    return manifest;
 };
 
 export default createExportManifest;

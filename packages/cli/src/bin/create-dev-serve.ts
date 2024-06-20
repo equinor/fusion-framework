@@ -11,17 +11,17 @@ import { createDevProxy } from './dev-proxy.js';
 
 import { loadAppConfig } from './utils/load-app-config.js';
 import { loadViteConfig } from './utils/load-vite-config.js';
-import { loadAppManifest } from './utils/load-manifest.js';
 
 import { Spinner } from './utils/spinner.js';
 import { chalk, formatPath } from './utils/format.js';
 
 import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
-import { createManifest, manifestConfigFilename } from '../lib/app-manifest.js';
+import { manifestConfigFilename } from '../lib/app-manifest.js';
 import { appConfigFilename, createAppConfig } from '../lib/app-config.js';
 import { loadPackage } from './utils/load-package.js';
 
 import { rateLimit } from 'express-rate-limit';
+import { resolveAppKey } from '../lib/app-package.js';
 
 export const createDevServer = async (options: {
     portal: string;
@@ -39,6 +39,7 @@ export const createDevServer = async (options: {
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
     const pkg = await loadPackage();
+    const appKey = resolveAppKey(pkg.packageJson);
 
     spinner.info(`using portal 🔌${formatPath(portal)} as proxy target`);
 
@@ -52,8 +53,6 @@ export const createDevServer = async (options: {
      * Load application manifest
      * Application might have overridden the `appKey`
      */
-    const manifest = await loadAppManifest(env, pkg, { file: configSourceFiles.manifest });
-    const { key: appKey } = manifest.manifest;
     spinner.info(`resolved application key ${chalk.magenta(appKey)}`);
 
     const { viteConfig, path: viteConfigPath } = await loadViteConfig(env, {
@@ -107,58 +106,69 @@ export const createDevServer = async (options: {
             onManifestResponse: async (slug, message, data) => {
                 if (slug.appKey === appKey) {
                     if (message.statusCode === 404) {
-                        const { manifest: response, path } = await loadAppManifest(env, pkg, {
-                            file: configSourceFiles.manifest,
-                        });
-                        response.entry = `/${entry}`;
-                        if (response.build) {
-                            response.build.entryPoint = `/${entry}`;
-                        }
+                        const response = {
+                            key: appKey,
+                            name: pkg.packageJson.name,
+                            build: {
+                                version: pkg.packageJson.version,
+                                entryPoint: `/${entry}`,
+                            },
+                        };
+                        const path = configSourceFiles.manifest;
                         return { response, path, statusCode: 200 };
                     } else if (data) {
-                        const { manifest: response, path } = await createManifest(env, data, {
-                            file: configSourceFiles.manifest,
-                        });
-
                         /* add package entry point for local development */
-                        response.entry = `/${entry}`;
-                        if (response.build) {
-                            response.build.entryPoint = `/${entry}`;
-                        }
+                        data.build ??= {};
+                        data.build.entryPoint = `/${entry}`;
 
-                        path && spinner.info('created manifest from ', formatPath(path));
-                        return { response, path };
+                        configSourceFiles.manifest &&
+                            spinner.info(
+                                'created manifest from ',
+                                formatPath(configSourceFiles.manifest),
+                            );
+                        return { response: data, path: configSourceFiles?.manifest };
                     }
                 }
             },
             onManifestListResponse: async (slug, message, data) => {
                 // TODO: Verify if we should always only return current app or all apps from API + current app.
+                const path = configSourceFiles.manifest;
+
+                // no apps registered???
                 if (!data) {
-                    const { manifest, path } = await loadAppManifest(env, pkg, {
-                        file: configSourceFiles.manifest,
-                    });
-                    manifest.entry = `/${entry}`;
-                    return { response: [manifest], path };
+                    // generate AppManifest since the app is not registered
+                    const response = [
+                        {
+                            key: appKey,
+                            name: pkg.packageJson.name,
+                            build: {
+                                version: pkg.packageJson.version,
+                                entryPoint: `/${entry}`,
+                            },
+                        },
+                    ];
+                    return { response, path };
                 }
-                let path: string | undefined;
+
                 const atIndex = data?.findIndex((manifest) => manifest.key === appKey) ?? -1;
                 // If existing app, we need to change the entry-point.
                 if (atIndex > -1) {
-                    data[atIndex].entry = `/${entry}`;
                     data[atIndex].build = Object.assign(data[atIndex].build ?? {}, {
                         entryPoint: `/${entry}`,
                     });
                 } else {
-                    const { manifest, path: manifestPath } = await loadAppManifest(env, pkg, {
-                        file: configSourceFiles.manifest,
-                    });
-
-                    /* add package entry point for local development */
-                    manifest.entry = `/${entry}`;
+                    // generate AppManifest since the app is not registered
+                    const manifest = {
+                        key: appKey,
+                        name: pkg.packageJson.name,
+                        build: {
+                            version: pkg.packageJson.version,
+                            entryPoint: `/${entry}`,
+                        },
+                    };
                     if (manifest.build) {
                         manifest.build.entryPoint = `/${entry}`;
                     }
-                    path = manifestPath;
                     data.push(manifest);
                 }
                 return { response: data, path };
@@ -167,6 +177,7 @@ export const createDevServer = async (options: {
         {
             target: portal,
             staticAssets: [{ path: devPortalPath }],
+            port,
         },
     );
 
