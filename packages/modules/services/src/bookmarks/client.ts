@@ -21,6 +21,7 @@ import {
     CreateBookmarkArg,
     CreateBookmarkResponse,
     CreateBookmarkVersion,
+    CreateBookmarksResult,
     createBookmark,
 } from './bookmark.post';
 import {
@@ -219,7 +220,7 @@ export class BookmarksApiClient<
         version: TVersion,
         request: CreateBookmarkArg<TVersion>,
         init?: ClientRequestInit<TClient, TResponse>,
-    ): GetBookmarkResult<TVersion, TMethod, TResponse> {
+    ): CreateBookmarksResult<TVersion, TMethod, TResponse> {
         const fn = createBookmark(version, this._client, this._method);
         return fn(request, init);
     }
