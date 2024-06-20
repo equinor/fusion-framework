@@ -23,7 +23,7 @@ type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
 const ArgSchema = {
     [ApiVersion.v1]: z.object({
         bookmarkId: z.string(),
-        data: z.object({
+        updates: z.object({
             name: z.string().nullish(),
             description: z.string().nullish(),
             isShared: z.boolean().nullish(),
@@ -31,6 +31,13 @@ const ArgSchema = {
                 .record(z.unknown())
                 .nullish()
                 .transform((x) => (x ? JSON.stringify(x) : undefined)),
+            sourceSystem: z
+                .object({
+                    identifier: z.string().nullish(),
+                    name: z.string().nullish(),
+                    subSystem: z.string().nullish(),
+                })
+                .nullish(),
         }),
     }),
 };
@@ -68,7 +75,7 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
                 method: 'PATCH',
                 selector: schemaSelector(ApiResponseSchema[version]),
-                body: args.data,
+                body: args.updates,
             };
             return Object.assign({}, baseInit, init);
         }

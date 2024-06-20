@@ -33,7 +33,7 @@ const ArgSchema = {
                         .object({
                             appKey: z.string().optional(),
                             contextId: z.string().optional(),
-                            sourceSystem: ApiSourceSystem[ApiVersion.v1].optional(),
+                            sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
                         })
                         .transform((x) => {
                             buildODataQuery({ filter: x }).replace(/$filter=/, '');
