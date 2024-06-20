@@ -1,6 +1,6 @@
 import { BookmarkFlowError } from './BookmarkProvider.error';
 import { BookmarkState } from './BookmarkProvider.store';
-import { Bookmark, BookmarkData } from './types';
+import type { Bookmark, BookmarkData } from './types';
 
 /**
  * Selects all bookmarks from the application state.
@@ -12,8 +12,11 @@ export const bookmarksSelector = (state: BookmarkState): Bookmark[] => {
 /**
  * Retrieves a bookmark from the state by its ID.
  */
-export const bookmarkSelector = (state: BookmarkState, id: string): Bookmark | undefined => {
-    return state.bookmarks[id];
+export const bookmarkSelector = <T extends BookmarkData>(
+    state: BookmarkState,
+    id: string,
+): Bookmark<T> | undefined => {
+    return state.bookmarks[id] as Bookmark<T>;
 };
 
 /**
@@ -24,8 +27,10 @@ export const bookmarkSelector = (state: BookmarkState, id: string): Bookmark | u
  * if there is no active bookmark, the function returns null.
  * if the active bookmark was never set, the function returns undefined.
  */
-export const activeBookmarkSelector = (state: BookmarkState): BookmarkData | null => {
-    const selectedBookmark = state.activeBookmark;
+export const activeBookmarkSelector = <T extends BookmarkData>(
+    state: BookmarkState,
+): Bookmark<T> | null => {
+    const selectedBookmark = state.currentBookmark as Bookmark<T>;
     return selectedBookmark || null;
 };
 
