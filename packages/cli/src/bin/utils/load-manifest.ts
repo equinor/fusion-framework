@@ -1,7 +1,11 @@
 import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
-import { createManifest, createManifestFromPackage } from '../../lib/app-manifest.js';
+import {
+    AppManifestExport,
+    createManifest,
+    createManifestFromPackage,
+} from '../../lib/app-manifest.js';
 import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { type ResolvedAppPackage } from '../../lib/app-package.js';
 
@@ -11,7 +15,7 @@ export const loadAppManifest = async (
     options?: {
         file?: string;
     },
-) => {
+): Promise<{ manifest: AppManifestExport; path?: string }> => {
     const spinner = Spinner.Current;
     try {
         spinner.start('create application manifest');
@@ -21,9 +25,9 @@ export const loadAppManifest = async (
         const manifest = await createManifest(env, baseManifest, { file: options?.file });
         spinner.succeed();
 
-        if (manifest.path) {
+        if (options?.file) {
             spinner.info(
-                `generating manifest from ${formatPath(manifest.path, { relative: true })}`,
+                `generating manifest from ${formatPath(options.file, { relative: true })}`,
             );
         } else {
             spinner.info(chalk.dim('no local manifest config applied, using default generated'));
