@@ -17,16 +17,17 @@ export interface AppModuleConfig {
     client: {
         getAppManifest: QueryCtorOptions<ApplicationManifest, { appKey: string }>;
         getAppManifests: QueryCtorOptions<ApplicationManifest[], void>;
+        getMyAppManifests: QueryCtorOptions<ApplicationManifest[], void>;
         getAppConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
     };
-    baseUrl?: string;
+    baseUri?: string;
 }
 
 export interface IAppConfigurator {
     setClient: (
         client_or_cb: AppModuleConfig['client'] | ConfigBuilderCallback<AppModuleConfig['client']>,
     ) => void;
-    setBaseUrl: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
+    setBaseUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
 }
 
 export class AppConfigurator
@@ -51,7 +52,11 @@ export class AppConfigurator
 
             // TODO - remove when refactor portal service!
             /** resolve and create a client from discovery */
-            return await serviceDiscovery.createClient('apps-proxy');
+            return await serviceDiscovery.createClient('apps', {
+                onCreate(client) {
+                    client.requestHandler.setHeader('Api-Version', '1.0-preview');
+                },
+            });
         }
     }
 
@@ -63,9 +68,9 @@ export class AppConfigurator
     }
 
     // TODO - explain why, used in import of resources aka proxy url
-    public setBaseUrl(base_or_cb: string | ConfigBuilderCallback<string>) {
+    public setBaseUri(base_or_cb: string | ConfigBuilderCallback<string>) {
         const cb = typeof base_or_cb === 'string' ? () => base_or_cb : base_or_cb;
-        this._set('baseUrl', cb);
+        this._set('baseUri', cb);
     }
 
     protected _createConfig(
@@ -80,7 +85,7 @@ export class AppConfigurator
                         client: {
                             fn: ({ appKey }) =>
                                 httpClient
-                                    .json$<ApiApp>(`/apps-proxy/apps/${appKey}`)
+                                    .json$<ApiApp>(`/apps/${appKey}`)
                                     .pipe(map((apiApp) => new ApplicationManifest(apiApp))),
                         },
                         key: ({ appKey }) => appKey,
@@ -90,9 +95,29 @@ export class AppConfigurator
                         client: {
                             // TODO: add to config if use me or not
                             fn: () =>
-                                httpClient.json$<ApiApp[]>(`/apps-proxy/apps`).pipe(
+                                httpClient.json$<{ value: ApiApp[] }>(`/apps`).pipe(
                                     map((x) => {
-                                        return x.map((apiApp) => new ApplicationManifest(apiApp));
+                                        const apps = x.value.map(
+                                            (apiApp) => new ApplicationManifest(apiApp),
+                                        );
+                                        return apps;
+                                    }),
+                                ),
+                        },
+                        // TODO - might cast to checksum
+                        key: () => 'manifests',
+                        expire: this.defaultExpireTime,
+                    },
+                    getMyAppManifests: {
+                        client: {
+                            // TODO: add to config if use me or not
+                            fn: () =>
+                                httpClient.json$<{ value: ApiApp[] }>(`/persons/me/apps`).pipe(
+                                    map((x) => {
+                                        const apps = x.value.map(
+                                            (apiApp) => new ApplicationManifest(apiApp),
+                                        );
+                                        return apps;
                                     }),
                                 ),
                         },
@@ -104,7 +129,7 @@ export class AppConfigurator
                         client: {
                             fn: ({ appKey, tag = 'latest' }) =>
                                 httpClient.json$<ApiAppVersionConfig>(
-                                    `/apps-proxy/apps/${appKey}/builds/${tag}/config`,
+                                    `/apps/${appKey}/builds/${tag}/config`,
                                 ),
                         },
                         key: (args) => JSON.stringify(args),
@@ -114,8 +139,8 @@ export class AppConfigurator
             });
         }
 
-        if (!this._has('baseUrl')) {
-            this.setBaseUrl('/apps-proxy');
+        if (!this._has('baseUri')) {
+            this.setBaseUri('/apps-proxy');
         }
 
         return super._createConfig(init, initial);
