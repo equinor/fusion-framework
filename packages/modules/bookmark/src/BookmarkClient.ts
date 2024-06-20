@@ -1,5 +1,5 @@
 import { from, type ObservableInput } from 'rxjs';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 /**
  * Imports the `Query` type from the `@equinor/fusion-query` package.
@@ -11,35 +11,17 @@ import { Query } from '@equinor/fusion-query';
  * Imports the `BookmarksApiClient` and `ApiBookmarkEntityV1` types from the `@equinor/fusion-framework-module-services/bookmarks` package.
  * These types are used to interact with the Fusion Bookmarks API and represent the API response entities.
  */
+import type { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+
 import type {
-    BookmarksApiClient,
-    ApiBookmark,
-} from '@equinor/fusion-framework-module-services/bookmarks';
+    IBookmarkClient,
+    BookmarksFilter,
+    BookmarkNew,
+    BookmarkUpdate,
+} from './BookmarkClient.interface';
 
-import type { IBookmarkClient, BookmarksFilter } from './BookmarkClient.interface';
-
-import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark, PatchBookmark } from './types';
-/**
- * Normalizes an API bookmark entity into a `Bookmark` object.
- *
- * @template TPayload - The payload type of the bookmark.
- * @param res - The API bookmark entity to normalize.
- * @returns The normalized `Bookmark` object.
- */
-const normalizeBookmark = (res: ApiBookmark<'v1'>): Bookmark =>
-    ({
-        appKey: res.appKey,
-        id: res.id,
-        name: res.name,
-        sourceSystem: res.sourceSystem,
-        created: res.created,
-        createdBy: res.createdBy,
-        description: res.description,
-        isShared: res.isShared,
-        updated: res.updated,
-        updatedBy: res.updatedBy,
-        context: res.context,
-    }) satisfies Bookmark;
+import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
+import { bookmarkSchema, bookmarkWithDataSchema, bookmarksSchema } from './schemas';
 
 /**
  * Represents a client for interacting with the Fusion Bookmarks API.
@@ -74,8 +56,9 @@ const normalizeBookmark = (res: ApiBookmark<'v1'>): Bookmark =>
 export class BookmarkClient implements IBookmarkClient {
     #api: BookmarksApiClient<'json$'>;
 
-    #queryBookmark: Query<Bookmark, { bookmarkId: string }>;
-    #queryBookmarks: Query<Array<Bookmark>, BookmarksFilter | undefined>;
+    #queryBookmark: Query<BookmarkWithoutData, { bookmarkId: string }>;
+    #queryBookmarks: Query<Bookmarks, BookmarksFilter | undefined>;
+    #queryBookmarkData: Query<BookmarkData, { bookmarkId: string }>;
 
     /**
      * Constructs a new `BookmarkClient` instance with the provided `BookmarksApiClient`.
@@ -91,7 +74,7 @@ export class BookmarkClient implements IBookmarkClient {
         this.#queryBookmark = new Query({
             client: {
                 fn: (args: { bookmarkId: string }) =>
-                    this.#api.get('v1', args).pipe(map(normalizeBookmark)),
+                    this.#api.get('v1', args).pipe(map((res) => bookmarkSchema.parse(res))),
             },
             key: (args) => args.bookmarkId,
             expire,
@@ -102,11 +85,26 @@ export class BookmarkClient implements IBookmarkClient {
             client: {
                 fn: (filter?: BookmarksFilter) =>
                     this.#api
-                        .getAll('v1', { filter })
-                        .pipe(map((res) => res.map(normalizeBookmark))),
+
+                        .query('v1', { filter })
+                        .pipe(map((res) => bookmarksSchema.parse(res))),
             },
             key: (args) => JSON.stringify(args),
             expire,
+        });
+
+        this.#queryBookmarkData = new Query({
+            client: {
+                fn: (args: { bookmarkId: string }) =>
+                    this.#api.getPayload('v1', args).pipe(map((res) => res.payload ?? {})),
+            },
+            key: (args) => args.bookmarkId,
+            expire,
+            cache: {
+                trimming: {
+                    size: 3,
+                },
+            },
         });
     }
 
@@ -114,77 +112,121 @@ export class BookmarkClient implements IBookmarkClient {
         return this.#queryBookmarks.query(filter).pipe(map((res) => res.value as Bookmark[]));
     }
 
-    public getBookmarkById<TPayload = unknown, TExpand extends boolean = false>(
-        bookmarkId: string,
-        includeData?: TExpand,
-    ): TExpand extends true
-        ? ObservableInput<BookmarkWithData<TPayload>>
-        : ObservableInput<Bookmark> {
-        const query$ = this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
-        return includeData
-            ? query$.pipe(
-                  withLatestFrom(from(this.getBookmarkData<TPayload>(bookmarkId))),
-                  map(([bookmark, { data }]) => ({ ...bookmark, data })),
-              )
-            : query$;
+    public getBookmarkById(bookmarkId: string): ObservableInput<BookmarkWithoutData> {
+        return this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
     }
 
-    public getBookmarkData<TPayload = unknown>(
+    // public getBookmarkById<
+    //     TPayload extends Record<string, unknown>,
+    //     TExpand extends boolean = false,
+    // >(
+    //     bookmarkId: string,
+    //     includeData?: TExpand,
+    // ): TExpand extends true
+    //     ? ObservableInput<Bookmark<TPayload>>
+    //     : ObservableInput<BookmarkWithoutData> {
+    //     const query$ = this.#queryBookmark.query({ bookmarkId }).pipe(map((res) => res.value));
+
+    //     if (includeData) {
+    //         const data$ = this.#queryBookmarkData
+    //             .query({ bookmarkId })
+    //             .pipe(map((res) => res.value));
+    //         return query$
+    //             .pipe(combineLatestWith(data$))
+    //             .pipe(
+    //                 map(
+    //                     ([bookmark, payload]) =>
+    //                         ({ ...bookmark, payload: payload.payload }) as Bookmark<TPayload>,
+    //                 ),
+    //             );
+    //     }
+
+    //     // Cast the result to the correct type
+    //     return query$ as ObservableInput<BookmarkWithoutData>;
+    // }
+
+    public getBookmarkData<T extends BookmarkData>(bookmarkId: string): ObservableInput<T> {
+        return this.#queryBookmarkData
+            .query({ bookmarkId })
+            .pipe(map((res): T => res.value.payload as T));
+    }
+
+    public setBookmarkData<T extends BookmarkData | null>(
         bookmarkId: string,
-    ): ObservableInput<BookmarkData<TPayload>> {
-        return this.#api.getPayload('v1', { bookmarkId }).pipe(
-            map((res) => {
-                const { id, context, payload } = res;
-                let data: TPayload | Error | undefined;
-                if (payload) {
-                    try {
-                        data = JSON.parse(payload) as TPayload;
-                    } catch (e) {
-                        data = e as Error;
-                    }
+        data: T,
+    ): ObservableInput<T> {
+        return this.#api.patch('v1', { bookmarkId, updates: { payload: data } }).pipe(
+            map((res) => res.payload as T),
+            tap((updatedData) => {
+                if (updatedData) {
+                    this.#queryBookmarkData.mutate(
+                        { bookmarkId },
+                        { value: updatedData, updated: Date.now() },
+                        { allowCreation: true },
+                    );
                 }
-                return { id, context, data };
             }),
         );
     }
 
-    public createBookmark<T>(bookmark: NewBookmark<T>): ObservableInput<BookmarkWithData<T>> {
-        // convert the data to a string and remove the data property from the bookmark
-        const { data, ...rest } = bookmark;
-        const payload = data ? JSON.stringify(data) : undefined;
-        return this.#api.create('v1', { ...rest, payload: JSON.stringify(payload) }).pipe(
-            map(normalizeBookmark),
-            // add the bookmark to the cache
-            tap((updatedBookmark) => {
-                // Update the cache with the new bookmark value and timestamp
+    public createBookmark<T extends BookmarkData>(
+        newBookmark: BookmarkNew<T>,
+    ): ObservableInput<Bookmark<T>> {
+        return this.#api.create('v1', newBookmark).pipe(
+            map((response) => bookmarkWithDataSchema<T>().parse(response) as Bookmark<T>),
+            /** update the bookmark cache */
+            tap((createdBookmark) => {
+                const { payload, ...bookmark } = createdBookmark;
                 this.#queryBookmark.mutate(
-                    { bookmarkId: updatedBookmark.id },
-                    { value: updatedBookmark, updated: Date.now() },
+                    { bookmarkId: bookmark.id },
+                    { value: bookmark, updated: Date.now() },
+                    { allowCreation: true },
                 );
-                // Invalidate the bookmarks query cache
+                if (payload) {
+                    this.#queryBookmarkData.mutate(
+                        { bookmarkId: bookmark.id },
+                        { value: payload, updated: Date.now() },
+                        { allowCreation: true },
+                    );
+                }
                 this.#queryBookmarks.invalidate();
             }),
-            // assume that the payload that we send is the data that we want to store
-            map((response) => ({ ...response, data: payload }) as BookmarkWithData<T>),
         );
     }
 
-    public updateBookmark<T = unknown>(bookmark: PatchBookmark<T>): ObservableInput<Bookmark> {
-        // convert the data to a string and remove the data property from the bookmark
-        const { data, ...rest } = bookmark;
-        const payload = data ? JSON.stringify(data) : undefined;
-
-        return this.#api.patch('v1', { ...rest, payload }).pipe(
-            // map api response to bookmark
-            map((updatedBookmark) => normalizeBookmark(updatedBookmark)),
-            // Update the query cache for the specific bookmark
+    public updateBookmark<T extends Record<string, unknown>>(
+        bookmarkId: string,
+        updates: BookmarkUpdate<T>,
+    ): ObservableInput<Bookmark<T>> {
+        return this.#api.patch('v1', { bookmarkId, updates: updates }).pipe(
+            map((response) => bookmarkWithDataSchema().parse(response) as Bookmark<T>),
+            /** Update the query cache for the specific bookmark */
             tap((updatedBookmark) => {
-                // Update the cache with the new bookmark value and timestamp
+                const { payload, ...bookmark } = updatedBookmark;
+                payload;
                 this.#queryBookmark.mutate(
-                    { bookmarkId: updatedBookmark.id },
-                    { value: updatedBookmark, updated: Date.now() },
+                    { bookmarkId },
+                    { value: bookmark, updated: Date.now() },
+                    { allowCreation: false },
                 );
-                // Invalidate the bookmarks query cache
+            }),
+            /** update the cache for bookmark data */
+            tap((createdBookmark) => {
+                const { payload } = createdBookmark;
+                const cacheKey = this.#queryBookmarkData.generateCacheKey({
+                    bookmarkId: createdBookmark.id,
+                });
+                if (payload) {
+                    this.#queryBookmarkData.cache.mutate(
+                        cacheKey,
+                        { value: payload, updated: Date.now() },
+                        { allowCreation: true },
+                    );
+                } else {
+                    this.#queryBookmarkData.cache.removeItem(cacheKey);
+                }
+            }),
+            tap(() => {
                 this.#queryBookmarks.invalidate();
             }),
         );
@@ -210,3 +252,15 @@ export class BookmarkClient implements IBookmarkClient {
         return this.#api.isFavorite('v1', { bookmarkId });
     }
 }
+
+from(
+    new BookmarkClient(null as unknown as BookmarksApiClient<'json$'>).updateBookmark('123', {
+        name: 'new title',
+    }),
+).subscribe((x) => console.log(x));
+from(
+    new BookmarkClient(null as unknown as BookmarksApiClient<'json$'>).updateBookmark('123', {
+        name: 'new title',
+        payload: { foo: 'bert' },
+    }),
+).subscribe((x) => console.log(x.payload));

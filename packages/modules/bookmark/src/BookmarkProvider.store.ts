@@ -9,7 +9,7 @@ import { type BookmarkFlowError } from './BookmarkProvider.error';
 import { createBookmarkReducer } from './BookmarkProvider.reducer';
 import { bookmarkApiFlows } from './BookmarkProvider.flows';
 import type { IBookmarkClient } from './BookmarkClient.interface';
-import type { BookmarkData, Bookmark } from './types';
+import type { Bookmark } from './types';
 
 /**
  * Represents the state of the BookmarkProvider store.
@@ -20,7 +20,7 @@ export type BookmarkState = {
     // errors that have occurred during the bookmark flow
     errors: Record<ActionBaseType<BookmarkActions>, BookmarkFlowError>;
     // the currently active bookmark, if any
-    activeBookmark?: BookmarkData | null;
+    currentBookmark?: Bookmark | null;
     // the collection of bookmarks, keyed by their IDs
     bookmarks: Record<string, Bookmark>;
 };
@@ -28,8 +28,10 @@ export type BookmarkState = {
 /**
  * Represents the store for bookmarks, which is a flow subject that manages the state and actions for bookmarks.
  */
-export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions> &
-    ActionCalls<typeof bookmarkActions>;
+export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions> & {
+    execute: ActionCalls<typeof bookmarkActions>;
+    client: IBookmarkClient;
+};
 
 /**
  * Creates a new BookmarkStore instance with the provided initial state and client.
@@ -40,16 +42,20 @@ export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions> &
  * @returns A new BookmarkStore instance.
  */
 export const createBookmarkStore = (args: {
-    initial?: BookmarkState;
+    initial?: Partial<BookmarkState>;
     client: IBookmarkClient;
 }): BookmarkStore => {
+    const { client, initial } = args;
     // create the store
-    const subject = new FlowSubject(createBookmarkReducer(args.initial));
+    const subject = new FlowSubject(createBookmarkReducer(initial));
 
     // add flows to the store
     subject.addFlow(bookmarkApiFlows(args.client));
 
     // add action calls to the store
-    const store = Object.assign(subject, actionMapper(bookmarkActions, subject));
+    const store = Object.assign(subject, {
+        client,
+        execute: actionMapper(bookmarkActions, subject),
+    });
     return store;
 };

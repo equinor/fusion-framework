@@ -45,7 +45,8 @@
         "@types/uuid": "^9.0.8",
         "bookmarks": "link:@equinor/fusion-framework-module-services/src/bookmarks",
         "rxjs": "^7.8.1",
-        "uuid": "^9.0.1"
+        "uuid": "^9.0.1",
+        "valibot": "^0.32.0"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-app": "workspace:^",

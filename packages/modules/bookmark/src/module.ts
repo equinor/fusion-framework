@@ -1,4 +1,4 @@
-import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
+import { Module, ModulesInstance, SemanticVersion } from '@equinor/fusion-framework-module';
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { AppModule } from '@equinor/fusion-framework-module-app';
@@ -7,6 +7,7 @@ import { BookmarkProvider } from './BookmarkProvider';
 import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
+import { version } from './version';
 
 export type BookmarkModuleKey = 'bookmark';
 
@@ -24,19 +25,17 @@ const fallbackLogger: ILogger = new ConsoleLogger('BookmarkModule');
 
 export const module: BookmarkModule = {
     name: moduleKey,
+    version: new SemanticVersion(version),
     configure: (args) => {
         // use parent logger if available, else fallback to console logger
         const log: ILogger =
             (args?.log as ILogger)?.createSubLogger('BookmarkModule') || fallbackLogger;
 
-        // create a configurator instance
-        const configurator = new BookmarkModuleConfigurator({ log });
-
         // Set client from parent module if available
-        const parent = (args as ModulesInstance<[BookmarkModule]>).bookmark;
-        if (parent) {
-            configurator.setClient(parent.client);
-        }
+        const ref = args.ref as ModulesInstance<[BookmarkModule]>;
+
+        // create a configurator instance
+        const configurator = new BookmarkModuleConfigurator({ log, ref });
 
         return configurator;
     },
@@ -44,8 +43,8 @@ export const module: BookmarkModule = {
         const config = await lastValueFrom(
             (args.config as BookmarkModuleConfigurator).createConfig(args),
         );
-
-        return new BookmarkProvider(config);
+        const provider = new BookmarkProvider(config);
+        return provider;
     },
     dispose: (args) => {
         (args.instance as BookmarkProvider).dispose();

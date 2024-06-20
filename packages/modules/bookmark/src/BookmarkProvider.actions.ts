@@ -1,8 +1,13 @@
-import { createAction, createAsyncAction, type ActionTypes } from '@equinor/fusion-observable';
+import {
+    Action,
+    createAction,
+    createAsyncAction,
+    type ActionTypes,
+} from '@equinor/fusion-observable';
 
-import type { Bookmark, BookmarkData, BookmarkWithData, NewBookmark, PatchBookmark } from './types';
+import type { Bookmark, Bookmarks } from './types';
 
-import { type BookmarksFilter } from './BookmarkClient.interface';
+import { BookmarkNew, BookmarkUpdate, type BookmarksFilter } from './BookmarkClient.interface';
 import { type BookmarkFlowError } from './BookmarkProvider.error';
 
 /**
@@ -19,47 +24,31 @@ type BookmarkActionMeta = {
  * Exports a set of actions that can be used to manage bookmarks.
  */
 export const bookmarkActions = {
-    clearActiveBookmark: createAction('clear_active_bookmark'),
-    setActiveBookmark: createAsyncAction(
-        'set_active_bookmark',
-        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
-            payload: bookmarkId,
-            meta: { ref: bookmarkId, ...meta },
-        }),
-        (data: BookmarkData, meta: BookmarkActionMeta) => ({
-            payload: data,
-            meta,
-        }),
-        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({
-            payload: error,
-            meta,
-        }),
-    ),
-    fetchBookmark: createAsyncAction(
-        'fetch_bookmark',
-        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
-            payload: bookmarkId,
-            meta: { ref: bookmarkId, ...meta },
-        }),
-        (bookmark: Bookmark, meta: BookmarkActionMeta) => ({ payload: bookmark, meta }),
-        (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload: error, meta }),
-    ),
+    aborted: createAction('action_aborted', (action: Action) => ({
+        payload: action,
+    })),
+    setCurrentBookmark: createAction('set_current_bookmark', (bookmark: Bookmark | null) => {
+        return { payload: bookmark };
+    }),
     fetchBookmarks: createAsyncAction(
         'fetch_bookmarks',
         (filter?: BookmarksFilter, meta?: BookmarkActionMeta) => ({ payload: filter, meta }),
-        (bookmarks: Bookmark[], meta?: BookmarkActionMeta) => ({ payload: bookmarks, meta }),
+        (bookmarks: Bookmarks, meta?: BookmarkActionMeta) => ({ payload: bookmarks, meta }),
         (error: BookmarkFlowError, meta?: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
     updateBookmark: createAsyncAction(
         'update_bookmark',
-        (payload: PatchBookmark, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: { bookmarkId: string; updates: BookmarkUpdate }, meta: BookmarkActionMeta) => ({
+            payload,
+            meta,
+        }),
         (payload: Bookmark, meta: BookmarkActionMeta) => ({ payload, meta }),
         (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload, meta }),
     ),
     createBookmark: createAsyncAction(
         'create_bookmark',
-        <T>(payload: NewBookmark<T>, meta: BookmarkActionMeta) => ({ payload, meta }),
-        <T>(payload: BookmarkWithData<T>, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: BookmarkNew, meta: BookmarkActionMeta) => ({ payload, meta }),
+        (payload: Bookmark, meta: BookmarkActionMeta) => ({ payload, meta }),
         (payload: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload, meta }),
     ),
     deleteBookmark: createAsyncAction(
@@ -117,9 +106,5 @@ export const bookmarkActions = {
         (error: BookmarkFlowError, meta: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
 };
-
-// type ActionBuilder = typeof bookmarkActions;
-
-// type ActionMap = ActionInstanceMap<ActionBuilder>;
 
 export type BookmarkActions = ActionTypes<typeof bookmarkActions>;

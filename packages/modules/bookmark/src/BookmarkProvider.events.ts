@@ -1,6 +1,7 @@
 import type { FrameworkEventInit, IFrameworkEvent } from '@equinor/fusion-framework-module-event';
-import type { Bookmark, BookmarkData, NewBookmark, PatchBookmark } from './types';
+import type { Bookmark } from './types';
 import type { BookmarkProvider } from './BookmarkProvider';
+import { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
 
 export interface BookmarkProviderEventMap {
     /**
@@ -9,10 +10,7 @@ export interface BookmarkProviderEventMap {
      * @param {FrameworkEventInit<{ current?: BookmarkData | null; next: BookmarkData | null }, BookmarkProvider>} event - The event payload, containing the current and next bookmark data.
      */
     onCurrentBookmarkChange: IFrameworkEvent<
-        FrameworkEventInit<
-            { current?: BookmarkData | null; next: BookmarkData | null },
-            BookmarkProvider
-        >
+        FrameworkEventInit<{ current?: Bookmark | null; next: Bookmark | null }, BookmarkProvider>
     >;
 
     /**
@@ -21,7 +19,7 @@ export interface BookmarkProviderEventMap {
      * @param {FrameworkEventInit<BookmarkData | null, BookmarkProvider>} event - The event payload, containing the new bookmark data.
      */
     onCurrentBookmarkChanged: IFrameworkEvent<
-        FrameworkEventInit<BookmarkData | null, BookmarkProvider>
+        FrameworkEventInit<Bookmark | null, BookmarkProvider>
     >;
 
     /**
@@ -29,7 +27,7 @@ export interface BookmarkProviderEventMap {
      * @event onBookmarkCreate
      * @param {FrameworkEventInit<NewBookmark, BookmarkProvider>} event - The event payload, containing the new bookmark data.
      */
-    onBookmarkCreate: IFrameworkEvent<FrameworkEventInit<NewBookmark, BookmarkProvider>>;
+    onBookmarkCreate: IFrameworkEvent<FrameworkEventInit<BookmarkNew, BookmarkProvider>>;
 
     /**
      * An event that is emitted when a bookmark has been created.
@@ -43,7 +41,9 @@ export interface BookmarkProviderEventMap {
      * @event onBookmarkUpdated
      * @param {FrameworkEventInit<PatchBookmark, BookmarkProvider>} event - The event payload, containing the updated bookmark data.
      */
-    onBookmarkUpdate: IFrameworkEvent<FrameworkEventInit<PatchBookmark, BookmarkProvider>>;
+    onBookmarkUpdate: IFrameworkEvent<
+        FrameworkEventInit<{ current?: Bookmark; updates: BookmarkUpdate }, BookmarkProvider>
+    >;
 
     /**
      * An event that is emitted before a bookmark is updated.

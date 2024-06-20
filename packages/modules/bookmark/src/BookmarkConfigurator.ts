@@ -21,6 +21,8 @@ import { IBookmarkClient } from './BookmarkClient.interface';
 
 import type { Bookmark } from './types';
 import { ILogger } from '../../../utils/log/src';
+import { BookmarkProvider } from './BookmarkProvider';
+import { BookmarkModule } from './module';
 
 /**
  * Configuration options for the bookmark module provider.
@@ -35,6 +37,11 @@ export type BookmarkModuleConfig = {
      * Sets the event provider to use for bookmark events.
      */
     eventProvider?: IEventModuleProvider;
+
+    /**
+     * The `BookmarkProvider` instance that is the parent of the current modules
+     */
+    parent?: BookmarkProvider | null;
 
     /**
      * Sets the client to use for accessing bookmarks.
@@ -76,10 +83,14 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     #log?: ILogger;
     defaultExpireTime = 1 * 60 * 1000; // Default expiration time for bookmarks
 
-    constructor(options?: { log: ILogger }) {
+    constructor(options?: { log?: ILogger; ref?: ModulesInstanceType<[BookmarkModule]> }) {
         super();
-        this.#log = options?.log;
-        this._set('log', () => options?.log);
+        const { log, ref } = options ?? {};
+        this.#log = log;
+        this._set('log', () => log);
+        if (ref) {
+            this._set('parent', async () => ref.bookmark ?? null);
+        }
     }
 
     /**
@@ -87,7 +98,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      * The client argument can be either a client object with predefined methods for bookmark operations or a callback function that creates and returns such a client object.
      * This method enables the configuration of how the bookmark module interacts with the backend or any other service to perform operations such as getting, creating, or updating bookmarks.
      *
-     * @param cbOrClient A client object or a callback function that returns a client object.
+     * @param client A client object or a callback function that returns a client object.
      * - If a callback function is provided, it receives an initializer function as its argument,
      *   and it should return a Promise that resolves to a client object.
      * - If a client object is provided directly, it is wrapped in a Promise and used as-is.
@@ -112,21 +123,42 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      * ```
      */
     public setClient(
-        cbOrClient:
+        client:
             | ConfigBuilderCallback<BookmarkModuleConfig['client']>
             | BookmarkModuleConfig['client'],
     ) {
-        if (typeof cbOrClient === 'function') {
-            this._set('client', (init) => cbOrClient(init));
+        if (typeof client === 'function') {
+            this._set('client', (init) => client(init));
         } else {
-            this._set('client', () => Promise.resolve(cbOrClient));
+            this._set('client', async () => client);
+        }
+    }
+
+    /**
+     * Sets the parent configuration for the bookmark module.
+     * This allows the bookmark module to inherit configuration from a parent module.
+     *
+     * @param parent - A callback function or a configuration object that provides the parent configuration.
+     * - If a callback function is provided, it receives an initializer function as its argument and should return a Promise that resolves to the parent configuration object.
+     * - If a configuration object is provided directly, it is wrapped in a Promise and used as-is.
+     */
+    public setParent(
+        parent:
+            | ConfigBuilderCallback<BookmarkModuleConfig['parent']>
+            | BookmarkModuleConfig['parent']
+            | null,
+    ) {
+        if (typeof parent === 'function') {
+            this._set('parent', (init) => parent(init));
+        } else {
+            this._set('parent', async () => parent);
         }
     }
 
     /**
      * Set the source system for the bookmark module.
      * This is used to tag bookmarks with their originating system for filtering or categorization purposes.
-     * @param cbOrSourceSystem - A callback function that returns the source system or a string value of the source system.
+     * @param sourceSystem - A callback function that returns the source system or a string value of the source system.
      *
      * Example:
      * ```
@@ -138,14 +170,14 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      * ```
      */
     public setSourceSystem(
-        cbOrSourceSystem:
+        sourceSystem:
             | ConfigBuilderCallback<BookmarkModuleConfig['sourceSystem']>
             | BookmarkModuleConfig['sourceSystem'],
     ) {
-        if (typeof cbOrSourceSystem === 'function') {
-            this._set('sourceSystem', cbOrSourceSystem);
+        if (typeof sourceSystem === 'function') {
+            this._set('sourceSystem', sourceSystem);
         } else {
-            this._set('sourceSystem', async () => cbOrSourceSystem);
+            this._set('sourceSystem', async () => sourceSystem);
         }
     }
 
@@ -194,6 +226,20 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         init: ConfigBuilderCallbackArgs,
         initial?: Partial<BookmarkModuleConfig>,
     ) {
+        if (!this._has('parent')) {
+            this.#log?.debug('No parent provided, using default parent');
+            const parentModules = init.ref as ModulesInstanceType<[BookmarkModule]>;
+            if ('bookmark' in parentModules) {
+                const parent = parentModules.bookmark;
+                if ('version' in parent && parent.version.satisfies('>=2.0.0')) {
+                    this._set('parent', async () => parent);
+                } else {
+                    this.#log?.warn('invalid version of parent BookmarkProvider provided');
+                }
+            } else {
+                this.#log?.info('No parent BookmarkProvider found');
+            }
+        }
         // Ensure a default client is set if none is provided
         if (!this._has('client')) {
             this.#log?.debug('No client provided, using default client');
