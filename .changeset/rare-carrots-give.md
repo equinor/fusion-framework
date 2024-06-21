@@ -10,4 +10,4 @@ Introduces new parameters to the `config` command for publishing the app config 
 
 ## breaking changes
 
-This introduces braking changes to the `AppConfig` type and `AppManifest` type.
+This introduces braking changes to the `AppManifest` type. Apps-service is now returning instance of `ApplicationManifest` class.
