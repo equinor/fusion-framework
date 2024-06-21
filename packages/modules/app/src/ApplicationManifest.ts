@@ -19,6 +19,10 @@ export class ApplicationManifest implements AppManifest {
         return this.model.owners?.map(this.convertAzureId);
     }
 
+    set key(appKey: string | null) {
+        this.model.appKey = appKey;
+    }
+
     get key() {
         return this.model.appKey;
     }
