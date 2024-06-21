@@ -51,7 +51,7 @@ const createResponseInterceptor = <TArgs, TType>(
                     proxyRes,
                     // might check??
                     Number(proxyRes.statusCode) < 400 &&
-                         JSON.parse(responseBuffer.toString('utf8')),
+                        JSON.parse(responseBuffer.toString('utf8')),
                 ),
             )) ?? {};
         if (statusCode) {
