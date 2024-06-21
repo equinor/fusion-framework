@@ -84,6 +84,8 @@ export const createDevServer = async (options: {
 
     spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
 
+    const serverPort = port ?? (await portFinder.getPortPromise({ port: 3000 }));
+
     /** add proxy handlers */
     const server = createDevProxy(
         {
@@ -177,7 +179,7 @@ export const createDevServer = async (options: {
         {
             target: portal,
             staticAssets: [{ path: devPortalPath }],
-            port,
+            port: serverPort,
         },
     );
 
@@ -199,7 +201,6 @@ export const createDevServer = async (options: {
     );
 
     /** use provided port or resolve available  */
-    const serverPort = port ?? (await portFinder.getPortPromise({ port: 3000 }));
     spinner.start('🚀 start server');
     server.listen(serverPort);
     spinner.succeed();
