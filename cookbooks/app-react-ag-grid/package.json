@@ -26,7 +26,7 @@
         "@ag-grid-community/core": "~31.3.2",
         "@ag-grid-community/react": "~31.3.2",
         "@ag-grid-community/styles": "^31.3.2",
-        "@ag-grid-enterprise/clipboard": "^31.3.2",
+        "@ag-grid-enterprise/clipboard": "^32.0.0",
         "@ag-grid-enterprise/column-tool-panel": "^31.3.2",
         "@ag-grid-enterprise/excel-export": "^31.3.2",
         "@ag-grid-enterprise/filter-tool-panel": "^31.3.2",
