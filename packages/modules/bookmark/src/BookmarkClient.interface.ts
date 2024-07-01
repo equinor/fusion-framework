@@ -65,7 +65,7 @@ export type BookmarkNew<T extends BookmarkData = BookmarkData> = {
         name?: string;
         subSystem?: string;
     };
-    payload?: T | null;
+    payload?: T;
 };
 
 /**

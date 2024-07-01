@@ -6,7 +6,7 @@ import type { Bookmark, BookmarkData } from './types';
  * Selects all bookmarks from the application state.
  */
 export const bookmarksSelector = (state: BookmarkState): Bookmark[] => {
-    return Object.values(state.bookmarks);
+    return Object.values(state.bookmarks) as Bookmark[];
 };
 
 /**
