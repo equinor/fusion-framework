@@ -685,7 +685,7 @@ export class BookmarkProvider {
                 }
                 const bookmark: BookmarkNew<T> = {
                     ...newBookmark,
-                    payload,
+                    payload: payload ?? undefined,
                     appKey: app.appKey,
                     contextId: context?.id,
                     sourceSystem: this.sourceSystem,
