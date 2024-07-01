@@ -1,68 +1,25 @@
 import {
     BaseConfigBuilder,
-    ConfigBuilderCallback,
-    ConfigBuilderCallbackArgs,
-    ModulesInstanceType,
+    type ConfigBuilderCallback,
+    type ConfigBuilderCallbackArgs,
+    type ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
 
-import { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
-import { AppModule, AppModuleProvider } from '@equinor/fusion-framework-module-app';
+import type { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
+import type { AppModule, AppModuleProvider } from '@equinor/fusion-framework-module-app';
 
 /**
  * These types are used for configuring and interacting with an event module or provider within the bookmark module.
  */
-import {
-    type EventModule,
-    type IEventModuleProvider,
-} from '@equinor/fusion-framework-module-event';
+import { type EventModule } from '@equinor/fusion-framework-module-event';
 
 import { BookmarkClient } from './BookmarkClient';
-import { IBookmarkClient } from './BookmarkClient.interface';
 
-import type { Bookmark } from './types';
-import { ILogger } from '../../../utils/log/src';
-import { BookmarkProvider } from './BookmarkProvider';
-import { BookmarkModule } from './module';
+import type { ILogger } from '../../../utils/log/src';
+import type { BookmarkModule } from './bookmark-module';
 
-/**
- * Configuration options for the bookmark module provider.
- */
-export type BookmarkModuleConfig = {
-    /**
-     * Sets the logger to use for logging.
-     */
-    log?: ILogger;
-
-    /**
-     * Sets the event provider to use for bookmark events.
-     */
-    eventProvider?: IEventModuleProvider;
-
-    /**
-     * The `BookmarkProvider` instance that is the parent of the current modules
-     */
-    parent?: BookmarkProvider | null;
-
-    /**
-     * Sets the client to use for accessing bookmarks.
-     */
-    client: IBookmarkClient;
-
-    /**
-     * Sets the source system of the bookmarks.
-     */
-    sourceSystem?: Bookmark['sourceSystem'];
-
-    /**
-     * Sets the function to use for resolving target context.
-     */
-    resolveContext: () => Promise<{ id: string } | undefined>;
-
-    /**
-     * Sets the function to use for resolving target application.
-     */
-    resolveApplication: () => Promise<{ appKey: string } | undefined>;
-};
+import type { BookmarkModuleConfig } from './types';
+import { bookmarkConfigSchema } from './bookmark-config.schema';
 
 /**
  * Configurator for the bookmark module.
@@ -87,7 +44,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         super();
         const { log, ref } = options ?? {};
         this.#log = log;
-        this._set('log', () => log);
+        this._set('log', async () => log);
         if (ref) {
             this._set('parent', async () => ref.bookmark ?? null);
         }
@@ -145,8 +102,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     public setParent(
         parent:
             | ConfigBuilderCallback<BookmarkModuleConfig['parent']>
-            | BookmarkModuleConfig['parent']
-            | null,
+            | BookmarkModuleConfig['parent'],
     ) {
         if (typeof parent === 'function') {
             this._set('parent', (init) => parent(init));
@@ -191,8 +147,10 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      * configurator.setContextIdResolver((init) => () => 'currentContextId');
      * ```
      */
-    public setContextIdResolver(cb: ConfigBuilderCallback<BookmarkModuleConfig['resolveContext']>) {
-        this._set('resolveContext', cb);
+    public setContextResolver(
+        cb: ConfigBuilderCallback<BookmarkModuleConfig['resolve']['context']>,
+    ) {
+        this._set('resolve.context', cb);
     }
 
     /**
@@ -205,10 +163,30 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      * configurator.setApplicationKeyResolver((init) => () => 'myApplicationKey');
      * ```
      */
-    public setApplicationKeyResolver(
-        cb: ConfigBuilderCallback<BookmarkModuleConfig['resolveApplication']>,
+    public setApplicationResolver(
+        cb: ConfigBuilderCallback<BookmarkModuleConfig['resolve']['application']>,
     ) {
-        this._set('resolveApplication', cb);
+        this._set('resolve.application', cb);
+    }
+
+    /**
+     * Sets a filter for the bookmark module.
+     * @param key - The key of the filter to set.
+     * @param value - The value to set for the filter.
+     *
+     * Applied when fetching bookmarks
+     * - application: Only return bookmarks for the resolved application.
+     * - context: Only return bookmarks for the resolved context.
+     */
+    public setFilter<TKey extends keyof BookmarkModuleConfig['filters']>(
+        key: TKey,
+        value: BookmarkModuleConfig['filters'][TKey],
+    ) {
+        this._set(`filters.${key}` as keyof BookmarkModuleConfig, async () => value);
+    }
+
+    protected _processConfig(config: BookmarkModuleConfig): Promise<BookmarkModuleConfig> {
+        return bookmarkConfigSchema.parseAsync(config);
     }
 
     /**
@@ -247,17 +225,17 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         }
 
         // Ensure a default context resolver is set if none is provided
-        if (!this._has('resolveContext')) {
+        if (!this._has('resolve.context')) {
             this.#log?.debug('No context resolver provided, using default context resolver');
-            this._set('resolveContext', this._createDefaultContextResolver.bind(this));
+            this._set('resolve.context', this._createDefaultContextResolver.bind(this));
         }
 
         // Ensure a default application resolver is set if none is provided
-        if (!this._has('resolveApplication')) {
+        if (!this._has('resolve.application')) {
             this.#log?.debug(
                 'No application resolver provided, using default application resolver',
             );
-            this._set('resolveApplication', this._createDefaultApplicationResolver.bind(this));
+            this._set('resolve.application', this._createDefaultApplicationResolver.bind(this));
         }
 
         // Ensure a default event provider is set if none is provided
@@ -277,7 +255,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      */
     protected async _createDefaultContextResolver(
         init: ConfigBuilderCallbackArgs,
-    ): Promise<BookmarkModuleConfig['resolveContext']> {
+    ): Promise<BookmarkModuleConfig['resolve']['context']> {
         if (!init.hasModule('context')) {
             this.#log?.info('No context module available, context for bookmarks will be undefined');
             return async () => undefined; // No context module available
@@ -298,7 +276,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      */
     protected async _createDefaultApplicationResolver(
         init: ConfigBuilderCallbackArgs,
-    ): Promise<BookmarkModuleConfig['resolveApplication']> {
+    ): Promise<BookmarkModuleConfig['resolve']['application']> {
         const appProvider = await this._resolveAppProvider(init);
 
         if (!appProvider) {

@@ -8,7 +8,7 @@ const bookmarkUserSchema = z.object({
     accountClassification: z.number(),
 });
 
-const bookmarkSourceSystemSchema = z.object({
+export const bookmarkSourceSystemSchema = z.object({
     identifier: z.string(),
     name: z.string().optional(),
     subSystem: z.string().optional(),
@@ -45,35 +45,3 @@ export const bookmarkWithDataSchema = <
     bookmarkSchema.extend({
         payload: schema,
     });
-
-// export const newBookmarkSchema = <
-//     T extends Record<string, unknown>,
-//     S extends z.ZodSchema<T> = z.ZodSchema<T>,
-// >(
-//     schema: S,
-// ) =>
-//     z.object({
-//         name: z.string(),
-//         appKey: z.string(),
-//         description: z.string().optional(),
-//         isShared: z.boolean().optional(),
-//         contextId: z.string().optional(),
-//         sourceSystem: bookmarkSourceSystemSchema.optional(),
-//         payload: schema.optional(),
-//     });
-
-// export const patchBookmarkSchema = <
-//     T extends Record<string, unknown> | never,
-//     S extends z.ZodSchema<T> = z.ZodSchema<T>,
-// >(
-//     schema: S = z.record(z.unknown()) as unknown as T extends Record<string, unknown>
-//         ? S
-//         : z.ZodSchema<T>,
-// ) =>
-//     z.object({
-//         name: z.string(),
-//         description: z.string().nullish(),
-//         isShared: z.boolean().nullish(),
-//         sourceSystem: bookmarkSourceSystemSchema.nullish(),
-//         payload: schema.nullish(),
-//     });
