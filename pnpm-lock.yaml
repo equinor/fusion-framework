@@ -109,8 +109,8 @@ importers:
   cookbooks/app-react-ag-grid:
     dependencies:
       '@ag-grid-community/client-side-row-model':
-        specifier: ~31.3.2
-        version: 31.3.2
+        specifier: ~32.0.0
+        version: 32.0.0
       '@ag-grid-community/core':
         specifier: ~31.3.2
         version: 31.3.2
@@ -1744,11 +1744,14 @@ packages:
   '@actions/http-client@2.2.0':
     resolution: {integrity: sha512-q+epW0trjVUUHboliPb4UF9g2msf+w61b32tAkFEwL/IwP0DQWgbCMM0Hbe3e3WXSKz5VcUXbzJQgy8Hkra/Lg==}
 
-  '@ag-grid-community/client-side-row-model@31.3.2':
-    resolution: {integrity: sha512-XFzq4BvPPEjf5HtC1VpruBESqvsJYfIcY1EC5CaY1hqV1NRp1JVImFrMdoxUuw9NsoucGneDT/DOj42WHweFIg==}
+  '@ag-grid-community/client-side-row-model@32.0.0':
+    resolution: {integrity: sha512-J/soopC8OqAWe5J1nykzY442b5Z8SuTf6ew1RrEjAhSCz1X+kpNxZmLAZlVvigpsWogMeKNhfuO6KNTTHkSTaw==}
 
   '@ag-grid-community/core@31.3.2':
     resolution: {integrity: sha512-iab+xIPCvjzGkIBgo12IQNa9/ZGI4BmjsQz65+aipNXISbtGketkN5iO4OFQgafgf0f9JZVFOZ3EzCnMiVWLiQ==}
+
+  '@ag-grid-community/core@32.0.0':
+    resolution: {integrity: sha512-xBsDlua2CehOmVIYzaAJtoKjLtbv6o/w2lMwdlllfpZAiqnbJQiLJEARWCOGRn769HUnIWFNtrbzJlbuFj4Usw==}
 
   '@ag-grid-community/csv-export@31.3.2':
     resolution: {integrity: sha512-AjQAvW84SXzGSzoSgmpSDCPrqYHZNRRDEVFi47N0iW44AxelCIVSjFRF8nkUky6On6bQ+Mv8+6JNtVmjki5p6w==}
@@ -2539,6 +2542,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -2546,6 +2550,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.2':
     resolution: {integrity: sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==}
+    deprecated: Use @eslint/object-schema instead
 
   '@internationalized/date@3.5.4':
     resolution: {integrity: sha512-qoVJVro+O0rBaw+8HPjUB1iH8Ihf8oziEnqMnvhJUSuVIrHOuZ6eNLHNvzXJKUvAtaDiqMnRlg8Z2mgh09BlUw==}
@@ -4596,6 +4601,9 @@ packages:
   adm-zip@0.5.10:
     resolution: {integrity: sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==}
     engines: {node: '>=6.0'}
+
+  ag-charts-types@10.0.0:
+    resolution: {integrity: sha512-jjiwrzydERou4yp9WHiJeVK237B7BUP3/4j6tdycyHag266YVWa/BMNtTOThWJKGku+m+TC2qfaujLYixgcbrQ==}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -8744,13 +8752,18 @@ snapshots:
       tunnel: 0.0.6
       undici: 5.28.3
 
-  '@ag-grid-community/client-side-row-model@31.3.2':
+  '@ag-grid-community/client-side-row-model@32.0.0':
     dependencies:
-      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-community/core': 32.0.0
       tslib: 2.6.2
 
   '@ag-grid-community/core@31.3.2':
     dependencies:
+      tslib: 2.6.2
+
+  '@ag-grid-community/core@32.0.0':
+    dependencies:
+      ag-charts-types: 10.0.0
       tslib: 2.6.2
 
   '@ag-grid-community/csv-export@31.3.2':
@@ -13344,6 +13357,8 @@ snapshots:
   acorn@8.11.3: {}
 
   adm-zip@0.5.10: {}
+
+  ag-charts-types@10.0.0: {}
 
   ajv@6.12.6:
     dependencies:
