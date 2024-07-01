@@ -38,14 +38,13 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module-bookmark": "workspace:^",
-        "@equinor/fusion-framework-module-context": "workspace:^",
-        "@equinor/fusion-framework-react": "workspace:^",
-        "@equinor/fusion-framework-react-module": "workspace:^",
-        "@equinor/fusion-observable": "workspace:^",
-        "@equinor/fusion-query": "workspace:^"
+        "@equinor/fusion-observable": "workspace:^"
     },
     "devDependencies": {
+        "@equinor/fusion-framework-module": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
+        "@equinor/fusion-framework-react": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
         "@types/react": "^18.2.50",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -53,6 +52,9 @@
         "typescript": "^5.5.3"
     },
     "peerDependencies": {
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@equinor/fusion-framework-react": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
         "@types/react": "^17.0.0 || ^18.0.0",
         "react": "^17.0.0 || ^18.0.0",
         "rxjs": "^7.x"
