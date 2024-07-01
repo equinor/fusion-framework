@@ -115,8 +115,8 @@ importers:
         specifier: ~31.3.2
         version: 31.3.2
       '@ag-grid-community/react':
-        specifier: ~31.3.2
-        version: 31.3.2(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ~32.0.0
+        version: 32.0.0(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@ag-grid-community/styles':
         specifier: ^31.3.2
         version: 31.3.2
@@ -1753,10 +1753,10 @@ packages:
   '@ag-grid-community/csv-export@31.3.2':
     resolution: {integrity: sha512-AjQAvW84SXzGSzoSgmpSDCPrqYHZNRRDEVFi47N0iW44AxelCIVSjFRF8nkUky6On6bQ+Mv8+6JNtVmjki5p6w==}
 
-  '@ag-grid-community/react@31.3.2':
-    resolution: {integrity: sha512-pGxW60itcWAKNBKOfi5oi0R9z6fEPME7V7vajz6cPafZCJ25ylTWxW4XLO2391tYNqorUbR5U3rOpaXkCtFCRQ==}
+  '@ag-grid-community/react@32.0.0':
+    resolution: {integrity: sha512-ZS8PxUlcLNuu+Vny8LU32lYK3lBu7y5IuqyPcH9c20MSKESRXMmQKLix/WN99FNUS2+EdEz4+0RlE7wPiCr5lw==}
     peerDependencies:
-      '@ag-grid-community/core': 31.3.2
+      '@ag-grid-community/core': 32.0.0
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
 
@@ -2539,6 +2539,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -2546,6 +2547,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.2':
     resolution: {integrity: sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==}
+    deprecated: Use @eslint/object-schema instead
 
   '@internationalized/date@3.5.4':
     resolution: {integrity: sha512-qoVJVro+O0rBaw+8HPjUB1iH8Ihf8oziEnqMnvhJUSuVIrHOuZ6eNLHNvzXJKUvAtaDiqMnRlg8Z2mgh09BlUw==}
@@ -8758,7 +8760,7 @@ snapshots:
       '@ag-grid-community/core': 31.3.2
       tslib: 2.6.2
 
-  '@ag-grid-community/react@31.3.2(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@ag-grid-community/react@32.0.0(@ag-grid-community/core@31.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@ag-grid-community/core': 31.3.2
       prop-types: 15.8.1
