@@ -2,7 +2,7 @@ import { type ObservableInput } from 'rxjs';
 import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
 
 /**
- * Defines the shape of a filter for bookmarks.
+ * Defines the shape of a filter for querying bookmarks.
  * @property {string} [appKey] - The app key to filter bookmarks by.
  * @property {string} [contextId] - The context ID to filter bookmarks by.
  * @property {object} [sourceSystem] - The source system to filter bookmarks by.
@@ -65,7 +65,7 @@ export type BookmarkNew<T extends BookmarkData = BookmarkData> = {
         name?: string;
         subSystem?: string;
     };
-    payload?: T;
+    payload?: T | null;
 };
 
 /**

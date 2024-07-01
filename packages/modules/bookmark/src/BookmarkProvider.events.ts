@@ -1,6 +1,6 @@
 import type { FrameworkEventInit, IFrameworkEvent } from '@equinor/fusion-framework-module-event';
 import type { Bookmark } from './types';
-import type { BookmarkProvider } from './BookmarkProvider';
+import type { BookmarkPayloadGenerator, BookmarkProvider } from './BookmarkProvider';
 import { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
 
 export interface BookmarkProviderEventMap {
@@ -84,6 +84,15 @@ export interface BookmarkProviderEventMap {
      */
     onBookmarkFavouriteAdded: IFrameworkEvent<
         FrameworkEventInit<{ bookmark: Bookmark | null }, BookmarkProvider>
+    >;
+
+    /**
+     * An event that is emitted when a new bookmark payload generator is added.
+     * @event onBookmarkPayloadCreatorAdded
+     * @param {FrameworkEventInit<BookmarkPayloadGenerator, BookmarkProvider>} event - The event payload, containing the new bookmark payload generator.
+     */
+    onBookmarkPayloadCreatorAdded: IFrameworkEvent<
+        FrameworkEventInit<BookmarkPayloadGenerator, BookmarkProvider>
     >;
 }
 

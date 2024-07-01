@@ -30,6 +30,8 @@ const defaultInitialState: BookmarkState = {
 
 /**
  * Creates a reducer for managing the state of bookmarks.
+ * 
+ * @todo add fast-deep-equal to compare bookmarks
  *
  * @param initialState - The initial state of the bookmarks.
  * @returns A reducer function for managing the bookmarks state.
@@ -39,19 +41,29 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
         { ...defaultInitialState, ...initialState },
         (builder) => {
             builder
+                .addCase(bookmarkActions.setBookmark, (state, action) => {
+                    const bookmarkId = action.payload.id;
+                    if (bookmarkId in state.bookmarks) {
+                        state.bookmarks[bookmarkId] = action.payload;
+                    }
+                })
                 .addCase(bookmarkActions.setCurrentBookmark, (state, action) => {
                     state.currentBookmark = action.payload;
                 })
                 .addCase(bookmarkActions.createBookmark.success, (state, action) => {
-                    state.bookmarks[action.payload.id] = action.payload;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const { payload, ...bookmark } = action.payload;
+                    state.bookmarks[bookmark.id] = bookmark;
                 })
                 .addCase(bookmarkActions.updateBookmark.success, (state, action) => {
                     const bookmarkId = action.payload.id;
-                    const current = state.bookmarks[bookmarkId];
-                    state.bookmarks[bookmarkId] = {
-                        ...current,
-                        ...action.payload,
-                    };
+                    if (bookmarkId in state.bookmarks) {
+                        const current = state.bookmarks[bookmarkId];
+                        state.bookmarks[bookmarkId] = {
+                            ...current,
+                            ...action.payload,
+                        };
+                    }
                 })
 
                 /** removal of bookmarks */

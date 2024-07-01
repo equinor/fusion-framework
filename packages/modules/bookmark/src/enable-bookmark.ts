@@ -1,6 +1,6 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
-import { module } from './module';
+import { module } from './bookmark-module';
 import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 
 /**

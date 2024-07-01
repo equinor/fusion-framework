@@ -21,7 +21,7 @@ import type {
 } from './BookmarkClient.interface';
 
 import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
-import { bookmarkSchema, bookmarkWithDataSchema, bookmarksSchema } from './schemas';
+import { bookmarkSchema, bookmarkWithDataSchema, bookmarksSchema } from './bookmark.schemas';
 
 /**
  * Represents a client for interacting with the Fusion Bookmarks API.
