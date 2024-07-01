@@ -30,7 +30,7 @@
         "@ag-grid-enterprise/column-tool-panel": "^31.3.2",
         "@ag-grid-enterprise/excel-export": "^31.3.2",
         "@ag-grid-enterprise/filter-tool-panel": "^31.3.2",
-        "@ag-grid-enterprise/menu": "^31.3.2",
+        "@ag-grid-enterprise/menu": "^32.0.0",
         "@ag-grid-enterprise/range-selection": "^31.3.2",
         "@equinor/fusion-framework-module-ag-grid": "workspace:^",
         "@equinor/fusion-react-ag-grid-styles": "^31.2.3"
