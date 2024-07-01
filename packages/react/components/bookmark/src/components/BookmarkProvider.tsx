@@ -1,12 +1,28 @@
 import { Snackbar } from '@equinor/eds-core-react';
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 import { CreateBookmarkModal } from './create-bookmark';
 import { EditBookmarkModal } from './edit-bookmark';
 import { ImportBookmarkModal } from './import-bookmark';
+import { type BookmarkProvider as IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 
-export const BookmarkProvider = ({ children }: PropsWithChildren<unknown>) => {
+const bookmarkProviderContext = createContext<IBookmarkProvider | null>(null);
+
+type BookmarkProviderProps = {
+    readonly provider: IBookmarkProvider | null;
+};
+
+export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>) => {
+    const { provider, children } = props;
+    return (
+        <bookmarkProviderContext.Provider value={provider}>
+            {children}
+        </bookmarkProviderContext.Provider>
+    );
+};
+
+export const BookmarkProviders = ({ children }: PropsWithChildren<unknown>) => {
     const [isCreateBookmarkOpen, setIsCreateBookmarkOpen] = useState(false);
     const [isEditBookmarkOpen, setIsEditBookmarkOpen] = useState(false);
     const [editBookmarkId, setEditBookmarkId] = useState<string | undefined>();

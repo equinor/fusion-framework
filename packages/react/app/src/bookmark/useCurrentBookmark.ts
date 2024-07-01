@@ -1,5 +1,5 @@
 import {
-    CreateBookMarkFn,
+    CreateBookmarkFn,
     useCurrentBookmark as _useCurrentBookmark,
 } from '@equinor/fusion-framework-react-module-bookmark';
 
@@ -7,7 +7,7 @@ import {
  * By providing a CreateBookMarkFn bookmarks is enabled for the current application.
  *
  * @template TData - Type of data stored in bookmark
- * @param {CreateBookMarkFn<TData>} [createBookmarkState] - Function for creating bookmark payload, this function should be wrapped in useCallback
+ * @param {CreateBookmarkFn<TData>} [createBookmarkState] - Function for creating bookmark payload, this function should be wrapped in useCallback
  *
  * ```TS
  * // Example
@@ -15,7 +15,7 @@ import {
  * ```
  * @return {*}  {CurrentBookmark<TData>}
  */
-export const useCurrentBookmark = <TData>(createBookmarkState?: CreateBookMarkFn<TData>) =>
+export const useCurrentBookmark = <TData>(createBookmarkState?: CreateBookmarkFn<TData>) =>
     _useCurrentBookmark(createBookmarkState);
 
 export default useCurrentBookmark;
