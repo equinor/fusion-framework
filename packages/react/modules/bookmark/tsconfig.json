@@ -11,17 +11,20 @@
       "path": "../../../utils/query"
     },
     {
+      "path": "../../../modules/module"
+    },
+    {
       "path": "../../../modules/navigation"
     },
     {
       "path": "../../../modules/bookmark"
     },
     {
-      "path": "../module"
+      "path": "../../framework"
     },
     {
-      "path": "../../framework"
-    }
+      "path": "../module"
+    },
   ],
   "include": [
     "src/**/*"
