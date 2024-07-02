@@ -37,7 +37,7 @@ importers:
         version: 5.0.7
       tslib:
         specifier: ^2.6.1
-        version: 2.6.2
+        version: 2.6.3
       turbo:
         specifier: ^1.12.2
         version: 1.13.3
@@ -1065,7 +1065,7 @@ importers:
         version: link:../msal
       '@microsoft/applicationinsights-web':
         specifier: ^3.0.2
-        version: 3.1.0(tslib@2.6.2)
+        version: 3.1.0(tslib@2.6.3)
     devDependencies:
       typescript:
         specifier: ^5.4.2
@@ -1318,10 +1318,10 @@ importers:
     devDependencies:
       '@equinor/fusion':
         specifier: ^3.4.15
-        version: 3.4.15(tslib@2.6.2)
+        version: 3.4.15(tslib@2.6.3)
       '@equinor/fusion-components':
         specifier: ^2.10.5
-        version: 2.12.4(@equinor/fusion@3.4.15(tslib@2.6.2))(@types/react@18.2.61)(eslint@8.57.0)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(typescript@5.4.2)
+        version: 2.12.4(@equinor/fusion@3.4.15(tslib@2.6.3))(@types/react@18.2.61)(eslint@8.57.0)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(typescript@5.4.2)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../../framework
@@ -8071,6 +8071,9 @@ packages:
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
+  tslib@2.6.3:
+    resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
+
   tsutils-etc@1.4.2:
     resolution: {integrity: sha512-2Dn5SxTDOu6YWDNKcx1xu2YUy6PUeKrWZB/x2cQ8vY2+iz3JRembKn/iZ0JLT1ZudGNwQQvtFX9AwvRHbXuPUg==}
     hasBin: true
@@ -8766,7 +8769,7 @@ snapshots:
   '@ag-grid-community/csv-export@32.0.0':
     dependencies:
       '@ag-grid-community/core': 32.0.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@ag-grid-community/react@32.0.0(@ag-grid-community/core@32.0.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -9425,9 +9428,9 @@ snapshots:
       - '@types/eslint'
       - supports-color
 
-  '@equinor/fusion-components@2.12.4(@equinor/fusion@3.4.15(tslib@2.6.2))(@types/react@18.2.61)(eslint@8.57.0)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(typescript@5.4.2)':
+  '@equinor/fusion-components@2.12.4(@equinor/fusion@3.4.15(tslib@2.6.3))(@types/react@18.2.61)(eslint@8.57.0)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.22.4)(react-dom@18.2.0(react@18.2.0))(react-router-dom@5.3.4(react@18.2.0))(react@18.2.0)(typescript@5.4.2)':
     dependencies:
-      '@equinor/fusion': 3.4.15(tslib@2.6.2)
+      '@equinor/fusion': 3.4.15(tslib@2.6.3)
       '@equinor/fusion-observable': 8.3.0(@types/react@18.2.61)(react@18.2.0)
       '@equinor/fusion-react-checkbox': 0.5.17(react@18.2.0)
       '@equinor/fusion-react-divider': 0.2.13(react@18.2.0)
@@ -9815,9 +9818,9 @@ snapshots:
       '@equinor/eds-tokens': 0.5.5
       csstype: 3.1.3
 
-  '@equinor/fusion@3.4.15(tslib@2.6.2)':
+  '@equinor/fusion@3.4.15(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-web': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-web': 2.8.17(tslib@2.6.3)
       '@microsoft/signalr': 8.0.0
       jwt-decode: 3.1.2
     optionalDependencies:
@@ -9970,26 +9973,26 @@ snapshots:
   '@formatjs/ecma402-abstract@2.0.0':
     dependencies:
       '@formatjs/intl-localematcher': 0.5.4
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@formatjs/fast-memoize@2.2.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@formatjs/icu-messageformat-parser@2.7.8':
     dependencies:
       '@formatjs/ecma402-abstract': 2.0.0
       '@formatjs/icu-skeleton-parser': 1.8.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@formatjs/icu-skeleton-parser@1.8.2':
     dependencies:
       '@formatjs/ecma402-abstract': 2.0.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@formatjs/intl-localematcher@0.5.4':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -10129,20 +10132,20 @@ snapshots:
 
   '@material/animation@14.0.0-canary.53b3cad2f.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/base@14.0.0-canary.53b3cad2f.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/density@14.0.0-canary.53b3cad2f.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/dom@14.0.0-canary.53b3cad2f.0':
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/elevation@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10151,15 +10154,15 @@ snapshots:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/feature-targeting@14.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/feature-targeting@14.0.0-canary.53b3cad2f.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/floating-label@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10170,7 +10173,7 @@ snapshots:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/focus-ring@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10186,7 +10189,7 @@ snapshots:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/line-ripple@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10194,7 +10197,7 @@ snapshots:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/list@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10207,41 +10210,41 @@ snapshots:
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-base@0.27.0':
     dependencies:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/dom': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-button@0.27.0':
     dependencies:
       '@material/mwc-icon': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-checkbox@0.27.0':
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-floating-label@0.27.0':
     dependencies:
       '@material/floating-label': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-formfield@0.27.0':
     dependencies:
       '@material/form-field': 14.0.0-canary.53b3cad2f.0
       '@material/mwc-base': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-icon-button-toggle@0.27.0':
     dependencies:
@@ -10249,24 +10252,24 @@ snapshots:
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-icon-button@0.27.0':
     dependencies:
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-icon@0.27.0':
     dependencies:
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-line-ripple@0.27.0':
     dependencies:
       '@material/line-ripple': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-list@0.27.0':
     dependencies:
@@ -10278,14 +10281,14 @@ snapshots:
       '@material/mwc-radio': 0.27.0
       '@material/mwc-ripple': 0.27.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-notched-outline@0.27.0':
     dependencies:
       '@material/mwc-base': 0.27.0
       '@material/notched-outline': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-radio@0.27.0':
     dependencies:
@@ -10293,7 +10296,7 @@ snapshots:
       '@material/mwc-ripple': 0.27.0
       '@material/radio': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-ripple@0.27.0':
     dependencies:
@@ -10301,7 +10304,7 @@ snapshots:
       '@material/mwc-base': 0.27.0
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/mwc-textfield@0.27.0':
     dependencies:
@@ -10313,7 +10316,7 @@ snapshots:
       '@material/mwc-notched-outline': 0.27.0
       '@material/textfield': 14.0.0-canary.53b3cad2f.0
       lit: 2.8.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/notched-outline@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10323,7 +10326,7 @@ snapshots:
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/shape': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/radio@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10336,7 +10339,7 @@ snapshots:
       '@material/ripple': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/touch-target': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/ripple@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10346,19 +10349,19 @@ snapshots:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/rtl@14.0.0-canary.53b3cad2f.0':
     dependencies:
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/shape@14.0.0-canary.53b3cad2f.0':
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/textfield@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10376,17 +10379,17 @@ snapshots:
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       '@material/tokens': 14.0.0-canary.53b3cad2f.0
       '@material/typography': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/theme@14.0.0':
     dependencies:
       '@material/feature-targeting': 14.0.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/theme@14.0.0-canary.53b3cad2f.0':
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/tokens@14.0.0-canary.53b3cad2f.0':
     dependencies:
@@ -10397,13 +10400,13 @@ snapshots:
       '@material/base': 14.0.0-canary.53b3cad2f.0
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/rtl': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@material/typography@14.0.0-canary.53b3cad2f.0':
     dependencies:
       '@material/feature-targeting': 14.0.0-canary.53b3cad2f.0
       '@material/theme': 14.0.0-canary.53b3cad2f.0
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@mdit-vue/plugin-component@2.1.3':
     dependencies:
@@ -10597,114 +10600,114 @@ snapshots:
     optionalDependencies:
       markdown-it: 14.1.0
 
-  '@microsoft/applicationinsights-analytics-js@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-analytics-js@2.8.17(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-analytics-js@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-analytics-js@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-cfgsync-js@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-cfgsync-js@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-channel-js@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-channel-js@2.8.17(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-channel-js@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-channel-js@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-common@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-common@2.8.17(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-common@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-common@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-core-js@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-core-js@2.8.17(tslib@2.6.3)':
     dependencies:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-core-js@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-core-js@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-shims': 3.0.1
-      '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-async': 0.4.0
-      '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
-
-  '@microsoft/applicationinsights-dependencies-js@2.8.17(tslib@2.6.2)':
-    dependencies:
-      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-shims': 2.0.2
-      '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
-
-  '@microsoft/applicationinsights-dependencies-js@3.1.0(tslib@2.6.2)':
-    dependencies:
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-properties-js@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-dependencies-js@2.8.17(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-properties-js@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-dependencies-js@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-shims': 3.0.1
+      '@microsoft/dynamicproto-js': 2.0.3
+      '@nevware21/ts-async': 0.4.0
+      '@nevware21/ts-utils': 0.11.2
+      tslib: 2.6.3
+
+  '@microsoft/applicationinsights-properties-js@2.8.17(tslib@2.6.3)':
+    dependencies:
+      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-shims': 2.0.2
+      '@microsoft/dynamicproto-js': 1.1.11
+      tslib: 2.6.3
+
+  '@microsoft/applicationinsights-properties-js@3.1.0(tslib@2.6.3)':
+    dependencies:
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.2
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@microsoft/applicationinsights-shims@2.0.2': {}
 
@@ -10712,32 +10715,32 @@ snapshots:
     dependencies:
       '@nevware21/ts-utils': 0.11.2
 
-  '@microsoft/applicationinsights-web@2.8.17(tslib@2.6.2)':
+  '@microsoft/applicationinsights-web@2.8.17(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-analytics-js': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-channel-js': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-dependencies-js': 2.8.17(tslib@2.6.2)
-      '@microsoft/applicationinsights-properties-js': 2.8.17(tslib@2.6.2)
+      '@microsoft/applicationinsights-analytics-js': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-channel-js': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-common': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-dependencies-js': 2.8.17(tslib@2.6.3)
+      '@microsoft/applicationinsights-properties-js': 2.8.17(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.11
-      tslib: 2.6.2
+      tslib: 2.6.3
 
-  '@microsoft/applicationinsights-web@3.1.0(tslib@2.6.2)':
+  '@microsoft/applicationinsights-web@3.1.0(tslib@2.6.3)':
     dependencies:
-      '@microsoft/applicationinsights-analytics-js': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-cfgsync-js': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-channel-js': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-dependencies-js': 3.1.0(tslib@2.6.2)
-      '@microsoft/applicationinsights-properties-js': 3.1.0(tslib@2.6.2)
+      '@microsoft/applicationinsights-analytics-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-cfgsync-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-channel-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-common': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-core-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-dependencies-js': 3.1.0(tslib@2.6.3)
+      '@microsoft/applicationinsights-properties-js': 3.1.0(tslib@2.6.3)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.4.0
       '@nevware21/ts-utils': 0.10.5
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@microsoft/dynamicproto-js@1.1.11': {}
 
@@ -12393,7 +12396,7 @@ snapshots:
 
   '@swc/helpers@0.5.11':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   '@tanstack/react-virtual@3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -14208,7 +14211,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.3.1
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   earcut@2.2.4: {}
 
@@ -14466,7 +14469,7 @@ snapshots:
       eslint-etc: 5.2.1(eslint@8.57.0)(typescript@5.4.5)
       requireindex: 1.2.0
       rxjs-report-usage: 1.0.6
-      tslib: 2.6.2
+      tslib: 2.6.3
       tsutils: 3.21.0(typescript@5.4.5)
       tsutils-etc: 1.4.2(tsutils@3.21.0(typescript@5.4.5))(typescript@5.4.5)
       typescript: 5.4.5
@@ -15143,7 +15146,7 @@ snapshots:
       '@formatjs/ecma402-abstract': 2.0.0
       '@formatjs/fast-memoize': 2.2.0
       '@formatjs/icu-messageformat-parser': 2.7.8
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   invariant@2.2.4:
     dependencies:
@@ -17375,7 +17378,7 @@ snapshots:
   synckit@0.8.8:
     dependencies:
       '@pkgr/core': 0.1.1
-      tslib: 2.6.2
+      tslib: 2.6.3
 
   tabbable@6.2.0: {}
 
@@ -17454,6 +17457,8 @@ snapshots:
   tslib@2.5.0: {}
 
   tslib@2.6.2: {}
+
+  tslib@2.6.3: {}
 
   tsutils-etc@1.4.2(tsutils@3.21.0(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
