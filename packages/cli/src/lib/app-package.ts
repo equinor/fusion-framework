@@ -4,7 +4,7 @@ import {
     type NormalizeOptions as ResolveAppPackageOptions,
 } from 'read-package-up';
 
-import { AppManifest } from './app-manifest.js';
+import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { assert } from './utils/assert.js';
 
 export type AppPackageJson = PackageJson & {

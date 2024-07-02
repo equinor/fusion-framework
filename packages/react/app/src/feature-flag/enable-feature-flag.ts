@@ -65,7 +65,7 @@ export function enableFeatureFlag(
             enableFeatureFlagging(configurator, async (builder) => {
                 builder.addPlugin(
                     createLocalStoragePlugin(localFlags, {
-                        name: (configurator as AppConfigurator).env?.manifest.key,
+                        name: (configurator as AppConfigurator).env?.manifest.key ?? undefined,
                     }),
                 );
                 builder.addPlugin(createUrlPlugin(urlFlags));

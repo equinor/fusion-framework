@@ -1,6 +1,6 @@
 import deepmerge from 'deepmerge';
 
-import { ResolvedAppPackage, resolveAppKey, resolveEntryPoint } from './app-package.js';
+import { ResolvedAppPackage, resolveEntryPoint } from './app-package.js';
 
 import {
     loadConfig,
@@ -14,32 +14,23 @@ import {
 import { AssertionError, assert, assertObject } from './utils/assert.js';
 import { RecursivePartial } from './utils/types.js';
 
-export type AppManifest = {
-    // version: {
-    //     major: number;
-    //     minor: number;
-    //     patch: number;
-    // };
+export type AppManifestExport = {
     version: string;
-    key: string;
-    entry: string;
-    name: string;
-    shortName: string;
-    description?: string;
-    admins?: string[];
-    owners?: string[];
-    main?: string;
-    icon?: string;
-    /** this will be deprecated when new app management is live  */
-    resource?: string[];
+    entryPoint: string;
+    timestamp?: string;
+    commitSha?: string;
+    githubRepo?: string;
+    projectPage?: string;
+    annotations?: Record<string, string>;
+    allowedExtensions?: string[];
 };
 
 export type AppManifestFn = (
     env: ConfigExecuterEnv,
     args: {
-        base: AppManifest;
+        base: AppManifestExport;
     },
-) => AppManifest | Promise<AppManifest>;
+) => AppManifestExport | Promise<AppManifestExport>;
 
 type FindManifestOptions = FindConfigOptions & {
     file?: string;
@@ -68,7 +59,7 @@ export const manifestConfigFilename = 'app.manifest.config';
  */
 export const defineAppManifest = (fn: AppManifestFn) => fn;
 
-export function assertAppManifest(value: AppManifest): asserts value {
+export function assertAppManifest(value: AppManifestExport): asserts value {
     assert(value, 'expected manifest');
     // TODO make assertions
 }
@@ -96,17 +87,17 @@ export function assertAppManifest(value: AppManifest): asserts value {
  * @returns deep merged manifest
  */
 export const mergeManifests = (
-    base: RecursivePartial<AppManifest>,
-    overrides: RecursivePartial<AppManifest>,
-): AppManifest => {
-    const manifest = deepmerge(base, overrides) as unknown as AppManifest;
-    assertAppManifest(manifest as unknown as AppManifest);
+    base: RecursivePartial<AppManifestExport>,
+    overrides: RecursivePartial<AppManifestExport>,
+): AppManifestExport => {
+    const manifest = deepmerge(base, overrides) as unknown as AppManifestExport;
+    assertAppManifest(manifest as unknown as AppManifestExport);
     return manifest;
 };
 
 /** loads manifestFn from file */
 export const loadManifest = (filename?: string) =>
-    loadConfig<AppManifest>(filename ?? manifestConfigFilename);
+    loadConfig<AppManifestExport>(filename ?? manifestConfigFilename);
 
 /**
  * tries to resolve manifest
@@ -127,33 +118,34 @@ export const resolveManifest = async (
     return resolveConfig(manifestConfigFilename, { find: options });
 };
 
-export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifest => {
+export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestExport => {
     const { packageJson } = pkg;
     assertObject(packageJson, 'expected packageJson');
     assert(packageJson.name, 'expected [name] in packageJson');
     assert(packageJson.version, 'expected [version] in packageJson');
-    const key = resolveAppKey(pkg.packageJson);
     const entry = resolveEntryPoint(pkg.packageJson);
     assert(entry, 'expected [version] in packageJson');
-
+    const { type: module } = pkg.packageJson;
+    const entryPoint = `app-bundle${module === module ? '.js' : '.mjs'}`;
     const manifest = {
-        key,
-        entry,
         version: packageJson.version,
-        // TODO manifest should not be loaded from package
-        name: packageJson.manifest?.name ?? key,
-        shortName: packageJson.manifest?.shortName ?? key,
-        description: packageJson.description,
-    } satisfies AppManifest;
+        entryPoint,
+        timestamp: new Date().toISOString(),
+        githubRepo:
+            typeof packageJson.repository === 'string'
+                ? packageJson.repository
+                : packageJson.repository?.url,
+        projectPage: packageJson.homepage,
+    } satisfies AppManifestExport;
     assertAppManifest(manifest);
     return manifest;
 };
 
 export const createManifest = async (
     env: ConfigExecuterEnv,
-    base: AppManifest,
+    base: AppManifestExport,
     options?: FindManifestOptions,
-): Promise<{ manifest: AppManifest; path?: string }> => {
+): Promise<{ manifest: AppManifestExport; path?: string }> => {
     const resolved = await resolveManifest(options);
     if (resolved) {
         const manifest = await initiateConfig(resolved.config, env, { base });

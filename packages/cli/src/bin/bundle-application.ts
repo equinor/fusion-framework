@@ -54,9 +54,8 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     if (!fileExistsSync(dirname(archive))) {
         await mkdir(dirname(archive), { recursive: true });
     }
+
     bundle.writeZip(archive);
-
     spinner.info(formatPath(archive), formatByteSize(archive));
-
     spinner.succeed();
 };

@@ -6,7 +6,9 @@ export default defineAppConfig((_nev, { base }) =>
             scope: 'foobar',
         },
         endpoints: {
-            api: 'https://foo.bars',
+            api: {
+                url: 'https://foo.bars'
+            },
         },
     }),
 );

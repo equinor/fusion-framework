@@ -15,7 +15,8 @@ import { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
-import type { AppConfig, AppManifest, CurrentApp } from './types';
+import type { AppConfig, CurrentApp } from './types';
+import { ApplicationManifest } from './ApplicationManifest';
 
 import { App, filterEmpty, IApp } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
@@ -23,12 +24,13 @@ import { AppConfigError, AppManifestError } from './errors';
 import { AppBundleStateInitial } from './app/types';
 
 export class AppModuleProvider {
-    static compareAppManifest<T extends AppManifest>(a?: T, b?: T): boolean {
+    static compareAppManifest<T extends ApplicationManifest>(a?: T, b?: T): boolean {
         return JSON.stringify(a) === JSON.stringify(b);
     }
 
-    public appClient: Query<AppManifest, { appKey: string }>;
-    #appsClient: Query<AppManifest[], void>;
+    public appClient: Query<ApplicationManifest, { appKey: string }>;
+    #appsClient: Query<ApplicationManifest[], void>;
+    #myAppsClient: Query<ApplicationManifest[], void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
@@ -69,10 +71,12 @@ export class AppModuleProvider {
 
         this.appClient = new Query(config.client.getAppManifest);
         this.#appsClient = new Query(config.client.getAppManifests);
+        this.#myAppsClient = new Query(config.client.getMyAppManifests);
         this.#configClient = new Query(config.client.getAppConfig);
 
         this.#subscription.add(() => this.appClient.complete());
         this.#subscription.add(() => this.#appsClient.complete());
+        this.#subscription.add(() => this.#myAppsClient.complete());
         this.#subscription.add(() => this.#configClient.complete());
         this.#subscription.add(
             this.current$
@@ -103,7 +107,7 @@ export class AppModuleProvider {
      * fetch an application by key
      * @param appKey - application key
      */
-    public getAppManifest(appKey: string): Observable<AppManifest> {
+    public getAppManifest(appKey: string): Observable<ApplicationManifest> {
         return Query.extractQueryValue(
             this.appClient.query({ appKey }).pipe(
                 catchError((err) => {
@@ -124,8 +128,15 @@ export class AppModuleProvider {
     /**
      * fetch all applications
      */
-    public getAllAppManifests(): Observable<AppManifest[]> {
+    public getAllAppManifests(): Observable<ApplicationManifest[]> {
         return Query.extractQueryValue(this.#appsClient.query());
+    }
+
+    /**
+     * fetch all current users applications
+     */
+    public getMyAppManifests(): Observable<ApplicationManifest[]> {
+        return Query.extractQueryValue(this.#myAppsClient.query());
     }
 
     /**

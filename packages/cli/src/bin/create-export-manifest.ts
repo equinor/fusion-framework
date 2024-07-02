@@ -1,6 +1,7 @@
 import nodeFs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import assert from 'node:assert';
+import { execSync } from 'node:child_process';
 
 import { SemVer, parse as parseSemver } from 'semver';
 
@@ -12,7 +13,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
-import { AppManifest } from '../lib/app-manifest.js';
+import type { AppManifestExport } from '../lib/app-manifest.js';
 
 // TODO  why do we do this??? can`t backend parse semver?
 export const normalizeVersion = (version: string) => {
@@ -23,19 +24,11 @@ export const normalizeVersion = (version: string) => {
     return { major, minor, patch };
 };
 
-type AppManifestExport = Omit<AppManifest, 'version'> & {
-    version: {
-        major: number;
-        minor: number;
-        patch: number;
-    };
-};
-
 export const createExportManifest = async (options?: {
     command?: ConfigExecuterEnv['command'];
     configFile?: string;
     outputFile?: string;
-}) => {
+}): Promise<AppManifestExport> => {
     const { command = 'build', outputFile } = options ?? {};
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('manifest') });
@@ -52,10 +45,14 @@ export const createExportManifest = async (options?: {
         file: options?.configFile,
     });
 
-    const manifestExport: AppManifestExport = {
-        ...manifest,
-        version: normalizeVersion(manifest.version),
-    };
+    // TODO - mutation is the mother of all f* ups
+    manifest.githubRepo ??= execSync('git remote get-url origin')
+        .toString()
+        .trim()
+        .replace('git@github.com:', 'https://github.com/')
+        .replace(/.git$/, '');
+    manifest.commitSha = execSync('git rev-parse HEAD').toString().trim();
+    manifest.timestamp = new Date().toISOString();
 
     if (outputFile) {
         spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
@@ -64,16 +61,16 @@ export const createExportManifest = async (options?: {
             if (!nodeFs.existsSync(dirname(outputFile))) {
                 nodeFs.mkdirSync(dir, { recursive: true });
             }
-            await writeFile(outputFile, JSON.stringify(manifestExport));
+            await writeFile(outputFile, JSON.stringify(manifest));
             spinner.succeed();
         } catch (err) {
             spinner.fail();
             throw err;
         }
     } else {
-        console.log(manifestExport);
+        console.log(manifest);
     }
-    return manifestExport;
+    return manifest;
 };
 
 export default createExportManifest;
