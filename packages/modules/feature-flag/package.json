@@ -53,13 +53,13 @@
         "@equinor/fusion-observable": "workspace:^",
         "immer": "^9.0.16",
         "rxjs": "^7.8.1",
-        "uuid": "^9.0.0"
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module-event": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
-        "@types/uuid": "^9.0.8",
+        "@types/uuid": "^10.0.0",
         "typescript": "^5.4.2"
     }
 }
