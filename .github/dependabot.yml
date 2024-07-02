@@ -6,6 +6,12 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 50
     versioning-strategy: increase-if-necessary
+    groups:
+      ag-grid:
+        applies-to: version-updates
+        patterns:
+          - "@ag-grid-enterprise/*"
+          - "@ag-grid-community/*"
   - package-ecosystem: "github-actions"
     # Workflow files stored in the
     # default location of `.github/workflows`
