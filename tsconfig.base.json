@@ -4,7 +4,6 @@
         "module": "ES2022",
         "target": "ES6",
         "incremental": true,
-        "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": true,
         "moduleResolution": "node",
