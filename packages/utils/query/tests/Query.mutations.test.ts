@@ -83,6 +83,68 @@ describe('Mutations of queries', () => {
         ]);
     });
 
+    it('should not create new cache entry if "allowCreation" is false', async () => {
+        // Mock a function to simulate fetching data
+        const fn = vi.fn((value) => Promise.resolve(value));
+        // Initialize a new Query with a mock client, a key function, and an expiration time
+        const query = new Query({
+            client: { fn },
+            key: (id) => id,
+            expire: 1000,
+        });
+
+        // 
+        query.mutate('foo', () => ({ value: 'bar' }), { allowCreation: false });
+
+        const cacheKey = query.generateCacheKey('foo');
+
+        expect(query.cache.has(cacheKey)).toBe(false);
+    });
+
+    it('should allow creating new cache entry if option provided', async () => {
+        // Mock a function to simulate fetching data
+        const fn = vi.fn((value) => Promise.resolve(value));
+        // Initialize a new Query with a mock client, a key function, and an expiration time
+        const query = new Query({
+            client: { fn },
+            key: (id) => id,
+            expire: 1000,
+        });
+
+        query.mutate('foo', () => ({ value: 'bar' }), { allowCreation: true });
+
+        const cacheKey = query.generateCacheKey('foo');
+
+        expect(query.cache.has(cacheKey)).toBe(true);
+        expect(query.cache.getItem(cacheKey)).toMatchObject({
+            value: 'bar',
+            updates: 1,
+            updated: undefined,
+            mutated: expect.any(Number),
+        });
+    });
+
+    it('should not create new cache entry if "allowCreation" is false', async () => {
+        // Mock a function to simulate fetching data
+        const fn = vi.fn((value) => Promise.resolve(value));
+        // Initialize a new Query with a mock client, a key function, and an expiration time
+        const query = new Query({
+            client: { fn },
+            key: (id) => id,
+            expire: 1000,
+        });
+
+        const args = 'foo';
+        const value = { value: 'bar' };
+
+        query.mutate(args, () => value, { allowCreation: false });
+
+        const cacheKey = query.generateCacheKey(args);
+
+        console.log('cache', cacheKey, value, query.cache.state);
+        expect(query.cache.has(cacheKey)).toBe(false);
+    });
+
     it('should fail when mutating if there are no records with matching key', async () => {
         // Create a new Query instance with a mocked fetch function, a simple key function, and an expiration time
         const query = new Query({
