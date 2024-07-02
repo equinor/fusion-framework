@@ -632,7 +632,23 @@ export class Query<TDataType, TQueryArguments = any> {
         options?: { allowCreation?: boolean },
     ): void {
         const key = this.#generateCacheKey(args);
-        this.#cache.mutate(key, changes, options);
+        if (key in this.cache.state === false) {
+            if (options?.allowCreation === undefined) {
+                throw new Error(
+                    `Cannot mutate cache item with key ${key}: item not found and option "allowCreation" is false`,
+                );
+            } else if (options.allowCreation === false) {
+                /** does not allow creation, can not mutate */
+                return;
+            }
+            const { value } = typeof changes === 'function' ? changes() : changes;
+            this.cache.setItem(key, {
+                args,
+                transaction: generateGUID(),
+                value,
+            });
+        }
+        this.#cache.mutate(key, changes);
     }
 
     /**
