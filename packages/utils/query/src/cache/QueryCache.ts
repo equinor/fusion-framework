@@ -136,14 +136,20 @@ export class QueryCache<TType, TArgs> {
      */
     public mutate(
         key: string,
-        changes: QueryCacheMutation | ((current: TType) => QueryCacheMutation),
+        changes: QueryCacheMutation<TType> | ((current?: TType) => QueryCacheMutation<TType>),
+        options?: { allowCreation?: boolean },
     ) {
-        const current = this.#state.value[key];
-        if (!current) {
+        const current = key in this.#state.value ? this.#state.value[key] : undefined;
+
+        if (current || options?.allowCreation) {
+            const next = typeof changes === 'function' ? changes(current?.value) : changes;
+            this.#state.next(actions.mutate(key, next, current));
+        }
+
+        // if not options.allowCreation is specified and the item is not found, throw an error
+        if (options?.allowCreation === undefined) {
             throw new Error(`Cannot mutate cache item with key ${key}: item not found`);
         }
-        const next = typeof changes === 'function' ? changes(current.value) : changes;
-        this.#state.next(actions.mutate(key, next, current));
     }
 
     /**
