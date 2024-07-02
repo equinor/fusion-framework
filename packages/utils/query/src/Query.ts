@@ -608,6 +608,17 @@ export class Query<TDataType, TQueryArguments = any> {
     }
 
     /**
+     * Generates a cache key based on the provided query arguments.
+     * This method is used internally to uniquely identify cache entries.
+     *
+     * @param args - The query arguments to be used for generating the cache key.
+     * @returns A string representing the cache key.
+     */
+    public generateCacheKey(args: TQueryArguments): string {
+        return this.#generateCacheKey(args);
+    }
+
+    /**
      * Performs a mutation on the cache entry associated with the given arguments.
      * This method allows for updating the state of a cache entry without needing to perform a new query.
      * The changes are applied by invoking the `mutate` method on the cache with the generated key and the changes function.
@@ -618,9 +629,10 @@ export class Query<TDataType, TQueryArguments = any> {
     public mutate(
         args: TQueryArguments,
         changes: Parameters<QueryCache<TDataType, TQueryArguments>['mutate']>[1],
+        options?: { allowCreation?: boolean },
     ): void {
         const key = this.#generateCacheKey(args);
-        this.#cache.mutate(key, changes);
+        this.#cache.mutate(key, changes, options);
     }
 
     /**
