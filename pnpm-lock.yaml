@@ -886,6 +886,9 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      immer:
+        specifier: ^9.0.16
+        version: 9.0.21
     devDependencies:
       rxjs:
         specifier: ^7.8.1
