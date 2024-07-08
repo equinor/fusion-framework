@@ -1,5 +1,6 @@
 ---
 '@equinor/fusion-framework-module-http': patch
+'@equinor/fusion-framework-docs': patch
 ---
 
 Updated documentation in `README.md` for http module.
