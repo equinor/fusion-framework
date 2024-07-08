@@ -3,10 +3,24 @@ import { HttpRequestHandler } from './lib/operators';
 import type { FetchRequest, IHttpClient } from './lib/client';
 import type { IHttpRequestHandler, IHttpResponseHandler } from './lib/operators';
 
+/**
+ * Represents the options for constructing an `IHttpClient` instance.
+ *
+ * @template TInit - The type of the initial request object used by the `IHttpClient` instance.
+ * @property {IHttpRequestHandler<TInit>} requestHandler - The request handler to be used by the `IHttpClient` instance.
+ */
 interface HttpClientConstructorOptions<TInit extends FetchRequest> {
     requestHandler: IHttpRequestHandler<TInit>;
 }
 
+/**
+ * Represents a constructor for an `IHttpClient` instance.
+ *
+ * @template TClient - The type of the `IHttpClient` instance to be constructed.
+ * @param uri - The base URI for the `IHttpClient` instance.
+ * @param options - The options for constructing the `IHttpClient` instance, including the request handler.
+ * @returns A new instance of the `TClient` type.
+ */
 interface HttpClientConstructor<TClient extends IHttpClient> {
     new (
         uri: string,
@@ -14,15 +28,38 @@ interface HttpClientConstructor<TClient extends IHttpClient> {
     ): TClient;
 }
 
+/**
+ * Represents the options for configuring an `IHttpClient` instance.
+ *
+ * @template TClient - The type of the `IHttpClient` instance to be configured.
+ */
 export interface HttpClientOptions<TClient extends IHttpClient = IHttpClient> {
+    /** The base URI for the `IHttpClient` instance. */
     baseUri?: string;
+
+    /** The default scopes to be used by the `IHttpClient` instance. */
     defaultScopes?: string[];
+
+    /** The constructor for the `TClient` type. */
     ctor?: HttpClientConstructor<TClient>;
+
+    /** A callback function that is called when a new `TClient` instance is created. */
     onCreate?: (client: TClient) => void;
+
+    /** The request handler to be used by the `IHttpClient` instance. */
     requestHandler?: IHttpRequestHandler<HttpClientRequestInitType<TClient>>;
+
+    /** The response handler to be used by the `IHttpClient` instance. */
     responseHandler?: IHttpResponseHandler<HttpClientRequestInitType<TClient>>;
 }
 
+/**
+ * Utility type that extracts the request init type from an `IHttpClient` implementation.
+ * This is useful for ensuring type safety when configuring an `IHttpClient` instance.
+ *
+ * @template T - The type of the `IHttpClient` implementation.
+ * @returns The request init type for the `IHttpClient` implementation.
+ */
 export type HttpClientRequestInitType<T extends IHttpClient> =
     T extends IHttpClient<infer U> ? U : never;
 
@@ -117,7 +154,7 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
         name: string,
         args: string | HttpClientOptions<T> | HttpClientOptions<T>['onCreate'],
     ): HttpClientConfigurator<TClient> {
-        const argFn = typeof args === 'string' ? (x: T) => (x.uri = String(args)) : args;
+        const argFn = typeof args === 'string' ? ({ baseUri: args } as HttpClientOptions<T>) : args;
         const options = typeof argFn === 'function' ? { onCreate: argFn } : argFn;
         this._clients[name] = {
             ...this._clients[name],

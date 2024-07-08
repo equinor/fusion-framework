@@ -1,4 +1,4 @@
-import { type BlobResult } from '../client/types';
+import type { ResponseSelector, BlobResult } from '../client/types';
 
 /**
  * Extracts a blob and filename from a successful HTTP response.
@@ -7,7 +7,7 @@ import { type BlobResult } from '../client/types';
  * @returns A promise that resolves to an object containing the extracted blob and filename.
  * @throws {Error} If the response is not successful or if there is an error parsing the response.
  */
-export const blobSelector = async <TResponse extends Response = Response>(
+export const blobSelector: ResponseSelector = async <TResponse extends Response = Response>(
     response: TResponse,
 ): Promise<BlobResult> => {
     if (!response.ok) {

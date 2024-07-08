@@ -1,3 +1,4 @@
+import type { ResponseSelector } from '../client/types';
 import { HttpJsonResponseError } from '../../errors';
 
 /**
@@ -14,7 +15,10 @@ import { HttpJsonResponseError } from '../../errors';
  * @param response - The HTTP response to parse.
  * @returns A promise that resolves with the parsed JSON data, or rejects with an `HttpJsonResponseError`.
  */
-export const jsonSelector = async <TType = unknown, TResponse extends Response = Response>(
+export const jsonSelector: ResponseSelector = async <
+    TType = unknown,
+    TResponse extends Response = Response,
+>(
     response: TResponse,
 ): Promise<TType> => {
     /** Status code 204 indicates no content in the response */
