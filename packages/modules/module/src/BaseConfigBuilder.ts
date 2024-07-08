@@ -86,7 +86,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
  */
 export type ConfigBuilderCallback<TReturn = unknown> = (
     args: ConfigBuilderCallbackArgs,
-) => TReturn | ObservableInput<TReturn>;
+) => ObservableInput<TReturn>;
 
 /**
  * The `BaseConfigBuilder` class is an abstract class that provides a flexible and extensible way to build and configure modules.
