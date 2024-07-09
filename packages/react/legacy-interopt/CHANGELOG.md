@@ -1,5 +1,65 @@
 # Change Log
 
+## 14.0.3
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
+-   Updated dependencies [[`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
+    -   @equinor/fusion-framework-module-http@6.0.1
+    -   @equinor/fusion-framework-module-service-discovery@7.1.10
+    -   @equinor/fusion-framework-module-navigation@4.0.3
+    -   @equinor/fusion-observable@8.3.3
+    -   @equinor/fusion-framework-module-msal@3.1.2
+    -   @equinor/fusion-framework-module-app@5.3.8
+    -   @equinor/fusion-framework@7.2.2
+    -   @equinor/fusion-framework-react-app@5.2.3
+    -   @equinor/fusion-framework-app@9.1.3
+
 ## 14.0.2
 
 ### Patch Changes

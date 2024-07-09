@@ -1,5 +1,34 @@
 # @equinor/fusion-framework-docs
 
+## 0.1.5
+
+### Patch Changes
+
+-   [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated documentation in `README.md` for http module.
+
+    -   added introduction to http module
+    -   added concepts section which highlights the key concepts of http module
+    -   added sequence diagram for http request execution
+    -   added examples for http module
+    -   improved documentation for configuring http module
+    -   improved documentation for working with http clients
+    -   improved the formatting of the documentation
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2321](https://github.com/equinor/fusion-framework/pull/2321) [`d760a49`](https://github.com/equinor/fusion-framework/commit/d760a49594ad09ad3de28517ad63b954fab85158) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bumps the docs with 8 updates:
+
+    | Package                                                                                                                           | From          | To            |
+    | --------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- |
+    | [@vuepress/bundler-vite](https://github.com/vuepress/core)                                                                        | `2.0.0-rc.11` | `2.0.0-rc.14` |
+    | [@vuepress/cli](https://github.com/vuepress/core)                                                                                 | `2.0.0-rc.11` | `2.0.0-rc.14` |
+    | [@vuepress/client](https://github.com/vuepress/core)                                                                              | `2.0.0-rc.11` | `2.0.0-rc.14` |
+    | [@vuepress/plugin-register-components](https://github.com/vuejs/vuepress/tree/HEAD/packages/@vuepress/plugin-register-components) | `2.0.0-rc.30` | `2.0.0-rc.37` |
+    | [@vuepress/utils](https://github.com/vuepress/core)                                                                               | `2.0.0-rc.11` | `2.0.0-rc.14` |
+    | [vue](https://github.com/vuejs/core)                                                                                              | `3.4.25`      | `3.4.31`      |
+    | [vuepress](https://github.com/vuejs/vuepress/tree/HEAD/packages/vuepress)                                                         | `2.0.0-rc.11` | `2.0.0-rc.14` |
+    | [vuepress-theme-hope](https://github.com/vuepress-theme-hope/vuepress-theme-hope/tree/HEAD/packages/theme)                        | `2.0.0-rc.43` | `2.0.0-rc.50` |
+
 ## 0.1.4
 
 ### Patch Changes

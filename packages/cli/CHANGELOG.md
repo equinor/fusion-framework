@@ -1,5 +1,71 @@
 # Change Log
 
+## 9.12.10
+
+### Patch Changes
+
+-   [#2328](https://github.com/equinor/fusion-framework/pull/2328) [`33d394f`](https://github.com/equinor/fusion-framework/commit/33d394f9718340f579e3f427bc68b59df5030d15) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 5.2.10 to 5.3.3
+
+-   [#2322](https://github.com/equinor/fusion-framework/pull/2322) [`b4dd215`](https://github.com/equinor/fusion-framework/commit/b4dd2150b5f3202e4bae9773afd55993043b4a5e) Thanks [@dependabot](https://github.com/apps/dependabot)! - The Vite changelog highlights several fixes, features, and refactors in versions 5.3.3, 5.3.2, and 5.3.0.
+    Key updates include lazy evaluation of `__vite__mapDeps` files, removal of pure CSS dynamic import, and improvements to build and asset handling.
+    Additionally, Vite now supports the `system` library format and adds options for not starting a WebSocket server and ignoring certain code sections.
+    The changelog also notes performance enhancements, dependency updates, and bug fixes, including resolving circular dependencies, improving error recovery, and updating non-major dependencies.
+
+    build(deps): bump vite from 5.2.10 to 5.3.3
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
+-   [#2330](https://github.com/equinor/fusion-framework/pull/2330) [`4c4471a`](https://github.com/equinor/fusion-framework/commit/4c4471a61d083c6b00d25ebf82952632ff50e200) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump rollup from 4.12.0 to 4.18.1
+
+-   Updated dependencies [[`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`a723e86`](https://github.com/equinor/fusion-framework/commit/a723e8605059ad126602d053c65114c3ce908964), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.2
+    -   @equinor/fusion-framework-module-feature-flag@1.1.5
+    -   @equinor/fusion-observable@8.3.3
+    -   @equinor/fusion-framework-app@9.1.3
+
 ## 9.12.9
 
 ### Patch Changes

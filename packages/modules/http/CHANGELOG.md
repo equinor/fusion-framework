@@ -1,5 +1,75 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+-   [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated documentation in `README.md` for http module.
+
+    -   added introduction to http module
+    -   added concepts section which highlights the key concepts of http module
+    -   added sequence diagram for http request execution
+    -   added examples for http module
+    -   improved documentation for configuring http module
+    -   improved documentation for working with http clients
+    -   improved the formatting of the documentation
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated TsDoc for http module
+
+-   [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - - Added a new type `ResponseSelector<TResult, TResponse>`: a function that takes a `Response` object and returns an observable stream of type `TResult`. The `ResponseSelector` type has two template parameters: `TResult` and `TResponse`.
+
+    -   Updated the `FetchRequestInit` type to include a new property `selector` of type `ResponseSelector<TReturn, TResponse>`, which allows specifying a response selector function.
+    -   Updated the blob-selector and json-selector functions to use the new `ResponseSelector` type.
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
+-   Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
+    -   @equinor/fusion-framework-module@4.3.2
+    -   @equinor/fusion-framework-module-msal@3.1.2
+
 ## 6.0.0
 
 ### Major Changes

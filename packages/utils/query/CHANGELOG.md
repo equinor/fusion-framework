@@ -1,5 +1,130 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+-   [#2313](https://github.com/equinor/fusion-framework/pull/2313) [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee) Thanks [@odinr](https://github.com/odinr)! - A new public method `generateCacheKey` has been added to the `Query` class. This method allows users to generate a cache key based on provided query arguments, which can be useful for advanced caching scenarios or debugging.
+
+    ```typescript
+    const query = new Query<YourDataType, YourArgsType>({
+        /* ... */
+    });
+    const args = {
+        /* your query arguments */
+    };
+    const cacheKey = query.generateCacheKey(args);
+    console.log('Generated cache key:', cacheKey);
+    ```
+
+    **Enhanced mutate method**
+    The mutate method of the Query class now accepts an optional options parameter, allowing for more flexible cache mutations.
+
+    **New allowCreation option**
+    You can now specify whether to allow the creation of a new cache entry if it doesn't exist when performing a mutation.
+
+    ```ts
+    const query = new Query<YourDataType, YourArgsType>({
+        /* ... */
+    });
+
+    // Mutate existing cache entry or create a new one if it doesn't exist
+    query.mutate(args, (prevState) => ({ ...prevState, newProperty: 'value' }), {
+        allowCreation: true,
+    });
+    ```
+
+    **Changes to internal cache handling**
+    The internal QueryCache class has been updated to support the new allowCreation option. This change allows for more flexible cache management, especially when dealing with non-existent cache entries.
+
+    **Breaking change**
+    The mutate method will now throw an error if the cache entry doesn't exist and allowCreation is not explicitly set to true. This change ensures more predictable behavior and helps prevent accidental cache entry creation.
+
+    ```ts
+    // This will throw an error if the cache entry doesn't exist
+    query.mutate(args, changes);
+
+    // This will create a new cache entry if it doesn't exist
+    query.mutate(args, changes, { allowCreation: true });
+    ```
+
+    **How to update**
+    If you're relying on the mutate method to create new cache entries, update your code to explicitly set allowCreation: true:
+
+    ```ts
+    query.mutate(args, changes, { allowCreation: true });
+    ```
+
+    Review your codebase for any uses of mutate that might be affected by the new error-throwing behavior when the cache entry doesn't exist.
+
+    If you need to generate cache keys for advanced use cases, you can now use the generateCacheKey method:
+
+    ```ts
+    const cacheKey = query.generateCacheKey(args);
+    ```
+
+    These changes provide more control over cache manipulation and help prevent unintended side effects when working with the Query class.
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2319](https://github.com/equinor/fusion-framework/pull/2319) [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated `uuid` from `^9.0.16` to `^10.0.0`. This update includes breaking changes where support for Node.js versions 12 and 14 has been dropped, and Node.js version 20 is now supported. Additionally, it introduces support for RFC9562 MAX, v6, v7, and v8 UUIDs.
+
+    **Migration Guide**
+    Consumers should ensure their environments are using Node.js version 16 or higher to avoid compatibility issues. If you are using Fusion Framework, you do not need to take any action as Fusion Framework already requires Node.js version 18 or higher.
+
+    [Link to `immer` v10.0.0 release notes](https://github.com/uuidjs/uuid/blob/main/CHANGELOG.md)
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
+-   [#2313](https://github.com/equinor/fusion-framework/pull/2313) [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee) Thanks [@odinr](https://github.com/odinr)! - added test for mutating a value which does not exist in the cache
+
+-   Updated dependencies [[`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
+    -   @equinor/fusion-observable@8.3.3
+    -   @equinor/fusion-log@1.0.1
+
 ## 5.0.5
 
 ### Patch Changes

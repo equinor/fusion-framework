@@ -1,5 +1,58 @@
 # Change Log
 
+## 0.4.11
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
+-   Updated dependencies [[`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.11
+    -   @equinor/fusion-framework-react@7.1.2
+
 ## 0.4.10
 
 ### Patch Changes
