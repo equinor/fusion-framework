@@ -84,7 +84,7 @@
     "eslint": "^8.47.0",
     "eslint-plugin-rxjs": "^5.0.3",
     "prettier": "^3.0.2",
-    "rimraf": "^5.0.1",
+    "rimraf": "^6.0.0",
     "tslib": "^2.6.1",
     "turbo": "^1.12.2",
     "typescript": "^5.4.2"
