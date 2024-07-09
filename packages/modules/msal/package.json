@@ -41,6 +41,6 @@
         "@equinor/fusion-framework-module": "workspace:^"
     },
     "devDependencies": {
-        "typescript": "^5.4.2"
+        "typescript": "^5.5.3"
     }
 }

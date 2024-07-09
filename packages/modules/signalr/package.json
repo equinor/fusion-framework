@@ -41,7 +41,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
         "@equinor/fusion-framework-module-msal": "workspace:^",
-        "typescript": "^5.4.2"
+        "typescript": "^5.5.3"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",

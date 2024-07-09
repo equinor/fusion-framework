@@ -13,8 +13,8 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@equinor/fusion-framework-cli": "workspace:^",
         "@equinor/fusion-framework-app": "workspace:^",
-        "typescript": "^5.4.2"
+        "@equinor/fusion-framework-cli": "workspace:^",
+        "typescript": "^5.5.3"
     }
 }

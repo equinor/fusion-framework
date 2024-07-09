@@ -73,8 +73,8 @@
         "url": "https://github.com/equinor/fusion-framework/issues"
     },
     "dependencies": {
-        "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-log": "workspace:^",
+        "@equinor/fusion-observable": "workspace:^",
         "immer": "^9.0.16",
         "rxjs": "^7.8.1",
         "uuid": "^10.0.0",
@@ -85,7 +85,7 @@
         "@types/react": "^18.2.50",
         "@types/uuid": "^10.0.0",
         "react": "^18.2.0",
-        "typescript": "^5.4.2"
+        "typescript": "^5.5.3"
     },
     "peerDependencies": {
         "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
