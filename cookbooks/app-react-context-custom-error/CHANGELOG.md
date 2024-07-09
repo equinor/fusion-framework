@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.15
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   Updated dependencies [[`33d394f`](https://github.com/equinor/fusion-framework/commit/33d394f9718340f579e3f427bc68b59df5030d15), [`b4dd215`](https://github.com/equinor/fusion-framework/commit/b4dd2150b5f3202e4bae9773afd55993043b4a5e), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee), [`4c4471a`](https://github.com/equinor/fusion-framework/commit/4c4471a61d083c6b00d25ebf82952632ff50e200)]:
+    -   @equinor/fusion-framework-cli@9.12.10
+    -   @equinor/fusion-framework-react-module-context@6.2.9
+    -   @equinor/fusion-observable@8.3.3
+    -   @equinor/fusion-framework-react-app@5.2.3
+
 ## 4.1.14
 
 ### Patch Changes

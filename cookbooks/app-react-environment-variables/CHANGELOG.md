@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 1.0.1
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
 ## 1.0.0
 
 ### Major Changes

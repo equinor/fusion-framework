@@ -1,5 +1,61 @@
 # Change Log
 
+## 8.3.3
+
+### Patch Changes
+
+-   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+
+-   [#2319](https://github.com/equinor/fusion-framework/pull/2319) [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated `uuid` from `^9.0.16` to `^10.0.0`. This update includes breaking changes where support for Node.js versions 12 and 14 has been dropped, and Node.js version 20 is now supported. Additionally, it introduces support for RFC9562 MAX, v6, v7, and v8 UUIDs.
+
+    **Migration Guide**
+    Consumers should ensure their environments are using Node.js version 16 or higher to avoid compatibility issues. If you are using Fusion Framework, you do not need to take any action as Fusion Framework already requires Node.js version 18 or higher.
+
+    [Link to `immer` v10.0.0 release notes](https://github.com/uuidjs/uuid/blob/main/CHANGELOG.md)
+
+-   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+
+    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+
+    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+
+    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+
+    Before:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "removeComments": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    After:
+
+    ```json
+    {
+        "compilerOptions": {
+            "module": "ES2022",
+            "target": "ES6",
+            "incremental": true,
+            "preserveConstEnums": true,
+            "sourceMap": true,
+            "moduleResolution": "node"
+        }
+    }
+    ```
+
+    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+
 ## 8.3.2
 
 ### Patch Changes
