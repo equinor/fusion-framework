@@ -15,7 +15,9 @@ export class HttpResponseError<TResponse = Response> extends Error {
 
 /**
  * Represents an error that occurs when handling a JSON response in an HTTP request.
- * @template TType - The type of the data contained in the response.
+ * Extends the base `HttpResponseError` class.
+ *
+ * @template TType - The type of the data associated with the error.
  * @template TResponse - The type of the HTTP response.
  */
 export class HttpJsonResponseError<
@@ -24,6 +26,14 @@ export class HttpJsonResponseError<
 > extends HttpResponseError<TResponse> {
     static Name = 'HttpJsonResponseError';
     public readonly data?: TType;
+
+    /**
+     * Creates a new instance of `HttpJsonResponseError`.
+     *
+     * @param message - The error message.
+     * @param response - The HTTP response associated with the error.
+     * @param options - Additional options for the error, including the associated data.
+     */
     constructor(message: string, response: TResponse, options?: ErrorOptions & { data?: TType }) {
         super(message, response, options);
         this.name = HttpJsonResponseError.Name;

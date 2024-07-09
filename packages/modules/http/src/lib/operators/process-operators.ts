@@ -6,15 +6,20 @@ import { IProcessOperators, ProcessOperator } from './types';
 /**
  * ProcessOperators class manages a collection of process operators
  * and provides methods to add, set, get, and process these operators.
+ * It implements the IProcessOperators interface for type T.
+ *
+ * @template T The type of data that the process operators work with
  */
 export class ProcessOperators<T> implements IProcessOperators<T> {
     /**
      * A record of process operators keyed by a string.
+     * This property is used to store and manage the collection of process operators
+     * that are used by the `ProcessOperators` class.
      */
     protected _operators: Record<string, ProcessOperator<T>>;
 
     /**
-     * Accessor for the operators.
+     * Accessor for the collection of process operators.
      * @returns The record of process operators.
      */
     get operators(): Record<string, ProcessOperator<T>> {

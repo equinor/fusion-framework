@@ -1,13 +1,39 @@
 import type { ObservableInput, Observable } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators/types';
 
+/**
+ * Represents a stream of response data.
+ * @template T - The type of the response data.
+ */
 export type StreamResponse<T> = Observable<T>;
 
+/**
+ * A function that takes a `Response` object and returns an `ObservableInput` of type `T`.
+ *
+ * @template TResult - The type of the data contained in the response.
+ * @template TResponse - The type of the response object.
+ * @param response - The `Response` object to be processed.
+ * @returns An `ObservableInput` of type `T`.
+ */
+export type ResponseSelector<TResult = unknown, TResponse = Response> = (
+    response: TResponse,
+) => ObservableInput<TResult>;
+
+/**
+ * Represents the parameters for a fetch request, including the URI and path.
+ * @property {string} uri - The URI of the request.
+ * @property {string} path - The path of the request.
+ */
 export type FetchRequest = RequestInit & {
     uri: string;
     path: string;
 };
 
+/**
+ * Represents a request with a JSON body.
+ * @template TRequest - The base request type, which extends `FetchRequest`.
+ * @property {object | string | null} [body] - The request body, which can be an object, a string, or null.
+ */
 export type JsonRequest<TRequest extends FetchRequest = FetchRequest> = Omit<TRequest, 'body'> & {
     body?: object | string | null;
 };
@@ -19,30 +45,65 @@ export type JsonRequest<TRequest extends FetchRequest = FetchRequest> = Omit<TRe
  */
 export type BlobResult = { filename?: string; blob: Blob };
 
+/**
+ * Represents the response from a fetch request, including the response object and a JSON parsing method.
+ * @template T - The type of the response data.
+ * @property {Response} - The original Response object.
+ * @property {() => Promise<T>} json - A method to parse the response body as JSON and return the data as type T.
+ */
 export type FetchResponse<T = unknown> = Response & {
     json(): Promise<T>;
 };
 
+/**
+ * Represents the parameters for a fetch request, including the URI and path, as well as a selector function to transform the response.
+ * @template TReturn - The type of the transformed response data.
+ * @template TRequest - The type of the fetch request.
+ * @template TResponse - The type of the fetch response.
+ */
 export type FetchRequestInit<
     TReturn = unknown,
     TRequest = FetchRequest,
     TResponse = FetchResponse<TReturn>,
 > = Omit<TRequest, 'uri' | 'path'> & {
-    selector?: (response: TResponse) => ObservableInput<TReturn>;
+    /** response selector function */
+    selector?: ResponseSelector<TReturn, TResponse>;
 };
 
+/**
+ * Represents the parameters for a fetch request, including the URI and path, as well as a selector function to transform the response.
+ *
+ * @template TReturn - The type of the transformed response data.
+ * @template TRequest - The type of the fetch request.
+ * @template TResponse - The type of the fetch response.
+ */
 export type ClientRequestInit<T extends IHttpClient, TReturn = unknown> =
     T extends IHttpClient<infer TRequest, infer TResponse>
         ? FetchRequestInit<TReturn, TRequest, TResponse>
         : never;
 
+/**
+ * Represents the available execution methods for an HTTP client.
+ */
 export type ExecutionMethod = 'fetch' | 'fetch$' | 'json' | 'json$';
 
+/**
+ * Represents the type of the parameters for the execution methods of an `IHttpClient` instance.
+ *
+ * @template TMethod - The execution method of the `IHttpClient` instance, e.g. 'fetch', 'json'.
+ * @template TClient - The type of the `IHttpClient` instance.
+ */
 export type ExecutionMethodParameters<
     TMethod extends ExecutionMethod = 'fetch',
     TClient extends IHttpClient = IHttpClient,
 > = Parameters<TClient[TMethod]>;
 
+/**
+ * Represents the type of the return value for the execution methods of an `IHttpClient` instance.
+ *
+ * @template TMethod - The execution method of the `IHttpClient` instance, e.g. 'fetch', 'json'.
+ * @template TClient - The type of the `IHttpClient` instance.
+ */
 export type ExecutionResponse<
     TMethod extends ExecutionMethod = 'fetch',
     TClient extends IHttpClient = IHttpClient,
@@ -54,50 +115,42 @@ export type ExecutionResponse<
  */
 export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResponse = Response> {
     uri: string;
-    /** pre-processor of requests */
+    /**
+     * A pre-processor for requests made by the `IHttpClient` interface.
+     * This handler can be used to modify the request before it is sent, such as adding headers, authentication, or other transformations.
+     */
     readonly requestHandler: IHttpRequestHandler<TRequest>;
-    /** post-processor of requests */
-    readonly responseHandler: IHttpResponseHandler<TResponse>;
-
-    /** Observable stream of request */
-    request$: Observable<TRequest>;
-
-    /** Observable stream of responses */
-    response$: Observable<TResponse>;
 
     /**
-     * Observable request.
-     * Simplifies execution of request and
-     * note: request will not be executed until subscribe!
+     * A post-processor for responses received by the `IHttpClient` interface.
+     * This handler can be used to transform the response data after it is received, such as parsing JSON, handling errors, or other transformations.
+     */
+    readonly responseHandler: IHttpResponseHandler<TResponse>;
+
+    /**
+     * Observable stream of requests made by the `IHttpClient` interface.
+     * This stream can be used to observe and potentially modify the requests before they are sent.
+     */
+    readonly request$: Observable<TRequest>;
+
+    /**
+     * Observable stream of responses received by the `IHttpClient` interface.
+     * This stream can be used to observe and potentially handle the responses after they are received.
+     */
+    readonly response$: Observable<TResponse>;
+
+    /**
+     * Fetch a resource as an observable stream.
+     * This method simplifies the execution of a request and returns an observable stream of the response.
+     * The request will not be executed until the observable is subscribed to.
      *
-     * @see {@link https://rxjs.dev/api/fetch/fromFetch|RXJS}
+     * @template T - The expected response type.
+     * @param path - The path to fetch the resource from.
+     * @param init - Optional request initialization options.
+     * @returns An observable stream of the response.
+     *
+     * @see {@link https://rxjs.dev/api/fetch/fromFetch|RxJS fromFetch}
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch|fetch}
-     * @example
-     * ```ts
-     * // Observer changes of a input field
-     * const client = modules.http.createClient('my-client');
-     * const input$ = fromEvent(document.getElementById('input'), 'input');
-     * input$.pipe(
-     *   // only call after no key input in .5s
-     *   debounceTime(500),
-     *   // extract value from event
-     *   map(x => x.currentTarget.value),
-     *   // only search when text longer than 2 characters
-     *   filter(x => x.length >=3),
-     *   // query api with input value
-     *   switchMap(x => client.fetch(`api/foo?q=${x}`).pipe(
-     *     // retry 2 times
-     *     retry(2)
-     *     // cancel request if new input
-     *     takeUntil(input$)
-     *   )),
-     *   // extract data from response
-     *   switchMap(x => x.json()),
-     *   // process error
-     *   catchError(x => of({error: e.message}))
-     * // write result to pre element
-     * ).subscribe(console.log);
-     * ```
      */
     fetch$<T = TResponse>(
         path: string,
@@ -105,46 +158,50 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
     ): StreamResponse<T>;
 
     /**
-     * Fetch a resource as an promise
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch|fetch}
-     * @example
-     * ```ts
-     * let controller: AbortController;
-     * const client = window.Fusion.createClient('my-client');
-     * const input = document.getElementById('input');
-     * input.addEventlistener('input', (e) => {
-     *  try{
-     *    // if a controller is defined, request might be ongoing
-     *    controller && controller.abort();
-     *    // create a new abort controller
-     *    controller = new AbortController();
-     *    // query api with
-     *    const response = await client.fetch({
-     *      path: `api/foo?q=${e.currentTarget.value}`,
-     *      signal: controller.signal,
-     *    });
-     *    const json = await response.json();
-     *    result.innerText = JSON.stringify(json, null, 2)
-     *  } catch(err){
-     *    result.innerText = 'an error occurred'
-     *  } finally{
-     *    delete controller;
-     *  }
-     * });
-     * ```
+     * Fetch a resource as a promise.
+     *
+     * @template T - The expected response type.
+     * @param path - The path to fetch the resource from.
+     * @param init - Optional request initialization options.
+     * @returns A promise that resolves to the fetched resource.
+     *
+     * @see {@link IHttpClient.fetch$}
      */
     fetch<T = TResponse>(path: string, init?: FetchRequestInit<T, TRequest, TResponse>): Promise<T>;
 
+    /** @deprecated use {@link IHttpClient.fetch} */
     fetchAsync<T = TResponse>(
         path: string,
         args?: FetchRequestInit<T, TRequest, TResponse>,
     ): Promise<T>;
 
+    /**
+     * Fetches a resource as an observable stream.
+     * This method simplifies the execution of a request and returns an observable stream of the response.
+     * The request will not be executed until the observable is subscribed to.
+     *
+     * @template T - The expected response type.
+     * @param path - The path to fetch the resource from.
+     * @param init - Optional request initialization options, including the request body, headers, and response type.
+     * @returns An observable stream of the fetched resource.
+     *
+     * @see {@link IHttpClient.fetch$}
+     */
     json$<T = unknown>(
         path: string,
         init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
     ): StreamResponse<T>;
 
+    /**
+     * Fetches a resource as a promise and returns the response as a JSON object.
+     *
+     * @template T - The expected response type.
+     * @param path - The path to fetch the resource from.
+     * @param init - Optional request initialization options, including the request body, headers, and response type.
+     * @returns A promise that resolves to the fetched resource as a JSON object.
+     *
+     * @see {@link IHttpClient.fetch} for fetching resources as an observable stream.
+     */
     json<T = unknown>(
         path: string,
         init?: FetchRequestInit<T, JsonRequest<TRequest>, TResponse>,
@@ -157,9 +214,9 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
     ): Promise<T>;
 
     /**
-     * Fetches a blob resource from the specified path.
+     * Fetches a blob resource from the specified path and returns a Promise that resolves to the fetched blob data.
      *
-     * @param path - The path to the blob resource.
+     * @param path - The path to fetch the blob from.
      * @param args - Optional arguments for the fetch request, including the request body, headers, and response type.
      * @returns A Promise that resolves to the fetched blob data.
      */
@@ -181,7 +238,7 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
     ): StreamResponse<T>;
 
     /**
-     * Abort all ongoing request for current client
+     * Abort all ongoing requests for the current client.
      */
     abort(): void;
 }
