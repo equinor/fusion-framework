@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^18 || ^20",
+    "node": "^20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": ">=9"
@@ -57,7 +57,19 @@
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^15.2.1",
     "vitest": "^1.6.0",
-    "vitest-github-actions-reporter": "^0.11.1"
+    "vitest-github-actions-reporter": "^0.11.1",
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.26.2",
+    "@equinor/eslint-config-fusion": "^2.1.4",
+    "@equinor/eslint-config-fusion-react": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "eslint": "^8.47.0",
+    "eslint-plugin-rxjs": "^5.0.3",
+    "prettier": "^3.0.2",
+    "rimraf": "^6.0.0",
+    "tslib": "^2.6.1",
+    "turbo": "^1.12.2",
+    "typescript": "^5.4.2"
   },
   "peerDependencies": {
     "typescript": ">=4.8"
@@ -74,19 +86,5 @@
       "eslint --quiet --fix",
       "vitest related --run"
     ]
-  },
-  "dependencies": {
-    "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.26.2",
-    "@equinor/eslint-config-fusion": "^2.1.4",
-    "@equinor/eslint-config-fusion-react": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "eslint": "^8.47.0",
-    "eslint-plugin-rxjs": "^5.0.3",
-    "prettier": "^3.0.2",
-    "rimraf": "^5.0.1",
-    "tslib": "^2.6.1",
-    "turbo": "^1.12.2",
-    "typescript": "^5.4.2"
   }
 }
