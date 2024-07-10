@@ -1,7 +1,9 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
-import { produce, type Draft } from 'immer';
+import { produce, enableMapSet, type Draft } from 'immer';
+
+enableMapSet();
 
 export declare interface FrameworkEventMap {
     onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
@@ -158,10 +160,19 @@ export class FrameworkEvent<
         private __type: string,
         args: TInit,
     ) {
-        this.#detail = produce(args.detail, () => {}) as FrameworkEventInitDetail<TInit>;
+        this.#detail = args.detail;
+        this.#originalDetail = args.detail;
         this.#mutableDetails = !!args.mutableDetails;
-        this.#originalDetail = produce(args.detail, () => {}) as FrameworkEventInitDetail<TInit>;
-        this.#source = produce(args.source, () => {}) as FrameworkEventInitSource<TInit>;
+        try {
+            /** Attempt to create an immutable copy of the event details */
+            const detail = produce(args.detail, () => {}) as FrameworkEventInitDetail<TInit>;
+            this.#detail = detail;
+            this.#originalDetail = detail;
+        } catch (error) {
+            /** The event details cannot be securely mutated, disable mutations */
+            this.#mutableDetails = false;
+        }
+        this.#source = args.source;
         this.#cancelable = !!args.cancelable;
         this.#canBubble = args.canBubble === undefined ? true : args.canBubble;
     }
