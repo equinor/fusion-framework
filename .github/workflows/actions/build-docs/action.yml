@@ -1,14 +1,14 @@
 name: Build documents
 
+inputs:
+  upload-artifact:
+    default: true
+
 runs:
   using: composite
   steps:
     - name: Setup node and install deps
       uses: ./.github/workflows/actions/node-setup
-
-    - name: Build project
-      shell: bash
-      run: pnpm build
 
     - name: Generate version
       shell: bash
@@ -21,6 +21,7 @@ runs:
       run: pnpm build:docs
 
     - name: Upload artifact
+      if: ${{ upload-artifact == 'true' }}
       uses: actions/upload-pages-artifact@v3
       with:
         path: ./vue-press/dist

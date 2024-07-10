@@ -1,0 +1,54 @@
+name: Document PR
+
+on: 
+  pull_request: 
+    types: 
+      - ready_for_review
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'vue-press/**'
+      - 'packages/**/README.md'
+
+concurrency:
+  group: pr-docs-${{ github.event.pull_request.id }}
+  cancel-in-progress: true
+
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+  
+jobs:
+  generate-docs:
+    name: Docs preview
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: github-pages
+    #   url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          fetch-depth: 0
+
+      - name: Generate docs
+        id: build
+        uses: ./.github/workflows/actions/build-docs
+        with:
+          upload-artifact: false
+
+      # - uses: actions/deploy-pages@v4
+      #   id: deployment
+      #   with:
+      #     preview: true
+
+      # - uses: thollander/actions-comment-pull-request@v2
+      #   if: steps.deployment.outcome == 'success'
+      #   with:
+      #     comment_tag: docs_preview
+      #     message: |
+      #       ${{ steps.deployment.outputs.page_url }}
