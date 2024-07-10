@@ -1,5 +1,18 @@
 # Change Log
 
+## 9.12.11
+
+### Patch Changes
+
+-   [#2251](https://github.com/equinor/fusion-framework/pull/2251) [`60afeaa`](https://github.com/equinor/fusion-framework/commit/60afeaab11ad2a76469807142098464bd5442e68) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @vitejs/plugin-react from 4.2.1 to 4.3.1
+
+-   [#2340](https://github.com/equinor/fusion-framework/pull/2340) [`9435ee4`](https://github.com/equinor/fusion-framework/commit/9435ee4ddebade18436c5c6bd57ee86b6baf0b24) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 5.2.10 to 5.3.3
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@9.1.4
+    -   @equinor/fusion-framework-module-feature-flag@1.1.5
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.3
+
 ## 9.12.10
 
 ### Patch Changes

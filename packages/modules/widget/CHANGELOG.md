@@ -1,5 +1,12 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+-   Updated dependencies [[`736ef31`](https://github.com/equinor/fusion-framework/commit/736ef310ee101738f9022d581a2b3189b30a2646)]:
+    -   @equinor/fusion-framework-module-event@4.2.1
+
 ## 6.0.0
 
 ### Patch Changes
