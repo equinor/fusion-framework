@@ -7,6 +7,9 @@ on:
       - opened
       - reopened
       - synchronize
+    paths-ignore:
+      - '.changeset/**'
+      - 'vue-press/**'
 
 concurrency:
   group: pr-${{ github.event.pull_request.id }}
@@ -97,38 +100,4 @@ jobs:
         if: ${{ steps.test-coverage.conclusion == 'success' }}
         uses: davelosert/vitest-coverage-report-action@v2.3.1
 
-  generate-docs:
-    name: Docs preview
-    runs-on: ubuntu-latest
-    # environment:
-    #   name: github-pages
-    #   url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: "${{ github.event.pull_request.merge_commit_sha }}"
-          fetch-depth: 0
-
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            docs:
-              - 'vue-press/**'
-
-      - name: Generate docs
-        if: steps.filter.outputs.docs == 'true'
-        id: build
-        uses: ./.github/workflows/actions/build-docs
-
-      # - uses: actions/deploy-pages@v4
-      #   id: deployment
-      #   with:
-      #     preview: true
-
-      # - uses: thollander/actions-comment-pull-request@v2
-      #   if: steps.deployment.outcome == 'success'
-      #   with:
-      #     comment_tag: docs_preview
-      #     message: |
-      #       ${{ steps.deployment.outputs.page_url }}
+  
