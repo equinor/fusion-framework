@@ -21,7 +21,7 @@ runs:
       run: pnpm build:docs
 
     - name: Upload artifact
-      if: ${{ upload-artifact == 'true' }}
+      if: ${{ inputs.upload-artifact == 'true' }}
       uses: actions/upload-pages-artifact@v3
       with:
         path: ./vue-press/dist
