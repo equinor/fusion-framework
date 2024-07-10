@@ -340,8 +340,8 @@ importers:
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.0
+        version: 0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -440,8 +440,8 @@ importers:
   cookbooks/app-react-people:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.0
+        version: 0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -565,8 +565,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.0
+        version: 0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -699,7 +699,7 @@ importers:
         version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.3.3
-        version: 1.3.3(@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 1.3.3(@equinor/eds-core-react@0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.1(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1178,8 +1178,8 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.0
+        version: 0.40.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -2104,13 +2104,12 @@ packages:
   '@emotion/unitless@0.8.1':
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
-  '@equinor/eds-core-react@0.38.0':
-    resolution: {integrity: sha512-BwE0ZeyxsP3sTzT1cxKHBN0MppzJ0Z2HVZW1/6b9xb4fZhbtkb9RYBBosklh+6rNkdrY8ZijbXlCPj/Nxy9GyA==}
-    engines: {node: '>=10.0.0', pnpm: '>=4'}
+  '@equinor/eds-core-react@0.40.0':
+    resolution: {integrity: sha512-ntpG8csRzMV454u1EsomJxH0LhGYdAh6bZQFfkP+ZhKzRsUBY0xMIdaTnNjens3civVxiR99YKeoJjlvJoqv8Q==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
-      styled-components: '>=4.2'
+      styled-components: '>=5.1'
 
   '@equinor/eds-icons@0.19.3':
     resolution: {integrity: sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==}
@@ -5599,8 +5598,8 @@ packages:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
     engines: {node: '>=10'}
 
-  downshift@9.0.4:
-    resolution: {integrity: sha512-6XV/p6+4177d8e8dJ6PoLNSDG1bv52FL18yilKD06oZCb6dFG6f6dXcn3h0B1ggcrOkN3hIvL11Qt15Y5McbXw==}
+  downshift@9.0.6:
+    resolution: {integrity: sha512-lkqWh0eb34XuH+3z3/BH/LGVRV7ur0rielSlxtlQKsjAFF/wc/c0wsM9phUGXyzK2g1QWHoNHQyc+vVAheI17Q==}
     peerDependencies:
       react: '>=16.12.0'
 
@@ -7619,6 +7618,9 @@ packages:
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
+  react-is@18.2.0:
+    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
@@ -9533,7 +9535,7 @@ snapshots:
 
   '@emotion/unitless@0.8.1': {}
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
       '@babel/runtime': 7.24.6
       '@equinor/eds-icons': 0.21.0
@@ -9546,13 +9548,13 @@ snapshots:
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
       '@tanstack/react-virtual': 3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
       '@babel/runtime': 7.24.6
       '@equinor/eds-icons': 0.21.0
@@ -9565,13 +9567,13 @@ snapshots:
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
       '@tanstack/react-virtual': 3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))':
     dependencies:
       '@babel/runtime': 7.24.6
       '@equinor/eds-icons': 0.21.0
@@ -9584,7 +9586,7 @@ snapshots:
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
       '@tanstack/react-virtual': 3.5.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       react-dom: 18.3.1(react@18.2.0)
@@ -9764,9 +9766,9 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-side-sheet@1.3.3(@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/fusion-react-side-sheet@1.3.3(@equinor/eds-core-react@0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@equinor/eds-core-react': 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      '@equinor/eds-core-react': 0.40.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       re-resizable: 6.9.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -10236,7 +10238,7 @@ snapshots:
   '@floating-ui/react@0.26.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/react-dom': 2.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@floating-ui/utils': 0.2.2
+      '@floating-ui/utils': 0.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tabbable: 6.2.0
@@ -10244,7 +10246,7 @@ snapshots:
   '@floating-ui/react@0.26.16(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/react-dom': 2.1.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
-      '@floating-ui/utils': 0.2.2
+      '@floating-ui/utils': 0.2.4
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
       tabbable: 6.2.0
@@ -14530,13 +14532,13 @@ snapshots:
 
   dotenv@8.6.0: {}
 
-  downshift@9.0.4(react@18.2.0):
+  downshift@9.0.6(react@18.2.0):
     dependencies:
       '@babel/runtime': 7.24.6
       compute-scroll-into-view: 3.1.0
       prop-types: 15.8.1
       react: 18.2.0
-      react-is: 18.3.1
+      react-is: 18.2.0
       tslib: 2.6.2
 
   earcut@2.2.4: {}
@@ -17024,6 +17026,8 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
+
+  react-is@18.2.0: {}
 
   react-is@18.3.1: {}
 
