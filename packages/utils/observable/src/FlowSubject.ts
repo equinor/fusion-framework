@@ -12,6 +12,7 @@ import {
     catchError,
     distinctUntilChanged,
     filter,
+    map,
     mergeMap,
     observeOn,
     scan,
@@ -62,6 +63,19 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
     }
 
     /**
+     * Creates a new instance of the FlowSubject class with an initial state reducer.
+     * @param reducer A reducer with an initial state or a reducer function.
+     */
+    constructor(reducer: ReducerWithInitialState<S, A>);
+
+    /**
+     * Create a new instance of the FlowSubject class with a reducer function and initial state.
+     * @param reducer state reducer
+     * @param initialState initial state
+     */
+    constructor(reducer: Reducer<S, A>, initialState: S);
+
+    /**
      * Initializes a new instance of the FlowSubject class.
      *
      * @param reducer A reducer with an initial state or a reducer function.
@@ -90,6 +104,20 @@ export class FlowSubject<S, A extends Action = Action> extends Observable<S> {
      */
     public next(action: A): void {
         this.#action.next(action);
+    }
+
+    /**
+     * Selects a derived state from the observable state and emits only when the selected state changes.
+     *
+     * @param selector - A function that takes the current state and returns a derived state.
+     * @param comparator - An optional function that compares the previous and current derived states to determine if a change has occurred.
+     * @returns An observable that emits the derived state whenever it changes.
+     */
+    public select<T>(
+        selector: (state: S) => T,
+        comparator?: (previous: T, current: T) => boolean,
+    ): Observable<T> {
+        return this.#state.pipe(map(selector), distinctUntilChanged(comparator));
     }
 
     /**
