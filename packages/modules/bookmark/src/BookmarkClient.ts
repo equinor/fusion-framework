@@ -213,16 +213,18 @@ export class BookmarkClient implements IBookmarkClient {
             /** update the cache for bookmark data */
             tap((createdBookmark) => {
                 const { payload } = createdBookmark;
-                const cacheKey = this.#queryBookmarkData.generateCacheKey({
-                    bookmarkId: createdBookmark.id,
-                });
                 if (payload) {
-                    this.#queryBookmarkData.cache.mutate(
-                        cacheKey,
+                    this.#queryBookmarkData.mutate(
+                        {
+                            bookmarkId: createdBookmark.id,
+                        },
                         { value: payload, updated: Date.now() },
                         { allowCreation: true },
                     );
                 } else {
+                    const cacheKey = this.#queryBookmarkData.generateCacheKey({
+                        bookmarkId: createdBookmark.id,
+                    });
                     this.#queryBookmarkData.cache.removeItem(cacheKey);
                 }
             }),
