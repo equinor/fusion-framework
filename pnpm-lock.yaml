@@ -340,8 +340,8 @@ importers:
   cookbooks/app-react-feature-flag:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.1
+        version: 0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -440,8 +440,8 @@ importers:
   cookbooks/app-react-people:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.1
+        version: 0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -565,8 +565,8 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.1
+        version: 0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -699,7 +699,7 @@ importers:
         version: 0.3.0(react@18.2.0)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.3.3
-        version: 1.3.3(@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 1.3.3(@equinor/eds-core-react@0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/fusion-react-styles':
         specifier: ^0.6.0
         version: 0.6.1(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1178,8 +1178,8 @@ importers:
         version: link:../../modules/bookmark
     devDependencies:
       '@equinor/eds-core-react':
-        specifier: ^0.38.0
-        version: 0.38.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))
+        specifier: ^0.40.1
+        version: 0.40.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons':
         specifier: ^0.21.0
         version: 0.21.0
@@ -1933,6 +1933,10 @@ packages:
     resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.24.7':
+    resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.24.0':
     resolution: {integrity: sha512-Bkf2q8lMB0AFpX0NFEqSbx1OkTHf0f+0j82mkw+ZpzBnkk7e9Ql0891vlfgi+kHwOk8tQjiQHpqh4LaSa0fKEA==}
     engines: {node: '>=6.9.0'}
@@ -2111,13 +2115,12 @@ packages:
   '@emotion/unitless@0.8.1':
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
-  '@equinor/eds-core-react@0.38.0':
-    resolution: {integrity: sha512-BwE0ZeyxsP3sTzT1cxKHBN0MppzJ0Z2HVZW1/6b9xb4fZhbtkb9RYBBosklh+6rNkdrY8ZijbXlCPj/Nxy9GyA==}
-    engines: {node: '>=10.0.0', pnpm: '>=4'}
+  '@equinor/eds-core-react@0.40.1':
+    resolution: {integrity: sha512-WqF+OICoFteKod/sJhzMtfm8RlSTZpB4lvPKH0QJFKlqoiJm/b8Pp+1T45dNVhiHNLC8d+KmDtkLQ7svoonszw==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
-      styled-components: '>=4.2'
+      styled-components: '>=5.1'
 
   '@equinor/eds-icons@0.19.3':
     resolution: {integrity: sha512-Sh0W01PrwXPCi8/p9YKj0qKNtRU9R/xYJORinIzsNNRllpiu9wvuGAsQNE0gQaDDnrprsiRBH3+MdMSRXVs3Wg==}
@@ -2662,14 +2665,14 @@ packages:
   '@floating-ui/dom@1.6.7':
     resolution: {integrity: sha512-wmVfPG5o2xnKDU4jx/m4w5qva9FWHcnZ8BvzEe90D/RpwsJaTAVYPEPdQ8sbr/N8zZTAHlZUTQdqg8ZUbzHmng==}
 
-  '@floating-ui/react-dom@2.1.0':
-    resolution: {integrity: sha512-lNzj5EQmEKn5FFKc04+zasr09h/uX8RtJRNj5gUXsSQIXHVWTVh+hVAg1vOMCexkX8EgvemMvIFpQfkosnVNyA==}
+  '@floating-ui/react-dom@2.1.1':
+    resolution: {integrity: sha512-4h84MJt3CHrtG18mGsXuLCHMrug49d7DFkU0RMIyshRveBeyV2hmV/pDaF2Uxtu8kgq5r46llp5E5FQiR0K2Yg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@floating-ui/react@0.26.16':
-    resolution: {integrity: sha512-HEf43zxZNAI/E781QIVpYSF3K2VH4TTYZpqecjdsFkjsaU1EbaWcM++kw0HXFffj7gDUcBFevX8s0rQGQpxkow==}
+  '@floating-ui/react@0.26.19':
+    resolution: {integrity: sha512-Jk6zITdjjIvjO/VdQFvpRaD3qPwOHH6AoDHxjhpy+oK4KFgaSP871HYWUAPdnLmx1gQ+w/pB312co3tVml+BXA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -4109,14 +4112,14 @@ packages:
   '@swc/helpers@0.5.11':
     resolution: {integrity: sha512-YNlnKRWF2sVojTpIyzwou9XoTNbzbzONwRhOoniEioF1AtaitTvVZblaQRrAzChWQ1bLYyYSWzM18y4WwgzJ+A==}
 
-  '@tanstack/react-virtual@3.5.0':
-    resolution: {integrity: sha512-rtvo7KwuIvqK9zb0VZ5IL7fiJAEnG+0EiFZz8FUOs+2mhGqdGmjKIaT1XU7Zq0eFqL0jonLlhbayJI/J2SA/Bw==}
+  '@tanstack/react-virtual@3.8.2':
+    resolution: {integrity: sha512-g78+DA29K0ByAfDkuibfLQqDshf8Aha/zcyEZ+huAX/yS/TWj/CUiEY4IJfDrFacdxIFmsLm0u4VtsLSKTngRw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  '@tanstack/virtual-core@3.5.0':
-    resolution: {integrity: sha512-KnPRCkQTyqhanNC0K63GBG3wA8I+D1fQuVnAvcBF8f13akOKeQp1gSbu6f77zCxhEk727iV5oQnbHLYzHrECLg==}
+  '@tanstack/virtual-core@3.8.2':
+    resolution: {integrity: sha512-ffpN6kTaPGwQPoWMcBAHbdv2ZCpj1SugldoYAcY0C4xH+Pej1KCOEUisNeEgbUnXOp8Y/4q6wGPu2tFHthOIQw==}
 
   '@testing-library/dom@10.1.0':
     resolution: {integrity: sha512-wdsYKy5zupPyLCW2Je5DLHSxSfbIp6h80WoHOQc+RPtmPGA52O9x5MJEkv92Sjonpq+poOAtUKhh1kBGAXBrNA==}
@@ -5590,8 +5593,8 @@ packages:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
     engines: {node: '>=10'}
 
-  downshift@9.0.4:
-    resolution: {integrity: sha512-6XV/p6+4177d8e8dJ6PoLNSDG1bv52FL18yilKD06oZCb6dFG6f6dXcn3h0B1ggcrOkN3hIvL11Qt15Y5McbXw==}
+  downshift@9.0.6:
+    resolution: {integrity: sha512-lkqWh0eb34XuH+3z3/BH/LGVRV7ur0rielSlxtlQKsjAFF/wc/c0wsM9phUGXyzK2g1QWHoNHQyc+vVAheI17Q==}
     peerDependencies:
       react: '>=16.12.0'
 
@@ -7599,6 +7602,9 @@ packages:
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
+  react-is@18.2.0:
+    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
@@ -9131,6 +9137,10 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  '@babel/runtime@7.24.7':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
   '@babel/template@7.24.0':
     dependencies:
       '@babel/code-frame': 7.24.6
@@ -9191,7 +9201,7 @@ snapshots:
 
   '@changesets/apply-release-plan@7.0.4':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/config': 3.0.2
       '@changesets/get-version-range-type': 0.4.0
       '@changesets/git': 3.0.0
@@ -9208,7 +9218,7 @@ snapshots:
 
   '@changesets/assemble-release-plan@6.0.3':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/errors': 0.2.0
       '@changesets/get-dependents-graph': 2.1.1
       '@changesets/should-skip-package': 0.1.0
@@ -9294,7 +9304,7 @@ snapshots:
 
   '@changesets/get-release-plan@4.0.3':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/assemble-release-plan': 6.0.3
       '@changesets/config': 3.0.2
       '@changesets/pre': 2.0.0
@@ -9306,7 +9316,7 @@ snapshots:
 
   '@changesets/git@3.0.0':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -9325,7 +9335,7 @@ snapshots:
 
   '@changesets/pre@2.0.0':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -9333,7 +9343,7 @@ snapshots:
 
   '@changesets/read@0.6.0':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/git': 3.0.0
       '@changesets/logger': 0.1.0
       '@changesets/parse': 0.4.0
@@ -9344,7 +9354,7 @@ snapshots:
 
   '@changesets/should-skip-package@0.1.0':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
 
@@ -9354,7 +9364,7 @@ snapshots:
 
   '@changesets/write@0.3.1':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/types': 6.0.0
       fs-extra: 7.0.1
       human-id: 1.0.2
@@ -9487,58 +9497,58 @@ snapshots:
 
   '@emotion/unitless@0.8.1': {}
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
-      '@floating-ui/react': 0.26.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/react': 0.26.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@internationalized/date': 3.5.4
       '@react-aria/utils': 3.24.1(react@18.2.0)
       '@react-stately/calendar': 3.5.1(react@18.2.0)
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
-      '@tanstack/react-virtual': 3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      '@tanstack/react-virtual': 3.8.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
-      '@floating-ui/react': 0.26.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/react': 0.26.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@internationalized/date': 3.5.4
       '@react-aria/utils': 3.24.1(react@18.2.0)
       '@react-stately/calendar': 3.5.1(react@18.2.0)
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
-      '@tanstack/react-virtual': 3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      '@tanstack/react-virtual': 3.8.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       styled-components: 6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
-  '@equinor/eds-core-react@0.38.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))':
+  '@equinor/eds-core-react@0.40.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/eds-utils': 0.8.5(react-dom@18.3.1(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.3.1(react@18.2.0))(react@18.2.0))
-      '@floating-ui/react': 0.26.16(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
+      '@floating-ui/react': 0.26.19(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       '@internationalized/date': 3.5.4
       '@react-aria/utils': 3.24.1(react@18.2.0)
       '@react-stately/calendar': 3.5.1(react@18.2.0)
       '@react-stately/datepicker': 3.9.4(react@18.2.0)
       '@react-types/shared': 3.23.1(react@18.2.0)
-      '@tanstack/react-virtual': 3.5.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
-      downshift: 9.0.4(react@18.2.0)
+      '@tanstack/react-virtual': 3.8.2(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
+      downshift: 9.0.6(react@18.2.0)
       react: 18.2.0
       react-aria: 3.33.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
       react-dom: 18.3.1(react@18.2.0)
@@ -9718,9 +9728,9 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-side-sheet@1.3.3(@equinor/eds-core-react@0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
+  '@equinor/fusion-react-side-sheet@1.3.3(@equinor/eds-core-react@0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)))(@equinor/eds-icons@0.21.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
     dependencies:
-      '@equinor/eds-core-react': 0.38.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      '@equinor/eds-core-react': 0.40.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@6.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@equinor/eds-icons': 0.21.0
       '@equinor/eds-tokens': 0.9.2
       re-resizable: 6.9.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -10175,30 +10185,30 @@ snapshots:
       '@floating-ui/core': 1.6.2
       '@floating-ui/utils': 0.2.4
 
-  '@floating-ui/react-dom@2.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@floating-ui/react-dom@2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/dom': 1.6.7
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@floating-ui/react-dom@2.1.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
+  '@floating-ui/react-dom@2.1.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@floating-ui/dom': 1.6.7
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
 
-  '@floating-ui/react@0.26.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@floating-ui/react@0.26.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@floating-ui/react-dom': 2.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@floating-ui/utils': 0.2.2
+      '@floating-ui/react-dom': 2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@floating-ui/utils': 0.2.4
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       tabbable: 6.2.0
 
-  '@floating-ui/react@0.26.16(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
+  '@floating-ui/react@0.26.19(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@floating-ui/react-dom': 2.1.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
-      '@floating-ui/utils': 0.2.2
+      '@floating-ui/react-dom': 2.1.1(react-dom@18.3.1(react@18.2.0))(react@18.2.0)
+      '@floating-ui/utils': 0.2.4
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
       tabbable: 6.2.0
@@ -10318,14 +10328,14 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
 
   '@manypkg/get-packages@1.1.3':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@changesets/types': 4.1.0
       '@manypkg/find-root': 1.1.0
       fs-extra: 8.1.0
@@ -10334,7 +10344,7 @@ snapshots:
 
   '@material-ui/styles@4.11.5(@types/react@18.2.61)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@emotion/hash': 0.8.0
       '@material-ui/types': 5.1.0(@types/react@18.2.61)
       '@material-ui/utils': 4.11.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -10361,7 +10371,7 @@ snapshots:
 
   '@material-ui/utils@4.11.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -12641,24 +12651,24 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  '@tanstack/react-virtual@3.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-virtual@3.8.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@tanstack/virtual-core': 3.5.0
+      '@tanstack/virtual-core': 3.8.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@tanstack/react-virtual@3.5.0(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
+  '@tanstack/react-virtual@3.8.2(react-dom@18.3.1(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@tanstack/virtual-core': 3.5.0
+      '@tanstack/virtual-core': 3.8.2
       react: 18.2.0
       react-dom: 18.3.1(react@18.2.0)
 
-  '@tanstack/virtual-core@3.5.0': {}
+  '@tanstack/virtual-core@3.8.2': {}
 
   '@testing-library/dom@10.1.0':
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -14131,7 +14141,7 @@ snapshots:
 
   css-vendor@2.0.8:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       is-in-browser: 1.1.3
 
   css-what@6.1.0: {}
@@ -14340,7 +14350,7 @@ snapshots:
 
   date-fns@2.30.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
 
   date-fns@3.3.1: {}
 
@@ -14467,13 +14477,13 @@ snapshots:
 
   dotenv@8.6.0: {}
 
-  downshift@9.0.4(react@18.2.0):
+  downshift@9.0.6(react@18.2.0):
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       compute-scroll-into-view: 3.1.0
       prop-types: 15.8.1
       react: 18.2.0
-      react-is: 18.3.1
+      react-is: 18.2.0
       tslib: 2.6.3
 
   earcut@2.2.4: {}
@@ -14687,7 +14697,7 @@ snapshots:
 
   eslint-plugin-jsx-a11y@6.7.1(eslint@8.57.0):
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       aria-query: 5.3.0
       array-includes: 3.1.7
       array.prototype.flatmap: 1.3.2
@@ -15689,46 +15699,46 @@ snapshots:
 
   jss-plugin-camel-case@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       hyphenate-style-name: 1.0.4
       jss: 10.10.0
 
   jss-plugin-default-unit@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       jss: 10.10.0
 
   jss-plugin-global@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       jss: 10.10.0
 
   jss-plugin-nested@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       jss: 10.10.0
       tiny-warning: 1.0.3
 
   jss-plugin-props-sort@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       jss: 10.10.0
 
   jss-plugin-rule-value-function@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       jss: 10.10.0
       tiny-warning: 1.0.3
 
   jss-plugin-vendor-prefixer@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       css-vendor: 2.0.8
       jss: 10.10.0
 
   jss@10.10.0:
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       csstype: 3.1.3
       is-in-browser: 1.1.3
       tiny-warning: 1.0.3
@@ -16944,6 +16954,8 @@ snapshots:
 
   react-is@17.0.2: {}
 
+  react-is@18.2.0: {}
+
   react-is@18.3.1: {}
 
   react-keyed-flatten-children@3.0.0(react@18.2.0):
@@ -16985,7 +16997,7 @@ snapshots:
 
   react-router@5.3.4(react@17.0.2):
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
@@ -16999,7 +17011,7 @@ snapshots:
 
   react-router@5.3.4(react@18.2.0):
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
@@ -17024,7 +17036,7 @@ snapshots:
 
   react-textarea-autosize@8.5.3(@types/react@18.2.61)(react@18.2.0):
     dependencies:
-      '@babel/runtime': 7.24.6
+      '@babel/runtime': 7.24.7
       react: 18.2.0
       use-composed-ref: 1.3.0(react@18.2.0)
       use-latest: 1.2.1(@types/react@18.2.61)(react@18.2.0)
