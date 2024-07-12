@@ -1,135 +1,169 @@
-import {
-    Bookmark,
-    PatchBookmark,
-    BookmarkModule,
-    UpdateBookmarkOptions,
-    IBookmarkModuleProvider,
-} from '@equinor/fusion-framework-module-bookmark';
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useObservableState } from '@equinor/fusion-observable/react';
-import { useCallback, useMemo } from 'react';
-import { Bookmarks, CreateBookMarkFn } from './types';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
 
 import { EMPTY } from 'rxjs';
 
-const useBookmarkProvider = (): IBookmarkModuleProvider | undefined =>
-    useFramework<[BookmarkModule]>().modules.bookmark;
+import {
+    Bookmark,
+    Bookmarks,
+    BookmarkUpdate,
+    BookmarkData,
+    BookmarkPayloadGenerator,
+    BookmarkUpdateOptions,
+    BookmarkProvider,
+} from '@equinor/fusion-framework-module-bookmark';
+
+import { useObservableState } from '@equinor/fusion-observable/react';
+
+import { useBookmarkProvider } from './useBookmarkProvider';
+import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark/src/BookmarkProvider';
+
+export type useBookmarkArgs = {
+    provider?: BookmarkProvider;
+    payloadGenerator?: BookmarkPayloadGenerator<BookmarkData>;
+};
+
+export type useBookmarkResult = {
+    currentBookmark: Bookmark | null;
+    setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
+    bookmarks: Bookmarks;
+    getAllBookmarks: () => Promise<Bookmarks>;
+    getBookmarkById: (bookmarkId: string) => Promise<Bookmark | null | undefined>;
+    createBookmark: <T extends BookmarkData>(args: BookmarkCreateArgs<T>) => Promise<Bookmark<T>>;
+    updateBookmark: <T extends BookmarkData>(
+        value: BookmarkUpdate<T> & { id: string },
+        options?: BookmarkUpdateOptions,
+    ) => Promise<Bookmark<T> | undefined>;
+    deleteBookmarkById: (bookmarkId: string) => Promise<void>;
+    addBookmarkFavorite: (bookmarkId: string) => Promise<void>;
+    removeBookmarkFavorite: (bookmarkId: string) => Promise<void>;
+    addBookmarkCreator: (cb: BookmarkPayloadGenerator) => VoidFunction | undefined;
+};
 
 /**
- *  For application development the useCurrentBookmark should be sufficient enough
- *
- *  Functionality provided here is:
- *  - addBookmarkCreator
- *  - getAllBookmarks
- *  - createBookmark
- *  - updateBookmark
- *  - deleteBookmarkById
- *  - setCurrentBookmark
- *  - currentBookmark
- *  - bookmarks,
- *
- * @template TData - Current applications  bookmark type
- * @return {*}  {Bookmarks<TData>} the full api fro handling bookmarks
+ * @deprecated
+ * For application development the useCurrentBookmark should be sufficient enough
  */
-export const useBookmark = <TData>(): Bookmarks<TData> => {
-    const bookmarkProvider = useBookmarkProvider();
+export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
+    const defaultProvider = useBookmarkProvider();
+    const bookmarkProvider = args?.provider ?? defaultProvider;
+    const payloadGenerator = args?.payloadGenerator;
 
-    const currentBookmark = useObservableState(
+    const { value: currentBookmark } = useObservableState(
         useMemo(() => bookmarkProvider?.currentBookmark$ ?? EMPTY, [bookmarkProvider]),
         {
             initial: bookmarkProvider?.currentBookmark,
         },
-    ).value as Bookmark<TData> | null | undefined;
+    );
 
-    const bookmarks = useObservableState(
+    const { value: bookmarks } = useObservableState(
         useMemo(() => bookmarkProvider?.bookmarks$ ?? EMPTY, [bookmarkProvider]),
         {
-            initial: [],
+            initial: bookmarkProvider?.bookmarks ?? [],
         },
-    ).value;
+    );
 
+    useLayoutEffect(() => {
+        if (payloadGenerator) {
+            return bookmarkProvider?.addPayloadGenerator(payloadGenerator);
+        }
+    }, [payloadGenerator, bookmarkProvider]);
+
+    /**
+     * @deprecated use `payloadGenerator` instead {@link useBookmarkArgs.payloadGenerator}
+     */
     const addBookmarkCreator = useCallback(
-        (createBookmarkState?: CreateBookMarkFn<TData>) => {
-            if (!createBookmarkState)
-                return () => {
-                    // Noting to remove
-                };
-            return bookmarkProvider?.addStateCreator(() => {
-                return createBookmarkState();
-            });
+        (cb: BookmarkPayloadGenerator) => {
+            if (bookmarkProvider) {
+                return bookmarkProvider.addPayloadGenerator(cb);
+            }
+            throw Error('No BookmarkProvider found');
         },
         [bookmarkProvider],
     );
 
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.createBookmarkAsync}
+     */
     const createBookmark = useCallback(
-        async <T>(args: {
-            name: string;
-            description: string;
-            isShared: boolean;
-        }): Promise<Bookmark<T> | undefined> => {
-            return bookmarkProvider && (await bookmarkProvider.createBookmark<T>(args));
+        <T extends BookmarkData>(args: BookmarkCreateArgs<T>): Promise<Bookmark<T>> => {
+            if (bookmarkProvider) {
+                return bookmarkProvider.createBookmarkAsync(args);
+            }
+            throw Error('No BookmarkProvider found');
         },
         [bookmarkProvider],
     );
+
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.updateBookmarkAsync}
+     */
     const updateBookmark = useCallback(
-        async <T>(
-            bookmark: PatchBookmark<T>,
-            options?: UpdateBookmarkOptions,
+        async <T extends BookmarkData>(
+            bookmark: BookmarkUpdate<T> & { id: string },
+            options?: BookmarkUpdateOptions,
         ): Promise<Bookmark<T> | undefined> => {
-            return (
-                bookmarkProvider &&
-                (await bookmarkProvider.updateBookmarkAsync<T>(bookmark, options))
-            );
+            if (bookmarkProvider) {
+                const { id, ...updates } = bookmark;
+                return await bookmarkProvider.updateBookmarkAsync(id, updates, options);
+            }
+            return undefined;
         },
         [bookmarkProvider],
     );
+
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.removeBookmarkAsync}
+     */
     const deleteBookmarkById = useCallback(
-        async (bookmarkId: string): Promise<string | undefined> => {
-            return bookmarkProvider && (await bookmarkProvider.deleteBookmarkByIdAsync(bookmarkId));
+        async (bookmarkId: string): Promise<void> => {
+            bookmarkProvider && (await bookmarkProvider.deleteBookmarkAsync(bookmarkId));
         },
         [bookmarkProvider],
     );
-    const getAllBookmarks = useCallback(async (): Promise<Array<Bookmark>> => {
+
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.getAllBookmarks}
+     */
+    const getAllBookmarks = useCallback(async (): Promise<Bookmarks> => {
         return bookmarkProvider ? await bookmarkProvider.getAllBookmarksAsync() : [];
     }, [bookmarkProvider]);
 
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.addBookmarkToFavoritesAsync}
+     */
     const addBookmarkFavorite = useCallback(
         async (bookmarkId: string): Promise<void> => {
-            return (
-                bookmarkProvider && (await bookmarkProvider.addBookmarkFavoriteAsync(bookmarkId))
-            );
+            bookmarkProvider && (await bookmarkProvider.addBookmarkToFavoritesAsync(bookmarkId));
         },
         [bookmarkProvider],
     );
+
+    /**
+     * @deprecated use provider instead {@link BookmarkProvider.removeBookmarkAsync}
+     */
     const removeBookmarkFavorite = useCallback(
         async (bookmarkId: string): Promise<void> => {
-            return (
-                bookmarkProvider && (await bookmarkProvider.removeBookmarkFavoriteAsync(bookmarkId))
-            );
+            bookmarkProvider && (await bookmarkProvider.removeBookmarkAsFavoriteAsync(bookmarkId));
         },
         [bookmarkProvider],
     );
 
     const setCurrentBookmark = useCallback(
-        <TData>(IdOrItem: string | Bookmark<TData>): void => {
+        (IdOrItem: Bookmark | string | null): void => {
             bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem);
         },
         [bookmarkProvider],
     );
 
+    /** @deprecated */
     const getBookmarkById = useCallback(
-        <TData>(id: string): Promise<Bookmark<TData>> | undefined =>
-            bookmarkProvider && bookmarkProvider.getBookmarkById<TData>(id),
+        <TData extends BookmarkData>(id: string): Promise<Bookmark<TData> | undefined | null> => {
+            return bookmarkProvider
+                ? bookmarkProvider.getBookmarkAsync<TData>(id)
+                : Promise.resolve(undefined);
+        },
         [bookmarkProvider],
     );
-
-    const getCurrentAppKey = useCallback(() => {
-        return (
-            bookmarkProvider &&
-            bookmarkProvider.config.getCurrentAppIdentification &&
-            bookmarkProvider.config.getCurrentAppIdentification()
-        );
-    }, [bookmarkProvider]);
 
     return {
         addBookmarkCreator,
@@ -141,7 +175,7 @@ export const useBookmark = <TData>(): Bookmarks<TData> => {
         getBookmarkById,
         currentBookmark,
         bookmarks,
-        getCurrentAppKey,
+        // getCurrentAppKey,
         addBookmarkFavorite,
         removeBookmarkFavorite,
     };
