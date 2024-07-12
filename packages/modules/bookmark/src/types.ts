@@ -1,73 +1,46 @@
-import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
+import z from 'zod';
 
-export interface PatchBookmark<TData = unknown> extends Partial<Bookmark<TData>> {
-    id: string;
-    appKey: string;
-}
-export interface Bookmark<TData = unknown> {
-    id: string;
-    name: string;
-    description: string;
-    isShared: boolean;
-    payload: TData;
-    appKey: string;
-    context?: Context;
-    createdBy: CreatedBy;
-    updatedBy: CreatedBy;
-    created: string;
-    updated: string;
-    sourceSystem?: SourceSystem;
-}
+import {
+    bookmarkSchema,
+    bookmarkSourceSystemSchema,
+    bookmarksSchema,
+    bookmarkWithDataSchema,
+} from './bookmark.schemas';
 
-export type CreateBookmark<TData = unknown> = {
-    /** Display name of the bookmark */
-    name: string;
-    description?: string;
-    /** Is the bookmark shared with others */
-    isShared: boolean;
-    /** Name of the app it belongs too, should correspond to a fusion appkey */
-    appKey: string;
-    contextId?: string;
-    /** Any JSON object to store as the bookmark payload */
-    payload: TData;
-    sourceSystem?: Partial<SourceSystem>;
-};
+import { bookmarkConfigSchema } from './bookmark-config.schema';
 
-export interface SourceSystem {
-    identifier: string;
-    name: string;
-    subSystem: string;
-}
+/**
+ * Represents the source system for a bookmark.
+ */
+export type SourceSystem = z.infer<typeof bookmarkSourceSystemSchema>;
 
-interface CreatedBy {
-    azureUniqueId: string;
-    mail: string;
-    name: string;
-    phoneNumber: string;
-    jobTitle: string;
-    accountType: number;
-    accountClassification: number;
-}
+/**
+ * Represents the data associated with a bookmark.
+ * This is a generic type that can hold any arbitrary data as a key-value map.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BookmarkData = Record<string, any> | string;
 
-interface Context {
-    id: string;
-    name: string;
-    type: string;
-}
+/**
+ * Represents a collection of bookmarks.
+ */
+export type Bookmarks = z.infer<typeof bookmarksSchema>;
 
-export type GetBookmarkParameters = { id: string };
+/**
+ * Represents a bookmark without any associated data.
+ */
+export type BookmarkWithoutData = z.infer<typeof bookmarkSchema>;
 
-export type GetAllBookmarksParameters = { isValid: boolean };
+/**
+ * Represents a bookmark with associated data.
+ * @template T - The type of the bookmark data.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Bookmark<T extends BookmarkData = any> = z.infer<
+    ReturnType<typeof bookmarkWithDataSchema<T>>
+>;
 
-export interface BookmarkQueryClient {
-    getAllBookmarks:
-        | QueryFn<Array<Bookmark<unknown>>, GetAllBookmarksParameters>
-        | QueryCtorOptions<Array<Bookmark<unknown>>, GetAllBookmarksParameters>;
-    getBookmarkById:
-        | QueryFn<Bookmark<unknown>, GetBookmarkParameters>
-        | QueryCtorOptions<Bookmark<unknown>, GetBookmarkParameters>;
-}
-
-export type UpdateBookmarkOptions = {
-    updatePayload: boolean;
-};
+/**
+ * Represents the configuration options for a bookmark module.
+ */
+export type BookmarkModuleConfig = z.infer<typeof bookmarkConfigSchema>;
