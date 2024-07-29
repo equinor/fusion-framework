@@ -77,19 +77,19 @@
         "@equinor/fusion-observable": "workspace:^",
         "immer": "^9.0.16",
         "rxjs": "^7.8.1",
-        "uuid": "^10.0.0",
-        "vitest": "^2.0.1"
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
         "@types/node": "^20.11.14",
         "@types/react": "^18.2.50",
         "@types/uuid": "^10.0.0",
         "react": "^18.2.0",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.3",
+        "vitest": "^2.0.4"
     },
     "peerDependencies": {
-        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
-        "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
+        "@types/react": "^16.9.0 || ^17.0.0 || ^18.0.0",
+        "react": "^16.9.0 || ^17.0.0 || ^18.0.0"
     },
     "peerDependenciesMeta": {
         "@types/react": {
