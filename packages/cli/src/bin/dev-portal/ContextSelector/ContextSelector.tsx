@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
     ContextProvider,
     ContextSearch,
     ContextSearchProps,
     ContextSelectEvent,
+    ContextClearEvent,
 } from '@equinor/fusion-react-context-selector';
 import { useContextResolver } from './useContextResolver';
 
@@ -37,6 +38,16 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
         },
         [provider],
     );
+
+    /**
+     * Clears context when ctx has been cleared outside the selector.
+     */
+    const clearEvent = useMemo(() => new ContextClearEvent({ date: Date.now() }), []);
+    useEffect(() => {
+        if (!selectedContextItem) {
+            document.dispatchEvent(clearEvent);
+        }
+    }, [clearEvent, selectedContextItem]);
 
     if (!resolver) return null;
 
