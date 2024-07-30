@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.0.4
+
+### Patch Changes
+
+-   [#2292](https://github.com/equinor/fusion-framework/pull/2292) [`1a215c4`](https://github.com/equinor/fusion-framework/commit/1a215c45c97d2dfdc8127dc752ec21951bb048be) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @remix-run/router from 1.15.2 to 1.17.0
+
+-   Updated dependencies [[`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
+    -   @equinor/fusion-framework-module@4.3.3
+
 ## 4.0.3
 
 ### Patch Changes

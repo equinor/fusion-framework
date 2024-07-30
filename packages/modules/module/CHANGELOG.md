@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.3.3
+
+### Patch Changes
+
+-   [#2356](https://github.com/equinor/fusion-framework/pull/2356) [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592) Thanks [@odinr](https://github.com/odinr)! - fixed type for infering dot path
+
 ## 4.3.2
 
 ### Patch Changes
