@@ -1041,8 +1041,8 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       '@microsoft/signalr':
-        specifier: ^7.0.10
-        version: 7.0.14
+        specifier: ^8.0.7
+        version: 8.0.7
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
@@ -3009,9 +3009,6 @@ packages:
 
   '@microsoft/dynamicproto-js@2.0.3':
     resolution: {integrity: sha512-JTWTU80rMy3mdxOjjpaiDQsTLZ6YSGGqsjURsY6AUQtIj0udlF/jYmhdLZu8693ZIC0T1IwYnFa0+QeiMnziBA==}
-
-  '@microsoft/signalr@7.0.14':
-    resolution: {integrity: sha512-dnS7gSJF5LxByZwJaj82+F1K755ya7ttPT+JnSeCBef3sL8p8FBkHePXphK8NSuOquIb7vsphXWa28A+L2SPpw==}
 
   '@microsoft/signalr@8.0.7':
     resolution: {integrity: sha512-PHcdMv8v5hJlBkRHAuKG5trGViQEkPYee36LnJQx4xHOQ5LL4X0nEWIxOp5cCtZ7tu+30quz5V3k0b1YNuc6lw==}
@@ -10120,18 +10117,6 @@ snapshots:
   '@microsoft/dynamicproto-js@2.0.3':
     dependencies:
       '@nevware21/ts-utils': 0.11.3
-
-  '@microsoft/signalr@7.0.14':
-    dependencies:
-      abort-controller: 3.0.0
-      eventsource: 2.0.2
-      fetch-cookie: 2.2.0
-      node-fetch: 2.7.0
-      ws: 7.5.10
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
 
   '@microsoft/signalr@8.0.7':
     dependencies:
