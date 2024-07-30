@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.0.11
+
+### Patch Changes
+
+-   Updated dependencies [[`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
+    -   @equinor/fusion-framework-module@4.3.3
+    -   @equinor/fusion-framework-module-service-discovery@7.1.11
+    -   @equinor/fusion-framework-module-msal@3.1.3
+
 ## 3.0.10
 
 ### Patch Changes
