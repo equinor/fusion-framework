@@ -7,10 +7,9 @@ export default () => ({
   "environment": {
     "scope": "foobar"
   },
-  "endpoints": [
-    {
-      "name": "api",
-      "url": "https://foo.barz"
+  "endpoints": {
+    "api": {
+      url: 'https://foo.barz'
     }
-  ],
+  },
 });
