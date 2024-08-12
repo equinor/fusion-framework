@@ -5,13 +5,18 @@ import {
     BookmarkPayloadGenerator,
     Bookmark,
 } from '@equinor/fusion-framework-module-bookmark';
-import { useObservableState } from '@equinor/fusion-observable/src/react';
+import { useObservableState } from '@equinor/fusion-observable/react';
 import { useBookmarkProvider } from './useBookmarkProvider';
 import { EMPTY } from 'rxjs';
 
-type useCurrentBookmarkOptions<TData extends BookmarkData> = {
+export type useCurrentBookmarkOptions<TData extends BookmarkData> = {
     payloadGenerator?: BookmarkPayloadGenerator<TData>;
     provider?: BookmarkProvider;
+};
+
+export type useCurrentBookmarkReturn<TData extends BookmarkData> = {
+    currentBookmark: Bookmark<TData> | null;
+    setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
 };
 
 /**
@@ -23,10 +28,7 @@ type useCurrentBookmarkOptions<TData extends BookmarkData> = {
  */
 export const useCurrentBookmark = <TData extends BookmarkData>(
     args?: BookmarkPayloadGenerator<TData> | useCurrentBookmarkOptions<TData>,
-): {
-    currentBookmark: Bookmark<TData> | null;
-    setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
-} => {
+): useCurrentBookmarkReturn<TData> => {
     const baseProvider = useBookmarkProvider();
 
     const { payloadGenerator, provider = baseProvider } =

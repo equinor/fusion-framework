@@ -8,8 +8,7 @@ export type {
     Bookmark,
     Bookmarks,
     BookmarkData,
-    BookmarkUpdate,
-    BookmarkNew,
-    BookmarkPayloadGenerator,
+    BookmarkModule,
     BookmarkProvider,
+    BookmarkPayloadGenerator,
 } from '@equinor/fusion-framework-module-bookmark';

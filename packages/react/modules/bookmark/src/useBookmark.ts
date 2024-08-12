@@ -6,7 +6,6 @@ import {
     Bookmark,
     Bookmarks,
     BookmarkUpdate,
-    BookmarkNew,
     BookmarkData,
     BookmarkPayloadGenerator,
     BookmarkUpdateOptions,
@@ -16,6 +15,7 @@ import {
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { useBookmarkProvider } from './useBookmarkProvider';
+import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark/src/BookmarkProvider';
 
 export type useBookmarkArgs = {
     provider?: BookmarkProvider;
@@ -24,13 +24,13 @@ export type useBookmarkArgs = {
 
 export type useBookmarkResult = {
     currentBookmark: Bookmark | null;
-    setCurrentBookmark: (bookmark: Bookmark) => void;
+    setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
     bookmarks: Bookmarks;
     getAllBookmarks: () => Promise<Bookmarks>;
     getBookmarkById: (bookmarkId: string) => Promise<Bookmark | null | undefined>;
-    createBookmark: <T extends BookmarkData>(value: BookmarkNew<T>) => Promise<Bookmark<T>>;
+    createBookmark: <T extends BookmarkData>(args: BookmarkCreateArgs<T>) => Promise<Bookmark<T>>;
     updateBookmark: <T extends BookmarkData>(
-        value: BookmarkUpdate<T> & { bookmarkId: string },
+        value: BookmarkUpdate<T> & { id: string },
         options?: BookmarkUpdateOptions,
     ) => Promise<Bookmark<T> | undefined>;
     deleteBookmarkById: (bookmarkId: string) => Promise<void>;
@@ -85,7 +85,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
      * @deprecated use provider instead {@link BookmarkProvider.createBookmarkAsync}
      */
     const createBookmark = useCallback(
-        <T extends Record<string, unknown>>(args: BookmarkNew<T>): Promise<Bookmark<T>> => {
+        <T extends Record<string, unknown>>(args: BookmarkCreateArgs<T>): Promise<Bookmark<T>> => {
             if (bookmarkProvider) {
                 return bookmarkProvider.createBookmarkAsync(args);
             }
@@ -99,12 +99,12 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
      */
     const updateBookmark = useCallback(
         async <T extends BookmarkData>(
-            bookmark: BookmarkUpdate<T> & { bookmarkId: string },
+            bookmark: BookmarkUpdate<T> & { id: string },
             options?: BookmarkUpdateOptions,
         ): Promise<Bookmark<T> | undefined> => {
             if (bookmarkProvider) {
-                const { bookmarkId, ...updates } = bookmark;
-                return await bookmarkProvider.updateBookmarkAsync(bookmarkId, updates, options);
+                const { id, ...updates } = bookmark;
+                return await bookmarkProvider.updateBookmarkAsync(id, updates, options);
             }
             return undefined;
         },
@@ -149,7 +149,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
     );
 
     const setCurrentBookmark = useCallback(
-        (IdOrItem: string | Bookmark): void => {
+        (IdOrItem: Bookmark | string | null): void => {
             bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem);
         },
         [bookmarkProvider],
