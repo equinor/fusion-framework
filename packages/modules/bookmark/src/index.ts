@@ -17,6 +17,7 @@ export {
 export {
     BookmarkProvider,
     type BookmarkPayloadGenerator,
+    type BookmarkCreateArgs,
     type BookmarkUpdateOptions,
 } from './BookmarkProvider';
 
