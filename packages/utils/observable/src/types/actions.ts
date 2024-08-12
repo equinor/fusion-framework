@@ -162,10 +162,11 @@ export type ActionType<T> = T extends ActionCreator
  * @returns The action name extracted from the action type string.
  */
 export type ActionBaseType<TAction extends Action> = TAction extends Action
-    ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      TAction['type'] extends `${infer AName}::${infer ASuffix}`
-        ? AName
-        : TAction['type']
+    ? Extract<
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          TAction['type'] extends `${infer AName}::${infer ASuffix}` ? AName : TAction['type'],
+          string
+      >
     : never;
 
 /**
