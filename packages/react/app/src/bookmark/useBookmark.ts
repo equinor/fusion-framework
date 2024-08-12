@@ -1,6 +1,7 @@
 import { useBookmark as _useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 
 /**
+ * @deprecated Use useBookmark from @equinor/fusion-framework-react-module-bookmark
  *  For application development the useCurrentBookmark should be sufficient enough
  *
  *  Functionality provided here is:
@@ -16,6 +17,7 @@ import { useBookmark as _useBookmark } from '@equinor/fusion-framework-react-mod
  * @template TData - Current applications  bookmark type
  * @return {*}  {Bookmarks<TData>} the full api fro handling bookmarks
  */
-export const useBookmark = <TData>() => _useBookmark<TData>();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const useBookmark = <TData>() => _useBookmark();
 
 export default useBookmark;
