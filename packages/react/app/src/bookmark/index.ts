@@ -1,4 +1,12 @@
-export type { CreateBookMarkFn } from '@equinor/fusion-framework-react-module-bookmark';
+export { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 
-export { default, useCurrentBookmark } from './useCurrentBookmark';
+export { useCurrentBookmark } from './useCurrentBookmark';
 export { useBookmark } from './useBookmark';
+
+export type {
+    Bookmark,
+    Bookmarks,
+    BookmarkData,
+    BookmarkPayloadGenerator,
+    BookmarkProvider,
+} from '@equinor/fusion-framework-react-module-bookmark';
