@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.1.11
+
+### Patch Changes
+
+-   Updated dependencies [[`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
+    -   @equinor/fusion-framework-module-http@6.0.2
+    -   @equinor/fusion-query@5.1.1
+    -   @equinor/fusion-framework-module@4.3.3
+
 ## 7.1.10
 
 ### Patch Changes
