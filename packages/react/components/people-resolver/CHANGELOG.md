@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.4.4
+
+### Patch Changes
+
+-   [#2389](https://github.com/equinor/fusion-framework/pull/2389) [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion(react|wc)-person to fix issues with clearing component
+
+-   Updated dependencies [[`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb)]:
+    -   @equinor/fusion-query@5.1.1
+    -   @equinor/fusion-framework-react@7.1.4
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.13
+    -   @equinor/fusion-framework-module-services@4.1.2
+    -   @equinor/fusion-framework-react-module@3.1.4
+
 ## 1.4.3
 
 ### Patch Changes

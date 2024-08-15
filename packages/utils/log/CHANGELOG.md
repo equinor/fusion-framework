@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 1.0.2
+
+### Patch Changes
+
+-   [#2358](https://github.com/equinor/fusion-framework/pull/2358) [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb) Thanks [@eikeland](https://github.com/eikeland)! - Updating vitest to 2.0.4. Setting vitest as devDependency in fusion-query. Updating vite to 5.3.4
+
 ## 1.0.1
 
 ### Patch Changes

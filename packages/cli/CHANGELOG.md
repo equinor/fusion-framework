@@ -1,5 +1,41 @@
 # Change Log
 
+## 9.12.12
+
+### Patch Changes
+
+-   [#2349](https://github.com/equinor/fusion-framework/pull/2349) [`0dd8160`](https://github.com/equinor/fusion-framework/commit/0dd8160b7b840e04ec6a92ed2bf8d00494752a00) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @vitejs/plugin-react from 4.2.1 to 4.3.1
+
+-   [#2389](https://github.com/equinor/fusion-framework/pull/2389) [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion(react|wc)-person to fix issues with clearing component
+
+-   [#2337](https://github.com/equinor/fusion-framework/pull/2337) [`79fa856`](https://github.com/equinor/fusion-framework/commit/79fa8566d27dcc4d38da3a6b3fef1b78223f7458) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump rollup from 4.12.0 to 4.18.1
+
+-   [#2358](https://github.com/equinor/fusion-framework/pull/2358) [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb) Thanks [@eikeland](https://github.com/eikeland)! - Updating vitest to 2.0.4. Setting vitest as devDependency in fusion-query. Updating vite to 5.3.4
+
+-   [#2352](https://github.com/equinor/fusion-framework/pull/2352) [`2025368`](https://github.com/equinor/fusion-framework/commit/202536855f736fb58f09442da5ca473325c1141c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 5.2.10 to 5.3.3
+
+-   [#2256](https://github.com/equinor/fusion-framework/pull/2256) [`db92a9d`](https://github.com/equinor/fusion-framework/commit/db92a9d2132f74e2a72287640e6fdfbe3afa2824) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump commander from 12.0.0 to 12.1.0
+
+-   [#2253](https://github.com/equinor/fusion-framework/pull/2253) [`6f93346`](https://github.com/equinor/fusion-framework/commit/6f9334672c6dd77237d52508bef8893303f33ca7) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-context-selector from 0.6.3 to 0.6.5
+
+-   [#2264](https://github.com/equinor/fusion-framework/pull/2264) [`797095a`](https://github.com/equinor/fusion-framework/commit/797095ab3b51a675159be5541381ca06637a1b71) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump express-rate-limit from 7.2.0 to 7.3.1
+
+-   [#2350](https://github.com/equinor/fusion-framework/pull/2350) [`960ca34`](https://github.com/equinor/fusion-framework/commit/960ca34cae26f386e28c16bac00e7932f4f9199a) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.38.0 to 0.40.1
+
+-   [#2360](https://github.com/equinor/fusion-framework/pull/2360) [`1c7ac1b`](https://github.com/equinor/fusion-framework/commit/1c7ac1b42213f33a668e79d750e0b12b227a7052) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced ContextSelector component in the CLI package:
+
+    -   Implemented responsive context clearing mechanism
+    -   Improved handling of context selection and clearing events
+    -   Optimized component rendering with useMemo and useCallback hooks
+
+-   [#2261](https://github.com/equinor/fusion-framework/pull/2261) [`aae93b9`](https://github.com/equinor/fusion-framework/commit/aae93b95120f1285545ea1b8344817c31e134ff5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump adm-zip from 0.5.10 to 0.5.14
+
+-   Updated dependencies [[`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594)]:
+    -   @equinor/fusion-observable@8.4.0
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.4
+    -   @equinor/fusion-framework-module-feature-flag@1.1.6
+    -   @equinor/fusion-framework-app@9.1.5
+
 ## 9.12.11
 
 ### Patch Changes

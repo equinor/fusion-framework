@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.4.2
+
+### Patch Changes
+
+-   [#2389](https://github.com/equinor/fusion-framework/pull/2389) [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion(react|wc)-person to fix issues with clearing component
+
+-   [#2350](https://github.com/equinor/fusion-framework/pull/2350) [`960ca34`](https://github.com/equinor/fusion-framework/commit/960ca34cae26f386e28c16bac00e7932f4f9199a) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.38.0 to 0.40.1
+
+-   Updated dependencies [[`1a215c4`](https://github.com/equinor/fusion-framework/commit/1a215c45c97d2dfdc8127dc752ec21951bb048be)]:
+    -   @equinor/fusion-framework-module-navigation@4.0.4
+
 ## 4.4.1
 
 ### Patch Changes

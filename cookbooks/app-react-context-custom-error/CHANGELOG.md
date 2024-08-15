@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.17
+
+### Patch Changes
+
+-   Updated dependencies [[`0dd8160`](https://github.com/equinor/fusion-framework/commit/0dd8160b7b840e04ec6a92ed2bf8d00494752a00), [`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e), [`79fa856`](https://github.com/equinor/fusion-framework/commit/79fa8566d27dcc4d38da3a6b3fef1b78223f7458), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`2025368`](https://github.com/equinor/fusion-framework/commit/202536855f736fb58f09442da5ca473325c1141c), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594), [`db92a9d`](https://github.com/equinor/fusion-framework/commit/db92a9d2132f74e2a72287640e6fdfbe3afa2824), [`6f93346`](https://github.com/equinor/fusion-framework/commit/6f9334672c6dd77237d52508bef8893303f33ca7), [`797095a`](https://github.com/equinor/fusion-framework/commit/797095ab3b51a675159be5541381ca06637a1b71), [`960ca34`](https://github.com/equinor/fusion-framework/commit/960ca34cae26f386e28c16bac00e7932f4f9199a), [`1c7ac1b`](https://github.com/equinor/fusion-framework/commit/1c7ac1b42213f33a668e79d750e0b12b227a7052), [`aae93b9`](https://github.com/equinor/fusion-framework/commit/aae93b95120f1285545ea1b8344817c31e134ff5)]:
+    -   @equinor/fusion-framework-cli@9.12.12
+    -   @equinor/fusion-observable@8.4.0
+    -   @equinor/fusion-framework-react-app@5.2.5
+    -   @equinor/fusion-framework-react-module-context@6.2.10
+
 ## 4.1.16
 
 ### Patch Changes
