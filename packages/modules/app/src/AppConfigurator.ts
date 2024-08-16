@@ -25,7 +25,9 @@ export interface AppModuleConfig {
 
 export interface IAppConfigurator {
     setClient: (
-        client_or_cb: AppModuleConfig['client'] | ConfigBuilderCallback<AppModuleConfig['client']>,
+        client_or_cb:
+            | Promise<AppModuleConfig['client']>
+            | ConfigBuilderCallback<AppModuleConfig['client']>,
     ) => void;
     setBaseUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
 }
@@ -61,7 +63,9 @@ export class AppConfigurator
     }
 
     public setClient(
-        client_or_cb: AppModuleConfig['client'] | ConfigBuilderCallback<AppModuleConfig['client']>,
+        client_or_cb:
+            | Promise<AppModuleConfig['client']>
+            | ConfigBuilderCallback<AppModuleConfig['client']>,
     ) {
         const cb = typeof client_or_cb === 'object' ? () => client_or_cb : client_or_cb;
         this._set('client', cb);
