@@ -19,21 +19,6 @@ Tooling for developing widgets  - 🚀 coming soon
 
 Tooling for developing portals  - 🚀 coming
 
-### Authentication
-
-To run any app commands involving the [app api](https://fusion-s-apps-ci.azurewebsites.net/swagger/index.html), you need to provide a valid fusion access_token.
-
-The CLI will look for the env varable `FUSION_TOKEN`.
-
-You can get an access token by using the azure `az` command in your local dev environment.
-
-```sh
-az login --scope example-env-scope.default
-az account get-access-token
-```
-
-See the [section](#authentication-in-github-actions) for using the framework-cli in a workflow with azure authentication.
-
 ### Commands
 
 #### `fusion-framework-cli`
@@ -47,6 +32,12 @@ pnpm add -D @equinor/fusion-framework-cli
 ```
 
 You can always use the option `-h or --help or help` to get help for the CLI and its commands.
+
+Example:
+
+```sh
+fusion-framework-cli help
+```
 
 ---
 
@@ -74,6 +65,12 @@ Options:
   -h, --help          display help for command
 ```
 
+Example:
+
+```sh
+fusion-framework-cli app
+```
+
 ---
 
 #### `fusion-framework-cli app dev`
@@ -93,6 +90,12 @@ Options:
   -h, --help                 display help for command
 ```
 
+Example:
+
+```sh
+fusion-framework-cli app dev -p 3001
+```
+
 ---
 
 #### `fusion-framework-cli app build`
@@ -109,6 +112,12 @@ Options:
   -h, --help                display help for command
 ```
 
+Example:
+
+```sh
+fusion-framework-cli app build -o dist
+```
+
 ---
 
 #### `fusion-framework-cli app config`
@@ -121,10 +130,15 @@ Options:
   -o, --output <string>              output file
   -c, --config <string>              application config file
   -p, --publish <string>             Publish app config to version [(semver | current)]
-  -e, --env, <ci | fqa | tr | fprd>  Fusion environment to build api urls from. used when publishing config.
-  -s, --service, <string>            Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands.
-                                     used when publishing config
+  -e, --env, <| ci | fqa | tr | fprd>  Fusion environment to build api urls from. used when publishing config.
+  -s, --service, <string>            Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands. used when publishing config
   -h, --help                         display help for command
+```
+
+Example that published the config to app version "1.0.3" in the "ci" environment:
+
+```sh
+fusion-framework-cli app config -p 1.0.3 -e ci
 ```
 
 ---
@@ -141,6 +155,12 @@ Options:
   -h, --help             display help for command
 ```
 
+Example:
+
+```sh
+fusion-framework-cli app manifest -o manifest.json
+```
+
 ---
 
 #### `fusion-framework-cli app pack`
@@ -155,13 +175,19 @@ Options:
   -h, --help               display help for command
 ```
 
+Example:
+
+```sh
+fusion-framework-cli app pack
+```
+
 ---
 
 #### `fusion-framework-cli app publish`
 
-The `app publish` command is a convenience command to handle packing, publishing and tagging in a one command.
+The `app publish` command is a convenience command to handle packing, publishing and tagging in one command.
 
-It chains together the commands:
+It runs the following commands in order:
 
 - `app pack` command that generates a zip file,
 - `app upload` command that uploads the generated zip
@@ -174,6 +200,12 @@ Options:
   -e, --env, <ci | fqa | tr | fprd>  Fusion environment to build api urls from
   -s, --service, <string>            Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands
   -h, --help                         display help for command
+```
+
+Example that publishes this build as preview in ci:
+
+```sh
+fusion-framework-cli app publish -t preview -e ci
 ```
 
 ---
@@ -191,6 +223,12 @@ Options:
   -h, --help                         display help for command
 ```
 
+Example that uploads zip package to ci:
+
+```sh
+fusion-framework-cli app upload -b app-bundle.zip -e ci
+```
+
 ---
 
 #### `fusion-framework-cli app tag`
@@ -206,6 +244,29 @@ Options:
   -s, --service, <string>            Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands
   -h, --help                         display help for command
 ```
+
+Example that tags version 1.0.3 with preview in ci:
+
+```sh
+fusion-framework-cli app tag -v 1.0.3 -t preview -e ci
+```
+
+---
+
+### Authentication
+
+To run any app commands involving the [app api](https://fusion-s-apps-ci.azurewebsites.net/swagger/index.html), you need to provide a valid fusion access_token.
+
+The CLI will look for the env varable `FUSION_TOKEN`.
+
+You can get an access token by using the azure `az` command in your local dev environment.
+
+```sh
+az login --scope example-env-scope.default
+az account get-access-token
+```
+
+See the [section](#authentication-in-github-actions) for using the framework-cli in a workflow with azure authentication.
 
 ---
 
