@@ -232,7 +232,7 @@ Create a GitHub Action **secret** AZURE_CREDENTIALS with the value as an object 
 }
 ```
 
-Define an action that runs the `az` command to get a token and save the token in env variable ``FUSION_TOKEN``.
+Define workflow steps that runs the `az` command to get a token and save the token in env variable ``FUSION_TOKEN``.
 
 ```yaml
 steps:
