@@ -34,7 +34,9 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     bundle.addLocalFolder(outDir);
     spinner.info(`added ./${outDir}`);
 
-    const licenseFile = resolve(pkg.path, 'LICENSE.md');
+    const appDir = dirname(pkg.path);
+
+    const licenseFile = resolve(appDir, 'LICENSE.md');
     if (fileExistsSync(licenseFile)) {
         bundle.addLocalFile(licenseFile);
         spinner.info(`added ${licenseFile}`);
@@ -42,7 +44,7 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
         spinner.warn(`missing ${licenseFile}`);
     }
 
-    const readmeFile = resolve(pkg.path, 'README.md');
+    const readmeFile = resolve(appDir, 'README.md');
     if (fileExistsSync(readmeFile)) {
         bundle.addLocalFile(readmeFile);
         spinner.info(`added ${readmeFile}`);
