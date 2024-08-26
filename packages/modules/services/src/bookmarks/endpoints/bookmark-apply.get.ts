@@ -7,11 +7,10 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from './types';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
 
-import { extractVersion } from '../utils';
-import { ApiVersion } from './api-version';
-import { statusSelector } from './selectors';
+import { extractVersion, schemaSelector } from '../../utils';
+import { ApiVersion } from '../api-version';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1;
@@ -21,14 +20,15 @@ type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
 
 /** Schema for the input arguments to this operation. */
 const ArgSchema = {
-    [ApiVersion.v1]: z.object({
-        bookmarkId: z.string(),
-    }),
+    [ApiVersion.v1]: z.object({ bookmarkId: z.string() }),
 };
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
-    [ApiVersion.v1]: z.boolean(),
+    [ApiVersion.v1]: z.object({
+        id: z.string(),
+        payload: z.string().or(z.record(z.unknown())).optional(),
+    }),
 };
 
 /** Defines the expected output from the api. */
@@ -51,14 +51,14 @@ type MethodResult<
 /** utility function for generating http request initialization parameters  */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     version: TVersion,
-    args: z.infer<(typeof ArgSchema)[TVersion]>,
+    _args: z.infer<(typeof ArgSchema)[TVersion]>,
     init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
     switch (version) {
         case ApiVersion.v1: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                method: 'DELETE',
-                selector: statusSelector,
+                method: 'GET',
+                selector: schemaSelector(ApiResponseSchema[version]),
             };
             return Object.assign({}, baseInit, init);
         }
@@ -75,7 +75,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
         case ApiVersion.v1: {
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/persons/me/bookmarks/favourites/${args.bookmarkId}?${String(params)}`;
+            return `/bookmarks/${args.bookmarkId}/apply?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
@@ -89,7 +89,6 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 ) => {
     type MethodVersion = ExtractApiVersion<TVersion>;
     const apiVersion = extractVersion(ApiVersion, version);
-    const execute = client[method];
     return <
         TResponse = ApiResponse<MethodVersion>,
         TResult = MethodResult<MethodVersion, TMethod, TResponse>,
@@ -98,7 +97,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
         init?: ClientRequestInit<IHttpClient, TResponse>,
     ): TResult => {
         const args = ArgSchema[apiVersion].parse(input);
-        return execute(
+        return client[method](
             generateApiPath(apiVersion, args),
             generateRequestParameters(apiVersion, args, init),
         ) as TResult;
@@ -106,9 +105,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-    AllowedVersions as RemoveBookmarkFavouriteVersion,
-    MethodArg as RemoveBookmarkFavouriteArgs,
-    ApiResponse as RemoveBookmarkFavouriteResponse,
-    MethodResult as RemoveBookmarkFavouriteResult,
-    executeApiCall as removeFavoriteBookmark,
+    AllowedVersions as BookmarkApplyVersion,
+    MethodArg as BookmarkApplyArgs,
+    ApiResponse as BookmarkApplyResponse,
+    MethodResult as BookmarkApplyResult,
+    executeApiCall as getBookmarkApply,
 };

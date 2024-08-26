@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 export const ApiDateSchema = z
     .string()
-    .datetime()
+    .datetime({ offset: true })
     .transform((x) => new Date(x));
 
 export const ApiPersonSchema = {
@@ -43,21 +43,22 @@ export const ApiFusionContext = {
  * This schema is defined for the v1 API version, and the properties are validated using the Zod library.
  */
 export const ApiBookmarkSchema = {
-    [ApiVersion.v1]: z.object({
-        id: z.string(),
-        name: z.string(),
-        appKey: z.string(),
-        description: z.string().optional(),
-        isShared: z.boolean().optional(),
-        context: ApiFusionContext[ApiVersion.v1].optional(),
-        createdBy: ApiPersonSchema[ApiVersion.v1],
-        updatedBy: ApiPersonSchema[ApiVersion.v1].optional(),
-        created: ApiDateSchema,
-        updated: ApiDateSchema.optional(),
-        sourceSystem: ApiSourceSystem[ApiVersion.v1].optional(),
-        payload: z
-            .string()
-            .optional()
-            .transform((x) => (x ? (JSON.parse(x) as Record<string, unknown>) : undefined)),
-    }),
+    get [ApiVersion.v1]() {
+        return z.object({
+            id: z.string(),
+            name: z.string(),
+            appKey: z.string(),
+            description: z.string().optional(),
+            isShared: z.boolean().optional(),
+            context: ApiFusionContext[ApiVersion.v1].optional(),
+            createdBy: ApiPersonSchema[ApiVersion.v1],
+            updatedBy: ApiPersonSchema[ApiVersion.v1].optional(),
+            created: ApiDateSchema,
+            updated: ApiDateSchema.optional(),
+            sourceSystem: ApiSourceSystem[ApiVersion.v1].optional(),
+        });
+    },
+    get [ApiVersion.v2]() {
+        return this[ApiVersion.v1];
+    },
 };

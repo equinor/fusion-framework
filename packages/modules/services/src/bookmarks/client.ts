@@ -7,7 +7,7 @@ import {
     GetBookmarksResult,
     GetBookmarksVersion,
     getBookmarks,
-} from './bookmarks.get';
+} from './endpoints/user-bookmarks.get';
 
 import {
     GetBookmarkArg,
@@ -15,7 +15,7 @@ import {
     GetBookmarkResult,
     GetBookmarkVersion,
     getBookmark,
-} from './bookmark.get';
+} from './endpoints/bookmark.get';
 
 import {
     CreateBookmarkArg,
@@ -23,14 +23,14 @@ import {
     CreateBookmarkVersion,
     CreateBookmarksResult,
     createBookmark,
-} from './bookmark.post';
+} from './endpoints/bookmark.post';
 import {
     type PatchBookmarkArg,
     type PatchBookmarkResponse,
     type PatchBookmarkVersion,
     type PatchBookmarksResult,
     patchBookmark,
-} from './bookmark.patch';
+} from './endpoints/bookmark.patch';
 
 import {
     BookmarkApplyArgs,
@@ -38,34 +38,34 @@ import {
     BookmarkApplyResult,
     BookmarkApplyVersion,
     getBookmarkApply,
-} from './bookmark-apply.get';
+} from './endpoints/bookmark-apply.get';
 import {
     AddBookmarkFavouriteArgs,
     AddBookmarkFavouriteResponse,
     AddBookmarkFavouriteResult,
     AddBookmarkFavouriteVersion,
     addBookmarkAsFavourite,
-} from './bookmark-favourite.post';
+} from './endpoints/user-bookmark-favourite.post';
 import {
     DeleteBookmarkArg,
     DeleteBookmarkResponse,
     DeleteBookmarkVersion,
     deleteBookmark,
-} from './bookmark.delete';
+} from './endpoints/bookmark.delete';
 import {
     IsFavoriteBookmarkArgs,
     IsFavoriteBookmarkResponse,
     IsFavoriteBookmarkResult,
     IsFavoriteBookmarkVersion,
     isFavoriteBookmark,
-} from './bookmark-favourite.head';
+} from './endpoints/user-bookmark-favourite.head';
 import {
     RemoveBookmarkFavouriteArgs,
     RemoveBookmarkFavouriteResponse,
     RemoveBookmarkFavouriteResult,
     RemoveBookmarkFavouriteVersion,
     removeFavoriteBookmark,
-} from './bookmark-favourite.delete';
+} from './endpoints/user-bookmark-favourite.delete';
 
 /**
  * Provides a client interface for interacting with the bookmarks API.

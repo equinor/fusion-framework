@@ -7,14 +7,14 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from './types';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
 
-import { extractVersion } from '../utils';
-import { ApiVersion } from './api-version';
-import { statusSelector } from './selectors';
+import { extractVersion, schemaSelector } from '../../utils';
+import { ApiVersion } from '../api-version';
+import { ApiBookmarkSchema } from '../schemas';
 
 /** API version which this operation uses. */
-type AvailableVersions = ApiVersion.v1;
+type AvailableVersions = ApiVersion.v1 | ApiVersion.v2;
 
 /** Defines the allowed versions for this operation. (key of enum as string or enum value) */
 type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
@@ -24,11 +24,15 @@ const ArgSchema = {
     [ApiVersion.v1]: z.object({
         bookmarkId: z.string(),
     }),
+    [ApiVersion.v2]: z.object({
+        bookmarkId: z.string(),
+    }),
 };
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
-    [ApiVersion.v1]: z.boolean(),
+    [ApiVersion.v1]: ApiBookmarkSchema[ApiVersion.v1],
+    [ApiVersion.v2]: ApiBookmarkSchema[ApiVersion.v2],
 };
 
 /** Defines the expected output from the api. */
@@ -55,11 +59,10 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
     switch (version) {
-        case ApiVersion.v1: {
+        case ApiVersion.v1:
+        case ApiVersion.v2: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                method: 'POST',
-                selector: statusSelector,
-                body: args,
+                selector: schemaSelector(ApiResponseSchema[version]),
             };
             return Object.assign({}, baseInit, init);
         }
@@ -70,13 +73,14 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
 /** utility function for generating the api path */
 const generateApiPath = <TVersion extends AvailableVersions>(
     version: TVersion,
-    _args: z.infer<(typeof ArgSchema)[TVersion]>,
+    args: z.infer<(typeof ArgSchema)[TVersion]>,
 ): string => {
     switch (version) {
-        case ApiVersion.v1: {
+        case ApiVersion.v1:
+        case ApiVersion.v2: {
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/persons/me/bookmarks/favourites?${String(params)}`;
+            return `/bookmarks/${args.bookmarkId}?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
@@ -90,7 +94,6 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 ) => {
     type MethodVersion = ExtractApiVersion<TVersion>;
     const apiVersion = extractVersion(ApiVersion, version);
-    const execute = client[method];
     return <
         TResponse = ApiResponse<MethodVersion>,
         TResult = MethodResult<MethodVersion, TMethod, TResponse>,
@@ -99,7 +102,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
         init?: ClientRequestInit<IHttpClient, TResponse>,
     ): TResult => {
         const args = ArgSchema[apiVersion].parse(input);
-        return execute(
+        return client[method](
             generateApiPath(apiVersion, args),
             generateRequestParameters(apiVersion, args, init),
         ) as TResult;
@@ -107,9 +110,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-    AllowedVersions as AddBookmarkFavouriteVersion,
-    MethodArg as AddBookmarkFavouriteArgs,
-    ApiResponse as AddBookmarkFavouriteResponse,
-    MethodResult as AddBookmarkFavouriteResult,
-    executeApiCall as addBookmarkAsFavourite,
+    AllowedVersions as GetBookmarkVersion,
+    MethodArg as GetBookmarkArg,
+    ApiResponse as GetBookmarkResponse,
+    MethodResult as GetBookmarkResult,
+    executeApiCall as getBookmark,
 };

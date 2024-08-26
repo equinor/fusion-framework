@@ -24,7 +24,11 @@ export const extractVersion = <
     version: TVersion,
 ): ExtractApiVersion<TApiVersions, TVersion, TAllowedApiVersion> => {
     if (version in apiVersions) {
-        return version as ExtractApiVersion<TApiVersions, TVersion, TAllowedApiVersion>;
+        return apiVersions[version] as ExtractApiVersion<
+            TApiVersions,
+            TVersion,
+            TAllowedApiVersion
+        >;
     }
     const extractedVersion = Object.values(apiVersions).find((v) => v === version);
     if (!extractedVersion) {

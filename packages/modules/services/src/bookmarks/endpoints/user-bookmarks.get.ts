@@ -7,11 +7,13 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from './types';
+import buildODataQuery from 'odata-query';
 
-import { extractVersion, schemaSelector } from '../utils';
-import { ApiVersion } from './api-version';
-import { ApiBookmarkSchema, ApiSourceSystem } from './schemas';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
+
+import { extractVersion, schemaSelector } from '../../utils';
+import { ApiVersion } from '../api-version';
+import { ApiBookmarkSchema, ApiSourceSystem } from '../schemas';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1;
@@ -21,23 +23,29 @@ type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
 
 /** Schema for the input arguments to this operation. */
 const ArgSchema = {
-    [ApiVersion.v1]: z.object({
-        name: z.string(),
-        appKey: z.string(),
-        payload: z
-            .record(z.unknown())
-            .optional()
-            .transform((x) => (x ? JSON.stringify(x) : undefined)),
-        description: z.string().nullish(),
-        isShared: z.boolean().nullish(),
-        contextId: z.string().nullish(),
-        sourceSystem: ApiSourceSystem[ApiVersion.v1].nullish(),
-    }),
+    [ApiVersion.v1]: z
+        .object({
+            filter: z
+                .string()
+                .optional()
+                .or(
+                    z
+                        .object({
+                            appKey: z.string().optional(),
+                            contextId: z.string().optional(),
+                            sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
+                        })
+                        .transform((x) => {
+                            buildODataQuery({ filter: x }).replace(/$filter=/, '');
+                        }),
+                ),
+        })
+        .optional(),
 };
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
-    [ApiVersion.v1]: ApiBookmarkSchema[ApiVersion.v1],
+    [ApiVersion.v1]: z.array(ApiBookmarkSchema[ApiVersion.v1]),
 };
 
 /** Defines the expected output from the api. */
@@ -60,15 +68,13 @@ type MethodResult<
 /** utility function for generating http request initialization parameters  */
 const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     version: TVersion,
-    args: z.infer<(typeof ArgSchema)[TVersion]>,
+    _args: z.infer<(typeof ArgSchema)[TVersion]>,
     init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
     switch (version) {
         case ApiVersion.v1: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                method: 'POST',
                 selector: schemaSelector(ApiResponseSchema[version]),
-                body: args,
             };
             return Object.assign({}, baseInit, init);
         }
@@ -79,13 +85,14 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
 /** utility function for generating the api path */
 const generateApiPath = <TVersion extends AvailableVersions>(
     version: TVersion,
-    _args: z.infer<(typeof ArgSchema)[TVersion]>,
+    args: z.infer<(typeof ArgSchema)[TVersion]>,
 ): string => {
     switch (version) {
         case ApiVersion.v1: {
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/bookmarks?${String(params)}`;
+            args?.filter && params.append('$filter', args.filter);
+            return `/persons/me/bookmarks/?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
@@ -99,7 +106,6 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 ) => {
     type MethodVersion = ExtractApiVersion<TVersion>;
     const apiVersion = extractVersion(ApiVersion, version);
-    const execute = client[method];
     return <
         TResponse = ApiResponse<MethodVersion>,
         TResult = MethodResult<MethodVersion, TMethod, TResponse>,
@@ -108,17 +114,16 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
         init?: ClientRequestInit<IHttpClient, TResponse>,
     ): TResult => {
         const args = ArgSchema[apiVersion].parse(input);
-        return execute(
-            generateApiPath(apiVersion, args),
-            generateRequestParameters(apiVersion, args, init),
-        ) as TResult;
+        const path = generateApiPath(apiVersion, args);
+        const params = generateRequestParameters(apiVersion, args, init);
+        return client[method](path, params) as TResult;
     };
 };
 
 export {
-    AllowedVersions as CreateBookmarkVersion,
-    MethodArg as CreateBookmarkArg,
-    ApiResponse as CreateBookmarkResponse,
-    MethodResult as CreateBookmarksResult,
-    executeApiCall as createBookmark,
+    AllowedVersions as GetBookmarksVersion,
+    MethodArg as GetBookmarksArgs,
+    ApiResponse as GetBookmarksResponse,
+    MethodResult as GetBookmarksResult,
+    executeApiCall as getBookmarks,
 };

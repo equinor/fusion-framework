@@ -7,11 +7,11 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from './types';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
 
-import { extractVersion } from '../utils';
-import { ApiVersion } from './api-version';
-import { headSelector } from './selectors';
+import { extractVersion } from '../../utils';
+import { ApiVersion } from '../api-version';
+import { statusSelector } from '../selectors';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1;
@@ -57,9 +57,8 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     switch (version) {
         case ApiVersion.v1: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                method: 'POST',
-                selector: headSelector,
-                body: args,
+                method: 'DELETE',
+                selector: statusSelector,
             };
             return Object.assign({}, baseInit, init);
         }
@@ -76,7 +75,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
         case ApiVersion.v1: {
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/persons/me/bookmarks/favourites/${args.bookmarkId}?${String(params)}`;
+            return `/bookmarks/${args.bookmarkId}?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
@@ -90,7 +89,6 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 ) => {
     type MethodVersion = ExtractApiVersion<TVersion>;
     const apiVersion = extractVersion(ApiVersion, version);
-    const execute = client[method];
     return <
         TResponse = ApiResponse<MethodVersion>,
         TResult = MethodResult<MethodVersion, TMethod, TResponse>,
@@ -99,7 +97,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
         init?: ClientRequestInit<IHttpClient, TResponse>,
     ): TResult => {
         const args = ArgSchema[apiVersion].parse(input);
-        return execute(
+        return client[method](
             generateApiPath(apiVersion, args),
             generateRequestParameters(apiVersion, args, init),
         ) as TResult;
@@ -107,9 +105,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-    AllowedVersions as IsFavoriteBookmarkVersion,
-    MethodArg as IsFavoriteBookmarkArgs,
-    ApiResponse as IsFavoriteBookmarkResponse,
-    MethodResult as IsFavoriteBookmarkResult,
-    executeApiCall as isFavoriteBookmark,
+    AllowedVersions as DeleteBookmarkVersion,
+    MethodArg as DeleteBookmarkArg,
+    ApiResponse as DeleteBookmarkResponse,
+    MethodResult as DeleteBookmarksResult,
+    executeApiCall as deleteBookmark,
 };

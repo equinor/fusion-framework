@@ -7,11 +7,11 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from './types';
+import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
 
-import { extractVersion, schemaSelector } from '../utils';
-import { ApiVersion } from './api-version';
-import { ApiBookmarkSchema } from './schemas';
+import { extractVersion } from '../../utils';
+import { ApiVersion } from '../api-version';
+import { headSelector } from '../selectors';
 
 /** API version which this operation uses. */
 type AvailableVersions = ApiVersion.v1;
@@ -28,7 +28,7 @@ const ArgSchema = {
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
-    [ApiVersion.v1]: ApiBookmarkSchema[ApiVersion.v1],
+    [ApiVersion.v1]: z.boolean(),
 };
 
 /** Defines the expected output from the api. */
@@ -57,7 +57,9 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     switch (version) {
         case ApiVersion.v1: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                selector: schemaSelector(ApiResponseSchema[version]),
+                method: 'POST',
+                selector: headSelector,
+                body: args,
             };
             return Object.assign({}, baseInit, init);
         }
@@ -74,7 +76,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
         case ApiVersion.v1: {
             const params = new URLSearchParams();
             params.append('api-version', version);
-            return `/bookmarks/${args.bookmarkId}?${String(params)}`;
+            return `/persons/me/bookmarks/favourites/${args.bookmarkId}?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
@@ -88,7 +90,6 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 ) => {
     type MethodVersion = ExtractApiVersion<TVersion>;
     const apiVersion = extractVersion(ApiVersion, version);
-    const execute = client[method];
     return <
         TResponse = ApiResponse<MethodVersion>,
         TResult = MethodResult<MethodVersion, TMethod, TResponse>,
@@ -97,7 +98,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
         init?: ClientRequestInit<IHttpClient, TResponse>,
     ): TResult => {
         const args = ArgSchema[apiVersion].parse(input);
-        return execute(
+        return client[method](
             generateApiPath(apiVersion, args),
             generateRequestParameters(apiVersion, args, init),
         ) as TResult;
@@ -105,9 +106,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-    AllowedVersions as GetBookmarkVersion,
-    MethodArg as GetBookmarkArg,
-    ApiResponse as GetBookmarkResponse,
-    MethodResult as GetBookmarkResult,
-    executeApiCall as getBookmark,
+    AllowedVersions as IsFavoriteBookmarkVersion,
+    MethodArg as IsFavoriteBookmarkArgs,
+    ApiResponse as IsFavoriteBookmarkResponse,
+    MethodResult as IsFavoriteBookmarkResult,
+    executeApiCall as isFavoriteBookmark,
 };
