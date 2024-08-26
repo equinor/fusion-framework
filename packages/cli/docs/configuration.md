@@ -10,26 +10,50 @@ title: Fusion Framework CLI - App Configuration
 
 the cli will look for a `app.config.{ts,js,json}` which will be provided to the configuration step of the application
 
+## Config (optional)
+
 ```ts
-export type AppConfig = {
-    /** application config */
-    environment?: Record<string, unknown>;
+// app.config.ts
+import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig((_env, { base }) =>
+    mergeAppConfigs(base, {
+        environment: {
+            endpoints: {
+              api: {
+                baseUri: 'https://foo.bar',
+                defaultScopes: ['default']
+              }
+            }
+        },
+    }),
+);
+
+// src/config.ts
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+export const configure: AppModuleInitiator = (configurator, { env }) => {
+    const { endpoints } = env.config.environment;
+    configurator.configureClient( 'api', endpoints.api );
 };
 ```
 
-[see how to generate config](./app.md#config)
+### Manifest (optional)
 
+By default the CLI will create a manifest on best effort from `package.json`
 
-## Manifest
+```ts
+// app.manifest.config.ts
+import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
 
-<!-- TODO: add link to documentation about Fusion application manifest, models and services -->
-
-the cli will look for a `app.manifest.config.{ts,js,json}` which will be provided to the configuration step as manifest
-
-> [!NOTE]
-> by default the the application will generate a manifest based on the package.json
-
-[see how to generate config](./app.md#manifest)
+export default defineAppManifest((env, { base }) => {
+  return mergeManifests(
+    base,
+    {
+      /** override name from package.json */
+        "appKey": "my-key",
+    }
+  )
+});
+```
 
 #### Resources
 

@@ -36,13 +36,20 @@ export default sidebar({
     ],
     '/cli/': [
         {
-            text: 'App',
-            link: 'docs/app.md',
-            prefix: 'docs/',
+            text: 'CLI',
+            link: 'README.md',
             children: [
                 {
-                    text: 'configuration',
-                    link: 'app-config.md',
+                    text: 'Commands',
+                    link: 'docs/commands.md',
+                },
+                {
+                    text: 'App Configuration',
+                    link: 'docs/configuration.md',
+                },
+                {
+                    text: 'Api Authentication',
+                    link: 'docs/api-authentication.md',
                 },
             ],
         },
