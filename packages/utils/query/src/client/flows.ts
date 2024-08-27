@@ -59,19 +59,25 @@ export const handleExecution =
                     }),
                 );
 
-                // Execute the fetch operation, passing the AbortSignal to allow for cancellation.
-                return from(fetch(request.args, controller.signal)).pipe(
-                    map((value) =>
-                        actions.execute.success({
-                            ...request,
-                            status: 'complete',
-                            completed: Date.now(),
-                            value,
-                        }),
-                    ),
-                    catchError((err) => of(actions.execute.failure(err, transaction))),
-                    takeUntil(cancel$), // Complete the observable chain if a cancel action is received.
-                );
+                try {
+                    return from(fetch(request.args, controller.signal)).pipe(
+                        map((value) =>
+                            actions.execute.success({
+                                ...request,
+                                status: 'complete',
+                                completed: Date.now(),
+                                value,
+                            }),
+                        ),
+                        catchError((err) => of(actions.execute.failure(err, transaction))),
+                        takeUntil(cancel$), // Complete the observable chain if a cancel action is received.
+                    );
+                } catch (err) {
+                    // Normally errors thrown during the execution of the fetch function are caught by the `catchError` operator.
+                    // However, if the fetch function itself throws an error, it will be caught here.
+                    // This can happen if the fetch function is not a function or if it throws synchronously.
+                    return of(actions.execute.failure(err as Error, transaction));
+                }
             }),
         );
 

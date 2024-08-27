@@ -58,8 +58,11 @@ describe('Query query', () => {
 
     it('should handle errors', async () => {
         // Mock a function that always throws an error when called
-        const fn = vi.fn(async (_: string) => {
-            throw Error('error');
+        const fn = vi.fn((arg: string) => {
+            if (fn.mock.calls.length === 1) {
+                throw Error('error');
+            }
+            return Promise.resolve(arg);
         });
         // Initialize the Query client with the mocked function that throws an error
         const queryClient = new Query({
@@ -68,15 +71,11 @@ describe('Query query', () => {
             },
             key: (value) => value, // Use the input value as the query key
         });
-        try {
-            // Attempt to perform a query that is expected to fail
-            await lastValueFrom(queryClient.query('foo'));
-        } catch (e) {
-            // Verify that the caught exception is an instance of Error
-            expect(e).toBeInstanceOf(Error);
-            // Verify that the error message is what was thrown by the mocked function
-            expect(e.message).toBe('error');
-        }
+
+        await expect(lastValueFrom(queryClient.query('foo'))).rejects.toThrowError('error');
+        await expect(lastValueFrom(queryClient.query('foo'))).resolves.toMatchObject({
+            value: 'foo',
+        });
     });
 
     it('should cancel requests when no longer subscribed', async () => {
