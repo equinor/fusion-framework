@@ -66,8 +66,13 @@ export class ConsoleLogger extends Logger {
     }
 
     protected _formatTitle(_lvl: LogLevel): string {
-        const title = [this.title, this.subtitle].filter((x) => !!x).join(' - ');
-        return chalk.magenta(title);
+        const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
+        switch (_lvl) {
+            case LogLevel.Warning:
+            case LogLevel.Error:
+                return chalk.bold(title);
+        }
+        return title;
     }
 
     /**

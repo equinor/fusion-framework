@@ -11,7 +11,8 @@ describe('Console logger', () => {
         logger.level = LogLevel.Debug;
         logger.debug('This is a debug message');
         expect(spy).toHaveBeenCalledWith(
-            chalk.dim(chalk.magenta('MainLogger'), 'This is a debug message'),
+            chalk(chalk.magenta('MainLogger')),
+            'This is a debug message',
         );
     });
     it('should log info messages', () => {
@@ -28,7 +29,8 @@ describe('Console logger', () => {
         logger.level = LogLevel.Warning;
         logger.warn('This is a warning message');
         expect(spy).toHaveBeenCalledWith(
-            chalk.bold(chalk.magenta('MainLogger'), 'This is a warning message'),
+            chalk.bold.magenta('MainLogger'),
+            'This is a warning message',
         );
     });
 
@@ -37,7 +39,10 @@ describe('Console logger', () => {
         const logger = new ConsoleLogger('MainLogger');
         logger.level = LogLevel.Error;
         logger.error('This is an error message');
-        expect(spy).toHaveBeenCalledWith(chalk.magenta('MainLogger'), 'This is an error message');
+        expect(spy).toHaveBeenCalledWith(
+            chalk.bold.magenta('MainLogger'),
+            'This is an error message',
+        );
     });
 
     it('should log multiple messages', () => {
