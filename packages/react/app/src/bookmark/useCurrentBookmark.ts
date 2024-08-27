@@ -4,7 +4,8 @@ import {
     useCurrentBookmark as _useCurrentBookmark,
 } from '@equinor/fusion-framework-react-module-bookmark';
 import { BookmarkModule } from '../../../../modules/bookmark/src';
-import useAppModule from '../useAppModule';
+import { useFrameworkModule } from '@equinor/fusion-framework-react';
+import useAppModules from '../useAppModules';
 
 /**
  * By providing a CreateBookMarkFn bookmarks is enabled for the current application.
@@ -21,8 +22,18 @@ import useAppModule from '../useAppModule';
 export const useCurrentBookmark = <TData extends BookmarkData>(
     payloadGenerator?: BookmarkPayloadGenerator<TData>,
 ) => {
-    const provider = useAppModule<BookmarkModule>('bookmark');
-    return _useCurrentBookmark<TData>({ provider, payloadGenerator });
+    const appBookmarkProvider = useAppModules<[BookmarkModule]>().bookmark;
+    const frameworkBookmarkProvider = useFrameworkModule<BookmarkModule>('bookmark');
+    if (!appBookmarkProvider) {
+        console.warn(
+            '@deprecation',
+            'application has not enabled bookmarks, this will not work in the future',
+        );
+    }
+    return _useCurrentBookmark<TData>({
+        provider: appBookmarkProvider ?? frameworkBookmarkProvider,
+        payloadGenerator,
+    });
 };
 
 export default useCurrentBookmark;
