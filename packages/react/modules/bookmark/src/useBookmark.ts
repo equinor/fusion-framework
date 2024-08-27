@@ -85,7 +85,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
      * @deprecated use provider instead {@link BookmarkProvider.createBookmarkAsync}
      */
     const createBookmark = useCallback(
-        <T extends Record<string, unknown>>(args: BookmarkCreateArgs<T>): Promise<Bookmark<T>> => {
+        <T extends BookmarkData>(args: BookmarkCreateArgs<T>): Promise<Bookmark<T>> => {
             if (bookmarkProvider) {
                 return bookmarkProvider.createBookmarkAsync(args);
             }
@@ -116,7 +116,7 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
      */
     const deleteBookmarkById = useCallback(
         async (bookmarkId: string): Promise<void> => {
-            bookmarkProvider && (await bookmarkProvider.removeBookmarkAsync(bookmarkId));
+            bookmarkProvider && (await bookmarkProvider.deleteBookmarkAsync(bookmarkId));
         },
         [bookmarkProvider],
     );
@@ -143,12 +143,13 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
      */
     const removeBookmarkFavorite = useCallback(
         async (bookmarkId: string): Promise<void> => {
-            bookmarkProvider && (await bookmarkProvider.removeBookmarkAsync(bookmarkId));
+            bookmarkProvider && (await bookmarkProvider.removeBookmarkAsFavoriteAsync(bookmarkId));
         },
         [bookmarkProvider],
     );
 
     const setCurrentBookmark = useCallback(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (IdOrItem: Bookmark | string | null): void => {
             bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem);
         },

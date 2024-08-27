@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import {
     BookmarkData,
     BookmarkProvider,
@@ -16,7 +16,7 @@ export type useCurrentBookmarkOptions<TData extends BookmarkData> = {
 
 export type useCurrentBookmarkReturn<TData extends BookmarkData> = {
     currentBookmark: Bookmark<TData> | null;
-    setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
+    setCurrentBookmark: BookmarkProvider['setCurrentBookmarkAsync'];
 };
 
 /**
@@ -32,7 +32,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
     const baseProvider = useBookmarkProvider();
 
     const { payloadGenerator, provider = baseProvider } =
-        typeof args === 'function' ? { payloadGenerator: args } : args ?? {};
+        typeof args === 'function' ? { payloadGenerator: args } : (args ?? {});
 
     const { value: bookmark } = useObservableState(
         useMemo(() => provider?.currentBookmark$ ?? EMPTY, [provider]),
@@ -41,15 +41,12 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
         },
     );
 
-    const setCurrentBookmark = useCallback(
-        (bookmark_or_id: Bookmark | string | null) => {
-            if (!provider) {
-                throw new Error('No bookmark provider found');
-            }
-            provider.setCurrentBookmark(bookmark_or_id);
-        },
-        [provider],
-    );
+    const setCurrentBookmark = useMemo(() => {
+        if (!provider) {
+            throw new Error('No bookmark provider found');
+        }
+        return provider.setCurrentBookmarkAsync.bind(provider);
+    }, [provider]);
 
     useLayoutEffect(() => {
         if (provider && payloadGenerator) {
