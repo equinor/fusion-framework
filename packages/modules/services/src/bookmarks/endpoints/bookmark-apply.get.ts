@@ -27,7 +27,18 @@ const ArgSchema = {
 const ApiResponseSchema = {
     [ApiVersion.v1]: z.object({
         id: z.string(),
-        payload: z.string().or(z.record(z.unknown())).optional(),
+        payload: z
+            .string()
+            .or(z.record(z.unknown()))
+            .optional()
+            .default('')
+            .transform((x) => {
+                try {
+                    return typeof x === 'string' ? JSON.parse(x) : x;
+                } catch {
+                    return x;
+                }
+            }),
     }),
 };
 

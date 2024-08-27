@@ -7,8 +7,6 @@ import type {
     JsonRequest,
 } from '@equinor/fusion-framework-module-http/client';
 
-import buildODataQuery from 'odata-query';
-
 import type { ClientMethod, ExtractApiVersion, FilterAllowedApiVersions } from '../types';
 
 import { extractVersion, schemaSelector } from '../../utils';
@@ -27,7 +25,6 @@ const ArgSchema = {
         .object({
             filter: z
                 .string()
-                .optional()
                 .or(
                     z
                         .object({
@@ -36,9 +33,25 @@ const ArgSchema = {
                             sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
                         })
                         .transform((x) => {
-                            buildODataQuery({ filter: x }).replace(/$filter=/, '');
+                            return Object.entries(x)
+                                .map(([key, value]) => {
+                                    if (typeof value === 'string') {
+                                        return `${key} eq '${value}'`;
+                                    }
+                                    if (typeof value === 'object') {
+                                        return Object.entries(value)
+                                            .map(
+                                                ([subKey, subValue]) =>
+                                                    `${key}.${subKey} eq '${subValue}'`,
+                                            )
+                                            .join(' and ');
+                                    }
+                                })
+                                .filter((x) => !!x)
+                                .join(' and ');
                         }),
-                ),
+                )
+                .optional(),
         })
         .optional(),
 };
@@ -92,7 +105,7 @@ const generateApiPath = <TVersion extends AvailableVersions>(
             const params = new URLSearchParams();
             params.append('api-version', version);
             args?.filter && params.append('$filter', args.filter);
-            return `/persons/me/bookmarks/?${String(params)}`;
+            return `/persons/me/bookmarks?${String(params)}`;
         }
     }
     throw Error(`Unknown API version: ${version}`);
