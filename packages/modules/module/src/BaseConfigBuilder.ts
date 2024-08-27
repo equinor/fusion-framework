@@ -1,5 +1,5 @@
 import { from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
-import { mergeMap, reduce, switchMap } from 'rxjs/operators';
+import { map, mergeMap, reduce, switchMap } from 'rxjs/operators';
 import { Modules, ModuleType } from './types';
 import { type DotPath, type DotPathType } from './utils/dot-path';
 
@@ -300,12 +300,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     ): ObservableInput<Partial<TConfig>> {
         return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
             // Transform each config callback into a target-value pair
-            mergeMap(async ([target, cb]) => {
-                // Execute callback with init and await result
-                const value = await cb(init);
-                // Return target-value pair
-                return { target, value };
-            }),
+            mergeMap(([target, cb]) => from(cb(init)).pipe(map((value) => ({ target, value })))),
             // Reduce the target-value pairs into a single configuration object
             reduce(
                 // Assign each value to the corresponding target in the accumulator
