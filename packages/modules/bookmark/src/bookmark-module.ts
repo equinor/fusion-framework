@@ -32,7 +32,7 @@ export const module: BookmarkModule = {
             (args?.log as ILogger)?.createSubLogger('BookmarkModule') || fallbackLogger;
 
         // Set client from parent module if available
-        const ref = args.ref as ModulesInstance<[BookmarkModule]>;
+        const ref = args?.ref as ModulesInstance<[BookmarkModule]>;
 
         // create a configurator instance
         const configurator = new BookmarkModuleConfigurator({ log, ref });
@@ -40,8 +40,12 @@ export const module: BookmarkModule = {
         return configurator;
     },
     initialize: async (args) => {
+        const parent = args.ref?.bookmark;
         const config = await lastValueFrom(
-            (args.config as BookmarkModuleConfigurator).createConfig(args),
+            args.config.createConfig(args, {
+                filters: parent?.filters,
+                sourceSystem: parent?.sourceSystem,
+            }),
         );
         const provider = new BookmarkProvider(config);
         return provider;

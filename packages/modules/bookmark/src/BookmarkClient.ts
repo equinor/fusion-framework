@@ -1,5 +1,5 @@
-import { type ObservableInput } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, type ObservableInput } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs/operators';
 
 /**
  * Imports the `Query` type from the `@equinor/fusion-query` package.
@@ -41,7 +41,7 @@ export class BookmarkClient implements IBookmarkClient {
 
     #queryBookmark: Query<BookmarkWithoutData, { bookmarkId: string }>;
     #queryBookmarks: Query<Bookmarks, BookmarksFilter | undefined>;
-    #queryBookmarkData: Query<BookmarkData, { bookmarkId: string }>;
+    #queryBookmarkData: Query<BookmarkData | undefined, { bookmarkId: string }>;
 
     /**
      * Constructs a new `BookmarkClient` instance with the provided `BookmarksApiClient`.
@@ -56,8 +56,9 @@ export class BookmarkClient implements IBookmarkClient {
         // set up the query for fetching a single bookmark
         this.#queryBookmark = new Query({
             client: {
-                fn: (args: { bookmarkId: string }) =>
-                    this.#api.get('v1', args).pipe(map((res) => bookmarkSchema.parse(res))),
+                fn: (args: { bookmarkId: string }) => {
+                    return this.#api.get('v2', args).pipe(map((res) => bookmarkSchema.parse(res)));
+                },
             },
             key: (args) => args.bookmarkId,
             expire,
@@ -66,19 +67,21 @@ export class BookmarkClient implements IBookmarkClient {
         // set up the query for fetching all bookmarks
         this.#queryBookmarks = new Query({
             client: {
-                fn: (filter?: BookmarksFilter) =>
-                    this.#api
+                fn: (filter?: BookmarksFilter) => {
+                    return this.#api
                         .query('v1', { filter })
-                        .pipe(map((res) => bookmarksSchema.parse(res))),
+                        .pipe(map((res) => bookmarksSchema.parse(res)));
+                },
             },
-            key: (args) => JSON.stringify(args),
+            key: (args) => JSON.stringify(args ?? ''),
             expire,
         });
 
         this.#queryBookmarkData = new Query({
             client: {
-                fn: (args: { bookmarkId: string }) =>
-                    this.#api.getPayload('v1', args).pipe(map((res) => res.payload ?? {})),
+                fn: (args: { bookmarkId: string }) => {
+                    return this.#api.getPayload('v1', args).pipe(map((res) => res.payload));
+                },
             },
             key: (args) => args.bookmarkId,
             expire,
@@ -99,9 +102,7 @@ export class BookmarkClient implements IBookmarkClient {
     }
 
     public getBookmarkData<T extends BookmarkData>(bookmarkId: string): ObservableInput<T> {
-        return this.#queryBookmarkData
-            .query({ bookmarkId })
-            .pipe(map((res): T => res.value.payload as T));
+        return this.#queryBookmarkData.query({ bookmarkId }).pipe(map((res): T => res.value as T));
     }
 
     public setBookmarkData<T extends BookmarkData | null>(
@@ -147,44 +148,60 @@ export class BookmarkClient implements IBookmarkClient {
         );
     }
 
-    public updateBookmark<T extends Record<string, unknown>>(
+    public updateBookmark<T extends BookmarkData>(
         bookmarkId: string,
         updates: BookmarkUpdate<T>,
     ): ObservableInput<Bookmark<T>> {
-        return this.#api.patch('v1', { bookmarkId, updates: updates }).pipe(
+        const update$ = this.#api.patch('v1', { bookmarkId, updates: updates }).pipe(
             map((response) => bookmarkWithDataSchema().parse(response) as Bookmark<T>),
-            /** Update the query cache for the specific bookmark */
-            tap((updatedBookmark) => {
-                const { payload, ...bookmark } = updatedBookmark;
-                payload;
-                this.#queryBookmark.mutate(
-                    { bookmarkId },
-                    { value: bookmark, updated: Date.now() },
-                    { allowCreation: false },
-                );
-            }),
-            /** update the cache for bookmark data */
-            tap((createdBookmark) => {
-                const { payload } = createdBookmark;
-                if (payload) {
-                    this.#queryBookmarkData.mutate(
-                        {
-                            bookmarkId: createdBookmark.id,
-                        },
-                        { value: payload, updated: Date.now() },
-                        { allowCreation: true },
-                    );
-                } else {
-                    const cacheKey = this.#queryBookmarkData.generateCacheKey({
-                        bookmarkId: createdBookmark.id,
-                    });
-                    this.#queryBookmarkData.cache.removeItem(cacheKey);
-                }
-            }),
-            tap(() => {
-                this.#queryBookmarks.invalidate();
-            }),
+            shareReplay(),
         );
+        return new Observable((subscriber) => {
+            // update the query cache for the specific bookmark
+            subscriber.add(
+                update$.subscribe((updatedBookmark) => {
+                    const { payload, ...bookmark } = updatedBookmark;
+                    // payload should not be included in the bookmark object
+                    payload;
+                    this.#queryBookmark.mutate(
+                        { bookmarkId },
+                        { value: bookmark, updated: Date.now() },
+                        { allowCreation: false },
+                    );
+                }),
+            );
+
+            // update the cache for bookmark data
+            subscriber.add(
+                update$.subscribe((updatedBookmark) => {
+                    const { payload } = updatedBookmark;
+                    if (payload) {
+                        this.#queryBookmarkData.mutate(
+                            {
+                                bookmarkId: updatedBookmark.id,
+                            },
+                            { value: payload, updated: Date.now() },
+                            { allowCreation: true },
+                        );
+                    } else {
+                        const cacheKey = this.#queryBookmarkData.generateCacheKey({
+                            bookmarkId: updatedBookmark.id,
+                        });
+                        this.#queryBookmarkData.cache.removeItem(cacheKey);
+                    }
+                }),
+            );
+
+            // invalidate the bookmarks query cache
+            subscriber.add(
+                update$.subscribe(() => {
+                    this.#queryBookmarks.invalidate();
+                }),
+            );
+
+            // emit the update to the subscriber
+            update$.subscribe(subscriber);
+        });
     }
 
     public deleteBookmark(bookmarkId: string): ObservableInput<boolean> {

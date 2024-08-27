@@ -151,6 +151,20 @@ bookmarkProvider.addBookmarkToFavorites(bookmarkId).subscribe({
 });
 ```
 
+To remove a bookmark from favorites, use the `removeBookmarkFromFavorites` method:
+
+```ts
+const bookmarkId = 'bookmark-id';
+bookmarkProvider.removeBookmarkFromFavorites(bookmarkId).subscribe({
+    next: (bookmark) => {
+        console.log('Bookmark removed from favorites:', bookmark);
+    },
+    error: (err) => {
+        console.error('Failed to remove bookmark from favorites:', err);
+    },
+});
+```
+
 
 To check if a bookmark is in favorites, use the `isBookmarkInFavorites` method:
 

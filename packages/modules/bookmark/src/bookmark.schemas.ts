@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { BookmarkData } from './types';
 
 const bookmarkUserSchema = z.object({
     azureUniqueId: z.string(),
@@ -39,10 +40,10 @@ export const bookmarkSchema = z.object({
 export const bookmarksSchema = z.array(bookmarkSchema);
 
 export const bookmarkWithDataSchema = <
-    T extends Record<string, unknown>,
+    T extends BookmarkData = BookmarkData,
     S extends z.ZodSchema<T> = z.ZodSchema<T>,
 >(
-    schema: S = z.record(z.unknown()).default({}) as unknown as S,
+    schema: S = z.record(z.unknown()).or(z.string()).optional() as unknown as S,
 ) =>
     bookmarkSchema.extend({
         payload: schema,

@@ -15,11 +15,12 @@ import { type EventModule } from '@equinor/fusion-framework-module-event';
 
 import { BookmarkClient } from './BookmarkClient';
 
-import type { ILogger } from '../../../utils/log/src';
+import { type ILogger, LogLevel } from '@equinor/fusion-log';
 import type { BookmarkModule } from './bookmark-module';
 
 import type { BookmarkModuleConfig } from './types';
-import { bookmarkConfigSchema } from './bookmark-config.schema';
+import { initialBookmarkConfig } from './bookmark-config.schema';
+import { z } from 'zod';
 
 /**
  * Configurator for the bookmark module.
@@ -31,11 +32,25 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
 
     constructor(options?: { log?: ILogger; ref?: ModulesInstanceType<[BookmarkModule]> }) {
         super();
-        const { log, ref } = options ?? {};
+        const { log } = options ?? {};
         this.#log = log;
         this._set('log', async () => log);
-        if (ref) {
-            this._set('parent', async () => ref.bookmark ?? null);
+    }
+
+    /**
+     * Sets the log level for the bookmark configurator.
+     *
+     * @param level - The log level to set. Allowed values are:
+     * - 0: No logging
+     * - 1: Error messages only
+     * - 2: Error and warning messages
+     * - 3: Error, warning, and info messages
+     * - 4: Error, warning, info, and debug messages
+     */
+    public setLogLevel(level: LogLevel) {
+        this._set('logLevel', async () => level);
+        if (this.#log) {
+            this.#log.level = level;
         }
     }
 
@@ -154,11 +169,9 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         key: TKey,
         value: BookmarkModuleConfig['filters'][TKey],
     ) {
-        this._set(`filters.${key}` as keyof BookmarkModuleConfig, async () => value);
-    }
-
-    protected _processConfig(config: BookmarkModuleConfig): Promise<BookmarkModuleConfig> {
-        return bookmarkConfigSchema.parseAsync(config);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this._set(`filters.${key}`, async () => value);
     }
 
     /**
@@ -174,12 +187,12 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
      */
     protected _createConfig(
         init: ConfigBuilderCallbackArgs,
-        initial?: Partial<BookmarkModuleConfig>,
+        initial?: z.infer<typeof initialBookmarkConfig>,
     ) {
         if (!this._has('parent')) {
             this.#log?.debug('No parent provided, using default parent');
             const parentModules = init.ref as ModulesInstanceType<[BookmarkModule]>;
-            if ('bookmark' in parentModules) {
+            if (parentModules && 'bookmark' in parentModules) {
                 const parent = parentModules.bookmark;
                 if ('version' in parent && parent.version.satisfies('>=2.0.0')) {
                     this._set('parent', async () => parent);
@@ -190,6 +203,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
                 this.#log?.info('No parent BookmarkProvider found');
             }
         }
+
         // Ensure a default client is set if none is provided
         if (!this._has('client')) {
             this.#log?.debug('No client provided, using default client');
@@ -217,7 +231,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         }
 
         // call super to create config
-        return super._createConfig(init, initial);
+        return super._createConfig(init, initialBookmarkConfig.parse(initial));
     }
 
     /**
@@ -257,8 +271,15 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
         }
 
         return async () => {
-            const appKey = appProvider.current?.appKey;
-            return appKey ? { appKey } : undefined;
+            const app = appProvider.current;
+            if (app) {
+                return {
+                    appKey: app.appKey,
+                    name: app.manifest?.name,
+                };
+            }
+            this.#log?.warn('No current application found');
+            return undefined;
         };
     }
 

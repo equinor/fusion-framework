@@ -5,7 +5,7 @@ import {
     type ActionTypes,
 } from '@equinor/fusion-observable';
 
-import type { Bookmark, BookmarkWithoutData, Bookmarks } from './types';
+import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
 
 import { BookmarkNew, BookmarkUpdate, type BookmarksFilter } from './BookmarkClient.interface';
 import { type BookmarkFlowError } from './BookmarkProvider.error';
@@ -33,6 +33,24 @@ export const bookmarkActions = {
     setCurrentBookmark: createAction('set_current_bookmark', (bookmark: Bookmark | null) => {
         return { payload: bookmark };
     }),
+    fetchBookmark: createAsyncAction(
+        'fetch_bookmark',
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({
+            payload: bookmarkId,
+            meta,
+        }),
+        (bookmark: BookmarkWithoutData, meta?: BookmarkActionMeta) => ({ payload: bookmark, meta }),
+        (error: BookmarkFlowError, meta?: BookmarkActionMeta) => ({ payload: error, meta }),
+    ),
+    fetchBookmarkData: createAsyncAction(
+        'fetch_bookmark_payload',
+        (bookmarkId: string, meta?: BookmarkActionMeta) => ({ payload: bookmarkId, meta }),
+        (bookmarkId: string, data: BookmarkData, meta?: BookmarkActionMeta) => ({
+            payload: { bookmarkId, data },
+            meta,
+        }),
+        (error: BookmarkFlowError, meta?: BookmarkActionMeta) => ({ payload: error, meta }),
+    ),
     fetchBookmarks: createAsyncAction(
         'fetch_bookmarks',
         (filter?: BookmarksFilter, meta?: BookmarkActionMeta) => ({ payload: filter, meta }),

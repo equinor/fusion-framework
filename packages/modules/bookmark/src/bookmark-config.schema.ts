@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { ILogger } from '@equinor/fusion-log';
+import { LogLevel, type ILogger } from '@equinor/fusion-log';
 
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
@@ -11,8 +11,11 @@ import { bookmarkSourceSystemSchema } from './bookmark.schemas';
 
 export const bookmarkConfigSchema = z.object({
     log: z.custom<ILogger>().optional(),
+    logLevel: z.nativeEnum(LogLevel).optional(),
     eventProvider: z.custom<IEventModuleProvider>().optional(),
-    sourceSystem: bookmarkSourceSystemSchema.describe('The source system for the bookmarks'),
+    sourceSystem: bookmarkSourceSystemSchema
+        .optional()
+        .describe('The source system for the bookmarks'),
     parent: z.custom<BookmarkProvider>().describe('Parent Bookmark provider').optional().nullable(),
     client: z.custom<IBookmarkClient>().describe('API client for interacting with bookmarks'),
     resolve: z
@@ -20,14 +23,23 @@ export const bookmarkConfigSchema = z.object({
             context: z.function().returns(z.promise(z.object({ id: z.string() }).optional())),
             application: z
                 .function()
-                .returns(z.promise(z.object({ appKey: z.string() }).optional())),
+                .returns(
+                    z.promise(
+                        z.object({ appKey: z.string(), name: z.string().optional() }).optional(),
+                    ),
+                ),
         })
         .describe('Functions for resolving context and application'),
     filters: z
         .object({
-            context: z.boolean().default(false),
-            application: z.boolean().default(false),
+            context: z.boolean().optional().default(false),
+            application: z.boolean().optional().default(false),
         })
         .describe('Flags for enabling resolving when fetching bookmarks')
-        .optional(),
+        .default({ context: false, application: false }),
+});
+
+export const initialBookmarkConfig = bookmarkConfigSchema.pick({
+    filters: true,
+    sourceSystem: true,
 });

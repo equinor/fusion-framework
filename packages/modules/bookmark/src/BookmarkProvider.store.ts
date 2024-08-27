@@ -1,10 +1,6 @@
-import {
-    FlowSubject,
-    actionMapper,
-    type ActionBaseType,
-    type ActionCalls,
-} from '@equinor/fusion-observable';
-import { bookmarkActions, type BookmarkActions } from './BookmarkProvider.actions';
+import { FlowSubject, type ActionBaseType } from '@equinor/fusion-observable';
+
+import { type BookmarkActions } from './BookmarkProvider.actions';
 import { type BookmarkFlowError } from './BookmarkProvider.error';
 import { createBookmarkReducer } from './BookmarkProvider.reducer';
 import { bookmarkApiFlows } from './BookmarkProvider.flows';
@@ -25,13 +21,12 @@ export type BookmarkState = {
     bookmarks: Record<string, BookmarkWithoutData>;
 };
 
+// export type BookmarkStoreFunctions = ActionCalls<typeof bookmarkActions>;
+
 /**
  * Represents the store for bookmarks, which is a flow subject that manages the state and actions for bookmarks.
  */
-export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions> & {
-    execute: ActionCalls<typeof bookmarkActions>;
-    client: IBookmarkClient;
-};
+export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
 
 /**
  * Creates a new BookmarkStore instance with the provided initial state and client.
@@ -45,17 +40,13 @@ export const createBookmarkStore = (args: {
     initial?: Partial<BookmarkState>;
     client: IBookmarkClient;
 }): BookmarkStore => {
-    const { client, initial } = args;
     // create the store
-    const subject = new FlowSubject(createBookmarkReducer(initial));
+    const store = new FlowSubject<BookmarkState, BookmarkActions>(
+        createBookmarkReducer(args.initial),
+    );
 
-    // add flows to the store
-    subject.addFlow(bookmarkApiFlows(args.client));
+    // add the bookmark API flows to the store
+    store.addFlow(bookmarkApiFlows(args.client));
 
-    // add action calls to the store
-    const store = Object.assign(subject, {
-        client,
-        execute: actionMapper(bookmarkActions, subject),
-    });
     return store;
 };

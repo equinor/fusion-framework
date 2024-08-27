@@ -5,8 +5,9 @@ import {
     catchError,
     filter,
     concatMap,
+    mergeMap,
+    groupBy,
     throttleTime,
-    mergeAll,
 } from 'rxjs/operators';
 
 import { type Flow, type Observable, getBaseType } from '@equinor/fusion-observable';
@@ -16,6 +17,79 @@ import type { IBookmarkClient } from './BookmarkClient.interface';
 import type { BookmarkState } from './BookmarkProvider.store';
 import { BookmarkFlowError } from './BookmarkProvider.error';
 
+const defaultThrottleTime = 200;
+
+/**
+ * Handles the fetch bookmark action by making an API request to get the bookmark by its ID.
+ *
+ * @param api - The bookmark client API.
+ * @returns A flow that handles the fetch bookmark action.
+ */
+export const handleFetchBookmark =
+    (api: IBookmarkClient): Flow<BookmarkActions> =>
+    (action$) => {
+        /**
+         * Observable that represents the flow of fetching bookmarks.
+         * It listens for `fetchBookmark` actions, makes an API request to get the bookmark by ID,
+         * and emits corresponding success or failure actions based on the API response.
+         */
+        const flow$ = action$.pipe(
+            filter(actions.fetchBookmark.match),
+            groupBy((action) => action.payload),
+            mergeMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
+            switchMap((action) =>
+                from(api.getBookmarkById(action.payload)).pipe(
+                    map((bookmark) => actions.fetchBookmark.success(bookmark, action.meta)),
+                    catchError((error) =>
+                        of(
+                            actions.fetchBookmark.failure(
+                                new BookmarkFlowError('Failed to fetch bookmark', action, {
+                                    cause: error,
+                                }),
+                                action.meta,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+        return flow$;
+    };
+
+/**
+ * Creates a flow for handling fetching bookmark data.
+ *
+ * @param api - The bookmark client API.
+ * @returns A flow of bookmark actions.
+ */
+export const handleFetchBookmarkData =
+    (api: IBookmarkClient): Flow<BookmarkActions> =>
+    (action$) => {
+        const flow$ = action$.pipe(
+            filter(actions.fetchBookmarkData.match),
+            groupBy((action) => JSON.stringify(action.payload)),
+            mergeMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
+            switchMap((action) => {
+                return from(api.getBookmarkData(action.payload)).pipe(
+                    map((data) =>
+                        actions.fetchBookmarkData.success(action.payload, data, action.meta),
+                    ),
+                    catchError((error) =>
+                        of(
+                            actions.fetchBookmarkData.failure(
+                                new BookmarkFlowError('Failed to fetch bookmark payload', action, {
+                                    cause: error,
+                                }),
+                                action.meta,
+                            ),
+                        ),
+                    ),
+                );
+            }),
+        );
+        return flow$;
+    };
+
 /**
  * Creates a Flow for handling fetching users bookmarks.
  *
@@ -24,7 +98,7 @@ import { BookmarkFlowError } from './BookmarkProvider.error';
  * @returns An observable that emits the result of the bookmark fetch operation.
  */
 export const handleFetchAllBookmark =
-    (api: IBookmarkClient, options?: { throttle?: number }): Flow<BookmarkActions> =>
+    (api: IBookmarkClient): Flow<BookmarkActions> =>
     (action$: Observable<BookmarkActions>) => {
         /**
          * This flow is triggered by the `fetchBookmarks` action and uses the `throttleTime` operator
@@ -33,9 +107,10 @@ export const handleFetchAllBookmark =
          */
         const flow$ = action$.pipe(
             filter(actions.fetchBookmarks.match),
-            throttleTime(options?.throttle || 500),
+            groupBy((action) => JSON.stringify(action.payload)),
+            switchMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
             switchMap((action) =>
-                from(api.getAllBookmarks()).pipe(
+                from(api.getAllBookmarks(action.payload)).pipe(
                     map((value) => actions.fetchBookmarks.success(value, action.meta)),
                     catchError((error) =>
                         of(
@@ -330,26 +405,22 @@ export const handleRemoveBookmark =
  * @returns A combined flow that handles all the bookmark-related actions.
  */
 export const bookmarkApiFlows = (api: IBookmarkClient): Flow<BookmarkActions, BookmarkState> => {
-    const throttle = 500;
+    // return handleFetchAllBookmark(api);
     /**
      * Combines multiple Bookmark-related observable flows into a single observable stream.
      * The resulting observable stream emits the combined effects of these flows,
      * which can be used to update the application state.
      */
-    const flow$ = (actions$: Observable<BookmarkActions>, state$: Observable<BookmarkState>) =>
-        merge(
-            from([
-                handleFetchAllBookmark(api, { throttle }),
-                handleCreateBookmark(api),
-                handleUpdateBookmark(api),
-                handleDeleteBookmark(api),
-                handleRemoveBookmark(api),
-                handleRemoveBookmarkFromFavorites(api),
-                handleAddBookmarkAsFavorite(api),
-            ]).pipe(
-                map((flow) => flow(actions$, state$)),
-                mergeAll(),
-            ),
-        );
-    return flow$;
+    return (actions$: Observable<BookmarkActions>, state$: Observable<BookmarkState>) =>
+        of(
+            handleFetchBookmark,
+            handleFetchBookmarkData,
+            handleFetchAllBookmark,
+            handleCreateBookmark,
+            handleUpdateBookmark,
+            handleDeleteBookmark,
+            handleRemoveBookmark,
+            handleRemoveBookmarkFromFavorites,
+            handleAddBookmarkAsFavorite,
+        ).pipe(mergeMap((flow) => flow(api)(actions$, state$)));
 };

@@ -94,7 +94,7 @@ export interface IBookmarkClient {
      * @param bookmarkId - The ID of the bookmark to retrieve data for.
      * @returns An observable that emits the bookmark data.
      */
-    getBookmarkData: <T extends BookmarkData>(bookmarkId: string) => ObservableInput<Bookmark<T>>;
+    getBookmarkData: <T extends BookmarkData>(bookmarkId: string) => ObservableInput<T>;
 
     /**
      * Updates the data associated with a bookmark.

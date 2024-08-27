@@ -42,7 +42,19 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
         { ...defaultInitialState, ...initialState },
         (builder) => {
             builder
+                .addCase(bookmarkActions.fetchBookmark.success, (state, action) => {
+                    if (action.payload.id in state.bookmarks) {
+                        state.bookmarks[action.payload.id] = action.payload;
+                    }
+                })
+                .addCase(bookmarkActions.fetchBookmarkData.success, (state, action) => {
+                    const { bookmarkId, data } = action.payload;
+                    if (state.currentBookmark?.id === bookmarkId) {
+                        state.currentBookmark.payload = data;
+                    }
+                })
                 .addCase(bookmarkActions.fetchBookmarks.success, (state, action) => {
+                    // normalize the bookmarks array into a record
                     state.bookmarks = action.payload.reduce(
                         (acc, bookmark) => {
                             acc[bookmark.id] = bookmark;
@@ -56,6 +68,9 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
                     if (bookmarkId in state.bookmarks) {
                         state.bookmarks[bookmarkId] = action.payload;
                     }
+                    if (state.currentBookmark?.id === bookmarkId) {
+                        state.currentBookmark = action.payload;
+                    }
                 })
                 .addCase(bookmarkActions.setCurrentBookmark, (state, action) => {
                     state.currentBookmark = action.payload;
@@ -67,21 +82,36 @@ export const createBookmarkReducer = (initialState?: Partial<BookmarkState>) =>
                 })
                 .addCase(bookmarkActions.updateBookmark.success, (state, action) => {
                     const bookmarkId = action.payload.id;
-                    if (bookmarkId in state.bookmarks) {
-                        const current = state.bookmarks[bookmarkId];
-                        state.bookmarks[bookmarkId] = {
-                            ...current,
-                            ...action.payload,
-                        };
+                    const hasBookmark = bookmarkId in state.bookmarks;
+                    const isCurrent = state.currentBookmark?.id === bookmarkId;
+
+                    // get the current bookmark
+                    const current = hasBookmark
+                        ? state.bookmarks[bookmarkId]
+                        : isCurrent
+                          ? state.currentBookmark
+                          : null;
+
+                    // merge the current bookmark with the new data
+                    const next = { ...current, ...action.payload };
+
+                    // if the bookmark is in the current state, update it
+                    if (hasBookmark) {
+                        state.bookmarks[bookmarkId] = next;
+                    }
+
+                    // if the bookmark is the selected bookmark, update it
+                    if (isCurrent) {
+                        state.currentBookmark = next;
                     }
                 })
 
                 /** removal of bookmarks */
                 .addCase(bookmarkActions.deleteBookmark.success, (state, action) => {
-                    delete state.bookmarks[action.meta.ref];
+                    delete state.bookmarks[action.payload];
                 })
                 .addCase(bookmarkActions.removeBookmarkAsFavourite.success, (state, action) => {
-                    delete state.bookmarks[action.meta.ref];
+                    delete state.bookmarks[action.payload];
                 })
 
                 /** when a request is made, add the action type to the status object */

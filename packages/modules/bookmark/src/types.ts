@@ -18,7 +18,8 @@ export type SourceSystem = z.infer<typeof bookmarkSourceSystemSchema>;
  * Represents the data associated with a bookmark.
  * This is a generic type that can hold any arbitrary data as a key-value map.
  */
-export type BookmarkData = Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BookmarkData = Record<string, any> | string;
 
 /**
  * Represents a collection of bookmarks.
@@ -34,7 +35,8 @@ export type BookmarkWithoutData = z.infer<typeof bookmarkSchema>;
  * Represents a bookmark with associated data.
  * @template T - The type of the bookmark data.
  */
-export type Bookmark<T extends BookmarkData = BookmarkData> = z.infer<
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Bookmark<T extends BookmarkData = any> = z.infer<
     ReturnType<typeof bookmarkWithDataSchema<T>>
 >;
 
