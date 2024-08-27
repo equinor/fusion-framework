@@ -62,23 +62,17 @@ export class ConsoleLogger extends Logger {
      * @returns An array of unknown, representing the formatted log message.
      */
     protected _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[] {
-        return this._formatMessage(lvl, this._formatTitle(lvl), ...msg);
+        return [this._formatTitle(lvl), ...msg];
     }
 
     protected _formatTitle(_lvl: LogLevel): string {
-        const title = [this.title, this.subtitle].filter((x) => !!x).join(' - ');
-        return chalk.magenta(title);
-    }
-
-    protected _formatMessage(lvl: LogLevel, ...msg: unknown[]): unknown[] {
-        switch (lvl) {
-            case LogLevel.Debug:
-                return [chalk.dim(...msg)];
+        const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
+        switch (_lvl) {
             case LogLevel.Warning:
-                return [chalk.bold(...msg)];
-            default:
-                return msg;
+            case LogLevel.Error:
+                return chalk.bold(title);
         }
+        return title;
     }
 
     /**
