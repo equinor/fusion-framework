@@ -1,8 +1,10 @@
 import { Button, Dialog } from '@equinor/eds-core-react';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import { useEffect, useState } from 'react';
+import { useObservableState } from '@equinor/fusion-observable/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import styled from 'styled-components';
+import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { useCurrentBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 
 const Styled = {
     Actions: styled.div`
@@ -14,15 +16,40 @@ const Styled = {
 export const ImportBookmarkModal = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { currentBookmark, bookmarks, addBookmarkFavorite } = useBookmark();
+    const { provider } = useBookmarkComponentContext();
+    const { value: bookmarks, complete: bookmarksLoaded } = useObservableState(
+        useMemo(() => provider.bookmarks$, [provider]),
+        { initial: [] },
+    );
+
+    const { currentBookmark } = useCurrentBookmark({ provider });
 
     useEffect(() => {
-        if (!bookmarks || !currentBookmark || bookmarks.length === 0) return;
-
-        if (bookmarks.findIndex(({ id }) => id === currentBookmark.id) === -1) {
-            setIsOpen(true);
+        if (bookmarksLoaded && currentBookmark) {
+            // TODO: this should rather use the provider.isFavorite, but the bookmark should have flag for if the bookmark is created by the user
+            const hasBookmark = bookmarks.find(({ id }) => id === currentBookmark.id);
+            if (!hasBookmark) {
+                setIsOpen(true);
+            }
         }
-    }, [bookmarks, currentBookmark]);
+    }, [bookmarks, currentBookmark, bookmarksLoaded]);
+
+    const onAddBookmarkFavorite = useCallback(async () => {
+        if (currentBookmark) {
+            try {
+                // TODO: missing state for disabling button
+                await provider.addBookmarkToFavoritesAsync(currentBookmark.id);
+                // TODO: Show success message
+            } catch (error) {
+                console.error('Failed to add bookmark to favorites', error);
+                // TODO: Show error message
+            }
+            await provider.addBookmarkToFavoritesAsync(currentBookmark.id);
+        } else {
+            console.error('No bookmark to add to favorites');
+            // TODO: Show error message
+        }
+    }, [provider, currentBookmark]);
 
     return (
         <Dialog style={{ width: '600px' }} open={isOpen}>
@@ -40,14 +67,7 @@ export const ImportBookmarkModal = () => {
                     >
                         No
                     </Button>
-                    <Button
-                        onClick={() => {
-                            console.log(currentBookmark?.id);
-                            currentBookmark && addBookmarkFavorite(currentBookmark.id);
-                            setIsOpen(false);
-                        }}
-                        variant="ghost"
-                    >
+                    <Button onClick={onAddBookmarkFavorite} variant="ghost">
                         Import
                     </Button>
                 </Styled.Actions>
