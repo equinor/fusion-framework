@@ -1,38 +1,33 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
-export interface MyBookmark {
+export interface MyPayload {
     title: string;
     data: string;
 }
 
-export interface BookmarkState {
-    payload: MyBookmark;
-}
-
-export const init = {
-    payload: {
+export const App = () => {
+    const [payload, setPayload] = useState({
         title: '',
         data: '',
-    },
-};
+    });
 
-export const App = () => {
-    const [state, setState] = useState<BookmarkState>(init);
+    const updateData = useRef(payload);
 
-    const updateState = useCallback(
-        (newState: () => Partial<BookmarkState>) => {
-            setState((s) => ({ ...s, ...newState() }));
-        },
-        [setState],
-    );
-    const currentBookmark = useCurrentBookmark<MyBookmark>(
-        useCallback(() => state.payload, [state.payload]),
+    const { currentBookmark } = useCurrentBookmark<MyPayload>(
+        useCallback(() => updateData.current, [updateData]),
     );
 
-    useEffect(() => {
-        currentBookmark.currentBookmark && setState(currentBookmark.currentBookmark);
-    }, [currentBookmark.currentBookmark]);
+    useLayoutEffect(() => {
+        setPayload({
+            title: currentBookmark?.payload?.title ?? '',
+            data: currentBookmark?.payload?.data ?? '',
+        });
+    }, [currentBookmark]);
+
+    useLayoutEffect(() => {
+        updateData.current = payload;
+    }, [payload]);
 
     return (
         <div
@@ -54,28 +49,24 @@ export const App = () => {
                         id="value"
                         type="text"
                         onChange={(e) => {
-                            updateState(() => ({
-                                payload: {
-                                    ...state.payload,
-                                    title: e.target.value,
-                                },
+                            setPayload((x) => ({
+                                ...x,
+                                title: e.target.value,
                             }));
                         }}
-                        value={state.payload.title}
+                        value={payload.title}
                     />
                     <label htmlFor="value">Bookmark data:</label>
                     <input
                         id="value"
                         type="text"
                         onChange={(e) => {
-                            updateState(() => ({
-                                payload: {
-                                    ...state.payload,
-                                    data: e.target.value,
-                                },
+                            setPayload((x) => ({
+                                ...x,
+                                data: e.target.value,
                             }));
                         }}
-                        value={state.payload.data}
+                        value={payload.data}
                     />
                 </form>
                 <pre>{JSON.stringify(currentBookmark, null, 2)}</pre>
