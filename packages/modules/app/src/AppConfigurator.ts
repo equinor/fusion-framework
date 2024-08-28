@@ -10,6 +10,9 @@ import { moduleKey } from './module';
 import type { AppConfig, AppManifest } from './types';
 
 export interface AppModuleConfig {
+    proxy: {
+        path: string;
+    },
     client: {
         getAppManifest: QueryCtorOptions<AppManifest, { appKey: string }>;
         getAppManifests: QueryCtorOptions<AppManifest[], void>;
@@ -28,6 +31,12 @@ export class AppConfigurator implements IAppConfigurator {
 
     addConfigBuilder(init: AppConfigBuilderCallback): void {
         this.#configBuilders.push(init);
+    }
+
+    setProxyPath(path: string) {
+        this.addConfigBuilder((builder) => {
+            builder.config.proxy = { path };
+        });
     }
 
     /**

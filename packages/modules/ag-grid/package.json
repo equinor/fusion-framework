@@ -33,7 +33,7 @@
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": ">=1.2.2"

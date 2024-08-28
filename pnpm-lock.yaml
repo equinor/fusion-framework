@@ -72,7 +72,7 @@ importers:
         specifier: ^2.0.6
         version: 2.1.0
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vitest:
         specifier: ^2.0.5
@@ -102,7 +102,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-ag-grid:
@@ -163,7 +163,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-bookmark:
@@ -193,7 +193,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-bookmark-advanced:
@@ -233,7 +233,7 @@ importers:
         specifier: ^6.15.0
         version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-context:
@@ -273,7 +273,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-context-custom-error:
@@ -310,7 +310,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-environment-variables:
@@ -334,7 +334,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-feature-flag:
@@ -373,7 +373,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
     devDependencies:
       '@types/express':
@@ -410,7 +410,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-msal:
@@ -434,7 +434,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-people:
@@ -486,7 +486,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-react-router:
@@ -519,7 +519,7 @@ importers:
         specifier: ^6.15.0
         version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   cookbooks/app-vanilla:
@@ -531,7 +531,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/cli
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/app:
@@ -559,7 +559,7 @@ importers:
         version: link:../modules/msal
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/cli:
@@ -737,7 +737,7 @@ importers:
         specifier: ^6.0.7
         version: 6.1.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/framework:
@@ -768,7 +768,7 @@ importers:
         version: 7.8.1
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/ag-grid:
@@ -781,7 +781,7 @@ importers:
         specifier: workspace:^
         version: link:../module
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/app:
@@ -815,7 +815,7 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/bookmark:
@@ -849,7 +849,7 @@ importers:
         specifier: workspace:^
         version: link:../services
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/context:
@@ -877,7 +877,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/event:
@@ -893,7 +893,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/feature-flag:
@@ -927,7 +927,7 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/http:
@@ -943,7 +943,7 @@ importers:
         version: 7.8.1
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vitest:
         specifier: ^2.0.5
@@ -965,7 +965,7 @@ importers:
         specifier: ^7.5.0
         version: 7.5.8
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/msal:
@@ -978,7 +978,7 @@ importers:
         version: link:../module
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/navigation:
@@ -994,7 +994,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/service-discovery:
@@ -1013,7 +1013,7 @@ importers:
         version: 7.8.1
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/services:
@@ -1032,7 +1032,7 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/signalr:
@@ -1054,7 +1054,7 @@ importers:
         specifier: workspace:^
         version: link:../msal
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/telemetry:
@@ -1070,7 +1070,7 @@ importers:
         version: 3.3.0(tslib@2.7.0)
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/modules/widget:
@@ -1101,7 +1101,7 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/app:
@@ -1165,7 +1165,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/components/bookmark:
@@ -1208,7 +1208,7 @@ importers:
         specifier: ^6.0.7
         version: 6.1.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/components/people-resolver:
@@ -1251,7 +1251,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/framework:
@@ -1303,7 +1303,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/legacy-interopt:
@@ -1376,7 +1376,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/bookmark:
@@ -1416,7 +1416,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/context:
@@ -1447,7 +1447,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/event:
@@ -1475,7 +1475,7 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/http:
@@ -1499,7 +1499,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/module:
@@ -1521,7 +1521,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/modules/signalr:
@@ -1540,7 +1540,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/react/widget:
@@ -1580,7 +1580,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   packages/utils/log:
@@ -1596,7 +1596,7 @@ importers:
         specifier: ^20.11.14
         version: 20.14.12
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vitest:
         specifier: ^2.0.5
@@ -1633,7 +1633,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vitest:
         specifier: ^2.0.5
@@ -1670,7 +1670,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vitest:
         specifier: ^2.0.5
@@ -1698,7 +1698,7 @@ importers:
         version: link:../modules/widget
     devDependencies:
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
 
   vue-press:
@@ -1722,7 +1722,7 @@ importers:
         specifier: ^11.0.2
         version: 11.0.2
       typescript:
-        specifier: ^5.5.3
+        specifier: ^5.5.4
         version: 5.5.4
       vue:
         specifier: ^3.4.38

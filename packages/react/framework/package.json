@@ -88,7 +88,7 @@
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",

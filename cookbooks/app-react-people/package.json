@@ -22,7 +22,7 @@
         "@types/react-dom": "^18.2.7",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "dependencies": {
         "@equinor/eds-core-react": "^0.41.2",
