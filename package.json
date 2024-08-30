@@ -59,7 +59,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-rxjs": "^5.0.3",
     "genversion": "^3.1.1",
-    "happy-dom": "^14.7.1",
+    "happy-dom": "^15.7.0",
     "husky": "^9.0.7",
     "lerna-update-wizard": "^1.1.2",
     "lint-staged": "^15.2.1",
