@@ -56,7 +56,7 @@ export class AppConfigurator
             /** resolve and create a client from discovery */
             return await serviceDiscovery.createClient('apps', {
                 onCreate(client) {
-                    client.requestHandler.setHeader('Api-Version', '1.0-preview');
+                    client.requestHandler.setHeader('Api-Version', '1.0');
                 },
             });
         }
