@@ -34,6 +34,8 @@ export class AppModuleProvider {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
+    #appBaseUri: string;
+
     #current$: BehaviorSubject<CurrentApp | null>;
 
     #subscription = new Subscription();
@@ -73,6 +75,8 @@ export class AppModuleProvider {
         this.#appsClient = new Query(config.client.getAppManifests);
         this.#myAppsClient = new Query(config.client.getMyAppManifests);
         this.#configClient = new Query(config.client.getAppConfig);
+
+        this.#appBaseUri = config.baseUri ?? '';
 
         this.#subscription.add(() => this.appClient.complete());
         this.#subscription.add(() => this.#appsClient.complete());
@@ -176,6 +180,10 @@ export class AppModuleProvider {
 
     public clearCurrentApp(): void {
         this.#current$.next(null);
+    }
+
+    public getBaseUri(): string {
+        return this.#appBaseUri;
     }
 
     /**
