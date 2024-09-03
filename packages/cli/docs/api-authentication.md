@@ -8,7 +8,7 @@ To run any app commands involving the [app api](https://fusion-s-apps-ci.azurewe
 
 The CLI will look for the env varable `FUSION_TOKEN`.
 
-You can get an access token by using the azure `az` command in your local dev environment.
+You can get an access token by using the azure `az` command in your local dev environment or in your github workflow.
 
 ```sh
 az login --scope example-env-scope.default
@@ -43,22 +43,62 @@ Create a GitHub Action **secret** AZURE_CREDENTIALS with the value as an object 
 ```
 
 Define workflow steps that runs the `az` command to get a token and save the token in env variable ``FUSION_TOKEN``.
+Handle versioning with changeset or please-release to create a semver of you application.
 
 ```yaml
-steps:
-  - name: Azure login
-    uses: azure/login@v2
-    with:
-      creds: ${{ secrets.AZURE_CREDENTIALS }}
+name: Publish to CI
+description: Deploy application to CI env with fusion apps-service.
 
-  - name: Azure CLI
-    uses: azure/cli@v2
-    with:
-      azcliversion: latest
-      inlineScript: |
-        export FUSION_TOKEN="$(az account get-access-token --scope example-env-scope\.default)"
-  
-  - name: Publish app...
+inputs:
+  fusionEnv: ci
+  tag: latest
+  node-version: 21
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    name: Publish to apps-service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            export FUSION_TOKEN="$(az account get-access-token --scope example-env-scope\.default)"
+      
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'pnpm'
+
+      - name: install deps
+        shell: bash
+        run: pnpm install
+
+      - name: Pack, upload and tag application
+        shell: bash
+        run: pnpm exec fusion-framework-cli app publish --tag ${{inputs.tag}} --env ${{inputs.fusionEnv}}
+
+      - name: Upload config for this version and env
+        shell: bash
+        run: pnpm exec fusion-framework-cli app config --config app.config-ci.ts --publish ${{inputs.tag}} --env ${{inputs.fusionEnv}}
+
 ```
 
-You can then use commands like ``fusion-framework-cli app publish``, or run defined package script `pnpm app:publish`, in you workflow to publish the application to the apps service.
+You can also use package script to deploy to apps-service
