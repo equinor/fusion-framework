@@ -102,7 +102,7 @@ export default (program: Command) => {
         .option('-c, --config <string>', 'application config file')
         .option(
             '-p, --publish <string>',
-            `Publish app config to version [${chalk.yellowBright('(semver | current)')}]`,
+            `Publish app config to version [${chalk.yellowBright('(semver | current | latest | preview)')}]`,
         )
         .option(
             '-e, --env, <ci | fqa | tr | fprd>',
