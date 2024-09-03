@@ -63,7 +63,7 @@ export const createExportConfig = async (options: {
         }
 
         const version = publish === 'current' ? pkg.packageJson.version : publish;
-        if (!version || !semverValid(version)) {
+        if (!version || (!semverValid(version) && !['latest', 'preview'].includes(version))) {
             spinner.fail(
                 '🙅‍♂️',
                 'Can not publish config to invalid version',
