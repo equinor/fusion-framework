@@ -16,7 +16,10 @@ import chalk, { formatPath } from './utils/format.js';
 type ProxyHandlerResult<T> = { response?: T; statusCode?: number; path?: string } | void;
 type ProxyHandlerReturn<T> = Promise<ProxyHandlerResult<T>> | ProxyHandlerResult<T>;
 
+/* name of apps api in services */
 const appServiceName = 'apps';
+
+/* fallback to CI in dev-portal */
 const appServiceURI = 'https://fusion-s-apps-ci.azurewebsites.net/';
 
 type Slug = { appKey: string };
