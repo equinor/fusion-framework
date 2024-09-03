@@ -7,7 +7,7 @@ export default defineAppConfig((_nev, { base }) =>
         },
         endpoints: {
             api: {
-                url: 'https://foo.bars'
+                url: 'https://foo.bars',
             },
         },
     }),
