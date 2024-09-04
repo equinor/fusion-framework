@@ -1,3 +1,7 @@
+---
+'@equinor/fusion-framework-module': patch
+---
+
 **@equinor/fusion-framework-module:**
 
 Updated the `_buildConfig` method in `BaseConfigBuilder` to improve error handling and configuration merging.
