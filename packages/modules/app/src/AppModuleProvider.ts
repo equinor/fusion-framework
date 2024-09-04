@@ -29,8 +29,7 @@ export class AppModuleProvider {
     }
 
     public appClient: Query<ApplicationManifest, { appKey: string }>;
-    #appsClient: Query<ApplicationManifest[], void>;
-    #myAppsClient: Query<ApplicationManifest[], void>;
+    #appsClient: Query<ApplicationManifest[], { filterByCurrentUser?: boolean } | undefined>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
 
@@ -73,14 +72,12 @@ export class AppModuleProvider {
 
         this.appClient = new Query(config.client.getAppManifest);
         this.#appsClient = new Query(config.client.getAppManifests);
-        this.#myAppsClient = new Query(config.client.getMyAppManifests);
         this.#configClient = new Query(config.client.getAppConfig);
 
         this.#appBaseUri = config.baseUri ?? '';
 
         this.#subscription.add(() => this.appClient.complete());
         this.#subscription.add(() => this.#appsClient.complete());
-        this.#subscription.add(() => this.#myAppsClient.complete());
         this.#subscription.add(() => this.#configClient.complete());
         this.#subscription.add(
             this.current$
@@ -129,18 +126,18 @@ export class AppModuleProvider {
         );
     }
 
-    /**
-     * fetch all applications
-     */
-    public getAllAppManifests(): Observable<ApplicationManifest[]> {
-        return Query.extractQueryValue(this.#appsClient.query());
+    public getAppManifests(filter?: {
+        filterByCurrentUser: boolean;
+    }): Observable<ApplicationManifest[]> {
+        return Query.extractQueryValue(this.#appsClient.query(filter));
     }
 
     /**
-     * fetch all current users applications
+     * fetch all applications
+     * @deprecated use `getAppManifests` instead
      */
-    public getMyAppManifests(): Observable<ApplicationManifest[]> {
-        return Query.extractQueryValue(this.#myAppsClient.query());
+    public getAllAppManifests(): Observable<ApplicationManifest[]> {
+        return this.getAppManifests();
     }
 
     /**
