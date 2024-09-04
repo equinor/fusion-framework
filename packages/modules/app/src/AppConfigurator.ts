@@ -16,8 +16,10 @@ import { map } from 'rxjs/operators';
 export interface AppModuleConfig {
     client: {
         getAppManifest: QueryCtorOptions<ApplicationManifest, { appKey: string }>;
-        getAppManifests: QueryCtorOptions<ApplicationManifest[], void>;
-        getMyAppManifests: QueryCtorOptions<ApplicationManifest[], void>;
+        getAppManifests: QueryCtorOptions<
+            ApplicationManifest[],
+            { filterByCurrentUser?: boolean } | undefined
+        >;
         getAppConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
     };
     baseUri?: string;
@@ -56,7 +58,7 @@ export class AppConfigurator
             /** resolve and create a client from discovery */
             return await serviceDiscovery.createClient('apps', {
                 onCreate(client) {
-                    client.requestHandler.setHeader('Api-Version', '1.0');
+                    client.requestHandler.setHeader('Api-Version', '1.0-preview');
                 },
             });
         }
@@ -98,35 +100,22 @@ export class AppConfigurator
                     getAppManifests: {
                         client: {
                             // TODO: add to config if use me or not
-                            fn: () =>
-                                httpClient.json$<{ value: ApiApp[] }>(`/apps`).pipe(
+                            fn: (filter) => {
+                                const path = filter?.filterByCurrentUser
+                                    ? '/persons/me/apps'
+                                    : '/apps';
+                                return httpClient.json$<{ value: ApiApp[] }>(path).pipe(
                                     map((x) => {
                                         const apps = x.value.map(
                                             (apiApp) => new ApplicationManifest(apiApp),
                                         );
                                         return apps;
                                     }),
-                                ),
+                                );
+                            },
                         },
                         // TODO - might cast to checksum
-                        key: () => 'manifests',
-                        expire: this.defaultExpireTime,
-                    },
-                    getMyAppManifests: {
-                        client: {
-                            // TODO: add to config if use me or not
-                            fn: () =>
-                                httpClient.json$<{ value: ApiApp[] }>(`/persons/me/apps`).pipe(
-                                    map((x) => {
-                                        const apps = x.value.map(
-                                            (apiApp) => new ApplicationManifest(apiApp),
-                                        );
-                                        return apps;
-                                    }),
-                                ),
-                        },
-                        // TODO - might cast to checksum
-                        key: () => 'manifests',
+                        key: (filter) => (filter ? JSON.stringify(filter) : 'all'),
                         expire: this.defaultExpireTime,
                     },
                     getAppConfig: {

@@ -1,5 +1,6 @@
 import type { AppManifest, ApiApp, AppOwnerOrAdmin, AppBuild, AzureId } from './types';
 
+// TODO: convert to zod parser
 export class ApplicationManifest implements AppManifest {
     constructor(protected model: ApiApp) {}
 
