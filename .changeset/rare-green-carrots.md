@@ -5,4 +5,4 @@
 "@equinor/fusion-framework-cookbook-app-react": major
 ---
 
-Adjusting app-config to new format from the app management api.
+Adjusting app-config in cookbooks to mitigate Breaking-Changes from new app-service
