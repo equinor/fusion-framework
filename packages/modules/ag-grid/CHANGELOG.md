@@ -1,5 +1,11 @@
 # Change Log
 
+## 32.1.0
+
+### Minor Changes
+
+-   [#2377](https://github.com/equinor/fusion-framework/pull/2377) [`401a10c`](https://github.com/equinor/fusion-framework/commit/401a10c2cfc13c73f874a40cf51c0f722ef2f629) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump AG Grid from 32.0.2 to 32.1.0
+
 ## 32.0.1
 
 ### Patch Changes

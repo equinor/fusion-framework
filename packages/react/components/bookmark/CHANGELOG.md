@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.4.14
+
+### Patch Changes
+
+-   [#2403](https://github.com/equinor/fusion-framework/pull/2403) [`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.40.1 to 0.41.2
+
+    [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
+
+-   Updated dependencies [[`843edd9`](https://github.com/equinor/fusion-framework/commit/843edd96f2a01ebd814766105902977cdc1cdf8e)]:
+    -   @equinor/fusion-framework-react@7.2.0
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.14
+
 ## 0.4.13
 
 ### Patch Changes

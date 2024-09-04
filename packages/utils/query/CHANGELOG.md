@@ -1,5 +1,34 @@
 # Change Log
 
+## 5.1.2
+
+### Patch Changes
+
+-   [`be2e925`](https://github.com/equinor/fusion-framework/commit/be2e92532f4a4b8f0b2c9e12d4adf942d380423e) Thanks [@odinr](https://github.com/odinr)! - Added try catch block to execution of query function, since the method might throw an exception before returning the observable.
+
+    ```ts
+    const queryClient = new Query({
+        client: {
+            () => {
+                throw new Error('this would terminate the process before');
+                return new Observable((subscriber) => {
+                    throw new Error('this worked before');
+                });
+            },
+        },
+        key: (value) => value,
+
+    queryClient.query().subscribe({
+        error: (error) => {
+            // before changes this would not be called since stream would be terminated.
+            console.log(error.message); // this would print 'this would terminate the process before'
+        },
+    });
+    ```
+
+-   Updated dependencies [[`3238800`](https://github.com/equinor/fusion-framework/commit/32388003d9b9a61ed70f7125358d03889dbf8ca0)]:
+    -   @equinor/fusion-log@1.1.0
+
 ## 5.1.1
 
 ### Patch Changes

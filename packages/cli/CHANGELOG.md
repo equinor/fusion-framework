@@ -1,5 +1,18 @@
 # Change Log
 
+## 9.12.13
+
+### Patch Changes
+
+-   [#2403](https://github.com/equinor/fusion-framework/pull/2403) [`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.40.1 to 0.41.2
+
+    [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@9.1.6
+    -   @equinor/fusion-framework-module-feature-flag@1.1.7
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.5
+
 ## 9.12.12
 
 ### Patch Changes
