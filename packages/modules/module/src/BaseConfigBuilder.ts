@@ -1,5 +1,5 @@
-import { from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
-import { map, mergeMap, reduce, switchMap } from 'rxjs/operators';
+import { EMPTY, from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
+import { catchError, filter, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
 import { Modules, ModuleType } from './types';
 import { type DotPath, type DotPathType } from './utils/dot-path';
 
@@ -79,14 +79,29 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
 };
 
 /**
- * config builder callback function blueprint
- * @template TReturn expected return type of callback
- * @param args - An object containing arguments that can be used to configure the `ConfigBuilder`.
- * @returns The configured value, or an observable that emits the configured value.
+ * Represents a callback function used in the ConfigBuilder.
+ *
+ * The callback function receives the `ConfigBuilderCallbackArgs` as an argument and returns an `Observable` that emits the return value of the callback function or void.
+ * Return void or undefined to skip providing a value for the configuration attribute.
+ *
+ * @example
+ * ```typescript
+ * const callback: ConfigBuilderCallback<string> = async(args) => {
+ *  if(args.hasModule('some_module')){
+ *    const someModule = await args.requireInstance('some_module');
+ *    return someModule.doSomething();
+ *  }
+ *  // will not provide a value for the configuration attribute
+ * };
+ * ```
+ *
+ * @template TReturn The return type of the callback function.
+ * @param args The arguments passed to the callback function.
+ * @returns An Observable that emits the return value of the callback function or void.
  */
 export type ConfigBuilderCallback<TReturn = unknown> = (
     args: ConfigBuilderCallbackArgs,
-) => ObservableInput<TReturn>;
+) => ObservableInput<TReturn | void>;
 
 /**
  * The `BaseConfigBuilder` class is an abstract class that provides a flexible and extensible way to build and configure modules.
@@ -300,7 +315,21 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
     ): ObservableInput<Partial<TConfig>> {
         return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
             // Transform each config callback into a target-value pair
-            mergeMap(([target, cb]) => from(cb(init)).pipe(map((value) => ({ target, value })))),
+            mergeMap(([target, cb]) =>
+                from(cb(init)).pipe(
+                    // Filter out undefined values, mostly for void return types
+                    filter((value) => value !== undefined),
+                    // Map the value to a target-value pair
+                    map((value) => ({ target, value })),
+                    catchError((error) => {
+                        console.error(
+                            `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
+                            error,
+                        );
+                        return EMPTY;
+                    }),
+                ),
+            ),
             // Reduce the target-value pairs into a single configuration object
             reduce(
                 // Assign each value to the corresponding target in the accumulator
