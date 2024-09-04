@@ -10,6 +10,7 @@ import type {
 } from '@equinor/fusion-framework-module';
 
 import { MsalModule } from '@equinor/fusion-framework-module-msal';
+import { HttpRequestHandler } from './lib';
 
 /**
  * Defines the type for the HTTP module, which includes:
