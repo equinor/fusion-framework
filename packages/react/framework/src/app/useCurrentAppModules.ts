@@ -32,7 +32,7 @@ export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): 
         error,
         complete,
     } = useObservableState(modules$, {
-        initial: currentApp === undefined ? undefined : currentApp?.instance ?? null,
+        initial: currentApp === undefined ? undefined : (currentApp?.instance ?? null),
     });
     return {
         modules,

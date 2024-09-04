@@ -12,7 +12,7 @@ import type { AppConfig, AppManifest } from './types';
 export interface AppModuleConfig {
     proxy: {
         path: string;
-    },
+    };
     client: {
         getAppManifest: QueryCtorOptions<AppManifest, { appKey: string }>;
         getAppManifests: QueryCtorOptions<AppManifest[], void>;

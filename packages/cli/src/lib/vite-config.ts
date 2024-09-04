@@ -88,7 +88,7 @@ export const createViteConfig = async (
             viteEnv({
                 NODE_ENV: env.mode,
                 FUSION_LOG_LEVEL:
-                    process.env.FUSION_LOG_LEVEL ?? env.mode === 'development' ? '3' : '1',
+                    (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
             }),
         ],
         root,
