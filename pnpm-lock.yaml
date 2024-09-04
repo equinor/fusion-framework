@@ -117,8 +117,8 @@ importers:
         specifier: ~32.1.0
         version: 32.1.0(@ag-grid-community/core@32.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ag-grid-community/styles':
-        specifier: ^32.0.0
-        version: 32.0.2
+        specifier: ^32.1.0
+        version: 32.1.0
       '@ag-grid-enterprise/clipboard':
         specifier: ^32.0.0
         version: 32.0.2
@@ -142,7 +142,7 @@ importers:
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^31.2.3
-        version: 31.2.3(@ag-grid-community/styles@32.0.2)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 31.2.3(@ag-grid-community/styles@32.1.0)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -1761,8 +1761,8 @@ packages:
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
 
-  '@ag-grid-community/styles@32.0.2':
-    resolution: {integrity: sha512-AIbk1Oq1TOEfQopdretMs7Umv5Swm74JTTWH38sc1BX5NOFEC49m3wDi+5E/8xejtH0tmCAhKtpMsbMa16FGIQ==}
+  '@ag-grid-community/styles@32.1.0':
+    resolution: {integrity: sha512-OjakLetS/zr0g5mJWpnjldk/RjGnl7Rv3I/5cGuvtgdmSgS+4FNZMr8ZmyR8Bl34s0RM63OSIphpVaFGlnJM4w==}
 
   '@ag-grid-enterprise/clipboard@32.0.2':
     resolution: {integrity: sha512-lswW1yiRWst35TgTE/H5YiJO3qZAuLirKKMbDAAj3C6WNN61S2m59QJUP1VUecwhGUgES2xxuSJDYp3qyaH5Qw==}
@@ -8546,7 +8546,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ag-grid-community/styles@32.0.2': {}
+  '@ag-grid-community/styles@32.1.0': {}
 
   '@ag-grid-enterprise/clipboard@32.0.2':
     dependencies:
@@ -9227,9 +9227,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@equinor/fusion-react-ag-grid-styles@31.2.3(@ag-grid-community/styles@32.0.2)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/fusion-react-ag-grid-styles@31.2.3(@ag-grid-community/styles@32.1.0)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@ag-grid-community/styles': 32.0.2
+      '@ag-grid-community/styles': 32.1.0
       '@equinor/eds-tokens': 0.9.2
       '@equinor/fusion-react-styles': 0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
