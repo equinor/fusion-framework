@@ -1,8 +1,9 @@
-import { FusionConfigurator } from '@equinor/fusion-framework';
+import { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { createFrameworkProvider } from './create-framework-provider';
 import { PropsWithChildren, ReactNode, Suspense, useMemo } from 'react';
+import { useModules } from '@equinor/fusion-framework-react-module';
 
-type ConfigureCallback = (configurator: FusionConfigurator) => void;
+type ConfigureCallback = (configurator: FrameworkConfigurator) => void;
 
 export const Framework = (
     props: PropsWithChildren<{
@@ -11,7 +12,9 @@ export const Framework = (
     }>,
 ) => {
     const { configure, fallback, children } = props;
-    const Component = useMemo(() => createFrameworkProvider(configure), [configure]);
+    //import modules from parent context
+    const ref = useModules<[]>();
+    const Component = useMemo(() => createFrameworkProvider(configure, ref), [configure, ref]);
     return (
         <Suspense fallback={fallback}>
             <Component>{children}</Component>
