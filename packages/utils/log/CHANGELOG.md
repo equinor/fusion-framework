@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 1.1.0
+
+### Minor Changes
+
+-   [#2408](https://github.com/equinor/fusion-framework/pull/2408) [`3238800`](https://github.com/equinor/fusion-framework/commit/32388003d9b9a61ed70f7125358d03889dbf8ca0) Thanks [@odinr](https://github.com/odinr)! - Removed formatting of messages in the `log` function. Now the messages are printed as they are, without any additional formatting. This is done to make the messages more readable and to avoid any additional formatting that might be added by the user. Formatting objects would result in the console outputting `[[object,object]]` which was not very helpful.
+
 ## 1.0.2
 
 ### Patch Changes

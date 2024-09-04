@@ -1,5 +1,73 @@
 # Change Log
 
+## 4.3.4
+
+### Patch Changes
+
+-   [#2434](https://github.com/equinor/fusion-framework/pull/2434) [`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module:**
+
+    Updated the `_buildConfig` method in `BaseConfigBuilder` to improve error handling and configuration merging.
+
+    -   Enhanced `_buildConfig` to log errors when a configuration callback fails, providing more detailed error messages.
+    -   Improved the merging process of configuration callbacks by filtering out undefined values and mapping them to target-value pairs.
+    -   Updated the `_buildConfig` method to initialize the accumulator with the initial configuration or an empty object.
+
+    ```ts
+    type MyConfig = {
+      foo?: number;
+      bar?: string;
+    }
+
+    const initial = {foo: 1, bar: 'baz'};
+
+    export class MyConfigurator extends BaseConfigBuilder<MyConfig> {
+      setFoo(cb: ConfigBuilderCallback<MyConfig['foo']>){
+        this._set('foo', cb);
+      }
+      setBar(cb: ConfigBuilderCallback<MyConfig['bar']>){
+        this._set('bar', cb);
+      }
+    }
+
+    const configurator =  MyConfigurator();
+
+    configurator.setFoo(async () => {
+      if(someCondition) // do some async work
+    });
+
+    configurator.setBar(() => {
+      return 'override';
+    });
+
+    configurator.createConfig(initial).subscribe(console.log);
+    ```
+
+    _Output:_
+
+    ```diff
+    - {foo: undefined, bar: 'override'}
+    + {foo: 1, bar: 'override'}
+    ```
+
+    Example of a failed configuration callback:
+
+    ```ts
+    configurator.setFoo(async () => {
+        throw new Error('Failed to set foo');
+    });
+    ```
+
+    _Output:_
+
+    ```diff
+    - Configuration failed
+    + {foo: 1, bar: 'override'}
+    ```
+
+-   [#2407](https://github.com/equinor/fusion-framework/pull/2407) [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9) Thanks [@odinr](https://github.com/odinr)! - Improved Configuration Callback Handling
+
+    BaseConfigBuilder.\_buildConfig will now correctly handle asynchronous configuration callbacks. This change simplifies the handling of asynchronous configuration callbacks by removing the `async` keyword and directly using RxJS operators.
+
 ## 4.3.3
 
 ### Patch Changes

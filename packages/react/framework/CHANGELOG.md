@@ -1,5 +1,35 @@
 # Change Log
 
+## 7.2.0
+
+### Minor Changes
+
+-   [#2425](https://github.com/equinor/fusion-framework/pull/2425) [`843edd9`](https://github.com/equinor/fusion-framework/commit/843edd96f2a01ebd814766105902977cdc1cdf8e) Thanks [@odinr](https://github.com/odinr)! - These changes ensure that the `Framework` component and `createFrameworkProvider` function are consistent with the updated configuration approach and support module instances from the parent context.
+
+    **Updated Framework Component:**
+
+    -   Added `useModules` hook to import modules from the parent context.
+    -   Updated the `createFrameworkProvider` function to accept a `ref` parameter for module instances.
+
+    **Updated create-framework-provider Function:**
+
+    -   Added `ref` parameter to the `createFrameworkProvider` function to support module instances.
+    -   Updated the example usage in the documentation to reflect the changes.
+
+    **Misc:**
+
+    -   Replaced deprecated import of `FusionConfigurator` with `FrameworkConfigurator` (renaming).
+
+### Patch Changes
+
+-   Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
+    -   @equinor/fusion-framework-module@4.3.4
+    -   @equinor/fusion-framework@7.2.5
+    -   @equinor/fusion-framework-module-feature-flag@1.1.7
+    -   @equinor/fusion-framework-react-module@3.1.5
+    -   @equinor/fusion-framework-react-module-http@6.0.3
+    -   @equinor/fusion-framework-react-module-signalr@3.0.13
+
 ## 7.1.4
 
 ### Patch Changes

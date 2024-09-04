@@ -1,5 +1,19 @@
 # Change Log
 
+## 14.0.6
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@9.1.6
+    -   @equinor/fusion-framework@7.2.5
+    -   @equinor/fusion-framework-module-app@5.3.10
+    -   @equinor/fusion-framework-module-http@6.0.3
+    -   @equinor/fusion-framework-module-msal@3.1.4
+    -   @equinor/fusion-framework-module-navigation@4.0.5
+    -   @equinor/fusion-framework-module-service-discovery@7.1.12
+    -   @equinor/fusion-framework-react-app@5.2.6
+
 ## 14.0.5
 
 ### Patch Changes

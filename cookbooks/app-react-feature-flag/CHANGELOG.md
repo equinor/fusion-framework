@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.2.18
+
+### Patch Changes
+
+-   [#2403](https://github.com/equinor/fusion-framework/pull/2403) [`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.40.1 to 0.41.2
+
+    [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
+
+-   Updated dependencies [[`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d)]:
+    -   @equinor/fusion-framework-cli@9.12.13
+    -   @equinor/fusion-framework-module-feature-flag@1.1.7
+    -   @equinor/fusion-framework-module-http@6.0.3
+    -   @equinor/fusion-framework-module-navigation@4.0.5
+    -   @equinor/fusion-framework-react-app@5.2.6
+
 ## 1.2.17
 
 ### Patch Changes
