@@ -56,11 +56,7 @@ export class AppConfigurator
 
             // TODO - remove when refactor portal service!
             /** resolve and create a client from discovery */
-            return await serviceDiscovery.createClient('apps', {
-                onCreate(client) {
-                    client.requestHandler.setHeader('Api-Version', '1.0-preview');
-                },
-            });
+            return await serviceDiscovery.createClient('apps');
         }
     }
 
@@ -91,7 +87,11 @@ export class AppConfigurator
                         client: {
                             fn: ({ appKey }) =>
                                 httpClient
-                                    .json$<ApiApp>(`/apps/${appKey}`)
+                                    .json$<ApiApp>(`/apps/${appKey}`, {
+                                        headers: {
+                                            'Api-Version': '1.0',
+                                        },
+                                    })
                                     .pipe(map((apiApp) => new ApplicationManifest(apiApp))),
                         },
                         key: ({ appKey }) => appKey,
@@ -104,14 +104,20 @@ export class AppConfigurator
                                 const path = filter?.filterByCurrentUser
                                     ? '/persons/me/apps'
                                     : '/apps';
-                                return httpClient.json$<{ value: ApiApp[] }>(path).pipe(
-                                    map((x) => {
-                                        const apps = x.value.map(
-                                            (apiApp) => new ApplicationManifest(apiApp),
-                                        );
-                                        return apps;
-                                    }),
-                                );
+                                return httpClient
+                                    .json$<{ value: ApiApp[] }>(path, {
+                                        headers: {
+                                            'Api-Version': '1.0',
+                                        },
+                                    })
+                                    .pipe(
+                                        map((x) => {
+                                            const apps = x.value.map(
+                                                (apiApp) => new ApplicationManifest(apiApp),
+                                            );
+                                            return apps;
+                                        }),
+                                    );
                             },
                         },
                         // TODO - might cast to checksum
@@ -123,6 +129,11 @@ export class AppConfigurator
                             fn: ({ appKey, tag = 'latest' }) =>
                                 httpClient.json$<ApiAppVersionConfig>(
                                     `/apps/${appKey}/builds/${tag}/config`,
+                                    {
+                                        headers: {
+                                            'Api-Version': '1.0',
+                                        },
+                                    },
                                 ),
                         },
                         key: (args) => JSON.stringify(args),
