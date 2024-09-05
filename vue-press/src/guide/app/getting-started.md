@@ -50,7 +50,7 @@ npm i -D '@equinor/fusion-framework-react-app'
     ],
   }
 }
-```
+``` 
 :::
 
 ### EsLint
@@ -59,7 +59,7 @@ npm i -D '@equinor/fusion-framework-react-app'
 @tab .eslintrc
 ```json 
 {
-  "extends": "@equinor/eslint-config-fusion/react",
+  "extends": "@equinor/eslint-config-fusion-react",
 }
 ```
 
@@ -90,30 +90,42 @@ When the application renders, the portal will load configuration from `app servi
 ::: code-tabs
 
 @tab src/config.ts
+
 ```ts
-export const configure = (configurator, { env }) => {
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 
-  const { config: { environment: { endpoints } } } = env;
+import { enableContext } from '@equinor/fusion-framework-module-context';
 
-  for(const [key, endpoint] in Object.entries(endpoints)) {
-    const { baseUri, defaultScopes } = endpoint;
-    configurator.configureHttpClient({ key, { baseUri, defaultScopes });
-  }
+export const configure: AppModuleInitiator = (configurator) => {
+  // enable context and set contextType
+    enableContext(configurator, async (builder) => {
+        builder.setContextType(['projectMaster']); 
+    });
+
+    // configure framework loglevel
+    configurator.logger.level = 0;
 };
+
+export default configure;
 ```
 
-@tab app.config.js
-```js
-export default () => ({
-  "environment": {
-    "endpoints": {
-      "api": {
-        "baseUri": "https://foo.barz",
-        "defaultScopes": ["foobar/.default"]
-      }
-    }
-  }
-});
+@tab app.config.ts
+
+```ts
+import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig((_nev, { base }) =>
+    mergeAppConfigs(base, {
+        environment: {
+            scope: 'foobar',
+        },
+        endpoints: {
+            api: {
+                url: 'https://foo.bars',
+            },
+        },
+    }),
+);
+
 ```
 
 :::
