@@ -52,7 +52,6 @@ description: Deploy application to CI env with fusion apps-service.
 inputs:
   fusionEnv: ci
   tag: latest
-  node-version: 21
 
 on:
   push:
@@ -77,27 +76,17 @@ jobs:
             export FUSION_TOKEN="$(az account get-access-token --scope example-env-scope\.default)"
       
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4'
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
-          cache: 'pnpm'
+      - name: install dependencies
+        ...
 
-      - name: install deps
-        shell: bash
-        run: pnpm install
-
-      - name: Pack, upload and tag application
-        shell: bash
-        run: pnpm exec fusion-framework-cli app publish --tag ${{inputs.tag}} --env ${{inputs.fusionEnv}}
+      - name: Publish current version to apps-service
+        run: fusion-framework-cli app publish --tag ${{inputs.tag}} --env ${{inputs.fusionEnv}}
 
       - name: Upload config for this version and env
-        shell: bash
-        run: pnpm exec fusion-framework-cli app config --config app.config-ci.ts --publish ${{inputs.tag}} --env ${{inputs.fusionEnv}}
+        run: fusion-framework-cli app config --config app.config-ci.ts --publish ${{inputs.tag}} --env ${{inputs.fusionEnv}}
 
 ```
 
