@@ -452,14 +452,13 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     public async loadAppModule(allow_cache = true) {
         const manifest = await this.getManifestAsync(allow_cache);
-        if (!manifest.build.entryPoint) {
+        if (manifest.build.entryPoint) {
+            this.#state.next(actions.importApp(manifest.build.entryPoint));
+        } else {
             console.log(
                 `The ${manifest.key} is missing entryPoint, please upload a build for the app before continuing`,
             );
-            return;
         }
-
-        this.#state.next(actions.importApp(manifest.build.entryPoint));
     }
 
     public getConfig(force_refresh = false): Observable<AppConfig> {
@@ -610,14 +609,14 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 // fetch application latest manifest and request loading of the application script
                 this.getManifest().subscribe((manifest) => {
-                    if (!manifest.build.entryPoint) {
+                    if (manifest.build.entryPoint) {
+                        // dispatch import_app action to load the application script
+                        this.#state.next(actions.importApp(manifest.build.entryPoint));
+                    } else {
                         console.error(
                             `The ${manifest.key} app is missing a entry in the manifest, upload a build for your app before continuing`,
                         );
-                        return;
                     }
-                    // dispatch import_app action to load the application script
-                    this.#state.next(actions.importApp(manifest.build.entryPoint));
                 }),
             );
         });
