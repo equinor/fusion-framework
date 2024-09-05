@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.1.13
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-query@5.1.3
+
 ## 7.1.12
 
 ### Patch Changes

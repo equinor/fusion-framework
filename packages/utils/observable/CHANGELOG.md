@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.4.1
+
+### Patch Changes
+
+-   [#2426](https://github.com/equinor/fusion-framework/pull/2426) [`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated happy-dom from 14.12.3 to [15.7.3](https://github.com/capricorn86/happy-dom/releases/tag/v15.7.3)
+
 ## 8.4.0
 
 ### Minor Changes
