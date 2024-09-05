@@ -40,16 +40,16 @@ export const tagApplication = async (options: {
         return;
     }
 
-    const tagd = await tagAppBundle(tag, appKey, version, env, service);
+    const tagged = await tagAppBundle(tag, appKey, version, env, service);
 
-    if (!tagd) {
+    if (!tagged) {
         return;
     }
 
     spinner.succeed(
         '✅',
         `App: "${chalk.greenBright(appKey)}"`,
-        `Version: "${chalk.greenBright(tagd.version)}"`,
-        `Tag: "${chalk.greenBright(tagd.tagName)}"`,
+        `Version: "${chalk.greenBright(tagged.version)}"`,
+        `Tag: "${chalk.greenBright(tagged.tagName)}"`,
     );
 };
