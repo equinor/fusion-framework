@@ -45,15 +45,6 @@ export const createExportManifest = async (options?: {
         file: options?.configFile,
     });
 
-    // TODO - mutation is the mother of all f* ups
-    manifest.githubRepo ??= execSync('git remote get-url origin')
-        .toString()
-        .trim()
-        .replace('git@github.com:', 'https://github.com/')
-        .replace(/.git$/, '');
-    manifest.commitSha = execSync('git rev-parse HEAD').toString().trim();
-    manifest.timestamp = new Date().toISOString();
-
     if (outputFile) {
         spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
         try {
