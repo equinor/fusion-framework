@@ -11,7 +11,7 @@ export type AgGridModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator
 
 export const module: AgGridModule = {
     name: 'agGrid',
-    configure: (ref: ModulesInstanceType<[AgGridModule]>) => {
+    configure: (ref?: ModulesInstanceType<[AgGridModule]>) => {
         const config = new AgGridConfigurator();
         if (ref?.agGrid) {
             config.licenseKey = ref.agGrid.licenseKey;
