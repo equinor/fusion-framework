@@ -153,7 +153,7 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestE
     const entry = resolveEntryPoint(pkg.packageJson);
     assert(entry, 'expected [version] in packageJson');
     const { type: module } = pkg.packageJson;
-    const entryPoint = `app-bundle${module === module ? '.js' : '.mjs'}`;
+    const entryPoint = `app-bundle.${module === 'module' ? 'js' : 'mjs'}`;
     const manifest = {
         version: packageJson.version,
         entryPoint,
