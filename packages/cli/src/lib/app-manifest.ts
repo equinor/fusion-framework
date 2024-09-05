@@ -1,6 +1,7 @@
 import deepmerge from 'deepmerge';
+import { execSync } from 'node:child_process';
 
-import { ResolvedAppPackage, resolveEntryPoint } from './app-package.js';
+import { AppPackageJson, ResolvedAppPackage, resolveEntryPoint } from './app-package.js';
 
 import {
     loadConfig,
@@ -118,6 +119,32 @@ export const resolveManifest = async (
     return resolveConfig(manifestConfigFilename, { find: options });
 };
 
+const getGithubRepo = (pkg: AppPackageJson) => {
+    try {
+        /* get reporurl from package.json */
+        if (pkg.repository) {
+            return typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url;
+        } else {
+            /* get reporurl from git command */
+            return execSync('git remote get-url origin')
+                .toString()
+                .trim()
+                .replace('git@github.com:', 'https://github.com/')
+                .replace(/.git$/, '');
+        }
+    } catch {
+        return undefined;
+    }
+};
+
+const getGitCommitSha = () => {
+    try {
+        return execSync('git rev-parse HEAD').toString().trim();
+    } catch {
+        return undefined;
+    }
+};
+
 export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestExport => {
     const { packageJson } = pkg;
     assertObject(packageJson, 'expected packageJson');
@@ -131,10 +158,8 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestE
         version: packageJson.version,
         entryPoint,
         timestamp: new Date().toISOString(),
-        githubRepo:
-            typeof packageJson.repository === 'string'
-                ? packageJson.repository
-                : packageJson.repository?.url,
+        githubRepo: getGithubRepo(packageJson),
+        commitSha: getGitCommitSha(),
         projectPage: packageJson.homepage,
     } satisfies AppManifestExport;
     assertAppManifest(manifest);
