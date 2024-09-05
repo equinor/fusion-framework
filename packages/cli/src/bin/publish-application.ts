@@ -50,16 +50,16 @@ export const publishApplication = async (options: {
     }
 
     spinner.info(`Tag app bundle with: ${tag}`);
-    const tagd = await tagAppBundle(tag, appKey, uploadedBundle.version, env, service);
+    const tagged = await tagAppBundle(tag, appKey, uploadedBundle.version, env, service);
 
-    if (!tagd) {
+    if (!tagged) {
         return;
     }
 
     spinner.succeed(
         '✅',
         `Published app: "${chalk.greenBright(appKey)}"`,
-        `With version: "${chalk.greenBright(tagd.version)}"`,
-        `Tag: "${chalk.greenBright(tagd.tagName)}"`,
+        `With version: "${chalk.greenBright(tagged.version)}"`,
+        `Tag: "${chalk.greenBright(tagged.tagName)}"`,
     );
 };
