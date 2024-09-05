@@ -6,16 +6,15 @@ import { useAppProvider } from './useAppProvider';
 
 type UseAppsArgs = {
     /** @deprecated - no longer available */
-    includeHidden: boolean;
+    includeHidden?: boolean;
     // only show apps that the current user has access to
-    filterByCurrentUser: boolean;
+    filterByCurrentUser?: boolean;
 };
 
 /**
  * React Hook - Get apps from framework
- * @param _args Object with boolean  member includeHidden
- * @returns Object {apps, isLoading} where apps is Array of ApplicationManifest, isLoading is a boolean on observable complete
- * @deprecated _args is not used anymore with new app service
+ * @param args Object with filterByCurrentUser: boolean
+ * @returns Object {apps, isLoading, error} where apps is Array of ApplicationManifest, isLoading is a boolean on observable complete
  * @since 7.1.1
  */
 export const useApps = (
