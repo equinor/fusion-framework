@@ -23,10 +23,10 @@ export type NavigationModule = Module<
 export const module: NavigationModule = {
     version: new SemanticVersion(version),
     name: moduleKey,
-    configure: (ref?: unknown) => {
+    configure: (ref?: ModuleInstance) => {
         const configurator = new NavigationConfigurator();
-        if (ref) {
-            configurator.history = (ref as ModuleInstance).navigation.navigator;
+        if (ref?.navigation) {
+            configurator.history = ref.navigation.navigator;
         }
         return configurator;
     },
