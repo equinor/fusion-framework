@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.6
+
+### Patch Changes
+
+-   [#2442](https://github.com/equinor/fusion-framework/pull/2442) [`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2) Thanks [@odinr](https://github.com/odinr)! - Fixed reference check in navigation module and ag-grid module.
+
+    hotfix for [PR-2425](https://github.com/equinor/fusion-framework/pull/2425)
+
 ## 4.0.5
 
 ### Patch Changes

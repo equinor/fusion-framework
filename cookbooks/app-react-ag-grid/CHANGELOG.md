@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+-   [#2417](https://github.com/equinor/fusion-framework/pull/2417) [`034e3cc`](https://github.com/equinor/fusion-framework/commit/034e3cc05e9786cd19c0d3a89c92b5b79e3c090d) Thanks [@dependabot](https://github.com/apps/dependabot)! - upgraded @ag-grid-community/styles from 32.0.2 to 32.1.0
+
+-   Updated dependencies [[`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2)]:
+    -   @equinor/fusion-framework-module-ag-grid@32.1.1
+
 ## 0.4.0
 
 ### Minor Changes

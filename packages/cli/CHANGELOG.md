@@ -1,5 +1,17 @@
 # Change Log
 
+## 9.12.14
+
+### Patch Changes
+
+-   [#2431](https://github.com/equinor/fusion-framework/pull/2431) [`53ff9cc`](https://github.com/equinor/fusion-framework/commit/53ff9ccdbac95ae8d279aed49f173708bbe9adbe) Thanks [@dependabot](https://github.com/apps/dependabot)! - Upgrade vite from 5.3.5 to [5.4.3](<(https://github.com/vitejs/vite/blob/create-vite@5.4.0/packages/create-vite/CHANGELOG.md)>)
+
+-   Updated dependencies [[`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d)]:
+    -   @equinor/fusion-observable@8.4.1
+    -   @equinor/fusion-framework-module-feature-flag@1.1.8
+    -   @equinor/fusion-framework-app@9.1.7
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.6
+
 ## 9.12.13
 
 ### Patch Changes
