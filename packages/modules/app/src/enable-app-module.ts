@@ -9,13 +9,13 @@ import { AppConfigurator } from './AppConfigurator';
 export const enableAppModule = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     configurator: IModulesConfigurator<any, any>,
-    callback?: (builder: AppConfigurator) => void,
+    callback?: (builder: AppConfigurator) => void | Promise<void>,
 ): void => {
     configurator.addConfig({
         module,
-        configure: (configurator) => {
+        configure: async (configurator) => {
             if (callback) {
-                callback(configurator);
+                Promise.resolve(callback(configurator));
             }
         },
     });
