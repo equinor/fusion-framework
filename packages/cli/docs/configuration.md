@@ -20,8 +20,8 @@ export default defineAppConfig((_env, { base }) =>
         environment: {
             endpoints: {
               api: {
-                baseUri: 'https://foo.bar',
-                defaultScopes: ['default']
+                url: 'https://foo.bar',
+                scopes: ['default']
               }
             }
         },
