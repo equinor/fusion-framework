@@ -58,7 +58,7 @@ export const uploadApplication = async (options: {
     /* Upload app bundle */
     try {
         spinner.info(
-            `Uploading bundle ${chalk.yellowBright(bundle)} to appKey ${chalk.yellowBright(appKey)}`
+            `Uploading bundle ${chalk.yellowBright(bundle)} to appKey ${chalk.yellowBright(appKey)}`,
         );
 
         const endpoint = await getEndpointUrl(`bundles/apps/${appKey}`, env, service);

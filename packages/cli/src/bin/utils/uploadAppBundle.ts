@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 
 /**
  * Function that uploads a zip bundle to the endpoint.
- * 
  * @param endpoint string The endpoint to upload to
  * @param bundle string The filename to upload
  * @returns Object
@@ -29,7 +28,7 @@ export const uploadAppBundle = async (endpoint: string, bundle: string) => {
 
     if (requestBundle.status === 401 || requestBundle.status === 403) {
         throw new Error(
-            `This is not allowed for this role on this app. HTTP message: ${requestBundle.statusText}`
+            `This is not allowed for this role on this app. HTTP message: ${requestBundle.statusText}`,
         );
     }
 
