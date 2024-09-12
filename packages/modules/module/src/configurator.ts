@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BehaviorSubject, EMPTY, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
-import { catchError, filter, map, mergeMap, scan, tap, timeout } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, reduce, tap, timeout } from 'rxjs/operators';
 
 import { IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
 
@@ -260,7 +260,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                     throw err;
                 }
             }),
-            scan((acc, module) => Object.assign(acc, module), {
+            reduce((acc, module) => Object.assign(acc, module), {
                 onAfterConfiguration(cb) {
                     _afterConfiguration.push(cb);
                 },
@@ -484,7 +484,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
         );
 
         /** call all added post config hooks  */
-        await lastValueFrom(postInitialize$);
+        await new Promise((resolve, reject) => {
+            postInitialize$.subscribe({
+                complete: () => resolve(true),
+                error: reject,
+            });
+        });
 
         if (afterInit.length) {
             try {
