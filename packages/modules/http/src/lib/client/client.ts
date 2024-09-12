@@ -347,7 +347,8 @@ export class HttpClient<
      * @returns The full URL for the given path.
      */
     protected _resolveUrl(path: string): string {
-        const baseUrl = this.uri || window.location.origin;
-        return new URL(path, baseUrl).href;
+        const { origin, pathname: basePath } = new URL(this.uri || window.location.origin);
+        const pathname = [basePath, path].join('/').replace(/\/{2,}/g, '/');
+        return new URL(pathname, origin).href;
     }
 }
