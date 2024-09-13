@@ -1,7 +1,5 @@
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { IServiceDiscoveryClient } from './client';
-
 import type { ModulesConfigurator, ModuleType } from '@equinor/fusion-framework-module';
 import type {
     HttpClientOptions,
@@ -9,48 +7,80 @@ import type {
     IHttpClient,
 } from '@equinor/fusion-framework-module-http';
 
-import type { Environment, Service } from './types';
+import type { Service } from './types';
+import { ServiceDiscoveryConfig } from './configurator';
 
 export interface IServiceDiscoveryProvider {
     /**
-     * Try to resolve services for requested key
+     * Resolves a service by key
+     * @param key - The key of the service to resolve
      */
     resolveService(key: string): Promise<Service>;
+
     /**
-     * service environment
-     * this might throw error if no environment is loaded
+     * Fetch all services
      */
-    readonly environment: Environment;
+    resolveServices(): Promise<Service[]>;
 
-    resolveServices(): Promise<Environment>;
-
+    /**
+     * create http client for a service
+     * @param name key of the service
+     * @param opt http client options
+     *
+     * @example
+     * ```typescript
+     * const myClient = await serviceDiscovery.createClient('my-service', {});
+     * ```
+     */
     createClient(
         name: string,
         opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
     ): Promise<IHttpClient>;
 
+    /**
+     * Used in the framework to configure a http client which is resolved by service discovery
+     *
+     * @deprecating this method will be reworked in later versions, please don`t use!
+     *
+     * @param serviceName key of the service or an object with key and alias
+     * @param config http client configurator
+     *
+     * @example
+     * ```typescript
+     * configure = (
+     *   configurator: ModuleConfigBuilder<[HttpModule]>,
+     *   ref: ModuleInstanceType<ServiceDiscovery>
+     * )=> {
+     *   ref.serviceDiscovery.configureClient(
+     *     // use `my-service` from service discovery
+     *     // and register it as `foo` in the http module
+     *     { key: 'my-service', alias: 'foo'},
+     *     configurator
+     *   );
+     * });
+     *
+     * ```
+     */
     configureClient(
         serviceName: string | { key: string; alias: string },
         config: ModulesConfigurator<[HttpModule]>,
     ): Promise<void>;
+
+    readonly config: ServiceDiscoveryConfig;
 }
 
 export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     constructor(
-        protected readonly _client: IServiceDiscoveryClient,
+        public readonly config: ServiceDiscoveryConfig,
         protected readonly _http: ModuleType<HttpModule>,
     ) {}
 
-    public get environment(): Environment {
-        return this._client.environment;
-    }
-
-    public resolveServices(): Promise<Environment> {
-        return this._client.fetchEnvironment();
+    public resolveServices(): Promise<Service[]> {
+        return this.config.discoveryClient.resolveServices();
     }
 
     public async resolveService(key: string): Promise<Service> {
-        return this._client.resolveService(key);
+        return this.config.discoveryClient.resolveService(key);
     }
 
     public async createClient(
@@ -64,7 +94,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
         return this._http.createClient({
             ...opt,
             baseUri: service.uri,
-            defaultScopes: service.defaultScopes,
+            defaultScopes: service.scopes,
         });
     }
 
@@ -76,7 +106,7 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
             typeof serviceName === 'string'
                 ? { key: serviceName, alias: serviceName }
                 : serviceName;
-        const { uri: baseUri, defaultScopes } = await this.resolveService(key);
+        const { uri: baseUri, scopes: defaultScopes } = await this.resolveService(key);
         config.addConfig(configureHttpClient(alias, { baseUri, defaultScopes }));
     }
 }
