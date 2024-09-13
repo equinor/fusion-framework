@@ -102,7 +102,7 @@ export class WidgetConfigurator<
                 }
                 config.configureClient(serviceName, {
                     baseUri: service.uri,
-                    defaultScopes: service.defaultScopes,
+                    defaultScopes: service.scopes ?? service.defaultScopes,
                 });
             },
         });
