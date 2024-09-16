@@ -71,7 +71,7 @@ export class AppConfigurator
 
     // TODO - explain why, used in import of resources aka proxy url
     public setBaseUri(base_or_cb: string | ConfigBuilderCallback<string>) {
-        const cb = typeof base_or_cb === 'string' ? () => base_or_cb : base_or_cb;
+        const cb = typeof base_or_cb === 'string' ? async () => base_or_cb : base_or_cb;
         this._set('baseUri', cb);
     }
 

@@ -24,7 +24,7 @@ export const createState = (
     state.addFlow(handleFetchConfig(provider));
 
     // add handler for loading application script
-    state.addFlow(handleImportApplication());
+    state.addFlow(handleImportApplication(provider));
 
     return state;
 };
