@@ -20,7 +20,7 @@ export class ApplicationManifest implements AppManifest {
         return this.model.owners?.map(this.convertAzureId);
     }
 
-    set key(appKey: string | null) {
+    set key(appKey: string) {
         this.model.appKey = appKey;
     }
 

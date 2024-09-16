@@ -1,0 +1,1 @@
+- add howto set app entrypoint!

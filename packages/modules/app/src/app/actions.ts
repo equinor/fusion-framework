@@ -4,7 +4,7 @@ import {
     createAction,
     createAsyncAction,
 } from '@equinor/fusion-observable';
-import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
+import type { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
 import { ApplicationManifest } from '../ApplicationManifest';
 
 const createActions = () => ({
@@ -31,7 +31,7 @@ const createActions = () => ({
     setConfig: createAction('set_config', (config: AppConfig) => ({ payload: config })),
     fetchConfig: createAsyncAction(
         'fetch_config',
-        (key: string) => ({ payload: key }),
+        (manifest: AppManifest) => ({ payload: manifest }),
         (config: AppConfig) => ({ payload: config }),
         (error: unknown) => ({ payload: error }),
     ),
