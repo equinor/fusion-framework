@@ -14,8 +14,13 @@ export const configureFromFramework = async (
         url: new URL(args.path, service.uri).toString(),
         options: {
             accessTokenFactory: async () => {
+                if (!service.scopes) {
+                    throw Error(
+                        `service [${service.name}] does not have authentication scopes, please configure an endpoint with scopes`,
+                    );
+                }
                 const token = await authProvider.acquireAccessToken({
-                    scopes: service.defaultScopes,
+                    scopes: service.scopes ?? service.defaultScopes,
                 });
                 if (!token) {
                     throw Error('failed to acquire access token');

@@ -4,8 +4,20 @@ import { PortalFramework } from './types';
 export const createServiceResolver = async (
     provider: PortalFramework['modules']['serviceDiscovery'],
     authContainer: LegacyAuthContainer,
+    clientId: string = window.clientId,
 ) => {
-    const { services, clientId } = await provider.resolveServices();
+    if (!clientId) {
+        throw new Error('clientId is required');
+    }
+    const services = await provider.resolveServices().then((services) =>
+        services.reduce(
+            (acc, service) => {
+                acc[service.key] = service;
+                return acc;
+            },
+            {} as Record<string, { uri: string }>,
+        ),
+    );
     /** register for legacy auth token */
     await authContainer.registerAppAsync(
         clientId,

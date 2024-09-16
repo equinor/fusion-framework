@@ -106,16 +106,20 @@ export const createDevProxy = (
             ...proxyOptions,
             onProxyRes: responseInterceptor(async (responseBuffer, _proxyRes, req) => {
                 const response = JSON.parse(responseBuffer.toString('utf8'));
-                response.environmentName = 'DEVELOPMENT';
-                response.services = response.services.filter(
-                    (x: { key: string }) => x.key !== 'app',
-                );
-                /** refer service [app] to vite middleware */
-                response.services.push({
+                const services = response.services
+                    .filter((x: { key: string }) => x.key !== 'app')
+                    .map((service: object) => ({
+                        ...service,
+                        scopes: [response.clientId + '/.default'],
+                        environment: 'DEVELOPMENT',
+                    }));
+                services.push({
                     key: 'app',
                     uri: new URL('/', req.headers.referer).href,
+                    scopes: [response.clientId + '/.default'],
                 });
-                return JSON.stringify(response);
+
+                return JSON.stringify(services);
             }),
         }),
     );

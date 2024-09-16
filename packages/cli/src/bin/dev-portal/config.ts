@@ -15,7 +15,7 @@ export const configure = async (config: FrameworkConfigurator) => {
 
     config.configureServiceDiscovery({
         client: {
-            baseUri: new URL(import.meta.url).origin,
+            baseUri: String(new URL('/_discovery/environments/current', import.meta.url)),
             defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
         },
     });

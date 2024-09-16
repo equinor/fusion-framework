@@ -1,21 +1,13 @@
-export type EnvironmentResponse = {
-    clientId: string;
-    services: Array<{
-        key: string;
-        uri: string;
-        defaultScopes?: Array<string>;
-    }>;
-};
-
-export type Environment = {
-    type?: string;
-    clientId: string;
-    services: Record<string, Service>;
-};
-
 export type Service = {
-    name?: null | string;
-    clientId?: string;
+    key: string;
     uri: string;
+    scopes?: string[];
+    id?: string;
+    name?: string;
+    tags?: string[];
+
+    /**
+     * @deprecated use scopes instead
+     */
     defaultScopes: string[];
 };

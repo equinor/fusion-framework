@@ -1,87 +1,84 @@
 import { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { Query } from '@equinor/fusion-query';
 
-import { Environment, EnvironmentResponse, Service } from './types';
+import type { Service } from './types';
 
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, from, lastValueFrom, map, ObservableInput } from 'rxjs';
+import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
+import { ApiServices } from './api-schema';
 
 export interface IServiceDiscoveryClient {
-    readonly environment: Environment;
-    resolveService(key: string): Promise<Service>;
-    fetchEnvironment(): Promise<Environment>;
+    /**
+     * Resolves a service by key
+     * @param key - The key of the service to resolve
+     */
+    resolveService(key: string, allow_cache?: boolean): Promise<Service>;
+
+    /**
+     * Fetches services from the service discovery API.
+     */
+    resolveServices(allow_cache?: boolean): Promise<Service[]>;
 }
 
-export interface IServiceDiscoveryClientCtor<TEnv extends Environment = Environment> {
-    new (args: ServiceDiscoveryClientCtorArgs): ServiceDiscoveryClient<TEnv>;
+export interface IServiceDiscoveryClientCtor {
+    new (args: ServiceDiscoveryClientCtorArgs): ServiceDiscoveryClient;
 }
 
 type ServiceDiscoveryClientCtorArgs = {
     http: IHttpClient;
-    endpoint: string;
+    endpoint?: string;
 };
 
 const queryKey = 'services';
 
-export class ServiceDiscoveryClient<T extends Environment = Environment>
-    implements IServiceDiscoveryClient
-{
-    // TODO - make better
-    #query: Query<T, void>;
+/**
+ * Transforms a Response object into an ObservableInput of Service arrays.
+ *
+ * @param response - The Response object to be transformed.
+ * @returns An ObservableInput that emits an array of Service objects.
+ */
+const serviceResponseSelector = (response: Response): ObservableInput<Service[]> =>
+    // parse response by using the jsonSelector
+    from(jsonSelector(response)).pipe(
+        // parse and validate the response
+        map((value) => ApiServices.default([]).parse(value)),
+    );
 
-    public endpoint: string;
-    public http: IHttpClient;
+export class ServiceDiscoveryClient implements IServiceDiscoveryClient {
+    #query: Query<Service[], void>;
 
-    get environment(): T {
-        const env = this.#query.cache.getItem(queryKey)?.value;
-        if (!env) {
-            throw Error('no cached environment found');
-        }
-        return env;
-    }
+    /** Endpoint for fetching services from API  */
+    public readonly endpoint?: string;
+
+    /** HTTP client for fetching services */
+    public readonly http: IHttpClient;
 
     constructor({ http, endpoint }: ServiceDiscoveryClientCtorArgs) {
         this.http = http;
         this.endpoint = endpoint;
-        this.#query = new Query<T, void>({
+
+        // setup api handler (queue and cache)
+        this.#query = new Query<Service[], void>({
             client: {
-                fn: () => http.fetch$(endpoint, { selector: this.selector.bind(this) }),
+                fn: () => http.fetch$(endpoint ?? '', { selector: serviceResponseSelector }),
             },
             key: () => queryKey,
+            // Cache for 5 minutes
             expire: 5 * 60 * 1000,
-            // queueOperator: (_) => ($) => $.pipe(throttleTime(100)),
         });
     }
 
-    public async fetchEnvironment(): Promise<T> {
-        return firstValueFrom(
-            Query.extractQueryValue(
-                this.#query.query(undefined, { cache: { suppressInvalid: true } }),
-            ),
-        );
+    public resolveServices(allow_cache?: boolean): Promise<Service[]> {
+        const fn = allow_cache ? firstValueFrom : lastValueFrom;
+        return fn(Query.extractQueryValue(this.#query.query()));
     }
 
-    public async selector(response: Response): Promise<T> {
-        const env = (await response.json()) as EnvironmentResponse;
-        const services = env.services.reduce((acc, service) => {
-            return Object.assign(acc, {
-                [service.key]: {
-                    clientId: env.clientId,
-                    uri: service.uri,
-                    defaultScopes: service.defaultScopes ?? [env.clientId + '/.default'],
-                },
-            });
-        }, {} as T);
-        return { ...env, services } as unknown as T;
-    }
-
-    public async resolveService(key: string): Promise<Service> {
-        try {
-            const { services } = await this.fetchEnvironment();
-            const service = services[key];
-            return service;
-        } catch (err) {
-            console.error(err);
-            throw err;
+    public async resolveService(key: string, allow_cache?: boolean): Promise<Service> {
+        const services = await this.resolveServices(allow_cache);
+        const service = services.find((s) => s.key === key);
+        if (!service) {
+            throw Error(`Failed to resolve service, invalid key [${key}]`);
         }
+        return service;
     }
 }
