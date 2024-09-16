@@ -152,7 +152,7 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
             });
 
             // serve local bundles if request matches the current app and version
-            const bundlePath = `${proxyPath}/bundles/apps/${app.key}@${app.version}`;
+            const bundlePath = `${proxyPath}/bundles/apps/${app.key}/${app.version}`;
             server.middlewares.use(async (req, _res, next) => {
                 if (req.url?.match(bundlePath)) {
                     // remove proxy path from url
