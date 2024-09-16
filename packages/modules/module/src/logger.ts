@@ -7,10 +7,13 @@ export interface IConsoleLogger {
     warn(...msg: unknown[]): void;
     error(...msg: unknown[]): void;
 }
-
+/**
+ * @todo replace with proper logger
+ */
 export class ConsoleLogger implements IConsoleLogger {
     /** - 0-1-2-3 (error-warning-info-debug) if not provided only errors are logged */
-    public level: 0 | 1 | 2 | 3 | 4 = process.env.NODE_ENV === 'development' ? 3 : 1;
+    public level: 0 | 1 | 2 | 3 | 4 =
+        (Number(process.env.FUSION_LOG_LEVEL) as 0 | 1 | 2 | 3 | 4) || 1;
     constructor(protected domain: string) {}
 
     /** @inheritdoc */
