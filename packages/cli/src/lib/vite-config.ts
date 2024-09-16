@@ -91,10 +91,8 @@ export const createViteConfig = async (
                     (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
             }),
         ],
+        mode: env.mode,
         root,
-        server: {
-            middlewareMode: true,
-        },
         appType: 'custom',
         build: {
             lib: {

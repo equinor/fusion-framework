@@ -55,54 +55,54 @@ export type AzureUniqueId = {
     azureUniqueId: string;
 };
 export type AppBuild<TUploaderId = AzureId | AzureUniqueId> = {
-    version?: string | null;
-    entryPoint?: string | null;
-    tags?: string[] | null;
-    tag?: string | null;
-    assetPath?: string | null;
-    configUrl?: string | null;
-    timestamp?: string | null;
-    commitSha?: string | null;
-    githubRepo?: string | null;
-    projectPage?: string | null;
+    version?: string;
+    entryPoint?: string;
+    tags?: string[];
+    tag?: string;
+    assetPath?: string;
+    configUrl?: string;
+    timestamp?: string;
+    commitSha?: string;
+    githubRepo?: string;
+    projectPage?: string;
     uploadedBy?: {
-        displayName?: string | null;
-        mail?: string | null;
-        upn?: string | null;
-        accountType?: string | null;
-        accountClassification?: string | null;
+        displayName?: string;
+        mail?: string;
+        upn?: string;
+        accountType?: string;
+        accountClassification?: string;
     } & TUploaderId;
 };
 
 export type AppOwnerOrAdmin = {
     id: string;
-    azureId?: string | null;
-    azureUniqueId?: string | null;
-    displayName?: string | null;
-    mail?: string | null;
-    upn?: string | null;
-    accountType?: string | null;
-    accountClassification?: string | null;
+    azureId?: string;
+    azureUniqueId?: string;
+    displayName?: string;
+    mail?: string;
+    upn?: string;
+    accountType?: string;
+    accountClassification?: string;
 };
 
 export interface AppManifest {
-    key: string | null;
-    name?: string | null;
-    entry?: string | null;
-    version?: string | null;
-    shortName?: string | null;
-    description?: string | null;
+    key: string;
+    name?: string;
+    entry?: string;
+    version?: string;
+    shortName?: string;
+    description?: string;
     keywords?: string[];
     type?: AppType;
     isPinned?: boolean;
-    tags?: string[] | null;
-    tag?: string | null;
+    tags?: string[];
+    tag?: string;
     auth?: AppOwnerOrAdmin[];
-    icon?: string | null;
+    icon?: string;
     order?: number;
-    publishedDate?: string | null;
-    accentColor?: string | null;
-    categoryId?: string | null;
+    publishedDate?: string;
+    accentColor?: string;
+    categoryId?: string;
     category?: AppCategory;
     hide?: boolean;
     visualization?: AppVisualization;
@@ -158,16 +158,16 @@ export type ApiAppVersionConfig = {
 };
 
 export type ApiApp = {
-    appKey: string | null;
-    displayName?: string | null;
-    description?: string | null;
+    appKey: string;
+    displayName?: string;
+    description?: string;
     type?: AppType;
     isPinned?: boolean;
-    templateSource?: string | null;
+    templateSource?: string;
     category?: AppCategory;
     visualization: {
-        color: string | null;
-        icon: string | null;
+        color: string;
+        icon: string;
         sortOrder: number;
     };
     keywords: string[];

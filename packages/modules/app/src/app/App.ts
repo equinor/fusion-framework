@@ -8,6 +8,7 @@ import {
     firstValueFrom,
     lastValueFrom,
     map,
+    of,
     OperatorFunction,
     Subscription,
 } from 'rxjs';
@@ -439,7 +440,12 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     }
 
     public loadConfig() {
-        this.#state.next(actions.fetchConfig(this.appKey));
+        // TODO - shit fix
+        (this.manifest ? of(this.manifest) : this.getManifest()).subscribe({
+            next: (manifest) => {
+                this.#state.next(actions.fetchConfig(manifest));
+            },
+        });
     }
 
     public loadManifest(update?: boolean) {
@@ -610,8 +616,14 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
                 // fetch application latest manifest and request loading of the application script
                 this.getManifest().subscribe((manifest) => {
                     if (manifest.build.entryPoint) {
+                        // TODO - this should come from backend
+                        const assetPath =
+                            manifest.build.assetPath ??
+                            [manifest.key, manifest.build.version].join('@');
                         // dispatch import_app action to load the application script
-                        this.#state.next(actions.importApp(manifest.build.entryPoint));
+                        this.#state.next(
+                            actions.importApp([assetPath, manifest.build.entryPoint].join('/')),
+                        );
                     } else {
                         console.error(
                             `The ${manifest.key} app is missing a entry in the manifest, upload a build for your app before continuing`,

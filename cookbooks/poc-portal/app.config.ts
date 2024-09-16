@@ -1,0 +1,14 @@
+// demo
+import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig((_nev, { base }) =>
+    mergeAppConfigs(base, {
+        environment: {
+            apps: [
+                {
+                    context: 'something',
+                    key: 'my-app',
+                },
+            ],
+        },
+    }),
+);

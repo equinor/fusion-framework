@@ -1,7 +1,6 @@
 import nodeFs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import assert from 'node:assert';
-import { execSync } from 'node:child_process';
 
 import { SemVer, parse as parseSemver } from 'semver';
 
