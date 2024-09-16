@@ -101,9 +101,6 @@ export const createViteConfig = async (
                 formats: ['es'],
             },
             rollupOptions: {
-                input: {
-                    portal: './dist/index.html',
-                },
                 output: {
                     manualChunks: undefined,
                 },
