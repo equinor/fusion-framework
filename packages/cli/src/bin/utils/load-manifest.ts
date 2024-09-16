@@ -22,6 +22,11 @@ export const loadAppManifest = async (
         const baseManifest = await createManifestFromPackage(pkg);
         spinner.info('created application manifest from package.json');
 
+        // TODO - this need to come from the config
+        if (env.mode !== 'development') {
+            baseManifest.entryPoint = 'app-bundle.mjs';
+        }
+
         const manifest = await createManifest(env, baseManifest, { file: options?.file });
         spinner.succeed();
 
