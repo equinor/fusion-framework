@@ -1,7 +1,9 @@
+import { exit } from 'node:process';
 import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
-import { appRegistered, validateToken, tagAppBundle, type FusionEnv } from './utils/app-api.js';
+import { isAppRegistered, getEndpointUrl, requireToken, tagAppBundle } from './utils/index.js';
+import type { FusionEnv } from './utils/index.js';
 
 enum Tags {
     preview = 'preview',
@@ -18,38 +20,73 @@ export const tagApplication = async (options: {
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('Tag') });
 
-    const validToken = validateToken();
-    if (!validToken) {
-        return;
+    if (!Object.values(Tags).includes(tag as Tags)) {
+        spinner.fail('😞', `Tag must match (${Tags.latest} | ${Tags.preview})`);
+        exit(1);
+    }
+
+    /** make sure user has a valid token */
+    try {
+        spinner.info('Validating FUSION_TOKEN');
+
+        // make sure token exist
+        requireToken();
+
+        // call service discovery with token, will throw error if failed
+        await getEndpointUrl('apps', env, '');
+
+        spinner.succeed('Found valid FUSION_TOKEN');
+    } catch (e) {
+        const err = e as Error;
+        spinner.fail(chalk.bgRed(err.message));
+        exit(1);
     }
 
     const pkg = await resolveAppPackage();
     const appKey = resolveAppKey(pkg.packageJson);
 
-    // if (!['preview', 'latest'].includes(tag)) {
-    if (!Object.values(Tags).includes(tag as Tags)) {
-        spinner.fail('😞', `Tag must match (${Tags.latest} | ${Tags.preview})`);
-        return;
+    try {
+        spinner.info('Verifying that App is registered');
+        const state = { endpoint: '' };
+        try {
+            state.endpoint = await getEndpointUrl(`apps/${appKey}`, env, service);
+        } catch (e) {
+            const err = e as Error;
+            throw new Error(
+                `Could not get endpoint from service discovery while verifying app is registered. service-discovery status: ${err.message}`,
+            );
+        }
+
+        await isAppRegistered(state.endpoint, appKey);
+        spinner.succeed(`${appKey} is registered`);
+    } catch (e) {
+        const err = e as Error;
+        spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
+        exit(1);
     }
 
-    spinner.info(`Tag app "${appKey}@${version}" with: "${tag}"`);
+    try {
+        spinner.info(`Tagging "${appKey}@${version}" with: "${tag}"`);
+        const state = { endpoint: '' };
+        try {
+            state.endpoint = await getEndpointUrl(`apps/${appKey}/tags/${tag}`, env, service);
+        } catch (e) {
+            const err = e as Error;
+            throw new Error(
+                `Could not get endpoint from service discovery while tagging app. service-discovery status: ${err.message}`,
+            );
+        }
 
-    spinner.info('Verifying that App is registered');
-    const registered = await appRegistered(appKey, env, service);
-    if (!registered) {
-        return;
+        const tagged = await tagAppBundle(state.endpoint, version);
+        spinner.succeed(
+            '✅',
+            `Tagged app: "${chalk.greenBright(appKey)}"`,
+            `version: "${chalk.greenBright(tagged.version)}"`,
+            `with tag: "${chalk.greenBright(tagged.tagName)}"`,
+        );
+    } catch (e) {
+        const err = e as Error;
+        spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
+        exit(1);
     }
-
-    const tagged = await tagAppBundle(tag, appKey, version, env, service);
-
-    if (!tagged) {
-        return;
-    }
-
-    spinner.succeed(
-        '✅',
-        `App: "${chalk.greenBright(appKey)}"`,
-        `Version: "${chalk.greenBright(tagged.version)}"`,
-        `Tag: "${chalk.greenBright(tagged.tagName)}"`,
-    );
 };
