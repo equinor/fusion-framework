@@ -26,9 +26,9 @@ Commands:
 
 Options:
 
-```sh
-  -h, --help          display help for command
-```
+  | Option   | Description           |
+  |----------|-----------------------|
+  | -h, --help | display help for command |
 
 Example:
 

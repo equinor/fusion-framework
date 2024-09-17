@@ -18,16 +18,27 @@ import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli'
 export default defineAppConfig((_env, { base }) =>
     mergeAppConfigs(base, {
         environment: {
-            endpoints: {
-              api: {
-                url: 'https://foo.bar',
-                scopes: ['default']
-              }
-            }
+          fish: 'they can fly?',
+          shrimp: {
+            type: 'crustation',
+            desc: 'cockroach of the sea'
+          }
+        },
+        endpoints: {
+          api: {
+            url: 'https://foo.bar',
+            scopes: ['default'],
+          },
         },
     }),
 );
+```
 
+You can configure framework services in the `src/config.ts` file.
+
+> this is the configuration used by the application to configure framework services and modules
+
+```ts
 // src/config.ts
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 export const configure: AppModuleInitiator = (configurator, { env }) => {
@@ -40,16 +51,17 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
 
 By default the CLI will create a manifest on best effort from `package.json`
 
+You can override defaults with mergeManifests
+
 ```ts
-// app.manifest.config.ts
+// app.manifest.config.ts should be of type AppManifestExport
 import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
 
 export default defineAppManifest((env, { base }) => {
   return mergeManifests(
     base,
     {
-      /** override name from package.json */
-        "appKey": "my-key",
+      entryPoint: 'index.js'
     }
   )
 });
@@ -59,21 +71,28 @@ export default defineAppManifest((env, { base }) => {
 
 <!-- TODO: add migration tip -->
 
-When uploading resources used within the application, the need to be defined in the manifest.
+If the archive contains a file that isn't whitelisted by default it's possible to allow it by adding it's extension to the allowedExtensions array.
 
-> [!NOTE]
-> A new application service is under construction, which supports dynamic resources. 
-> Since resources will be deprecated in the future, so the CLI will not auto generate it from the `package.json` attribute
+**Default allowed extensions**:
 
-__app.manifest.config.ts__
+- .md
+- .js
+- .json
+- .map
+
+> [!IMPORTANT]
+> Resources are now deprecated, so the CLI will no longer auto generate it from the `package.json` attribute
+
+##### app.manifest.config.ts
+
 ```ts
 import { defineAppManifest } from '@equinor/fusion-framework-cli';
 export default defineAppManifest((env, { base }) => {
   return {
     ...base,
-    resources: [
-        'static/foo.png',
-        'static/bar.svg',
+    allowedExtensions: [
+        '.png',
+        '.svg',
     ],
   };
 });
@@ -82,6 +101,7 @@ export default defineAppManifest((env, { base }) => {
 By default [Vite](https://vitejs.dev/config/shared-options.html#publicdir) will copy the `public` folder, simply move the resources to the public folder
 
 for more advance, override the application vite config in `app.vite.config.ts`
+
 ```ts
 /** @type {import('vite').UserConfig} */
 export default {
@@ -89,17 +109,14 @@ export default {
 }
 ```
 
-
-> [!IMPORTANT]
-> Resources will be removed in future version of Fusion, the will come an migration guide of how to include static content
-
 ## Vite
 
 the cli will look for a `app.vite.config.{ts,js,json}` [Vite Configuration](https://vitejs.dev/config/)
 
 > [!IMPORTANT]
-> in most cases developers do not need to alter the base vite configuration, __this is only a option as a last resort__.
+> in most cases developers do not need to alter the base vite configuration, **this is only a option as a last resort**.
+
+vite.config
 
 > [!CAUTION]
-> adding a `vite.config` to the base of your project will override Fusion Framework CLI base config, __NOT RECOMMENDED__
-
+> adding a `vite.config` to the base of your project will override Fusion Framework CLI base config, **NOT RECOMMENDED**

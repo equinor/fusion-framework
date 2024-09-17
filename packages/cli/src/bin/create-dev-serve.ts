@@ -26,7 +26,7 @@ import { loadPackage } from './utils/load-package.js';
 import { Spinner } from './utils/spinner.js';
 import { chalk, formatPath } from './utils/format.js';
 import { loadAppManifest } from './utils/load-manifest.js';
-import proxyRequestLogger from './utils/proxy-request-logger.js';
+import { proxyRequestLogger } from './utils/proxy-request-logger.js';
 
 export const createDevServer = async (options: {
     portal: string;
