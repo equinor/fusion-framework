@@ -91,8 +91,8 @@ export const mergeManifests = (
     base: RecursivePartial<AppManifestExport>,
     overrides: RecursivePartial<AppManifestExport>,
 ): AppManifestExport => {
-    const manifest = deepmerge(base, overrides) as unknown as AppManifestExport;
-    assertAppManifest(manifest as unknown as AppManifestExport);
+    const manifest = deepmerge(base, overrides) as AppManifestExport;
+    assertAppManifest(manifest);
     return manifest;
 };
 
