@@ -8141,6 +8141,37 @@ packages:
       terser:
         optional: true
 
+  vite@5.4.6:
+    resolution: {integrity: sha512-IeL5f8OO5nylsgzd9tq4qD2QqI0k2CQLGrWD0rCN0EQJZpBK5vJAx0I+GDkMOXxQX/OfFHMuLIx6ddAxGX/k+Q==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      sass-embedded: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+
   vitest-github-actions-reporter@0.11.1:
     resolution: {integrity: sha512-ZHHB0wBgOPhMYCB17WKVlJZa+5SdudBZFoVoebwfq3ioIUTeLQGYHwh85vpdJAxRghLP8d0qI/6eCTueGyDVXA==}
     engines: {node: '>=14.16.0'}
@@ -16690,7 +16721,7 @@ snapshots:
       debug: 4.3.6
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.4.3(@types/node@20.14.12)(sass@1.77.8)(stylus@0.54.8)
+      vite: 5.4.6(@types/node@20.14.12)(sass@1.77.8)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16708,7 +16739,7 @@ snapshots:
       debug: 4.3.6
       pathe: 1.1.2
       tinyrainbow: 1.2.0
-      vite: 5.4.3(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8)
+      vite: 5.4.6(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -16752,6 +16783,28 @@ snapshots:
       stylus: 0.54.8
 
   vite@5.4.3(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8):
+    dependencies:
+      esbuild: 0.21.5
+      postcss: 8.4.45
+      rollup: 4.21.2
+    optionalDependencies:
+      '@types/node': 22.5.0
+      fsevents: 2.3.3
+      sass: 1.77.8
+      stylus: 0.54.8
+
+  vite@5.4.6(@types/node@20.14.12)(sass@1.77.8)(stylus@0.54.8):
+    dependencies:
+      esbuild: 0.21.5
+      postcss: 8.4.45
+      rollup: 4.21.2
+    optionalDependencies:
+      '@types/node': 20.14.12
+      fsevents: 2.3.3
+      sass: 1.77.8
+      stylus: 0.54.8
+
+  vite@5.4.6(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.45
@@ -16819,7 +16872,7 @@ snapshots:
       tinybench: 2.9.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.4.3(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8)
+      vite: 5.4.6(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8)
       vite-node: 2.0.5(@types/node@22.5.0)(sass@1.77.8)(stylus@0.54.8)
       why-is-node-running: 2.3.0
     optionalDependencies:
