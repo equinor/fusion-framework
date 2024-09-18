@@ -119,7 +119,7 @@ export const resolveManifest = async (
     return resolveConfig(manifestConfigFilename, { find: options });
 };
 
-const getGithubRepo = (pkg: AppPackageJson) => {
+const resolveGithubRepo = (pkg: AppPackageJson) => {
     try {
         /* get reporurl from package.json */
         if (pkg.repository) {
@@ -137,7 +137,7 @@ const getGithubRepo = (pkg: AppPackageJson) => {
     }
 };
 
-const getGitCommitSha = () => {
+const resolveGitCommitSha = () => {
     try {
         return execSync('git rev-parse HEAD').toString().trim();
     } catch {
@@ -155,8 +155,8 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestE
         version: packageJson.version,
         entryPoint,
         timestamp: new Date().toISOString(),
-        githubRepo: getGithubRepo(packageJson),
-        commitSha: getGitCommitSha(),
+        githubRepo: resolveGithubRepo(packageJson),
+        commitSha: resolveGitCommitSha(),
         projectPage: packageJson.homepage,
     } satisfies AppManifestExport;
     assertAppManifest(manifest);
