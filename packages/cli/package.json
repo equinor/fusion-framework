@@ -50,7 +50,7 @@
         "express": "^4.18.2",
         "express-rate-limit": "^7.0.0",
         "find-up": "^7.0.0",
-        "http-proxy-middleware": "^2.0.6",
+        "http-proxy-middleware": "^3.0.2",
         "is-mergeable-object": "^1.1.1",
         "ora": "^8.0.1",
         "portfinder": "^1.0.32",
