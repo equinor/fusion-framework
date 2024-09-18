@@ -9751,11 +9751,11 @@ snapshots:
 
   '@lit/reactive-element@1.6.3':
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.2.0
+      '@lit-labs/ssr-dom-shim': 1.2.1
 
   '@lit/reactive-element@2.0.4':
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.2.0
+      '@lit-labs/ssr-dom-shim': 1.2.1
 
   '@lit/task@1.0.1':
     dependencies:
@@ -14829,7 +14829,7 @@ snapshots:
 
   lit-element@3.3.3:
     dependencies:
-      '@lit-labs/ssr-dom-shim': 1.2.0
+      '@lit-labs/ssr-dom-shim': 1.2.1
       '@lit/reactive-element': 1.6.3
       lit-html: 2.8.0
 
@@ -14837,7 +14837,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.0
       '@lit/reactive-element': 2.0.4
-      lit-html: 3.1.4
+      lit-html: 3.2.0
 
   lit-element@4.1.0:
     dependencies:
@@ -14872,8 +14872,8 @@ snapshots:
   lit@3.0.2:
     dependencies:
       '@lit/reactive-element': 2.0.4
-      lit-element: 4.0.6
-      lit-html: 3.1.4
+      lit-element: 4.1.0
+      lit-html: 3.2.0
 
   lit@3.1.2:
     dependencies:
