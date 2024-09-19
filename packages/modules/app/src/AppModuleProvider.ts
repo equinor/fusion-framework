@@ -1,7 +1,7 @@
 import {
     BehaviorSubject,
-    catchError,
     distinctUntilChanged,
+    from,
     map,
     Observable,
     pairwise,
@@ -10,28 +10,22 @@ import {
 } from 'rxjs';
 
 import { ModuleType } from '@equinor/fusion-framework-module';
-import { HttpResponseError } from '@equinor/fusion-framework-module-http';
 import { EventModule } from '@equinor/fusion-framework-module-event';
 
-import { Query } from '@equinor/fusion-query';
 
-import type { AppConfig, CurrentApp } from './types';
-import { ApplicationManifest } from './ApplicationManifest';
+import type { AppConfig, AppManifest, CurrentApp } from './types';
 
 import { App, filterEmpty, IApp } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
-import { AppConfigError, AppManifestError } from './errors';
 import { AppBundleStateInitial } from './app/types';
+import { IAppClient } from './AppClient';
 
 export class AppModuleProvider {
-    static compareAppManifest<T extends ApplicationManifest>(a?: T, b?: T): boolean {
+    static compareAppManifest<T extends AppManifest>(a?: T, b?: T): boolean {
         return JSON.stringify(a) === JSON.stringify(b);
     }
 
-    public appClient: Query<ApplicationManifest, { appKey: string }>;
-    #appsClient: Query<ApplicationManifest[], { filterByCurrentUser?: boolean } | undefined>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    #configClient: Query<AppConfig<any>, { appKey: string; tag?: string }>;
+    #appClient: IAppClient;
 
     #appBaseUri: string;
 
@@ -66,19 +60,13 @@ export class AppModuleProvider {
     constructor(args: { config: AppModuleConfig; event?: ModuleType<EventModule> }) {
         const { event, config } = args;
 
+        this.#appClient = config.client;
         this.#event = event;
 
         this.#current$ = new BehaviorSubject<CurrentApp>(undefined);
 
-        this.appClient = new Query(config.client.getAppManifest);
-        this.#appsClient = new Query(config.client.getAppManifests);
-        this.#configClient = new Query(config.client.getAppConfig);
-
         this.#appBaseUri = config.baseUri ?? '';
 
-        this.#subscription.add(() => this.appClient.complete());
-        this.#subscription.add(() => this.#appsClient.complete());
-        this.#subscription.add(() => this.#configClient.complete());
         this.#subscription.add(
             this.current$
                 .pipe(
@@ -108,35 +96,19 @@ export class AppModuleProvider {
      * fetch an application by key
      * @param appKey - application key
      */
-    public getAppManifest(appKey: string): Observable<ApplicationManifest> {
-        return Query.extractQueryValue(
-            this.appClient.query({ appKey }).pipe(
-                catchError((err) => {
-                    /** extract cause, since error will be a `QueryError` */
-                    const { cause } = err;
-                    if (cause instanceof AppManifestError) {
-                        throw cause;
-                    }
-                    if (cause instanceof HttpResponseError) {
-                        throw AppManifestError.fromHttpResponse(cause.response, { cause });
-                    }
-                    throw new AppManifestError('unknown', 'failed to load manifest', { cause });
-                }),
-            ),
-        );
+    public getAppManifest(appKey: string): Observable<AppManifest> {
+        return from(this.#appClient.getAppManifest({ appKey }));
     }
 
-    public getAppManifests(filter?: {
-        filterByCurrentUser: boolean;
-    }): Observable<ApplicationManifest[]> {
-        return Query.extractQueryValue(this.#appsClient.query(filter));
+    public getAppManifests(filter?: { filterByCurrentUser: boolean }): Observable<AppManifest[]> {
+        return from(this.#appClient.getAppManifests(filter));
     }
 
     /**
      * fetch all applications
      * @deprecated use `getAppManifests` instead
      */
-    public getAllAppManifests(): Observable<ApplicationManifest[]> {
+    public getAllAppManifests(): Observable<AppManifest[]> {
         return this.getAppManifests();
     }
 
@@ -148,21 +120,7 @@ export class AppModuleProvider {
         appKey: string,
         tag?: string,
     ): Observable<AppConfig<TType>> {
-        return Query.extractQueryValue(
-            this.#configClient.query({ appKey, tag }).pipe(
-                catchError((err) => {
-                    /** extract cause, since error will be a `QueryError` */
-                    const { cause } = err;
-                    if (cause instanceof AppConfigError) {
-                        throw cause;
-                    }
-                    if (cause instanceof HttpResponseError) {
-                        throw AppConfigError.fromHttpResponse(cause.response, { cause });
-                    }
-                    throw new AppConfigError('unknown', 'failed to load config', { cause });
-                }),
-            ),
-        );
+        return from(this.#appClient.getAppConfig<TType>({ appKey, tag }));
     }
 
     /**

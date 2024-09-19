@@ -4,7 +4,6 @@ import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 import IApp from './app';
-import { ApplicationManifest } from './ApplicationManifest';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,7 +11,7 @@ type Fusion = any;
 
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     basename?: string;
-    manifest?: ApplicationManifest;
+    manifest?: AppManifest;
     config?: AppConfig<TConfig>;
     props?: TProps;
 };
@@ -28,55 +27,8 @@ export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
     | null
     | undefined;
 
-export type AppAuth = {
-    clientId: string;
-    resources: string[];
-};
-
-type AppCategory = {
+export type AppAdmin = {
     id: string;
-    name?: string | null;
-    displayName?: string | null;
-    color?: string | null;
-    defaultIcon?: string | null;
-    sortOrder: number;
-};
-
-type AppVisualization = {
-    color?: string | null;
-    icon?: string | null;
-    sortOrder: number;
-};
-
-export type AzureId = {
-    azureId: string;
-};
-export type AzureUniqueId = {
-    azureUniqueId: string;
-};
-export type AppBuild<TUploaderId = AzureId | AzureUniqueId> = {
-    version?: string;
-    entryPoint?: string;
-    tags?: string[];
-    tag?: string;
-    assetPath?: string;
-    configUrl?: string;
-    timestamp?: string;
-    commitSha?: string;
-    githubRepo?: string;
-    projectPage?: string;
-    uploadedBy?: {
-        displayName?: string;
-        mail?: string;
-        upn?: string;
-        accountType?: string;
-        accountClassification?: string;
-    } & TUploaderId;
-};
-
-export type AppOwnerOrAdmin = {
-    id: string;
-    azureId?: string;
     azureUniqueId?: string;
     displayName?: string;
     mail?: string;
@@ -85,30 +37,49 @@ export type AppOwnerOrAdmin = {
     accountClassification?: string;
 };
 
-export interface AppManifest {
-    key: string;
-    name?: string;
-    entry?: string;
+export type AppOwner = AppAdmin;
+
+export type AppBuildManifest = {
     version?: string;
-    shortName?: string;
+    entryPoint?: string;
+    tags?: string[];
+    tag?: 'latest' | 'preview';
+    assetPath?: string;
+    configUrl?: string;
+    timestamp?: string;
+    commitSha?: string;
+    githubRepo?: string;
+    projectPage?: string;
+    uploadedBy?: {
+        azureUniqueId: string;
+        displayName?: string;
+        mail?: string;
+        upn?: string;
+        accountType?: string;
+        accountClassification?: string;
+    };
+};
+
+export interface AppManifest {
+    /** @deprecated will be removed, use appKey */
+    key: string;
+    appKey: string;
+    /** @deprecated will be removed, use displayName */
+    name?: string;
+    displayName?: string;
     description?: string;
-    keywords?: string[];
     type?: AppType;
     isPinned?: boolean;
-    tags?: string[];
-    tag?: string;
-    auth?: AppOwnerOrAdmin[];
-    icon?: string;
-    order?: number;
-    publishedDate?: string;
-    accentColor?: string;
     categoryId?: string;
-    category?: AppCategory;
-    hide?: boolean;
-    visualization?: AppVisualization;
-    admins?: AppOwnerOrAdmin[];
-    owners?: AppOwnerOrAdmin[];
-    build?: AppBuild<AzureId>;
+    visualization?: {
+        color?: string;
+        icon?: string;
+        sortOrder: number;
+    };
+    keywords?: string[];
+    admins?: AppAdmin[];
+    owners?: AppOwner[];
+    build?: AppBuildManifest;
 }
 
 export type Endpoint = { url: string; scopes?: string[] };
@@ -123,7 +94,7 @@ export type AppConfig<TEnvironment = unknown> = {
  * @template TModule - ES module type (import return type)
  */
 export type AppBundle<TEnvironment = unknown, TModule = unknown> = {
-    manifest: ApplicationManifest;
+    manifest: AppManifest;
     config: AppConfig<TEnvironment>;
     module: TModule;
 };
@@ -146,32 +117,32 @@ export type AppScriptModule = {
 export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
     ModulesInstance<AppModules<TModules>>;
 
-export type ApiAppVersionConfig = {
-    environment: string;
-    endpoints: Record<
-        string,
-        {
-            url: string;
-            scopes: string[];
-        }
-    >;
-};
+// export type ApiAppVersionConfig = {
+//     environment: string;
+//     endpoints: Record<
+//         string,
+//         {
+//             url: string;
+//             scopes: string[];
+//         }
+//     >;
+// };
 
-export type ApiApp = {
-    appKey: string;
-    displayName?: string;
-    description?: string;
-    type?: AppType;
-    isPinned?: boolean;
-    templateSource?: string;
-    category?: AppCategory;
-    visualization: {
-        color: string;
-        icon: string;
-        sortOrder: number;
-    };
-    keywords: string[];
-    admins: AppOwnerOrAdmin[];
-    owners: AppOwnerOrAdmin[];
-    build: AppBuild<AzureUniqueId>;
-};
+// export type ApiApp = {
+//     appKey: string;
+//     displayName?: string;
+//     description?: string;
+//     type?: AppType;
+//     isPinned?: boolean;
+//     templateSource?: string;
+//     category?: AppCategory;
+//     visualization: {
+//         color: string;
+//         icon: string;
+//         sortOrder: number;
+//     };
+//     keywords: string[];
+//     admins: AppOwnerOrAdmin[];
+//     owners: AppOwnerOrAdmin[];
+//     build: AppBuild<AzureUniqueId>;
+// };
