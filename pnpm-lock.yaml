@@ -637,6 +637,9 @@ importers:
       find-up:
         specifier: ^7.0.0
         version: 7.0.0
+      is-mergeable-object:
+        specifier: ^1.1.1
+        version: 1.1.1
       ora:
         specifier: ^8.0.1
         version: 8.0.1
