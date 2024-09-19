@@ -24,7 +24,7 @@ export const loadAppManifest = async (
 
         // TODO - this need to come from the config
         if (env.mode !== 'development') {
-            baseManifest.entryPoint = 'app-bundle.mjs';
+            baseManifest.entryPoint = pkg.packageJson.type === 'module' ? 'app-bundle.js' : 'app-bundle.mjs';
         }
 
         const manifest = await createManifest(env, baseManifest, { file: options?.file });
