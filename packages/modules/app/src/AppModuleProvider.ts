@@ -12,7 +12,6 @@ import {
 import { ModuleType } from '@equinor/fusion-framework-module';
 import { EventModule } from '@equinor/fusion-framework-module-event';
 
-
 import type { AppConfig, AppManifest, CurrentApp } from './types';
 
 import { App, filterEmpty, IApp } from './app/App';
