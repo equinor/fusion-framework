@@ -7,7 +7,7 @@ import {
     TelemetryLogger,
 } from '@equinor/fusion';
 
-import { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
 
 import { original } from 'immer';
@@ -249,7 +249,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
                     selectedApp: current
                         ? {
                               key: current.appKey,
-                              name: current.manifest?.name ?? null,
+                              name: current.manifest?.displayName ?? null,
                           }
                         : null,
                     previousApps: Object.keys(previousApps.state).map((key) => ({
@@ -288,7 +288,7 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
             const appProvider = this.#framework.modules.app;
             const currentApp = appProvider.current;
             if (currentApp && currentApp.appKey === appKey) {
-                currentApp.updateManifest(manifest as unknown as ApplicationManifest);
+                currentApp.updateManifest(manifest as unknown as AppManifest);
                 await currentApp.getConfigAsync();
             } else {
                 if (currentApp?.appKey !== appKey) {
