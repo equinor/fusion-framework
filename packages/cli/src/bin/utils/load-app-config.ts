@@ -15,6 +15,9 @@ export const loadAppConfig = async (
     const spinner = Spinner.Current;
     try {
         spinner.start('create application configuration');
+        spinner.info(
+            `generating config with ${chalk.red.dim(env.command)} command in ${chalk.green.dim(env.mode)} mode`,
+        );
         const baseAppConfig = createAppConfigFromPackage(pkg);
         const appConfig = await createAppConfig(env, baseAppConfig, { file: options?.file });
         spinner.succeed();

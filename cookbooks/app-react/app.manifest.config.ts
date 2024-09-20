@@ -1,9 +1,9 @@
-import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
+import { defineAppManifest } from '@equinor/fusion-framework-cli';
 
-export default defineAppManifest((env, { base }) => {
+export default defineAppManifest(async (env) => {
     if (env.command === 'serve') {
-        return mergeManifests(base, {});
+        return {
+            appKey: 'app-react',
+        };
     }
-
-    return base;
 });

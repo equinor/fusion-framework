@@ -50,6 +50,7 @@ export type AppBuildManifest = {
     commitSha?: string;
     githubRepo?: string;
     projectPage?: string;
+    annotations?: Record<string, string>;
     uploadedBy?: {
         azureUniqueId: string;
         displayName?: string;
@@ -62,7 +63,7 @@ export type AppBuildManifest = {
 
 export interface AppManifest {
     /** @deprecated will be removed, use appKey */
-    key: string;
+    key?: string;
     appKey: string;
     /** @deprecated will be removed, use displayName */
     name?: string;
