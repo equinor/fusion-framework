@@ -1,8 +1,6 @@
 ---
-'@equinor/fusion-framework-cli': patch
+'@equinor/fusion-framework-cli': minor
 ---
-
-**@equinor/fusion-framework-cli**
 
 Introduced `proxyRequestLogger` to log proxy requests in the CLI.
 

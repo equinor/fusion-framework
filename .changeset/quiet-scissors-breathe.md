@@ -2,8 +2,6 @@
 '@equinor/fusion-framework-cli': minor
 ---
 
-**@equinor/fusion-framework-cli**
-
 The `appProxyPlugin` is a Vite plugin designed to proxy requests to a Fusion app backend.
 It sets up proxy rules for API and bundle requests and serves the app configuration and manifest based on the app key and version.
 
