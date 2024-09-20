@@ -114,6 +114,7 @@ export default (program: Command) => {
         .option(
             '-p, --publish <string>',
             `Publish app config to version [${chalk.yellowBright('(semver | current | latest | preview)')}]`,
+            'current',
         )
         .option(
             '-e, --env, <ci | fqa | tr | fprd>',
