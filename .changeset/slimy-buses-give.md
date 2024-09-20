@@ -1,8 +1,10 @@
 ---
-'@equinor/fusion-framework-app': major
+'@equinor/fusion-framework-module-app': major
+'@equinor/fusion-framework-react-app': patch
+'@equinor/fusion-framework-react-components-bookmark': patch
+'@equinor/fusion-framework-react': patch
+'@equinor/fusion-framework-legacy-interopt': patch
 ---
-
-**@equinor/fusion-framework-module-app**
 
 Adjusted module to the new app service API.
 
