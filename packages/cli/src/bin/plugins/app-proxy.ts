@@ -2,7 +2,7 @@ import { Plugin } from 'vite';
 
 import { assert } from 'node:console';
 
-import { AppConfig, ApplicationManifest } from '@equinor/fusion-framework-app';
+import { AppConfig, AppManifest } from '@equinor/fusion-framework-app';
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
 /**
@@ -47,7 +47,7 @@ export type AppProxyPluginOptions = {
         /** callback function for generating configuration for the application */
         generateConfig: () => Promise<AppConfig>;
         /** callback function for generating manifest for the application */
-        generateManifest: () => Promise<ApplicationManifest>;
+        generateManifest: () => Promise<AppManifest>;
     };
 };
 

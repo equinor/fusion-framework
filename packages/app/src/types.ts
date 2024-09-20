@@ -4,18 +4,16 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import type {
     AppConfig,
+    AppManifest,
     AppModulesInstance,
     ComponentRenderArgs,
 } from '@equinor/fusion-framework-module-app';
-
-import { AppManifest } from '@equinor/fusion-framework-module-app';
-
-export { AppManifest as ApplicationManifest } from '@equinor/fusion-framework-module-app';
 
 import type { IAppConfigurator } from './AppConfigurator';
 
 export type {
     AppModules,
+    AppManifest,
     AppConfig,
     AppModulesInstance,
 } from '@equinor/fusion-framework-module-app';
