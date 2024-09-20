@@ -69,7 +69,9 @@ export const handleFetchConfig =
             switchMap(({ payload }) => {
                 // TODO - use the configUrl directly from the manifest
                 // fetch config from provider
-                const subject = from(provider.getAppConfig(payload.key, payload.version)).pipe(
+                const subject = from(
+                    provider.getAppConfig(payload.appKey, payload.build?.version),
+                ).pipe(
                     // filter out null values
                     filter((x) => !!x),
                     // allow multiple subscriptions
