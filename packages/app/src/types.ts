@@ -8,9 +8,9 @@ import type {
     ComponentRenderArgs,
 } from '@equinor/fusion-framework-module-app';
 
-import { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+import { AppManifest } from '@equinor/fusion-framework-module-app';
 
-export { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+export { AppManifest as ApplicationManifest } from '@equinor/fusion-framework-module-app';
 
 import type { IAppConfigurator } from './AppConfigurator';
 
@@ -30,7 +30,7 @@ export type {
 export type AppEnv<TConfig = unknown, TProps = unknown> = {
     /** base routing path of the application */
     basename?: string;
-    manifest: ApplicationManifest;
+    manifest: AppManifest;
     config?: AppConfig<TConfig>;
     props?: TProps;
 };

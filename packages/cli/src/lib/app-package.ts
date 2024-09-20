@@ -7,11 +7,11 @@ import {
     type NormalizeOptions as ResolveAppPackageOptions,
 } from 'read-package-up';
 
-import { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { assert } from './utils/assert.js';
 
 export type AppPackageJson = PackageJson & {
-    manifest?: ApplicationManifest;
+    manifest?: AppManifest;
 };
 
 type DefinePackageFn = () => AppPackageJson | Promise<AppPackageJson>;

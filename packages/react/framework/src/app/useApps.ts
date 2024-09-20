@@ -1,4 +1,4 @@
-import { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useMemo } from 'react';
 
@@ -19,7 +19,7 @@ type UseAppsArgs = {
  */
 export const useApps = (
     args?: UseAppsArgs,
-): { apps: ApplicationManifest[] | undefined; isLoading: boolean; error: unknown } => {
+): { apps: AppManifest[] | undefined; isLoading: boolean; error: unknown } => {
     const provider = useAppProvider();
 
     const { filterByCurrentUser } = args || {};
