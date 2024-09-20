@@ -15,3 +15,5 @@
 ---
 
 Cleaned up app config
+
+Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.

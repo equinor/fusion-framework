@@ -2,10 +2,6 @@
 '@equinor/fusion-framework-cli': minor
 ---
 
-** @equinor/fusion-framework-cli**
-
-**Changes:**
-
 Updated commands in CLI to reflect purpose of the command:
 - renamed `config` to `build-config` to generate build config of an application.
 - renamed `pack`to `build-pack` to bundle an application.

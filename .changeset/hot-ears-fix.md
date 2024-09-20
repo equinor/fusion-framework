@@ -2,8 +2,6 @@
 '@equinor/fusion-framework-cli': minor
 ---
 
-**@equinor/fusion-framework-cli:**
-
 Create a plugin `externalPublicPlugin` to fix the issue with serving the `index.html` file from the specified external public directory. Vite mode `spa` will not serve the `index.html` file from the specified external public directory.
 
 -   Enhanced the middleware to intercept requests and serve the `index.html` file from the specified external public directory.
