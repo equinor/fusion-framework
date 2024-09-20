@@ -7,7 +7,7 @@ import { uploadApplication } from './upload-application.js';
 import { tagApplication } from './tag-application.js';
 
 import { formatPath, chalk } from './utils/format.js';
-import createExportManifest from './create-export-manifest.js';
+import { createAppManifest, createBuildManifest } from './create-export-manifest.js';
 import { bundleApplication } from './bundle-application.js';
 import { createExportConfig } from './create-export-config.js';
 import { fileURLToPath } from 'node:url';
@@ -67,6 +67,17 @@ export default (program: Command) => {
             });
         });
 
+    app.command('manifest')
+        .description('Generate manifest')
+        .option('-o, --output <string>', 'output file')
+        .option('-c, --config <string>', 'manifest config file')
+        .action((opt) => {
+            createAppManifest({
+                outputFile: opt.output,
+                configFile: opt.config,
+            });
+        });
+
     app.command('build')
         .description('Builds application')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
@@ -96,7 +107,7 @@ export default (program: Command) => {
             });
         });
 
-    app.command('config')
+    app.command('build-config')
         .description('Generate config')
         .option('-o, --output <string>', 'output file')
         .option('-c, --config <string>', 'application config file')
@@ -121,18 +132,19 @@ export default (program: Command) => {
                 service: opt.service,
             });
         });
-    app.command('manifest')
+
+    app.command('build-manifest')
         .description('Generate manifest')
         .option('-o, --output <string>', 'output file')
         .option('-c, --config <string>', 'manifest config file')
         .action((opt) => {
-            createExportManifest({
+            createBuildManifest({
                 outputFile: opt.output,
                 configFile: opt.config,
             });
         });
 
-    app.command('pack')
+    app.command('build-pack')
         .description('Create  distributable app bundle of the application')
         .option('-o, --outDir, <string>', 'output directory of package', 'dist')
         .option('-a, --archive, <string>', 'output filename', 'app-bundle.zip')
@@ -141,7 +153,7 @@ export default (program: Command) => {
             bundleApplication({ archive, outDir });
         });
 
-    app.command('publish')
+    app.command('build-publish')
         .description('Publish application to app api')
         .option(
             '-t, --tag, <string>',
@@ -161,7 +173,7 @@ export default (program: Command) => {
             publishApplication({ tag, env, service });
         });
 
-    app.command('upload')
+    app.command('build-upload')
         .description('Upload packaged app bundle to app api')
         .option(
             '-b, --bundle, <string>',
@@ -181,7 +193,7 @@ export default (program: Command) => {
             uploadApplication({ bundle, env, service });
         });
 
-    app.command('tag')
+    app.command('build-tag')
         .description('Tag a published version')
         .option(
             '-t, --tag, <string>',

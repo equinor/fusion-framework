@@ -108,13 +108,15 @@ export const loadConfig = async <TType>(file: string): Promise<ConfigExecuter<TT
         case '.json': {
             return async () => JSON.parse(await readFile(file, 'utf-8'));
         }
+        default:
+            throw Error('unsupported file type');
     }
 };
 
 export function initiateConfig<TConfig extends ConfigExecuter>(
     config: TConfig,
     ...args: Parameters<TConfig>
-): Promise<ConfigExecuterType<TConfig>> {
+): Promise<ConfigExecuterType<TConfig> | void> {
     return Promise.resolve(config(...(args as ConfigExecuterArgs)));
 }
 

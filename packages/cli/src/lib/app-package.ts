@@ -58,10 +58,7 @@ export const resolveEntryPoint = (packageJson: PackageJson, pkgPath: string = ''
     ]
         .filter((x): x is string => !!x)
         .map((x): string => relative(dirname(pkgPath), x))
-        .find((entry) => {
-            console.log(entry, existsSync(entry));
-            return existsSync(entry);
-        });
+        .find((entry) => existsSync(entry));
 
     assert(entrypoint, 'failed to resolve entrypoint');
 

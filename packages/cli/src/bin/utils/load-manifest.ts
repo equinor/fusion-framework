@@ -1,11 +1,10 @@
 import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
-import {
-    AppManifestExport,
-    createManifest,
-    createManifestFromPackage,
-} from '../../lib/app-manifest.js';
+import { createManifest, createManifestFromPackage } from '../../lib/app-manifest.js';
+
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
+
 import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { type ResolvedAppPackage } from '../../lib/app-package.js';
 
@@ -15,8 +14,8 @@ export const loadAppManifest = async (
     options?: {
         file?: string;
     },
-): Promise<{ manifest: AppManifestExport; path?: string }> => {
-    const spinner = Spinner.Current;
+): Promise<{ manifest: AppManifest; path?: string }> => {
+    const spinner = Spinner.Clone();
     try {
         spinner.start('create application manifest');
         const baseManifest = await createManifestFromPackage(pkg);
@@ -24,18 +23,22 @@ export const loadAppManifest = async (
 
         // TODO - this need to come from the config
         if (env.mode !== 'development') {
-            baseManifest.entryPoint = pkg.packageJson.type === 'module' ? 'app-bundle.js' : 'app-bundle.mjs';
+            baseManifest.build!.entryPoint =
+                pkg.packageJson.type === 'module' ? 'app-bundle.js' : 'app-bundle.mjs';
         }
 
-        const manifest = await createManifest(env, baseManifest, { file: options?.file });
-        spinner.succeed();
+        spinner.info(
+            `generating manifest with ${chalk.red.dim(env.command)} command in ${chalk.green.dim(env.mode)} mode`,
+        );
 
-        if (options?.file) {
-            spinner.info(
-                `generating manifest from ${formatPath(options.file, { relative: true })}`,
+        const manifest = await createManifest(env, baseManifest, { file: options?.file });
+
+        if (manifest.path) {
+            spinner.succeed(
+                `Created manifest from ${formatPath(manifest.path, { relative: true })}`,
             );
         } else {
-            spinner.info(chalk.dim('no local manifest config applied, using default generated'));
+            spinner.succeed(chalk.dim('no local manifest config applied, using default generated'));
         }
 
         return manifest;
