@@ -3,11 +3,22 @@ import ora, { Options, type Ora } from 'ora';
 const parseArgs = (args: string[]): string | undefined =>
     args.length ? args.join(' ') : undefined;
 
+const originalConsole = console;
+
 export class Spinner {
     #ora: Ora;
 
     get ora(): Ora {
         return this.#ora;
+    }
+
+    set attachConsole(value: boolean) {
+        if (value) {
+            console.log = this.info.bind(this);
+            console.info = this.info.bind(this);
+        } else {
+            console = originalConsole;
+        }
     }
 
     static Global(options?: Options) {

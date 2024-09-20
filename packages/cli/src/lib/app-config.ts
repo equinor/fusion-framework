@@ -20,7 +20,7 @@ type FindAppConfigOptions = FindConfigOptions & {
 export type AppConfigFn = (
     env: ConfigExecuterEnv,
     args: { base: AppConfig },
-) => AppConfig | Promise<AppConfig>;
+) => AppConfig | Promise<AppConfig | void> | void;
 export type AppConfigExport = AppConfig | AppConfigFn;
 
 export const appConfigFilename = 'app.config';
@@ -72,7 +72,7 @@ export const createAppConfig = async (
 ): Promise<{ config: AppConfig; path?: string }> => {
     const resolved = await resolveAppConfig(options);
     if (resolved) {
-        const config = await initiateConfig(resolved.config, env, { base });
+        const config = (await initiateConfig(resolved.config, env, { base })) ?? {};
         assertAppConfig(config);
         return { config, path: resolved.path };
     } else if (options?.file) {

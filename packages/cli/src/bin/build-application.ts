@@ -49,10 +49,17 @@ export const buildApplication = async (options: {
 
     viteConfig.build.outDir = outDir.trim();
 
+    spinner.attachConsole = true;
+
+    console.log('Building application...');
+
     const viteBuild = await build(viteConfig);
+
+    spinner.attachConsole = false;
 
     return {
         viteConfig,
         viteBuild,
+        pkg,
     };
 };

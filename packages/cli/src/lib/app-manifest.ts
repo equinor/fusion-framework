@@ -1,7 +1,12 @@
-import deepmerge from 'deepmerge';
+import deepMerge from 'deepmerge';
 import { execSync } from 'node:child_process';
 
-import { AppPackageJson, ResolvedAppPackage, resolveEntryPoint } from './app-package.js';
+import {
+    AppPackageJson,
+    resolveAppKey,
+    ResolvedAppPackage,
+    resolveEntryPoint,
+} from './app-package.js';
 
 import {
     loadConfig,
@@ -14,24 +19,15 @@ import {
 
 import { AssertionError, assert, assertObject } from './utils/assert.js';
 import { RecursivePartial } from './utils/types.js';
-
-export type AppManifestExport = {
-    version: string;
-    entryPoint: string;
-    timestamp?: string;
-    commitSha?: string;
-    githubRepo?: string;
-    projectPage?: string;
-    annotations?: Record<string, string>;
-    allowedExtensions?: string[];
-};
+import { AppManifest } from '@equinor/fusion-framework-module-app';
+import { parse as parseSemver } from 'semver';
 
 export type AppManifestFn = (
     env: ConfigExecuterEnv,
     args: {
-        base: AppManifestExport;
+        base: AppManifest;
     },
-) => AppManifestExport | Promise<AppManifestExport>;
+) => AppManifest | Promise<AppManifest | void> | void;
 
 type FindManifestOptions = FindConfigOptions & {
     file?: string;
@@ -60,8 +56,10 @@ export const manifestConfigFilename = 'app.manifest.config';
  */
 export const defineAppManifest = (fn: AppManifestFn) => fn;
 
-export function assertAppManifest(value: AppManifestExport): asserts value {
+export function assertAppManifest(value: AppManifest): asserts value {
     assert(value, 'expected manifest');
+    assert(value.build, 'expected build');
+    assert(parseSemver(value.build?.version), 'invalid version');
     // TODO make assertions
 }
 
@@ -88,17 +86,17 @@ export function assertAppManifest(value: AppManifestExport): asserts value {
  * @returns deep merged manifest
  */
 export const mergeManifests = (
-    base: RecursivePartial<AppManifestExport>,
-    overrides: RecursivePartial<AppManifestExport>,
-): AppManifestExport => {
-    const manifest = deepmerge(base, overrides) as AppManifestExport;
+    base: RecursivePartial<AppManifest>,
+    overrides: RecursivePartial<AppManifest>,
+): AppManifest => {
+    const manifest = deepMerge(base, overrides) as AppManifest;
     assertAppManifest(manifest);
     return manifest;
 };
 
 /** loads manifestFn from file */
 export const loadManifest = (filename?: string) =>
-    loadConfig<AppManifestExport>(filename ?? manifestConfigFilename);
+    loadConfig<AppManifest>(filename ?? manifestConfigFilename);
 
 /**
  * tries to resolve manifest
@@ -116,7 +114,7 @@ export const resolveManifest = async (
             path: options.file,
         };
     }
-    return resolveConfig(manifestConfigFilename, { find: options });
+    return resolveConfig<AppManifest>(manifestConfigFilename, { find: options });
 };
 
 const resolveGithubRepo = (pkg: AppPackageJson) => {
@@ -145,32 +143,38 @@ const resolveGitCommitSha = () => {
     }
 };
 
-export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifestExport => {
+export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifest => {
     const { packageJson } = pkg;
     assertObject(packageJson, 'expected packageJson');
     assert(packageJson.name, 'expected [name] in packageJson');
     assert(packageJson.version, 'expected [version] in packageJson');
     const entryPoint = resolveEntryPoint(packageJson);
-    const manifest = {
-        version: packageJson.version,
-        entryPoint,
-        timestamp: new Date().toISOString(),
-        githubRepo: resolveGithubRepo(packageJson),
-        commitSha: resolveGitCommitSha(),
-        projectPage: packageJson.homepage,
-    } satisfies AppManifestExport;
-    assertAppManifest(manifest);
+    const manifest: AppManifest = {
+        appKey: resolveAppKey(pkg.packageJson),
+        displayName: packageJson.name,
+        description: packageJson.description,
+        keywords: packageJson.keywords,
+        build: {
+            entryPoint,
+            version: packageJson.version,
+            timestamp: new Date().toISOString(),
+            githubRepo: resolveGithubRepo(packageJson),
+            commitSha: resolveGitCommitSha(),
+            projectPage: packageJson.homepage,
+        },
+    };
     return manifest;
 };
 
 export const createManifest = async (
     env: ConfigExecuterEnv,
-    base: AppManifestExport,
+    base: AppManifest,
     options?: FindManifestOptions,
-): Promise<{ manifest: AppManifestExport; path?: string }> => {
+): Promise<{ manifest: AppManifest; path?: string }> => {
     const resolved = await resolveManifest(options);
     if (resolved) {
-        const manifest = await initiateConfig(resolved.config, env, { base });
+        const configuredManifest = await initiateConfig(resolved.config, env, { base });
+        const manifest = deepMerge(base, configuredManifest ?? {}) as AppManifest;
         assertAppManifest(manifest);
         return { manifest, path: resolved.path };
     } else if (options?.file) {
