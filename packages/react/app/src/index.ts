@@ -8,7 +8,7 @@ export type {
     IAppConfigurator,
 } from '@equinor/fusion-framework-app';
 
-export { ApplicationManifest } from '@equinor/fusion-framework-module-app';
+export { AppManifest } from '@equinor/fusion-framework-module-app';
 
 export { useAppModule } from './useAppModule';
 export { useAppModules } from './useAppModules';

@@ -58,7 +58,7 @@ export const CreateBookmarkModal = ({
                 </div>
                 <div>
                     <Label htmlFor="app" label="App" />
-                    <Input readOnly={true} value={current?.manifest?.name || ''} />
+                    <Input readOnly={true} value={current?.manifest?.displayName || ''} />
                 </div>
 
                 <div>
