@@ -51,6 +51,7 @@ export type AppBuildManifest = {
     githubRepo?: string;
     projectPage?: string;
     annotations?: Record<string, string>;
+    allowedExtensions?: string[];
     uploadedBy?: {
         azureUniqueId: string;
         displayName?: string;
