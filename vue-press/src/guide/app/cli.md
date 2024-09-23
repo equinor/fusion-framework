@@ -20,20 +20,22 @@ npm i -D '@equinor/fusion-framework-cli'
 
 ```ts
 // app.config.ts
-import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
-export default defineAppConfig((_nev, { base }) =>
-    mergeAppConfigs(base, {
+import { defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig() => (
+    {
         environment: {
-            scope: 'foobar',
+            scope: 'default',
         },
         endpoints: {
             api: {
-                url: 'https://foo.bars',
+                url: 'https://api.example.com',
             },
         },
-    }),
+    }
 );
+```
 
+```ts
 // src/config.ts
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 export const configure: AppModuleInitiator = (configurator, { env }) => {
@@ -48,15 +50,12 @@ By default the CLI will create a manifest on best effort from `package.json`
 
 ```ts
 // app.manifest.config.ts should be of type AppManifestExport
-import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
+import { defineAppManifest } from '@equinor/fusion-framework-cli';
 
-export default defineAppManifest((env, { base }) => {
-  return mergeManifests(
-    base,
-    {
-      entryPoint: 'index.js'
-    }
-  )
+export default defineAppManifest(() => ({
+  build: {
+    entryPoint: 'index.js',
+  },
 });
 ```
 
