@@ -16,12 +16,12 @@ Commands:
 
 - [dev](#fusion-framework-cli-app-dev) - Start development server for application
 - [build](#fusion-framework-cli-app-build) - Builds application
-- [config](#fusion-framework-cli-app-config) - Generate config
-- [manifest](#fusion-framework-cli-app-manifest) - Generate manifest
-- [pack](#fusion-framework-cli-app-pack) - Create  distributable app bundle of the application
-- [publish](#fusion-framework-cli-app-publish) - Publish application to app api
-- [upload](#fusion-framework-cli-app-upload) - Upload packaged app bundle to app api
-- [tag](#fusion-framework-cli-app-tag) - Tag a published version
+- [build-config](#fusion-framework-cli-app-build-config) - Generate config
+- [build-manifest](#fusion-framework-cli-app-build-manifest) - Generate manifest
+- [build-pack](#fusion-framework-cli-app-build-pack) - Create  distributable app bundle of the application
+- [build-publish](#fusion-framework-cli-app-build-publish) - Publish application to app api
+- [build-upload](#fusion-framework-cli-app-build-upload) - Upload packaged app bundle to app api
+- [build-tag](#fusion-framework-cli-app-build-tag) - Tag a published version
 - help - display help for any command
 
 Options:
@@ -40,7 +40,7 @@ fusion-framework-cli app
 
 ### fusion-framework-cli app dev
 
-The `dev` command starts a development server for current application
+The `dev` command starts a development server for current application.
 
 ``fusion-framework-cli app dev``
 
@@ -68,7 +68,7 @@ fusion-framework-cli app dev -p 3001
 
 ### fusion-framework-cli app build
 
-The `build` command, you guessed it, compiles the application with vite.
+The `build` command compiles the application with vite.
 
 ``fusion-framework-cli app build``
 
@@ -90,11 +90,11 @@ fusion-framework-cli app build -o dist
 
 ---
 
-### fusion-framework-cli app config
+### fusion-framework-cli app build-config
 
-The `config` command generates config file for the application.
+The `app build-config` command generates config file for the application.
 
-``fusion-framework-cli app config``
+``fusion-framework-cli app build-config``
 
 Options:
 
@@ -110,16 +110,16 @@ Options:
 Example to publish config to version "1.0.3" in the "ci" environment:
 
 ```sh
-fusion-framework-cli app config -p 1.0.3 -e ci
+fusion-framework-cli app build-config -p 1.0.3 -e ci
 ```
 
 ---
 
-### fusion-framework-cli app manifest
+### fusion-framework-cli app build-manifest
 
-The `manifest` command generates manifest file for the application.
+The `app build-manifest` command generates manifest file for the application.
 
-``fusion-framework-cli app manifest``
+``fusion-framework-cli app build-manifest``
 
 Options:
 
@@ -132,16 +132,16 @@ Options:
 Example:
 
 ```sh
-fusion-framework-cli app manifest -o manifest.json
+fusion-framework-cli app build-manifest -o manifest.json
 ```
 
 ---
 
-### fusion-framework-cli app pack
+### fusion-framework-cli app build-pack
 
-The `pack` command creates a distributable app bundle of the application.
+The `app build-pack` command creates a distributable app bundle of the application.
 
-``fusion-framework-cli app pack``
+``fusion-framework-cli app build-pack``
 
 Options:
 
@@ -154,28 +154,28 @@ Options:
 Example:
 
 ```sh
-fusion-framework-cli app pack
+fusion-framework-cli app build-pack
 ```
 
 ---
 
-### fusion-framework-cli app publish
+### fusion-framework-cli app build-publish
 
-The `app publish` command is a convenience command to handle packing, publishing and tagging in one command.
+The `app build-publish` command is a convenience command to handle packing, publishing and tagging in one command.
 
 It runs the following commands in order:
 
-- `app pack` command that generates a zip file,
-- `app upload` command that uploads the generated zip
-- `app tag` command to tag the uploaded build.
+- `app build-pack` command that generates a zip file,
+- `app build-upload` command that uploads the generated zip
+- `app build-tag` command to tag the uploaded build.
 
-``fusion-framework-cli app publish``
+``fusion-framework-cli app build-publish``
 
 Options:
 
   | Option                  | Description                                            |
   |-------------------------|--------------------------------------------------------|
-  | -t, --tag, \<string>                | Tagname to publish this build as [(latest | preview)] (default: "latest") |
+  | -t, --tag, \<latest \| preview>                | Tagname to publish this build as (default: "latest") |
   | -e, --env, \<ci \| fqa \| tr \| fprd>  | Fusion environment to build api urls from |
   | -s, --service, \<string>            | Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands |
   | -h, --help                         | display help for command                               |
@@ -183,16 +183,16 @@ Options:
 Example that publishes a build and tag it with preview in ci:
 
 ```sh
-fusion-framework-cli app publish -t preview -e ci
+fusion-framework-cli app build-publish -t preview -e ci
 ```
 
 ---
 
-### fusion-framework-cli app upload
+### fusion-framework-cli app build-upload
 
-The `app upload` command takes a generated bundle file and uploads it to the appKey you are running the command from. the bundle must be a zip file, but support for tar.gz will come soon.
+The `app build-upload` command takes a generated bundle file and uploads it to the appKey you are running the command from. the bundle must be a zip file, but support for tar.gz will come soon.
 
-``fusion-framework-cli app upload``
+``fusion-framework-cli app build-upload``
 
 Options:
 
@@ -206,16 +206,16 @@ Options:
 Example that uploads zip package to ci:
 
 ```sh
-fusion-framework-cli app upload -b app-bundle.zip -e ci
+fusion-framework-cli app build-upload -b app-bundle.zip -e ci
 ```
 
 ---
 
-### fusion-framework-cli app tag
+### fusion-framework-cli app build-tag
 
-The `app tag` commands tags the specified version with preview or latest, where latest is default. The `--version` parameter must be a previously published build.
+The `app build-tag` commands tags the specified version with preview or latest, where latest is default. The `--version` parameter must be a previously published build.
 
-``fusion-framework-cli app tag``
+``fusion-framework-cli app build-tag``
 
 Options:
 
@@ -230,7 +230,7 @@ Options:
 Example that tags version 1.0.3 with preview in ci:
 
 ```sh
-fusion-framework-cli app tag -v 1.0.3 -t preview -e ci
+fusion-framework-cli app build-tag -v 1.0.3 -t preview -e ci
 ```
 
 ---
