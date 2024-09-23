@@ -11,7 +11,7 @@ The CLI will look for the env varable `FUSION_TOKEN`.
 You can get an access token by using the azure `az` command in your local dev environment or in your github workflow.
 
 ```sh
-az login --scope example-env-scope.default
+az login --scope "example-env-scope/.default"
 az account get-access-token
 ```
 
