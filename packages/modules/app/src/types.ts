@@ -71,7 +71,15 @@ export interface AppManifest {
     description?: string;
     type?: AppType;
     isPinned?: boolean;
-    categoryId?: string;
+    templateSource?: string;
+    catagory?: {
+        id: string;
+        name: string;
+        displayName: string;
+        color: string;
+        defaultIcon: string;
+        sortOrder: 1000;
+    };
     visualization?: {
         color?: string;
         icon?: string;
