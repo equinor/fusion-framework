@@ -73,7 +73,7 @@ export interface AppManifest {
     type?: AppType;
     isPinned?: boolean;
     templateSource?: string;
-    catagory?: {
+    category?: {
         id: string;
         name: string;
         displayName: string;
