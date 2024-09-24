@@ -11,6 +11,8 @@ import { join, relative } from 'node:path';
 
 import portFinder from 'portfinder';
 
+import deepmerge from 'deepmerge/index.js';
+
 import ViteRestart from 'vite-plugin-restart';
 import { appProxyPlugin } from './plugins/app-proxy.js';
 import { externalPublicPlugin } from './plugins/external-public.js';
@@ -18,7 +20,6 @@ import { externalPublicPlugin } from './plugins/external-public.js';
 import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
 import { manifestConfigFilename } from '../lib/app-manifest.js';
 import { appConfigFilename } from '../lib/app-config.js';
-import { resolveAppKey } from '../lib/app-package.js';
 
 import { loadAppConfig } from './utils/load-app-config.js';
 import { loadViteConfig } from './utils/load-vite-config.js';
@@ -27,6 +28,8 @@ import { Spinner } from './utils/spinner.js';
 import { chalk, formatPath } from './utils/format.js';
 import { loadAppManifest } from './utils/load-manifest.js';
 import { proxyRequestLogger } from './utils/proxy-request-logger.js';
+
+import { type AppManifest } from '@equinor/fusion-framework-module-app';
 
 export const createDevServer = async (options: {
     portal: string;
@@ -44,13 +47,35 @@ export const createDevServer = async (options: {
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
     const pkg = await loadPackage();
-    const appKey = resolveAppKey(pkg.packageJson);
 
     const env: ConfigExecuterEnv = {
         command: 'serve',
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };
+
+    const generateManifest = async () => {
+        const { manifest } = await loadAppManifest(env, pkg, {
+            file: configSourceFiles.manifest,
+        });
+        const assetPath = `bundles/apps/${manifest.appKey}/${pkg.packageJson.version}`;
+        return deepmerge(manifest, {
+            build: {
+                assetPath,
+                configUrl: `${assetPath}/config`,
+            },
+        }) as AppManifest;
+    };
+
+    const generateConfig = async () => {
+        const { config } = await loadAppConfig(env, pkg, {
+            file: configSourceFiles.app,
+        });
+        return config;
+    };
+
+    const {appKey} = await generateManifest();
+
 
     /**
      * Load application manifest
@@ -85,25 +110,8 @@ export const createDevServer = async (options: {
                 app: {
                     key: appKey,
                     version: String(pkg.packageJson.version),
-                    generateConfig: async () => {
-                        const { config } = await loadAppConfig(env, pkg, {
-                            file: configSourceFiles.app,
-                        });
-                        return config;
-                    },
-                    generateManifest: async () => {
-                        const { manifest } = await loadAppManifest(env, pkg, {
-                            file: configSourceFiles.manifest,
-                        });
-                        const assetPath = `bundles/apps/${appKey}/${pkg.packageJson.version}`;
-                        return deepmerge(manifest, {
-                            appKey,
-                            build: {
-                                assetPath,
-                                configUrl: `${assetPath}/config`,
-                            },
-                        }) as any;
-                    },
+                    generateConfig,
+                    generateManifest
                 },
             }),
             // Restart the server when config changes or the dev portal source is updated
