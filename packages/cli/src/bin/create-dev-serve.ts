@@ -96,18 +96,13 @@ export const createDevServer = async (options: {
                             file: configSourceFiles.manifest,
                         });
                         const assetPath = `bundles/apps/${appKey}/${pkg.packageJson.version}`;
-                        // TODO: @eikeland we need to fix this
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        return {
+                        return deepmerge(manifest, {
                             appKey,
                             build: {
-                                ...manifest,
                                 assetPath,
                                 configUrl: `${assetPath}/config`,
                             },
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        } as any;
+                        }) as any;
                     },
                 },
             }),
