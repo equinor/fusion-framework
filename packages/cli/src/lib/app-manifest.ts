@@ -21,6 +21,7 @@ import { AssertionError, assert, assertObject } from './utils/assert.js';
 import { RecursivePartial } from './utils/types.js';
 import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { parse as parseSemver } from 'semver';
+import { StandardIncludeAssetExtensions } from './plugins/app-assets/index.js';
 
 export type AppManifestFn = (
     env: ConfigExecuterEnv,
@@ -162,6 +163,10 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifest 
             githubRepo: resolveGithubRepo(packageJson),
             commitSha: resolveGitCommitSha(),
             projectPage: packageJson.homepage,
+            allowedExtensions: StandardIncludeAssetExtensions.map(
+                // TODO: @jaysencpp, this is just 🫤, extensions should not require leading dot
+                (ext) => `.${ext}`,
+            ),
         },
     };
     return manifest;
