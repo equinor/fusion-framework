@@ -14,8 +14,8 @@ import portFinder from 'portfinder';
 import deepmerge from 'deepmerge/index.js';
 
 import ViteRestart from 'vite-plugin-restart';
-import { appProxyPlugin } from './plugins/app-proxy.js';
-import { externalPublicPlugin } from './plugins/external-public.js';
+import { appProxyPlugin } from '../lib/plugins/app-proxy/app-proxy-plugin.js';
+import { externalPublicPlugin } from '../lib/plugins/external-public/external-public-plugin.js';
 
 import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
 import { manifestConfigFilename } from '../lib/app-manifest.js';
