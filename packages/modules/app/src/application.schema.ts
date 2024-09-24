@@ -2,56 +2,56 @@ import z from 'zod';
 
 const ApiApplicationPersonSchema = z.object({
     azureUniqueId: z.string(),
-    displayName: z.string().optional(),
-    mail: z.string().optional(),
-    upn: z.string().optional(),
-    accountType: z.string().optional(),
-    accountClassification: z.string().optional(),
-    isExpired: z.boolean().optional(),
+    displayName: z.string(),
+    mail: z.string().nullish(),
+    upn: z.string().nullish(),
+    accountType: z.string(),
+    accountClassification: z.string().nullish(),
+    isExpired: z.boolean().nullish(),
 });
 
 export const ApiApplicationBuildSchema = z.object({
-    version: z.string().optional(),
-    entryPoint: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    tag: z.enum(['latest', 'preview']).optional(),
-    assetPath: z.string().optional(),
-    configUrl: z.string().optional(),
-    timestamp: z.string().optional(),
-    commitSha: z.string().optional(),
-    githubRepo: z.string().optional(),
-    projectPage: z.string().optional(),
-    uploadedBy: ApiApplicationPersonSchema.optional(),
+    version: z.string(),
+    entryPoint: z.string(),
+    tags: z.array(z.string()).nullish(),
+    tag: z.enum(['latest', 'preview']).nullish(),
+    assetPath: z.string().nullish(),
+    configUrl: z.string().nullish(),
+    timestamp: z.string().nullish(),
+    commitSha: z.string().nullish(),
+    githubRepo: z.string().nullish(),
+    projectPage: z.string().nullish(),
+    uploadedBy: ApiApplicationPersonSchema.nullish(),
 });
 
 export const ApiApplicationSchema = z.object({
     appKey: z.string(),
-    displayName: z.string().optional(),
-    description: z.string().optional(),
-    type: z.string().optional(),
-    isPinned: z.boolean().optional(),
-    templateSource: z.string().optional(),
+    displayName: z.string(),
+    description: z.string(),
+    type: z.string(),
+    isPinned: z.boolean().nullish(),
+    templateSource: z.string().nullish(),
     category: z
         .object({
             id: z.string(),
-            name: z.string().optional(),
-            displayName: z.string().optional(),
-            color: z.string().optional(),
-            defaultIcon: z.string().optional(),
-            sortOrder: z.number().optional(),
-        })
-        .optional(),
-    visualization: z
-        .object({
-            color: z.string().optional(),
-            icon: z.string().optional(),
+            name: z.string(),
+            displayName: z.string(),
+            color: z.string(),
+            defaultIcon: z.string(),
             sortOrder: z.number(),
         })
-        .optional(),
-    keywords: z.array(z.string()).optional(),
-    admins: z.array(ApiApplicationPersonSchema).optional(),
-    owners: z.array(ApiApplicationPersonSchema).optional(),
-    build: ApiApplicationBuildSchema.optional(),
+        .nullish(),
+    visualization: z
+        .object({
+            color: z.string().nullish(),
+            icon: z.string().nullish(),
+            sortOrder: z.number(),
+        })
+        .nullish(),
+    keywords: z.array(z.string()).nullish(),
+    admins: z.array(ApiApplicationPersonSchema).nullish(),
+    owners: z.array(ApiApplicationPersonSchema).nullish(),
+    build: ApiApplicationBuildSchema.nullish(),
 });
 
 export default { ApiApplicationPersonSchema, ApiApplicationBuildSchema, ApiApplicationSchema };

@@ -19,6 +19,7 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
+// TODO: remove `report` and `launcher` when legacy apps are removed
 export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,39 +28,37 @@ export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
     | null
     | undefined;
 
-export type AppAdmin = {
+type Nullable<T> = T | null | undefined;
+
+type AppPerson = {
     id: string;
-    azureUniqueId?: string;
-    displayName?: string;
-    mail?: string;
-    upn?: string;
-    accountType?: string;
-    accountClassification?: string;
+    azureUniqueId: string;
+    displayName: string;
+    mail?: Nullable<string>;
+    upn?: Nullable<string>;
+    accountType: string;
+    accountClassification?: Nullable<string>;
+    isExpired?: Nullable<boolean>;
 };
 
-export type AppOwner = AppAdmin;
+export type AppAdmin = AppPerson;
+
+export type AppOwner = AppPerson;
 
 export type AppBuildManifest = {
-    version?: string;
-    entryPoint?: string;
-    tags?: string[];
-    tag?: 'latest' | 'preview';
-    assetPath?: string;
-    configUrl?: string;
-    timestamp?: string;
-    commitSha?: string;
-    githubRepo?: string;
-    projectPage?: string;
-    annotations?: Record<string, string>;
-    allowedExtensions?: string[];
-    uploadedBy?: {
-        azureUniqueId: string;
-        displayName?: string;
-        mail?: string;
-        upn?: string;
-        accountType?: string;
-        accountClassification?: string;
-    };
+    version: string;
+    entryPoint: string;
+    tags?: Nullable<string[]>;
+    tag?: Nullable<'latest' | 'preview'>;
+    assetPath?: Nullable<string>;
+    configUrl?: Nullable<string>;
+    timestamp?: Nullable<string>;
+    commitSha?: Nullable<string>;
+    githubRepo?: Nullable<string>;
+    projectPage?: Nullable<string>;
+    annotations?: Nullable<Record<string, string>>;
+    allowedExtensions?: Nullable<string[]>;
+    uploadedBy?: Nullable<AppOwner>;
 };
 
 export interface AppManifest {
@@ -68,28 +67,28 @@ export interface AppManifest {
     appKey: string;
     /** @deprecated will be removed, use displayName */
     name?: string;
-    displayName?: string;
-    description?: string;
-    type?: AppType;
-    isPinned?: boolean;
-    templateSource?: string;
-    category?: {
+    displayName: string;
+    description: string;
+    type: AppType;
+    isPinned?: Nullable<boolean>;
+    templateSource?: Nullable<string>;
+    category?: Nullable<{
         id: string;
         name: string;
         displayName: string;
         color: string;
         defaultIcon: string;
-        sortOrder: 1000;
-    };
-    visualization?: {
-        color?: string;
-        icon?: string;
         sortOrder: number;
-    };
-    keywords?: string[];
-    admins?: AppAdmin[];
-    owners?: AppOwner[];
-    build?: AppBuildManifest;
+    }>;
+    visualization?: Nullable<{
+        color?: Nullable<string>;
+        icon?: Nullable<string>;
+        sortOrder: number;
+    }>;
+    keywords?: Nullable<string[]>;
+    admins?: Nullable<AppAdmin[]>;
+    owners?: Nullable<AppOwner[]>;
+    build?: Nullable<AppBuildManifest>;
 }
 
 export type Endpoint = { url: string; scopes?: string[] };
@@ -126,33 +125,3 @@ export type AppScriptModule = {
 
 export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
     ModulesInstance<AppModules<TModules>>;
-
-// export type ApiAppVersionConfig = {
-//     environment: string;
-//     endpoints: Record<
-//         string,
-//         {
-//             url: string;
-//             scopes: string[];
-//         }
-//     >;
-// };
-
-// export type ApiApp = {
-//     appKey: string;
-//     displayName?: string;
-//     description?: string;
-//     type?: AppType;
-//     isPinned?: boolean;
-//     templateSource?: string;
-//     category?: AppCategory;
-//     visualization: {
-//         color: string;
-//         icon: string;
-//         sortOrder: number;
-//     };
-//     keywords: string[];
-//     admins: AppOwnerOrAdmin[];
-//     owners: AppOwnerOrAdmin[];
-//     build: AppBuild<AzureUniqueId>;
-// };

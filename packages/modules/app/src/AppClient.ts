@@ -87,8 +87,10 @@ export class AppClient implements IAppClient {
                         headers: {
                             'Api-Version': '1.0',
                         },
-                        selector: async (res: Response) =>
-                            ApplicationSchema.array().parse(await jsonSelector(res)),
+                        selector: async (res: Response) => {
+                            const response = (await jsonSelector(res)) as { value: unknown[] };
+                            return ApplicationSchema.array().parse(response.value);
+                        },
                     });
                 },
             },
