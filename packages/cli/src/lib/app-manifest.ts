@@ -152,8 +152,9 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifest 
     const manifest: AppManifest = {
         appKey: resolveAppKey(pkg.packageJson),
         displayName: packageJson.name,
-        description: packageJson.description,
+        description: packageJson.description || '',
         keywords: packageJson.keywords,
+        type: 'standalone',
         build: {
             entryPoint,
             version: packageJson.version,
