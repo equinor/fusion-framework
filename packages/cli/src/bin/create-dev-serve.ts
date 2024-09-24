@@ -74,8 +74,7 @@ export const createDevServer = async (options: {
         return config;
     };
 
-    const {appKey} = await generateManifest();
-
+    const { appKey } = await generateManifest();
 
     /**
      * Load application manifest
@@ -111,7 +110,7 @@ export const createDevServer = async (options: {
                     key: appKey,
                     version: String(pkg.packageJson.version),
                     generateConfig,
-                    generateManifest
+                    generateManifest,
                 },
             }),
             // Restart the server when config changes or the dev portal source is updated
