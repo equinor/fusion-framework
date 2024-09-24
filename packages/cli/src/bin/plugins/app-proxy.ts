@@ -99,7 +99,7 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
             config.server ??= {};
             config.server.proxy = {
                 // proxy all api calls to the fusion apps backend
-                [`${proxyPath}/apps`]: {
+                [proxyPath]: {
                     target,
                     changeOrigin: true,
                     secure: false,
@@ -107,23 +107,13 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                     configure: (proxy) => {
                         proxy.on('proxyReq', (proxyReq) => {
                             const token = proxyReq.getHeader('authorization');
+                            // preserve token for executing proxy assets
                             if (typeof token === 'string') {
                                 __APP_API_TOKEN__ = token;
+                            // apply token to proxy request
+                            } else if (__APP_API_TOKEN__) {
+                                proxyReq.setHeader('authorization', __APP_API_TOKEN__);
                             }
-                        });
-                        proxy.on('proxyReq', onProxyReq);
-                    },
-                },
-                // proxy all bundle requests to the fusion apps backend
-                [`${proxyPath}/bundles`]: {
-                    target,
-                    changeOrigin: true,
-                    secure: false,
-                    rewrite: (path) => path.replace(proxyPath, ''),
-                    configure: (proxy) => {
-                        proxy.on('proxyReq', (proxyReq) => {
-                            assert(__APP_API_TOKEN__, 'expected token to be set');
-                            proxyReq.setHeader('authorization', __APP_API_TOKEN__);
                         });
                         proxy.on('proxyReq', onProxyReq);
                     },
