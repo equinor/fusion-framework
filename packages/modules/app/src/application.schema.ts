@@ -21,6 +21,7 @@ export const ApiApplicationBuildSchema = z.object({
     commitSha: z.string().nullish(),
     githubRepo: z.string().nullish(),
     projectPage: z.string().nullish(),
+    allowedExtensions: z.array(z.string()).nullish(),
     uploadedBy: ApiApplicationPersonSchema.nullish(),
 });
 
