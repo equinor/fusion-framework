@@ -49,6 +49,7 @@ const ApplicationSchema = ApiApplicationSchema.transform((x): AppManifest => {
             return props.displayName;
         },
         categoryId: category?.id,
+        category,
     } as AppManifest;
 });
 
