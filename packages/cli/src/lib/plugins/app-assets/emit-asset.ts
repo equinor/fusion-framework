@@ -33,8 +33,7 @@ export const emitAssetSync = (
     // read asset content, early return if not found
     const content = readAssetContentSync(id);
     if (!content || content.byteLength === 0) {
-        context.warn(`Could not read asset content for ${id}`);
-        return null;
+        throw new Error(`Could not read asset content for ${id}`);
     }
 
     // generate asset file name

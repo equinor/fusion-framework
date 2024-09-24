@@ -60,14 +60,15 @@ export const AppAssetExportPlugin = (
             viteConfig = config;
         },
         async resolveId(source, importer = '', opts) {
-            if (!viteConfig.build.lib) {
+            if (viteConfig.build.lib === false) {
                 this.warn(`this plugin is only for vite build lib`);
             }
-            // skip resolves triggered by plugin self or filter mismatch
-            if (opts.custom?.caller === PLUGIN_NAME || !filter(source)) {
+            // skip resolves triggered by plugin self
+            if (opts.custom?.caller === PLUGIN_NAME) {
                 return null;
             }
 
+            // resolve asset ID, the ID should refer to the actual asset file
             const assetId = await resolveAssetId(this, source, importer, {
                 ...opts,
                 custom: {
@@ -76,9 +77,15 @@ export const AppAssetExportPlugin = (
                 },
             });
 
+            // skip if asset is not found or filtered out
             const { id } = assetId ?? {};
+            const shouldIncludeAsset = id && filter(id);
+            if (!shouldIncludeAsset) {
+                return null;
+            }
 
-            if (id) {
+            try {
+                // emit asset and index the asset path
                 const { outDir, assetsDir } = viteConfig.build;
                 const assetPath = emitAssetSync(this, id, {
                     name,
@@ -86,9 +93,10 @@ export const AppAssetExportPlugin = (
                     assetsDir,
                 });
                 assetsPathMap.set(id, assetPath!);
+            } catch (err) {
+                this.warn((err as Error).message);
+                return null;
             }
-
-            return id;
         },
         load(id) {
             // lookup asset path and export as URL
