@@ -1,7 +1,5 @@
 import { Plugin } from 'vite';
 
-import { assert } from 'node:console';
-
 import { AppConfig, AppManifest } from '@equinor/fusion-framework-app';
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
@@ -110,7 +108,7 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                             // preserve token for executing proxy assets
                             if (typeof token === 'string') {
                                 __APP_API_TOKEN__ = token;
-                            // apply token to proxy request
+                                // apply token to proxy request
                             } else if (__APP_API_TOKEN__) {
                                 proxyReq.setHeader('authorization', __APP_API_TOKEN__);
                             }
