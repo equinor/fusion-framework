@@ -47,6 +47,8 @@ export const uploadAppBundle = async (endpoint: string, bundle: string) => {
     }
 
     if (!requestBundle.ok) {
+        const json = await requestBundle.json();
+        console.error(json);
         throw new Error(
             `Failed to publish bundle. HTTP status ${requestBundle.status}, ${requestBundle.statusText}`,
         );
