@@ -39,6 +39,7 @@
         "deepmerge": "^4.3.1",
         "find-up": "^7.0.0",
         "is-mergeable-object": "^1.1.1",
+        "mime": "^4.0.4",
         "ora": "^8.0.1",
         "portfinder": "^1.0.32",
         "pretty-bytes": "^6.1.1",

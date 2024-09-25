@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from 'node:fs';
 
 import mime from 'mime';
 
-import { type Plugin } from 'vite';
+import { createFilter, type FilterPattern, type ResolvedConfig, type Plugin } from 'vite';
 
 /**
  * Creates a plugin that serves an external public directory.
@@ -13,7 +13,10 @@ import { type Plugin } from 'vite';
  * so this plugin is necessary to serve the `index.html` file from a different directory.
  *
  * @param path - The path to the external public directory.
- * @returns A Plugin object configured to serve the specified public directory.
+ * @param options - Optional filter patterns to include or exclude specific assets.
+ * @param options.include - A filter pattern to include specific assets.
+ * @param options.exclude - A filter pattern to exclude specific assets.
+ * @returns A Vite plugin object.
  *
  * The plugin:
  * - Sets the `path` configuration to the provided path.
@@ -26,14 +29,22 @@ import { type Plugin } from 'vite';
  * - Transforms the HTML using the server's `transformIndexHtml` method.
  * - Responds with the transformed HTML, setting appropriate headers.
  */
-export const externalPublicPlugin = (path: string): Plugin => {
-    let root: string;
+export const externalPublicPlugin = (
+    path: string,
+    options?: {
+        include?: FilterPattern;
+        exclude?: FilterPattern;
+    },
+): Plugin => {
+    let viteConfig: ResolvedConfig;
+
+    const assetFilter = createFilter(options?.include, options?.exclude);
+
     return {
         name: 'fusion:external-public',
         apply: 'serve',
         configResolved(config) {
-            // set the path configuration to the provided path
-            root = config.root;
+            viteConfig = config;
         },
         configureServer(server) {
             // serve the static assets from the provided path
@@ -43,10 +54,13 @@ export const externalPublicPlugin = (path: string): Plugin => {
                 const assetPath = join(path, urlPath);
 
                 if (
+                    !assetFilter(assetPath) ||
                     // skip if the request is for index.html
                     req.url?.match('index.html') ||
                     // skip if request is for a source file
-                    existsSync(join(root, urlPath)) ||
+                    existsSync(join(viteConfig.root, urlPath)) ||
+                    // skip if asset is in publicDir
+                    existsSync(join(viteConfig.publicDir, urlPath)) ||
                     // skip if asset does not exist
                     !existsSync(assetPath)
                 ) {
