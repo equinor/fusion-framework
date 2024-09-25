@@ -1,5 +1,7 @@
 import { join } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+
+import mime from 'mime';
 
 import { type Plugin } from 'vite';
 
@@ -14,22 +16,58 @@ import { type Plugin } from 'vite';
  * @returns A Plugin object configured to serve the specified public directory.
  *
  * The plugin:
- * - Sets the `publicDir` configuration to the provided path.
+ * - Sets the `path` configuration to the provided path.
+ * - Adds a middleware to the server that serves static assets from the specified path.
  * - Adds a middleware to the server that serves the `index.html` file from the specified path.
  *
  * The middleware:
+ * - Checks if the request is for a static asset and serves it from the specified path.
  * - Reads the `index.html` file from the specified path.
  * - Transforms the HTML using the server's `transformIndexHtml` method.
  * - Responds with the transformed HTML, setting appropriate headers.
  */
 export const externalPublicPlugin = (path: string): Plugin => {
+    let root: string;
     return {
         name: 'fusion:external-public',
         apply: 'serve',
-        config(config) {
-            config.publicDir = path;
+        configResolved(config) {
+            // set the path configuration to the provided path
+            root = config.root;
         },
         configureServer(server) {
+            // serve the static assets from the provided path
+            server.middlewares.use(async (req, res, next) => {
+                const [urlPath] = req.url!.split('?');
+
+                const assetPath = join(path, urlPath);
+
+                if (
+                    // skip if the request is for index.html
+                    req.url?.match('index.html') ||
+                    // skip if request is for a source file
+                    existsSync(join(root, urlPath)) ||
+                    // skip if asset does not exist
+                    !existsSync(assetPath)
+                ) {
+                    return next();
+                }
+
+                try {
+                    const content = readFileSync(assetPath);
+                    const contentType = mime.getType(assetPath) || 'application/octet-stream';
+                    res.writeHead(200, {
+                        'content-type': contentType,
+                        'content-length': Buffer.byteLength(content),
+                        'cache-control': 'no-cache',
+                        ...server.config.server.headers,
+                    });
+                    res.end(content);
+                } catch (e) {
+                    next(e);
+                }
+            });
+
             // intercept requests to serve the index.html file
             server.middlewares.use(async (req, res, next) => {
                 if (
