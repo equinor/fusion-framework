@@ -105,11 +105,11 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                     configure: (proxy) => {
                         proxy.on('proxyReq', (proxyReq) => {
                             const token = proxyReq.getHeader('authorization');
-                            // preserve token for executing proxy assets
                             if (typeof token === 'string') {
+                                // preserve token for executing proxy assets
                                 __APP_API_TOKEN__ = token;
-                            // apply token to proxy request
                             } else if (__APP_API_TOKEN__) {
+                                // apply token to proxy request
                                 proxyReq.setHeader('authorization', __APP_API_TOKEN__);
                             }
                         });
