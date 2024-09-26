@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, Mock, vi } from 'vitest';
 import { ModulesConfigurator } from '../src/configurator';
 import { type Module } from '../src/types';
 
@@ -8,17 +8,25 @@ type MockModule<TName extends string, TType extends object, TConfig = unknown> =
     configure?: Mock<Required<Module<TName, TType, TConfig>>['configure']>;
 };
 
-type TestModule = MockModule<'tester', object>;
+const createMockModule = <TName extends string, TType extends object, TConfig = unknown>(
+    name: string,
+    initialize: Mock<Module<TName, TType, TConfig>['initialize']>,
+    configure?: Mock<Required<Module<TName, TType, TConfig>>['configure']>,
+): MockModule<TName, TType, TConfig> => ({
+    name,
+    initialize,
+    configure,
+});
 
-const testModule: TestModule = {
-    name: 'tester',
-    initialize: vi.fn(() => ({})),
-};
-
-let testConfigurator: ModulesConfigurator<[TestModule]>;
+let testModule: MockModule<string, object>;
+let testConfigurator: ModulesConfigurator;
 
 describe('ModulesConfigurator', () => {
-    beforeEach(() => {
+    beforeAll(() => {
+        testModule = createMockModule(
+            'tester',
+            vi.fn(() => ({})),
+        );
         testConfigurator = new ModulesConfigurator([testModule]);
     });
     afterEach(() => {
@@ -41,8 +49,12 @@ describe('ModulesConfigurator', () => {
     });
 
     it('should create an instance', async () => {
+        const expectedInstance = {};
+        testModule.initialize.mockImplementationOnce(() => expectedInstance);
+
         const instance = await testConfigurator.initialize();
         expect(instance).toHaveProperty('tester');
+        expect(instance.tester).toBe(expectedInstance);
         expect(testModule.initialize).toHaveBeenCalledOnce();
     });
 });
