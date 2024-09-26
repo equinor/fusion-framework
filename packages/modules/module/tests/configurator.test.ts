@@ -15,4 +15,14 @@ describe('ModulesConfigurator', () => {
         const configurator = new ModulesConfigurator([testModule]);
         expect(configurator.modules).toHaveLength(1);
     });
+
+    it('should allow adding configuration', () => {
+        const testModule: AnyModule = {
+            name: 'tester',
+            initialize: () => {},
+        };
+        const configurator = new ModulesConfigurator();
+        configurator.addConfig({ module: testModule });
+        expect(configurator.modules).toHaveLength(1);
+    });
 });
