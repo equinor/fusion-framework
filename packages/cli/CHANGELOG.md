@@ -1,5 +1,31 @@
 # Change Log
 
+## 9.13.0
+
+### Minor Changes
+
+-   [#2465](https://github.com/equinor/fusion-framework/pull/2465) [`eb11a19`](https://github.com/equinor/fusion-framework/commit/eb11a1952cfa5a1ec8ca40d8f53303ff7c675cbe) Thanks [@dependabot](https://github.com/apps/dependabot)! - updated @equinor/eds-core-react to 0.42.0
+
+-   [#2459](https://github.com/equinor/fusion-framework/pull/2459) [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-cli**
+
+    Updated the CLI to use the new service discovery API.
+
+    > [!NOTE]
+    > This is a quick fix until the new major version of the CLI is released.
+
+    -   Updated the `baseUri` to use a more specific URL path for service discovery.
+    -   Changed from `new URL(import.meta.url).origin` to `String(new URL('/_discovery/environments/current', import.meta.url))`.
+    -   Changed parsing of service discovery response to match new API format.
+
+### Patch Changes
+
+-   [#2458](https://github.com/equinor/fusion-framework/pull/2458) [`202cf10`](https://github.com/equinor/fusion-framework/commit/202cf10ae434d6432c8b57c2867b182223c19212) Thanks [@odinr](https://github.com/odinr)! - changed service discover url to match #c776845e753acf4a0bceda1c59d31e5939c44c31
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@9.1.8
+    -   @equinor/fusion-framework-module-feature-flag@1.1.9
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.7
+
 ## 9.12.14
 
 ### Patch Changes

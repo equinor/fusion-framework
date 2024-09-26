@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.2.7
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-event@4.2.4
+    -   @equinor/fusion-framework-react-module@3.1.6
+
 ## 3.2.6
 
 ### Patch Changes

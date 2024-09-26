@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+-   [#2467](https://github.com/equinor/fusion-framework/pull/2467) [`94659b2`](https://github.com/equinor/fusion-framework/commit/94659b2d8b350089841091a88754ca44b488acd2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated Ag Grid to 32.1.0
+
+### Patch Changes
+
+-   Updated dependencies [[`94659b2`](https://github.com/equinor/fusion-framework/commit/94659b2d8b350089841091a88754ca44b488acd2)]:
+    -   @equinor/fusion-framework-module-ag-grid@32.2.0
+
 ## 0.4.1
 
 ### Patch Changes

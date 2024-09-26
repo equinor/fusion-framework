@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.3.5
+
+### Patch Changes
+
+-   [#2451](https://github.com/equinor/fusion-framework/pull/2451) [`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d) Thanks [@odinr](https://github.com/odinr)! - fixed issue where post handlers where empty
+
 ## 4.3.4
 
 ### Patch Changes

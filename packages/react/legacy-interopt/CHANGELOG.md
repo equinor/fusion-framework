@@ -1,5 +1,27 @@
 # Change Log
 
+## 15.0.0
+
+### Minor Changes
+
+-   [#2459](https://github.com/equinor/fusion-framework/pull/2459) [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa) Thanks [@odinr](https://github.com/odinr)! - Updated createServiceResolver to match service discovery module
+
+    **BREAKING CHANGES:**
+
+    now requires `@equinor/fusion-framework-module-service-discovery^8`
+
+### Patch Changes
+
+-   Updated dependencies [[`c776845`](https://github.com/equinor/fusion-framework/commit/c776845e753acf4a0bceda1c59d31e5939c44c31), [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa)]:
+    -   @equinor/fusion-framework-module-http@6.1.0
+    -   @equinor/fusion-framework-module-service-discovery@8.0.0
+    -   @equinor/fusion-framework-app@9.1.8
+    -   @equinor/fusion-framework@7.2.7
+    -   @equinor/fusion-framework-module-app@5.3.11
+    -   @equinor/fusion-framework-module-msal@3.1.5
+    -   @equinor/fusion-framework-module-navigation@4.0.7
+    -   @equinor/fusion-framework-react-app@5.2.8
+
 ## 14.0.7
 
 ### Patch Changes

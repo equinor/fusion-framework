@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.0
+
+### Patch Changes
+
+-   Updated dependencies [[`c776845`](https://github.com/equinor/fusion-framework/commit/c776845e753acf4a0bceda1c59d31e5939c44c31), [`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d), [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa)]:
+    -   @equinor/fusion-framework-module-http@6.1.0
+    -   @equinor/fusion-framework-module@4.3.5
+    -   @equinor/fusion-framework-module-service-discovery@8.0.0
+    -   @equinor/fusion-framework-module-event@4.2.4
+
 ## 6.0.4
 
 ### Patch Changes

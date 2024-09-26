@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+-   [#2465](https://github.com/equinor/fusion-framework/pull/2465) [`eb11a19`](https://github.com/equinor/fusion-framework/commit/eb11a1952cfa5a1ec8ca40d8f53303ff7c675cbe) Thanks [@dependabot](https://github.com/apps/dependabot)! - updated @equinor/eds-core-react to 0.42.0
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react@7.2.2
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.16
+
 ## 0.4.15
 
 ### Patch Changes
