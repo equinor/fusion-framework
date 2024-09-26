@@ -2,14 +2,14 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '../src/configurator';
 import { type Module } from '../src/types';
 
-const testModule: Module<'tester', void, void> = {
+const testModule: Module<'tester', object, void> = {
     name: 'tester',
-    initialize: vi.fn(() => {}),
+    initialize: vi.fn(() => ({})),
 };
 
 describe('ModulesConfigurator', () => {
     afterEach(() => {
-        vi.resetAllMocks();
+        vi.clearAllMocks();
     });
 
     it('should create a new instance', () => {
@@ -26,5 +26,11 @@ describe('ModulesConfigurator', () => {
         const configurator = new ModulesConfigurator();
         configurator.addConfig({ module: testModule });
         expect(configurator.modules).toHaveLength(1);
+    });
+
+    it('should create an instance', async () => {
+        const configurator = new ModulesConfigurator([testModule]);
+        const instance = await configurator.initialize();
+        expect(instance).toHaveProperty('tester');
     });
 });
