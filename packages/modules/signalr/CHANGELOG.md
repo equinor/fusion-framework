@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.0.0
+
+### Patch Changes
+
+-   [#2459](https://github.com/equinor/fusion-framework/pull/2459) [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa) Thanks [@odinr](https://github.com/odinr)! - Update configureFromFramework to handle authentication scopes
+
+-   Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d), [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa)]:
+    -   @equinor/fusion-framework-module@4.3.5
+    -   @equinor/fusion-framework-module-service-discovery@8.0.0
+    -   @equinor/fusion-framework-module-msal@3.1.5
+
 ## 3.0.13
 
 ### Patch Changes

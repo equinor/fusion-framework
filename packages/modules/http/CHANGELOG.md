@@ -1,5 +1,33 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+-   [#2452](https://github.com/equinor/fusion-framework/pull/2452) [`c776845`](https://github.com/equinor/fusion-framework/commit/c776845e753acf4a0bceda1c59d31e5939c44c31) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module-http**
+
+    `HttpClient._resolveUrl` now supports resolving URLs with a base URL that contains a path.
+
+    before:
+
+    ```typescript
+    const client = new HttpClient('https://example.com/test/me');
+    client.fetch('/api'); // https://example.com/api
+    ```
+
+    now:
+
+    ```typescript
+    const client = new HttpClient('https://example.com/test/me');
+    client.fetch('/api'); // https://example.com/test/me/api
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
+    -   @equinor/fusion-framework-module@4.3.5
+    -   @equinor/fusion-framework-module-msal@3.1.5
+
 ## 6.0.3
 
 ### Patch Changes
