@@ -11,7 +11,7 @@ export default defineProject({
     },
     // Configure testing options
     test: {
-        include: ['tests/**'], // Glob pattern to include test files
+        include: ['src/tests/**'], // Glob pattern to include test files
         name: `${name}@${version}`, // Naming the test suite with package name and version
         env: {
             NODE_ENV: 'development', // Set the environment to development for testing

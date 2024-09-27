@@ -1,6 +1,6 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { ModulesConfigurator } from '../src/configurator';
-import { AnyModule, type Module } from '../src/types';
+import { ModulesConfigurator } from '../configurator';
+import { type Module } from '../types';
 
 // TODO - allow never ref
 const testModule = {
@@ -37,23 +37,19 @@ describe('ModulesConfigurator', () => {
 
     it('should create an instance', async () => {
         const expectedInstance = Symbol('expectedInstance');
-        const initialize = vi.fn(async () => expectedInstance);
+        const module: Module<'shouldCreateInstance', object, object> = {
+            name: 'shouldCreateInstance',
+            initialize: vi.fn(async () => expectedInstance),
+        };
 
-        const name = 'shouldCreateInstance';
+        const configurator = new ModulesConfigurator([module]);
 
-        testConfigurator.addConfig({
-            module: {
-                name,
-                initialize,
-            },
-        });
+        const result = await configurator.initialize();
 
-        const instance = await testConfigurator.initialize();
+        expect(module.initialize).toHaveBeenCalledOnce();
 
-        expect(initialize).toHaveBeenCalledOnce();
-
-        expect(instance).toHaveProperty(name);
-        expect(instance[name]).toBe(expectedInstance);
+        expect(result).toHaveProperty(module.name);
+        expect(result[module.name]).toBe(expectedInstance);
     });
 
     it('should generate module config', async () => {
