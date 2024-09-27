@@ -36,17 +36,24 @@ describe('ModulesConfigurator', () => {
     });
 
     it('should create an instance', async () => {
-        const expectedInstance = {
-            name: 'test-instance',
-        };
-        vi.spyOn(testModule, 'initialize').mockImplementationOnce(async () => expectedInstance);
+        const expectedInstance = Symbol('expectedInstance');
+        const initialize = vi.fn(async () => expectedInstance);
+
+        const name = 'shouldCreateInstance';
+
+        testConfigurator.addConfig({
+            module: {
+                name,
+                initialize,
+            },
+        });
 
         const instance = await testConfigurator.initialize();
 
-        expect(testModule.initialize).toHaveBeenCalledOnce();
+        expect(initialize).toHaveBeenCalledOnce();
 
-        expect(instance).toHaveProperty(testModule.name);
-        expect(instance[testModule.name]).toBe(expectedInstance);
+        expect(instance).toHaveProperty(name);
+        expect(instance[name]).toBe(expectedInstance);
     });
 
     it('should generate module config', async () => {
