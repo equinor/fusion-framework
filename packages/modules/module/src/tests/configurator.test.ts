@@ -3,13 +3,12 @@ import { ModulesConfigurator } from '../configurator';
 import { AnyModule } from '../types';
 
 describe('ModulesConfigurator', () => {
-
     it('should allow adding configuration', () => {
         const configurator = new ModulesConfigurator();
         configurator.addConfig({
             module: {
                 name: 'additionalModule',
-                initialize: () => ({}),
+                initialize: async () => Symbol('instance'),
             },
         });
         expect(configurator.modules).toHaveLength(1);
@@ -19,7 +18,7 @@ describe('ModulesConfigurator', () => {
         const configurator = new ModulesConfigurator([
             {
                 name: 'initialModule',
-                initialize: () => ({}),
+                initialize: async () => Symbol('instance'),
             },
         ]);
         expect(configurator.modules).toHaveLength(1);
