@@ -61,4 +61,19 @@ describe('ModulesConfigurator', () => {
 
         await testConfigurator.initialize();
     });
+
+    it('should call postConfigure on modules', async () => {
+        const postConfigure = vi.fn();
+        testConfigurator.addConfig({
+            module: {
+                name: 'shouldCallPostConfigure',
+                initialize: async () => ({}),
+                postConfigure,
+            },
+        });
+
+        await testConfigurator.initialize();
+
+        expect(postConfigure).toHaveBeenCalled();
+    });
 });
