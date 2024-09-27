@@ -57,7 +57,7 @@ describe('ModulesConfigurator', () => {
     });
 
     it('should generate module config', async () => {
-        const expectedConfig = { name: 'test-config' };
+        const expectedConfig = Symbol('expectedConfig');
         const configure = vi.fn(async () => expectedConfig);
 
         testConfigurator.addConfig({
