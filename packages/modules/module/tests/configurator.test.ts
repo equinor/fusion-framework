@@ -1,32 +1,21 @@
-import { afterEach, beforeAll, describe, expect, it, Mock, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '../src/configurator';
 import { type Module } from '../src/types';
 
-type MockModule<TName extends string, TType extends object, TConfig = unknown> = {
-    name: string;
-    initialize: Mock<Module<TName, TType, TConfig>['initialize']>;
-    configure?: Mock<Required<Module<TName, TType, TConfig>>['configure']>;
+type TestModule = Module<'testModule', object, object>;
+
+// TODO - allow never ref
+const testModule: TestModule = {
+    name: 'testModule',
+    configure: vi.fn(async () => ({})),
+    initialize: vi.fn(async () => ({})),
 };
 
-const createMockModule = <TName extends string, TType extends object, TConfig = unknown>(
-    name: string,
-    initialize: Mock<Module<TName, TType, TConfig>['initialize']>,
-    configure?: Mock<Required<Module<TName, TType, TConfig>>['configure']>,
-): MockModule<TName, TType, TConfig> => ({
-    name,
-    initialize,
-    configure,
-});
-
-let testModule: MockModule<string, object>;
-let testConfigurator: ModulesConfigurator;
+// let testConfigurator: ModulesConfigurator;
+let testConfigurator: ModulesConfigurator<[TestModule]>;
 
 describe('ModulesConfigurator', () => {
     beforeAll(() => {
-        testModule = createMockModule(
-            'tester',
-            vi.fn(() => ({})),
-        );
         testConfigurator = new ModulesConfigurator([testModule]);
     });
     afterEach(() => {
@@ -50,11 +39,13 @@ describe('ModulesConfigurator', () => {
 
     it('should create an instance', async () => {
         const expectedInstance = {};
-        testModule.initialize.mockImplementationOnce(() => expectedInstance);
+        vi.spyOn(testModule, 'initialize').mockImplementationOnce(async () => expectedInstance);
 
         const instance = await testConfigurator.initialize();
-        expect(instance).toHaveProperty('tester');
-        expect(instance.tester).toBe(expectedInstance);
+
         expect(testModule.initialize).toHaveBeenCalledOnce();
+
+        expect(instance).toHaveProperty(testModule.name);
+        expect(instance[testModule.name]).toBe(expectedInstance);
     });
 });
