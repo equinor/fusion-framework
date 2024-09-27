@@ -1,18 +1,16 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '../src/configurator';
-import { type Module } from '../src/types';
-
-type TestModule = Module<'testModule', object, object>;
+import { AnyModule, type Module } from '../src/types';
 
 // TODO - allow never ref
-const testModule: TestModule = {
+const testModule = {
     name: 'testModule',
     configure: vi.fn(async () => ({})),
     initialize: vi.fn(async () => ({})),
-};
+} satisfies Module<'testModule', object, object>;
 
 // let testConfigurator: ModulesConfigurator;
-let testConfigurator: ModulesConfigurator<[TestModule]>;
+let testConfigurator: ModulesConfigurator<[typeof testModule]>;
 
 describe('ModulesConfigurator', () => {
     beforeAll(() => {
@@ -38,7 +36,9 @@ describe('ModulesConfigurator', () => {
     });
 
     it('should create an instance', async () => {
-        const expectedInstance = {};
+        const expectedInstance = {
+            name: 'test-instance',
+        };
         vi.spyOn(testModule, 'initialize').mockImplementationOnce(async () => expectedInstance);
 
         const instance = await testConfigurator.initialize();
@@ -47,5 +47,18 @@ describe('ModulesConfigurator', () => {
 
         expect(instance).toHaveProperty(testModule.name);
         expect(instance[testModule.name]).toBe(expectedInstance);
+    });
+
+    it('should generate module config', async () => {
+        const expectedConfig = { name: 'test-config' };
+        vi.spyOn(testModule, 'configure').mockImplementationOnce(async () => expectedConfig);
+
+        const originalInitialize = testModule.initialize;
+        vi.spyOn(testModule as AnyModule, 'initialize').mockImplementationOnce((args) => {
+            expect(args.config).toBe(expectedConfig);
+            return originalInitialize();
+        });
+
+        await testConfigurator.initialize();
     });
 });
