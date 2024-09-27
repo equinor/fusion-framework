@@ -9,7 +9,7 @@ import AppList from './AppList';
 export const Framework = (args: { modules: ModulesInstanceType<[]> }) => {
     const FrameworkProvider = createFrameworkProvider((configurator) => {
         enableAppModule(configurator, (builder) => {
-            builder.setBaseUri('/apps-proxy/bundles/apps');
+            builder.setAssetUri('/apps-proxy/bundles/apps');
         });
 
         if (process.env.NODE_ENV === 'development') {

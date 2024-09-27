@@ -64,7 +64,7 @@ export class AppModuleProvider {
 
         this.#current$ = new BehaviorSubject<CurrentApp>(undefined);
 
-        this.#appBaseUri = config.baseUri ?? '';
+        this.#appBaseUri = config.assetUri ?? '';
 
         this.#subscription.add(
             this.current$
@@ -136,7 +136,7 @@ export class AppModuleProvider {
         this.#current$.next(null);
     }
 
-    public getBaseUri(): string {
+    public get assetUri(): string {
         return this.#appBaseUri;
     }
 

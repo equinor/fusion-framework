@@ -12,7 +12,8 @@ import AppClient, { IAppClient } from './AppClient';
 
 export interface AppModuleConfig {
     client: IAppClient;
-    baseUri?: string;
+    // uri which to fetch the assets from aka the bundle of the application
+    assetUri?: string;
 }
 
 export interface IAppConfigurator {
@@ -21,7 +22,7 @@ export interface IAppConfigurator {
             | Promise<AppModuleConfig['client']>
             | ConfigBuilderCallback<AppModuleConfig['client']>,
     ) => void;
-    setBaseUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
+    setAssetUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
 }
 
 export class AppConfigurator
@@ -60,9 +61,9 @@ export class AppConfigurator
     }
 
     // TODO - explain why, used in import of resources aka proxy url
-    public setBaseUri(base_or_cb: string | ConfigBuilderCallback<string>) {
+    public setAssetUri(base_or_cb: string | ConfigBuilderCallback<string>) {
         const cb = typeof base_or_cb === 'string' ? async () => base_or_cb : base_or_cb;
-        this._set('baseUri', cb);
+        this._set('assetUri', cb);
     }
 
     protected _createConfig(
@@ -77,8 +78,8 @@ export class AppConfigurator
             });
         }
 
-        if (!this._has('baseUri')) {
-            this.setBaseUri('/apps-proxy');
+        if (!this._has('assetUri')) {
+            this.setAssetUri('/apps-proxy');
         }
 
         return super._createConfig(init, initial);

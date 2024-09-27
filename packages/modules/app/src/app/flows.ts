@@ -105,7 +105,7 @@ export const handleImportApplication =
             filter(actions.importApp.match),
             // when request is received, abort any ongoing request and start new
             switchMap(({ payload }) => {
-                const endpoint = [provider.getBaseUri(), payload].join('/').replace(/\/{2,}/g, '/');
+                const endpoint = [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/');
                 // dynamically import the application script
                 return from(import(/* @vite-ignore */ endpoint)).pipe(
                     // dispatch success action
