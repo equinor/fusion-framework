@@ -3,7 +3,7 @@ import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
 import { configureMsal } from '@equinor/fusion-framework-module-msal';
-import { configureServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
+import { enableServiceDiscovery } from '@equinor/fusion-framework-module-service-discovery';
 
 const environment = 'ci';
 
@@ -20,6 +20,13 @@ configurator.addConfig(
     }),
 );
 
+enableServiceDiscovery(configurator, async (builder) => {
+    builder.configureServiceDiscoveryClientByClientKey(
+        'service_discovery',
+        `/service-registry/environments/${environment}/services`,
+    );
+});
+
 configurator.addConfig(
     configureMsal(
         {
@@ -29,12 +36,6 @@ configurator.addConfig(
         },
         { requiresAuth: true },
     ),
-);
-
-configurator.addConfig(
-    configureServiceDiscovery((config) => {
-        config.endpoint = `/service-registry/environments/${environment}/services`;
-    }),
 );
 
 (async () => {
