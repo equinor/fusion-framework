@@ -51,15 +51,22 @@ describe('ModulesConfigurator', () => {
 
     it('should generate module config', async () => {
         const expectedConfig = { name: 'test-config' };
-        vi.spyOn(testModule, 'configure').mockImplementationOnce(async () => expectedConfig);
+        const configure = vi.fn(async () => expectedConfig);
 
-        const originalInitialize = testModule.initialize;
-        vi.spyOn(testModule as AnyModule, 'initialize').mockImplementationOnce((args) => {
-            expect(args.config).toBe(expectedConfig);
-            return originalInitialize();
+        testConfigurator.addConfig({
+            module: {
+                name: 'shouldGenerateModuleConfig',
+                configure,
+                initialize: async ({ config }) => {
+                    expect(config).toBe(expectedConfig);
+                    return {};
+                },
+            },
         });
 
         await testConfigurator.initialize();
+
+        expect(configure).toHaveBeenCalledOnce();
     });
 
     it('should call postConfigure on modules', async () => {
