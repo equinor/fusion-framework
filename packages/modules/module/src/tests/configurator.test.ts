@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ModulesConfigurator } from '../configurator';
 import { AnyModule } from '../types';
+import { SemanticVersion } from '../lib';
 
 describe('ModulesConfigurator', () => {
     it('should allow adding configuration', () => {
@@ -78,5 +79,18 @@ describe('ModulesConfigurator', () => {
         await new ModulesConfigurator([module]).initialize();
 
         expect(module.postInitialize).toHaveBeenCalled();
+    });
+
+    it('should use the module version of the configurator', async () => {
+        const module: AnyModule = {
+            name: 'shouldUseModuleVersion',
+            version: new SemanticVersion('1.0.0'),
+            initialize: async () => ({}), 
+        };
+
+        await new ModulesConfigurator([module]).initialize();
+
+        expect(module.version).toBeInstanceOf(SemanticVersion);
+        expect(String(module.version)).toBe('1.0.0');
     });
 });
