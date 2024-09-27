@@ -68,4 +68,16 @@ describe('ModulesConfigurator', () => {
 
         expect(module.postConfigure).toHaveBeenCalled();
     });
+
+    it('should execute callback to module after initialization', async () => {
+        const module: AnyModule = {
+            name: 'shouldCallOnInitialized',
+            initialize: async () => Symbol('instance'),
+            postInitialize: vi.fn(async () => {}),
+        };
+
+        await new ModulesConfigurator([module]).initialize();
+
+        expect(module.postInitialize).toHaveBeenCalled();
+    });
 });
