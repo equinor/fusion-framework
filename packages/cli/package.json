@@ -41,6 +41,7 @@
         "is-mergeable-object": "^1.1.1",
         "loader-utils": "^3.3.1",
         "mime": "^4.0.4",
+        "node-fetch": "^3.3.2",
         "ora": "^8.0.1",
         "portfinder": "^1.0.32",
         "pretty-bytes": "^6.1.1",

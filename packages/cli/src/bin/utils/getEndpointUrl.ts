@@ -1,4 +1,5 @@
 export type FusionEnv = 'ci' | 'fqa' | 'tr' | 'fprd';
+import fetch from 'node-fetch';
 
 /**
  * Retreive full endpoint URI to env in service-discovery
@@ -51,7 +52,7 @@ export const getEndpointUrl = async (
         }
 
         const responseService = await requestService.json();
-        process.env.FUSION_CLI_APPAPI = responseService.uri;
+        process.env.FUSION_CLI_APPAPI = (responseService as { uri: string }).uri;
     }
 
     const uri = new URL(`${process.env.FUSION_CLI_APPAPI}/${endpoint}`);
