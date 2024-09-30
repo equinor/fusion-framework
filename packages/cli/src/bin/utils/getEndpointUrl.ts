@@ -27,8 +27,6 @@ export const getEndpointUrl = async (
         process.env.FUSION_CLI_ENV = fusionEnv;
 
         const requestService = await fetch(
-            // TODO: Change to production url.
-            // `https://discovery.fusion.equinor.com/service-registry/environments/${fusionEnv}/services/apps`,
             `https://discovery.ci.fusion-dev.net/service-registry/environments/${fusionEnv}/services/apps`,
             {
                 headers: {
