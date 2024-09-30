@@ -43,6 +43,8 @@ export const getEndpointUrl = async (
         }
 
         if (!requestService.ok) {
+            const response = await requestService.json();
+            console.log(response);
             throw new Error(
                 `Failed getEndpointUrl from service-discovery. HTTP status: ${requestService.status} - ${requestService.statusText}`,
             );

@@ -18,6 +18,8 @@ export const isAppRegistered = async (endpoint: string, appKey: string) => {
     }
 
     if (!requestApp.ok) {
+        const response = await requestApp.json();
+        console.log(response);
         throw new Error(
             `Could not connect to apps-service. HTTP status ${requestApp.status}, ${requestApp.statusText}`,
         );

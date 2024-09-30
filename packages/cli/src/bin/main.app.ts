@@ -116,7 +116,7 @@ export default (program: Command) => {
             `Publish app config to version [${chalk.yellowBright('(semver | current | latest | preview)')}]`,
             'current',
         )
-        .option(
+        .requiredOption(
             '-e, --env, <ci | fqa | tr | fprd>',
             'Fusion environment to build api urls from. used when publishing config.',
         )
