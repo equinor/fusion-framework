@@ -9,14 +9,6 @@ Create a plugin `externalPublicPlugin` to fix the issue with serving the `index.
 -   Applied appropriate content headers and additional configured headers before sending the response.
 
 ```typescript
-const viteConfig = {
-  roo
-    plugins: [
-        // path wich contains the index.html file
-        externalPublicPlugin('./my-portal'),
-    ],
-};
-
 const viteConfig = defineConfig({
     // vite configuration
     root: './src', // this where vite will look for the index.html file
