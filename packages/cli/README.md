@@ -4,7 +4,7 @@ title: Fusion Framework CLI
 
 ### fusion-framework-cli
 
-The cli, named `fusion-framework-cli`, containt tooling for running and managing your application in the terminal or in your package scripts.
+The cli, named `fusion-framework-cli`, contains tooling for running, building and publishing your application.
 
 The fusion-famework-cli should be installed as a devDependency.
 
