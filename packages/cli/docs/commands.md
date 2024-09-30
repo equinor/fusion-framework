@@ -17,7 +17,8 @@ Commands:
 - [dev](#fusion-framework-cli-app-dev) - Start development server for application
 - [build](#fusion-framework-cli-app-build) - Builds application
 - [build-config](#fusion-framework-cli-app-build-config) - Generate config
-- [build-manifest](#fusion-framework-cli-app-build-manifest) - Generate manifest
+- [manifest](#fusion-framework-cli-app-manifest) - Generate AppManifest for application
+- [build-manifest](#fusion-framework-cli-app-build-manifest) - Generate build manifest for application
 - [build-pack](#fusion-framework-cli-app-build-pack) - Create  distributable app bundle of the application
 - [build-publish](#fusion-framework-cli-app-build-publish) - Publish application to app api
 - [build-upload](#fusion-framework-cli-app-build-upload) - Upload packaged app bundle to app api
@@ -111,6 +112,28 @@ Example to publish config to version "1.0.3" in the "ci" environment:
 
 ```sh
 fusion-framework-cli app build-config -p 1.0.3 -e ci
+```
+
+---
+
+### fusion-framework-cli app manifest
+
+The `app manifest` command generates AppManifest for the application.
+
+``fusion-framework-cli app manifest``
+
+Options:
+
+  | Option              | Description            |
+  |---------------------|------------------------|
+  | -o, --output \<string> | output file            |
+  | -c, --config \<string> | manifest config file   |
+  | -h, --help           | display help for command |
+
+Example:
+
+```sh
+fusion-framework-cli app build-manifest -o manifest.json
 ```
 
 ---
