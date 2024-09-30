@@ -85,12 +85,28 @@ describe('ModulesConfigurator', () => {
         const module: AnyModule = {
             name: 'shouldUseModuleVersion',
             version: new SemanticVersion('1.0.0'),
-            initialize: async () => ({}), 
+            initialize: async () => ({}),
         };
 
-        await new ModulesConfigurator([module]).initialize();
+        const result = await new ModulesConfigurator([module]).initialize();
 
-        expect(module.version).toBeInstanceOf(SemanticVersion);
-        expect(String(module.version)).toBe('1.0.0');
+        expect(result[module.name]).toHaveProperty('version');
+        expect(result[module.name].version).toBeInstanceOf(SemanticVersion);
+        expect(module.version?.toString()).toBe('1.0.0');
+        expect(module.version?.compare(result[module.name].version)).toBe(0);
+    });
+
+    it('should dispose of modules', async () => {
+        const module: AnyModule = {
+            name: 'shouldDispose',
+            initialize: async () => Symbol('instance'),
+            dispose: vi.fn(async () => {}),
+        };
+
+        const configurator = new ModulesConfigurator([module]);
+        const instance = await configurator.initialize();
+        await configurator.dispose(instance);
+
+        expect(module.dispose).toHaveBeenCalled();
     });
 });
