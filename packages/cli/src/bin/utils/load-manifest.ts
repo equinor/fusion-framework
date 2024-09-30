@@ -22,7 +22,7 @@ export const loadAppManifest = async (
         spinner.info('created application manifest from package.json');
 
         // TODO - this need to come from the config
-        if (env.mode !== 'development') {
+        if (env.command !== 'serve') {
             baseManifest.build!.entryPoint =
                 pkg.packageJson.type === 'module' ? 'app-bundle.js' : 'app-bundle.mjs';
         }

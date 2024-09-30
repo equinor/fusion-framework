@@ -162,6 +162,7 @@ export const createManifestFromPackage = (pkg: ResolvedAppPackage): AppManifest 
             timestamp: new Date().toISOString(),
             githubRepo: resolveGithubRepo(packageJson),
             commitSha: resolveGitCommitSha(),
+            annotations: packageJson.annotations as Record<string, string> | undefined,
             projectPage: packageJson.homepage,
             allowedExtensions: StandardIncludeAssetExtensions.map(
                 // TODO: @jaysencpp, this is just 🫤, extensions should not require leading dot
