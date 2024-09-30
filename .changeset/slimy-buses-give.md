@@ -2,7 +2,7 @@
 '@equinor/fusion-framework-module-app': major
 '@equinor/fusion-framework-react-app': patch
 '@equinor/fusion-framework-react-components-bookmark': patch
-'@equinor/fusion-framework-react': patch
+'@equinor/fusion-framework-react': minor
 '@equinor/fusion-framework-legacy-interopt': patch
 ---
 
@@ -20,6 +20,7 @@ Adjusted module to the new app service API.
 
 -   Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
 -   Modified `AppConfigurator` to utilize `AppClient` for client configuration.
+-   Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
 
 **Migration**
 
