@@ -53,8 +53,8 @@ export const getEndpointUrl = async (
             );
         }
 
-        const responseService = await requestService.json();
-        process.env.FUSION_CLI_APPAPI = (responseService as { uri: string }).uri;
+        const responseService = (await requestService.json()) as { uri: string };
+        process.env.FUSION_CLI_APPAPI = responseService.uri;
     }
 
     const uri = new URL(`${process.env.FUSION_CLI_APPAPI}/${endpoint}`);

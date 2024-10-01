@@ -28,7 +28,7 @@ export type AppManifestFn = (
     args: {
         base: AppManifest;
     },
-) => AppManifest | Promise<AppManifest | void> | void;
+) => Partial<AppManifest> | Promise<Partial<AppManifest> | void> | void;
 
 type FindManifestOptions = FindConfigOptions & {
     file?: string;
