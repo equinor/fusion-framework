@@ -64,6 +64,17 @@ export class ProcessOperators<T> implements IProcessOperators<T> {
     }
 
     /**
+     * Removes an operator from the collection by its key.
+     *
+     * @param key - The key of the operator to remove.
+     * @returns The current instance of `ProcessOperators` for method chaining.
+     */
+    remove(key: string): ProcessOperators<T> {
+        delete this._operators[key];
+        return this;
+    }
+
+    /**
      * Retrieves an operator from the collection by its key.
      * @param key The key of the operator to retrieve.
      * @returns The retrieved operator.
