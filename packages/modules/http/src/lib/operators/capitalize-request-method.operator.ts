@@ -1,3 +1,4 @@
+import { requestMethodCasing } from './fetch-request.schema';
 import type { ProcessOperator } from './types';
 
 /**
@@ -9,15 +10,12 @@ import type { ProcessOperator } from './types';
 export const capitalizeRequestMethodOperator =
     <T extends RequestInit>(): ProcessOperator<T> =>
     (request): T => {
-        const method = request.method?.toUpperCase();
-        if (method !== request.method) {
-            console.warn(
-                [
-                    `[request-method-operator]: HTTP method '${request.method}' was converted to uppercase '${method}',`,
-                    'see RFC 7231 Section 4.1 for more information.',
-                    'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
-                ].join(' '),
-            );
+        const { error, success, data } = requestMethodCasing().safeParse(request.method);
+        if (success) {
+            request.method = data;
+        } else if (error) {
+            error.errors.forEach((e) => console.warn(e.message));
+            request.method = request.method?.toUpperCase();
         }
-        return Object.assign(request, { method });
+        return request;
     };
