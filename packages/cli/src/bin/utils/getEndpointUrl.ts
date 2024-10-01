@@ -1,6 +1,5 @@
 export type FusionEnv = 'ci' | 'fqa' | 'tr' | 'fprd';
 import fetch from 'node-fetch';
-import https from 'https';
 
 /**
  * Retreive full endpoint URI to env in service-discovery
@@ -33,9 +32,6 @@ export const getEndpointUrl = async (
                 headers: {
                     Authorization: `Bearer ${FUSION_TOKEN}`,
                 },
-                agent: new https.Agent({
-                    rejectUnauthorized: false, // Allow self-signed certificates
-                }),
             },
         );
 
