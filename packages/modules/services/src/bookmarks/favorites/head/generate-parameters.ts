@@ -20,7 +20,7 @@ export const generateParameters = <
 
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
-        { method: 'head', headers: headers },
+        { method: 'HEAD', headers: headers },
         init,
     );
 
