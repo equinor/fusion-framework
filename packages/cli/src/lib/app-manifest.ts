@@ -40,16 +40,11 @@ export const manifestConfigFilename = 'app.manifest.config';
 /**
  * Define a manifest for an application
  *
- * @see {@link mergeManifests | extend manifest}
- *
  * @example
  * ```ts
  * export default defineAppManifest(async() => {
- *    // fetch some data, example owner from secrets
- *    const owner = gh.secrets.owners:
  *    return {
- *        ...all_required_attributes
- *        owners,
+ *        ...AppManifest_properties
  *    }
  * })
  * ```
