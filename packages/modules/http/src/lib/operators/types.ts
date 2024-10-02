@@ -41,6 +41,13 @@ export interface IProcessOperators<T> {
     set(key: string, operator: ProcessOperator<T>): IProcessOperators<T>;
 
     /**
+     * Removes a process operator from the collection.
+     * @param key The key of the operator to remove.
+     * @returns The updated collection of process operators.
+     */
+    remove(key: string): IProcessOperators<T>;
+
+    /**
      * Gets a process operator from the collection.
      * @param key The key of the operator to retrieve.
      * @returns The process operator associated with the key, or undefined if the key is invalid.

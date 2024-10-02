@@ -703,6 +703,55 @@ client.requestHandler.add(
 );
 ```
 
+##### Available Request Handlers
+
+__`capitalizeRequestMethodOperator`__
+
+operator to ensure that the HTTP method of a given request is in uppercase.
+
+> [!NOTE]
+> by default this plugin will log a warning if the method was not in uppercase.
+> This can be disabled by setting the `silent` option to `true`.
+
+```typescript
+import { capitalizeRequestMethodOperator } from '@equinor/fusion-framework-module-http/operators';
+client.requestHandler.add(
+  'capatalize-method', 
+  capitalizeRequestMethodOperator()
+);
+
+// transforms `method` to uppercase and logs a warning.
+client.get('https://example.com', { method: 'get' });
+```
+
+__`requestValidationOperator`__
+
+operator to validate the request before it is sent.
+
+> [!NOTE]
+> By default this plugin will only log a warning if the request is invalid.
+> To allow the plugin to modify `FetchRequest` set the `parse` option to `true`. 
+> __NOTE__ this will also throw an error if the request is invalid.
+
+```typescript
+import { requestValidationOperator } from '@equinor/fusion-framework-module-http/operators';
+client.requestHandler.add(
+  'validate-request', 
+  requestValidationOperator(
+    {
+      // use parsed schema values for request
+      parse: true,
+      // only allow defined defined options
+      strict: false,
+    }
+  )
+);
+```
+
+> [!WARNING]
+> Validating `RequestInit` should not be necessary, but a helpful tool for development.
+
+
 #### Response Handlers
 
 > [!IMPORTANT]

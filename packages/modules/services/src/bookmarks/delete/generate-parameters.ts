@@ -17,7 +17,7 @@ export const generateParameters = <
 
     const requestParams: ClientRequestInit<TClient, TResult> = Object.assign(
         {},
-        { method: 'Delete' },
+        { method: 'DELETE' },
         init,
     );
 

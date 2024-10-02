@@ -1,4 +1,8 @@
-import { HttpRequestHandler } from './lib/operators';
+import {
+    capitalizeRequestMethodOperator,
+    requestValidationOperator,
+    HttpRequestHandler,
+} from './lib/operators';
 
 import type { FetchRequest, IHttpClient } from './lib/client';
 import type { IHttpRequestHandler, IHttpResponseHandler } from './lib/operators';
@@ -132,9 +136,14 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
     readonly defaultHttpClientCtor: HttpClientConstructor<TClient>;
 
     /** default request handler for http clients, applied on creation */
-    readonly defaultHttpRequestHandler = new HttpRequestHandler<
-        HttpClientRequestInitType<TClient>
-    >();
+    readonly defaultHttpRequestHandler = new HttpRequestHandler<HttpClientRequestInitType<TClient>>(
+        {
+            // convert all request methods to uppercase
+            ['capitalize-method']: capitalizeRequestMethodOperator(),
+            // validate the request object
+            ['request-validation']: requestValidationOperator(),
+        },
+    );
 
     /**
      * Create a instance of http configuration
