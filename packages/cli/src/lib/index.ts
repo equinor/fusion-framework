@@ -1,14 +1,8 @@
-export {
-    mergeManifests,
-    defineAppManifest,
-    type AppManifest,
-    type AppManifestFn,
-} from './app-manifest.js';
+export { mergeManifests, defineAppManifest, type AppManifestFn } from './app-manifest.js';
 
 export {
     mergeAppConfigs,
     defineAppConfig,
-    type AppConfig,
     type AppConfigFn,
     type AppConfigExport,
 } from './app-config.js';

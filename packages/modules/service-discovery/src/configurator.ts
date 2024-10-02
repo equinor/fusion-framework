@@ -24,10 +24,13 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
             throw new Error('http module is required');
         }
 
-        // check if http module has a client with key 'service_discovery'
-        const httpProvider = await init.requireInstance('http');
-        if (httpProvider.hasClient('service_discovery')) {
-            this.configureServiceDiscoveryClientByClientKey('service_discovery');
+        // if discoveryClient is not configured, check if http module has a client with key 'service_discovery'
+        if (!this._has('discoveryClient')) {
+            // check if http module has a client with key 'service_discovery'
+            const httpProvider = await init.requireInstance('http');
+            if (httpProvider.hasClient('service_discovery')) {
+                this.configureServiceDiscoveryClientByClientKey('service_discovery');
+            }
         }
 
         // convert parent to promise

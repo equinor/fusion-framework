@@ -12,7 +12,7 @@ import { loadAppManifest } from './utils/load-manifest.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
-import { AppManifest } from '../lib/app-manifest.js';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 // TODO  why do we do this??? can`t backend parse semver?
 export const normalizeVersion = (version: string) => {
@@ -23,27 +23,59 @@ export const normalizeVersion = (version: string) => {
     return { major, minor, patch };
 };
 
-type AppManifestExport = Omit<AppManifest, 'version'> & {
-    version: {
-        major: number;
-        minor: number;
-        patch: number;
-    };
-};
-
-export const createExportManifest = async (options?: {
+type CreateManifestOptions = {
     command?: ConfigExecuterEnv['command'];
     configFile?: string;
     outputFile?: string;
-}) => {
-    const { command = 'build', outputFile } = options ?? {};
+    onlyBuild?: boolean;
+};
 
-    const spinner = Spinner.Global({ prefixText: chalk.dim('manifest') });
+export const createAppManifest = async (options?: CreateManifestOptions) => {
+    Spinner.Global({ prefixText: chalk.dim('app manifest') });
+    const manifest = await createManifest(options);
+    if (options?.outputFile) {
+        await writeManifestToDisk(manifest, options.outputFile);
+    } else {
+        console.log(JSON.stringify(manifest, undefined, 2));
+    }
+    return manifest;
+};
 
+export const createBuildManifest = async (options?: CreateManifestOptions) => {
+    Spinner.Global({ prefixText: chalk.dim('build manifest') });
+    const { build } = await createManifest(options);
+    if (options?.outputFile) {
+        await writeManifestToDisk(build, options.outputFile);
+    } else {
+        console.log(JSON.stringify(build, undefined, 2));
+    }
+    return build;
+};
+
+const writeManifestToDisk = async (
+    content: AppManifest | AppManifest['build'],
+    outputFile: string,
+): Promise<void> => {
+    const spinner = Spinner.Clone();
+    spinner.start(`Exporting manifest to ${formatPath(outputFile)}`);
+    try {
+        const dir = dirname(outputFile).trim();
+        if (!nodeFs.existsSync(dirname(outputFile))) {
+            nodeFs.mkdirSync(dir, { recursive: true });
+        }
+        await writeFile(outputFile, JSON.stringify(content));
+        spinner.succeed();
+    } catch (err) {
+        spinner.fail();
+        throw err;
+    }
+};
+
+const createManifest = async (options?: CreateManifestOptions): Promise<AppManifest> => {
     const pkg = await loadPackage();
 
     const env: ConfigExecuterEnv = {
-        command,
+        command: options?.command ?? 'build',
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };
@@ -52,28 +84,5 @@ export const createExportManifest = async (options?: {
         file: options?.configFile,
     });
 
-    const manifestExport: AppManifestExport = {
-        ...manifest,
-        version: normalizeVersion(manifest.version),
-    };
-
-    if (outputFile) {
-        spinner.start(`outputting manifest to ${formatPath(outputFile)}`);
-        try {
-            const dir = dirname(outputFile).trim();
-            if (!nodeFs.existsSync(dirname(outputFile))) {
-                nodeFs.mkdirSync(dir, { recursive: true });
-            }
-            await writeFile(outputFile, JSON.stringify(manifestExport));
-            spinner.succeed();
-        } catch (err) {
-            spinner.fail();
-            throw err;
-        }
-    } else {
-        console.log(manifestExport);
-    }
-    return manifestExport;
+    return manifest;
 };
-
-export default createExportManifest;
