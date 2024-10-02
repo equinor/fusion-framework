@@ -1,17 +1,25 @@
-export {
-    BookmarkModuleConfigurator,
-    IBookmarkModuleConfigurator,
-    BookmarkModuleConfig,
-} from './configurator';
+export { BookmarkModuleConfigurator } from './BookmarkConfigurator';
+
+export type {
+    IBookmarkClient,
+    BookmarkNew,
+    BookmarkUpdate,
+    BookmarksFilter,
+} from './BookmarkClient.interface';
 
 export {
     default,
     BookmarkModule,
     module as bookmarkModule,
     moduleKey as bookmarkModuleKey,
-} from './module';
+} from './bookmark-module';
 
-export { IBookmarkModuleProvider, BookmarkModuleProvider } from './bookmark-provider';
+export {
+    BookmarkProvider,
+    type BookmarkPayloadGenerator,
+    type BookmarkCreateArgs,
+    type BookmarkUpdateOptions,
+} from './BookmarkProvider';
 
 export { enableBookmark } from './enable-bookmark';
 

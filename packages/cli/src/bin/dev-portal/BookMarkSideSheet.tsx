@@ -1,7 +1,8 @@
 import { Button, Icon } from '@equinor/eds-core-react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { Bookmark } from '@equinor/fusion-framework-react-components-bookmark';
-import { useHasBookmark } from '@equinor/fusion-framework-react-module-bookmark/portal';
+import { BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
+import { useCurrentAppModule } from '@equinor/fusion-framework-react/app';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 
 type BookmarkSideSheetProps = {
@@ -10,7 +11,7 @@ type BookmarkSideSheetProps = {
 };
 
 export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) => {
-    const hasBookmark = useHasBookmark();
+    const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
 
     const { event } = useFramework().modules;
 
@@ -21,7 +22,7 @@ export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) =
             <SideSheet.SubTitle subTitle={'Application bookmarks'} />
             <SideSheet.Actions>
                 <Button
-                    disabled={!hasBookmark}
+                    disabled={!bookmarkProvider?.hasBookmarkCreators}
                     variant="ghost"
                     onClick={() => {
                         onClose();

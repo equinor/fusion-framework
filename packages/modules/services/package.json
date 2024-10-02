@@ -50,6 +50,10 @@
             "import": "./dist/esm/index.js",
             "types": "./dist/types/index.d.ts"
         },
+        "./bookmarks": {
+            "import": "./dist/esm/bookmarks/index.js",
+            "types": "./dist/types/bookmarks/index.d.ts"
+        },
         "./context": {
             "import": "./dist/esm/context/index.js",
             "types": "./dist/types/context/index.d.ts"
@@ -65,10 +69,6 @@
         "./context/related": {
             "import": "./dist/esm/context/related/index.js",
             "types": "./dist/types/context/related/index.d.ts"
-        },
-        "./bookmarks": {
-            "import": "./dist/esm/bookmarks/index.js",
-            "types": "./dist/types/bookmarks/index.d.ts"
         },
         "./notification": {
             "import": "./dist/esm/notification/index.js",
@@ -116,7 +116,8 @@
         "directory": "packages/modules/services"
     },
     "dependencies": {
-        "odata-query": "^7.0.4"
+        "odata-query": "^7.0.4",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",

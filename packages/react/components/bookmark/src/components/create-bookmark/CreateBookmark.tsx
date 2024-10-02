@@ -1,10 +1,11 @@
-import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
-import type { AppModule } from '@equinor/fusion-framework-module-app';
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
+import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
+import { useBookmarkComponentContext } from '../BookmarkProvider';
+
+import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+
 // TODO
 const StyledContent = styled(Dialog.Content)`
     display: flex;
@@ -19,15 +20,33 @@ export const CreateBookmarkModal = ({
     readonly isOpen: boolean;
     readonly onClose: (b: boolean) => void;
 }) => {
-    const [state, setState] = useState<{ name: string; description: string; isShared: boolean }>({
+    const { provider, currentApp } = useBookmarkComponentContext();
+
+    const [state, setState] = useState<BookmarkCreateArgs<never>>({
         name: '',
         description: '',
         isShared: false,
     });
 
-    const { current } = useFramework<[AppModule]>().modules.app;
+    useEffect(() => {
+        setState((s) => ({ ...s, appKey: currentApp?.appKey || '' }));
+    }, [currentApp]);
 
-    const { createBookmark } = useBookmark();
+    const createBookmark = useCallback(
+        async (args: BookmarkCreateArgs<never>) => {
+            try {
+                await provider.createBookmarkAsync(args);
+                // TODO: Show success message
+                // TODO: should this call onCreated, with the new bookmark?
+                // TODO: should current bookmark be updated?
+                onClose(false);
+            } catch (error) {
+                console.error('Failed to create bookmark', error);
+                // TODO: Show error message
+            }
+        },
+        [onClose, provider],
+    );
 
     return (
         <Dialog style={{ width: '400px' }} open={isOpen}>
@@ -58,7 +77,7 @@ export const CreateBookmarkModal = ({
                 </div>
                 <div>
                     <Label htmlFor="app" label="App" />
-                    <Input readOnly={true} value={current?.manifest?.name || ''} />
+                    <Input readOnly={true} value={currentApp?.name || currentApp?.appKey || ''} />
                 </div>
 
                 <div>
@@ -77,11 +96,9 @@ export const CreateBookmarkModal = ({
                         Cancel
                     </Button>
                     <Button
+                        disabled={!currentApp || !state.name}
                         onClick={() => {
-                            state &&
-                                createBookmark(state).then(() => {
-                                    onClose(false);
-                                });
+                            createBookmark(state);
                         }}
                     >
                         Create

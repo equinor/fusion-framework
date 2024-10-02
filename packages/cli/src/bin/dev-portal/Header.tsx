@@ -4,18 +4,22 @@ import { FusionLogo } from './FusionLogo';
 
 /* typescript reference for makeStyles */
 import '@material-ui/styles';
-import { BookmarkSideSheet } from './BookMarkSideSheet';
-import { Button, Icon, TopBar } from '@equinor/eds-core-react';
-import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
-import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import { add, menu, tag } from '@equinor/eds-icons';
-import { styled } from 'styled-components';
 
-import { PersonSideSheet } from './PersonSideSheet';
+import { styled } from 'styled-components';
+import { add, menu, tag } from '@equinor/eds-icons';
+import { Button, Icon, TopBar } from '@equinor/eds-core-react';
+Icon.add({ menu, add, tag });
+
+import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
+import { BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
+import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
+
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement;
 
-Icon.add({ menu, add, tag });
+import { BookmarkSideSheet } from './BookMarkSideSheet';
+import { PersonSideSheet } from './PersonSideSheet';
+import { useCurrentAppModule } from '@equinor/fusion-framework-react/app';
 
 const Styled = {
     Title: styled.div`
@@ -38,6 +42,8 @@ export const Header = () => {
         setIsBookmarkOpen((s) => !s);
     }
 
+    const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
+
     return (
         <>
             <TopBar id="cli-top-bar" sticky={false} style={{ padding: '0 1em', height: 48 }}>
@@ -52,7 +58,16 @@ export const Header = () => {
                 </TopBar.CustomContent>
                 {/* since buttons are 40px but have 48px click bounds */}
                 <TopBar.Actions style={{ minWidth: 48, minHeight: 48 }}>
-                    <Button onClick={toggleBookmark} variant="ghost_icon">
+                    <Button
+                        onClick={toggleBookmark}
+                        variant="ghost_icon"
+                        disabled={!bookmarkProvider}
+                        title={
+                            bookmarkProvider
+                                ? 'Bookmarks'
+                                : 'Bookmarks not available, enable in app'
+                        }
+                    >
                         <Icon name="tag" />
                     </Button>
                     <Button
@@ -67,7 +82,7 @@ export const Header = () => {
                     </Button>
                 </TopBar.Actions>
             </TopBar>
-            <BookmarkProvider>
+            <BookmarkProvider provider={bookmarkProvider}>
                 <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={toggleBookmark} />
             </BookmarkProvider>
             <PersonSideSheet

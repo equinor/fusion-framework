@@ -1,4 +1,14 @@
-export * from './types';
 export { default, useCurrentBookmark } from './useCurrentBookmark';
 export { useBookmark } from './useBookmark';
-export type { PatchBookmark } from '@equinor/fusion-framework-module-bookmark';
+export { useBookmarkProvider } from './useBookmarkProvider';
+
+export { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
+
+export type {
+    Bookmark,
+    Bookmarks,
+    BookmarkData,
+    BookmarkModule,
+    BookmarkProvider,
+    BookmarkPayloadGenerator,
+} from '@equinor/fusion-framework-module-bookmark';
