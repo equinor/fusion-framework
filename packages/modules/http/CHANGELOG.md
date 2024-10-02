@@ -1,5 +1,150 @@
 # Change Log
 
+## 6.2.0
+
+### Minor Changes
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Added a new operator `capitalizeRequestMethodOperator` to ensure that the HTTP method of a given request is in uppercase.
+
+    -   Introduced `capitalizeRequestMethodOperator` which processes an HTTP request object and converts its method to uppercase.
+    -   Logs a warning if the HTTP method was converted, providing information about the change and a reference to RFC 7231 Section 4.1.
+
+    **Example usage:**
+
+    ```typescript
+    import { capitalizeRequestMethodOperator } from '@equinor/fusion-query';
+
+    const operator = capitalizeRequestMethodOperator();
+    const request = { method: 'get' };
+    const updatedRequest = operator(request);
+    console.log(updatedRequest.method); // Outputs: 'GET'
+    ```
+
+    Adding the operator to the `HttpClient`:
+
+    ```typescript
+    const httpClient = new HttpClient();
+    httpClient.requestHandler.add('capatalize-method', capitalizeRequestMethodOperator());
+
+    // transforms `method` to uppercase and logs a warning.
+    httpClient.get('https://example.com', { method: 'get' });
+    ```
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - The `HttpClientConfigurator` now has by default the `capitalizeRequestMethodOperator` and `requestValidationOperator` enabled.
+
+    **CapitalizeRequestMethodOperator**
+
+    This operator will capitalize the HTTP method name before sending the request. This is useful when you are using a client that requires the HTTP method to be capitalized. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
+
+    ```typescript
+    httpConfig.defaultHttpRequestHandler.remove('capitalize-method');
+    ```
+
+    > [!NOTE]
+    > This operator is enabled by default and will log to the console if the method is not capitalized.
+
+    **RequestValidationOperator**
+
+    This operator will parse and validate the request before sending it. If the request is invalid, the error will be logged to the console. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
+
+    ```typescript
+    httpConfig.defaultHttpRequestHandler.remove('validate-request');
+    ```
+
+    > [!NOTE]
+    > This operator is enabled by default and will log to the console if the request parameters are invalid.
+
+    If you wish stricter validation, you can enable the `strict` mode by setting the `strict` property to `true`:
+
+    ```typescript
+    import { requestValidationOperator } from '@equinor/fusion-framework-module-http/operators';
+
+    httpConfig.defaultHttpRequestHandler.set(
+      'validate-request'
+      requestValidationOperator({
+        strict: true, // will throw error if schema is not valid
+        parse: true // will not allow additional properties
+      })
+    );
+    ```
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Added `remove` to the `ProcessOperators` to allow for the removal of a specific operator. This is useful for removing operators that are not desired, example default operators included in initial configuration.
+
+    example:
+
+    ```typescript
+    httpClient.requestHandler.remove('capitalize-method');
+    ```
+
+    > [!NOTE]
+    > There are currently no code completion for the `remove` method, so you will need to know the name of the operator you want to remove. We assume this is so low level that if you are removing operators you know what the name of the operator is.
+
+    > [!TIP]
+    > If you only wish to replace the operator with another operator, you can use the `set` method instead of `remove` and `add`.
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - **New Feature: Enhanced `requestValidationOperator`**
+
+    The `requestValidationOperator` is a utility function that validates incoming requests against a Zod schema. This function has two options: `strict` and `parse`. The `strict` option allows you to enforce strict validation, while the `parse` option enables you to return the parsed request object if it passes validation.
+
+    The `requestValidationOperator` is meant to be used as a request operator in the Fusion API framework. It is a higher-order function that takes a Zod schema as an argument and returns a function that validates incoming requests against that schema.
+
+    | Option                | Description                                                                                                                      | Usage                                                                                                                                 |
+    | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+    | **Strict Validation** | When `strict` is set to `true`, the validation will fail if there are additional properties not defined in the schema.           | If `strict` is set to `false` or omitted, additional properties will be allowed and passed through without causing validation errors. |
+    | **Parse Option**      | When `parse` is enabled, the function will return the parsed and potentially transformed request object if it passes validation. | If `parse` is not enabled, the function will not return anything even if the request object is valid.                                 |
+
+    To use the new `strict` and `parse` options, update your code as follows:
+
+    Example usage with strict validation:
+
+    ```typescript
+    const operator = requestValidationOperator({ strict: true });
+
+    // This will throw an error because of invalid method and extra property.
+    operator({
+        method: 'post',
+        body: 'foo',
+        extraProperty: 'This should not be here',
+    });
+    ```
+
+    Example usage with parsing enabled:
+
+    ```typescript
+    // Example usage with parsing enabled
+    const operator = requestValidationOperator({ parse: true });
+
+    // will return { method: 'GET' }
+    const parsedRequest = operator({
+        method: 'GET',
+        extraProperty: 'This should not be here',
+    });
+    ```
+
+    Example usage with both strict validation and parsing enabled:
+
+    ```typescript
+    const operator = requestValidationOperator({ strict: true, parse: true });
+
+    // will throw an error because of extra property.
+    const parsedStrictRequest = operator({
+        method: 'GET',
+        extraProperty: 'This should not be here',
+    });
+    ```
+
+    Example usage with the `HttpClient`:
+
+    ```typescript
+    const httpClient = new HttpClient();
+
+    // Add the request validation operator to the HttpClient.
+    httpClient.requestHandler.add('validate-init', requestValidationOperator({ parse: true }));
+
+    // will throw an error because of invalid method.
+    httpClient.get('https://example.com', { method: 'get' });
+    ```
+
 ## 6.1.0
 
 ### Minor Changes

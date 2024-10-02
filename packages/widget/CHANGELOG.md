@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.1.17
+
+### Patch Changes
+
+-   Updated dependencies [[`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51)]:
+    -   @equinor/fusion-framework-module-http@6.2.0
+    -   @equinor/fusion-framework@7.2.8
+    -   @equinor/fusion-framework-module-widget@8.0.0
+
 ## 1.1.16
 
 ### Patch Changes

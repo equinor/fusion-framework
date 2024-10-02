@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.5
+
+### Patch Changes
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Capatalize http request method verb to uppercase
+
 ## 4.1.4
 
 ### Patch Changes
