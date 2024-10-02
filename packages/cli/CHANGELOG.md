@@ -1,5 +1,20 @@
 # Change Log
 
+## 9.13.1
+
+### Patch Changes
+
+-   [#2493](https://github.com/equinor/fusion-framework/pull/2493) [`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
+
+    Updated the following dependencies
+
+    -   `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
+
+-   Updated dependencies [[`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81)]:
+    -   @equinor/fusion-framework-react-components-people-provider@1.4.8
+    -   @equinor/fusion-framework-app@9.1.9
+    -   @equinor/fusion-framework-module-feature-flag@1.1.9
+
 ## 9.13.0
 
 ### Minor Changes

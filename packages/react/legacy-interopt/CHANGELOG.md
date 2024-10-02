@@ -1,5 +1,19 @@
 # Change Log
 
+## 16.0.0
+
+### Patch Changes
+
+-   [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Capatalize http request method verb to uppercase
+
+-   Updated dependencies [[`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51)]:
+    -   @equinor/fusion-framework-module-http@6.2.0
+    -   @equinor/fusion-framework-app@9.1.9
+    -   @equinor/fusion-framework@7.2.8
+    -   @equinor/fusion-framework-module-app@5.3.11
+    -   @equinor/fusion-framework-module-service-discovery@8.0.1
+    -   @equinor/fusion-framework-react-app@5.2.9
+
 ## 15.0.0
 
 ### Minor Changes
