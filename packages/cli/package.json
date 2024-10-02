@@ -21,6 +21,18 @@
         ".": {
             "types": "./dist/types/lib/index.d.ts",
             "import": "./dist/lib/index.js"
+        },
+        "./plugin-app-assets":{
+            "types": "./dist/types/bin/plugins/app-assets/index.d.ts",
+            "import": "./dist/lib/plugins/app-assets/index.js"
+        },
+        "./plugin-app-proxy": {
+            "types": "./dist/types/lib/plugins/app-proxy/index.d.ts",
+            "import": "./dist/lib/plugins/app-proxy/index.js"
+        },
+        "./plugin-external-public": {
+            "types": "./dist/types/lib/plugins/external-public/index.d.ts",
+            "import": "./dist/lib/plugins/external-public/index.js"
         }
     },
     "scripts": {
