@@ -1,12 +1,12 @@
 import { Module } from '@equinor/fusion-framework-module';
 import { ModuleDeps } from './types';
 
-import { IAppConfigurator, AppConfigurator } from './AppConfigurator';
+import { AppConfigurator } from './AppConfigurator';
 import { AppModuleProvider } from './AppModuleProvider';
 
 export const moduleKey = 'app';
 
-export type AppModule = Module<typeof moduleKey, AppModuleProvider, IAppConfigurator, ModuleDeps>;
+export type AppModule = Module<typeof moduleKey, AppModuleProvider, AppConfigurator, ModuleDeps>;
 
 /**
  * Represents a module for handling applications.
@@ -29,7 +29,7 @@ export const module: AppModule = {
      * @returns A new instance of AppModuleProvider.
      */
     initialize: async (args) => {
-        const config = await (args.config as AppConfigurator).createConfig(args);
+        const config = await args.config.createConfigAsync(args);
         const event = await args.requireInstance('event').catch(() => undefined);
         return new AppModuleProvider({ config, event });
     },

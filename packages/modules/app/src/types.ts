@@ -19,7 +19,8 @@ export type AppEnv<TConfig = unknown, TProps = unknown> = {
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
-export type AppType = 'standalone' | 'report' | 'launcher';
+// TODO: remove `report` and `launcher` when legacy apps are removed
+export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
@@ -27,43 +28,74 @@ export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
     | null
     | undefined;
 
-export type AppAuth = {
-    clientId: string;
-    resources: string[];
+type Nullable<T> = T | null | undefined;
+
+type AppPerson = {
+    id: string;
+    azureUniqueId: string;
+    displayName: string;
+    mail?: Nullable<string>;
+    upn?: Nullable<string>;
+    accountType: string;
+    accountClassification?: Nullable<string>;
+    isExpired?: Nullable<boolean>;
 };
 
-type AppCategory = {
-    id?: string;
-    name: string | null;
-    color: string | null;
-    defaultIcon: string | null;
-};
+export type AppAdmin = AppPerson;
 
-export type AppManifest = {
-    key: string;
-    name: string;
-    entry: string;
+export type AppOwner = AppPerson;
+
+export type AppBuildManifest = {
     version: string;
-    shortName?: string;
-    description?: string;
-    type?: AppType;
-    tags?: string[];
-    // context?: ContextManifest;
-    auth?: AppAuth[];
-    icon?: string;
-    order?: number;
-    publishedDate?: Date;
-    accentColor?: string;
-    categoryId?: string;
-    category?: AppCategory;
-    hide?: boolean;
+    entryPoint: string;
+    tags?: Nullable<string[]>;
+    tag?: Nullable<'latest' | 'preview'>;
+    assetPath?: Nullable<string>;
+    configUrl?: Nullable<string>;
+    timestamp?: Nullable<string>;
+    commitSha?: Nullable<string>;
+    githubRepo?: Nullable<string>;
+    projectPage?: Nullable<string>;
+    annotations?: Nullable<Record<string, string>>;
+    allowedExtensions?: Nullable<string[]>;
+    uploadedBy?: Nullable<AppOwner>;
 };
 
-export type Endpoint = { name: string; uri: string; scopes?: string[] };
+export interface AppManifest {
+    /** @deprecated will be removed, use appKey */
+    key?: string;
+    appKey: string;
+    /** @deprecated will be removed, use displayName */
+    name?: string;
+    displayName: string;
+    description: string;
+    type: AppType;
+    isPinned?: Nullable<boolean>;
+    templateSource?: Nullable<string>;
+    category?: Nullable<{
+        id: string;
+        name: string;
+        displayName: string;
+        color: string;
+        defaultIcon: string;
+        sortOrder: number;
+    }>;
+    visualization?: Nullable<{
+        color?: Nullable<string>;
+        icon?: Nullable<string>;
+        sortOrder: number;
+    }>;
+    keywords?: Nullable<string[]>;
+    admins?: Nullable<AppAdmin[]>;
+    owners?: Nullable<AppOwner[]>;
+    build?: Nullable<AppBuildManifest>;
+}
+
+export type Endpoint = { url: string; scopes?: string[] };
 
 export type AppConfig<TEnvironment = unknown> = {
-    environment: TEnvironment;
-    endpoints: Record<string, string | Endpoint>;
+    environment?: TEnvironment;
+    endpoints?: Record<string, Endpoint>;
 };
 
 /**

@@ -11,13 +11,18 @@ import {
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
 export const configure = async (config: FrameworkConfigurator) => {
-    config.logger.level = 0;
-
     config.configureServiceDiscovery({
         client: {
-            baseUri: String(new URL('/_discovery/environments/current', import.meta.url)),
+            baseUri:
+                'https://discovery.fusion.equinor.com/service-registry/environments/ci/services',
             defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
         },
+    });
+
+    // Add custom client for app
+    config.configureHttpClient('app', {
+        baseUri: new URL('/apps-proxy/', window.location.href).href,
+        defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
     });
 
     config.configureMsal(

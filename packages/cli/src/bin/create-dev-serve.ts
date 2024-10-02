@@ -1,27 +1,35 @@
-import { join } from 'node:path';
-import { readFileSync } from 'node:fs';
-import { assert } from 'node:console';
+import {
+    createServer,
+    defineConfig,
+    mergeConfig,
+    type LibraryOptions,
+    type UserConfig,
+} from 'vite';
 
-import { LibraryOptions, createServer } from 'vite';
-import ViteRestart from 'vite-plugin-restart';
+import { assert } from 'node:console';
+import { join, relative } from 'node:path';
 
 import portFinder from 'portfinder';
 
-import { createDevProxy } from './dev-proxy.js';
+import deepmerge from 'deepmerge/index.js';
+
+import ViteRestart from 'vite-plugin-restart';
+import { appProxyPlugin } from '../lib/plugins/app-proxy/app-proxy-plugin.js';
+import { externalPublicPlugin } from '../lib/plugins/external-public/external-public-plugin.js';
+
+import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
+import { manifestConfigFilename } from '../lib/app-manifest.js';
+import { appConfigFilename } from '../lib/app-config.js';
 
 import { loadAppConfig } from './utils/load-app-config.js';
 import { loadViteConfig } from './utils/load-vite-config.js';
-import { loadAppManifest } from './utils/load-manifest.js';
-
+import { loadPackage } from './utils/load-package.js';
 import { Spinner } from './utils/spinner.js';
 import { chalk, formatPath } from './utils/format.js';
+import { loadAppManifest } from './utils/load-manifest.js';
+import { proxyRequestLogger } from './utils/proxy-request-logger.js';
 
-import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
-import { createManifest, manifestConfigFilename } from '../lib/app-manifest.js';
-import { appConfigFilename, createAppConfig } from '../lib/app-config.js';
-import { loadPackage } from './utils/load-package.js';
-
-import { rateLimit } from 'express-rate-limit';
+import { type AppManifest } from '@equinor/fusion-framework-module-app';
 
 export const createDevServer = async (options: {
     portal: string;
@@ -34,13 +42,11 @@ export const createDevServer = async (options: {
     port?: number;
     library?: 'react';
 }) => {
-    const { configSourceFiles, library, portal, port, devPortalPath } = options;
+    const { configSourceFiles, library, port, devPortalPath } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
     const pkg = await loadPackage();
-
-    spinner.info(`using portal 🔌${formatPath(portal)} as proxy target`);
 
     const env: ConfigExecuterEnv = {
         command: 'serve',
@@ -48,135 +54,112 @@ export const createDevServer = async (options: {
         root: pkg.root,
     };
 
+    const generateManifest = async () => {
+        const { manifest } = await loadAppManifest(env, pkg, {
+            file: configSourceFiles.manifest,
+        });
+        const assetPath = `bundles/apps/${manifest.appKey}/${pkg.packageJson.version}`;
+        return deepmerge(manifest, {
+            build: {
+                assetPath,
+                configUrl: `${assetPath}/config`,
+            },
+        }) as AppManifest;
+    };
+
+    const generateConfig = async () => {
+        const { config } = await loadAppConfig(env, pkg, {
+            file: configSourceFiles.app,
+        });
+        return config;
+    };
+
+    const { appKey } = await generateManifest();
+
     /**
      * Load application manifest
      * Application might have overridden the `appKey`
      */
-    const manifest = await loadAppManifest(env, pkg, { file: configSourceFiles.manifest });
-    const { key: appKey } = manifest.manifest;
     spinner.info(`resolved application key ${chalk.magenta(appKey)}`);
 
-    const { viteConfig, path: viteConfigPath } = await loadViteConfig(env, {
+    const { viteConfig: baseViteConfig, path: viteConfigPath } = await loadViteConfig(env, {
         file: configSourceFiles.vite,
     });
+
+    /**
+     * Defines the configuration for the development server.
+     */
+    const devServerConfig = defineConfig({
+        publicDir: devPortalPath,
+        appType: 'custom',
+        server: {
+            open: `/apps/${appKey}`,
+            port: port ?? (await portFinder.getPortPromise({ port: 3000 })),
+        },
+        plugins: [
+            // Serve the dev portal as static files
+            externalPublicPlugin(devPortalPath),
+            // Proxy requests to the app server
+            appProxyPlugin({
+                proxy: {
+                    path: '/apps-proxy',
+                    target: 'https://fusion-s-apps-ci.azurewebsites.net/',
+                    onProxyReq: proxyRequestLogger,
+                },
+                app: {
+                    key: appKey,
+                    version: String(pkg.packageJson.version),
+                    generateConfig,
+                    generateManifest,
+                },
+            }),
+            // Restart the server when config changes or the dev portal source is updated
+            ViteRestart({
+                restart: [
+                    'package.json',
+                    viteConfigPath,
+                    join(relative(process.cwd(), devPortalPath), '/**/*'),
+                ].filter((x): x is string => !!x),
+                /** reload the CLI when config changes, note change to APP-KEY need restart */
+                reload: [
+                    ...supportedExt.map((ext) => [appConfigFilename, ext].join('')),
+                    ...supportedExt.map((ext) => [manifestConfigFilename, ext].join('')),
+                ],
+            }),
+        ],
+    });
+
+    // Merge the base Vite config with the dev server config
+    const viteConfig = mergeConfig(devServerConfig, baseViteConfig) as UserConfig;
 
     /** Add library/framework plugins */
     if (library === 'react') {
         const reactPlugin = await import('@vitejs/plugin-react');
-        viteConfig.plugins.push(reactPlugin.default());
+        viteConfig.plugins!.push(reactPlugin.default());
     }
 
-    viteConfig.plugins.push(
-        ViteRestart({
-            restart: ['package.json', viteConfigPath].filter((x): x is string => !!x),
-            /** reload the CLI when config changes, note change to APP-KEY need restart */
-            reload: [
-                ...supportedExt.map((ext) => [appConfigFilename, ext].join('')),
-                ...supportedExt.map((ext) => [manifestConfigFilename, ext].join('')),
-            ],
-        }),
+    assert(viteConfig.build?.lib, 'expected vite build to have library defined');
+
+    const { entry } = viteConfig.build!.lib as LibraryOptions;
+
+    spinner.info('💾 application entrypoint', formatPath(String(entry), { relative: true }));
+
+    spinner.info(
+        'resolving cli internal assets from',
+        formatPath(String(viteConfig.publicDir), { relative: true }),
     );
 
     const vite = await createServer({ ...env, ...viteConfig });
-    assert(vite.config.build.lib, 'expected vite build to have library defined');
-    const { entry } = vite.config.build.lib as LibraryOptions;
 
-    spinner.info('💾 application entrypoint', formatPath(String(entry)));
-
-    spinner.info('resolving cli internal assets from ', formatPath(devPortalPath));
-
-    /** add proxy handlers */
-    const server = createDevProxy(
-        {
-            onConfigResponse: async (slug, message, data) => {
-                if (slug.appKey === appKey) {
-                    if (message.statusCode === 404) {
-                        const { config: response, path } = await loadAppConfig(env, pkg, {
-                            file: configSourceFiles.app,
-                        });
-                        return { response, path, statusCode: 200 };
-                    } else if (data) {
-                        const { config: response, path } = await createAppConfig(env, data, {
-                            file: configSourceFiles.app,
-                        });
-                        path && spinner.info('created config from ', formatPath(path));
-                        return { response, path };
-                    }
-                }
-            },
-            onManifestResponse: async (slug, message, data) => {
-                if (slug.appKey === appKey) {
-                    if (message.statusCode === 404) {
-                        const { manifest: response, path } = await loadAppManifest(env, pkg, {
-                            file: configSourceFiles.manifest,
-                        });
-                        response.entry = `/${entry}`;
-                        return { response, path, statusCode: 200 };
-                    } else if (data) {
-                        const { manifest: response, path } = await createManifest(env, data, {
-                            file: configSourceFiles.manifest,
-                        });
-                        response.entry = `/${entry}`;
-                        path && spinner.info('created manifest from ', formatPath(path));
-                        return { response, path };
-                    }
-                }
-            },
-            onManifestListResponse: async (slug, message, data) => {
-                // TODO: Verify if we should always only return current app or all apps from API + current app.
-                if (!data) {
-                    const { manifest, path } = await loadAppManifest(env, pkg, {
-                        file: configSourceFiles.manifest,
-                    });
-                    manifest.entry = `/${entry}`;
-                    return { response: [manifest], path };
-                }
-                let path: string | undefined;
-                const atIndex = data?.findIndex((manifest) => manifest.key === appKey) ?? -1;
-                // If existing app, we need to change the entry-point.
-                if (atIndex > -1) {
-                    data[atIndex].entry = `/${entry}`;
-                } else {
-                    const { manifest, path: manifestPath } = await loadAppManifest(env, pkg, {
-                        file: configSourceFiles.manifest,
-                    });
-                    manifest.entry = `/${entry}`;
-                    path = manifestPath;
-                    data.push(manifest);
-                }
-                return { response: data, path };
-            },
-        },
-        {
-            target: portal,
-            staticAssets: [{ path: devPortalPath }],
-        },
-    );
-
-    /** connect dev server to Vite */
-    server.use(vite.middlewares);
-
-    /** redirect all request that miss to index.html, SPA logic */
-    server.use(
-        '*',
-        async (req, res) => {
-            // TODO add check if file request
-            const htmlRaw = readFileSync(join(devPortalPath + '/index.html'), 'utf-8');
-            const html = await vite.transformIndexHtml(req.url, htmlRaw);
-            res.send(html);
-        },
-        rateLimit({
-            max: 10,
-        }),
-    );
-
-    /** use provided port or resolve available  */
-    const serverPort = port ?? (await portFinder.getPortPromise({ port: 3000 }));
     spinner.start('🚀 start server');
-    server.listen(serverPort);
-    spinner.succeed();
+    await vite.listen();
     spinner.succeed(
         '🔗',
-        chalk.underline.green(new URL(`/apps/${appKey}`, `http://localhost:${serverPort}`).href),
+        chalk.underline.green(
+            new URL(
+                `/apps/${appKey}`,
+                vite.resolvedUrls?.local[0] ?? `https://localhost:/${vite.config.server.port}`,
+            ).href,
+        ),
     );
 };

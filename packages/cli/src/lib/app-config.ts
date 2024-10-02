@@ -11,13 +11,7 @@ import { AssertionError, assertObject } from './utils/assert.js';
 import { ResolvedAppPackage } from './app-package.js';
 import deepmerge from 'deepmerge/index.js';
 
-// TODO extend defined type in app-package
-export type AppConfig = {
-    /** application config */
-    environment?: Record<string, unknown>;
-    /** application urls @todo missing scope, use environment until further notice */
-    endpoints?: Record<string, string>;
-};
+import type { AppConfig } from '@equinor/fusion-framework-module-app';
 
 type FindAppConfigOptions = FindConfigOptions & {
     file?: string;
@@ -26,7 +20,7 @@ type FindAppConfigOptions = FindConfigOptions & {
 export type AppConfigFn = (
     env: ConfigExecuterEnv,
     args: { base: AppConfig },
-) => AppConfig | Promise<AppConfig>;
+) => AppConfig | Promise<AppConfig | void> | void;
 export type AppConfigExport = AppConfig | AppConfigFn;
 
 export const appConfigFilename = 'app.config';
@@ -78,7 +72,7 @@ export const createAppConfig = async (
 ): Promise<{ config: AppConfig; path?: string }> => {
     const resolved = await resolveAppConfig(options);
     if (resolved) {
-        const config = await initiateConfig(resolved.config, env, { base });
+        const config = (await initiateConfig(resolved.config, env, { base })) ?? {};
         assertAppConfig(config);
         return { config, path: resolved.path };
     } else if (options?.file) {
