@@ -54,5 +54,5 @@ export const uploadAppBundle = async (endpoint: string, bundle: string) => {
         );
     }
 
-    return await requestBundle.json();
+    return requestBundle.json();
 };

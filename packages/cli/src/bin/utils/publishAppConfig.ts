@@ -21,7 +21,7 @@ export const publishAppConfig = async (endpoint: string, appKey: string, config:
         throw new Error(
             `App ${appKey} is deleted from apps-service. HTTP status ${requestConfig.status}, ${requestConfig.statusText}`,
         );
-    } else if (!requestConfig.ok || requestConfig.status > 399) {
+    } else if (!requestConfig.ok || requestConfig.status >= 400) {
         const response = await requestConfig.json();
         console.log(response);
         throw new Error(
@@ -29,5 +29,5 @@ export const publishAppConfig = async (endpoint: string, appKey: string, config:
         );
     }
 
-    return await requestConfig.json();
+    return requestConfig.json();
 };

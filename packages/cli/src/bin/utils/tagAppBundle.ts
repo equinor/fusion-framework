@@ -28,5 +28,5 @@ export const tagAppBundle = async (endpoint: string, version: string) => {
         );
     }
 
-    return await requestTag.json();
+    return requestTag.json();
 };
