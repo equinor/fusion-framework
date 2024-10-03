@@ -1072,8 +1072,8 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^2.21.0
-        version: 2.39.0
+        specifier: ^3.25.0
+        version: 3.25.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -1868,12 +1868,12 @@ packages:
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
 
-  '@azure/msal-browser@2.39.0':
-    resolution: {integrity: sha512-kks/n2AJzKUk+DBqZhiD+7zeQGBl+WpSOQYzWy6hff3bU0ZrYFqr4keFLlzB5VKuKZog0X59/FGHb1RPBDZLVg==}
+  '@azure/msal-browser@3.25.0':
+    resolution: {integrity: sha512-a0Y7pmSy8SC1s9bvwr+REvyAA1nQcITlZvkElM2gNUPYFTTNUTEdcpg73TmawNucyMdZ9xb/GFcuhrLOqYAzwg==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@13.3.3':
-    resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
+  '@azure/msal-common@14.15.0':
+    resolution: {integrity: sha512-ImAQHxmpMneJ/4S8BRFhjt1MZ3bppmpRPYYNyzeQPeFN288YKbb8TmmISQEbtfkQ1BPASvYZU5doIZOPBAqENQ==}
     engines: {node: '>=0.8.0'}
 
   '@babel/code-frame@7.26.2':
@@ -9059,11 +9059,11 @@ snapshots:
 
   '@antfu/utils@0.7.10': {}
 
-  '@azure/msal-browser@2.39.0':
+  '@azure/msal-browser@3.25.0':
     dependencies:
-      '@azure/msal-common': 13.3.3
+      '@azure/msal-common': 14.15.0
 
-  '@azure/msal-common@13.3.3': {}
+  '@azure/msal-common@14.15.0': {}
 
   '@babel/code-frame@7.26.2':
     dependencies:
