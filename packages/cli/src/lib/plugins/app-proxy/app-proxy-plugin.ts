@@ -124,19 +124,19 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
             // disable local assets if no app configuration provided
             if (!app) return;
 
+            // serve app config if request matches the current app and version
+            const configPath = `${proxyPath}/apps/${app.key}/builds/${app.version}/config`;
+            server.middlewares.use(configPath, async (_req, res) => {
+                res.setHeader('content-type', 'application/json');
+                res.end(JSON.stringify(await app.generateConfig()));
+            });
+
             // serve app manifest if request matches the current app
             // todo this should have version
             const manifestPath = `${proxyPath}/apps/${app.key}`;
             server.middlewares.use(manifestPath, async (_req, res) => {
                 res.setHeader('content-type', 'application/json');
                 res.end(JSON.stringify(await app.generateManifest()));
-            });
-
-            // serve app config if request matches the current app and version
-            const configPath = `${proxyPath}/apps/${app.key}/builds/${app.version}/config`;
-            server.middlewares.use(configPath, async (_req, res) => {
-                res.setHeader('content-type', 'application/json');
-                res.end(JSON.stringify(await app.generateConfig()));
             });
 
             // serve local bundles if request matches the current app and version
