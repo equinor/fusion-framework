@@ -11,19 +11,21 @@ export const isAppRegistered = async (endpoint: string, appKey: string) => {
         },
     });
 
+    const response = await requestApp.json();
+
     if (requestApp.status === 404) {
+        console.log(response);
         throw new Error(
             `The appkey '${appKey}' is not registered, visit the app-admin app and register the application there.`,
         );
     }
 
     if (!requestApp.ok) {
-        const response = await requestApp.json();
         console.log(response);
         throw new Error(
             `Could not connect to apps-service. HTTP status ${requestApp.status}, ${requestApp.statusText}`,
         );
     }
 
-    return await requestApp.json();
+    return response;
 };
