@@ -35,7 +35,7 @@ export const uploadApplication = async (options: {
     const appKey = resolveAppKey(pkg.packageJson);
 
     try {
-        spinner.info('Verifying that App is registered');
+        spinner.info(`Verifying that ${appKey} is registered`);
         const state = { endpoint: '' };
 
         try {
@@ -47,7 +47,10 @@ export const uploadApplication = async (options: {
             );
         }
 
+        spinner.info('Using endpoint:', state.endpoint);
+
         await isAppRegistered(state.endpoint, appKey);
+
         spinner.succeed(`${appKey} is registered`);
     } catch (e) {
         const err = e as Error;
