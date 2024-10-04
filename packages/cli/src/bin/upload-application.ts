@@ -47,7 +47,7 @@ export const uploadApplication = async (options: {
             );
         }
 
-        spinner.info('Verifying towards endpoint:', state.endpoint);
+        spinner.info('Using endpoint:', state.endpoint);
 
         await isAppRegistered(state.endpoint, appKey);
 
