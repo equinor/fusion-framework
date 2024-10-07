@@ -13,6 +13,7 @@ import {
 import type { FusionEnv } from './utils/index.js';
 
 import { exit } from 'node:process';
+import assert from 'node:assert';
 
 export const publishApplication = async (options: {
     tag: string;
@@ -54,12 +55,13 @@ export const publishApplication = async (options: {
             );
         }
 
-        await isAppRegistered(state.endpoint, appKey);
+        const exist = await isAppRegistered(state.endpoint);
+        assert(exist, `${appKey} is not registered`);
         spinner.succeed(`${appKey} is registered`);
     } catch (e) {
         const err = e as Error;
         spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
-        exit(1);
+        throw err;
     }
 
     const bundle = 'app-bundle.zip';

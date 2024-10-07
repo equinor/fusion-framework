@@ -4,6 +4,7 @@ import { chalk } from './utils/format.js';
 import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
 import { isAppRegistered, getEndpointUrl, requireToken, uploadAppBundle } from './utils/index.js';
 import type { FusionEnv } from './utils/index.js';
+import assert from 'node:assert';
 
 export const uploadApplication = async (options: {
     bundle: string;
@@ -49,13 +50,14 @@ export const uploadApplication = async (options: {
 
         spinner.info('Using endpoint:', state.endpoint);
 
-        await isAppRegistered(state.endpoint, appKey);
+        const exist = await isAppRegistered(state.endpoint);
+        assert(exist, `${appKey} is not registered`);
 
         spinner.succeed(`${appKey} is registered`);
     } catch (e) {
         const err = e as Error;
         spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
-        exit(1);
+        throw err;
     }
 
     /* Upload app bundle */
