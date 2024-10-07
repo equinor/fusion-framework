@@ -1,32 +1,26 @@
 import fetch from 'node-fetch';
+
 /**
  * Make sure the app is registerred in the app-service
  * @param endpoint <string> The endpoint to make a call to
- * @param appKey <string> The appkey to check for
- * @returns response object as json
  */
-export const isAppRegistered = async (endpoint: string, appKey: string) => {
+export const isAppRegistered = async (endpoint: string): Promise<boolean> => {
     const requestApp = await fetch(endpoint, {
+        method: 'HEAD',
         headers: {
             Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
         },
     });
 
-    const response = await requestApp.json();
+    /** Assume that ok response asserts that app exists */
+    if (requestApp.ok) {
+        return true;
+    }
 
     if (requestApp.status === 404) {
-        console.log(response);
-        throw new Error(
-            `The appkey '${appKey}' is not registered, visit the app-admin app and register the application there.`,
-        );
+        return false;
     }
 
-    if (!requestApp.ok) {
-        console.log(response);
-        throw new Error(
-            `Could not connect to apps-service. HTTP status ${requestApp.status}, ${requestApp.statusText}`,
-        );
-    }
-
-    return response;
+    const data = await requestApp.json();
+    throw Error('Custom Fusion error, see cause.', { cause: data });
 };
