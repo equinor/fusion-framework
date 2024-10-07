@@ -10,8 +10,10 @@ import { formatPath, chalk } from './utils/format.js';
 import { createAppManifest, createBuildManifest } from './create-export-manifest.js';
 import { bundleApplication } from './bundle-application.js';
 import { createExportConfig } from './create-export-config.js';
+import { uploadExportConfig } from './upload-export-config.js';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
+import { version } from '../../../app/src/version';
 
 export default (program: Command) => {
     const app = program
@@ -111,8 +113,58 @@ export default (program: Command) => {
         .description('Generate config')
         .option('-o, --output <string>', 'output file')
         .option('-c, --config <string>', 'application config file')
+        .option('-p, --publish', 'Publish config to app api')
         .option(
-            '-p, --publish <string>',
+            '-v, --version <string>',
+            `Publish app config to version [${chalk.yellowBright('(semver | current | latest | preview)')}]`,
+            'current',
+        )
+        .option(
+            '-e, --env, <ci | fqa | tr | fprd>',
+            'Fusion environment to build api urls from. used when publishing config.',
+        )
+        .option(
+            '-s, --service, <string>',
+            'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands. the --env parameter is ignored when set',
+        )
+        .action((opt) => {
+            if (opt.publish) {
+                opt.output = opt.output ?? 'app.config.json';
+
+                if (!opt.env) {
+                    console.error(
+                        chalk.redBright(
+                            'Missing required option --env when publishing, see --help for usage'
+                        ),
+                    );
+                    return;
+                }
+
+                createExportConfig({
+                    outputFile: opt.output,
+                    configFile: opt.config,
+                }).then(() => {
+                    uploadExportConfig({
+                        configFile: opt.output,
+                        version: opt.version,
+                        env: opt.env,
+                        service: opt.service,
+                    });
+                });
+                return;
+            }
+
+            createExportConfig({
+                outputFile: opt.output,
+                configFile: opt.config,
+            });
+        });
+
+    app.command('upload-config')
+        .description('Upload config file to app api')
+        .requiredOption('-c, --config <string>', 'Generated application config json file')
+        .option(
+            '-v, --version <string>',
             `Publish app config to version [${chalk.yellowBright('(semver | current | latest | preview)')}]`,
             'current',
         )
@@ -125,10 +177,9 @@ export default (program: Command) => {
             'Define uri to custom app service. You can also define the env variable CUSTOM_APPAPI to be used on all publish commands. the --env parameter is ignored when set',
         )
         .action((opt) => {
-            createExportConfig({
-                outputFile: opt.output,
+            uploadExportConfig({
                 configFile: opt.config,
-                publish: opt.publish,
+                version: opt.version,
                 env: opt.env,
                 service: opt.service,
             });
