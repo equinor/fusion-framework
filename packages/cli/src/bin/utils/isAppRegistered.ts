@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 /**
  * Make sure the app is registerred in the app-service
  * @param endpoint <string> The endpoint to make a call to
