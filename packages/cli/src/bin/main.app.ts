@@ -13,7 +13,6 @@ import { createExportConfig } from './create-export-config.js';
 import { uploadExportConfig } from './upload-export-config.js';
 import { fileURLToPath } from 'node:url';
 import { resolve, join } from 'node:path';
-import { version } from '../../../app/src/version';
 
 export default (program: Command) => {
     const app = program
@@ -134,7 +133,7 @@ export default (program: Command) => {
                 if (!opt.env) {
                     console.error(
                         chalk.redBright(
-                            'Missing required option --env when publishing, see --help for usage'
+                            'Missing required option --env when publishing, see --help for usage',
                         ),
                     );
                     return;
