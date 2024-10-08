@@ -24,9 +24,15 @@ Commands:
   - `-t, --tag <tag>` - Tag to apply to the uploaded app
   - `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
   - `-s, --service <service>` - Custom app service
-- `build-config` - Publish the app config to a build version
+- `build-config` - Generate app config for an environment
   - `-o, --output <output>` - Output file for the app config
   - `-c, --config <config>` - Path to the app config file (for config generation)
+  - `-p, --publish` - Flag for upload the generated config
+  - `-v, --version<semver | current | latest | preview>` - Publish the app config to version
+  - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
+  - `-s, --service <service>` - Custom app service
+- `upload-config` - Upload the app config to a build version
+  - `-c, --config <config>` - Path to the app config json file to upload
   - `-p, --publish<semver | current | latest | preview>` - Publish the app config to the build version
   - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
   - `-s, --service <service>` - Custom app service

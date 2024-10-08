@@ -21,6 +21,10 @@ export const isAppRegistered = async (endpoint: string): Promise<boolean> => {
         return false;
     }
 
+    if (requestApp.status === 410) {
+        throw Error('App is deleted.');
+    }
+
     const data = await requestApp.json();
     throw Error('Custom Fusion error, see cause.', { cause: data });
 };
