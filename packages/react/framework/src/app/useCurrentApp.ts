@@ -3,7 +3,11 @@ import { useMemo } from 'react';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { type AnyModule } from '@equinor/fusion-framework-module';
-import { type AppModule, type CurrentApp } from '@equinor/fusion-framework-module-app';
+import {
+    ConfigEnvironment,
+    type AppModule,
+    type CurrentApp,
+} from '@equinor/fusion-framework-module-app';
 
 import { useFramework } from '../useFramework';
 
@@ -15,7 +19,10 @@ import { useFramework } from '../useFramework';
  * @template TModule type hint modules which the application has configured
  * @template TEnv type hint what kind of environment config the application has
  */
-export const useCurrentApp = <TModules extends Array<AnyModule> = [], TEnv = unknown>(): {
+export const useCurrentApp = <
+    TModules extends Array<AnyModule> = [],
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+>(): {
     currentApp?: CurrentApp<TModules, TEnv> | null;
     setCurrentApp: (appKey: string) => void;
     clearCurrentApp: () => void;

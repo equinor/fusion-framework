@@ -1,7 +1,10 @@
 import { Plugin } from 'vite';
 
-import { AppConfig, AppManifest } from '@equinor/fusion-framework-app';
+import { AppManifest } from '@equinor/fusion-framework-app';
+
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
+
+import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
 /**
  * Preserve token for executing proxy assets
@@ -43,7 +46,7 @@ export type AppProxyPluginOptions = {
         /** application version */
         version: string;
         /** callback function for generating configuration for the application */
-        generateConfig: () => Promise<AppConfig>;
+        generateConfig: () => Promise<ApiAppConfig>;
         /** callback function for generating manifest for the application */
         generateManifest: () => Promise<AppManifest>;
     };

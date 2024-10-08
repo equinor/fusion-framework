@@ -1,4 +1,10 @@
-import type { AppConfig, AppModulesInstance, AppScriptModule } from '../types';
+import type {
+    AppModulesInstance,
+    AppScriptModule,
+    AppManifest,
+    AppConfig,
+    ConfigEnvironment,
+} from '../types';
 import { FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
@@ -17,7 +23,6 @@ import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
 import { actions, Actions } from './actions';
 import { AppBundleState, AppBundleStateInitial } from './types';
-import { AppManifest } from '../types';
 
 import './events';
 
@@ -32,7 +37,10 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
  * @template TModules The type of the app modules.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown> {
+export interface IApp<
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+    TModules extends Array<AnyModule> | unknown = unknown,
+> {
     /**
      * Returns an observable that emits the app manifest.
      * @returns An observable of type AppManifest.
@@ -175,8 +183,10 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
 
 // TODO make streams distinct until changed from state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown>
-    implements IApp<TEnv, TModules>
+export class App<
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+    TModules extends Array<AnyModule> | unknown = unknown,
+> implements IApp<TEnv, TModules>
 {
     #state: FlowSubject<AppBundleState, Actions>;
 
@@ -191,7 +201,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     get config$(): Observable<AppConfig<TEnv>> {
         return this.#state.pipe(
-            map(({ config }) => config),
+            map(({ config }) => config as AppConfig<TEnv>),
             filterEmpty(),
         );
     }
@@ -229,11 +239,11 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         return firstValueFrom(this.manifest$);
     }
 
-    get config(): Readonly<AppConfig<TEnv>> | undefined {
-        return this.state.config;
+    get config(): AppConfig<TEnv> | undefined {
+        return this.state.config as AppConfig<TEnv>;
     }
 
-    get configAsync(): Promise<Readonly<AppConfig<TEnv>>> {
+    get configAsync(): Promise<AppConfig<TEnv>> {
         return firstValueFrom(this.config$);
     }
 

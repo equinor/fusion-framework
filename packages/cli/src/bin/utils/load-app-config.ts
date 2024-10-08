@@ -1,9 +1,10 @@
 import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
-import { createAppConfig, createAppConfigFromPackage } from '../../lib/app-config.js';
+import { createAppConfig } from '../../lib/app-config.js';
 import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { type ResolvedAppPackage } from '../../lib/app-package.js';
+import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
 export const loadAppConfig = async (
     env: ConfigExecuterEnv,
@@ -18,7 +19,7 @@ export const loadAppConfig = async (
         spinner.info(
             `generating config with ${chalk.red.dim(env.command)} command in ${chalk.green.dim(env.mode)} mode`,
         );
-        const baseAppConfig = createAppConfigFromPackage(pkg);
+        const baseAppConfig: ApiAppConfig = {} as ApiAppConfig;
         const appConfig = await createAppConfig(env, baseAppConfig, { file: options?.file });
         spinner.succeed();
         if (appConfig.path) {
