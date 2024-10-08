@@ -1,18 +1,22 @@
-import { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import IApp from './app';
+import type { AppConfig } from './AppConfig';
+import type IApp from './app';
+
+export type ConfigEnvironment = Record<string, unknown>;
+export type { AppConfig } from './AppConfig';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;
 
-export type AppEnv<TConfig = unknown, TProps = unknown> = {
+export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
     basename?: string;
     manifest?: AppManifest;
-    config?: AppConfig<TConfig>;
+    config?: AppConfig<TEnv>;
     props?: TProps;
 };
 
@@ -22,11 +26,10 @@ export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 // TODO: remove `report` and `launcher` when legacy apps are removed
 export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
-    | IApp<TEnv, TModules>
-    | null
-    | undefined;
+export type CurrentApp<
+    TModules extends Array<AnyModule> = [],
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+> = IApp<TEnv, TModules> | null | undefined;
 
 type Nullable<T> = T | null | undefined;
 
@@ -91,18 +94,14 @@ export interface AppManifest {
     build?: Nullable<AppBuildManifest>;
 }
 
-export type Endpoint = { url: string; scopes?: string[] };
-
-export type AppConfig<TEnvironment = unknown> = {
-    environment?: TEnvironment;
-    endpoints?: Record<string, Endpoint>;
-};
-
 /**
  * @template TEnvironment - name of hosted environment
  * @template TModule - ES module type (import return type)
  */
-export type AppBundle<TEnvironment = unknown, TModule = unknown> = {
+export type AppBundle<
+    TEnvironment extends ConfigEnvironment = ConfigEnvironment,
+    TModule = unknown,
+> = {
     manifest: AppManifest;
     config: AppConfig<TEnvironment>;
     module: TModule;

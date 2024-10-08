@@ -3,6 +3,7 @@
     "version": "5.3.11",
     "description": "",
     "main": "dist/esm/index.js",
+    "type": "module",
     "exports": {
         ".": {
             "import": "./dist/esm/index.js",
@@ -12,15 +13,16 @@
             "import": "./dist/esm/errors.js",
             "types": "./dist/types/errors.d.ts"
         },
+        "./schemas.js": {
+            "import": "./dist/esm/schemas.js",
+            "types": "./dist/types/schemas.d.ts"
+        },
         "./app": {
             "import": "./dist/esm/app/index.js",
             "types": "./dist/types/app/index.d.ts"
         },
         "./app/*.js": {
             "import": "./dist/esm/app/*.js"
-        },
-        "./application.schema.js": {
-            "import": "./dist/esm/application.schema.js"
         }
     },
     "types": "dist/types/index.d.ts",
@@ -28,6 +30,9 @@
         "*": {
             "errors.js": [
                 "dist/types/errors.d.ts"
+            ],
+            "schemas.js": [
+                "dist/types/schemas.d.ts"
             ],
             "app": [
                 "dist/types/app/index.d.ts"

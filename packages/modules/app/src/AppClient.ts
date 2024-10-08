@@ -6,10 +6,11 @@ import { queryValue } from '@equinor/fusion-query/operators';
 import { HttpResponseError, IHttpClient } from '@equinor/fusion-framework-module-http';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
-import { ApiApplicationSchema } from './application.schema';
+import { ApiApplicationSchema } from './schemas';
 
-import { AppConfig, AppManifest } from './types';
+import type { AppConfig, AppManifest, ConfigEnvironment } from './types';
 import { AppConfigError, AppManifestError } from './errors';
+import { AppConfigSelector } from './AppClient.Selectors';
 
 export interface IAppClient extends Disposable {
     /**
@@ -25,7 +26,7 @@ export interface IAppClient extends Disposable {
     /**
      * Fetch app config by appKey and tag
      */
-    getAppConfig: <TType = unknown>(args: {
+    getAppConfig: <TType extends ConfigEnvironment = ConfigEnvironment>(args: {
         appKey: string;
         tag?: string;
     }) => ObservableInput<AppConfig<TType>>;
@@ -103,6 +104,7 @@ export class AppClient implements IAppClient {
             client: {
                 fn: ({ appKey, tag = 'latest' }) => {
                     return client.json(`/apps/${appKey}/builds/${tag}/config`, {
+                        selector: AppConfigSelector,
                         headers: {
                             'Api-Version': '1.0',
                         },
@@ -136,7 +138,7 @@ export class AppClient implements IAppClient {
         return this.#manifests.query(args).pipe(queryValue);
     }
 
-    getAppConfig<TType = unknown>(args: {
+    getAppConfig<TType extends ConfigEnvironment = ConfigEnvironment>(args: {
         appKey: string;
         tag?: string;
     }): Observable<AppConfig<TType>> {
