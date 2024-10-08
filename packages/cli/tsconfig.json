@@ -28,6 +28,9 @@
       "path": "../modules/bookmark"
     },
     {
+      "path": "../modules/app"
+    },
+    {
       "path": "../app"
     },
     {

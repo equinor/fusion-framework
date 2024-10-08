@@ -1,4 +1,4 @@
-import type { AppConfig } from '@equinor/fusion-framework-module-app';
+import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
 /**
  * Publishes app config to the apps-service endpoint
@@ -7,7 +7,7 @@ import type { AppConfig } from '@equinor/fusion-framework-module-app';
  * @param config Object with app config
  * @returns HTTP response as json
  */
-export const publishAppConfig = async (endpoint: string, appKey: string, config: AppConfig) => {
+export const publishAppConfig = async (endpoint: string, appKey: string, config: ApiAppConfig) => {
     const requestConfig = await fetch(endpoint, {
         method: 'PUT',
         body: JSON.stringify(config),
