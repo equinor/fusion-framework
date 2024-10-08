@@ -52,8 +52,20 @@ export type ConfigEndPoint = {
 export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironment> {
     #endpoints: Record<string, ConfigEndPoint>;
 
+    /**
+     * The environment configuration for the application.
+     * This property is read-only and is of type `TEnvironment`.
+     */
     public readonly environment: TEnvironment;
 
+    /**
+     * @deprecated Use `getEndpoint` instead.
+     *
+     * Retrieves the endpoints as a record of strings. This method returns a proxy
+     * that maps the endpoint names to their respective URLs.
+     *
+     * @returns {Record<string, string | undefined>} A record where the keys are endpoint names and the values are their URLs.
+     */
     public get endpoints(): Record<string, string | undefined> {
         console.warn('endpoints is deprecated, use getEndpoint instead');
         return new Proxy(this.#endpoints, {
@@ -71,6 +83,12 @@ export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironmen
         this.#endpoints = config.endpoints ?? {};
     }
 
+    /**
+     * Retrieves the configuration endpoint associated with the given key.
+     *
+     * @param key - The key corresponding to the desired configuration endpoint.
+     * @returns The configuration endpoint if found, otherwise `undefined`.
+     */
     getEndpoint(key: string): ConfigEndPoint | undefined {
         return this.#endpoints[key];
     }
