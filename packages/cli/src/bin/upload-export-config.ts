@@ -16,6 +16,7 @@ import type { FusionEnv } from './utils/index.js';
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { resolveAppKey } from '../lib/app-package.js';
 import { exit } from 'node:process';
+import assert from 'node:assert';
 
 export const uploadExportConfig = async (options: {
     command?: ConfigExecuterEnv['command'];
@@ -81,12 +82,14 @@ export const uploadExportConfig = async (options: {
             );
         }
 
-        await isAppRegistered(state.endpoint, appKey);
+        const exist = await isAppRegistered(state.endpoint);
+        assert(exist, `${appKey} is not registered`);
+
         spinner.succeed(`${appKey} is registered`);
     } catch (e) {
         const err = e as Error;
         spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
-        exit(1);
+        throw err;
     }
 
     try {
