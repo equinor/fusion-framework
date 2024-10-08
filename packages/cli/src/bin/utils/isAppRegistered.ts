@@ -22,7 +22,7 @@ export const isAppRegistered = async (endpoint: string): Promise<boolean> => {
     }
 
     if (requestApp.status === 410) {
-        throw Error('App is deleted, please re-register.');
+        throw Error('App is deleted.');
     }
 
     const data = await requestApp.json();
