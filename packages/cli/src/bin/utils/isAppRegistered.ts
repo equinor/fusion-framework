@@ -17,7 +17,7 @@ export const isAppRegistered = async (endpoint: string): Promise<boolean> => {
         return true;
     }
 
-    if (requestApp.status === 404) {
+    if (requestApp.status === 404 || requestApp.status === 410) {
         return false;
     }
 
