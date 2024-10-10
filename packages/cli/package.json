@@ -36,12 +36,13 @@
         }
     },
     "scripts": {
-        "prebuild": "pnpm build:source",
-        "build": "pnpm build:source && pnpm build:dev-server",
+        "build": "pnpm build:lib && pnpm build:dev-proxy  && pnpm build:bin",
         "build:clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo && pnpm build",
-        "build:source": "tsc -b",
-        "build:dev-server": "vite build",
-        "prepack": "pnpm build"
+        "build:lib": "tsc -b tsconfig.lib.json",
+        "build:bin": "rollup -c",
+        "build:dev-proxy": "vite build",
+        "prepack": "pnpm build",
+        "clean": "rimraf dist, tsconfig.tsbuildinfo, tsconfig.lib.tsbuildinfo"
     },
     "dependencies": {
         "@vitejs/plugin-react": "^4.0.4",
@@ -92,6 +93,7 @@
         "@equinor/fusion-wc-chip": "^1.2.1",
         "@equinor/fusion-wc-person": "^3.0.1",
         "@material-ui/styles": "^4.11.5",
+        "@rollup/plugin-typescript": "^12.1.0",
         "@types/adm-zip": "^0.5.0",
         "@types/loader-utils": "^2.0.6",
         "@types/node": "^20.11.14",
@@ -103,6 +105,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.15.0",
+        "rimraf": "^6.0.0",
         "rollup": "^4.22.4",
         "rxjs": "^7.8.1",
         "styled-components": "^6.0.7",
