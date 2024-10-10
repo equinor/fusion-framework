@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/lib",
+    "rootDir": "src/lib",
+    "target": "ES6",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+  },
+  "include": ["src/lib"],
+}

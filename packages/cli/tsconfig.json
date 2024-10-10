@@ -7,7 +7,12 @@
     "declarationDir": "./dist/types",
     "baseUrl": ".",
     "jsx": "react-jsx",
-      },
+    "paths": {
+      "@equinor/fusion-framework-cli/*-plugin.js": [
+        "./src/lib/plugins/*"
+      ],
+    }
+  },
   "references": [
     {
       "path": "../utils/observable"
