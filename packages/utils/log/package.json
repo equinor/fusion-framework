@@ -12,6 +12,7 @@
     "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/utils/log/#readme",
     "license": "ISC",
     "main": "dist/esm/index.js",
+    "type": "module",
     "exports": {
         ".": {
             "import": "./dist/esm/index.js",
