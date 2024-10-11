@@ -36,7 +36,7 @@
         }
     },
     "scripts": {
-        "build": "pnpm build:lib && pnpm build:dev-proxy  && pnpm build:bin",
+        "build": "pnpm build:lib && pnpm build:dev-proxy && pnpm build:bin",
         "build:clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo && pnpm build",
         "build:lib": "tsc -b tsconfig.lib.json",
         "build:bin": "rollup -c",

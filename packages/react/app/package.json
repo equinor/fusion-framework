@@ -2,6 +2,7 @@
     "name": "@equinor/fusion-framework-react-app",
     "version": "5.2.9",
     "description": "",
+    "type": "module",
     "main": "./dist/esm/index.js",
     "types": "./dist/types/index.d.ts",
     "exports": {
