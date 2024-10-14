@@ -11,7 +11,6 @@
     "homepage": "https://equinor.github.io/fusion-framework/",
     "license": "ISC",
     "main": "dist/esm/index.js",
-    "type": "module",
     "exports": {
         ".": {
             "import": "./dist/esm/index.js",

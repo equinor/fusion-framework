@@ -4,7 +4,7 @@ import { AppManifest } from '@equinor/fusion-framework-app';
 
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
-import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
+import { ApiAppConfig } from '../../../schemas.js';
 
 /**
  * Preserve token for executing proxy assets

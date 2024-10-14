@@ -4,7 +4,7 @@ import { formatPath, chalk } from './format.js';
 import { createAppConfig } from '../../lib/app-config.js';
 import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { type ResolvedAppPackage } from '../../lib/app-package.js';
-import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
+import { ApiAppConfig } from '../../schemas.js';
 
 export const loadAppConfig = async (
     env: ConfigExecuterEnv,

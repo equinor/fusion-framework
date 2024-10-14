@@ -1,4 +1,4 @@
-import { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
+import { ApiAppConfig } from '../../schemas.js';
 
 /**
  * Publishes app config to the apps-service endpoint
