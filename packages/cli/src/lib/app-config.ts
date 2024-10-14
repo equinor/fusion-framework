@@ -9,7 +9,7 @@ import {
 
 import { AssertionError } from './utils/assert.js';
 
-import { ApiAppConfig, ApiAppConfigSchema } from '@equinor/fusion-framework-module-app/schemas.js';
+import { ApiAppConfig, ApiAppConfigSchema } from '../schemas.js';
 
 type FindAppConfigOptions = FindConfigOptions & {
     file?: string;
