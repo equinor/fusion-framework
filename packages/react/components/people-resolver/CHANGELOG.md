@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.4.9
+
+### Patch Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
+
+    Updated the following dependencies
+
+    -   `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
+
+-   Updated dependencies [[`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251)]:
+    -   @equinor/fusion-framework-react@7.3.0
+    -   @equinor/fusion-framework-react-module-bookmark@2.1.18
+
 ## 1.4.8
 
 ### Patch Changes

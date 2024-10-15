@@ -1,5 +1,225 @@
 # Change Log
 
+## 10.0.0
+
+### Major Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adding new commands for app management, `build-publish`, `build-pack`, `build-upload`, `build-config`, `build-manifest` and `build-tag`.
+
+    Introduces new parameters to the `build-config` command for publishing the app config to a build version.
+
+    Commands:
+
+    -   `build-pack` - Bundle the app for distribution
+        -   `-o, --output <output>` - Output directory for the packed app
+        -   `-a, --archive` - Archive name for the packed app
+    -   `build-upload` - Upload the packed app to the Fusion App Store
+        -   `-b, --bundle <bundle>` - Path to the packed app bundle
+        -   `-e, --env <ci | fqa | tr | fprd>` - Environment to upload the app to
+        -   `-s, --service <service>` - Custom app service
+    -   `build-tag` - Tag the uploaded app with a version
+        -   `-t, --tag <tag>` - Tag to apply to the uploaded app
+        -   `-v, --version <version>` - Version to attach to the tag
+        -   `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
+        -   `-s, --service <service>` - Custom app service
+    -   `build-publish` - Publish the app config to a build version
+        -   `-t, --tag <tag>` - Tag to apply to the uploaded app
+        -   `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
+        -   `-s, --service <service>` - Custom app service
+    -   `build-config` - Generate app config for an environment
+        -   `-o, --output <output>` - Output file for the app config
+        -   `-c, --config <config>` - Path to the app config file (for config generation)
+        -   `-p, --publish` - Flag for upload the generated config
+        -   `-v, --version<semver | current | latest | preview>` - Publish the app config to version
+        -   `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
+        -   `-s, --service <service>` - Custom app service
+    -   `upload-config` - Upload the app config to a build version
+        -   `-c, --config <config>` - Path to the app config json file to upload
+        -   `-p, --publish<semver | current | latest | preview>` - Publish the app config to the build version
+        -   `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
+        -   `-s, --service <service>` - Custom app service
+    -   `build-manifest` - Creates the build manifest to publish with app
+        -   `-o, --output <output>` - Output file for manifest
+        -   `-c, --config <config>` - Manifest config file
+
+    simple usage:
+
+    ```sh
+    fusion-framework-cli app build-publish -e ci
+    ```
+
+    complex usage:
+
+    ```sh
+    fusion-framework-cli app build-pack -o ./dist -a my-app.zip
+    fusion-framework-cli app build-upload -b ./dist/my-app.zip -e ci
+    fusion-framework-cli app build-tag -t my-tag -v 1.0.0 -e ci
+    ```
+
+    After publishing a build of an app, the app config should be uploaded to the build version. This is done by running the `build-config` command.
+
+    ```sh
+    # Publish the app config to the build version
+    fusion-framework-cli app build-config -p -e ci
+
+    # Publish the app config to a specific build tag
+    fusion-framework-cli app build-config -p preview -e ci
+
+    # Publish the app config to a specific build version
+    fusion-framework-cli app build-config -p 1.0.0 -e ci
+    ```
+
+    **breaking changes:**
+
+    -   renaming all commands accociated with build.
+    -   The app-config endpoints is now an object containing url and scopes, where name is the object key:
+
+        ```ts
+          environment: {
+              myProp: 'foobar',
+          },
+          endpoints: {
+              api: {
+                  url: 'https://foo.bars'
+                  scopes: ['foobar./default']
+              },
+          },
+        ```
+
+    -   The `config` command has been removed, use `build-config` instead
+
+### Minor Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Introduced `proxyRequestLogger` to log proxy requests in the CLI.
+
+    -   Show the request URL and method in the console when a proxy request is made.
+    -   Show proxy response status code
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Create a plugin `externalPublicPlugin` to fix the issue with serving the `index.html` file from the specified external public directory. Vite mode `spa` will not serve the `index.html` file from the specified external public directory.
+
+    -   Enhanced the middleware to intercept requests and serve the `index.html` file from the specified external public directory.
+    -   Transformed the HTML using Vite's `transformIndexHtml` method.
+    -   Applied appropriate content headers and additional configured headers before sending the response.
+
+    ```typescript
+    const viteConfig = defineConfig({
+        // vite configuration
+        root: './src', // this where vite will look for the index.html file
+        plugins: [
+            // path which contains the index.html file
+            externalPublicPlugin('./my-portal'),
+        ],
+    });
+    ```
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updated commands in CLI to reflect purpose of the command:
+
+    -   renamed `config` to `build-config` to generate build config of an application.
+    -   renamed `pack`to `build-pack` to bundle an application.
+    -   added `build-manifest` command to generate build manifest of an application.
+
+    > [!WARNING]
+    > Config callback for `manifest` and `config` now allows `void` return type.
+    > Return value from callback is now merged with default config instead of replacing it, this might be a breaking change for some applications.
+
+    > [!NOTE]
+    > This mean that `mergeAppConfig` and `mergeManifestConfig` functions are no longer needed and can be removed from the application.
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - The `appProxyPlugin` is a Vite plugin designed to proxy requests to a Fusion app backend.
+    It sets up proxy rules for API and bundle requests and serves the app configuration and manifest based on the app key and version.
+
+    Key Features:
+
+    1. Proxy Configuration:
+
+        - Proxies API calls to the Fusion apps backend.
+        - Proxies bundle requests to the Fusion apps backend.
+        - Uses a base path `proxyPath` for proxying.
+        - Captures and reuses authorization tokens for asset requests.
+
+    2. **App Configuration and Manifest**:
+
+        - Serves the app configuration if the request matches the current app and version.
+        - Serves the app manifest if the request matches the current app.
+
+    3. **Middleware Setup**:
+        - Sets up middleware to handle requests for app configuration, manifest, and local bundles.
+
+    This plugin is used by the CLI for local development, but design as exportable for custom CLI to consume applications from other API`s
+
+    example configuration:
+
+    ```typescript
+    const viteConfig = defineConfig({
+        // vite configuration
+        plugins: [
+            appProxyPlugin({
+                proxy: {
+                    path: '/app-proxy',
+                    target: 'https://fusion-s-apps-ci.azurewebsites.net/',
+                    // optional callback when matched request is proxied
+                    onProxyReq: (proxyReq, req, res) => {
+                        proxyReq.on('response', (res) => {
+                            console.log(res.statusCode);
+                        });
+                    },
+                },
+                // optional, but required for serving local app configuration, manifest and resources
+                app: {
+                    key: 'my-app',
+                    version: '1.0.0',
+                    generateConfig: async () => ({}),
+                    generateManifest: async () => ({}),
+                },
+            }),
+        ],
+    });
+    ```
+
+    example usage:
+
+    ```typescript
+    // Example API calls
+    fetch('/app-proxy/apps/my-app/builds/1.0.0/config'); // local
+    fetch('/app-proxy/apps/my-app/builds/0.0.9/config'); // proxy
+    fetch('/app-proxy/apps/other-app/builds/1.0.0/config'); // proxy
+
+    // Example asset calls
+    fetch('/app-proxy/bundles/my-app/builds/1.0.0/index.js'); // local
+    fetch('/app-proxy/bundles/my-app/builds/0.0.9/index.js'); // proxy
+    ```
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - when building an application the `AppAssetExportPlugin` is now added to the `ViteConfig` and configure to include `manifest.build.allowedExtensions`
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - **App Assets Export Plugin**
+
+    Create a plugin that exports assets from the app's source code.
+    This plugin resolves the issue where assets are not extracted from the app's source code since the app is in `lib` mode.
+
+    ```typescript
+    export default {
+      plugins: [
+        AppAssetExportPlugin(
+          include: createExtensionFilterPattern(
+            manifest.build.allowedExtensions
+            ),
+        ),
+      ]
+    }
+    ```
+
+    see readme for more information.
+
+### Patch Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
+
+    Updated the following dependencies
+
+    -   `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Generated base manifest from package will now include `StandardIncludeAssetExtensions` as `allowedExtensions`
+
 ## 9.13.1
 
 ### Patch Changes
