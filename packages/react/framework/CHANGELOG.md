@@ -1,5 +1,67 @@
 # Change Log
 
+## 7.3.0
+
+### Minor Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adjusted module to the new app service API.
+
+    > [!WARNING]
+    > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
+
+    **Added**
+
+    -   Introduced `AppClient` class to handle application manifest and configuration queries.
+    -   Added `zod` to validate the application manifest.
+
+    **Changed**
+
+    -   Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
+    -   Modified `AppConfigurator` to utilize `AppClient` for client configuration.
+    -   Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
+
+    **Migration**
+
+    before:
+
+    ```ts
+    configurator.setClient({
+        getAppManifest: {
+            client: {
+                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
+            },
+            key: ({ appKey }) => appKey,
+        },
+        getAppManifests: {
+            client: {
+                fn: () => httpClient.json$<ApiApp[]>(`/apps`),
+            },
+            key: () => `all-apps`,
+        },
+        getAppConfig: {
+            client: {
+                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
+            },
+            key: ({ appKey }) => appKey,
+        },
+    });
+    ```
+
+    after:
+
+    ```ts
+    import { AppClient } from `@equinor/fusion-framework-module-app`;
+    configurator.setClient(new AppClient());
+    ```
+
+    custom client implementation:
+
+    ```ts
+    import { AppClient } from `@equinor/fusion-framework-module-app`;
+    class CustomAppClient implements IAppClient { ... }
+    configurator.setClient(new CustomAppClient());
+    ```
+
 ## 7.2.3
 
 ### Patch Changes

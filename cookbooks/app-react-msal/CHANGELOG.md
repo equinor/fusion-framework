@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.1.3
+
+### Patch Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Cleaned up app config
+
+    Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.
+
 ## 1.1.2
 
 ### Patch Changes

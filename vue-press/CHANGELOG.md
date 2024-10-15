@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.2.0
+
+### Minor Changes
+
+-   [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Documenting the new CLI commands in vue-press.
+
 ## 0.1.6
 
 ### Patch Changes
