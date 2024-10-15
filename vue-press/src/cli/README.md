@@ -1,6 +1,6 @@
 ---
 title: Framework CLI
-category: Guide
+category: CLI
 tag:
   - cli
 ---

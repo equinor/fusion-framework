@@ -66,20 +66,23 @@ export const handleFetchConfig =
             // only handle fetch config request actions
             filter(actions.fetchConfig.match),
             // when request is received, abort any ongoing request and start new
-            switchMap(({ payload: appKey }) => {
-                // fetch manifest from provider
-                const subject = from(provider.getAppConfig(appKey)).pipe(
+            switchMap(({ payload }) => {
+                // TODO - use the configUrl directly from the manifest
+                // fetch config from provider
+                const subject = from(
+                    provider.getAppConfig(payload.appKey, payload.build?.version),
+                ).pipe(
                     // filter out null values
                     filter((x) => !!x),
                     // allow multiple subscriptions
                     share(),
                 );
-                // first load manifest and then dispatch success action
+                // first load config and then dispatch success action
                 return concat(
-                    subject.pipe(map((manifest) => actions.setConfig(manifest))),
+                    subject.pipe(map((config) => actions.setConfig(config))),
                     subject.pipe(
                         last(),
-                        map((manifest) => actions.fetchConfig.success(manifest)),
+                        map((config) => actions.fetchConfig.success(config)),
                     ),
                 ).pipe(
                     // catch any error and dispatch failure action
@@ -94,18 +97,21 @@ export const handleFetchConfig =
  * Handles the import application flow.
  * @returns A flow that takes in actions and returns an observable of AppBundleState.
  */
-export const handleImportApplication = (): Flow<Actions, AppBundleState> => (action$) =>
-    action$.pipe(
-        // only handle import script request actions
-        filter(actions.importApp.match),
-        // when request is received, abort any ongoing request and start new
-        switchMap(({ payload }) => {
-            // dynamically import the application script
-            return from(import(payload)).pipe(
-                // dispatch success action
-                map(actions.importApp.success),
-                // catch any error and dispatch failure action
-                catchError((err) => of(actions.importApp.failure(err))),
-            );
-        }),
-    );
+export const handleImportApplication =
+    (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+    (action$) =>
+        action$.pipe(
+            // only handle import script request actions
+            filter(actions.importApp.match),
+            // when request is received, abort any ongoing request and start new
+            switchMap(({ payload }) => {
+                const endpoint = [provider.assetUri, payload].join('/').replace(/\/{2,}/g, '/');
+                // dynamically import the application script
+                return from(import(/* @vite-ignore */ endpoint)).pipe(
+                    // dispatch success action
+                    map(actions.importApp.success),
+                    // catch any error and dispatch failure action
+                    catchError((err) => of(actions.importApp.failure(err))),
+                );
+            }),
+        );

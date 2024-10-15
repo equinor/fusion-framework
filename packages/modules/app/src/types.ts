@@ -1,76 +1,107 @@
-import { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import IApp from './app';
+import type { AppConfig } from './AppConfig';
+import type IApp from './app';
+
+export type ConfigEnvironment = Record<string, unknown>;
+export type { AppConfig } from './AppConfig';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;
 
-export type AppEnv<TConfig = unknown, TProps = unknown> = {
+export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
     basename?: string;
     manifest?: AppManifest;
-    config?: AppConfig<TConfig>;
+    config?: AppConfig<TEnv>;
     props?: TProps;
 };
 
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
-export type AppType = 'standalone' | 'report' | 'launcher';
+// TODO: remove `report` and `launcher` when legacy apps are removed
+export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CurrentApp<TModules extends Array<AnyModule> = [], TEnv = any> =
-    | IApp<TEnv, TModules>
-    | null
-    | undefined;
+export type CurrentApp<
+    TModules extends Array<AnyModule> = [],
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+> = IApp<TEnv, TModules> | null | undefined;
 
-export type AppAuth = {
-    clientId: string;
-    resources: string[];
+type Nullable<T> = T | null | undefined;
+
+type AppPerson = {
+    id: string;
+    azureUniqueId: string;
+    displayName: string;
+    mail?: Nullable<string>;
+    upn?: Nullable<string>;
+    accountType: string;
+    accountClassification?: Nullable<string>;
+    isExpired?: Nullable<boolean>;
 };
 
-type AppCategory = {
-    id?: string;
-    name: string | null;
-    color: string | null;
-    defaultIcon: string | null;
-};
+export type AppAdmin = AppPerson;
 
-export type AppManifest = {
-    key: string;
-    name: string;
-    entry: string;
+export type AppOwner = AppPerson;
+
+export type AppBuildManifest = {
     version: string;
-    shortName?: string;
-    description?: string;
-    type?: AppType;
-    tags?: string[];
-    // context?: ContextManifest;
-    auth?: AppAuth[];
-    icon?: string;
-    order?: number;
-    publishedDate?: Date;
-    accentColor?: string;
-    categoryId?: string;
-    category?: AppCategory;
-    hide?: boolean;
+    entryPoint: string;
+    tags?: Nullable<string[]>;
+    tag?: Nullable<'latest' | 'preview'>;
+    assetPath?: Nullable<string>;
+    configUrl?: Nullable<string>;
+    timestamp?: Nullable<string>;
+    commitSha?: Nullable<string>;
+    githubRepo?: Nullable<string>;
+    projectPage?: Nullable<string>;
+    annotations?: Nullable<Record<string, string>>;
+    allowedExtensions?: Nullable<string[]>;
+    uploadedBy?: Nullable<AppOwner>;
 };
 
-export type Endpoint = { name: string; uri: string; scopes?: string[] };
-
-export type AppConfig<TEnvironment = unknown> = {
-    environment: TEnvironment;
-    endpoints: Record<string, string | Endpoint>;
-};
+export interface AppManifest {
+    /** @deprecated will be removed, use appKey */
+    key?: string;
+    appKey: string;
+    /** @deprecated will be removed, use displayName */
+    name?: string;
+    displayName: string;
+    description: string;
+    type: AppType;
+    isPinned?: Nullable<boolean>;
+    templateSource?: Nullable<string>;
+    category?: Nullable<{
+        id: string;
+        name: string;
+        displayName: string;
+        color: string;
+        defaultIcon: string;
+        sortOrder: number;
+    }>;
+    visualization?: Nullable<{
+        color?: Nullable<string>;
+        icon?: Nullable<string>;
+        sortOrder: number;
+    }>;
+    keywords?: Nullable<string[]>;
+    admins?: Nullable<AppAdmin[]>;
+    owners?: Nullable<AppOwner[]>;
+    build?: Nullable<AppBuildManifest>;
+}
 
 /**
  * @template TEnvironment - name of hosted environment
  * @template TModule - ES module type (import return type)
  */
-export type AppBundle<TEnvironment = unknown, TModule = unknown> = {
+export type AppBundle<
+    TEnvironment extends ConfigEnvironment = ConfigEnvironment,
+    TModule = unknown,
+> = {
     manifest: AppManifest;
     config: AppConfig<TEnvironment>;
     module: TModule;

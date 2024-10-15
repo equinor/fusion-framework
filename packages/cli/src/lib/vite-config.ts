@@ -50,10 +50,10 @@ export const createAppViteConfig = async (
     options?: FindConfigOptions & {
         file?: string;
     },
-): Promise<{ config: UserConfig; path?: string } | void> => {
+): Promise<{ config?: UserConfig; path?: string } | void> => {
     const resolved = await resolveViteConfig(options);
     if (resolved) {
-        const config = await initiateConfig(resolved.config, env);
+        const config = (await initiateConfig(resolved.config, env)) ?? {};
         return { config, path: resolved.path };
     } else if (options?.file) {
         throw new AssertionError({
@@ -91,10 +91,8 @@ export const createViteConfig = async (
                     (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
             }),
         ],
+        mode: env.mode,
         root,
-        server: {
-            middlewareMode: true,
-        },
         appType: 'custom',
         build: {
             lib: {

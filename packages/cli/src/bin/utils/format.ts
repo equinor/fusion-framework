@@ -8,7 +8,9 @@ import prettyBytes from 'pretty-bytes';
 export { chalk };
 
 export const formatPath = (path: string, opt?: { relative?: boolean; cwd?: string }) => {
-    return chalk.blueBright(opt?.relative ? relative(opt?.cwd ?? process.cwd(), path) : path);
+    return chalk.blueBright(
+        opt?.relative ? './' + relative(opt?.cwd ?? process.cwd(), path) : path,
+    );
 };
 
 export const formatByteSize = (input: string | number): string => {

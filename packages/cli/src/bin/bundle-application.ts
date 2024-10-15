@@ -3,11 +3,10 @@ import AdmZip from 'adm-zip';
 import { dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 
-import { loadPackage } from './utils/load-package.js';
 import { chalk, formatByteSize, formatPath } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { buildApplication } from './build-application.js';
-import createExportManifest from './create-export-manifest.js';
+import { createBuildManifest } from './create-export-manifest.js';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
 export const bundleApplication = async (options: { outDir: string; archive: string }) => {
@@ -15,16 +14,13 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('pack') });
 
-    const pkg = await loadPackage();
-
     spinner.start('build application');
-    await buildApplication({ outDir });
+    const { pkg } = await buildApplication({ outDir });
     spinner.succeed();
 
     spinner.start('generate manifest');
-    const manifest = await createExportManifest({ outputFile: `${outDir}/app-manifest.json` });
-    spinner.succeed();
-    console.log(chalk.dim(JSON.stringify(manifest, undefined, 2)));
+    const buildManifest = await createBuildManifest({ outputFile: `${outDir}/app-manifest.json` });
+    spinner.succeed('generated manifest:', '\n' + JSON.stringify(buildManifest, undefined, 2));
 
     const bundle = new AdmZip();
 
@@ -34,7 +30,9 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     bundle.addLocalFolder(outDir);
     spinner.info(`added ./${outDir}`);
 
-    const licenseFile = resolve(pkg.path, 'LICENSE.md');
+    const appDir = dirname(pkg.path);
+
+    const licenseFile = resolve(appDir, 'LICENSE.md');
     if (fileExistsSync(licenseFile)) {
         bundle.addLocalFile(licenseFile);
         spinner.info(`added ${licenseFile}`);
@@ -42,7 +40,7 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
         spinner.warn(`missing ${licenseFile}`);
     }
 
-    const readmeFile = resolve(pkg.path, 'README.md');
+    const readmeFile = resolve(appDir, 'README.md');
     if (fileExistsSync(readmeFile)) {
         bundle.addLocalFile(readmeFile);
         spinner.info(`added ${readmeFile}`);
@@ -54,9 +52,11 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     if (!fileExistsSync(dirname(archive))) {
         await mkdir(dirname(archive), { recursive: true });
     }
+
     bundle.writeZip(archive);
-
-    spinner.info(formatPath(archive), formatByteSize(archive));
-
-    spinner.succeed();
+    spinner.succeed(
+        'Bundle complete',
+        formatPath(archive, { relative: true }),
+        formatByteSize(archive),
+    );
 };

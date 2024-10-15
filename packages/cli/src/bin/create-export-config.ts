@@ -5,29 +5,29 @@ import { dirname } from 'node:path';
 import { chalk, formatPath } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 
-import { loadPackage } from './utils/load-package.js';
-import { loadAppConfig } from './utils/load-app-config.js';
+import { loadAppConfig, loadPackage } from './utils/index.js';
+
 import { ConfigExecuterEnv } from '../lib/utils/config.js';
 
-export const createExportConfig = async (options?: {
+export const createExportConfig = async (options: {
     command?: ConfigExecuterEnv['command'];
     configFile?: string;
     outputFile?: string;
 }) => {
-    const { command = 'build', outputFile } = options ?? {};
+    const { command = 'build', outputFile, configFile } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('config') });
 
     const pkg = await loadPackage();
 
-    const env: ConfigExecuterEnv = {
+    const appEnv: ConfigExecuterEnv = {
         command,
         mode: process.env.NODE_ENV ?? 'development',
         root: pkg.root,
     };
 
-    const { config } = await loadAppConfig(env, pkg, {
-        file: options?.configFile,
+    const { config } = await loadAppConfig(appEnv, pkg, {
+        file: configFile,
     });
 
     if (outputFile) {
@@ -46,6 +46,7 @@ export const createExportConfig = async (options?: {
     } else {
         console.log(config);
     }
+
     return config;
 };
 

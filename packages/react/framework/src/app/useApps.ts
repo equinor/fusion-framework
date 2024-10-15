@@ -4,27 +4,37 @@ import { useMemo } from 'react';
 
 import { useAppProvider } from './useAppProvider';
 
+type UseAppsArgs = {
+    /** @deprecated - no longer available */
+    includeHidden?: boolean;
+    // only show apps that the current user has access to
+    filterByCurrentUser?: boolean;
+};
+
 /**
  * React Hook - Get apps from framework
- * @param args Object with boolean  member includeHidden
- * @returns Object {apps, isLoading} where apps is Array of AppManifest, isLoading is a boolean on observable complete
+ * @param args Object with filterByCurrentUser: boolean
+ * @returns Object {apps, isLoading, error} where apps is Array of ApplicationManifest, isLoading is a boolean on observable complete
+ * @since 7.1.1
  */
-export const useApps = (args?: {
-    includeHidden: boolean;
-}): { apps: AppManifest[] | undefined; isLoading: boolean; error: unknown } => {
+export const useApps = (
+    args?: UseAppsArgs,
+): { apps: AppManifest[] | undefined; isLoading: boolean; error: unknown } => {
     const provider = useAppProvider();
+
+    const { filterByCurrentUser } = args || {};
+
     const {
-        value: manifests,
+        value: apps,
         complete,
         error,
-    } = useObservableState(useMemo(() => provider.getAllAppManifests(), [provider]));
-
-    const apps = useMemo(() => {
-        if (manifests && !args?.includeHidden) {
-            return manifests.filter((app) => !app.hide);
-        }
-        return manifests;
-    }, [args, manifests]);
+    } = useObservableState(
+        useMemo(
+            () =>
+                provider.getAppManifests(filterByCurrentUser ? { filterByCurrentUser } : undefined),
+            [provider, filterByCurrentUser],
+        ),
+    );
 
     return { apps, isLoading: !complete, error };
 };

@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "target": "ES6",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../../packages/modules/module"
+    },
+    {
+      "path": "../../packages/modules/msal"
+    },
+    {
+      "path": "../../packages/modules/http"
+    },
+    {
+      "path": "../../packages/modules/app"
+    },
+    {
+      "path": "../../packages/modules/service-discovery"
+    },
+    {
+      "path": "../../packages/framework"
+    },
+    {
+      "path": "../../packages/react/framework"
+    },
+    {
+      "path": "../../packages/cli"
+    },
+    
+  ],
+  "include": [
+    "src/**/*",
+    "types/*"
+, "app.config.ts"  ],
+  "exclude": [
+    "node_modules",
+  ],
+}

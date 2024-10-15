@@ -1,43 +1,35 @@
-import type { ModuleInitializerArgs } from '@equinor/fusion-framework-module';
+import {
+    BaseConfigBuilder,
+    ConfigBuilderCallback,
+    type ModuleInitializerArgs,
+} from '@equinor/fusion-framework-module';
 import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import type { QueryCtorOptions } from '@equinor/fusion-query';
-
-import { AppConfigBuilder, AppConfigBuilderCallback } from './AppConfigBuilder';
 
 import { moduleKey } from './module';
 
-import type { AppConfig, AppManifest } from './types';
+import AppClient, { IAppClient } from './AppClient';
 
 export interface AppModuleConfig {
-    proxy: {
-        path: string;
-    };
-    client: {
-        getAppManifest: QueryCtorOptions<AppManifest, { appKey: string }>;
-        getAppManifests: QueryCtorOptions<AppManifest[], void>;
-        getAppConfig: QueryCtorOptions<AppConfig, { appKey: string; tag?: string }>;
-    };
+    client: IAppClient;
+    // uri which to fetch the assets from aka the bundle of the application
+    assetUri?: string;
 }
 
 export interface IAppConfigurator {
-    addConfigBuilder: (init: AppConfigBuilderCallback) => void;
+    setClient: (
+        client_or_cb:
+            | Promise<AppModuleConfig['client']>
+            | ConfigBuilderCallback<AppModuleConfig['client']>,
+    ) => void;
+    setAssetUri: (base_or_cb: string | ConfigBuilderCallback<string>) => void;
 }
 
-export class AppConfigurator implements IAppConfigurator {
+export class AppConfigurator
+    extends BaseConfigBuilder<AppModuleConfig>
+    implements IAppConfigurator
+{
     defaultExpireTime = 1 * 60 * 1000;
-
-    #configBuilders: Array<AppConfigBuilderCallback> = [];
-
-    addConfigBuilder(init: AppConfigBuilderCallback): void {
-        this.#configBuilders.push(init);
-    }
-
-    setProxyPath(path: string) {
-        this.addConfigBuilder((builder) => {
-            builder.config.proxy = { path };
-        });
-    }
 
     /**
      * WARNING: this function will be remove in future
@@ -55,59 +47,41 @@ export class AppConfigurator implements IAppConfigurator {
 
             // TODO - remove when refactor portal service!
             /** resolve and create a client from discovery */
-            try {
-                return await serviceDiscovery.createClient('app');
-            } catch {
-                return await serviceDiscovery.createClient('portal');
-            }
+            return await serviceDiscovery.createClient('apps');
         }
     }
 
-    public async createConfig(
+    public setClient(
+        client_or_cb:
+            | Promise<AppModuleConfig['client']>
+            | ConfigBuilderCallback<AppModuleConfig['client']>,
+    ) {
+        const cb = typeof client_or_cb === 'object' ? () => client_or_cb : client_or_cb;
+        this._set('client', cb);
+    }
+
+    // TODO - explain why, used in import of resources aka proxy url
+    public setAssetUri(base_or_cb: string | ConfigBuilderCallback<string>) {
+        const cb = typeof base_or_cb === 'string' ? async () => base_or_cb : base_or_cb;
+        this._set('assetUri', cb);
+    }
+
+    protected _createConfig(
         init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
-    ): Promise<AppModuleConfig> {
-        const config = await this.#configBuilders.reduce(
-            async (cur, cb) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const builder = new AppConfigBuilder(init, await cur);
-                await Promise.resolve(cb(builder));
-                return Object.assign(cur, builder.config);
-            },
-            Promise.resolve({} as Partial<AppModuleConfig>),
-        );
+        initial?: Partial<AppModuleConfig>,
+    ) {
+        if (!this._has('client')) {
+            this.setClient(async () => {
+                const httpClient = await this._createHttpClient(init);
+                const appClient = new AppClient(httpClient);
+                return appClient;
+            });
+        }
 
-        // TODO - make less lazy
-        config.client ??= await (async (): Promise<AppModuleConfig['client']> => {
-            const httpClient = await this._createHttpClient(init);
-            return {
-                getAppManifest: {
-                    client: {
-                        fn: ({ appKey }) => httpClient.json$<AppManifest>(`/api/apps/${appKey}`),
-                    },
-                    key: ({ appKey }) => appKey,
-                    expire: this.defaultExpireTime,
-                },
-                getAppManifests: {
-                    client: {
-                        fn: () => httpClient.json$(`/api/apps`),
-                    },
-                    // TODO - might cast to checksum
-                    key: () => 'manifests',
-                    expire: this.defaultExpireTime,
-                },
-                getAppConfig: {
-                    client: {
-                        fn: ({ appKey, tag }) =>
-                            httpClient.json$(
-                                `/api/apps/${appKey}/config${tag ? `?tag=${tag}` : ''}`,
-                            ),
-                    },
-                    key: (args) => JSON.stringify(args),
-                    expire: this.defaultExpireTime,
-                },
-            };
-        })();
+        if (!this._has('assetUri')) {
+            this.setAssetUri('/apps-proxy');
+        }
 
-        return config as AppModuleConfig;
+        return super._createConfig(init, initial);
     }
 }

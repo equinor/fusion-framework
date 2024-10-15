@@ -1,20 +1,42 @@
 ---
-title: usion Framework CLI
+title: Fusion Framework CLI
 ---
 
-Node CLI utility for working with Fusion Applications
+### fusion-framework-cli
 
-### [App](docs/app.md)
+The cli, named `fusion-framework-cli`, contains tooling for running, building and publishing your application.
 
-see [Configuration](docs/app-configuration.md)
+The fusion-famework-cli should be installed as a devDependency.
 
-- tooling for [Vitest](https://vitest.dev/) - 🚀 coming soon 
-- tooling for proxy configuration  - 🚀 coming soon 
+```sh
+pnpm add -D @equinor/fusion-framework-cli
+```
 
-### Widget 
+You can always use the option `-h or --help or help` to get help for the CLI and its commands.
+
+Example:
+
+```sh
+fusion-framework-cli help
+```
+
+### App Commands
+
+See [App Commands](/cli/docs/commands.md)
+
+### Configuration
+
+See [Configuration](/cli/docs/configuration.md)
+
+### Tooling
+
+- tooling for [Vitest](https://vitest.dev/) - 🚀 coming soon
+- tooling for proxy configuration  - 🚀 coming soon
+
+### Widget
 
 Tooling for developing widgets  - 🚀 coming soon
 
-### Portal 
+### Portal
 
 Tooling for developing portals  - 🚀 coming

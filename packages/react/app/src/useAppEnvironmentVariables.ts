@@ -1,3 +1,4 @@
+import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import {
     type ObservableStateReturnType,
@@ -31,7 +32,7 @@ import {
  * @returns An observable state object containing the current environment configuration.
  */
 export const useAppEnvironmentVariables = <
-    TEnvironmentVariables = unknown,
+    TEnvironmentVariables extends ConfigEnvironment = ConfigEnvironment,
 >(): ObservableStateReturnType<TEnvironmentVariables> => {
     // Get the current app module instance from the framework
     const app = useCurrentApp<[], TEnvironmentVariables>().currentApp;

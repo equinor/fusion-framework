@@ -1,4 +1,10 @@
-import { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type {
+    AppModulesInstance,
+    AppScriptModule,
+    AppManifest,
+    AppConfig,
+    ConfigEnvironment,
+} from '../types';
 import { FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
@@ -8,6 +14,7 @@ import {
     firstValueFrom,
     lastValueFrom,
     map,
+    of,
     OperatorFunction,
     Subscription,
 } from 'rxjs';
@@ -30,7 +37,10 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
  * @template TModules The type of the app modules.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown> {
+export interface IApp<
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+    TModules extends Array<AnyModule> | unknown = unknown,
+> {
     /**
      * Returns an observable that emits the app manifest.
      * @returns An observable of type AppManifest.
@@ -71,13 +81,13 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
      * Gets the manifest of the app.
      * @returns The manifest of the app, or undefined if it doesn't exist.
      */
-    get manifest(): AppManifest | undefined;
+    get manifest(): Readonly<AppManifest> | undefined;
 
     /**
      * Retrieves the manifest asynchronously.
      * @returns A promise that resolves to the AppManifest.
      */
-    get manifestAsync(): Promise<AppManifest>;
+    get manifestAsync(): Promise<Readonly<AppManifest>>;
 
     /**
      * Gets the configuration of the app.
@@ -173,8 +183,10 @@ export interface IApp<TEnv = any, TModules extends Array<AnyModule> | unknown = 
 
 // TODO make streams distinct until changed from state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unknown>
-    implements IApp<TEnv, TModules>
+export class App<
+    TEnv extends ConfigEnvironment = ConfigEnvironment,
+    TModules extends Array<AnyModule> | unknown = unknown,
+> implements IApp<TEnv, TModules>
 {
     #state: FlowSubject<AppBundleState, Actions>;
 
@@ -189,7 +201,7 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     get config$(): Observable<AppConfig<TEnv>> {
         return this.#state.pipe(
-            map(({ config }) => config),
+            map(({ config }) => config as AppConfig<TEnv>),
             filterEmpty(),
         );
     }
@@ -227,11 +239,11 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
         return firstValueFrom(this.manifest$);
     }
 
-    get config(): Readonly<AppConfig<TEnv>> | undefined {
-        return this.state.config;
+    get config(): AppConfig<TEnv> | undefined {
+        return this.state.config as AppConfig<TEnv>;
     }
 
-    get configAsync(): Promise<Readonly<AppConfig<TEnv>>> {
+    get configAsync(): Promise<AppConfig<TEnv>> {
         return firstValueFrom(this.config$);
     }
 
@@ -438,7 +450,12 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
     }
 
     public loadConfig() {
-        this.#state.next(actions.fetchConfig(this.appKey));
+        // TODO - shit fix
+        (this.manifest ? of(this.manifest) : this.getManifest()).subscribe({
+            next: (manifest) => {
+                this.#state.next(actions.fetchConfig(manifest));
+            },
+        });
     }
 
     public loadManifest(update?: boolean) {
@@ -451,7 +468,13 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
 
     public async loadAppModule(allow_cache = true) {
         const manifest = await this.getManifestAsync(allow_cache);
-        this.#state.next(actions.importApp(manifest.entry));
+        if (manifest.build?.entryPoint) {
+            this.#state.next(actions.importApp(manifest.build.entryPoint));
+        } else {
+            console.log(
+                `The ${manifest.appKey} is missing entryPoint, please upload a build for the app before continuing`,
+            );
+        }
     }
 
     public getConfig(force_refresh = false): Observable<AppConfig> {
@@ -602,8 +625,20 @@ export class App<TEnv = any, TModules extends Array<AnyModule> | unknown = unkno
             subscriber.add(
                 // fetch application latest manifest and request loading of the application script
                 this.getManifest().subscribe((manifest) => {
-                    // dispatch import_app action to load the application script
-                    this.#state.next(actions.importApp(manifest.entry));
+                    if (manifest.build?.entryPoint) {
+                        // TODO - this should come from backend
+                        const assetPath =
+                            manifest.build.assetPath ??
+                            [manifest.appKey, manifest.build.version].join('@');
+                        // dispatch import_app action to load the application script
+                        this.#state.next(
+                            actions.importApp([assetPath, manifest.build.entryPoint].join('/')),
+                        );
+                    } else {
+                        console.error(
+                            `The ${manifest.appKey} app is missing a entry in the manifest, upload a build for your app before continuing`,
+                        );
+                    }
                 }),
             );
         });

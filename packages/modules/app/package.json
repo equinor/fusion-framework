@@ -12,6 +12,10 @@
             "import": "./dist/esm/errors.js",
             "types": "./dist/types/errors.d.ts"
         },
+        "./schemas.js": {
+            "import": "./dist/esm/schemas.js",
+            "types": "./dist/types/schemas.d.ts"
+        },
         "./app": {
             "import": "./dist/esm/app/index.js",
             "types": "./dist/types/app/index.d.ts"
@@ -25,6 +29,9 @@
         "*": {
             "errors.js": [
                 "dist/types/errors.d.ts"
+            ],
+            "schemas.js": [
+                "dist/types/schemas.d.ts"
             ],
             "app": [
                 "dist/types/app/index.d.ts"
@@ -53,7 +60,8 @@
         "@equinor/fusion-observable": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
         "immer": "^9.0.16",
-        "rxjs": "^7.8.1"
+        "rxjs": "^7.8.1",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",

@@ -10,6 +10,7 @@ import type {
 } from '@equinor/fusion-framework-module-app';
 
 import type { IAppConfigurator } from './AppConfigurator';
+import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
 export type {
     AppModules,
@@ -25,7 +26,7 @@ export type {
  * @template TConfig config value type
  * @template TProps [__not in use__] properties for application component
  */
-export type AppEnv<TConfig = unknown, TProps = unknown> = {
+export type AppEnv<TConfig extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
     /** base routing path of the application */
     basename?: string;
     manifest: AppManifest;

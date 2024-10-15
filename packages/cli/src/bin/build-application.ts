@@ -5,9 +5,14 @@ import { build } from 'vite';
 import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { loadViteConfig } from './utils/load-vite-config.js';
+import { loadAppManifest } from './utils/load-manifest.js';
 
-import { resolveAppPackage } from '../lib/app-package.js';
 import { type ConfigExecuterEnv } from '../lib/utils/config.js';
+import { resolveAppPackage } from '../lib/app-package.js';
+import {
+    AppAssetExportPlugin,
+    createExtensionFilterPattern,
+} from '../lib/plugins/app-assets/index.js';
 
 export const buildApplication = async (options: {
     configSourceFiles?: {
@@ -38,9 +43,28 @@ export const buildApplication = async (options: {
     const packageDirname = dirname(pkg.path);
     spinner.info(`🏠 ${chalk.blueBright(packageDirname)}`);
 
+    spinner.start('resolve application manifest');
+    const { manifest } = await loadAppManifest(env, pkg, {
+        file: configSourceFiles?.manifest,
+    });
+    spinner.succeed();
+
     const { viteConfig } = await loadViteConfig(env, {
         file: configSourceFiles?.vite,
     });
+
+    const includeAssetsPattern = manifest.build?.allowedExtensions
+        ? createExtensionFilterPattern(manifest.build.allowedExtensions)
+        : undefined;
+
+    spinner.info('📂', 'Using asset include filter:', chalk.red(includeAssetsPattern));
+
+    viteConfig.plugins = [
+        ...viteConfig.plugins,
+        AppAssetExportPlugin({
+            include: includeAssetsPattern,
+        }),
+    ];
 
     if (library === 'react') {
         const reactPlugin = await import('@vitejs/plugin-react');
@@ -49,10 +73,17 @@ export const buildApplication = async (options: {
 
     viteConfig.build.outDir = outDir.trim();
 
+    spinner.attachConsole = true;
+
+    console.log('Building application...');
+
     const viteBuild = await build(viteConfig);
+
+    spinner.attachConsole = false;
 
     return {
         viteConfig,
         viteBuild,
+        pkg,
     };
 };
