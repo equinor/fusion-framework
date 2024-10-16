@@ -112,18 +112,19 @@ export default configure;
 @tab app.config.ts
 
 ```ts
-import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
+import { defineAppConfig } from '@equinor/fusion-framework-cli';
 export default defineAppConfig((_nev, { base }) =>
-    mergeAppConfigs(base, {
+    return {
         environment: {
-            scope: 'foobar',
+           foo: 'foobar',
         },
         endpoints: {
             api: {
                 url: 'https://foo.bars',
+                scopes: ['myscope/.default']
             },
         },
-    }),
+    },
 );
 
 ```
@@ -177,7 +178,7 @@ upload this config to the application admin under `configs`
 
 [read more about authentication](./authentication.md)
 
-```json dsadsa 
+```json
 // config.ENV.json
 {
   "services": {
@@ -193,8 +194,12 @@ configure application to create a http client based on dynamic config from app s
 ```ts
 // config.ts
 export const configure: AppModuleInitiator = (configurator, { env }) => {
-  configurator.configureHttpClient("myApi",  env.config.environment.myApi);
-};
+  const endpointApi = env.config?.getEndpoint('myApi');
+  configurator.configureHttpClient('myApi', {
+      baseUri: endpointApi?.url,
+      defaultScopes: endpointApi?.scopes,
+  });
+  // ... other config setting
 ```
 
 create a util hook for accessing custom http client
@@ -236,7 +241,6 @@ export const configure = (configurator, { env: { basename } }) => {
   enableNavigation(configurator, basename);
 }
 ```
-
 
 ### Enable context
 
