@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
     loadConfig,
     type ResolvedConfig,
@@ -18,7 +19,7 @@ type FindAppConfigOptions = FindConfigOptions & {
 export type AppConfigFn = (
     env: ConfigExecuterEnv,
     args: { base: ApiAppConfig },
-) => ApiAppConfig | Promise<ApiAppConfig | void> | void;
+) => z.input<typeof ApiAppConfigSchema> | Promise<z.input<typeof ApiAppConfigSchema> | void> | void;
 export type AppConfigExport = ApiAppConfig | AppConfigFn;
 
 export const appConfigFilename = 'app.config';
