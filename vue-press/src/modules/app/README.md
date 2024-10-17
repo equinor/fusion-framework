@@ -9,7 +9,7 @@ tag:
   - application module instance
 ---
 
-<ModuleBadge module="module-app" />
+<ModuleBadge module="modules/app" />
 
 This module purpose is:
 - [x] load application manifest.

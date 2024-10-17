@@ -7,6 +7,8 @@ tag:
   - react-router
 ---
 
+<ModuleBadge module="modules/navigation" />
+
 Simple module which allows to monitor navigation events
 
 > [!CAUTION]

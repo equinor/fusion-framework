@@ -7,7 +7,7 @@ tag:
     - builder
 ---
 
-<ModuleBadge module="module-widget" />
+<ModuleBadge module="modules/widget" />
 
 ## Configuration
 
