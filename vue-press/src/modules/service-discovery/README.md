@@ -8,5 +8,7 @@ tag:
   - core
 ---
 
+<ModuleBadge module="modules/service-discovery" />
+
 ## Services
 @[code](./services.json)

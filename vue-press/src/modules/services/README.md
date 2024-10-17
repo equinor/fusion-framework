@@ -7,7 +7,7 @@ tag:
     - api
 ---
 
-<ModuleBadge module="module-services" />
+<ModuleBadge module="modules/services" />
 
 ## Configuration
 
