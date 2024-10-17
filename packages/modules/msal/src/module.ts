@@ -18,6 +18,7 @@ export const module: MsalModule = {
     },
     initialize: async ({ config }) => {
         const authProvider = new AuthProvider(config);
+        await authProvider.defaultClient.initialize();
         if (config.requiresAuth) {
             await authProvider.handleRedirect();
             if (!authProvider.defaultAccount) {

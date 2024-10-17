@@ -6,10 +6,15 @@ import {
     PopupRequest,
     RedirectRequest,
     AccountInfo as AccountInfoBase,
+    BrowserConfiguration,
+    Logger,
 } from '@azure/msal-browser';
+
+import {} from '@azure/msal-browser/dist/app/PublicClientApplication';
 
 import { AuthBehavior, defaultBehavior } from './behavior';
 import { AuthRequest } from './request';
+import { BrowserCacheManager } from '@azure/msal-browser/dist/cache/BrowserCacheManager';
 
 export type IdTokenClaims = {
     aud: string;
@@ -53,6 +58,26 @@ export type AccountInfo = AccountInfoBase & {
  */
 export class AuthClient extends PublicClientApplication {
     /**
+     * This will be removed on future update,
+     * only added as a temporary solution to access configuration.
+     * (migration to from v2 - v3)
+     * @deprecated
+     */
+    get config(): BrowserConfiguration {
+        return this.controller.getConfiguration();
+    }
+
+    /**
+     * This will be removed on future update,
+     * only added as a temporary solution to access configuration.
+     * (migration to from v2 - v3)
+     * @deprecated
+     */
+    get logger(): Logger {
+        return this.getLogger();
+    }
+
+    /**
      * @returns
      * Returns account for client tenant that MSAL currently has data for.
      * (the account object is created at the time of successful login)
@@ -82,7 +107,11 @@ export class AuthClient extends PublicClientApplication {
     }
 
     get requestOrigin(): string | null {
-        return this.browserStorage.getTemporaryCache('request.origin', true);
+        // hack to get `request.origin` from cache, this should be removed in future update of framework
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        const storage = this.controller.browserStorage as BrowserCacheManager;
+        return storage.getTemporaryCache('request.origin', true);
     }
 
     /**
