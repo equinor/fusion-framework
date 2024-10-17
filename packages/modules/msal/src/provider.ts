@@ -98,13 +98,19 @@ export class AuthProvider implements IAuthProvider {
             const logger = client.getLogger();
             const { requestOrigin } = client;
 
-            await client.handleRedirectPromise();
-            if (requestOrigin === redirectUri) {
+            const res = await client.handleRedirectPromise();
+
+            // if not internal state, do not redirect (state will not be included when popup was created from iframe)
+            if (res?.state !== 'internal') {
+                return null;
+            } else if (requestOrigin === redirectUri) {
+                // prevent redirect loop
                 logger.warning(
                     `detected callback loop from url ${redirectUri}, redirecting to root`,
                 );
                 window.location.replace('/');
             } else {
+                // either redirect to origin or root
                 window.location.replace(requestOrigin || '/');
             }
         }
@@ -121,6 +127,9 @@ export class AuthProvider implements IAuthProvider {
     }
 
     async login(): Promise<void> {
-        await this.defaultClient.login();
+        await this.defaultClient.login({
+            state: window.parent === window ? 'internal' : 'external',
+            scopes: [],
+        });
     }
 }
