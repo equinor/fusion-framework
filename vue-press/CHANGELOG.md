@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-docs
 
+## 0.2.1
+
+### Patch Changes
+
+-   [#2517](https://github.com/equinor/fusion-framework/pull/2517) [`e78861a`](https://github.com/equinor/fusion-framework/commit/e78861a17cb0174ad96cd05e1b873e5fee42660f) Thanks [@eikeland](https://github.com/eikeland)! - Updated `getting-started.md` documentation to:
+
+    -   Correct JSON code block formatting.
+    -   Update `app.config.ts` example to use `defineAppConfig` directly without `mergeAppConfigs`.
+    -   Provide an example of configuring an HTTP client with endpoint details from environment configuration.
+
 ## 0.2.0
 
 ### Minor Changes

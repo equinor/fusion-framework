@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.0.1
+
+### Patch Changes
+
+-   [#2517](https://github.com/equinor/fusion-framework/pull/2517) [`e78861a`](https://github.com/equinor/fusion-framework/commit/e78861a17cb0174ad96cd05e1b873e5fee42660f) Thanks [@eikeland](https://github.com/eikeland)! - Make `app.config.ts` definition scopes optional by updating the `AppConfigFn` type to use `z.input<typeof ApiAppConfigSchema>`.
+
 ## 10.0.0
 
 ### Major Changes
