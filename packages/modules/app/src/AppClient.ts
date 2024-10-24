@@ -67,7 +67,7 @@ export class AppClient implements IAppClient {
         const expire = 1 * 60 * 1000;
         this.#manifest = new Query<AppManifest, { appKey: string }>({
             client: {
-                fn: ({ appKey }) => {
+                fn: ({ appKey }) => { 
                     return client.json(`/apps/${appKey}`, {
                         headers: {
                             'Api-Version': '1.0',
@@ -84,7 +84,9 @@ export class AppClient implements IAppClient {
         this.#manifests = new Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>({
             client: {
                 fn: (filter) => {
-                    const path = filter?.filterByCurrentUser ? '/persons/me/apps' : '/apps';
+                    const path = filter?.filterByCurrentUser
+                        ? '/persons/me/apps'
+                        : '/apps?=$expand=category,admins,owners,keywords';
                     return client.json(path, {
                         headers: {
                             'Api-Version': '1.0',
