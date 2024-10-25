@@ -68,7 +68,7 @@ export class AppClient implements IAppClient {
         this.#manifest = new Query<AppManifest, { appKey: string }>({
             client: {
                 fn: ({ appKey }) => {
-                    return client.json(`/apps/${appKey}`, {
+                    return client.json(`/persons/me/apps/${appKey}`, {
                         headers: {
                             'Api-Version': '1.0',
                         },
