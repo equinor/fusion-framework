@@ -24,29 +24,22 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
 
     const bundle = new AdmZip();
 
-    bundle.addLocalFile(pkg.path);
-    spinner.info(`added ./package.json`);
-
     bundle.addLocalFolder(outDir);
     spinner.info(`added ./${outDir}`);
 
     const appDir = dirname(pkg.path);
 
-    const licenseFile = resolve(appDir, 'LICENSE.md');
-    if (fileExistsSync(licenseFile)) {
-        bundle.addLocalFile(licenseFile);
-        spinner.info(`added ${licenseFile}`);
-    } else {
-        spinner.warn(`missing ${licenseFile}`);
-    }
-
-    const readmeFile = resolve(appDir, 'README.md');
-    if (fileExistsSync(readmeFile)) {
-        bundle.addLocalFile(readmeFile);
-        spinner.info(`added ${readmeFile}`);
-    } else {
-        spinner.warn(`missing ${readmeFile}`);
-    }
+    /* Files to add to zip package */
+    const addFiles = ['package.json', 'LICENSE.md', 'README.md', 'CHANGELOG.md'];
+    addFiles.forEach((file) => {
+        const filePath = resolve(appDir, file);
+        if (fileExistsSync(filePath)) {
+            bundle.addLocalFile(filePath);
+            spinner.info(`added ${file}`);
+        } else {
+            spinner.warn(`missing ${file}`);
+        }
+    });
 
     spinner.start('compressing content');
     if (!fileExistsSync(dirname(archive))) {
