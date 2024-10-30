@@ -1,5 +1,15 @@
 # Change Log
 
+## 10.0.2
+
+### Patch Changes
+
+-   [#2521](https://github.com/equinor/fusion-framework/pull/2521) [`65f03fa`](https://github.com/equinor/fusion-framework/commit/65f03fa01b71d387874dbe8ae21163c7c1c3d4b8) Thanks [@eikeland](https://github.com/eikeland)! - ### Adds CHANGELOG.md to app zip package
+
+    -   Removed individual file additions for package.json, LICENSE.md, and README.md.
+    -   Added a loop to handle multiple files (package.json, LICENSE.md, README.md, CHANGELOG.md) in a more concise manner.
+    -   Updated the spinner messages accordingly.
+
 ## 10.0.1
 
 ### Patch Changes
