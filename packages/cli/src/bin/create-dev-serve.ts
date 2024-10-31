@@ -103,7 +103,7 @@ export const createDevServer = async (options: {
             appProxyPlugin({
                 proxy: {
                     path: '/apps-proxy',
-                    target: 'https://fusion-s-apps-ci.azurewebsites.net/',
+                    target: 'https://apps.ci.api.fusion-dev.net/',
                     onProxyReq: proxyRequestLogger,
                 },
                 app: {
