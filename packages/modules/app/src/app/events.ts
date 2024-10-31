@@ -2,7 +2,13 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 
 import type { App } from './App';
 
-import type { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type {
+    AppConfig,
+    AppManifest,
+    AppModulesInstance,
+    AppScriptModule,
+    AppSettings,
+} from '../types';
 
 /** base event type for applications */
 export type AppEventEventInit<TDetail extends Record<string, unknown> | unknown = unknown> =
@@ -44,6 +50,13 @@ declare module '@equinor/fusion-framework-module-event' {
             config: AppConfig;
         }>;
         onAppConfigFailure: AppEventFailure;
+
+        onAppSettingsLoad: AppEvent;
+        /** fired when the application has loaded corresponding settings */
+        onAppSettingsLoaded: AppEvent<{
+            settings: AppSettings;
+        }>;
+        onAppSettingsFailure: AppEventFailure;
 
         /** fired when the application has loaded corresponding javascript module */
         onAppScriptLoad: AppEvent;

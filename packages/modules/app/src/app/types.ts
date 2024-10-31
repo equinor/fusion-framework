@@ -4,6 +4,7 @@ import type {
     AppModulesInstance,
     AppScriptModule,
     ConfigEnvironment,
+    AppSettings,
 } from '../types';
 
 /**
@@ -16,6 +17,7 @@ import type {
  * @property {Set<string>} status - A set of strings representing the status of the application.
  * @property {AppManifest} [manifest] - An optional manifest describing the application.
  * @property {AppConfig<TConfig>} [config] - An optional configuration object for the application.
+ * @property {AppSettings} [settings] - An optional application settings object.
  * @property {AppScriptModule} [modules] - An optional script module for the application.
  * @property {AppModulesInstance<TModules>} [instance] - An optional instance of the application modules.
  */
@@ -28,6 +30,7 @@ export type AppBundleState<
     status: Set<string>;
     manifest?: AppManifest;
     config?: AppConfig<TConfig>;
+    settings?: AppSettings;
     modules?: AppScriptModule;
     instance?: AppModulesInstance<TModules>;
 };
