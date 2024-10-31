@@ -2,7 +2,12 @@ import { FlowSubject } from '@equinor/fusion-observable';
 
 import { createReducer } from './create-reducer';
 
-import { handleFetchManifest, handleFetchConfig, handleImportApplication } from './flows';
+import {
+    handleFetchManifest,
+    handleFetchConfig,
+    handleFetchSettings,
+    handleImportApplication,
+} from './flows';
 
 import type { Actions } from './actions';
 import type { AppBundleState, AppBundleStateInitial } from './types';
@@ -22,6 +27,9 @@ export const createState = (
 
     // add handler for fetching config
     state.addFlow(handleFetchConfig(provider));
+
+    // add handler for fetching settings
+    state.addFlow(handleFetchSettings(provider));
 
     // add handler for loading application script
     state.addFlow(handleImportApplication(provider));

@@ -3,6 +3,7 @@ import type {
     AppScriptModule,
     AppManifest,
     AppConfig,
+    AppSettings,
     ConfigEnvironment,
 } from '../types';
 import { FlowSubject, Observable } from '@equinor/fusion-observable';
@@ -54,6 +55,12 @@ export interface IApp<
     get config$(): Observable<AppConfig<TEnv>>;
 
     /**
+     * Observable that emits the settings of the app.
+     * @returns An Observable that emits the app settings.
+     */
+    get settings$(): Observable<AppSettings>;
+
+    /**
      * Returns an observable stream of the loaded app script instance.
      * @returns {Observable<AppScriptModule>} The observable stream of app script modules.
      */
@@ -96,6 +103,18 @@ export interface IApp<
     get config(): AppConfig<TEnv> | undefined;
 
     /**
+     * Gets the settings of the app.
+     * @returns The settings object or undefined if no settings is set.
+     */
+    get settings(): AppSettings | undefined;
+
+    /**
+     * Gets the settings of the app asyncronously.
+     * @returns A promise that resolves to the AppSettings.
+     */
+    get settingsAsync(): Promise<AppSettings> | undefined;
+
+    /**
      * Retrieves the configuration asynchronously.
      * @returns A promise that resolves to the AppConfig.
      */
@@ -120,12 +139,18 @@ export interface IApp<
         manifest: AppManifest;
         script: AppScriptModule;
         config: AppConfig;
+        settings: AppSettings;
     }>;
 
     /**
      * Loads the app configuration.
      */
     loadConfig(): void;
+
+    /**
+     * Loads the app settings.
+     */
+    loadSettings(): void;
 
     /**
      * Loads the app manifest.
@@ -151,6 +176,20 @@ export interface IApp<
      * @returns A promise that resolves to the AppConfig.
      */
     getConfigAsync(allow_cache?: boolean): Promise<AppConfig>;
+
+    /**
+     * Gets the app settings.
+     * @param force_refresh Whether to force refreshing the settings.
+     * @returns An observable that emits the app settings.
+     */
+    getSettings(force_refresh?: boolean): Observable<AppSettings>;
+
+    /**
+     * Retrieves the app settings asynchronously.
+     * @param allow_cache Whether to allow loading from cache.
+     * @returns A promise that resolves to the AppSettings.
+     */
+    getSettingsAsync(allow_cache?: boolean): Promise<AppSettings>;
 
     /**
      * Gets the app manifest.
@@ -206,6 +245,13 @@ export class App<
         );
     }
 
+    get settings$(): Observable<AppSettings> {
+        return this.#state.pipe(
+            map(({ settings }) => settings as AppSettings),
+            filterEmpty(),
+        );
+    }
+
     get modules$(): Observable<AppScriptModule> {
         return this.#state.pipe(
             map(({ modules }) => modules),
@@ -245,6 +291,14 @@ export class App<
 
     get configAsync(): Promise<AppConfig<TEnv>> {
         return firstValueFrom(this.config$);
+    }
+
+    get settings(): AppSettings | undefined {
+        return this.state.settings as AppSettings;
+    }
+
+    get settingsAsync(): Promise<AppSettings> {
+        return firstValueFrom(this.settings$);
     }
 
     get instance(): AppModulesInstance<TModules> | undefined {
@@ -358,6 +412,33 @@ export class App<
             });
         });
 
+        // monitor when application settings is loading
+        this.#state.addEffect(actions.fetchSettings.type, () => {
+            // dispatch event to notify listeners that the application settings is being loaded
+            event.dispatchEvent('onAppSettingsLoad', {
+                detail: { appKey },
+                source: this,
+            });
+        });
+
+        // monitor when application settings is loaded
+        this.#state.addEffect(actions.fetchSettings.success.type, (action) => {
+            // dispatch event to notify listeners that the application settings has been loaded
+            event.dispatchEvent('onAppSettingsLoaded', {
+                detail: { appKey, settings: action.payload },
+                source: this,
+            });
+        });
+
+        // monitor when application settings fails to load
+        this.#state.addEffect(actions.fetchSettings.failure.type, (action) => {
+            // dispatch event to notify listeners that the application settings failed to load
+            event.dispatchEvent('onAppSettingsFailure', {
+                detail: { appKey, error: action.payload },
+                source: this,
+            });
+        });
+
         // monitor when application script is loading
         this.#state.addEffect(actions.importApp.type, () => {
             // dispatch event to notify listeners that the application script is being loaded
@@ -417,6 +498,7 @@ export class App<
         manifest: AppManifest;
         script: AppScriptModule;
         config: AppConfig;
+        settings: AppSettings;
     }> {
         return new Observable((subscriber) => {
             // dispatch initialize action to indicate that the application is initializing
@@ -427,13 +509,15 @@ export class App<
                     this.getManifest(),
                     this.getAppModule(),
                     this.getConfig(),
+                    this.getSettings(),
                 ]).subscribe({
-                    next: ([manifest, script, config]) =>
+                    next: ([manifest, script, config, settings]) =>
                         // emit the manifest, script, and config to the subscriber
                         subscriber.next({
                             manifest,
                             script,
                             config,
+                            settings,
                         }),
                     error: (err) => {
                         // emit error and complete the stream
@@ -456,6 +540,10 @@ export class App<
                 this.#state.next(actions.fetchConfig(manifest));
             },
         });
+    }
+
+    public loadSettings() {
+        this.#state.next(actions.fetchSettings(this.appKey));
     }
 
     public loadManifest(update?: boolean) {
@@ -527,6 +615,58 @@ export class App<
         // when allow_cache is true, use first emitted value, otherwise use last emitted value
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
         return operator(this.getConfig(!allow_cache));
+    }
+
+    public getSettings(force_refresh = false): Observable<AppSettings> {
+        return new Observable((subscriber) => {
+            if (this.#state.value.config) {
+                // emit current settings to the subscriber
+                subscriber.next(this.#state.value.settings);
+                if (!force_refresh) {
+                    // since we have the settings and no force refresh, complete the stream
+                    return subscriber.complete();
+                }
+            }
+
+            // when stream closes, dispose of subscription to change of state settings
+            subscriber.add(
+                // monitor changes to state changes of settings and emit to subscriber
+                this.#state.addEffect('set_settings', ({ payload }) => {
+                    subscriber.next(payload);
+                }),
+            );
+
+            // when stream closes, dispose of subscription to fetch settings
+            subscriber.add(
+                // monitor success of fetching settings and emit to subscriber
+                this.#state.addEffect('fetch_settings::success', ({ payload }) => {
+                    // application settings loaded, emit to subscriber and complete the stream
+                    subscriber.next(payload);
+                    subscriber.complete();
+                }),
+            );
+
+            // when stream closes, dispose of subscription to fetch settings
+            subscriber.add(
+                // monitor failure of fetching settings and emit error to subscriber
+                this.#state.addEffect('fetch_settings::failure', ({ payload }) => {
+                    // application settings failed to load, emit error and complete the stream
+                    subscriber.error(
+                        Error('failed to load application settings', {
+                            cause: payload,
+                        }),
+                    );
+                }),
+            );
+
+            this.loadSettings();
+        });
+    }
+
+    public getSettingsAsync(allow_cache = true): Promise<AppSettings> {
+        // when allow_cache is true, use first emitted value, otherwise use last emitted value
+        const operator = allow_cache ? firstValueFrom : lastValueFrom;
+        return operator(this.getSettings(!allow_cache));
     }
 
     public getManifest(force_refresh = false): Observable<AppManifest> {

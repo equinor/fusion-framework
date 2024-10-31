@@ -12,7 +12,7 @@ import {
 import { ModuleType } from '@equinor/fusion-framework-module';
 import { EventModule } from '@equinor/fusion-framework-module-event';
 
-import type { AppConfig, AppManifest, ConfigEnvironment, CurrentApp } from './types';
+import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment, CurrentApp } from './types';
 
 import { App, filterEmpty, IApp } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
@@ -120,6 +120,14 @@ export class AppModuleProvider {
         tag?: string,
     ): Observable<AppConfig<TType>> {
         return from(this.#appClient.getAppConfig<TType>({ appKey, tag }));
+    }
+
+    /**
+     * fetch user settings for an application
+     * @param appKey - application key
+     */
+    public getAppSettings(appKey: string): Observable<AppSettings> {
+        return from(this.#appClient.getAppSettings({ appKey }));
     }
 
     /**

@@ -23,6 +23,8 @@ export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = 
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
+export type AppSettings = Record<string, unknown>;
+
 // TODO: remove `report` and `launcher` when legacy apps are removed
 export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 

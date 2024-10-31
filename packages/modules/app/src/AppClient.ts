@@ -8,8 +8,8 @@ import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 import { ApiApplicationSchema } from './schemas';
 
-import type { AppConfig, AppManifest, ConfigEnvironment } from './types';
-import { AppConfigError, AppManifestError } from './errors';
+import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment } from './types';
+import { AppConfigError, AppManifestError, AppSettingsError } from './errors';
 import { AppConfigSelector } from './AppClient.Selectors';
 
 export interface IAppClient extends Disposable {
@@ -30,6 +30,11 @@ export interface IAppClient extends Disposable {
         appKey: string;
         tag?: string;
     }) => ObservableInput<AppConfig<TType>>;
+
+    /**
+     * Fetch app settings by appKey
+     */
+    getAppSettings: (args: { appKey: string }) => ObservableInput<AppSettings>;
 }
 
 /**
@@ -62,6 +67,7 @@ export class AppClient implements IAppClient {
     #manifest: Query<AppManifest, { appKey: string }>;
     #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
     #config: Query<AppConfig, { appKey: string; tag?: string }>;
+    #settings: Query<AppSettings, { appKey: string }>;
 
     constructor(client: IHttpClient) {
         const expire = 1 * 60 * 1000;
@@ -114,7 +120,22 @@ export class AppClient implements IAppClient {
             key: (args) => JSON.stringify(args),
             expire,
         });
+
+        this.#settings = new Query<AppSettings, { appKey: string }>({
+            client: {
+                fn: ({ appKey }) => {
+                    return client.json(`/persons/me/apps/${appKey}/settings`, {
+                        headers: {
+                            'Api-Version': '1.0',
+                        },
+                    });
+                },
+            },
+            key: (args) => JSON.stringify(args),
+            expire,
+        });
     }
+
     getAppManifest(args: { appKey: string }): Observable<AppManifest> {
         return this.#manifest.query(args).pipe(
             queryValue,
@@ -158,11 +179,29 @@ export class AppClient implements IAppClient {
         );
     }
 
+    getAppSettings(args: { appKey: string }): Observable<AppSettings> {
+        return this.#settings.query(args).pipe(
+            queryValue,
+            catchError((err) => {
+                /** extract cause, since error will be a `QueryError` */
+                const { cause } = err;
+                if (cause instanceof AppSettingsError) {
+                    throw cause;
+                }
+                if (cause instanceof HttpResponseError) {
+                    throw AppSettingsError.fromHttpResponse(cause.response, { cause });
+                }
+                throw new AppSettingsError('unknown', 'failed to load settings', { cause });
+            }),
+        );
+    }
+
     [Symbol.dispose]() {
         console.warn('AppClient disposed');
         this.#manifest.complete();
         this.#manifests.complete();
         this.#config.complete();
+        this.#settings.complete();
     }
 }
 
