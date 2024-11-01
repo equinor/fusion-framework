@@ -124,10 +124,14 @@ export class LegacyAuthContainer extends AuthContainer {
             return super.registerAppAsync(clientId, resources);
         }
         resources = resources.filter(Boolean);
-        const app = this.resolveApp(clientId) ?? new AuthApp(clientId, resources);
-        app.updateResources(resources);
-        this._registeredApps[clientId] = app;
-        this.apps.push(app);
+        const app = this.resolveApp(clientId);
+        if (app) {
+            app.updateResources(resources);
+            return true;
+        }
+
+        const newApp = new AuthApp(clientId, resources);
+        this.apps.push(newApp);
         return true;
     }
 
