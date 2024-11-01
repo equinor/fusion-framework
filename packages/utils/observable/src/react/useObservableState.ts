@@ -1,6 +1,7 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Observable, StatefulObservable } from '../types';
-import { useObservableLayoutSubscription } from './useObservableSubscription';
+import { StatefulObservable } from '../types';
+import { Observable, ObservableInput } from 'rxjs';
+import { useObservableExternalStore } from './useObservableExternalStore';
+import { useState } from 'react';
 
 type ObservableStateOptions<TType = undefined> = {
     initial?: TType;
@@ -9,7 +10,7 @@ type ObservableStateOptions<TType = undefined> = {
 
 export type ObservableStateReturnType<TType, TError = unknown> = {
     value: TType;
-    error: TError | null;
+    error?: TError;
     complete: boolean;
 };
 
@@ -62,51 +63,19 @@ export function useObservableState<TType, TError = unknown>(
  * @returns current state of observable
  */
 export function useObservableState<S, E = unknown>(
-    subject: Observable<S> | StatefulObservable<S>,
+    source: ObservableInput<S>,
     opt?: ObservableStateOptions<S>,
 ): ObservableStateReturnType<S | undefined, E> {
-    const resolveInitial = useCallback(
-        () =>
-            /** provided initial value */
-            opt?.initial ??
-            /** use subject current value if supported */
-            (subject as StatefulObservable<S>).value ??
-            /** nothing to resolve */
-            undefined,
-        [subject, opt?.initial],
-    );
+    type TReturn = ObservableStateReturnType<S | undefined, E>;
+    // resolve initial value
+    const [initial] = useState(() => {
+        // if initial value is provided return it
+        if (opt?.initial !== undefined) return opt.initial;
+        // if the source is a stateful observable (BehaviorSubject) return the value
+        return 'value' in source ? (source as StatefulObservable<S>).value : undefined;
+    });
 
-    const initialValue = useRef(resolveInitial());
-
-    const [next, setNext] = useState<S | undefined>(initialValue.current);
-    const [error, setError] = useState<E | null>(null);
-    const [complete, setComplete] = useState<boolean>(false);
-
-    useLayoutEffect(() => {
-        initialValue.current = resolveInitial();
-    }, [resolveInitial]);
-
-    /**
-     * when subject change, reset state
-     */
-    useLayoutEffect(() => {
-        setError(null);
-        setComplete(false);
-        setNext(initialValue.current);
-    }, [setNext, setError, setComplete, subject, initialValue]);
-
-    const subscriber = useMemo(
-        () => ({
-            next: setNext,
-            error: setError,
-            complete: () => setComplete(true),
-        }),
-        [setNext, setError, setComplete],
-    );
-
-    useObservableLayoutSubscription(subject, subscriber, opt?.teardown);
-
-    return { value: next, error, complete };
+    return useObservableExternalStore(source, initial) as TReturn;
 }
 
 export default useObservableState;
