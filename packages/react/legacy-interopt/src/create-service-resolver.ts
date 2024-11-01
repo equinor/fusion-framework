@@ -1,3 +1,4 @@
+import type { Service } from '@equinor/fusion-framework-module-service-discovery';
 import LegacyAuthContainer from './LegacyAuthContainer';
 import { PortalFramework } from './types';
 
@@ -12,37 +13,59 @@ export const createServiceResolver = async (
     const services = await provider.resolveServices().then((services) =>
         services.reduce(
             (acc, service) => {
-                acc[service.key] = service;
+                // try to get the client id from the scope
+                const scope = service.scopes?.[0];
+                const id = scope ? (scope.split('/')[0] ?? clientId) : clientId;
+
+                // assure that the clientMap has an array for the id
+                if (!acc.clientMap[id]) {
+                    acc.clientMap[id] = [];
+                }
+
+                // add the service to the clientMap and serviceMap
+                acc.clientMap[id]!.push(service);
+                acc.serviceMap[service.key] = service;
+
                 return acc;
             },
-            {} as Record<string, { uri: string }>,
+            {
+                clientMap: {},
+                serviceMap: {},
+            } as {
+                clientMap: Record<string, Service[]>;
+                serviceMap: Record<string, Service>;
+            },
         ),
     );
+
     /** register for legacy auth token */
-    await authContainer.registerAppAsync(
-        clientId,
-        Object.values(services)
-            .map((x) => x.uri)
-            .concat([window.location.origin]),
-        false,
+    await Promise.all(
+        Object.entries(services.clientMap).map(async ([id, uris]) => {
+            return authContainer.registerAppAsync(
+                id,
+                uris.map((x) => x.uri),
+                false,
+            );
+        }),
     );
+
     return {
-        getContextBaseUrl: () => services['context'].uri,
-        getDataProxyBaseUrl: () => services['data-proxy'].uri,
-        getFusionBaseUrl: () => services['portal'].uri,
-        getMeetingsBaseUrl: () => services['meeting-v2'].uri,
-        getOrgBaseUrl: () => services['org'].uri,
-        getPowerBiBaseUrl: () => services['powerbi'].uri,
-        getProjectsBaseUrl: () => services['projects'].uri,
-        getTasksBaseUrl: () => services['tasks'].uri,
-        getFusionTasksBaseUrl: () => services['tasks'].uri,
-        getPeopleBaseUrl: () => services['people'].uri,
-        getReportsBaseUrl: () => services['reports'].uri,
+        getContextBaseUrl: () => services.serviceMap['context'].uri,
+        getDataProxyBaseUrl: () => services.serviceMap['data-proxy'].uri,
+        getFusionBaseUrl: () => services.serviceMap['portal'].uri,
+        getMeetingsBaseUrl: () => services.serviceMap['meeting-v2'].uri,
+        getOrgBaseUrl: () => services.serviceMap['org'].uri,
+        getPowerBiBaseUrl: () => services.serviceMap['powerbi'].uri,
+        getProjectsBaseUrl: () => services.serviceMap['projects'].uri,
+        getTasksBaseUrl: () => services.serviceMap['tasks'].uri,
+        getFusionTasksBaseUrl: () => services.serviceMap['tasks'].uri,
+        getPeopleBaseUrl: () => services.serviceMap['people'].uri,
+        getReportsBaseUrl: () => services.serviceMap['reports'].uri,
         // TODO - What?!?
         getPowerBiApiBaseUrl: () => 'https://api.powerbi.com/v1.0/myorg',
-        getNotificationBaseUrl: () => services['notification'].uri,
-        getInfoUrl: () => services['info'].uri,
-        getBookmarksBaseUrl: () => services['bookmarks'].uri,
+        getNotificationBaseUrl: () => services.serviceMap['notification'].uri,
+        getInfoUrl: () => services.serviceMap['info'].uri,
+        getBookmarksBaseUrl: () => services.serviceMap['bookmarks'].uri,
     };
 };
 
