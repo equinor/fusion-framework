@@ -17,7 +17,7 @@ export default {
       type: String,
       required: true
     },
-     package: {
+    package: {
       type: String,
     },
     layout: {
@@ -37,7 +37,7 @@ export default {
       return url.toString();
     },
     packageName() {
-      return this.package || `@equinor/fusion-framework-${this.module}`;
+      return this.package || `@equinor/fusion-framework-${this.module.replaceAll('/', '-')}`;
     },
     npmUrl() {
       return `https://www.npmjs.com/package/${this.packageName}`;
