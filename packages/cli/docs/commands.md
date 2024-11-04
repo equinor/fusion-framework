@@ -260,7 +260,7 @@ fusion-framework-cli app build-tag -v 1.0.3 -t preview -e ci
 
 ### Authentication
 
-To run any app commands involving the [app api](https://fusion-s-apps-ci.azurewebsites.net/swagger/index.html), you need to provide a valid fusion access_token.
+To run any app commands involving the [app api](https://apps.ci.api.fusion-dev.net/swagger/index.html), you need to provide a valid fusion access_token.
 
 The CLI will look for the env varable `FUSION_TOKEN`.
 

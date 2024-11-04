@@ -65,7 +65,7 @@ export type AppProxyPluginOptions = {
  * const plugin = appProxyPlugin({
  *   proxy: {
  *     path: '/app-proxy',
- *     target: 'https://fusion-s-apps-ci.azurewebsites.net/',
+ *     target: 'https://apps.ci.api.fusion-dev.net',
  *     onProxyReq: (proxyReq, req, res) => {
  *       proxyReq.on('response', (res) => { console.log(res.statusCode) });
  *     },
