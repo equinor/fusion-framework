@@ -55,6 +55,8 @@ export const createFusionContext = async (args: {
 
     const authContainer = new LegacyAuthContainer({ auth: framework.modules.auth });
 
+    await authContainer.handleWindowCallbackAsync();
+
     const telemetryLogger = new TelemetryLogger(telemetry?.instrumentationKey ?? '', authContainer);
 
     const abortControllerManager = new AbortControllerManager(new EventHub());
