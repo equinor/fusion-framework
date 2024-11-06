@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.0.3
+
+### Patch Changes
+
+-   [#2523](https://github.com/equinor/fusion-framework/pull/2523) [`e188193`](https://github.com/equinor/fusion-framework/commit/e188193a09802cfb74bd8aeaa8713b75b10a0638) Thanks [@eikeland](https://github.com/eikeland)! - ## changes:
+
+    -   changing ci urls to new domain
+
 ## 10.0.2
 
 ### Patch Changes
