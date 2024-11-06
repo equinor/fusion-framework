@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-docs
 
+## 0.2.2
+
+### Patch Changes
+
+-   [#2518](https://github.com/equinor/fusion-framework/pull/2518) [`f21d582`](https://github.com/equinor/fusion-framework/commit/f21d5826c0c9b5400bf1e35b658c229f3de127fc) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
+
+    -   Fixed indentation in `ModuleBadge.vue`.
+    -   Updated `packageName` method in `ModuleBadge.vue` to replace all '/' with '-'.
+    -   Updated `ModuleBadge` component usage in various README files to use the correct module paths:
+        -   `modules/app`
+        -   `modules/feature-flag`
+        -   `modules/navigation`
+        -   `modules/service-discovery`
+        -   `modules/services`
+        -   `modules/widget`
+    -   Added `ModuleBadge` component to `feature-flag/module.md` and `feature-flag/react.md`.
+
 ## 0.2.1
 
 ### Patch Changes

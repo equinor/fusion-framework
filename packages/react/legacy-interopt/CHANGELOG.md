@@ -1,5 +1,22 @@
 # Change Log
 
+## 17.0.2
+
+### Patch Changes
+
+-   [#2528](https://github.com/equinor/fusion-framework/pull/2528) [`ecc6bbb`](https://github.com/equinor/fusion-framework/commit/ecc6bbb16a1593c967f3bcebc0446ebac0bdac21) Thanks [@eikeland](https://github.com/eikeland)! - #### Updated Files:
+
+    -   `packages/react/legacy-interopt/src/create-fusion-context.ts`
+    -   `packages/react/legacy-interopt/src/create-service-resolver.ts`
+
+    #### Changes:
+
+    1. **create-fusion-context.ts**
+        - Added a call to `authContainer.handleWindowCallbackAsync()` before initializing `TelemetryLogger`.
+    2. **create-service-resolver.ts**
+
+        - Changed the third parameter of authContainer.registerAppAsync from false to true.
+
 ## 17.0.1
 
 ### Patch Changes
