@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+-   [#2520](https://github.com/equinor/fusion-framework/pull/2520) [`248ee1f`](https://github.com/equinor/fusion-framework/commit/248ee1f83978a158dfb88dd47d8e8bcaac0e3574) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
+    -   Updated the `AppClient` class to modify the query path in the `fn` method for fetching app manifests:
+        -   Changed the path from `/apps/${appKey}` to `/persons/me/apps/${appKey}`.
+
 ## 6.0.0
 
 ### Major Changes
