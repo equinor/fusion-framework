@@ -5,6 +5,7 @@ import { resolveAssetId } from './resolve-asset-id.js';
 import { createExtensionFilterPattern } from './extension-filter-pattern.js';
 
 import { ASSET_EXTENSIONS, PLUGIN_NAME } from './static.js';
+import { PluginContext } from 'rollup';
 
 const defaultInclude = createExtensionFilterPattern(ASSET_EXTENSIONS);
 
@@ -59,9 +60,9 @@ export const AppAssetExportPlugin = (
         configResolved(config) {
             viteConfig = config;
         },
-        async resolveId(source, importer = '', opts) {
+        async resolveId(source, importer, opts) {
             if (viteConfig.build.lib === false) {
-                this.warn(`this plugin is only for vite build lib`);
+                this.warn('this plugin is only for vite build lib');
             }
             // skip resolves triggered by plugin self
             if (opts.custom?.caller === PLUGIN_NAME) {
@@ -69,7 +70,7 @@ export const AppAssetExportPlugin = (
             }
 
             // resolve asset ID, the ID should refer to the actual asset file
-            const assetId = await resolveAssetId(this, source, importer, {
+            const assetId = await resolveAssetId(this as PluginContext, source, importer ?? '', {
                 ...opts,
                 custom: {
                     ...opts.custom,
@@ -87,7 +88,7 @@ export const AppAssetExportPlugin = (
             try {
                 // emit asset and index the asset path
                 const { outDir, assetsDir } = viteConfig.build;
-                const assetPath = emitAssetSync(this, id, {
+                const assetPath = emitAssetSync(this as PluginContext, id, {
                     name,
                     outDir,
                     assetsDir,
