@@ -1,25 +1,25 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { ClientMethod } from '..';
+import type { ClientMethod } from '..';
 import deleteBookmark from './delete/client';
-import { DeleteBookmarkResult, DeleteBookmarksFn, DeleteBookmarksResult } from './delete/types';
+import type { DeleteBookmarkResult, DeleteBookmarksFn, DeleteBookmarksResult } from './delete/types';
 import getBookmark from './get/client';
-import { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
-import { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
+import type { ApiVersions, GetBookmarkResult, GetBookmarksFn, GetBookmarksResult } from './get/types';
+import type { PostBookmarkResult, PostBookmarkFn, PostBookmarksResult } from './post/types';
 import postBookmark from './post/client';
-import patchBookmark, { PatchBookmarkFn, PatchBookmarkResult, PatchBookmarksResult } from './patch';
-import getAllBookmarks, { GetAllBookmarkResult, GetAllBookmarksResult } from './getAll';
+import patchBookmark, { type PatchBookmarkFn, type PatchBookmarkResult, type PatchBookmarksResult } from './patch';
+import getAllBookmarks, { type GetAllBookmarkResult, type GetAllBookmarksResult } from './getAll';
 import addBookmarkFavorite, {
-    PostBookmarkFavoriteFn,
-    PostBookmarksFavoriteResult,
+    type PostBookmarkFavoriteFn,
+    type PostBookmarksFavoriteResult,
 } from './favorites/post';
 import deleteBookmarkFavorite, {
-    DeleteBookmarksFavoriteFn,
-    DeleteBookmarksFavoriteResult,
+    type DeleteBookmarksFavoriteFn,
+    type DeleteBookmarksFavoriteResult,
 } from './favorites/delete';
 import verifyBookmarkFavorite, {
-    HeadBookmarkFavoriteFn,
-    HeadBookmarksFavoriteResult,
+    type HeadBookmarkFavoriteFn,
+    type HeadBookmarksFavoriteResult,
 } from './favorites/head';
 
 export class BookmarksApiClient<

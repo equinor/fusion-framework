@@ -5,7 +5,7 @@ import type {
     AppConfig,
     ConfigEnvironment,
 } from '../types';
-import { FlowSubject, Observable } from '@equinor/fusion-observable';
+import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
 import {
@@ -15,14 +15,14 @@ import {
     lastValueFrom,
     map,
     of,
-    OperatorFunction,
+    type OperatorFunction,
     Subscription,
 } from 'rxjs';
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
-import { actions, Actions } from './actions';
-import { AppBundleState, AppBundleStateInitial } from './types';
+import { actions, type Actions } from './actions';
+import type { AppBundleState, AppBundleStateInitial } from './types';
 
 import './events';
 
@@ -36,7 +36,7 @@ export function filterEmpty<T>(): OperatorFunction<T | null | undefined, T> {
  * @template TEnv The type of the environment.
  * @template TModules The type of the app modules.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export interface IApp<
     TEnv extends ConfigEnvironment = ConfigEnvironment,
     TModules extends Array<AnyModule> | unknown = unknown,
@@ -182,7 +182,7 @@ export interface IApp<
 }
 
 // TODO make streams distinct until changed from state
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export class App<
     TEnv extends ConfigEnvironment = ConfigEnvironment,
     TModules extends Array<AnyModule> | unknown = unknown,

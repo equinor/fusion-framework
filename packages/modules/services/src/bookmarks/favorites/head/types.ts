@@ -1,6 +1,6 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../..';
 
 export type HeadBookmarkFavoriteResult<TVersion extends ApiVersions> =
     HeadBookmarksFavoriteVersions[TVersion]['result'];

@@ -1,5 +1,5 @@
-import { HttpClient } from './lib/client';
-import {
+import type { HttpClient } from './lib/client';
+import type {
     HttpClientOptions,
     HttpClientRequestInitType,
     IHttpClientConfigurator,

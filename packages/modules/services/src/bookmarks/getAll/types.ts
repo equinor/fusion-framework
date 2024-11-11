@@ -1,5 +1,5 @@
-import { ApiBookmarkEntityV1 } from '../api-models';
-import { ClientMethod } from '../types';
+import type { ApiBookmarkEntityV1 } from '../api-models';
+import type { ClientMethod } from '../types';
 
 /**Gets result type for GetAllBookmark call based on version and method */
 export type GetAllBookmarksResult<

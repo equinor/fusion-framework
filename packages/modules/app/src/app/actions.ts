@@ -1,6 +1,6 @@
 import {
-    ActionInstanceMap,
-    ActionTypes,
+    type ActionInstanceMap,
+    type ActionTypes,
     createAction,
     createAsyncAction,
 } from '@equinor/fusion-observable';
@@ -32,7 +32,7 @@ const createActions = () => ({
         (error: unknown) => ({ payload: error }),
     ),
     /** App loading */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     setModule: createAction('set_module', (module: any) => ({ payload: module })),
     importApp: createAsyncAction(
         'import_app',

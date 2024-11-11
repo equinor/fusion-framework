@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';

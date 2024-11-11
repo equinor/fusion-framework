@@ -3,9 +3,9 @@ import type {
     IModulesConfigurator,
     ModuleInitializerArgs,
 } from '@equinor/fusion-framework-module';
-import { BookmarkConfigBuilder } from './bookmark-config-builder';
+import type { BookmarkConfigBuilder } from './bookmark-config-builder';
 
-import { IBookmarkModuleConfigurator } from './configurator';
+import type { IBookmarkModuleConfigurator } from './configurator';
 
 import { module } from './module';
 
@@ -14,7 +14,7 @@ import { module } from './module';
  * @param configurator - configuration object
  */
 export const enableBookmark = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     builder?: <TDeps extends Array<AnyModule> = []>(
         builder: BookmarkConfigBuilder<

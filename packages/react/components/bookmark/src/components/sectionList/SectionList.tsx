@@ -1,5 +1,5 @@
 import { Icon } from '@equinor/eds-core-react';
-import { useBookmarkGrouping } from '../../hooks';
+import type { useBookmarkGrouping } from '../../hooks';
 import { Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';

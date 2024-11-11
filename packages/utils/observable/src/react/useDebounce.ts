@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
-import { from, Observable, ObservableInput, Subject } from 'rxjs';
+import { from, type Observable, type ObservableInput, Subject } from 'rxjs';
 import { debounce, debounceTime, switchMap, tap } from 'rxjs/operators';
-import { ObservableType } from '../types';
+import type { ObservableType } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type UseDebounceOptions<TArgs extends any[]> = {
     debounce: ((value: TArgs) => ObservableInput<unknown>) | number;
     queuer?: Subject<TArgs>;
@@ -11,15 +11,15 @@ export type UseDebounceOptions<TArgs extends any[]> = {
 
 export const useDebounce = <
     TFn extends (...args: TArgs) => TType,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TType extends ObservableInput<any> = ReturnType<TFn>,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TArgs extends any[] = Parameters<TFn>,
 >(
     fn: TFn,
     options: UseDebounceOptions<TArgs>,
 ): {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     value$: Observable<TType extends ObservableInput<any> ? ObservableType<TType> : TType>;
     next: (...args: TArgs) => void;
     idle: boolean;

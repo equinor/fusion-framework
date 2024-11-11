@@ -1,14 +1,14 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module } from './module';
-import { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator';
+import type { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator';
 
 /**
  * Method for enabling the widget module
  * @param configurator - configuration object
  */
 export const enableWidgetModule = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     builder?: WidgetModuleConfigBuilderCallback,
 ): void => {

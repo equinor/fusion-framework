@@ -1,6 +1,6 @@
 import { v4 as generateGUID } from 'uuid';
 
-import { ActionInstanceMap, createAction, createAsyncAction } from '@equinor/fusion-observable';
+import { type ActionInstanceMap, createAction, createAsyncAction } from '@equinor/fusion-observable';
 
 import type { ActionTypes } from '@equinor/fusion-observable';
 
@@ -68,15 +68,15 @@ const createActions = <TType, TArgs>() => ({
 
 export const actions = createActions();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
     typeof createActions<TType, TArgs>
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;
 
 export default actions;

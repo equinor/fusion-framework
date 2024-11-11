@@ -1,4 +1,4 @@
-import { type FusionModulesInstance } from '@equinor/fusion-framework';
+import type { FusionModulesInstance } from '@equinor/fusion-framework';
 
 import {
     type AnyModule,
@@ -17,7 +17,7 @@ import http, {
 
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-import { AppEnv, AppModules } from './types';
+import type { AppEnv, AppModules } from './types';
 
 /**
  * Configurator for configuring application modules
@@ -78,7 +78,7 @@ export interface IAppConfigurator<
     // TODO - rename
     useFrameworkServiceClient(
         serviceName: string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
     ): void;
 }
@@ -106,7 +106,7 @@ export class AppConfigurator<
 
     public useFrameworkServiceClient(
         serviceName: string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         options?: Omit<HttpClientOptions<any>, 'baseUri' | 'defaultScopes'>,
     ): void {
         this.addConfig({

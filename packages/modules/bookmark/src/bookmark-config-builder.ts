@@ -1,21 +1,21 @@
-import {
+import type {
     AnyModule,
     ModuleInitializerArgs,
     Modules,
     ModuleType,
 } from '@equinor/fusion-framework-module';
-import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
 
-import { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
+import type { QueryCtorOptions, QueryFn } from '@equinor/fusion-query';
 
-import {
+import type {
     BookmarkModuleConfig,
     BookmarkModuleConfigurator,
     IBookmarkModuleConfigurator,
 } from './configurator';
-import { Bookmark, GetAllBookmarksParameters, GetBookmarkParameters, SourceSystem } from './types';
+import type { Bookmark, GetAllBookmarksParameters, GetBookmarkParameters, SourceSystem } from './types';
 
 export type BookmarkConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>(
     builder: BookmarkConfigBuilder<
@@ -26,7 +26,7 @@ export type BookmarkConfigBuilderCallback = <TDeps extends Array<AnyModule> = []
 
 export class BookmarkConfigBuilder<
     TModules extends Array<AnyModule> = [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
         BookmarkModuleConfigurator,
         TModules
@@ -46,7 +46,7 @@ export class BookmarkConfigBuilder<
 
     requireInstance<T>(module: string): Promise<T>;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     requireInstance(module: string): Promise<any> {
         return this.#init.requireInstance(module);
     }

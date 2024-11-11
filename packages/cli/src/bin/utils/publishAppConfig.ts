@@ -1,4 +1,4 @@
-import { ApiAppConfig } from '../../schemas.js';
+import type { ApiAppConfig } from '../../schemas.js';
 
 /**
  * Publishes app config to the apps-service endpoint

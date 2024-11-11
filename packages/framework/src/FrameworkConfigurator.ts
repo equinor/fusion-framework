@@ -1,5 +1,5 @@
 import {
-    AnyModule,
+    type AnyModule,
     ModuleConsoleLogger,
     ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
@@ -9,7 +9,7 @@ import event from '@equinor/fusion-framework-module-event';
 import http, {
     configureHttpClient,
     configureHttp,
-    HttpClientOptions,
+    type HttpClientOptions,
 } from '@equinor/fusion-framework-module-http';
 import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 
@@ -20,7 +20,7 @@ import context from '@equinor/fusion-framework-module-context';
 import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
 
-import { FusionModules } from './types';
+import type { FusionModules } from './types';
 
 /**
  * Module configurator for Framework modules
@@ -29,7 +29,7 @@ import { FusionModules } from './types';
  */
 export class FrameworkConfigurator<
     TModules extends Array<AnyModule> = [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
     constructor() {

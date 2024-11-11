@@ -70,7 +70,7 @@ export type ProblemDetails = {
     status?: number;
     detail?: string;
     instance?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     [key: string]: any;
 };
 

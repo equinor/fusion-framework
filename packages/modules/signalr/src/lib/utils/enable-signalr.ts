@@ -1,17 +1,17 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
+import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
 import { module } from '../../SignalRModule';
 import { configureFromFramework } from './configure-from-framework';
 
 export interface enableSignalR {
     (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         configurator: IModulesConfigurator<any, any>,
         name: string,
         cb: SignalRModuleConfigBuilderCallback,
     ): void;
     (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         configurator: IModulesConfigurator<any, any>,
         name: string,
         options: { service: string; path: string },
@@ -46,7 +46,7 @@ export interface enableSignalR {
  ```
  */
 export function enableSignalR(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     name: string,
     optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },

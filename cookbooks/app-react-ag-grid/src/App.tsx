@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { AgGridReact } from '@ag-grid-community/react';
 import useStyles from '@equinor/fusion-react-ag-grid-styles';
-import { ColDef, ModuleRegistry } from '@ag-grid-community/core';
+import { type ColDef, ModuleRegistry } from '@ag-grid-community/core';
 
 // Import required Ag-Grid modules
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';

@@ -1,9 +1,9 @@
 import {
-    IModuleConfigurator,
-    IModulesConfigurator,
-    Module,
-    ModuleConfigType,
-    ModuleInstance,
+    type IModuleConfigurator,
+    type IModulesConfigurator,
+    type Module,
+    type ModuleConfigType,
+    type ModuleInstance,
     SemanticVersion,
 } from '@equinor/fusion-framework-module';
 import { type INavigationConfigurator, NavigationConfigurator } from './configurator';
@@ -40,7 +40,7 @@ export const module: NavigationModule = {
 };
 
 export const enableNavigation = <TRef = unknown>(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>,
 ): void => {

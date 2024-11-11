@@ -4,20 +4,20 @@ import { filter, map, share, withLatestFrom } from 'rxjs/operators';
 import { FlowSubject } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 
-import actions, { ActionMap, Actions } from './actions';
+import actions, { type ActionMap, type Actions } from './actions';
 
 import { handleRequests, handleExecution, handleFailure } from './flows';
 import { QueryClientError } from './QueryClientError';
 import createReducer from './reducer';
 
-import {
+import type {
     QueryClientState,
     RetryOptions,
     QueryFn,
     QueryClientResult,
     QueryClientRequest,
 } from './types';
-import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
+import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { QueryClientJob } from './QueryClientJob';
 
 /**
@@ -27,7 +27,7 @@ import { QueryClientJob } from './QueryClientJob';
  * @property {Partial<RetryOptions>} [retry] - Configuration for retry behavior, including number of retries and delay strategy.
  * @property {string} [ref] - A reference string to associate with a query, which can be used for cancellation or tracking purposes.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type QueryClientOptions = {
     signal?: AbortSignal;
     retry?: Partial<RetryOptions>;

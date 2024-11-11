@@ -1,6 +1,6 @@
-import { ModuleType } from '@equinor/fusion-framework-module';
+import type { ModuleType } from '@equinor/fusion-framework-module';
 
-import {
+import type {
     EventModule,
     FrameworkEvent,
     FrameworkEventInit,
@@ -8,9 +8,9 @@ import {
 
 import { BookmarkClient } from './client/bookmarkClient';
 
-import { BookmarkModuleConfig } from './configurator';
-import { Observable, Subscription } from 'rxjs';
-import { Bookmark, CreateBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
+import type { BookmarkModuleConfig } from './configurator';
+import { type Observable, Subscription } from 'rxjs';
+import type { Bookmark, CreateBookmark, PatchBookmark, UpdateBookmarkOptions } from './types';
 
 export interface IBookmarkModuleProvider {
     /**
@@ -22,7 +22,7 @@ export interface IBookmarkModuleProvider {
      * Observable Bookmark providing current resolved bookmark.
      * @type {(Observable<Bookmark<any> | undefined>)}
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     readonly currentBookmark$: Observable<Bookmark<any> | undefined>;
     /**
      *

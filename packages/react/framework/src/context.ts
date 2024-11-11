@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import type { Fusion } from '@equinor/fusion-framework';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export const context = createContext<Fusion<any> | null>(null);
 
 /**

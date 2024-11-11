@@ -3,7 +3,7 @@ import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { useObservableEpic } from '../react';
 
 import { ReactiveObservable } from '../ReactiveObservable';
-import { Epic, Reducer } from '../types';
+import type { Epic, Reducer } from '../types';
 
 type State = { value: string; index: number };
 type Action = { type: string; payload: string };

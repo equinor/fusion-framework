@@ -1,4 +1,4 @@
-import {
+import type {
     Bookmark,
     PatchBookmark,
     BookmarkModule,
@@ -8,7 +8,7 @@ import {
 import { useFramework } from '@equinor/fusion-framework-react';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';
-import { Bookmarks, CreateBookMarkFn } from './types';
+import type { Bookmarks, CreateBookMarkFn } from './types';
 
 import { EMPTY } from 'rxjs';
 

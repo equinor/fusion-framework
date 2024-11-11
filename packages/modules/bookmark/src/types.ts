@@ -1,4 +1,4 @@
-import { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
+import type { QueryFn, QueryCtorOptions } from '@equinor/fusion-query';
 
 export interface PatchBookmark<TData = unknown> extends Partial<Bookmark<TData>> {
     id: string;

@@ -1,5 +1,5 @@
 import { createReducer } from '@equinor/fusion-observable';
-import { Bookmark } from '../types';
+import type { Bookmark } from '../types';
 import { actions } from './bookmarkActions';
 
 export type State = {

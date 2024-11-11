@@ -9,7 +9,7 @@ import { Spinner } from './utils/spinner.js';
 
 import { loadAppManifest } from './utils/load-manifest.js';
 
-import { ConfigExecuterEnv } from '../lib/utils/config.js';
+import type { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { loadPackage } from './utils/load-package.js';
 import { dirname } from 'node:path';
 import type { AppManifest } from '@equinor/fusion-framework-module-app';

@@ -1,4 +1,4 @@
-import { Link, Outlet, RouteObject } from 'react-router-dom';
+import { Link, Outlet, type RouteObject } from 'react-router-dom';
 
 import { useLocation } from 'react-router-dom';
 

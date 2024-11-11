@@ -13,7 +13,7 @@ export const executeCommand = async <TProgram extends keyof Commands>(
     program: TProgram,
     command: keyof Commands[TProgram],
     // TODO map command args
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     ...options: any[]
 ) => {
     assert(process.env.CLI_BIN, 'expected bin path in env');

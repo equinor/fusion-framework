@@ -2,9 +2,9 @@ import type { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusio
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { QueryCtorOptions } from '@equinor/fusion-query';
+import type { QueryCtorOptions } from '@equinor/fusion-query';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 type Fusion = any;
 
 /**
@@ -116,7 +116,7 @@ export type WidgetModulesInstance<TModules extends Array<AnyModule> | unknown = 
 /**
  * WidgetState type represents the state of a widget, including properties like name, status, config, manifest, modules, and instance.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type WidgetState<TModules = any> = {
     name: string;
     status: Set<string>;

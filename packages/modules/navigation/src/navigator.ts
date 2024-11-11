@@ -87,7 +87,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
     constructor(args: {
         basename?: string;
         history: History;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         logger?: any;
         mode?: 'MASTER' | 'SLAVE';
     }) {

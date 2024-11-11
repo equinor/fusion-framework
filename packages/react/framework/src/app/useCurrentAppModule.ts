@@ -1,7 +1,7 @@
-import { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
-import {
+import type { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type {
     ModuleKey,
-    type AnyModule,
+    AnyModule,
     ModuleTypes,
     ModuleType,
 } from '@equinor/fusion-framework-module';
@@ -37,7 +37,7 @@ export const useCurrentAppModule = <
             ? null
             : modules === undefined
               ? undefined
-              : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              : // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
                 (modules[moduleKey as keyof typeof modules] as any);
     return { module, error, complete };
 };

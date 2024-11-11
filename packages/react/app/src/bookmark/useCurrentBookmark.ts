@@ -1,5 +1,5 @@
 import {
-    CreateBookMarkFn,
+    type CreateBookMarkFn,
     useCurrentBookmark as _useCurrentBookmark,
 } from '@equinor/fusion-framework-react-module-bookmark';
 

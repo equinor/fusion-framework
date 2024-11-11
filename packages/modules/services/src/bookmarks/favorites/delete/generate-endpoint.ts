@@ -1,4 +1,4 @@
-import { ApiVersions, DeleteBookmarkFavoriteArgs } from './types';
+import type { ApiVersions, DeleteBookmarkFavoriteArgs } from './types';
 
 /**
  * Method for generating endpoint for deleting a bookmark.

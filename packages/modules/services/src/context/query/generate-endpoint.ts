@@ -18,7 +18,7 @@ const buildOdataFilter = (filterObj: QueryContextOdataFilter) => {
             default:
                 return { ...acc, [key]: filterObj[key as keyof typeof filterObj] };
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     }, {} as any);
 };
 
@@ -35,7 +35,7 @@ const buildOdataObject = (parameters: QueryContextOdataParameters) => {
                 default:
                     return { ...acc, [key]: parameters[key as keyof typeof parameters] };
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
         }, {} as any);
 };
 

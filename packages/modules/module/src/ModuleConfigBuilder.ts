@@ -1,11 +1,11 @@
-import { AnyModule, CombinedModules, ModuleInitializerArgs, Modules, ModuleType } from './types';
+import type { AnyModule, CombinedModules, ModuleInitializerArgs, Modules, ModuleType } from './types';
 
 /**
  * @deprecated @see {@link BaseConfigBuilder}
  */
 export abstract class ModuleConfigBuilder<
     TModules extends Array<AnyModule> | unknown = unknown,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TConfig = any,
 > {
     #init: ModuleInitializerArgs<TConfig, CombinedModules<TModules, Array<Modules[keyof Modules]>>>;
@@ -46,7 +46,7 @@ export abstract class ModuleConfigBuilder<
      */
     public requireInstance<T>(module: string): Promise<T>;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     public requireInstance(module: string): Promise<any> {
         return this.#init.requireInstance(module);
     }

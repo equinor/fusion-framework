@@ -1,10 +1,10 @@
-import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { ServicesModule } from '@equinor/fusion-framework-module-services';
-import { AppModule } from '@equinor/fusion-framework-module-app';
-import { ContextModule } from '@equinor/fusion-framework-module-context';
-import { BookmarkModuleProvider, IBookmarkModuleProvider } from './bookmark-provider';
-import { BookmarkModuleConfigurator, IBookmarkModuleConfigurator } from './configurator';
+import type { Module, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ServicesModule } from '@equinor/fusion-framework-module-services';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { ContextModule } from '@equinor/fusion-framework-module-context';
+import { BookmarkModuleProvider, type IBookmarkModuleProvider } from './bookmark-provider';
+import { BookmarkModuleConfigurator, type IBookmarkModuleConfigurator } from './configurator';
 
 export type BookmarkModuleKey = 'bookmark';
 

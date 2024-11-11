@@ -1,8 +1,8 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
-import { ApiBookmarkEntityV1 } from '../api-models';
-import { PostBookmarksArgsV1 } from '../post';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../..';
+import type { ApiBookmarkEntityV1 } from '../api-models';
+import type { PostBookmarksArgsV1 } from '../post';
 
 export type PatchBookmarkResult<
     TVersion extends ApiVersions,

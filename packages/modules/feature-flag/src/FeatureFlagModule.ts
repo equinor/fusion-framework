@@ -1,7 +1,7 @@
 import { type IFeatureFlagConfigurator, FeatureFlagConfigurator } from './FeatureFlagConfigurator';
 import { type IFeatureFlagProvider, FeatureFlagProvider } from './FeatureFlagProvider';
 
-import { type Module, IModulesConfigurator } from '@equinor/fusion-framework-module';
+import type { Module, IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 export const name = 'featureFlag';
 export type FeatureFlagModule = Module<typeof name, IFeatureFlagProvider, IFeatureFlagConfigurator>;
@@ -21,7 +21,7 @@ export const module: FeatureFlagModule = {
 };
 
 export const enableFeatureFlagging = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     callback?: FeatureFlagBuilderCallback,
 ): void => {

@@ -1,5 +1,5 @@
-import { Module } from '@equinor/fusion-framework-module';
-import { ModuleDeps } from './types';
+import type { Module } from '@equinor/fusion-framework-module';
+import type { ModuleDeps } from './types';
 
 import { AppConfigurator } from './AppConfigurator';
 import { AppModuleProvider } from './AppModuleProvider';

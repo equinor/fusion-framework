@@ -1,6 +1,6 @@
-import { AuthClient, createAuthClient, AuthRequest, ConsoleLogger } from './client';
+import { type AuthClient, createAuthClient, type AuthRequest, ConsoleLogger } from './client';
 
-import { IAuthConfigurator, AuthClientOptions } from './configurator';
+import type { IAuthConfigurator, AuthClientOptions } from './configurator';
 
 // TODO - export from msal
 export declare type AccountInfo = {

@@ -1,4 +1,4 @@
-import { AuthClientConfig } from './client';
+import type { AuthClientConfig } from './client';
 
 export type AuthClientOptions = {
     tenantId: string;

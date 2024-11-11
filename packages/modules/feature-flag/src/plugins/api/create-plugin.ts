@@ -1,6 +1,6 @@
 import type { ApiFeatureFlagPlugin, ApiResponseSelector } from './types';
-import { IFeatureFlag, FeatureFlag } from '../../FeatureFlag';
-import { FeatureFlagPluginConfigCallback } from '../../types';
+import { type IFeatureFlag, FeatureFlag } from '../../FeatureFlag';
+import type { FeatureFlagPluginConfigCallback } from '../../types';
 import { createApiPluginClient } from './create-client';
 import { ApiPlugin } from './plugin';
 

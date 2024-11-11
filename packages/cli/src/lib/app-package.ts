@@ -2,12 +2,12 @@ import { existsSync } from 'node:fs';
 import { dirname, relative } from 'node:path';
 
 import {
-    PackageJson,
+    type PackageJson,
     readPackageUp,
     type NormalizeOptions as ResolveAppPackageOptions,
 } from 'read-package-up';
 
-import { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import { assert } from './utils/assert.js';
 
 export type AppPackageJson = PackageJson & {
@@ -17,13 +17,9 @@ export type AppPackageJson = PackageJson & {
 type DefinePackageFn = () => AppPackageJson | Promise<AppPackageJson>;
 type DefinePackageExporter = AppPackageJson | DefinePackageFn;
 
-export interface defineAppPackage {
-    (obj: AppPackageJson): AppPackageJson;
-}
+export type defineAppPackage = (obj: AppPackageJson) => AppPackageJson
 
-export interface defineAppPackage {
-    (fn: DefinePackageFn): void;
-}
+export type defineAppPackage = (fn: DefinePackageFn) => void
 
 export type ResolvedAppPackage = {
     packageJson: AppPackageJson;
@@ -46,7 +42,7 @@ export function defineAppPackage(fnOrObject: DefinePackageExporter): DefinePacka
  * @returns The relative path to the resolved entry point.
  * @throws Will throw an error if no entry point can be resolved.
  */
-export const resolveEntryPoint = (packageJson: PackageJson, pkgPath: string = ''): string => {
+export const resolveEntryPoint = (packageJson: PackageJson, pkgPath = ''): string => {
     const entrypoint = [
         packageJson.entrypoint,
         packageJson.main,

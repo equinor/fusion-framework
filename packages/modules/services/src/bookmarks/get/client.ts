@@ -1,7 +1,7 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../..';
 import { generateParameters } from './generate-parameters';
-import { ApiVersions, GetBookmarkArgs, GetBookmarkResult, GetBookmarksResult } from './types';
+import type { ApiVersions, GetBookmarkArgs, GetBookmarkResult, GetBookmarksResult } from './types';
 
 /**
  * Method for fetching bookmark by it`s id from bookmark service

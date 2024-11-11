@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import useBookmark from './useBookmark';
-import { CreateBookMarkFn, CurrentBookmark } from './types';
+import type { CreateBookMarkFn, CurrentBookmark } from './types';
 
 /**
  * By providing a CreateBookMarkFn bookmarks is enabled for the current application.

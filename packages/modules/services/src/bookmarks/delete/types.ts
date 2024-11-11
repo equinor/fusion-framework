@@ -1,7 +1,7 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
-import { DeleteBookmarksArgsV1 } from './types-v1';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../..';
+import type { DeleteBookmarksArgsV1 } from './types-v1';
 
 export type DeleteBookmarkResult<TVersion extends ApiVersions> =
     DeleteBookmarksVersions[TVersion]['result'];

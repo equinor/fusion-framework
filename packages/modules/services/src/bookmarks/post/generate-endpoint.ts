@@ -1,4 +1,4 @@
-import { ApiVersions, PostBookmarkArgs } from './types';
+import type { ApiVersions, PostBookmarkArgs } from './types';
 
 /**
  * Method for generating endpoint for getting bookmark by id

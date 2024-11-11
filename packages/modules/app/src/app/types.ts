@@ -21,7 +21,7 @@ import type {
  */
 export type AppBundleState<
     TConfig extends ConfigEnvironment = ConfigEnvironment,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TModules = any,
 > = {
     appKey: string;
@@ -40,6 +40,6 @@ export type AppBundleState<
  */
 export type AppBundleStateInitial<
     TConfig extends ConfigEnvironment = ConfigEnvironment,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TModules = any,
 > = Omit<AppBundleState<TConfig, TModules>, 'status'>;

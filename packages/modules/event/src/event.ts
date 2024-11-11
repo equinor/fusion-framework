@@ -76,7 +76,7 @@ export interface IFrameworkEvent<
  * @template TDetail - type of event detail, event data payload
  * @template TSource - type of event source
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type FrameworkEventInit<TDetail = any, TSource = any> = {
     /** Event data */
     detail: TDetail;

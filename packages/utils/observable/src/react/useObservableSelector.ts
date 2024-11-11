@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { Observable } from '../types';
+import type { Observable } from '../types';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { OperatorFunction } from 'rxjs';
+import type { OperatorFunction } from 'rxjs';
 
 import type { NestedKeys, NestedPropType } from '../types';
 import { mapProp } from '../operators';

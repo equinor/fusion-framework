@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 const BOOKMARK_ID_PARM = 'bookmarkId';

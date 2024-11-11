@@ -1,7 +1,7 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ApiClientArguments } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ApiClientArguments } from '../..';
 import { generateEndpoint } from './generate-endpoint';
-import { ApiVersions, DeleteBookmarkArgs } from './types';
+import type { ApiVersions, DeleteBookmarkArgs } from './types';
 
 /** function for creating http client arguments  */
 export const generateParameters = <

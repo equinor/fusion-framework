@@ -1,5 +1,5 @@
-import { ActionInstanceMap, ActionTypes, createAction } from '@equinor/fusion-observable';
-import { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types';
+import { type ActionInstanceMap, type ActionTypes, createAction } from '@equinor/fusion-observable';
+import type { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types';
 
 /**
  * Creates a set of actions to manipulate cache entries.
@@ -8,7 +8,7 @@ import { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types';
  * @template TArgs The type of the arguments associated with the cache entry.
  * @returns An object containing the cache actions.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export default function createActions<TType = any, TArgs = any>() {
     return {
         /**
@@ -81,7 +81,8 @@ export default function createActions<TType = any, TArgs = any>() {
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type ActionBuilder<TType = any, TArgs = any> = ReturnType<
     typeof createActions<TType, TArgs>
 >;
@@ -97,7 +98,7 @@ export const actions = createActions();
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilder<TType, TArgs>>;
 
 /**
@@ -106,5 +107,5 @@ export type ActionMap<TType = any, TArgs = any> = ActionInstanceMap<ActionBuilde
  * @template TType The type of the value being cached.
  * @template TArgs The type of the arguments associated with the cache entry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type Actions<TType = any, TArgs = any> = ActionTypes<ActionMap<TType, TArgs>>;

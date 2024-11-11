@@ -1,5 +1,5 @@
-import { AuthApp, AuthContainer, AuthUser } from '@equinor/fusion';
-import { AccountInfo } from '@equinor/fusion-framework-module-msal/client';
+import { AuthApp, AuthContainer, type AuthUser } from '@equinor/fusion';
+import type { AccountInfo } from '@equinor/fusion-framework-module-msal/client';
 import { FusionAuthAppNotFoundError } from '@equinor/fusion/lib/auth/AuthContainer';
 import { LegacyAuthUser } from './LegacyAuthUser';
 

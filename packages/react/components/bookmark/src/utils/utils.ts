@@ -1,4 +1,4 @@
-import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
+import type { Bookmark } from '@equinor/fusion-framework-module-bookmark';
 
 /** Helpers.. */
 export const filterEmptyGroups = (i: { values: Bookmark[] }) => i.values.length;

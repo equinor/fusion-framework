@@ -1,12 +1,12 @@
 import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { type QueryClient, type QueryClientOptions } from './QueryClient';
+import type { QueryClient, QueryClientOptions } from './QueryClient';
 import { QueryClientError } from './QueryClientError';
 
 import { actions } from './actions';
 
-import { type QueryClientResult } from './types';
+import type { QueryClientResult } from './types';
 
 type QueryClientJobStatus = 'idle' | 'active' | 'complete' | 'failed' | 'error' | 'canceled';
 

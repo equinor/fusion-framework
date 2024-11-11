@@ -1,4 +1,4 @@
-import { AuthRequest } from '@equinor/fusion-framework-module-msal/client';
+import type { AuthRequest } from '@equinor/fusion-framework-module-msal/client';
 import { useToken } from './useToken';
 
 /**

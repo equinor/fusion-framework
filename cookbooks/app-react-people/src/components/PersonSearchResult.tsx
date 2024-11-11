@@ -1,4 +1,4 @@
-import { PersonResult } from '../api-models';
+import type { PersonResult } from '../api-models';
 
 export const PersonSearchResult: React.FC<{ item: PersonResult }> = ({ item }) => {
     const activePositions = item.document.positions.filter((p) => p.isActive);

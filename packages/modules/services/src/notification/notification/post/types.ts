@@ -1,6 +1,6 @@
-import { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../../../types';
-import { ApiNotificationEntity } from '../../api-models';
+import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../../../types';
+import type { ApiNotificationEntity } from '../../api-models';
 import { ApiVersion } from '../../static';
 
 type SourceSystem_v1 = {

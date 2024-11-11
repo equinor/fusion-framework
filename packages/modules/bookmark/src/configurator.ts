@@ -1,5 +1,5 @@
 import { getBookmarkIdFormURL } from './utils/handle-url';
-import { BookmarkConfigBuilder, BookmarkConfigBuilderCallback } from './bookmark-config-builder';
+import { BookmarkConfigBuilder, type BookmarkConfigBuilderCallback } from './bookmark-config-builder';
 
 import type { ModuleInitializerArgs, ModulesInstanceType } from '@equinor/fusion-framework-module';
 import type { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
@@ -84,7 +84,7 @@ export class BookmarkModuleConfigurator implements IBookmarkModuleConfigurator {
     ): Promise<BookmarkModuleConfig> {
         const config: Partial<BookmarkModuleConfig> = await this.#configBuilders.reduce(
             async (cur, cb) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
                 const builder = new BookmarkConfigBuilder<any, any>(init, await cur);
                 await Promise.resolve(cb(builder));
                 return Object.assign(cur, builder.config);

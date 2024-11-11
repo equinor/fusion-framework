@@ -1,5 +1,5 @@
-import { IFeatureFlag } from '../../FeatureFlag';
-import { FeatureFlagPlugin, FeatureFlagPluginConfigCallback } from '../../types';
+import type { IFeatureFlag } from '../../FeatureFlag';
+import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback } from '../../types';
 import { createStorage, type StorageType } from '../../utils/storage';
 
 /**

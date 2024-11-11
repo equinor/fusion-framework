@@ -1,9 +1,9 @@
-import { ObservableInput, Subscription } from 'rxjs';
+import type { ObservableInput, Subscription } from 'rxjs';
 
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 
-import { IFeatureFlagProvider } from './FeatureFlagProvider';
-import { IFeatureFlag } from './FeatureFlag';
+import type { IFeatureFlagProvider } from './FeatureFlagProvider';
+import type { IFeatureFlag } from './FeatureFlag';
 
 export type { IFeatureFlag } from './FeatureFlag';
 

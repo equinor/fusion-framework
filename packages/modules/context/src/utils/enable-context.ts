@@ -13,7 +13,7 @@ import { module } from '../module';
  * @param configurator - configuration object
  */
 export const enableContext = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     configurator: IModulesConfigurator<any, any>,
     builder?: <TDeps extends Array<AnyModule> = []>(
         builder: ContextConfigBuilder<

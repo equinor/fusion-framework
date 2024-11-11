@@ -1,4 +1,4 @@
-import { HubConnection } from '@microsoft/signalr';
+import type { HubConnection } from '@microsoft/signalr';
 import { Observable } from 'rxjs';
 
 export class Topic<T> extends Observable<T> {
@@ -21,7 +21,7 @@ export class Topic<T> extends Observable<T> {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     public send(...args: any[]): void {
         if (!this.connection) {
             throw new Error('No hub connection awaitable');
@@ -29,7 +29,7 @@ export class Topic<T> extends Observable<T> {
         this.connection.send(this.topic, args);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     public invoke<T>(...args: any[]): Promise<T> {
         if (!this.connection) {
             throw new Error('No hub connection awaitable');

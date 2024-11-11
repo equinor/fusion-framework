@@ -1,17 +1,17 @@
-import {
+import type {
     FrameworkEvent,
     FrameworkEventInit,
     IEventModuleProvider,
 } from '@equinor/fusion-framework-module-event';
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
-import { createState, FlowState } from '@equinor/fusion-observable';
+import type { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+import { createState, type FlowState } from '@equinor/fusion-observable';
 import Query, { type QueryCtorOptions } from '@equinor/fusion-query';
 
 import { BehaviorSubject, lastValueFrom, map, Observable, Subscription } from 'rxjs';
 
-import {
+import type {
     Bookmark,
     CreateBookmark,
     GetAllBookmarksParameters,
@@ -19,8 +19,8 @@ import {
     PatchBookmark,
     SourceSystem,
 } from '../types';
-import { ActionBuilder, actions } from './bookmarkActions';
-import { reducer, State } from './bookmarkReducer';
+import { type ActionBuilder, actions } from './bookmarkActions';
+import { reducer, type State } from './bookmarkReducer';
 import {
     handleBookmarkGetAll,
     handleCreateBookmark,

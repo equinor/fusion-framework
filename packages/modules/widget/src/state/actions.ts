@@ -1,10 +1,10 @@
 import {
-    ActionInstanceMap,
-    ActionTypes,
+    type ActionInstanceMap,
+    type ActionTypes,
     createAction,
     createAsyncAction,
 } from '@equinor/fusion-observable';
-import {
+import type {
     GetWidgetParameters,
     WidgetConfig,
     WidgetManifest,
@@ -41,7 +41,7 @@ const createActions = () => ({
         (config: WidgetConfig) => ({ payload: config }),
         (error: unknown) => ({ payload: error }),
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     setModule: createAction('set_module', (module: any) => ({ payload: module })),
     importWidget: createAsyncAction(
         'import_widget',

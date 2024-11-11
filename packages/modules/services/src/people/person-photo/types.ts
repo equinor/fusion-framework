@@ -1,6 +1,6 @@
-import { BlobResult } from '@equinor/fusion-framework-module-http/client';
+import type { BlobResult } from '@equinor/fusion-framework-module-http/client';
 import { ApiVersion } from '../static';
-import { ClientDataMethod } from '../../types';
+import type { ClientDataMethod } from '../../types';
 
 export type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2'>;
 

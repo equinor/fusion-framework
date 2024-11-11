@@ -13,7 +13,7 @@ import {
 } from './utils/index.js';
 import type { FusionEnv } from './utils/index.js';
 
-import { ConfigExecuterEnv } from '../lib/utils/config.js';
+import type { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { resolveAppKey } from '../lib/app-package.js';
 import { exit } from 'node:process';
 import assert from 'node:assert';

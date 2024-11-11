@@ -1,5 +1,5 @@
-import { AuthClientOptions, AuthConfigurator, IAuthConfigurator } from './configurator';
-import { AuthProvider, IAuthProvider } from './provider';
+import { type AuthClientOptions, AuthConfigurator, type IAuthConfigurator } from './configurator';
+import { AuthProvider, type IAuthProvider } from './provider';
 
 import type { Module, IModuleConfigurator } from '@equinor/fusion-framework-module';
 

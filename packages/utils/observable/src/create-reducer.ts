@@ -23,11 +23,11 @@ export type ActionMatcherDescription<S, A extends AnyAction> = {
     reducer: CaseReducer<S, NoInfer<A>>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 type ActionMatcherDescriptionCollection<S> = Array<ActionMatcherDescription<S, any>>;
 
 interface TypedActionCreator<Type extends string> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     (...args: any[]): Action<Type>;
     type: Type;
 }
@@ -208,7 +208,7 @@ export interface ActionReducerMapBuilder<State, Actions extends AnyAction = AnyA
 export function executeReducerBuilderCallback<TState, TAction extends AnyAction>(
     builderCallback: (builder: ActionReducerMapBuilder<TState, TAction>) => void,
 ): [
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     CaseReducers<TState, any>,
     ActionMatcherDescriptionCollection<TState>,
     CaseReducer<TState, TAction> | undefined,

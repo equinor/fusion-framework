@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import {
-    PropsWithChildren,
-    ReactChild,
-    ReactElement,
-    ReactNode,
+    type PropsWithChildren,
+    type ReactChild,
+    type ReactElement,
+    type ReactNode,
     Suspense,
     useMemo,
     useRef,
@@ -13,13 +13,13 @@ import { FusionRoot } from '@equinor/fusion-components';
 
 import { createLegacyContextComponent } from './create-legacy-context-component';
 import type { PortalFramework } from '../types';
-import { FusionContextOptions } from '../create-fusion-context';
+import type { FusionContextOptions } from '../create-fusion-context';
 
 export type LegacyFusionWrapperProps = {
     readonly loader: NonNullable<ReactNode>;
     readonly framework: PortalFramework;
     readonly options?: FusionContextOptions;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     readonly RootWrapper?: (props: { children: ReactChild }) => ReactElement<any, any>;
 };
 
@@ -31,7 +31,7 @@ const FallThrewComponent = ({
     children,
 }: {
     readonly children: ReactChild;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 }): ReactElement<any, any> => <>{children}</>;
 
 export const LegacyFusionWrapper = (props: PropsWithChildren<LegacyFusionWrapperProps>) => {

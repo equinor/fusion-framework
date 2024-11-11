@@ -1,11 +1,11 @@
 import {
-    AnyModule,
+    type AnyModule,
     ModuleConfigBuilder,
-    ModuleInitializerArgs,
+    type ModuleInitializerArgs,
 } from '@equinor/fusion-framework-module';
 
-import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
+import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
+import type { IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 
 export interface ISignalRConfigurator {
     /** add configuration for hub connection */
@@ -84,7 +84,7 @@ export class SignalRConfigurator implements ISignalRConfigurator {
     ): Promise<SignalRConfig> {
         /** trigger all builder callbacks */
         for (const cb of this.#builderCallbacks) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
             const builder = new SignalRModuleConfigBuilder<[ServiceDiscoveryModule]>(init, this);
             await Promise.resolve(cb(builder));
         }

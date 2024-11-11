@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
 
-import { findUpMultiple, Options } from 'find-up';
+import { findUpMultiple, type Options } from 'find-up';
 
 import { assert } from 'node:console';
 import { AssertionError } from 'node:assert';
@@ -25,15 +25,15 @@ export type ConfigExecuterEnv = {
     /** root of the package */
     root?: string;
 };
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
 export type ConfigExecuterArgs = [ConfigExecuterEnv, ...any[]];
 
 export type ConfigExecuter<
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TType = any,
     TArgs extends ConfigExecuterArgs = ConfigExecuterArgs,
 > =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     (...args: TArgs) => TType | Promise<TType>;
 
 export type ConfigExecuterType<T> = T extends ConfigExecuter<infer TType> ? TType : never;

@@ -1,11 +1,11 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
-import { Observable } from '@equinor/fusion-observable';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+import type { Observable } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { Query } from '@equinor/fusion-query';
+import type { Query } from '@equinor/fusion-query';
 import { switchMap, map, catchError, EMPTY, last } from 'rxjs';
-import { GetAllBookmarksParameters, Bookmark } from '../types';
-import { actions, Actions } from './bookmarkActions';
+import type { GetAllBookmarksParameters, Bookmark } from '../types';
+import { actions, type Actions } from './bookmarkActions';
 
 export const handleBookmarkGetAll =
     (

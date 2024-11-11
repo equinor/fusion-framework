@@ -1,4 +1,4 @@
-import { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useMemo } from 'react';
 

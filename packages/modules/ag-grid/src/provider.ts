@@ -1,6 +1,6 @@
 import { LicenseManager } from '@ag-grid-enterprise/core';
 
-import { IAgGridConfigurator } from './configurator';
+import type { IAgGridConfigurator } from './configurator';
 
 export interface IAgGridProvider {
     licenseKey?: string;

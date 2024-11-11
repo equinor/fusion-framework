@@ -1,4 +1,4 @@
-import { AuthRequest, AuthenticationResult } from '@equinor/fusion-framework-module-msal/client';
+import type { AuthRequest, AuthenticationResult } from '@equinor/fusion-framework-module-msal/client';
 import useAppModule from '../useAppModule';
 import { useEffect, useState } from 'react';
 

@@ -1,5 +1,5 @@
-import { ITelemetryConfigurator, TelemetryConfigurator } from './configurator';
-import { ITelemetryProvider, TelemetryProvider } from './provider';
+import { type ITelemetryConfigurator, TelemetryConfigurator } from './configurator';
+import { type ITelemetryProvider, TelemetryProvider } from './provider';
 import type { Module } from '@equinor/fusion-framework-module';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 

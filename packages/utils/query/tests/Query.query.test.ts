@@ -4,7 +4,7 @@ import { Query } from '../src/Query';
 
 import { interval, lastValueFrom, merge, EmptyError } from 'rxjs';
 import { reduce, takeUntil } from 'rxjs/operators';
-import { type QueryTaskValue } from '../src/types';
+import type { QueryTaskValue } from '../src/types';
 
 vi.stubEnv('FUSION_LOG_LEVEL', '0');
 

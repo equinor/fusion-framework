@@ -25,7 +25,7 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
 
 export class ContextConfigBuilder<
     TModules extends Array<AnyModule> = [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
         ContextModuleConfigurator,
         TModules
@@ -45,7 +45,7 @@ export class ContextConfigBuilder<
 
     requireInstance<T>(module: string): Promise<T>;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     requireInstance(module: string): Promise<any> {
         return this.#init.requireInstance(module);
     }

@@ -1,7 +1,7 @@
-import { Module } from '@equinor/fusion-framework-module';
-import { ISignalRConfigurator, SignalRConfigurator } from './SignalRModuleConfigurator';
+import type { Module } from '@equinor/fusion-framework-module';
+import { type ISignalRConfigurator, SignalRConfigurator } from './SignalRModuleConfigurator';
 
-import { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
+import { type ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';
 
 export type SignalRModuleKey = 'signalR';
 

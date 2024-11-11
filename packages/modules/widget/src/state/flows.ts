@@ -6,7 +6,7 @@ import { actions } from './actions';
 import type { Flow } from '@equinor/fusion-observable';
 
 import type { Actions } from './actions';
-import { WidgetState } from '../types';
+import type { WidgetState } from '../types';
 import type WidgetModuleProvider from '../WidgetModuleProvider';
 
 export const handleFetchManifest =

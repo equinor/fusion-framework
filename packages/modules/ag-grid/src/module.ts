@@ -1,5 +1,5 @@
-import { IAgGridConfigurator, AgGridConfigurator } from './configurator';
-import { IAgGridProvider, AgGridProvider } from './provider';
+import { type IAgGridConfigurator, AgGridConfigurator } from './configurator';
+import { type IAgGridProvider, AgGridProvider } from './provider';
 import type {
     IModuleConfigurator,
     IModulesConfigurator,
@@ -31,7 +31,7 @@ export const configureAgGrid = (args: {
 });
 
 export const enableAgGrid = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     config: IModulesConfigurator<any, any>,
     options?: {
         licenseKey: string;

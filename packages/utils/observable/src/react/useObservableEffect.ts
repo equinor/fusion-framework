@@ -1,18 +1,14 @@
 import { useLayoutEffect, useState } from 'react';
-import { FlowSubject } from '../FlowSubject';
-import { Action, Effect, ActionType, ExtractAction } from '../types';
+import type { FlowSubject } from '../FlowSubject';
+import type { Action, Effect, ActionType, ExtractAction } from '../types';
 
-export interface useObservableEffect<
+export type useObservableEffect<
     S,
     A extends Action = Action,
     TType extends ActionType<A> = ActionType<A>,
-> {
-    (subject: FlowSubject<S, A>, type: TType, effect?: Effect<ExtractAction<A, TType>, S>): void;
-}
+> = (subject: FlowSubject<S, A>, type: TType, effect?: Effect<ExtractAction<A, TType>, S>) => void
 
-export interface useObservableEffect<S, A extends Action = Action> {
-    (subject: FlowSubject<S, A>, effect: Effect<A, S>): void;
-}
+export type useObservableEffect<S, A extends Action = Action> = (subject: FlowSubject<S, A>, effect: Effect<A, S>) => void
 /**
  * Apply side effect to Reactive Subject.
  *

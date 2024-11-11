@@ -1,7 +1,7 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../..';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../..';
 import { generateParameters } from './generate-parameters';
-import {
+import type {
     ApiVersions,
     DeleteBookmarkArgs,
     DeleteBookmarkResult,

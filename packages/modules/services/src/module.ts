@@ -9,8 +9,8 @@ import type {
     ServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
-import { IApiConfigurator, ApiConfigurator } from './configurator';
-import { IApiProvider, ApiProvider } from './provider';
+import { type IApiConfigurator, ApiConfigurator } from './configurator';
+import { type IApiProvider, ApiProvider } from './provider';
 
 import type { ApiClientFactory } from './types';
 
@@ -72,7 +72,7 @@ export const module: ServicesModule = {
  * @param config - configuration object
  */
 export const enableServices = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore  lint/suspicious/noExplicitAny: allowed in this case
     config: IModulesConfigurator<any, any>,
 ): void => {
     config.addConfig({ module });

@@ -1,4 +1,4 @@
-import { ApiVersions } from './types';
+import type { ApiVersions } from './types';
 
 /**
  * Method for generating endpoint for getting all bookmarks
