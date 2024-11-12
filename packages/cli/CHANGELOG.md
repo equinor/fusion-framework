@@ -1,5 +1,15 @@
 # Change Log
 
+## 10.0.4
+
+### Patch Changes
+
+-   [#2542](https://github.com/equinor/fusion-framework/pull/2542) [`29565b8`](https://github.com/equinor/fusion-framework/commit/29565b80d1fd2287a91009e3315da852665886ec) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/fusion-wc-person from 3.0.1 to 3.0.3
+
+-   [#2551](https://github.com/equinor/fusion-framework/pull/2551) [`4570ffb`](https://github.com/equinor/fusion-framework/commit/4570ffb0f3bf1561bdd679c9280de83dda0d9bf8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.41.2 to 0.42.3
+
+-   [#2556](https://github.com/equinor/fusion-framework/pull/2556) [`1a59364`](https://github.com/equinor/fusion-framework/commit/1a59364477520859a00152e182cdbc4f8f271a27) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump rollup from 4.22.4 to 4.25.0
+
 ## 10.0.3
 
 ### Patch Changes

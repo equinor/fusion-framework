@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-service-discovery@8.0.2
+
 ## 4.0.1
 
 ### Patch Changes

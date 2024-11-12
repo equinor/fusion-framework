@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.4.2
+
+### Patch Changes
+
+-   [#2558](https://github.com/equinor/fusion-framework/pull/2558) [`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump uuid from 10.0.0 to 11.0.3
+
 ## 8.4.1
 
 ### Patch Changes
