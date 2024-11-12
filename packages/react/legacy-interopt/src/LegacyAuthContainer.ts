@@ -131,6 +131,7 @@ export class LegacyAuthContainer extends AuthContainer {
         }
 
         const newApp = new AuthApp(clientId, resources);
+        this._registeredApps[clientId] = newApp;
         this.apps.push(newApp);
         return true;
     }
