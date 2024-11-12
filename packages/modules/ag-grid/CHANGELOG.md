@@ -1,5 +1,11 @@
 # Change Log
 
+## 32.3.0
+
+### Minor Changes
+
+-   [#2532](https://github.com/equinor/fusion-framework/pull/2532) [`850ffee`](https://github.com/equinor/fusion-framework/commit/850ffee7b84aaaf43e63fd3691177c72ec031e7e) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump the ag-grid to 32.3
+
 ## 32.2.0
 
 ### Minor Changes
