@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { map, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
@@ -78,9 +78,7 @@ export const EditBookmarkModal = ({
         useMemo(
             () =>
                 bookmark && appProvider
-                    ? appProvider.appClient
-                          .query({ appKey: bookmark.appKey })
-                          .pipe(map((x) => x.value.name))
+                    ? appProvider.getAppManifest(bookmark.appKey)
                     : of(undefined),
             [appProvider, bookmark],
         ),
