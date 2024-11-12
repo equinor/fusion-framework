@@ -1,5 +1,19 @@
 # Change Log
 
+## 17.0.4
+
+### Patch Changes
+
+-   [#2535](https://github.com/equinor/fusion-framework/pull/2535) [`10475db`](https://github.com/equinor/fusion-framework/commit/10475db05cf9248e482f004e82b84e2520709bd6) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/fusion from 3.4.16 to 3.4.17
+
+-   Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
+    -   @equinor/fusion-observable@8.4.2
+    -   @equinor/fusion-framework-app@9.1.12
+    -   @equinor/fusion-framework-react-app@5.2.12
+    -   @equinor/fusion-framework-module-app@6.0.2
+    -   @equinor/fusion-framework-module-service-discovery@8.0.2
+    -   @equinor/fusion-framework@7.2.9
+
 ## 17.0.3
 
 ### Patch Changes

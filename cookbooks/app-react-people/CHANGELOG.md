@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+-   [#2542](https://github.com/equinor/fusion-framework/pull/2542) [`29565b8`](https://github.com/equinor/fusion-framework/commit/29565b80d1fd2287a91009e3315da852665886ec) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/fusion-wc-person from 3.0.1 to 3.0.3
+
 ## 4.5.1
 
 ### Patch Changes
