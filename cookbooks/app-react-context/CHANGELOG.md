@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.1.29
+
+### Patch Changes
+
+-   Updated dependencies [[`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641), [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641)]:
+    -   @equinor/fusion-framework-react-app@5.3.0
+    -   @equinor/fusion-framework-cli@10.2.0
+
 ## 4.1.28
 
 ### Patch Changes

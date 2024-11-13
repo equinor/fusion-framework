@@ -1,5 +1,24 @@
 # Change Log
 
+## 5.3.0
+
+### Minor Changes
+
+-   [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated bookmark namespace in `@equinor/fusion-react-app` to include new hooks and updated `useCurrentBookmark` hook.
+
+    -   Updated `index.ts` to re-export everything from `@equinor/fusion-framework-react-module-bookmark` instead of individual exports.
+    -   Marked `useBookmark` as deprecated in `useBookmark.ts`.
+    -   Enhanced `useCurrentBookmark` in `useCurrentBookmark.ts` to accept a `BookmarkPayloadGenerator` and use the `BookmarkModule` from `useAppModule`.
+
+    **NOTE**: This change is backwards compatible and should not require any changes in consuming applications.
+    **NOTE**: `useBookmark` will be removed in the next major version. Please use providers and hooks from `@equinor/fusion-framework-react-module-bookmark` instead.
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-app@9.1.13
+    -   @equinor/fusion-framework-react@7.3.2
+
 ## 5.2.12
 
 ### Patch Changes
