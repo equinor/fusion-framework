@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.1.0
+
+### Minor Changes
+
+-   [#2567](https://github.com/equinor/fusion-framework/pull/2567) [`71d57c2`](https://github.com/equinor/fusion-framework/commit/71d57c2955861e86f8026068fb7cd4fe39b195f6) Thanks [@odinr](https://github.com/odinr)! - Added functionality for allow providing paths for `config`, `manifest` and bundle in `app-proxy-plugin`. This is useful for plugins that need to load resources from a specific path.
+
+    This was required since the AppClient was changed in [#2520](https://github.com/equinor/fusion-framework/pull/2520) which broke the ability to load resources from the plugin.
+
 ## 10.0.4
 
 ### Patch Changes
