@@ -162,13 +162,10 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
 
             // serve app manifest if request matches the current app
             const manifestPath = join(proxyPath, app.manifestPath ?? `apps/${app.key}`);
-            server.middlewares.use(
-                [proxyPath, manifestPath, app.key].join('/'),
-                async (_req, res) => {
-                    res.setHeader('content-type', 'application/json');
-                    res.end(JSON.stringify(await app.generateManifest()));
-                },
-            );
+            server.middlewares.use(manifestPath, async (_req, res) => {
+                res.setHeader('content-type', 'application/json');
+                res.end(JSON.stringify(await app.generateManifest()));
+            });
 
             // serve local bundles if request matches the current app and version
             const bundlePath = join(
