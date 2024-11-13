@@ -111,6 +111,7 @@ export const createDevServer = async (options: {
                     version: String(pkg.packageJson.version),
                     generateConfig,
                     generateManifest,
+                    manifestPath: `persons/me/apps/${appKey}`,
                 },
             }),
             // Restart the server when config changes or the dev portal source is updated

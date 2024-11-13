@@ -5,6 +5,7 @@ import { AppManifest } from '@equinor/fusion-framework-app';
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
 import { ApiAppConfig } from '../../../schemas.js';
+import { join } from 'node:path';
 
 /**
  * Preserve token for executing proxy assets
@@ -47,8 +48,30 @@ export type AppProxyPluginOptions = {
         version: string;
         /** callback function for generating configuration for the application */
         generateConfig: () => Promise<ApiAppConfig>;
+
+        /**
+         * string path to the app config
+         * @example `persons/me/apps/${app.key}/builds/${app.version}/config`
+         * @default `apps/${app.key}/builds/${app.version}/config`
+         */
+        configPath?: string;
+
         /** callback function for generating manifest for the application */
         generateManifest: () => Promise<AppManifest>;
+
+        /**
+         * string path to the app manifest
+         * @example `persons/me/apps/${app.key}`
+         * @default `apps/${app.key}`
+         */
+        manifestPath?: string;
+
+        /**
+         * string path to the app bundle
+         * @default `bundles/apps/${app.key}/${app.version}`
+         * @example `bundles/apps/${app.key}/${app.version}`
+         */
+        bundlePath?: string;
     };
 };
 
@@ -128,22 +151,30 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
             if (!app) return;
 
             // serve app config if request matches the current app and version
-            const configPath = `${proxyPath}/apps/${app.key}/builds/${app.version}/config`;
+            const configPath = join(
+                proxyPath,
+                app.configPath ?? `apps/${app.key}/builds/${app.version}/config`,
+            );
             server.middlewares.use(configPath, async (_req, res) => {
                 res.setHeader('content-type', 'application/json');
                 res.end(JSON.stringify(await app.generateConfig()));
             });
 
             // serve app manifest if request matches the current app
-            // todo this should have version
-            const manifestPath = `${proxyPath}/apps/${app.key}`;
-            server.middlewares.use(manifestPath, async (_req, res) => {
-                res.setHeader('content-type', 'application/json');
-                res.end(JSON.stringify(await app.generateManifest()));
-            });
+            const manifestPath = join(proxyPath, app.manifestPath ?? `apps/${app.key}`);
+            server.middlewares.use(
+                [proxyPath, manifestPath, app.key].join('/'),
+                async (_req, res) => {
+                    res.setHeader('content-type', 'application/json');
+                    res.end(JSON.stringify(await app.generateManifest()));
+                },
+            );
 
             // serve local bundles if request matches the current app and version
-            const bundlePath = `${proxyPath}/bundles/apps/${app.key}/${app.version}`;
+            const bundlePath = join(
+                proxyPath,
+                app.bundlePath ?? `bundles/apps/${app.key}/${app.version}`,
+            );
             server.middlewares.use(async (req, _res, next) => {
                 if (req.url?.match(bundlePath)) {
                     // remove proxy path from url
