@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.2.1
+
+### Patch Changes
+
+-   [`71f2de5`](https://github.com/equinor/fusion-framework/commit/71f2de516bbbb270e8c110197fb7c90288075b05) Thanks [@odinr](https://github.com/odinr)! - hotfix
+
 ## 10.2.0
 
 ### Minor Changes
