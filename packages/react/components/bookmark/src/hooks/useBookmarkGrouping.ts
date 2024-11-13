@@ -1,16 +1,16 @@
-import { Bookmark } from '@equinor/fusion-framework-module-bookmark';
+import { Bookmarks, BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 
 import { useState } from 'react';
 
 export type GroupingKeys = 'Group by app' | 'Created by' | 'Group by Context';
 
-const groupingModes: Record<GroupingKeys, (_item: Bookmark) => string> = {
-    'Group by app': (item: Bookmark) => item.appKey,
-    'Created by': (item: Bookmark) => item.createdBy.name,
-    'Group by Context': (item: Bookmark) => item?.context?.name ?? 'Unknown',
+const groupingModes: Record<GroupingKeys, (_item: BookmarkWithoutData) => string> = {
+    'Group by app': (item: BookmarkWithoutData) => item.appKey,
+    'Created by': (item: BookmarkWithoutData) => item.createdBy.name,
+    'Group by Context': (item: BookmarkWithoutData) => item?.context?.name ?? 'Unknown',
 } as const;
 
-export const useBookmarkGrouping = (bookmarks?: Bookmark[]) => {
+export const useBookmarkGrouping = (bookmarks?: Bookmarks) => {
     const [searchText, setSearchText] = useState<string | null>(null);
 
     const [groupByKey, setGroupBy] = useState<keyof typeof groupingModes>('Group by app');

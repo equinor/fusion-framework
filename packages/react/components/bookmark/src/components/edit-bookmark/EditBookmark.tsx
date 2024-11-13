@@ -1,14 +1,18 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+
+import { of } from 'rxjs';
+
+import { useObservableState } from '@equinor/fusion-observable/react';
+
+import { useFramework, useFrameworkModule } from '@equinor/fusion-framework-react';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { BookmarkUpdate } from '@equinor/fusion-framework-module-bookmark';
 
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
-import type { AppModule } from '@equinor/fusion-framework-module-app';
-// TODO - export from `@equinor/fusion-framework-react-module-bookmark`
-import type { PatchBookmark } from '@equinor/fusion-framework-module-bookmark';
-import { useFramework } from '@equinor/fusion-framework-react';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
-
 import styled from 'styled-components';
+
+import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 
 const Styled = {
     Dialog: styled(Dialog)`
@@ -36,11 +40,11 @@ export const EditBookmarkModal = ({
 }: {
     readonly isOpen: boolean;
     readonly onClose: (b: boolean) => void;
-    readonly bookmarkId?: string;
+    readonly bookmarkId: string;
 }) => {
-    const [state, setState] = useState<PatchBookmark>({
-        id: '',
-        appKey: '',
+    const { provider } = useBookmarkComponentContext();
+
+    const [state, setState] = useState<BookmarkUpdate>({
         name: '',
         description: '',
         isShared: false,
@@ -48,17 +52,52 @@ export const EditBookmarkModal = ({
 
     const [updatePayload, setUpdatePayload] = useState(false);
 
-    const { app, event } = useFramework<[AppModule]>().modules;
-    const { current } = app;
+    const { event } = useFramework<[AppModule]>().modules;
 
-    const { updateBookmark, bookmarks } = useBookmark();
+    const bookmark$ = useMemo(
+        () => provider.getBookmark(bookmarkId, { excludePayload: true }),
+        [provider, bookmarkId],
+    );
 
+    const { value: bookmark, complete: isLoadingBookmark } = useObservableState(bookmark$);
+
+    // set the state when the bookmark is loaded
     useEffect(() => {
-        const bookmark = bookmarks.find((b) => b.id === bookmarkId);
         if (bookmark) {
-            setState(bookmark);
+            setState({
+                name: bookmark.name,
+                description: bookmark.description,
+                isShared: bookmark.isShared,
+            });
         }
-    }, [bookmarkId, bookmarks]);
+    }, [bookmark]);
+
+    // TODO - this should be on the bookmark object
+    const appProvider = useFrameworkModule<AppModule>('app');
+    const { value: appName } = useObservableState(
+        useMemo(
+            () =>
+                bookmark && appProvider
+                    ? appProvider.getAppManifest(bookmark.appKey)
+                    : of(undefined),
+            [appProvider, bookmark],
+        ),
+    );
+
+    const updateBookmark = useCallback(
+        async (updates: BookmarkUpdate) => {
+            await provider.updateBookmarkAsync(bookmarkId, updates, {
+                excludePayloadGeneration: !updatePayload,
+            });
+            // TODO: Show success message
+            // TODO: should this call onUpdated, with the updated bookmark?
+            onClose(false);
+        },
+        [onClose, provider, bookmarkId, updatePayload],
+    );
+
+    // TODO - add loading spinner
+    isLoadingBookmark;
 
     return (
         <Styled.Dialog open={isOpen}>
@@ -90,7 +129,8 @@ export const EditBookmarkModal = ({
                 </div>
                 <div>
                     <Label htmlFor="app" label="App" />
-                    <Input readOnly={true} value={current?.manifest?.displayName || ''} />
+                    {/** TODO - show ghost while loading app name  */}
+                    <Input readOnly={true} value={appName || ''} />
                 </div>
 
                 <Styled.CheckboxWrapper>
@@ -99,7 +139,7 @@ export const EditBookmarkModal = ({
                         checked={state.isShared}
                         onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => {
                             if (changeEvent.target.checked) {
-                                const url = appendBookmarkIdToUrl(state.id);
+                                const url = appendBookmarkIdToUrl(bookmark?.id || '');
                                 navigator.clipboard.writeText(url);
                                 event.dispatchEvent('onBookmarkUrlCopy', { detail: { url } });
                             }
@@ -122,10 +162,7 @@ export const EditBookmarkModal = ({
                     </Button>
                     <Button
                         onClick={() => {
-                            state &&
-                                updateBookmark(state, { updatePayload }).then(() => {
-                                    onClose(false);
-                                });
+                            updateBookmark(state);
                         }}
                     >
                         Save

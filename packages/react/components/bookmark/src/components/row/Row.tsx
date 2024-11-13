@@ -1,11 +1,11 @@
 import { Icon, Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { useOutsideClick } from '@equinor/eds-utils';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
 import { MutableRefObject, ReactNode, useRef } from 'react';
 import { MoreMenu } from './MoreMenu';
 
 import styled from 'styled-components';
+import { useBookmarkComponentContext } from '../BookmarkProvider';
 
 export type MenuOption = {
     name: string;
@@ -48,7 +48,7 @@ const Styled = {
 
 export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: RowProps) => {
     const pRef = useRef<HTMLElement | null>(null);
-    const { setCurrentBookmark } = useBookmark();
+    const { provider } = useBookmarkComponentContext();
 
     useOutsideClick(pRef.current, () => onMenuOpen(''));
 
@@ -59,7 +59,7 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setCurrentBookmark(id);
+                provider.setCurrentBookmarkAsync(id);
             }}
         >
             <Typography>{name}</Typography>

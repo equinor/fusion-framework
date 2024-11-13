@@ -4,14 +4,15 @@ import { Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
 // TODO - export from `@equinor/fusion-framework-react-module-bookmark`
-import type { Bookmark } from '@equinor/fusion-framework-module-bookmark';
-import { useBookmark } from '@equinor/fusion-framework-react-module-bookmark';
+import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
+import { AppModule } from '@equinor/fusion-framework-module-app';
+import { useBookmarkComponentContext } from '../BookmarkProvider';
 
 Icon.add({
     delete_to_trash,
@@ -26,51 +27,89 @@ type SectionListProps = {
 };
 
 export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
-    const { deleteBookmarkById, getCurrentAppKey, updateBookmark, removeBookmarkFavorite } =
-        useBookmark();
+    // const { deleteBookmarkById, updateBookmark, removeBookmarkFavorite } = useBookmark();
 
+    const { provider: bookmarkProvider, currentApp } = useBookmarkComponentContext();
+
+    // TODO - should be removed when bookmark has property for isOwner
     const user = useCurrentUser();
+
     const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
 
-    const { event } = useFramework().modules;
+    const { event: eventProvider } = useFramework<[AppModule]>().modules;
 
-    const editBookmark = useCallback(
-        (bookmarkId: string) => {
-            event.dispatchEvent('onBookmarkEdit', { detail: { bookmarkId } });
-        },
-        [event],
-    );
+    const createMenuOptions = useCallback(
+        (bookmark: BookmarkWithoutData) => {
+            const appKey = currentApp?.appKey;
+            const bookmarkId = bookmark.id;
+            const isOwner = bookmark.createdBy.azureUniqueId === user?.localAccountId;
+            if (isOwner) {
+                return [
+                    {
+                        name: 'Edit',
+                        disabled: appKey !== bookmark.appKey,
+                        onClick: () => {
+                            eventProvider.dispatchEvent('onBookmarkEdit', {
+                                detail: { bookmarkId },
+                            });
+                        },
+                        Icon: <Icon name="edit" />,
+                    },
+                    {
+                        name: 'Update with current view',
+                        disabled: appKey !== bookmark.appKey,
+                        onClick: () => {
+                            bookmarkProvider.updateBookmarkAsync(bookmark.id);
+                            // TODO: add success and failure message
+                        },
+                        Icon: <Icon name="update" />,
+                    },
+                    {
+                        name: 'Remove',
+                        disabled: false,
+                        onClick: () => {
+                            bookmarkProvider.deleteBookmarkAsync(bookmark.id);
+                            // TODO: add success and failure message
+                        },
+                        Icon: <Icon name="delete_to_trash" />,
+                    },
+                    {
+                        name: bookmark.isShared ? 'Unshare' : 'Share',
+                        disabled: false,
+                        onClick: () => {
+                            if (!bookmark.isShared) {
+                                const url = appendBookmarkIdToUrl(bookmark.id);
+                                navigator.clipboard.writeText(url);
+                                eventProvider.dispatchEvent('onBookmarkUrlCopy', {
+                                    detail: { url },
+                                });
+                            }
 
-    const shareBookmark = useCallback(
-        (bookmark: Bookmark) => {
-            if (!bookmark.isShared) {
-                const url = appendBookmarkIdToUrl(bookmark.id);
-                navigator.clipboard.writeText(url);
-                event.dispatchEvent('onBookmarkUrlCopy', { detail: { url } });
+                            // TODO - this flag should only be set by backend when sharing is successful
+                            bookmarkProvider.updateBookmarkAsync(
+                                bookmark.id,
+                                { isShared: !bookmark.isShared },
+                                { excludePayloadGeneration: true },
+                            );
+                        },
+                        Icon: <Icon name="share" />,
+                    },
+                ];
+            } else {
+                return [
+                    {
+                        name: 'Unfavourite',
+                        disabled: false,
+                        onClick: () => {
+                            bookmarkProvider.deleteBookmarkAsync(bookmark.id);
+                        },
+                        Icon: <Icon name="close" />,
+                    },
+                ];
             }
-            updateBookmark({ ...bookmark, isShared: !bookmark.isShared });
         },
-        [event, updateBookmark],
+        [eventProvider, bookmarkProvider, user, currentApp?.appKey],
     );
-
-    const updateBookmarkWithCurrentView = useCallback(
-        (bookmark: Bookmark) => {
-            updateBookmark({ ...bookmark }, { updatePayload: true });
-        },
-        [updateBookmark],
-    );
-
-    const createMenuOptions = (bookmark: Bookmark) =>
-        createBookmarkActions(
-            bookmark,
-            deleteBookmarkById,
-            editBookmark,
-            shareBookmark,
-            removeBookmarkFavorite,
-            updateBookmarkWithCurrentView,
-            getCurrentAppKey(),
-            user?.localAccountId,
-        );
 
     return (
         <>
@@ -100,62 +139,3 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
         </>
     );
 };
-
-function createBookmarkActions(
-    bookmark: Bookmark,
-    deleteBookmarkById: (bookmarkId: string) => Promise<string | undefined>,
-    editBookmark: (bookmark: string) => void,
-    shareBookmark: (bookmark: Bookmark) => void,
-    removeBookmarkFavorite: (bookmarkId: string) => void,
-    updateBookmarkWithCurrentView: (bookmark: Bookmark) => void,
-    appKey?: string,
-    localAccountId?: string,
-) {
-    if (bookmark.createdBy.azureUniqueId === localAccountId) {
-        return [
-            {
-                name: 'Edit',
-                disabled: appKey !== bookmark.appKey,
-                onClick: () => {
-                    editBookmark(bookmark.id);
-                },
-                Icon: <Icon name="edit" />,
-            },
-            {
-                name: 'Update with current view',
-                disabled: appKey !== bookmark.appKey,
-                onClick: () => {
-                    updateBookmarkWithCurrentView(bookmark);
-                },
-                Icon: <Icon name="update" />,
-            },
-            {
-                name: 'Remove',
-                disabled: false,
-                onClick: () => {
-                    deleteBookmarkById(bookmark.id);
-                },
-                Icon: <Icon name="delete_to_trash" />,
-            },
-            {
-                name: bookmark.isShared ? 'Unshare' : 'Share',
-                disabled: false,
-                onClick: () => {
-                    shareBookmark(bookmark);
-                },
-                Icon: <Icon name="share" />,
-            },
-        ];
-    } else {
-        return [
-            {
-                name: 'Unfavourite',
-                disabled: false,
-                onClick: () => {
-                    removeBookmarkFavorite(bookmark.id);
-                },
-                Icon: <Icon name="close" />,
-            },
-        ];
-    }
-}
