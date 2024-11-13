@@ -1,5 +1,21 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+-   [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Added new hooks `useBookmarkProvider` and `useHasBookmark` with support for custom bookmark providers. This allows for more flexible bookmark management within the Fusion Framework React Bookmark Module.
+
+    Developers can now directly use `useBookmarkProvider` to get the bookmark provider instance and `useHasBookmark` to check if bookmark creators are present. This enhancement facilitates better integration with custom bookmark logic and improves the module's usability.
+
+    To adapt to these changes, consumers should consider utilizing the new hooks in their applications for enhanced bookmark management capabilities. Additionally, the removal of certain dependencies and the restructuring of `package.json` dependencies and peerDependencies sections should be noted and adjusted for in project setups.
+
+### Patch Changes
+
+-   Updated dependencies [[`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641)]:
+    -   @equinor/fusion-framework-module-bookmark@2.0.0
+    -   @equinor/fusion-framework-react@7.3.2
+
 ## 2.1.19
 
 ### Patch Changes

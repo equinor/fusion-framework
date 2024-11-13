@@ -1,5 +1,25 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+-   [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-react-module-bookmark:**
+
+    Updated the `Bookmark` component to use the `useBookmarkComponentContext` hook for accessing the bookmark provider and state.
+
+    -   Replaced the `useBookmark` hook with `useBookmarkComponentContext` in the `Bookmark` component.
+    -   Updated the `BookmarkProvider` component to use `createContext` and `useContext` for managing the bookmark provider state.
+    -   Modified the `CreateBookmarkModal` and `EditBookmarkModal` components to use the `useBookmarkComponentContext` hook.
+    -   Enhanced the `BookmarkProvider` component to include the current application context.
+    -   Improved error handling and loading state management in the `Bookmark` component.
+
+### Patch Changes
+
+-   Updated dependencies [[`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641)]:
+    -   @equinor/fusion-framework-react-module-bookmark@2.2.0
+    -   @equinor/fusion-framework-react@7.3.2
+
 ## 0.5.3
 
 ### Patch Changes

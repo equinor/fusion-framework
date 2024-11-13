@@ -1,5 +1,12 @@
 # Change Log
 
+## 9.1.13
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework@7.2.10
+
 ## 9.1.12
 
 ### Patch Changes

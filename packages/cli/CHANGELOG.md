@@ -1,5 +1,26 @@
 # Change Log
 
+## 10.2.0
+
+### Minor Changes
+
+-   [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Integration in Dev Portal
+
+    -   **Refactored `BookMarkSideSheet.tsx`:**
+
+        -   Replaced `useHasBookmark` with `useCurrentAppModule<BookmarkModule>('bookmark')` for better module integration.
+        -   Updated button `disabled` state to use `bookmarkProvider?.hasBookmarkCreators`.
+
+    -   **Updated `Header.tsx`:**
+
+        -   Added `useCurrentAppModule<BookmarkModule>('bookmark')` to manage bookmark module state.
+        -   Disabled bookmark button if `bookmarkProvider` is not available.
+        -   Passed `bookmarkProvider` to `BookmarkProvider` component.
+
+    -   **Configuration Changes in `config.ts`:**
+        -   Switched import from `@equinor/fusion-framework-module-bookmark` to `@equinor/fusion-framework-react-module-bookmark`.
+        -   Added `builder.setFilter('application', true)` to bookmark configuration.
+
 ## 10.1.0
 
 ### Minor Changes

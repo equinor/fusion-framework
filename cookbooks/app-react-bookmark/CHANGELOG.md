@@ -1,5 +1,21 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+-   [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Handling in App Component
+
+    -   Refactored `App.tsx` to use `useLayoutEffect` instead of `useEffect` for synchronizing the `payload` state with the current bookmark.
+    -   Replaced `useState` and `useCallback` with `useRef` for managing the `updateData` reference.
+    -   Simplified state management by removing `BookmarkState` and `init` and directly using `payload` state.
+    -   Updated input change handlers to directly update the `payload` state instead of using `updateState`.
+
+    Configuration Changes
+
+    -   Updated `config.ts` to enable the bookmark module using `enableBookmark`.
+    -   Removed unnecessary logger level settings and configuration callbacks for a cleaner setup.
+
 ## 4.1.3
 
 ### Patch Changes
