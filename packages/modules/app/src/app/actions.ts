@@ -37,11 +37,19 @@ const createActions = () => ({
         (config: AppConfig) => ({ payload: config }),
         (error: unknown) => ({ payload: error }),
     ),
-    /** Config loading */
+    /** Settings loading */
     setSettings: createAction('set_settings', (settings: AppSettings) => ({ payload: settings })),
+    /** Fetching settings */
     fetchSettings: createAsyncAction(
         'fetch_settings',
         (key: string) => ({ payload: key }),
+        (settings: AppSettings) => ({ payload: settings }),
+        (error: unknown) => ({ payload: error }),
+    ),
+    /** Updatings settings */
+    updateSettings: createAsyncAction(
+        'update_settings',
+        (settings: AppSettings) => ({ payload: { settings } }),
         (settings: AppSettings) => ({ payload: settings }),
         (error: unknown) => ({ payload: error }),
     ),

@@ -6,6 +6,7 @@ import {
     handleFetchManifest,
     handleFetchConfig,
     handleFetchSettings,
+    handleUpdateSettings,
     handleImportApplication,
 } from './flows';
 
@@ -30,6 +31,8 @@ export const createState = (
 
     // add handler for fetching settings
     state.addFlow(handleFetchSettings(provider));
+
+    state.addFlow(handleUpdateSettings(provider));
 
     // add handler for loading application script
     state.addFlow(handleImportApplication(provider));

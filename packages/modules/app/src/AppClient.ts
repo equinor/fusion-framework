@@ -35,6 +35,16 @@ export interface IAppClient extends Disposable {
      * Fetch app settings by appKey
      */
     getAppSettings: (args: { appKey: string }) => ObservableInput<AppSettings>;
+
+    /**
+     * Set app settings by appKey
+     * @param args - Object with appKey and settings
+     * @returns ObservableInput<AppSettings>
+     */
+    updateAppSettings: (args: {
+        appKey: string;
+        settings: AppSettings;
+    }) => ObservableInput<AppSettings>;
 }
 
 /**
@@ -68,6 +78,7 @@ export class AppClient implements IAppClient {
     #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
     #config: Query<AppConfig, { appKey: string; tag?: string }>;
     #settings: Query<AppSettings, { appKey: string }>;
+    #setSettings: Query<AppSettings, { appKey: string; settings: AppSettings }>;
 
     constructor(client: IHttpClient) {
         const expire = 1 * 60 * 1000;
@@ -134,6 +145,23 @@ export class AppClient implements IAppClient {
             key: (args) => JSON.stringify(args),
             expire,
         });
+        this.#setSettings = new Query<AppSettings, { appKey: string; settings: AppSettings }>({
+            client: {
+                fn: ({ appKey, settings }) => {
+                    console.log('query', appKey, settings);
+                    return client.fetch(`/persons/me/apps/${appKey}/settings`, {
+                        method: 'PUT',
+                        headers: {
+                            'Api-Version': '1.0',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(settings),
+                    });
+                },
+            },
+            key: (args) => JSON.stringify(args),
+            expire,
+        });
     }
 
     getAppManifest(args: { appKey: string }): Observable<AppManifest> {
@@ -192,6 +220,23 @@ export class AppClient implements IAppClient {
                     throw AppSettingsError.fromHttpResponse(cause.response, { cause });
                 }
                 throw new AppSettingsError('unknown', 'failed to load settings', { cause });
+            }),
+        );
+    }
+
+    updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
+        return this.#setSettings.query(args).pipe(
+            queryValue,
+            catchError((err) => {
+                /** extract cause, since error will be a `QueryError` */
+                const { cause } = err;
+                if (cause instanceof AppSettingsError) {
+                    throw cause;
+                }
+                if (cause instanceof HttpResponseError) {
+                    throw AppSettingsError.fromHttpResponse(cause.response, { cause });
+                }
+                throw new AppSettingsError('unknown', 'failed to update app settings', { cause });
             }),
         );
     }

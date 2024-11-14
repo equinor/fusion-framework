@@ -131,6 +131,15 @@ export class AppModuleProvider {
     }
 
     /**
+     * Put user settings for an application
+     * @param appKey - application key
+     * @param settings - The settings to add save
+     */
+    public updateAppSettings(appKey: string, settings: AppSettings): Observable<AppSettings> {
+        return from(this.#appClient.updateAppSettings({ appKey, settings }));
+    }
+
+    /**
      * set the current application, will internally resolve manifest
      * @param appKey - application key
      */

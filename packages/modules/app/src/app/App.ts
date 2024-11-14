@@ -192,6 +192,20 @@ export interface IApp<
     getSettingsAsync(allow_cache?: boolean): Promise<AppSettings>;
 
     /**
+     * Sets the app settings.
+     * @param settings The settings object to save.
+     * @returns An observable that emits the app settings.
+     */
+    updateSettings(settings: AppSettings): Observable<AppSettings>;
+
+    /**
+     * Sets the app settings asyncronously.
+     * @param settings The settings object to save.
+     * @returns An Promise that resolves the app settings.
+     */
+    updateSettingsAsync(settings: AppSettings): Promise<AppSettings>;
+
+    /**
      * Gets the app manifest.
      * @param force_refresh Whether to force refreshing the manifest.
      * @returns An observable that emits the app manifest.
@@ -439,6 +453,33 @@ export class App<
             });
         });
 
+        // monitor when application settings is updated
+        this.#state.addEffect(actions.updateSettings.type, (action) => {
+            // dispatch event to notify listeners that the application settings has been loaded
+            event.dispatchEvent('onAppSettingsUpdate', {
+                detail: { appKey, settings: action.payload.settings },
+                source: this,
+            });
+        });
+
+        // monitor when application settings is updated
+        this.#state.addEffect(actions.updateSettings.success.type, (action) => {
+            // dispatch event to notify listeners that the application settings has been loaded
+            event.dispatchEvent('onAppSettingsUpdated', {
+                detail: { appKey, settings: action.payload.settings },
+                source: this,
+            });
+        });
+
+        // monitor when application settings fails to updated
+        this.#state.addEffect(actions.updateSettings.failure.type, (action) => {
+            // dispatch event to notify listeners that the application settings has been loaded
+            event.dispatchEvent('onAppSettingsUpdateFailure', {
+                detail: { appKey, settings: action.payload },
+                source: this,
+            });
+        });
+
         // monitor when application script is loading
         this.#state.addEffect(actions.importApp.type, () => {
             // dispatch event to notify listeners that the application script is being loaded
@@ -619,7 +660,7 @@ export class App<
 
     public getSettings(force_refresh = false): Observable<AppSettings> {
         return new Observable((subscriber) => {
-            if (this.#state.value.config) {
+            if (this.#state.value.settings) {
                 // emit current settings to the subscriber
                 subscriber.next(this.#state.value.settings);
                 if (!force_refresh) {
@@ -667,6 +708,49 @@ export class App<
         // when allow_cache is true, use first emitted value, otherwise use last emitted value
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
         return operator(this.getSettings(!allow_cache));
+    }
+
+    public updateSettings(settings: AppSettings): Observable<AppSettings> {
+        return new Observable((subscriber) => {
+            // when stream closes, dispose of subscription to change of state settings
+            subscriber.add(
+                // monitor changes to state changes of settings and emit to subscriber
+                this.#state.addEffect(actions.updateSettings.type, ({ payload }) => {
+                    subscriber.next(payload);
+                }),
+            );
+
+            // when stream closes, dispose of subscription to fetch settings
+            subscriber.add(
+                // monitor success of fetching settings and emit to subscriber
+                this.#state.addEffect(actions.updateSettings.success.type, ({ payload }) => {
+                    // application settings loaded, emit to subscriber and complete the stream
+                    subscriber.next(payload);
+                    subscriber.complete();
+                }),
+            );
+
+            // when stream closes, dispose of subscription to fetch settings
+            subscriber.add(
+                // monitor failure of fetching settings and emit error to subscriber
+                this.#state.addEffect(actions.updateSettings.failure.type, ({ payload }) => {
+                    // application settings failed to load, emit error and complete the stream
+                    subscriber.error(
+                        Error('failed to load application settings', {
+                            cause: payload,
+                        }),
+                    );
+                }),
+            );
+
+            this.#state.next(actions.updateSettings(settings));
+        });
+    }
+
+    public updateSettingsAsync(settings: AppSettings): Promise<AppSettings> {
+        // when allow_cache is true, use first emitted value, otherwise use last emitted value
+        const operator = lastValueFrom;
+        return operator(this.updateSettings(settings));
     }
 
     public getManifest(force_refresh = false): Observable<AppManifest> {
