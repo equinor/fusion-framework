@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+-   [#2575](https://github.com/equinor/fusion-framework/pull/2575) [`7e67ae1`](https://github.com/equinor/fusion-framework/commit/7e67ae127a3a5256df925ae6bd472aa32b8d9292) Thanks [@odinr](https://github.com/odinr)! - fixed import path in `useBookmark` hook
+
 ## 2.2.0
 
 ### Minor Changes

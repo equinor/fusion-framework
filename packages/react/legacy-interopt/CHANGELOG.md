@@ -1,5 +1,41 @@
 # Change Log
 
+## 18.0.1
+
+### Patch Changes
+
+-   [#2574](https://github.com/equinor/fusion-framework/pull/2574) [`2e1a4fd`](https://github.com/equinor/fusion-framework/commit/2e1a4fdde0573bc23627a1dea4b0e92c531c79f7) Thanks [@eikeland](https://github.com/eikeland)! - #### Updated Files:
+
+    -   `packages/react/legacy-interopt/src/create-fusion-context.ts`
+    -   `packages/react/legacy-interopt/src/create-service-resolver.ts`
+
+    #### Changes:
+
+    1. **create-fusion-context.ts**
+        - Added a call to `authContainer.handleWindowCallbackAsync()` before initializing `TelemetryLogger`.
+
+    ```ts
+    const authContainer = new LegacyAuthContainer({ auth: framework.modules.auth });
+
+    await authContainer.handleWindowCallbackAsync();
+
+    const telemetryLogger = new TelemetryLogger(telemetry?.instrumentationKey ?? '', authContainer);
+    ```
+
+    2. **create-service-resolver.ts**
+        - Changed the third parameter of authContainer.registerAppAsync from false to true.
+
+    ```ts
+    return authContainer.registerAppAsync(
+        id,
+        uris.map((x) => x.uri),
+        true,
+    );
+    ```
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-react-app@5.3.0
+
 ## 18.0.0
 
 ### Patch Changes
