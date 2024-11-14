@@ -100,19 +100,19 @@ export class LegacyAuthContainer extends AuthContainer {
             throw new FusionAuthAppNotFoundError(resource);
         }
         if (this._registeredApps[app.clientId]) {
-            // TODO
-            const defaultScope = app.clientId + '/.default';
-            const res = await this.#auth.acquireToken({ scopes: [defaultScope] });
-            if (res && res.accessToken) {
-                return res.accessToken;
-            }
-            // if (!accessToken) {
-            throw Error('failed to aquire token');
-            // }
-            // return accessToken;
+            return this.__acquireTokenAsync(app);
         }
         console.trace(`FusionAuthContainer::acquireTokenAsync ${resource}`);
         return super.acquireTokenAsync(resource);
+    }
+
+    protected async __acquireTokenAsync(app: AuthApp): Promise<string | null> {
+        const defaultScope = app.clientId + '/.default';
+        const res = await this.#auth.acquireToken({ scopes: [defaultScope] });
+        if (res && res.accessToken) {
+            return res.accessToken;
+        }
+        throw Error('failed to aquire token');
     }
 
     /** internal registry of 'new' apps registred for msal */
@@ -131,6 +131,7 @@ export class LegacyAuthContainer extends AuthContainer {
         }
 
         const newApp = new AuthApp(clientId, resources);
+        this._registeredApps[clientId] = newApp;
         this.apps.push(newApp);
         return true;
     }
@@ -143,20 +144,7 @@ export class LegacyAuthContainer extends AuthContainer {
         const app = this.resolveApp(resource);
 
         if (app && app.clientId === global.clientId) {
-            const refreshUrl = `/auth/refresh`;
-            try {
-                const response = await fetch(refreshUrl, {
-                    credentials: 'include',
-                    method: 'POST',
-                });
-
-                if (response.status === 200) {
-                    return response.text();
-                }
-            } catch (err) {
-                // @todo AI
-                console.error(err);
-            }
+            return this.__acquireTokenAsync(app);
         }
 
         return super.refreshTokenAsync(resource);
