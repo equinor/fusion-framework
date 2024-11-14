@@ -58,6 +58,12 @@ declare module '@equinor/fusion-framework-module-event' {
         }>;
         onAppSettingsFailure: AppEventFailure;
 
+        onAppSettingsUpdate: AppEvent;
+        onAppSettingsUpdated: AppEvent<{
+            settings: AppSettings;
+        }>;
+        onAppSettingsUpdateFailure: AppEventFailure;
+
         /** fired when the application has loaded corresponding javascript module */
         onAppScriptLoad: AppEvent;
         onAppScriptLoaded: AppEvent<{

@@ -1,5 +1,5 @@
 import { from, of, concat } from 'rxjs';
-import { catchError, filter, last, map, share, switchMap } from 'rxjs/operators';
+import { catchError, filter, last, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { actions } from './actions';
 
@@ -130,6 +130,34 @@ export const handleFetchSettings =
                     catchError((err) => {
                         return of(actions.fetchSettings.failure(err));
                     }),
+                );
+            }),
+        );
+
+/**
+ * Handles the set settings action by setting the app settings from the provider,
+ * filtering out null values, and dispatching success or failure actions accordingly.
+ *
+ * @param provider The AppModuleProvider used to fetch the app settings.
+ * @returns A Flow function that takes an Observable of actions and returns an Observable of actions.
+ */
+export const handleUpdateSettings =
+    (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
+    (action$, state$) =>
+        action$.pipe(
+            // only handle update settings request actions
+            filter(actions.updateSettings.match),
+            withLatestFrom(state$),
+            // when request is received, abort any ongoing request and start new
+            switchMap(([action, state]) => {
+                const { payload } = action;
+                const { appKey } = state;
+
+                // set settings in provider
+                return from(provider.updateAppSettings(appKey, payload.settings)).pipe(
+                    // allow multiple subscriptions
+                    map((settings) => actions.updateSettings.success(settings)),
+                    catchError((err) => of(actions.updateSettings.failure(err))),
                 );
             }),
         );

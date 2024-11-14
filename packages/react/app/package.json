@@ -37,6 +37,10 @@
             "types": "./dist/types/navigation/index.d.ts",
             "import": "./dist/esm/navigation/index.js"
         },
+        "./settings": {
+            "types": "./dist/types/settings/index.d.ts",
+            "import": "./dist/esm/settings/index.js"
+        },
         "./widget": {
             "types": "./dist/types/widget/index.d.ts",
             "import": "./dist/esm/widget/index.js"
@@ -64,6 +68,9 @@
             ],
             "navigation": [
                 "dist/types/navigation/index.d.ts"
+            ],
+            "settings": [
+                "dist/types/settings/index.d.ts"
             ],
             "widget": [
                 "dist/types/widget/index.d.ts"
