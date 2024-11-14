@@ -247,6 +247,7 @@ export class AppClient implements IAppClient {
         this.#manifests.complete();
         this.#config.complete();
         this.#settings.complete();
+        this.#setSettings.complete();
     }
 }
 
