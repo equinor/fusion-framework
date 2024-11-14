@@ -15,7 +15,7 @@ import {
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { useBookmarkProvider } from './useBookmarkProvider';
-import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark/src/BookmarkProvider';
+import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
 
 export type useBookmarkArgs = {
     provider?: BookmarkProvider;
