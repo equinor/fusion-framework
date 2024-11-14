@@ -1,6 +1,6 @@
 import { defineAppConfig } from '@equinor/fusion-framework-cli';
 
-export default defineAppConfig((_nev) => {
+export default defineAppConfig(() => {
     return {
         endpoints: {
             api: {

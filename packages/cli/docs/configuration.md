@@ -14,9 +14,9 @@ the cli will look for a `app.config.{ts,js,json}` which will be provided to the 
 
 ```ts
 // app.config.ts
-import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
-export default defineAppConfig((_env, { base }) =>
-    mergeAppConfigs(base, {
+import { defineAppConfig } from '@equinor/fusion-framework-cli';
+export default defineAppConfig() => {
+    return {
         environment: {
           fish: 'they can fly?',
           shrimp: {
@@ -30,8 +30,8 @@ export default defineAppConfig((_env, { base }) =>
             scopes: ['default'],
           },
         },
-    }),
-);
+    },
+});
 ```
 
 You can configure framework services in the `src/config.ts` file.
