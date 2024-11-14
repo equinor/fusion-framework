@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.2.3
+
+### Patch Changes
+
+-   [#2548](https://github.com/equinor/fusion-framework/pull/2548) [`5a0310d`](https://github.com/equinor/fusion-framework/commit/5a0310d2e7ac1d0941166537293c2db98e6727a9) Thanks [@eikeland](https://github.com/eikeland)! - Changing example of app-config.ts in cli docs
+
 ## 0.2.2
 
 ### Patch Changes
