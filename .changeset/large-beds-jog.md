@@ -39,3 +39,6 @@
 
 11. **useAppSettings.ts**
     - Created new hook for handling app settings.
+
+12. **app-proxy-plugin.ts**
+    - Add conditional handler for persons/me/appKey/settings to prevent matching against appmanifest path
