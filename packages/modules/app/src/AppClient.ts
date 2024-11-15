@@ -77,8 +77,7 @@ export class AppClient implements IAppClient {
     #manifest: Query<AppManifest, { appKey: string }>;
     #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
     #config: Query<AppConfig, { appKey: string; tag?: string }>;
-    #settings: Query<AppSettings, { appKey: string }>;
-    #setSettings: Query<AppSettings, { appKey: string; settings: AppSettings }>;
+    #settings: Query<AppSettings, { appKey: string; settings?: AppSettings }>;
 
     constructor(client: IHttpClient) {
         const expire = 1 * 60 * 1000;
@@ -132,31 +131,19 @@ export class AppClient implements IAppClient {
             expire,
         });
 
-        this.#settings = new Query<AppSettings, { appKey: string }>({
-            client: {
-                fn: ({ appKey }) => {
-                    return client.json(`/persons/me/apps/${appKey}/settings`, {
-                        headers: {
-                            'Api-Version': '1.0',
-                        },
-                    });
-                },
-            },
-            key: (args) => JSON.stringify(args),
-            expire,
-        });
-        this.#setSettings = new Query<AppSettings, { appKey: string; settings: AppSettings }>({
+        this.#settings = new Query<AppSettings, { appKey: string; settings?: AppSettings }>({
             client: {
                 fn: ({ appKey, settings }) => {
-                    console.log('query', appKey, settings);
-                    return client.fetch(`/persons/me/apps/${appKey}/settings`, {
-                        method: 'PUT',
+                    const init: RequestInit = {
                         headers: {
                             'Api-Version': '1.0',
-                            'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(settings),
-                    });
+                    };
+                    if (settings) {
+                        init.method = 'PUT';
+                        init.body = JSON.stringify(settings);
+                    }
+                    return client.json(`/persons/me/apps/${appKey}/settings`, init);
                 },
             },
             key: (args) => JSON.stringify(args),
@@ -225,7 +212,7 @@ export class AppClient implements IAppClient {
     }
 
     updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
-        return this.#setSettings.query(args).pipe(
+        return this.#settings.query(args).pipe(
             queryValue,
             catchError((err) => {
                 /** extract cause, since error will be a `QueryError` */
@@ -247,7 +234,6 @@ export class AppClient implements IAppClient {
         this.#manifests.complete();
         this.#config.complete();
         this.#settings.complete();
-        this.#setSettings.complete();
     }
 }
 
