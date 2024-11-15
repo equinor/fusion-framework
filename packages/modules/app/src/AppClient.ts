@@ -106,8 +106,12 @@ export class AppClient implements IAppClient {
                             'Api-Version': '1.0',
                         },
                         selector: async (res: Response) => {
-                            const response = (await jsonSelector(res)) as { value: unknown[] };
-                            return ApplicationSchema.array().parse(response.value);
+                            /** Return empyt settings if app is not registerred */
+                            if (res.status === 404) {
+                                return {}
+                            }
+                            const body = await res.json();
+                            return body;
                         },
                     });
                 },
@@ -133,17 +137,21 @@ export class AppClient implements IAppClient {
 
         this.#settings = new Query<AppSettings, { appKey: string; settings?: AppSettings }>({
             client: {
-                fn: ({ appKey, settings }) => {
-                    const init: RequestInit = {
+                fn: ({ appKey, settings }) => {;
+                    const update = settings ? {method: 'PUT', body: JSON.stringify(settings)} : {};
+                    return client.json(`/persons/me/apps/${appKey}/settings`, {
                         headers: {
                             'Api-Version': '1.0',
                         },
-                    };
-                    if (settings) {
-                        init.method = 'PUT';
-                        init.body = JSON.stringify(settings);
-                    }
-                    return client.json(`/persons/me/apps/${appKey}/settings`, init);
+                        ...update,
+                        selector: async (res: Response) => {
+                            /** return empty settings if app not registered */
+                            if (res.status === 404) {
+                                return Promise.resolve({});
+                            }
+                            return res.json();
+                        },
+                    });
                 },
             },
             key: (args) => JSON.stringify(args),
