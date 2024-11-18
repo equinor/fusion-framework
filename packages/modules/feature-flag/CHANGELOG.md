@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 1.1.11
+
+### Patch Changes
+
+-   [#2571](https://github.com/equinor/fusion-framework/pull/2571) [`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump uuid from 10.0.0 to 11.0.3
+
+-   Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
+    -   @equinor/fusion-observable@8.4.3
+
 ## 1.1.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.2.2
+
+### Patch Changes
+
+-   [#2582](https://github.com/equinor/fusion-framework/pull/2582) [`8dfb437`](https://github.com/equinor/fusion-framework/commit/8dfb4370d1c961a1f24af93344034facaef87646) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump rollup from 4.22.4 to 4.27.2
+
 ## 10.2.1
 
 ### Patch Changes
