@@ -11,14 +11,14 @@ import { FlowSubject, Observable } from '@equinor/fusion-observable';
 import type { AppModuleProvider } from '../AppModuleProvider';
 import {
     combineLatest,
-    filter,
+    of,
+    type OperatorFunction,
+    Subscription,
     firstValueFrom,
     lastValueFrom,
-    map,
-    of,
-    OperatorFunction,
-    Subscription,
 } from 'rxjs';
+import { defaultIfEmpty, filter, map } from 'rxjs/operators';
+
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
@@ -55,12 +55,6 @@ export interface IApp<
     get config$(): Observable<AppConfig<TEnv>>;
 
     /**
-     * Observable that emits the settings of the app.
-     * @returns An Observable that emits the app settings.
-     */
-    get settings$(): Observable<AppSettings>;
-
-    /**
      * Returns an observable stream of the loaded app script instance.
      * @returns {Observable<AppScriptModule>} The observable stream of app script modules.
      */
@@ -71,6 +65,12 @@ export interface IApp<
      * @returns An observable that emits the instance of the app modules.
      */
     get instance$(): Observable<AppModulesInstance<TModules>>;
+
+    /**
+     * Observable that emits the settings of the app.
+     * @returns An Observable that emits the app setttings.
+     */
+    get settings$(): Observable<AppSettings>;
 
     /**
      * Gets the current state of the Application.
@@ -103,18 +103,6 @@ export interface IApp<
     get config(): AppConfig<TEnv> | undefined;
 
     /**
-     * Gets the settings of the app.
-     * @returns The settings object or undefined if no settings is set.
-     */
-    get settings(): AppSettings | undefined;
-
-    /**
-     * Gets the settings of the app asyncronously.
-     * @returns A promise that resolves to the AppSettings.
-     */
-    get settingsAsync(): Promise<AppSettings> | undefined;
-
-    /**
      * Retrieves the configuration asynchronously.
      * @returns A promise that resolves to the AppConfig.
      */
@@ -139,18 +127,12 @@ export interface IApp<
         manifest: AppManifest;
         script: AppScriptModule;
         config: AppConfig;
-        settings: AppSettings;
     }>;
 
     /**
      * Loads the app configuration.
      */
     loadConfig(): void;
-
-    /**
-     * Loads the app settings.
-     */
-    loadSettings(): void;
 
     /**
      * Loads the app manifest.
@@ -234,6 +216,8 @@ export interface IApp<
     getAppModuleAsync(allow_cache?: boolean): Promise<AppScriptModule>;
 }
 
+const fallbackSettings: AppSettings = {};
+
 // TODO make streams distinct until changed from state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<
@@ -259,13 +243,6 @@ export class App<
         );
     }
 
-    get settings$(): Observable<AppSettings> {
-        return this.#state.pipe(
-            map(({ settings }) => settings as AppSettings),
-            filterEmpty(),
-        );
-    }
-
     get modules$(): Observable<AppScriptModule> {
         return this.#state.pipe(
             map(({ modules }) => modules),
@@ -276,6 +253,15 @@ export class App<
     get instance$(): Observable<AppModulesInstance<TModules>> {
         return this.#state.pipe(
             map(({ instance }) => instance as AppModulesInstance<TModules>),
+            filterEmpty(),
+        );
+    }
+
+    get settings$(): Observable<AppSettings> {
+        this.#state.next(actions.fetchSettings(this.appKey));
+        return this.#state.pipe(
+            map(({ settings }) => settings),
+            defaultIfEmpty(fallbackSettings),
             filterEmpty(),
         );
     }
@@ -305,14 +291,6 @@ export class App<
 
     get configAsync(): Promise<AppConfig<TEnv>> {
         return firstValueFrom(this.config$);
-    }
-
-    get settings(): AppSettings | undefined {
-        return this.state.settings as AppSettings;
-    }
-
-    get settingsAsync(): Promise<AppSettings> {
-        return firstValueFrom(this.settings$);
     }
 
     get instance(): AppModulesInstance<TModules> | undefined {
@@ -539,7 +517,6 @@ export class App<
         manifest: AppManifest;
         script: AppScriptModule;
         config: AppConfig;
-        settings: AppSettings;
     }> {
         return new Observable((subscriber) => {
             // dispatch initialize action to indicate that the application is initializing
@@ -550,15 +527,13 @@ export class App<
                     this.getManifest(),
                     this.getAppModule(),
                     this.getConfig(),
-                    this.getSettings(),
                 ]).subscribe({
-                    next: ([manifest, script, config, settings]) =>
+                    next: ([manifest, script, config]) =>
                         // emit the manifest, script, and config to the subscriber
                         subscriber.next({
                             manifest,
                             script,
                             config,
-                            settings,
                         }),
                     error: (err) => {
                         // emit error and complete the stream
@@ -581,10 +556,6 @@ export class App<
                 this.#state.next(actions.fetchConfig(manifest));
             },
         });
-    }
-
-    public loadSettings() {
-        this.#state.next(actions.fetchSettings(this.appKey));
     }
 
     public loadManifest(update?: boolean) {
@@ -700,7 +671,7 @@ export class App<
                 }),
             );
 
-            this.loadSettings();
+            this.#state.next(actions.fetchSettings(this.appKey));
         });
     }
 
@@ -711,36 +682,32 @@ export class App<
     }
 
     public updateSettings(settings: AppSettings): Observable<AppSettings> {
+        const action = actions.updateSettings(settings);
+
+        const updateActions$ = this.#state.action$.pipe(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            filter((a) => action.meta.id === a.meta.id),
+        );
+
         return new Observable((subscriber) => {
-            // when stream closes, dispose of subscription to change of state settings
             subscriber.add(
-                // monitor changes to state changes of settings and emit to subscriber
-                this.#state.addEffect(actions.updateSettings.type, ({ payload }) => {
-                    subscriber.next(payload);
-                }),
+                updateActions$
+                    .pipe(filter((a) => a.type === actions.updateSettings.success.type))
+                    .subscribe(subscriber),
             );
 
-            // when stream closes, dispose of subscription to fetch settings
             subscriber.add(
-                // monitor success of fetching settings and emit to subscriber
-                this.#state.addEffect(actions.updateSettings.success.type, ({ payload }) => {
-                    // application settings loaded, emit to subscriber and complete the stream
-                    subscriber.next(payload);
-                    subscriber.complete();
-                }),
-            );
-
-            // when stream closes, dispose of subscription to fetch settings
-            subscriber.add(
-                // monitor failure of fetching settings and emit error to subscriber
-                this.#state.addEffect(actions.updateSettings.failure.type, ({ payload }) => {
-                    // application settings failed to load, emit error and complete the stream
-                    subscriber.error(
-                        Error('failed to load application settings', {
-                            cause: payload,
-                        }),
-                    );
-                }),
+                updateActions$
+                    .pipe(filter((a) => a.type === actions.updateSettings.failure.type))
+                    .subscribe(({ payload }) => {
+                        // application settings failed to save, emit error and complete the stream
+                        subscriber.error(
+                            Error('failed to load application settings', {
+                                cause: payload,
+                            }),
+                        );
+                    }),
             );
 
             this.#state.next(actions.updateSettings(settings));

@@ -11,6 +11,7 @@ import type {
     AppScriptModule,
     AppSettings,
 } from '../types';
+import { v4 as uuid } from 'uuid';
 
 const createActions = () => ({
     /** Manifest loading */
@@ -49,9 +50,9 @@ const createActions = () => ({
     /** Updatings settings */
     updateSettings: createAsyncAction(
         'update_settings',
-        (settings: AppSettings) => ({ payload: { settings } }),
-        (settings: AppSettings) => ({ payload: settings }),
-        (error: unknown) => ({ payload: error }),
+        (settings: AppSettings) => ({ payload: { settings }, meta: { id: uuid() } }),
+        (settings: AppSettings, meta: { id: string }) => ({ payload: settings, meta }),
+        (error: unknown, meta: { id: string }) => ({ payload: error, meta }),
     ),
     /** App loading */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
