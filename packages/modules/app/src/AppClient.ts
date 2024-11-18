@@ -106,10 +106,6 @@ export class AppClient implements IAppClient {
                             'Api-Version': '1.0',
                         },
                         selector: async (res: Response) => {
-                            /** Return empyt settings if app is not registerred */
-                            if (res.status === 404) {
-                                return {};
-                            }
                             const body = await res.json();
                             return body;
                         },
@@ -149,10 +145,6 @@ export class AppClient implements IAppClient {
                         },
                         ...update,
                         selector: async (res: Response) => {
-                            /** return empty settings if app not registered */
-                            if (res.status === 404) {
-                                return Promise.resolve({});
-                            }
                             return res.json();
                         },
                     });

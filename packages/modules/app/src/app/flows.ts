@@ -1,5 +1,14 @@
 import { from, of, concat } from 'rxjs';
-import { catchError, filter, last, map, share, switchMap, withLatestFrom } from 'rxjs/operators';
+import {
+    catchError,
+    concatMap,
+    filter,
+    last,
+    map,
+    share,
+    switchMap,
+    withLatestFrom,
+} from 'rxjs/operators';
 
 import { actions } from './actions';
 
@@ -149,15 +158,15 @@ export const handleUpdateSettings =
             filter(actions.updateSettings.match),
             withLatestFrom(state$),
             // when request is received, abort any ongoing request and start new
-            switchMap(([action, state]) => {
-                const { payload } = action;
+            concatMap(([action, state]) => {
+                const { payload, meta } = action;
                 const { appKey } = state;
 
                 // set settings in provider
                 return from(provider.updateAppSettings(appKey, payload.settings)).pipe(
                     // allow multiple subscriptions
-                    map((settings) => actions.updateSettings.success(settings)),
-                    catchError((err) => of(actions.updateSettings.failure(err))),
+                    map((settings) => actions.updateSettings.success(settings, meta)),
+                    catchError((err) => of(actions.updateSettings.failure(err, meta))),
                 );
             }),
         );

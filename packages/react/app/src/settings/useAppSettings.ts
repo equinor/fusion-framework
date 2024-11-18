@@ -10,17 +10,17 @@ import { useCurrentApp } from '@equinor/fusion-framework-react/app';
  */
 export const useAppSettings = (): {
     settings: AppSettings | undefined;
-    updateSettings: (settings: AppSettings) => Promise<AppSettings> | undefined;
+    updateSettings: (settings: AppSettings) => void;
 } => {
     const { currentApp } = useCurrentApp();
 
     const { value: settings } = useObservableState(
-        useMemo(() => currentApp?.getSettings() || EMPTY, [currentApp]),
+        useMemo(() => currentApp?.settings$ || EMPTY, [currentApp]),
     );
 
     const updateSettings = useCallback(
         (settings: AppSettings) => {
-            return currentApp?.updateSettingsAsync(settings);
+            currentApp?.updateSettingsAsync(settings);
         },
         [currentApp],
     );

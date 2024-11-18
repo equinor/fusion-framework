@@ -66,13 +66,6 @@ export type AppProxyPluginOptions = {
         manifestPath?: string;
 
         /**
-         * string path to the app settingse
-         * @example `persons/me/apps/${app.key}/settings`
-         * @default `apps/${app.key}/settings`
-         */
-        settingsPath?: string;
-
-        /**
          * string path to the app bundle
          * @default `bundles/apps/${app.key}/${app.version}`
          * @example `bundles/apps/${app.key}/${app.version}`
@@ -166,14 +159,18 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                 res.end(JSON.stringify(await app.generateConfig()));
             });
 
-            const settingsPath = join(proxyPath, app.settingsPath ?? `apps/${app.key}/settings`);
-            server.middlewares.use(settingsPath, async (_req, _res, next) => next());
-
+            // TODO: AppSettings should be saved in memory localy
             // serve app manifest if request matches the current app
             const manifestPath = [proxyPath, app.manifestPath ?? `apps/${app.key}`].join('/');
-            server.middlewares.use(async (_req, res) => {
-                res.setHeader('content-type', 'application/json');
-                res.end(JSON.stringify(await app.generateManifest()));
+            server.middlewares.use(async (req, res, next) => {
+                // We only want to match the exact path
+                const [requestPath] = (req.url ?? '').split('?');
+                if (requestPath === manifestPath) {
+                    res.setHeader('content-type', 'application/json');
+                    res.end(JSON.stringify(await app.generateManifest()));
+                } else {
+                    next();
+                }
             });
 
             // serve local bundles if request matches the current app and version
