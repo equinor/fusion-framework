@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.1.20
+
+### Patch Changes
+
+-   Updated dependencies []:
+    -   @equinor/fusion-framework-module-widget@8.0.2
+    -   @equinor/fusion-framework@7.2.11
+
 ## 1.1.19
 
 ### Patch Changes
