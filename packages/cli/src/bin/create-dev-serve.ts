@@ -112,6 +112,7 @@ export const createDevServer = async (options: {
                     generateConfig,
                     generateManifest,
                     manifestPath: `persons/me/apps/${appKey}`,
+                    settingsPath: `persons/me/apps/${appKey}/settings`,
                 },
             }),
             // Restart the server when config changes or the dev portal source is updated
