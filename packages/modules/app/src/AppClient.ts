@@ -108,7 +108,7 @@ export class AppClient implements IAppClient {
                         selector: async (res: Response) => {
                             /** Return empyt settings if app is not registerred */
                             if (res.status === 404) {
-                                return {}
+                                return {};
                             }
                             const body = await res.json();
                             return body;
@@ -137,8 +137,12 @@ export class AppClient implements IAppClient {
 
         this.#settings = new Query<AppSettings, { appKey: string; settings?: AppSettings }>({
             client: {
-                fn: ({ appKey, settings }) => {;
-                    const update = settings ? {method: 'PUT', body: JSON.stringify(settings)} : {};
+                fn: ({ appKey, settings }) => {
+                    // is settings construct a push request
+                    const update = settings
+                        ? { method: 'PUT', body: JSON.stringify(settings) }
+                        : {};
+
                     return client.json(`/persons/me/apps/${appKey}/settings`, {
                         headers: {
                             'Api-Version': '1.0',

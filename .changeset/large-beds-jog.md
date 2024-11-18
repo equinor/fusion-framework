@@ -7,7 +7,6 @@
 
 1. **AppClient.ts**
    - Added `updateAppSettings` method to set app settings by appKey.
-   - Initialized `#setSettings` query in the constructor.
 
 2. **AppModuleProvider.ts**
    - Added `updateAppSettings` method to update app settings.
