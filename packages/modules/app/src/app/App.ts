@@ -687,7 +687,7 @@ export class App<
         const updateActions$ = this.#state.action$.pipe(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            filter((a) => action.meta.id === a.meta.id),
+            filter((a) => action.meta.id === a.meta?.id),
         );
 
         return new Observable((subscriber) => {

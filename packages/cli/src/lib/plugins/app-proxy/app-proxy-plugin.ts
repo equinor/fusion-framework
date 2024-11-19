@@ -159,7 +159,6 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                 res.end(JSON.stringify(await app.generateConfig()));
             });
 
-            // TODO: AppSettings should be saved in memory localy
             // serve app manifest if request matches the current app
             const manifestPath = [proxyPath, app.manifestPath ?? `apps/${app.key}`].join('/');
             server.middlewares.use(async (req, res, next) => {
@@ -168,9 +167,10 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                 if (requestPath === manifestPath) {
                     res.setHeader('content-type', 'application/json');
                     res.end(JSON.stringify(await app.generateManifest()));
-                } else {
-                    next();
+                    return;
                 }
+
+                next();
             });
 
             // serve local bundles if request matches the current app and version
