@@ -159,7 +159,6 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
                 res.end(JSON.stringify(await app.generateConfig()));
             });
 
-            // TODO: AppSettings should be saved in memory localy
             // serve app manifest if request matches the current app
             const manifestPath = [proxyPath, app.manifestPath ?? `apps/${app.key}`].join('/');
             server.middlewares.use(async (req, res, next) => {
