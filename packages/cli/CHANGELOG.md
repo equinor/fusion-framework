@@ -1,5 +1,18 @@
 # Change Log
 
+## 10.2.4
+
+### Patch Changes
+
+-   [#2606](https://github.com/equinor/fusion-framework/pull/2606) [`00fb17d`](https://github.com/equinor/fusion-framework/commit/00fb17d9e753462a7acf6a34281a50194b94db20) Thanks [@eikeland](https://github.com/eikeland)! - ### Modified Files
+
+    `AppLoader.tsx`
+
+    ### Changes
+
+    -   Added import for last operator from rxjs/operators.
+    -   Updated the initialize subscription to use the last operator.
+
 ## 10.2.3
 
 ### Patch Changes
