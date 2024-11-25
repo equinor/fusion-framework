@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Subscription } from 'rxjs';
+import { last } from 'rxjs/operators';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
@@ -52,39 +53,44 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
         /** make sure that initialize is canceled and disposed if current app changes  */
         subscription.add(
-            currentApp?.initialize().subscribe({
-                next: ({ manifest, script, config }) => {
-                    /** generate basename for application */
-                    const [basename] = window.location.pathname.match(
-                        /\/?apps\/[a-z|-]+(\/)?/g,
-                    ) ?? [''];
+            currentApp
+                ?.initialize()
+                .pipe(last())
+                .subscribe({
+                    next: ({ manifest, script, config }) => {
+                        /** generate basename for application */
+                        const [basename] = window.location.pathname.match(
+                            /\/?apps\/[a-z|-]+(\/)?/g,
+                        ) ?? [''];
 
-                    /** create a 'private' element for the application */
-                    const el = document.createElement('div');
-                    if (!ref.current) {
-                        throw Error('Missing application mounting point');
-                    }
+                        /** create a 'private' element for the application */
+                        const el = document.createElement('div');
+                        if (!ref.current) {
+                            throw Error('Missing application mounting point');
+                        }
 
-                    ref.current.appendChild(el);
+                        ref.current.appendChild(el);
 
-                    /** extract render callback function from javascript module */
-                    const render = script.renderApp ?? script.default;
+                        /** extract render callback function from javascript module */
+                        const render = script.renderApp ?? script.default;
 
-                    /** add application teardown to current render effect teardown */
-                    subscription.add(render(el, { fusion, env: { basename, config, manifest } }));
+                        /** add application teardown to current render effect teardown */
+                        subscription.add(
+                            render(el, { fusion, env: { basename, config, manifest } }),
+                        );
 
-                    /** remove app element when application unmounts */
-                    subscription.add(() => el.remove());
-                },
-                complete: () => {
-                    /** flag that application is no longer loading */
-                    setLoading(false);
-                },
-                error: (err) => {
-                    /** set error if initialization of application fails */
-                    setError(err);
-                },
-            }),
+                        /** remove app element when application unmounts */
+                        subscription.add(() => el.remove());
+                    },
+                    complete: () => {
+                        /** flag that application is no longer loading */
+                        setLoading(false);
+                    },
+                    error: (err) => {
+                        /** set error if initialization of application fails */
+                        setError(err);
+                    },
+                }),
         );
 
         /** teardown application when hook unmounts */
