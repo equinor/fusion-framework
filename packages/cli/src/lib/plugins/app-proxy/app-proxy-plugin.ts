@@ -5,7 +5,6 @@ import { AppManifest } from '@equinor/fusion-framework-app';
 import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
 import { ApiAppConfig } from '../../../schemas.js';
-import { join } from 'node:path';
 
 /**
  * Preserve token for executing proxy assets
@@ -151,27 +150,27 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
             if (!app) return;
 
             // serve app config if request matches the current app and version
-            const configPath = join(
+            const configPath = [
                 proxyPath,
                 app.configPath ?? `apps/${app.key}/builds/${app.version}/config`,
-            );
+            ].join('/');
             server.middlewares.use(configPath, async (_req, res) => {
                 res.setHeader('content-type', 'application/json');
                 res.end(JSON.stringify(await app.generateConfig()));
             });
 
             // serve app manifest if request matches the current app
-            const manifestPath = join(proxyPath, app.manifestPath ?? `apps/${app.key}`);
+            const manifestPath = [proxyPath, app.manifestPath ?? `apps/${app.key}`].join('/');
             server.middlewares.use(manifestPath, async (_req, res) => {
                 res.setHeader('content-type', 'application/json');
                 res.end(JSON.stringify(await app.generateManifest()));
             });
 
             // serve local bundles if request matches the current app and version
-            const bundlePath = join(
+            const bundlePath = [
                 proxyPath,
                 app.bundlePath ?? `bundles/apps/${app.key}/${app.version}`,
-            );
+            ].join('/');
             server.middlewares.use(async (req, _res, next) => {
                 if (req.url?.match(bundlePath)) {
                     // remove proxy path from url
