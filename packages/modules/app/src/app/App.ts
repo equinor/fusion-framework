@@ -252,40 +252,33 @@ export class App<
     //#region === streams ===
 
     get manifest$(): Observable<AppManifest> {
-        return this.#state.pipe(
-            map(({ manifest }) => manifest),
-            filterEmpty(),
-        );
+        return this.#state.select((state) => state.manifest).pipe(filterEmpty());
     }
 
     get config$(): Observable<AppConfig<TEnv>> {
-        return this.#state.pipe(
-            map(({ config }) => config as AppConfig<TEnv>),
-            filterEmpty(),
-        );
+        return this.#state.select((state) => state.config as AppConfig<TEnv>).pipe(filterEmpty());
     }
 
     get modules$(): Observable<AppScriptModule> {
-        return this.#state.pipe(
-            map(({ modules }) => modules),
-            filterEmpty(),
-        );
+        return this.#state.select((state) => state.modules).pipe(filterEmpty());
     }
 
     get instance$(): Observable<AppModulesInstance<TModules>> {
-        return this.#state.pipe(
-            map(({ instance }) => instance as AppModulesInstance<TModules>),
-            filterEmpty(),
-        );
+        return this.#state
+            .select((state) => state.instance as AppModulesInstance<TModules>)
+            .pipe(filterEmpty());
     }
 
     get settings$(): Observable<AppSettings> {
-        this.#state.next(actions.fetchSettings(this.appKey));
-        return this.#state.pipe(
-            map(({ settings }) => settings),
-            defaultIfEmpty(fallbackSettings),
-            filterEmpty(),
-        );
+        return new Observable<AppSettings>((subscriber) => {
+            this.#state.next(actions.fetchSettings(this.appKey));
+            subscriber.add(
+                this.#state
+                    .select((state) => state.settings)
+                    .pipe(filterEmpty(), defaultIfEmpty(fallbackSettings))
+                    .subscribe(subscriber),
+            );
+        });
     }
 
     //#endregion
