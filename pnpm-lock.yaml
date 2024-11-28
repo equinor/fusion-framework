@@ -546,6 +546,30 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
+  cookbooks/app-react-settings:
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.3.12
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.5.4
+        version: 5.6.3
+
   cookbooks/app-vanilla:
     devDependencies:
       '@equinor/fusion-framework-app':
@@ -12577,7 +12601,6 @@ snapshots:
   '@types/react-dom@18.3.1':
     dependencies:
       '@types/react': 18.3.12
-    optional: true
 
   '@types/react-router-dom@5.3.3':
     dependencies:
