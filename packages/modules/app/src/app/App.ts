@@ -17,7 +17,7 @@ import {
     firstValueFrom,
     lastValueFrom,
 } from 'rxjs';
-import { defaultIfEmpty, filter, map } from 'rxjs/operators';
+import { defaultIfEmpty, filter, map, switchMap } from 'rxjs/operators';
 
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
@@ -186,6 +186,28 @@ export interface IApp<
      * @returns An Promise that resolves the app settings.
      */
     updateSettingsAsync(settings: AppSettings): Promise<AppSettings>;
+
+    /**
+     * Updates a specific setting of the app.
+     * @param property The property to update.
+     * @param value The value to set.
+     * @returns An observable that emits the app settings.
+     */
+    updateSetting<T extends keyof AppSettings>(
+        property: T,
+        value: AppSettings[T],
+    ): Observable<AppSettings[T]>;
+
+    /**
+     * Updates a specific setting of the app asynchronously.
+     * @param property The property to update.
+     * @param value The value to set.
+     * @returns A promise that resolves to the AppSettings.
+     */
+    updateSettingAsync<T extends keyof AppSettings>(
+        property: T,
+        value: AppSettings[T],
+    ): Promise<AppSettings[T]>;
 
     /**
      * Gets the app manifest.
@@ -715,9 +737,25 @@ export class App<
     }
 
     public updateSettingsAsync(settings: AppSettings): Promise<AppSettings> {
-        // when allow_cache is true, use first emitted value, otherwise use last emitted value
-        const operator = lastValueFrom;
-        return operator(this.updateSettings(settings));
+        return lastValueFrom(this.updateSettings(settings));
+    }
+
+    public updateSetting<T extends keyof AppSettings>(
+        property: T,
+        value: AppSettings[T],
+    ): Observable<AppSettings[T]> {
+        return this.getSettings().pipe(
+            map((settings) => ({ ...settings, [property]: value })),
+            switchMap((settings) => this.updateSettings(settings)),
+            map((settings) => settings[property]),
+        );
+    }
+
+    public updateSettingAsync<T extends keyof AppSettings>(
+        property: T,
+        value: AppSettings[T],
+    ): Promise<AppSettings[T]> {
+        return lastValueFrom(this.updateSetting(property, value));
     }
 
     public getManifest(force_refresh = false): Observable<AppManifest> {
