@@ -700,8 +700,11 @@ export class App<
         const action = actions.updateSettings(settings);
 
         const updateActions$ = this.#state.action$.pipe(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
+            filter(
+                (a) =>
+                    actions.updateSettings.success.match(a) ||
+                    actions.updateSettings.failure.match(a),
+            ),
             filter((a) => action.meta.id === a.meta?.id),
         );
 
@@ -725,7 +728,7 @@ export class App<
                     }),
             );
 
-            this.#state.next(actions.updateSettings(settings));
+            this.#state.next(action);
         });
     }
 
