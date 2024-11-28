@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.2.5
+
+### Patch Changes
+
+-   [#2612](https://github.com/equinor/fusion-framework/pull/2612) [`1f9da67`](https://github.com/equinor/fusion-framework/commit/1f9da67df85f466763788039c9f0df67164eb391) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
+
+    -   Stopped using node:path join in app-proxy-plugin since it caused issues on windows
+
 ## 10.2.4
 
 ### Patch Changes
