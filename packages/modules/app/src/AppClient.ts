@@ -78,8 +78,11 @@ export class AppClient implements IAppClient {
     #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
     #config: Query<AppConfig, { appKey: string; tag?: string }>;
     #settings: Query<AppSettings, { appKey: string; settings?: AppSettings }>;
+    #client: IHttpClient;
 
     constructor(client: IHttpClient) {
+        this.#client = client;
+
         const expire = 1 * 60 * 1000;
         this.#manifest = new Query<AppManifest, { appKey: string }>({
             client: {
@@ -131,26 +134,17 @@ export class AppClient implements IAppClient {
             expire,
         });
 
-        this.#settings = new Query<AppSettings, { appKey: string; settings?: AppSettings }>({
+        this.#settings = new Query<AppSettings, { appKey: string }>({
             client: {
-                fn: ({ appKey, settings }) => {
-                    // is settings construct a push request
-                    const update = settings
-                        ? { method: 'PUT', body: JSON.stringify(settings) }
-                        : {};
-
-                    return client.json(`/persons/me/apps/${appKey}/settings`, {
+                fn: ({ appKey }) => {
+                    return client.json<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
                         headers: {
                             'Api-Version': '1.0',
-                        },
-                        ...update,
-                        selector: async (res: Response) => {
-                            return res.json();
                         },
                     });
                 },
             },
-            key: (args) => JSON.stringify(args),
+            key: (args) => args.appKey,
             expire,
         });
     }
@@ -216,20 +210,34 @@ export class AppClient implements IAppClient {
     }
 
     updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
-        return this.#settings.query(args).pipe(
-            queryValue,
-            catchError((err) => {
-                /** extract cause, since error will be a `QueryError` */
-                const { cause } = err;
-                if (cause instanceof AppSettingsError) {
-                    throw cause;
-                }
-                if (cause instanceof HttpResponseError) {
-                    throw AppSettingsError.fromHttpResponse(cause.response, { cause });
-                }
-                throw new AppSettingsError('unknown', 'failed to update app settings', { cause });
-            }),
-        );
+        const { appKey, settings } = args;
+        return new Observable<AppSettings>((observer) => {
+            this.#client
+                // execute PUT request to update settings
+                .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
+                    method: 'PUT',
+                    body: settings,
+                    headers: {
+                        'Api-Version': '1.0',
+                    },
+                })
+                .subscribe({
+                    next: (value) => {
+                        // update cache with new settings
+                        this.#settings.mutate(
+                            { appKey },
+                            {
+                                value,
+                                updated: Date.now(),
+                            },
+                        );
+                        // notify observer with new settings
+                        observer.next(value);
+                    },
+                    complete: () => observer.complete(),
+                    error: (err) => observer.error(err),
+                });
+        });
     }
 
     [Symbol.dispose]() {
