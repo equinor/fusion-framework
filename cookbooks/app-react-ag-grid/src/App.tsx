@@ -11,7 +11,6 @@ import { FiltersToolPanelModule } from '@ag-grid-enterprise/filter-tool-panel';
 import { MenuModule } from '@ag-grid-enterprise/menu';
 import { ExcelExportModule } from '@ag-grid-enterprise/excel-export';
 import { ClipboardModule } from '@ag-grid-enterprise/clipboard';
-import { RangeSelectionModule } from '@ag-grid-enterprise/range-selection';
 
 // Import custom table configuration
 import { defaultColDef, sideBar } from './table';
@@ -23,7 +22,6 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     MenuModule,
     ExcelExportModule,
-    RangeSelectionModule,
     ClipboardModule,
 ]);
 
@@ -91,9 +89,8 @@ export const App = (): JSX.Element => {
                     defaultColDef={defaultColDef}
                     sideBar={sideBar}
                     rowSelection={'multiple'}
-                    suppressRowClickSelection={true}
-                    enableRangeSelection={true}
                     copyHeadersToClipboard={true}
+                    cellSelection={true}
                     allowContextMenuWithControlKey={true}
                     onGridReady={onGridReady}
                 />
