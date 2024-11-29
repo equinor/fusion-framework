@@ -34,15 +34,13 @@ import AgGridReact from '@ag-grid-community/react';
 import useStyles from '@equinor/fusion-react-ag-grid-styles';
 
 const MyComponent = (): JSX.Element => {
-    const styles = useStyles();
+    useStyles();
 
     // aggrid effects...
 
     return (
-        <div className={styles.root}>
-            <div className="ag-theme-alpine-fusion">
-                <AgGridReact {...agGridProps} />
-            </div>
+        <div className="ag-theme-alpine-fusion">
+            <AgGridReact {...agGridProps} />
         </div>
     );
 };
