@@ -34,7 +34,7 @@ export interface AppSettingsPluginOptions {
  * - Responds with the current application settings in JSON format.
  */
 export function appSettingsPlugin(options: AppSettingsPluginOptions): Plugin {
-    const appSettings = options.defaultSettings ?? {};
+    let appSettings = options.defaultSettings ?? {};
     const pathMatch = new RegExp(options.match ?? '/persons/me/apps/.*/settings');
     return {
         name: 'app-settings',
@@ -45,8 +45,7 @@ export function appSettingsPlugin(options: AppSettingsPluginOptions): Plugin {
                 }
 
                 if (req.method === 'PUT') {
-                    const body = await parseJsonFromRequest(req);
-                    Object.assign(appSettings, body);
+                    appSettings = await parseJsonFromRequest(req);
                 }
 
                 res.setHeader('content-type', 'application/json');
