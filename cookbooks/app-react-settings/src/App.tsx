@@ -1,8 +1,10 @@
+import { useCallback, useState } from 'react';
 import { useAppSettings, useAppSetting } from '@equinor/fusion-framework-react-app/settings';
 
 type MyAppSettings = {
     theme: 'none' | 'light' | 'dark';
     size: 'small' | 'medium' | 'large';
+    fancy: boolean;
 };
 
 declare module '@equinor/fusion-framework-react-app/settings' {
@@ -10,10 +12,20 @@ declare module '@equinor/fusion-framework-react-app/settings' {
 }
 
 export const App = () => {
-    const { setting: theme, setSetting: setTheme } = useAppSetting('theme');
-    const { setting: size, setSetting: setSize } = useAppSetting('size', 'medium');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [settingsHooks] = useState(() => ({
+        onLoading: setIsLoading,
+        onUpdating: setIsUpdating,
+    }));
 
-    const { settings } = useAppSettings();
+    const [theme, setTheme] = useAppSetting('theme', 'none', settingsHooks);
+    const [size, setSize] = useAppSetting('size', 'medium', settingsHooks);
+    const [fancy, setFancy] = useAppSetting('fancy', false);
+
+    const onFancyChange = useCallback(() => setFancy((isFancy) => !isFancy), [setFancy]);
+
+    const [settings] = useAppSettings();
 
     return (
         <div
@@ -23,6 +35,7 @@ export const App = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+                fontFamily: fancy ? 'cursive' : 'sans-serif',
                 fontSize: size === 'small' ? '0.6rem' : size === 'large' ? '2rem' : '1rem',
                 background:
                     theme === 'light' ? '#f0f0f0' : theme === 'dark' ? '#343434' : '#f97fcc',
@@ -39,6 +52,7 @@ export const App = () => {
                 <section style={{ display: 'grid', gridTemplateColumns: '3em auto', gap: '1rem' }}>
                     <span>Theme:</span>
                     <select
+                        disabled={isLoading || isUpdating}
                         value={theme}
                         onChange={(e) => setTheme(e.currentTarget.value as MyAppSettings['theme'])}
                     >
@@ -50,6 +64,7 @@ export const App = () => {
                 <section style={{ display: 'grid', gridTemplateColumns: '3em auto', gap: '1rem' }}>
                     <span>Size:</span>
                     <select
+                        disabled={isLoading || isUpdating}
                         value={size}
                         onChange={(e) => setSize(e.currentTarget.value as MyAppSettings['size'])}
                     >
@@ -57,6 +72,10 @@ export const App = () => {
                         <option value="medium">Medium</option>
                         <option value="large">Large</option>
                     </select>
+                </section>
+                <section style={{ display: 'grid', gridTemplateColumns: '3em auto', gap: '1rem' }}>
+                    <span>Size:</span>
+                    <input type="checkbox" checked={fancy} onChange={onFancyChange} />
                 </section>
                 <div>
                     <span>App settings:</span>
