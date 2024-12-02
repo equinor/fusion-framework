@@ -19,18 +19,17 @@ useAppSetting<{notDefined: string}>('notDefined', 'not registered');
 
 ```tsx
 const MyApp = () => {
-  const { 
-    setting: theme, 
-    setSetting: setTheme 
-  } = useAppSetting('theme', 'default');
-  
-  const { 
-    setting: mode, 
-    setSetting: setMode 
-  } = useAppSetting('mode', 'simple');
-  
+  const [ theme, setTheme ] = useAppSetting('theme', 'default');
+  const [ mode, setMode ] = useAppSetting('mode', 'simple');
+
+  // using the setter as a callback
+  const toggleMode = useCallback(() => {
+    setMode(mode => mode === 'simple' ? 'advanced' : 'simple')
+  }, [setMode]);
+
   return (
     <MyThemeProvider theme={theme} onChange={setTheme}>
+      <Button onClick={toggleMode}>Toggle mode</Button>
       {mode === 'simple' ? <SimpleView /> : <AdvancedView />}
     </MyThemeProvider>
   );
@@ -41,23 +40,17 @@ const MyApp = () => {
 
 > [!WARNING]
 > **Using the `setSettings` must include all settings, not just the ones you want to change.**
- 
+> prefer using `setSettings` with a callback function.
+
 > [!IMPORTANT]
 > This is not recommended for large apps, as it will cause re-renders on every setting change.
 
 ```tsx
 const MyApp = () => {
-  const { settings, setSettings } = useAppSettings();
-  
-  const updateSettings = useCallback(
-    (newSettings: Partial<AppSettings>) => {
-      setSettings({ ...settings, ...newSettings })
-    }, 
-    [settings, setSettings]
-  ); 
+  const [ settings, setSettings ] = useAppSettings();
 
   const updateTheme = useCallback(
-    (theme: AppSettings['theme']) => updateSettings({theme}),
+    (theme: AppSettings['theme']) => setSettings(settings => ({...settings, theme})),
     [updateSettings]
   );
       
@@ -67,4 +60,54 @@ const MyApp = () => {
     </MyThemeProvider>
   );
 }
+```
+
+### Using hook callbacks
+
+The `useAppSettings` and `useAppSetting` hooks can take callbacks for loading, updating, updated and error handling.
+
+> [!NOTE]
+> These callbacks are optional and can be used to show loading spinners, error dialogs or other UI elements.
+>
+> We have chosen to use callbacks as parameters to the hooks, instead of returning them, to avoid unnecessary re-renders.
+
+> [!IMPORTANT]
+> Hooks must be memoized to avoid re-renders on every render. Provided callbacks are not internally memoized, to allow consumers to control implementation of these callbacks.
+
+```tsx
+
+// state and callback for loading settings
+const [ loading, setLoading ] = useState(false);
+
+// state and callback for updating settings
+const [ updating, setUpdating ] = useState(false);
+
+// state and callback for error handling
+const [ error, setError ] = useState<Error | null>(null);
+
+// callback for when settings are updated
+const onUpdated = useCallback(() => {
+  showSnackbar('Settings updated');
+}, [showSnackbar]);
+
+const [ settings, setSettings ] = useAppSettings(defaultSettings, {
+  onLoading: setLoading,
+  onUpdating: setUpdating,
+  onError: setError,
+});
+
+const updateSettings = useCallback(() => {
+  setSettings(/* new settings */);
+}, [setSettings, onUpdated]);
+
+return (
+  <MyThemeProvider theme={settings.theme}>
+    {loading && <Loading />}
+    {updating && <Updating />}
+    {error && <ErrorDialog error={error} />}
+    <Button onClick={updateSettings} disabled={loading||updating}>
+      Update settings
+    </Button>
+  </MyThemeProvider>
+);
 ```

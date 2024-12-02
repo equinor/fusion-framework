@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Observable } from 'rxjs';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { type AppSettings } from '@equinor/fusion-framework-module-app';
 
@@ -7,6 +7,9 @@ import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus';
+
+type UpdateSettingsFunction<T, O = T> = (currentSettings: T | undefined) => O;
+
 /**
  * Custom hook to manage application settings.
  *
@@ -49,20 +52,33 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
         onError?: (error: Error | null) => void;
         onUpdated?: () => void;
     },
-): [TSettings, (settings: TSettings) => void] => {
+): [TSettings, (settings: TSettings | UpdateSettingsFunction<TSettings>) => void] => {
     const { onError, onUpdated, onLoading, onUpdating } = hooks ?? {};
     const { currentApp = null } = useCurrentApp();
 
-    const { value: settings } = useObservableState(
-        useMemo(() => currentApp?.settings$ as Observable<TSettings>, [currentApp]),
-        { initial: defaultValue },
-    );
+    const subject = useMemo(() => {
+        return new BehaviorSubject<TSettings>(defaultValue ?? ({} as TSettings));
+        // Only create a new subject when the current app changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentApp]);
+
+    // connect the subject to the current app settings stream
+    useLayoutEffect(() => {
+        const sub = (currentApp?.settings$ as Observable<TSettings>).subscribe(subject);
+        return () => sub?.unsubscribe();
+    }, [currentApp, subject]);
+
+    // subscribe to the subject to get the latest settings
+    const { value: settings } = useObservableState(subject, { initial: defaultValue });
 
     const setSettings = useCallback(
-        (settings: TSettings) => {
+        (update: TSettings | UpdateSettingsFunction<TSettings>) => {
             if (!currentApp) {
                 return onError?.(new Error('App is not available'));
             }
+
+            // resolve settings with the provided value or function
+            const settings = typeof update === 'function' ? update(subject.value) : update;
 
             currentApp.updateSettings(settings).subscribe({
                 next: () => {
@@ -72,7 +88,7 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
                 error: onError,
             });
         },
-        [currentApp, onError, onUpdated],
+        [currentApp, subject, onError, onUpdated],
     );
 
     useAppSettingsStatus(currentApp, { onLoading, onUpdating });

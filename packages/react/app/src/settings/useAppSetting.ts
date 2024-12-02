@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { map, Observable } from 'rxjs';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { BehaviorSubject, map } from 'rxjs';
 
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
@@ -8,6 +8,8 @@ import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSetti
 import type { AppSettings } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
+type UpdateSettingFunction<T, O = T> = (currentSetting: T | undefined) => O;
+
 /**
  * Custom hook to manage application settings.
  *
@@ -15,7 +17,7 @@ import { useObservableState } from '@equinor/fusion-observable/react';
  * @template TProp - The type of the property key in the settings object. Defaults to `keyof TSettings`.
  *
  * @param {TProp} prop - The property key in the settings object to manage.
- * @param {TSettings[TProp]} [defaultSettings] - The default value for the setting.
+ * @param {TSettings[TProp]} [defaultValue] - The default value for the setting.
  * @param hooks - Optional hooks to handle the status changes and errors.
  *
  * @returns {Array} An array containing:
@@ -47,40 +49,55 @@ export const useAppSetting = <
     TProp extends keyof TSettings = keyof TSettings,
 >(
     prop: TProp,
-    defaultSettings?: TSettings[TProp],
+    defaultValue?: TSettings[TProp],
     hooks?: AppSettingsStatusHooks & {
         onError?: (error: Error | null) => void;
         onUpdated?: () => void;
     },
-): [TSettings[TProp] | undefined, (settings: TSettings[TProp]) => void] => {
+): [
+    TSettings[TProp] | undefined,
+    (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => void,
+] => {
     const [{ onError, onUpdated, onLoading, onUpdating }] = useState(() => hooks ?? {});
 
     const { currentApp = null } = useCurrentApp();
 
+    // create a subject to manage the setting value
+    const subject = useMemo(() => {
+        return new BehaviorSubject<TSettings[TProp] | undefined>(defaultValue);
+        // Only create a new subject when the current app changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentApp]);
+
+    useLayoutEffect(() => {
+        const sub = currentApp?.settings$
+            .pipe(map((settings) => (settings as TSettings)[prop]))
+            .subscribe(subject);
+        return () => sub?.unsubscribe();
+    }, [currentApp, subject, prop]);
+
     // subscribe to the setting value
-    const { value: setting } = useObservableState(
-        useMemo(
-            () =>
-                currentApp?.settings$.pipe(
-                    map((settings) => (settings as TSettings)[prop]),
-                ) as Observable<TSettings[TProp]>,
-            [currentApp, prop],
-        ),
-        { initial: defaultSettings },
-    );
+    const { value: setting } = useObservableState(subject);
 
     // update function
     const setSetting = useCallback(
-        (value: TSettings[TProp]) => {
+        (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
             if (!currentApp) {
                 return onError?.(new Error('App is not available'));
             }
+
+            // resolve setting value with the provided value or function
+            const value =
+                typeof update === 'function'
+                    ? (update as UpdateSettingFunction<TSettings[TProp]>)(subject.value)
+                    : update;
+
             currentApp.updateSetting<TSettings, TProp>(prop, value).subscribe({
                 error: onError,
                 complete: onUpdated,
             });
         },
-        [currentApp, prop, onError, onUpdated],
+        [currentApp, subject, prop, onError, onUpdated],
     );
 
     // status hooks
