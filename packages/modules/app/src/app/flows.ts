@@ -1,14 +1,5 @@
 import { from, of, concat } from 'rxjs';
-import {
-    catchError,
-    concatMap,
-    filter,
-    last,
-    map,
-    share,
-    switchMap,
-    withLatestFrom,
-} from 'rxjs/operators';
+import { catchError, concatMap, filter, last, map, share, switchMap } from 'rxjs/operators';
 
 import { actions } from './actions';
 
@@ -116,8 +107,8 @@ export const handleFetchSettings =
             // only handle fetch settings request actions
             filter(actions.fetchSettings.match),
             // when request is received, abort any ongoing request and start new
-            switchMap((action) => {
-                const { payload: appKey } = action;
+            switchMap(({ payload }) => {
+                const { appKey } = payload;
 
                 // fetch settings from provider
                 const subject = from(provider.getAppSettings(appKey)).pipe(
@@ -152,24 +143,25 @@ export const handleFetchSettings =
  */
 export const handleUpdateSettings =
     (provider: AppModuleProvider): Flow<Actions, AppBundleState> =>
-    (action$, state$) =>
-        action$.pipe(
-            // only handle update settings request actions
-            filter(actions.updateSettings.match),
-            withLatestFrom(state$),
-            // when request is received, abort any ongoing request and start new
-            concatMap(([action, state]) => {
-                const { payload, meta } = action;
-                const { appKey } = state;
-
-                // set settings in provider
-                return from(provider.updateAppSettings(appKey, payload.settings)).pipe(
-                    // allow multiple subscriptions
-                    map((settings) => actions.updateSettings.success(settings, meta)),
-                    catchError((err) => of(actions.updateSettings.failure(err, meta))),
+    (action$) => {
+        return action$.pipe(filter(actions.updateSettings.match)).pipe(
+            switchMap(({ payload }) => {
+                const { appKey, settings } = payload;
+                return provider.updateAppSettings(appKey, settings).pipe(
+                    // take the last value
+                    last(),
+                    // request updating of settings and dispatch success action
+                    concatMap((updatedSettings) =>
+                        from([
+                            actions.setSettings(updatedSettings),
+                            actions.updateSettings.success(updatedSettings),
+                        ]),
+                    ),
+                    catchError((err) => of(actions.updateSettings.failure(err))),
                 );
             }),
         );
+    };
 
 /**
  * Handles the import application flow.

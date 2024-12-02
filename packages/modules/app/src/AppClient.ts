@@ -1,4 +1,4 @@
-import { catchError, map, Observable, ObservableInput } from 'rxjs';
+import { catchError, map, Observable, ObservableInput, tap } from 'rxjs';
 
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
@@ -211,7 +211,7 @@ export class AppClient implements IAppClient {
 
     updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
         const { appKey, settings } = args;
-        return new Observable<AppSettings>((observer) => {
+        return (
             this.#client
                 // execute PUT request to update settings
                 .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
@@ -221,8 +221,8 @@ export class AppClient implements IAppClient {
                         'Api-Version': '1.0',
                     },
                 })
-                .subscribe({
-                    next: (value) => {
+                .pipe(
+                    tap((value) => {
                         // update cache with new settings
                         this.#settings.mutate(
                             { appKey },
@@ -231,13 +231,9 @@ export class AppClient implements IAppClient {
                                 updated: Date.now(),
                             },
                         );
-                        // notify observer with new settings
-                        observer.next(value);
-                    },
-                    complete: () => observer.complete(),
-                    error: (err) => observer.error(err),
-                });
-        });
+                    }),
+                )
+        );
     }
 
     [Symbol.dispose]() {

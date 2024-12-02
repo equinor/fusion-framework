@@ -17,13 +17,15 @@ import {
     firstValueFrom,
     lastValueFrom,
 } from 'rxjs';
-import { defaultIfEmpty, filter, map, switchMap } from 'rxjs/operators';
+import { defaultIfEmpty, filter, last, map, switchMap } from 'rxjs/operators';
 
 import { EventModule } from '@equinor/fusion-framework-module-event';
 import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
 import { actions, Actions } from './actions';
 import { AppBundleState, AppBundleStateInitial } from './types';
+
+import isEqual from 'fast-deep-equal';
 
 import './events';
 
@@ -68,9 +70,15 @@ export interface IApp<
 
     /**
      * Observable that emits the settings of the app.
-     * @returns An Observable that emits the app setttings.
+     * @returns An Observable that emits the app settings.
      */
     get settings$(): Observable<AppSettings>;
+
+    /**
+     * Observable that emits the status of the app.
+     * @returns An Observable that emits the app status.
+     */
+    get status$(): Observable<AppBundleState['status']>;
 
     /**
      * Gets the current state of the Application.
@@ -178,14 +186,14 @@ export interface IApp<
      * @param settings The settings object to save.
      * @returns An observable that emits the app settings.
      */
-    updateSettings(settings: AppSettings): Observable<AppSettings>;
+    updateSettings<T extends AppSettings>(settings: T): Observable<T>;
 
     /**
      * Sets the app settings asyncronously.
      * @param settings The settings object to save.
      * @returns An Promise that resolves the app settings.
      */
-    updateSettingsAsync(settings: AppSettings): Promise<AppSettings>;
+    updateSettingsAsync<T extends AppSettings>(settings: T): Promise<T>;
 
     /**
      * Updates a specific setting of the app.
@@ -193,10 +201,10 @@ export interface IApp<
      * @param value The value to set.
      * @returns An observable that emits the app settings.
      */
-    updateSetting<T extends keyof AppSettings>(
-        property: T,
-        value: AppSettings[T],
-    ): Observable<AppSettings[T]>;
+    updateSetting<T extends AppSettings, P extends keyof T>(
+        property: P,
+        value: T[P],
+    ): Observable<T[P]>;
 
     /**
      * Updates a specific setting of the app asynchronously.
@@ -204,10 +212,10 @@ export interface IApp<
      * @param value The value to set.
      * @returns A promise that resolves to the AppSettings.
      */
-    updateSettingAsync<T extends keyof AppSettings>(
-        property: T,
-        value: AppSettings[T],
-    ): Promise<AppSettings[T]>;
+    updateSettingAsync<T extends AppSettings, P extends keyof T>(
+        property: P,
+        value: T[P],
+    ): Promise<T[P]>;
 
     /**
      * Gets the app manifest.
@@ -256,7 +264,9 @@ export class App<
     }
 
     get config$(): Observable<AppConfig<TEnv>> {
-        return this.#state.select((state) => state.config as AppConfig<TEnv>).pipe(filterEmpty());
+        return this.#state
+            .select((state) => state.config as AppConfig<TEnv>, isEqual)
+            .pipe(filterEmpty());
     }
 
     get modules$(): Observable<AppScriptModule> {
@@ -274,11 +284,15 @@ export class App<
             this.#state.next(actions.fetchSettings(this.appKey));
             subscriber.add(
                 this.#state
-                    .select((state) => state.settings)
+                    .select((state) => state.settings, isEqual)
                     .pipe(filterEmpty(), defaultIfEmpty(fallbackSettings))
                     .subscribe(subscriber),
             );
         });
+    }
+
+    get status$(): Observable<AppBundleState['status']> {
+        return this.#state.select((state) => state.status);
     }
 
     //#endregion
@@ -644,11 +658,11 @@ export class App<
         return operator(this.getConfig(!allow_cache));
     }
 
-    public getSettings(force_refresh = false): Observable<AppSettings> {
-        return new Observable((subscriber) => {
+    public getSettings<T extends AppSettings>(force_refresh = false): Observable<T> {
+        return new Observable<T>((subscriber) => {
             if (this.#state.value.settings) {
                 // emit current settings to the subscriber
-                subscriber.next(this.#state.value.settings);
+                subscriber.next(this.#state.value.settings as T);
                 if (!force_refresh) {
                     // since we have the settings and no force refresh, complete the stream
                     return subscriber.complete();
@@ -659,7 +673,7 @@ export class App<
             subscriber.add(
                 // monitor changes to state changes of settings and emit to subscriber
                 this.#state.addEffect('set_settings', ({ payload }) => {
-                    subscriber.next(payload);
+                    subscriber.next(payload as T);
                 }),
             );
 
@@ -668,7 +682,7 @@ export class App<
                 // monitor success of fetching settings and emit to subscriber
                 this.#state.addEffect('fetch_settings::success', ({ payload }) => {
                     // application settings loaded, emit to subscriber and complete the stream
-                    subscriber.next(payload);
+                    subscriber.next(payload as T);
                     subscriber.complete();
                 }),
             );
@@ -690,68 +704,75 @@ export class App<
         });
     }
 
-    public getSettingsAsync(allow_cache = true): Promise<AppSettings> {
+    public getSettingsAsync<T extends AppSettings>(allow_cache = true): Promise<T> {
         // when allow_cache is true, use first emitted value, otherwise use last emitted value
         const operator = allow_cache ? firstValueFrom : lastValueFrom;
-        return operator(this.getSettings(!allow_cache));
+        return operator(this.getSettings<T>(!allow_cache));
     }
 
-    public updateSettings(settings: AppSettings): Observable<AppSettings> {
-        const action = actions.updateSettings(settings);
-
-        const updateActions$ = this.#state.action$.pipe(
-            filter(
-                (a) =>
-                    actions.updateSettings.success.match(a) ||
-                    actions.updateSettings.failure.match(a),
-            ),
-            filter((a) => action.meta.id === a.meta?.id),
-        );
-
+    public updateSettings<T extends AppSettings>(settings: T): Observable<T> {
         return new Observable((subscriber) => {
             subscriber.add(
-                updateActions$
-                    .pipe(filter((a) => a.type === actions.updateSettings.success.type))
-                    .subscribe(subscriber),
+                // monitor failure of updating settings and emit error to subscriber
+                this.#state.addEffect('update_settings::failure', ({ payload }) => {
+                    // request to reset settings to source state
+                    this.#state.next(actions.fetchSettings(this.appKey));
+
+                    // application settings failed to save, emit error and complete the stream
+                    subscriber.error(
+                        Error('failed to update application settings', {
+                            cause: payload,
+                        }),
+                    );
+                }),
             );
 
             subscriber.add(
-                updateActions$
-                    .pipe(filter((a) => a.type === actions.updateSettings.failure.type))
-                    .subscribe(({ payload }) => {
-                        // application settings failed to save, emit error and complete the stream
-                        subscriber.error(
-                            Error('failed to load application settings', {
-                                cause: payload,
-                            }),
-                        );
-                    }),
+                // monitor success of updating settings and emit to subscriber
+                this.#state.addEffect('update_settings::success', ({ payload }) => {
+                    subscriber.next(payload as T);
+                    subscriber.complete();
+                }),
             );
 
-            this.#state.next(action);
+            // optimistic update of settings
+            this.#state.next(actions.setSettings(settings));
+
+            // request to update settings
+            this.#state.next(actions.updateSettings(this.appKey, settings));
         });
     }
 
-    public updateSettingsAsync(settings: AppSettings): Promise<AppSettings> {
+    public updateSettingsAsync<T extends AppSettings>(settings: T): Promise<T> {
         return lastValueFrom(this.updateSettings(settings));
     }
 
-    public updateSetting<T extends keyof AppSettings>(
-        property: T,
-        value: AppSettings[T],
-    ): Observable<AppSettings[T]> {
-        return this.getSettings().pipe(
+    public updateSetting<T extends AppSettings, P extends keyof T>(
+        property: P,
+        value: T[P],
+    ): Observable<T[P]> {
+        const currentSettings$ =
+            this.#state.value.settings === undefined
+                ? // if settings are not loaded, fetch settings
+                  this.getSettings().pipe(last())
+                : // if settings are loaded, use current settings
+                  of(this.#state.value.settings);
+
+        return currentSettings$.pipe(
+            // merge current settings with new value
             map((settings) => ({ ...settings, [property]: value })),
-            switchMap((settings) => this.updateSettings(settings)),
-            map((settings) => settings[property]),
+            // update settings
+            switchMap((settings) => this.updateSettings<T>(settings as T)),
+            // return the updated property
+            map((settings) => settings[property] as T[P]),
         );
     }
 
-    public updateSettingAsync<T extends keyof AppSettings>(
-        property: T,
-        value: AppSettings[T],
-    ): Promise<AppSettings[T]> {
-        return lastValueFrom(this.updateSetting(property, value));
+    public updateSettingAsync<T extends AppSettings, P extends keyof T>(
+        property: P,
+        value: T[P],
+    ): Promise<T[P]> {
+        return lastValueFrom(this.updateSetting<T, P>(property, value));
     }
 
     public getManifest(force_refresh = false): Observable<AppManifest> {
