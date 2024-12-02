@@ -75,6 +75,12 @@ The `useAppSettings` and `useAppSetting` hooks can take callbacks for loading, u
 >
 > We have chosen to use callbacks as parameters to the hooks, instead of returning them, to avoid unnecessary re-renders.
 
+> [!NOTE]
+> `onUpdating` and `onLoading` refers to the global state of the settings, not the individual settings. This means that if you have multiple settings that are being updated, the `onUpdating` and `onLoading` will be true until all settings are updated.
+> 
+> Good practice is to disable UI elements that can trigger settings updates when `onUpdating` or `onLoading` is true.
+
+
 > [!IMPORTANT]
 > Hooks must be memoized to avoid re-renders on every render. Provided callbacks are not internally memoized, to allow consumers to control implementation of these callbacks.
 
