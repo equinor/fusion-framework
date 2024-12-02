@@ -100,7 +100,7 @@ export class QueryCache<TType, TArgs> {
         record: Pick<QueryCacheRecord<TType, TArgs>, 'value' | 'args' | 'transaction'>,
     ): void {
         const { args, transaction, value } = record;
-        this.#state.next(actions.set(key, { args, transaction, value }));
+        this.#state.next(actions.insert(key, { args, transaction, value }));
     }
 
     /**
@@ -137,7 +137,7 @@ export class QueryCache<TType, TArgs> {
     public mutate(
         key: string,
         changes: QueryCacheMutation<TType> | ((current?: TType) => QueryCacheMutation<TType>),
-    ): void {
+    ): VoidFunction {
         const current = key in this.#state.value ? this.#state.value[key] : undefined;
 
         if (!current) {
@@ -145,6 +145,7 @@ export class QueryCache<TType, TArgs> {
         }
         const next = typeof changes === 'function' ? changes(current?.value) : changes;
         this.#state.next(actions.mutate(key, next, current));
+        return () => this.#state.next(actions.set(key, current));
     }
 
     /**
