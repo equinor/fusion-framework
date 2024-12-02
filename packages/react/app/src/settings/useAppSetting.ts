@@ -1,92 +1,112 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useMemo } from 'react';
-import { useObservableState } from '@equinor/fusion-observable/react';
-import { EMPTY, from, lastValueFrom, type Observable } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { BehaviorSubject, map } from 'rxjs';
+
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
-import type { DotPath, DotPathType } from './dot-path';
-import { type AppSettings } from '@equinor/fusion-framework-module-app';
 
-function getByDotPath<T extends Record<string, any>>(
-    obj: T,
-    path: DotPath<T>,
-): DotPathType<T, string> {
-    return path.split('.').reduce((acc, part) => acc && acc[part], obj) as DotPathType<T, string>;
-}
+import { useAppSettingsStatus, type AppSettingsStatusHooks } from './useAppSettingsStatus';
 
-function setByDotPath<T extends Record<string, any>, TProp extends DotPath<T>>(
-    obj: T,
-    path: TProp,
-    value: DotPathType<T, TProp>,
-): T {
-    // Split the property path into individual parts
-    const props = typeof path === 'string' ? path.split('.') : path;
+import type { AppSettings } from '@equinor/fusion-framework-module-app';
+import { useObservableState } from '@equinor/fusion-observable/react';
 
-    // Get the first property in the path
-    const prop = props.shift();
-
-    // If there is a property to process
-    if (prop) {
-        // Create the nested object if it doesn't exist
-        if (!obj[prop]) {
-            (obj as any)[prop] = {};
-        }
-
-        // If there are more properties in the path, recurse
-        props.length
-            ? setByDotPath(obj[prop] as Record<string, unknown>, props.join('.'), value)
-            : Object.assign(obj, { [prop]: value });
-    }
-
-    // Return the modified object
-    return obj as T;
-}
+type UpdateSettingFunction<T, O = T> = (currentSetting: T | undefined) => O;
 
 /**
- * Hook for handling a users app settings
- * @returns {settings, updateSettings} Methods for getting and setting settings.
+ * Custom hook to manage application settings.
+ *
+ * @template TSettings - The type of the settings object. Defaults to `AppSettings`.
+ * @template TProp - The type of the property key in the settings object. Defaults to `keyof TSettings`.
+ *
+ * @param {TProp} prop - The property key in the settings object to manage.
+ * @param {TSettings[TProp]} [defaultValue] - The default value for the setting.
+ * @param hooks - Optional hooks to handle the status changes and errors.
+ *
+ * @returns {Array} An array containing:
+ * - `setting`: The current setting value or undefined.
+ * - `setSetting`: A function to update the setting.
+ *
+ * @example
+ * const { setting, setSetting } = useAppSetting('theme');
+ *
+ * @example
+ * // with default value
+ * const { setting, setSetting } = useAppSetting('theme', 'dark');
+ *
+ * @example
+ * // with hooks
+ * const [isLoading, setIsLoading] = useState(false);
+ * const [isUpdating, setIsUpdating] = useState(false);
+ * const [error, setError] = useState<Error | null>(null);
+ *
+ * const { setting, setSetting } = useAppSetting('theme', 'dark', {
+ *    onLoading: setIsLoading,
+ *    onUpdating: setIsUpdating,
+ *    onError: setError,
+ *    onUpdated: useCallback(() => console.log('Settings updated'), [])
+ * });
  */
 export const useAppSetting = <
-    TSettings extends Record<string, any> = AppSettings,
-    TProp extends DotPath<TSettings> = TSettings[keyof TSettings],
+    TSettings extends Record<string, unknown> = AppSettings,
+    TProp extends keyof TSettings = keyof TSettings,
 >(
     prop: TProp,
-): {
-    setting: DotPathType<TSettings, TProp> | undefined;
-    updateSettings: (value: DotPathType<TSettings, TProp>) => void;
-} => {
-    const { currentApp } = useCurrentApp();
+    defaultValue?: TSettings[TProp],
+    hooks?: AppSettingsStatusHooks & {
+        onError?: (error: Error | null) => void;
+        onUpdated?: () => void;
+    },
+): [
+    TSettings[TProp] | undefined,
+    (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => void,
+] => {
+    const [{ onError, onUpdated, onLoading, onUpdating }] = useState(() => hooks ?? {});
 
-    const selector = useMemo(() => {
-        return map((settings: TSettings) => getByDotPath(settings, prop));
-    }, [prop]);
+    const { currentApp = null } = useCurrentApp();
 
-    const { value: setting } = useObservableState<DotPathType<TSettings, TProp>>(
-        useMemo(
-            () => (currentApp?.settings$ as Observable<TSettings>).pipe(selector) || EMPTY,
-            [currentApp, selector],
-        ),
-    );
+    // create a subject to manage the setting value
+    const subject = useMemo(() => {
+        return new BehaviorSubject<TSettings[TProp] | undefined>(defaultValue);
+        // Only create a new subject when the current app changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentApp]);
 
-    const updateSettings = useCallback(
-        async (value: DotPathType<TSettings, TProp>) => {
-            const newSettings = await lastValueFrom(
-                from(value).pipe(
-                    withLatestFrom(currentApp?.settings$ || EMPTY),
-                    map(([value, settings]) => {
-                        return setByDotPath(settings, prop, value as DotPathType<TSettings, TProp>);
-                    }),
-                ),
-            );
-            currentApp?.updateSettings(newSettings);
+    useLayoutEffect(() => {
+        const sub = currentApp?.settings$
+            .pipe(map((settings) => (settings as TSettings)[prop]))
+            .subscribe(subject);
+        return () => sub?.unsubscribe();
+    }, [currentApp, subject, prop]);
+
+    // subscribe to the setting value
+    const { value: setting } = useObservableState(subject);
+
+    // update function
+    const setSetting = useCallback(
+        (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
+            if (!currentApp) {
+                return onError?.(new Error('App is not available'));
+            }
+
+            // resolve setting value with the provided value or function
+            const value =
+                typeof update === 'function'
+                    ? (update as UpdateSettingFunction<TSettings[TProp]>)(subject.value)
+                    : update;
+
+            currentApp.updateSetting<TSettings, TProp>(prop, value).subscribe({
+                error: onError,
+                complete: onUpdated,
+            });
         },
-        [currentApp, prop],
+        [currentApp, subject, prop, onError, onUpdated],
     );
 
-    return {
-        setting,
-        updateSettings,
-    };
+    // status hooks
+    useAppSettingsStatus(currentApp, {
+        onLoading,
+        onUpdating,
+    });
+
+    return [setting, setSetting];
 };
 
 export default useAppSetting;

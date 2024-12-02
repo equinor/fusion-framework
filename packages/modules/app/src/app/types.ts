@@ -1,3 +1,4 @@
+import { ActionBaseType } from '@equinor/fusion-observable';
 import type {
     AppManifest,
     AppConfig,
@@ -6,6 +7,7 @@ import type {
     ConfigEnvironment,
     AppSettings,
 } from '../types';
+import { Actions } from './actions';
 
 /**
  * Represents the state of an application bundle.
@@ -27,7 +29,7 @@ export type AppBundleState<
     TModules = any,
 > = {
     appKey: string;
-    status: Set<string>;
+    status: Set<ActionBaseType<Actions>>;
     manifest?: AppManifest;
     config?: AppConfig<TConfig>;
     settings?: AppSettings;

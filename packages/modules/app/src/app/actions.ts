@@ -11,7 +11,6 @@ import type {
     AppScriptModule,
     AppSettings,
 } from '../types';
-import { v4 as uuid } from 'uuid';
 
 const createActions = () => ({
     /** Manifest loading */
@@ -39,21 +38,32 @@ const createActions = () => ({
         (error: unknown) => ({ payload: error }),
     ),
     /** Settings loading */
-    setSettings: createAction('set_settings', (settings: AppSettings) => ({ payload: settings })),
+    setSettings: createAction('set_settings', (settings?: AppSettings) => ({
+        payload: settings,
+    })),
     /** Fetching settings */
     fetchSettings: createAsyncAction(
         'fetch_settings',
-        (key: string) => ({ payload: key }),
+        (appKey: string) => ({ payload: { appKey } }),
         (settings: AppSettings) => ({ payload: settings }),
         (error: unknown) => ({ payload: error }),
     ),
-    /** Updatings settings */
+    /** Updating settings */
     updateSettings: createAsyncAction(
         'update_settings',
-        (settings: AppSettings) => ({ payload: { settings }, meta: { id: uuid() } }),
-        (settings: AppSettings, meta: { id: string }) => ({ payload: settings, meta }),
-        (error: unknown, meta: { id: string }) => ({ payload: error, meta }),
+        (appKey: string, settings: AppSettings) => ({
+            payload: { appKey, settings },
+        }),
+        (settings: AppSettings) => ({
+            payload: settings,
+        }),
+        (error: unknown) => ({
+            payload: error,
+        }),
     ),
+    updateSettingsAbort: createAction('update_settings::abort', (id: string) => ({
+        payload: id,
+    })),
     /** App loading */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setModule: createAction('set_module', (module: any) => ({ payload: module })),
