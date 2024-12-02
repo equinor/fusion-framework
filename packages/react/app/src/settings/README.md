@@ -1,3 +1,7 @@
+## Portal Settings
+
+> TBD
+
 ## App Settings
 
 App settings are a way to store and retrieve settings that are shared across the app. The settings are stored in the configured service of the app module.
