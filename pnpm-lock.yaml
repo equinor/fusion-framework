@@ -2436,9 +2436,6 @@ packages:
   '@equinor/fusion-wc-button@2.4.2':
     resolution: {integrity: sha512-NPhY6GLO6MQnZLNnqtLrAbZrodm1ogsK65OL+VleN0NlYZzZ7i2li99itXSMSgXg5fit1YZ4ONonPzZ9BN4HFw==}
 
-  '@equinor/fusion-wc-checkbox@1.1.1':
-    resolution: {integrity: sha512-anLfHPuyO9VIsByGp5BAZEMo/wRy/YiCilnE0dlqi4AY5/DxfnjHkvMEinbQ9yeu2y3r/Mp3Oi6TBmYN4cIBXw==}
-
   '@equinor/fusion-wc-checkbox@1.1.2':
     resolution: {integrity: sha512-lAD6yh4cvuTCNisiYjyB1BvGg566YkQFa9m+/hzIVIlQRk0UQn9/FHa8BB/DnAj9O/K6IrgRx7tabrXIDrzHUg==}
 
@@ -7539,10 +7536,6 @@ packages:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
     engines: {node: '>=0.6'}
 
-  qs@6.13.0:
-    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
-    engines: {node: '>=0.6'}
-
   qs@6.13.1:
     resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
     engines: {node: '>=0.6'}
@@ -9744,7 +9737,7 @@ snapshots:
   '@equinor/fusion-react-checkbox@0.5.17(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
-      '@equinor/fusion-wc-checkbox': 1.1.1
+      '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-formfield': 1.1.1
     transitivePeerDependencies:
       - react
@@ -9866,13 +9859,6 @@ snapshots:
       '@material/mwc-icon-button': 0.27.0
       '@material/mwc-icon-button-toggle': 0.27.0
       lit: 3.2.0
-
-  '@equinor/fusion-wc-checkbox@1.1.1':
-    dependencies:
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material/mwc-checkbox': 0.27.0
-      lit: 3.1.2
 
   '@equinor/fusion-wc-checkbox@1.1.2':
     dependencies:
@@ -12398,7 +12384,7 @@ snapshots:
       '@storybook/theming': 6.5.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       core-js: 3.37.1
       memoizerific: 1.11.3
-      qs: 6.13.0
+      qs: 6.13.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       regenerator-runtime: 0.13.11
@@ -12417,7 +12403,7 @@ snapshots:
       '@storybook/client-logger': 6.5.16
       core-js: 3.37.1
       memoizerific: 1.11.3
-      qs: 6.13.0
+      qs: 6.13.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       regenerator-runtime: 0.13.11
@@ -16501,10 +16487,6 @@ snapshots:
       yargs: 15.4.1
 
   qs@6.11.0:
-    dependencies:
-      side-channel: 1.0.6
-
-  qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
 
