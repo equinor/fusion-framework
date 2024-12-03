@@ -30,6 +30,9 @@ export const createReducer = (value: AppBundleStateInitial) =>
                 .addCase(actions.setConfig, (state, action) => {
                     state.config = action.payload;
                 })
+                .addCase(actions.setSettings, (state, action) => {
+                    state.settings = action.payload;
+                })
                 .addCase(actions.setModule, (state, action) => {
                     state.modules = action.payload;
                 })

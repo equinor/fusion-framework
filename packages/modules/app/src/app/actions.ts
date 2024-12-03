@@ -4,7 +4,13 @@ import {
     createAction,
     createAsyncAction,
 } from '@equinor/fusion-observable';
-import type { AppConfig, AppManifest, AppModulesInstance, AppScriptModule } from '../types';
+import type {
+    AppConfig,
+    AppManifest,
+    AppModulesInstance,
+    AppScriptModule,
+    AppSettings,
+} from '../types';
 
 const createActions = () => ({
     /** Manifest loading */
@@ -31,6 +37,33 @@ const createActions = () => ({
         (config: AppConfig) => ({ payload: config }),
         (error: unknown) => ({ payload: error }),
     ),
+    /** Settings loading */
+    setSettings: createAction('set_settings', (settings?: AppSettings) => ({
+        payload: settings,
+    })),
+    /** Fetching settings */
+    fetchSettings: createAsyncAction(
+        'fetch_settings',
+        (appKey: string) => ({ payload: { appKey } }),
+        (settings: AppSettings) => ({ payload: settings }),
+        (error: unknown) => ({ payload: error }),
+    ),
+    /** Updating settings */
+    updateSettings: createAsyncAction(
+        'update_settings',
+        (appKey: string, settings: AppSettings) => ({
+            payload: { appKey, settings },
+        }),
+        (settings: AppSettings) => ({
+            payload: settings,
+        }),
+        (error: unknown) => ({
+            payload: error,
+        }),
+    ),
+    updateSettingsAbort: createAction('update_settings::abort', (id: string) => ({
+        payload: id,
+    })),
     /** App loading */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setModule: createAction('set_module', (module: any) => ({ payload: module })),

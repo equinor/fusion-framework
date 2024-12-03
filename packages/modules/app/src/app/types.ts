@@ -1,10 +1,13 @@
+import { ActionBaseType } from '@equinor/fusion-observable';
 import type {
     AppManifest,
     AppConfig,
     AppModulesInstance,
     AppScriptModule,
     ConfigEnvironment,
+    AppSettings,
 } from '../types';
+import { Actions } from './actions';
 
 /**
  * Represents the state of an application bundle.
@@ -16,6 +19,7 @@ import type {
  * @property {Set<string>} status - A set of strings representing the status of the application.
  * @property {AppManifest} [manifest] - An optional manifest describing the application.
  * @property {AppConfig<TConfig>} [config] - An optional configuration object for the application.
+ * @property {AppSettings} [settings] - An optional application settings object.
  * @property {AppScriptModule} [modules] - An optional script module for the application.
  * @property {AppModulesInstance<TModules>} [instance] - An optional instance of the application modules.
  */
@@ -25,9 +29,10 @@ export type AppBundleState<
     TModules = any,
 > = {
     appKey: string;
-    status: Set<string>;
+    status: Set<ActionBaseType<Actions>>;
     manifest?: AppManifest;
     config?: AppConfig<TConfig>;
+    settings?: AppSettings;
     modules?: AppScriptModule;
     instance?: AppModulesInstance<TModules>;
 };

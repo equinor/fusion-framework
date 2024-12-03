@@ -1,4 +1,4 @@
-import { catchError, map, Observable, ObservableInput } from 'rxjs';
+import { catchError, map, Observable, ObservableInput, tap } from 'rxjs';
 
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
@@ -8,8 +8,8 @@ import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 import { ApiApplicationSchema } from './schemas';
 
-import type { AppConfig, AppManifest, ConfigEnvironment } from './types';
-import { AppConfigError, AppManifestError } from './errors';
+import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment } from './types';
+import { AppConfigError, AppManifestError, AppSettingsError } from './errors';
 import { AppConfigSelector } from './AppClient.Selectors';
 
 export interface IAppClient extends Disposable {
@@ -30,6 +30,21 @@ export interface IAppClient extends Disposable {
         appKey: string;
         tag?: string;
     }) => ObservableInput<AppConfig<TType>>;
+
+    /**
+     * Fetch app settings by appKey
+     */
+    getAppSettings: (args: { appKey: string }) => ObservableInput<AppSettings>;
+
+    /**
+     * Set app settings by appKey
+     * @param args - Object with appKey and settings
+     * @returns ObservableInput<AppSettings>
+     */
+    updateAppSettings: (args: {
+        appKey: string;
+        settings: AppSettings;
+    }) => ObservableInput<AppSettings>;
 }
 
 /**
@@ -62,8 +77,12 @@ export class AppClient implements IAppClient {
     #manifest: Query<AppManifest, { appKey: string }>;
     #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
     #config: Query<AppConfig, { appKey: string; tag?: string }>;
+    #settings: Query<AppSettings, { appKey: string; settings?: AppSettings }>;
+    #client: IHttpClient;
 
     constructor(client: IHttpClient) {
+        this.#client = client;
+
         const expire = 1 * 60 * 1000;
         this.#manifest = new Query<AppManifest, { appKey: string }>({
             client: {
@@ -90,8 +109,8 @@ export class AppClient implements IAppClient {
                             'Api-Version': '1.0',
                         },
                         selector: async (res: Response) => {
-                            const response = (await jsonSelector(res)) as { value: unknown[] };
-                            return ApplicationSchema.array().parse(response.value);
+                            const body = await res.json();
+                            return body;
                         },
                     });
                 },
@@ -114,7 +133,22 @@ export class AppClient implements IAppClient {
             key: (args) => JSON.stringify(args),
             expire,
         });
+
+        this.#settings = new Query<AppSettings, { appKey: string }>({
+            client: {
+                fn: ({ appKey }) => {
+                    return client.json<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
+                        headers: {
+                            'Api-Version': '1.0',
+                        },
+                    });
+                },
+            },
+            key: (args) => args.appKey,
+            expire,
+        });
     }
+
     getAppManifest(args: { appKey: string }): Observable<AppManifest> {
         return this.#manifest.query(args).pipe(
             queryValue,
@@ -158,11 +192,56 @@ export class AppClient implements IAppClient {
         );
     }
 
+    getAppSettings(args: { appKey: string }): Observable<AppSettings> {
+        return this.#settings.query(args).pipe(
+            queryValue,
+            catchError((err) => {
+                /** extract cause, since error will be a `QueryError` */
+                const { cause } = err;
+                if (cause instanceof AppSettingsError) {
+                    throw cause;
+                }
+                if (cause instanceof HttpResponseError) {
+                    throw AppSettingsError.fromHttpResponse(cause.response, { cause });
+                }
+                throw new AppSettingsError('unknown', 'failed to load settings', { cause });
+            }),
+        );
+    }
+
+    updateAppSettings(args: { appKey: string; settings: AppSettings }): Observable<AppSettings> {
+        const { appKey, settings } = args;
+        return (
+            this.#client
+                // execute PUT request to update settings
+                .json$<AppSettings>(`/persons/me/apps/${appKey}/settings`, {
+                    method: 'PUT',
+                    body: settings,
+                    headers: {
+                        'Api-Version': '1.0',
+                    },
+                })
+                .pipe(
+                    tap((value) => {
+                        // update cache with new settings
+                        this.#settings.mutate(
+                            { appKey },
+                            {
+                                value,
+                                updated: Date.now(),
+                            },
+                        );
+                    }),
+                )
+        );
+    }
+
     [Symbol.dispose]() {
         console.warn('AppClient disposed');
         this.#manifest.complete();
         this.#manifests.complete();
         this.#config.complete();
+        this.#settings.complete();
     }
 }
 

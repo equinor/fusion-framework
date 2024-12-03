@@ -15,6 +15,7 @@ import deepmerge from 'deepmerge/index.js';
 
 import ViteRestart from 'vite-plugin-restart';
 import { appProxyPlugin } from '../lib/plugins/app-proxy/app-proxy-plugin.js';
+import { appSettingsPlugin } from '../lib/plugins/app-settings/index.js';
 import { externalPublicPlugin } from '../lib/plugins/external-public/external-public-plugin.js';
 
 import { supportedExt, type ConfigExecuterEnv } from '../lib/utils/config.js';
@@ -99,6 +100,9 @@ export const createDevServer = async (options: {
         plugins: [
             // Serve the dev portal as static files
             externalPublicPlugin(devPortalPath),
+            appSettingsPlugin({
+                match: `/apps-proxy/persons/me/apps/${appKey}/settings`,
+            }),
             // Proxy requests to the app server
             appProxyPlugin({
                 proxy: {
