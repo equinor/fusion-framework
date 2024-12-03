@@ -60,9 +60,7 @@
     "eslint-plugin-rxjs": "^5.0.3",
     "genversion": "^3.1.1",
     "happy-dom": "^15.7.3",
-    "husky": "^9.0.7",
     "lerna-update-wizard": "^1.1.2",
-    "lint-staged": "^15.2.1",
     "prettier": "^3.0.2",
     "rimraf": "^6.0.0",
     "tslib": "^2.6.1",
@@ -79,12 +77,6 @@
       "packages/**",
       "cookbooks/*",
       "vue-press"
-    ]
-  },
-  "lint-staged": {
-    "./packages/**/src/**/*.{ts,tsx}": [
-      "eslint --quiet --fix",
-      "vitest related --run"
     ]
   }
 }
