@@ -26,7 +26,6 @@
     "build:clean": "pnpm clean:build && pnpm build --force",
     "lint": "eslint '{packages,cookbooks}/**/src/**/*.{ts,tsx}'",
     "lint:report": "pnpm lint --output-file eslint.report.json --format json",
-    "lint:staged": "lint-staged",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
@@ -48,8 +47,6 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.26.2",
-    "@commitlint/cli": "^19.0.3",
-    "@commitlint/config-conventional": "^19.0.3",
     "@equinor/eslint-config-fusion": "^2.1.4",
     "@equinor/eslint-config-fusion-react": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
