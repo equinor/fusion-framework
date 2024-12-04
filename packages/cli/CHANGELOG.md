@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.3.1
+
+### Patch Changes
+
+- [#2632](https://github.com/equinor/fusion-framework/pull/2632) [`b136b45`](https://github.com/equinor/fusion-framework/commit/b136b4565da1af09c8447956716f3d9f0ea91698) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
+
+    Updated `@equinor/fusion-wc-person` dependency from version `^3.0.5` to `^3.0.6`
+
 ## 10.3.0
 
 ### Minor Changes
