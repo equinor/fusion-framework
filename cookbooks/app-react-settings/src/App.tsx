@@ -74,7 +74,7 @@ export const App = () => {
                     </select>
                 </section>
                 <section style={{ display: 'grid', gridTemplateColumns: '3em auto', gap: '1rem' }}>
-                    <span>Size:</span>
+                    <span>Fancy:</span>
                     <input type="checkbox" checked={fancy} onChange={onFancyChange} />
                 </section>
                 <div>
