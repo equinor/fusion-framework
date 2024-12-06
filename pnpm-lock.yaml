@@ -1377,8 +1377,8 @@ importers:
         specifier: workspace:^
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
-        specifier: ^3.0.6
-        version: 3.0.6
+        specifier: ^3.1.0
+        version: 3.1.0
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.3
@@ -2386,6 +2386,9 @@ packages:
 
   '@equinor/fusion-wc-person@3.0.6':
     resolution: {integrity: sha512-K//ffldMv8BNBBRz8xW/nI+hRbSPVJoM3r8bjDMAcoG3ZXcrlU0h5JxYirpJgY4QfRKViZMKv0KG0vzZWSoDjQ==}
+
+  '@equinor/fusion-wc-person@3.1.0':
+    resolution: {integrity: sha512-H/MHdHSx0761CKNYI+XrHiSQlp0yGVWNGJrYAdEVYxY1BwaBaV4bvk+oklfik7VJtIUdEFGoO0DY6P7wUxHDAQ==}
 
   '@equinor/fusion-wc-picture@3.1.1':
     resolution: {integrity: sha512-TeZd46sjyg43HHlbE4h9Ebk9wCBnif5j9XGodIdVTCaC7rLz2YEd7C6RS7vj3nS+goFIZmowiUUmg6gZemzY4w==}
@@ -9336,6 +9339,23 @@ snapshots:
       lit: 3.2.0
 
   '@equinor/fusion-wc-person@3.0.6':
+    dependencies:
+      '@equinor/fusion-wc-avatar': 3.2.3
+      '@equinor/fusion-wc-badge': 1.3.2
+      '@equinor/fusion-wc-button': 2.4.2
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-wc-list': 1.1.3
+      '@equinor/fusion-wc-searchable-dropdown': 3.7.4
+      '@equinor/fusion-wc-skeleton': 2.1.2
+      '@equinor/fusion-wc-textinput': 1.1.2
+      '@equinor/fusion-web-theme': 0.1.10
+      '@floating-ui/dom': 1.6.12
+      '@lit-labs/observers': 2.0.4
+      '@lit-labs/task': 3.1.0
+      lit: 3.2.0
+
+  '@equinor/fusion-wc-person@3.1.0':
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.3
       '@equinor/fusion-wc-badge': 1.3.2
