@@ -31,9 +31,9 @@
     },
     "devDependencies": {
         "@types/react": "^18.2.50",
-        "@types/react-dom": "^18.2.7",
+        "@types/react-dom": "^19.0.1",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0",
+        "react-dom": "^19.0.0",
         "rxjs": "^7.8.1",
         "typescript": "^5.5.4"
     },
