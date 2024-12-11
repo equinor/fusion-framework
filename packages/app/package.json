@@ -8,6 +8,17 @@
         ".": {
             "types": "./dist/types/index.d.ts",
             "import": "./dist/esm/index.js"
+        },
+        "./enable-bookmark": {
+            "types": "./dist/types/enable-bookmark.d.ts",
+            "import": "./dist/esm/enable-bookmark.js"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "enable-bookmark": [
+                "dist/types/enable-bookmark.d.ts"
+            ]
         }
     },
     "scripts": {
@@ -43,6 +54,7 @@
         "@equinor/fusion-framework-module-msal": "workspace:^"
     },
     "devDependencies": {
+        "@equinor/fusion-framework-module-bookmark": "workspace:^",
         "typescript": "^5.5.4"
     },
     "peerDependencies": {
