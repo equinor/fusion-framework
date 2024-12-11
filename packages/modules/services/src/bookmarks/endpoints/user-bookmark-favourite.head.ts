@@ -57,9 +57,8 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     switch (version) {
         case ApiVersion.v1: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
-                method: 'POST',
+                method: 'HEAD',
                 selector: headSelector,
-                body: args,
             };
             return Object.assign({}, baseInit, init);
         }
