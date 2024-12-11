@@ -1,22 +1,22 @@
 import { useLayoutEffect, useMemo } from 'react';
 import {
     BookmarkData,
-    BookmarkProvider,
     BookmarkPayloadGenerator,
     Bookmark,
+    IBookmarkProvider,
 } from '@equinor/fusion-framework-module-bookmark';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useBookmarkProvider } from './useBookmarkProvider';
-import { EMPTY } from 'rxjs';
+import { EMPTY, from } from 'rxjs';
 
 export type useCurrentBookmarkOptions<TData extends BookmarkData> = {
     payloadGenerator?: BookmarkPayloadGenerator<TData>;
-    provider?: BookmarkProvider;
+    provider?: IBookmarkProvider;
 };
 
 export type useCurrentBookmarkReturn<TData extends BookmarkData> = {
     currentBookmark: Bookmark<TData> | null;
-    setCurrentBookmark: BookmarkProvider['setCurrentBookmarkAsync'];
+    setCurrentBookmark: (bookmark_or_id: Bookmark | string | null) => VoidFunction;
 };
 
 /**
@@ -45,7 +45,10 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
         if (!provider) {
             throw new Error('No bookmark provider found');
         }
-        return provider.setCurrentBookmarkAsync.bind(provider);
+        return (bookmark_or_id: Bookmark | string | null) => {
+            const sub = from(provider.setCurrentBookmark(bookmark_or_id)).subscribe();
+            return () => sub.unsubscribe();
+        };
     }, [provider]);
 
     useLayoutEffect(() => {
