@@ -1,7 +1,7 @@
 import { chalk } from './utils/format.js';
 import { Spinner } from './utils/spinner.js';
 import { bundleApplication } from './bundle-application.js';
-import { resolveAppPackage, resolveAppKey } from '../lib/app-package.js';
+import { resolveAppPackage } from '../lib/app-package.js';
 
 import {
     isAppRegistered,
@@ -9,6 +9,7 @@ import {
     requireToken,
     tagAppBundle,
     uploadAppBundle,
+    loadAppManifest,
 } from './utils/index.js';
 import type { FusionEnv } from './utils/index.js';
 
@@ -41,7 +42,8 @@ export const publishApplication = async (options: {
     }
 
     const pkg = await resolveAppPackage();
-    const appKey = resolveAppKey(pkg.packageJson);
+    const { manifest } = await loadAppManifest({ command: 'build', mode: 'prod' }, pkg);
+    const { appKey } = manifest;
 
     try {
         spinner.info('Verifying that App is registered');
