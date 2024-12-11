@@ -15,6 +15,7 @@ import { BookmarkClient } from './BookmarkClient';
 import type { BookmarkModule } from './bookmark-module';
 import { bookmarkConfigSchema } from './bookmark-config.schema';
 import type { BookmarkModuleConfig } from './types';
+import { BookmarkProvider } from './BookmarkProvider';
 
 const initialBookmarkConfig = bookmarkConfigSchema
     .pick({
@@ -199,7 +200,10 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
             const parentModules = init.ref as ModulesInstanceType<[BookmarkModule]>;
             if (parentModules && 'bookmark' in parentModules) {
                 const parent = parentModules.bookmark;
-                if ('version' in parent && parent.version.satisfies('>=2.0.0')) {
+                if (
+                    'version' in parent &&
+                    (parent as unknown as BookmarkProvider).version.satisfies('>=2.0.0')
+                ) {
                     this._set('parent', async () => parent);
                 } else {
                     this.#log?.warn('invalid version of parent BookmarkProvider provided');

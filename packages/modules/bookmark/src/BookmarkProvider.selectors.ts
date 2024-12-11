@@ -29,9 +29,8 @@ export const bookmarkSelector = <T extends BookmarkData>(
  */
 export const activeBookmarkSelector = <T extends BookmarkData>(
     state: BookmarkState,
-): Bookmark<T> | null => {
-    const selectedBookmark = state.currentBookmark as Bookmark<T>;
-    return selectedBookmark || null;
+): Bookmark<T> | null | undefined => {
+    return state.currentBookmark as Bookmark<T> | null | undefined;
 };
 
 /**
