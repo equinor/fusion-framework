@@ -23,7 +23,7 @@ export type useBookmarkArgs = {
 };
 
 export type useBookmarkResult = {
-    currentBookmark: Bookmark | null;
+    currentBookmark: Bookmark | null | undefined;
     setCurrentBookmark: (bookmark: Bookmark | string | null) => void;
     bookmarks: Bookmarks;
     getAllBookmarks: () => Promise<Bookmarks>;
@@ -45,7 +45,7 @@ export type useBookmarkResult = {
  */
 export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
     const defaultProvider = useBookmarkProvider();
-    const bookmarkProvider = args?.provider ?? defaultProvider;
+    const bookmarkProvider = (args?.provider ?? defaultProvider) as BookmarkProvider;
     const payloadGenerator = args?.payloadGenerator;
 
     const { value: currentBookmark } = useObservableState(
@@ -150,7 +150,8 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
 
     const setCurrentBookmark = useCallback(
         (IdOrItem: Bookmark | string | null): void => {
-            bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem as any);
         },
         [bookmarkProvider],
     );
