@@ -27,8 +27,12 @@ export default function <TType, TArgs>(
         initial,
         (builder) =>
             builder
-                // Handles the 'set' action to update or add a cache record.
                 .addCase(actions.set, (state, action) => {
+                    const { key, record } = action.payload;
+                    state[key] = castDraft(record);
+                })
+                // Handles the 'set' action to update or add a cache record.
+                .addCase(actions.insert, (state, action) => {
                     const { key, entry } = action.payload;
                     const record = state[key];
 
