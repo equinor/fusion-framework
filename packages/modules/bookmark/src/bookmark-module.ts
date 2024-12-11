@@ -8,6 +8,7 @@ import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
 import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
 import { version } from './version';
+import { type IBookmarkProvider } from './BookmarkProvider.interface';
 
 export type BookmarkModuleKey = 'bookmark';
 
@@ -15,7 +16,7 @@ export const moduleKey: BookmarkModuleKey = 'bookmark';
 
 export type BookmarkModule = Module<
     BookmarkModuleKey,
-    BookmarkProvider,
+    IBookmarkProvider,
     BookmarkModuleConfigurator,
     [EventModule, ServicesModule, AppModule, ContextModule]
 >;
