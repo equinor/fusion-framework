@@ -1,4 +1,4 @@
-import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http';
+import { HttpJsonResponseError, HttpResponseError } from '@equinor/fusion-framework-module-http';
 import { type ResponseSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 /**
@@ -35,15 +35,12 @@ export const statusSelector: ResponseSelector<boolean> = async (res) => {
  * @returns `true` if the response is successful, `false` if the response has a 404 status code, otherwise throws an `HttpJsonResponseError`.
  * @throws {HttpJsonResponseError} If the response is not successful and does not have a 404 status code, with the error message, response, and any additional data or cause.
  */
-export const headSelector: ResponseSelector<boolean> = (res) => {
-    try {
-        return statusSelector(res);
-    } catch (error) {
-        if (error instanceof HttpJsonResponseError) {
-            if (error.response.status === 404) {
-                return Promise.resolve(false);
-            }
-        }
-        throw error;
+export const headSelector: ResponseSelector<boolean> = async (res) => {
+    if (res.ok) {
+        return true;
     }
+    if (res.status === 404) {
+        return false;
+    }
+    throw new HttpResponseError(`Failed to execute request. Status code: ${res.status}`, res);
 };
