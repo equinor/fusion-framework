@@ -1,5 +1,20 @@
 # Change Log
 
+## 6.1.1
+
+### Patch Changes
+
+- [#2654](https://github.com/equinor/fusion-framework/pull/2654) [`59ab642`](https://github.com/equinor/fusion-framework/commit/59ab6424f3ce80649f42ddb6804b46f6789607ba) Thanks [@eikeland](https://github.com/eikeland)! - Reverting update to the `manifests` call `selector` function in `AppClient` to use `jsonSelector` and parse the response with `ApplicationSchema`.
+
+    **Modified files:**
+
+    - `packages/modules/app/src/AppClient.ts`
+
+    **Changes:**
+
+    - Replaced `res.json()` with `jsonSelector(res)`
+    - Parsed the response using `ApplicationSchema.array().parse(response.value)`
+
 ## 6.1.0
 
 ### Minor Changes
