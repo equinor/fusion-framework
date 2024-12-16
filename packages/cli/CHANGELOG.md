@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.3.4
+
+### Patch Changes
+
+- [#2657](https://github.com/equinor/fusion-framework/pull/2657) [`dfb69b5`](https://github.com/equinor/fusion-framework/commit/dfb69b5d710503cbcec35be70e6e50dd0b9a34f7) Thanks [@eikeland](https://github.com/eikeland)! - - Updates link to fusion ci portal
+
 ## 10.3.3
 
 ### Patch Changes
