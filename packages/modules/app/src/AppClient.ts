@@ -109,8 +109,8 @@ export class AppClient implements IAppClient {
                             'Api-Version': '1.0',
                         },
                         selector: async (res: Response) => {
-                            const body = await res.json();
-                            return body;
+                            const response = (await jsonSelector(res)) as { value: AppManifest[] };
+                            return ApplicationSchema.array().parse(response.value);
                         },
                     });
                 },
