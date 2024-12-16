@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.3.3
+
+### Patch Changes
+
+- [#2648](https://github.com/equinor/fusion-framework/pull/2648) [`270f2ba`](https://github.com/equinor/fusion-framework/commit/270f2ba5c7447fff79e3a54130c10614aa35fea7) Thanks [@odinr](https://github.com/odinr)! - Fixed resolving of app key from manifest when publishing (earlier only resolved from package)
+
 ## 10.3.2
 
 ### Patch Changes
