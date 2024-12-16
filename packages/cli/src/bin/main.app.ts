@@ -54,9 +54,7 @@ export default (program: Command) => {
                 ? resolve(join(process.cwd(), opt.devPortal))
                 : fileURLToPath(new URL('public', import.meta.url));
             await createDevServer({
-                portal:
-                    process.env.FUSION_PORTAL_HOST ??
-                    'https://fusion-s-portal-ci.azurewebsites.net',
+                portal: process.env.FUSION_PORTAL_HOST ?? 'https://fusion.ci.fusion-dev.net',
                 configSourceFiles: {
                     app: opt.config,
                     manifest: opt.manifest,
