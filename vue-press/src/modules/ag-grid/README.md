@@ -26,7 +26,7 @@ npm i ag-grid-community
 :::
 
 ::: warning version
-When installing ag-grid packages, the packages must inhere to same __major__ and __minor__ as the framework module.
+When installing ag-grid packages, the packages must inhere to same __major__ and __minor__ as the framework module. Current verison is <AgGridVersion />
 
 _The framework package should represent the major and minor of ag-grid, but double check the decencies in `package.json`_
 
@@ -44,15 +44,18 @@ npm i @ag-grid-community/core@^x.yy
 > plugins/extensions for react, see [Fusion React Component](https://github.com/equinor/fusion-react-components)
 
 ## Configuration
+
+This setup will give you a license key in Fusion environments but not in fusion-framework-cli devportal.
+
 ::: code-tabs#scope
 @tab App
 ```ts
-import { configureModules } from '@equinor/fusion-framework-app"';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
 
-const initializeApp = configureModules((config) => {
-  enableAgGrid(config);
-} 
+export const configure: AppModuleInitiator = (configurator, { env }) => {
+    enableAgGrid(configurator);
+};
 ```
 
 @tab Portal
@@ -64,31 +67,6 @@ const configurator = new FusionConfigurator();
 configurator.addConfig(configureAgGrid({
   licenseKey = 'my-license-key'
 }));
-```
-:::
-
-## React
-
-::: code-tabs#scope
-@tab App
-```ts
-import { createComponent } from '@equinor/fusion-framework-react-app"';
-import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-
-const initializeApp = createComponent((config) => {
-  enableAgGrid(config);
-} 
-```
-@tab Portal
-```ts
-import { createFrameworkProvider } from '@equinor/fusion-framework-react';
-import { configureAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-
-createFrameworkProvider((config) => {
-  config.addConfig(configureAgGrid({
-    licenseKey = 'my-license-key'
-  }));
-})
 ```
 :::
 
