@@ -1,5 +1,22 @@
 # Change Log
 
+## 10.3.5
+
+### Patch Changes
+
+- [#2661](https://github.com/equinor/fusion-framework/pull/2661) [`f60748b`](https://github.com/equinor/fusion-framework/commit/f60748b4f3980f00fa3aed131fef97513f1424c6) Thanks [@eikeland](https://github.com/eikeland)! - Added `noOpen` option to the development server configuration.
+
+    **Modified files:**
+
+    - `packages/cli/src/bin/create-dev-serve.ts`
+    - `packages/cli/src/bin/main.app.ts`
+
+    **Changes:**
+
+    - Added `noOpen` boolean option to `createDevServer` function.
+    - Updated the server configuration to conditionally open the app in the default browser based on the `noOpen` option.
+    - Added `-n, --noOpen` option to the CLI command for starting the development server.
+
 ## 10.3.4
 
 ### Patch Changes
