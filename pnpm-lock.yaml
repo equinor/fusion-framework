@@ -9128,7 +9128,7 @@ snapshots:
 
   '@equinor/fusion-react-checkbox@0.5.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-formfield': 1.1.1
     transitivePeerDependencies:
@@ -9148,7 +9148,7 @@ snapshots:
 
   '@equinor/fusion-react-divider@0.2.13(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-divider': 0.2.23
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -9156,7 +9156,7 @@ snapshots:
 
   '@equinor/fusion-react-icon@0.2.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
