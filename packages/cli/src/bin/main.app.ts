@@ -23,6 +23,7 @@ export default (program: Command) => {
         .description('Start development server for application')
         .option('-p, --port <number>', 'dev-server port')
         .option('-P, --portal <string>', 'fusion portal host')
+        .option('-n, --noOpen', 'Do not open app in default browser automatically', false)
         .option(
             '-c, --config <file>',
             `use specified application config, by default search for ${formatPath(
@@ -63,6 +64,7 @@ export default (program: Command) => {
                 library: opt.framework,
                 port: opt.port,
                 devPortalPath: devPortalPath,
+                noOpen: opt.noOpen,
             });
         });
 

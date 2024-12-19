@@ -42,8 +42,9 @@ export const createDevServer = async (options: {
     devPortalPath: string;
     port?: number;
     library?: 'react';
+    noOpen: boolean;
 }) => {
-    const { configSourceFiles, library, port, devPortalPath } = options;
+    const { configSourceFiles, library, port, devPortalPath, noOpen } = options;
 
     const spinner = Spinner.Global({ prefixText: chalk.dim('dev-server') });
 
@@ -94,7 +95,7 @@ export const createDevServer = async (options: {
         publicDir: devPortalPath,
         appType: 'custom',
         server: {
-            open: `/apps/${appKey}`,
+            open: !noOpen ? `/apps/${appKey}` : false,
             port: port ?? (await portFinder.getPortPromise({ port: 3000 })),
         },
         plugins: [
