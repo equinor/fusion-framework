@@ -2339,6 +2339,11 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
+  '@equinor/fusion-react-utils@2.2.0':
+    resolution: {integrity: sha512-W5MXUaiqC+9jQjcFrUBplUyEwmBtT/r0hudbQBlKMqxWQY7C5lrC540Vy7zgdzZ77eU75DRw8gW0ytsugQG/4A==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+
   '@equinor/fusion-wc-avatar@3.2.3':
     resolution: {integrity: sha512-R4QrPz+lzIdYnc1s/6RixQb6MQ/sn1t1h+/P9MictC1bpxXaBKNA7XonxOXQyP9ivZHXLIZK8lNW6vtxiZXurQ==}
 
@@ -9654,7 +9659,7 @@ snapshots:
 
   '@equinor/fusion-react-checkbox@0.5.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-formfield': 1.1.1
     transitivePeerDependencies:
@@ -9674,7 +9679,7 @@ snapshots:
 
   '@equinor/fusion-react-divider@0.2.13(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-divider': 0.2.23
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -9682,7 +9687,7 @@ snapshots:
 
   '@equinor/fusion-react-icon@0.2.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.1(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
@@ -9702,7 +9707,7 @@ snapshots:
 
   '@equinor/fusion-react-searchable-dropdown@0.5.2(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.0(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       '@equinor/fusion-wc-searchable-dropdown': 3.7.4
     transitivePeerDependencies:
@@ -9749,6 +9754,11 @@ snapshots:
       react: 18.3.1
 
   '@equinor/fusion-react-utils@2.1.2(react@18.3.1)':
+    dependencies:
+      date-fns: 4.1.0
+      react: 18.3.1
+
+  '@equinor/fusion-react-utils@2.2.0(react@18.3.1)':
     dependencies:
       date-fns: 4.1.0
       react: 18.3.1
