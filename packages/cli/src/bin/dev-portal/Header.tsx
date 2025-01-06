@@ -19,7 +19,7 @@ PersonAvatarElement;
 
 import { BookmarkSideSheet } from './BookMarkSideSheet';
 import { PersonSideSheet } from './PersonSideSheet';
-import { useCurrentAppModule } from '@equinor/fusion-framework-react/app';
+import { useCurrentApp, useCurrentAppModule } from '@equinor/fusion-framework-react/app';
 
 const Styled = {
     Title: styled.div`
@@ -35,6 +35,7 @@ export const Header = () => {
     const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
     const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
     const currentUser = useCurrentUser();
+    const { currentApp } = useCurrentApp();
 
     const { localAccountId: azureId } = currentUser ?? {};
 
@@ -82,7 +83,7 @@ export const Header = () => {
                     </Button>
                 </TopBar.Actions>
             </TopBar>
-            <BookmarkProvider provider={bookmarkProvider}>
+            <BookmarkProvider provider={bookmarkProvider} currentApp={currentApp}>
                 <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={toggleBookmark} />
             </BookmarkProvider>
             <PersonSideSheet
