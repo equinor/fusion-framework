@@ -31,13 +31,13 @@ export default (program: Command) => {
             )}`,
         )
         .option(
-            '    --manifest <file>',
+            '--manifest <file>',
             `use specified manifest, by default search for ${formatPath(
                 'app.manifest.config.{ts,js,json}',
             )}`,
         )
         .option(
-            '    --vite <file>',
+            '--vite <file>',
             `use specified Vite config file, by default search for ${formatPath(
                 'app.vite.config.{ts,js,json}',
             )}`,
@@ -87,7 +87,7 @@ export default (program: Command) => {
             'Use specified config file, see https://vitejs.dev/guide/cli.html#build',
         )
         .option(
-            '    --vite <string>',
+            '--vite <string>',
             `use specified Vite config file, by default search for ${formatPath(
                 'app.config.vite.{ts,js,json}',
             )}`,
