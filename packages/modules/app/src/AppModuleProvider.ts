@@ -18,6 +18,8 @@ import { App, filterEmpty, IApp } from './app/App';
 import { AppModuleConfig } from './AppConfigurator';
 import { AppBundleStateInitial } from './app/types';
 import { IAppClient } from './AppClient';
+import { SemanticVersion } from '@equinor/fusion-framework-module';
+import { version } from './version';
 
 export class AppModuleProvider {
     static compareAppManifest<T extends AppManifest>(a?: T, b?: T): boolean {
@@ -33,6 +35,13 @@ export class AppModuleProvider {
     #subscription = new Subscription();
 
     #event?: ModuleType<EventModule>;
+
+    /**
+     * Get module version
+     */
+    get version(): SemanticVersion {
+        return new SemanticVersion(version);
+    }
 
     /**
      * fetch an application by key
