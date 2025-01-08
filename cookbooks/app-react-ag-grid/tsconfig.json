@@ -3,7 +3,7 @@
     "declaration": false,
     "importHelpers": true,
     "sourceMap": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "ES6",
     "strict": true,
     "target": "ES6",
@@ -20,5 +20,10 @@
   "exclude": [
     "node_modules",
     "lib"
+  ],
+  "references": [
+    {
+      "path": "../../packages/modules/ag-grid"
+    }
   ]
 }
