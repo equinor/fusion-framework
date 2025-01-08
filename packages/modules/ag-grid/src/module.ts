@@ -1,43 +1,51 @@
-import { IAgGridConfigurator, AgGridConfigurator } from './configurator';
-import { IAgGridProvider, AgGridProvider } from './provider';
+import { AgGridConfigurator } from './AgGridConfigurator';
+import { defaultModules } from './default-modules';
+import { IAgGridProvider, AgGridProvider } from './AgGridProvider';
 import type {
-    IModuleConfigurator,
     IModulesConfigurator,
     Module,
     ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
+import { type IAgGridConfigurator } from './AgGridConfigurator.interface';
+
+import { fusionTheme } from './themes';
 
 export type AgGridModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator>;
+
+export type AgGridBuilderCallback = (builder: IAgGridConfigurator) => void | Promise<void>;
 
 export const module: AgGridModule = {
     name: 'agGrid',
     configure: (ref?: ModulesInstanceType<[AgGridModule]>) => {
-        const config = new AgGridConfigurator();
-        if (ref?.agGrid) {
-            config.licenseKey = ref.agGrid.licenseKey;
-        }
-        return config;
+        const licenseKey = ref?.agGrid?.licenseKey;
+        const theme = ref?.agGrid?.theme ?? fusionTheme;
+        return new AgGridConfigurator({
+            licenseKey,
+            theme,
+            modules: defaultModules,
+        });
     },
-    initialize: ({ config }): IAgGridProvider => new AgGridProvider(config),
-};
 
-export const configureAgGrid = (args: {
-    licenseKey: string;
-}): IModuleConfigurator<AgGridModule> => ({
-    module,
-    configure: (config) => {
-        config.licenseKey = args.licenseKey;
+    initialize: async (args) => {
+        const configurator = args.config as AgGridConfigurator;
+        const config = await configurator.createConfigAsync(args);
+        return new AgGridProvider(config);
     },
-});
+};
 
 export const enableAgGrid = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: IModulesConfigurator<any, any>,
-    options?: {
-        licenseKey: string;
-    },
+    configurator: IModulesConfigurator<any, any>,
+    callback?: AgGridBuilderCallback,
 ): void => {
-    options ? config.addConfig(configureAgGrid(options)) : config.configure({ module });
+    configurator.addConfig({
+        module,
+        configure: async (config) => {
+            if (callback) {
+                return Promise.resolve(callback(config));
+            }
+        },
+    });
 };
 
 export default module;
