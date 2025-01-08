@@ -3,13 +3,34 @@
     "version": "32.3.0",
     "description": "Fusion module for using AG Grid",
     "main": "dist/esm/index.js",
+    "types": "dist/types/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/esm/index.js",
             "types": "./dist/types/index.d.ts"
+        },
+        "./community": {
+            "import": "./dist/esm/community.js",
+            "types": "./dist/types/community.d.ts"
+        },
+        "./enterprise": {
+            "import": "./dist/esm/enterprise.js",
+            "types": "./dist/types/enterprise.d.ts"
+        },
+        "./themes": {
+            "import": "./dist/esm/themes.js",
+            "types": "./dist/types/themes.d.ts"
+        },
+        "./package.json": "./package.json",
+        "./README.md": "./README.md"
+    },
+    "typesVersions": {
+        "*": {
+            "themes": [
+                "dist/types/themes.d.ts"
+            ]
         }
     },
-    "types": "dist/types/index.d.ts",
     "scripts": {
         "build": "tsc -b",
         "prepack": "pnpm build"
@@ -29,13 +50,14 @@
         "directory": "packages/modules/ag-grid"
     },
     "dependencies": {
-        "@ag-grid-enterprise/core": "~32.3.2"
+        "ag-grid-community": "^33.0.3",
+        "ag-grid-enterprise": "^33.0.3"
     },
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
         "typescript": "^5.5.4"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": ">=1.2.2"
+        "@equinor/fusion-framework-module": "workspace:^"
     }
 }
