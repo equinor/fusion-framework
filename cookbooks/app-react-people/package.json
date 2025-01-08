@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@equinor/eds-core-react": "^0.42.0",
-        "@equinor/eds-icons": "^0.21.0",
+        "@equinor/eds-icons": "^0.22.0",
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-react-person": "^0.9.1",
         "@remix-run/router": "^1.8.0",
