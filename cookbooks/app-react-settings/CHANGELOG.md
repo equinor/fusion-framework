@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-settings
 
+## 1.0.1
+
+### Patch Changes
+
+- [#2636](https://github.com/equinor/fusion-framework/pull/2636) [`3b2539d`](https://github.com/equinor/fusion-framework/commit/3b2539dcb9e43e52d31e0b177e1ed268b82ef62a) Thanks [@eikeland](https://github.com/eikeland)! - Changing label on fancy to Fancy
+
 ## 1.0.0
 
 ### Major Changes

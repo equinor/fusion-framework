@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.1.17
+
+### Patch Changes
+
+- Updated dependencies [[`add2e98`](https://github.com/equinor/fusion-framework/commit/add2e98d23e683a801729e9af543cfa15c574e27)]:
+    - @equinor/fusion-framework-module-app@6.1.2
+    - @equinor/fusion-framework@7.2.13
+
 ## 9.1.16
 
 ### Patch Changes

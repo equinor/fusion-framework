@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-docs
 
+## 0.3.1
+
+### Patch Changes
+
+- [#2626](https://github.com/equinor/fusion-framework/pull/2626) [`d6e7d62`](https://github.com/equinor/fusion-framework/commit/d6e7d62aaff295d53431a73a688bc2097f0a94f1) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
+
+    - Update defineAppConfig function:
+        - Change scope to var in the environment object.
+        - Add scopes array to the api endpoint.
+    - Update configure function:
+        - Change configureClient to configureHttpClient.
+        - Update the configuration to include baseUri and defaultScopes.
+    - Update defineAppManifest function:
+        - Add version to the build object.
+    - Correct CLI command:
+        - Change app pack to app build-pack.
+
 ## 0.3.0
 
 ### Minor Changes

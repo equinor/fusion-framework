@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.4
+
+### Patch Changes
+
+- [#2690](https://github.com/equinor/fusion-framework/pull/2690) [`809bee0`](https://github.com/equinor/fusion-framework/commit/809bee089d5d84799a3834294ca02937eaa46a0e) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-icons from 0.21.0 to 0.22.0
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-react@7.3.5
+    - @equinor/fusion-framework-react-module-bookmark@2.2.4
+
 ## 1.0.3
 
 ### Patch Changes
