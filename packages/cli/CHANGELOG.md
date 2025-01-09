@@ -1,5 +1,21 @@
 # Change Log
 
+## 10.3.6
+
+### Patch Changes
+
+- [#2671](https://github.com/equinor/fusion-framework/pull/2671) [`9ccfe80`](https://github.com/equinor/fusion-framework/commit/9ccfe8024de221ce5b26beec6ab230dfa635f759) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated commander from 12.1.0 to 13.0.0
+
+- [#2675](https://github.com/equinor/fusion-framework/pull/2675) [`e36756d`](https://github.com/equinor/fusion-framework/commit/e36756dfff11ca06957a9132df6a89ba47eba338) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 5.4.3 to 6.0.7
+
+- [#2679](https://github.com/equinor/fusion-framework/pull/2679) [`04f0597`](https://github.com/equinor/fusion-framework/commit/04f059702b665c8ec079daba9ba8b8b21eadf9a2) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/fusion-react-context-selector from 0.6.6 to 0.6.8
+
+- [#2653](https://github.com/equinor/fusion-framework/pull/2653) [`4e1e47d`](https://github.com/equinor/fusion-framework/commit/4e1e47d3250027b757ad647534cffcb35add1011) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/fusion-react-side-sheet from 1.3.3 to 1.3.4
+
+- [#2686](https://github.com/equinor/fusion-framework/pull/2686) [`9c2b6c5`](https://github.com/equinor/fusion-framework/commit/9c2b6c5f97203aa793dc76a8fcd8c3ec3c7eb810) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump rollup from 4.22.4 to 4.30.1
+
+- [#2690](https://github.com/equinor/fusion-framework/pull/2690) [`809bee0`](https://github.com/equinor/fusion-framework/commit/809bee089d5d84799a3834294ca02937eaa46a0e) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-icons from 0.21.0 to 0.22.0
+
 ## 10.3.5
 
 ### Patch Changes

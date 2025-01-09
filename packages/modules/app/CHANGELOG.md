@@ -1,5 +1,24 @@
 # Change Log
 
+## 6.1.2
+
+### Patch Changes
+
+- [#2685](https://github.com/equinor/fusion-framework/pull/2685) [`add2e98`](https://github.com/equinor/fusion-framework/commit/add2e98d23e683a801729e9af543cfa15c574e27) Thanks [@eikeland](https://github.com/eikeland)! - Added versioning support to `AppModuleProvider`.
+
+    **Modified files:**
+
+    - `packages/modules/app/src/AppModuleProvider.ts`
+
+    **Changes:**
+
+    - Imported `SemanticVersion` from `@equinor/fusion-framework-module`.
+    - Imported `version` from `./version`.
+    - Added a `version` getter to `AppModuleProvider` that returns a `SemanticVersion` instance.
+
+- Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
+    - @equinor/fusion-query@5.2.0
+
 ## 6.1.1
 
 ### Patch Changes

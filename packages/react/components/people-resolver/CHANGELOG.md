@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.4.18
+
+### Patch Changes
+
+- Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
+    - @equinor/fusion-query@5.2.0
+    - @equinor/fusion-framework-react@7.3.5
+    - @equinor/fusion-framework-react-module-bookmark@2.2.4
+    - @equinor/fusion-framework-module-services@5.0.1
+
 ## 1.4.17
 
 ### Patch Changes
