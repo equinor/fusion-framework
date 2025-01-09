@@ -2337,11 +2337,6 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-utils@2.1.2':
-    resolution: {integrity: sha512-RmkNqbuvO+NQQKiGI9LxqkYq7Lyc4QFd700U8nURCo5PixToNCx0Awzru6brkrTDz0W8bQ6JE4P5B/ZWYVowXQ==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
-
   '@equinor/fusion-react-utils@2.2.0':
     resolution: {integrity: sha512-W5MXUaiqC+9jQjcFrUBplUyEwmBtT/r0hudbQBlKMqxWQY7C5lrC540Vy7zgdzZ77eU75DRw8gW0ytsugQG/4A==}
     peerDependencies:
@@ -9668,7 +9663,7 @@ snapshots:
 
   '@equinor/fusion-react-checkbox@0.5.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.0(react@18.3.1)
       '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-formfield': 1.1.1
     transitivePeerDependencies:
@@ -9688,7 +9683,7 @@ snapshots:
 
   '@equinor/fusion-react-divider@0.2.13(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.0(react@18.3.1)
       '@equinor/fusion-wc-divider': 0.2.23
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -9696,7 +9691,7 @@ snapshots:
 
   '@equinor/fusion-react-icon@0.2.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.1.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.0(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
@@ -9760,11 +9755,6 @@ snapshots:
   '@equinor/fusion-react-utils@2.1.1(react@18.3.1)':
     dependencies:
       date-fns: 3.6.0
-      react: 18.3.1
-
-  '@equinor/fusion-react-utils@2.1.2(react@18.3.1)':
-    dependencies:
-      date-fns: 4.1.0
       react: 18.3.1
 
   '@equinor/fusion-react-utils@2.2.0(react@18.3.1)':
