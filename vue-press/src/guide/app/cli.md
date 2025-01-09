@@ -24,11 +24,12 @@ import { defineAppConfig } from '@equinor/fusion-framework-cli';
 export default defineAppConfig() => (
     {
         environment: {
-            scope: 'default',
+            var: 'default',
         },
         endpoints: {
             api: {
                 url: 'https://api.example.com',
+                scopes: ['api.read'],
             },
         },
     }
@@ -40,7 +41,10 @@ export default defineAppConfig() => (
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
 export const configure: AppModuleInitiator = (configurator, { env }) => {
     const { endpoints } = env.config.environment;
-    configurator.configureClient( 'api', endpoints.api );
+    configurator.configureHttpClient( 'api', {
+      baseUri: endpoints.api.url,
+      defaultScopes: endpoints.api.scopes,
+    });
 };
 ```
 
@@ -55,6 +59,7 @@ import { defineAppManifest } from '@equinor/fusion-framework-cli';
 export default defineAppManifest(() => ({
   build: {
     entryPoint: 'index.js',
+    version: '1.0.1',
   },
 });
 ```
@@ -75,14 +80,14 @@ Building the application for `production` mode
 fusion-framework-cli app build
 ```
 
-> To create zipped standalone app bundle see the ``app pack``command below
+> To create zipped standalone app bundle see the ``app build-pack``command below
 
 ## App bundle
 
 Create zipped standalone app bundle to upload to your portal.
 
 ```sh
-fusion-framework-cli app pack
+fusion-framework-cli app build-pack
 ```
 
 > its important to set your package type to module to generate a proper app-bundle for use in the Fusion portal, add `"type": "module"` to your package.json.
