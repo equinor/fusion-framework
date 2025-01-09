@@ -630,7 +630,7 @@ export class Query<TDataType, TQueryArguments = any> {
         args: TQueryArguments,
         changes: Parameters<QueryCache<TDataType, TQueryArguments>['mutate']>[1],
         options?: { allowCreation?: boolean },
-    ): void {
+    ): VoidFunction {
         const key = this.#generateCacheKey(args);
         if (key in this.cache.state === false) {
             if (options?.allowCreation === undefined) {
@@ -639,7 +639,7 @@ export class Query<TDataType, TQueryArguments = any> {
                 );
             } else if (options.allowCreation === false) {
                 /** does not allow creation, can not mutate */
-                return;
+                return () => {};
             }
             const { value } = typeof changes === 'function' ? changes() : changes;
             this.cache.setItem(key, {
@@ -648,7 +648,7 @@ export class Query<TDataType, TQueryArguments = any> {
                 value,
             });
         }
-        this.#cache.mutate(key, changes);
+        return this.#cache.mutate(key, changes);
     }
 
     /**

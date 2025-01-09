@@ -15,11 +15,21 @@ export default function createActions<TType = any, TArgs = any>() {
          * Action to set a cache entry.
          *
          * @param key The cache key.
+         * @param record The cache record to set.
+         * @returns An action object with the cache key and record.
+         */
+        set: createAction('cache/set', (key: string, record: QueryCacheRecord<TType, TArgs>) => ({
+            payload: { key, record },
+        })),
+        /**
+         * Action to set a cache entry.
+         *
+         * @param key The cache key.
          * @param entry The cache entry, including value, arguments, and transaction identifier.
          * @returns An action object with the cache key and entry.
          */
-        set: createAction(
-            'cache/set',
+        insert: createAction(
+            'cache/insert',
             (key: string, entry: { value: TType; args: TArgs; transaction: string }) => {
                 return { payload: { key, entry } };
             },
