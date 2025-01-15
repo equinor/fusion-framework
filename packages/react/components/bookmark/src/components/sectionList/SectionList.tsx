@@ -1,6 +1,6 @@
 import { Icon } from '@equinor/eds-core-react';
 import { useBookmarkGrouping } from '../../hooks';
-import { Row } from '../row/Row';
+import { MenuOption, Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
 // TODO - export from `@equinor/fusion-framework-react-module-bookmark`
@@ -8,11 +8,9 @@ import type { BookmarkWithoutData } from '@equinor/fusion-framework-module-bookm
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCallback, useState } from 'react';
 import { delete_to_trash, share, edit, close, update } from '@equinor/eds-icons';
-import { useFramework } from '@equinor/fusion-framework-react';
-import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 import { filterEmptyGroups, sortByName, toHumanReadable } from '../../utils/utils';
-import { AppModule } from '@equinor/fusion-framework-module-app';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { from } from 'rxjs';
 
 Icon.add({
     delete_to_trash,
@@ -29,14 +27,13 @@ type SectionListProps = {
 export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
     // const { deleteBookmarkById, updateBookmark, removeBookmarkFavorite } = useBookmark();
 
-    const { provider: bookmarkProvider, currentApp } = useBookmarkComponentContext();
+    const { provider, currentApp, showEditBookmark, addBookmarkToClipboard } =
+        useBookmarkComponentContext();
 
     // TODO - should be removed when bookmark has property for isOwner
     const user = useCurrentUser();
 
     const [isMenuByIdOpen, setIsMenuByIdOpen] = useState('');
-
-    const { event: eventProvider } = useFramework<[AppModule]>().modules;
 
     const createMenuOptions = useCallback(
         (bookmark: BookmarkWithoutData) => {
@@ -49,9 +46,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                         name: 'Edit',
                         disabled: appKey !== bookmark.appKey,
                         onClick: () => {
-                            eventProvider.dispatchEvent('onBookmarkEdit', {
-                                detail: { bookmarkId },
-                            });
+                            showEditBookmark(bookmarkId);
                         },
                         Icon: <Icon name="edit" />,
                     },
@@ -59,8 +54,22 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                         name: 'Update with current view',
                         disabled: appKey !== bookmark.appKey,
                         onClick: () => {
-                            bookmarkProvider.updateBookmarkAsync(bookmark.id);
                             // TODO: add success and failure message
+                            from(
+                                provider.updateBookmark(bookmark.id, undefined, {
+                                    excludePayloadGeneration: false,
+                                }),
+                            ).subscribe({
+                                error(err) {
+                                    console.error(
+                                        'Failed to update bookmark with current view',
+                                        err,
+                                    );
+                                },
+                                complete() {
+                                    console.log('Bookmark updated with current view');
+                                },
+                            });
                         },
                         Icon: <Icon name="update" />,
                     },
@@ -68,47 +77,64 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                         name: 'Remove',
                         disabled: false,
                         onClick: () => {
-                            bookmarkProvider.deleteBookmarkAsync(bookmark.id);
                             // TODO: add success and failure message
+                            from(provider.deleteBookmark(bookmark.id)).subscribe({
+                                error(err) {
+                                    console.error('Failed to remove bookmark', err);
+                                },
+                                complete() {
+                                    console.log('Bookmark removed');
+                                },
+                            });
                         },
                         Icon: <Icon name="delete_to_trash" />,
                     },
                     {
                         name: bookmark.isShared ? 'Unshare' : 'Share',
                         disabled: false,
-                        onClick: () => {
-                            if (!bookmark.isShared) {
-                                const url = appendBookmarkIdToUrl(bookmark.id);
-                                navigator.clipboard.writeText(url);
-                                eventProvider.dispatchEvent('onBookmarkUrlCopy', {
-                                    detail: { url },
-                                });
-                            }
-
-                            // TODO - this flag should only be set by backend when sharing is successful
-                            bookmarkProvider.updateBookmarkAsync(
-                                bookmark.id,
-                                { isShared: !bookmark.isShared },
-                                { excludePayloadGeneration: true },
-                            );
+                        onClick: async () => {
+                            from(
+                                provider.updateBookmark(bookmark.id, {
+                                    isShared: !bookmark.isShared,
+                                }),
+                            ).subscribe({
+                                next(value) {
+                                    if (value.isShared) {
+                                        addBookmarkToClipboard(value.id);
+                                    }
+                                },
+                                error(err) {
+                                    console.error('Failed to update bookmark', err);
+                                },
+                                complete() {
+                                    console.log('Bookmark updated');
+                                },
+                            });
                         },
                         Icon: <Icon name="share" />,
                     },
-                ];
+                ] as MenuOption[];
             } else {
                 return [
                     {
                         name: 'Unfavourite',
                         disabled: false,
                         onClick: () => {
-                            bookmarkProvider.deleteBookmarkAsync(bookmark.id);
+                            from(provider.removeBookmarkAsFavorite(bookmark.id)).subscribe({
+                                error(err) {
+                                    console.error('Failed to remove bookmark from favorites', err);
+                                },
+                                complete() {
+                                    console.log('Bookmark removed from favorites');
+                                },
+                            });
                         },
                         Icon: <Icon name="close" />,
                     },
                 ];
             }
         },
-        [eventProvider, bookmarkProvider, user, currentApp?.appKey],
+        [provider, showEditBookmark, addBookmarkToClipboard, user, currentApp?.appKey],
     );
 
     return (

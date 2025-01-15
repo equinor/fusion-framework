@@ -1,10 +1,10 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
-import { useFramework, useFrameworkModule } from '@equinor/fusion-framework-react';
+import { useFrameworkModule } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { BookmarkUpdate } from '@equinor/fusion-framework-module-bookmark';
 
@@ -12,7 +12,6 @@ import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-
 import styled from 'styled-components';
 
 import { useBookmarkComponentContext } from '../BookmarkProvider';
-import { appendBookmarkIdToUrl } from '../../utils/append-bookmark-to-uri';
 
 const Styled = {
     Dialog: styled(Dialog)`
@@ -42,7 +41,7 @@ export const EditBookmarkModal = ({
     readonly onClose: (b: boolean) => void;
     readonly bookmarkId: string;
 }) => {
-    const { provider } = useBookmarkComponentContext();
+    const { provider, addBookmarkToClipboard, currentApp } = useBookmarkComponentContext();
 
     const [state, setState] = useState<BookmarkUpdate>({
         name: '',
@@ -52,23 +51,15 @@ export const EditBookmarkModal = ({
 
     const [updatePayload, setUpdatePayload] = useState(false);
 
-    const { event } = useFramework<[AppModule]>().modules;
-
-    const bookmark$ = useMemo(
-        () => provider.getBookmark(bookmarkId, { excludePayload: true }),
-        [provider, bookmarkId],
-    );
+    const bookmark$ = useMemo(() => from(provider.getBookmark(bookmarkId)), [provider, bookmarkId]);
 
     const { value: bookmark, complete: isLoadingBookmark } = useObservableState(bookmark$);
 
     // set the state when the bookmark is loaded
     useEffect(() => {
         if (bookmark) {
-            setState({
-                name: bookmark.name,
-                description: bookmark.description,
-                isShared: bookmark.isShared,
-            });
+            const { name, description, isShared } = bookmark;
+            setState({ name, description, isShared });
         }
     }, [bookmark]);
 
@@ -86,8 +77,21 @@ export const EditBookmarkModal = ({
 
     const updateBookmark = useCallback(
         async (updates: BookmarkUpdate) => {
-            await provider.updateBookmarkAsync(bookmarkId, updates, {
-                excludePayloadGeneration: !updatePayload,
+            from(
+                provider.updateBookmark(bookmarkId, updates, {
+                    excludePayloadGeneration: !updatePayload,
+                }),
+            ).subscribe({
+                next: (updatedBookmark) => {
+                    console.log('Bookmark updated', updatedBookmark);
+                },
+                error: (error) => {
+                    console.error('Failed to update bookmark', error);
+                },
+                complete: () => {
+                    console.log('Bookmark updated');
+                    onClose(false);
+                },
             });
             // TODO: Show success message
             // TODO: should this call onUpdated, with the updated bookmark?
@@ -130,7 +134,7 @@ export const EditBookmarkModal = ({
                 <div>
                     <Label htmlFor="app" label="App" />
                     {/** TODO - show ghost while loading app name  */}
-                    <Input readOnly={true} value={appName || ''} />
+                    <Input readOnly={true} value={appName?.displayName || ''} />
                 </div>
 
                 <Styled.CheckboxWrapper>
@@ -138,21 +142,23 @@ export const EditBookmarkModal = ({
                         label="Is Shared"
                         checked={state.isShared}
                         onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => {
-                            if (changeEvent.target.checked) {
-                                const url = appendBookmarkIdToUrl(bookmark?.id || '');
-                                navigator.clipboard.writeText(url);
-                                event.dispatchEvent('onBookmarkUrlCopy', { detail: { url } });
+                            const isShared = changeEvent.target.checked;
+                            if (isShared) {
+                                addBookmarkToClipboard(bookmarkId);
                             }
-                            setState((s) => ({ ...s, isShared: changeEvent.target.checked }));
+                            setState((s) => ({ ...s, isShared }));
                         }}
                     />
-                    <Checkbox
-                        label="Update bookmark with current view"
-                        checked={updatePayload}
-                        onChange={() => {
-                            setUpdatePayload((s) => !s);
-                        }}
-                    />
+                    {/* only allow updating payload if the app is the same as the creator of the app */}
+                    {bookmark?.appKey === currentApp?.name && provider.canCreateBookmarks && (
+                        <Checkbox
+                            label="Update bookmark with current view"
+                            checked={updatePayload}
+                            onChange={() => {
+                                setUpdatePayload((s) => !s);
+                            }}
+                        />
+                    )}
                 </Styled.CheckboxWrapper>
             </Styled.DialogContent>
             <Dialog.Actions>
