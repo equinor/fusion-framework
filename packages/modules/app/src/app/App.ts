@@ -600,7 +600,7 @@ export class App<
         if (manifest.build?.entryPoint) {
             this.#state.next(actions.importApp(manifest.build.entryPoint));
         } else {
-            console.log(
+            console.warn(
                 `The ${manifest.appKey} is missing entryPoint, please upload a build for the app before continuing`,
             );
         }
