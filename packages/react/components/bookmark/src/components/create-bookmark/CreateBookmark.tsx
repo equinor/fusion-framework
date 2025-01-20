@@ -35,12 +35,16 @@ export const CreateBookmarkModal = ({
 
     const createBookmark = useCallback(
         async (args: BookmarkCreateArgs<never>) => {
+            if (!provider) {
+                console.error('Provider not available');
+                return;
+            }
             // TODO: Show success message
             // TODO: should this call onCreated, with the new bookmark?
             // TODO: should current bookmark be updated?
             const sub = from(provider.createBookmark(args)).subscribe({
                 next: (bookmark) => {
-                    console.log('Bookmark created', bookmark);
+                    console.debug('Bookmark created', bookmark);
                 },
                 error: (error) => {
                     console.error('Failed to create bookmark', error);
