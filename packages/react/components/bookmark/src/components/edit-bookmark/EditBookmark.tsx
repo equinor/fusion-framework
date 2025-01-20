@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { from, of } from 'rxjs';
+import { EMPTY, from, of } from 'rxjs';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
@@ -51,7 +51,10 @@ export const EditBookmarkModal = ({
 
     const [updatePayload, setUpdatePayload] = useState(false);
 
-    const bookmark$ = useMemo(() => from(provider.getBookmark(bookmarkId)), [provider, bookmarkId]);
+    const bookmark$ = useMemo(
+        () => from(provider ? provider.getBookmark(bookmarkId) : EMPTY),
+        [provider, bookmarkId],
+    );
 
     const { value: bookmark, complete: isLoadingBookmark } = useObservableState(bookmark$);
 
@@ -77,19 +80,22 @@ export const EditBookmarkModal = ({
 
     const updateBookmark = useCallback(
         async (updates: BookmarkUpdate) => {
+            if (!provider) {
+                console.error('Provider not available');
+                return;
+            }
             from(
                 provider.updateBookmark(bookmarkId, updates, {
                     excludePayloadGeneration: !updatePayload,
                 }),
             ).subscribe({
                 next: (updatedBookmark) => {
-                    console.log('Bookmark updated', updatedBookmark);
+                    console.debug('Bookmark updated', updatedBookmark);
                 },
                 error: (error) => {
                     console.error('Failed to update bookmark', error);
                 },
                 complete: () => {
-                    console.log('Bookmark updated');
                     onClose(false);
                 },
             });
@@ -150,7 +156,7 @@ export const EditBookmarkModal = ({
                         }}
                     />
                     {/* only allow updating payload if the app is the same as the creator of the app */}
-                    {bookmark?.appKey === currentApp?.name && provider.canCreateBookmarks && (
+                    {bookmark?.appKey === currentApp?.name && provider?.canCreateBookmarks && (
                         <Checkbox
                             label="Update bookmark with current view"
                             checked={updatePayload}

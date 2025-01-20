@@ -37,9 +37,10 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
 
     const createMenuOptions = useCallback(
         (bookmark: BookmarkWithoutData) => {
+            if (!provider) return [];
             const appKey = currentApp?.appKey;
             const bookmarkId = bookmark.id;
-            const isOwner = bookmark.createdBy.azureUniqueId === user?.localAccountId;
+            const isOwner = bookmark.createdBy.id === user?.localAccountId;
             if (isOwner) {
                 return [
                     {
@@ -67,7 +68,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                                     );
                                 },
                                 complete() {
-                                    console.log('Bookmark updated with current view');
+                                    console.debug('Bookmark updated with current view');
                                 },
                             });
                         },
@@ -83,7 +84,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                                     console.error('Failed to remove bookmark', err);
                                 },
                                 complete() {
-                                    console.log('Bookmark removed');
+                                    console.debug('Bookmark removed');
                                 },
                             });
                         },
@@ -107,7 +108,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                                     console.error('Failed to update bookmark', err);
                                 },
                                 complete() {
-                                    console.log('Bookmark updated');
+                                    console.debug('Bookmark updated');
                                 },
                             });
                         },
@@ -125,7 +126,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                                     console.error('Failed to remove bookmark from favorites', err);
                                 },
                                 complete() {
-                                    console.log('Bookmark removed from favorites');
+                                    console.debug('Bookmark removed from favorites');
                                 },
                             });
                         },
@@ -154,7 +155,7 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
                         >
                             {b.isShared && (
                                 <SharedIcon
-                                    createdById={b.createdBy.azureUniqueId}
+                                    createdById={b.createdBy.id}
                                     createdBy={b.createdBy.name}
                                 />
                             )}

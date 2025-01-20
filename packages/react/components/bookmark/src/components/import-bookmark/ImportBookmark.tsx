@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import styled from 'styled-components';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
-import { EMPTY, filter, from, of } from 'rxjs';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, from, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 const Styled = {
@@ -17,33 +17,27 @@ const Styled = {
 export const ImportBookmarkModal = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { provider } = useBookmarkComponentContext();
+    const { provider, currentUser } = useBookmarkComponentContext();
 
     // Observe changes to current bookmark and check if it is already in bookmarks or favorites
     const newBookmark$ = useMemo(() => {
+        if (!provider) {
+            return of(null);
+        }
         return provider.currentBookmark$.pipe(
+            // filter out null values, not interested in those
             filter((bookmark) => !!bookmark),
-            withLatestFrom(provider.bookmarks$),
-            switchMap(([bookmark, bookmarks]) => {
-                if (bookmarks.find((b) => b.id === bookmark?.id)) {
-                    return EMPTY;
+            switchMap((bookmark) => {
+                const checkBookmark = bookmark && bookmark.createdBy.id !== currentUser?.id;
+                if (!checkBookmark) {
+                    return of(null);
                 }
-                console.log('Checking if bookmark is in favorites', bookmark);
-                return of(bookmark);
+                return from(provider.isBookmarkInFavorites(bookmark.id)).pipe(
+                    map((isFavorite) => (isFavorite ? null : bookmark)),
+                );
             }),
-            switchMap((bookmark) =>
-                from(provider.isBookmarkInFavorites(bookmark.id)).pipe(
-                    switchMap((isFavorite) => {
-                        console.log(555, 'Is favorite', isFavorite);
-                        if (isFavorite) {
-                            return EMPTY;
-                        }
-                        return of(bookmark);
-                    }),
-                ),
-            ),
         );
-    }, [provider]);
+    }, [provider, currentUser?.id]);
 
     const { value: newBookmark } = useObservableState(newBookmark$);
 
@@ -55,15 +49,12 @@ export const ImportBookmarkModal = () => {
 
     const onAddBookmarkFavorite = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (!provider) {
+                console.error('Provider not available');
+                return;
+            }
             from(provider.addBookmarkToFavorites(e.currentTarget.value)).subscribe({
-                next: (bookmark) => {
-                    console.log(333, 'Bookmark added to favorites', bookmark);
-                },
-                error: (error) => {
-                    console.error('Failed to add bookmark to favorites', error);
-                },
                 complete: () => {
-                    console.log('Bookmark added to favorites');
                     setIsOpen(false);
                 },
             });
