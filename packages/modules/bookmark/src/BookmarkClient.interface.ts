@@ -15,8 +15,8 @@ export type BookmarksFilter = {
     contextId?: string;
     sourceSystem?: {
         identifier?: string;
-        name?: string;
-        subSystem?: string;
+        name?: string | null;
+        subSystem?: string | null;
     };
 };
 

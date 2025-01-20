@@ -1,23 +1,22 @@
 import * as z from 'zod';
 import { BookmarkData } from './types';
 
-const bookmarkUserSchema = z.object({
-    azureUniqueId: z.string(),
+export const bookmarkUserSchema = z.object({
+    id: z.string(),
     name: z.string(),
     mail: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    jobTitle: z.string().optional(),
-    accountType: z.enum(['Employee', 'Consultant', 'External', 'Application', 'Local']).optional(),
-    accountClassification: z.enum(['Unclassified', 'Internal', 'External']).optional(),
 });
 
-export const bookmarkSourceSystemSchema = z.object({
-    identifier: z.string(),
-    name: z.string().optional(),
-    subSystem: z.string().optional(),
-});
+export const bookmarkSourceSystemSchema = z.object(
+    {
+        identifier: z.string(),
+        name: z.string().nullish(),
+        subSystem: z.string().nullish(),
+    },
+    { message: 'invalid source system' },
+);
 
-const bookmarkContextSchema = z.object({
+export const bookmarkContextSchema = z.object({
     id: z.string(),
     name: z.string().optional(),
     type: z.string().optional(),
@@ -34,7 +33,7 @@ export const bookmarkSchema = z.object({
     updated: z.date().optional(),
     updatedBy: bookmarkUserSchema.optional(),
     context: bookmarkContextSchema.optional(),
-    sourceSystem: bookmarkSourceSystemSchema.optional(),
+    sourceSystem: bookmarkSourceSystemSchema.nullish(),
 });
 
 export const bookmarksSchema = z.array(bookmarkSchema);
