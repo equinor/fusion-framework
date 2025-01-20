@@ -97,40 +97,40 @@ importers:
     dependencies:
       '@ag-grid-community/client-side-row-model':
         specifier: ~32.3.2
-        version: 32.3.2
+        version: 32.3.3
       '@ag-grid-community/core':
         specifier: ~32.3.2
-        version: 32.3.2
+        version: 32.3.3
       '@ag-grid-community/react':
         specifier: ~32.3.2
-        version: 32.3.2(@ag-grid-community/core@32.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 32.3.3(@ag-grid-community/core@32.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ag-grid-community/styles':
-        specifier: ^32.1.0
-        version: 32.1.0
+        specifier: ^33.0.3
+        version: 33.0.3
       '@ag-grid-enterprise/clipboard':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@ag-grid-enterprise/column-tool-panel':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@ag-grid-enterprise/excel-export':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@ag-grid-enterprise/filter-tool-panel':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@ag-grid-enterprise/menu':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@ag-grid-enterprise/range-selection':
         specifier: ^32.0.0
-        version: 32.0.2
+        version: 32.3.3
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../packages/modules/ag-grid
       '@equinor/fusion-react-ag-grid-styles':
         specifier: ^31.2.3
-        version: 31.2.3(@ag-grid-community/styles@32.1.0)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 31.2.3(@ag-grid-community/styles@33.0.3)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -868,7 +868,7 @@ importers:
     dependencies:
       '@ag-grid-enterprise/core':
         specifier: ~32.3.2
-        version: 32.3.2
+        version: 32.3.3
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1874,57 +1874,51 @@ packages:
   '@actions/http-client@2.2.1':
     resolution: {integrity: sha512-KhC/cZsq7f8I4LfZSJKgCvEwfkE8o1538VoBeoGzokVLLnbFDEAdFD3UhoMklxo2un9NJVBdANOresx7vTHlHw==}
 
-  '@ag-grid-community/client-side-row-model@32.3.2':
-    resolution: {integrity: sha512-ulDslHzoZ3nkBcSEiEXYoULLzhZ6lVnTTL/J7xeFV8esBaDkP4+heesG+0oAG2qKKWSRorsJyTTCJMrNodxerQ==}
+  '@ag-grid-community/client-side-row-model@32.3.3':
+    resolution: {integrity: sha512-/6OFltj9qax/xfOcYMOKGFQRFTrPX8hrELfS2jChWwpo/+rpnnFqN2iUlIiAB1tDJZsi2ryl8S4UoFSTcEv/VA==}
 
-  '@ag-grid-community/core@32.0.2':
-    resolution: {integrity: sha512-Pm4KpWuoHtn/eXgzunX0R10TZt6ze3KIz89Q/pzl2ZE+GdEjn6vPmgG+lMb/z90FgFwnMuIOQiz1qk0x5/xaHA==}
+  '@ag-grid-community/core@32.3.3':
+    resolution: {integrity: sha512-JMr5ahDjjl+pvQbBM1/VrfVFlioCVnMl1PKWc6MC1ENhpXT1+CPQdfhUEUw2VytOulQeQ4eeP0pFKPuBZ5Jn2g==}
 
-  '@ag-grid-community/core@32.3.2':
-    resolution: {integrity: sha512-m9+x9y1hFoXGklaXxN474pxYc7B/M/hH6pcBtBl+mQpCC4TwUAy516rDsFRH6WqpYiakfBdx1A3mhQbavNEDAQ==}
+  '@ag-grid-community/csv-export@32.3.3':
+    resolution: {integrity: sha512-uu5BdegnQCpoySFbhd7n0/yK9mMoepZMN6o36DblPydLXCOLEqOuroIPqQv008slDOK676Pe/O6bMszY3/MUlQ==}
 
-  '@ag-grid-community/csv-export@32.0.2':
-    resolution: {integrity: sha512-OUvFiq6C/uwo2AQi+xisnECXDRnskmFPjp0BzK/3ybstAZuF3tpYcM57UEmnAR3u3Gnav+MOfKmZTCSL8c30fw==}
-
-  '@ag-grid-community/react@32.3.2':
-    resolution: {integrity: sha512-ItPrOOfXgPEtzEH0BVuB9LigH5AAejsdDgASfe17Js4zkvRxvAwekg8evIpk1EEnmwfr0CWQ6wZjOPnzd4nDcg==}
+  '@ag-grid-community/react@32.3.3':
+    resolution: {integrity: sha512-YU8nOMZjvJsrbbW41PT1jFZQw67p1RGvTk3W7w1dFmtzXFOoXzpB2pWf2jMxREyLYGvz2P9TwmfeHEM50osSPQ==}
     peerDependencies:
-      '@ag-grid-community/core': 32.3.2
+      '@ag-grid-community/core': 32.3.3
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@ag-grid-community/styles@32.1.0':
-    resolution: {integrity: sha512-OjakLetS/zr0g5mJWpnjldk/RjGnl7Rv3I/5cGuvtgdmSgS+4FNZMr8ZmyR8Bl34s0RM63OSIphpVaFGlnJM4w==}
+  '@ag-grid-community/styles@33.0.3':
+    resolution: {integrity: sha512-1bXrYoVj5TIpLvyjgXHvKnYrC0/JvrdGDdJ3mYfT58GulDt1iNQqhjxMnZB+sxMdQoOc681jmKTGcWzOEDE1Dw==}
 
-  '@ag-grid-enterprise/clipboard@32.0.2':
-    resolution: {integrity: sha512-lswW1yiRWst35TgTE/H5YiJO3qZAuLirKKMbDAAj3C6WNN61S2m59QJUP1VUecwhGUgES2xxuSJDYp3qyaH5Qw==}
+  '@ag-grid-enterprise/clipboard@32.3.3':
+    resolution: {integrity: sha512-W9AuZCmLU/wCk6qAMpcijbQ6jgHnLAoz8rnxExeIwIEfVBZ5HcPahwbT28eksGmPjc+rpPzLLzP8KQBnSpGU4A==}
 
-  '@ag-grid-enterprise/column-tool-panel@32.0.2':
-    resolution: {integrity: sha512-d0s2T55ILUxDt7lw+aginaJhnAfo7RXyodzl/7dBhig2zqUHmQCctMhphrjj/c1QFni6beCVNhabshI57/R31A==}
+  '@ag-grid-enterprise/column-tool-panel@32.3.3':
+    resolution: {integrity: sha512-Gw5C6vb1mGwiyutMMDL0S+6lTMmbSApNkZUhFXk1DX0c83ftHAf05qF1D3o5cc+aVHNV7E2EkLuwLIBihW/dsw==}
 
-  '@ag-grid-enterprise/core@32.0.2':
-    resolution: {integrity: sha512-ksHpdHqgg7OR5XMQWZ51vvvN8APhYkbtwuHG7B6QNP6JmdVfa88kMCpvb08So/JR4lIlvhunKHhosI41EjSBkw==}
+  '@ag-grid-enterprise/core@32.3.3':
+    resolution: {integrity: sha512-8qsBPIdx55qY1sqOpmaiSgYXZT5qRy6wScN2goaXDpffxkyTNiQgs6Iq0YdW4c6VJM4Ua87B0RuysOI925ZQ9A==}
 
-  '@ag-grid-enterprise/core@32.3.2':
-    resolution: {integrity: sha512-+NfYdG8v6rrs/x/9UvsWHSlaGw2ffEJc0fEN5oDgyDYz0S+vywWDNn7OL7KlpMx9W9KpTUv8Zx0VzI5qfZPBLQ==}
+  '@ag-grid-enterprise/excel-export@32.3.3':
+    resolution: {integrity: sha512-lvzqdRPlUXkMnXzojYrmtjpAImQZaiZfq3N13jgc+r3DTf0zIC5LC3vOXRJyid0MVj4ZeeWQK1/GsrRNImamTg==}
 
-  '@ag-grid-enterprise/excel-export@32.0.2':
-    resolution: {integrity: sha512-I3Gdfk3SSBZK2h32gr3p/FD5AICyRf3Gmu+sPjf3USlW2SwIl7h6j+/sgsEsm1XuLyrWjBFRJzpJjCiMGMvCPQ==}
+  '@ag-grid-enterprise/filter-tool-panel@32.3.3':
+    resolution: {integrity: sha512-75XzF94QvQWHIIaUGRTlGQiMK9kxhnoqflyr9qkaTAXLHO33t3A92N6LHbBNJTaXWVIxxiZsdLLrgm38dPhcrQ==}
 
-  '@ag-grid-enterprise/filter-tool-panel@32.0.2':
-    resolution: {integrity: sha512-n+EmloIUI6knEBoOdupVayUm9tYRJ1qZO7BOhQpeh63RPjfBkZqG+QVoH3As/7TwqKOfKIK19V2yQlToFxxbgg==}
+  '@ag-grid-enterprise/menu@32.3.3':
+    resolution: {integrity: sha512-cCr8eLY9xoDgH/3lojy1wb0zqXRxPUsZwmlID7In5L1UMvMat42Trh2N9gu9qhtOft9LOYfI+Vz2zmPtlpZNug==}
 
-  '@ag-grid-enterprise/menu@32.0.2':
-    resolution: {integrity: sha512-uJKR3ZGjZbhENyUSAdt/2N4Ap/qnOGx7oddmZ9nJZUisjRBU6J2+qIEcEv5cl0OpQdD34sqeGUiDD9cOnJXtHg==}
+  '@ag-grid-enterprise/range-selection@32.3.3':
+    resolution: {integrity: sha512-az7vdldLbkSjIE0VlVDI1ig9V0+GPTNVu1+HkxL/fs/hYjBWtJW/DnVVXABvE9FsL4xbkmhIU14NhUEhufqgyw==}
 
-  '@ag-grid-enterprise/range-selection@32.0.2':
-    resolution: {integrity: sha512-S+Z1d0e9Z1SGB0M/sLgv9wiiXcw/yfTKbiLKP67638lZzgrQIQuPIgLBv+FVFNktAkCgI6XuBwFMHviIsEhhWA==}
+  '@ag-grid-enterprise/row-grouping@32.3.3':
+    resolution: {integrity: sha512-tcxcNuK6Sf/RXhAyFKd+oo8w6Pb4kEI037x650jFW7+G+CndZ7+GOvfI7T4p/oYxiDuUQIJRRlD1YSdzRwKoFQ==}
 
-  '@ag-grid-enterprise/row-grouping@32.0.2':
-    resolution: {integrity: sha512-JcWvSDDsFfgjiW7LEPDpUCiEIhRmKTWS529hHERE0TGPUrBNXtLBem+S8HAfqT2fMMYOC8EjL+x+x0oB9lhTuQ==}
-
-  '@ag-grid-enterprise/side-bar@32.0.2':
-    resolution: {integrity: sha512-B8RBT7YAWLfw7Sa8XCadyz8KnrIlx52ncjzsUg1snwCKbFOTg5QJJtu/b0kNlPxLI0lFjFQziUntMhSScXUkjQ==}
+  '@ag-grid-enterprise/side-bar@32.3.3':
+    resolution: {integrity: sha512-G2MkzV+BhnQZsxLxxIjB3Y2s6O3Wewi5BUEj5bQ6rsKi3Hl1Cyx6w5K1+qyh4TahR6fAfbnB6ymBtsYV1PNmGQ==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -4941,11 +4935,8 @@ packages:
     resolution: {integrity: sha512-DnyqqifT4Jrcvb8USYjp6FHtBpEIz1mnXu6pTRHZ0RL69LbQYiO+0lDFg5+OKA7U29oWSs3a/i8fhn8ZcceIWg==}
     engines: {node: '>=12.0'}
 
-  ag-charts-types@10.0.2:
-    resolution: {integrity: sha512-Nxo5slHOXlaeg0gRIsVnovAosQzzlYfWJtdDy0Aq/VvpJru/PJ+5i2c9aCyEhgRxhBjImsoegwkgRj7gNOWV6Q==}
-
-  ag-charts-types@10.3.1:
-    resolution: {integrity: sha512-oZvu9vJLk6lmzaYi0TmVVmHFZJpVNFziU0bnllx4wR3muXCmnxz5LouKIZ8CYnNiC7VO5HmHNlFu+0DmEO5zxg==}
+  ag-charts-types@10.3.3:
+    resolution: {integrity: sha512-8rmyquaTkwfP4Lzei/W/cbkq9wwEl8+grIo3z97mtxrMIXh9sHJK1oJipd/u08MmBZrca5Jjtn5F1+UNPu/4fQ==}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -5145,8 +5136,16 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
+  call-bind-apply-helpers@1.0.1:
+    resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
+    engines: {node: '>= 0.4'}
+
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
+    engines: {node: '>= 0.4'}
+
+  call-bound@1.0.3:
+    resolution: {integrity: sha512-YTd+6wGlNlPxSuri7Y6X8tY2dmm12UMH66RpKMhiX6rsk5wXXnYgbUcOt8kiS31/AjfoTOvCsE+w8nZQLQnzHA==}
     engines: {node: '>= 0.4'}
 
   callsites@3.1.0:
@@ -5707,6 +5706,10 @@ packages:
     peerDependencies:
       react: '>=16.12.0'
 
+  dunder-proto@1.0.1:
+    resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
+    engines: {node: '>= 0.4'}
+
   earcut@2.2.4:
     resolution: {integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==}
 
@@ -5770,6 +5773,10 @@ packages:
     resolution: {integrity: sha512-jxayLKShrEqqzJ0eumQbVhTYQM27CfT1T35+gCgDFoL82JLsXqTJ76zv6A0YLOgEnLUMvLzsDsGIrl8NFpT2gQ==}
     engines: {node: '>= 0.4'}
 
+  es-define-property@1.0.1:
+    resolution: {integrity: sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==}
+    engines: {node: '>= 0.4'}
+
   es-errors@1.3.0:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
@@ -5783,6 +5790,10 @@ packages:
 
   es-object-atoms@1.0.0:
     resolution: {integrity: sha512-MZ4iQ6JwHOBQjahnjwaC1ZtIBH+2ohjamzAO3oaHcXYup7qxjF2fixyH+Q71voWHeOkI2q/TnJao/KfXYIZWbw==}
+    engines: {node: '>= 0.4'}
+
+  es-object-atoms@1.1.1:
+    resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
     engines: {node: '>= 0.4'}
 
   es-set-tostringtag@2.0.3:
@@ -6122,6 +6133,14 @@ packages:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
     engines: {node: '>= 0.4'}
 
+  get-intrinsic@1.2.7:
+    resolution: {integrity: sha512-VW6Pxhsrk0KAOqs3WEd0klDiF/+V7gQOpAvY1jVU/LHmaD/kQO4523aiJuikX/QAKYiW6x8Jh+RJej1almdtCA==}
+    engines: {node: '>= 0.4'}
+
+  get-proto@1.0.1:
+    resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
+    engines: {node: '>= 0.4'}
+
   get-stream@8.0.1:
     resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
     engines: {node: '>=16'}
@@ -6187,6 +6206,10 @@ packages:
   gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
 
+  gopd@1.2.0:
+    resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
+    engines: {node: '>= 0.4'}
+
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
@@ -6232,6 +6255,10 @@ packages:
 
   has-symbols@1.0.3:
     resolution: {integrity: sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==}
+    engines: {node: '>= 0.4'}
+
+  has-symbols@1.1.0:
+    resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
     engines: {node: '>= 0.4'}
 
   has-tostringtag@1.0.2:
@@ -6881,6 +6908,10 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
+  math-intrinsics@1.1.0:
+    resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
+    engines: {node: '>= 0.4'}
+
   mdast-util-to-hast@13.2.0:
     resolution: {integrity: sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==}
 
@@ -7087,6 +7118,10 @@ packages:
 
   object-inspect@1.13.2:
     resolution: {integrity: sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==}
+    engines: {node: '>= 0.4'}
+
+  object-inspect@1.13.3:
+    resolution: {integrity: sha512-kDCGIbxkDSXE3euJZZXzc6to7fCrKHNI/hSRQnRuQ+BWjFNzZwiFF8fj/6o2t2G9/jTj8PSIYTfCLelLZEeRpA==}
     engines: {node: '>= 0.4'}
 
   object-is@1.1.6:
@@ -7485,6 +7520,10 @@ packages:
     resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
     engines: {node: '>=0.6'}
 
+  qs@6.14.0:
+    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+    engines: {node: '>=0.6'}
+
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
 
@@ -7820,8 +7859,24 @@ packages:
   shiki@1.26.1:
     resolution: {integrity: sha512-Gqg6DSTk3wYqaZ5OaYtzjcdxcBvX5kCy24yvRJEgjT5U+WHlmqCThLuBUx0juyxQBi+6ug53IGeuQS07DWwpcw==}
 
+  side-channel-list@1.0.0:
+    resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
+    engines: {node: '>= 0.4'}
+
+  side-channel-map@1.0.1:
+    resolution: {integrity: sha512-VCjCNfgMsby3tTdo02nbjtM/ewra6jPHmpThenkTYh8pG9ucZ/1P8So4u4FGBek/BjpOVsDCMoLA/iuBKIFXRA==}
+    engines: {node: '>= 0.4'}
+
+  side-channel-weakmap@1.0.2:
+    resolution: {integrity: sha512-WPS/HvHQTYnHisLo9McqBHOJk2FkHO/tlpvldyrnem4aeQp4hai3gythswg6p01oSoTl58rcpiFAjF2br2Ak2A==}
+    engines: {node: '>= 0.4'}
+
   side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
+    engines: {node: '>= 0.4'}
+
+  side-channel@1.1.0:
+    resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
     engines: {node: '>= 0.4'}
 
   siginfo@2.0.0:
@@ -8879,88 +8934,79 @@ snapshots:
       tunnel: 0.0.6
       undici: 5.28.4
 
-  '@ag-grid-community/client-side-row-model@32.3.2':
+  '@ag-grid-community/client-side-row-model@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.3.2
+      '@ag-grid-community/core': 32.3.3
       tslib: 2.8.1
 
-  '@ag-grid-community/core@32.0.2':
+  '@ag-grid-community/core@32.3.3':
     dependencies:
-      ag-charts-types: 10.0.2
+      ag-charts-types: 10.3.3
       tslib: 2.8.1
 
-  '@ag-grid-community/core@32.3.2':
+  '@ag-grid-community/csv-export@32.3.3':
     dependencies:
-      ag-charts-types: 10.3.1
+      '@ag-grid-community/core': 32.3.3
       tslib: 2.8.1
 
-  '@ag-grid-community/csv-export@32.0.2':
+  '@ag-grid-community/react@32.3.3(@ag-grid-community/core@32.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      tslib: 2.8.1
-
-  '@ag-grid-community/react@32.3.2(@ag-grid-community/core@32.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@ag-grid-community/core': 32.3.2
+      '@ag-grid-community/core': 32.3.3
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ag-grid-community/styles@32.1.0': {}
+  '@ag-grid-community/styles@33.0.3': {}
 
-  '@ag-grid-enterprise/clipboard@32.0.2':
+  '@ag-grid-enterprise/clipboard@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-community/csv-export': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-community/csv-export': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
-  '@ag-grid-enterprise/column-tool-panel@32.0.2':
+  '@ag-grid-enterprise/column-tool-panel@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
-      '@ag-grid-enterprise/row-grouping': 32.0.2
-      '@ag-grid-enterprise/side-bar': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
+      '@ag-grid-enterprise/row-grouping': 32.3.3
+      '@ag-grid-enterprise/side-bar': 32.3.3
 
-  '@ag-grid-enterprise/core@32.0.2':
+  '@ag-grid-enterprise/core@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
 
-  '@ag-grid-enterprise/core@32.3.2':
+  '@ag-grid-enterprise/excel-export@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.3.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-community/csv-export': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
-  '@ag-grid-enterprise/excel-export@32.0.2':
+  '@ag-grid-enterprise/filter-tool-panel@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-community/csv-export': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
+      '@ag-grid-enterprise/side-bar': 32.3.3
 
-  '@ag-grid-enterprise/filter-tool-panel@32.0.2':
+  '@ag-grid-enterprise/menu@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
-      '@ag-grid-enterprise/side-bar': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/column-tool-panel': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
-  '@ag-grid-enterprise/menu@32.0.2':
+  '@ag-grid-enterprise/range-selection@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/column-tool-panel': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
-  '@ag-grid-enterprise/range-selection@32.0.2':
+  '@ag-grid-enterprise/row-grouping@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
-  '@ag-grid-enterprise/row-grouping@32.0.2':
+  '@ag-grid-enterprise/side-bar@32.3.3':
     dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
-
-  '@ag-grid-enterprise/side-bar@32.0.2':
-    dependencies:
-      '@ag-grid-community/core': 32.0.2
-      '@ag-grid-enterprise/core': 32.0.2
+      '@ag-grid-community/core': 32.3.3
+      '@ag-grid-enterprise/core': 32.3.3
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -9548,9 +9594,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@equinor/fusion-react-ag-grid-styles@31.2.3(@ag-grid-community/styles@32.1.0)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/fusion-react-ag-grid-styles@31.2.3(@ag-grid-community/styles@33.0.3)(@equinor/eds-tokens@0.9.2)(@equinor/fusion-react-styles@0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@ag-grid-community/styles': 32.1.0
+      '@ag-grid-community/styles': 33.0.3
       '@equinor/eds-tokens': 0.9.2
       '@equinor/fusion-react-styles': 0.6.2(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
@@ -13442,9 +13488,7 @@ snapshots:
 
   adm-zip@0.5.14: {}
 
-  ag-charts-types@10.0.2: {}
-
-  ag-charts-types@10.3.1: {}
+  ag-charts-types@10.3.3: {}
 
   ajv@6.12.6:
     dependencies:
@@ -13661,6 +13705,11 @@ snapshots:
 
   cac@6.7.14: {}
 
+  call-bind-apply-helpers@1.0.1:
+    dependencies:
+      es-errors: 1.3.0
+      function-bind: 1.1.2
+
   call-bind@1.0.7:
     dependencies:
       es-define-property: 1.0.0
@@ -13668,6 +13717,11 @@ snapshots:
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
       set-function-length: 1.2.2
+
+  call-bound@1.0.3:
+    dependencies:
+      call-bind-apply-helpers: 1.0.1
+      get-intrinsic: 1.2.7
 
   callsites@3.1.0: {}
 
@@ -14256,6 +14310,12 @@ snapshots:
       react-is: 18.2.0
       tslib: 2.8.1
 
+  dunder-proto@1.0.1:
+    dependencies:
+      call-bind-apply-helpers: 1.0.1
+      es-errors: 1.3.0
+      gopd: 1.2.0
+
   earcut@2.2.4: {}
 
   eastasianwidth@0.2.0: {}
@@ -14353,6 +14413,8 @@ snapshots:
     dependencies:
       get-intrinsic: 1.2.4
 
+  es-define-property@1.0.1: {}
+
   es-errors@1.3.0: {}
 
   es-get-iterator@1.1.3:
@@ -14385,6 +14447,10 @@ snapshots:
       safe-array-concat: 1.1.2
 
   es-object-atoms@1.0.0:
+    dependencies:
+      es-errors: 1.3.0
+
+  es-object-atoms@1.1.1:
     dependencies:
       es-errors: 1.3.0
 
@@ -14888,6 +14954,24 @@ snapshots:
       has-symbols: 1.0.3
       hasown: 2.0.2
 
+  get-intrinsic@1.2.7:
+    dependencies:
+      call-bind-apply-helpers: 1.0.1
+      es-define-property: 1.0.1
+      es-errors: 1.3.0
+      es-object-atoms: 1.1.1
+      function-bind: 1.1.2
+      get-proto: 1.0.1
+      gopd: 1.2.0
+      has-symbols: 1.1.0
+      hasown: 2.0.2
+      math-intrinsics: 1.1.0
+
+  get-proto@1.0.1:
+    dependencies:
+      dunder-proto: 1.0.1
+      es-object-atoms: 1.1.1
+
   get-stream@8.0.1: {}
 
   get-stream@9.0.1:
@@ -14980,6 +15064,8 @@ snapshots:
     dependencies:
       get-intrinsic: 1.2.4
 
+  gopd@1.2.0: {}
+
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
@@ -15018,6 +15104,8 @@ snapshots:
   has-proto@1.0.3: {}
 
   has-symbols@1.0.3: {}
+
+  has-symbols@1.1.0: {}
 
   has-tostringtag@1.0.2:
     dependencies:
@@ -15703,6 +15791,8 @@ snapshots:
 
   marked@13.0.3: {}
 
+  math-intrinsics@1.1.0: {}
+
   mdast-util-to-hast@13.2.0:
     dependencies:
       '@types/hast': 3.0.4
@@ -15920,6 +16010,8 @@ snapshots:
   object-assign@4.1.1: {}
 
   object-inspect@1.13.2: {}
+
+  object-inspect@1.13.3: {}
 
   object-is@1.1.6:
     dependencies:
@@ -16386,6 +16478,10 @@ snapshots:
   qs@6.13.1:
     dependencies:
       side-channel: 1.0.6
+
+  qs@6.14.0:
+    dependencies:
+      side-channel: 1.1.0
 
   querystringify@2.2.0: {}
 
@@ -16869,12 +16965,40 @@ snapshots:
       '@shikijs/vscode-textmate': 10.0.1
       '@types/hast': 3.0.4
 
+  side-channel-list@1.0.0:
+    dependencies:
+      es-errors: 1.3.0
+      object-inspect: 1.13.3
+
+  side-channel-map@1.0.1:
+    dependencies:
+      call-bound: 1.0.3
+      es-errors: 1.3.0
+      get-intrinsic: 1.2.7
+      object-inspect: 1.13.3
+
+  side-channel-weakmap@1.0.2:
+    dependencies:
+      call-bound: 1.0.3
+      es-errors: 1.3.0
+      get-intrinsic: 1.2.7
+      object-inspect: 1.13.3
+      side-channel-map: 1.0.1
+
   side-channel@1.0.6:
     dependencies:
       call-bind: 1.0.7
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
       object-inspect: 1.13.2
+
+  side-channel@1.1.0:
+    dependencies:
+      es-errors: 1.3.0
+      object-inspect: 1.13.3
+      side-channel-list: 1.0.0
+      side-channel-map: 1.0.1
+      side-channel-weakmap: 1.0.2
 
   siginfo@2.0.0: {}
 
@@ -17391,7 +17515,7 @@ snapshots:
   url@0.11.4:
     dependencies:
       punycode: 1.4.1
-      qs: 6.13.1
+      qs: 6.14.0
 
   use-composed-ref@1.3.0(react@18.3.1):
     dependencies:
