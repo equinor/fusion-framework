@@ -23,7 +23,7 @@ export const publishAppConfig = async (endpoint: string, appKey: string, config:
         );
     } else if (!requestConfig.ok || requestConfig.status >= 400) {
         const response = await requestConfig.json();
-        console.log(response);
+        console.error(response);
         throw new Error(
             `Failed to upload config. HTTP status ${requestConfig.status}, ${requestConfig.statusText}`,
         );
