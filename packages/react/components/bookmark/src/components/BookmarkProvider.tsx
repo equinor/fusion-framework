@@ -11,9 +11,15 @@ type BookmarkApp = {
     name?: string;
 };
 
+type BookmarkUser = {
+    id: string;
+    name?: string;
+};
+
 type ProviderState = {
-    provider: IBookmarkProvider;
+    provider?: IBookmarkProvider;
     currentApp?: BookmarkApp | null;
+    currentUser?: BookmarkUser | null;
     showCreateBookmark: () => void;
     showEditBookmark: (bookmarkId: string) => void;
     addBookmarkToClipboard: (bookmarkId: string) => void;
@@ -22,15 +28,16 @@ type ProviderState = {
 const bookmarkProviderContext = createContext<ProviderState | null>(null);
 
 type BookmarkProviderProps = {
-    readonly provider?: IBookmarkProvider | null;
-    readonly currentApp?: BookmarkApp | null;
+    readonly provider?: IBookmarkProvider;
+    readonly currentApp?: BookmarkApp;
+    readonly currentUser?: BookmarkUser;
 };
 
 export const useBookmarkComponentContext = () =>
     useContext(bookmarkProviderContext) as ProviderState;
 
 export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>) => {
-    const { provider, currentApp, children } = props;
+    const { provider, currentApp, currentUser, children } = props;
 
     const [isCreateBookmarkOpen, setIsCreateBookmarkOpen] = useState(false);
     const [editBookmarkId, setEditBookmarkId] = useState<string | undefined>();
@@ -49,7 +56,20 @@ export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>
     }, []);
 
     if (!provider) {
-        return null;
+        return (
+            <bookmarkProviderContext.Provider
+                value={{
+                    provider: undefined,
+                    currentApp,
+                    currentUser,
+                    showCreateBookmark,
+                    showEditBookmark: setEditBookmarkId,
+                    addBookmarkToClipboard,
+                }}
+            >
+                {children}
+            </bookmarkProviderContext.Provider>
+        );
     }
 
     return (
@@ -57,6 +77,7 @@ export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>
             value={{
                 provider,
                 currentApp,
+                currentUser,
                 showCreateBookmark,
                 showEditBookmark: setEditBookmarkId,
                 addBookmarkToClipboard,

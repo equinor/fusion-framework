@@ -55,7 +55,9 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
         (e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
-            from(provider.setCurrentBookmark(id)).subscribe();
+            if (provider) {
+                from(provider.setCurrentBookmark(id)).subscribe();
+            }
         },
         [provider, id],
     );
