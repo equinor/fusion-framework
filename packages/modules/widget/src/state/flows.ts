@@ -32,7 +32,7 @@ export const handleFetchManifest =
                     ),
                 ).pipe(
                     catchError((err) => {
-                        console.log(err, action.payload);
+                        console.error(err, action.payload);
                         return of(actions.fetchManifest.failure(err));
                     }),
                 );
