@@ -5,7 +5,7 @@ import { SideSheet } from '@equinor/fusion-react-side-sheet';
 
 type BookmarkSideSheetProps = {
     readonly isOpen: boolean;
-    onClose(): void;
+    readonly onClose: VoidFunction;
 };
 
 export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) => {
@@ -18,11 +18,11 @@ export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) =
             <SideSheet.SubTitle subTitle={'Application bookmarks'} />
             <SideSheet.Actions>
                 <Button
-                    disabled={!provider.canCreateBookmarks}
+                    disabled={!provider?.canCreateBookmarks}
                     variant="ghost"
                     onClick={() => {
-                        onClose();
                         showCreateBookmark();
+                        onClose();
                     }}
                 >
                     <Icon name="add" /> Add Bookmark

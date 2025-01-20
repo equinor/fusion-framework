@@ -2,7 +2,7 @@ import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-book
 
 import { Outlet, RouterProvider, RouterProviderProps, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
-import Header from './Header';
+import { Header } from './Header';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
