@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
@@ -7,19 +7,24 @@ import '@material-ui/styles';
 
 import { styled } from 'styled-components';
 import { add, menu, tag } from '@equinor/eds-icons';
-import { Button, Icon, TopBar } from '@equinor/eds-core-react';
+import { Icon, TopBar } from '@equinor/eds-core-react';
 Icon.add({ menu, add, tag });
 
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
-import { BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
+import { useCurrentApp, useCurrentAppModule } from '@equinor/fusion-framework-react/app';
+
+import { type BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
+
 import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
 
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement;
 
-import { BookmarkSideSheet } from './BookMarkSideSheet';
 import { PersonSideSheet } from './PersonSideSheet';
-import { useCurrentApp, useCurrentAppModule } from '@equinor/fusion-framework-react/app';
+
+import { BookmarkSideSheet } from './BookMarkSideSheet';
+
+import { HeaderActions } from './Header.Actions';
 
 const Styled = {
     Title: styled.div`
@@ -32,21 +37,30 @@ const Styled = {
 };
 
 export const Header = () => {
-    const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
-    const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
     const currentUser = useCurrentUser();
+    const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
+
+    const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
+    const onBookmarkClose = useCallback(() => {
+        setIsBookmarkOpen(false);
+    }, []);
+
     const { currentApp } = useCurrentApp();
-
-    const { localAccountId: azureId } = currentUser ?? {};
-
-    function toggleBookmark() {
-        setIsBookmarkOpen((s) => !s);
-    }
 
     const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
 
     return (
-        <>
+        <BookmarkProvider
+            provider={bookmarkProvider ?? undefined}
+            currentApp={
+                currentApp
+                    ? { appKey: currentApp.appKey, name: currentApp.manifest?.displayName }
+                    : undefined
+            }
+            currentUser={
+                currentUser ? { id: currentUser.localAccountId, name: currentUser.name } : undefined
+            }
+        >
             <TopBar id="cli-top-bar" sticky={false} style={{ padding: '0 1em', height: 48 }}>
                 <TopBar.Header>
                     <Styled.Title>
@@ -54,45 +68,22 @@ export const Header = () => {
                         <span>Fusion Framework CLI</span>
                     </Styled.Title>
                 </TopBar.Header>
+                <HeaderActions
+                    userAzureId={currentUser?.localAccountId}
+                    toggleBookmark={setIsBookmarkOpen}
+                    togglePerson={setIsPersonSheetOpen}
+                />
                 <TopBar.CustomContent>
                     <ContextSelector />
                 </TopBar.CustomContent>
                 {/* since buttons are 40px but have 48px click bounds */}
-                <TopBar.Actions style={{ minWidth: 48, minHeight: 48 }}>
-                    <Button
-                        onClick={toggleBookmark}
-                        variant="ghost_icon"
-                        disabled={!bookmarkProvider}
-                        title={
-                            bookmarkProvider
-                                ? 'Bookmarks'
-                                : 'Bookmarks not available, enable in app'
-                        }
-                    >
-                        <Icon name="tag" />
-                    </Button>
-                    <Button
-                        onClick={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
-                        variant="ghost_icon"
-                    >
-                        <fwc-person-avatar
-                            size="small"
-                            azureId={azureId}
-                            clickable={false}
-                        ></fwc-person-avatar>
-                    </Button>
-                </TopBar.Actions>
             </TopBar>
-            <BookmarkProvider provider={bookmarkProvider} currentApp={currentApp}>
-                <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={toggleBookmark} />
-            </BookmarkProvider>
+            <BookmarkSideSheet isOpen={isBookmarkOpen} onClose={onBookmarkClose} />
             <PersonSideSheet
-                azureId={azureId}
+                azureId={currentUser?.localAccountId}
                 isOpen={isPersonSheetOpen}
                 onClose={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
             />
-        </>
+        </BookmarkProvider>
     );
 };
-
-export default Header;
