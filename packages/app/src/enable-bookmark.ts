@@ -62,7 +62,6 @@ export const enableBookmark = (config: IAppConfigurator): void => {
                 });
             },
             dispose() {
-                console.log('Disposing bookmark module');
                 for (const teardown of cleanupFunctions) {
                     teardown();
                 }
