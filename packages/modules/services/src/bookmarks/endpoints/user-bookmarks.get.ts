@@ -14,44 +14,65 @@ import { ApiVersion } from '../api-version';
 import { ApiBookmarkSchema, ApiSourceSystem } from '../schemas';
 
 /** API version which this operation uses. */
-type AvailableVersions = ApiVersion.v1;
+type AvailableVersions = ApiVersion.v1 | ApiVersion.v2;
 
 /** Defines the allowed versions for this operation. (key of enum as string or enum value) */
 type AllowedVersions = FilterAllowedApiVersions<AvailableVersions>;
+
+/**
+ * Schema transformer of the filter object to an OData filter string.
+ *
+ * @todo This function should be moved to a shared utility module.
+ */
+const transformOdataFilter = (filter: Record<string, unknown>) => {
+    return Object.entries(filter)
+        .map(([key, value]) => {
+            if (value === null) {
+                return `${key} eq null`;
+            }
+            if (typeof value === 'string') {
+                return `${key} eq '${value}'`;
+            }
+            if (typeof value === 'boolean') {
+                return `${key} eq ${value}`;
+            }
+            if (typeof value === 'object') {
+                return Object.entries(value)
+                    .map(([subKey, subValue]) => `${key}.${subKey} eq '${subValue}'`)
+                    .join(' and ');
+            }
+        })
+        .filter((x) => !!x)
+        .join(' and ');
+};
+
+const filterSchema_v1 = z
+    .object({
+        appKey: z.string().optional(),
+        contextId: z.string().optional(),
+        sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
+    })
+    .transform(transformOdataFilter);
+
+const filterSchema_v2 = z
+    .object({
+        appKey: z.string().optional(),
+        contextId: z.string().optional(),
+        sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
+        isFavourite: z.boolean().optional(),
+    })
+    .transform(transformOdataFilter);
 
 /** Schema for the input arguments to this operation. */
 const ArgSchema = {
     [ApiVersion.v1]: z
         .object({
-            filter: z
-                .string()
-                .or(
-                    z
-                        .object({
-                            appKey: z.string().optional(),
-                            contextId: z.string().optional(),
-                            sourceSystem: ApiSourceSystem[ApiVersion.v1].partial().optional(),
-                        })
-                        .transform((x) => {
-                            return Object.entries(x)
-                                .map(([key, value]) => {
-                                    if (typeof value === 'string') {
-                                        return `${key} eq '${value}'`;
-                                    }
-                                    if (typeof value === 'object') {
-                                        return Object.entries(value)
-                                            .map(
-                                                ([subKey, subValue]) =>
-                                                    `${key}.${subKey} eq '${subValue}'`,
-                                            )
-                                            .join(' and ');
-                                    }
-                                })
-                                .filter((x) => !!x)
-                                .join(' and ');
-                        }),
-                )
-                .optional(),
+            filter: z.string().or(filterSchema_v1).optional(),
+        })
+        .optional(),
+    [ApiVersion.v2]: z
+        .object({
+            filter: z.string().or(filterSchema_v2).optional(),
         })
         .optional(),
 };
@@ -59,6 +80,7 @@ const ArgSchema = {
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
     [ApiVersion.v1]: z.array(ApiBookmarkSchema[ApiVersion.v1]),
+    [ApiVersion.v2]: z.array(ApiBookmarkSchema[ApiVersion.v2]),
 };
 
 /** Defines the expected output from the api. */
@@ -85,7 +107,8 @@ const generateRequestParameters = <TResult, TVersion extends AvailableVersions>(
     init?: ClientRequestInit<IHttpClient, TResult>,
 ): ClientRequestInit<IHttpClient, TResult> => {
     switch (version) {
-        case ApiVersion.v1: {
+        case ApiVersion.v1:
+        case ApiVersion.v2: {
             const baseInit: FetchRequestInit<ApiResponse<ApiVersion.v1>, JsonRequest> = {
                 selector: schemaSelector(ApiResponseSchema[version]),
             };
@@ -101,7 +124,8 @@ const generateApiPath = <TVersion extends AvailableVersions>(
     args: z.infer<(typeof ArgSchema)[TVersion]>,
 ): string => {
     switch (version) {
-        case ApiVersion.v1: {
+        case ApiVersion.v1:
+        case ApiVersion.v2: {
             const params = new URLSearchParams();
             params.append('api-version', version);
             args?.filter && params.append('$filter', args.filter);
