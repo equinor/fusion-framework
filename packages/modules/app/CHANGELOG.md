@@ -1,5 +1,15 @@
 # Change Log
 
+## 6.1.3
+
+### Patch Changes
+
+- [#2519](https://github.com/equinor/fusion-framework/pull/2519) [`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
+
+    - Updated `AppClient` class to improve the query for fetching app manifests:
+        - Adjusted the query path manifests method to include `$expand=category,admins,owners,keywords` when `filterByCurrentUser` is not specified.
+        - Minor formatting changes for better readability.
+
 ## 6.1.2
 
 ### Patch Changes
