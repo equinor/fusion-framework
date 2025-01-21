@@ -5,6 +5,7 @@ import { useBookmarkComponentContext } from '../BookmarkProvider';
 
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+import { from } from 'rxjs';
 
 // TODO
 const StyledContent = styled(Dialog.Content)`
@@ -34,16 +35,25 @@ export const CreateBookmarkModal = ({
 
     const createBookmark = useCallback(
         async (args: BookmarkCreateArgs<never>) => {
-            try {
-                await provider.createBookmarkAsync(args);
-                // TODO: Show success message
-                // TODO: should this call onCreated, with the new bookmark?
-                // TODO: should current bookmark be updated?
-                onClose(false);
-            } catch (error) {
-                console.error('Failed to create bookmark', error);
-                // TODO: Show error message
+            if (!provider) {
+                console.error('Provider not available');
+                return;
             }
+            // TODO: Show success message
+            // TODO: should this call onCreated, with the new bookmark?
+            // TODO: should current bookmark be updated?
+            const sub = from(provider.createBookmark(args)).subscribe({
+                next: (bookmark) => {
+                    console.debug('Bookmark created', bookmark);
+                },
+                error: (error) => {
+                    console.error('Failed to create bookmark', error);
+                },
+                complete() {
+                    onClose(false);
+                },
+            });
+            return () => sub.unsubscribe();
         },
         [onClose, provider],
     );

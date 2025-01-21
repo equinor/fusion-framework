@@ -8,6 +8,7 @@ import {
     mergeMap,
     groupBy,
     throttleTime,
+    last,
 } from 'rxjs/operators';
 
 import { type Flow, type Observable, getBaseType } from '@equinor/fusion-observable';
@@ -39,6 +40,7 @@ export const handleFetchBookmark =
             mergeMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
             switchMap((action) =>
                 from(api.getBookmarkById(action.payload)).pipe(
+                    last(),
                     map((bookmark) => actions.fetchBookmark.success(bookmark, action.meta)),
                     catchError((error) =>
                         of(
@@ -71,6 +73,7 @@ export const handleFetchBookmarkData =
             mergeMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
             switchMap((action) => {
                 return from(api.getBookmarkData(action.payload)).pipe(
+                    last(),
                     map((data) =>
                         actions.fetchBookmarkData.success(action.payload, data, action.meta),
                     ),
@@ -111,6 +114,7 @@ export const handleFetchAllBookmark =
             switchMap((group) => group.pipe(throttleTime(defaultThrottleTime))),
             switchMap((action) =>
                 from(api.getAllBookmarks(action.payload)).pipe(
+                    last(),
                     map((value) => actions.fetchBookmarks.success(value, action.meta)),
                     catchError((error) =>
                         of(
@@ -148,6 +152,7 @@ export const handleCreateBookmark =
             filter(actions.createBookmark.match),
             concatMap((action) => {
                 return from(api.createBookmark(action.payload)).pipe(
+                    last(),
                     map((bookmark) => actions.createBookmark.success(bookmark, action.meta)),
                     catchError((error) =>
                         of(
@@ -186,6 +191,7 @@ export const handleUpdateBookmark =
             concatMap((action) => {
                 const { bookmarkId, updates } = action.payload;
                 return from(api.updateBookmark(bookmarkId, updates)).pipe(
+                    last(),
                     map((bookmark) => actions.updateBookmark.success(bookmark, action.meta)),
                     catchError((error) =>
                         of(
@@ -223,6 +229,7 @@ export const handleDeleteBookmark =
             filter(actions.deleteBookmark.match),
             concatMap((action) =>
                 from(api.deleteBookmark(action.payload)).pipe(
+                    last(),
                     map(() => actions.deleteBookmark.success(action.payload, action.meta)),
                     catchError((error) =>
                         of(
@@ -261,6 +268,7 @@ export const handleRemoveBookmarkFromFavorites =
             // use concat to prevent aborting the request if a new action is dispatched while the previous request is in flight
             concatMap((action) =>
                 from(api.removeBookmarkFromFavorites(action.payload)).pipe(
+                    last(),
                     map(() =>
                         actions.removeBookmarkAsFavourite.success(action.payload, action.meta),
                     ),
@@ -306,6 +314,7 @@ export const handleAddBookmarkAsFavorite =
             filter(actions.addBookmarkAsFavourite.match),
             concatMap((action) =>
                 from(api.addBookmarkToFavorites(action.payload)).pipe(
+                    last(),
                     map(() => actions.addBookmarkAsFavourite.success(action.payload, action.meta)),
                     catchError((error) =>
                         of(

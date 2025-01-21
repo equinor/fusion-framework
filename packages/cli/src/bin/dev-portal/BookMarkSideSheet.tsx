@@ -1,19 +1,15 @@
 import { Button, Icon } from '@equinor/eds-core-react';
-import { useFramework } from '@equinor/fusion-framework-react';
 import { Bookmark } from '@equinor/fusion-framework-react-components-bookmark';
-import { BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
-import { useCurrentAppModule } from '@equinor/fusion-framework-react/app';
+import { useBookmarkComponentContext } from '@equinor/fusion-framework-react-components-bookmark';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 
 type BookmarkSideSheetProps = {
     readonly isOpen: boolean;
-    onClose(): void;
+    readonly onClose: VoidFunction;
 };
 
 export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) => {
-    const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
-
-    const { event } = useFramework().modules;
+    const { provider, showCreateBookmark } = useBookmarkComponentContext();
 
     return (
         <SideSheet isOpen={isOpen} onClose={onClose} isDismissable={true} enableFullscreen={true}>
@@ -22,11 +18,11 @@ export const BookmarkSideSheet = ({ isOpen, onClose }: BookmarkSideSheetProps) =
             <SideSheet.SubTitle subTitle={'Application bookmarks'} />
             <SideSheet.Actions>
                 <Button
-                    disabled={!bookmarkProvider?.hasBookmarkCreators}
+                    disabled={!provider?.canCreateBookmarks}
                     variant="ghost"
                     onClick={() => {
+                        showCreateBookmark();
                         onClose();
-                        event.dispatchEvent('onBookmarkOpen', { detail: true });
                     }}
                 >
                     <Icon name="add" /> Add Bookmark

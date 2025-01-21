@@ -27,7 +27,7 @@ export const bookmarkActions = {
     aborted: createAction('action_aborted', (action: Action) => ({
         payload: action,
     })),
-    setBookmark: createAction('update_bookmark', (bookmark: BookmarkWithoutData) => {
+    setBookmark: createAction('set_bookmark', (bookmark: BookmarkWithoutData) => {
         return { payload: bookmark };
     }),
     setCurrentBookmark: createAction('set_current_bookmark', (bookmark: Bookmark | null) => {
@@ -58,7 +58,7 @@ export const bookmarkActions = {
         (error: BookmarkFlowError, meta?: BookmarkActionMeta) => ({ payload: error, meta }),
     ),
     updateBookmark: createAsyncAction(
-        'update_bookmark',
+        'set_bookmark',
         (payload: { bookmarkId: string; updates: BookmarkUpdate }, meta: BookmarkActionMeta) => ({
             payload,
             meta,

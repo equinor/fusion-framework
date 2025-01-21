@@ -1,9 +1,11 @@
 import z from 'zod';
 
 import {
+    bookmarkContextSchema,
     bookmarkSchema,
     bookmarkSourceSystemSchema,
     bookmarksSchema,
+    bookmarkUserSchema,
     bookmarkWithDataSchema,
 } from './bookmark.schemas';
 
@@ -44,3 +46,13 @@ export type Bookmark<T extends BookmarkData = any> = z.infer<
  * Represents the configuration options for a bookmark module.
  */
 export type BookmarkModuleConfig = z.infer<typeof bookmarkConfigSchema>;
+
+/**
+ * Represents a user associated with a bookmark.
+ */
+export type BookmarkUser = z.infer<typeof bookmarkUserSchema>;
+
+/**
+ * Represents the context associated with a bookmark.
+ */
+export type bookmarkContext = z.infer<typeof bookmarkContextSchema>;
