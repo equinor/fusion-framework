@@ -78,6 +78,69 @@ export class BookmarkProvider implements IBookmarkProvider {
     #subscriptions = new Subscription();
 
     /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    get config() {
+        return {
+            getCurrentAppIdentification() {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                return window.Fusion.modules.app.current.appKey;
+            },
+        };
+    }
+
+    /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    addStateCreator<T extends BookmarkData>(fn: BookmarkPayloadGenerator<T>) {
+        console.warn('addStateCreator is deprecated, use addPayloadGenerator instead');
+        this.addPayloadGenerator(fn);
+    }
+
+    /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    deleteBookmarkByIdAsync(id: string): Promise<void> {
+        console.warn('deleteBookmarkByIdAsync is deprecated, use deleteBookmarkAsync instead');
+        return this.deleteBookmarkAsync(id);
+    }
+
+    /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    addBookmarkFavoriteAsync(id: string): Promise<Bookmark | undefined> {
+        console.warn(
+            'addBookmarkFavoriteAsync is deprecated, use addBookmarkToFavoritesAsync instead',
+        );
+        return this.addBookmarkToFavoritesAsync(id);
+    }
+
+    /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    removeBookmarkFavoriteAsync(id: string): Promise<void> {
+        console.warn(
+            'removeBookmarkFavoriteAsync is deprecated, use removeBookmarkAsFavoriteAsync instead',
+        );
+        return this.removeBookmarkAsFavoriteAsync(id);
+    }
+
+    /**
+     * @deprecated
+     * this will be removed as soon as applications have been migrated to use the bookmark provider
+     */
+    getBookmarkById(id: string): Promise<Bookmark | null> {
+        console.warn('getBookmarkById is deprecated, use getBookmarkAsync instead');
+        return this.getBookmarkAsync(id);
+    }
+
+    /**
      * Gets the semantic version of the bookmark provider.
      */
     public get version(): SemanticVersion {
@@ -122,7 +185,8 @@ export class BookmarkProvider implements IBookmarkProvider {
      * Gets the currently active bookmark.
      */
     public get currentBookmark(): Bookmark | null | undefined {
-        return activeBookmarkSelector(this.#store.value);
+        const bookmark = activeBookmarkSelector(this.#store.value);
+        return bookmark;
     }
 
     /**
@@ -373,7 +437,9 @@ export class BookmarkProvider implements IBookmarkProvider {
                     this._log?.warn(
                         `bookmark data generator ${generator.name} returned a value, but it should not do this, since the data is an immer draft object`,
                     );
-                    return castDraft(result);
+                    // Dirty fix since some developers are returning the reference object, which will freeze the object
+                    return JSON.parse(JSON.stringify(result));
+                    // return castDraft(result);
                 }
 
                 // clear the bookmark data if the generator returns null
@@ -843,15 +909,42 @@ export class BookmarkProvider implements IBookmarkProvider {
     /**
      * Updates a bookmark asynchronously.
      *
+     * @todo - remove the deprecated method in the next major version
+     *
      * @param bookmark - The bookmark to update.
      * @returns A promise that resolves to the updated bookmark with its associated data.
      */
     public updateBookmarkAsync<T extends BookmarkData>(
-        bookmarkId: string,
-        bookmarkUpdates?: BookmarkUpdate<T>,
+        id_or_bookmark: string | Bookmark<T>,
+        updates_or_options?: BookmarkUpdate<T> | BookmarkUpdateOptions,
         options?: BookmarkUpdateOptions,
     ): Promise<Bookmark<T>> {
-        return lastValueFrom(this.updateBookmark<T>(bookmarkId, bookmarkUpdates, options));
+        if (typeof id_or_bookmark === 'object') {
+            // @deprecated
+            console.warn(
+                'updateBookmarkAsync(bookmark, updates, options) is deprecated, use updateBookmarkAsync(id, updates, options) instead',
+            );
+            const { id, ...updates } = id_or_bookmark as Bookmark<T>;
+            return lastValueFrom(
+                this.updateBookmark<T>(id, updates as BookmarkUpdate<T>, {
+                    excludePayloadGeneration: !(
+                        updates_or_options as unknown as {
+                            updatePayload: boolean;
+                        }
+                    ).updatePayload,
+                }).pipe(
+                    // this is totally wrong, but we need to keep the API for now
+                    map((bookmark) => bookmark.payload as Bookmark<T>),
+                ),
+            );
+        }
+        return lastValueFrom(
+            this.updateBookmark<T>(
+                id_or_bookmark,
+                updates_or_options as BookmarkUpdate<T>,
+                options,
+            ),
+        );
     }
 
     /**
