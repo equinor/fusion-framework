@@ -242,3 +242,100 @@ const configure = (configurator) => {
 };
 ```
 
+## Tips
+
+## Using "shared" creator across multiple components
+
+The bookmark module is designed to allow multiple subscribers to collectively manage the payload of an bookmark. This is done by using a payload generator that is triggered on creation and update of the bookmark. This allows multiple components to share the same payload and update it in a safe way.
+
+To solve this complex problem, internally the bookmark provider uses immer to generate a draft of the payload (a reducer function to update the payload, prevent flux and mutation). This allows the payload to be updated in a safe way, without the need to worry about immutability.
+
+__BAD!__
+```tsx
+/**
+ * In this example, the mutation of the payload will fail since the currentBookmark is immutable.
+ */ 
+const RootComponent = () => {
+  // note deprecated useBookmark
+  const {
+    addBookmarkCreator,
+    currentBookmark 
+  } = useBookmark();
+
+  const payloadRef = useRef(currentBookmark?.payload ?? {});
+
+  useEffect(() => {
+    // since the reference to is return within the reducer, the value will be frozen
+    // this will break, since `payloadRef.current` is supposed to be updated
+    return addBookmarkCreator(() => payloadRef.current);
+  }, [bookmarkProvider]);
+
+  // updates the payloadRef when the current bookmark changes
+  useEffect(() => {
+    payloadRef.current = currentBookmark?.payload ?? {};
+  }, [currentBookmark]);
+
+
+  return (
+    <>
+      <Component1 payloadRef={payloadRef} />
+      <Component2 payloadRef={payloadRef} />
+    </>
+  );
+}
+
+const Component1 = ({ payloadRef }) => {
+  return <input 
+    value={ payloadRef.current.foo } 
+    onChange={(e) => payloadRef.current.foo = e.target.value } 
+  />
+}
+
+const Component2 = ({ payloadRef }) => { ... }
+```
+
+this version can be improved by updating the payload generator, but see next example to migrate of deprecated `useBookmark` to `useCurrentBookmark`.
+
+```ts
+// fix issue with payload generator
+useEffect(() => {
+    return addBookmarkCreator((payload) => {
+        Object.assign(payload, payloadRef.current);
+    });
+}, [bookmarkProvider]);
+```
+
+
+__BETTER!__
+```tsx
+
+const RootComponent = () => {
+  return (
+    <>
+      <Component1 />
+      <Component2 />
+    </>
+  );
+}
+
+const Component1 = () => {
+  const ref = useRef(null);
+
+  // internally the payload generator will use immer to generate a draft
+  const payloadGenerator = useCallback((payload) => {
+    payload.foo = ref.current.value;
+  }, []);
+
+  // use the current bookmark and register the payload generator
+  const { currentBookmark } = useCurrentBookmark({ payloadGenerator });
+
+  // when the current bookmark changes, update the input value
+  useEffect(() => {
+    ref.current.value = currentBookmark.foo;
+  }, [currentBookmark]);
+
+  return <input ref={ref} />
+}
+
+Component2 = () => { ... }
+```
