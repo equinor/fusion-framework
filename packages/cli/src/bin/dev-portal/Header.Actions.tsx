@@ -1,6 +1,5 @@
-import { add, menu, tag } from '@equinor/eds-icons';
+import { tag } from '@equinor/eds-icons';
 import { Button, Icon, TopBar } from '@equinor/eds-core-react';
-Icon.add({ menu, add, tag });
 
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
 PersonAvatarElement;
@@ -30,7 +29,7 @@ export const HeaderActions = (props: HeaderActionProps) => {
                         : 'Bookmarks not available, enable in app'
                 }
             >
-                <Icon name="tag" />
+                <Icon data={tag} />
             </Button>
             <Button onClick={() => togglePerson((x) => !x)} variant="ghost_icon">
                 <fwc-person-avatar
