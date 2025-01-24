@@ -438,8 +438,7 @@ export class BookmarkProvider implements IBookmarkProvider {
                         `bookmark data generator ${generator.name} returned a value, but it should not do this, since the data is an immer draft object`,
                     );
                     // Dirty fix since some developers are returning the reference object, which will freeze the object
-                    return JSON.parse(JSON.stringify(result));
-                    // return castDraft(result);
+                    return castDraft(JSON.parse(JSON.stringify(result)));
                 }
 
                 // clear the bookmark data if the generator returns null
