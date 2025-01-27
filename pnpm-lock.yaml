@@ -1323,7 +1323,7 @@ importers:
         version: 0.9.2
       '@equinor/eds-utils':
         specifier: ^0.8.5
-        version: 0.8.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../../modules/app
@@ -2219,6 +2219,13 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
       styled-components: '>=4.2'
+
+  '@equinor/eds-utils@0.8.6':
+    resolution: {integrity: sha512-15AtxEoqovSZdXJprjt5YISTGJYiQCh35HPS3PjvbiJeY03ZXOq77zI0O12qUXxJmQ/MsadKxIxtfqAUmfRvtQ==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+      styled-components: '>=5.1'
 
   '@equinor/eslint-config-fusion-react@2.1.1':
     resolution: {integrity: sha512-c7eKI7wxycpf3Y8EqOow0dd5yM0MLdQhil5iKjyMkYQIZrieMiPuXIcXXEXelA1k6m6P2KiTGwLfA/Dvv9i+bg==}
@@ -9493,6 +9500,14 @@ snapshots:
   '@equinor/eds-utils@0.8.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.25.7
+      '@equinor/eds-tokens': 0.9.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-components: 6.1.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@equinor/eds-utils@0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@babel/runtime': 7.26.0
       '@equinor/eds-tokens': 0.9.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
