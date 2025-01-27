@@ -11,7 +11,12 @@ import { Query } from '@equinor/fusion-query';
  * Imports the `BookmarksApiClient` and `ApiBookmarkEntityV1` types from the `@equinor/fusion-framework-module-services/bookmarks` package.
  * These types are used to interact with the Fusion Bookmarks API and represent the API response entities.
  */
-import type { BookmarksApiClient } from '@equinor/fusion-framework-module-services/bookmarks';
+import {
+    type BookmarksApiClient,
+    ApiBookmarkSchema,
+    ApiPersonSchema,
+    ApiVersion,
+} from '@equinor/fusion-framework-module-services/bookmarks';
 
 import type {
     IBookmarkClient,
@@ -20,8 +25,38 @@ import type {
     BookmarkUpdate,
 } from './BookmarkClient.interface';
 
-import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
-import { bookmarkSchema, bookmarkWithDataSchema, bookmarksSchema } from './bookmark.schemas';
+import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks, BookmarkUser } from './types';
+import { bookmarkWithDataSchema } from './bookmark.schemas';
+import { z } from 'zod';
+
+// Define the schema for the API response entity representing a bookmark
+const UserSchema = ApiPersonSchema['1.0'].transform((person) => {
+    return {
+        // @deprecated
+        azureUniqueId: person.azureUniqueId,
+        id: person.azureUniqueId,
+        name: person.name,
+        email: person.mail,
+    } as BookmarkUser;
+});
+
+// Parse the bookmark entity from the API response
+const parseBookmark = <T extends BookmarkData>(value: unknown): Bookmark<T> => {
+    const { createdBy, updatedBy, ...rest } = value as z.infer<
+        (typeof ApiBookmarkSchema)[ApiVersion.v2]
+    >;
+    return bookmarkWithDataSchema().parse({
+        ...rest,
+        createdBy: UserSchema.parse(createdBy),
+        updatedBy: updatedBy ? UserSchema.parse(updatedBy) : undefined,
+    }) as Bookmark<T>;
+};
+
+const parseBookmarkWithoutPayload = (value: unknown): BookmarkWithoutData => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { payload, ...bookmark } = parseBookmark(value);
+    return bookmark;
+};
 
 /**
  * Represents a client for interacting with the Fusion Bookmarks API.
@@ -57,7 +92,7 @@ export class BookmarkClient implements IBookmarkClient {
         this.#queryBookmark = new Query({
             client: {
                 fn: (args: { bookmarkId: string }) => {
-                    return this.#api.get('v2', args).pipe(map((res) => bookmarkSchema.parse(res)));
+                    return this.#api.get('v2', args).pipe(map(parseBookmarkWithoutPayload));
                 },
             },
             key: (args) => args.bookmarkId,
@@ -69,8 +104,8 @@ export class BookmarkClient implements IBookmarkClient {
             client: {
                 fn: (filter?: BookmarksFilter) => {
                     return this.#api
-                        .query('v1', { filter })
-                        .pipe(map((res) => bookmarksSchema.parse(res)));
+                        .query('v2', { filter })
+                        .pipe(map((res) => res.map(parseBookmarkWithoutPayload)));
                 },
             },
             key: (args) => JSON.stringify(args ?? ''),
@@ -127,9 +162,10 @@ export class BookmarkClient implements IBookmarkClient {
         newBookmark: BookmarkNew<T>,
     ): ObservableInput<Bookmark<T>> {
         return this.#api.create('v1', newBookmark).pipe(
-            map((response) => bookmarkWithDataSchema<T>().parse(response) as Bookmark<T>),
+            map((response) => parseBookmark<T>(response)),
             /** update the bookmark cache */
             tap((createdBookmark) => {
+                console.log('createdBookmark', createdBookmark);
                 const { payload, ...bookmark } = createdBookmark;
                 this.#queryBookmark.mutate(
                     { bookmarkId: bookmark.id },
@@ -153,7 +189,7 @@ export class BookmarkClient implements IBookmarkClient {
         updates: BookmarkUpdate<T>,
     ): ObservableInput<Bookmark<T>> {
         const update$ = this.#api.patch('v1', { bookmarkId, updates: updates }).pipe(
-            map((response) => bookmarkWithDataSchema().parse(response) as Bookmark<T>),
+            map((response) => parseBookmark<T>(response)),
             shareReplay(),
         );
         return new Observable((subscriber) => {

@@ -46,8 +46,8 @@ export const configure = async (config: FrameworkConfigurator) => {
             identifier: 'fusion-cli',
             name: 'Fusion CLI',
         });
-        builder.setFilter('application', true);
-        //builder.setLogLevel(4);
+        // builder.setFilter('application', true);
+        // builder.setLogLevel(4);
     });
 
     /* Adds demo portal features to cli */

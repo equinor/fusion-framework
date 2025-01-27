@@ -10,7 +10,7 @@ export const useHasBookmark = (args?: { provider?: BookmarkProvider }): boolean 
 
     useEffect(() => {
         return provider?.on('onBookmarkPayloadCreatorAdded', () => {
-            setHasBookmark(provider?.hasBookmarkCreators);
+            setHasBookmark(provider?.canCreateBookmarks);
         });
     }, [provider]);
 

@@ -642,6 +642,9 @@ importers:
         specifier: workspace:^
         version: link:../modules/msal
     devDependencies:
+      '@equinor/fusion-framework-module-bookmark':
+        specifier: workspace:^
+        version: link:../modules/bookmark
       typescript:
         specifier: ^5.5.4
         version: 5.5.4

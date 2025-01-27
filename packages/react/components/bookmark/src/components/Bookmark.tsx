@@ -1,8 +1,8 @@
-import { EMPTY } from 'rxjs';
+import { EMPTY, map } from 'rxjs';
 import { useBookmarkGrouping } from '../hooks';
 import { BookmarkFilter } from './filter/Filter';
 import { SectionList } from './sectionList/SectionList';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { Icon } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right, share, more_vertical, add } from '@equinor/eds-icons';
@@ -45,38 +45,24 @@ const Styled = {
 export const Bookmark = () => {
     const { provider } = useBookmarkComponentContext();
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
-
     const { value: bookmarks } = useObservableState(
         useMemo(() => provider?.bookmarks$ || EMPTY, [provider]),
-        { initial: provider?.bookmarks },
     );
 
-    useEffect(() => {
-        const sub = provider?.getAllBookmarks().subscribe({
-            complete: () => {
-                setLoading(false);
-            },
-            error: (err) => {
-                setError(err);
-            },
-        });
-        return () => sub?.unsubscribe();
-    }, [provider]);
+    const { value: isLoading } = useObservableState(
+        useMemo(
+            () =>
+                (provider?.status$ || EMPTY).pipe(map((status) => !!status.has('fetch_bookmarks'))),
+            [provider],
+        ),
+        { initial: true },
+    );
 
     const { bookmarkGroups, groupingModes, searchText, setGroupBy, setSearchText, groupByKey } =
         useBookmarkGrouping(bookmarks);
 
     const content = useMemo(() => {
-        if (error) {
-            return (
-                <Message title="Error" type="Error">
-                    {error.message}
-                </Message>
-            );
-        }
-        if (loading) {
+        if (isLoading) {
             return <Loading />;
         }
         if (bookmarkGroups.length === 0) {
@@ -87,7 +73,7 @@ export const Bookmark = () => {
             );
         }
         return <SectionList bookmarkGroups={bookmarkGroups} />;
-    }, [error, loading, bookmarkGroups]);
+    }, [isLoading, bookmarkGroups]);
 
     return (
         <Styled.Wrapper>

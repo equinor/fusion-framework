@@ -1,11 +1,12 @@
 import { Icon, Typography } from '@equinor/eds-core-react';
 import { tokens } from '@equinor/eds-tokens';
 import { useOutsideClick } from '@equinor/eds-utils';
-import { MutableRefObject, ReactNode, useRef } from 'react';
+import { MutableRefObject, ReactNode, useCallback, useRef } from 'react';
 import { MoreMenu } from './MoreMenu';
 
 import styled from 'styled-components';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
+import { from } from 'rxjs';
 
 export type MenuOption = {
     name: string;
@@ -50,18 +51,23 @@ export const Row = ({ name, menuOptions, children, id, menuOpen, onMenuOpen }: R
     const pRef = useRef<HTMLElement | null>(null);
     const { provider } = useBookmarkComponentContext();
 
+    const onListItemClick = useCallback(
+        (e: React.MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (provider) {
+                from(provider.setCurrentBookmark(id)).subscribe();
+            }
+        },
+        [provider, id],
+    );
+
     useOutsideClick(pRef.current, () => onMenuOpen(''));
 
     // TODO: @noggling fix this
     return (
         /* eslint-disable-next-line styled-components-a11y/click-events-have-key-events, styled-components-a11y/no-static-element-interactions*/
-        <Styled.ListItem
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                provider.setCurrentBookmarkAsync(id);
-            }}
-        >
+        <Styled.ListItem onClick={onListItemClick}>
             <Typography>{name}</Typography>
             <Styled.Icons>
                 {children}

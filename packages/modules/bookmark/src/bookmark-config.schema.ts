@@ -4,7 +4,7 @@ import { LogLevel, type ILogger } from '@equinor/fusion-log';
 
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import type { BookmarkProvider } from './BookmarkProvider';
+import type { IBookmarkProvider } from './BookmarkProvider.interface';
 import type { IBookmarkClient } from './BookmarkClient.interface';
 
 import { bookmarkSourceSystemSchema } from './bookmark.schemas';
@@ -16,7 +16,11 @@ export const bookmarkConfigSchema = z.object({
     sourceSystem: bookmarkSourceSystemSchema
         .optional()
         .describe('The source system for the bookmarks'),
-    parent: z.custom<BookmarkProvider>().describe('Parent Bookmark provider').optional().nullable(),
+    parent: z
+        .custom<IBookmarkProvider>()
+        .describe('Parent Bookmark provider')
+        .optional()
+        .nullable(),
     client: z.custom<IBookmarkClient>().describe('API client for interacting with bookmarks'),
     resolve: z
         .object({

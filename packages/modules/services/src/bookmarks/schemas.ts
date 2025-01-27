@@ -17,7 +17,7 @@ export const ApiPersonSchema = {
         accountType: z
             .enum(['Employee', 'Consultant', 'External', 'Application', 'Local'])
             .optional(),
-        accountClassification: z.enum(['Unclassified', 'Internal', 'External']).optional(),
+        accountClassification: z.enum(['Unclassified', 'Internal', 'External']).nullish(),
     }),
 };
 
@@ -55,7 +55,7 @@ export const ApiBookmarkSchema = {
             updatedBy: ApiPersonSchema[ApiVersion.v1].optional(),
             created: ApiDateSchema,
             updated: ApiDateSchema.optional(),
-            sourceSystem: ApiSourceSystem[ApiVersion.v1].optional(),
+            sourceSystem: ApiSourceSystem[ApiVersion.v1].nullish(),
         });
     },
     get [ApiVersion.v2]() {

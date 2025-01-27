@@ -14,12 +14,14 @@ export {
     moduleKey as bookmarkModuleKey,
 } from './bookmark-module';
 
-export {
-    BookmarkProvider,
-    type BookmarkPayloadGenerator,
-    type BookmarkCreateArgs,
-    type BookmarkUpdateOptions,
-} from './BookmarkProvider';
+export { BookmarkProvider } from './BookmarkProvider';
+
+export type {
+    BookmarkCreateArgs,
+    BookmarkUpdateOptions,
+    IBookmarkProvider,
+    BookmarkPayloadGenerator,
+} from './BookmarkProvider.interface';
 
 export { enableBookmark } from './enable-bookmark';
 

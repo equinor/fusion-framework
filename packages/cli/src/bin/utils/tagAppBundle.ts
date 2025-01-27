@@ -22,7 +22,7 @@ export const tagAppBundle = async (endpoint: string, version: string) => {
 
     if (requestTag.status !== 200) {
         const response = await requestTag.json();
-        console.log(response);
+        console.error(response);
         throw new Error(
             `Failed to tag bundle. HTTP status ${requestTag.status}, ${requestTag.statusText}`,
         );
