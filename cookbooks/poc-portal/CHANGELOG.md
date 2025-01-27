@@ -1,5 +1,16 @@
 # poc-portal
 
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [[`81a8e9b`](https://github.com/equinor/fusion-framework/commit/81a8e9b2201be89801eddfc8f84f989c3cab26cc), [`a567179`](https://github.com/equinor/fusion-framework/commit/a567179009e1e2f710acb3bf707be0b1f3d7d02b), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb), [`a466c37`](https://github.com/equinor/fusion-framework/commit/a466c371a47d47b6d7a037dd5343bb71972dfc70), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb), [`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af), [`7897219`](https://github.com/equinor/fusion-framework/commit/789721988959ea21a4ebe769128d5a92de90a678), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb)]:
+    - @equinor/fusion-framework-cli@10.4.0
+    - @equinor/fusion-framework-module-app@6.1.3
+    - @equinor/fusion-framework-react-app@5.5.0
+    - @equinor/fusion-framework@7.2.14
+    - @equinor/fusion-framework-react@7.3.6
+
 ## 1.0.20
 
 ### Patch Changes

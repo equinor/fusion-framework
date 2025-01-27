@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.3.0
+
+### Minor Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - refactored React wirering to align with module
+
+### Patch Changes
+
+- Updated dependencies [[`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb)]:
+    - @equinor/fusion-framework-module-bookmark@2.1.0
+    - @equinor/fusion-framework-react@7.3.6
+
 ## 2.2.4
 
 ### Patch Changes

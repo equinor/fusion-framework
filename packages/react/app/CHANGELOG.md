@@ -1,5 +1,18 @@
 # Change Log
 
+## 5.5.0
+
+### Minor Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - Added a enabler function for application to use bookmark module
+
+### Patch Changes
+
+- Updated dependencies [[`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb)]:
+    - @equinor/fusion-framework-module-app@6.1.3
+    - @equinor/fusion-framework-app@9.2.0
+    - @equinor/fusion-framework-react@7.3.6
+
 ## 5.4.2
 
 ### Patch Changes

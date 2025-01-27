@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - - Exposed the `IBookmarkProvider` interface and updated references.
+    - Improved handling of the parent provider in `BookmarkProvider`.
+    - Fixed `BookmarkProvider.on` to only emit when the source of the event is the provider.
+    - Refactored `BookmarkProvider.generatePayload` to better handle the creation and update of bookmark payloads.
+    - Ensured all observable executions to the API are terminated after the first successful or failed response.
+
+### Patch Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - improved typing and convertion from api
+
 ## 2.0.2
 
 ### Patch Changes

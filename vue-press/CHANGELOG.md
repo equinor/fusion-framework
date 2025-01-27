@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.3.2
+
+### Patch Changes
+
+- [#2717](https://github.com/equinor/fusion-framework/pull/2717) [`cbf32e9`](https://github.com/equinor/fusion-framework/commit/cbf32e94333296e2ede8b5bf690e19845672eff7) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump mermaid from 11.0.2 to 11.4.1
+
 ## 0.3.1
 
 ### Patch Changes
