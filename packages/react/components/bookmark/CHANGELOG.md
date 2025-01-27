@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.0.5
+
+### Patch Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - Minor adjustment to bookmark component
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - improved handling of provider
+
+- Updated dependencies [[`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb)]:
+    - @equinor/fusion-framework-react-module-bookmark@2.3.0
+    - @equinor/fusion-framework-react@7.3.6
+
 ## 1.0.4
 
 ### Patch Changes

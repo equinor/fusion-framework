@@ -1,5 +1,25 @@
 # Change Log
 
+## 10.4.0
+
+### Minor Changes
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - Refactored dev-portal bookmark sidesheet to use component context
+
+### Patch Changes
+
+- [#2748](https://github.com/equinor/fusion-framework/pull/2748) [`81a8e9b`](https://github.com/equinor/fusion-framework/commit/81a8e9b2201be89801eddfc8f84f989c3cab26cc) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/fusion-react-context-selector from 0.6.6 to 0.6.8
+
+- [#2715](https://github.com/equinor/fusion-framework/pull/2715) [`a567179`](https://github.com/equinor/fusion-framework/commit/a567179009e1e2f710acb3bf707be0b1f3d7d02b) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/fusion-react-context-selector from 0.6.6 to 0.6.8
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - updated bookmark component for dev portal
+
+- [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - improved markup for bookmark
+
+- [#2712](https://github.com/equinor/fusion-framework/pull/2712) [`a466c37`](https://github.com/equinor/fusion-framework/commit/a466c371a47d47b6d7a037dd5343bb71972dfc70) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @remix-run/router from 1.18.0 to 1.21.0
+
+- [#2696](https://github.com/equinor/fusion-framework/pull/2696) [`7897219`](https://github.com/equinor/fusion-framework/commit/789721988959ea21a4ebe769128d5a92de90a678) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - wc-person component update from 3.1.0 to 3.1.1
+
 ## 10.3.6
 
 ### Patch Changes

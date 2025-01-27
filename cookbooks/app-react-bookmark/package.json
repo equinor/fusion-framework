@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-bookmark",
-    "version": "4.2.0-beta.7",
+    "version": "4.2.0",
     "description": "",
     "private": true,
     "type": "module",
