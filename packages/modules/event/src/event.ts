@@ -64,7 +64,6 @@ export interface IFrameworkEvent<
     updateDetails(
         fn: (
             details: FrameworkEventInitDetail<TInit>,
-            originalDetails: FrameworkEventInitDetail<TInit>,
         ) => FrameworkEventInitDetail<TInit> | void | undefined,
     ): void;
 }
@@ -275,13 +274,12 @@ export class FrameworkEvent<
     public updateDetails(
         fn: (
             details: FrameworkEventInitDetail<TInit>,
-            originalDetails: FrameworkEventInitDetail<TInit>,
         ) => FrameworkEventInitDetail<TInit> | void | undefined,
     ) {
         if (!this.#mutableDetails) {
             throw new Error('Event details are not mutable');
         }
-        const detail = fn(this.#detail, this.#originalDetail);
+        const detail = fn(this.#detail);
         this.#detail = detail === undefined ? this.#detail : detail;
     }
 }
