@@ -1,5 +1,11 @@
 # Change Log
 
+## 9.2.2
+
+### Patch Changes
+
+- [`50a8966`](https://github.com/equinor/fusion-framework/commit/50a8966d64544a34b386307b690e0ecbf8baaead) Thanks [@odinr](https://github.com/odinr)! - hotfix: add missing reference in tsconfig
+
 ## 9.2.1
 
 ### Patch Changes
