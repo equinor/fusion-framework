@@ -1,9 +1,7 @@
 import type { ModuleInstance } from '@equinor/fusion-framework-module';
 import type { IEventModuleProvider } from './provider';
 
-import { produce, enableMapSet, type Draft } from 'immer';
-
-enableMapSet();
+import cloneDeep from 'lodash.clonedeep';
 
 export declare interface FrameworkEventMap {
     onModulesLoaded: FrameworkEvent<FrameworkEventInit<ModuleInstance, IEventModuleProvider>>;
@@ -65,7 +63,8 @@ export interface IFrameworkEvent<
      */
     updateDetails(
         fn: (
-            details: Draft<FrameworkEventInitDetail<TInit>>,
+            details: FrameworkEventInitDetail<TInit>,
+            originalDetails: FrameworkEventInitDetail<TInit>,
         ) => FrameworkEventInitDetail<TInit> | void | undefined,
     ): void;
 }
@@ -161,17 +160,8 @@ export class FrameworkEvent<
         args: TInit,
     ) {
         this.#detail = args.detail;
-        this.#originalDetail = args.detail;
+        this.#originalDetail = cloneDeep(args.detail);
         this.#mutableDetails = !!args.mutableDetails;
-        try {
-            /** Attempt to create an immutable copy of the event details */
-            const detail = produce(args.detail, () => {}) as FrameworkEventInitDetail<TInit>;
-            this.#detail = detail;
-            this.#originalDetail = detail;
-        } catch (error) {
-            /** The event details cannot be securely mutated, disable mutations */
-            this.#mutableDetails = false;
-        }
         this.#source = args.source;
         this.#cancelable = !!args.cancelable;
         this.#canBubble = args.canBubble === undefined ? true : args.canBubble;
@@ -284,12 +274,14 @@ export class FrameworkEvent<
      */
     public updateDetails(
         fn: (
-            details: Draft<FrameworkEventInitDetail<TInit>>,
+            details: FrameworkEventInitDetail<TInit>,
+            originalDetails: FrameworkEventInitDetail<TInit>,
         ) => FrameworkEventInitDetail<TInit> | void | undefined,
     ) {
         if (!this.#mutableDetails) {
             throw new Error('Event details are not mutable');
         }
-        this.#detail = produce(this.#detail, fn) as FrameworkEventInitDetail<TInit>;
+        const detail = fn(this.#detail, this.#originalDetail);
+        this.#detail = detail === undefined ? this.#detail : detail;
     }
 }

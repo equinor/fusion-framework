@@ -29,9 +29,11 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
-        "immer": "^9.0.16"
+        "immer": "^9.0.16",
+        "lodash.clonedeep": "^4.5.0"
     },
     "devDependencies": {
+        "@types/lodash.clonedeep": "^4.5.9",
         "rxjs": "^7.8.1",
         "typescript": "^5.5.4"
     },
