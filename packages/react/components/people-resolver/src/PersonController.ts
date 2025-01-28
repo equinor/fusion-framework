@@ -64,12 +64,24 @@ export class PersonController implements IPersonController {
             key: ({ azureId }) => azureId,
             client: {
                 fn: ({ azureId }, signal): Observable<GetPersonResult> => {
-                    return client.get(
-                        'v4',
-                        'json$',
-                        { azureId, expand: ['manager', 'positions'] },
-                        { signal },
-                    );
+                    return client
+                        .get(
+                            'v4',
+                            'json$',
+                            { azureId, expand: ['manager', 'positions'] },
+                            { signal },
+                        )
+                        .pipe(
+                            map((result) => {
+                                const { positions = [] } = result;
+                                return {
+                                    ...result,
+                                    positions: positions.filter(
+                                        (x) => new Date(x.appliesTo) > new Date(),
+                                    ),
+                                };
+                            }),
+                        );
                 },
             },
         });
