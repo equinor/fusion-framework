@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.2.15
+
+### Patch Changes
+
+- Updated dependencies [[`a551b01`](https://github.com/equinor/fusion-framework/commit/a551b01d552b9b9770d1f5132803f92cc91d4bc6)]:
+    - @equinor/fusion-framework-module-event@4.3.0
+    - @equinor/fusion-framework-module-context@5.0.15
+
 ## 7.2.14
 
 ### Patch Changes

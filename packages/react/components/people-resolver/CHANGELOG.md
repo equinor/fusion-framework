@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.0
+
+### Minor Changes
+
+- [#2765](https://github.com/equinor/fusion-framework/pull/2765) [`595ef3b`](https://github.com/equinor/fusion-framework/commit/595ef3b6bca396787f40c8bf1a0f7bf41314dfb6) Thanks [@odinr](https://github.com/odinr)! - Removed previous positions from PersonController
+
+### Patch Changes
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-react@7.3.7
+    - @equinor/fusion-framework-react-module-bookmark@2.3.1
+
 ## 1.4.19
 
 ### Patch Changes

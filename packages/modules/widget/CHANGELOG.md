@@ -1,5 +1,12 @@
 # Change Log
 
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`a551b01`](https://github.com/equinor/fusion-framework/commit/a551b01d552b9b9770d1f5132803f92cc91d4bc6)]:
+    - @equinor/fusion-framework-module-event@4.3.0
+
 ## 8.0.3
 
 ### Patch Changes
