@@ -20,6 +20,9 @@
       "path": "../modules/event"
     },
     {
+      "path": "../modules/bookmark"
+    },
+    {
       "path": "../modules/app"
     },
     {
