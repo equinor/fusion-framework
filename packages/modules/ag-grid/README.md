@@ -16,7 +16,14 @@ npm i ag-grid-react // or the framework of your choice
 >
 > It is possible to install `ag-grid-enterprise` and `ag-grid-community` if needed, but it is recommended to use the modules provided by this package.
 
+> [!IMPORTANT]
+> Before upgrading to AG Grid 33, please read remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
+
 ## Configuration
+
+> [!IMPORTANT]
+> Since ag-grid is re-exported from this package, node has a hard time resolving the correct types.
+> The solution for now is to have `"moduleResolution": "bundler"` in your `tsconfig.json`.
 
 ### Portal
 
