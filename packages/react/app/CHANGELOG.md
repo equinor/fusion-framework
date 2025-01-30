@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.5.3
+
+### Patch Changes
+
+- [#2687](https://github.com/equinor/fusion-framework/pull/2687) [`22219ab`](https://github.com/equinor/fusion-framework/commit/22219ab3c07b5578c48a012632fe16d9a823a3bf) Thanks [@odinr](https://github.com/odinr)! - - Added hook for using theme in ag-grid
+    - Fixed issue with export types of bookmarks
+
 ## 5.5.2
 
 ### Patch Changes
