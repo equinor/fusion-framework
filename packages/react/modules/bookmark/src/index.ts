@@ -1,5 +1,5 @@
 export { default, useCurrentBookmark } from './useCurrentBookmark';
-export { useBookmark } from './useBookmark';
+export { useBookmark, type useBookmarkResult } from './useBookmark';
 export { useBookmarkProvider } from './useBookmarkProvider';
 
 export { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
