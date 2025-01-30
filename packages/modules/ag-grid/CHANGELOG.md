@@ -1,22 +1,60 @@
 # Change Log
 
+## 33.0.0
+
+### Major Changes
+
+- [#2687](https://github.com/equinor/fusion-framework/pull/2687) [`22219ab`](https://github.com/equinor/fusion-framework/commit/22219ab3c07b5578c48a012632fe16d9a823a3bf) Thanks [@odinr](https://github.com/odinr)! - Enhanced the AG Grid module with new functionalities and improvements.
+
+    - Added TypeScript type definitions for better type support.
+    - Introduced new exports for `community`, `enterprise`, and `themes`.
+    - Implemented `AgGridConfigurator` and `AgGridProvider` classes for better configuration and initialization.
+    - Added support for setting and clearing themes, managing modules, and setting license keys.
+    - Updated the `module.ts` to use the new configurator and provider classes.
+    - Removed deprecated files and refactored the module structure for better maintainability.
+
+    **Detailed Changes:**
+
+    - **package.json**: Updated dependencies and added new exports.
+    - **AgGridConfigurator.interface.ts**: Defined the interface for configuring AG Grid settings and modules.
+    - **AgGridConfigurator.ts**: Implemented the `AgGridConfigurator` class for managing AG Grid configuration.
+    - **AgGridProvider.ts**: Implemented the `AgGridProvider` class for providing AG Grid configuration.
+    - **community.ts**: Exported all from `ag-grid-community`.
+    - **default-modules.ts**: Added a placeholder for default modules.
+    - **enterprise.ts**: Exported all from `ag-grid-enterprise`.
+    - **index.ts**: Updated exports to use the new configurator and provider.
+    - **module.ts**: Refactored to use the new configurator and provider classes.
+    - **themes.ts**: Added a default theme for AG Grid.
+
+    **Breaking Changes:**
+
+    - `@ag-grid-community/*` and `@ag-grid-enterprise/*` must be removed from the project dependencies.
+    - The new configurator no longer supports setting license keys directly. Use the `setLicense` function to set license keys.
+    - Modules are now managed through the `AgGridConfigurator` class. Use the `setModule` or `addModule` function to set/add modules to the configuration.
+
+    **References:**
+
+    - [AG Grid 33 Migration Guide](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-33/)
+    - [AG Grid Documentation](https://www.ag-grid.com/)
+    - [AG Grid Theme Builder](https://www.ag-grid.com/theme-builder/)
+
 ## 32.3.0
 
 ### Minor Changes
 
--   [#2532](https://github.com/equinor/fusion-framework/pull/2532) [`850ffee`](https://github.com/equinor/fusion-framework/commit/850ffee7b84aaaf43e63fd3691177c72ec031e7e) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump the ag-grid to 32.3
+- [#2532](https://github.com/equinor/fusion-framework/pull/2532) [`850ffee`](https://github.com/equinor/fusion-framework/commit/850ffee7b84aaaf43e63fd3691177c72ec031e7e) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump the ag-grid to 32.3
 
 ## 32.2.0
 
 ### Minor Changes
 
--   [#2467](https://github.com/equinor/fusion-framework/pull/2467) [`94659b2`](https://github.com/equinor/fusion-framework/commit/94659b2d8b350089841091a88754ca44b488acd2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated Ag Grid to 32.1.0
+- [#2467](https://github.com/equinor/fusion-framework/pull/2467) [`94659b2`](https://github.com/equinor/fusion-framework/commit/94659b2d8b350089841091a88754ca44b488acd2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated Ag Grid to 32.1.0
 
 ## 32.1.1
 
 ### Patch Changes
 
--   [#2442](https://github.com/equinor/fusion-framework/pull/2442) [`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2) Thanks [@odinr](https://github.com/odinr)! - Fixed reference check in navigation module and ag-grid module.
+- [#2442](https://github.com/equinor/fusion-framework/pull/2442) [`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2) Thanks [@odinr](https://github.com/odinr)! - Fixed reference check in navigation module and ag-grid module.
 
     hotfix for [PR-2425](https://github.com/equinor/fusion-framework/pull/2425)
 
@@ -24,15 +62,15 @@
 
 ### Minor Changes
 
--   [#2377](https://github.com/equinor/fusion-framework/pull/2377) [`401a10c`](https://github.com/equinor/fusion-framework/commit/401a10c2cfc13c73f874a40cf51c0f722ef2f629) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump AG Grid from 32.0.2 to 32.1.0
+- [#2377](https://github.com/equinor/fusion-framework/pull/2377) [`401a10c`](https://github.com/equinor/fusion-framework/commit/401a10c2cfc13c73f874a40cf51c0f722ef2f629) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump AG Grid from 32.0.2 to 32.1.0
 
 ## 32.0.1
 
 ### Patch Changes
 
--   [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
+- [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
 
--   [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
+- [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
     Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
@@ -79,7 +117,7 @@
 
 ### Major Changes
 
--   [#2314](https://github.com/equinor/fusion-framework/pull/2314) [`c416233`](https://github.com/equinor/fusion-framework/commit/c41623333a0f0b2be1bd3567b383f3ee5ca6fdbd) Thanks [@dependabot](https://github.com/apps/dependabot)! - # Upgrading to AG Grid 32 for React
+- [#2314](https://github.com/equinor/fusion-framework/pull/2314) [`c416233`](https://github.com/equinor/fusion-framework/commit/c41623333a0f0b2be1bd3567b383f3ee5ca6fdbd) Thanks [@dependabot](https://github.com/apps/dependabot)! - # Upgrading to AG Grid 32 for React
 
     ## Summary
 
@@ -110,7 +148,7 @@
 
 ### Minor Changes
 
--   [#2207](https://github.com/equinor/fusion-framework/pull/2207) [`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d) Thanks [@odinr](https://github.com/odinr)! - Updated the `@ag-grid-enterprise/core` dependency to version `~31.3.2`. This is a patch version bump.
+- [#2207](https://github.com/equinor/fusion-framework/pull/2207) [`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d) Thanks [@odinr](https://github.com/odinr)! - Updated the `@ag-grid-enterprise/core` dependency to version `~31.3.2`. This is a patch version bump.
 
     **Sticky Group Total and Grand Total Rows**: Group and grand total rows can now be displayed as sticky rows at the top or bottom of the grid, making it easier to track total values in large datasets.
 
@@ -130,49 +168,49 @@
 
 ### Patch Changes
 
--   [#2037](https://github.com/equinor/fusion-framework/pull/2037) [`20d929f`](https://github.com/equinor/fusion-framework/commit/20d929f87e6b68e1d1df0de114dd46583502a871) Thanks [@odinr](https://github.com/odinr)! - updated @ag-grid-enterprise/core to 31.2.0
+- [#2037](https://github.com/equinor/fusion-framework/pull/2037) [`20d929f`](https://github.com/equinor/fusion-framework/commit/20d929f87e6b68e1d1df0de114dd46583502a871) Thanks [@odinr](https://github.com/odinr)! - updated @ag-grid-enterprise/core to 31.2.0
 
 ## 31.2.0
 
 ### Minor Changes
 
--   [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
+- [#1953](https://github.com/equinor/fusion-framework/pull/1953) [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904) Thanks [@odinr](https://github.com/odinr)! - updated typescript to 5.4.2
 
 ## 31.1.0
 
 ### Minor Changes
 
--   [#1885](https://github.com/equinor/fusion-framework/pull/1885) [`d6dbb5f`](https://github.com/equinor/fusion-framework/commit/d6dbb5fdeb683c64131de16fa79f3e714a7f552b) Thanks [@odinr](https://github.com/odinr)! - bumped ag-grid from 31.0.3 to 31.1.1
+- [#1885](https://github.com/equinor/fusion-framework/pull/1885) [`d6dbb5f`](https://github.com/equinor/fusion-framework/commit/d6dbb5fdeb683c64131de16fa79f3e714a7f552b) Thanks [@odinr](https://github.com/odinr)! - bumped ag-grid from 31.0.3 to 31.1.1
 
 ## 31.0.1
 
 ### Patch Changes
 
--   [#1650](https://github.com/equinor/fusion-framework/pull/1650) [`36d18d5`](https://github.com/equinor/fusion-framework/commit/36d18d5779bcbe2f7b1c1c418cc28482632fdb18) Thanks [@odinr](https://github.com/odinr)! - update ag-grid to 31.0.1
+- [#1650](https://github.com/equinor/fusion-framework/pull/1650) [`36d18d5`](https://github.com/equinor/fusion-framework/commit/36d18d5779bcbe2f7b1c1c418cc28482632fdb18) Thanks [@odinr](https://github.com/odinr)! - update ag-grid to 31.0.1
 
 ## 30.2.1
 
 ### Patch Changes
 
--   [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
+- [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 ## 30.2.0
 
 ### Minor Changes
 
--   [#1354](https://github.com/equinor/fusion-framework/pull/1354) [`a05a56c2`](https://github.com/equinor/fusion-framework/commit/a05a56c2e608d00c9083c345331751f31d415e1f) Thanks [@odinr](https://github.com/odinr)! - update [@ag-grid-enterprise/core to 30.2.0](https://github.com/ag-grid/ag-grid/releases/tag/v30.2.0)
+- [#1354](https://github.com/equinor/fusion-framework/pull/1354) [`a05a56c2`](https://github.com/equinor/fusion-framework/commit/a05a56c2e608d00c9083c345331751f31d415e1f) Thanks [@odinr](https://github.com/odinr)! - update [@ag-grid-enterprise/core to 30.2.0](https://github.com/ag-grid/ag-grid/releases/tag/v30.2.0)
 
 ## 30.1.1
 
 ### Patch Changes
 
--   [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
+- [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 ## 30.1.0
 
 ### Minor Changes
 
--   [#1225](https://github.com/equinor/fusion-framework/pull/1225) [`31a4b06a`](https://github.com/equinor/fusion-framework/commit/31a4b06afcbb76b0a7584724a5bc061a3e2d98b3) Thanks [@odinr](https://github.com/odinr)! - updated ag-grid to 30.1
+- [#1225](https://github.com/equinor/fusion-framework/pull/1225) [`31a4b06a`](https://github.com/equinor/fusion-framework/commit/31a4b06afcbb76b0a7584724a5bc061a3e2d98b3) Thanks [@odinr](https://github.com/odinr)! - updated ag-grid to 30.1
 
     see [ag-grid changelog](https://github.com/ag-grid/ag-grid/releases/tag/v30.1.0)
 
@@ -182,7 +220,7 @@
 
 ### Patch Changes
 
--   [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
+- [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
     conflicts of `@types/react` made random outcomes when using `yarn`
 
@@ -192,23 +230,23 @@
 
 ### Major Changes
 
--   [#1060](https://github.com/equinor/fusion-framework/pull/1060) [`3a2c3107`](https://github.com/equinor/fusion-framework/commit/3a2c3107b436c1eef7bc03c8225c32d40ed27e74) Thanks [@odinr](https://github.com/odinr)! - chore: update ag-grid to ~30.0
+- [#1060](https://github.com/equinor/fusion-framework/pull/1060) [`3a2c3107`](https://github.com/equinor/fusion-framework/commit/3a2c3107b436c1eef7bc03c8225c32d40ed27e74) Thanks [@odinr](https://github.com/odinr)! - chore: update ag-grid to ~30.0
 
 ## 29.3.3
 
 ### Patch Changes
 
--   [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
+- [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 ## 29.3.2
 
 ### Patch Changes
 
--   [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
+- [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    -   align all versions of typescript
-    -   update types to build
-        -   a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+    - align all versions of typescript
+    - update types to build
+        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -249,18 +287,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-ag-grid:** make options optional ([dfa6458](https://github.com/equinor/fusion-framework/commit/dfa6458ce3ed5e83370f8ad0ecdcb0aee68feb7e))
--   update interface for enabling modules ([1e5730e](https://github.com/equinor/fusion-framework/commit/1e5730e91992c1d0177790c851be993a0532a3d1))
+- **module-ag-grid:** make options optional ([dfa6458](https://github.com/equinor/fusion-framework/commit/dfa6458ce3ed5e83370f8ad0ecdcb0aee68feb7e))
+- update interface for enabling modules ([1e5730e](https://github.com/equinor/fusion-framework/commit/1e5730e91992c1d0177790c851be993a0532a3d1))
 
 ## 2.0.0 (2023-01-19)
 
 ### ⚠ BREAKING CHANGES
 
--   **module-ag-grid:** enableAgGrid now requires options
+- **module-ag-grid:** enableAgGrid now requires options
 
 ### Features
 
--   **module-ag-grid:** enhance enabling module ([4ae3c61](https://github.com/equinor/fusion-framework/commit/4ae3c61bc1e9e569e9002ef6a171dc3ef12ef5db))
+- **module-ag-grid:** enhance enabling module ([4ae3c61](https://github.com/equinor/fusion-framework/commit/4ae3c61bc1e9e569e9002ef6a171dc3ef12ef5db))
 
 ## 1.0.19 (2022-12-06)
 
@@ -350,15 +388,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
--   **module-ag-grid:** expose simple config ([e0ce67f](https://github.com/equinor/fusion-framework/commit/e0ce67f5594cd0f63aea318d130021b0bdeec41d))
--   **module-ag-grid:** expose simple configurator ([788385f](https://github.com/equinor/fusion-framework/commit/788385fa216853c5cc71b13afbcd1c14ca712a5d))
+- **module-ag-grid:** expose simple config ([e0ce67f](https://github.com/equinor/fusion-framework/commit/e0ce67f5594cd0f63aea318d130021b0bdeec41d))
+- **module-ag-grid:** expose simple configurator ([788385f](https://github.com/equinor/fusion-framework/commit/788385fa216853c5cc71b13afbcd1c14ca712a5d))
 
 ## [1.0.0-alpha.0](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@0.3.4...@equinor/fusion-framework-module-ag-grid@1.0.0-alpha.0) (2022-09-12)
 
 ### Features
 
--   **module-ag-grid:** expose simple config ([e0ce67f](https://github.com/equinor/fusion-framework/commit/e0ce67f5594cd0f63aea318d130021b0bdeec41d))
--   **module-ag-grid:** expose simple configurator ([788385f](https://github.com/equinor/fusion-framework/commit/788385fa216853c5cc71b13afbcd1c14ca712a5d))
+- **module-ag-grid:** expose simple config ([e0ce67f](https://github.com/equinor/fusion-framework/commit/e0ce67f5594cd0f63aea318d130021b0bdeec41d))
+- **module-ag-grid:** expose simple configurator ([788385f](https://github.com/equinor/fusion-framework/commit/788385fa216853c5cc71b13afbcd1c14ca712a5d))
 
 ## 0.3.4 (2022-09-05)
 
@@ -378,11 +416,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # 0.3.0 (2022-08-11)
 
--   feat!: allow modules to displose ([32b69fb](https://github.com/equinor/fusion-framework/commit/32b69fb7cc61e78e503e67d0e77f21fb44b600b9))
+- feat!: allow modules to displose ([32b69fb](https://github.com/equinor/fusion-framework/commit/32b69fb7cc61e78e503e67d0e77f21fb44b600b9))
 
 ### BREAKING CHANGES
 
--   module.initialize now has object as arg
+- module.initialize now has object as arg
 
 ## [0.2.11](https://github.com/equinor/fusion-framework/compare/@equinor/fusion-framework-module-ag-grid@0.2.10...@equinor/fusion-framework-module-ag-grid@0.2.11) (2022-08-05)
 
@@ -432,14 +470,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
--   **module-ag-grid:** update config chaining ([12e0cad](https://github.com/equinor/fusion-framework/commit/12e0cad06383a02b710d5a1b989f76a53363b181))
+- **module-ag-grid:** update config chaining ([12e0cad](https://github.com/equinor/fusion-framework/commit/12e0cad06383a02b710d5a1b989f76a53363b181))
 
 ### Features
 
--   **module-ag-grid:** create a module for registering ag-grid ([41f2388](https://github.com/equinor/fusion-framework/commit/41f238836d2e42b94f22a253067bfda0f46132e7))
+- **module-ag-grid:** create a module for registering ag-grid ([41f2388](https://github.com/equinor/fusion-framework/commit/41f238836d2e42b94f22a253067bfda0f46132e7))
 
 # 0.1.0 (2022-06-23)
 
 ### Features
 
--   **module-ag-grid:** create a module for registering ag-grid ([41f2388](https://github.com/equinor/fusion-framework/commit/41f238836d2e42b94f22a253067bfda0f46132e7))
+- **module-ag-grid:** create a module for registering ag-grid ([41f2388](https://github.com/equinor/fusion-framework/commit/41f238836d2e42b94f22a253067bfda0f46132e7))
