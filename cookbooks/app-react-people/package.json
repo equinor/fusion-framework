@@ -30,7 +30,7 @@
         "@equinor/fusion-framework-module-navigation": "workspace:^",
         "@equinor/fusion-react-person": "^0.10.0",
         "@remix-run/router": "^1.8.0",
-        "react-router-dom": "^6.16.0",
+        "react-router-dom": "^7.1.4",
         "styled-components": "^6.0.7"
     }
 }
