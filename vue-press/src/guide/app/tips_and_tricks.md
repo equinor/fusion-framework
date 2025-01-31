@@ -63,7 +63,7 @@ jobs:
           repo-token: "${{ github.token }}"
           report-json: "eslint-report.log.json"
       - name: Upload ESLint report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: eslint-report.log.json
           path: eslint-report.log.json
