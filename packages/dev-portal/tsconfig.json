@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "target": "ESNext",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "types": ["vite/client"],
+    "paths": {
+      "vite-plugin-fusion-spa": ["./dist/vite-plugin-fusion-spa/index.js"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "types/*"
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+}

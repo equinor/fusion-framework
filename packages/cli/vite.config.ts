@@ -9,7 +9,7 @@ dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({
   plugins: [react(), viteTsconfigPaths()],
-  root: fileURLToPath(new URL('./src/bin/dev-portal', import.meta.url)),
+  root: fileURLToPath(new URL('./src/dev-portal', import.meta.url)),
   build: {
     outDir: fileURLToPath(new URL('./dist/bin/public', import.meta.url)),
     emptyOutDir: true,

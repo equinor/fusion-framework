@@ -672,6 +672,9 @@ importers:
       '@equinor/fusion-framework-app':
         specifier: workspace:^
         version: link:../app
+      '@equinor/fusion-framework-module':
+        specifier: workspace:^
+        version: link:../modules/module
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../modules/app
@@ -684,12 +687,18 @@ importers:
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../modules/feature-flag
+      '@equinor/fusion-framework-module-http':
+        specifier: workspace:^
+        version: link:../modules/http
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../modules/msal
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../modules/navigation
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../modules/service-discovery
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../modules/services
@@ -776,6 +785,31 @@ importers:
         version: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
+        version: 5.8.2
+
+  packages/dev-portal:
+    dependencies:
+      '@equinor/fusion-framework-module':
+        specifier: workspace:^
+        version: link:../modules/module
+      '@equinor/fusion-framework-module-http':
+        specifier: workspace:^
+        version: link:../modules/http
+      '@equinor/fusion-framework-module-msal':
+        specifier: workspace:^
+        version: link:../modules/msal
+      '@equinor/fusion-framework-module-service-discovery':
+        specifier: workspace:^
+        version: link:../modules/service-discovery
+      vite:
+        specifier: ^6.0.7
+        version: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(yaml@2.7.0)
+      vite-plugin-environment:
+        specifier: ^1.1.3
+        version: 1.1.3(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(yaml@2.7.0))
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
         version: 5.8.2
 
   packages/framework:
@@ -13659,7 +13693,7 @@ snapshots:
       '@vue/shared': 3.5.13
       estree-walker: 2.0.2
       magic-string: 0.30.11
-      postcss: 8.4.49
+      postcss: 8.5.3
       source-map-js: 1.2.1
 
   '@vue/compiler-ssr@3.4.38':
@@ -18284,7 +18318,7 @@ snapshots:
   vite@6.0.11(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(yaml@2.7.0):
     dependencies:
       esbuild: 0.24.2
-      postcss: 8.4.49
+      postcss: 8.5.3
       rollup: 4.34.8
     optionalDependencies:
       '@types/node': 22.13.5
