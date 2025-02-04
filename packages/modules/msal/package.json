@@ -37,10 +37,10 @@
         "directory": "packages/modules/msal"
     },
     "dependencies": {
-        "@azure/msal-browser": "^4.0.2",
         "@equinor/fusion-framework-module": "workspace:^"
     },
     "devDependencies": {
+        "@azure/msal-browser": "^3.28.1",
         "typescript": "^5.5.4"
     }
 }
