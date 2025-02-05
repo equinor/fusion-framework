@@ -1174,7 +1174,7 @@ importers:
         version: link:../msal
       '@microsoft/applicationinsights-web':
         specifier: ^3.0.2
-        version: 3.3.4(tslib@2.8.1)
+        version: 3.3.5(tslib@2.8.1)
     devDependencies:
       typescript:
         specifier: ^5.5.4
@@ -3156,13 +3156,13 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-analytics-js@3.3.4':
-    resolution: {integrity: sha512-RxxyiIgt3TJ/tvLhg1wth1862wrPmru6dBS7vyThFEUkCZ/AYqEAzdH1JiixgTL/e72NesqmgKcvUUPv9kl9rg==}
+  '@microsoft/applicationinsights-analytics-js@3.3.5':
+    resolution: {integrity: sha512-79EfjQpch2x/B6Ae9dKQixwewWkPSR5vF3KtiJtTZV5udQdlgrcVZgtk3RlqdSaWEMC/xcwBXl7bCiKntd+v/g==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
-  '@microsoft/applicationinsights-cfgsync-js@3.3.4':
-    resolution: {integrity: sha512-Q5aLy6e6dFf4zr+FJdO46dOfHIvRgt/6QG1lJNC9tiuyjWYOKBkOSTop/5+2vvFK5IY4p3g0mxJOSeoHsr8RQQ==}
+  '@microsoft/applicationinsights-cfgsync-js@3.3.5':
+    resolution: {integrity: sha512-18Kct8zgtKq6Vyl1uzGQlAHFZ2D5bJWvGsDkC4OsEduqAHRfA5mfizvtmHJoTTHgTg9mPvdTLDcSpuntndEu4g==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3171,8 +3171,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-channel-js@3.3.4':
-    resolution: {integrity: sha512-Z4nrxYwGKP9iyrYtm7iPQXVOFy4FsEsX0nDKkAi96Qpgw+vEh6NH4ORxMMuES0EollBQ3faJyvYCwckuCVIj0g==}
+  '@microsoft/applicationinsights-channel-js@3.3.5':
+    resolution: {integrity: sha512-q9iE5alabgddwnxIDxgYLwC/3OMjYNOPk87p3jY+KxO0UmJGhiv7C1uI62zpx4AHBGT2+q6pMbIZdgld9TmMrw==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3181,8 +3181,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-common@3.3.4':
-    resolution: {integrity: sha512-4ms16MlIvcP4WiUPqopifNxcWCcrXQJ2ADAK/75uok2mNQe6ZNRsqb/P+pvhUxc8A5HRlvoXPP1ptDSN5Girgw==}
+  '@microsoft/applicationinsights-common@3.3.5':
+    resolution: {integrity: sha512-zZgMOY3ePBhjTrZ8+MXwAb0Y+Yi4iVDKOqIaz/KoCmj1BxX5JKFgaqYiN8Tvu5O0YPJpEKS4coYXRHbStDm/Hw==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3191,8 +3191,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-core-js@3.3.4':
-    resolution: {integrity: sha512-MummANF0mgKIkdvVvfmHQTBliK114IZLRhTL0X0Ep+zjDwWMHqYZgew0nlFKAl6ggu42abPZFK5afpE7qjtYJA==}
+  '@microsoft/applicationinsights-core-js@3.3.5':
+    resolution: {integrity: sha512-8Gg18W5eOE3usXtkZ5iOqWAMU97hyjb7Oi1CtkWmxEoMUHMlQmqUD62n9BmVq/s5YfbUihGZHxc0keMJy0txAA==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3201,8 +3201,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-dependencies-js@3.3.4':
-    resolution: {integrity: sha512-RBEFs78v1Zl+9I85nUyw2KdXUKnjxDvdMC0Ul86v7i9ApFrrPJTJ0AVS8h+ydxtJcO2f2nHUEbtVWCf1ixRHiQ==}
+  '@microsoft/applicationinsights-dependencies-js@3.3.5':
+    resolution: {integrity: sha512-6yCrMUjgzzGHelj4UcEftFelcBUoEXmmLP7cuur/+MgfULiNUNbhIcyM0NzehbzDU2h51mQmMapwdw6R7goKFQ==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3211,8 +3211,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-properties-js@3.3.4':
-    resolution: {integrity: sha512-iI26hM34ysqxVmdOxVetBeoinPoBnNxSb0/c3A+zbY9iCelvf7HF4tn1Qf+sS9Jqn1Z1XjzzKvan8k82+cK+XA==}
+  '@microsoft/applicationinsights-properties-js@3.3.5':
+    resolution: {integrity: sha512-5pPCys+9CVaW9PlEon7HmGPeNynUch5MZzj4x884TTpl1idKI9GRNVYRpzhivwabaMNvvQIqLBpIMacaD1Xc0w==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3227,8 +3227,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-web@3.3.4':
-    resolution: {integrity: sha512-aZdGnI0fby/OoRNIKkYC9xqNjqFJyb7fKiYtIejCGbE/i2sClnHq7tnwiTk1UKBy9oflwryoFFNs0MM6PDBuMA==}
+  '@microsoft/applicationinsights-web@3.3.5':
+    resolution: {integrity: sha512-lf1eqFXDL1m7ObychpecTChiUXtMltTxekETJjp05nK8X618mmfcnTCdJgWSvmAG2m09GNz6Wd26omJlNknSdQ==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -10748,19 +10748,19 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-analytics-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-analytics-js@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.6
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-cfgsync-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-cfgsync-js@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
@@ -10775,10 +10775,10 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-channel-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-channel-js@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
@@ -10792,9 +10792,9 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-common@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-common@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.6
@@ -10806,7 +10806,7 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-core-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-core-js@3.3.5(tslib@2.8.1)':
     dependencies:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
@@ -10822,10 +10822,10 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-dependencies-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-dependencies-js@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
@@ -10840,10 +10840,10 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-properties-js@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-properties-js@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-utils': 0.11.6
@@ -10867,15 +10867,15 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-web@3.3.4(tslib@2.8.1)':
+  '@microsoft/applicationinsights-web@3.3.5(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-analytics-js': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-cfgsync-js': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-channel-js': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-common': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-dependencies-js': 3.3.4(tslib@2.8.1)
-      '@microsoft/applicationinsights-properties-js': 3.3.4(tslib@2.8.1)
+      '@microsoft/applicationinsights-analytics-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-cfgsync-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-channel-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-dependencies-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-properties-js': 3.3.5(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
