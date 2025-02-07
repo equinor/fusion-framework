@@ -1,5 +1,12 @@
 # Change Log
 
+## 8.0.5
+
+### Patch Changes
+
+- Updated dependencies []:
+    - @equinor/fusion-query@5.2.1
+
 ## 8.0.4
 
 ### Patch Changes

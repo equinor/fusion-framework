@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.4.1
+
+### Patch Changes
+
+- [#2791](https://github.com/equinor/fusion-framework/pull/2791) [`0f87836`](https://github.com/equinor/fusion-framework/commit/0f878368780f57df07dc766bc0afb945ca1346ce) Thanks [@eikeland](https://github.com/eikeland)! - Updating `@equinor/fusion-wc-person` to get latest fixes in dev-portal
+
+- [#2781](https://github.com/equinor/fusion-framework/pull/2781) [`25dfe68`](https://github.com/equinor/fusion-framework/commit/25dfe68275c4da267cda9a0699dc123e5febc708) Thanks [@eikeland](https://github.com/eikeland)! - Updating `@equinor/fusion-react-context-selector` to get latest wc in devportal
+
 ## 10.4.0
 
 ### Minor Changes
