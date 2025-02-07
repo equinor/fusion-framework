@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.26
+
+### Patch Changes
+
+- Updated dependencies [[`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1), [`0f87836`](https://github.com/equinor/fusion-framework/commit/0f878368780f57df07dc766bc0afb945ca1346ce), [`25dfe68`](https://github.com/equinor/fusion-framework/commit/25dfe68275c4da267cda9a0699dc123e5febc708)]:
+    - @equinor/fusion-observable@8.4.4
+    - @equinor/fusion-framework-cli@10.4.1
+    - @equinor/fusion-framework-module-feature-flag@1.1.12
+    - @equinor/fusion-framework-react-app@5.5.4
+
 ## 1.3.25
 
 ### Patch Changes

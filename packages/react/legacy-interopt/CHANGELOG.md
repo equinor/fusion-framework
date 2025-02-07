@@ -1,5 +1,17 @@
 # Change Log
 
+## 20.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1)]:
+    - @equinor/fusion-observable@8.4.4
+    - @equinor/fusion-framework-module-app@6.1.4
+    - @equinor/fusion-framework-react-app@5.5.4
+    - @equinor/fusion-framework-app@9.2.3
+    - @equinor/fusion-framework-module-service-discovery@8.0.5
+    - @equinor/fusion-framework@7.2.16
+
 ## 20.0.3
 
 ### Patch Changes

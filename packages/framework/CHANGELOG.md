@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.2.16
+
+### Patch Changes
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-module-context@5.0.16
+    - @equinor/fusion-framework-module-service-discovery@8.0.5
+    - @equinor/fusion-framework-module-services@5.1.0
+
 ## 7.2.15
 
 ### Patch Changes

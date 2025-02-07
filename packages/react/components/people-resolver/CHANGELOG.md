@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.1
+
+### Patch Changes
+
+- [#2791](https://github.com/equinor/fusion-framework/pull/2791) [`0f87836`](https://github.com/equinor/fusion-framework/commit/0f878368780f57df07dc766bc0afb945ca1346ce) Thanks [@eikeland](https://github.com/eikeland)! - Updating `@equinor/fusion-wc-person` to get latest fixes in dev-portal
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-react@7.3.8
+    - @equinor/fusion-framework-react-module-bookmark@2.3.2
+    - @equinor/fusion-query@5.2.1
+    - @equinor/fusion-framework-module-services@5.1.0
+
 ## 1.5.0
 
 ### Minor Changes
