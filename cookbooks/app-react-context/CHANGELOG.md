@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.1.47
+
+### Patch Changes
+
+- Updated dependencies [[`c2ffb02`](https://github.com/equinor/fusion-framework/commit/c2ffb026edacd3dc9eed570dc83aa71c3e58adea)]:
+    - @equinor/fusion-framework-cli@10.4.2
+    - @equinor/fusion-framework-react-app@5.5.4
+
 ## 4.1.46
 
 ### Patch Changes

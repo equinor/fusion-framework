@@ -4,6 +4,22 @@
 
 ### Patch Changes
 
+- [#2802](https://github.com/equinor/fusion-framework/pull/2802) [`6277eef`](https://github.com/equinor/fusion-framework/commit/6277eefe89444fee150f01c11b1d01348e024ca3) Thanks [@odinr](https://github.com/odinr)! - Updated the package to use `@equinor/fusion-framework-react-ag-grid` instead of `@equinor/fusion-framework-module-ag-grid`.
+
+    - Replaced `@equinor/fusion-framework-module-ag-grid` with `@equinor/fusion-framework-react-ag-grid` in `package.json`.
+    - Updated imports in `App.tsx` and `config.ts` to use `@equinor/fusion-framework-react-ag-grid`.
+    - Modified `tsconfig.json` to use `react-jsx` instead of `react-jsxdev`.
+    - Added `app.manifest.config.ts` to define the app manifest.
+
+- Updated dependencies [[`6277eef`](https://github.com/equinor/fusion-framework/commit/6277eefe89444fee150f01c11b1d01348e024ca3), [`c2ffb02`](https://github.com/equinor/fusion-framework/commit/c2ffb026edacd3dc9eed570dc83aa71c3e58adea)]:
+    - @equinor/fusion-framework-react-ag-grid@33.0.0
+    - @equinor/fusion-framework-cli@10.4.2
+    - @equinor/fusion-framework-react-app@5.5.4
+
+## 0.6.2
+
+### Patch Changes
+
 - Updated dependencies [[`0f87836`](https://github.com/equinor/fusion-framework/commit/0f878368780f57df07dc766bc0afb945ca1346ce), [`25dfe68`](https://github.com/equinor/fusion-framework/commit/25dfe68275c4da267cda9a0699dc123e5febc708)]:
     - @equinor/fusion-framework-cli@10.4.1
     - @equinor/fusion-framework-react-app@5.5.4
