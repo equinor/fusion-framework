@@ -2,12 +2,6 @@
 '@equinor/fusion-framework-module-ag-grid': patch
 ---
 
----
-
-## "@equinor/fusion-framework-module-ag-grid": patch
-
-**@equinor/fusion-framework-module-ag-grid:**
-
 - Updated `README.md` with detailed documentation for the AG Grid React for Fusion Framework, including installation, configuration, theming, customizing a grid instance, and upgrading from version 32 to 33.
 - Refactor: `package.json` to include peer dependencies for `ag-grid-community` and `ag-grid-enterprise`.
 - Fixed: `AgGridConfigurator` class to setting the license key on initialization.
