@@ -1,8 +1,7 @@
 // Import necessary hooks and components from React and Ag-Grid
 import { useCallback, useMemo, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import { type ColDef } from '@equinor/fusion-framework-module-ag-grid/community';
-import { createTheme } from '@equinor/fusion-framework-module-ag-grid/themes';
+import { AgGridReact } from '@equinor/fusion-framework-react-ag-grid';
+import { createTheme, type ColDef } from '@equinor/fusion-framework-react-ag-grid/community';
 
 // Import custom table configuration
 import { defaultColDef, sideBar } from './table';
@@ -64,6 +63,7 @@ export const App = (): JSX.Element => {
             }),
         [],
     );
+    customTheme;
 
     return (
         <>
@@ -73,8 +73,8 @@ export const App = (): JSX.Element => {
             </div>
             <div style={gridStyle}>
                 <AgGridReact
-                    theme={customTheme}
                     rowData={rowData}
+                    // theme={customTheme}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     sideBar={sideBar}

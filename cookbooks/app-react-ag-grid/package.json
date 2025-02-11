@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-framework-cookbook-app-react-ag-grid",
-    "version": "0.6.2",
+    "version": "0.6.2-17",
     "description": "Setup AG-grid with fusion-framework",
     "private": true,
     "type": "module",
@@ -14,11 +14,10 @@
     "license": "ISC",
     "dependencies": {
         "@equinor/fusion-framework-cli": "workspace:^",
-        "@equinor/fusion-framework-module-ag-grid": "workspace:^",
         "@equinor/fusion-framework-react-app": "workspace:^",
+        "@equinor/fusion-framework-react-ag-grid": "workspace:*",
         "@types/react": "^18.2.50",
         "@types/react-dom": "^18.2.7",
-        "ag-grid-react": "^33.0.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "typescript": "^5.5.4"
