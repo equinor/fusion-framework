@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.2
+
+### Patch Changes
+
+- [#2801](https://github.com/equinor/fusion-framework/pull/2801) [`c2ffb02`](https://github.com/equinor/fusion-framework/commit/c2ffb026edacd3dc9eed570dc83aa71c3e58adea) Thanks [@eikeland](https://github.com/eikeland)! - Updating fwc-person to resolve height issues on variant dense
+
 ## 1.5.1
 
 ### Patch Changes
