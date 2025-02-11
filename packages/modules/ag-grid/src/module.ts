@@ -1,14 +1,16 @@
+import {
+    type IModulesConfigurator,
+    type Module,
+    type ModulesInstanceType,
+} from '@equinor/fusion-framework-module';
+
 import { AgGridConfigurator } from './AgGridConfigurator';
 import { defaultModules } from './default-modules';
 import { IAgGridProvider, AgGridProvider } from './AgGridProvider';
-import type {
-    IModulesConfigurator,
-    Module,
-    ModulesInstanceType,
-} from '@equinor/fusion-framework-module';
+
 import { type IAgGridConfigurator } from './AgGridConfigurator.interface';
 
-import { fusionTheme } from './themes';
+import { fusionTheme, createThemeFromTheme } from './themes';
 
 export type AgGridModule = Module<'agGrid', IAgGridProvider, IAgGridConfigurator>;
 
@@ -18,7 +20,8 @@ export const module: AgGridModule = {
     name: 'agGrid',
     configure: (ref?: ModulesInstanceType<[AgGridModule]>) => {
         const licenseKey = ref?.agGrid?.licenseKey;
-        const theme = ref?.agGrid?.theme ?? fusionTheme;
+
+        const theme = ref?.agGrid?.theme ? createThemeFromTheme(ref.agGrid.theme) : fusionTheme;
         return new AgGridConfigurator({
             licenseKey,
             theme,

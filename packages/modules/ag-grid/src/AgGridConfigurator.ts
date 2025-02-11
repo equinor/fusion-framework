@@ -21,6 +21,7 @@ export class AgGridConfigurator
         // set config properties
         this._set('modules', async () => [...this.#modules]);
         this._set('theme', async () => this.#theme);
+        this.setLicenseKey(args.licenseKey);
     }
 
     setLicenseKey(value: string | undefined): void {

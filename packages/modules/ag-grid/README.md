@@ -4,26 +4,22 @@ This module provides an agnostic wrapper around the [AG Grid](https://www.ag-gri
 
 The intention of this module is to provide a consistent way to configure AG Grid and to ensure that the correct version of AG Grid is used.
 
+> [!TIP]
+> This is the base package for AG Grid in Fusion, which means that `ag-grid-enterprise` and `ag-grid-community` is required to be installed. This package should be consumed by the host (portal) which configures AG Grid for the applications. See [`@equinor/fusion-framework-module-ag-grid`](https://www.npmjs.com/package/@equinor/fusion-framework-react-ag-grid) for usage in applications.
+
 ## Installation
 
 ```sh
 npm i @equinor/fusion-framework-module-ag-grid
-npm i ag-grid-react // or the framework of your choice
 ```
 
 > [!WARNING]
 > Fusion will try to keep the semantic major and minor versions in sync with AG Grid, but there might be cases where this is not possible. So `@equinor/fusion-framework-module-ag-grid` and `ag-grid` might have different __patch__ versions.
->
-> It is possible to install `ag-grid-enterprise` and `ag-grid-community` if needed, but it is recommended to use the modules provided by this package.
 
 > [!IMPORTANT]
 > Before upgrading to AG Grid 33, please read remove all previous references to `@equinor/fusion-react-ag-grid-styles`, `@ag-grid-community/*` and `@ag-grid-enterprise/*` from your project dependencies.
 
 ## Configuration
-
-> [!IMPORTANT]
-> Since ag-grid is re-exported from this package, node has a hard time resolving the correct types.
-> The solution for now is to have `"moduleResolution": "bundler"` in your `tsconfig.json`.
 
 ### Portal
 
@@ -36,22 +32,6 @@ export async function configure(config: FrameworkConfigurator) {
         builder.setLicenseKey('your-license-key');
     });
 }
-```
-
-### Application
-
-To use AG Grid in an application, the module needs to be enabled in the application configuration. 
-
-> [!NOTE]
-> All configuration is scoped to the application.
-
-```ts
-import { type AppModuleInitiator } from '@equinor/fusion-framework-react-app';
-import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-
-export const configure: AppModuleInitiator = (configurator, { env }) => {
-    enableAgGrid(configurator);
-};
 ```
 
 ## Theming

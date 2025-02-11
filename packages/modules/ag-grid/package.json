@@ -9,14 +9,6 @@
             "import": "./dist/esm/index.js",
             "types": "./dist/types/index.d.ts"
         },
-        "./community": {
-            "import": "./dist/esm/community.js",
-            "types": "./dist/types/community.d.ts"
-        },
-        "./enterprise": {
-            "import": "./dist/esm/enterprise.js",
-            "types": "./dist/types/enterprise.d.ts"
-        },
         "./themes": {
             "import": "./dist/esm/themes.js",
             "types": "./dist/types/themes.d.ts"
@@ -49,15 +41,16 @@
         "url": "git+https://github.com/equinor/fusion-framework.git",
         "directory": "packages/modules/ag-grid"
     },
-    "dependencies": {
-        "ag-grid-community": "^33.0.3",
-        "ag-grid-enterprise": "^33.0.3"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
-        "typescript": "^5.5.4"
+        "typescript": "^5.5.4",
+        "ag-grid-community": "33.0.3",
+        "ag-grid-enterprise": "33.0.3"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^"
+        "@equinor/fusion-framework-module": "workspace:^",
+        "ag-grid-community": ">=33.0.3",
+        "ag-grid-enterprise": ">=33.0.3"
     }
 }
