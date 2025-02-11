@@ -1,0 +1,28 @@
+{
+  "extends": "../tsconfig.react.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "paths": {
+      "react": [
+        "./node_modules/@types/react"
+      ],
+    },
+  },
+  "references": [
+    {
+      "path": "../../modules/ag-grid"
+    },
+    {
+      "path": "../modules/module"
+    }
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}

@@ -1,13 +1,13 @@
 import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
-import { enableAgGrid } from '@equinor/fusion-framework-module-ag-grid';
-import { ClientSideRowModelModule } from '@equinor/fusion-framework-module-ag-grid/community';
+import { enableAgGrid } from '@equinor/fusion-framework-react-ag-grid';
+import { ClientSideRowModelModule } from '@equinor/fusion-framework-react-ag-grid/community';
 import {
     ClipboardModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
     MenuModule,
-} from '@equinor/fusion-framework-module-ag-grid/enterprise';
+} from '@equinor/fusion-framework-react-ag-grid/enterprise';
 
 export const configure: AppModuleInitiator = (configurator, { env }) => {
     /** print render environment arguments */
@@ -22,11 +22,11 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
             ExcelExportModule,
             ClipboardModule,
         ]);
-        builder.setTheme((theme) => {
-            return theme.withParams({
-                backgroundColor: 'blue',
-            });
-        });
+        // builder.setTheme((theme) => {
+        //     return theme.withParams({
+        //         backgroundColor: 'blue',
+        //     });
+        // });
     });
 
     /** callback when configurations is created */
