@@ -1,4 +1,3 @@
-import { AuthRequest } from '@equinor/fusion-framework-module-msal/client';
 import { useToken } from './useToken';
 
 /**
@@ -7,9 +6,9 @@ import { useToken } from './useToken';
  * @param req - The authentication request.
  * @returns An object containing the access token, pending state, and error.
  */
-export const useAccessToken = (
-    req: AuthRequest,
-): { token?: string; pending: boolean; error: unknown } => {
+export const useAccessToken = (req: {
+    scopes: string[];
+}): { token?: string; pending: boolean; error: unknown } => {
     const { token, error, pending } = useToken(req);
     return { token: token?.accessToken, pending, error };
 };
