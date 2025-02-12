@@ -8,16 +8,16 @@
             "import": "./dist/esm/index.js",
             "types": "./dist/types/index.d.ts"
         },
-        "./client": {
-            "import": "./dist/esm/client/index.js",
-            "types": "./dist/types/client/index.d.ts"
+        "./v2": {
+            "import": "./dist/esm/v2/index.js",
+            "types": "./dist/types/v2/index.d.ts"
         }
     },
     "types": "dist/types/index.d.ts",
     "typesVersions": {
         "*": {
-            "client": [
-                "dist/types/client/index.d.ts"
+            "v2": [
+                "dist/types/v2/index.d.ts"
             ]
         }
     },
@@ -38,7 +38,10 @@
     },
     "dependencies": {
         "@azure/msal-browser": "^2.21.0",
-        "@equinor/fusion-framework-module": "workspace:^"
+        "@equinor/fusion-framework-module": "workspace:^",
+        "@types/semver": "^7.5.0",
+        "semver": "^7.5.4",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "typescript": "^5.5.4"

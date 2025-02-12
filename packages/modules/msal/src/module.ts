@@ -1,68 +1,91 @@
-import { AuthClientOptions, AuthConfigurator, IAuthConfigurator } from './configurator';
-import { AuthProvider, IAuthProvider } from './provider';
+import {
+    type Module,
+    type IModulesConfigurator,
+    SemanticVersion,
+    ModulesInstanceType,
+} from '@equinor/fusion-framework-module';
 
-import type { Module, IModuleConfigurator } from '@equinor/fusion-framework-module';
+import { createProxyProvider } from './create-proxy-provider';
+import resolveVersion from './resolve-version';
+import { MsalModuleVersion } from './static';
 
-export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator>;
+import { AuthConfigurator, AuthProvider, type AuthClientConfig, type IAuthProvider } from './v2';
+
+export { AuthConfig } from './v2';
+
+export type MsalModule = Module<'auth', IAuthProvider, AuthConfigurator, [MsalModule]>;
+export type { AuthConfigurator, IAuthProvider };
 
 export const module: MsalModule = {
     name: 'auth',
+    version: new SemanticVersion(MsalModuleVersion.Latest),
     configure: (refModules) => {
         const configurator = new AuthConfigurator();
-        /** check if parent scope has configured msal */
-        if (refModules?.auth?.defaultConfig) {
-            /** copy configuration from parent scope */
-            configurator.configureDefault(refModules.auth.defaultConfig);
-        }
+
+        // Check if the parent module has the auth module
+        const provider = (refModules as ModulesInstanceType<[MsalModule]>)?.auth;
+        configurator.setProvider(provider);
+
         return configurator;
     },
-    initialize: async ({ config }) => {
-        const authProvider = new AuthProvider(config);
+    initialize: async (init) => {
+        // generate the configuration
+        const config = await init.config.createConfigAsync(init);
+
+        // resolve configuration version
+        const version = resolveVersion(config.version);
+
+        // check if the provider is defined
+        if (config.provider) {
+            if (config.client) {
+                console.warn(
+                    'Client configuration is ignored when using provider from parent module',
+                );
+            }
+            // generate a proxy provider
+            return createProxyProvider(config.provider, version.wantedVersion) as IAuthProvider;
+        }
+
+        // validate client configuration
+        if (!config.client) {
+            throw new Error('Client configuration is required when provider is not defined');
+        }
+
+        // create a new provider
+        const authProvider = new AuthProvider(config.client);
+
         if (config.requiresAuth) {
             await authProvider.handleRedirect();
-            if (!authProvider.defaultAccount) {
-                await authProvider.login();
-            }
+            await authProvider.login({ onlyIfRequired: true });
         }
+
+        // check if the version satisfies the latest version, if not create a proxy provider
+        const { satisfiesLatest } = resolveVersion(config.version);
+        if (!satisfiesLatest) {
+            return createProxyProvider(authProvider, config.version) as IAuthProvider;
+        }
+
         return authProvider;
     },
 };
 
-/**
- * Enable MSAL module
- * 
- * @example
- ```ts
- configureMsal(
-    {
-        tenantId: '{TENANT_ID}',
-        clientId: '{CLIENT_ID}',
-        redirectUri: '/authentication/login-callback',
-    },
-    // requires authenticated user when module is initialized (force login)
-    { requiresAuth: true }
- );
- ```
- * @param defaultClient - default auth client for the module
- */
-export const configureMsal = (
-    defaultClient: AuthClientOptions,
-    args?: {
-        clients?: Record<string, AuthClientOptions>;
-        requiresAuth?: boolean;
-    },
-): IModuleConfigurator<MsalModule, unknown> => ({
+export type AuthConfigFn = (builder: {
+    setClientConfig: (config: AuthClientConfig) => void;
+    setRequiresAuth: (requiresAuth: boolean) => void;
+}) => void;
+
+export const enableMSAL = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    configurator: IModulesConfigurator<any, any>,
+    configure?: AuthConfigFn,
+): void => {
+    const config = configure ? configureMsal(configure) : { module };
+    configurator.addConfig(config);
+};
+
+export const configureMsal = (configure: AuthConfigFn) => ({
     module,
-    configure: (config) => {
-        config.configureDefault(defaultClient);
-        if (args?.requiresAuth !== undefined) {
-            config.requiresAuth = args?.requiresAuth;
-        }
-        const { clients } = args ?? {};
-        if (clients) {
-            Object.entries(clients).forEach(([key, opt]) => config.configureClient(key, opt));
-        }
-    },
+    configure,
 });
 
 declare module '@equinor/fusion-framework-module' {
