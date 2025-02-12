@@ -1070,6 +1070,15 @@ importers:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@types/semver':
+        specifier: ^7.5.0
+        version: 7.5.8
+      semver:
+        specifier: ^7.5.4
+        version: 7.7.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       typescript:
         specifier: ^5.5.4
@@ -1418,6 +1427,9 @@ importers:
       '@equinor/fusion-framework-module-feature-flag':
         specifier: workspace:^
         version: link:../../modules/feature-flag
+      '@equinor/fusion-framework-module-msal':
+        specifier: workspace:^
+        version: link:../../modules/msal
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
