@@ -13,7 +13,7 @@ import http, {
 } from '@equinor/fusion-framework-module-http';
 import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 
-import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
+import auth, { type AuthConfigFn } from '@equinor/fusion-framework-module-msal';
 
 import context from '@equinor/fusion-framework-module-context';
 
@@ -21,6 +21,7 @@ import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
 
 import { FusionModules } from './types';
+import { AuthClientConfig } from '@equinor/fusion-framework-module-msal/v2';
 
 /**
  * Module configurator for Framework modules
@@ -45,8 +46,21 @@ export class FrameworkConfigurator<
         this.addConfig(configureHttpClient(...args));
     }
 
-    public configureMsal(...args: Parameters<typeof configureMsal>) {
-        this.addConfig(configureMsal(...args));
+    public configureMsal(cb_or_config: AuthConfigFn | AuthClientConfig, requiresAuth = true) {
+        this.addConfig({
+            module: auth,
+            configure: (builder) => {
+                if (requiresAuth !== undefined) {
+                    builder.setRequiresAuth(!!requiresAuth);
+                }
+                if (typeof cb_or_config === 'function') {
+                    cb_or_config(builder);
+                }
+                if (typeof cb_or_config === 'object') {
+                    builder.setClientConfig(cb_or_config);
+                }
+            },
+        });
     }
 
     public configureServiceDiscovery(args: { client: HttpClientOptions<HttpClientMsal> }) {
