@@ -17,9 +17,9 @@ runs:
     - name: generate patch for all packages
       shell: bash
       run: |
-          PWD
+          pwd
           ls -la
-          sh ./.github/workflows/actions/changeset-snapshot/create-pre-release-patch.sh ${{ inputs.gh-token }}
+          sh ./.github/workflows/actions/changeset-snapshot/create-pre-release-changeset.sh ${{ inputs.gh-token }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
     - name: Generate status
