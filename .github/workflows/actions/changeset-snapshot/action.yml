@@ -16,9 +16,7 @@ runs:
   steps:
     - name: generate patch for all packages
       shell: bash
-      run: |
-        echo PWD
-        sh create-pre-release-patch.sh ${{ inputs.gh-token }}
+      run: ./.github/workflows/actions/changeset-snapshot/create-pre-release-patch.sh ${{ inputs.gh-token }}
       env:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
     - name: Generate status
