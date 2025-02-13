@@ -8,19 +8,24 @@ inputs:
     description: token for pushing to npm
     required: true
   gh-token:
-    desciption: github token
-    default:  ${{ github.token }}
+    description: github token
+    default: ${{ github.token }}
 
 runs:
   using: composite
   steps:
+    - name: generate patch for all packages
+      shell: bash
+      run: create-pre-release-patch.sh ${{ inputs.gh-token }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh-token }}
     - name: Generate status
       id: status
       shell: bash
       run: |
         pnpm changeset status --output changeset.json
-        REALEASE_COUNT=$(cat changeset.json | jq '.releases | length')
-        echo "releases=${REALEASE_COUNT}" >> "$GITHUB_OUTPUT"
+        RELEASE_COUNT=$(cat changeset.json | jq '.releases | length')
+        echo "releases=${RELEASE_COUNT}" >> "$GITHUB_OUTPUT"
       env:
         GITHUB_TOKEN: ${{ inputs.gh-token }}
 
@@ -29,8 +34,8 @@ runs:
       if: ${{ steps.status.outputs.releases > 0 }}
       run: |
         pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
-        pnpm changeset version --snapshot ${{  inputs.tag }} 
-        pnpm publish -r --tag ${{  inputs.tag }} --no-git-checks --report-summary
+        pnpm changeset version --snapshot ${{ inputs.tag }}
+        pnpm publish -r --tag ${{ inputs.tag }} --no-git-checks --report-summary
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
         GITHUB_TOKEN: ${{ inputs.gh-token }}
@@ -40,4 +45,3 @@ runs:
       with:
         name: changeset-status
         path: changeset.json
-          
