@@ -16,8 +16,8 @@ runs:
   steps:
     - name: generate patch for all packages
       shell: bash
-      run: ./.github/workflows/actions/changeset-snapshot/create-pre-release-changeset.sh ${{ inputs.tag }}
-      
+      run: sh ./.github/workflows/actions/changeset-snapshot/create-pre-release-changeset.sh ${{ inputs.tag }}
+
     - name: Generate status
       id: status
       shell: bash
