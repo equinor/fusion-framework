@@ -58,10 +58,10 @@
         "typescript": "^5.5.4"
     },
     "peerDependencies": {
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^"
+        "@equinor/fusion-framework-module-bookmark": "workspace:^"
     },
     "peerDependenciesMeta": {
-        "@equinor/fusion-framework-module-feature-flag": {
+        "@equinor/fusion-framework-module-bookmark": {
             "optional": true
         }
     }
