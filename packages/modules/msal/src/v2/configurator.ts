@@ -17,25 +17,23 @@ const AuthClientConfigSchema = z.object({
 // NOTE: this might need refinement to validate the provider
 const AuthClientSchema = z.custom<IAuthProvider>();
 
-const AuthConfigSchema = z
-    .object({
-        client: AuthClientConfigSchema.optional(),
-        provider: AuthClientSchema.optional(),
-        requiresAuth: z.boolean().optional(),
-        version: VersionSchema.default(MsalModuleVersion.Latest),
-    })
-    .refine((data) => {
-        if (!data.client && !data.provider) {
-            throw new Error('Either client or provider must be defined');
-        }
-        return true;
-    });
+const AuthConfigSchema = z.object({
+    client: AuthClientConfigSchema.optional(),
+    provider: AuthClientSchema.optional(),
+    requiresAuth: z.boolean().optional(),
+    version: VersionSchema,
+});
 
 export type AuthClientConfig = z.infer<typeof AuthClientConfigSchema>;
 export type AuthConfig = z.infer<typeof AuthConfigSchema>;
 
 export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
     public version = MsalModuleVersion.Latest as const;
+
+    constructor() {
+        super();
+        this._set('version', async () => this.version);
+    }
 
     setClientConfig(config?: z.infer<typeof AuthClientConfigSchema>): void {
         this._set('client', async () => config);
@@ -49,7 +47,7 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
         this._set('provider', async () => provider);
     }
 
-    setVersion(version?: string): void {
+    setVersion(version: string): void {
         this._set('version', async () => version);
     }
 

@@ -2,16 +2,11 @@ import {
     type Module,
     type IModulesConfigurator,
     SemanticVersion,
-    ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
 
-import { createProxyProvider } from './create-proxy-provider';
-import resolveVersion from './resolve-version';
 import { MsalModuleVersion } from './static';
 
 import { AuthConfigurator, AuthProvider, type AuthClientConfig, type IAuthProvider } from './v2';
-
-export { AuthConfig } from './v2';
 
 export type MsalModule = Module<'auth', IAuthProvider, AuthConfigurator, [MsalModule]>;
 export type { AuthConfigurator, IAuthProvider };
@@ -19,36 +14,31 @@ export type { AuthConfigurator, IAuthProvider };
 export const module: MsalModule = {
     name: 'auth',
     version: new SemanticVersion(MsalModuleVersion.Latest),
-    configure: (refModules) => {
-        const configurator = new AuthConfigurator();
-
-        // Check if the parent module has the auth module
-        const provider = (refModules as ModulesInstanceType<[MsalModule]>)?.auth;
-        configurator.setProvider(provider);
-
-        return configurator;
-    },
+    configure: () => new AuthConfigurator(),
     initialize: async (init) => {
-        // generate the configuration
         const config = await init.config.createConfigAsync(init);
 
-        // resolve configuration version
-        const version = resolveVersion(config.version);
-
-        // check if the provider is defined
+        // configured to use a custom provider
         if (config.provider) {
-            if (config.client) {
-                console.warn(
-                    'Client configuration is ignored when using provider from parent module',
-                );
-            }
-            // generate a proxy provider
-            return createProxyProvider(config.provider, version.wantedVersion) as IAuthProvider;
+            return config.provider;
         }
 
-        // validate client configuration
+        // check if the provider is defined in the parent module
+        const hostProvider = init.ref?.auth as AuthProvider;
+        if (hostProvider) {
+            try {
+                return hostProvider.createProxyProvider(config.version);
+            } catch (error) {
+                console.error('MsalModule::Failed to create proxy provider', error);
+                // just to make sure during migration that the provider is not set
+                return hostProvider;
+            }
+        }
+
         if (!config.client) {
-            throw new Error('Client configuration is required when provider is not defined');
+            throw new Error(
+                'Client configuration is required when provider is not in the parent module nor defined',
+            );
         }
 
         // create a new provider
@@ -57,12 +47,6 @@ export const module: MsalModule = {
         if (config.requiresAuth) {
             await authProvider.handleRedirect();
             await authProvider.login({ onlyIfRequired: true });
-        }
-
-        // check if the version satisfies the latest version, if not create a proxy provider
-        const { satisfiesLatest } = resolveVersion(config.version);
-        if (!satisfiesLatest) {
-            return createProxyProvider(authProvider, config.version) as IAuthProvider;
         }
 
         return authProvider;

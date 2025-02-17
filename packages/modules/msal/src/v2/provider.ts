@@ -4,9 +4,10 @@ import { MsalModuleVersion } from '../static';
 
 import { AuthClientConfig } from './configurator';
 import { AccountInfo, AuthenticationResult } from './types';
+import { IProxyProvider } from '../types';
+import resolveVersion from '../resolve-version';
 
 export interface IAuthProvider {
-    readonly version: string;
     // readonly defaultClient: AuthClient;
     // readonly defaultConfig: AuthClientOptions | undefined;
     readonly defaultAccount: AccountInfo | undefined;
@@ -39,7 +40,7 @@ export interface IAuthProvider {
     handleRedirect(): Promise<void | null>;
 }
 
-export class AuthProvider implements IAuthProvider {
+export class AuthProvider implements IAuthProvider, IProxyProvider {
     #client: AuthClient;
 
     get version(): string {
@@ -124,6 +125,43 @@ export class AuthProvider implements IAuthProvider {
         await this.defaultClient.logoutRedirect({
             postLogoutRedirectUri: options?.redirectUri,
             account: this.defaultAccount,
+        });
+    }
+
+    createProxyProvider<T = IAuthProvider>(version: string): T {
+        // TODO - check if version is supported and telemetry
+        const { enumVersion } = resolveVersion(version);
+        switch (enumVersion) {
+            case MsalModuleVersion.V2:
+            case MsalModuleVersion.Latest:
+                return this._createProxyProvider_v2() as T;
+            default:
+                throw new Error(`Version ${version} is not supported`);
+        }
+    }
+
+    _createProxyProvider_v2(): IAuthProvider {
+        return new Proxy(this, {
+            get: (target: AuthProvider, prop) => {
+                switch (prop) {
+                    case 'version':
+                        return target.version;
+                    case 'defaultAccount':
+                        return target.defaultAccount;
+                    case 'acquireToken':
+                        return target.acquireToken.bind(target);
+                    case 'acquireAccessToken':
+                        return target.acquireAccessToken.bind(target);
+                    case 'login':
+                        return target.login.bind(target);
+                    case 'handleRedirect':
+                        return target.handleRedirect.bind(target);
+                    case 'createProxyProvider':
+                        return target.createProxyProvider.bind(target);
+                }
+                console.debug(`AuthProvider:: Property ${String(prop)} does not exist`);
+                return target[prop as keyof AuthProvider];
+            },
         });
     }
 }
