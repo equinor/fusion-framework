@@ -1,5 +1,11 @@
 # Change Log
 
+## 33.0.2
+
+### Patch Changes
+
+- [#2823](https://github.com/equinor/fusion-framework/pull/2823) [`92bbb30`](https://github.com/equinor/fusion-framework/commit/92bbb30954b87d9fec19411e698916ff81224933) Thanks [@odinr](https://github.com/odinr)! - Hotfix to remove demo styling of ag-grid.
+
 ## 33.0.1
 
 ### Patch Changes
