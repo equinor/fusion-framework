@@ -6,6 +6,7 @@ import { AuthClientConfig } from './configurator';
 import { AccountInfo, AuthenticationResult } from './types';
 import { IProxyProvider } from '../types';
 import resolveVersion from '../resolve-version';
+import { SemanticVersion } from '@equinor/fusion-framework-module';
 
 export interface IAuthProvider {
     // readonly defaultClient: AuthClient;
@@ -43,8 +44,8 @@ export interface IAuthProvider {
 export class AuthProvider implements IAuthProvider, IProxyProvider {
     #client: AuthClient;
 
-    get version(): string {
-        return MsalModuleVersion.Latest;
+    get version(): SemanticVersion {
+        return new SemanticVersion(MsalModuleVersion.Latest);
     }
 
     /** @deprecated */
@@ -159,8 +160,6 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
                     case 'createProxyProvider':
                         return target.createProxyProvider.bind(target);
                 }
-                console.debug(`AuthProvider:: Property ${String(prop)} does not exist`);
-                return target[prop as keyof AuthProvider];
             },
         });
     }
