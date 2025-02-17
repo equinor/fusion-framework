@@ -1302,8 +1302,8 @@ importers:
         specifier: workspace:^
         version: link:../../modules/bookmark
       '@equinor/fusion-observable':
-        specifier: ^8.3.3
-        version: 8.3.3(@types/react@18.3.3)(react@18.3.1)
+        specifier: workspace:^
+        version: link:../../../utils/observable
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
