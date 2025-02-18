@@ -1,5 +1,19 @@
 # Change Log
 
+## 7.4.0
+
+### Minor Changes
+
+- [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - Updated `useCurrentUser` to consume new MSAL provider interface
+
+### Patch Changes
+
+- Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
+    - @equinor/fusion-framework@7.3.0
+    - @equinor/fusion-framework-module-feature-flag@1.1.12
+    - @equinor/fusion-framework-react-module-http@8.0.1
+    - @equinor/fusion-framework-react-module-signalr@3.0.21
+
 ## 7.3.8
 
 ### Patch Changes

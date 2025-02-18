@@ -1,5 +1,20 @@
 # Change Log
 
+## 6.0.0
+
+### Minor Changes
+
+- [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - Update implementation of hook `useToken` and `useAccessToken`, to consume new MSAL provider interface.
+
+### Patch Changes
+
+- Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`4578b18`](https://github.com/equinor/fusion-framework/commit/4578b1835b70bd0869441c8fcf6d188f6440f192), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
+    - @equinor/fusion-framework-module-msal@4.0.0
+    - @equinor/fusion-framework-app@9.3.0
+    - @equinor/fusion-framework-react@7.4.0
+    - @equinor/fusion-framework-module-app@6.1.4
+    - @equinor/fusion-framework-react-module-http@8.0.1
+
 ## 5.5.4
 
 ### Patch Changes
