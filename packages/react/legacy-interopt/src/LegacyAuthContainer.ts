@@ -1,5 +1,5 @@
 import { AuthApp, AuthContainer, AuthUser } from '@equinor/fusion';
-import { AccountInfo } from '@equinor/fusion-framework-module-msal/client';
+import { AccountInfo } from '@equinor/fusion-framework-module-msal';
 import { FusionAuthAppNotFoundError } from '@equinor/fusion/lib/auth/AuthContainer';
 import { LegacyAuthUser } from './LegacyAuthUser';
 
@@ -33,7 +33,7 @@ export class LegacyAuthContainer extends AuthContainer {
     }
 
     get account(): AccountInfo | undefined {
-        return this.#auth.defaultClient.account;
+        return this.#auth.defaultAccount;
     }
 
     public async requiresAuth(): Promise<void> {
@@ -73,9 +73,8 @@ export class LegacyAuthContainer extends AuthContainer {
         console.trace(`FusionAuthContainer::logoutAsync for client id [${clientId}]`);
         // TODO
         if (!clientId || this._registeredApps[clientId]) {
-            return this.#auth.defaultClient.logoutRedirect({
-                postLogoutRedirectUri: '/sign-out',
-                account: this.account,
+            return this.#auth.logout({
+                redirectUri: '/sign-out',
             });
         }
         await super.logoutAsync(clientId);

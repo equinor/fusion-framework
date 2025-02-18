@@ -15,7 +15,7 @@ import http, {
     type HttpClientOptions,
 } from '@equinor/fusion-framework-module-http';
 
-import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
+import auth from '@equinor/fusion-framework-module-msal';
 
 import { AppEnv, AppModules } from './types';
 
@@ -50,23 +50,6 @@ export interface IAppConfigurator<
      * ```
      */
     configureHttpClient(...args: Parameters<typeof configureHttpClient>): void;
-
-    /**
-     * [required]
-     * Setup of MSAL auth module
-     * @example
-     * ```ts
-     configurator.configureMsal(
-        {
-            tenantId: '{TENANT_ID}',
-            clientId: '{CLIENT_ID}',
-            redirectUri: '/authentication/login-callback',
-        },
-        { requiresAuth: true }
-    );
-     * ```
-     */
-    configureMsal(...args: Parameters<typeof configureMsal>): void;
 
     /**
      * [optional]
@@ -123,10 +106,6 @@ export class AppConfigurator<
                 });
             },
         });
-    }
-
-    public configureMsal(...args: Parameters<typeof configureMsal>) {
-        this.addConfig(configureMsal(...args));
     }
 }
 

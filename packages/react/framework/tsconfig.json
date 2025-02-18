@@ -16,6 +16,9 @@
       "path": "../../modules/app"
     },
     {
+      "path": "../../modules/msal"
+    },
+    {
       "path": "../../modules/feature-flag"
     },
     {

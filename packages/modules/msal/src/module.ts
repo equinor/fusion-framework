@@ -1,68 +1,75 @@
-import { AuthClientOptions, AuthConfigurator, IAuthConfigurator } from './configurator';
-import { AuthProvider, IAuthProvider } from './provider';
+import {
+    type Module,
+    type IModulesConfigurator,
+    SemanticVersion,
+} from '@equinor/fusion-framework-module';
 
-import type { Module, IModuleConfigurator } from '@equinor/fusion-framework-module';
+import { MsalModuleVersion } from './static';
 
-export type MsalModule = Module<'auth', IAuthProvider, IAuthConfigurator>;
+import { AuthConfigurator, AuthProvider, type AuthClientConfig, type IAuthProvider } from './v2';
+
+export type MsalModule = Module<'auth', IAuthProvider, AuthConfigurator, [MsalModule]>;
+export type { AuthConfigurator, IAuthProvider };
 
 export const module: MsalModule = {
     name: 'auth',
-    configure: (refModules) => {
-        const configurator = new AuthConfigurator();
-        /** check if parent scope has configured msal */
-        if (refModules?.auth?.defaultConfig) {
-            /** copy configuration from parent scope */
-            configurator.configureDefault(refModules.auth.defaultConfig);
+    version: new SemanticVersion(MsalModuleVersion.Latest),
+    configure: () => new AuthConfigurator(),
+    initialize: async (init) => {
+        const config = await init.config.createConfigAsync(init);
+
+        // configured to use a custom provider
+        if (config.provider) {
+            return config.provider;
         }
-        return configurator;
-    },
-    initialize: async ({ config }) => {
-        const authProvider = new AuthProvider(config);
-        if (config.requiresAuth) {
-            await authProvider.handleRedirect();
-            if (!authProvider.defaultAccount) {
-                await authProvider.login();
+
+        // check if the provider is defined in the parent module
+        const hostProvider = init.ref?.auth as AuthProvider;
+        if (hostProvider) {
+            try {
+                return hostProvider.createProxyProvider(config.version);
+            } catch (error) {
+                console.error('MsalModule::Failed to create proxy provider', error);
+                // just to make sure during migration that the provider is not set
+                return hostProvider;
             }
         }
+
+        if (!config.client) {
+            throw new Error(
+                'Client configuration is required when provider is not in the parent module nor defined',
+            );
+        }
+
+        // create a new provider
+        const authProvider = new AuthProvider(config.client);
+
+        if (config.requiresAuth) {
+            await authProvider.handleRedirect();
+            await authProvider.login({ onlyIfRequired: true });
+        }
+
         return authProvider;
     },
 };
 
-/**
- * Enable MSAL module
- * 
- * @example
- ```ts
- configureMsal(
-    {
-        tenantId: '{TENANT_ID}',
-        clientId: '{CLIENT_ID}',
-        redirectUri: '/authentication/login-callback',
-    },
-    // requires authenticated user when module is initialized (force login)
-    { requiresAuth: true }
- );
- ```
- * @param defaultClient - default auth client for the module
- */
-export const configureMsal = (
-    defaultClient: AuthClientOptions,
-    args?: {
-        clients?: Record<string, AuthClientOptions>;
-        requiresAuth?: boolean;
-    },
-): IModuleConfigurator<MsalModule, unknown> => ({
+export type AuthConfigFn = (builder: {
+    setClientConfig: (config: AuthClientConfig) => void;
+    setRequiresAuth: (requiresAuth: boolean) => void;
+}) => void;
+
+export const enableMSAL = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    configurator: IModulesConfigurator<any, any>,
+    configure?: AuthConfigFn,
+): void => {
+    const config = configure ? configureMsal(configure) : { module };
+    configurator.addConfig(config);
+};
+
+export const configureMsal = (configure: AuthConfigFn) => ({
     module,
-    configure: (config) => {
-        config.configureDefault(defaultClient);
-        if (args?.requiresAuth !== undefined) {
-            config.requiresAuth = args?.requiresAuth;
-        }
-        const { clients } = args ?? {};
-        if (clients) {
-            Object.entries(clients).forEach(([key, opt]) => config.configureClient(key, opt));
-        }
-    },
+    configure,
 });
 
 declare module '@equinor/fusion-framework-module' {
