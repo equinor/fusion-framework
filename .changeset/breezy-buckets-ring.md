@@ -39,9 +39,5 @@ import { configureMsal } from '@equinor/fusion-framework-module-msal';
 +       redirectUri: '/authentication/login-callback',
 +    });
 +    msalConfigurator.requiresAuth(true);
-})
-
- - Change the parameter signature of `configureMsal` to `configureMsal(msalConfigurator: MsalConfigurator): void`
- - Add a new `enableMsal` function to your module configuration, and move the `configureMsal` call to the new function.
-
++})
 ```
