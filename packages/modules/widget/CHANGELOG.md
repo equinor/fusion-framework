@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.0.2
+
+### Patch Changes
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-module-http@6.2.1
+    - @equinor/fusion-framework-module-service-discovery@8.0.6
+
 ## 9.0.1
 
 ### Patch Changes

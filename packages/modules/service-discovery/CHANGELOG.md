@@ -1,5 +1,12 @@
 # Change Log
 
+## 8.0.6
+
+### Patch Changes
+
+- Updated dependencies []:
+    - @equinor/fusion-framework-module-http@6.2.1
+
 ## 8.0.5
 
 ### Patch Changes

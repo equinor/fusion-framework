@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.8
+
+### Patch Changes
+
+- [#2827](https://github.com/equinor/fusion-framework/pull/2827) [`4578b18`](https://github.com/equinor/fusion-framework/commit/4578b1835b70bd0869441c8fcf6d188f6440f192) Thanks [@odinr](https://github.com/odinr)! - fixed peer dependencies
+
+- Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
+    - @equinor/fusion-framework-react@7.4.0
+    - @equinor/fusion-framework-react-module-bookmark@3.0.0
+
 ## 1.0.7
 
 ### Patch Changes

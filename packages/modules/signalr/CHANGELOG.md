@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
+    - @equinor/fusion-framework-module-msal@4.0.0
+    - @equinor/fusion-framework-module-service-discovery@8.0.6
+
 ## 4.0.5
 
 ### Patch Changes

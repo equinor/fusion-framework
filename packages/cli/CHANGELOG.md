@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.5.0
+
+### Minor Changes
+
+- [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - updated configuration of MSAL
+
 ## 10.4.2
 
 ### Patch Changes

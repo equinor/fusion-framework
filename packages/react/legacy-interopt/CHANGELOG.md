@@ -1,5 +1,22 @@
 # Change Log
 
+## 21.0.0
+
+### Minor Changes
+
+- [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - Updated `LegacyAuthContainer` to use new MSAL provider interface.
+
+### Patch Changes
+
+- Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`4578b18`](https://github.com/equinor/fusion-framework/commit/4578b1835b70bd0869441c8fcf6d188f6440f192), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
+    - @equinor/fusion-framework-module-msal@4.0.0
+    - @equinor/fusion-framework-app@9.3.0
+    - @equinor/fusion-framework-react-app@6.0.0
+    - @equinor/fusion-framework@7.3.0
+    - @equinor/fusion-framework-module-app@6.1.4
+    - @equinor/fusion-framework-module-http@6.2.1
+    - @equinor/fusion-framework-module-service-discovery@8.0.6
+
 ## 20.0.4
 
 ### Patch Changes
