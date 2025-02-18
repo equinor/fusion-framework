@@ -52,6 +52,17 @@ export const useAppContextNavigation = () => {
             : 'App does not have its own navigation, using portal navigation.',
         );
 
+        /** context was cleared  */
+        if (item === null) {
+          console.debug('🌍 Portal:', 'current context was cleared, navigating to root');
+          if (appNavigation) {
+            appNavigation.replace('/');
+          } else {
+            navigation.replace('/');
+          }
+          return;
+        }
+
         // extract the context id from the current path
         const pathContextId = extractContextIdFromPath(currentPathname);
 
