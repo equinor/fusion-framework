@@ -1,24 +1,26 @@
 # GitHub Copilot Instructions
 
 ## Commit Messages
-- Conform to `contributing/conventional-commits.md`.
+- Follow the guidelines in `contributing/conventional-commits.md`.
 
-## Pull Request
-- Use template `.github/PULL_REQUEST_TEMPLATE.md`.
-- Replace the placeholder text with the relevant information.
+## Pull Requests
+- Use `git diff --merge-base <target_branch>`.
+- Analyze and generate content from diff.
+- Use the template in `.github/PULL_REQUEST_TEMPLATE.md`.
+- Replace placeholder text with relevant information.
 
 ## Code Suggestions and Examples
-- Use code comments to explain the purpose of the code.
-- Use proper parameter and return types.
-- Use typedoc comments to document functions, classes, and interfaces.
+- Include comments explaining the purpose of the code.
+- Specify parameter and return types.
+- Use Typedoc comments to document functions, classes, and interfaces.
 
 ## Preferred Language
-- All code examples and suggestions should be written in TypeScript.
-- Prefer using RxJS for handling asynchronous operations.
+- Write all code examples and suggestions in TypeScript.
+- Use RxJS for asynchronous operations.
 
 ## Package Manager
-- Always use `pnpm` as the package manager for installing dependencies and managing packages.
+- Use `pnpm` for installing dependencies and managing packages.
 
 ## Changesets
-- Use `git diff --staged` to resolve which packages have been updated and the type of update (major, minor, or patch).
-- Conform to `contributing/changeset.md` and generate a changeset for each affected package.
+- Use `git diff --staged` to identify updated packages and the type of update (major, minor, or patch).
+- Follow `contributing/changeset.md` and generate a changeset for each affected package.
