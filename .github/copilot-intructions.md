@@ -3,6 +3,10 @@
 ## Commit Messages
 - Conform to `contributing/conventional-commits.md`.
 
+## Pull Request
+- Use template `.github/PULL_REQUEST_TEMPLATE.md`.
+- Replace the placeholder text with the relevant information.
+
 ## Code Suggestions and Examples
 - Use code comments to explain the purpose of the code.
 - Use proper parameter and return types.
