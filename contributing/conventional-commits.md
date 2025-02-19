@@ -1,6 +1,4 @@
----
-title: Conventional Commits
----
+# Conventional Commits
 
 Contributors should use conventional commits to ensure that their commit messages are structured and meaningful. By following these guidelines, you help us maintain a clean and understandable commit history.
 
