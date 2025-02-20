@@ -1,4 +1,0 @@
-runner:
-  eslint:
-    cmd: pnpm --silent lint -f rdjson
-    format: rdjson

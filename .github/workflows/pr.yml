@@ -61,10 +61,13 @@ jobs:
         with:
           token: ${{ github.token }}
           filter-user: "reviewdog"
-          mode: "delete"
 
       - name: Lint source files
-        run: reviewdog --runners=eslint -name=eslint -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+        uses: mongolyy/reviewdog-action-biome@v1
+        with:
+          github_token: ${{ github.token }}
+          reporter: ${{ steps.reporter.outputs.value }}
+          level: error
           
       - name: Build affected packages
         id: build
