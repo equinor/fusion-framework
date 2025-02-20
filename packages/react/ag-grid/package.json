@@ -53,7 +53,7 @@
         "@equinor/fusion-framework-module-ag-grid": "workspace:*",
         "ag-grid-community": "33.0.3",
         "ag-grid-enterprise": "33.0.3",
-        "ag-grid-react": "33.0.3"
+        "ag-grid-react": "33.1.1"
     },
     "devDependencies": {
         "@equinor/fusion-framework-react-module": "workspace:^",
