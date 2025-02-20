@@ -45,7 +45,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
         "typescript": "^5.5.4",
-        "ag-grid-community": "33.0.3",
+        "ag-grid-community": "33.1.1",
         "ag-grid-enterprise": "33.0.3"
     },
     "peerDependencies": {
