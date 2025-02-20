@@ -53,22 +53,6 @@ npm i -D '@equinor/fusion-framework-react-app'
 ``` 
 :::
 
-### EsLint
-::: code-tabs
-
-@tab .eslintrc
-```json 
-{
-  "extends": "@equinor/eslint-config-fusion-react",
-}
-```
-
-@tab required packages
-```sh
-npm i -D @equinor/eslint-config-fusion eslint prettier
-```
-
-:::
 
 
 ## Configuration
