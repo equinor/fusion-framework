@@ -22,9 +22,9 @@ All PR should have a changeset if it changes code in any of the Fusion Framework
 3. Write a brief description of the change(s).
 4. Add sections for each package that was changed.
 5. Explain in detailed why and what changes made to the package.
-6. Explain in detail how a consumer should update their code
-7. [optional] Include code blocks with examples of how to use new features or migrate breaking changes.
-8. [optional] Include mermaid diagrams to illustrate the flow of the change.
+6. _(optional)_ Explain in detail how a consumer should update their code
+7. _(optional)_ Include code blocks with examples of how to use new features or migrate breaking changes.
+8. _(optional)_ Include mermaid diagrams to illustrate the flow of the change.
 
 > as a reviewer it is important to make __SURE__ these changelogs are in place before approving the PR!
 
