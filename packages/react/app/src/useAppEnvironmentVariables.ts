@@ -1,9 +1,9 @@
 import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import {
-    type ObservableStateReturnType,
-    useObservableSelector,
-    useObservableState,
+  type ObservableStateReturnType,
+  useObservableSelector,
+  useObservableState,
 } from '@equinor/fusion-observable/react';
 
 /**
@@ -32,24 +32,24 @@ import {
  * @returns An observable state object containing the current environment configuration.
  */
 export const useAppEnvironmentVariables = <
-    TEnvironmentVariables extends ConfigEnvironment = ConfigEnvironment,
+  TEnvironmentVariables extends ConfigEnvironment = ConfigEnvironment,
 >(): ObservableStateReturnType<TEnvironmentVariables> => {
-    // Get the current app module instance from the framework
-    const app = useCurrentApp<[], TEnvironmentVariables>().currentApp;
+  // Get the current app module instance from the framework
+  const app = useCurrentApp<[], TEnvironmentVariables>().currentApp;
 
-    // Ensure the app module is available before proceeding
-    if (!app) {
-        throw Error('Framework is missing app module');
-    }
+  // Ensure the app module is available before proceeding
+  if (!app) {
+    throw Error('Framework is missing app module');
+  }
 
-    // Get the environment configuration observable from the app module
-    const env$ = useObservableSelector(
-        app.getConfig(),
-        (config) => config.environment as TEnvironmentVariables,
-    );
+  // Get the environment configuration observable from the app module
+  const env$ = useObservableSelector(
+    app.getConfig(),
+    (config) => config.environment as TEnvironmentVariables,
+  );
 
-    // Return the observable state of the environment configuration
-    return useObservableState(env$, {
-        initial: app.config?.environment,
-    });
+  // Return the observable state of the environment configuration
+  return useObservableState(env$, {
+    initial: app.config?.environment,
+  });
 };

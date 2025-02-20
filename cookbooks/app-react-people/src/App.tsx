@@ -2,7 +2,7 @@ import { AppRouter } from './Router';
 import { styled } from 'styled-components';
 
 const Styled = {
-    Root: styled.div`
+  Root: styled.div`
         background: linear-gradient(
             180deg,
             rgba(0, 0, 0, 1) 0%,
@@ -12,7 +12,7 @@ const Styled = {
         min-height: 100%;
         overflow: auto;
     `,
-    Container: styled.div`
+  Container: styled.div`
         width: 860px;
         /* min-height: 45vh; */
         margin: 1em auto;
@@ -23,13 +23,13 @@ const Styled = {
 };
 
 export const App = () => {
-    return (
-        <Styled.Root>
-            <Styled.Container>
-                <AppRouter />
-            </Styled.Container>
-        </Styled.Root>
-    );
+  return (
+    <Styled.Root>
+      <Styled.Container>
+        <AppRouter />
+      </Styled.Container>
+    </Styled.Root>
+  );
 };
 
 export default App;

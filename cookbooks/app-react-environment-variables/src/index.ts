@@ -14,17 +14,17 @@ const createApp = (args: ComponentRenderArgs) => makeComponent(appComponent, arg
 
 /** Render function */
 export const renderApp = (el: HTMLElement, args: ComponentRenderArgs) => {
-    /** make render element */
-    const app = createApp(args);
+  /** make render element */
+  const app = createApp(args);
 
-    /** create render root from provided element */
-    const root = createRoot(el);
+  /** create render root from provided element */
+  const root = createRoot(el);
 
-    /** render Application */
-    root.render(createElement(app));
+  /** render Application */
+  root.render(createElement(app));
 
-    /** Teardown */
-    return () => root.unmount();
+  /** Teardown */
+  return () => root.unmount();
 };
 
 export default renderApp;

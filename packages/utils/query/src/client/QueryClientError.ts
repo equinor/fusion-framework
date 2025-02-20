@@ -30,17 +30,17 @@ type QueryClientErrorType = 'error' | 'abort';
  * ```
  */
 export class QueryClientError<TArgs = unknown> extends Error {
-    public readonly request?: QueryClientRequest;
-    constructor(
-        public type: QueryClientErrorType,
-        args: {
-            message: string;
-            cause?: Error | unknown;
-            request?: QueryClientRequest<TArgs>;
-        },
-    ) {
-        super(args.message, { cause: args.cause });
-        this.name = 'QueryClientError';
-        this.request = args.request;
-    }
+  public readonly request?: QueryClientRequest;
+  constructor(
+    public type: QueryClientErrorType,
+    args: {
+      message: string;
+      cause?: Error | unknown;
+      request?: QueryClientRequest<TArgs>;
+    },
+  ) {
+    super(args.message, { cause: args.cause });
+    this.name = 'QueryClientError';
+    this.request = args.request;
+  }
 }

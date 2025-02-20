@@ -17,11 +17,11 @@ export { actionMapper, type ActionCalls } from './action-mapper';
 export { createAction, getBaseType, type ActionCreatorWithPreparedPayload } from './create-action';
 
 export {
-    createAsyncAction,
-    isRequestAction,
-    isCompleteAction,
-    isFailureAction,
-    isSuccessAction,
+  createAsyncAction,
+  isRequestAction,
+  isCompleteAction,
+  isFailureAction,
+  isSuccessAction,
 } from './create-async-action';
 
 export { createReducer, ActionReducerMapBuilder } from './create-reducer';

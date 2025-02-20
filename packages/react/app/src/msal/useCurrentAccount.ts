@@ -6,6 +6,6 @@ import useAppModule from '../useAppModule';
  * @returns The current account information or undefined if no account is available.
  */
 export const useCurrentAccount = (): AccountInfo | undefined => {
-    const msalProvider = useAppModule('auth');
-    return msalProvider.defaultAccount;
+  const msalProvider = useAppModule('auth');
+  return msalProvider.defaultAccount;
 };

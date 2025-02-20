@@ -11,14 +11,14 @@ import type { Bookmark, BookmarkWithoutData } from './types';
  * Represents the state of the BookmarkProvider store.
  */
 export type BookmarkState = {
-    // current actions performed on the store
-    status: Set<ActionBaseType<BookmarkActions>>;
-    // errors that have occurred during the bookmark flow
-    errors: Record<ActionBaseType<BookmarkActions>, BookmarkFlowError>;
-    // the currently active bookmark, if any
-    currentBookmark?: Bookmark | null;
-    // the collection of bookmarks, keyed by their IDs
-    bookmarks: Record<string, BookmarkWithoutData>;
+  // current actions performed on the store
+  status: Set<ActionBaseType<BookmarkActions>>;
+  // errors that have occurred during the bookmark flow
+  errors: Record<ActionBaseType<BookmarkActions>, BookmarkFlowError>;
+  // the currently active bookmark, if any
+  currentBookmark?: Bookmark | null;
+  // the collection of bookmarks, keyed by their IDs
+  bookmarks: Record<string, BookmarkWithoutData>;
 };
 
 // export type BookmarkStoreFunctions = ActionCalls<typeof bookmarkActions>;
@@ -37,16 +37,16 @@ export type BookmarkStore = FlowSubject<BookmarkState, BookmarkActions>;
  * @returns A new BookmarkStore instance.
  */
 export const createBookmarkStore = (args: {
-    initial?: Partial<BookmarkState>;
-    client: IBookmarkClient;
+  initial?: Partial<BookmarkState>;
+  client: IBookmarkClient;
 }): BookmarkStore => {
-    // create the store
-    const store = new FlowSubject<BookmarkState, BookmarkActions>(
-        createBookmarkReducer(args.initial),
-    );
+  // create the store
+  const store = new FlowSubject<BookmarkState, BookmarkActions>(
+    createBookmarkReducer(args.initial),
+  );
 
-    // add the bookmark API flows to the store
-    store.addFlow(bookmarkApiFlows(args.client));
+  // add the bookmark API flows to the store
+  store.addFlow(bookmarkApiFlows(args.client));
 
-    return store;
+  return store;
 };

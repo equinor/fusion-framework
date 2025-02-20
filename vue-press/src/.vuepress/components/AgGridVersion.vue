@@ -9,7 +9,7 @@ export default {
   computed: {
     version() {
       return agGridModule.dependencies['@ag-grid-enterprise/core'].slice(1);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -15,30 +15,28 @@ import { useObservableState } from '@equinor/fusion-observable/react';
  * @returns the observable instance of initialized modules of the application
  */
 export const useCurrentAppModules = <TModules extends Array<AnyModule> = []>(): {
-    modules?: AppModulesInstance<TModules> | null;
-    error?: unknown;
-    complete: boolean;
+  modules?: AppModulesInstance<TModules> | null;
+  error?: unknown;
+  complete: boolean;
 } => {
-    const { currentApp, error: appError } = useCurrentApp<TModules>();
-    const modules$ = useMemo(
-        () =>
-            currentApp
-                ? (currentApp.instance$ as Observable<AppModulesInstance<TModules>>)
-                : of(null),
-        [currentApp],
-    );
-    const {
-        value: modules,
-        error,
-        complete,
-    } = useObservableState(modules$, {
-        initial: currentApp === undefined ? undefined : (currentApp?.instance ?? null),
-    });
-    return {
-        modules,
-        error: error ?? appError,
-        complete,
-    };
+  const { currentApp, error: appError } = useCurrentApp<TModules>();
+  const modules$ = useMemo(
+    () =>
+      currentApp ? (currentApp.instance$ as Observable<AppModulesInstance<TModules>>) : of(null),
+    [currentApp],
+  );
+  const {
+    value: modules,
+    error,
+    complete,
+  } = useObservableState(modules$, {
+    initial: currentApp === undefined ? undefined : (currentApp?.instance ?? null),
+  });
+  return {
+    modules,
+    error: error ?? appError,
+    complete,
+  };
 };
 
 export default useCurrentAppModules;

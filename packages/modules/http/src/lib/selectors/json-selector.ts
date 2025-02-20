@@ -16,37 +16,37 @@ import { HttpJsonResponseError } from '../../errors';
  * @returns A promise that resolves with the parsed JSON data, or rejects with an `HttpJsonResponseError`.
  */
 export const jsonSelector: ResponseSelector = async <
-    TType = unknown,
-    TResponse extends Response = Response,
+  TType = unknown,
+  TResponse extends Response = Response,
 >(
-    response: TResponse,
+  response: TResponse,
 ): Promise<TType> => {
-    /** Status code 204 indicates no content in the response */
-    if (response.status === 204) {
-        return Promise.resolve() as Promise<TType>;
+  /** Status code 204 indicates no content in the response */
+  if (response.status === 204) {
+    return Promise.resolve() as Promise<TType>;
+  }
+
+  try {
+    // Parse the response JSON data
+    const data = await response.json();
+
+    // Check if the response was successful
+    if (!response.ok) {
+      // Throw an error with the response details
+      throw new HttpJsonResponseError('network response was not OK', response, { data });
     }
 
-    try {
-        // Parse the response JSON data
-        const data = await response.json();
-
-        // Check if the response was successful
-        if (!response.ok) {
-            // Throw an error with the response details
-            throw new HttpJsonResponseError('network response was not OK', response, { data });
-        }
-
-        // Return the parsed data
-        return data;
-    } catch (cause) {
-        // If the cause is an HttpJsonResponseError, rethrow it
-        if (cause instanceof HttpJsonResponseError) {
-            throw cause;
-        }
-
-        // Otherwise, throw a new HttpJsonResponseError with the parsing error
-        throw new HttpJsonResponseError('failed to parse response', response, { cause });
+    // Return the parsed data
+    return data;
+  } catch (cause) {
+    // If the cause is an HttpJsonResponseError, rethrow it
+    if (cause instanceof HttpJsonResponseError) {
+      throw cause;
     }
+
+    // Otherwise, throw a new HttpJsonResponseError with the parsing error
+    throw new HttpJsonResponseError('failed to parse response', response, { cause });
+  }
 };
 
 export default jsonSelector;

@@ -9,13 +9,13 @@ import { WidgetState, WidgetStateInitial } from '../types';
 import WidgetModuleProvider from '../WidgetModuleProvider';
 
 export const createState = (
-    value: WidgetStateInitial,
-    provider: WidgetModuleProvider,
+  value: WidgetStateInitial,
+  provider: WidgetModuleProvider,
 ): FlowSubject<WidgetState, Actions> => {
-    const reducer = createReducer(value);
-    const state = new FlowSubject<WidgetState, Actions>(reducer);
-    state.addFlow(handleFetchManifest(provider));
-    state.addFlow(handleImportWidget());
-    state.addFlow(handleFetchConfig(provider));
-    return state;
+  const reducer = createReducer(value);
+  const state = new FlowSubject<WidgetState, Actions>(reducer);
+  state.addFlow(handleFetchManifest(provider));
+  state.addFlow(handleImportWidget());
+  state.addFlow(handleFetchConfig(provider));
+  return state;
 };

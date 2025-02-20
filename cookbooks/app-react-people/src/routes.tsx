@@ -7,32 +7,32 @@ import { HomePage } from './pages/HomePage';
 import { SelectorPage } from './pages/SelectorPage';
 
 export const routes: RouteObject[] = [
-    {
-        path: '/',
-        Component: Navigation,
-        children: [
-            {
-                index: true,
-                Component: HomePage,
-            },
-            {
-                path: 'avatar/*',
-                Component: AvatarPage,
-            },
-            {
-                path: 'card/*',
-                Component: CardPage,
-            },
-            {
-                path: 'list-item/*',
-                Component: ListItemPage,
-            },
-            {
-                path: 'selector/*',
-                Component: SelectorPage,
-            },
-        ],
-    },
+  {
+    path: '/',
+    Component: Navigation,
+    children: [
+      {
+        index: true,
+        Component: HomePage,
+      },
+      {
+        path: 'avatar/*',
+        Component: AvatarPage,
+      },
+      {
+        path: 'card/*',
+        Component: CardPage,
+      },
+      {
+        path: 'list-item/*',
+        Component: ListItemPage,
+      },
+      {
+        path: 'selector/*',
+        Component: SelectorPage,
+      },
+    ],
+  },
 ];
 
 export default routes;

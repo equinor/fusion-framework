@@ -2,21 +2,21 @@
 import { lazy, useEffect } from 'react';
 
 import {
-    initializeModules,
-    ModulesConfigurator,
-    ModulesInstanceType,
-    AnyModule,
+  initializeModules,
+  ModulesConfigurator,
+  ModulesInstanceType,
+  AnyModule,
 } from '@equinor/fusion-framework-module';
 
 import moduleContext from './context';
 
 type ModuleProviderCreator = <
-    TModules extends Array<AnyModule> = Array<AnyModule>,
-    TRef extends ModulesInstanceType<[AnyModule]> = any,
+  TModules extends Array<AnyModule> = Array<AnyModule>,
+  TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-    configurator: ModulesConfigurator<TModules>,
-    modules: TModules,
-    ref?: TRef,
+  configurator: ModulesConfigurator<TModules>,
+  modules: TModules,
+  ref?: TRef,
 ) => Promise<React.LazyExoticComponent<React.FunctionComponent>>;
 
 /**
@@ -51,27 +51,27 @@ type ModuleProviderCreator = <
  * @returns Suspensive `ModuleProvider`
  */
 export const createModuleProvider: ModuleProviderCreator = async <
-    TModules extends Array<AnyModule>,
-    TRef extends ModulesInstanceType<[AnyModule]> = any,
+  TModules extends Array<AnyModule>,
+  TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-    configurator: ModulesConfigurator<TModules>,
-    ref?: TRef,
+  configurator: ModulesConfigurator<TModules>,
+  ref?: TRef,
 ): Promise<React.LazyExoticComponent<React.FunctionComponent>> => {
-    const Component = lazy(async () => {
-        const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
-        return {
-            default: ({ children }: { children?: React.ReactNode }) => {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                useEffect(
-                    () => dispose,
-                    // eslint-disable-next-line  react-hooks/exhaustive-deps
-                    [instance],
-                );
-                return <ModuleProvider value={instance}>{children}</ModuleProvider>;
-            },
-        };
-    });
-    return Component;
+  const Component = lazy(async () => {
+    const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
+    return {
+      default: ({ children }: { children?: React.ReactNode }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(
+          () => dispose,
+          // eslint-disable-next-line  react-hooks/exhaustive-deps
+          [instance],
+        );
+        return <ModuleProvider value={instance}>{children}</ModuleProvider>;
+      },
+    };
+  });
+  return Component;
 };
 
 export const ModuleProvider = moduleContext.Provider;

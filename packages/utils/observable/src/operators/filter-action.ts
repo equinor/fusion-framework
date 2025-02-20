@@ -4,11 +4,11 @@ import { filter } from 'rxjs/operators';
 import { Action, ActionType, ExtractAction, TypeConstant } from '../types';
 
 export const filterAction = <
-    TAction extends Action,
-    TType extends TypeConstant = ActionType<TAction>,
+  TAction extends Action,
+  TType extends TypeConstant = ActionType<TAction>,
 >(
-    ...types: TType[]
+  ...types: TType[]
 ): OperatorFunction<TAction, ExtractAction<TAction, TType>> =>
-    filter((x: TAction): x is ExtractAction<TAction, TType> => types.includes(x.type as TType));
+  filter((x: TAction): x is ExtractAction<TAction, TType> => types.includes(x.type as TType));
 
 export default filterAction;

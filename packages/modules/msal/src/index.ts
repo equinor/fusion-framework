@@ -1,11 +1,11 @@
 export {
-    module,
-    configureMsal,
-    enableMSAL,
-    type AuthConfigurator as IAppConfigurator,
-    type AuthConfigFn,
-    type IAuthProvider,
-    type MsalModule,
+  module,
+  configureMsal,
+  enableMSAL,
+  type AuthConfigurator as IAppConfigurator,
+  type AuthConfigFn,
+  type IAuthProvider,
+  type MsalModule,
 } from './module';
 
 export { MsalModuleVersion } from './static';

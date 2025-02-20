@@ -9,6 +9,6 @@
  * @param history - append navigation to history
  */
 export const redirect = (url: string, timeout = 3000, history?: boolean): Promise<void> => {
-    history ? window.location.assign(url) : window.location.replace(url);
-    return new Promise((_, reject) => setTimeout(reject, timeout));
+  history ? window.location.assign(url) : window.location.replace(url);
+  return new Promise((_, reject) => setTimeout(reject, timeout));
 };

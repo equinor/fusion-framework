@@ -4,96 +4,92 @@ import type { ClientDataMethod, ClientMethod } from '../types';
 import { ApiVersion } from './static';
 
 import {
-    client as personDetailClient,
-    ApiResponse as PersonDetailApiResponse,
-    ApiResult as PersonDetailResult,
-    SupportedApiVersion as PersonDetailSupportedApiVersion,
-    ApiRequestArgs as PersonDetailApiRequestArgs,
+  client as personDetailClient,
+  ApiResponse as PersonDetailApiResponse,
+  ApiResult as PersonDetailResult,
+  SupportedApiVersion as PersonDetailSupportedApiVersion,
+  ApiRequestArgs as PersonDetailApiRequestArgs,
 } from './person-details';
 
 import {
-    client as personQueryClient,
-    ApiResponse as PersonQueryApiResponse,
-    ApiResult as PersonQueryResult,
-    SupportedApiVersion as PersonQuerySupportedApiVersion,
-    ApiRequestArgs as PersonQueryApiRequestArgs,
+  client as personQueryClient,
+  ApiResponse as PersonQueryApiResponse,
+  ApiResult as PersonQueryResult,
+  SupportedApiVersion as PersonQuerySupportedApiVersion,
+  ApiRequestArgs as PersonQueryApiRequestArgs,
 } from './query';
 
 import {
-    client as personPhotoClient,
-    ApiResponse as PersonPhotoApiResponse,
-    ApiResult as PersonPhotoResult,
-    SupportedApiVersion as PersonPhotoSupportedApiVersion,
-    ApiRequestArgs as PersonPhotoApiRequestArgs,
+  client as personPhotoClient,
+  ApiResponse as PersonPhotoApiResponse,
+  ApiResult as PersonPhotoResult,
+  SupportedApiVersion as PersonPhotoSupportedApiVersion,
+  ApiRequestArgs as PersonPhotoApiRequestArgs,
 } from './person-photo';
 
 export class PeopleApiClient<
-    // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
-    TClient extends IHttpClient = IHttpClient,
+  // TMethod extends keyof ClientMethod<unknown> = keyof ClientMethod<unknown>,
+  TClient extends IHttpClient = IHttpClient,
 > {
-    get Version(): typeof ApiVersion {
-        return ApiVersion;
-    }
+  get Version(): typeof ApiVersion {
+    return ApiVersion;
+  }
 
-    constructor(protected _client: TClient) {}
+  constructor(protected _client: TClient) {}
 
-    /**
-     * Fetch person by id
-     */
-    public get<
-        TVersion extends PersonDetailSupportedApiVersion,
-        TArgs extends PersonDetailApiRequestArgs<TVersion>,
-        TResult extends PersonDetailApiResponse<TVersion, TArgs>,
-        TMethod extends keyof ClientMethod<TResult>,
-    >(
-        version: TVersion,
-        method: TMethod,
-        args: TArgs,
-        init?: ClientRequestInit<TClient, TResult>,
-    ): PersonDetailResult<TVersion, TArgs, TMethod, TResult> {
-        const fn = personDetailClient<TVersion, TMethod, TClient, TArgs>(
-            this._client,
-            version,
-            method,
-        );
-        return fn(args, init);
-    }
+  /**
+   * Fetch person by id
+   */
+  public get<
+    TVersion extends PersonDetailSupportedApiVersion,
+    TArgs extends PersonDetailApiRequestArgs<TVersion>,
+    TResult extends PersonDetailApiResponse<TVersion, TArgs>,
+    TMethod extends keyof ClientMethod<TResult>,
+  >(
+    version: TVersion,
+    method: TMethod,
+    args: TArgs,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonDetailResult<TVersion, TArgs, TMethod, TResult> {
+    const fn = personDetailClient<TVersion, TMethod, TClient, TArgs>(this._client, version, method);
+    return fn(args, init);
+  }
 
-    /**
-     * Query person service
-     */
-    public query<
-        TVersion extends PersonQuerySupportedApiVersion,
-        TArgs extends PersonQueryApiRequestArgs<TVersion>,
-        TResult = PersonQueryApiResponse<TVersion>,
-        TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
-    >(
-        version: TVersion,
-        method: TMethod,
-        args: TArgs,
-        init?: ClientRequestInit<TClient, TResult>,
-    ): PersonQueryResult<TVersion, TMethod, TResult> {
-        const fn = personQueryClient<TVersion, TMethod, TClient>(this._client, version, method);
-        return fn<TResult>(args, init);
-    }
+  /**
+   * Query person service
+   */
+  public query<
+    TVersion extends PersonQuerySupportedApiVersion,
+    TArgs extends PersonQueryApiRequestArgs<TVersion>,
+    TResult = PersonQueryApiResponse<TVersion>,
+    TMethod extends keyof ClientMethod<TResult> = keyof ClientMethod<TResult>,
+  >(
+    version: TVersion,
+    method: TMethod,
+    args: TArgs,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonQueryResult<TVersion, TMethod, TResult> {
+    const fn = personQueryClient<TVersion, TMethod, TClient>(this._client, version, method);
+    return fn<TResult>(args, init);
+  }
 
-    /**
-     * Photo person service
-     */
-    public photo<
-        TVersion extends PersonPhotoSupportedApiVersion,
-        TArgs extends PersonPhotoApiRequestArgs<TVersion>,
-        TResult extends PersonPhotoApiResponse<TVersion> = PersonPhotoApiResponse<TVersion>,
-        TMethod extends keyof ClientDataMethod = keyof ClientDataMethod,
-    >(
-        version: TVersion,
-        method: TMethod,
-        args: TArgs,
-        init?: ClientRequestInit<TClient, TResult>,
-    ): PersonPhotoResult<TMethod> {
-        const fn = personPhotoClient<TVersion, TMethod, TClient>(this._client, version, method);
-        return fn<TResult>(args, init);
-    }
+  /**
+   * Photo person service
+   */
+  public photo<
+    TVersion extends PersonPhotoSupportedApiVersion,
+    TArgs extends PersonPhotoApiRequestArgs<TVersion>,
+    TResult extends PersonPhotoApiResponse<TVersion> = PersonPhotoApiResponse<TVersion>,
+    TMethod extends keyof ClientDataMethod = keyof ClientDataMethod,
+  >(
+    version: TVersion,
+    method: TMethod,
+    args: TArgs,
+    init?: ClientRequestInit<TClient, TResult>,
+  ): PersonPhotoResult<TMethod> {
+    const fn = personPhotoClient<TVersion, TMethod, TClient>(this._client, version, method);
+    return fn<TResult>(args, init);
+  }
 }
 
 // const oo = new PeopleApiClient(null).get('v4', 'fetch', { azureId: '123' });

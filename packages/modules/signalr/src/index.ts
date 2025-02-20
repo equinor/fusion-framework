@@ -1,10 +1,10 @@
 export {
-    ISignalRConfigurator,
-    SignalRConfigurator,
-    SignalRConfig,
-    SignalRHubConfig,
-    SignalRModuleConfigBuilder,
-    SignalRModuleConfigBuilderCallback,
+  ISignalRConfigurator,
+  SignalRConfigurator,
+  SignalRConfig,
+  SignalRHubConfig,
+  SignalRModuleConfigBuilder,
+  SignalRModuleConfigBuilderCallback,
 } from './SignalRModuleConfigurator';
 
 export { ISignalRProvider, SignalRModuleProvider } from './SignalRModuleProvider';

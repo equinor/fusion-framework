@@ -1,53 +1,53 @@
-import { hopeTheme, NavbarOptions } from "vuepress-theme-hope";
+import { hopeTheme, NavbarOptions } from 'vuepress-theme-hope';
 
 import sidebar from './sidebar';
 
 const navbar: NavbarOptions = [
   {
     text: 'Guide',
-    link: '/guide/app/'
+    link: '/guide/app/',
   },
   {
     text: 'Modules',
-    link: '/modules/'
+    link: '/modules/',
   },
   {
     text: 'CLI',
-    link: '/cli/'
+    link: '/cli/',
   },
   {
     text: 'Roadmap',
-    link: '/roadmap/'
+    link: '/roadmap/',
   },
 ];
 
 export default hopeTheme({
-     logo: '/fusion.svg',
-     repo: 'equinor/fusion-framework',
-     docsBranch: 'main',
-     docsDir: "vue-press/src",
-     darkmode: "switch",
-     navbar,
-     sidebar,
-     plugins:{
-      blog: true,
-      mdEnhance: {
-        mermaid: true,
-        codetabs: true,
-        tabs: true,
-        tasklist: true,
-        hint: true,
-        imgSize: true,
-        align: true,
-        gfm: true,
-        include: true,
-      },
-      comment: {
-        provider: "Giscus",
-        repo: 'equinor/fusion-framework',
-        repoId: "MDEwOlJlcG9zaXRvcnkzNzEyODUwMzk=",
-        category: "Documentation",
-        categoryId: "DIC_kwDOFiFcL84CSoOm",
-      },
-     }
+  logo: '/fusion.svg',
+  repo: 'equinor/fusion-framework',
+  docsBranch: 'main',
+  docsDir: 'vue-press/src',
+  darkmode: 'switch',
+  navbar,
+  sidebar,
+  plugins: {
+    blog: true,
+    mdEnhance: {
+      mermaid: true,
+      codetabs: true,
+      tabs: true,
+      tasklist: true,
+      hint: true,
+      imgSize: true,
+      align: true,
+      gfm: true,
+      include: true,
+    },
+    comment: {
+      provider: 'Giscus',
+      repo: 'equinor/fusion-framework',
+      repoId: 'MDEwOlJlcG9zaXRvcnkzNzEyODUwMzk=',
+      category: 'Documentation',
+      categoryId: 'DIC_kwDOFiFcL84CSoOm',
+    },
+  },
 });

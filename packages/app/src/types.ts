@@ -3,20 +3,20 @@ import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import type {
-    AppConfig,
-    AppManifest,
-    AppModulesInstance,
-    ComponentRenderArgs,
+  AppConfig,
+  AppManifest,
+  AppModulesInstance,
+  ComponentRenderArgs,
 } from '@equinor/fusion-framework-module-app';
 
 import type { IAppConfigurator } from './AppConfigurator';
 import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
 export type {
-    AppModules,
-    AppManifest,
-    AppConfig,
-    AppModulesInstance,
+  AppModules,
+  AppManifest,
+  AppConfig,
+  AppModulesInstance,
 } from '@equinor/fusion-framework-module-app';
 
 /**
@@ -27,11 +27,11 @@ export type {
  * @template TProps [__not in use__] properties for application component
  */
 export type AppEnv<TConfig extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
-    /** base routing path of the application */
-    basename?: string;
-    manifest: AppManifest;
-    config?: AppConfig<TConfig>;
-    props?: TProps;
+  /** base routing path of the application */
+  basename?: string;
+  manifest: AppManifest;
+  config?: AppConfig<TConfig>;
+  props?: TProps;
 };
 
 /**
@@ -42,12 +42,12 @@ export type AppEnv<TConfig extends ConfigEnvironment = ConfigEnvironment, TProps
  * @template TEnv environment object for configuring modules
  */
 export type AppModuleInitiator<
-    TModules extends Array<AnyModule> | unknown = unknown,
-    TRef extends Fusion = Fusion,
-    TEnv = AppEnv,
+  TModules extends Array<AnyModule> | unknown = unknown,
+  TRef extends Fusion = Fusion,
+  TEnv = AppEnv,
 > = (
-    configurator: IAppConfigurator<TModules, TRef['modules']>,
-    args: { fusion: TRef; env: TEnv },
+  configurator: IAppConfigurator<TModules, TRef['modules']>,
+  args: { fusion: TRef; env: TEnv },
 ) => void | Promise<void>;
 
 /**
@@ -58,16 +58,16 @@ export type AppModuleInitiator<
  * @template TEnv environment object for configuring modules
  */
 export type AppModuleInit<
-    TModules extends Array<AnyModule> | unknown = [],
-    TRef extends Fusion = Fusion,
-    TEnv = AppEnv,
+  TModules extends Array<AnyModule> | unknown = [],
+  TRef extends Fusion = Fusion,
+  TEnv = AppEnv,
 > = (
-    cb: AppModuleInitiator<TModules, TRef, TEnv>,
+  cb: AppModuleInitiator<TModules, TRef, TEnv>,
 ) => (args: AppModuleInitArgs<TRef, TEnv>) => Promise<AppModulesInstance<TModules>>;
 
 export type AppModuleInitArgs<TRef extends Fusion = Fusion, TEnv = AppEnv> = {
-    fusion: TRef;
-    env: TEnv;
+  fusion: TRef;
+  env: TEnv;
 };
 
 /**
@@ -87,6 +87,6 @@ export type AppModuleInitArgs<TRef extends Fusion = Fusion, TEnv = AppEnv> = {
  * };
  */
 export type AppRenderFn<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
-    el: HTMLHtmlElement,
-    args: ComponentRenderArgs<TFusion, TEnv>,
+  el: HTMLHtmlElement,
+  args: ComponentRenderArgs<TFusion, TEnv>,
 ) => VoidFunction | void;

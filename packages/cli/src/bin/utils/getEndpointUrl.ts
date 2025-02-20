@@ -10,52 +10,50 @@ import fetch from 'node-fetch';
  * @returns <string> The uri with endpoint
  */
 export const getEndpointUrl = async (
-    endpoint: string,
-    fusionEnv: FusionEnv,
-    service: string,
-    version: string = '1.0',
+  endpoint: string,
+  fusionEnv: FusionEnv,
+  service: string,
+  version: string = '1.0',
 ): Promise<string> => {
-    const { CUSTOM_APPAPI, FUSION_CLI_ENV, FUSION_TOKEN } = process.env;
+  const { CUSTOM_APPAPI, FUSION_CLI_ENV, FUSION_TOKEN } = process.env;
 
-    /* use consumer provided api url */
-    if (service || CUSTOM_APPAPI) {
-        return service ?? CUSTOM_APPAPI;
+  /* use consumer provided api url */
+  if (service || CUSTOM_APPAPI) {
+    return service ?? CUSTOM_APPAPI;
+  }
+
+  /* Env has changed get new api url */
+  if (FUSION_CLI_ENV !== fusionEnv || !process.env.FUSION_CLI_APPAPI) {
+    process.env.FUSION_CLI_ENV = fusionEnv;
+
+    const requestService = await fetch(
+      `https://discovery.fusion.equinor.com/service-registry/environments/${fusionEnv}/services/apps`,
+      {
+        headers: {
+          Authorization: `Bearer ${FUSION_TOKEN}`,
+        },
+      },
+    );
+
+    if (requestService.status === 401) {
+      throw new Error(`The provided FUSION_TOKEN is not valid. Refresh your token and try again.`);
     }
 
-    /* Env has changed get new api url */
-    if (FUSION_CLI_ENV !== fusionEnv || !process.env.FUSION_CLI_APPAPI) {
-        process.env.FUSION_CLI_ENV = fusionEnv;
-
-        const requestService = await fetch(
-            `https://discovery.fusion.equinor.com/service-registry/environments/${fusionEnv}/services/apps`,
-            {
-                headers: {
-                    Authorization: `Bearer ${FUSION_TOKEN}`,
-                },
-            },
-        );
-
-        if (requestService.status === 401) {
-            throw new Error(
-                `The provided FUSION_TOKEN is not valid. Refresh your token and try again.`,
-            );
-        }
-
-        if (!requestService.ok) {
-            const response = await requestService.json();
-            console.error(response);
-            throw new Error(
-                `Failed getEndpointUrl from service-discovery. HTTP status: ${requestService.status} - ${requestService.statusText}`,
-            );
-        }
-
-        const responseService = (await requestService.json()) as { uri: string };
-        process.env.FUSION_CLI_APPAPI = responseService.uri;
+    if (!requestService.ok) {
+      const response = await requestService.json();
+      console.error(response);
+      throw new Error(
+        `Failed getEndpointUrl from service-discovery. HTTP status: ${requestService.status} - ${requestService.statusText}`,
+      );
     }
 
-    const uri = new URL(`${process.env.FUSION_CLI_APPAPI}/${endpoint}`);
-    uri.searchParams.set('api-version', version);
+    const responseService = (await requestService.json()) as { uri: string };
+    process.env.FUSION_CLI_APPAPI = responseService.uri;
+  }
 
-    /* return fresh/cached endpoint url */
-    return uri.href;
+  const uri = new URL(`${process.env.FUSION_CLI_APPAPI}/${endpoint}`);
+  uri.searchParams.set('api-version', version);
+
+  /* return fresh/cached endpoint url */
+  return uri.href;
 };

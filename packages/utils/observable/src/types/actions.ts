@@ -14,9 +14,9 @@ export type Action<T extends TypeConstant = TypeConstant> = { type: T };
  * having an index signature.
  */
 export interface AnyAction extends Action {
-    // Allows any extra properties to be defined in an action.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [extraProps: string]: any;
+  // Allows any extra properties to be defined in an action.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [extraProps: string]: any;
 }
 
 /**
@@ -36,8 +36,8 @@ export type ActionCreator<T extends Action = AnyAction> = (...args: any[]) => T;
  * The `failure` property is an optional action creator that will be dispatched if the asynchronous operation fails.
  */
 export type AsyncActionCreator = ActionCreator & {
-    success: ActionCreator;
-    failure?: ActionCreator;
+  success: ActionCreator;
+  failure?: ActionCreator;
 };
 
 /**
@@ -54,10 +54,10 @@ export type AsyncActionCreator = ActionCreator & {
  * @template T - The type of the `AsyncActionCreator`.
  */
 export type AsyncActionTypes<T> = T extends AsyncActionCreator
-    ? T['failure'] extends ActionCreator
-        ? ReturnType<T> | ReturnType<T['success']> | ReturnType<T['failure']>
-        : ReturnType<T> | ReturnType<T['success']>
-    : never;
+  ? T['failure'] extends ActionCreator
+    ? ReturnType<T> | ReturnType<T['success']> | ReturnType<T['failure']>
+    : ReturnType<T> | ReturnType<T['success']>
+  : never;
 
 /**
  * Utility type that extracts the return type of an `ActionCreator` function, or returns the input type `T` if it is already an `AnyAction`.
@@ -67,27 +67,26 @@ export type AsyncActionTypes<T> = T extends AsyncActionCreator
  * @returns The return type of the `ActionCreator` function, or the input type `T` if it is already an `AnyAction`.
  */
 export type ActionInstance<T> = T extends ActionCreator
-    ? ReturnType<T>
-    : T extends AnyAction
-      ? T
-      : never;
+  ? ReturnType<T>
+  : T extends AnyAction
+    ? T
+    : never;
 
 /**
  * Represents a map of action instances for a given set of action creators.
  *
  * @template T - The input type, which can be a record of action creators, or any other type.
  */
-export type ActionInstanceMap<T> =
-    T extends Record<string, ActionCreator>
-        ? {
-              [K in keyof T]: T[K] extends AsyncActionCreator
-                  ? AsyncActionTypes<T[K]>
-                  : ActionInstance<T[K]>;
-              //   [K in keyof T]: ActionInstance<T[K]>;
-          }
-        : {
-              [K in keyof T]: ActionInstanceMap<T[K]>;
-          };
+export type ActionInstanceMap<T> = T extends Record<string, ActionCreator>
+  ? {
+      [K in keyof T]: T[K] extends AsyncActionCreator
+        ? AsyncActionTypes<T[K]>
+        : ActionInstance<T[K]>;
+      //   [K in keyof T]: ActionInstance<T[K]>;
+    }
+  : {
+      [K in keyof T]: ActionInstanceMap<T[K]>;
+    };
 
 /**
  * Utility type that recursively extracts the `ActionTypes` from a given object type `T`.
@@ -97,16 +96,15 @@ export type ActionInstanceMap<T> =
  * @param T - The object type to extract `ActionTypes` from.
  * @returns The union of all `ActionTypes` from the given object type `T`.
  */
-export type ActionTypes<T> =
-    T extends Record<string, ActionCreator>
-        ? ActionTypes<ActionInstanceMap<T>>
-        : T extends Record<string, Action>
-          ? T[keyof T]
-          : T extends Record<string, unknown>
-            ? {
-                  [K in keyof T]: ActionTypes<T[K]>;
-              }[keyof T]
-            : never;
+export type ActionTypes<T> = T extends Record<string, ActionCreator>
+  ? ActionTypes<ActionInstanceMap<T>>
+  : T extends Record<string, Action>
+    ? T[keyof T]
+    : T extends Record<string, unknown>
+      ? {
+          [K in keyof T]: ActionTypes<T[K]>;
+        }[keyof T]
+      : never;
 
 /**
  * An action with a string type and an associated payload. This is the
@@ -120,20 +118,20 @@ export type ActionTypes<T> =
  * @public
  */
 export type PayloadAction<P = void, T extends string = string, M = never, E = never> = {
-    payload: P;
-    type: T;
+  payload: P;
+  type: T;
 } & ([M] extends [never]
+  ? // eslint-disable-next-line @typescript-eslint/ban-types
+    {}
+  : {
+      meta: M;
+    }) &
+  ([E] extends [never]
     ? // eslint-disable-next-line @typescript-eslint/ban-types
       {}
     : {
-          meta: M;
-      }) &
-    ([E] extends [never]
-        ? // eslint-disable-next-line @typescript-eslint/ban-types
-          {}
-        : {
-              error: E;
-          });
+        error: E;
+      });
 
 /**
  * Utility type that extracts the `type` property from an `Action` type.
@@ -145,10 +143,10 @@ export type PayloadAction<P = void, T extends string = string, M = never, E = ne
  * @returns The `type` property of the `Action` type, or `never` if the input type is not an `Action`.
  */
 export type ActionType<T> = T extends ActionCreator
-    ? ActionType<ActionInstance<T>>
-    : T extends Action
-      ? T['type']
-      : never;
+  ? ActionType<ActionInstance<T>>
+  : T extends Action
+    ? T['type']
+    : never;
 
 /**
  * Extracts the action name from the action type string.
@@ -162,12 +160,12 @@ export type ActionType<T> = T extends ActionCreator
  * @returns The action name extracted from the action type string.
  */
 export type ActionBaseType<TAction extends Action> = TAction extends Action
-    ? Extract<
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TAction['type'] extends `${infer AName}::${infer ASuffix}` ? AName : TAction['type'],
-          string
-      >
-    : never;
+  ? Extract<
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      TAction['type'] extends `${infer AName}::${infer ASuffix}` ? AName : TAction['type'],
+      string
+    >
+  : never;
 
 /**
  * Utility type that extracts the payload type from an `ActionInstance` type.
@@ -181,8 +179,8 @@ export type ActionBaseType<TAction extends Action> = TAction extends Action
  * @returns The payload type of the `ActionInstance`, or `never` if it does not extend `PayloadAction<any>`.
  */
 export type ActionPayloadType<T> =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ActionInstance<T> extends PayloadAction<any> ? ActionInstance<T>['payload'] : never;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ActionInstance<T> extends PayloadAction<any> ? ActionInstance<T>['payload'] : never;
 
 /**
  * Extracts an action type from a given action object type.
@@ -194,8 +192,8 @@ export type ActionPayloadType<T> =
  * @returns The extracted action type.
  */
 export type ExtractAction<
-    TAction extends Action,
-    TType extends TypeConstant = ActionType<TAction>,
+  TAction extends Action,
+  TType extends TypeConstant = ActionType<TAction>,
 > = Extract<TAction, Action<TType>>;
 
 /**
@@ -207,12 +205,12 @@ export type ExtractAction<
  * @returns The original action type if it has the required suffix, or `never` if it does not.
  */
 export type ActionWithSuffix<TAction extends Action, Suffix extends string> = TAction extends Action
-    ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      TAction['type'] extends `${infer AName}::${infer ASuffix}`
-        ? ASuffix extends Suffix
-            ? TAction
-            : never
-        : never
-    : never;
+  ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TAction['type'] extends `${infer AName}::${infer ASuffix}`
+    ? ASuffix extends Suffix
+      ? TAction
+      : never
+    : never
+  : never;
 
 export type ActionDefinitions = Record<string, ActionCreator>;

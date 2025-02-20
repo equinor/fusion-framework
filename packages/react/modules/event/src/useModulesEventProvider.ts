@@ -1,9 +1,9 @@
 import { useModule } from '@equinor/fusion-framework-react-module';
 
 import {
-    EventModule,
-    IEventModuleProvider,
-    eventModuleKey,
+  EventModule,
+  IEventModuleProvider,
+  eventModuleKey,
 } from '@equinor/fusion-framework-module-event';
 
 /**
@@ -11,4 +11,4 @@ import {
  * @see {@link useModule}
  */
 export const useModulesEventProvider = (): IEventModuleProvider | undefined =>
-    useModule<EventModule>(eventModuleKey);
+  useModule<EventModule>(eventModuleKey);

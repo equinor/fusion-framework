@@ -13,13 +13,13 @@ import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framewo
 import { ModuleProvider as AppModuleProvider } from '@equinor/fusion-framework-react-module';
 
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
-    fusion: TFusion;
-    env: TEnv;
+  fusion: TFusion;
+  env: TEnv;
 };
 
 export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = (
-    fusion: TFusion,
-    env: TEnv,
+  fusion: TFusion,
+  env: TEnv,
 ) => React.LazyExoticComponent<React.ComponentType>;
 
 /**
@@ -44,40 +44,40 @@ export type ComponentRenderer<TFusion extends Fusion = Fusion, TEnv = AppEnv> = 
  * initializes the specified modules and provides the necessary Fusion and module context.
  */
 export const makeComponent = <
-    TModules extends Array<AnyModule>,
-    TRef extends Fusion = Fusion,
-    TEnv extends AppEnv = AppEnv,
+  TModules extends Array<AnyModule>,
+  TRef extends Fusion = Fusion,
+  TEnv extends AppEnv = AppEnv,
 >(
-    Component: React.ReactNode,
-    args: { fusion: TRef; env: TEnv },
-    configure?: AppModuleInitiator<TModules, TRef, TEnv>,
+  Component: React.ReactNode,
+  args: { fusion: TRef; env: TEnv },
+  configure?: AppModuleInitiator<TModules, TRef, TEnv>,
 ): React.LazyExoticComponent<React.ComponentType> =>
-    lazy(async () => {
-        const init = configureModules<TModules, TRef, TEnv>(configure);
-        const modules = (await init(args)) as unknown as AppModulesInstance;
+  lazy(async () => {
+    const init = configureModules<TModules, TRef, TEnv>(configure);
+    const modules = (await init(args)) as unknown as AppModulesInstance;
 
-        const { fusion } = args;
+    const { fusion } = args;
 
-        modules.event.dispatchEvent('onReactAppLoaded', {
-            detail: { modules, fusion },
-            source: Component,
-        });
-
-        return {
-            default: () => (
-                <FrameworkProvider value={fusion}>
-                    <AppModuleProvider value={modules}>{Component}</AppModuleProvider>
-                </FrameworkProvider>
-            ),
-        };
+    modules.event.dispatchEvent('onReactAppLoaded', {
+      detail: { modules, fusion },
+      source: Component,
     });
 
+    return {
+      default: () => (
+        <FrameworkProvider value={fusion}>
+          <AppModuleProvider value={modules}>{Component}</AppModuleProvider>
+        </FrameworkProvider>
+      ),
+    };
+  });
+
 declare module '@equinor/fusion-framework-module-event' {
-    interface FrameworkEventMap {
-        onReactAppLoaded: FrameworkEvent<
-            FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion }, React.ComponentType>
-        >;
-    }
+  interface FrameworkEventMap {
+    onReactAppLoaded: FrameworkEvent<
+      FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion }, React.ComponentType>
+    >;
+  }
 }
 
 export default makeComponent;

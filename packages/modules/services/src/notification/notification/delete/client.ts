@@ -5,9 +5,9 @@ import { ApiVersion } from '../../static';
 import { generateParameters } from './generate-parameters';
 
 import type {
-    DeleteNotificationArgs,
-    DeleteNotificationResponse,
-    DeleteNotificationResult,
+  DeleteNotificationArgs,
+  DeleteNotificationResponse,
+  DeleteNotificationResult,
 } from './types';
 
 /**
@@ -17,21 +17,21 @@ import type {
  * @param method - client method to call
  */
 export const deleteNotification =
-    <
-        TVersion extends string = keyof typeof ApiVersion,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
-    >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <T = DeleteNotificationResponse<TVersion>>(
-        args: DeleteNotificationArgs<TVersion>,
-        init?: ClientRequestInit<TClient, T>,
-    ): DeleteNotificationResult<TVersion, TMethod, T> =>
-        client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as DeleteNotificationResult<TVersion, TMethod, T>;
+  <
+    TVersion extends string = keyof typeof ApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient,
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod,
+  ) =>
+  <T = DeleteNotificationResponse<TVersion>>(
+    args: DeleteNotificationArgs<TVersion>,
+    init?: ClientRequestInit<TClient, T>,
+  ): DeleteNotificationResult<TVersion, TMethod, T> =>
+    client[method](
+      ...generateParameters<T, TVersion, TClient>(version, args, init),
+    ) as DeleteNotificationResult<TVersion, TMethod, T>;
 
 export default deleteNotification;

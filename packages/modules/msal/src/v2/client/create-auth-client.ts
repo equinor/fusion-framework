@@ -3,7 +3,7 @@ import { AuthClient } from './client';
 import { normalizeUri } from './util/url';
 
 export type AuthClientConfig = Configuration & {
-    auth: Partial<Configuration['auth']>;
+  auth: Partial<Configuration['auth']>;
 };
 
 /**
@@ -27,22 +27,22 @@ export type AuthClientConfig = Configuration & {
  * @param ctor - optional client class
  */
 export const createAuthClient = <T extends IPublicClientApplication = AuthClient>(
-    tenantId: string,
-    clientId: string,
-    redirectUri?: string,
-    config?: AuthClientConfig,
-    ctor?: new (tenantId: string, config: Configuration) => T,
+  tenantId: string,
+  clientId: string,
+  redirectUri?: string,
+  config?: AuthClientConfig,
+  ctor?: new (tenantId: string, config: Configuration) => T,
 ): T => {
-    const auth: Configuration['auth'] = {
-        clientId,
-        redirectUri: normalizeUri(redirectUri || ''),
-        navigateToLoginRequestUrl: false,
-        authority: `https://login.microsoftonline.com/${tenantId}`,
-        ...config?.auth,
-    };
-    const cache = { cacheLocation: 'localStorage', ...config?.cache };
-    const system = config?.system;
-    return new (ctor || AuthClient)(tenantId, { auth, cache, system }) as T;
+  const auth: Configuration['auth'] = {
+    clientId,
+    redirectUri: normalizeUri(redirectUri || ''),
+    navigateToLoginRequestUrl: false,
+    authority: `https://login.microsoftonline.com/${tenantId}`,
+    ...config?.auth,
+  };
+  const cache = { cacheLocation: 'localStorage', ...config?.cache };
+  const system = config?.system;
+  return new (ctor || AuthClient)(tenantId, { auth, cache, system }) as T;
 };
 
 export default createAuthClient;

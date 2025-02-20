@@ -7,82 +7,82 @@ import type { FusionEnv } from './utils/index.js';
 import assert from 'node:assert';
 
 export const uploadApplication = async (options: {
-    bundle: string;
-    env: FusionEnv;
-    service: string;
+  bundle: string;
+  env: FusionEnv;
+  service: string;
 }) => {
-    const { bundle, env, service } = options;
+  const { bundle, env, service } = options;
 
-    const spinner = Spinner.Global({ prefixText: chalk.dim('Upload') });
+  const spinner = Spinner.Global({ prefixText: chalk.dim('Upload') });
+
+  try {
+    spinner.info('Validating FUSION_TOKEN');
+
+    // make sure token exist
+    requireToken();
+
+    // call service discovery with token, will throw error if failed
+    await getEndpointUrl('apps', env, '');
+
+    spinner.succeed('Found valid FUSION_TOKEN');
+  } catch (e) {
+    const err = e as Error;
+    spinner.fail(chalk.bgRed(err.message));
+    exit(1);
+  }
+
+  /* get package.json */
+  const pkg = await resolveAppPackage();
+  const appKey = resolveAppKey(pkg.packageJson);
+
+  try {
+    spinner.info(`Verifying that ${appKey} is registered`);
+    const state = { endpoint: '' };
 
     try {
-        spinner.info('Validating FUSION_TOKEN');
-
-        // make sure token exist
-        requireToken();
-
-        // call service discovery with token, will throw error if failed
-        await getEndpointUrl('apps', env, '');
-
-        spinner.succeed('Found valid FUSION_TOKEN');
+      state.endpoint = await getEndpointUrl(`apps/${appKey}`, env, service);
     } catch (e) {
-        const err = e as Error;
-        spinner.fail(chalk.bgRed(err.message));
-        exit(1);
+      const err = e as Error;
+      throw new Error(
+        `Could not get endpoint from service discovery while verifying app. service-discovery status: ${err.message}`,
+      );
     }
 
-    /* get package.json */
-    const pkg = await resolveAppPackage();
-    const appKey = resolveAppKey(pkg.packageJson);
+    spinner.info('Using endpoint:', state.endpoint);
 
-    try {
-        spinner.info(`Verifying that ${appKey} is registered`);
-        const state = { endpoint: '' };
+    const exist = await isAppRegistered(state.endpoint);
+    assert(exist, `${appKey} is not registered`);
 
-        try {
-            state.endpoint = await getEndpointUrl(`apps/${appKey}`, env, service);
-        } catch (e) {
-            const err = e as Error;
-            throw new Error(
-                `Could not get endpoint from service discovery while verifying app. service-discovery status: ${err.message}`,
-            );
-        }
+    spinner.succeed(`${appKey} is registered`);
+  } catch (e) {
+    const err = e as Error;
+    spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
+    throw err;
+  }
 
-        spinner.info('Using endpoint:', state.endpoint);
+  /* Upload app bundle */
+  try {
+    spinner.info(
+      `Uploading bundle ${chalk.yellowBright(bundle)} to appKey ${chalk.yellowBright(appKey)}`,
+    );
 
-        const exist = await isAppRegistered(state.endpoint);
-        assert(exist, `${appKey} is not registered`);
-
-        spinner.succeed(`${appKey} is registered`);
-    } catch (e) {
-        const err = e as Error;
-        spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
-        throw err;
+    const endpoint = await getEndpointUrl(`bundles/apps/${appKey}`, env, service);
+    if (!endpoint) {
+      throw new Error('Could not get endpoint from service discovery');
     }
 
-    /* Upload app bundle */
-    try {
-        spinner.info(
-            `Uploading bundle ${chalk.yellowBright(bundle)} to appKey ${chalk.yellowBright(appKey)}`,
-        );
+    spinner.info(`Posting bundle to => ${endpoint}`);
 
-        const endpoint = await getEndpointUrl(`bundles/apps/${appKey}`, env, service);
-        if (!endpoint) {
-            throw new Error('Could not get endpoint from service discovery');
-        }
+    const uploadedBundle = await uploadAppBundle(endpoint, bundle);
 
-        spinner.info(`Posting bundle to => ${endpoint}`);
-
-        const uploadedBundle = await uploadAppBundle(endpoint, bundle);
-
-        spinner.succeed(
-            '✅',
-            `Uploaded app: "${chalk.greenBright(appKey)}"`,
-            `Version: "${chalk.greenBright(uploadedBundle.version)}"`,
-        );
-    } catch (e) {
-        const err = e as Error;
-        spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
-        exit(1);
-    }
+    spinner.succeed(
+      '✅',
+      `Uploaded app: "${chalk.greenBright(appKey)}"`,
+      `Version: "${chalk.greenBright(uploadedBundle.version)}"`,
+    );
+  } catch (e) {
+    const err = e as Error;
+    spinner.fail('🙅‍♂️', chalk.bgRed(err.message));
+    exit(1);
+  }
 };

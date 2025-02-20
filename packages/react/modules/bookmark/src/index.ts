@@ -5,10 +5,10 @@ export { useBookmarkProvider } from './useBookmarkProvider';
 export { enableBookmark } from '@equinor/fusion-framework-module-bookmark';
 
 export type {
-    Bookmark,
-    Bookmarks,
-    BookmarkData,
-    BookmarkModule,
-    BookmarkProvider,
-    BookmarkPayloadGenerator,
+  Bookmark,
+  Bookmarks,
+  BookmarkData,
+  BookmarkModule,
+  BookmarkProvider,
+  BookmarkPayloadGenerator,
 } from '@equinor/fusion-framework-module-bookmark';

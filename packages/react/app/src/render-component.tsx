@@ -7,26 +7,26 @@ export type RenderTeardown = VoidFunction;
 
 /** @deprecated */
 export const renderComponent = (renderer: ComponentRenderer) => {
-    return (el: HTMLElement, args: ComponentRenderArgs): RenderTeardown => {
-        const Component = renderer(args.fusion, args.env);
-        return render(el, Component);
-    };
+  return (el: HTMLElement, args: ComponentRenderArgs): RenderTeardown => {
+    const Component = renderer(args.fusion, args.env);
+    return render(el, Component);
+  };
 };
 
 const render = (el: Element, Component: FunctionComponent): RenderTeardown => {
+  // eslint-disable-next-line react/no-deprecated
+  ReactDOM.render(
+    <StrictMode>
+      <Suspense fallback={<p>loading app</p>}>
+        <Component />
+      </Suspense>
+    </StrictMode>,
+    el,
+  );
+  return () => {
     // eslint-disable-next-line react/no-deprecated
-    ReactDOM.render(
-        <StrictMode>
-            <Suspense fallback={<p>loading app</p>}>
-                <Component />
-            </Suspense>
-        </StrictMode>,
-        el,
-    );
-    return () => {
-        // eslint-disable-next-line react/no-deprecated
-        ReactDOM.unmountComponentAtNode(el);
-    };
+    ReactDOM.unmountComponentAtNode(el);
+  };
 };
 
 // const render = (el: Element, Component: FunctionComponent): RenderTeardown => {

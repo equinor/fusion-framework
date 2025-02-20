@@ -13,15 +13,15 @@ import { context } from './context';
  * ```
  */
 export const useFramework = <TModules extends Array<AnyModule> = []>(): Fusion<TModules> => {
-    let framework = useContext(context);
-    if (!framework) {
-        console.warn('could not locate fusion in context!');
-    }
-    framework ??= window.Fusion;
-    if (!framework) {
-        console.error('Could not load framework, might not be initiated?');
-    }
-    return framework;
+  let framework = useContext(context);
+  if (!framework) {
+    console.warn('could not locate fusion in context!');
+  }
+  framework ??= window.Fusion;
+  if (!framework) {
+    console.error('Could not load framework, might not be initiated?');
+  }
+  return framework;
 };
 
 export default useFramework;

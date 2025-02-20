@@ -28,64 +28,64 @@ import { LogLevel } from './static';
  * ```
  */
 export class ConsoleLogger extends Logger {
-    /**
-     * Constructs a new ConsoleLogger instance.
-     * @param title The main title of the logger, used to identify the source of the log messages.
-     * @param subtitle An optional subtitle for additional context, such as a specific component or functionality within the source.
-     */
-    constructor(
-        protected readonly title: string,
-        protected readonly subtitle?: string,
-    ) {
-        super();
-        this.log.subscribe(({ lvl, msg }) => {
-            switch (lvl) {
-                case LogLevel.Debug:
-                    console.debug(...msg);
-                    break;
-                case LogLevel.Info:
-                    console.info(...msg);
-                    break;
-                case LogLevel.Warning:
-                    console.warn(...msg);
-                    break;
-                case LogLevel.Error:
-                    console.error(...msg);
-                    break;
-            }
-        });
-    }
+  /**
+   * Constructs a new ConsoleLogger instance.
+   * @param title The main title of the logger, used to identify the source of the log messages.
+   * @param subtitle An optional subtitle for additional context, such as a specific component or functionality within the source.
+   */
+  constructor(
+    protected readonly title: string,
+    protected readonly subtitle?: string,
+  ) {
+    super();
+    this.log.subscribe(({ lvl, msg }) => {
+      switch (lvl) {
+        case LogLevel.Debug:
+          console.debug(...msg);
+          break;
+        case LogLevel.Info:
+          console.info(...msg);
+          break;
+        case LogLevel.Warning:
+          console.warn(...msg);
+          break;
+        case LogLevel.Error:
+          console.error(...msg);
+          break;
+      }
+    });
+  }
 
-    /**
-     * Generates the formatted message to log, including the title, subtitle (if any), and the messages provided.
-     * @param msg The messages or objects to include in the log.
-     * @returns An array of unknown, representing the formatted log message.
-     */
-    protected _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[] {
-        return [this._formatTitle(lvl), ...msg];
-    }
+  /**
+   * Generates the formatted message to log, including the title, subtitle (if any), and the messages provided.
+   * @param msg The messages or objects to include in the log.
+   * @returns An array of unknown, representing the formatted log message.
+   */
+  protected _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[] {
+    return [this._formatTitle(lvl), ...msg];
+  }
 
-    protected _formatTitle(_lvl: LogLevel): string {
-        const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
-        switch (_lvl) {
-            case LogLevel.Warning:
-            case LogLevel.Error:
-                return chalk.bold(title);
-        }
-        return title;
+  protected _formatTitle(_lvl: LogLevel): string {
+    const title = chalk.magenta([this.title, this.subtitle].filter((x) => !!x).join(' - '));
+    switch (_lvl) {
+      case LogLevel.Warning:
+      case LogLevel.Error:
+        return chalk.bold(title);
     }
+    return title;
+  }
 
-    /**
-     * Creates a new `ConsoleLogger` instance with a specific title and subtitle, and an optional log level.
-     *
-     * @param title - The title of the new logger, which will be prefixed to the log messages.
-     * @param subtitle - The subtitle of the new logger, which will be appended to the log messages.
-     * @param logLevel - The log level for the new logger. If not provided, the log level of the parent logger will be used.
-     * @returns A new ConsoleLogger instance as an ILogger.
-     */
-    public createSubLogger(title: string, subtitle?: string, logLevel?: LogLevel): ILogger {
-        const logger = new ConsoleLogger(`${this.title}::${title}`, subtitle ?? this.subtitle);
-        logger.level = logLevel === undefined ? this.level : logLevel;
-        return logger;
-    }
+  /**
+   * Creates a new `ConsoleLogger` instance with a specific title and subtitle, and an optional log level.
+   *
+   * @param title - The title of the new logger, which will be prefixed to the log messages.
+   * @param subtitle - The subtitle of the new logger, which will be appended to the log messages.
+   * @param logLevel - The log level for the new logger. If not provided, the log level of the parent logger will be used.
+   * @returns A new ConsoleLogger instance as an ILogger.
+   */
+  public createSubLogger(title: string, subtitle?: string, logLevel?: LogLevel): ILogger {
+    const logger = new ConsoleLogger(`${this.title}::${title}`, subtitle ?? this.subtitle);
+    logger.level = logLevel === undefined ? this.level : logLevel;
+    return logger;
+  }
 }

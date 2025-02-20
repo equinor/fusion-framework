@@ -8,9 +8,9 @@
  * @param home - base url for relative urls
  */
 export const normalizeUri = (uri: string, home: string = window.location.origin): string => {
-    uri = uri.match(/^http[s]?/) ? uri : home + uri;
-    const { origin, pathname } = new URL(uri);
-    return origin + pathname.replace(/([^:]\/)\/+/g, '$1');
+  uri = uri.match(/^http[s]?/) ? uri : home + uri;
+  const { origin, pathname } = new URL(uri);
+  return origin + pathname.replace(/([^:]\/)\/+/g, '$1');
 };
 
 /**
@@ -19,6 +19,6 @@ export const normalizeUri = (uri: string, home: string = window.location.origin)
  * @internal
  */
 export const compareOrigin = (a: string, b: string): boolean => {
-    const url = { a: normalizeUri(a), b: normalizeUri(b) };
-    return url.a === url.b;
+  const url = { a: normalizeUri(a), b: normalizeUri(b) };
+  return url.a === url.b;
 };

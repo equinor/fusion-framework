@@ -15,33 +15,33 @@ export default {
     },
     module: {
       type: String,
-      required: true
+      required: true,
     },
     package: {
       type: String,
     },
     layout: {
       type: String,
-      default: 'for-the-badge'
+      default: 'for-the-badge',
     },
     label: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
     url() {
       const url = new URL(`https://img.shields.io/github/package-json/v/equinor/fusion-framework`);
-      url.searchParams.set('filename',  `packages/${this.module}/package.json`);
+      url.searchParams.set('filename', `packages/${this.module}/package.json`);
       url.searchParams.set('style', this.layout);
       url.searchParams.set('label', this.label || this.packageName);
       return url.toString();
     },
-    packageName() {
+    packageName() {
       return this.package || `@equinor/fusion-framework-${this.module.replaceAll('/', '-')}`;
     },
-    npmUrl() {
+    npmUrl() {
       return `https://www.npmjs.com/package/${this.packageName}`;
-    }
-  }
+    },
+  },
 };
 </script>

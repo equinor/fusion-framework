@@ -6,17 +6,17 @@ import type { Bookmark, BookmarkData } from './types';
  * Selects all bookmarks from the application state.
  */
 export const bookmarksSelector = (state: BookmarkState): Bookmark[] => {
-    return Object.values(state.bookmarks) as Bookmark[];
+  return Object.values(state.bookmarks) as Bookmark[];
 };
 
 /**
  * Retrieves a bookmark from the state by its ID.
  */
 export const bookmarkSelector = <T extends BookmarkData>(
-    state: BookmarkState,
-    id: string,
+  state: BookmarkState,
+  id: string,
 ): Bookmark<T> | undefined => {
-    return state.bookmarks[id] as Bookmark<T>;
+  return state.bookmarks[id] as Bookmark<T>;
 };
 
 /**
@@ -28,9 +28,9 @@ export const bookmarkSelector = <T extends BookmarkData>(
  * if the active bookmark was never set, the function returns undefined.
  */
 export const activeBookmarkSelector = <T extends BookmarkData>(
-    state: BookmarkState,
+  state: BookmarkState,
 ): Bookmark<T> | null | undefined => {
-    return state.currentBookmark as Bookmark<T> | null | undefined;
+  return state.currentBookmark as Bookmark<T> | null | undefined;
 };
 
 /**
@@ -40,7 +40,7 @@ export const activeBookmarkSelector = <T extends BookmarkData>(
  * @returns The status from the bookmark state.
  */
 export const statusSelector = (state: BookmarkState): BookmarkState['status'] => {
-    return state.status;
+  return state.status;
 };
 
 /**
@@ -50,5 +50,5 @@ export const statusSelector = (state: BookmarkState): BookmarkState['status'] =>
  * @returns An array of bookmark flow errors.
  */
 export const errorsSelector = (state: BookmarkState): Array<BookmarkFlowError> => {
-    return Object.values(state.errors);
+  return Object.values(state.errors);
 };

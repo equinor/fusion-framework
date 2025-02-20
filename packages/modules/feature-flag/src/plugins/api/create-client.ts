@@ -13,18 +13,18 @@ import type { ApiResponseSelector, IApiPluginClient } from './types';
  * ```
  */
 export const createApiPluginClient = (args: {
-    httpClient: IHttpClient;
-    /** Relatice HTTP client path */
-    path: string;
-    selector: ApiResponseSelector;
+  httpClient: IHttpClient;
+  /** Relatice HTTP client path */
+  path: string;
+  selector: ApiResponseSelector;
 }): IApiPluginClient => {
-    const { httpClient, path, selector } = args;
+  const { httpClient, path, selector } = args;
 
-    return {
-        getFeatureFlags: () => {
-            return httpClient.fetch$(path, { selector });
-        },
-    };
+  return {
+    getFeatureFlags: () => {
+      return httpClient.fetch$(path, { selector });
+    },
+  };
 };
 
 export default createApiPluginClient;

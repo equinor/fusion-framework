@@ -2,19 +2,19 @@ import { ServiceDiscoveryConfigurator } from './configurator';
 import { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
 
 import type {
-    IModuleConfigurator,
-    Module,
-    ModulesConfigurator,
+  IModuleConfigurator,
+  Module,
+  ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 
 export const moduleName = 'serviceDiscovery';
 
 export type ServiceDiscoveryModule = Module<
-    typeof moduleName,
-    IServiceDiscoveryProvider,
-    ServiceDiscoveryConfigurator,
-    [HttpModule]
+  typeof moduleName,
+  IServiceDiscoveryProvider,
+  ServiceDiscoveryConfigurator,
+  [HttpModule]
 >;
 
 /**
@@ -37,28 +37,28 @@ export type ServiceDiscoveryModule = Module<
  * function properly.
  */
 export const module: ServiceDiscoveryModule = {
-    name: moduleName,
-    configure: () => new ServiceDiscoveryConfigurator(),
-    initialize: async (init) => {
-        const { requireInstance, ref } = init;
+  name: moduleName,
+  configure: () => new ServiceDiscoveryConfigurator(),
+  initialize: async (init) => {
+    const { requireInstance, ref } = init;
 
-        // create service discovery configuration
-        const config = await init.config.createConfigAsync(init, {
-            /**
-             * @remarks
-             * This is a dangerous pattern, as it allows the child module to access the parent module's client.
-             * The client client could implement breaking changes that would affect the child module.
-             * On the positive side, it allows the child module to reuse cache and always be up to date.
-             */
-            ...ref?.serviceDiscovery?.config,
-        });
+    // create service discovery configuration
+    const config = await init.config.createConfigAsync(init, {
+      /**
+       * @remarks
+       * This is a dangerous pattern, as it allows the child module to access the parent module's client.
+       * The client client could implement breaking changes that would affect the child module.
+       * On the positive side, it allows the child module to reuse cache and always be up to date.
+       */
+      ...ref?.serviceDiscovery?.config,
+    });
 
-        // service discovery requires http module to be initialized
-        const httpModule = await requireInstance('http');
+    // service discovery requires http module to be initialized
+    const httpModule = await requireInstance('http');
 
-        // return service discovery provider
-        return new ServiceDiscoveryProvider(config, httpModule);
-    },
+    // return service discovery provider
+    return new ServiceDiscoveryProvider(config, httpModule);
+  },
 };
 
 /**
@@ -79,10 +79,10 @@ export const module: ServiceDiscoveryModule = {
  * ```
  */
 export const configureServiceDiscovery = <TRef>(
-    callback: (config: ServiceDiscoveryConfigurator) => Promise<void>,
+  callback: (config: ServiceDiscoveryConfigurator) => Promise<void>,
 ): IModuleConfigurator<ServiceDiscoveryModule, TRef> => ({
-    module,
-    configure: (config: ServiceDiscoveryConfigurator) => callback(config),
+  module,
+  configure: (config: ServiceDiscoveryConfigurator) => callback(config),
 });
 
 /**
@@ -107,16 +107,16 @@ export const configureServiceDiscovery = <TRef>(
  * ```
  */
 export const enableServiceDiscovery = (
-    configurator: ModulesConfigurator<[HttpModule]>,
-    callback?: (config: ServiceDiscoveryConfigurator) => Promise<void>,
+  configurator: ModulesConfigurator<[HttpModule]>,
+  callback?: (config: ServiceDiscoveryConfigurator) => Promise<void>,
 ): void => {
-    configurator.addConfig(configureServiceDiscovery(callback ?? (() => Promise.resolve())));
+  configurator.addConfig(configureServiceDiscovery(callback ?? (() => Promise.resolve())));
 };
 
 declare module '@equinor/fusion-framework-module' {
-    export interface Modules {
-        serviceDiscovery: ServiceDiscoveryModule;
-    }
+  export interface Modules {
+    serviceDiscovery: ServiceDiscoveryModule;
+  }
 }
 
 export default module;

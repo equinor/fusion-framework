@@ -8,16 +8,16 @@ export { type IStorageAdapter, StorageAdapter, LocalStorageAdapter, SessionStora
 export type StorageType = 'local' | 'session';
 
 export const createStorage = <TType = unknown>(
-    namespace: string,
-    type: StorageType,
+  namespace: string,
+  type: StorageType,
 ): StorageAdapter<TType> => {
-    switch (type) {
-        case 'local':
-            return new LocalStorageAdapter(namespace);
-        case 'session':
-            return new SessionStorageAdapter(namespace);
-    }
-    throw Error('invalid type provided');
+  switch (type) {
+    case 'local':
+      return new LocalStorageAdapter(namespace);
+    case 'session':
+      return new SessionStorageAdapter(namespace);
+  }
+  throw Error('invalid type provided');
 };
 
 export default createStorage;

@@ -9,8 +9,8 @@ import { type INavigationProvider } from '@equinor/fusion-framework-module-navig
  * @param routes router objects __(must be static | memorized)__
  */
 export const useRouter = (
-    routes: Parameters<INavigationProvider['createRouter']>[0],
+  routes: Parameters<INavigationProvider['createRouter']>[0],
 ): ReturnType<INavigationProvider['createRouter']> => {
-    const provider = useNavigationModule();
-    return useMemo(() => provider.createRouter(routes), [provider, routes]);
+  const provider = useNavigationModule();
+  return useMemo(() => provider.createRouter(routes), [provider, routes]);
 };

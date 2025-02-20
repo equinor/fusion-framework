@@ -3,8 +3,8 @@ import { AgnosticRouteObject, createRouter, Path, To } from '@remix-run/router';
 import { filter, map } from 'rxjs/operators';
 
 import {
-    BaseModuleProvider,
-    type BaseModuleProviderCtorArgs,
+  BaseModuleProvider,
+  type BaseModuleProviderCtorArgs,
 } from '@equinor/fusion-framework-module/provider';
 
 import { INavigationProvider } from './INavigationProvider';
@@ -15,105 +15,103 @@ import { Navigator, type INavigator } from '../../navigator';
 const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
 
 export class NavigationProvider
-    extends BaseModuleProvider<INavigationConfigurator>
-    implements INavigationProvider
+  extends BaseModuleProvider<INavigationConfigurator>
+  implements INavigationProvider
 {
-    #navigator: INavigator;
-    #basePathname?: string;
+  #navigator: INavigator;
+  #basePathname?: string;
 
-    public get state$() {
-        return this.#navigator.pipe(
-            /** only push navigation state if the path is within the basename scope */
-            filter((event) =>
-                this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true,
-            ),
-            /** map path to localized path */
-            map(({ action, location }) => ({
-                action,
-                location: this._localizePath(location),
-            })),
-        );
+  public get state$() {
+    return this.#navigator.pipe(
+      /** only push navigation state if the path is within the basename scope */
+      filter((event) =>
+        this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true,
+      ),
+      /** map path to localized path */
+      map(({ action, location }) => ({
+        action,
+        location: this._localizePath(location),
+      })),
+    );
+  }
+
+  public get navigator(): INavigator {
+    return this.#navigator;
+  }
+
+  public get path(): Path {
+    return this._localizePath(this.navigator.location);
+  }
+
+  constructor(args: BaseModuleProviderCtorArgs<INavigationConfigurator>) {
+    super(args);
+
+    const { basename, history } = args.config;
+
+    this.#basePathname = basename;
+
+    if (!history) {
+      throw Error('no history provided!');
     }
 
-    public get navigator(): INavigator {
-        return this.#navigator;
-    }
+    this.#navigator = new Navigator({
+      basename,
+      history,
+    });
 
-    public get path(): Path {
-        return this._localizePath(this.navigator.location);
-    }
+    this._addTeardown(() => this.#navigator.dispose());
+  }
 
-    constructor(args: BaseModuleProviderCtorArgs<INavigationConfigurator>) {
-        super(args);
+  public createRouter(routes: AgnosticRouteObject[]) {
+    const history = this.#navigator;
+    console.debug('NavigationProvider::createRouter', routes);
+    const router = createRouter({
+      basename: history.basename,
+      history,
+      routes,
+      future: {
+        v7_prependBasename: true,
+      },
+    });
+    router.initialize();
+    return router;
+  }
 
-        const { basename, history } = args.config;
+  public createHref(to?: To): string {
+    return this.#navigator.createHref(this._createToPath(to ?? this.path));
+  }
 
-        this.#basePathname = basename;
+  public createURL(to?: To): URL {
+    return this.#navigator.createURL(this._createToPath(to ?? this.path));
+  }
 
-        if (!history) {
-            throw Error('no history provided!');
-        }
+  public push(to: To, state?: unknown): void {
+    return this.#navigator.push(this._createToPath(to), state);
+  }
 
-        this.#navigator = new Navigator({
-            basename,
-            history,
-        });
+  public replace(to: To, state?: unknown): void {
+    return this.#navigator.replace(this._createToPath(to), state);
+  }
 
-        this._addTeardown(() => this.#navigator.dispose());
-    }
+  protected _localizePath(location: Path): Path {
+    const { pathname, search, hash } = location;
+    return {
+      // TODO make better check
+      pathname: normalizePathname(pathname.replace(this.#basePathname ?? '', '')),
+      search,
+      hash,
+    };
+  }
 
-    public createRouter(routes: AgnosticRouteObject[]) {
-        const history = this.#navigator;
-        console.debug('NavigationProvider::createRouter', routes);
-        const router = createRouter({
-            basename: history.basename,
-            history,
-            routes,
-            future: {
-                v7_prependBasename: true,
-            },
-        });
-        router.initialize();
-        return router;
-    }
-
-    public createHref(to?: To): string {
-        return this.#navigator.createHref(this._createToPath(to ?? this.path));
-    }
-
-    public createURL(to?: To): URL {
-        return this.#navigator.createURL(this._createToPath(to ?? this.path));
-    }
-
-    public push(to: To, state?: unknown): void {
-        return this.#navigator.push(this._createToPath(to), state);
-    }
-
-    public replace(to: To, state?: unknown): void {
-        return this.#navigator.replace(this._createToPath(to), state);
-    }
-
-    protected _localizePath(location: Path): Path {
-        const { pathname, search, hash } = location;
-        return {
-            // TODO make better check
-            pathname: normalizePathname(pathname.replace(this.#basePathname ?? '', '')),
-            search,
-            hash,
-        };
-    }
-
-    protected _createToPath(to: To): Partial<Path> {
-        const { pathname, search, hash } =
-            typeof to === 'string' ? { pathname: to, search: undefined, hash: undefined } : to;
-        return {
-            pathname: normalizePathname(
-                [this.#basePathname, pathname === '/' ? undefined : pathname]
-                    .filter((x) => !!x)
-                    .join('/'),
-            ),
-            search,
-            hash,
-        };
-    }
+  protected _createToPath(to: To): Partial<Path> {
+    const { pathname, search, hash } =
+      typeof to === 'string' ? { pathname: to, search: undefined, hash: undefined } : to;
+    return {
+      pathname: normalizePathname(
+        [this.#basePathname, pathname === '/' ? undefined : pathname].filter((x) => !!x).join('/'),
+      ),
+      search,
+      hash,
+    };
+  }
 }

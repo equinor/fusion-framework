@@ -9,11 +9,11 @@ import type { ProcessOperator } from './types';
  * @returns A process operator that adds the specified header to the request.
  */
 export const requestOperatorHeader =
-    <T extends FetchRequest = FetchRequest>(key: string, value: string): ProcessOperator<T> =>
-    (request) => {
-        const headers = new Headers(request.headers);
-        headers.append(key, value);
-        return { ...request, headers };
-    };
+  <T extends FetchRequest = FetchRequest>(key: string, value: string): ProcessOperator<T> =>
+  (request) => {
+    const headers = new Headers(request.headers);
+    headers.append(key, value);
+    return { ...request, headers };
+  };
 
 export default requestOperatorHeader;

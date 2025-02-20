@@ -9,27 +9,27 @@ import { createComponent } from './create-component';
 import { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
-    Component: React.ElementType,
-    configure?: AppModuleInitiator<TModules>,
+  Component: React.ElementType,
+  configure?: AppModuleInitiator<TModules>,
 ) => {
-    const LegacyComponent = (): JSX.Element => {
-        const fusion = useFramework<[AppModule]>();
-        const RenderComponent = useMemo(() => {
-            const creator = createComponent(Component, configure);
-            // @eikeland
-            // TODO - recheck when legacy fusion-cli is updated!
-            const appProvider = fusion.modules.app;
-            if (appProvider?.current) {
-                const { config, manifest } = appProvider.current;
-                return creator(fusion, { config, manifest } as unknown as AppEnv);
-            }
-            return creator(fusion, {} as unknown as AppEnv);
-        }, [fusion]);
-        return (
-            <Suspense fallback={<p>loading app</p>}>
-                <RenderComponent />
-            </Suspense>
-        );
-    };
-    return LegacyComponent;
+  const LegacyComponent = (): JSX.Element => {
+    const fusion = useFramework<[AppModule]>();
+    const RenderComponent = useMemo(() => {
+      const creator = createComponent(Component, configure);
+      // @eikeland
+      // TODO - recheck when legacy fusion-cli is updated!
+      const appProvider = fusion.modules.app;
+      if (appProvider?.current) {
+        const { config, manifest } = appProvider.current;
+        return creator(fusion, { config, manifest } as unknown as AppEnv);
+      }
+      return creator(fusion, {} as unknown as AppEnv);
+    }, [fusion]);
+    return (
+      <Suspense fallback={<p>loading app</p>}>
+        <RenderComponent />
+      </Suspense>
+    );
+  };
+  return LegacyComponent;
 };
