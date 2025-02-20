@@ -35,24 +35,4 @@ export const BookmarkFilter = ({
             }}
         />
     );
-    return (
-        <Styled.Root>
-            <Search
-                placeholder="Search in my bookmarks"
-                value={searchText ?? ''}
-                onChange={(e) => {
-                    setSearchText(e.currentTarget.value.length ? e.currentTarget.value : null);
-                }}
-            />
-            <Autocomplete
-                options={groupingModes}
-                selectedOptions={[groupBy]}
-                multiple={false}
-                hideClearButton
-                autoWidth
-                onOptionsChange={(changes) => setGroupBy(changes.selectedItems[0] as GroupingKeys)}
-                label={''}
-            />
-        </Styled.Root>
-    );
 };

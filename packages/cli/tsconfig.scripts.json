@@ -11,6 +11,6 @@
     "moduleResolution": "node"
   },
   "include": [
-    "src/scripts",
-  ],
+    "src/scripts"
+  ]
 }

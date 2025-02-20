@@ -139,7 +139,7 @@ export interface FrameworkEvent<TInit extends FrameworkEventInit> {
  * @template TInit The type of the event details.
  * @template TType The type of the event type.
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: no other way to define a class with multiple signatures
 export class FrameworkEvent<
     TInit extends FrameworkEventInit = FrameworkEventInit,
     TType extends string = keyof FrameworkEventMap,

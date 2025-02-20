@@ -17,6 +17,7 @@ export class Spinner {
             console.log = this.info.bind(this);
             console.info = this.info.bind(this);
         } else {
+            // biome-ignore lint/suspicious/noGlobalAssign: duh
             console = originalConsole;
         }
     }

@@ -56,14 +56,13 @@ export const App = (): JSX.Element => {
         ]);
     }, []);
 
-    const customTheme = useMemo(
+    const _customTheme = useMemo(
         () =>
             createTheme().withParams({
                 textColor: '#39a',
             }),
         [],
     );
-    customTheme;
 
     return (
         <>
@@ -74,7 +73,7 @@ export const App = (): JSX.Element => {
             <div style={gridStyle}>
                 <AgGridReact
                     rowData={rowData}
-                    // theme={customTheme}
+                    // theme={_customTheme}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     sideBar={sideBar}

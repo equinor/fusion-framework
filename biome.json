@@ -1,0 +1,98 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"files": { "ignoreUnknown": false, "ignore": [] },
+	"formatter": {
+		"enabled": true,
+		"lineWidth": 100,
+		"useEditorconfig": true
+	},
+	"organizeImports": { 
+		"enabled": true 
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"useButtonType": "warn",
+				"useAltText": "warn",
+				"noSvgWithoutTitle": "warn",
+				"noBlankTarget": "warn"
+			},
+			"complexity": {
+				"noBannedTypes": "warn",
+				"useLiteralKeys": "warn",
+				"useOptionalChain": "warn",
+				"noUselessSwitchCase": "warn",
+				"noUselessFragments": "warn",
+				"noForEach": "warn",
+				"noUselessConstructor": "warn"
+			},
+			"correctness": {
+				"noUndeclaredVariables": "warn",
+				"noUnusedVariables": "warn",
+				"useExhaustiveDependencies": "warn",
+				"noVoidTypeReturn": "warn",
+				"useJsxKeyInIterable": "warn"
+			},
+			"performance": {
+				"noAccumulatingSpread": "warn",
+				"noDelete": "warn"
+			},
+			"style": {
+				"useImportType": "warn",
+				"noParameterAssign": "warn",
+				"useShorthandFunctionType": "warn",
+				"noUselessElse": "warn",
+				"useExportType": "warn",
+				"useLiteralEnumMembers": "warn",
+				"noNonNullAssertion": "warn",
+				"noUnusedTemplateLiteral": "warn",
+				"noCommaOperator": "warn",
+				"useNodejsImportProtocol": "warn",
+				"useTemplate": "warn",
+				"useSelfClosingElements": "warn",
+				"noInferrableTypes": "warn",
+				"useDefaultParameterLast": "warn"
+			},
+			"suspicious": {
+				"noExplicitAny": "warn",
+				"noEmptyBlockStatements": "warn",
+				"noConfusingVoidType": "warn",
+				"noGlobalIsNan": "warn",
+				"noDoubleEquals": "warn",
+				"noAssignInExpressions": "warn",
+				"noImplicitAnyLet": "warn"
+			}
+		},
+		"ignore": [
+			"node_modules", 
+			"**/dist/**", 
+			"**/*.config.js", 
+			"**/version.ts", 
+			"vue-press/src/.vuepress"
+		]
+	},
+	"javascript": {
+		"formatter": {
+			"jsxQuoteStyle": "double",
+			"quoteProperties": "asNeeded",
+			"trailingCommas": "all",
+			"semicolons": "always",
+			"arrowParentheses": "always",
+			"bracketSameLine": false,
+			"quoteStyle": "single",
+			"attributePosition": "auto",
+			"bracketSpacing": true
+		}
+	},
+	"overrides": [
+		{
+			"include": ["packages/react/**"]
+		}, 
+		{
+			"include": ["vue-press/**"]
+		}
+	]
+}

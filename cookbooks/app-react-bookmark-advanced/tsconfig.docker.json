@@ -13,12 +13,12 @@
       "esnext",
       "dom",
       "dom.iterable"
-    ],
+    ]
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules",
+    "node_modules"
   ]
 }
