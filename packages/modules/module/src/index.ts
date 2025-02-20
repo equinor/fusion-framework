@@ -6,13 +6,13 @@ export { ModuleConsoleLogger } from './logger';
 
 export { ModuleConfigBuilder } from './ModuleConfigBuilder';
 export {
-    type ConfigBuilderCallback,
-    type ConfigBuilderCallbackArgs,
-    BaseConfigBuilder,
+  type ConfigBuilderCallback,
+  type ConfigBuilderCallbackArgs,
+  BaseConfigBuilder,
 } from './BaseConfigBuilder';
 
 export {
-    type IModuleConfigurator,
-    type IModulesConfigurator,
-    ModulesConfigurator,
+  type IModuleConfigurator,
+  type IModulesConfigurator,
+  ModulesConfigurator,
 } from './configurator';

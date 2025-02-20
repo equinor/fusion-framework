@@ -7,13 +7,13 @@ import { useFeatures, type UseFeaturesResult } from './useFeatures';
  * @returns An object containing the current app features, a function to toggle a feature, and any error that occurred.
  */
 export const useCurrentAppFeatures = (): UseFeaturesResult => {
-    const { module, error: moduleError } = useCurrentAppModule<FeatureFlagModule>('featureFlag');
+  const { module, error: moduleError } = useCurrentAppModule<FeatureFlagModule>('featureFlag');
 
-    const { features, toggleFeature, error } = useFeatures(module);
+  const { features, toggleFeature, error } = useFeatures(module);
 
-    return {
-        features,
-        toggleFeature,
-        error: error ?? moduleError,
-    };
+  return {
+    features,
+    toggleFeature,
+    error: error ?? moduleError,
+  };
 };

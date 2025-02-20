@@ -1,21 +1,17 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "module": "ES2022",
-        "target": "ES6",
-        "incremental": true,
-        "preserveConstEnums": true,
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "stripInternal": true,
-        "skipLibCheck": true,
-        "lib": [
-            "esnext",
-            "dom",
-            "dom.iterable"
-        ],
-        "composite": true,
-    }
+  "compilerOptions": {
+    "strict": true,
+    "module": "ES2022",
+    "target": "ES6",
+    "incremental": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "stripInternal": true,
+    "skipLibCheck": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "composite": true
+  }
 }

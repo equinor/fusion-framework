@@ -11,8 +11,8 @@ import type { AnyModule } from './types';
  * @param ref - reference instance (parent module instance)
  */
 export const initializeModules = <TModules extends Array<AnyModule>, TInstance = any>(
-    configurator: IModulesConfigurator<TModules, TInstance>,
-    ref?: TInstance,
+  configurator: IModulesConfigurator<TModules, TInstance>,
+  ref?: TInstance,
 ) => configurator.initialize(ref);
 
 export default initializeModules;

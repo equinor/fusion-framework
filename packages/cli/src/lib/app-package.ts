@@ -2,36 +2,36 @@ import { existsSync } from 'node:fs';
 import { dirname, relative } from 'node:path';
 
 import {
-    PackageJson,
-    readPackageUp,
-    type NormalizeOptions as ResolveAppPackageOptions,
+  PackageJson,
+  readPackageUp,
+  type NormalizeOptions as ResolveAppPackageOptions,
 } from 'read-package-up';
 
 import { AppManifest } from '@equinor/fusion-framework-module-app';
 import { assert } from './utils/assert.js';
 
 export type AppPackageJson = PackageJson & {
-    manifest?: AppManifest;
+  manifest?: AppManifest;
 };
 
 type DefinePackageFn = () => AppPackageJson | Promise<AppPackageJson>;
 type DefinePackageExporter = AppPackageJson | DefinePackageFn;
 
 export interface defineAppPackage {
-    (obj: AppPackageJson): AppPackageJson;
+  (obj: AppPackageJson): AppPackageJson;
 }
 
 export interface defineAppPackage {
-    (fn: DefinePackageFn): void;
+  (fn: DefinePackageFn): void;
 }
 
 export type ResolvedAppPackage = {
-    packageJson: AppPackageJson;
-    path: string;
+  packageJson: AppPackageJson;
+  path: string;
 };
 
 export function defineAppPackage(fnOrObject: DefinePackageExporter): DefinePackageExporter {
-    return fnOrObject;
+  return fnOrObject;
 }
 
 /**
@@ -47,22 +47,22 @@ export function defineAppPackage(fnOrObject: DefinePackageExporter): DefinePacka
  * @throws Will throw an error if no entry point can be resolved.
  */
 export const resolveEntryPoint = (packageJson: PackageJson, pkgPath: string = ''): string => {
-    const entrypoint = [
-        packageJson.entrypoint,
-        packageJson.main,
-        packageJson.module,
-        'src/index.ts',
-        'src/index.tsx',
-        'src/index.js',
-        'src/index.jsx',
-    ]
-        .filter((x): x is string => !!x)
-        .map((x): string => relative(dirname(pkgPath), x))
-        .find((entry) => existsSync(entry));
+  const entrypoint = [
+    packageJson.entrypoint,
+    packageJson.main,
+    packageJson.module,
+    'src/index.ts',
+    'src/index.tsx',
+    'src/index.js',
+    'src/index.jsx',
+  ]
+    .filter((x): x is string => !!x)
+    .map((x): string => relative(dirname(pkgPath), x))
+    .find((entry) => existsSync(entry));
 
-    assert(entrypoint, 'failed to resolve entrypoint');
+  assert(entrypoint, 'failed to resolve entrypoint');
 
-    return entrypoint;
+  return entrypoint;
 };
 
 /**
@@ -73,8 +73,8 @@ export const resolveEntryPoint = (packageJson: PackageJson, pkgPath: string = ''
  * @throws Will throw an error if the 'name' property is not present in the packageJson.
  */
 export const resolveAppKey = (packageJson: Pick<PackageJson, 'name'>) => {
-    assert(packageJson.name, 'expected [name] in packageJson');
-    return packageJson.name.replace(/^@|\w.*\//gm, '');
+  assert(packageJson.name, 'expected [name] in packageJson');
+  return packageJson.name.replace(/^@|\w.*\//gm, '');
 };
 
 /**
@@ -83,8 +83,8 @@ export const resolveAppKey = (packageJson: Pick<PackageJson, 'name'>) => {
  * @param pkg - A partial representation of the application's package JSON.
  */
 export const assertPackage = (pkg: Partial<AppPackageJson>) => {
-    assert(resolveAppKey(pkg));
-    assert(resolveEntryPoint(pkg as AppPackageJson));
+  assert(resolveAppKey(pkg));
+  assert(resolveEntryPoint(pkg as AppPackageJson));
 };
 
 /**
@@ -95,13 +95,13 @@ export const assertPackage = (pkg: Partial<AppPackageJson>) => {
  * @throws Will throw an error if the `package.json` file is not found.
  */
 export const resolveAppPackage = async (
-    options?: ResolveAppPackageOptions,
+  options?: ResolveAppPackageOptions,
 ): Promise<ResolvedAppPackage> => {
-    const result = await readPackageUp(options);
-    if (!result) {
-        throw Error('failed to find package.json');
-    }
-    return result;
+  const result = await readPackageUp(options);
+  if (!result) {
+    throw Error('failed to find package.json');
+  }
+  return result;
 };
 
 export default resolveAppPackage;

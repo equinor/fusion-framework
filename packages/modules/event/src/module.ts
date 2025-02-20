@@ -8,39 +8,39 @@ export const moduleKey = 'event';
 export type EventModule = Module<typeof moduleKey, IEventModuleProvider, IEventModuleConfigurator>;
 
 export type FrameworkEventModuleLoadedEvent = FrameworkEvent<
-    FrameworkEventInit<ModuleInstance, EventModuleProvider>
+  FrameworkEventInit<ModuleInstance, EventModuleProvider>
 >;
 
 export const module: EventModule = {
-    name: moduleKey,
-    configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
-        const configurator = {} as IEventModuleConfigurator;
-        const parentProvider = ref?.event;
-        if (parentProvider) {
-            configurator.onBubble = async (e) => {
-                await parentProvider.dispatchEvent(e);
-            };
-        }
-        return configurator;
-    },
-    initialize: ({ config }) => new EventModuleProvider(config),
-    postInitialize: async ({ instance, modules }) => {
-        instance.dispatchEvent('onModulesLoaded', { detail: modules, source: instance });
-    },
-    dispose({ instance }) {
-        instance.dispose();
-    },
+  name: moduleKey,
+  configure: (ref?: Partial<ModulesInstanceType<[EventModule]>>) => {
+    const configurator = {} as IEventModuleConfigurator;
+    const parentProvider = ref?.event;
+    if (parentProvider) {
+      configurator.onBubble = async (e) => {
+        await parentProvider.dispatchEvent(e);
+      };
+    }
+    return configurator;
+  },
+  initialize: ({ config }) => new EventModuleProvider(config),
+  postInitialize: async ({ instance, modules }) => {
+    instance.dispatchEvent('onModulesLoaded', { detail: modules, source: instance });
+  },
+  dispose({ instance }) {
+    instance.dispose();
+  },
 };
 
 export default module;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare interface ModuleEventMap {
-    onModulesLoaded: FrameworkEventModuleLoadedEvent;
+  onModulesLoaded: FrameworkEventModuleLoadedEvent;
 }
 
 declare module '@equinor/fusion-framework-module' {
-    interface Modules {
-        event: EventModule;
-    }
+  interface Modules {
+    event: EventModule;
+  }
 }

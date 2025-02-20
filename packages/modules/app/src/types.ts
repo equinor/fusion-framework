@@ -14,38 +14,38 @@ export type { AppConfig } from './AppConfig';
 type Fusion = any;
 
 export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
-    basename?: string;
-    manifest?: AppManifest;
-    config?: AppConfig<TEnv>;
-    props?: TProps;
+  basename?: string;
+  manifest?: AppManifest;
+  config?: AppConfig<TEnv>;
+  props?: TProps;
 };
 
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
 export interface AppSettings {
-    [key: string]: unknown;
+  [key: string]: unknown;
 }
 
 // TODO: remove `report` and `launcher` when legacy apps are removed
 export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
 
 export type CurrentApp<
-    TModules extends Array<AnyModule> = [],
-    TEnv extends ConfigEnvironment = ConfigEnvironment,
+  TModules extends Array<AnyModule> = [],
+  TEnv extends ConfigEnvironment = ConfigEnvironment,
 > = IApp<TEnv, TModules> | null | undefined;
 
 type Nullable<T> = T | null | undefined;
 
 type AppPerson = {
-    id: string;
-    azureUniqueId: string;
-    displayName: string;
-    mail?: Nullable<string>;
-    upn?: Nullable<string>;
-    accountType: string;
-    accountClassification?: Nullable<string>;
-    isExpired?: Nullable<boolean>;
+  id: string;
+  azureUniqueId: string;
+  displayName: string;
+  mail?: Nullable<string>;
+  upn?: Nullable<string>;
+  accountType: string;
+  accountClassification?: Nullable<string>;
+  isExpired?: Nullable<boolean>;
 };
 
 export type AppAdmin = AppPerson;
@@ -53,49 +53,49 @@ export type AppAdmin = AppPerson;
 export type AppOwner = AppPerson;
 
 export type AppBuildManifest = {
-    version: string;
-    entryPoint: string;
-    tags?: Nullable<string[]>;
-    tag?: Nullable<'latest' | 'preview'>;
-    assetPath?: Nullable<string>;
-    configUrl?: Nullable<string>;
-    timestamp?: Nullable<string>;
-    commitSha?: Nullable<string>;
-    githubRepo?: Nullable<string>;
-    projectPage?: Nullable<string>;
-    annotations?: Nullable<Record<string, string>>;
-    allowedExtensions?: Nullable<string[]>;
-    uploadedBy?: Nullable<AppOwner>;
+  version: string;
+  entryPoint: string;
+  tags?: Nullable<string[]>;
+  tag?: Nullable<'latest' | 'preview'>;
+  assetPath?: Nullable<string>;
+  configUrl?: Nullable<string>;
+  timestamp?: Nullable<string>;
+  commitSha?: Nullable<string>;
+  githubRepo?: Nullable<string>;
+  projectPage?: Nullable<string>;
+  annotations?: Nullable<Record<string, string>>;
+  allowedExtensions?: Nullable<string[]>;
+  uploadedBy?: Nullable<AppOwner>;
 };
 
 export interface AppManifest {
-    /** @deprecated will be removed, use appKey */
-    key?: string;
-    appKey: string;
-    /** @deprecated will be removed, use displayName */
-    name?: string;
+  /** @deprecated will be removed, use appKey */
+  key?: string;
+  appKey: string;
+  /** @deprecated will be removed, use displayName */
+  name?: string;
+  displayName: string;
+  description: string;
+  type: AppType;
+  isPinned?: Nullable<boolean>;
+  templateSource?: Nullable<string>;
+  category?: Nullable<{
+    id: string;
+    name: string;
     displayName: string;
-    description: string;
-    type: AppType;
-    isPinned?: Nullable<boolean>;
-    templateSource?: Nullable<string>;
-    category?: Nullable<{
-        id: string;
-        name: string;
-        displayName: string;
-        color: string;
-        defaultIcon: string;
-        sortOrder: number;
-    }>;
-    visualization?: Nullable<{
-        color?: Nullable<string>;
-        icon?: Nullable<string>;
-        sortOrder: number;
-    }>;
-    keywords?: Nullable<string[]>;
-    admins?: Nullable<AppAdmin[]>;
-    owners?: Nullable<AppOwner[]>;
-    build?: Nullable<AppBuildManifest>;
+    color: string;
+    defaultIcon: string;
+    sortOrder: number;
+  }>;
+  visualization?: Nullable<{
+    color?: Nullable<string>;
+    icon?: Nullable<string>;
+    sortOrder: number;
+  }>;
+  keywords?: Nullable<string[]>;
+  admins?: Nullable<AppAdmin[]>;
+  owners?: Nullable<AppOwner[]>;
+  build?: Nullable<AppBuildManifest>;
 }
 
 /**
@@ -103,28 +103,28 @@ export interface AppManifest {
  * @template TModule - ES module type (import return type)
  */
 export type AppBundle<
-    TEnvironment extends ConfigEnvironment = ConfigEnvironment,
-    TModule = unknown,
+  TEnvironment extends ConfigEnvironment = ConfigEnvironment,
+  TModule = unknown,
 > = {
-    manifest: AppManifest;
-    config: AppConfig<TEnvironment>;
-    module: TModule;
+  manifest: AppManifest;
+  config: AppConfig<TEnvironment>;
+  module: TModule;
 };
 
 export type AppModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
-    TModules,
-    [EventModule, HttpModule, MsalModule]
+  TModules,
+  [EventModule, HttpModule, MsalModule]
 >;
 
 export type ComponentRenderArgs<TFusion extends Fusion = Fusion, TEnv = AppEnv> = {
-    fusion: TFusion;
-    env: TEnv;
+  fusion: TFusion;
+  env: TEnv;
 };
 
 export type AppScriptModule = {
-    default: (el: HTMLElement, args: ComponentRenderArgs) => VoidFunction;
-    renderApp: (el: HTMLElement, args: ComponentRenderArgs) => VoidFunction;
+  default: (el: HTMLElement, args: ComponentRenderArgs) => VoidFunction;
+  renderApp: (el: HTMLElement, args: ComponentRenderArgs) => VoidFunction;
 };
 
 export type AppModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
-    ModulesInstance<AppModules<TModules>>;
+  ModulesInstance<AppModules<TModules>>;

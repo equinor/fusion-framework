@@ -1,7 +1,7 @@
-import { defineUserConfig } from "@vuepress/cli";
-import { viteBundler } from '@vuepress/bundler-vite'
-import { getDirname, path } from '@vuepress/utils'
-import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { defineUserConfig } from '@vuepress/cli';
+import { viteBundler } from '@vuepress/bundler-vite';
+import { getDirname, path } from '@vuepress/utils';
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 
 const __dirname = getDirname(import.meta.url);
 
@@ -16,16 +16,14 @@ export default defineUserConfig({
   title: [name, version].join('@'),
   description,
   head: [
-    ["link", { href:"https://cdn.eds.equinor.com/font/equinor-font.css", rel:"stylesheet"}]
+    ['link', { href: 'https://cdn.eds.equinor.com/font/equinor-font.css', rel: 'stylesheet' }],
   ],
   theme,
   bundler: viteBundler({
     viteOptions: {
       optimizeDeps: {
-        include: [
-          'mermaid'
-        ]
-      }
+        include: ['mermaid'],
+      },
     },
     vuePluginOptions: {},
   }),
@@ -34,8 +32,8 @@ export default defineUserConfig({
       components: {
         ModuleBadge: path.resolve(__dirname, './components/ModuleBadge.vue'),
         AgGridVersion: path.resolve(__dirname, './components/AgGridVersion.vue'),
-      }
-    })
+      },
+    }),
   ],
   markdown: {
     code: {
@@ -43,9 +41,10 @@ export default defineUserConfig({
     },
     importCode: {
       handleImportPath: (str) => {
-        return str.replace(/^@cookbooks/, path.resolve(__repoRoot, 'cookbooks')).replace(/^@packages/, path.resolve(__repoRoot, 'packages'));
-      }
-    }
+        return str
+          .replace(/^@cookbooks/, path.resolve(__repoRoot, 'cookbooks'))
+          .replace(/^@packages/, path.resolve(__repoRoot, 'packages'));
+      },
+    },
   },
 });
-

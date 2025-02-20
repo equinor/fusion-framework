@@ -1,12 +1,12 @@
 import z from 'zod';
 
 import {
-    bookmarkContextSchema,
-    bookmarkSchema,
-    bookmarkSourceSystemSchema,
-    bookmarksSchema,
-    bookmarkUserSchema,
-    bookmarkWithDataSchema,
+  bookmarkContextSchema,
+  bookmarkSchema,
+  bookmarkSourceSystemSchema,
+  bookmarksSchema,
+  bookmarkUserSchema,
+  bookmarkWithDataSchema,
 } from './bookmark.schemas';
 
 import { bookmarkConfigSchema } from './bookmark-config.schema';
@@ -39,7 +39,7 @@ export type BookmarkWithoutData = z.infer<typeof bookmarkSchema>;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Bookmark<T extends BookmarkData = any> = z.infer<
-    ReturnType<typeof bookmarkWithDataSchema<T>>
+  ReturnType<typeof bookmarkWithDataSchema<T>>
 >;
 
 /**

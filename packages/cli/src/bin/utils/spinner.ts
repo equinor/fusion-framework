@@ -1,75 +1,76 @@
 import ora, { Options, type Ora } from 'ora';
 
 const parseArgs = (args: string[]): string | undefined =>
-    args.length ? args.join(' ') : undefined;
+  args.length ? args.join(' ') : undefined;
 
 const originalConsole = console;
 
 export class Spinner {
-    #ora: Ora;
+  #ora: Ora;
 
-    get ora(): Ora {
-        return this.#ora;
-    }
+  get ora(): Ora {
+    return this.#ora;
+  }
 
-    set attachConsole(value: boolean) {
-        if (value) {
-            console.log = this.info.bind(this);
-            console.info = this.info.bind(this);
-        } else {
-            console = originalConsole;
-        }
+  set attachConsole(value: boolean) {
+    if (value) {
+      console.log = this.info.bind(this);
+      console.info = this.info.bind(this);
+    } else {
+      // biome-ignore lint/suspicious/noGlobalAssign: duh
+      console = originalConsole;
     }
+  }
 
-    static Global(options?: Options) {
-        _spinner = new Spinner(options);
-        return _spinner;
-    }
+  static Global(options?: Options) {
+    _spinner = new Spinner(options);
+    return _spinner;
+  }
 
-    static Clone(spinner?: Spinner) {
-        const { prefixText } = spinner || _spinner;
-        return new Spinner({ prefixText });
-    }
+  static Clone(spinner?: Spinner) {
+    const { prefixText } = spinner || _spinner;
+    return new Spinner({ prefixText });
+  }
 
-    static get Current(): Spinner {
-        return _spinner;
-    }
+  static get Current(): Spinner {
+    return _spinner;
+  }
 
-    static set Current(spinner: Spinner) {
-        _spinner = spinner;
-    }
+  static set Current(spinner: Spinner) {
+    _spinner = spinner;
+  }
 
-    constructor(options?: Options) {
-        this.#ora = ora(options);
-    }
+  constructor(options?: Options) {
+    this.#ora = ora(options);
+  }
 
-    get prefixText() {
-        return this.#ora.prefixText;
-    }
-    info(...args: string[]) {
-        this.#ora.info(parseArgs(args));
-    }
-    succeed(...args: string[]) {
-        this.#ora.succeed(parseArgs(args));
-    }
-    start(...args: string[]) {
-        this.#ora.start(parseArgs(args));
-    }
-    fail(...args: string[]) {
-        this.#ora.fail(parseArgs(args));
-    }
-    warn(...args: string[]) {
-        this.#ora.warn(parseArgs(args));
-    }
-    clear() {
-        this.#ora.clear();
-    }
-    stop() {
-        this.#ora.stop();
-    }
-    stopAndPersist(...args: Parameters<Ora['stopAndPersist']>) {
-        this.#ora.stopAndPersist(...args);
-    }
+  get prefixText() {
+    return this.#ora.prefixText;
+  }
+  info(...args: string[]) {
+    this.#ora.info(parseArgs(args));
+  }
+  succeed(...args: string[]) {
+    this.#ora.succeed(parseArgs(args));
+  }
+  start(...args: string[]) {
+    this.#ora.start(parseArgs(args));
+  }
+  fail(...args: string[]) {
+    this.#ora.fail(parseArgs(args));
+  }
+  warn(...args: string[]) {
+    this.#ora.warn(parseArgs(args));
+  }
+  clear() {
+    this.#ora.clear();
+  }
+  stop() {
+    this.#ora.stop();
+  }
+  stopAndPersist(...args: Parameters<Ora['stopAndPersist']>) {
+    this.#ora.stopAndPersist(...args);
+  }
 }
 
 let _spinner = new Spinner();

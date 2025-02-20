@@ -7,37 +7,33 @@ import { type ResolvedAppPackage } from '../../lib/app-package.js';
 import { ApiAppConfig } from '../../schemas.js';
 
 export const loadAppConfig = async (
-    env: ConfigExecuterEnv,
-    pkg: ResolvedAppPackage,
-    options?: {
-        file?: string;
-    },
+  env: ConfigExecuterEnv,
+  pkg: ResolvedAppPackage,
+  options?: {
+    file?: string;
+  },
 ) => {
-    const spinner = Spinner.Current;
-    try {
-        spinner.start('create application configuration');
-        spinner.info(
-            `generating config with ${chalk.red.dim(env.command)} command in ${chalk.green.dim(env.mode)} mode`,
-        );
-        const baseAppConfig: ApiAppConfig = {} as ApiAppConfig;
-        const appConfig = await createAppConfig(env, baseAppConfig, { file: options?.file });
-        spinner.succeed();
-        if (appConfig.path) {
-            spinner.info(
-                `generating config from ${formatPath(appConfig.path, { relative: true })}`,
-            );
-        } else {
-            spinner.info(chalk.dim('no local application config applied, using built-in'));
-        }
-        return appConfig;
-    } catch (err) {
-        spinner.fail(
-            `failed to resolve application config ${
-                options?.file ? formatPath(options?.file) : ''
-            }`,
-        );
-        throw err;
+  const spinner = Spinner.Current;
+  try {
+    spinner.start('create application configuration');
+    spinner.info(
+      `generating config with ${chalk.red.dim(env.command)} command in ${chalk.green.dim(env.mode)} mode`,
+    );
+    const baseAppConfig: ApiAppConfig = {} as ApiAppConfig;
+    const appConfig = await createAppConfig(env, baseAppConfig, { file: options?.file });
+    spinner.succeed();
+    if (appConfig.path) {
+      spinner.info(`generating config from ${formatPath(appConfig.path, { relative: true })}`);
+    } else {
+      spinner.info(chalk.dim('no local application config applied, using built-in'));
     }
+    return appConfig;
+  } catch (err) {
+    spinner.fail(
+      `failed to resolve application config ${options?.file ? formatPath(options?.file) : ''}`,
+    );
+    throw err;
+  }
 };
 
 export default loadAppConfig;

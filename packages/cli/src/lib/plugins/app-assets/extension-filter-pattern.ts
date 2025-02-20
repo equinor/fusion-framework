@@ -17,6 +17,6 @@ const trimLeadingDot = (ext: string) => ext.replace(/^\./, '');
  * ```
  */
 export const createExtensionFilterPattern = (exts: string[]) =>
-    new RegExp(`\\.(${exts.map(trimLeadingDot).join('|')})(\\?.*)?$`);
+  new RegExp(`\\.(${exts.map(trimLeadingDot).join('|')})(\\?.*)?$`);
 
 export default createExtensionFilterPattern;

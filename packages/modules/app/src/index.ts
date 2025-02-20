@@ -1,8 +1,8 @@
 export {
-    AppModuleConfig,
-    AppConfigurator,
-    IAppConfigurator,
-    type AppModuleConfig as IAppModuleConfig,
+  AppModuleConfig,
+  AppConfigurator,
+  IAppConfigurator,
+  type AppModuleConfig as IAppModuleConfig,
 } from './AppConfigurator';
 
 export { AppClient, type IAppClient } from './AppClient';

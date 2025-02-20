@@ -16,36 +16,36 @@ import { version } from './version';
  * Concrete implementations of the `Logger` class must implement the `_createMessage` and `createSubLogger` abstract methods.
  */
 export abstract class Logger implements ILogger {
-    public level: LogLevel = defaultLogLevel;
-    public readonly version = version;
+  public level: LogLevel = defaultLogLevel;
+  public readonly version = version;
 
-    // raw log, will emit all messages
-    protected readonly _log$ = new Subject<{ lvl: LogLevel; msg: unknown[] }>();
+  // raw log, will emit all messages
+  protected readonly _log$ = new Subject<{ lvl: LogLevel; msg: unknown[] }>();
 
-    /**
-     * The observable that emits log messages that are at a level greater than the logger's level.
-     */
-    public get log(): Observable<{ lvl: LogLevel; msg: unknown[] }> {
-        return this._log$.pipe(filter((x) => this.level >= x.lvl));
-    }
+  /**
+   * The observable that emits log messages that are at a level greater than the logger's level.
+   */
+  public get log(): Observable<{ lvl: LogLevel; msg: unknown[] }> {
+    return this._log$.pipe(filter((x) => this.level >= x.lvl));
+  }
 
-    public debug(...msg: unknown[]) {
-        this._log$.next({ lvl: LogLevel.Debug, msg: this._createMessage(LogLevel.Debug, ...msg) });
-    }
-    public info(...msg: unknown[]) {
-        this._log$.next({ lvl: LogLevel.Info, msg: this._createMessage(LogLevel.Info, ...msg) });
-    }
-    public warn(...msg: unknown[]) {
-        this._log$.next({
-            lvl: LogLevel.Warning,
-            msg: this._createMessage(LogLevel.Warning, ...msg),
-        });
-    }
-    public error(...msg: unknown[]) {
-        this._log$.next({ lvl: LogLevel.Error, msg: this._createMessage(LogLevel.Error, ...msg) });
-    }
-    public abstract createSubLogger(...args: unknown[]): ILogger;
-    protected abstract _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[];
+  public debug(...msg: unknown[]) {
+    this._log$.next({ lvl: LogLevel.Debug, msg: this._createMessage(LogLevel.Debug, ...msg) });
+  }
+  public info(...msg: unknown[]) {
+    this._log$.next({ lvl: LogLevel.Info, msg: this._createMessage(LogLevel.Info, ...msg) });
+  }
+  public warn(...msg: unknown[]) {
+    this._log$.next({
+      lvl: LogLevel.Warning,
+      msg: this._createMessage(LogLevel.Warning, ...msg),
+    });
+  }
+  public error(...msg: unknown[]) {
+    this._log$.next({ lvl: LogLevel.Error, msg: this._createMessage(LogLevel.Error, ...msg) });
+  }
+  public abstract createSubLogger(...args: unknown[]): ILogger;
+  protected abstract _createMessage(lvl: LogLevel, ...msg: unknown[]): unknown[];
 }
 
 export default Logger;

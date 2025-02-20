@@ -14,11 +14,11 @@ import fallbackSvg from './resources/fallback-photo.svg';
 const fallbackImage = new Blob([fallbackSvg], { type: 'image/svg+xml' });
 
 ReactDOM.createRoot(target).render(
-    <ThemeProvider theme={theme}>
-        <Framework configure={configure} fallback={<EquinorLoader text="Loading framework" />}>
-            <PeopleResolverProvider options={{ fallbackImage }}>
-                <Router />
-            </PeopleResolverProvider>
-        </Framework>
-    </ThemeProvider>,
+  <ThemeProvider theme={theme}>
+    <Framework configure={configure} fallback={<EquinorLoader text="Loading framework" />}>
+      <PeopleResolverProvider options={{ fallbackImage }}>
+        <Router />
+      </PeopleResolverProvider>
+    </Framework>
+  </ThemeProvider>,
 );

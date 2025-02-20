@@ -7,8 +7,8 @@ import { useToken } from './useToken';
  * @returns An object containing the access token, pending state, and error.
  */
 export const useAccessToken = (req: {
-    scopes: string[];
+  scopes: string[];
 }): { token?: string; pending: boolean; error: unknown } => {
-    const { token, error, pending } = useToken(req);
-    return { token: token?.accessToken, pending, error };
+  const { token, error, pending } = useToken(req);
+  return { token: token?.accessToken, pending, error };
 };

@@ -4,9 +4,9 @@ import { IHttpClientConfigurator, HttpClientConfigurator, HttpClientOptions } fr
 import { IHttpClientProvider, HttpClientProvider } from './provider';
 
 import type {
-    Module,
-    ModuleConfigType,
-    IModuleConfigurator,
+  Module,
+  ModuleConfigType,
+  IModuleConfigurator,
 } from '@equinor/fusion-framework-module';
 
 import { MsalModule } from '@equinor/fusion-framework-module-msal';
@@ -29,75 +29,75 @@ export type HttpModule = Module<'http', IHttpClientProvider, IHttpClientConfigur
  * - The list of required modules, which includes the `MsalModule`
  */
 export type HttpMsalModule = Module<
-    'http',
-    IHttpClientProvider<HttpClientMsal>,
-    IHttpClientConfigurator<HttpClientMsal>,
-    [MsalModule]
+  'http',
+  IHttpClientProvider<HttpClientMsal>,
+  IHttpClientConfigurator<HttpClientMsal>,
+  [MsalModule]
 >;
 
 /**
  * HTTP module with MSAL authentication.
  */
 export const module: HttpMsalModule = {
-    name: 'http',
-    /**
-     * Configures the HTTP module with MSAL authentication.
-     *
-     * This function creates a new `HttpClientConfigurator` instance using the `HttpClientMsal` class.
-     * The `HttpClientConfigurator` is responsible for configuring the HTTP client with the necessary options,
-     * such as the base URL, request headers, and other settings.
-     *
-     * @returns A new `HttpClientConfigurator` instance configured for MSAL authentication.
-     */
-    configure: () => new HttpClientConfigurator(HttpClientMsal),
+  name: 'http',
+  /**
+   * Configures the HTTP module with MSAL authentication.
+   *
+   * This function creates a new `HttpClientConfigurator` instance using the `HttpClientMsal` class.
+   * The `HttpClientConfigurator` is responsible for configuring the HTTP client with the necessary options,
+   * such as the base URL, request headers, and other settings.
+   *
+   * @returns A new `HttpClientConfigurator` instance configured for MSAL authentication.
+   */
+  configure: () => new HttpClientConfigurator(HttpClientMsal),
 
-    /**
-     * Initializes the HTTP client provider with MSAL authentication.
-     *
-     * This function is responsible for setting up the default HTTP request handler
-     * to acquire an access token from MSAL and attach it to the request headers
-     * when the request includes scopes.
-     *
-     * @param config - The module configuration.
-     * @param hasModule - A function to check if a module is available.
-     * @param requireInstance - A function to get an instance of a module.
-     * @returns A promise that resolves to the HTTP client provider.
-     */
-    initialize: async ({
-        config,
-        hasModule,
-        requireInstance,
-    }): Promise<HttpClientProvider<HttpClientMsal>> => {
-        const httpProvider = new HttpClientProvider(config);
-        if (hasModule('auth')) {
-            const authProvider = await requireInstance('auth');
-            httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
-                const { scopes = [] } = request;
-                if (scopes.length) {
-                    /** TODO should be try catch, check caller for handling */
-                    const token = await authProvider.acquireToken({
-                        scopes,
-                    });
-                    if (token) {
-                        const headers = new Headers(request.headers);
-                        headers.set('Authorization', `Bearer ${token.accessToken}`);
-                        return { ...request, headers };
-                    }
-                }
-            });
+  /**
+   * Initializes the HTTP client provider with MSAL authentication.
+   *
+   * This function is responsible for setting up the default HTTP request handler
+   * to acquire an access token from MSAL and attach it to the request headers
+   * when the request includes scopes.
+   *
+   * @param config - The module configuration.
+   * @param hasModule - A function to check if a module is available.
+   * @param requireInstance - A function to get an instance of a module.
+   * @returns A promise that resolves to the HTTP client provider.
+   */
+  initialize: async ({
+    config,
+    hasModule,
+    requireInstance,
+  }): Promise<HttpClientProvider<HttpClientMsal>> => {
+    const httpProvider = new HttpClientProvider(config);
+    if (hasModule('auth')) {
+      const authProvider = await requireInstance('auth');
+      httpProvider.defaultHttpRequestHandler.set('MSAL', async (request) => {
+        const { scopes = [] } = request;
+        if (scopes.length) {
+          /** TODO should be try catch, check caller for handling */
+          const token = await authProvider.acquireToken({
+            scopes,
+          });
+          if (token) {
+            const headers = new Headers(request.headers);
+            headers.set('Authorization', `Bearer ${token.accessToken}`);
+            return { ...request, headers };
+          }
         }
-        return httpProvider;
-    },
+      });
+    }
+    return httpProvider;
+  },
 };
 
 /**
  * Configures the HTTP module with MSAL authentication.
  */
 export const configureHttp = <TRef = unknown>(
-    configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void,
+  configure: (config: ModuleConfigType<HttpMsalModule>, ref?: TRef) => void,
 ): IModuleConfigurator<HttpMsalModule, TRef> => ({
-    module,
-    configure,
+  module,
+  configure,
 });
 
 /**
@@ -112,22 +112,22 @@ export const configureHttp = <TRef = unknown>(
  * @returns A module configurator that can be used to configure the HTTP module.
  */
 export const configureHttpClient = <TRef = unknown>(
-    name: string,
-    args: HttpClientOptions<HttpClientMsal>,
+  name: string,
+  args: HttpClientOptions<HttpClientMsal>,
 ): IModuleConfigurator<HttpMsalModule, TRef> => ({
-    module,
-    configure: (config: ModuleConfigType<HttpMsalModule>) => {
-        config.configureClient(name, args);
-    },
+  module,
+  configure: (config: ModuleConfigType<HttpMsalModule>) => {
+    config.configureClient(name, args);
+  },
 });
 
 /**
  * Declares a module named '@equinor/fusion-framework-module' that contains an interface named 'Modules' with a property 'http' of type 'HttpMsalModule'.
  */
 declare module '@equinor/fusion-framework-module' {
-    interface Modules {
-        http: HttpMsalModule;
-    }
+  interface Modules {
+    http: HttpMsalModule;
+  }
 }
 
 export default module;

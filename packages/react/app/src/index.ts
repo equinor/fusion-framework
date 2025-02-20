@@ -1,11 +1,11 @@
 export type {
-    AppConfig,
-    AppEnv,
-    AppModuleInitiator,
-    AppModules,
-    AppModulesInstance,
-    AppRenderFn,
-    IAppConfigurator,
+  AppConfig,
+  AppEnv,
+  AppModuleInitiator,
+  AppModules,
+  AppModulesInstance,
+  AppRenderFn,
+  IAppConfigurator,
 } from '@equinor/fusion-framework-app';
 
 export { AppManifest } from '@equinor/fusion-framework-module-app';

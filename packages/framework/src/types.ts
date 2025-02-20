@@ -12,19 +12,19 @@ import { ServicesModule } from '@equinor/fusion-framework-module-services';
  * interface of the modules provided by Fusion Framework
  */
 export type FusionModules<TModules extends Array<AnyModule> | unknown = unknown> = CombinedModules<
-    TModules,
-    [ContextModule, EventModule, HttpModule, MsalModule, ServicesModule, ServiceDiscoveryModule]
+  TModules,
+  [ContextModule, EventModule, HttpModule, MsalModule, ServicesModule, ServiceDiscoveryModule]
 >;
 
 /**
  * Blueprint of instance of framework modules
  */
 export type FusionModulesInstance<TModules extends Array<AnyModule> | unknown = unknown> =
-    ModulesInstance<FusionModules<TModules>>;
+  ModulesInstance<FusionModules<TModules>>;
 
 export interface Fusion<TModules extends Array<AnyModule> | unknown = unknown> {
-    /**
-     * Configured services for Fusion
-     */
-    modules: FusionModulesInstance<TModules>;
+  /**
+   * Configured services for Fusion
+   */
+  modules: FusionModulesInstance<TModules>;
 }

@@ -18,22 +18,22 @@ const assetsContentMap = new Map<string, Buffer>();
  * - If the file does not exist, it logs a warning and returns null.
  */
 export const readAssetContentSync = (id: string): Buffer | null => {
-    // check if the asset is already loaded
-    if (assetsContentMap.has(id)) {
-        return assetsContentMap.get(id)!;
-    }
+  // check if the asset is already loaded
+  if (assetsContentMap.has(id)) {
+    return assetsContentMap.get(id)!;
+  }
 
-    // extract the filename without query
-    const [pureId] = id.split('?');
+  // extract the filename without query
+  const [pureId] = id.split('?');
 
-    // if the file exists, read, cache and return content
-    if (existsSync(pureId)) {
-        const content = readFileSync(pureId);
-        assetsContentMap.set(id, content);
-        return content;
-    }
+  // if the file exists, read, cache and return content
+  if (existsSync(pureId)) {
+    const content = readFileSync(pureId);
+    assetsContentMap.set(id, content);
+    return content;
+  }
 
-    return null;
+  return null;
 };
 
 export default readAssetContentSync;

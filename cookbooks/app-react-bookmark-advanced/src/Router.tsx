@@ -6,7 +6,7 @@ import routes from './Routes';
 import { useState } from 'react';
 
 export default function () {
-    const module = useAppModule<NavigationModule>('navigation');
-    const [router] = useState(() => module.createRouter(routes));
-    return <RouterProvider router={router} fallbackElement={<p>:(</p>} />;
+  const module = useAppModule<NavigationModule>('navigation');
+  const [router] = useState(() => module.createRouter(routes));
+  return <RouterProvider router={router} fallbackElement={<p>:(</p>} />;
 }

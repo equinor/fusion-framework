@@ -4,8 +4,8 @@ import { map } from 'rxjs';
 import type { IApp } from '@equinor/fusion-framework-module-app';
 
 export type AppSettingsStatusHooks = {
-    onLoading?: (isLoading: boolean) => void;
-    onUpdating?: (isUpdating: boolean) => void;
+  onLoading?: (isLoading: boolean) => void;
+  onUpdating?: (isUpdating: boolean) => void;
 };
 
 /**
@@ -26,23 +26,23 @@ export type AppSettingsStatusHooks = {
  * useAppSettingsStatus(app, hooks);
  */
 export const useAppSettingsStatus = (app: IApp | null, hooks?: AppSettingsStatusHooks) => {
-    const { onLoading, onUpdating } = hooks ?? {};
+  const { onLoading, onUpdating } = hooks ?? {};
 
-    useLayoutEffect(() => {
-        if (app && onLoading) {
-            const subscription = app.status$
-                .pipe(map((status) => status.has('fetch_settings')))
-                .subscribe(onLoading);
-            return () => subscription.unsubscribe();
-        }
-    }, [app, onLoading]);
+  useLayoutEffect(() => {
+    if (app && onLoading) {
+      const subscription = app.status$
+        .pipe(map((status) => status.has('fetch_settings')))
+        .subscribe(onLoading);
+      return () => subscription.unsubscribe();
+    }
+  }, [app, onLoading]);
 
-    useLayoutEffect(() => {
-        if (app && onUpdating) {
-            const subscription = app.status$
-                .pipe(map((status) => status.has('update_settings')))
-                .subscribe(onUpdating);
-            return () => subscription.unsubscribe();
-        }
-    }, [app, onUpdating]);
+  useLayoutEffect(() => {
+    if (app && onUpdating) {
+      const subscription = app.status$
+        .pipe(map((status) => status.has('update_settings')))
+        .subscribe(onUpdating);
+      return () => subscription.unsubscribe();
+    }
+  }, [app, onUpdating]);
 };

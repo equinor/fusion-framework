@@ -8,14 +8,14 @@ import { WidgetModuleConfigBuilderCallback } from './WidgetModuleConfigurator';
  * @param configurator - configuration object
  */
 export const enableWidgetModule = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configurator: IModulesConfigurator<any, any>,
-    builder?: WidgetModuleConfigBuilderCallback,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  configurator: IModulesConfigurator<any, any>,
+  builder?: WidgetModuleConfigBuilderCallback,
 ): void => {
-    configurator.addConfig({
-        module,
-        configure: (widgetConfigurator) => {
-            builder && builder(widgetConfigurator);
-        },
-    });
+  configurator.addConfig({
+    module,
+    configure: (widgetConfigurator) => {
+      builder && builder(widgetConfigurator);
+    },
+  });
 };

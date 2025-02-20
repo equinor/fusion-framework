@@ -5,28 +5,28 @@
  * @returns Response object as json.
  */
 export const tagAppBundle = async (endpoint: string, version: string) => {
-    const requestTag = await fetch(endpoint, {
-        method: 'PUT',
-        body: JSON.stringify({ version }),
-        headers: {
-            Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
-            'Content-Type': 'application/json',
-        },
-    });
+  const requestTag = await fetch(endpoint, {
+    method: 'PUT',
+    body: JSON.stringify({ version }),
+    headers: {
+      Authorization: `Bearer ${process.env.FUSION_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+  });
 
-    if (requestTag.status === 404) {
-        throw new Error(
-            `Failed to tag bundle, make sure version ${version} exist. HTTP status ${requestTag.status} - ${requestTag.statusText}`,
-        );
-    }
+  if (requestTag.status === 404) {
+    throw new Error(
+      `Failed to tag bundle, make sure version ${version} exist. HTTP status ${requestTag.status} - ${requestTag.statusText}`,
+    );
+  }
 
-    if (requestTag.status !== 200) {
-        const response = await requestTag.json();
-        console.error(response);
-        throw new Error(
-            `Failed to tag bundle. HTTP status ${requestTag.status}, ${requestTag.statusText}`,
-        );
-    }
+  if (requestTag.status !== 200) {
+    const response = await requestTag.json();
+    console.error(response);
+    throw new Error(
+      `Failed to tag bundle. HTTP status ${requestTag.status}, ${requestTag.statusText}`,
+    );
+  }
 
-    return requestTag.json();
+  return requestTag.json();
 };

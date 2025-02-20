@@ -1,6 +1,6 @@
 import {
-    useBookmark as _useBookmark,
-    type useBookmarkResult,
+  useBookmark as _useBookmark,
+  type useBookmarkResult,
 } from '@equinor/fusion-framework-react-module-bookmark';
 
 /**

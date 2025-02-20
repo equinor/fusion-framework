@@ -7,8 +7,8 @@ export * from './types';
 export { ServiceDiscoveryConfigurator } from './configurator';
 export { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
 export {
-    default,
-    ServiceDiscoveryModule,
-    configureServiceDiscovery,
-    enableServiceDiscovery,
+  default,
+  ServiceDiscoveryModule,
+  configureServiceDiscovery,
+  enableServiceDiscovery,
 } from './module';

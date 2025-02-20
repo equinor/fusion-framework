@@ -3,17 +3,17 @@ import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import type {
-    WidgetManifest,
-    WidgetModulesInstance,
-    WidgetRenderArgs,
+  WidgetManifest,
+  WidgetModulesInstance,
+  WidgetRenderArgs,
 } from '@equinor/fusion-framework-module-widget';
 
 import type { IWidgetConfigurator } from './WidgetConfigurator';
 
 export type {
-    WidgetManifest,
-    WidgetModules,
-    WidgetModulesInstance,
+  WidgetManifest,
+  WidgetModules,
+  WidgetModulesInstance,
 } from '@equinor/fusion-framework-module-widget';
 
 /**
@@ -24,10 +24,10 @@ export type {
  * @template TProps [__not in use__] properties for application component
  */
 export type WidgetEnv<TProps = unknown> = {
-    manifest: WidgetManifest;
-    /** missing backend feature */
-    config?: null;
-    props?: TProps;
+  manifest: WidgetManifest;
+  /** missing backend feature */
+  config?: null;
+  props?: TProps;
 };
 
 /**
@@ -38,12 +38,12 @@ export type WidgetEnv<TProps = unknown> = {
  * @template TEnv environment object for configuring modules
  */
 export type WidgetModuleInitiator<
-    TModules extends Array<AnyModule> | unknown = unknown,
-    TRef extends Fusion = Fusion,
-    TEnv = WidgetEnv,
+  TModules extends Array<AnyModule> | unknown = unknown,
+  TRef extends Fusion = Fusion,
+  TEnv = WidgetEnv,
 > = (
-    configurator: IWidgetConfigurator<TModules, TRef['modules']>,
-    args: WidgetRenderArgs<TRef, TEnv>,
+  configurator: IWidgetConfigurator<TModules, TRef['modules']>,
+  args: WidgetRenderArgs<TRef, TEnv>,
 ) => void | Promise<void>;
 
 /**
@@ -54,9 +54,9 @@ export type WidgetModuleInitiator<
  * @template TEnv environment object for configuring modules
  */
 export type WidgetModuleInit<
-    TModules extends Array<AnyModule> | unknown,
-    TRef extends Fusion = Fusion,
-    TEnv = WidgetEnv,
+  TModules extends Array<AnyModule> | unknown,
+  TRef extends Fusion = Fusion,
+  TEnv = WidgetEnv,
 > = (
-    cb: WidgetModuleInitiator<TModules, TRef, TEnv>,
+  cb: WidgetModuleInitiator<TModules, TRef, TEnv>,
 ) => (args: { fusion: TRef; env: TEnv }) => Promise<WidgetModulesInstance<TModules>>;

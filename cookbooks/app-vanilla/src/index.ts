@@ -8,27 +8,27 @@ import { configureModules, type AppRenderFn } from '@equinor/fusion-framework-ap
  * @param env - The environment object that contains details about the render environment.
  */
 const init = configureModules((configurator, env) => {
-    console.log('configuring application', env);
+  console.log('configuring application', env);
 
-    /**
-     * Registers a callback to be called once the application configuration has been created.
-     * This allows for inspection or modification of the configuration before the application is initialized.
-     *
-     * @param config - The created application configuration object.
-     */
-    configurator.onConfigured((config) => {
-        console.log('application config created', config);
-    });
+  /**
+   * Registers a callback to be called once the application configuration has been created.
+   * This allows for inspection or modification of the configuration before the application is initialized.
+   *
+   * @param config - The created application configuration object.
+   */
+  configurator.onConfigured((config) => {
+    console.log('application config created', config);
+  });
 
-    /**
-     * Registers a callback to be called once the application modules have been initialized.
-     * This is useful for running any post-initialization logic or to access the initialized modules.
-     *
-     * @param instance - The instance object containing all initialized modules.
-     */
-    configurator.onInitialized((instance) => {
-        console.log('application config initialized', instance);
-    });
+  /**
+   * Registers a callback to be called once the application modules have been initialized.
+   * This is useful for running any post-initialization logic or to access the initialized modules.
+   *
+   * @param instance - The instance object containing all initialized modules.
+   */
+  configurator.onInitialized((instance) => {
+    console.log('application config initialized', instance);
+  });
 });
 
 /**
@@ -38,17 +38,17 @@ const init = configureModules((configurator, env) => {
  * @param args - Initialization arguments for the application modules.
  */
 export const renderApp: AppRenderFn = (el, args) => {
-    const myApp = document.createElement('pre');
-    init(args)
-        .then((modules) => {
-            // Display the default account information from the auth module
-            myApp.innerText = JSON.stringify(modules.auth.defaultAccount, null, 2);
-        })
-        .catch((error) => {
-            // Display any errors that occurred during initialization
-            myApp.innerText = JSON.stringify(error, null, 2);
-        });
-    // Indicate that the application is loading until the modules are initialized
-    myApp.innerText = 'loading...';
-    el.appendChild(myApp);
+  const myApp = document.createElement('pre');
+  init(args)
+    .then((modules) => {
+      // Display the default account information from the auth module
+      myApp.innerText = JSON.stringify(modules.auth.defaultAccount, null, 2);
+    })
+    .catch((error) => {
+      // Display any errors that occurred during initialization
+      myApp.innerText = JSON.stringify(error, null, 2);
+    });
+  // Indicate that the application is loading until the modules are initialized
+  myApp.innerText = 'loading...';
+  el.appendChild(myApp);
 };

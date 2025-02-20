@@ -8,12 +8,12 @@ import { useFramework } from '../useFramework';
  * @returns framework AppModule
  */
 export const useAppProvider = (): FusionModulesInstance<[AppModule]>['app'] => {
-    const provider = useFramework<[AppModule]>().modules.app;
-    if (!provider) {
-        throw Error('Current framework does not have AppModule configured');
-    }
+  const provider = useFramework<[AppModule]>().modules.app;
+  if (!provider) {
+    throw Error('Current framework does not have AppModule configured');
+  }
 
-    return provider;
+  return provider;
 };
 
 export default useAppProvider;

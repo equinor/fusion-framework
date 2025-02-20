@@ -8,16 +8,16 @@ import dns from 'dns';
 dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({
-    plugins: [react(), viteTsconfigPaths()],
-    root: fileURLToPath(new URL('./src/bin/dev-portal', import.meta.url)),
-    build: {
-        outDir: fileURLToPath(new URL('./dist/bin/public', import.meta.url)),
-        emptyOutDir: true,
-        // TODO: keep for debug purposes
-        // minify: false,
-        // terserOptions: {
-        //     mangle: false,
-        //     compress: false,
-        // },
-    },
+  plugins: [react(), viteTsconfigPaths()],
+  root: fileURLToPath(new URL('./src/bin/dev-portal', import.meta.url)),
+  build: {
+    outDir: fileURLToPath(new URL('./dist/bin/public', import.meta.url)),
+    emptyOutDir: true,
+    // TODO: keep for debug purposes
+    // minify: false,
+    // terserOptions: {
+    //     mangle: false,
+    //     compress: false,
+    // },
+  },
 });

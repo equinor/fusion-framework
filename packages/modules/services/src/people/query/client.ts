@@ -12,22 +12,24 @@ import type { ApiResponse, ApiResult, ApiRequestArgs, SupportedApiVersion } from
  * @param method - client method to call
  */
 export const client =
-    <
-        TVersion extends SupportedApiVersion,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
-        TArgs extends ApiRequestArgs<TVersion> = ApiRequestArgs<TVersion>,
-    >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <T = ApiResponse<TVersion>>(
-        args: TArgs,
-        init?: ClientRequestInit<TClient, T>,
-    ): ApiResult<TVersion, TMethod, T> =>
-        client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as ApiResult<TVersion, TMethod, T>;
+  <
+    TVersion extends SupportedApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient,
+    TArgs extends ApiRequestArgs<TVersion> = ApiRequestArgs<TVersion>,
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod,
+  ) =>
+  <T = ApiResponse<TVersion>>(
+    args: TArgs,
+    init?: ClientRequestInit<TClient, T>,
+  ): ApiResult<TVersion, TMethod, T> =>
+    client[method](...generateParameters<T, TVersion, TClient>(version, args, init)) as ApiResult<
+      TVersion,
+      TMethod,
+      T
+    >;
 
 export default client;

@@ -1,12 +1,12 @@
 export { FrameworkEvent } from './event';
 export type {
-    IFrameworkEvent,
-    FrameworkEventDetail,
-    FrameworkEventInit,
-    FrameworkEventSource,
-    FrameworkEventMap,
-    FrameworkEventHandler,
-    FrameworkEventInitType,
+  IFrameworkEvent,
+  FrameworkEventDetail,
+  FrameworkEventInit,
+  FrameworkEventSource,
+  FrameworkEventMap,
+  FrameworkEventHandler,
+  FrameworkEventInitType,
 } from './event';
 
 export { IEventModuleConfigurator } from './configurator';

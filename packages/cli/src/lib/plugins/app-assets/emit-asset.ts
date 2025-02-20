@@ -19,46 +19,46 @@ type LoaderContext = Parameters<typeof interpolateName>[0];
  * @returns The path of the emitted asset relative to the assets directory, or null if the asset content could not be read.
  */
 export const emitAssetSync = (
-    context: PluginContext,
-    id: string,
-    options: {
-        name?: string;
-        outDir?: string;
-        assetsDir?: string;
-    } = {},
+  context: PluginContext,
+  id: string,
+  options: {
+    name?: string;
+    outDir?: string;
+    assetsDir?: string;
+  } = {},
 ): string | null => {
-    const { outDir = 'dist', assetsDir = 'assets', name = '[name].[ext]' } = options;
-    const [originalFileName, resourceQuery] = id.split('?');
+  const { outDir = 'dist', assetsDir = 'assets', name = '[name].[ext]' } = options;
+  const [originalFileName, resourceQuery] = id.split('?');
 
-    // read asset content, early return if not found
-    const content = readAssetContentSync(id);
-    if (!content || content.byteLength === 0) {
-        throw new Error(`Could not read asset content for ${id}`);
-    }
+  // read asset content, early return if not found
+  const content = readAssetContentSync(id);
+  if (!content || content.byteLength === 0) {
+    throw new Error(`Could not read asset content for ${id}`);
+  }
 
-    // generate asset file name
-    const url = interpolateName(
-        {
-            resourcePath: originalFileName,
-            resourceQuery,
-        } as LoaderContext,
-        name,
-        { content },
-    );
+  // generate asset file name
+  const url = interpolateName(
+    {
+      resourcePath: originalFileName,
+      resourceQuery,
+    } as LoaderContext,
+    name,
+    { content },
+  );
 
-    const assetPath = path.posix.join(assetsDir, url);
-    const fileName = assetPath.replace(`?${resourceQuery}`, '');
-    const fullName = path.join(path.isAbsolute(outDir) ? process.cwd() : '', outDir, assetPath);
+  const assetPath = path.posix.join(assetsDir, url);
+  const fileName = assetPath.replace(`?${resourceQuery}`, '');
+  const fullName = path.join(path.isAbsolute(outDir) ? process.cwd() : '', outDir, assetPath);
 
-    // write asset to file
-    context.emitFile({
-        fileName,
-        name: fullName,
-        type: 'asset',
-        source: content,
-    });
+  // write asset to file
+  context.emitFile({
+    fileName,
+    name: fullName,
+    type: 'asset',
+    source: content,
+  });
 
-    return assetPath;
+  return assetPath;
 };
 
 export default emitAssetSync;

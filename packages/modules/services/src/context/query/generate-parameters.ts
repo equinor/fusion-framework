@@ -8,16 +8,16 @@ import type { QueryContextArgs, ApiClientArguments } from './types';
 
 /** Function for generating parameter for querying context service  */
 export const generateParameters = <
-    TResult,
-    TVersion extends string = keyof typeof ApiVersion,
-    TClient extends IHttpClient = IHttpClient,
+  TResult,
+  TVersion extends string = keyof typeof ApiVersion,
+  TClient extends IHttpClient = IHttpClient,
 >(
-    version: TVersion,
-    args: QueryContextArgs<TVersion>,
-    init?: ClientRequestInit<TClient, TResult>,
+  version: TVersion,
+  args: QueryContextArgs<TVersion>,
+  init?: ClientRequestInit<TClient, TResult>,
 ): ApiClientArguments<TClient, TResult> => {
-    const path = generateEndpoint(version, args);
-    return [path, init];
+  const path = generateEndpoint(version, args);
+  return [path, init];
 };
 
 export default generateParameters;

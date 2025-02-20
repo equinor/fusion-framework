@@ -5,9 +5,9 @@ import { ApiVersion } from '../../static';
 import { generateParameters } from './generate-parameters';
 
 import type {
-    GetNotificationsArgs,
-    GetNotificationsResult,
-    GetNotificationsResponse,
+  GetNotificationsArgs,
+  GetNotificationsResult,
+  GetNotificationsResponse,
 } from './types';
 
 /**
@@ -17,21 +17,21 @@ import type {
  * @param method - client method to call
  */
 export const getNotifications =
-    <
-        TVersion extends string = keyof typeof ApiVersion,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
-    >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <T = GetNotificationsResponse<TVersion>>(
-        args: GetNotificationsArgs<TVersion>,
-        init?: ClientRequestInit<TClient, T>,
-    ): GetNotificationsResult<TVersion, TMethod, T> =>
-        client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as GetNotificationsResult<TVersion, TMethod, T>;
+  <
+    TVersion extends string = keyof typeof ApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient,
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod,
+  ) =>
+  <T = GetNotificationsResponse<TVersion>>(
+    args: GetNotificationsArgs<TVersion>,
+    init?: ClientRequestInit<TClient, T>,
+  ): GetNotificationsResult<TVersion, TMethod, T> =>
+    client[method](
+      ...generateParameters<T, TVersion, TClient>(version, args, init),
+    ) as GetNotificationsResult<TVersion, TMethod, T>;
 
 export default getNotifications;
