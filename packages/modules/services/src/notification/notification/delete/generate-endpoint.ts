@@ -8,12 +8,11 @@ import type { DeleteNotificationArgs } from './types';
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
   version: TVersion,
   args: DeleteNotificationArgs<TVersion>,
-) => {
+): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);
-    case ApiVersion.v1:
     default: {
       const { id } = args as { id: string };
       const params = new URLSearchParams();
