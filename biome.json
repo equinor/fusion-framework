@@ -28,8 +28,7 @@
         "useOptionalChain": "warn"
       },
       "performance": {
-        "noAccumulatingSpread": "warn",
-        "noDelete": "warn"
+        "noAccumulatingSpread": "warn"
       },
       "style": {
         "noParameterAssign": "warn",
