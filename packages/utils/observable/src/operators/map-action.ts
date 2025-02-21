@@ -1,6 +1,6 @@
-import { Observable, map, OperatorFunction } from 'rxjs';
+import { type Observable, map, type OperatorFunction } from 'rxjs';
 import { filterAction } from './filter-action';
-import { Action, ActionType, ExtractAction } from '../types';
+import type { Action, ActionType, ExtractAction } from '../types';
 
 export const mapAction =
   <TAction extends Action, TType extends ActionType<TAction>, TResult>(

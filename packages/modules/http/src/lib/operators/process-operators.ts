@@ -1,7 +1,7 @@
 import { from, of } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { last, mergeScan } from 'rxjs/operators';
-import { IProcessOperators, ProcessOperator } from './types';
+import type { IProcessOperators, ProcessOperator } from './types';
 
 /**
  * ProcessOperators class manages a collection of process operators

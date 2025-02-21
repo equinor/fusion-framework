@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLoadWidget } from '../hooks/use-portal-widgets';
-import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework';
+import type { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
+import type { Fusion } from '@equinor/fusion-framework';
 
 interface WidgetComponentProps<TProps extends WidgetProps> {
   readonly props?: TProps;

@@ -9,8 +9,8 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-import { Actions, actions } from './actions';
-import { WidgetStateInitial, WidgetState } from '../types';
+import { type Actions, actions } from './actions';
+import type { WidgetStateInitial, WidgetState } from '../types';
 
 export const createReducer = (value: WidgetStateInitial) =>
   makeReducer<WidgetState, Actions>({ ...value, status: new Set() } as WidgetState, (builder) =>

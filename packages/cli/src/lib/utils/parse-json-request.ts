@@ -1,4 +1,4 @@
-import { IncomingMessage } from 'node:http';
+import type { IncomingMessage } from 'node:http';
 
 /**
  * Extracts and parses JSON data from an incoming HTTP request.

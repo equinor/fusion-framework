@@ -1,6 +1,6 @@
 import { useFramework } from '../useFramework';
 
-import { SignalRModule, useProviderTopic } from '@equinor/fusion-framework-react-module-signalr';
+import { type SignalRModule, useProviderTopic } from '@equinor/fusion-framework-react-module-signalr';
 
 /**
  * hook for subscribing to a topic of a SignalR hub

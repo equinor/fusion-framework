@@ -1,5 +1,5 @@
-import { BookmarkFlowError } from './BookmarkProvider.error';
-import { BookmarkState } from './BookmarkProvider.store';
+import type { BookmarkFlowError } from './BookmarkProvider.error';
+import type { BookmarkState } from './BookmarkProvider.store';
 import type { Bookmark, BookmarkData } from './types';
 
 /**

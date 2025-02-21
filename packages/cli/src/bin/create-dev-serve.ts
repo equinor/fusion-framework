@@ -30,7 +30,7 @@ import { chalk, formatPath } from './utils/format.js';
 import { loadAppManifest } from './utils/load-manifest.js';
 import { proxyRequestLogger } from './utils/proxy-request-logger.js';
 
-import { type AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 export const createDevServer = async (options: {
   portal: string;

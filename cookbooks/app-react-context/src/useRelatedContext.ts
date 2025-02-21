@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { EMPTY } from 'rxjs';
 
 import {
-  ContextItem,
-  ContextModule,
+  type ContextItem,
+  type ContextModule,
   useModuleCurrentContext,
 } from '@equinor/fusion-framework-react-module-context';
 import { useAppModule } from '@equinor/fusion-framework-react-app';

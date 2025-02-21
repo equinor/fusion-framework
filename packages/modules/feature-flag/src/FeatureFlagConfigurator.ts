@@ -1,12 +1,12 @@
-import { Observable, forkJoin, from } from 'rxjs';
+import { type Observable, forkJoin, from } from 'rxjs';
 import { concatMap, filter, last, map, mergeMap, reduce, share } from 'rxjs/operators';
-import { BaseConfigBuilder, ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { BaseConfigBuilder, type ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import type {
   FeatureFlagConfig,
   FeatureFlagPlugin,
   FeatureFlagPluginConfigCallback,
 } from './types.js';
-import { IFeatureFlag } from './FeatureFlag.js';
+import type { IFeatureFlag } from './FeatureFlag.js';
 import { createLocalStoragePlugin, createUrlPlugin } from './plugins/index.js';
 
 // TODO allow configurator to have array

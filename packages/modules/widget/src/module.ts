@@ -1,8 +1,8 @@
-import { Module } from '@equinor/fusion-framework-module';
-import { ModuleDeps } from './types';
+import type { Module } from '@equinor/fusion-framework-module';
+import type { ModuleDeps } from './types';
 
 import { WidgetModuleConfigurator } from './WidgetModuleConfigurator';
-import { IWidgetModuleProvider, WidgetModuleProvider } from './WidgetModuleProvider';
+import { type IWidgetModuleProvider, WidgetModuleProvider } from './WidgetModuleProvider';
 
 export const moduleKey = 'widget';
 

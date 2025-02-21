@@ -1,9 +1,9 @@
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, type Observable } from 'rxjs';
 
-import { type ModuleType } from '@equinor/fusion-framework-module';
+import type { ModuleType } from '@equinor/fusion-framework-module';
 
-import { type ContextModule } from '../module';
-import { type ContextItem } from '../types';
+import type { ContextModule } from '../module';
+import type { ContextItem } from '../types';
 
 /**
  * Arguments for resolving a context from a path.
@@ -76,9 +76,7 @@ const validateContextId = (contextId: string): boolean => !!contextId.match(matc
  * @param context The context module.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
  */
-export interface resolveContextFromPath {
-  (context: ModuleType<ContextModule>): (path: string) => Observable<ContextItem>;
-}
+export function resolveContextFromPath(context: ModuleType<ContextModule>): (path: string) => Observable<ContextItem>;
 
 /**
  *
@@ -99,12 +97,10 @@ export interface resolveContextFromPath {
  * @param args The arguments for resolving the path.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
  */
-export interface resolveContextFromPath {
-  (
+export function resolveContextFromPath(
     context: ModuleType<ContextModule>,
-    args: ContextPathResolveArgs,
-  ): (path: string) => Observable<ContextItem>;
-}
+    args?: ContextPathResolveArgs
+): (path: string) => Observable<ContextItem>;
 
 export function resolveContextFromPath(
   context: ModuleType<ContextModule>,

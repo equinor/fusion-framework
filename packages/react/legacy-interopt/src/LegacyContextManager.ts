@@ -9,9 +9,9 @@ import {
 
 import type { ContextCache } from '@equinor/fusion/lib/core/ContextManager';
 
-import { Fusion } from '@equinor/fusion-framework-react';
+import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { type ContextItem } from '@equinor/fusion-framework-module-context';
+import type { ContextItem } from '@equinor/fusion-framework-module-context';
 
 export class LegacyContextManager extends ReliableDictionary<ContextCache> {
   #framework: Fusion;

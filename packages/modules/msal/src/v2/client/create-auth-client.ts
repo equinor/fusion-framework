@@ -1,4 +1,4 @@
-import { Configuration, IPublicClientApplication } from '@azure/msal-browser';
+import type { Configuration, IPublicClientApplication } from '@azure/msal-browser';
 import { AuthClient } from './client';
 import { normalizeUri } from './util/url';
 

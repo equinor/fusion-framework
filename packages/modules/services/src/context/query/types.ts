@@ -1,6 +1,6 @@
-import { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
-import { ApiVersion, ApiContextEntity, ClientMethod } from '..';
+import { ApiVersion, type ApiContextEntity, type ClientMethod } from '..';
 
 export { ApiClientArguments, ClientMethod } from '..';
 

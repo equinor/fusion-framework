@@ -1,7 +1,7 @@
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
 import { type Theme, type Module, createTheme } from 'ag-grid-community';
-import { type AgGridConfig, type IAgGridConfigurator } from './AgGridConfigurator.interface';
+import type { AgGridConfig, IAgGridConfigurator } from './AgGridConfigurator.interface';
 
 export class AgGridConfigurator
   extends BaseConfigBuilder<AgGridConfig>

@@ -4,7 +4,7 @@ import { type PropsWithChildren, createContext, useCallback, useContext, useStat
 import { CreateBookmarkModal } from './create-bookmark';
 import { EditBookmarkModal } from './edit-bookmark';
 import { ImportBookmarkModal } from './import-bookmark';
-import { type IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import type { IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 
 type BookmarkApp = {
   appKey: string;

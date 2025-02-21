@@ -2,9 +2,9 @@ import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
 import { createAppConfig } from '../../lib/app-config.js';
-import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
-import { type ResolvedAppPackage } from '../../lib/app-package.js';
-import { ApiAppConfig } from '../../schemas.js';
+import type { ConfigExecuterEnv } from '../../lib/utils/config.js';
+import type { ResolvedAppPackage } from '../../lib/app-package.js';
+import type { ApiAppConfig } from '../../schemas.js';
 
 export const loadAppConfig = async (
   env: ConfigExecuterEnv,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right } from '@equinor/eds-icons';
 

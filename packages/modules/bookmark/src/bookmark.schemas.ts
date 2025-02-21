@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { BookmarkData } from './types';
+import type { BookmarkData } from './types';
 
 export const bookmarkUserSchema = z.object({
   id: z.string(),

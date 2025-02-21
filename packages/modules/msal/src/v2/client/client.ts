@@ -1,15 +1,15 @@
 import {
   PublicClientApplication,
-  Configuration,
-  AuthenticationResult,
-  SsoSilentRequest,
-  PopupRequest,
-  RedirectRequest,
-  AccountInfo as AccountInfoBase,
+  type Configuration,
+  type AuthenticationResult,
+  type SsoSilentRequest,
+  type PopupRequest,
+  type RedirectRequest,
+  type AccountInfo as AccountInfoBase,
 } from '@azure/msal-browser';
 
-import { AuthBehavior, defaultBehavior } from './behavior';
-import { AuthRequest } from './request';
+import { type AuthBehavior, defaultBehavior } from './behavior';
+import type { AuthRequest } from './request';
 
 export type IdTokenClaims = {
   aud: string;

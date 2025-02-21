@@ -1,4 +1,4 @@
-import { AccountInfo } from '@equinor/fusion-framework-module-msal';
+import type { AccountInfo } from '@equinor/fusion-framework-module-msal';
 import useAppModule from '../useAppModule';
 
 /**

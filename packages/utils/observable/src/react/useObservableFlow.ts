@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
-import { FlowSubject } from '../FlowSubject';
-import { Action, Flow } from '../types';
+import type { FlowSubject } from '../FlowSubject';
+import type { Action, Flow } from '../types';
 /**
  * Apply side effect to Reactive Subject.
  *

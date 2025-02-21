@@ -1,14 +1,14 @@
-import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { Observable, type Observer, Subject, type Subscription } from 'rxjs';
 
-import { IEventModuleConfigurator } from './configurator';
-import { FrameworkEventDispatcher, FrameworkEventHandler } from './dispatcher';
+import type { IEventModuleConfigurator } from './configurator';
+import { FrameworkEventDispatcher, type FrameworkEventHandler } from './dispatcher';
 
 import {
-  IFrameworkEvent,
+  type IFrameworkEvent,
   FrameworkEvent,
-  FrameworkEventInit,
-  FrameworkEventInitType,
-  FrameworkEventMap,
+  type FrameworkEventInit,
+  type FrameworkEventInitType,
+  type FrameworkEventMap,
 } from './event';
 
 export interface IEventModuleProvider {

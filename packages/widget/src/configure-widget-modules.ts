@@ -1,9 +1,9 @@
-import { Fusion } from '@equinor/fusion-framework';
+import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import { WidgetConfigurator } from './WidgetConfigurator';
 import type { WidgetModulesInstance, WidgetModuleInitiator, WidgetEnv } from './types';
-import { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
+import type { WidgetRenderArgs } from '@equinor/fusion-framework-module-widget';
 
 /**
  * 

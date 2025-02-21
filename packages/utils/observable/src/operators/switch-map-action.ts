@@ -1,6 +1,6 @@
-import { OperatorFunction, ObservableInput, switchMap } from 'rxjs';
+import { type OperatorFunction, type ObservableInput, switchMap } from 'rxjs';
 import { filterAction } from './filter-action';
-import { Action, ActionType, ExtractAction } from '../types';
+import type { Action, ActionType, ExtractAction } from '../types';
 
 export const switchMapAction =
   <TAction extends Action, TType extends ActionType<TAction>, TResult>(

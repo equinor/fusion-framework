@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigationModule } from './useNavigationModule';
-import { type INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 /**
  * create a router for react routing

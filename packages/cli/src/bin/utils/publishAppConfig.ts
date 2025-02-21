@@ -1,4 +1,4 @@
-import { ApiAppConfig } from '../../schemas.js';
+import type { ApiAppConfig } from '../../schemas.js';
 
 /**
  * Publishes app config to the apps-service endpoint
@@ -17,11 +17,15 @@ export const publishAppConfig = async (endpoint: string, appKey: string, config:
     },
   });
 
+  // if the status is 410, the app is deleted from apps-service
   if (requestConfig.status === 410) {
     throw new Error(
       `App ${appKey} is deleted from apps-service. HTTP status ${requestConfig.status}, ${requestConfig.statusText}`,
     );
-  } else if (!requestConfig.ok || requestConfig.status >= 400) {
+  }
+  
+  // if the request is not ok or the status is 400 or higher, throw an error
+  if (!requestConfig.ok || requestConfig.status >= 400) {
     const response = await requestConfig.json();
     console.error(response);
     throw new Error(

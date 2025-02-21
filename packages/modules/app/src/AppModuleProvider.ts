@@ -3,21 +3,21 @@ import {
   distinctUntilChanged,
   from,
   map,
-  Observable,
+  type Observable,
   pairwise,
   Subscription,
   takeWhile,
 } from 'rxjs';
 
-import { ModuleType } from '@equinor/fusion-framework-module';
-import { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ModuleType } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment, CurrentApp } from './types';
 
-import { App, filterEmpty, IApp } from './app/App';
-import { AppModuleConfig } from './AppConfigurator';
-import { AppBundleStateInitial } from './app/types';
-import { IAppClient } from './AppClient';
+import { App, filterEmpty, type IApp } from './app/App';
+import type { AppModuleConfig } from './AppConfigurator';
+import type { AppBundleStateInitial } from './app/types';
+import type { IAppClient } from './AppClient';
 import { SemanticVersion } from '@equinor/fusion-framework-module';
 import { version } from './version';
 

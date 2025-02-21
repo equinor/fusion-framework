@@ -1,7 +1,7 @@
-import { FusionModulesInstance } from '@equinor/fusion-framework';
+import type { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
-  AnyModule,
-  IModulesConfigurator,
+  type AnyModule,
+  type IModulesConfigurator,
   ModuleConsoleLogger,
   ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
@@ -10,7 +10,7 @@ import event from '@equinor/fusion-framework-module-event';
 import http, { configureHttpClient, configureHttp } from '@equinor/fusion-framework-module-http';
 import auth, { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-import { WidgetModules } from './types';
+import type { WidgetModules } from './types';
 
 /**
  * Configurator for configuring application modules

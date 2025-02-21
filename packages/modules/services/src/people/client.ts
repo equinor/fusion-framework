@@ -1,30 +1,30 @@
-import { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
+import type { IHttpClient, ClientRequestInit } from '@equinor/fusion-framework-module-http/client';
 
 import type { ClientDataMethod, ClientMethod } from '../types';
 import { ApiVersion } from './static';
 
 import {
   client as personDetailClient,
-  ApiResponse as PersonDetailApiResponse,
-  ApiResult as PersonDetailResult,
-  SupportedApiVersion as PersonDetailSupportedApiVersion,
-  ApiRequestArgs as PersonDetailApiRequestArgs,
+  type ApiResponse as PersonDetailApiResponse,
+  type ApiResult as PersonDetailResult,
+  type SupportedApiVersion as PersonDetailSupportedApiVersion,
+  type ApiRequestArgs as PersonDetailApiRequestArgs,
 } from './person-details';
 
 import {
   client as personQueryClient,
-  ApiResponse as PersonQueryApiResponse,
-  ApiResult as PersonQueryResult,
-  SupportedApiVersion as PersonQuerySupportedApiVersion,
-  ApiRequestArgs as PersonQueryApiRequestArgs,
+  type ApiResponse as PersonQueryApiResponse,
+  type ApiResult as PersonQueryResult,
+  type SupportedApiVersion as PersonQuerySupportedApiVersion,
+  type ApiRequestArgs as PersonQueryApiRequestArgs,
 } from './query';
 
 import {
   client as personPhotoClient,
-  ApiResponse as PersonPhotoApiResponse,
-  ApiResult as PersonPhotoResult,
-  SupportedApiVersion as PersonPhotoSupportedApiVersion,
-  ApiRequestArgs as PersonPhotoApiRequestArgs,
+  type ApiResponse as PersonPhotoApiResponse,
+  type ApiResult as PersonPhotoResult,
+  type SupportedApiVersion as PersonPhotoSupportedApiVersion,
+  type ApiRequestArgs as PersonPhotoApiRequestArgs,
 } from './person-photo';
 
 export class PeopleApiClient<

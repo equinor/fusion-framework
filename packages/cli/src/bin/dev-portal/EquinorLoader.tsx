@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { StarProgress } from '@equinor/fusion-react-progress-indicator';
 
 export const EquinorLoader = ({

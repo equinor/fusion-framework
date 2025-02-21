@@ -9,8 +9,8 @@ import type {
   ServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
-import { IApiConfigurator, ApiConfigurator } from './configurator';
-import { IApiProvider, ApiProvider } from './provider';
+import { type IApiConfigurator, ApiConfigurator } from './configurator';
+import { type IApiProvider, ApiProvider } from './provider';
 
 import type { ApiClientFactory } from './types';
 

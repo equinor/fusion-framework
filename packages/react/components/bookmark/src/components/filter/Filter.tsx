@@ -1,5 +1,5 @@
 import { Search, Autocomplete } from '@equinor/eds-core-react';
-import { GroupingKeys } from '../../hooks/useBookmarkGrouping';
+import type { GroupingKeys } from '../../hooks/useBookmarkGrouping';
 
 import styled from 'styled-components';
 

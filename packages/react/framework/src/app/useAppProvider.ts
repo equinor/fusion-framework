@@ -1,5 +1,5 @@
-import { FusionModulesInstance } from '@equinor/fusion-framework';
-import { AppModule } from '@equinor/fusion-framework-module-app';
+import type { FusionModulesInstance } from '@equinor/fusion-framework';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 import { useFramework } from '../useFramework';
 

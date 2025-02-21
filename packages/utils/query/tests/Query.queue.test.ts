@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Query } from '../src/Query';
-import { QueryClientError } from '../src/client';
+import type { QueryClientError } from '../src/client';
 
 describe('Query queue operators', () => {
   // Clean up after each test case by using real timers

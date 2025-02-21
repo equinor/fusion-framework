@@ -1,4 +1,4 @@
-import { from, lastValueFrom, ObservableInput } from 'rxjs';
+import { from, lastValueFrom, type ObservableInput } from 'rxjs';
 
 import {
   BaseConfigBuilder,
@@ -6,7 +6,7 @@ import {
   type ConfigBuilderCallbackArgs,
 } from '@equinor/fusion-framework-module';
 
-import { type IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { type IServiceDiscoveryClient, ServiceDiscoveryClient } from './client';
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClientMsal } from './lib/client';
-import { IHttpClientConfigurator, HttpClientConfigurator, HttpClientOptions } from './configurator';
-import { IHttpClientProvider, HttpClientProvider } from './provider';
+import { type IHttpClientConfigurator, HttpClientConfigurator, type HttpClientOptions } from './configurator';
+import { type IHttpClientProvider, HttpClientProvider } from './provider';
 
 import type {
   Module,
@@ -9,7 +9,7 @@ import type {
   IModuleConfigurator,
 } from '@equinor/fusion-framework-module';
 
-import { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { MsalModule } from '@equinor/fusion-framework-module-msal';
 
 /**
  * Defines the type for the HTTP module, which includes:

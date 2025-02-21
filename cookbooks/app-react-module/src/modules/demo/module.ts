@@ -1,4 +1,4 @@
-import { Module } from '@equinor/fusion-framework-module';
+import type { Module } from '@equinor/fusion-framework-module';
 import { DemoModuleConfigurator } from './configurator';
 import DemoProvider from './provider';
 

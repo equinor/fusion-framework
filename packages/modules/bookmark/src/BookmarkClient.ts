@@ -13,9 +13,9 @@ import { Query } from '@equinor/fusion-query';
  */
 import {
   type BookmarksApiClient,
-  ApiBookmarkSchema,
+  type ApiBookmarkSchema,
   ApiPersonSchema,
-  ApiVersion,
+  type ApiVersion,
 } from '@equinor/fusion-framework-module-services/bookmarks';
 
 import type {
@@ -27,7 +27,7 @@ import type {
 
 import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks, BookmarkUser } from './types';
 import { bookmarkWithDataSchema } from './bookmark.schemas';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 // Define the schema for the API response entity representing a bookmark
 const UserSchema = ApiPersonSchema['1.0'].transform((person) => {

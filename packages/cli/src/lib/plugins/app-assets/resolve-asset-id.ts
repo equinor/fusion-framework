@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { type PluginContext, type PartialResolvedId } from 'rollup';
+import type { PluginContext, PartialResolvedId } from 'rollup';
 
 import { PLUGIN_NAME } from './static.js';
 
@@ -11,7 +11,9 @@ import { PLUGIN_NAME } from './static.js';
 const localResolve = (id: string, importer: string): PartialResolvedId | null => {
   if (path.isAbsolute(id)) {
     return { id, external: 'absolute', resolvedBy: PLUGIN_NAME };
-  } else if (id.startsWith('.')) {
+  }
+  
+  if (id.startsWith('.')) {
     return {
       id: path.resolve(path.dirname(importer), id),
       external: 'relative',

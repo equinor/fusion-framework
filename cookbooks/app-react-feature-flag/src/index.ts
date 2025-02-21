@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
+import { type ComponentRenderArgs, makeComponent } from '@equinor/fusion-framework-react-app';
 
 import configure from './config';
 import App from './App';

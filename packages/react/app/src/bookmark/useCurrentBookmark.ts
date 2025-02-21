@@ -1,9 +1,9 @@
 import {
-  BookmarkData,
-  BookmarkPayloadGenerator,
+  type BookmarkData,
+  type BookmarkPayloadGenerator,
   useCurrentBookmark as _useCurrentBookmark,
 } from '@equinor/fusion-framework-react-module-bookmark';
-import { BookmarkModule } from '../../../../modules/bookmark/src';
+import type { BookmarkModule } from '../../../../modules/bookmark/src';
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
 import useAppModules from '../useAppModules';
 

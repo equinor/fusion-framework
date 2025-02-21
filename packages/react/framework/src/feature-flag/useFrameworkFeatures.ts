@@ -1,4 +1,4 @@
-import { type FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
+import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 
 import { useFrameworkModule } from '../useFrameworkModule';
 import { useFeatures } from './useFeatures';

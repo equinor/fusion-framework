@@ -1,24 +1,24 @@
-import { ObservableInput } from 'rxjs';
+import type { ObservableInput } from 'rxjs';
 
-import {
+import type {
   AnyModuleInstance,
   ModuleInitializerArgs,
   ModuleInstance,
   ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
-import { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { ServicesModule, IApiProvider } from '@equinor/fusion-framework-module-services';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { getContextSelector, queryContextSelector, relatedContextSelector } from './selectors';
-import { QueryCtorOptions } from '@equinor/fusion-query';
-import {
+import type { QueryCtorOptions } from '@equinor/fusion-query';
+import type {
   ContextFilterFn,
   ContextItem,
   QueryContextParameters,
   RelatedContextParameters,
 } from './types';
-import { GetContextParameters } from './client/ContextClient';
-import { ContextConfigBuilder, ContextConfigBuilderCallback } from './ContextConfigBuilder';
-import { type IContextProvider } from './ContextProvider';
+import type { GetContextParameters } from './client/ContextClient';
+import { ContextConfigBuilder, type ContextConfigBuilderCallback } from './ContextConfigBuilder';
+import type { IContextProvider } from './ContextProvider';
 import resolveInitialContext from './utils/resolve-initial-context';
 
 export interface ContextModuleConfig {

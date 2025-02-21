@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { type AuthenticationResult } from '@equinor/fusion-framework-module-msal';
+import type { AuthenticationResult } from '@equinor/fusion-framework-module-msal';
 
 import useAppModule from '../useAppModule';
 

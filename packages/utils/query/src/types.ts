@@ -1,7 +1,7 @@
 import type { Observable, ObservableInput, OperatorFunction } from 'rxjs';
 import type { QueryCacheRecord } from './cache';
 import type { QueryClientOptions, QueryClientResult, RetryOptions } from './client';
-import { QueryTask } from './QueryTask';
+import type { QueryTask } from './QueryTask';
 
 /**
  * Representation of item in the query queue.

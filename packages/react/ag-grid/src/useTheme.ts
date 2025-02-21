@@ -1,6 +1,6 @@
 import { useModule } from '@equinor/fusion-framework-react-module';
-import { type AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
-import { type Theme } from '@equinor/fusion-framework-module-ag-grid/themes';
+import type { AgGridModule } from '@equinor/fusion-framework-module-ag-grid';
+import type { Theme } from '@equinor/fusion-framework-module-ag-grid/themes';
 
 /**
  * Hook for using the current AG Grid theme.

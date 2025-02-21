@@ -4,7 +4,7 @@ import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
 import { MsalModuleVersion } from '../static';
 import semver from 'semver';
-import { IAuthProvider } from './provider';
+import type { IAuthProvider } from './provider';
 
 const VersionSchema = z.string().transform((x: string) => String(semver.coerce(x)));
 

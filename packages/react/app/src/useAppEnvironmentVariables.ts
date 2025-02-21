@@ -1,4 +1,4 @@
-import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
+import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import {
   type ObservableStateReturnType,

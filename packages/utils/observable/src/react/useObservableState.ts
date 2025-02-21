@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Observable, StatefulObservable } from '../types';
+import type { Observable, StatefulObservable } from '../types';
 import { useObservableLayoutSubscription } from './useObservableSubscription';
 
 type ObservableStateOptions<TType = undefined> = {

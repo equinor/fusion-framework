@@ -1,7 +1,7 @@
 import { Observable, throwError } from 'rxjs';
 import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { ReactiveObservable } from '../ReactiveObservable';
-import { Epic } from '../types';
+import type { Epic } from '../types';
 
 type State = { value: string; index: number };
 type Action = { type: string; payload: string };

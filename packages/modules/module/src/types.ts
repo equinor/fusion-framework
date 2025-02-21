@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import SemanticVersion from './lib/semantic-version';
-import { ObservableInput } from 'rxjs';
+import type SemanticVersion from './lib/semantic-version';
+import type { ObservableInput } from 'rxjs';
 
 export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
   ref?: any;

@@ -1,5 +1,5 @@
 import { HttpJsonResponseError, HttpResponseError } from '@equinor/fusion-framework-module-http';
-import { type ResponseSelector } from '@equinor/fusion-framework-module-http/selectors';
+import type { ResponseSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 /**
  * A response selector that checks the status of an HTTP response and throws an error if the response is not successful.

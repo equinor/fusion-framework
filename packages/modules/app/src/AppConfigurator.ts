@@ -1,6 +1,6 @@
 import {
   BaseConfigBuilder,
-  ConfigBuilderCallback,
+  type ConfigBuilderCallback,
   type ModuleInitializerArgs,
 } from '@equinor/fusion-framework-module';
 import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
@@ -8,7 +8,7 @@ import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-se
 
 import { moduleKey } from './module';
 
-import AppClient, { IAppClient } from './AppClient';
+import AppClient, { type IAppClient } from './AppClient';
 
 export interface AppModuleConfig {
   client: IAppClient;

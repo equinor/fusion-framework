@@ -1,4 +1,4 @@
-import { HubConnection } from '@microsoft/signalr';
+import type { HubConnection } from '@microsoft/signalr';
 import { Observable } from 'rxjs';
 
 export class Topic<T> extends Observable<T> {

@@ -1,11 +1,11 @@
 import { useBookmarkNavigate } from '@equinor/fusion-framework-react-module-bookmark/portal';
 
-import { Outlet, RouterProvider, RouterProviderProps, useParams } from 'react-router-dom';
+import { Outlet, RouterProvider, type RouterProviderProps, useParams } from 'react-router-dom';
 import AppLoader from './AppLoader';
 import { Header } from './Header';
 
 import { useFramework } from '@equinor/fusion-framework-react';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 import { useAppContextNavigation } from './useAppContextNavigation';

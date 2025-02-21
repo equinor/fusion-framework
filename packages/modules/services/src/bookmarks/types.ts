@@ -3,7 +3,7 @@ import type {
   ExtractApiVersion as ExtractApiVersionBase,
 } from '../types';
 
-import { ApiVersion } from './api-version';
+import type { ApiVersion } from './api-version';
 
 export { ClientMethodType, ClientMethod, ApiClientArguments } from '../types';
 

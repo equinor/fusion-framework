@@ -1,8 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { createElement } from '../util/element';
 import { widgetRender } from '../render/render';
-import { IWidgetModuleProvider, WidgetProps } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework';
+import type { IWidgetModuleProvider, WidgetProps } from '@equinor/fusion-framework-module-widget';
+import type { Fusion } from '@equinor/fusion-framework';
 
 export const useLoadWidget = <TProps extends WidgetProps>(
   provider: IWidgetModuleProvider,

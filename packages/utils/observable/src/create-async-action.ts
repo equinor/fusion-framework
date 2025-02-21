@@ -4,7 +4,7 @@ import {
   actionSuffixDivider,
   createAction,
   matchActionSuffix,
-  PayloadActionCreator,
+  type PayloadActionCreator,
 } from './create-action';
 
 import type { PrepareAction } from './create-action';

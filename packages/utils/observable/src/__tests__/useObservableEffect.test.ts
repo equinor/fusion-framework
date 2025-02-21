@@ -4,7 +4,7 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { useObservableEffect } from '../react/useObservableEffect';
 import { useObservable } from '../react/useObservable';
 
-import { Reducer } from '../types';
+import type { Reducer } from '../types';
 
 const reducer: Reducer<
   { sum: number },

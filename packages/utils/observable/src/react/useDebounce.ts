@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
-import { from, Observable, ObservableInput, Subject } from 'rxjs';
+import { from, type Observable, type ObservableInput, Subject } from 'rxjs';
 import { debounce, debounceTime, switchMap, tap } from 'rxjs/operators';
-import { ObservableType } from '../types';
+import type { ObservableType } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UseDebounceOptions<TArgs extends any[]> = {

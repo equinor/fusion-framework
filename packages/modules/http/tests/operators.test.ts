@@ -2,10 +2,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   capitalizeRequestMethodOperator,
-  ProcessOperator,
+  type ProcessOperator,
   requestValidationOperator,
 } from '../src/lib/operators';
-import { FetchRequest } from '../src/lib';
+import type { FetchRequest } from '../src/lib';
 
 const executeOperator = <R, O extends ProcessOperator<FetchRequest, R>>(
   operator: O,

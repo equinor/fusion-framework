@@ -1,4 +1,4 @@
-import { IFrameworkEvent } from './event';
+import type { IFrameworkEvent } from './event';
 
 export type FrameworkEventHandler<TType extends IFrameworkEvent = IFrameworkEvent> = (
   event: TType,

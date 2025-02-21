@@ -3,9 +3,9 @@ import { lazy, useEffect } from 'react';
 
 import {
   initializeModules,
-  ModulesConfigurator,
-  ModulesInstanceType,
-  AnyModule,
+  type ModulesConfigurator,
+  type ModulesInstanceType,
+  type AnyModule,
 } from '@equinor/fusion-framework-module';
 
 import moduleContext from './context';

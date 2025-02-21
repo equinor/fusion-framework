@@ -105,9 +105,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-  AllowedVersions as IsFavoriteBookmarkVersion,
-  MethodArg as IsFavoriteBookmarkArgs,
-  ApiResponse as IsFavoriteBookmarkResponse,
-  MethodResult as IsFavoriteBookmarkResult,
+  type AllowedVersions as IsFavoriteBookmarkVersion,
+  type MethodArg as IsFavoriteBookmarkArgs,
+  type ApiResponse as IsFavoriteBookmarkResponse,
+  type MethodResult as IsFavoriteBookmarkResult,
   executeApiCall as isFavoriteBookmark,
 };

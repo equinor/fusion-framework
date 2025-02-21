@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useDebounce, UseDebounceOptions } from '@equinor/fusion-observable/react';
-import Query, { QueryCtorOptions } from '../Query';
+import { useDebounce, type UseDebounceOptions } from '@equinor/fusion-observable/react';
+import Query, { type QueryCtorOptions } from '../Query';
 
 export const useDebounceQuery = <TType, TArgs>(
   clientOrClientCtor: Query<TType, TArgs> | QueryCtorOptions<TType, TArgs>,

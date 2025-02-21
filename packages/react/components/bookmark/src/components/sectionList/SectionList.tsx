@@ -1,6 +1,6 @@
 import { Icon } from '@equinor/eds-core-react';
-import { useBookmarkGrouping } from '../../hooks';
-import { MenuOption, Row } from '../row/Row';
+import type { useBookmarkGrouping } from '../../hooks';
+import { type MenuOption, Row } from '../row/Row';
 import { Section } from '../section/Section';
 import { SharedIcon } from '../shared/SharedIcon';
 // TODO - export from `@equinor/fusion-framework-react-module-bookmark`

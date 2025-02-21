@@ -13,7 +13,7 @@ Icon.add({ menu, add, tag });
 import { useCurrentUser } from '@equinor/fusion-framework-react/hooks';
 import { useCurrentApp, useCurrentAppModule } from '@equinor/fusion-framework-react/app';
 
-import { type BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
+import type { BookmarkModule } from '@equinor/fusion-framework-react-module-bookmark';
 
 import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
 

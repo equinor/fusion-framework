@@ -1,9 +1,10 @@
-import React, { lazy } from 'react';
+import type React from 'react';
+import { lazy } from 'react';
 
 import { FrameworkProvider } from '@equinor/fusion-framework-react';
 import type { Fusion } from '@equinor/fusion-framework-react';
 
-import { AppEnv, configureModules } from '@equinor/fusion-framework-app';
+import { type AppEnv, configureModules } from '@equinor/fusion-framework-app';
 import type { AppModuleInitiator, AppModulesInstance } from '@equinor/fusion-framework-app';
 
 import type { AnyModule } from '@equinor/fusion-framework-module';
