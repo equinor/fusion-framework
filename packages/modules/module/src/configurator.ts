@@ -165,7 +165,9 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
    * @param configs - Array of module configurators.
    */
   public configure(...configs: Array<IModuleConfigurator<any, TRef>>) {
-    configs.forEach((x) => this.addConfig(x));
+    for (const x of configs) {
+      this.addConfig(x);
+    }
   }
 
   /**

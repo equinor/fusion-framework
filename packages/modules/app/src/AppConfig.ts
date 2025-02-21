@@ -1,6 +1,6 @@
 // todo: move to utils
 const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
-  Object.keys(obj).forEach((property) => {
+  for (const property of Object.keys(obj)) {
     if (
       typeof obj[property] === 'object' &&
       obj[property] !== null &&
@@ -8,7 +8,7 @@ const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
     ) {
       deepFreeze(obj[property] as Record<string, unknown>);
     }
-  });
+  }
   return Object.freeze(obj);
 };
 

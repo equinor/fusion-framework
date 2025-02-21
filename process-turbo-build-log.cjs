@@ -31,6 +31,7 @@ function findLogFiles(startPath, filter) {
   }, []);
 }
 
-findLogFiles('./', '.turbo/turbo-build.log').forEach((entry) => {
+const logFileEntries = findLogFiles('./', '.turbo/turbo-build.log');
+for (const entry of logFileEntries) {
   console.log(processLogFile(entry));
-});
+}
