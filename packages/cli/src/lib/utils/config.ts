@@ -75,7 +75,7 @@ export const resolveConfig = async <TType>(
 
 function assertConfigFileType(value: string | string[], message?: string): asserts value {
   const values = typeof value === 'string' ? [value] : value;
-  values.forEach((ext) =>
+  for (const ext of values) {
     assert(
       supportedExt.includes(ext as SupportedExt),
       new AssertionError({
@@ -83,8 +83,8 @@ function assertConfigFileType(value: string | string[], message?: string): asser
         actual: value,
         expected: supportedExt.join('|'),
       }),
-    ),
-  );
+    );
+  }
 }
 
 const configExtname = (file: string): SupportedExt => {

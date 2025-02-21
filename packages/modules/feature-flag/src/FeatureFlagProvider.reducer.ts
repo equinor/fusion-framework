@@ -6,17 +6,16 @@ import type { State } from './FeatureFlagProvider.state';
 export const makeReducer = (initial: State) =>
   createReducer(initial, (builder) => {
     builder.addCase(actions.setFeatures, (state, action) => {
-      action.payload.forEach((flag) => {
+      for (const flag of action.payload) {
         state.features[flag.key] = flag;
-      });
+      }
     });
     builder.addCase(actions.toggleFeatures, (state, action) => {
-      action.payload
-        .filter((flag) => flag.key in state.features)
-        .forEach((flag) => {
-          const { key } = flag;
-          state.features[key].enabled = !!flag.enabled;
-        });
+      const filteredFlags = action.payload.filter((flag) => flag.key in state.features);
+      for (const flag of filteredFlags) {
+        const { key } = flag;
+        state.features[key].enabled = !!flag.enabled;
+      }
     });
   });
 

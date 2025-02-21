@@ -31,7 +31,7 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
 
   /* Files to add to zip package */
   const addFiles = ['package.json', 'LICENSE.md', 'README.md', 'CHANGELOG.md'];
-  addFiles.forEach((file) => {
+  for (const file of addFiles) {
     const filePath = resolve(appDir, file);
     if (fileExistsSync(filePath)) {
       bundle.addLocalFile(filePath);
@@ -39,7 +39,7 @@ export const bundleApplication = async (options: { outDir: string; archive: stri
     } else {
       spinner.warn(`missing ${file}`);
     }
-  });
+  }
 
   spinner.start('compressing content');
   if (!fileExistsSync(dirname(archive))) {

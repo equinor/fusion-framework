@@ -110,11 +110,11 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
     });
 
     /** connect all plugins */
-    Object.values(config.plugins).forEach((plugin) => {
+    for (const plugin of Object.values(config.plugins)) {
       if (plugin.connect) {
         this.#subscription.add(plugin.connect({ provider: this }));
       }
-    });
+    }
 
     if (event) {
       this.onFeatureToggle(({ features }) =>

@@ -50,9 +50,9 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
   }
 
   clear(): void {
-    this._getItems().forEach((item) => {
+    for (const item of this._getItems()) {
       this.#storage.removeItem(item.key);
-    });
+    }
   }
 
   protected _getItems(): Array<{ namespace: string; id: string; key: string; value: TType }> {
