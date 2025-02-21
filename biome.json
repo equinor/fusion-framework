@@ -27,11 +27,6 @@
         "useLiteralKeys": "warn",
         "useOptionalChain": "warn"
       },
-      "correctness": {
-        "noUndeclaredVariables": "warn",
-        "noUnusedVariables": "warn",
-        "noVoidTypeReturn": "warn"
-      },
       "performance": {
         "noAccumulatingSpread": "warn",
         "noDelete": "warn"
