@@ -22,9 +22,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "a11y": {
-        "useAltText": "warn"
-      },
       "complexity": {
         "noBannedTypes": "warn",
         "useLiteralKeys": "warn",
