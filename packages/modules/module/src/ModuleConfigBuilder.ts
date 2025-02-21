@@ -1,4 +1,10 @@
-import type { AnyModule, CombinedModules, ModuleInitializerArgs, Modules, ModuleType } from './types';
+import type {
+  AnyModule,
+  CombinedModules,
+  ModuleInitializerArgs,
+  Modules,
+  ModuleType,
+} from './types';
 
 /**
  * @deprecated @see {@link BaseConfigBuilder}

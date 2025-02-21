@@ -1,6 +1,11 @@
 import type { FusionModules, FusionModulesInstance } from '@equinor/fusion-framework';
 import { useFramework } from './useFramework';
-import type { AnyModule, ModuleKey, ModuleType, ModuleTypes } from '@equinor/fusion-framework-module';
+import type {
+  AnyModule,
+  ModuleKey,
+  ModuleType,
+  ModuleTypes,
+} from '@equinor/fusion-framework-module';
 
 /**
  * Retrieves a module from the framework instance based on its name.

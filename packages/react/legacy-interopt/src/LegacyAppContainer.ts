@@ -8,7 +8,12 @@ import {
 } from '@equinor/fusion';
 
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
-import { type ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
+import {
+  type ActionTypes,
+  createAction,
+  createReducer,
+  FlowSubject,
+} from '@equinor/fusion-observable';
 
 import { original } from 'immer';
 import { pairwise, Subscription } from 'rxjs';

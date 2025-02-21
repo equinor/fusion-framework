@@ -17,7 +17,10 @@ import {
 
 import { resolveInitialContext } from '@equinor/fusion-framework-module-context/utils';
 
-import { enableNavigation, type NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import {
+  enableNavigation,
+  type NavigationModule,
+} from '@equinor/fusion-framework-module-navigation';
 
 import { createComponent } from '@equinor/fusion-framework-react-app';
 import { useFramework } from '@equinor/fusion-framework-react';

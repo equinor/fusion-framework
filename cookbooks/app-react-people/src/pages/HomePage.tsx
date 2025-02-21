@@ -15,7 +15,8 @@ export const HomePage = () => {
         </p>
         <a
           href="https://equinor.github.io/fusion-react-components/?path=/docs/person-docs--docs"
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           📦 See our storybook documentation for more information about People React components.
         </a>
@@ -29,7 +30,8 @@ export const HomePage = () => {
         </p>
         <a
           href="https://fusion-docs.equinor.com/fusion-platform/people/api/index.html"
-          target="_blank" rel="noreferrer"
+          target="_blank"
+          rel="noreferrer"
         >
           📚 Read the swagger documentation for people API
         </a>

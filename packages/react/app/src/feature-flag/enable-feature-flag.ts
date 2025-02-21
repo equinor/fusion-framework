@@ -18,8 +18,8 @@ import {
  * @param flags - An array of feature flags to enable.
  */
 export function enableFeatureFlag(
-    configurator: IAppConfigurator,
-    flags: Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>
+  configurator: IAppConfigurator,
+  flags: Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>,
 ): void;
 
 /**
@@ -31,11 +31,10 @@ export function enableFeatureFlag(
  * @remarks
  * Advance use __ONLY__
  */
-export function enableFeatureFlag (
-  configurator: IAppConfigurator, 
-  cb: FeatureFlagBuilderCallback
+export function enableFeatureFlag(
+  configurator: IAppConfigurator,
+  cb: FeatureFlagBuilderCallback,
 ): void;
-
 
 /**
  * Enables feature flagging based on the provided configurator and flags callback.

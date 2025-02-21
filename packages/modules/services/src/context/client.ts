@@ -3,9 +3,19 @@ import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ClientMethod } from './types';
 import { ApiVersion } from './static';
 
-import { getContext, type GetContextFn, type GetContextResponse, type GetContextResult } from './get';
+import {
+  getContext,
+  type GetContextFn,
+  type GetContextResponse,
+  type GetContextResult,
+} from './get';
 
-import { queryContext, type QueryContextFn, type QueryContextResponse, type QueryContextResult } from './query';
+import {
+  queryContext,
+  type QueryContextFn,
+  type QueryContextResponse,
+  type QueryContextResult,
+} from './query';
 
 import {
   type RelatedContextFn,

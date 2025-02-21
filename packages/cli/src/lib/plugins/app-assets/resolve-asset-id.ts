@@ -12,7 +12,7 @@ const localResolve = (id: string, importer: string): PartialResolvedId | null =>
   if (path.isAbsolute(id)) {
     return { id, external: 'absolute', resolvedBy: PLUGIN_NAME };
   }
-  
+
   if (id.startsWith('.')) {
     return {
       id: path.resolve(path.dirname(importer), id),

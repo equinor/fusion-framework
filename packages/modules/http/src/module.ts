@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClientMsal } from './lib/client';
-import { type IHttpClientConfigurator, HttpClientConfigurator, type HttpClientOptions } from './configurator';
+import {
+  type IHttpClientConfigurator,
+  HttpClientConfigurator,
+  type HttpClientOptions,
+} from './configurator';
 import { type IHttpClientProvider, HttpClientProvider } from './provider';
 
 import type {

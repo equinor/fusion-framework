@@ -68,7 +68,9 @@ export const App = (): JSX.Element => {
     <>
       <div>
         <h4>Hello Fusion-framework Ag-Grid</h4>
-        <button type='button' onClick={addRow}>Add Row</button>
+        <button type="button" onClick={addRow}>
+          Add Row
+        </button>
       </div>
       <div style={gridStyle}>
         <AgGridReact

@@ -76,7 +76,9 @@ const validateContextId = (contextId: string): boolean => !!contextId.match(matc
  * @param context The context module.
  * @returns A function that takes a path and returns an Observable of the resolved context item.
  */
-export function resolveContextFromPath(context: ModuleType<ContextModule>): (path: string) => Observable<ContextItem>;
+export function resolveContextFromPath(
+  context: ModuleType<ContextModule>,
+): (path: string) => Observable<ContextItem>;
 
 /**
  *
@@ -98,8 +100,8 @@ export function resolveContextFromPath(context: ModuleType<ContextModule>): (pat
  * @returns A function that takes a path and returns an Observable of the resolved context item.
  */
 export function resolveContextFromPath(
-    context: ModuleType<ContextModule>,
-    args?: ContextPathResolveArgs
+  context: ModuleType<ContextModule>,
+  args?: ContextPathResolveArgs,
 ): (path: string) => Observable<ContextItem>;
 
 export function resolveContextFromPath(

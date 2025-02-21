@@ -8,7 +8,10 @@ export function useObservableEffect<
   TType extends ActionType<A> = ActionType<A>,
 >(subject: FlowSubject<S, A>, type: TType, effect?: Effect<ExtractAction<A, TType>, S>): void;
 
-export function useObservableEffect<S, A extends Action = Action>(subject: FlowSubject<S, A>, effect: Effect<A, S>): void;
+export function useObservableEffect<S, A extends Action = Action>(
+  subject: FlowSubject<S, A>,
+  effect: Effect<A, S>,
+): void;
 /**
  * Apply side effect to Reactive Subject.
  *
@@ -31,6 +34,6 @@ export function useObservableEffect<
       : subject.addEffect(fn as Effect<A, S>);
     return () => subscription.unsubscribe();
   }, [subject, type, fn]);
-};
+}
 
 export default useObservableEffect;

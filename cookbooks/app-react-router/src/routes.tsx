@@ -12,7 +12,7 @@ const Root = () => {
         <Link to={'page2'}>Page 2</Link>
       </section>
       <pre>{JSON.stringify(currentLocation, null, 4)}</pre>
-      <Outlet/>
+      <Outlet />
     </div>
   );
 };

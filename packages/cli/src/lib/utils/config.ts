@@ -32,8 +32,7 @@ export type ConfigExecuter<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TType = any,
   TArgs extends ConfigExecuterArgs = ConfigExecuterArgs,
-> = // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(...args: TArgs) => TType | Promise<TType>;
+> = (...args: TArgs) => TType | Promise<TType>; // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 export type ConfigExecuterType<T> = T extends ConfigExecuter<infer TType> ? TType : never;
 

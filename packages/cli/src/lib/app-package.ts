@@ -24,16 +24,15 @@ export type ResolvedAppPackage = {
 
 /**
  * Method to define the application package with the given object.
- * 
+ *
  * @param obj - The object to define the application package.
  * @returns The defined application package object.
  */
 export function defineAppPackage(obj: AppPackageJson): AppPackageJson;
 
-
 /**
  * Method to define the application package with the given function.
- * 
+ *
  * @param fn - The function to define the application package.
  */
 export function defineAppPackage(fn: DefinePackageFn): void;

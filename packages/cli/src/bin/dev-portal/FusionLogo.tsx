@@ -1,4 +1,4 @@
-import type { SVGProps } from "react";
+import type { SVGProps } from 'react';
 
 type FusionLogoProps = Omit<SVGProps<SVGSVGElement>, 'viewBox'> & {
   readonly scale?: number;

@@ -1,6 +1,10 @@
 import { v4 as generateGUID } from 'uuid';
 
-import { type ActionInstanceMap, createAction, createAsyncAction } from '@equinor/fusion-observable';
+import {
+  type ActionInstanceMap,
+  createAction,
+  createAsyncAction,
+} from '@equinor/fusion-observable';
 
 import type { ActionTypes } from '@equinor/fusion-observable';
 

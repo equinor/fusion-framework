@@ -23,12 +23,12 @@ export const LandingSheetContent = ({ azureId, navigate }: SheetContentProps) =>
       <BtnList>
         <BtnListItem>
           <Button variant="ghost" onClick={() => navigate('features')}>
-            <Icon name="category"/>
+            <Icon name="category" />
             My Features
           </Button>
         </BtnListItem>
       </BtnList>
-      <Divider/>
+      <Divider />
       <BtnList>
         <BtnListItem>
           <Button

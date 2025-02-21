@@ -1,6 +1,9 @@
 import { type Observable, forkJoin, from } from 'rxjs';
 import { concatMap, filter, last, map, mergeMap, reduce, share } from 'rxjs/operators';
-import { BaseConfigBuilder, type ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import {
+  BaseConfigBuilder,
+  type ConfigBuilderCallbackArgs,
+} from '@equinor/fusion-framework-module';
 import type {
   FeatureFlagConfig,
   FeatureFlagPlugin,

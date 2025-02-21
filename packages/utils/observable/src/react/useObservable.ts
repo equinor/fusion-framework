@@ -6,10 +6,10 @@ import type { Action, Reducer, ReducerWithInitialState } from '../types';
 // Function overloads
 export function useObservable<S, A extends Action = Action>(
   reducer: Reducer<S, A>,
-  initial: S
+  initial: S,
 ): FlowSubject<S, A>;
 export function useObservable<S, A extends Action = Action>(
-  reducer: ReducerWithInitialState<S, A>
+  reducer: ReducerWithInitialState<S, A>,
 ): FlowSubject<S, A>;
 
 // Implementation

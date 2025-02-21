@@ -36,7 +36,7 @@ export class ConsoleLogger extends Logger {
 
   /**
    * Map log level to console log function type
-   * 
+   *
    * @default LogLevel.Verbose
    */
   protected getLogType = (lvl: LogLevel): ConsoleLevel => {
@@ -51,7 +51,7 @@ export class ConsoleLogger extends Logger {
         return 'debug';
       default:
         return this.getLogType(LogLevel.Verbose);
-    } 
+    }
   };
 }
 

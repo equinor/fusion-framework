@@ -10,10 +10,10 @@ import type { IHttpClient } from './lib/client';
 
 /**
  * Exception thrown when a client cannot be found.
- * 
+ *
  * This error is typically used to indicate that a requested client instance
  * does not exist or cannot be located within the current context.
- * 
+ *
  * @extends {Error}
  */
 export class ClientNotFoundException extends Error {}

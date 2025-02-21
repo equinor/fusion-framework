@@ -1,4 +1,8 @@
-import { type Module, type ModulesInstance, SemanticVersion } from '@equinor/fusion-framework-module';
+import {
+  type Module,
+  type ModulesInstance,
+  SemanticVersion,
+} from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { AppModule } from '@equinor/fusion-framework-module-app';

@@ -18,7 +18,10 @@ import { v4 as generateGUID } from 'uuid';
 
 import deepEqual from 'fast-deep-equal/es6';
 
-import { FrameworkEvent, type FrameworkEventInitType } from '@equinor/fusion-framework-module-event';
+import {
+  FrameworkEvent,
+  type FrameworkEventInitType,
+} from '@equinor/fusion-framework-module-event';
 
 import { isFailureAction } from '@equinor/fusion-observable';
 
@@ -34,7 +37,11 @@ import type {
 
 import type { BookmarkNew, BookmarkUpdate, IBookmarkClient } from './BookmarkClient.interface';
 import { type BookmarkActions, bookmarkActions } from './BookmarkProvider.actions';
-import { type BookmarkState, createBookmarkStore, type BookmarkStore } from './BookmarkProvider.store';
+import {
+  type BookmarkState,
+  createBookmarkStore,
+  type BookmarkStore,
+} from './BookmarkProvider.store';
 import {
   activeBookmarkSelector,
   bookmarkSelector,
