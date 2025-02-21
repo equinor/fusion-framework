@@ -86,11 +86,11 @@ export class NavigationProvider
   }
 
   public push(to: To, state?: unknown): void {
-    return this.#navigator.push(this._createToPath(to), state);
+    this.#navigator.push(this._createToPath(to), state);
   }
 
   public replace(to: To, state?: unknown): void {
-    return this.#navigator.replace(this._createToPath(to), state);
+    this.#navigator.replace(this._createToPath(to), state);
   }
 
   protected _localizePath(location: Path): Path {

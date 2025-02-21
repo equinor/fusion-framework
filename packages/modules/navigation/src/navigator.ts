@@ -159,7 +159,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
   public push(to: To, state?: unknown): void {
     const skip = isLocation(to) && this._isDuplicateLocation(to);
     if (!skip) {
-      return this.#history.push(to, state);
+      this.#history.push(to, state);
     }
   }
 
@@ -171,7 +171,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
   public replace(to: To, state?: unknown): void {
     const skip = isLocation(to) && this._isDuplicateLocation(to);
     if (!skip) {
-      return this.#history.replace(to, state);
+      this.#history.replace(to, state);
     }
   }
 
