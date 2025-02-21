@@ -17,7 +17,7 @@ const mapPersonToListItem = (person: ApiPersonSearchResultV2) => (
   <PersonListItem
     key={person.azureUniqueId}
     dataSource={{
-      azureId: person.azureUniqueId!,
+      azureId: person.azureUniqueId ?? '0000-0000-0000-0000-0000',
       name: person.name,
       mail: person.mail,
       jobTitle: person.jobTitle,

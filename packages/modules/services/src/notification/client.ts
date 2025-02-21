@@ -1,6 +1,6 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientMethod } from '../types';
-import { GetNotificationFn, GetNotificationResult } from './notification/get';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientMethod } from '../types';
+import type { GetNotificationFn, GetNotificationResult } from './notification/get';
 import {
   createNotification,
   deleteNotification,
@@ -9,17 +9,17 @@ import {
   updateSeenByUser,
 } from './notification';
 import { ApiVersion } from './static';
-import { PatchNotificationFn, PatchNotificationResult } from './notification/patch';
-import { GetNotificationsFn, GetNotificationsResult } from './notification/getAll';
-import { PostNotificationResult, PostNotificationFn } from './notification/post';
-import { DeleteNotificationFn, DeleteNotificationResult } from './notification/delete';
+import type { PatchNotificationFn, PatchNotificationResult } from './notification/patch';
+import type { GetNotificationsFn, GetNotificationsResult } from './notification/getAll';
+import type { PostNotificationResult, PostNotificationFn } from './notification/post';
+import type { DeleteNotificationFn, DeleteNotificationResult } from './notification/delete';
 import updateUserNotificationSettings, {
-  PutUserNotificationSettingsFn,
-  PutUserNotificationSettingsResult,
+  type PutUserNotificationSettingsFn,
+  type PutUserNotificationSettingsResult,
 } from './settings/put';
 import getUserNotificationSettings, {
-  GetUserNotificationSettingsFn,
-  GetUserNotificationsSettingsResult,
+  type GetUserNotificationSettingsFn,
+  type GetUserNotificationsSettingsResult,
 } from './settings/get';
 
 export class NotificationApiClient<

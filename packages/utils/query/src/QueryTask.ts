@@ -1,9 +1,9 @@
-import { Subject, Subscription } from 'rxjs';
+import { Subject, type Subscription } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import { QueryOptions, QueryTaskCompleted } from './types';
-import { QueryClientJob } from './client/QueryClientJob';
+import type { QueryOptions, QueryTaskCompleted } from './types';
+import type { QueryClientJob } from './client/QueryClientJob';
 import { v4 as generateGUID } from 'uuid';
-import { type ILogger } from '@equinor/fusion-log';
+import type { ILogger } from '@equinor/fusion-log';
 
 /**
  * The `QueryTask` class is designed to manage and execute query operations efficiently. It extends the RxJS `Subject` to

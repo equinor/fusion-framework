@@ -1,4 +1,4 @@
-import { ActionCreator, ActionDefinitions, ActionTypes } from './types/actions';
+import type { ActionCreator, ActionDefinitions, ActionTypes } from './types/actions';
 
 /** flat map ActionDefinitions  */
 export type ActionCalls<T extends ActionDefinitions> = {

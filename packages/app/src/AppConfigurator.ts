@@ -1,4 +1,4 @@
-import { type FusionModulesInstance } from '@equinor/fusion-framework';
+import type { FusionModulesInstance } from '@equinor/fusion-framework';
 
 import {
   type AnyModule,
@@ -17,7 +17,7 @@ import http, {
 
 import auth from '@equinor/fusion-framework-module-msal';
 
-import { AppEnv, AppModules } from './types';
+import type { AppEnv, AppModules } from './types';
 
 /**
  * Configurator for configuring application modules

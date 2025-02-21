@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { type PluginContext } from 'rollup';
+import type { PluginContext } from 'rollup';
 import { interpolateName } from 'loader-utils';
 
 import { readAssetContentSync } from './read-asset-content.js';

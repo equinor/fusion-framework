@@ -1,6 +1,6 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 import { module } from './module';
-import { AppConfigurator } from './AppConfigurator';
+import type { AppConfigurator } from './AppConfigurator';
 
 /**
  * Method for enabling the Service module

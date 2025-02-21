@@ -41,9 +41,7 @@ export type IsUnknownOrNonInferrable<T, True, False> = IsUnknown<T, True, False>
  */
 export type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export interface TypeGuard<T> {
-  (value: any): value is T;
-}
+export type TypeGuard<T> = (value: any) => value is T
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NotFunction<T = unknown> = T extends Function ? never : T;

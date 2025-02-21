@@ -1,4 +1,4 @@
-import { Reducer } from 'react';
+import type { Reducer } from 'react';
 import {
   asyncScheduler,
   BehaviorSubject,
@@ -6,7 +6,7 @@ import {
   from,
   Observable,
   Subject,
-  Subscription,
+  type Subscription,
 } from 'rxjs';
 import {
   catchError,

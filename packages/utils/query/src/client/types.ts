@@ -1,5 +1,5 @@
-import { ObservableInput } from 'rxjs';
-import { QueryClientOptions } from './QueryClient';
+import type { ObservableInput } from 'rxjs';
+import type { QueryClientOptions } from './QueryClient';
 
 /**
  * Represents a request made by the QueryClient with its status, transaction details, arguments, options, and metadata.

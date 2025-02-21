@@ -1,4 +1,4 @@
-import { type Theme, type Module } from 'ag-grid-community';
+import type { Theme, Module } from 'ag-grid-community';
 
 export interface AgGridConfig {
   licenseKey?: string;

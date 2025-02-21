@@ -1,4 +1,4 @@
-import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
+import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
 import type { Fusion } from './types';
 
 declare module '@equinor/fusion-framework-module-event' {

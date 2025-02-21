@@ -1,5 +1,5 @@
 import { RouterProvider } from 'react-router-dom';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 
 import routes from './Routes';

@@ -1,5 +1,5 @@
 import {
-  Observable,
+  type Observable,
   Subscription,
   filter,
   finalize,
@@ -10,8 +10,8 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { ModuleType } from '@equinor/fusion-framework-module';
-import {
+import type { ModuleType } from '@equinor/fusion-framework-module';
+import type {
   EventModule,
   FrameworkEvent,
   FrameworkEventInit,
@@ -21,9 +21,9 @@ import { createState } from './FeatureFlagProvider.state';
 import { actions } from './FeatureFlagProvider.actions';
 
 import type { FeatureFlagConfig } from './types';
-import { IFeatureFlag } from './FeatureFlag';
+import type { IFeatureFlag } from './FeatureFlag';
 import { normalizeFlags } from './utils/normalize-flags';
-import { FeatureSelectorFn } from './utils/selectors';
+import type { FeatureSelectorFn } from './utils/selectors';
 
 export type CompareFeature = (a: IFeatureFlag | undefined, b: IFeatureFlag | undefined) => boolean;
 

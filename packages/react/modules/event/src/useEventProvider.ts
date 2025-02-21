@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import { eventContext } from './eventContext';
 import { useModulesEventProvider } from './useModulesEventProvider';

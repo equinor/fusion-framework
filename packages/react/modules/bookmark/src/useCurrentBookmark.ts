@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo } from 'react';
-import {
+import type {
   BookmarkData,
   BookmarkPayloadGenerator,
   Bookmark,

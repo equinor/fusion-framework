@@ -6,7 +6,7 @@ import type {
   AppSettings,
   ConfigEnvironment,
 } from '../types';
-import { FlowSubject, Observable } from '@equinor/fusion-observable';
+import { type FlowSubject, Observable } from '@equinor/fusion-observable';
 
 import type { AppModuleProvider } from '../AppModuleProvider';
 import {
@@ -19,11 +19,11 @@ import {
 } from 'rxjs';
 import { defaultIfEmpty, filter, last, map, switchMap } from 'rxjs/operators';
 
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { AnyModule, ModuleType } from '@equinor/fusion-framework-module';
 import { createState } from './create-state';
-import { actions, Actions } from './actions';
-import { AppBundleState, AppBundleStateInitial } from './types';
+import { actions, type Actions } from './actions';
+import type { AppBundleState, AppBundleStateInitial } from './types';
 
 import isEqual from 'fast-deep-equal';
 

@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { EMPTY, from, of } from 'rxjs';
 

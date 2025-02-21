@@ -1,8 +1,8 @@
 import { actionMapper } from './action-mapper';
-import { ActionReducerMapBuilder, createReducer } from './create-reducer';
+import { type ActionReducerMapBuilder, createReducer } from './create-reducer';
 import { FlowSubject } from './FlowSubject';
-import { ActionDefinitions, ActionTypes } from './types/actions';
-import { ReducerWithInitialState } from './types/reducers';
+import type { ActionDefinitions, ActionTypes } from './types/actions';
+import type { ReducerWithInitialState } from './types/reducers';
 
 export type FlowState<TState, TActions extends ActionDefinitions> = {
   subject: FlowSubject<TState, ActionTypes<TActions>>;

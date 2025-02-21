@@ -1,4 +1,4 @@
-import { AnyModule, ModuleKey, Modules, ModuleType } from '@equinor/fusion-framework-module';
+import type { AnyModule, ModuleKey, Modules, ModuleType } from '@equinor/fusion-framework-module';
 import { useContext } from 'react';
 
 import { moduleContext } from './context';

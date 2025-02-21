@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod';
+import type { z, ZodError } from 'zod';
 
 import {
   BaseConfigBuilder,
@@ -9,13 +9,13 @@ import {
 
 import type { IApiProvider, ServicesModule } from '@equinor/fusion-framework-module-services';
 import type { AppModuleProvider } from '@equinor/fusion-framework-module-app';
-import { type ILogger, LogLevel } from '@equinor/fusion-log';
+import type { ILogger, LogLevel } from '@equinor/fusion-log';
 
 import { BookmarkClient } from './BookmarkClient';
 import type { BookmarkModule } from './bookmark-module';
 import { bookmarkConfigSchema } from './bookmark-config.schema';
 import type { BookmarkModuleConfig } from './types';
-import { BookmarkProvider } from './BookmarkProvider';
+import type { BookmarkProvider } from './BookmarkProvider';
 
 const initialBookmarkConfig = bookmarkConfigSchema
   .pick({

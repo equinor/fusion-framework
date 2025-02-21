@@ -7,7 +7,7 @@ import { Spinner } from './utils/spinner.js';
 
 import { loadAppConfig, loadPackage } from './utils/index.js';
 
-import { ConfigExecuterEnv } from '../lib/utils/config.js';
+import type { ConfigExecuterEnv } from '../lib/utils/config.js';
 
 export const createExportConfig = async (options: {
   command?: ConfigExecuterEnv['command'];

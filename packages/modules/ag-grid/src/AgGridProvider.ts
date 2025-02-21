@@ -1,7 +1,7 @@
 import { LicenseManager } from 'ag-grid-enterprise';
 import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
 
-import { AgGridConfig } from './AgGridConfigurator.interface';
+import type { AgGridConfig } from './AgGridConfigurator.interface';
 
 export interface IAgGridProvider {
   readonly licenseKey?: string;

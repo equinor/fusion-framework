@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { FlowSubject } from '@equinor/fusion-observable';
 

@@ -1,4 +1,4 @@
-import { LogLevel } from './static';
+import type { LogLevel } from './static';
 
 /**
  * Defines the interface for a logger that can be used to log messages at different severity levels.

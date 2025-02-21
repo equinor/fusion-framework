@@ -2,7 +2,7 @@ import { useCallback, useLayoutEffect, useMemo } from 'react';
 
 import { EMPTY } from 'rxjs';
 
-import {
+import type {
   Bookmark,
   Bookmarks,
   BookmarkUpdate,
@@ -15,7 +15,7 @@ import {
 import { useObservableState } from '@equinor/fusion-observable/react';
 
 import { useBookmarkProvider } from './useBookmarkProvider';
-import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
 
 export type useBookmarkArgs = {
   provider?: BookmarkProvider;

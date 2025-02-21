@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Observable, ObservableInput } from 'rxjs';
+import type { Observable, ObservableInput } from 'rxjs';
 import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
-import { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
-import { BookmarkProviderEventMap } from './BookmarkProvider.events';
-import { BookmarkState } from './BookmarkProvider.store';
+import type { BookmarkNew, BookmarkUpdate } from './BookmarkClient.interface';
+import type { BookmarkProviderEventMap } from './BookmarkProvider.events';
+import type { BookmarkState } from './BookmarkProvider.store';
 
 export type BookmarkCreateArgs<T extends BookmarkData = any> = Omit<
   BookmarkNew<T>,

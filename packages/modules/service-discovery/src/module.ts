@@ -1,5 +1,5 @@
 import { ServiceDiscoveryConfigurator } from './configurator';
-import { IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
+import { type IServiceDiscoveryProvider, ServiceDiscoveryProvider } from './provider';
 
 import type {
   IModuleConfigurator,

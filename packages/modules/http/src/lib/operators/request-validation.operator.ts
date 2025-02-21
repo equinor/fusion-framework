@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 import type { ProcessOperator } from './types';
 import type { FetchRequest } from '../client/types';
 import { fetchRequestSchema } from './fetch-request.schema';

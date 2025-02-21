@@ -1,5 +1,5 @@
-import { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework';
+import type { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
+import type { Fusion } from '@equinor/fusion-framework';
 import { useFramework } from '@equinor/fusion-framework-react';
 import { BaseWidget } from './BaseWidget';
 

@@ -1,6 +1,6 @@
 import { useObservableSelector } from './useObservableSelector';
 import { useObservableState } from './useObservableState';
-import { Observable } from '../types';
+import type { Observable } from '../types';
 
 /**
  * @deprecated use useObservableState (since ^8.1)

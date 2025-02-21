@@ -1,9 +1,9 @@
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
-import { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
-import { type IFeatureFlagProvider } from '../../FeatureFlagProvider';
+import type { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 
 import { assertFeatureFlag } from './assert-feature-flag';
 

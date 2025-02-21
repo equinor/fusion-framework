@@ -2,9 +2,9 @@ import { useCallback, useMemo } from 'react';
 
 import { EMPTY } from 'rxjs';
 
-import {
-  type IFeatureFlag,
-  type IFeatureFlagProvider,
+import type {
+  IFeatureFlag,
+  IFeatureFlagProvider,
 } from '@equinor/fusion-framework-module-feature-flag';
 
 import { useObservableState } from '@equinor/fusion-observable/react';

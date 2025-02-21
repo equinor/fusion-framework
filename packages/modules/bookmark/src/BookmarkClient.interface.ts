@@ -1,4 +1,4 @@
-import { type ObservableInput } from 'rxjs';
+import type { ObservableInput } from 'rxjs';
 import type { Bookmark, BookmarkData, BookmarkWithoutData } from './types';
 
 /**

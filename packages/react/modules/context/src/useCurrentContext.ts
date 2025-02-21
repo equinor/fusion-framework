@@ -1,5 +1,5 @@
-import { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
-import { IContextProvider, contextModuleKey } from '@equinor/fusion-framework-module-context';
+import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
+import { type IContextProvider, contextModuleKey } from '@equinor/fusion-framework-module-context';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useCallback, useMemo } from 'react';

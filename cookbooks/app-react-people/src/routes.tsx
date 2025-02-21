@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 import { Navigation } from './pages/Navigation';
 import { AvatarPage } from './pages/AvatarPage';
 import { CardPage } from './pages/CardPage';

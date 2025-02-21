@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Suspense } from 'react';
-import { ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { ModulesInstanceType } from '@equinor/fusion-framework-module';
 import { createFrameworkProvider } from '@equinor/fusion-framework-react';
 
 import { type AppModule, enableAppModule } from '@equinor/fusion-framework-module-app';

@@ -49,7 +49,6 @@
         "noDelete": "warn"
       },
       "style": {
-        "useImportType": "warn",
         "noParameterAssign": "warn",
         "useShorthandFunctionType": "warn",
         "noUselessElse": "warn",

@@ -7,7 +7,7 @@ import { Spinner } from './utils/spinner.js';
 import { loadViteConfig } from './utils/load-vite-config.js';
 import { loadAppManifest } from './utils/load-manifest.js';
 
-import { type ConfigExecuterEnv } from '../lib/utils/config.js';
+import type { ConfigExecuterEnv } from '../lib/utils/config.js';
 import { resolveAppPackage } from '../lib/app-package.js';
 import {
   AppAssetExportPlugin,

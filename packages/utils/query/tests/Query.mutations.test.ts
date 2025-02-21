@@ -1,6 +1,6 @@
 import { describe, expect, vi, it } from 'vitest';
 import { Query } from '../src/Query';
-import { QueryTaskCached } from '../src/types';
+import type { QueryTaskCached } from '../src/types';
 import { firstValueFrom, toArray } from 'rxjs';
 
 describe('Mutations of queries', () => {

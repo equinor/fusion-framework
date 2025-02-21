@@ -1,5 +1,5 @@
-import { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
-import { App } from './app/App';
+import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
+import type { App } from './app/App';
 
 import './app/events';
 

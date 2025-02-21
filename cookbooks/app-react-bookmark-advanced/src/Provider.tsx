@@ -4,15 +4,15 @@ import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 
 import {
   createContext,
-  FC,
-  PropsWithChildren,
+  type FC,
+  type PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
   useState,
 } from 'react';
 
-import { BookmarkState } from './types';
+import type { BookmarkState } from './types';
 
 export const init = {
   name: '',

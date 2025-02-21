@@ -1,6 +1,6 @@
 import { Menu } from '@equinor/eds-core-react';
-import { MutableRefObject } from 'react';
-import { MenuOption } from './Row';
+import type { MutableRefObject } from 'react';
+import type { MenuOption } from './Row';
 
 type MenuProps = {
   readonly pRef: MutableRefObject<HTMLElement | null>;

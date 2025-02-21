@@ -1,6 +1,6 @@
-import { FrameworkConfigurator } from '@equinor/fusion-framework';
+import type { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { createFrameworkProvider } from './create-framework-provider';
-import { PropsWithChildren, ReactNode, Suspense, useMemo } from 'react';
+import { type PropsWithChildren, type ReactNode, Suspense, useMemo } from 'react';
 import { useModules } from '@equinor/fusion-framework-react-module';
 
 type ConfigureCallback = (configurator: FrameworkConfigurator) => void;

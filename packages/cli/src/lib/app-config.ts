@@ -1,16 +1,16 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 import {
   loadConfig,
   type ResolvedConfig,
   type FindConfigOptions,
   initiateConfig,
-  ConfigExecuterEnv,
+  type ConfigExecuterEnv,
   resolveConfig,
 } from './utils/config.js';
 
 import { AssertionError } from './utils/assert.js';
 
-import { ApiAppConfig, ApiAppConfigSchema } from '../schemas.js';
+import { type ApiAppConfig, ApiAppConfigSchema } from '../schemas.js';
 
 type FindAppConfigOptions = FindConfigOptions & {
   file?: string;

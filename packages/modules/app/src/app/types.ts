@@ -1,4 +1,4 @@
-import { ActionBaseType } from '@equinor/fusion-observable';
+import type { ActionBaseType } from '@equinor/fusion-observable';
 import type {
   AppManifest,
   AppConfig,
@@ -7,7 +7,7 @@ import type {
   ConfigEnvironment,
   AppSettings,
 } from '../types';
-import { Actions } from './actions';
+import type { Actions } from './actions';
 
 /**
  * Represents the state of an application bundle.

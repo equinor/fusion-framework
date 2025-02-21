@@ -6,7 +6,7 @@ import type { AnyModule } from '@equinor/fusion-framework-module';
 import type { AppEnv, AppModuleInitiator } from '@equinor/fusion-framework-app';
 
 import { createComponent } from './create-component';
-import { AppModule } from '@equinor/fusion-framework-module-app';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
   Component: React.ElementType,

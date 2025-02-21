@@ -1,10 +1,10 @@
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
-import { AppManifest } from '@equinor/fusion-framework-app';
+import type { AppManifest } from '@equinor/fusion-framework-app';
 
-import { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
+import type { ClientRequest, IncomingMessage, ServerResponse } from 'node:http';
 
-import { ApiAppConfig } from '../../../schemas.js';
+import type { ApiAppConfig } from '../../../schemas.js';
 
 /**
  * Preserve token for executing proxy assets

@@ -1,4 +1,4 @@
-import { IFeatureFlag } from '../FeatureFlag';
+import type { IFeatureFlag } from '../FeatureFlag';
 
 export const normalizeFlags = <T extends IFeatureFlag = IFeatureFlag>(
   flags: Array<T>,

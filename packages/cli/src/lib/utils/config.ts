@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
 
-import { findUpMultiple, Options } from 'find-up';
+import { findUpMultiple, type Options } from 'find-up';
 
 import { assert } from 'node:console';
 import { AssertionError } from 'node:assert';

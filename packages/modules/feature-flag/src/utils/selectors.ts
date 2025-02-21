@@ -1,5 +1,5 @@
 import { map, distinctUntilChanged } from 'rxjs/operators';
-import { type OperatorFunction } from 'rxjs';
+import type { OperatorFunction } from 'rxjs';
 import type { IFeatureFlag } from '../FeatureFlag';
 
 /**

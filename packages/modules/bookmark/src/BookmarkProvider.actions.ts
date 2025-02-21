@@ -1,5 +1,5 @@
 import {
-  Action,
+  type Action,
   createAction,
   createAsyncAction,
   type ActionTypes,
@@ -7,8 +7,8 @@ import {
 
 import type { Bookmark, BookmarkData, BookmarkWithoutData, Bookmarks } from './types';
 
-import { BookmarkNew, BookmarkUpdate, type BookmarksFilter } from './BookmarkClient.interface';
-import { type BookmarkFlowError } from './BookmarkProvider.error';
+import type { BookmarkNew, BookmarkUpdate, BookmarksFilter } from './BookmarkClient.interface';
+import type { BookmarkFlowError } from './BookmarkProvider.error';
 
 /**
  * Represents the metadata associated with a bookmark action.

@@ -1,5 +1,6 @@
-import { AuthToken } from '@equinor/fusion';
-import AuthUser, { AuthUserJSON } from '@equinor/fusion/lib/auth/AuthUser';
+import type { AuthToken } from '@equinor/fusion';
+import type AuthUser from '@equinor/fusion/lib/auth/AuthUser';
+import type { AuthUserJSON } from '@equinor/fusion/lib/auth/AuthUser';
 
 // from msal
 type AccountInfo = {

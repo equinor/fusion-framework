@@ -3,9 +3,9 @@ import { catchError, map } from 'rxjs/operators';
 
 import equal from 'fast-deep-equal';
 
-import { Query, QueryCtorOptions } from '@equinor/fusion-query';
+import { Query, type QueryCtorOptions } from '@equinor/fusion-query';
 
-import { ContextItem } from '../types';
+import type { ContextItem } from '../types';
 
 export type GetContextParameters = { id: string };
 

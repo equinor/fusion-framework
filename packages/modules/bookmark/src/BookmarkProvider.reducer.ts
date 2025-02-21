@@ -9,9 +9,9 @@ import {
 } from '@equinor/fusion-observable';
 
 import { bookmarkActions, type BookmarkActions } from './BookmarkProvider.actions';
-import { type BookmarkState } from './BookmarkProvider.store';
-import { BookmarkFlowError } from './BookmarkProvider.error';
-import { BookmarkWithoutData } from './types';
+import type { BookmarkState } from './BookmarkProvider.store';
+import type { BookmarkFlowError } from './BookmarkProvider.error';
+import type { BookmarkWithoutData } from './types';
 
 /**
  * Utility function that extracts the base action type from a given action object.

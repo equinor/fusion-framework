@@ -1,4 +1,4 @@
-import { AgnosticRouteObject, createRouter, Path, To } from '@remix-run/router';
+import { type AgnosticRouteObject, createRouter, type Path, type To } from '@remix-run/router';
 
 import { filter, map } from 'rxjs/operators';
 
@@ -7,9 +7,9 @@ import {
   type BaseModuleProviderCtorArgs,
 } from '@equinor/fusion-framework-module/provider';
 
-import { INavigationProvider } from './INavigationProvider';
+import type { INavigationProvider } from './INavigationProvider';
 
-import { type INavigationConfigurator } from '../../configurator';
+import type { INavigationConfigurator } from '../../configurator';
 import { Navigator, type INavigator } from '../../navigator';
 
 const normalizePathname = (path: string) => path.replace(/\/+/g, '/');

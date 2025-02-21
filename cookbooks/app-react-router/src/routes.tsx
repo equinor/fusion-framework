@@ -1,4 +1,4 @@
-import { Link, Outlet, RouteObject } from 'react-router-dom';
+import { Link, Outlet, type RouteObject } from 'react-router-dom';
 
 import { useLocation } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ const Root = () => {
         <Link to={'page2'}>Page 2</Link>
       </section>
       <pre>{JSON.stringify(currentLocation, null, 4)}</pre>
-      <Outlet></Outlet>
+      <Outlet/>
     </div>
   );
 };

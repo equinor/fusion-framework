@@ -1,7 +1,7 @@
 import {
-  ContextModule,
+  type ContextModule,
   contextModuleKey,
-  IContextProvider,
+  type IContextProvider,
 } from '@equinor/fusion-framework-module-context';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { useObservableState, useDebounce } from '@equinor/fusion-observable/react';

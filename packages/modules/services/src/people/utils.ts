@@ -1,4 +1,4 @@
-import { ApiPerson } from './api-models';
+import type { ApiPerson } from './api-models';
 import { ApiVersion } from './static';
 
 // type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2' | 'v4'>;

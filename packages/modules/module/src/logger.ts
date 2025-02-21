@@ -1,4 +1,4 @@
-import { AnyModule } from './types';
+import type { AnyModule } from './types';
 
 export interface IConsoleLogger {
   level: 0 | 1 | 2 | 3 | 4;

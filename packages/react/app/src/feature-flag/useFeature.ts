@@ -4,9 +4,9 @@ import { EMPTY, combineLatest, map } from 'rxjs';
 
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
 import { useObservableState } from '@equinor/fusion-observable/react';
-import {
-  type FeatureFlagModule,
-  type IFeatureFlag,
+import type {
+  FeatureFlagModule,
+  IFeatureFlag,
 } from '@equinor/fusion-framework-module-feature-flag';
 import { findFeature } from '@equinor/fusion-framework-module-feature-flag/selectors';
 

@@ -1,14 +1,14 @@
-import { catchError, Observable, Subscription } from 'rxjs';
+import { catchError, type Observable, Subscription } from 'rxjs';
 
-import { ModuleType } from '@equinor/fusion-framework-module';
+import type { ModuleType } from '@equinor/fusion-framework-module';
 import { HttpResponseError } from '@equinor/fusion-framework-module-http';
-import { EventModule } from '@equinor/fusion-framework-module-event';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 import { Query } from '@equinor/fusion-query';
 
 import type { GetWidgetParameters, WidgetConfig, WidgetManifest } from './types';
 
-import { WidgetModuleConfig } from './WidgetModuleConfigurator';
+import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
 import { WidgetManifestLoadError, WidgetConfigLoadError } from './errors';
 import { Widget } from './Widget';
 

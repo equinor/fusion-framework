@@ -1,6 +1,6 @@
 import { castDraft, createReducer as makeReducer } from '@equinor/fusion-observable';
 
-import { Actions, actions } from './actions';
+import { type Actions, actions } from './actions';
 
 import type { QueryClientRequest, QueryClientState } from './types';
 

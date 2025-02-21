@@ -1,5 +1,5 @@
 import { createComponent } from './create-component';
-import { renderComponent, RenderTeardown } from './render-component';
+import { renderComponent, type RenderTeardown } from './render-component';
 
 import type { ComponentRenderArgs } from './create-component';
 

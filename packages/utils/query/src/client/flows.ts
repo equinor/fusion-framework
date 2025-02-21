@@ -1,4 +1,4 @@
-import { type Flow } from '@equinor/fusion-observable';
+import type { Flow } from '@equinor/fusion-observable';
 import { actions, type Actions } from './actions';
 import type { QueryClientState, QueryFn, RetryOptions } from './types';
 import {
@@ -11,7 +11,7 @@ import {
   takeUntil,
   withLatestFrom,
   timer,
-  Observable,
+  type Observable,
   tap,
 } from 'rxjs';
 import { QueryClientError } from './QueryClientError';

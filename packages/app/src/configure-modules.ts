@@ -1,4 +1,4 @@
-import { Fusion } from '@equinor/fusion-framework';
+import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
 import { AppConfigurator } from './AppConfigurator';
