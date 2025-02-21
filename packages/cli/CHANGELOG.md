@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.5.1
+
+### Patch Changes
+
+- [#2831](https://github.com/equinor/fusion-framework/pull/2831) [`4e2b961`](https://github.com/equinor/fusion-framework/commit/4e2b961ac6ace80b95f2795b3f3b839c763cbb28) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add support for clearing context in CLI - aligning with same behaviour as portal
+
+- [#2847](https://github.com/equinor/fusion-framework/pull/2847) [`59348f0`](https://github.com/equinor/fusion-framework/commit/59348f02f7ced10782691f69bae32274b88a4b53) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update dep `@equinor/fusion-react-context-selector` to `1.0.1`
+
 ## 10.5.0
 
 ### Minor Changes
@@ -62,16 +70,16 @@
 
 - [#2661](https://github.com/equinor/fusion-framework/pull/2661) [`f60748b`](https://github.com/equinor/fusion-framework/commit/f60748b4f3980f00fa3aed131fef97513f1424c6) Thanks [@eikeland](https://github.com/eikeland)! - Added `noOpen` option to the development server configuration.
 
-    **Modified files:**
+  **Modified files:**
 
-    - `packages/cli/src/bin/create-dev-serve.ts`
-    - `packages/cli/src/bin/main.app.ts`
+  - `packages/cli/src/bin/create-dev-serve.ts`
+  - `packages/cli/src/bin/main.app.ts`
 
-    **Changes:**
+  **Changes:**
 
-    - Added `noOpen` boolean option to `createDevServer` function.
-    - Updated the server configuration to conditionally open the app in the default browser based on the `noOpen` option.
-    - Added `-n, --noOpen` option to the CLI command for starting the development server.
+  - Added `noOpen` boolean option to `createDevServer` function.
+  - Updated the server configuration to conditionally open the app in the default browser based on the `noOpen` option.
+  - Added `-n, --noOpen` option to the CLI command for starting the development server.
 
 ## 10.3.4
 
@@ -97,7 +105,7 @@
 
 - [#2632](https://github.com/equinor/fusion-framework/pull/2632) [`b136b45`](https://github.com/equinor/fusion-framework/commit/b136b4565da1af09c8447956716f3d9f0ea91698) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
 
-    Updated `@equinor/fusion-wc-person` dependency from version `^3.0.5` to `^3.0.6`
+  Updated `@equinor/fusion-wc-person` dependency from version `^3.0.5` to `^3.0.6`
 
 ## 10.3.0
 
@@ -105,9 +113,9 @@
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - Created a plugin for handling application settings. This plugin allows retrieving and setting application settings when developing locally by intercepting the request to the settings API and returning the local settings instead. Settings are stored in memory and are not persisted, which means the CLI will always provide settings as if the user has never set them before. By restarting the CLI, the settings will be lost. This plugin is useful for testing and development purposes.
 
-    Also added a utility function `parseJsonFromRequest` to parse JSON from a request body. This function is used in the plugin to parse the `PUT` request body and update the settings accordingly.
+  Also added a utility function `parseJsonFromRequest` to parse JSON from a request body. This function is used in the plugin to parse the `PUT` request body and update the settings accordingly.
 
-    The default development server has enabled this plugin by default and confiuigred it to intercept the settings API on `/apps-proxy/persons/me/apps/${CURRENT_APP_KEY}/settings`
+  The default development server has enabled this plugin by default and confiuigred it to intercept the settings API on `/apps-proxy/persons/me/apps/${CURRENT_APP_KEY}/settings`
 
 ## 10.2.5
 
@@ -115,7 +123,7 @@
 
 - [#2612](https://github.com/equinor/fusion-framework/pull/2612) [`1f9da67`](https://github.com/equinor/fusion-framework/commit/1f9da67df85f466763788039c9f0df67164eb391) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes
 
-    - Stopped using node:path join in app-proxy-plugin since it caused issues on windows
+  - Stopped using node:path join in app-proxy-plugin since it caused issues on windows
 
 ## 10.2.4
 
@@ -123,12 +131,12 @@
 
 - [#2606](https://github.com/equinor/fusion-framework/pull/2606) [`00fb17d`](https://github.com/equinor/fusion-framework/commit/00fb17d9e753462a7acf6a34281a50194b94db20) Thanks [@eikeland](https://github.com/eikeland)! - ### Modified Files
 
-    `AppLoader.tsx`
+  `AppLoader.tsx`
 
-    ### Changes
+  ### Changes
 
-    - Added import for last operator from rxjs/operators.
-    - Updated the initialize subscription to use the last operator.
+  - Added import for last operator from rxjs/operators.
+  - Updated the initialize subscription to use the last operator.
 
 ## 10.2.3
 
@@ -136,7 +144,7 @@
 
 - [#2591](https://github.com/equinor/fusion-framework/pull/2591) [`445760c`](https://github.com/equinor/fusion-framework/commit/445760ce73e1d76303c83c367a394adfb5b7a479) Thanks [@eikeland](https://github.com/eikeland)! - ### Updated Dependencies:
 
-    - Updated @equinor/fusion-wc-person to ^3.0.5 in package.json.
+  - Updated @equinor/fusion-wc-person to ^3.0.5 in package.json.
 
 ## 10.2.2
 
@@ -156,20 +164,20 @@
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Integration in Dev Portal
 
-    - **Refactored `BookMarkSideSheet.tsx`:**
+  - **Refactored `BookMarkSideSheet.tsx`:**
 
-        - Replaced `useHasBookmark` with `useCurrentAppModule<BookmarkModule>('bookmark')` for better module integration.
-        - Updated button `disabled` state to use `bookmarkProvider?.hasBookmarkCreators`.
+    - Replaced `useHasBookmark` with `useCurrentAppModule<BookmarkModule>('bookmark')` for better module integration.
+    - Updated button `disabled` state to use `bookmarkProvider?.hasBookmarkCreators`.
 
-    - **Updated `Header.tsx`:**
+  - **Updated `Header.tsx`:**
 
-        - Added `useCurrentAppModule<BookmarkModule>('bookmark')` to manage bookmark module state.
-        - Disabled bookmark button if `bookmarkProvider` is not available.
-        - Passed `bookmarkProvider` to `BookmarkProvider` component.
+    - Added `useCurrentAppModule<BookmarkModule>('bookmark')` to manage bookmark module state.
+    - Disabled bookmark button if `bookmarkProvider` is not available.
+    - Passed `bookmarkProvider` to `BookmarkProvider` component.
 
-    - **Configuration Changes in `config.ts`:**
-        - Switched import from `@equinor/fusion-framework-module-bookmark` to `@equinor/fusion-framework-react-module-bookmark`.
-        - Added `builder.setFilter('application', true)` to bookmark configuration.
+  - **Configuration Changes in `config.ts`:**
+    - Switched import from `@equinor/fusion-framework-module-bookmark` to `@equinor/fusion-framework-react-module-bookmark`.
+    - Added `builder.setFilter('application', true)` to bookmark configuration.
 
 ## 10.1.0
 
@@ -177,7 +185,7 @@
 
 - [#2567](https://github.com/equinor/fusion-framework/pull/2567) [`71d57c2`](https://github.com/equinor/fusion-framework/commit/71d57c2955861e86f8026068fb7cd4fe39b195f6) Thanks [@odinr](https://github.com/odinr)! - Added functionality for allow providing paths for `config`, `manifest` and bundle in `app-proxy-plugin`. This is useful for plugins that need to load resources from a specific path.
 
-    This was required since the AppClient was changed in [#2520](https://github.com/equinor/fusion-framework/pull/2520) which broke the ability to load resources from the plugin.
+  This was required since the AppClient was changed in [#2520](https://github.com/equinor/fusion-framework/pull/2520) which broke the ability to load resources from the plugin.
 
 ## 10.0.4
 
@@ -195,7 +203,7 @@
 
 - [#2523](https://github.com/equinor/fusion-framework/pull/2523) [`e188193`](https://github.com/equinor/fusion-framework/commit/e188193a09802cfb74bd8aeaa8713b75b10a0638) Thanks [@eikeland](https://github.com/eikeland)! - ## changes:
 
-    - changing ci urls to new domain
+  - changing ci urls to new domain
 
 ## 10.0.2
 
@@ -203,9 +211,9 @@
 
 - [#2521](https://github.com/equinor/fusion-framework/pull/2521) [`65f03fa`](https://github.com/equinor/fusion-framework/commit/65f03fa01b71d387874dbe8ae21163c7c1c3d4b8) Thanks [@eikeland](https://github.com/eikeland)! - ### Adds CHANGELOG.md to app zip package
 
-    - Removed individual file additions for package.json, LICENSE.md, and README.md.
-    - Added a loop to handle multiple files (package.json, LICENSE.md, README.md, CHANGELOG.md) in a more concise manner.
-    - Updated the spinner messages accordingly.
+  - Removed individual file additions for package.json, LICENSE.md, and README.md.
+  - Added a loop to handle multiple files (package.json, LICENSE.md, README.md, CHANGELOG.md) in a more concise manner.
+  - Updated the spinner messages accordingly.
 
 ## 10.0.1
 
@@ -219,217 +227,217 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adding new commands for app management, `build-publish`, `build-pack`, `build-upload`, `build-config`, `build-manifest` and `build-tag`.
 
-    Introduces new parameters to the `build-config` command for publishing the app config to a build version.
+  Introduces new parameters to the `build-config` command for publishing the app config to a build version.
 
-    Commands:
+  Commands:
 
-    - `build-pack` - Bundle the app for distribution
-        - `-o, --output <output>` - Output directory for the packed app
-        - `-a, --archive` - Archive name for the packed app
-    - `build-upload` - Upload the packed app to the Fusion App Store
-        - `-b, --bundle <bundle>` - Path to the packed app bundle
-        - `-e, --env <ci | fqa | tr | fprd>` - Environment to upload the app to
-        - `-s, --service <service>` - Custom app service
-    - `build-tag` - Tag the uploaded app with a version
-        - `-t, --tag <tag>` - Tag to apply to the uploaded app
-        - `-v, --version <version>` - Version to attach to the tag
-        - `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
-        - `-s, --service <service>` - Custom app service
-    - `build-publish` - Publish the app config to a build version
-        - `-t, --tag <tag>` - Tag to apply to the uploaded app
-        - `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
-        - `-s, --service <service>` - Custom app service
-    - `build-config` - Generate app config for an environment
-        - `-o, --output <output>` - Output file for the app config
-        - `-c, --config <config>` - Path to the app config file (for config generation)
-        - `-p, --publish` - Flag for upload the generated config
-        - `-v, --version<semver | current | latest | preview>` - Publish the app config to version
-        - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
-        - `-s, --service <service>` - Custom app service
-    - `upload-config` - Upload the app config to a build version
-        - `-c, --config <config>` - Path to the app config json file to upload
-        - `-p, --publish<semver | current | latest | preview>` - Publish the app config to the build version
-        - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
-        - `-s, --service <service>` - Custom app service
-    - `build-manifest` - Creates the build manifest to publish with app
-        - `-o, --output <output>` - Output file for manifest
-        - `-c, --config <config>` - Manifest config file
+  - `build-pack` - Bundle the app for distribution
+    - `-o, --output <output>` - Output directory for the packed app
+    - `-a, --archive` - Archive name for the packed app
+  - `build-upload` - Upload the packed app to the Fusion App Store
+    - `-b, --bundle <bundle>` - Path to the packed app bundle
+    - `-e, --env <ci | fqa | tr | fprd>` - Environment to upload the app to
+    - `-s, --service <service>` - Custom app service
+  - `build-tag` - Tag the uploaded app with a version
+    - `-t, --tag <tag>` - Tag to apply to the uploaded app
+    - `-v, --version <version>` - Version to attach to the tag
+    - `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
+    - `-s, --service <service>` - Custom app service
+  - `build-publish` - Publish the app config to a build version
+    - `-t, --tag <tag>` - Tag to apply to the uploaded app
+    - `-e, --env <ci | fqa | tr | fprd>` - Environment to tag the app in
+    - `-s, --service <service>` - Custom app service
+  - `build-config` - Generate app config for an environment
+    - `-o, --output <output>` - Output file for the app config
+    - `-c, --config <config>` - Path to the app config file (for config generation)
+    - `-p, --publish` - Flag for upload the generated config
+    - `-v, --version<semver | current | latest | preview>` - Publish the app config to version
+    - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
+    - `-s, --service <service>` - Custom app service
+  - `upload-config` - Upload the app config to a build version
+    - `-c, --config <config>` - Path to the app config json file to upload
+    - `-p, --publish<semver | current | latest | preview>` - Publish the app config to the build version
+    - `-e, --env <ci | fqa | tr | fprd>` - Environment to publish the app config to
+    - `-s, --service <service>` - Custom app service
+  - `build-manifest` - Creates the build manifest to publish with app
+    - `-o, --output <output>` - Output file for manifest
+    - `-c, --config <config>` - Manifest config file
 
-    simple usage:
+  simple usage:
 
-    ```sh
-    fusion-framework-cli app build-publish -e ci
-    ```
+  ```sh
+  fusion-framework-cli app build-publish -e ci
+  ```
 
-    complex usage:
+  complex usage:
 
-    ```sh
-    fusion-framework-cli app build-pack -o ./dist -a my-app.zip
-    fusion-framework-cli app build-upload -b ./dist/my-app.zip -e ci
-    fusion-framework-cli app build-tag -t my-tag -v 1.0.0 -e ci
-    ```
+  ```sh
+  fusion-framework-cli app build-pack -o ./dist -a my-app.zip
+  fusion-framework-cli app build-upload -b ./dist/my-app.zip -e ci
+  fusion-framework-cli app build-tag -t my-tag -v 1.0.0 -e ci
+  ```
 
-    After publishing a build of an app, the app config should be uploaded to the build version. This is done by running the `build-config` command.
+  After publishing a build of an app, the app config should be uploaded to the build version. This is done by running the `build-config` command.
 
-    ```sh
-    # Publish the app config to the build version
-    fusion-framework-cli app build-config -p -e ci
+  ```sh
+  # Publish the app config to the build version
+  fusion-framework-cli app build-config -p -e ci
 
-    # Publish the app config to a specific build tag
-    fusion-framework-cli app build-config -p preview -e ci
+  # Publish the app config to a specific build tag
+  fusion-framework-cli app build-config -p preview -e ci
 
-    # Publish the app config to a specific build version
-    fusion-framework-cli app build-config -p 1.0.0 -e ci
-    ```
+  # Publish the app config to a specific build version
+  fusion-framework-cli app build-config -p 1.0.0 -e ci
+  ```
 
-    **breaking changes:**
+  **breaking changes:**
 
-    - renaming all commands accociated with build.
-    - The app-config endpoints is now an object containing url and scopes, where name is the object key:
+  - renaming all commands accociated with build.
+  - The app-config endpoints is now an object containing url and scopes, where name is the object key:
 
-        ```ts
-          environment: {
-              myProp: 'foobar',
+    ```ts
+      environment: {
+          myProp: 'foobar',
+      },
+      endpoints: {
+          api: {
+              url: 'https://foo.bars'
+              scopes: ['foobar./default']
           },
-          endpoints: {
-              api: {
-                  url: 'https://foo.bars'
-                  scopes: ['foobar./default']
-              },
-          },
-        ```
+      },
+    ```
 
-    - The `config` command has been removed, use `build-config` instead
+  - The `config` command has been removed, use `build-config` instead
 
 ### Minor Changes
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Introduced `proxyRequestLogger` to log proxy requests in the CLI.
 
-    - Show the request URL and method in the console when a proxy request is made.
-    - Show proxy response status code
+  - Show the request URL and method in the console when a proxy request is made.
+  - Show proxy response status code
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Create a plugin `externalPublicPlugin` to fix the issue with serving the `index.html` file from the specified external public directory. Vite mode `spa` will not serve the `index.html` file from the specified external public directory.
 
-    - Enhanced the middleware to intercept requests and serve the `index.html` file from the specified external public directory.
-    - Transformed the HTML using Vite's `transformIndexHtml` method.
-    - Applied appropriate content headers and additional configured headers before sending the response.
+  - Enhanced the middleware to intercept requests and serve the `index.html` file from the specified external public directory.
+  - Transformed the HTML using Vite's `transformIndexHtml` method.
+  - Applied appropriate content headers and additional configured headers before sending the response.
 
-    ```typescript
-    const viteConfig = defineConfig({
-        // vite configuration
-        root: './src', // this where vite will look for the index.html file
-        plugins: [
-            // path which contains the index.html file
-            externalPublicPlugin('./my-portal'),
-        ],
-    });
-    ```
+  ```typescript
+  const viteConfig = defineConfig({
+    // vite configuration
+    root: "./src", // this where vite will look for the index.html file
+    plugins: [
+      // path which contains the index.html file
+      externalPublicPlugin("./my-portal"),
+    ],
+  });
+  ```
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updated commands in CLI to reflect purpose of the command:
 
-    - renamed `config` to `build-config` to generate build config of an application.
-    - renamed `pack`to `build-pack` to bundle an application.
-    - added `build-manifest` command to generate build manifest of an application.
+  - renamed `config` to `build-config` to generate build config of an application.
+  - renamed `pack`to `build-pack` to bundle an application.
+  - added `build-manifest` command to generate build manifest of an application.
 
-    > [!WARNING]
-    > Config callback for `manifest` and `config` now allows `void` return type.
-    > Return value from callback is now merged with default config instead of replacing it, this might be a breaking change for some applications.
+  > [!WARNING]
+  > Config callback for `manifest` and `config` now allows `void` return type.
+  > Return value from callback is now merged with default config instead of replacing it, this might be a breaking change for some applications.
 
-    > [!NOTE]
-    > This mean that `mergeAppConfig` and `mergeManifestConfig` functions are no longer needed and can be removed from the application.
+  > [!NOTE]
+  > This mean that `mergeAppConfig` and `mergeManifestConfig` functions are no longer needed and can be removed from the application.
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - The `appProxyPlugin` is a Vite plugin designed to proxy requests to a Fusion app backend.
   It sets up proxy rules for API and bundle requests and serves the app configuration and manifest based on the app key and version.
 
-    Key Features:
+  Key Features:
 
-    1. Proxy Configuration:
+  1. Proxy Configuration:
 
-        - Proxies API calls to the Fusion apps backend.
-        - Proxies bundle requests to the Fusion apps backend.
-        - Uses a base path `proxyPath` for proxying.
-        - Captures and reuses authorization tokens for asset requests.
+     - Proxies API calls to the Fusion apps backend.
+     - Proxies bundle requests to the Fusion apps backend.
+     - Uses a base path `proxyPath` for proxying.
+     - Captures and reuses authorization tokens for asset requests.
 
-    2. **App Configuration and Manifest**:
+  2. **App Configuration and Manifest**:
 
-        - Serves the app configuration if the request matches the current app and version.
-        - Serves the app manifest if the request matches the current app.
+     - Serves the app configuration if the request matches the current app and version.
+     - Serves the app manifest if the request matches the current app.
 
-    3. **Middleware Setup**:
-        - Sets up middleware to handle requests for app configuration, manifest, and local bundles.
+  3. **Middleware Setup**:
+     - Sets up middleware to handle requests for app configuration, manifest, and local bundles.
 
-    This plugin is used by the CLI for local development, but design as exportable for custom CLI to consume applications from other API`s
+  This plugin is used by the CLI for local development, but design as exportable for custom CLI to consume applications from other API`s
 
-    example configuration:
+  example configuration:
 
-    ```typescript
-    const viteConfig = defineConfig({
-        // vite configuration
-        plugins: [
-            appProxyPlugin({
-                proxy: {
-                    path: '/app-proxy',
-                    target: 'https://fusion-s-apps-ci.azurewebsites.net/',
-                    // optional callback when matched request is proxied
-                    onProxyReq: (proxyReq, req, res) => {
-                        proxyReq.on('response', (res) => {
-                            console.log(res.statusCode);
-                        });
-                    },
-                },
-                // optional, but required for serving local app configuration, manifest and resources
-                app: {
-                    key: 'my-app',
-                    version: '1.0.0',
-                    generateConfig: async () => ({}),
-                    generateManifest: async () => ({}),
-                },
-            }),
-        ],
-    });
-    ```
+  ```typescript
+  const viteConfig = defineConfig({
+    // vite configuration
+    plugins: [
+      appProxyPlugin({
+        proxy: {
+          path: "/app-proxy",
+          target: "https://fusion-s-apps-ci.azurewebsites.net/",
+          // optional callback when matched request is proxied
+          onProxyReq: (proxyReq, req, res) => {
+            proxyReq.on("response", (res) => {
+              console.log(res.statusCode);
+            });
+          },
+        },
+        // optional, but required for serving local app configuration, manifest and resources
+        app: {
+          key: "my-app",
+          version: "1.0.0",
+          generateConfig: async () => ({}),
+          generateManifest: async () => ({}),
+        },
+      }),
+    ],
+  });
+  ```
 
-    example usage:
+  example usage:
 
-    ```typescript
-    // Example API calls
-    fetch('/app-proxy/apps/my-app/builds/1.0.0/config'); // local
-    fetch('/app-proxy/apps/my-app/builds/0.0.9/config'); // proxy
-    fetch('/app-proxy/apps/other-app/builds/1.0.0/config'); // proxy
+  ```typescript
+  // Example API calls
+  fetch("/app-proxy/apps/my-app/builds/1.0.0/config"); // local
+  fetch("/app-proxy/apps/my-app/builds/0.0.9/config"); // proxy
+  fetch("/app-proxy/apps/other-app/builds/1.0.0/config"); // proxy
 
-    // Example asset calls
-    fetch('/app-proxy/bundles/my-app/builds/1.0.0/index.js'); // local
-    fetch('/app-proxy/bundles/my-app/builds/0.0.9/index.js'); // proxy
-    ```
+  // Example asset calls
+  fetch("/app-proxy/bundles/my-app/builds/1.0.0/index.js"); // local
+  fetch("/app-proxy/bundles/my-app/builds/0.0.9/index.js"); // proxy
+  ```
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - when building an application the `AppAssetExportPlugin` is now added to the `ViteConfig` and configure to include `manifest.build.allowedExtensions`
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - **App Assets Export Plugin**
 
-    Create a plugin that exports assets from the app's source code.
-    This plugin resolves the issue where assets are not extracted from the app's source code since the app is in `lib` mode.
+  Create a plugin that exports assets from the app's source code.
+  This plugin resolves the issue where assets are not extracted from the app's source code since the app is in `lib` mode.
 
-    ```typescript
-    export default {
-      plugins: [
-        AppAssetExportPlugin(
-          include: createExtensionFilterPattern(
-            manifest.build.allowedExtensions
-            ),
-        ),
-      ]
-    }
-    ```
+  ```typescript
+  export default {
+    plugins: [
+      AppAssetExportPlugin(
+        include: createExtensionFilterPattern(
+          manifest.build.allowedExtensions
+          ),
+      ),
+    ]
+  }
+  ```
 
-    see readme for more information.
+  see readme for more information.
 
 ### Patch Changes
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
-    Updated the following dependencies
+  Updated the following dependencies
 
-    - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
+  - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Generated base manifest from package will now include `StandardIncludeAssetExtensions` as `allowedExtensions`
 
@@ -439,14 +447,14 @@
 
 - [#2493](https://github.com/equinor/fusion-framework/pull/2493) [`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81) Thanks [@eikeland](https://github.com/eikeland)! - Updating fusion-wc-person to fix issues when using selectedPerson = null in PersonSelect component.
 
-    Updated the following dependencies
+  Updated the following dependencies
 
-    - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
+  - `@equinor/fusion-wc-person` from `^3.0.1` to `^3.0.3` in `packages/cli/package.json` and `packages/react/components/people-resolver/package.json`.
 
 - Updated dependencies [[`4839295`](https://github.com/equinor/fusion-framework/commit/4839295263f07704bc43930351ce34dfb27a4c81)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.4.8
-    - @equinor/fusion-framework-app@9.1.9
-    - @equinor/fusion-framework-module-feature-flag@1.1.9
+  - @equinor/fusion-framework-react-components-people-provider@1.4.8
+  - @equinor/fusion-framework-app@9.1.9
+  - @equinor/fusion-framework-module-feature-flag@1.1.9
 
 ## 9.13.0
 
@@ -456,23 +464,23 @@
 
 - [#2459](https://github.com/equinor/fusion-framework/pull/2459) [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-cli**
 
-    Updated the CLI to use the new service discovery API.
+  Updated the CLI to use the new service discovery API.
 
-    > [!NOTE]
-    > This is a quick fix until the new major version of the CLI is released.
+  > [!NOTE]
+  > This is a quick fix until the new major version of the CLI is released.
 
-    - Updated the `baseUri` to use a more specific URL path for service discovery.
-    - Changed from `new URL(import.meta.url).origin` to `String(new URL('/_discovery/environments/current', import.meta.url))`.
-    - Changed parsing of service discovery response to match new API format.
+  - Updated the `baseUri` to use a more specific URL path for service discovery.
+  - Changed from `new URL(import.meta.url).origin` to `String(new URL('/_discovery/environments/current', import.meta.url))`.
+  - Changed parsing of service discovery response to match new API format.
 
 ### Patch Changes
 
 - [#2458](https://github.com/equinor/fusion-framework/pull/2458) [`202cf10`](https://github.com/equinor/fusion-framework/commit/202cf10ae434d6432c8b57c2867b182223c19212) Thanks [@odinr](https://github.com/odinr)! - changed service discover url to match #c776845e753acf4a0bceda1c59d31e5939c44c31
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.8
-    - @equinor/fusion-framework-module-feature-flag@1.1.9
-    - @equinor/fusion-framework-react-components-people-provider@1.4.7
+  - @equinor/fusion-framework-app@9.1.8
+  - @equinor/fusion-framework-module-feature-flag@1.1.9
+  - @equinor/fusion-framework-react-components-people-provider@1.4.7
 
 ## 9.12.14
 
@@ -481,10 +489,10 @@
 - [#2431](https://github.com/equinor/fusion-framework/pull/2431) [`53ff9cc`](https://github.com/equinor/fusion-framework/commit/53ff9ccdbac95ae8d279aed49f173708bbe9adbe) Thanks [@dependabot](https://github.com/apps/dependabot)! - Upgrade vite from 5.3.5 to [5.4.3](<(https://github.com/vitejs/vite/blob/create-vite@5.4.0/packages/create-vite/CHANGELOG.md)>)
 
 - Updated dependencies [[`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d)]:
-    - @equinor/fusion-observable@8.4.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.8
-    - @equinor/fusion-framework-app@9.1.7
-    - @equinor/fusion-framework-react-components-people-provider@1.4.6
+  - @equinor/fusion-observable@8.4.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.8
+  - @equinor/fusion-framework-app@9.1.7
+  - @equinor/fusion-framework-react-components-people-provider@1.4.6
 
 ## 9.12.13
 
@@ -492,12 +500,12 @@
 
 - [#2403](https://github.com/equinor/fusion-framework/pull/2403) [`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.40.1 to 0.41.2
 
-    [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
+  [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.6
-    - @equinor/fusion-framework-module-feature-flag@1.1.7
-    - @equinor/fusion-framework-react-components-people-provider@1.4.5
+  - @equinor/fusion-framework-app@9.1.6
+  - @equinor/fusion-framework-module-feature-flag@1.1.7
+  - @equinor/fusion-framework-react-components-people-provider@1.4.5
 
 ## 9.12.12
 
@@ -523,17 +531,17 @@
 
 - [#2360](https://github.com/equinor/fusion-framework/pull/2360) [`1c7ac1b`](https://github.com/equinor/fusion-framework/commit/1c7ac1b42213f33a668e79d750e0b12b227a7052) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced ContextSelector component in the CLI package:
 
-    - Implemented responsive context clearing mechanism
-    - Improved handling of context selection and clearing events
-    - Optimized component rendering with useMemo and useCallback hooks
+  - Implemented responsive context clearing mechanism
+  - Improved handling of context selection and clearing events
+  - Optimized component rendering with useMemo and useCallback hooks
 
 - [#2261](https://github.com/equinor/fusion-framework/pull/2261) [`aae93b9`](https://github.com/equinor/fusion-framework/commit/aae93b95120f1285545ea1b8344817c31e134ff5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump adm-zip from 0.5.10 to 0.5.14
 
 - Updated dependencies [[`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`a3543e3`](https://github.com/equinor/fusion-framework/commit/a3543e31353c9eac25140842643cb8e27e9b187e), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594)]:
-    - @equinor/fusion-observable@8.4.0
-    - @equinor/fusion-framework-react-components-people-provider@1.4.4
-    - @equinor/fusion-framework-module-feature-flag@1.1.6
-    - @equinor/fusion-framework-app@9.1.5
+  - @equinor/fusion-observable@8.4.0
+  - @equinor/fusion-framework-react-components-people-provider@1.4.4
+  - @equinor/fusion-framework-module-feature-flag@1.1.6
+  - @equinor/fusion-framework-app@9.1.5
 
 ## 9.12.11
 
@@ -544,9 +552,9 @@
 - [#2340](https://github.com/equinor/fusion-framework/pull/2340) [`9435ee4`](https://github.com/equinor/fusion-framework/commit/9435ee4ddebade18436c5c6bd57ee86b6baf0b24) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 5.2.10 to 5.3.3
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.4
-    - @equinor/fusion-framework-module-feature-flag@1.1.5
-    - @equinor/fusion-framework-react-components-people-provider@1.4.3
+  - @equinor/fusion-framework-app@9.1.4
+  - @equinor/fusion-framework-module-feature-flag@1.1.5
+  - @equinor/fusion-framework-react-components-people-provider@1.4.3
 
 ## 9.12.10
 
@@ -559,60 +567,60 @@
   Additionally, Vite now supports the `system` library format and adds options for not starting a WebSocket server and ignoring certain code sections.
   The changelog also notes performance enhancements, dependency updates, and bug fixes, including resolving circular dependencies, improving error recovery, and updating non-major dependencies.
 
-    build(deps): bump vite from 5.2.10 to 5.3.3
+  build(deps): bump vite from 5.2.10 to 5.3.3
 
 - [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - [#2330](https://github.com/equinor/fusion-framework/pull/2330) [`4c4471a`](https://github.com/equinor/fusion-framework/commit/4c4471a61d083c6b00d25ebf82952632ff50e200) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump rollup from 4.12.0 to 4.18.1
 
 - Updated dependencies [[`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`a723e86`](https://github.com/equinor/fusion-framework/commit/a723e8605059ad126602d053c65114c3ce908964), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.4.2
-    - @equinor/fusion-framework-module-feature-flag@1.1.5
-    - @equinor/fusion-observable@8.3.3
-    - @equinor/fusion-framework-app@9.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.4.2
+  - @equinor/fusion-framework-module-feature-flag@1.1.5
+  - @equinor/fusion-observable@8.3.3
+  - @equinor/fusion-framework-app@9.1.3
 
 ## 9.12.9
 
@@ -621,17 +629,17 @@
 - [#2270](https://github.com/equinor/fusion-framework/pull/2270) [`b739416`](https://github.com/equinor/fusion-framework/commit/b7394165a573e545152cfcedc2ddae186ec94112) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Update fusion-wc-person to resolve issue with positioning
 
 - Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb), [`b739416`](https://github.com/equinor/fusion-framework/commit/b7394165a573e545152cfcedc2ddae186ec94112)]:
-    - @equinor/fusion-observable@8.3.2
-    - @equinor/fusion-framework-react-components-people-provider@1.4.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.4
-    - @equinor/fusion-framework-app@9.1.2
+  - @equinor/fusion-observable@8.3.2
+  - @equinor/fusion-framework-react-components-people-provider@1.4.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.4
+  - @equinor/fusion-framework-app@9.1.2
 
 ## 9.12.8
 
 ### Patch Changes
 
 - Updated dependencies [[`b8d52ad`](https://github.com/equinor/fusion-framework/commit/b8d52adb2ca1f9857c672a3deb774409ff2bdb37)]:
-    - @equinor/fusion-framework-app@9.1.1
+  - @equinor/fusion-framework-app@9.1.1
 
 ## 9.12.7
 
@@ -640,19 +648,19 @@
 - [#2205](https://github.com/equinor/fusion-framework/pull/2205) [`4e64552`](https://github.com/equinor/fusion-framework/commit/4e64552a3c1b0324e1deda93779eab16dbebbed3) Thanks [@odinr](https://github.com/odinr)! - Updated `@equinor/eds-core-react` dependency to version `^0.38.0`
   Updated `@equinor/eds-utils` dependency to version `^0.8.5`
 - Updated dependencies [[`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8), [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.4.0
-    - @equinor/fusion-framework-app@9.1.0
-    - @equinor/fusion-observable@8.3.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.4.0
+  - @equinor/fusion-framework-app@9.1.0
+  - @equinor/fusion-observable@8.3.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.3
 
 ## 9.12.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.0.9
-    - @equinor/fusion-framework-module-feature-flag@1.1.2
-    - @equinor/fusion-framework-react-components-people-provider@1.3.8
+  - @equinor/fusion-framework-app@9.0.9
+  - @equinor/fusion-framework-module-feature-flag@1.1.2
+  - @equinor/fusion-framework-react-components-people-provider@1.3.8
 
 ## 9.12.5
 
@@ -660,25 +668,25 @@
 
 - [#2135](https://github.com/equinor/fusion-framework/pull/2135) [`3cd63d5`](https://github.com/equinor/fusion-framework/commit/3cd63d58e4e3ffd15bccdebaa94b391e3e3d12f0) Thanks [@odinr](https://github.com/odinr)! - Fixed styling of the render root element for the application
 
-    fixes: https://github.com/equinor/fusion/issues/301
+  fixes: https://github.com/equinor/fusion/issues/301
 
-    ## @equinor/fusion-framework-cli
+  ## @equinor/fusion-framework-cli
 
-    ### What the change is
+  ### What the change is
 
-    This change fixes an issue where the root element rendered by the CLI was not being styled correctly, causing layout issues in some applications.
+  This change fixes an issue where the root element rendered by the CLI was not being styled correctly, causing layout issues in some applications.
 
-    ### Why the change was made
+  ### Why the change was made
 
-    Previously, the root element was not receiving the correct styles due to an issue with the way styles were being applied. This led to visual inconsistencies and layout problems in applications rendered by the CLI.
+  Previously, the root element was not receiving the correct styles due to an issue with the way styles were being applied. This led to visual inconsistencies and layout problems in applications rendered by the CLI.
 
-    ### How a consumer should update their code
+  ### How a consumer should update their code
 
-    No code changes are required for consumers. This fix will be automatically applied when using the updated version of the `@equinor/fusion-framework-cli` package.
+  No code changes are required for consumers. This fix will be automatically applied when using the updated version of the `@equinor/fusion-framework-cli` package.
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.7
-    - @equinor/fusion-framework-app@9.0.8
+  - @equinor/fusion-framework-react-components-people-provider@1.3.7
+  - @equinor/fusion-framework-app@9.0.8
 
 ## 9.12.4
 
@@ -686,14 +694,14 @@
 
 - [#2107](https://github.com/equinor/fusion-framework/pull/2107) [`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197) Thanks [@odinr](https://github.com/odinr)! - Fixed issue with missing process env `FUSION_LOG_LEVEL`
 
-    - added default resolve value when generating base vite configuration
-    - moved default query log level resolve outside class
+  - added default resolve value when generating base vite configuration
+  - moved default query log level resolve outside class
 
-    fixes: https://github.com/equinor/fusion/issues/343
+  fixes: https://github.com/equinor/fusion/issues/343
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.6
-    - @equinor/fusion-framework-app@9.0.7
+  - @equinor/fusion-framework-react-components-people-provider@1.3.6
+  - @equinor/fusion-framework-app@9.0.7
 
 ## 9.12.3
 
@@ -706,18 +714,18 @@
 - [`cf4a17a`](https://github.com/equinor/fusion-framework/commit/cf4a17a07540b05b0d44de7e188aaaa8f9fef8f8) Thanks [@odinr](https://github.com/odinr)! - updated Query, ref #2095
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.5
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework-app@9.0.6
+  - @equinor/fusion-framework-react-components-people-provider@1.3.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-app@9.0.6
 
 ## 9.12.2
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.0.5
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework-react-components-people-provider@1.3.4
+  - @equinor/fusion-framework-app@9.0.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-react-components-people-provider@1.3.4
 
 ## 9.12.1
 
@@ -726,10 +734,10 @@
 - [#2059](https://github.com/equinor/fusion-framework/pull/2059) [`303c962`](https://github.com/equinor/fusion-framework/commit/303c96234e381ddc3ad86daeff9baaec5ade6bbe) Thanks [@eikeland](https://github.com/eikeland)! - Removes z-index from apploader section to make ContextSelector dropdown usable again
 
 - Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a)]:
-    - @equinor/fusion-observable@8.3.0
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework-react-components-people-provider@1.3.3
-    - @equinor/fusion-framework-app@9.0.4
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-react-components-people-provider@1.3.3
+  - @equinor/fusion-framework-app@9.0.4
 
 ## 9.12.0
 
@@ -737,9 +745,9 @@
 
 - [#2051](https://github.com/equinor/fusion-framework/pull/2051) [`3eba53a`](https://github.com/equinor/fusion-framework/commit/3eba53a7eb113a9985092a3c6166ab6bdd44c02f) Thanks [@odinr](https://github.com/odinr)! - Aligned CLI dev-portal more to fusion classic portal layout
 
-    > the dev-portal is a generic portal for developing application, not a 100% replica of the environment _(this will be a feature in future, which the developer kan test the application in different simulated portals)_
+  > the dev-portal is a generic portal for developing application, not a 100% replica of the environment _(this will be a feature in future, which the developer kan test the application in different simulated portals)_
 
-    **No functionality changed, only the markup of dev-portal**
+  **No functionality changed, only the markup of dev-portal**
 
 ### Patch Changes
 
@@ -748,16 +756,16 @@
 - [#2052](https://github.com/equinor/fusion-framework/pull/2052) [`545a090`](https://github.com/equinor/fusion-framework/commit/545a0902bc670724498add3f4fd82f251e9156e6) Thanks [@odinr](https://github.com/odinr)! - fix for #2051
 
 - Updated dependencies [[`1cf4003`](https://github.com/equinor/fusion-framework/commit/1cf400389d8d15afbacdc33789130e268c492a0c)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.2
-    - @equinor/fusion-framework-app@9.0.3
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-framework-react-components-people-provider@1.3.2
+  - @equinor/fusion-framework-app@9.0.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
 
 ## 9.11.1
 
 ### Patch Changes
 
 - Updated dependencies [[`036ec15`](https://github.com/equinor/fusion-framework/commit/036ec151ace9c051ded41798ab94b8ee5e3d4461)]:
-    - @equinor/fusion-framework-app@9.0.2
+  - @equinor/fusion-framework-app@9.0.2
 
 ## 9.11.0
 
@@ -772,9 +780,9 @@
 - [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
 
 - Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.1
-    - @equinor/fusion-framework-app@9.0.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-framework-react-components-people-provider@1.3.1
+  - @equinor/fusion-framework-app@9.0.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
 
 ## 9.10.0
 
@@ -787,10 +795,10 @@
 - [#1945](https://github.com/equinor/fusion-framework/pull/1945) [`b59d314`](https://github.com/equinor/fusion-framework/commit/b59d3142a551574117d3cdeb274cceb996459000) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - bump @equinor/fusion-wc-person from 2.6.4 to 2.6.5
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`b59d314`](https://github.com/equinor/fusion-framework/commit/b59d3142a551574117d3cdeb274cceb996459000), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.3.0
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
-    - @equinor/fusion-observable@8.2.0
-    - @equinor/fusion-framework-app@9.0.0
+  - @equinor/fusion-framework-react-components-people-provider@1.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-observable@8.2.0
+  - @equinor/fusion-framework-app@9.0.0
 
 ## 9.9.0
 
@@ -798,19 +806,19 @@
 
 - [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - CLI will now update pathname when current context changes
 
-    CLI will now resolve initial context _(if context module enabled)_
+  CLI will now resolve initial context _(if context module enabled)_
 
-    Fixes: https://github.com/equinor/fusion/issues/307
+  Fixes: https://github.com/equinor/fusion/issues/307
 
-    Will work even if not application has not enabled navigation
+  Will work even if not application has not enabled navigation
 
 ### Patch Changes
 
 - [#1929](https://github.com/equinor/fusion-framework/pull/1929) [`86e7556`](https://github.com/equinor/fusion-framework/commit/86e7556b212f42501ef5e885fea36d20002e43ac) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update to latest fusion-react-context-selector
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@8.1.4
-    - @equinor/fusion-framework-react-components-people-provider@1.2.6
+  - @equinor/fusion-framework-app@8.1.4
+  - @equinor/fusion-framework-react-components-people-provider@1.2.6
 
 ## 9.8.7
 
@@ -827,15 +835,15 @@
 - [#1919](https://github.com/equinor/fusion-framework/pull/1919) [`666780c`](https://github.com/equinor/fusion-framework/commit/666780cb2f6e5b3d5b861a179220362c1bf4b0ad) Thanks [@odinr](https://github.com/odinr)! - removed unused packages
 
 - Updated dependencies [[`6f3315a`](https://github.com/equinor/fusion-framework/commit/6f3315a83ea43d5355a5d95c1e9e4caf6f6b7c72)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.2.5
+  - @equinor/fusion-framework-react-components-people-provider@1.2.5
 
 ## 9.8.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@8.1.3
-    - @equinor/fusion-framework-react-components-people-provider@1.2.4
+  - @equinor/fusion-framework-app@8.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.2.4
 
 ## 9.8.4
 
@@ -846,7 +854,7 @@
 - [#1902](https://github.com/equinor/fusion-framework/pull/1902) [`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8) Thanks [@eikeland](https://github.com/eikeland)! - Updates cli dep fwc-person and improve people cookbook
 
 - Updated dependencies [[`06d3739`](https://github.com/equinor/fusion-framework/commit/06d373990b481bcae361cfa4fa8a905b4256c7d8)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.2.3
+  - @equinor/fusion-framework-react-components-people-provider@1.2.3
 
 ## 9.8.3
 
@@ -854,7 +862,7 @@
 
 - [#1878](https://github.com/equinor/fusion-framework/pull/1878) [`fe1a239`](https://github.com/equinor/fusion-framework/commit/fe1a239e9ce9fc0e39b4faf67ffda40d287d5bd2) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add error icon for errors
 
-    - Add info icon for no result
+  - Add info icon for no result
 
 - [#1875](https://github.com/equinor/fusion-framework/pull/1875) [`e018c6e`](https://github.com/equinor/fusion-framework/commit/e018c6e5b5f8676b642ded1bb8b5b41bc65f674f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Show message when unhandled error occurs in context selector
 
@@ -865,8 +873,8 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@8.1.2
-    - @equinor/fusion-framework-react-components-people-provider@1.2.2
+  - @equinor/fusion-framework-app@8.1.2
+  - @equinor/fusion-framework-react-components-people-provider@1.2.2
 
 ## 9.8.1
 
@@ -875,7 +883,7 @@
 - [#1839](https://github.com/equinor/fusion-framework/pull/1839) [`f2e5d9f`](https://github.com/equinor/fusion-framework/commit/f2e5d9f78546b4e933f012d58081439a1c2f5554) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bumps @equinor/fusion-wc-person to 2.5.1
 
 - Updated dependencies [[`f2e5d9f`](https://github.com/equinor/fusion-framework/commit/f2e5d9f78546b4e933f012d58081439a1c2f5554)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.2.1
+  - @equinor/fusion-framework-react-components-people-provider@1.2.1
 
 ## 9.8.0
 
@@ -888,7 +896,7 @@
 - [#1823](https://github.com/equinor/fusion-framework/pull/1823) [`9733563`](https://github.com/equinor/fusion-framework/commit/9733563ad072a6c21d61952d6d71978b88612ac5) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump @equinor/eds-core-react from 0.35.1 to 0.36.0
 
 - Updated dependencies [[`91a5782`](https://github.com/equinor/fusion-framework/commit/91a5782d22b25c562a1c65cc702bee1c96b97737)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.2.0
+  - @equinor/fusion-framework-react-components-people-provider@1.2.0
 
 ## 9.7.0
 
@@ -896,7 +904,7 @@
 
 - [#1801](https://github.com/equinor/fusion-framework/pull/1801) [`6e8fb78`](https://github.com/equinor/fusion-framework/commit/6e8fb78698fe11402ceef8d8ab48530bb8866699) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump commander from 11.1.0 to 12.0.0
 
-    see [changelog](https://github.com/tj/commander.js/releases/tag/v12.0.0)
+  see [changelog](https://github.com/tj/commander.js/releases/tag/v12.0.0)
 
 ### Patch Changes
 
@@ -907,9 +915,9 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.15
-    - @equinor/fusion-framework-app@8.1.1
-    - @equinor/fusion-framework-module-feature-flag@1.0.2
+  - @equinor/fusion-framework-react-components-people-provider@1.1.15
+  - @equinor/fusion-framework-app@8.1.1
+  - @equinor/fusion-framework-module-feature-flag@1.0.2
 
 ## 9.6.3
 
@@ -917,25 +925,25 @@
 
 - [#1786](https://github.com/equinor/fusion-framework/pull/1786) [`a5f74f2`](https://github.com/equinor/fusion-framework/commit/a5f74f2096a55c4dab4b1d263bd39cd0dc39ac7a) Thanks [@odinr](https://github.com/odinr)! - support resources in `defineAppManifest`
 
-    ref [issue 286](https://github.com/equinor/fusion/issues/286#issuecomment-1923401234)
+  ref [issue 286](https://github.com/equinor/fusion/issues/286#issuecomment-1923401234)
 
 ## 9.6.2
 
 ### Patch Changes
 
 - Updated dependencies [[`09f8dd2`](https://github.com/equinor/fusion-framework/commit/09f8dd2dad31e8de47409e6bd751f74e3dd02607), [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.14
-    - @equinor/fusion-framework-app@8.1.0
+  - @equinor/fusion-framework-react-components-people-provider@1.1.14
+  - @equinor/fusion-framework-app@8.1.0
 
 ## 9.6.1
 
 ### Patch Changes
 
 - Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
-    - @equinor/fusion-observable@8.1.5
-    - @equinor/fusion-framework-module-feature-flag@1.0.1
-    - @equinor/fusion-framework-app@8.0.1
-    - @equinor/fusion-framework-react-components-people-provider@1.1.13
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-framework-module-feature-flag@1.0.1
+  - @equinor/fusion-framework-app@8.0.1
+  - @equinor/fusion-framework-react-components-people-provider@1.1.13
 
 ## 9.6.0
 
@@ -950,9 +958,9 @@
 - [`cb20fc1`](https://github.com/equinor/fusion-framework/commit/cb20fc1a0259a8e0f91d43e44a035b2ad26951f3) Thanks [@odinr](https://github.com/odinr)! - [security update](https://github.com/equinor/fusion-framework/security/dependabot/90)
 
 - Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e), [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
-    - @equinor/fusion-framework-app@8.0.0
-    - @equinor/fusion-framework-module-feature-flag@1.0.0
-    - @equinor/fusion-framework-react-components-people-provider@1.1.12
+  - @equinor/fusion-framework-app@8.0.0
+  - @equinor/fusion-framework-module-feature-flag@1.0.0
+  - @equinor/fusion-framework-react-components-people-provider@1.1.12
 
 ## 9.5.10
 
@@ -965,7 +973,7 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.11
+  - @equinor/fusion-framework-react-components-people-provider@1.1.11
 
 ## 9.5.8
 
@@ -974,8 +982,8 @@
 - [#1215](https://github.com/equinor/fusion-framework/pull/1215) [`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d) Thanks [@odinr](https://github.com/odinr)! - Adding PersonSidesheet to cli with featuretoggler
 
 - Updated dependencies [[`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d), [`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d)]:
-    - @equinor/fusion-framework-module-feature-flag@0.0.1
-    - @equinor/fusion-framework-react-components-people-provider@1.1.10
+  - @equinor/fusion-framework-module-feature-flag@0.0.1
+  - @equinor/fusion-framework-react-components-people-provider@1.1.10
 
 ## 9.5.7
 
@@ -998,33 +1006,33 @@
 - [#1565](https://github.com/equinor/fusion-framework/pull/1565) [`4e7dbce`](https://github.com/equinor/fusion-framework/commit/4e7dbce1a92b093bec91d48d38afd7b70fe03296) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/fusion-wc-person from 2.1.8 to 2.3.0
 
 - Updated dependencies [[`4e7dbce`](https://github.com/equinor/fusion-framework/commit/4e7dbce1a92b093bec91d48d38afd7b70fe03296)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.9
-    - @equinor/fusion-framework-app@7.1.15
+  - @equinor/fusion-framework-react-components-people-provider@1.1.9
+  - @equinor/fusion-framework-app@7.1.15
 
 ## 9.5.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.14
-    - @equinor/fusion-framework-react-components-people-provider@1.1.8
+  - @equinor/fusion-framework-app@7.1.14
+  - @equinor/fusion-framework-react-components-people-provider@1.1.8
 
 ## 9.5.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.13
-    - @equinor/fusion-framework-react-components-people-provider@1.1.7
+  - @equinor/fusion-framework-app@7.1.13
+  - @equinor/fusion-framework-react-components-people-provider@1.1.7
 
 ## 9.5.3
 
 ### Patch Changes
 
 - Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
-    - @equinor/fusion-observable@8.1.4
-    - @equinor/fusion-framework-app@7.1.12
-    - @equinor/fusion-framework-react-components-people-provider@1.1.6
+  - @equinor/fusion-observable@8.1.4
+  - @equinor/fusion-framework-app@7.1.12
+  - @equinor/fusion-framework-react-components-people-provider@1.1.6
 
 ## 9.5.2
 
@@ -1035,9 +1043,9 @@
 - [#1578](https://github.com/equinor/fusion-framework/pull/1578) [`e6859bf`](https://github.com/equinor/fusion-framework/commit/e6859bf9604b1ac388c077db97cb7bd7127f59db) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-menu from 0.2.0 to 0.3.0
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-observable@8.1.3
-    - @equinor/fusion-framework-react-components-people-provider@1.1.5
-    - @equinor/fusion-framework-app@7.1.11
+  - @equinor/fusion-observable@8.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.1.5
+  - @equinor/fusion-framework-app@7.1.11
 
 ## 9.5.1
 
@@ -1056,15 +1064,15 @@
 ### Patch Changes
 
 - Updated dependencies [[`22909e77`](https://github.com/equinor/fusion-framework/commit/22909e77488b099697dccec93e7ac8416dc4a5bd)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.4
+  - @equinor/fusion-framework-react-components-people-provider@1.1.4
 
 ## 9.4.3
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.10
-    - @equinor/fusion-framework-react-components-people-provider@1.1.3
+  - @equinor/fusion-framework-app@7.1.10
+  - @equinor/fusion-framework-react-components-people-provider@1.1.3
 
 ## 9.4.2
 
@@ -1075,8 +1083,8 @@
 - [#1534](https://github.com/equinor/fusion-framework/pull/1534) [`8c77de20`](https://github.com/equinor/fusion-framework/commit/8c77de209df2f41a78636f1f6f85a81d653484d2) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite-plugin-restart from 0.3.1 to 0.4.0
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.9
-    - @equinor/fusion-framework-react-components-people-provider@1.1.3
+  - @equinor/fusion-framework-app@7.1.9
+  - @equinor/fusion-framework-react-components-people-provider@1.1.3
 
 ## 9.4.1
 
@@ -1085,7 +1093,7 @@
 - [#1498](https://github.com/equinor/fusion-framework/pull/1498) [`7287fa3d`](https://github.com/equinor/fusion-framework/commit/7287fa3dca655c84b3a4f5f904e3f423ec341e7a) Thanks [@odinr](https://github.com/odinr)! - bump @equinor/fusion-wc-person from 2.1.0 to 2.1.8
 
 - Updated dependencies [[`7287fa3d`](https://github.com/equinor/fusion-framework/commit/7287fa3dca655c84b3a4f5f904e3f423ec341e7a)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.3
+  - @equinor/fusion-framework-react-components-people-provider@1.1.3
 
 ## 9.4.0
 
@@ -1107,11 +1115,11 @@
 
 - [#1475](https://github.com/equinor/fusion-framework/pull/1475) [`9b22a14d`](https://github.com/equinor/fusion-framework/commit/9b22a14d791878a83b6df84190922d3143fdc0df) Thanks [@odinr](https://github.com/odinr)! - fix log loop
 
-    ```bash
-    if (msg.match(/^Failed to load url \/assets/)) {
-    RangeError: Maximum call stack size exceeded
-        at String.match (<anonymous>)
-    ```
+  ```bash
+  if (msg.match(/^Failed to load url \/assets/)) {
+  RangeError: Maximum call stack size exceeded
+      at String.match (<anonymous>)
+  ```
 
 ## 9.3.4
 
@@ -1119,7 +1127,7 @@
 
 - [#1465](https://github.com/equinor/fusion-framework/pull/1465) [`1cdc52ab`](https://github.com/equinor/fusion-framework/commit/1cdc52abbdf8aa714d4b4035a01e474fbe56d8f6) Thanks [@odinr](https://github.com/odinr)! - cli should no use provided config when developing an application which exists in Fusion App Service.
 
-    > when dev proxy server did not get 404 when requesting application config, it provided the manifest instead of config file path
+  > when dev proxy server did not get 404 when requesting application config, it provided the manifest instead of config file path
 
 ## 9.3.3
 
@@ -1133,9 +1141,9 @@
 
 - [#1462](https://github.com/equinor/fusion-framework/pull/1462) [`e35d8e2b`](https://github.com/equinor/fusion-framework/commit/e35d8e2b69148a497c7acaa8e1e0bf86987f475e) Thanks [@odinr](https://github.com/odinr)! - silent error when failing to optimize pre-built assets
 
-    Vite tries to import optimize pre-built assets for the dev portal (which it should not).
+  Vite tries to import optimize pre-built assets for the dev portal (which it should not).
 
-    see [fix: exclude external dependencies from html rewriting](https://github.com/vitejs/vite/pull/11854#issuecomment-1500453147)
+  see [fix: exclude external dependencies from html rewriting](https://github.com/vitejs/vite/pull/11854#issuecomment-1500453147)
 
 - [#1442](https://github.com/equinor/fusion-framework/pull/1442) [`1173f715`](https://github.com/equinor/fusion-framework/commit/1173f71597b7b90c17d314188d83f46e1d81a2f3) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @equinor/fusion-react-side-sheet from 1.1.0 to 1.2.0
 
@@ -1144,8 +1152,8 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.2
-    - @equinor/fusion-framework-app@7.1.8
+  - @equinor/fusion-framework-react-components-people-provider@1.1.2
+  - @equinor/fusion-framework-app@7.1.8
 
 ## 9.3.0
 
@@ -1176,7 +1184,7 @@
 - [#1375](https://github.com/equinor/fusion-framework/pull/1375) [`f50ea5da`](https://github.com/equinor/fusion-framework/commit/f50ea5dab449ce7a5e3071f65fac4e800a619eec) Thanks [@odinr](https://github.com/odinr)! - update people deps
 
 - Updated dependencies [[`f50ea5da`](https://github.com/equinor/fusion-framework/commit/f50ea5dab449ce7a5e3071f65fac4e800a619eec)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.1
+  - @equinor/fusion-framework-react-components-people-provider@1.1.1
 
 ## 9.2.0
 
@@ -1190,7 +1198,7 @@
 
 - [#1348](https://github.com/equinor/fusion-framework/pull/1348) [`0acc8827`](https://github.com/equinor/fusion-framework/commit/0acc8827e5e2df8b5b2aeac5e1a2cd29c4384e78) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.32.4 to 0.33.0
 
-    - support for [styled-components@6](https://styled-components.com/releases#v6.0.0)
+  - support for [styled-components@6](https://styled-components.com/releases#v6.0.0)
 
 ## 9.1.3
 
@@ -1210,9 +1218,9 @@
 
 - [`6ec59f64`](https://github.com/equinor/fusion-framework/commit/6ec59f64f35e553cd68d6d6e03c1e5867aba87ce) Thanks [@odinr](https://github.com/odinr)! - fixed loading of config files for Windows
 
-    found internal [issues](https://github.com/radarsu/ts-import/issues/39) with `ts-import` where file url path crashed native `fs` command, but failed on imports since windows can`t handle absolute paths.
+  found internal [issues](https://github.com/radarsu/ts-import/issues/39) with `ts-import` where file url path crashed native `fs` command, but failed on imports since windows can`t handle absolute paths.
 
-    quick and dirty transpile code and eject of `ts-import`
+  quick and dirty transpile code and eject of `ts-import`
 
 - [#1264](https://github.com/equinor/fusion-framework/pull/1264) [`ace9fa37`](https://github.com/equinor/fusion-framework/commit/ace9fa379215fd75e37b140db5c8ea2d3680b0c0) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump express-rate-limit from 6.9.0 to [7.0.0](https://github.com/express-rate-limit/express-rate-limit/releases/tag/v7.0.0)
 
@@ -1221,8 +1229,8 @@
 - [`5b8c4ebc`](https://github.com/equinor/fusion-framework/commit/5b8c4ebc85f636e18e7666fd5dbbaf9ee10d8608) Thanks [@odinr](https://github.com/odinr)! - fixed packing of application
 
 - Updated dependencies [[`cc7bcfb5`](https://github.com/equinor/fusion-framework/commit/cc7bcfb51187fb757b95793356da4a11b233d930), [`f65c4531`](https://github.com/equinor/fusion-framework/commit/f65c453178e2c581acb154d5839971c75f60fa86), [`9f121865`](https://github.com/equinor/fusion-framework/commit/9f121865254a0c76c4a812e6e42bfe3c7086c714), [`518b8476`](https://github.com/equinor/fusion-framework/commit/518b8476bb40255d05e937663d3a513de479a1f8), [`9d9f629e`](https://github.com/equinor/fusion-framework/commit/9d9f629e007df38db75067781b251b7e5e9673da), [`3e38c9cc`](https://github.com/equinor/fusion-framework/commit/3e38c9cc925fc0456837e42e7ee3ac55e9553bad), [`63592229`](https://github.com/equinor/fusion-framework/commit/63592229cea4d3606289738fe14b432e9978623f)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.1.0
-    - @equinor/fusion-framework-app@7.1.7
+  - @equinor/fusion-framework-react-components-people-provider@1.1.0
+  - @equinor/fusion-framework-app@7.1.7
 
 ## 9.1.1
 
@@ -1231,9 +1239,9 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-app@7.1.6
-    - @equinor/fusion-framework-react-components-people-provider@1.0.1
-    - @equinor/fusion-observable@8.1.2
+  - @equinor/fusion-framework-app@7.1.6
+  - @equinor/fusion-framework-react-components-people-provider@1.0.1
+  - @equinor/fusion-observable@8.1.2
 
 ## 9.1.0
 
@@ -1241,17 +1249,17 @@
 
 - [#1257](https://github.com/equinor/fusion-framework/pull/1257) [`780b229a`](https://github.com/equinor/fusion-framework/commit/780b229a709d83b275e88473df0236b3f218c037) Thanks [@odinr](https://github.com/odinr)! - person resolving
 
-    the CLI now resolves persons from `azureId` or `upn`
+  the CLI now resolves persons from `azureId` or `upn`
 
-    ```tsx
-    const MyPage = () => {
-      return (
-        <fwc-person-avatar azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-avatar>
-        <fwc-person-card azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-card>
-        <fwc-person-list-item azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-list-item>
-      )
-    }
-    ```
+  ```tsx
+  const MyPage = () => {
+    return (
+      <fwc-person-avatar azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-avatar>
+      <fwc-person-card azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-card>
+      <fwc-person-list-item azureId='cbc6480d-12c1-467e-b0b8-cfbb22612daa'></fwc-person-list-item>
+    )
+  }
+  ```
 
 ### Patch Changes
 
@@ -1260,15 +1268,15 @@
 - [`0d84d39e`](https://github.com/equinor/fusion-framework/commit/0d84d39ed9d452aa7bb8bc4dfc6ff2e46d3af82b) Thanks [@odinr](https://github.com/odinr)! - enable services for CLI portal
 
 - Updated dependencies [[`de46f0a2`](https://github.com/equinor/fusion-framework/commit/de46f0a2ce93134fc32bf587d29dd32d7ab9a8d9)]:
-    - @equinor/fusion-framework-react-components-people-provider@1.0.0
-    - @equinor/fusion-framework-app@7.1.5
+  - @equinor/fusion-framework-react-components-people-provider@1.0.0
+  - @equinor/fusion-framework-app@7.1.5
 
 ## 9.0.2
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.4
+  - @equinor/fusion-framework-app@7.1.4
 
 ## 9.0.1
 
@@ -1282,106 +1290,112 @@
 
 - [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - Rewrite fusion framework CLI
 
-    Rework of the Fusion Framework CLI to support future features
+  Rework of the Fusion Framework CLI to support future features
 
-    > the CLI was thrown together as a proof of concept, but grown un-manageable, because of lack of structure
+  > the CLI was thrown together as a proof of concept, but grown un-manageable, because of lack of structure
 
-    **Main Features**
+  **Main Features**
 
-    - Separate logic and utilities from program (app/cli commands)
-    - allow user to provide config files `app.{config,manifest,vite}.{ts,js,json}`
-        - the cli will try to resolve from `.ts` then `.js` then `.json`
-        - `app.config` is used to configure application environment configs (app-service config)
-        - `app.manifest` application manifest, information about the application
-        - `app.vite` override the CLI vite configuration
-    - provide interface for `app.TYPE.ts` config
-        - `define` and `merge` functionality
-        - note that `app.config` and `app.manifest` needs to return full object _(will not be merged by CLI)_
-    - allow providing config file in command
-    - using config when resolving proxy request
-    - improved CLI logging
+  - Separate logic and utilities from program (app/cli commands)
+  - allow user to provide config files `app.{config,manifest,vite}.{ts,js,json}`
+    - the cli will try to resolve from `.ts` then `.js` then `.json`
+    - `app.config` is used to configure application environment configs (app-service config)
+    - `app.manifest` application manifest, information about the application
+    - `app.vite` override the CLI vite configuration
+  - provide interface for `app.TYPE.ts` config
+    - `define` and `merge` functionality
+    - note that `app.config` and `app.manifest` needs to return full object _(will not be merged by CLI)_
+  - allow providing config file in command
+  - using config when resolving proxy request
+  - improved CLI logging
 
-    **examples**
+  **examples**
 
-    app.config.ts
+  app.config.ts
 
-    ```ts
-    import { mergeAppConfigs, defineAppConfig } from '@equinor/fusion-framework-cli';
-    export default defineAppConfig((_nev, { base }) =>
-        mergeAppConfigs(base, {
-            environment: {
-                api: {
-                    foo: {
-                        baseUri: 'https://foo.bars',
-                        scopes: ['foobar'],
-                    },
-                },
-            },
-        }),
-    );
-    ```
+  ```ts
+  import {
+    mergeAppConfigs,
+    defineAppConfig,
+  } from "@equinor/fusion-framework-cli";
+  export default defineAppConfig((_nev, { base }) =>
+    mergeAppConfigs(base, {
+      environment: {
+        api: {
+          foo: {
+            baseUri: "https://foo.bars",
+            scopes: ["foobar"],
+          },
+        },
+      },
+    }),
+  );
+  ```
 
-    app.manifest
+  app.manifest
 
-    ```ts
-    import { defineAppManifest, mergeManifests } from '@equinor/fusion-framework-cli';
+  ```ts
+  import {
+    defineAppManifest,
+    mergeManifests,
+  } from "@equinor/fusion-framework-cli";
 
-    export default defineAppManifest((env, { base }) => {
-        if (env.command === 'serve') {
-            return mergeManifests(base, {
-                key: 'simple',
-            });
-        }
-        return base;
-    });
-    ```
+  export default defineAppManifest((env, { base }) => {
+    if (env.command === "serve") {
+      return mergeManifests(base, {
+        key: "simple",
+      });
+    }
+    return base;
+  });
+  ```
 
-    fusion-framework-cli app
+  fusion-framework-cli app
 
-    ```sh
-    fusion-framework-cli app dev --manifest app.manifest.local.ts
-    ```
+  ```sh
+  fusion-framework-cli app dev --manifest app.manifest.local.ts
+  ```
 
 ### Minor Changes
 
 - [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - add command for generating manifest
 
-    generate manifest for application
+  generate manifest for application
 
-    ```sh
-    fusion-framework-cli app manifest
-    #output to file
-    fusion-framework-cli app manifest -o manifest.json
-    #specify custom config
-    fusion-framework-cli app manifest -c app.manifest.custom.ts
-    ```
+  ```sh
+  fusion-framework-cli app manifest
+  #output to file
+  fusion-framework-cli app manifest -o manifest.json
+  #specify custom config
+  fusion-framework-cli app manifest -c app.manifest.custom.ts
+  ```
 
 - [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - add pack command to cli
 
-    add method which will build, generate manifest and pack assets into a zip file (**just like the legacy @equinor/fusion-cli**)
+  add method which will build, generate manifest and pack assets into a zip file (**just like the legacy @equinor/fusion-cli**)
 
-    ```sh
-    fusion-framework-cli app pack
-    ```
+  ```sh
+  fusion-framework-cli app pack
+  ```
 
 ### Patch Changes
 
 - [#1194](https://github.com/equinor/fusion-framework/pull/1194) [`a424aef5`](https://github.com/equinor/fusion-framework/commit/a424aef5dc6575204a9448b74e0170192147b1b3) Thanks [@odinr](https://github.com/odinr)! - Add command for outputting application configuration
 
-    **example**
+  **example**
 
-    ```sh
-    fusion-framework-cli app config -o my-app.config.json
-    fdev portal config -e ci -k my-app --config-file my-app.config.json set
-    ```
+  ```sh
+  fusion-framework-cli app config -o my-app.config.json
+  fdev portal config -e ci -k my-app --config-file my-app.config.json set
+  ```
 
 ## 8.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760), [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4)]:
-    - @equinor/fusion-observable@8.1.1
-    - @equinor/fusion-framework-app@7.1.3
+  - @equinor/fusion-observable@8.1.1
+  - @equinor/fusion-framework-app@7.1.3
 
 ## 8.1.0
 
@@ -1389,22 +1403,22 @@
 
 - [`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594) Thanks [@odinr](https://github.com/odinr)! - Remove emotion decencies from CLI
 
-    align CLI with EDS and use style components instead of emotion 🥲
-    prevent conflict of react types dependent on both emotion and eds
+  align CLI with EDS and use style components instead of emotion 🥲
+  prevent conflict of react types dependent on both emotion and eds
 
-    - remove @emotion/\*
-    - convert emotion to styled-components
-    - fix styling of cli
-        - convert main placeholder to grid
-        - remove unnecessary styling from header
-        - set dynamic width of context selector (min 25rem)
+  - remove @emotion/\*
+  - convert emotion to styled-components
+  - fix styling of cli
+    - convert main placeholder to grid
+    - remove unnecessary styling from header
+    - set dynamic width of context selector (min 25rem)
 
 ### Patch Changes
 
 - [`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594) Thanks [@odinr](https://github.com/odinr)! - fixed bin resolve for pnpm
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.2
+  - @equinor/fusion-framework-app@7.1.2
 
 ## 8.0.1
 
@@ -1412,9 +1426,9 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1130](https://github.com/equinor/fusion-framework/pull/1130) [`542356ee`](https://github.com/equinor/fusion-framework/commit/542356eecfcc1bc8b896e71377308a1de29f4ab9) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps-dev): bump @emotion/styled from 11.10.6 to 11.11.0
 
@@ -1422,20 +1436,20 @@
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 - [#1122](https://github.com/equinor/fusion-framework/pull/1122) [`1a055b21`](https://github.com/equinor/fusion-framework/commit/1a055b21e07f84bc5d35cc891586aa9aa0bdf661) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update styled-components to [^6.0.7](https://github.com/styled-components/styled-components/releases/tag/v6.0.7)
 
-    - upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
-    - removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
+  - upgraded dev deps of `@equinor/fusion-framework-react-components-bookmark` to react 18, see style-components [changelog](https://github.com/styled-components/styled-components/releases/tag/v6.0.0)
+  - removed `@types/style-components` from `@equinor/fusion-framework-react-components-bookmark`
 
-    see style-components [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
+  see style-components [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6)
 
 - [#1148](https://github.com/equinor/fusion-framework/pull/1148) [`46201069`](https://github.com/equinor/fusion-framework/commit/46201069505f2526d1bdec05c134da17012b6d31) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump vite from 4.2.3 to 4.4.9
 
-    see [changelog](https://github.com/vitejs/vite/blob/create-vite@4.4.0/packages/create-vite/CHANGELOG.md)
+  see [changelog](https://github.com/vitejs/vite/blob/create-vite@4.4.0/packages/create-vite/CHANGELOG.md)
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
@@ -1444,8 +1458,8 @@
 - [#1087](https://github.com/equinor/fusion-framework/pull/1087) [`6887c016`](https://github.com/equinor/fusion-framework/commit/6887c0164102e17b4a6d6f16193d9e34a0f41149) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @vitejs/plugin-react from 3.1.0 to 4.0.4
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-observable@8.1.0
-    - @equinor/fusion-framework-app@7.1.1
+  - @equinor/fusion-observable@8.1.0
+  - @equinor/fusion-framework-app@7.1.1
 
 ## 8.0.0
 
@@ -1453,19 +1467,19 @@
 
 - [#973](https://github.com/equinor/fusion-framework/pull/973) [`713c94d9`](https://github.com/equinor/fusion-framework/commit/713c94d9a493f5aecb9fefa44942f83bd30ae29c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump commander from [10.0.1](https://github.com/tj/commander.js/releases/tag/v10.0.1) to [11.0.0](https://github.com/tj/commander.js/releases/tag/v11.0.0)
 
-    **Breaking**
+  **Breaking**
 
-    @equinor/fusion-framework-cli now requires Node.js v16 or higher
+  @equinor/fusion-framework-cli now requires Node.js v16 or higher
 
 ### Patch Changes
 
 - [#1047](https://github.com/equinor/fusion-framework/pull/1047) [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @typescript-eslint/eslint-plugin from 5.59.11 to 6.1.0
 
-    only style semantics updated
+  only style semantics updated
 
 - Updated dependencies [[`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f), [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f), [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f), [`0a785d5c`](https://github.com/equinor/fusion-framework/commit/0a785d5c339ceec7cbbe2a6ff9e16053c86ce511), [`38869a87`](https://github.com/equinor/fusion-framework/commit/38869a87788c340d363e9be1e7fc6ce0e29efa63)]:
-    - @equinor/fusion-observable@8.0.3
-    - @equinor/fusion-framework-app@7.1.0
+  - @equinor/fusion-observable@8.0.3
+  - @equinor/fusion-framework-app@7.1.0
 
 ## 7.1.0
 
@@ -1473,10 +1487,10 @@
 
 - [#1055](https://github.com/equinor/fusion-framework/pull/1055) [`6c2fd59e`](https://github.com/equinor/fusion-framework/commit/6c2fd59e66ff77629ce1b7ecd5fd47e799719b91) Thanks [@odinr](https://github.com/odinr)! - **Allow loading of custom vite config**
 
-    When running the CLI, allow the user to provide custom [Vite config](https://vitejs.dev/config/).
-    The provided config is merged with the built-in config (default generated by the CLI).
+  When running the CLI, allow the user to provide custom [Vite config](https://vitejs.dev/config/).
+  The provided config is merged with the built-in config (default generated by the CLI).
 
-    updated [documentation](https://equinor.github.io/fusion-framework/guide/app/cli.html#config)
+  updated [documentation](https://equinor.github.io/fusion-framework/guide/app/cli.html#config)
 
 ## 7.0.13
 
@@ -1484,9 +1498,9 @@
 
 - [#1002](https://github.com/equinor/fusion-framework/pull/1002) [`7f506120`](https://github.com/equinor/fusion-framework/commit/7f506120c702f157f95f477ddfc514a906176870) Thanks [@eikeland](https://github.com/eikeland)! - # Updating @equinor/fusion-react-styles
 
-    Updating dependency @equinor/fusion-react-styles to version 0.5.6.
+  Updating dependency @equinor/fusion-react-styles to version 0.5.6.
 
-    This ads the correct equinor-font cdn link to the themeprovider.
+  This ads the correct equinor-font cdn link to the themeprovider.
 
 ## 7.0.12
 
@@ -1495,7 +1509,7 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework-app@7.0.16
+  - @equinor/fusion-framework-app@7.0.16
 
 ## 7.0.11
 
@@ -1506,12 +1520,12 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework-app@7.0.15
+  - @equinor/fusion-framework-app@7.0.15
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
