@@ -3,7 +3,7 @@ import { useFramework } from '@equinor/fusion-framework-react';
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
-import {
+import type {
   ContextItem,
   ContextModule,
   IContextProvider,
@@ -15,14 +15,14 @@ ChipElement;
 
 import { EMPTY, catchError, lastValueFrom, map, of } from 'rxjs';
 
-import {
+import type {
   ContextResult,
   ContextResultItem,
   ContextResolver,
 } from '@equinor/fusion-react-context-selector';
-import { AppModulesInstance } from '@equinor/fusion-framework-app';
-import { QueryClientError } from '@equinor/fusion-query/client';
-import { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors';
+import type { AppModulesInstance } from '@equinor/fusion-framework-app';
+import type { QueryClientError } from '@equinor/fusion-query/client';
+import type { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors';
 
 function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();

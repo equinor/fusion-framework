@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import { PeopleResolverComponent } from './PeopleResolver';
-import { PersonController, PersonControllerOptions } from './PersonController';
+import { PersonController, type PersonControllerOptions } from './PersonController';
 import { createResolver } from './create-resolver';
-import { IApiProvider } from '@equinor/fusion-framework-module-services';
+import type { IApiProvider } from '@equinor/fusion-framework-module-services';
 
 export const makeResolver = (services: IApiProvider, options?: PersonControllerOptions) => {
   return lazy(async () => {

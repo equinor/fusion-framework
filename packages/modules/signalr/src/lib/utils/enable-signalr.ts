@@ -1,5 +1,5 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
+import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
 import { module } from '../../SignalRModule';
 import { configureFromFramework } from './configure-from-framework';
 

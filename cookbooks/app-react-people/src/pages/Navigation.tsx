@@ -16,7 +16,7 @@ export const Navigation = () => {
           <Button onClick={() => navigate('selector')}>PersonSelect</Button>
         </FlexGrid>
       </div>
-      <Outlet></Outlet>
+      <Outlet/>
     </>
   );
 };

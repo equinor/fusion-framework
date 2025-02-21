@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Query } from '../src/Query';
-import { QueryTaskValue } from '../src/types';
+import type { QueryTaskValue } from '../src/types';
 
 describe('Persistent queries', () => {
   it('should emit when the cache is mutated', async () => {

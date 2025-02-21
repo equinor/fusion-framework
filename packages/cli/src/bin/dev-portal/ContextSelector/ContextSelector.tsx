@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import {
   ContextProvider,
   ContextSearch,
-  ContextSearchProps,
-  ContextSelectEvent,
+  type ContextSearchProps,
+  type ContextSelectEvent,
   ContextClearEvent,
 } from '@equinor/fusion-react-context-selector';
 import { useContextResolver } from './useContextResolver';

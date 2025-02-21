@@ -1,9 +1,9 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 import { Query } from '@equinor/fusion-query';
 
 import type { Service } from './types';
 
-import { firstValueFrom, from, lastValueFrom, map, ObservableInput } from 'rxjs';
+import { firstValueFrom, from, lastValueFrom, map, type ObservableInput } from 'rxjs';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 import { ApiServices } from './api-schema';
 

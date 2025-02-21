@@ -1,9 +1,9 @@
 import {
-  IModuleConfigurator,
-  IModulesConfigurator,
-  Module,
-  ModuleConfigType,
-  ModuleInstance,
+  type IModuleConfigurator,
+  type IModulesConfigurator,
+  type Module,
+  type ModuleConfigType,
+  type ModuleInstance,
   SemanticVersion,
 } from '@equinor/fusion-framework-module';
 import { type INavigationConfigurator, NavigationConfigurator } from './configurator';

@@ -4,7 +4,7 @@ import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
 import { createAppViteConfig, createViteConfig } from '../../lib/vite-config.js';
-import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
+import type { ConfigExecuterEnv } from '../../lib/utils/config.js';
 import { mergeConfig } from 'vite';
 
 export const loadViteConfig = async (

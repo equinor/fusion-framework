@@ -5,7 +5,7 @@ import { resolveAssetId } from './resolve-asset-id.js';
 import { createExtensionFilterPattern } from './extension-filter-pattern.js';
 
 import { ASSET_EXTENSIONS, PLUGIN_NAME } from './static.js';
-import { PluginContext } from 'rollup';
+import type { PluginContext } from 'rollup';
 
 const defaultInclude = createExtensionFilterPattern(ASSET_EXTENSIONS);
 

@@ -1,6 +1,6 @@
 import {
-  ActionInstanceMap,
-  ActionTypes,
+  type ActionInstanceMap,
+  type ActionTypes,
   createAction,
   createAsyncAction,
 } from '@equinor/fusion-observable';

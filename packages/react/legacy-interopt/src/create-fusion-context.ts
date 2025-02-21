@@ -10,18 +10,18 @@ import {
   FeatureLogger,
   SettingsContainer,
   ComponentDisplayType,
-  AppContainer,
+  type AppContainer,
   TasksContainer,
   NotificationCenter,
   PeopleContainer,
   UserMenuContainer,
-  FusionContextRefs,
-  IFusionContext,
+  type FusionContextRefs,
+  type IFusionContext,
   // appContainerFactory,
 } from '@equinor/fusion';
 import { appContainerFactory } from '@equinor/fusion/lib/app/AppContainer';
 
-import { NavigationUpdate } from '@equinor/fusion-framework-module-navigation';
+import type { NavigationUpdate } from '@equinor/fusion-framework-module-navigation';
 
 import { LegacyAppContainer } from './LegacyAppContainer';
 import { LegacyAuthContainer } from './LegacyAuthContainer';

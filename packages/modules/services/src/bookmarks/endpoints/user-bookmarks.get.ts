@@ -158,9 +158,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-  AllowedVersions as GetBookmarksVersion,
-  MethodArg as GetBookmarksArgs,
-  ApiResponse as GetBookmarksResponse,
-  MethodResult as GetBookmarksResult,
+  type AllowedVersions as GetBookmarksVersion,
+  type MethodArg as GetBookmarksArgs,
+  type ApiResponse as GetBookmarksResponse,
+  type MethodResult as GetBookmarksResult,
   executeApiCall as getBookmarks,
 };

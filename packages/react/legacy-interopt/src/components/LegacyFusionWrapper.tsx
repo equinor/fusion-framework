@@ -1,9 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import {
-  PropsWithChildren,
-  ReactChild,
-  ReactElement,
-  ReactNode,
+  type PropsWithChildren,
+  type ReactChild,
+  type ReactElement,
+  type ReactNode,
   Suspense,
   useMemo,
   useRef,
@@ -13,7 +13,7 @@ import { FusionRoot } from '@equinor/fusion-components';
 
 import { createLegacyContextComponent } from './create-legacy-context-component';
 import type { PortalFramework } from '../types';
-import { FusionContextOptions } from '../create-fusion-context';
+import type { FusionContextOptions } from '../create-fusion-context';
 
 export type LegacyFusionWrapperProps = {
   readonly loader: NonNullable<ReactNode>;

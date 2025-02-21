@@ -1,14 +1,14 @@
-import {
-  type IModulesConfigurator,
-  type Module,
-  type ModulesInstanceType,
+import type {
+  IModulesConfigurator,
+  Module,
+  ModulesInstanceType,
 } from '@equinor/fusion-framework-module';
 
 import { AgGridConfigurator } from './AgGridConfigurator';
 import { defaultModules } from './default-modules';
-import { IAgGridProvider, AgGridProvider } from './AgGridProvider';
+import { type IAgGridProvider, AgGridProvider } from './AgGridProvider';
 
-import { type IAgGridConfigurator } from './AgGridConfigurator.interface';
+import type { IAgGridConfigurator } from './AgGridConfigurator.interface';
 
 import { fusionTheme, createThemeFromTheme } from './themes';
 

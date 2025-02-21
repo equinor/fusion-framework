@@ -1,7 +1,7 @@
 import { Subject, type Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LogLevel, defaultLogLevel } from './static';
-import { ILogger } from './Logger.interface';
+import type { ILogger } from './Logger.interface';
 import { version } from './version';
 
 /**

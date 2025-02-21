@@ -23,7 +23,6 @@
     "rules": {
       "recommended": true,
       "a11y": {
-        "useButtonType": "warn",
         "useAltText": "warn",
         "noSvgWithoutTitle": "warn",
         "noBlankTarget": "warn"

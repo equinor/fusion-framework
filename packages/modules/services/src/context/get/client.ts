@@ -1,6 +1,6 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
 
-import { ApiVersion } from '..';
+import type { ApiVersion } from '..';
 
 import { generateParameters } from './generate-parameters';
 

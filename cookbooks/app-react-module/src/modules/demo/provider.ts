@@ -1,4 +1,4 @@
-import { type DemoModuleConfig } from './configurator';
+import type { DemoModuleConfig } from './configurator';
 
 export class DemoProvider {
   #config: DemoModuleConfig;

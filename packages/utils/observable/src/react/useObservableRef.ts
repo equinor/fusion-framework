@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import type { BehaviorSubject } from 'rxjs';
 import { useObservableLayoutSubscription } from './useObservableSubscription';
-import { Observable } from '../types';
+import type { Observable } from '../types';
 
 /**
  * TODO

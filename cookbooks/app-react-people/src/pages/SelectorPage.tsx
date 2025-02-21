@@ -1,9 +1,9 @@
 import { useCallback, useReducer } from 'react';
 import {
-  PersonInfo,
+  type PersonInfo,
   PersonListItem,
   PersonSelect,
-  PersonSelectEvent,
+  type PersonSelectEvent,
 } from '@equinor/fusion-react-person';
 import { styled } from 'styled-components';
 

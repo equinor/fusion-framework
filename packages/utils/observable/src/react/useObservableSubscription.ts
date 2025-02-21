@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react';
-import { Observable, Observer } from 'rxjs';
+import type { Observable, Observer } from 'rxjs';
 
 export const useObservableSubscription = <T>(
   observable: Observable<T>,

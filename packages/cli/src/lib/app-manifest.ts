@@ -2,9 +2,9 @@ import deepMerge from 'deepmerge';
 import { execSync } from 'node:child_process';
 
 import {
-  AppPackageJson,
+  type AppPackageJson,
   resolveAppKey,
-  ResolvedAppPackage,
+  type ResolvedAppPackage,
   resolveEntryPoint,
 } from './app-package.js';
 
@@ -14,12 +14,12 @@ import {
   resolveConfig,
   type FindConfigOptions,
   type ResolvedConfig,
-  ConfigExecuterEnv,
+  type ConfigExecuterEnv,
 } from './utils/config.js';
 
 import { AssertionError, assert, assertObject } from './utils/assert.js';
-import { RecursivePartial } from './utils/types.js';
-import { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { RecursivePartial } from './utils/types.js';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import { parse as parseSemver } from 'semver';
 import { StandardIncludeAssetExtensions } from './plugins/app-assets/index.js';
 

@@ -1,6 +1,6 @@
 import type { Service } from '@equinor/fusion-framework-module-service-discovery';
-import LegacyAuthContainer from './LegacyAuthContainer';
-import { PortalFramework } from './types';
+import type LegacyAuthContainer from './LegacyAuthContainer';
+import type { PortalFramework } from './types';
 
 export const createServiceResolver = async (
   provider: PortalFramework['modules']['serviceDiscovery'],

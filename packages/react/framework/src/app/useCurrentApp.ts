@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
-import { type AnyModule } from '@equinor/fusion-framework-module';
-import {
+import type { AnyModule } from '@equinor/fusion-framework-module';
+import type {
   ConfigEnvironment,
-  type AppModule,
-  type CurrentApp,
+  AppModule,
+  CurrentApp,
 } from '@equinor/fusion-framework-module-app';
 
 import { useFramework } from '../useFramework';

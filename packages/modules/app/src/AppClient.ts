@@ -1,9 +1,9 @@
-import { catchError, map, Observable, ObservableInput, tap } from 'rxjs';
+import { catchError, map, type Observable, type ObservableInput, tap } from 'rxjs';
 
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
 
-import { HttpResponseError, IHttpClient } from '@equinor/fusion-framework-module-http';
+import { HttpResponseError, type IHttpClient } from '@equinor/fusion-framework-module-http';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 import { ApiApplicationSchema } from './schemas';

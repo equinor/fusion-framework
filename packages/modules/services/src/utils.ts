@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 
-import { FetchResponse } from '@equinor/fusion-framework-module-http';
+import type { FetchResponse } from '@equinor/fusion-framework-module-http';
 import {
   type ResponseSelector,
   jsonSelector,

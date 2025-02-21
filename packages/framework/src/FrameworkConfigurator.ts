@@ -1,5 +1,5 @@
 import {
-  AnyModule,
+  type AnyModule,
   ModuleConsoleLogger,
   ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
@@ -9,7 +9,7 @@ import event from '@equinor/fusion-framework-module-event';
 import http, {
   configureHttpClient,
   configureHttp,
-  HttpClientOptions,
+  type HttpClientOptions,
 } from '@equinor/fusion-framework-module-http';
 import type { HttpClientMsal } from '@equinor/fusion-framework-module-http/client';
 
@@ -20,8 +20,8 @@ import context from '@equinor/fusion-framework-module-context';
 import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
 
-import { FusionModules } from './types';
-import { AuthClientConfig } from '@equinor/fusion-framework-module-msal/v2';
+import type { FusionModules } from './types';
+import type { AuthClientConfig } from '@equinor/fusion-framework-module-msal/v2';
 
 /**
  * Module configurator for Framework modules

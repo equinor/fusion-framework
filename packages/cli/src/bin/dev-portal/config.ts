@@ -1,6 +1,6 @@
 import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import { FrameworkConfigurator } from '@equinor/fusion-framework';
+import type { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';

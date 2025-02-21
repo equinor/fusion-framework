@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import {
+import type {
   FrameworkEventMap,
   FrameworkEventHandler,
   FrameworkEvent,

@@ -1,4 +1,4 @@
-import { BookmarkModule, IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkModule, IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 import { useModule } from '@equinor/fusion-framework-react-module';
 
 /**

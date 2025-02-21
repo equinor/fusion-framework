@@ -13,7 +13,7 @@ export const getEndpointUrl = async (
   endpoint: string,
   fusionEnv: FusionEnv,
   service: string,
-  version: string = '1.0',
+  version = '1.0',
 ): Promise<string> => {
   const { CUSTOM_APPAPI, FUSION_CLI_ENV, FUSION_TOKEN } = process.env;
 

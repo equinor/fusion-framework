@@ -70,7 +70,7 @@ export type ProblemDetails = {
   status?: number;
   detail?: string;
   instance?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   [key: string]: any;
 };
 
@@ -171,10 +171,9 @@ export const useSearchPersons = (search: string): useSearchPersonsResult => {
 
       // Return a cleanup function to cancel the search if the component is unmounted
       return () => abortController.abort();
-    } else {
-      // If the'search' parameter is empty, clear the 'persons' state
-      setPersons([]);
     }
+    // If the 'search' parameter is empty, clear the 'persons' state
+    setPersons([]);
   }, [search, searchClient]);
 
   // Return the search results, any errors, and the 'isSearching' state

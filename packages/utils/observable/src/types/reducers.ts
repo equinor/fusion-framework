@@ -1,5 +1,5 @@
-import { Action, AnyAction } from './actions';
-import { NotFunction } from './ts-helpers';
+import type { Action, AnyAction } from './actions';
+import type { NotFunction } from './ts-helpers';
 
 export type Reducer<S, A> = (prevState: S, action: A) => S;
 export type ReducerState<R extends Reducer<unknown, unknown>> = R extends Reducer<infer S, unknown>

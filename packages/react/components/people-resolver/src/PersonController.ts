@@ -1,4 +1,4 @@
-import { EMPTY, Observable, concat, from, fromEvent, of } from 'rxjs';
+import { EMPTY, type Observable, concat, from, fromEvent, of } from 'rxjs';
 import { catchError, filter, find, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 import type { ApiPerson, PeopleApiClient } from '@equinor/fusion-framework-module-services/people';
@@ -8,7 +8,7 @@ import type { ApiResponse as QueryPersonApiResponse } from '@equinor/fusion-fram
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
 
-import { ApiProviderError } from '@equinor/fusion-framework-module-services/provider';
+import type { ApiProviderError } from '@equinor/fusion-framework-module-services/provider';
 
 type GetPersonResult = GetPersonApiResponse<
   'v4',

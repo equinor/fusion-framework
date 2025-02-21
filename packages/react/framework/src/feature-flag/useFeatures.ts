@@ -3,12 +3,12 @@ import { useCallback, useMemo } from 'react';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {
-  type IFeatureFlagProvider,
-  type IFeatureFlag,
+import type {
+  IFeatureFlagProvider,
+  IFeatureFlag,
 } from '@equinor/fusion-framework-module-feature-flag';
 
-import { type FeatureSelectorFn } from '@equinor/fusion-framework-module-feature-flag/selectors';
+import type { FeatureSelectorFn } from '@equinor/fusion-framework-module-feature-flag/selectors';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 

@@ -1,4 +1,4 @@
-import ora, { Options, type Ora } from 'ora';
+import ora, { type Options, type Ora } from 'ora';
 
 const parseArgs = (args: string[]): string | undefined =>
   args.length ? args.join(' ') : undefined;

@@ -1,5 +1,5 @@
-import { ModuleType } from '@equinor/fusion-framework-module';
-import {
+import type { ModuleType } from '@equinor/fusion-framework-module';
+import type {
   GetWidgetParameters,
   WidgetConfig,
   WidgetManifest,
@@ -7,14 +7,14 @@ import {
   WidgetState,
   WidgetStateInitial,
 } from './types';
-import { Actions, actions } from './state/actions';
-import { FlowSubject } from '@equinor/fusion-observable';
+import { type Actions, actions } from './state/actions';
+import type { FlowSubject } from '@equinor/fusion-observable';
 
 import { createState } from './state/create-state';
-import { EventModule } from '@equinor/fusion-framework-module-event';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
 import { Observable, Subscription, combineLatest, firstValueFrom, lastValueFrom, of } from 'rxjs';
-import WidgetModuleProvider from './WidgetModuleProvider';
-import { WidgetModuleConfig } from './WidgetModuleConfigurator';
+import type WidgetModuleProvider from './WidgetModuleProvider';
+import type { WidgetModuleConfig } from './WidgetModuleConfigurator';
 
 import './events';
 

@@ -127,9 +127,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
 };
 
 export {
-  AllowedVersions as PatchBookmarkVersion,
-  MethodArg as PatchBookmarkArg,
-  ApiResponse as PatchBookmarkResponse,
-  MethodResult as PatchBookmarksResult,
+  type AllowedVersions as PatchBookmarkVersion,
+  type MethodArg as PatchBookmarkArg,
+  type ApiResponse as PatchBookmarkResponse,
+  type MethodResult as PatchBookmarksResult,
   executeApiCall as patchBookmark,
 };

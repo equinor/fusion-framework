@@ -1,4 +1,4 @@
-import { PopupRequest, RedirectRequest } from '@azure/msal-browser';
+import type { PopupRequest, RedirectRequest } from '@azure/msal-browser';
 
 /**
  * Request object passed by user to retrieve a Code from the

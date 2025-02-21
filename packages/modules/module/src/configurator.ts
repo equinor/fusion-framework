@@ -2,7 +2,7 @@
 import { BehaviorSubject, EMPTY, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, reduce, tap, timeout } from 'rxjs/operators';
 
-import { IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
+import { type IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
 
 import type {
   AnyModule,

@@ -2,10 +2,10 @@ import { useCallback } from 'react';
 
 import { useCurrentAppModules } from '@equinor/fusion-framework-react/app';
 
-import { ContextItem, type ContextModule } from '@equinor/fusion-framework-module-context';
+import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
 import { extractContextIdFromPath } from '@equinor/fusion-framework-module-context/utils';
 
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 import { useObservableSubscription } from '@equinor/fusion-observable/react';
 import { EMPTY } from 'rxjs';

@@ -1,4 +1,4 @@
-import { Bookmarks, BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
+import type { Bookmarks, BookmarkWithoutData } from '@equinor/fusion-framework-module-bookmark';
 
 import { useState } from 'react';
 

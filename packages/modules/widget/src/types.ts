@@ -2,7 +2,7 @@ import type { AnyModule, CombinedModules, ModulesInstance } from '@equinor/fusio
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 import type { HttpModule } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
-import { QueryCtorOptions } from '@equinor/fusion-query';
+import type { QueryCtorOptions } from '@equinor/fusion-query';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Fusion = any;

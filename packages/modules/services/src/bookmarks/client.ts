@@ -2,26 +2,26 @@ import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-m
 import type { ClientMethod } from '../types';
 
 import {
-  GetBookmarksArgs,
-  GetBookmarksResponse,
-  GetBookmarksResult,
-  GetBookmarksVersion,
+  type GetBookmarksArgs,
+  type GetBookmarksResponse,
+  type GetBookmarksResult,
+  type GetBookmarksVersion,
   getBookmarks,
 } from './endpoints/user-bookmarks.get';
 
 import {
-  GetBookmarkArg,
-  GetBookmarkResponse,
-  GetBookmarkResult,
-  GetBookmarkVersion,
+  type GetBookmarkArg,
+  type GetBookmarkResponse,
+  type GetBookmarkResult,
+  type GetBookmarkVersion,
   getBookmark,
 } from './endpoints/bookmark.get';
 
 import {
-  CreateBookmarkArg,
-  CreateBookmarkResponse,
-  CreateBookmarkVersion,
-  CreateBookmarksResult,
+  type CreateBookmarkArg,
+  type CreateBookmarkResponse,
+  type CreateBookmarkVersion,
+  type CreateBookmarksResult,
   createBookmark,
 } from './endpoints/bookmark.post';
 import {
@@ -33,37 +33,37 @@ import {
 } from './endpoints/bookmark.patch';
 
 import {
-  BookmarkApplyArgs,
-  BookmarkApplyResponse,
-  BookmarkApplyResult,
-  BookmarkApplyVersion,
+  type BookmarkApplyArgs,
+  type BookmarkApplyResponse,
+  type BookmarkApplyResult,
+  type BookmarkApplyVersion,
   getBookmarkApply,
 } from './endpoints/bookmark-apply.get';
 import {
-  AddBookmarkFavouriteArgs,
-  AddBookmarkFavouriteResponse,
-  AddBookmarkFavouriteResult,
-  AddBookmarkFavouriteVersion,
+  type AddBookmarkFavouriteArgs,
+  type AddBookmarkFavouriteResponse,
+  type AddBookmarkFavouriteResult,
+  type AddBookmarkFavouriteVersion,
   addBookmarkAsFavourite,
 } from './endpoints/user-bookmark-favourite.post';
 import {
-  DeleteBookmarkArg,
-  DeleteBookmarkResponse,
-  DeleteBookmarkVersion,
+  type DeleteBookmarkArg,
+  type DeleteBookmarkResponse,
+  type DeleteBookmarkVersion,
   deleteBookmark,
 } from './endpoints/bookmark.delete';
 import {
-  IsFavoriteBookmarkArgs,
-  IsFavoriteBookmarkResponse,
-  IsFavoriteBookmarkResult,
-  IsFavoriteBookmarkVersion,
+  type IsFavoriteBookmarkArgs,
+  type IsFavoriteBookmarkResponse,
+  type IsFavoriteBookmarkResult,
+  type IsFavoriteBookmarkVersion,
   isFavoriteBookmark,
 } from './endpoints/user-bookmark-favourite.head';
 import {
-  RemoveBookmarkFavouriteArgs,
-  RemoveBookmarkFavouriteResponse,
-  RemoveBookmarkFavouriteResult,
-  RemoveBookmarkFavouriteVersion,
+  type RemoveBookmarkFavouriteArgs,
+  type RemoveBookmarkFavouriteResponse,
+  type RemoveBookmarkFavouriteResult,
+  type RemoveBookmarkFavouriteVersion,
   removeFavoriteBookmark,
 } from './endpoints/user-bookmark-favourite.delete';
 

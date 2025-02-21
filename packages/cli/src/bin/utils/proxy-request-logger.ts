@@ -1,4 +1,4 @@
-import { type ClientRequest } from 'http';
+import type { ClientRequest } from 'http';
 import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 

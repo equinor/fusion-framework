@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 
 import { createDevServer } from './create-dev-serve.js';
 import { buildApplication } from './build-application.js';

@@ -1,4 +1,4 @@
-import { type Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
 import parseJsonFromRequest from '../../utils/parse-json-request.js';
 

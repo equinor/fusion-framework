@@ -1,6 +1,6 @@
 import { ApiVersion } from '../static';
-import { ApiPerson_v2 } from '../api-models.v2';
-import { ClientMethod } from '../../types';
+import type { ApiPerson_v2 } from '../api-models.v2';
+import type { ClientMethod } from '../../types';
 
 export type SupportedApiVersion = Extract<keyof typeof ApiVersion, 'v2'>;
 

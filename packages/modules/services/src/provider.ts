@@ -1,7 +1,7 @@
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { ClientMethod } from './types';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { ClientMethod } from './types';
 
-import { ApiClientFactory } from './types';
+import type { ApiClientFactory } from './types';
 import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';

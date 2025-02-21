@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ISignalRProvider, Topic } from '@equinor/fusion-framework-module-signalr';
+import type { ISignalRProvider, Topic } from '@equinor/fusion-framework-module-signalr';
 
 export const useSignalRProvider = <T>(
   provider: ISignalRProvider,

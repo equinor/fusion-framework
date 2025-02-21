@@ -1,7 +1,7 @@
-import { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
-import {
+import type { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type {
   ModuleKey,
-  type AnyModule,
+  AnyModule,
   ModuleTypes,
   ModuleType,
 } from '@equinor/fusion-framework-module';

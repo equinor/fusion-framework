@@ -1,6 +1,6 @@
 import {
-  EventModule,
-  IEventModuleProvider,
+  type EventModule,
+  type IEventModuleProvider,
   eventModuleKey,
 } from '@equinor/fusion-framework-module-event';
 import { useModule } from '@equinor/fusion-framework-react-module';

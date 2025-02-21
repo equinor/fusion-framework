@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { ILogger } from './Logger.interface';
+import type { ILogger } from './Logger.interface';
 import Logger from './Logger';
 import { LogLevel } from './static';
 

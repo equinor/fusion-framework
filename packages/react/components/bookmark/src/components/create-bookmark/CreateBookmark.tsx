@@ -1,6 +1,6 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 
-import { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
 
 import { Button, Checkbox, Dialog, Input, Label, TextField } from '@equinor/eds-core-react';

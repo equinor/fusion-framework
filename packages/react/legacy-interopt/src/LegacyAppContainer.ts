@@ -1,14 +1,14 @@
 import {
-  AppManifest as LegacyAppManifest,
+  type AppManifest as LegacyAppManifest,
   DistributedState,
   EventEmitter,
-  FeatureLogger,
-  IEventHub,
-  TelemetryLogger,
+  type FeatureLogger,
+  type IEventHub,
+  type TelemetryLogger,
 } from '@equinor/fusion';
 
-import { AppManifest } from '@equinor/fusion-framework-module-app';
-import { ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
+import { type ActionTypes, createAction, createReducer, FlowSubject } from '@equinor/fusion-observable';
 
 import { original } from 'immer';
 import { pairwise, Subscription } from 'rxjs';

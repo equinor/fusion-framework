@@ -1,4 +1,4 @@
-import { type AppConfigurator, type IAppConfigurator } from '@equinor/fusion-framework-app';
+import type { AppConfigurator, IAppConfigurator } from '@equinor/fusion-framework-app';
 
 import {
   enableFeatureFlagging,
@@ -17,12 +17,10 @@ import {
  * @param configurator - The AppConfigurator instance.
  * @param flags - An array of feature flags to enable.
  */
-export interface enableFeatureFlag {
-  (
+export function enableFeatureFlag(
     configurator: IAppConfigurator,
-    flags: Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>,
-  ): void;
-}
+    flags: Array<IFeatureFlag<unknown> & { allowUrl?: boolean | undefined }>
+): void;
 
 /**
  * Enables a feature flag by invoking the provided configurator and callback.
@@ -33,9 +31,11 @@ export interface enableFeatureFlag {
  * @remarks
  * Advance use __ONLY__
  */
-export interface enableFeatureFlag {
-  (configurator: IAppConfigurator, cb: FeatureFlagBuilderCallback): void;
-}
+export function enableFeatureFlag (
+  configurator: IAppConfigurator, 
+  cb: FeatureFlagBuilderCallback
+): void;
+
 
 /**
  * Enables feature flagging based on the provided configurator and flags callback.

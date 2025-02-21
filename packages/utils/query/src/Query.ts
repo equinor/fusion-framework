@@ -20,11 +20,11 @@ import {
 
 import { v4 as generateGUID, v5 as generateUniqueKey } from 'uuid';
 
-import { QueryClient, QueryClientCtorOptions } from './client';
+import { QueryClient, type QueryClientCtorOptions } from './client';
 
-import { QueryCache, QueryCacheMutation, QueryCacheRecord } from './cache';
+import { QueryCache, type QueryCacheMutation, type QueryCacheRecord } from './cache';
 
-import {
+import type {
   CacheOptions,
   QueryFn,
   QueryOptions,
@@ -33,11 +33,11 @@ import {
   QueryTaskCached,
   QueryTaskCompleted,
 } from './types';
-import { QueryCacheCtorArgs } from './cache/QueryCache';
+import type { QueryCacheCtorArgs } from './cache/QueryCache';
 import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
 
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
+import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { QueryTask } from './QueryTask';
 
 /**

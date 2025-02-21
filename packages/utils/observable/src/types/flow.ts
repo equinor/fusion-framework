@@ -1,5 +1,5 @@
-import { Observable, ObservableInput } from 'rxjs';
-import { AnyAction } from './actions';
+import type { Observable, ObservableInput } from 'rxjs';
+import type { AnyAction } from './actions';
 
 export type Flow<TAction extends AnyAction, TState = unknown> = (
   action: Observable<TAction>,

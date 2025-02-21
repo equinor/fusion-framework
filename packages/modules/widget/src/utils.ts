@@ -1,5 +1,5 @@
-import { GetWidgetParameters, IClient, WidgetEndpointBuilder } from './types';
-import { IHttpClient } from '@equinor/fusion-framework-module-http';
+import type { GetWidgetParameters, IClient, WidgetEndpointBuilder } from './types';
+import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 export const defaultManifestEndpointBuilder =
   (apiVersion: string): WidgetEndpointBuilder =>

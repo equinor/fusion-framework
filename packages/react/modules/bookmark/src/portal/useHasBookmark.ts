@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
-import { BookmarkModule, BookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkModule, BookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 
 export const useHasBookmark = (args?: { provider?: BookmarkProvider }): boolean => {
   const frameworkProvider = useFrameworkModule<BookmarkModule>('bookmark');

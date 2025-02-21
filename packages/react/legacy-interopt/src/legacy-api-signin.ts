@@ -1,5 +1,5 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
-import { PortalFramework } from './types';
+import type { PortalFramework } from './types';
 
 const executeSignIn = (client: IHttpClient) =>
   client.fetch('api-signin', { method: 'POST', credentials: 'include' });

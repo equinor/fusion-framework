@@ -1,14 +1,14 @@
-import { Module, ModulesInstance, SemanticVersion } from '@equinor/fusion-framework-module';
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { ServicesModule } from '@equinor/fusion-framework-module-services';
-import { AppModule } from '@equinor/fusion-framework-module-app';
-import { ContextModule } from '@equinor/fusion-framework-module-context';
+import { type Module, type ModulesInstance, SemanticVersion } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ServicesModule } from '@equinor/fusion-framework-module-services';
+import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type { ContextModule } from '@equinor/fusion-framework-module-context';
 import { BookmarkProvider } from './BookmarkProvider';
 import { BookmarkModuleConfigurator } from './BookmarkConfigurator';
-import { ConsoleLogger, ILogger } from '@equinor/fusion-log';
+import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { lastValueFrom } from 'rxjs';
 import { version } from './version';
-import { type IBookmarkProvider } from './BookmarkProvider.interface';
+import type { IBookmarkProvider } from './BookmarkProvider.interface';
 
 export type BookmarkModuleKey = 'bookmark';
 

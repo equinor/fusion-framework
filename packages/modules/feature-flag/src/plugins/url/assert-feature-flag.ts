@@ -1,4 +1,4 @@
-import { AssertFeatureFlag } from './types';
+import type { AssertFeatureFlag } from './types';
 
 /**
  * Asserts if a feature flag is enabled feature flag.

@@ -1,5 +1,5 @@
-import { ActionInstanceMap, ActionTypes, createAction } from '@equinor/fusion-observable';
-import { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types';
+import { type ActionInstanceMap, type ActionTypes, createAction } from '@equinor/fusion-observable';
+import type { CacheSortFn, QueryCacheMutation, QueryCacheRecord } from './types';
 
 /**
  * Creates a set of actions to manipulate cache entries.

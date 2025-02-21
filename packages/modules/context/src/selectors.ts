@@ -1,4 +1,4 @@
-import { ApiVersion, ApiContextEntity } from '@equinor/fusion-framework-module-services/context';
+import type { ApiVersion, ApiContextEntity } from '@equinor/fusion-framework-module-services/context';
 import type { GetContextResponse } from '@equinor/fusion-framework-module-services/context/get';
 import type { QueryContextResponse } from '@equinor/fusion-framework-module-services/context/query';
 import type { RelatedContextResponse } from '@equinor/fusion-framework-module-services/context/related';

@@ -1,14 +1,14 @@
 import { catchError, EMPTY, from, Observable, switchMap, filter, Subscription } from 'rxjs';
 
-import { Module, ModulesInstance } from '@equinor/fusion-framework-module';
+import type { Module, ModulesInstance } from '@equinor/fusion-framework-module';
 
-import { EventModule } from '@equinor/fusion-framework-module-event';
-import { ServicesModule } from '@equinor/fusion-framework-module-services';
-import { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+import type { ServicesModule } from '@equinor/fusion-framework-module-services';
+import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-import { IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
-import { IContextProvider, ContextProvider } from './ContextProvider';
-import { ContextItem } from './types';
+import { type IContextModuleConfigurator, ContextModuleConfigurator } from './configurator';
+import { type IContextProvider, ContextProvider } from './ContextProvider';
+import type { ContextItem } from './types';
 
 export type ContextModuleKey = 'context';
 

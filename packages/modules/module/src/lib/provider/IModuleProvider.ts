@@ -1,4 +1,4 @@
-import SemanticVersion from '../semantic-version';
+import type SemanticVersion from '../semantic-version';
 
 export interface IModuleProvider {
   get version(): SemanticVersion;

@@ -9,9 +9,9 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
-import { Actions, actions } from './actions';
+import { type Actions, actions } from './actions';
 
-import { AppBundleState, AppBundleStateInitial } from './types';
+import type { AppBundleState, AppBundleStateInitial } from './types';
 
 export const createReducer = (value: AppBundleStateInitial) =>
   makeReducer<AppBundleState, Actions>(

@@ -1,8 +1,8 @@
-import { PropsWithChildren, Suspense, useMemo } from 'react';
-import { ServicesModule } from '@equinor/fusion-framework-module-services';
+import { type PropsWithChildren, Suspense, useMemo } from 'react';
+import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { makeResolver } from './makeResolver';
-import { PersonControllerOptions } from './PersonController';
+import type { PersonControllerOptions } from './PersonController';
 
 type PeopleResolverProviderProps = PropsWithChildren<{
   readonly options?: PersonControllerOptions;

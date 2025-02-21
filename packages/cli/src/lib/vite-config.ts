@@ -11,7 +11,7 @@ import {
   resolveConfig,
   type FindConfigOptions,
   type ResolvedConfig,
-  ConfigExecuterEnv,
+  type ConfigExecuterEnv,
   initiateConfig,
 } from './utils/config.js';
 

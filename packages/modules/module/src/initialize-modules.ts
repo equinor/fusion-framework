@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IModulesConfigurator } from './configurator';
+import type { IModulesConfigurator } from './configurator';
 
 import type { AnyModule } from './types';
 

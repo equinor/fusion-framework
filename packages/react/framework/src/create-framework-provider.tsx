@@ -1,4 +1,5 @@
-import React, { lazy } from 'react';
+import type React from 'react';
+import { lazy } from 'react';
 import initFusion from '@equinor/fusion-framework';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 

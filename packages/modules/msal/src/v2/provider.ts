@@ -1,10 +1,10 @@
-import { AuthClient, createAuthClient, AuthRequest, ConsoleLogger } from './client';
+import { type AuthClient, createAuthClient, type AuthRequest, ConsoleLogger } from './client';
 
 import { MsalModuleVersion } from '../static';
 
-import { AuthClientConfig } from './configurator';
-import { AccountInfo, AuthenticationResult } from './types';
-import { IProxyProvider } from '../types';
+import type { AuthClientConfig } from './configurator';
+import type { AccountInfo, AuthenticationResult } from './types';
+import type { IProxyProvider } from '../types';
 import resolveVersion from '../resolve-version';
 import { SemanticVersion } from '@equinor/fusion-framework-module';
 

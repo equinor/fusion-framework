@@ -1,2 +1,2 @@
 export { type DemoModule, demoModule } from './module';
-export { type DemoModuleConfig } from './configurator';
+export type { DemoModuleConfig } from './configurator';

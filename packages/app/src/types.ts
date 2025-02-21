@@ -10,7 +10,7 @@ import type {
 } from '@equinor/fusion-framework-module-app';
 
 import type { IAppConfigurator } from './AppConfigurator';
-import { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
+import type { ConfigEnvironment } from '@equinor/fusion-framework-module-app';
 
 export type {
   AppModules,

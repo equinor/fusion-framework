@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo } from 'react';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, type Observable } from 'rxjs';
 
-import { type AppSettings } from '@equinor/fusion-framework-module-app';
+import type { AppSettings } from '@equinor/fusion-framework-module-app';
 
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import { useObservableState } from '@equinor/fusion-observable/react';

@@ -1,7 +1,7 @@
 import { EMPTY, from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
 import { catchError, filter, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
-import { Modules, ModuleType } from './types';
-import { type DotPath, type DotPathType } from './utils/dot-path';
+import type { Modules, ModuleType } from './types';
+import type { DotPath, DotPathType } from './utils/dot-path';
 
 /**
  * Recursively assigns a configuration value to a nested object property.

@@ -5,8 +5,8 @@ import { createManifest, createManifestFromPackage } from '../../lib/app-manifes
 
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
-import { type ConfigExecuterEnv } from '../../lib/utils/config.js';
-import { type ResolvedAppPackage } from '../../lib/app-package.js';
+import type { ConfigExecuterEnv } from '../../lib/utils/config.js';
+import type { ResolvedAppPackage } from '../../lib/app-package.js';
 
 export const loadAppManifest = async (
   env: ConfigExecuterEnv,

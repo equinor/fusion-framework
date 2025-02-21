@@ -1,4 +1,4 @@
-import { QueryClientRequest } from './types';
+import type { QueryClientRequest } from './types';
 
 type QueryClientErrorType = 'error' | 'abort';
 

@@ -1,7 +1,7 @@
-import { MsalModule } from '@equinor/fusion-framework-module-msal';
-import { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
+import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
-import { SignalRModuleConfigBuilder } from '../../SignalRModuleConfigurator';
+import type { SignalRModuleConfigBuilder } from '../../SignalRModuleConfigurator';
 
 export const configureFromFramework = async (
   args: { name: string; service: string; path: string },

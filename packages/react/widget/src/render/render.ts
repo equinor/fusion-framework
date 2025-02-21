@@ -1,10 +1,10 @@
-import {
+import type {
   WidgetEnv,
   WidgetProps,
   WidgetRenderArgs,
   WidgetScriptModule,
 } from '@equinor/fusion-framework-module-widget';
-import { Fusion } from '@equinor/fusion-framework';
+import type { Fusion } from '@equinor/fusion-framework';
 
 export const widgetRender = <TProps extends WidgetProps>(args: {
   script?: WidgetScriptModule<TProps>;

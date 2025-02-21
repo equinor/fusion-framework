@@ -1,6 +1,6 @@
-import z from 'zod';
+import type z from 'zod';
 
-import {
+import type {
   bookmarkContextSchema,
   bookmarkSchema,
   bookmarkSourceSystemSchema,
@@ -9,7 +9,7 @@ import {
   bookmarkWithDataSchema,
 } from './bookmark.schemas';
 
-import { bookmarkConfigSchema } from './bookmark-config.schema';
+import type { bookmarkConfigSchema } from './bookmark-config.schema';
 
 /**
  * Represents the source system for a bookmark.

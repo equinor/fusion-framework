@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { from, Observable, ObservableInput } from 'rxjs';
-import { useObservableState, ObservableStateReturnType } from './useObservableState';
+import { from, type Observable, type ObservableInput } from 'rxjs';
+import { useObservableState, type ObservableStateReturnType } from './useObservableState';
 
 /**
  * Convert an observable input to an observable

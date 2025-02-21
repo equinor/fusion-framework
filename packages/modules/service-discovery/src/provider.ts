@@ -8,7 +8,7 @@ import type {
 } from '@equinor/fusion-framework-module-http';
 
 import type { Service } from './types';
-import { ServiceDiscoveryConfig } from './configurator';
+import type { ServiceDiscoveryConfig } from './configurator';
 
 export interface IServiceDiscoveryProvider {
   /**

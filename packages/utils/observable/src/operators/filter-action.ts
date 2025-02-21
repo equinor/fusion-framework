@@ -1,7 +1,7 @@
 import type { OperatorFunction } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { Action, ActionType, ExtractAction, TypeConstant } from '../types';
+import type { Action, ActionType, ExtractAction, TypeConstant } from '../types';
 
 export const filterAction = <
   TAction extends Action,

@@ -1,7 +1,7 @@
 import { createReducer } from '@equinor/fusion-observable';
 
 import { actions } from './FeatureFlagProvider.actions';
-import { State } from './FeatureFlagProvider.state';
+import type { State } from './FeatureFlagProvider.state';
 
 export const makeReducer = (initial: State) =>
   createReducer(initial, (builder) => {

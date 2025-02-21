@@ -1,6 +1,6 @@
-import { type ActionWithSuffix } from '@equinor/fusion-observable';
+import type { ActionWithSuffix } from '@equinor/fusion-observable';
 
-import { BookmarkActions } from './BookmarkProvider.actions';
+import type { BookmarkActions } from './BookmarkProvider.actions';
 
 export class BookmarkFlowError extends Error {
   constructor(
