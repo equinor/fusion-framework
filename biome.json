@@ -27,9 +27,7 @@
         "useLiteralKeys": "warn",
         "useOptionalChain": "warn",
         "noUselessSwitchCase": "warn",
-        "noUselessFragments": "warn",
-        "noForEach": "warn",
-        "noUselessConstructor": "warn"
+        "noUselessFragments": "warn"
       },
       "correctness": {
         "noUndeclaredVariables": "warn",
