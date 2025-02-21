@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { lazy, useEffect } from 'react';
+import {
+  lazy,
+  useEffect,
+  type LazyExoticComponent,
+  type FunctionComponent,
+  type ReactNode,
+} from 'react';
 
 import {
   initializeModules,
@@ -17,7 +23,7 @@ type ModuleProviderCreator = <
   configurator: ModulesConfigurator<TModules>,
   modules: TModules,
   ref?: TRef,
-) => Promise<React.LazyExoticComponent<React.FunctionComponent>>;
+) => Promise<LazyExoticComponent<FunctionComponent>>;
 
 /**
  * Function for creating a `ModuleProvider` component.
@@ -56,17 +62,13 @@ export const createModuleProvider: ModuleProviderCreator = async <
 >(
   configurator: ModulesConfigurator<TModules>,
   ref?: TRef,
-): Promise<React.LazyExoticComponent<React.FunctionComponent>> => {
+): Promise<LazyExoticComponent<FunctionComponent>> => {
   const Component = lazy(async () => {
     const { dispose, ...instance } = await initializeModules<TModules, TRef>(configurator, ref);
     return {
-      default: ({ children }: { children?: React.ReactNode }) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(
-          () => dispose,
-          // eslint-disable-next-line  react-hooks/exhaustive-deps
-          [instance],
-        );
+      default: ({ children }: { children?: ReactNode }) => {
+        // biome-ignore lint/correctness/useExhaustiveDependencies: should dispose when new instance is provided
+        useEffect(() => dispose, [instance]);
         return <ModuleProvider value={instance}>{children}</ModuleProvider>;
       },
     };

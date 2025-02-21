@@ -109,23 +109,20 @@ export const useContextResolver = (): {
   }, [currentContext]);
 
   /** callback function when current app instance changes */
-  const onContextProviderChange = useCallback(
-    (modules: AppModulesInstance) => {
-      /** try to get the context module from the app module instance */
-      const contextProvider = (modules as AppModulesInstance<[ContextModule]>).context;
-      if (contextProvider) {
-        setProvider(contextProvider);
-      } else {
-        setProvider(null);
-      }
-    },
-    [setProvider],
-  );
+  const onContextProviderChange = useCallback((modules: AppModulesInstance) => {
+    /** try to get the context module from the app module instance */
+    const contextProvider = (modules as AppModulesInstance<[ContextModule]>).context;
+    if (contextProvider) {
+      setProvider(contextProvider);
+    } else {
+      setProvider(null);
+    }
+  }, []);
 
   /** clear the app provider */
   const clearContextProvider = useCallback(() => {
     setProvider(null);
-  }, [setProvider]);
+  }, []);
 
   /** observe changes to app modules and  clear / set the context provider on change */
   useObservableSubscription(instance$, onContextProviderChange, clearContextProvider);

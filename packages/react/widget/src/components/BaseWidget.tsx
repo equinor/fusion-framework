@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useLoadWidget } from '../hooks/use-portal-widgets';
 import type { WidgetModule, WidgetProps } from '@equinor/fusion-framework-module-widget';
 import type { Fusion } from '@equinor/fusion-framework';
@@ -11,7 +11,7 @@ interface WidgetComponentProps<TProps extends WidgetProps> {
     value: string;
   };
   readonly fusion: Fusion<[WidgetModule]>;
-  readonly fallback?: React.ReactNode;
+  readonly fallback?: ReactNode;
 }
 
 export const BaseWidget = <TProps extends WidgetProps>({
@@ -49,7 +49,7 @@ export const BaseWidget = <TProps extends WidgetProps>({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [widget, ref.current, widgetRef]);
+  }, [widget, widgetRef]);
 
   if (error) {
     throw error;

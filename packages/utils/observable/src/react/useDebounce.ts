@@ -46,7 +46,7 @@ export const useDebounce = <
         switchMap((args) => from(fn(...args))),
         tap(() => setIdle(true)),
       ),
-    [fn],
+    [queuer, debounceFn, fn],
   );
 
   return { idle, next, value$ };

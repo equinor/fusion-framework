@@ -63,10 +63,9 @@ export const useAppSetting = <
   const { currentApp = null } = useCurrentApp();
 
   // create a subject to manage the setting value
+  // biome-ignore lint/correctness/useExhaustiveDependencies: new subject when app changes
   const subject = useMemo(() => {
     return new BehaviorSubject<TSettings[TProp] | undefined>(defaultValue);
-    // Only create a new subject when the current app changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentApp]);
 
   useLayoutEffect(() => {

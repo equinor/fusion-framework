@@ -38,12 +38,9 @@ describe('useObservableSelector', () => {
       const [value, setValue] = useState('');
       const selectedValue$ = useObservableSelector(
         subject,
-        useCallback(
-          (state: TestState) => {
-            return state.foo;
-          },
-          [subject],
-        ),
+        useCallback((state: TestState) => {
+          return state.foo;
+        }, []),
       );
       useEffect(() => {
         const sub = selectedValue$.subscribe(setValue);

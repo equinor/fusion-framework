@@ -30,9 +30,7 @@
       "correctness": {
         "noUndeclaredVariables": "warn",
         "noUnusedVariables": "warn",
-        "useExhaustiveDependencies": "warn",
-        "noVoidTypeReturn": "warn",
-        "useJsxKeyInIterable": "warn"
+        "noVoidTypeReturn": "warn"
       },
       "performance": {
         "noAccumulatingSpread": "warn",

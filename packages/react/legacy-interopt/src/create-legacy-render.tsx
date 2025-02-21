@@ -34,6 +34,7 @@ const AppWrapper = (
 ) => {
   const framework = useFramework<[NavigationModule]>();
   const { history, basename, appKey, children } = props;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: will be deprecated
   useLayoutEffect(() => {
     return framework.modules.navigation.navigator.listen(({ location, action }) => {
       if (
