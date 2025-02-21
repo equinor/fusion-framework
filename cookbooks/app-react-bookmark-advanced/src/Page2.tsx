@@ -8,7 +8,7 @@ export function Page2() {
     updateState((s) => {
       return { payload: { ...s.payload, page: 'page2' } };
     });
-  }, []);
+  }, [updateState]);
 
   return (
     <div

@@ -45,7 +45,7 @@ export const App = (): JSX.Element => {
         price: 53200 + rowData.length,
       },
     ]);
-  }, [rowData, setRowData]);
+  }, [rowData]);
 
   // Define a function to set initial grid data when the grid is ready
   const onGridReady = useCallback(() => {

@@ -34,25 +34,22 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
     return Comp;
   }, [currentSheet]);
 
-  const navigateCallback = useCallback(
-    (sheet: string) => {
-      setCurrentSheet(sheet ?? 'default');
-    },
-    [setCurrentSheet],
-  );
+  const navigateCallback = useCallback((sheet: string) => {
+    setCurrentSheet(sheet ?? 'default');
+  }, []);
 
   return (
     <SideSheet isOpen={isOpen} onClose={onClose} isDismissable={true}>
       <SideSheet.Title title="User settings" />
       <SideSheet.SubTitle subTitle={'Settings for your user in Fusion portal'} />
-      <SideSheet.Actions></SideSheet.Actions>
+      <SideSheet.Actions />
       <SideSheet.Content>
         <section style={{ paddingLeft: '0.5em' }}>
           <div>
-            <fwc-person-list-item azureId={azureId}></fwc-person-list-item>
+            <fwc-person-list-item azureId={azureId} />
           </div>
-          <Divider></Divider>
-          <Component azureId={azureId} sheet={currentSheet} navigate={navigateCallback}></Component>
+          <Divider />
+          <Component azureId={azureId} sheet={currentSheet} navigate={navigateCallback} />
         </section>
       </SideSheet.Content>
     </SideSheet>

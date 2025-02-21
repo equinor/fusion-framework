@@ -6,6 +6,7 @@ export const useObservableSubscription = <T>(
   observer?: Partial<Observer<T>> | ((value: T) => void),
   teardown?: () => void,
 ): void => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: teardown should not trigger rerender
   useEffect(() => {
     const subscription = observable.subscribe(observer as Partial<Observer<T>>);
     subscription.add(teardown);
@@ -18,6 +19,7 @@ export const useObservableLayoutSubscription = <T>(
   observer?: Partial<Observer<T>> | ((value: T) => void),
   teardown?: () => void,
 ): void => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: teardown should not trigger rerender
   useLayoutEffect(() => {
     const subscription = observable.subscribe(observer as Partial<Observer<T>>);
     subscription.add(teardown);

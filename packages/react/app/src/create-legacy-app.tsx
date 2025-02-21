@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, type ElementType } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 
@@ -9,11 +9,12 @@ import { createComponent } from './create-component';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 export const createLegacyApp = <TModules extends Array<AnyModule>>(
-  Component: React.ElementType,
+  Component: ElementType,
   configure?: AppModuleInitiator<TModules>,
 ) => {
-  const LegacyComponent = (): JSX.Element => {
+  const LegacyComponent = () => {
     const fusion = useFramework<[AppModule]>();
+    // biome-ignore lint/correctness/useExhaustiveDependencies: this will soon be removed
     const RenderComponent = useMemo(() => {
       const creator = createComponent(Component, configure);
       // @eikeland

@@ -63,16 +63,13 @@ export const SelectorPage = () => {
   /** Init reducer */
   const [selected, dispatch] = useReducer(reducer, reducer.getInitialState());
 
-  const selectPersonCallback = useCallback(
-    (e: PersonSelectEvent) => {
-      const { selected: sel } = e.nativeEvent.detail;
-      if (sel) {
-        console.log('Selecting =>', sel);
-        dispatch(actions.add(sel));
-      }
-    },
-    [dispatch],
-  );
+  const selectPersonCallback = useCallback((e: PersonSelectEvent) => {
+    const { selected: sel } = e.nativeEvent.detail;
+    if (sel) {
+      console.log('Selecting =>', sel);
+      dispatch(actions.add(sel));
+    }
+  }, []);
 
   return (
     <>

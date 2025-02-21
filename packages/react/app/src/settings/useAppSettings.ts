@@ -56,10 +56,9 @@ export const useAppSettings = <TSettings extends Record<string, unknown> = AppSe
   const { onError, onUpdated, onLoading, onUpdating } = hooks ?? {};
   const { currentApp = null } = useCurrentApp();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: create new subject when app changes
   const subject = useMemo(() => {
     return new BehaviorSubject<TSettings>(defaultValue ?? ({} as TSettings));
-    // Only create a new subject when the current app changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentApp]);
 
   // connect the subject to the current app settings stream

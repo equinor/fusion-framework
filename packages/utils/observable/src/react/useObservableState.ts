@@ -90,10 +90,11 @@ export function useObservableState<S, E = unknown>(
    * when subject change, reset state
    */
   useLayoutEffect(() => {
+    subject;
     setError(null);
     setComplete(false);
     setNext(initialValue.current);
-  }, [setNext, setError, setComplete, subject, initialValue]);
+  }, [subject]);
 
   const subscriber = useMemo(
     () => ({
@@ -101,7 +102,7 @@ export function useObservableState<S, E = unknown>(
       error: setError,
       complete: () => setComplete(true),
     }),
-    [setNext, setError, setComplete],
+    [],
   );
 
   useObservableLayoutSubscription(subject, subscriber, opt?.teardown);
