@@ -48,7 +48,7 @@ export const Provider: FC<PropsWithChildren<unknown>> = ({ children }) => {
 
   useEffect(() => {
     getAllBookmarks();
-  }, []);
+  }, [getAllBookmarks]);
 
   return <Context.Provider value={{ ...state, updateState }}>{children}</Context.Provider>;
 };

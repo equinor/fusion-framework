@@ -15,7 +15,7 @@ export const App = () => {
   const updateData = useRef(payload);
 
   const { currentBookmark } = useCurrentBookmark<MyPayload>(
-    useCallback(() => updateData.current, [updateData]),
+    useCallback(() => updateData.current, []),
   );
 
   useLayoutEffect(() => {
