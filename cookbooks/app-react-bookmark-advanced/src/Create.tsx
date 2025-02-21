@@ -89,6 +89,7 @@ export const Create = () => {
             />
           </form>
           <button
+            type="button"
             disabled={state.name.length < 2 || state.description.length < 3}
             onClick={() => {
               createBookmark(state);
@@ -98,6 +99,7 @@ export const Create = () => {
           </button>
 
           <button
+            type="button"
             onClick={() => {
               updateState(() => init);
             }}
@@ -110,6 +112,7 @@ export const Create = () => {
               .map((bookmark) => (
                 <div key={bookmark.id} style={{ display: 'flex' }}>
                   <button
+                    type="button"
                     style={{
                       display: 'flex',
                       textAlign: 'start',
@@ -127,6 +130,7 @@ export const Create = () => {
                   </button>
                   <div>
                     <button
+                      type="button"
                       style={{ display: 'flex' }}
                       onClick={() => {
                         deleteBookmarkById(bookmark.id);
@@ -135,6 +139,7 @@ export const Create = () => {
                       x
                     </button>
                     <button
+                      type="button"
                       style={{ display: 'flex' }}
                       onClick={() => {
                         updateBookmark({
