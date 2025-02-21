@@ -1,4 +1,4 @@
-import { type PropsWithChildren, Suspense, useMemo } from 'react';
+import { type PropsWithChildren, type ReactNode, Suspense, useMemo } from 'react';
 import type { ServicesModule } from '@equinor/fusion-framework-module-services';
 import { useModule } from '@equinor/fusion-framework-react-module';
 import { makeResolver } from './makeResolver';
@@ -6,7 +6,7 @@ import type { PersonControllerOptions } from './PersonController';
 
 type PeopleResolverProviderProps = PropsWithChildren<{
   readonly options?: PersonControllerOptions;
-  readonly fallback?: React.ReactNode;
+  readonly fallback?: ReactNode;
 }>;
 
 export const PeopleResolverProvider = (props: PeopleResolverProviderProps) => {
@@ -17,7 +17,7 @@ export const PeopleResolverProvider = (props: PeopleResolverProviderProps) => {
   }
   const Component = useMemo(() => makeResolver(services, options), [services, options]);
   return (
-    <Suspense fallback={fallback || <></>}>
+    <Suspense fallback={fallback || null}>
       <Component>{children}</Component>
     </Suspense>
   );
