@@ -9,12 +9,11 @@ import type { GetNotificationsArgs } from './types';
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
   version: TVersion,
   args: GetNotificationsArgs<TVersion>,
-) => {
+): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);
-    case ApiVersion.v1:
     default: {
       const { userId } = args as { userId: string };
       const params = new URLSearchParams();

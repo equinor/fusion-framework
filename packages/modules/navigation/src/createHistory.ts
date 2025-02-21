@@ -10,9 +10,12 @@ export const createHistory = (type?: HistoryType): History => {
     case 'memory':
       return createMemoryHistory({ v5Compat: true });
     case 'browser':
-    default:
       return createBrowserHistory({
         v5Compat: true,
       });
+    default: {
+      console.warn(`Unknown history type: ${type}. Using browser history as default.`);
+      return createHistory('browser');
+    }
   }
 };

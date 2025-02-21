@@ -25,8 +25,7 @@
       "complexity": {
         "noBannedTypes": "warn",
         "useLiteralKeys": "warn",
-        "useOptionalChain": "warn",
-        "noUselessSwitchCase": "warn"
+        "useOptionalChain": "warn"
       },
       "correctness": {
         "noUndeclaredVariables": "warn",
