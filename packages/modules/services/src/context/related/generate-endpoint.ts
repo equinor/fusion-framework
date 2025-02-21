@@ -45,12 +45,11 @@ const createSearchParameters = (args: string | RelatedContextOdataParameters) =>
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
   version: TVersion,
   args: RelatedContextArgs<TVersion>,
-) => {
+): string => {
   const apiVersion = ApiVersion[version as keyof typeof ApiVersion] ?? version;
   switch (apiVersion) {
     case ApiVersion.v2:
       throw new UnsupportedApiVersion(version);
-    case ApiVersion.v1:
     default: {
       const { id, query } = args as RelatedContextArgs<'v1'>;
       const params = new URLSearchParams(createSearchParameters(query || ''));
