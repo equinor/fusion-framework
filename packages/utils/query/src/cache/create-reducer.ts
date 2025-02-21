@@ -43,7 +43,8 @@ export default function <TType, TArgs>(
             record.updates++;
             record.value = castDraft(entry.value);
             record.transaction = entry.transaction;
-            delete record.mutated;
+            // reset the mutated timestamp
+            record.mutated = undefined;
           } else {
             // If the record does not exist, create a new one with the current timestamp.
             const created = Date.now();
@@ -64,7 +65,8 @@ export default function <TType, TArgs>(
           for (const key of invalidKey) {
             const entry = state[key];
             if (entry) {
-              delete entry.updated;
+              // reset the updated timestamp
+              entry.updated = undefined;
             }
           }
         })
