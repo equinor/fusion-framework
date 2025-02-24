@@ -10,7 +10,11 @@ import { SemanticVersion } from '@equinor/fusion-framework-module';
 
 export interface IAuthProvider {
   // readonly defaultClient: AuthClient;
-  // readonly defaultConfig: AuthClientOptions | undefined;
+  /**
+   * @deprecated
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: this is deprecated
+  readonly defaultConfig: any | undefined;
   readonly defaultAccount: AccountInfo | undefined;
 
   /**
@@ -147,6 +151,8 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
             return target.version;
           case 'defaultAccount':
             return target.defaultAccount;
+          case 'defaultConfig':
+            return target.defaultConfig;
           case 'acquireToken':
             return target.acquireToken.bind(target);
           case 'acquireAccessToken':
