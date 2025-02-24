@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.1.50
+
+### Patch Changes
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - fixed `useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`68b180c`](https://github.com/equinor/fusion-framework/commit/68b180c687ad1939d4f3df185c634f5046a55f63), [`c1c9dfa`](https://github.com/equinor/fusion-framework/commit/c1c9dfa5bf0323ab4e146c45c475fa4f6af61088), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d), [`6961024`](https://github.com/equinor/fusion-framework/commit/6961024f4ea330ac5d742037623834ee95b05b2b)]:
+  - @equinor/fusion-framework-cli@10.5.2
+  - @equinor/fusion-framework-module-navigation@4.0.8
+  - @equinor/fusion-observable@8.4.5
+  - @equinor/fusion-framework-react-app@6.0.1
+  - @equinor/fusion-framework-react-module-context@6.2.18
+
 ## 4.1.49
 
 ### Patch Changes

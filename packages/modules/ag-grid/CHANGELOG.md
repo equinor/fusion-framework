@@ -1,5 +1,18 @@
 # Change Log
 
+## 33.1.0
+
+### Minor Changes
+
+- [#2859](https://github.com/equinor/fusion-framework/pull/2859) [`78ec0ed`](https://github.com/equinor/fusion-framework/commit/78ec0edcf9d3578a79654696c6fdaaefd59b5fe4) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump the ag-grid from 33.0.3 to 33.1.1
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+
 ## 33.0.2
 
 ### Patch Changes
@@ -12,14 +25,14 @@
 
 - [#2802](https://github.com/equinor/fusion-framework/pull/2802) [`6277eef`](https://github.com/equinor/fusion-framework/commit/6277eefe89444fee150f01c11b1d01348e024ca3) Thanks [@odinr](https://github.com/odinr)! - - Updated `README.md` with detailed documentation for the AG Grid React for Fusion Framework, including installation, configuration, theming, customizing a grid instance, and upgrading from version 32 to 33.
 
-    - Refactor: `package.json` to include peer dependencies for `ag-grid-community` and `ag-grid-enterprise`.
-    - Fixed: `AgGridConfigurator` class to setting the license key on initialization.
-    - Refactor: import statements to use `ag-grid-enterprise` and `ag-grid-community`.
-    - Feature: Added `createThemeFromExistingTheme` function to decontruct an existing theme and create a new theme _(AG-Grid type checks with `instanceof` which will break since the parent scope has another instance than the consumer)._
+  - Refactor: `package.json` to include peer dependencies for `ag-grid-community` and `ag-grid-enterprise`.
+  - Fixed: `AgGridConfigurator` class to setting the license key on initialization.
+  - Refactor: import statements to use `ag-grid-enterprise` and `ag-grid-community`.
+  - Feature: Added `createThemeFromExistingTheme` function to decontruct an existing theme and create a new theme _(AG-Grid type checks with `instanceof` which will break since the parent scope has another instance than the consumer)._
 
-    We have chose to only `patch` this release, to conform with the AG Grid versioning scheme, event tho there are some breaking changes. This is because the breaking changes are not related to the API of the module itself, but rather to the dependencies of the module.
+  We have chose to only `patch` this release, to conform with the AG Grid versioning scheme, event tho there are some breaking changes. This is because the breaking changes are not related to the API of the module itself, but rather to the dependencies of the module.
 
-    - `@equinor/fusion-framework-module-ag-grid/enterprise` and `@equinor/fusion-framework-module-ag-grid/community` have been removed. Instead, the module now relies on the `ag-grid-enterprise` and `ag-grid-community` packages as peer dependencies. This means that you will have to install these packages yourself.
+  - `@equinor/fusion-framework-module-ag-grid/enterprise` and `@equinor/fusion-framework-module-ag-grid/community` have been removed. Instead, the module now relies on the `ag-grid-enterprise` and `ag-grid-community` packages as peer dependencies. This means that you will have to install these packages yourself.
 
 ## 33.0.0
 
@@ -27,37 +40,37 @@
 
 - [#2687](https://github.com/equinor/fusion-framework/pull/2687) [`22219ab`](https://github.com/equinor/fusion-framework/commit/22219ab3c07b5578c48a012632fe16d9a823a3bf) Thanks [@odinr](https://github.com/odinr)! - Enhanced the AG Grid module with new functionalities and improvements.
 
-    - Added TypeScript type definitions for better type support.
-    - Introduced new exports for `community`, `enterprise`, and `themes`.
-    - Implemented `AgGridConfigurator` and `AgGridProvider` classes for better configuration and initialization.
-    - Added support for setting and clearing themes, managing modules, and setting license keys.
-    - Updated the `module.ts` to use the new configurator and provider classes.
-    - Removed deprecated files and refactored the module structure for better maintainability.
+  - Added TypeScript type definitions for better type support.
+  - Introduced new exports for `community`, `enterprise`, and `themes`.
+  - Implemented `AgGridConfigurator` and `AgGridProvider` classes for better configuration and initialization.
+  - Added support for setting and clearing themes, managing modules, and setting license keys.
+  - Updated the `module.ts` to use the new configurator and provider classes.
+  - Removed deprecated files and refactored the module structure for better maintainability.
 
-    **Detailed Changes:**
+  **Detailed Changes:**
 
-    - **package.json**: Updated dependencies and added new exports.
-    - **AgGridConfigurator.interface.ts**: Defined the interface for configuring AG Grid settings and modules.
-    - **AgGridConfigurator.ts**: Implemented the `AgGridConfigurator` class for managing AG Grid configuration.
-    - **AgGridProvider.ts**: Implemented the `AgGridProvider` class for providing AG Grid configuration.
-    - **community.ts**: Exported all from `ag-grid-community`.
-    - **default-modules.ts**: Added a placeholder for default modules.
-    - **enterprise.ts**: Exported all from `ag-grid-enterprise`.
-    - **index.ts**: Updated exports to use the new configurator and provider.
-    - **module.ts**: Refactored to use the new configurator and provider classes.
-    - **themes.ts**: Added a default theme for AG Grid.
+  - **package.json**: Updated dependencies and added new exports.
+  - **AgGridConfigurator.interface.ts**: Defined the interface for configuring AG Grid settings and modules.
+  - **AgGridConfigurator.ts**: Implemented the `AgGridConfigurator` class for managing AG Grid configuration.
+  - **AgGridProvider.ts**: Implemented the `AgGridProvider` class for providing AG Grid configuration.
+  - **community.ts**: Exported all from `ag-grid-community`.
+  - **default-modules.ts**: Added a placeholder for default modules.
+  - **enterprise.ts**: Exported all from `ag-grid-enterprise`.
+  - **index.ts**: Updated exports to use the new configurator and provider.
+  - **module.ts**: Refactored to use the new configurator and provider classes.
+  - **themes.ts**: Added a default theme for AG Grid.
 
-    **Breaking Changes:**
+  **Breaking Changes:**
 
-    - `@ag-grid-community/*` and `@ag-grid-enterprise/*` must be removed from the project dependencies.
-    - The new configurator no longer supports setting license keys directly. Use the `setLicense` function to set license keys.
-    - Modules are now managed through the `AgGridConfigurator` class. Use the `setModule` or `addModule` function to set/add modules to the configuration.
+  - `@ag-grid-community/*` and `@ag-grid-enterprise/*` must be removed from the project dependencies.
+  - The new configurator no longer supports setting license keys directly. Use the `setLicense` function to set license keys.
+  - Modules are now managed through the `AgGridConfigurator` class. Use the `setModule` or `addModule` function to set/add modules to the configuration.
 
-    **References:**
+  **References:**
 
-    - [AG Grid 33 Migration Guide](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-33/)
-    - [AG Grid Documentation](https://www.ag-grid.com/)
-    - [AG Grid Theme Builder](https://www.ag-grid.com/theme-builder/)
+  - [AG Grid 33 Migration Guide](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-33/)
+  - [AG Grid Documentation](https://www.ag-grid.com/)
+  - [AG Grid Theme Builder](https://www.ag-grid.com/theme-builder/)
 
 ## 32.3.0
 
@@ -77,7 +90,7 @@
 
 - [#2442](https://github.com/equinor/fusion-framework/pull/2442) [`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2) Thanks [@odinr](https://github.com/odinr)! - Fixed reference check in navigation module and ag-grid module.
 
-    hotfix for [PR-2425](https://github.com/equinor/fusion-framework/pull/2425)
+  hotfix for [PR-2425](https://github.com/equinor/fusion-framework/pull/2425)
 
 ## 32.1.0
 
@@ -93,46 +106,46 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 ## 32.0.0
 
@@ -140,30 +153,30 @@
 
 - [#2314](https://github.com/equinor/fusion-framework/pull/2314) [`c416233`](https://github.com/equinor/fusion-framework/commit/c41623333a0f0b2be1bd3567b383f3ee5ca6fdbd) Thanks [@dependabot](https://github.com/apps/dependabot)! - # Upgrading to AG Grid 32 for React
 
-    ## Summary
+  ## Summary
 
-    AG Grid 32 introduces several new features and improvements for React applications, along with some breaking changes that developers need to be aware of when upgrading.
+  AG Grid 32 introduces several new features and improvements for React applications, along with some breaking changes that developers need to be aware of when upgrading.
 
-    ## Key Breaking Changes
+  ## Key Breaking Changes
 
-    1. **Removal of deprecated APIs**
-        - Several deprecated APIs have been removed, including some related to row models, column definitions, and grid options.
-    2. **Changes to default behavior**
-        - The default for `suppressMenuHide` is now `true`.
-        - `applyColumnDefOrder` now defaults to `true`.
-    3. **Typing changes**
-        - Some TypeScript interfaces have been updated or removed, which may require code adjustments.
-    4. **Removal of Internet Explorer 11 support**
-        - AG Grid no longer supports Internet Explorer 11.
-    5. **Changes to CSS classes**
-        - Some CSS classes have been renamed or removed, which may affect custom styling.
-    6. **Adjustments to event parameters**
-        - Certain events now have different parameter structures.
-    7. **Modifications to API methods**
-        - Some API methods have been changed or removed.
+  1. **Removal of deprecated APIs**
+     - Several deprecated APIs have been removed, including some related to row models, column definitions, and grid options.
+  2. **Changes to default behavior**
+     - The default for `suppressMenuHide` is now `true`.
+     - `applyColumnDefOrder` now defaults to `true`.
+  3. **Typing changes**
+     - Some TypeScript interfaces have been updated or removed, which may require code adjustments.
+  4. **Removal of Internet Explorer 11 support**
+     - AG Grid no longer supports Internet Explorer 11.
+  5. **Changes to CSS classes**
+     - Some CSS classes have been renamed or removed, which may affect custom styling.
+  6. **Adjustments to event parameters**
+     - Certain events now have different parameter structures.
+  7. **Modifications to API methods**
+     - Some API methods have been changed or removed.
 
-    When upgrading to AG Grid 32, it's important to review the [full changelog](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-32/?ref=blog.ag-grid.com) and test your application thoroughly to ensure compatibility with the new version.
-    The AG Grid team provides codemods to assist with some of the migration tasks, which can help automate parts of the upgrade process.
+  When upgrading to AG Grid 32, it's important to review the [full changelog](https://www.ag-grid.com/react-data-grid/upgrading-to-ag-grid-32/?ref=blog.ag-grid.com) and test your application thoroughly to ensure compatibility with the new version.
+  The AG Grid team provides codemods to assist with some of the migration tasks, which can help automate parts of the upgrade process.
 
 ## 31.3.0
 
@@ -171,19 +184,19 @@
 
 - [#2207](https://github.com/equinor/fusion-framework/pull/2207) [`cc6b519`](https://github.com/equinor/fusion-framework/commit/cc6b519df0903c570e7ed2f4af9b8e5cf8d1fc7d) Thanks [@odinr](https://github.com/odinr)! - Updated the `@ag-grid-enterprise/core` dependency to version `~31.3.2`. This is a patch version bump.
 
-    **Sticky Group Total and Grand Total Rows**: Group and grand total rows can now be displayed as sticky rows at the top or bottom of the grid, making it easier to track total values in large datasets.
+  **Sticky Group Total and Grand Total Rows**: Group and grand total rows can now be displayed as sticky rows at the top or bottom of the grid, making it easier to track total values in large datasets.
 
-    **Theme Builder**: A new powerful styling tool that allows users to easily build highly-customized themes for AG Grid using presets and visual configurations.
+  **Theme Builder**: A new powerful styling tool that allows users to easily build highly-customized themes for AG Grid using presets and visual configurations.
 
-    **Skeleton Content in Loading Grid Cells**: Skeleton loading placeholders are now displayed in grid cells while data is being loaded, providing a better user experience.
+  **Skeleton Content in Loading Grid Cells**: Skeleton loading placeholders are now displayed in grid cells while data is being loaded, providing a better user experience.
 
-    **Background Image in Excel Exports**: Users can now add a background image to Excel files exported from AG Grid.
+  **Background Image in Excel Exports**: Users can now add a background image to Excel files exported from AG Grid.
 
-    **Global Grid Options**: A new feature that allows users to apply global configuration options to all AG Grid instances in their application.
+  **Global Grid Options**: A new feature that allows users to apply global configuration options to all AG Grid instances in their application.
 
-    **Accessibility Improvements**: AG Grid 31.3 includes enhancements to keyboard navigation and overall accessibility support.
+  **Accessibility Improvements**: AG Grid 31.3 includes enhancements to keyboard navigation and overall accessibility support.
 
-    [see full release note](https://blog.ag-grid.com/whats-new-in-ag-grid-31-3/)
+  [see full release note](https://blog.ag-grid.com/whats-new-in-ag-grid-31-3/)
 
 ## 31.2.1
 
@@ -233,9 +246,9 @@
 
 - [#1225](https://github.com/equinor/fusion-framework/pull/1225) [`31a4b06a`](https://github.com/equinor/fusion-framework/commit/31a4b06afcbb76b0a7584724a5bc061a3e2d98b3) Thanks [@odinr](https://github.com/odinr)! - updated ag-grid to 30.1
 
-    see [ag-grid changelog](https://github.com/ag-grid/ag-grid/releases/tag/v30.1.0)
+  see [ag-grid changelog](https://github.com/ag-grid/ag-grid/releases/tag/v30.1.0)
 
-    see [📚doc](https://equinor.github.io/fusion-framework/modules/ag-grid/)
+  see [📚doc](https://equinor.github.io/fusion-framework/modules/ag-grid/)
 
 ## 30.0.1
 
@@ -243,9 +256,9 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 ## 30.0.0
 
@@ -265,9 +278,9 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

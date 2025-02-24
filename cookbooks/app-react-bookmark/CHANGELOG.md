@@ -4,6 +4,14 @@
 
 ### Patch Changes
 
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - fixed `useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+## 4.2.0
+
+### Patch Changes
+
 - [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - updated bookmark test app
 
 ## 4.2.0
@@ -12,15 +20,15 @@
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated Bookmark Handling in App Component
 
-    - Refactored `App.tsx` to use `useLayoutEffect` instead of `useEffect` for synchronizing the `payload` state with the current bookmark.
-    - Replaced `useState` and `useCallback` with `useRef` for managing the `updateData` reference.
-    - Simplified state management by removing `BookmarkState` and `init` and directly using `payload` state.
-    - Updated input change handlers to directly update the `payload` state instead of using `updateState`.
+  - Refactored `App.tsx` to use `useLayoutEffect` instead of `useEffect` for synchronizing the `payload` state with the current bookmark.
+  - Replaced `useState` and `useCallback` with `useRef` for managing the `updateData` reference.
+  - Simplified state management by removing `BookmarkState` and `init` and directly using `payload` state.
+  - Updated input change handlers to directly update the `payload` state instead of using `updateState`.
 
-    Configuration Changes
+  Configuration Changes
 
-    - Updated `config.ts` to enable the bookmark module using `enableBookmark`.
-    - Removed unnecessary logger level settings and configuration callbacks for a cleaner setup.
+  - Updated `config.ts` to enable the bookmark module using `enableBookmark`.
+  - Removed unnecessary logger level settings and configuration callbacks for a cleaner setup.
 
 ## 4.1.3
 
@@ -28,7 +36,7 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Cleaned up app config
 
-    Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.
+  Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.
 
 ## 4.1.2
 
@@ -60,15 +68,15 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 ## 4.0.22
 
@@ -101,9 +109,9 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

@@ -1,5 +1,23 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - Conformed to Biome `linter.correctness.useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`68b180c`](https://github.com/equinor/fusion-framework/commit/68b180c687ad1939d4f3df185c634f5046a55f63), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`6efabb7`](https://github.com/equinor/fusion-framework/commit/6efabb7837a97319e976e122db855d8b88b031a6), [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-framework-module-app@6.1.5
+  - @equinor/fusion-framework-module-navigation@4.0.8
+  - @equinor/fusion-framework-react-module@3.1.7
+  - @equinor/fusion-framework-module-msal@4.0.1
+  - @equinor/fusion-framework-react@7.4.1
+  - @equinor/fusion-framework-app@9.3.1
+  - @equinor/fusion-framework-react-module-http@8.0.2
+
 ## 6.0.0
 
 ### Minor Changes
@@ -9,43 +27,43 @@
 ### Patch Changes
 
 - Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`4578b18`](https://github.com/equinor/fusion-framework/commit/4578b1835b70bd0869441c8fcf6d188f6440f192), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa), [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
-    - @equinor/fusion-framework-module-msal@4.0.0
-    - @equinor/fusion-framework-app@9.3.0
-    - @equinor/fusion-framework-react@7.4.0
-    - @equinor/fusion-framework-module-app@6.1.4
-    - @equinor/fusion-framework-react-module-http@8.0.1
+  - @equinor/fusion-framework-module-msal@4.0.0
+  - @equinor/fusion-framework-app@9.3.0
+  - @equinor/fusion-framework-react@7.4.0
+  - @equinor/fusion-framework-module-app@6.1.4
+  - @equinor/fusion-framework-react-module-http@8.0.1
 
 ## 5.5.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@6.1.4
-    - @equinor/fusion-framework-react@7.3.8
-    - @equinor/fusion-framework-app@9.2.3
+  - @equinor/fusion-framework-module-app@6.1.4
+  - @equinor/fusion-framework-react@7.3.8
+  - @equinor/fusion-framework-app@9.2.3
 
 ## 5.5.3
 
 ### Patch Changes
 
 - [#2687](https://github.com/equinor/fusion-framework/pull/2687) [`22219ab`](https://github.com/equinor/fusion-framework/commit/22219ab3c07b5578c48a012632fe16d9a823a3bf) Thanks [@odinr](https://github.com/odinr)! - - Added hook for using theme in ag-grid
-    - Fixed issue with export types of bookmarks
+  - Fixed issue with export types of bookmarks
 
 ## 5.5.2
 
 ### Patch Changes
 
 - Updated dependencies [[`50a8966`](https://github.com/equinor/fusion-framework/commit/50a8966d64544a34b386307b690e0ecbf8baaead)]:
-    - @equinor/fusion-framework-app@9.2.2
+  - @equinor/fusion-framework-app@9.2.2
 
 ## 5.5.1
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.2.1
-    - @equinor/fusion-framework-module-app@6.1.3
-    - @equinor/fusion-framework-react@7.3.7
+  - @equinor/fusion-framework-app@9.2.1
+  - @equinor/fusion-framework-module-app@6.1.3
+  - @equinor/fusion-framework-react@7.3.7
 
 ## 5.5.0
 
@@ -56,27 +74,27 @@
 ### Patch Changes
 
 - Updated dependencies [[`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af), [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb)]:
-    - @equinor/fusion-framework-module-app@6.1.3
-    - @equinor/fusion-framework-app@9.2.0
-    - @equinor/fusion-framework-react@7.3.6
+  - @equinor/fusion-framework-module-app@6.1.3
+  - @equinor/fusion-framework-app@9.2.0
+  - @equinor/fusion-framework-react@7.3.6
 
 ## 5.4.2
 
 ### Patch Changes
 
 - Updated dependencies [[`add2e98`](https://github.com/equinor/fusion-framework/commit/add2e98d23e683a801729e9af543cfa15c574e27)]:
-    - @equinor/fusion-framework-module-app@6.1.2
-    - @equinor/fusion-framework-app@9.1.17
-    - @equinor/fusion-framework-react@7.3.5
+  - @equinor/fusion-framework-module-app@6.1.2
+  - @equinor/fusion-framework-app@9.1.17
+  - @equinor/fusion-framework-react@7.3.5
 
 ## 5.4.1
 
 ### Patch Changes
 
 - Updated dependencies [[`59ab642`](https://github.com/equinor/fusion-framework/commit/59ab6424f3ce80649f42ddb6804b46f6789607ba)]:
-    - @equinor/fusion-framework-module-app@6.1.1
-    - @equinor/fusion-framework-app@9.1.16
-    - @equinor/fusion-framework-react@7.3.4
+  - @equinor/fusion-framework-module-app@6.1.1
+  - @equinor/fusion-framework-app@9.1.16
+  - @equinor/fusion-framework-react@7.3.4
 
 ## 5.4.0
 
@@ -84,47 +102,47 @@
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - #### Changes:
 
-    1. **AppClient.ts**
-        - Added `updateAppSettings` method to set app settings by appKey.
-    2. **AppModuleProvider.ts**
-        - Added `updateAppSettings` method to update app settings.
-    3. **App.ts**
-        - Added `updateSettings` and `updateSettingsAsync` methods to set app settings.
-        - Added effects to monitor and dispatch events for settings updates.
-    4. **actions.ts**
-        - Added `updateSettings` async action for updating settings.
-    5. **create-reducer.ts**
-        - Added reducer case for `updateSettings.success` to update state settings.
-    6. **create-state.ts**
-        - Added `handleUpdateSettings` flow to handle updating settings.
-    7. **events.ts**
-        - Added new events: `onAppSettingsUpdate`, `onAppSettingsUpdated`, and `onAppSettingsUpdateFailure`.
-    8. **flows.ts**
-        - Added `handleUpdateSettings` flow to handle the set settings action.
-    9. **package.json**
-        - Added `settings` entry to exports and types.
-    10. **index.ts**
-        - Created new file to export `useAppSettings`.
-    11. **useAppSettings.ts**
-        - Created new hook for handling app settings.
-    12. **app-proxy-plugin.ts**
-        - Add conditional handler for persons/me/appKey/settings to prevent matching against appmanifest path
+  1. **AppClient.ts**
+     - Added `updateAppSettings` method to set app settings by appKey.
+  2. **AppModuleProvider.ts**
+     - Added `updateAppSettings` method to update app settings.
+  3. **App.ts**
+     - Added `updateSettings` and `updateSettingsAsync` methods to set app settings.
+     - Added effects to monitor and dispatch events for settings updates.
+  4. **actions.ts**
+     - Added `updateSettings` async action for updating settings.
+  5. **create-reducer.ts**
+     - Added reducer case for `updateSettings.success` to update state settings.
+  6. **create-state.ts**
+     - Added `handleUpdateSettings` flow to handle updating settings.
+  7. **events.ts**
+     - Added new events: `onAppSettingsUpdate`, `onAppSettingsUpdated`, and `onAppSettingsUpdateFailure`.
+  8. **flows.ts**
+     - Added `handleUpdateSettings` flow to handle the set settings action.
+  9. **package.json**
+     - Added `settings` entry to exports and types.
+  10. **index.ts**
+      - Created new file to export `useAppSettings`.
+  11. **useAppSettings.ts**
+      - Created new hook for handling app settings.
+  12. **app-proxy-plugin.ts**
+      - Add conditional handler for persons/me/appKey/settings to prevent matching against appmanifest path
 
 ### Patch Changes
 
 - Updated dependencies [[`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982), [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982)]:
-    - @equinor/fusion-framework-module-app@6.1.0
-    - @equinor/fusion-framework-app@9.1.15
-    - @equinor/fusion-framework-react@7.3.3
+  - @equinor/fusion-framework-module-app@6.1.0
+  - @equinor/fusion-framework-app@9.1.15
+  - @equinor/fusion-framework-react@7.3.3
 
 ## 5.3.1
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.14
-    - @equinor/fusion-framework-react@7.3.3
-    - @equinor/fusion-framework-module-app@6.0.3
+  - @equinor/fusion-framework-app@9.1.14
+  - @equinor/fusion-framework-react@7.3.3
+  - @equinor/fusion-framework-module-app@6.0.3
 
 ## 5.3.0
 
@@ -132,36 +150,36 @@
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Updated bookmark namespace in `@equinor/fusion-react-app` to include new hooks and updated `useCurrentBookmark` hook.
 
-    - Updated `index.ts` to re-export everything from `@equinor/fusion-framework-react-module-bookmark` instead of individual exports.
-    - Marked `useBookmark` as deprecated in `useBookmark.ts`.
-    - Enhanced `useCurrentBookmark` in `useCurrentBookmark.ts` to accept a `BookmarkPayloadGenerator` and use the `BookmarkModule` from `useAppModule`.
+  - Updated `index.ts` to re-export everything from `@equinor/fusion-framework-react-module-bookmark` instead of individual exports.
+  - Marked `useBookmark` as deprecated in `useBookmark.ts`.
+  - Enhanced `useCurrentBookmark` in `useCurrentBookmark.ts` to accept a `BookmarkPayloadGenerator` and use the `BookmarkModule` from `useAppModule`.
 
-    **NOTE**: This change is backwards compatible and should not require any changes in consuming applications.
-    **NOTE**: `useBookmark` will be removed in the next major version. Please use providers and hooks from `@equinor/fusion-framework-react-module-bookmark` instead.
+  **NOTE**: This change is backwards compatible and should not require any changes in consuming applications.
+  **NOTE**: `useBookmark` will be removed in the next major version. Please use providers and hooks from `@equinor/fusion-framework-react-module-bookmark` instead.
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.13
-    - @equinor/fusion-framework-react@7.3.2
+  - @equinor/fusion-framework-app@9.1.13
+  - @equinor/fusion-framework-react@7.3.2
 
 ## 5.2.12
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.12
-    - @equinor/fusion-framework-react@7.3.1
-    - @equinor/fusion-framework-module-app@6.0.2
+  - @equinor/fusion-framework-app@9.1.12
+  - @equinor/fusion-framework-react@7.3.1
+  - @equinor/fusion-framework-module-app@6.0.2
 
 ## 5.2.11
 
 ### Patch Changes
 
 - Updated dependencies [[`248ee1f`](https://github.com/equinor/fusion-framework/commit/248ee1f83978a158dfb88dd47d8e8bcaac0e3574)]:
-    - @equinor/fusion-framework-module-app@6.0.1
-    - @equinor/fusion-framework-app@9.1.11
-    - @equinor/fusion-framework-react@7.3.0
+  - @equinor/fusion-framework-module-app@6.0.1
+  - @equinor/fusion-framework-app@9.1.11
+  - @equinor/fusion-framework-react@7.3.0
 
 ## 5.2.10
 
@@ -169,137 +187,137 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adjusted module to the new app service API.
 
-    > [!WARNING]
-    > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
+  > [!WARNING]
+  > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
-    **Added**
+  **Added**
 
-    - Introduced `AppClient` class to handle application manifest and configuration queries.
-    - Added `zod` to validate the application manifest.
+  - Introduced `AppClient` class to handle application manifest and configuration queries.
+  - Added `zod` to validate the application manifest.
 
-    **Changed**
+  **Changed**
 
-    - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
-    - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
-    - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
+  - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
+  - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
+  - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
 
-    **Migration**
+  **Migration**
 
-    before:
+  before:
 
-    ```ts
-    configurator.setClient({
-        getAppManifest: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-        getAppManifests: {
-            client: {
-                fn: () => httpClient.json$<ApiApp[]>(`/apps`),
-            },
-            key: () => `all-apps`,
-        },
-        getAppConfig: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-    });
-    ```
+  ```ts
+  configurator.setClient({
+    getAppManifest: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+    getAppManifests: {
+      client: {
+        fn: () => httpClient.json$<ApiApp[]>(`/apps`),
+      },
+      key: () => `all-apps`,
+    },
+    getAppConfig: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+  });
+  ```
 
-    after:
+  after:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    configurator.setClient(new AppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  configurator.setClient(new AppClient());
+  ```
 
-    custom client implementation:
+  custom client implementation:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    class CustomAppClient implements IAppClient { ... }
-    configurator.setClient(new CustomAppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  class CustomAppClient implements IAppClient { ... }
+  configurator.setClient(new CustomAppClient());
+  ```
 
 - Updated dependencies [[`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251)]:
-    - @equinor/fusion-framework-module-app@6.0.0
-    - @equinor/fusion-framework-react@7.3.0
-    - @equinor/fusion-framework-app@9.1.10
+  - @equinor/fusion-framework-module-app@6.0.0
+  - @equinor/fusion-framework-react@7.3.0
+  - @equinor/fusion-framework-app@9.1.10
 
 ## 5.2.9
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.9
-    - @equinor/fusion-framework-module-app@5.3.11
-    - @equinor/fusion-framework-react-module-http@8.0.0
-    - @equinor/fusion-framework-react@7.2.3
+  - @equinor/fusion-framework-app@9.1.9
+  - @equinor/fusion-framework-module-app@5.3.11
+  - @equinor/fusion-framework-react-module-http@8.0.0
+  - @equinor/fusion-framework-react@7.2.3
 
 ## 5.2.8
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
-    - @equinor/fusion-framework-app@9.1.8
-    - @equinor/fusion-framework-module-app@5.3.11
-    - @equinor/fusion-framework-react-module-http@7.0.0
-    - @equinor/fusion-framework-module-msal@3.1.5
-    - @equinor/fusion-framework-module-navigation@4.0.7
-    - @equinor/fusion-framework-react@7.2.2
-    - @equinor/fusion-framework-react-module@3.1.6
+  - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-app@9.1.8
+  - @equinor/fusion-framework-module-app@5.3.11
+  - @equinor/fusion-framework-react-module-http@7.0.0
+  - @equinor/fusion-framework-module-msal@3.1.5
+  - @equinor/fusion-framework-module-navigation@4.0.7
+  - @equinor/fusion-framework-react@7.2.2
+  - @equinor/fusion-framework-react-module@3.1.6
 
 ## 5.2.7
 
 ### Patch Changes
 
 - Updated dependencies [[`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2)]:
-    - @equinor/fusion-framework-module-navigation@4.0.6
-    - @equinor/fusion-framework-module-app@5.3.11
-    - @equinor/fusion-framework-react@7.2.1
-    - @equinor/fusion-framework-app@9.1.7
+  - @equinor/fusion-framework-module-navigation@4.0.6
+  - @equinor/fusion-framework-module-app@5.3.11
+  - @equinor/fusion-framework-react@7.2.1
+  - @equinor/fusion-framework-app@9.1.7
 
 ## 5.2.6
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9), [`843edd9`](https://github.com/equinor/fusion-framework/commit/843edd96f2a01ebd814766105902977cdc1cdf8e)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-framework-react@7.2.0
-    - @equinor/fusion-framework-app@9.1.6
-    - @equinor/fusion-framework-module-app@5.3.10
-    - @equinor/fusion-framework-module-msal@3.1.4
-    - @equinor/fusion-framework-module-navigation@4.0.5
-    - @equinor/fusion-framework-react-module@3.1.5
-    - @equinor/fusion-framework-react-module-http@6.0.3
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-framework-react@7.2.0
+  - @equinor/fusion-framework-app@9.1.6
+  - @equinor/fusion-framework-module-app@5.3.10
+  - @equinor/fusion-framework-module-msal@3.1.4
+  - @equinor/fusion-framework-module-navigation@4.0.5
+  - @equinor/fusion-framework-react-module@3.1.5
+  - @equinor/fusion-framework-react-module-http@6.0.3
 
 ## 5.2.5
 
 ### Patch Changes
 
 - Updated dependencies [[`1a215c4`](https://github.com/equinor/fusion-framework/commit/1a215c45c97d2dfdc8127dc752ec21951bb048be), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-framework-module-navigation@4.0.4
-    - @equinor/fusion-framework-module@4.3.3
-    - @equinor/fusion-framework-module-app@5.3.9
-    - @equinor/fusion-framework-react@7.1.4
-    - @equinor/fusion-framework-app@9.1.5
-    - @equinor/fusion-framework-react-module-http@6.0.2
-    - @equinor/fusion-framework-module-msal@3.1.3
-    - @equinor/fusion-framework-react-module@3.1.4
+  - @equinor/fusion-framework-module-navigation@4.0.4
+  - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module-app@5.3.9
+  - @equinor/fusion-framework-react@7.1.4
+  - @equinor/fusion-framework-app@9.1.5
+  - @equinor/fusion-framework-react-module-http@6.0.2
+  - @equinor/fusion-framework-module-msal@3.1.3
+  - @equinor/fusion-framework-react-module@3.1.4
 
 ## 5.2.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.1.4
-    - @equinor/fusion-framework-module-app@5.3.8
-    - @equinor/fusion-framework-react@7.1.3
+  - @equinor/fusion-framework-app@9.1.4
+  - @equinor/fusion-framework-module-app@5.3.8
+  - @equinor/fusion-framework-react@7.1.3
 
 ## 5.2.3
 
@@ -309,72 +327,72 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-framework-react-module@3.1.3
-    - @equinor/fusion-framework-module-navigation@4.0.3
-    - @equinor/fusion-framework-react-module-http@6.0.1
-    - @equinor/fusion-framework-react@7.1.2
-    - @equinor/fusion-framework-module-msal@3.1.2
-    - @equinor/fusion-framework-module-app@5.3.8
-    - @equinor/fusion-framework-app@9.1.3
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-framework-react-module@3.1.3
+  - @equinor/fusion-framework-module-navigation@4.0.3
+  - @equinor/fusion-framework-react-module-http@6.0.1
+  - @equinor/fusion-framework-react@7.1.2
+  - @equinor/fusion-framework-module-msal@3.1.2
+  - @equinor/fusion-framework-module-app@5.3.8
+  - @equinor/fusion-framework-app@9.1.3
 
 ## 5.2.2
 
 ### Patch Changes
 
 - Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb), [`da9dd83`](https://github.com/equinor/fusion-framework/commit/da9dd83c9352def5365b6c962dc8443589ac9526)]:
-    - @equinor/fusion-framework-module-app@5.3.7
-    - @equinor/fusion-framework-react@7.1.1
-    - @equinor/fusion-framework-app@9.1.2
+  - @equinor/fusion-framework-module-app@5.3.7
+  - @equinor/fusion-framework-react@7.1.1
+  - @equinor/fusion-framework-app@9.1.2
 
 ## 5.2.1
 
 ### Patch Changes
 
 - Updated dependencies [[`b8d52ad`](https://github.com/equinor/fusion-framework/commit/b8d52adb2ca1f9857c672a3deb774409ff2bdb37)]:
-    - @equinor/fusion-framework-app@9.1.1
+  - @equinor/fusion-framework-app@9.1.1
 
 ## 5.2.0
 
@@ -382,26 +400,26 @@
 
 - [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - If you were previously using the `blob` or `blob# Change Log methods from the `IHttpClient`and expecting a`Blob`result, you must now use the new`BlobResult` type, which includes the filename (if available) and the blob data.
 
-    **Migration Guide:**
+  **Migration Guide:**
 
-    ```typescript
-    // Before
-    const blob = await httpClient.blob('/path/to/blob');
-    console.log(blob); // Blob instance
+  ```typescript
+  // Before
+  const blob = await httpClient.blob("/path/to/blob");
+  console.log(blob); // Blob instance
 
-    // After
-    const blobResult = await httpClient.blob<Blob>('/path/to/blob');
-    console.log(blobResult.filename); // 'example.pdf'
-    console.log(blobResult.blob); // Blob instance
-    ```
+  // After
+  const blobResult = await httpClient.blob<Blob>("/path/to/blob");
+  console.log(blobResult.filename); // 'example.pdf'
+  console.log(blobResult.blob); // Blob instance
+  ```
 
 ### Patch Changes
 
 - Updated dependencies [[`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8)]:
-    - @equinor/fusion-framework-app@9.1.0
-    - @equinor/fusion-framework-react@7.1.0
-    - @equinor/fusion-framework-module-app@5.3.6
-    - @equinor/fusion-framework-react-module-http@6.0.0
+  - @equinor/fusion-framework-app@9.1.0
+  - @equinor/fusion-framework-react@7.1.0
+  - @equinor/fusion-framework-module-app@5.3.6
+  - @equinor/fusion-framework-react-module-http@6.0.0
 
 ## 5.1.0
 
@@ -409,81 +427,79 @@
 
 - [#2180](https://github.com/equinor/fusion-framework/pull/2180) [`060a1aa`](https://github.com/equinor/fusion-framework/commit/060a1aa7f4f2ce6b1ddef527a219bf267e488500) Thanks [@odinr](https://github.com/odinr)! - ## @equinor/fusion-react
 
-    ### What changed?
+  ### What changed?
 
-    The `useAppEnvironmentVariables` hook has been added to the `@equinor/fusion-react` package.
-    This hook provides access to the application's environment variables, which are retrieved from the app module provided by the framework.
+  The `useAppEnvironmentVariables` hook has been added to the `@equinor/fusion-react` package.
+  This hook provides access to the application's environment variables, which are retrieved from the app module provided by the framework.
 
-    ### Why the change?
+  ### Why the change?
 
-    Previously, there was no built-in way to access the application's environment variables from the React components.
-    This new hook fills that gap, making it easier for developers to retrieve and use the environment configuration in their applications.
+  Previously, there was no built-in way to access the application's environment variables from the React components.
+  This new hook fills that gap, making it easier for developers to retrieve and use the environment configuration in their applications.
 
-    ### How to use the new feature
+  ### How to use the new feature
 
-    To use the `useAppEnvironmentVariables` hook, simply import it and call it in your React component:
+  To use the `useAppEnvironmentVariables` hook, simply import it and call it in your React component:
 
-    ```typescript
-    import { useAppEnvironmentVariables } from '@equinor/fusion-react';
+  ```typescript
+  import { useAppEnvironmentVariables } from "@equinor/fusion-react";
 
-    const MyComponent = () => {
-      const env = useAppEnvironmentVariables<{ API_URL: string }>();
+  const MyComponent = () => {
+    const env = useAppEnvironmentVariables<{ API_URL: string }>();
 
-      if (!env.complete) {
-        return <div>Loading environment variables...</div>;
-      }
+    if (!env.complete) {
+      return <div>Loading environment variables...</div>;
+    }
 
-      if (env.error) {
-        return <div>Error loading environment variables</div>;
-      }
+    if (env.error) {
+      return <div>Error loading environment variables</div>;
+    }
 
-      return (
-        <div>
-          My environment variables: {JSON.stringify(env.value, null, 2)}
-        </div>
-      );
-    };
-    ```
+    return (
+      <div>My environment variables: {JSON.stringify(env.value, null, 2)}</div>
+    );
+  };
+  ```
 
-    The hook returns an observable state object that represents the current environment configuration.
-    The `value` property of this object contains the environment variables, which can be typed using a generic type parameter.
+  The hook returns an observable state object that represents the current environment configuration.
+  The `value` property of this object contains the environment variables, which can be typed using a generic type parameter.
 
-    If the environment configuration is not yet available (e.g., during the initial load), the `complete` property will be `false`.
-    If there was an error retrieving the configuration, the `error` property will be set.
+  If the environment configuration is not yet available (e.g., during the initial load), the `complete` property will be `false`.
+  If there was an error retrieving the configuration, the `error` property will be set.
 
-    ### Migration guide
+  ### Migration guide
 
-    There are no breaking changes introduced with this feature. Developers can start using the `useAppEnvironmentVariables` hook immediately to access their application's environment variables.
+  There are no breaking changes introduced with this feature. Developers can start using the `useAppEnvironmentVariables` hook immediately to access their application's environment variables.
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-framework-app@9.0.9
-    - @equinor/fusion-framework-module-app@5.3.5
-    - @equinor/fusion-framework-module-msal@3.1.1
-    - @equinor/fusion-framework-module-navigation@4.0.2
-    - @equinor/fusion-framework-react@7.0.8
-    - @equinor/fusion-framework-react-module@3.1.2
-    - @equinor/fusion-framework-react-module-http@5.0.4
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-framework-app@9.0.9
+  - @equinor/fusion-framework-module-app@5.3.5
+  - @equinor/fusion-framework-module-msal@3.1.1
+  - @equinor/fusion-framework-module-navigation@4.0.2
+  - @equinor/fusion-framework-react@7.0.8
+  - @equinor/fusion-framework-react-module@3.1.2
+  - @equinor/fusion-framework-react-module-http@5.0.4
 
 ## 5.0.11
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.3.4
-    - @equinor/fusion-framework-app@9.0.8
-    - @equinor/fusion-framework-react@7.0.7
+  - @equinor/fusion-framework-module-app@5.3.4
+  - @equinor/fusion-framework-app@9.0.8
+  - @equinor/fusion-framework-react@7.0.7
 
 ## 5.0.10
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.3.3
-    - @equinor/fusion-framework-app@9.0.7
-    - @equinor/fusion-framework-react@7.0.6
+  - @equinor/fusion-framework-module-app@5.3.3
+  - @equinor/fusion-framework-app@9.0.7
+  - @equinor/fusion-framework-react@7.0.6
 
 ## 5.0.9
 
@@ -492,46 +508,46 @@
 - [#2096](https://github.com/equinor/fusion-framework/pull/2096) [`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5) Thanks [@odinr](https://github.com/odinr)! - update documentation
 
 - Updated dependencies [[`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5)]:
-    - @equinor/fusion-framework-module-navigation@4.0.1
-    - @equinor/fusion-framework-module-app@5.3.2
-    - @equinor/fusion-framework-app@9.0.6
-    - @equinor/fusion-framework-react@7.0.5
+  - @equinor/fusion-framework-module-navigation@4.0.1
+  - @equinor/fusion-framework-module-app@5.3.2
+  - @equinor/fusion-framework-app@9.0.6
+  - @equinor/fusion-framework-react@7.0.5
 
 ## 5.0.8
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.0.5
-    - @equinor/fusion-framework-module-app@5.3.1
-    - @equinor/fusion-framework-react-module-http@5.0.3
-    - @equinor/fusion-framework-react@7.0.4
+  - @equinor/fusion-framework-app@9.0.5
+  - @equinor/fusion-framework-module-app@5.3.1
+  - @equinor/fusion-framework-react-module-http@5.0.3
+  - @equinor/fusion-framework-react@7.0.4
 
 ## 5.0.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.3.1
-    - @equinor/fusion-framework-react@7.0.3
-    - @equinor/fusion-framework-app@9.0.4
+  - @equinor/fusion-framework-module-app@5.3.1
+  - @equinor/fusion-framework-react@7.0.3
+  - @equinor/fusion-framework-app@9.0.4
 
 ## 5.0.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@9.0.3
-    - @equinor/fusion-framework-module-app@5.3.0
-    - @equinor/fusion-framework-react-module-http@5.0.2
-    - @equinor/fusion-framework-react@7.0.2
+  - @equinor/fusion-framework-app@9.0.3
+  - @equinor/fusion-framework-module-app@5.3.0
+  - @equinor/fusion-framework-react-module-http@5.0.2
+  - @equinor/fusion-framework-react@7.0.2
 
 ## 5.0.5
 
 ### Patch Changes
 
 - Updated dependencies [[`036ec15`](https://github.com/equinor/fusion-framework/commit/036ec151ace9c051ded41798ab94b8ee5e3d4461)]:
-    - @equinor/fusion-framework-app@9.0.2
+  - @equinor/fusion-framework-app@9.0.2
 
 ## 5.0.4
 
@@ -540,11 +556,11 @@
 - [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
 
 - Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
-    - @equinor/fusion-framework-react-module@3.1.1
-    - @equinor/fusion-framework-react@7.0.1
-    - @equinor/fusion-framework-app@9.0.1
-    - @equinor/fusion-framework-react-module-http@5.0.1
-    - @equinor/fusion-framework-module-app@5.3.0
+  - @equinor/fusion-framework-react-module@3.1.1
+  - @equinor/fusion-framework-react@7.0.1
+  - @equinor/fusion-framework-app@9.0.1
+  - @equinor/fusion-framework-react-module-http@5.0.1
+  - @equinor/fusion-framework-module-app@5.3.0
 
 ## 5.0.3
 
@@ -561,39 +577,39 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-framework-react-module@3.1.0
-    - @equinor/fusion-framework-module-navigation@4.0.0
-    - @equinor/fusion-framework-react-module-http@5.0.0
-    - @equinor/fusion-framework-react@7.0.0
-    - @equinor/fusion-framework-module-msal@3.1.0
-    - @equinor/fusion-framework-module-app@5.3.0
-    - @equinor/fusion-framework-app@9.0.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-react-module@3.1.0
+  - @equinor/fusion-framework-module-navigation@4.0.0
+  - @equinor/fusion-framework-react-module-http@5.0.0
+  - @equinor/fusion-framework-react@7.0.0
+  - @equinor/fusion-framework-module-msal@3.1.0
+  - @equinor/fusion-framework-module-app@5.3.0
+  - @equinor/fusion-framework-app@9.0.0
 
 ## 4.3.8
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@8.1.4
-    - @equinor/fusion-framework-react@6.0.5
+  - @equinor/fusion-framework-app@8.1.4
+  - @equinor/fusion-framework-react@6.0.5
 
 ## 4.3.7
 
 ### Patch Changes
 
 - Updated dependencies [[`2acd475`](https://github.com/equinor/fusion-framework/commit/2acd47532fe680f498fdf7229309cddb2594e391)]:
-    - @equinor/fusion-framework-module-app@5.2.14
-    - @equinor/fusion-framework-app@8.1.3
-    - @equinor/fusion-framework-react@6.0.4
+  - @equinor/fusion-framework-module-app@5.2.14
+  - @equinor/fusion-framework-app@8.1.3
+  - @equinor/fusion-framework-react@6.0.4
 
 ## 4.3.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react@6.0.3
-    - @equinor/fusion-framework-app@8.1.2
+  - @equinor/fusion-framework-react@6.0.3
+  - @equinor/fusion-framework-app@8.1.2
 
 ## 4.3.5
 
@@ -612,14 +628,14 @@
 ### Patch Changes
 
 - Updated dependencies [[`2a813bc`](https://github.com/equinor/fusion-framework/commit/2a813bc0a32f53e7515f16f8b5cba1cf1e5018a3), [`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-react@6.0.2
-    - @equinor/fusion-framework-module@4.2.7
-    - @equinor/fusion-framework-app@8.1.1
-    - @equinor/fusion-framework-module-app@5.2.13
-    - @equinor/fusion-framework-module-msal@3.0.10
-    - @equinor/fusion-framework-module-navigation@3.1.4
-    - @equinor/fusion-framework-react-module@3.0.8
-    - @equinor/fusion-framework-react-module-http@4.0.6
+  - @equinor/fusion-framework-react@6.0.2
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-app@8.1.1
+  - @equinor/fusion-framework-module-app@5.2.13
+  - @equinor/fusion-framework-module-msal@3.0.10
+  - @equinor/fusion-framework-module-navigation@3.1.4
+  - @equinor/fusion-framework-react-module@3.0.8
+  - @equinor/fusion-framework-react-module-http@4.0.6
 
 ## 4.3.2
 
@@ -627,27 +643,27 @@
 
 - [#1781](https://github.com/equinor/fusion-framework/pull/1781) [`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9) Thanks [@odinr](https://github.com/odinr)! - Added functionality for enabling feature flagging
 
-    ```ts
-    import { enableFeatureFlag } from `@equinor/fusion-framework-react-app/feature-flag`
-    enableFeatureFlag(confgurator, [{
-      id: 'my-flag',
-      title: 'My flag'
-    }])
-    ```
+  ```ts
+  import { enableFeatureFlag } from `@equinor/fusion-framework-react-app/feature-flag`
+  enableFeatureFlag(confgurator, [{
+    id: 'my-flag',
+    title: 'My flag'
+  }])
+  ```
 
-    the user still needs to install `@equinor/fusion-framework-module-feature-flag`
+  the user still needs to install `@equinor/fusion-framework-module-feature-flag`
 
 - Updated dependencies [[`0f3affa`](https://github.com/equinor/fusion-framework/commit/0f3affa45b7b7dc0a0f01682682293e4b899a5d9)]:
-    - @equinor/fusion-framework-app@8.1.0
+  - @equinor/fusion-framework-app@8.1.0
 
 ## 4.3.1
 
 ### Patch Changes
 
 - Updated dependencies [[`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12), [`fdbe12f`](https://github.com/equinor/fusion-framework/commit/fdbe12f258aeb98d91094f16f2d8ce229d7b13ee)]:
-    - @equinor/fusion-framework-module-app@5.2.13
-    - @equinor/fusion-framework-react@6.0.1
-    - @equinor/fusion-framework-app@8.0.1
+  - @equinor/fusion-framework-module-app@5.2.13
+  - @equinor/fusion-framework-react@6.0.1
+  - @equinor/fusion-framework-app@8.0.1
 
 ## 4.3.0
 
@@ -655,17 +671,17 @@
 
 - [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - refactor hook for accessing feature flags
 
-    > [!IMPORTANT]
-    > the `useFeature` hook look for flag in parent **(portal)** if not defined in application scope
+  > [!IMPORTANT]
+  > the `useFeature` hook look for flag in parent **(portal)** if not defined in application scope
 
-    > [!CAUTION] > `@equinor/fusion-framework-react-app/feature-flag` will only return `useFeature`, since we don not see any scenario which an application would need to access multiple.
-    > We might add `useFeatures` if the should be an use-case
+  > [!CAUTION] > `@equinor/fusion-framework-react-app/feature-flag` will only return `useFeature`, since we don not see any scenario which an application would need to access multiple.
+  > We might add `useFeatures` if the should be an use-case
 
 ### Patch Changes
 
 - Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e), [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
-    - @equinor/fusion-framework-app@8.0.0
-    - @equinor/fusion-framework-react@6.0.0
+  - @equinor/fusion-framework-app@8.0.0
+  - @equinor/fusion-framework-react@6.0.0
 
 ## 4.2.1
 
@@ -674,7 +690,7 @@
 - [#1215](https://github.com/equinor/fusion-framework/pull/1215) [`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d) Thanks [@odinr](https://github.com/odinr)! - Adding PersonSidesheet to cli with featuretoggler
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-react@5.3.9
+  - @equinor/fusion-framework-react@5.3.9
 
 ## 4.2.0
 
@@ -682,47 +698,47 @@
 
 - [#1646](https://github.com/equinor/fusion-framework/pull/1646) [`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1) Thanks [@odinr](https://github.com/odinr)! - Created namespace for MSAL:
 
-    - Created hooks for accessing current authenticated account
-    - Created hooks for acquiring token
-    - Created hooks for acquiring access token
+  - Created hooks for accessing current authenticated account
+  - Created hooks for acquiring token
+  - Created hooks for acquiring access token
 
 ### Patch Changes
 
 - Updated dependencies [[`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1)]:
-    - @equinor/fusion-framework-module-msal@3.0.9
-    - @equinor/fusion-framework-app@7.1.15
-    - @equinor/fusion-framework-module-app@5.2.12
-    - @equinor/fusion-framework-react@5.3.8
-    - @equinor/fusion-framework-react-module-http@4.0.5
+  - @equinor/fusion-framework-module-msal@3.0.9
+  - @equinor/fusion-framework-app@7.1.15
+  - @equinor/fusion-framework-module-app@5.2.12
+  - @equinor/fusion-framework-react@5.3.8
+  - @equinor/fusion-framework-react-module-http@4.0.5
 
 ## 4.1.19
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-app@7.1.14
-    - @equinor/fusion-framework-module-app@5.2.12
-    - @equinor/fusion-framework-react-module-http@4.0.4
-    - @equinor/fusion-framework-react@5.3.7
+  - @equinor/fusion-framework-app@7.1.14
+  - @equinor/fusion-framework-module-app@5.2.12
+  - @equinor/fusion-framework-react-module-http@4.0.4
+  - @equinor/fusion-framework-react@5.3.7
 
 ## 4.1.18
 
 ### Patch Changes
 
 - Updated dependencies [[`cce198d`](https://github.com/equinor/fusion-framework/commit/cce198d6a91fb7912265d4383246dc405cf17a17), [`f85316f`](https://github.com/equinor/fusion-framework/commit/f85316f2344258896a77ef602bd4047dfa553788)]:
-    - @equinor/fusion-framework-react-module-http@4.0.3
-    - @equinor/fusion-framework-app@7.1.13
-    - @equinor/fusion-framework-module-app@5.2.12
-    - @equinor/fusion-framework-react@5.3.6
+  - @equinor/fusion-framework-react-module-http@4.0.3
+  - @equinor/fusion-framework-app@7.1.13
+  - @equinor/fusion-framework-module-app@5.2.12
+  - @equinor/fusion-framework-react@5.3.6
 
 ## 4.1.17
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.2.12
-    - @equinor/fusion-framework-react@5.3.5
-    - @equinor/fusion-framework-app@7.1.12
+  - @equinor/fusion-framework-module-app@5.2.12
+  - @equinor/fusion-framework-react@5.3.5
+  - @equinor/fusion-framework-app@7.1.12
 
 ## 4.1.16
 
@@ -731,70 +747,70 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module-navigation@3.1.3
-    - @equinor/fusion-framework-react@5.3.4
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-framework-module-app@5.2.11
-    - @equinor/fusion-framework-app@7.1.11
-    - @equinor/fusion-framework-react-module@3.0.7
-    - @equinor/fusion-framework-react-module-http@4.0.2
+  - @equinor/fusion-framework-module-navigation@3.1.3
+  - @equinor/fusion-framework-react@5.3.4
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework-module-app@5.2.11
+  - @equinor/fusion-framework-app@7.1.11
+  - @equinor/fusion-framework-react-module@3.0.7
+  - @equinor/fusion-framework-react-module-http@4.0.2
 
 ## 4.1.15
 
 ### Patch Changes
 
 - Updated dependencies [[`6d303787`](https://github.com/equinor/fusion-framework/commit/6d303787f647bb2fc3c90456eccac751abb264c4)]:
-    - @equinor/fusion-framework-module-app@5.2.10
-    - @equinor/fusion-framework-app@7.1.10
-    - @equinor/fusion-framework-react@5.3.3
+  - @equinor/fusion-framework-module-app@5.2.10
+  - @equinor/fusion-framework-app@7.1.10
+  - @equinor/fusion-framework-react@5.3.3
 
 ## 4.1.14
 
 ### Patch Changes
 
 - Updated dependencies [[`8274dca1`](https://github.com/equinor/fusion-framework/commit/8274dca10a773e1d29ffbce82a6f6f2bae818316)]:
-    - @equinor/fusion-framework-module-app@5.2.9
-    - @equinor/fusion-framework-app@7.1.9
-    - @equinor/fusion-framework-react@5.3.3
+  - @equinor/fusion-framework-module-app@5.2.9
+  - @equinor/fusion-framework-app@7.1.9
+  - @equinor/fusion-framework-react@5.3.3
 
 ## 4.1.13
 
 ### Patch Changes
 
 - Updated dependencies [[`a8f0f061`](https://github.com/equinor/fusion-framework/commit/a8f0f061dbde9efb3e2faf11fdb9c886d2277723)]:
-    - @equinor/fusion-framework-module-navigation@3.1.2
+  - @equinor/fusion-framework-module-navigation@3.1.2
 
 ## 4.1.12
 
 ### Patch Changes
 
 - Updated dependencies [[`e2ec89f4`](https://github.com/equinor/fusion-framework/commit/e2ec89f457135037e2a333a61ba546fee6d99cd8)]:
-    - @equinor/fusion-framework-module-navigation@3.1.1
+  - @equinor/fusion-framework-module-navigation@3.1.1
 
 ## 4.1.11
 
 ### Patch Changes
 
 - Updated dependencies [[`6f542d4c`](https://github.com/equinor/fusion-framework/commit/6f542d4c7c01ae94c28b7e82efba800a902a7633)]:
-    - @equinor/fusion-framework-module-navigation@3.1.0
+  - @equinor/fusion-framework-module-navigation@3.1.0
 
 ## 4.1.10
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.2.8
-    - @equinor/fusion-framework-app@7.1.8
-    - @equinor/fusion-framework-react@5.3.3
+  - @equinor/fusion-framework-module-app@5.2.8
+  - @equinor/fusion-framework-app@7.1.8
+  - @equinor/fusion-framework-react@5.3.3
 
 ## 4.1.9
 
 ### Patch Changes
 
 - Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-    - @equinor/fusion-framework-module-app@5.2.7
-    - @equinor/fusion-framework-app@7.1.7
-    - @equinor/fusion-framework-react@5.3.2
+  - @equinor/fusion-framework-module-app@5.2.7
+  - @equinor/fusion-framework-app@7.1.7
+  - @equinor/fusion-framework-react@5.3.2
 
 ## 4.1.8
 
@@ -803,54 +819,54 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-app@7.1.6
-    - @equinor/fusion-framework-module-app@5.2.6
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-framework-module-navigation@3.0.6
-    - @equinor/fusion-framework-react@5.3.1
-    - @equinor/fusion-framework-react-module-http@4.0.1
-    - @equinor/fusion-framework-react-module@3.0.6
+  - @equinor/fusion-framework-app@7.1.6
+  - @equinor/fusion-framework-module-app@5.2.6
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-framework-module-navigation@3.0.6
+  - @equinor/fusion-framework-react@5.3.1
+  - @equinor/fusion-framework-react-module-http@4.0.1
+  - @equinor/fusion-framework-react-module@3.0.6
 
 ## 4.1.7
 
 ### Patch Changes
 
 - Updated dependencies [[`3896fbec`](https://github.com/equinor/fusion-framework/commit/3896fbec3458dbe2ebd66e772465d5f89cd20658)]:
-    - @equinor/fusion-framework-react@5.3.0
-    - @equinor/fusion-framework-app@7.1.5
-    - @equinor/fusion-framework-module-app@5.2.5
-    - @equinor/fusion-framework-react-module-http@4.0.0
+  - @equinor/fusion-framework-react@5.3.0
+  - @equinor/fusion-framework-app@7.1.5
+  - @equinor/fusion-framework-module-app@5.2.5
+  - @equinor/fusion-framework-react-module-http@4.0.0
 
 ## 4.1.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.2.4
-    - @equinor/fusion-framework-app@7.1.4
-    - @equinor/fusion-framework-react@5.2.7
+  - @equinor/fusion-framework-module-app@5.2.4
+  - @equinor/fusion-framework-app@7.1.4
+  - @equinor/fusion-framework-react@5.2.7
 
 ## 4.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-framework-module-app@5.2.4
-    - @equinor/fusion-framework-react@5.2.6
-    - @equinor/fusion-framework-app@7.1.3
-    - @equinor/fusion-framework-module-navigation@3.0.5
-    - @equinor/fusion-framework-react-module@3.0.5
-    - @equinor/fusion-framework-react-module-http@3.0.5
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module-app@5.2.4
+  - @equinor/fusion-framework-react@5.2.6
+  - @equinor/fusion-framework-app@7.1.3
+  - @equinor/fusion-framework-module-navigation@3.0.5
+  - @equinor/fusion-framework-react-module@3.0.5
+  - @equinor/fusion-framework-react-module-http@3.0.5
 
 ## 4.1.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-app@5.2.3
-    - @equinor/fusion-framework-app@7.1.2
-    - @equinor/fusion-framework-react@5.2.5
+  - @equinor/fusion-framework-module-app@5.2.3
+  - @equinor/fusion-framework-app@7.1.2
+  - @equinor/fusion-framework-react@5.2.5
 
 ## 4.1.3
 
@@ -858,24 +874,24 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-react-module@3.0.4
-    - @equinor/fusion-framework-module-navigation@3.0.4
-    - @equinor/fusion-framework-react-module-http@3.0.4
-    - @equinor/fusion-framework-react@5.2.4
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-framework-module-app@5.2.2
-    - @equinor/fusion-framework-app@7.1.1
+  - @equinor/fusion-framework-react-module@3.0.4
+  - @equinor/fusion-framework-module-navigation@3.0.4
+  - @equinor/fusion-framework-react-module-http@3.0.4
+  - @equinor/fusion-framework-react@5.2.4
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module-app@5.2.2
+  - @equinor/fusion-framework-app@7.1.1
 
 ## 4.1.2
 
@@ -883,14 +899,14 @@
 
 - [#959](https://github.com/equinor/fusion-framework/pull/959) [`ac889787`](https://github.com/equinor/fusion-framework/commit/ac88978763f7c2d2eee3b5154a0eac12a93bc5a8) Thanks [@odinr](https://github.com/odinr)! - create a hook which returns the current `ContextProvider`
 
-    example
+  example
 
-    ```ts
-    import { useContextProvider } from '@equinor/fusion-framework-react-app/context';
-    const App = () => {
-        const contextProvider = useContextProvider();
-    };
-    ```
+  ```ts
+  import { useContextProvider } from "@equinor/fusion-framework-react-app/context";
+  const App = () => {
+    const contextProvider = useContextProvider();
+  };
+  ```
 
 ## 4.1.1
 
@@ -899,9 +915,9 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework-app@7.0.16
-    - @equinor/fusion-framework-module-navigation@3.0.1
-    - @equinor/fusion-framework-react@5.2.2
+  - @equinor/fusion-framework-app@7.0.16
+  - @equinor/fusion-framework-module-navigation@3.0.1
+  - @equinor/fusion-framework-react@5.2.2
 
 ## 4.1.0
 
@@ -909,24 +925,24 @@
 
 - [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - **Add tooling for navigation in React App package**
 
-    - add hook for using the navigation module
-    - add hook for creating a react router
+  - add hook for using the navigation module
+  - add hook for creating a react router
 
-    ```ts
-    const routes = [
-        {
-            path: '/',
-            element: <p>👍🏻</p>,
-        },
-    ];
+  ```ts
+  const routes = [
+    {
+      path: "/",
+      element: <p>👍🏻</p>,
+    },
+  ];
 
-    const Router = () => {
-        const router = useRouter(routes);
-        return <RouterProvider router={router} fallbackElement={<p>😥</p>} />;
-    };
+  const Router = () => {
+    const router = useRouter(routes);
+    return <RouterProvider router={router} fallbackElement={<p>😥</p>} />;
+  };
 
-    const App = () => <Router />;
-    ```
+  const App = () => <Router />;
+  ```
 
 - [#934](https://github.com/equinor/fusion-framework/pull/934) [`ea081696`](https://github.com/equinor/fusion-framework/commit/ea0816967244917b01a3aa43b75cd3cf59573958) Thanks [@odinr](https://github.com/odinr)! - hook `useAppModule` now throws error if requested module is not configured
 
@@ -940,14 +956,14 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework-app@7.0.15
-    - @equinor/fusion-framework-react@5.1.4
-    - @equinor/fusion-framework-react-module-http@3.0.3
+  - @equinor/fusion-framework-app@7.0.15
+  - @equinor/fusion-framework-react@5.1.4
+  - @equinor/fusion-framework-react-module-http@3.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

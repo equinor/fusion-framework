@@ -1,62 +1,72 @@
 # Change Log
 
+## 5.0.17
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`2fe6241`](https://github.com/equinor/fusion-framework/commit/2fe624186640c3b30079c7d76f0e3af65f64f5d2), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-query@5.2.2
+
 ## 5.0.16
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.2.1
+  - @equinor/fusion-query@5.2.1
 
 ## 5.0.15
 
 ### Patch Changes
 
 - Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
-    - @equinor/fusion-query@5.2.0
+  - @equinor/fusion-query@5.2.0
 
 ## 5.0.14
 
 ### Patch Changes
 
 - Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
-    - @equinor/fusion-query@5.1.5
+  - @equinor/fusion-query@5.1.5
 
 ## 5.0.13
 
 ### Patch Changes
 
 - Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
-    - @equinor/fusion-query@5.1.4
+  - @equinor/fusion-query@5.1.4
 
 ## 5.0.12
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module@4.3.5
 
 ## 5.0.11
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.1.3
+  - @equinor/fusion-query@5.1.3
 
 ## 5.0.10
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`be2e925`](https://github.com/equinor/fusion-framework/commit/be2e92532f4a4b8f0b2c9e12d4adf942d380423e), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-query@5.1.2
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-query@5.1.2
 
 ## 5.0.9
 
 ### Patch Changes
 
 - Updated dependencies [[`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-query@5.1.1
-    - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-query@5.1.1
+  - @equinor/fusion-framework-module@4.3.3
 
 ## 5.0.8
 
@@ -66,100 +76,100 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-query@5.1.0
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-query@5.1.0
 
 ## 5.0.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.0.5
+  - @equinor/fusion-query@5.0.5
 
 ## 5.0.6
 
 ### Patch Changes
 
 - Updated dependencies [[`1681940`](https://github.com/equinor/fusion-framework/commit/16819401db191321637fb2a17390abd98738c103)]:
-    - @equinor/fusion-query@5.0.4
+  - @equinor/fusion-query@5.0.4
 
 ## 5.0.5
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`6a81125`](https://github.com/equinor/fusion-framework/commit/6a81125ca856bbddbd1ec9e66a30e887cef93f66), [`cd737c2`](https://github.com/equinor/fusion-framework/commit/cd737c2f916747965ece46ed6f33fdadb776c90b)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-query@5.0.3
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-query@5.0.3
 
 ## 5.0.4
 
 ### Patch Changes
 
 - Updated dependencies [[`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995)]:
-    - @equinor/fusion-query@5.0.2
+  - @equinor/fusion-query@5.0.2
 
 ## 5.0.3
 
 ### Patch Changes
 
 - Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
-    - @equinor/fusion-query@5.0.1
+  - @equinor/fusion-query@5.0.1
 
 ## 5.0.2
 
 ### Patch Changes
 
 - Updated dependencies [[`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2)]:
-    - @equinor/fusion-query@5.0.0
+  - @equinor/fusion-query@5.0.0
 
 ## 5.0.1
 
 ### Patch Changes
 
 - Updated dependencies [[`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883)]:
-    - @equinor/fusion-query@4.2.0
+  - @equinor/fusion-query@4.2.0
 
 ## 5.0.0
 
@@ -170,8 +180,8 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-query@4.1.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-query@4.1.0
 
 ## 4.2.0
 
@@ -179,7 +189,7 @@
 
 - [#1933](https://github.com/equinor/fusion-framework/pull/1933) [`701c297`](https://github.com/equinor/fusion-framework/commit/701c29709351ff80864d26311efc72a439cd4098) Thanks [@odinr](https://github.com/odinr)! - updated method for resolving context from path, will now search all path fragments for context id by default
 
-    updated documentation of utility functions
+  updated documentation of utility functions
 
 ### Patch Changes
 
@@ -197,53 +207,53 @@
 
 - [#1760](https://github.com/equinor/fusion-framework/pull/1760) [`6e6ee6b`](https://github.com/equinor/fusion-framework/commit/6e6ee6b7ce280820111e8b98ac8377efb15808ef) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add FusionContextSearchError.
 
-    - Potential _BREAKING_:
-        - Error in `ContextProvider.ts` are now unwrapped if the thrown error is
-          `QueryClientError`.
+  - Potential _BREAKING_:
+    - Error in `ContextProvider.ts` are now unwrapped if the thrown error is
+      `QueryClientError`.
 
-    ```diff
-    index 114f430b1..2640c9a55 100644
-    --- a/packages/modules/context/src/ContextProvider.ts
-    +++ b/packages/modules/context/src/ContextProvider.ts
-    @@ -406,7 +407,15 @@ export class ContextProvider implements IContextProvider {
-                     /* @ts-ignore */
-                     this.#contextParameterFn({ search, type: this.#contextType }),
-                 )
-    -            .pipe(map((x) => x.value));
-    +            .pipe(
-    +                catchError((err) => {
-    +                    if (err.name === 'QueryClientError') {
-    +                        throw err.cause;
-    +                    }
-    +                    throw err;
-    +                }),
-    +                map((x) => x.value),
-    +            );
+  ```diff
+  index 114f430b1..2640c9a55 100644
+  --- a/packages/modules/context/src/ContextProvider.ts
+  +++ b/packages/modules/context/src/ContextProvider.ts
+  @@ -406,7 +407,15 @@ export class ContextProvider implements IContextProvider {
+                   /* @ts-ignore */
+                   this.#contextParameterFn({ search, type: this.#contextType }),
+               )
+  -            .pipe(map((x) => x.value));
+  +            .pipe(
+  +                catchError((err) => {
+  +                    if (err.name === 'QueryClientError') {
+  +                        throw err.cause;
+  +                    }
+  +                    throw err;
+  +                }),
+  +                map((x) => x.value),
+  +            );
 
-             return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
-         }
-    ```
+           return this.#contextFilter ? query$.pipe(map(this.#contextFilter)) : query$;
+       }
+  ```
 
 ## 4.0.21
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module@4.2.7
 
 ## 4.0.20
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@4.0.6
+  - @equinor/fusion-query@4.0.6
 
 ## 4.0.19
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@4.0.5
+  - @equinor/fusion-query@4.0.5
 
 ## 4.0.18
 
@@ -254,22 +264,22 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-query@4.0.4
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-query@4.0.4
 
 ## 4.0.17
 
 ### Patch Changes
 
 - Updated dependencies [[`446b63ce`](https://github.com/equinor/fusion-framework/commit/446b63ce44b59a3aaab4399c0d877d3a1b560a0e)]:
-    - @equinor/fusion-query@4.0.3
+  - @equinor/fusion-query@4.0.3
 
 ## 4.0.16
 
 ### Patch Changes
 
 - Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-    - @equinor/fusion-query@4.0.2
+  - @equinor/fusion-query@4.0.2
 
 ## 4.0.15
 
@@ -278,30 +288,30 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-query@4.0.1
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-query@4.0.1
 
 ## 4.0.14
 
 ### Patch Changes
 
 - Updated dependencies [[`ebcabd0e`](https://github.com/equinor/fusion-framework/commit/ebcabd0e6945e1420a0a9a7d82bd9255da1b8578), [`8739a5a6`](https://github.com/equinor/fusion-framework/commit/8739a5a65d8aaa46ce9ef56cce013efeeb006e8a)]:
-    - @equinor/fusion-query@4.0.0
+  - @equinor/fusion-query@4.0.0
 
 ## 4.0.13
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-query@3.0.7
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-query@3.0.7
 
 ## 4.0.12
 
 ### Patch Changes
 
 - Updated dependencies [[`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594)]:
-    - @equinor/fusion-query@3.0.6
+  - @equinor/fusion-query@3.0.6
 
 ## 4.0.11
 
@@ -309,15 +319,15 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-query@3.0.5
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-query@3.0.5
 
 ## 4.0.10
 
@@ -331,9 +341,9 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 ## 4.0.8
 
@@ -341,9 +351,9 @@
 
 - [#898](https://github.com/equinor/fusion-framework/pull/898) [`4551142e`](https://github.com/equinor/fusion-framework/commit/4551142ededdb2f1bf74eae552da26d28cd23057) Thanks [@odinr](https://github.com/odinr)! - feat(module-context): add config option for connection to parent context
 
-    - add attribute to config interface
-    - add setter on config builder
-    - add check for connecting to parent when creating provider
+  - add attribute to config interface
+  - add setter on config builder
+  - add check for connecting to parent when creating provider
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

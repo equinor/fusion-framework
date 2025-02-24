@@ -1,12 +1,24 @@
 # Change Log
 
+## 6.1.5
+
+### Patch Changes
+
+- [#2852](https://github.com/equinor/fusion-framework/pull/2852) [`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d) Thanks [@odinr](https://github.com/odinr)! - replaced forEach with for-of loops for better readability
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`2fe6241`](https://github.com/equinor/fusion-framework/commit/2fe624186640c3b30079c7d76f0e3af65f64f5d2), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-observable@8.4.5
+  - @equinor/fusion-query@5.2.2
+
 ## 6.1.4
 
 ### Patch Changes
 
 - Updated dependencies [[`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1)]:
-    - @equinor/fusion-observable@8.4.4
-    - @equinor/fusion-query@5.2.1
+  - @equinor/fusion-observable@8.4.4
+  - @equinor/fusion-query@5.2.1
 
 ## 6.1.3
 
@@ -14,9 +26,9 @@
 
 - [#2519](https://github.com/equinor/fusion-framework/pull/2519) [`83a7ee9`](https://github.com/equinor/fusion-framework/commit/83a7ee971785343bccedc2d72cc02486193615af) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
 
-    - Updated `AppClient` class to improve the query for fetching app manifests:
-        - Adjusted the query path manifests method to include `$expand=category,admins,owners,keywords` when `filterByCurrentUser` is not specified.
-        - Minor formatting changes for better readability.
+  - Updated `AppClient` class to improve the query for fetching app manifests:
+    - Adjusted the query path manifests method to include `$expand=category,admins,owners,keywords` when `filterByCurrentUser` is not specified.
+    - Minor formatting changes for better readability.
 
 ## 6.1.2
 
@@ -24,18 +36,18 @@
 
 - [#2685](https://github.com/equinor/fusion-framework/pull/2685) [`add2e98`](https://github.com/equinor/fusion-framework/commit/add2e98d23e683a801729e9af543cfa15c574e27) Thanks [@eikeland](https://github.com/eikeland)! - Added versioning support to `AppModuleProvider`.
 
-    **Modified files:**
+  **Modified files:**
 
-    - `packages/modules/app/src/AppModuleProvider.ts`
+  - `packages/modules/app/src/AppModuleProvider.ts`
 
-    **Changes:**
+  **Changes:**
 
-    - Imported `SemanticVersion` from `@equinor/fusion-framework-module`.
-    - Imported `version` from `./version`.
-    - Added a `version` getter to `AppModuleProvider` that returns a `SemanticVersion` instance.
+  - Imported `SemanticVersion` from `@equinor/fusion-framework-module`.
+  - Imported `version` from `./version`.
+  - Added a `version` getter to `AppModuleProvider` that returns a `SemanticVersion` instance.
 
 - Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
-    - @equinor/fusion-query@5.2.0
+  - @equinor/fusion-query@5.2.0
 
 ## 6.1.1
 
@@ -43,14 +55,14 @@
 
 - [#2654](https://github.com/equinor/fusion-framework/pull/2654) [`59ab642`](https://github.com/equinor/fusion-framework/commit/59ab6424f3ce80649f42ddb6804b46f6789607ba) Thanks [@eikeland](https://github.com/eikeland)! - Reverting update to the `manifests` call `selector` function in `AppClient` to use `jsonSelector` and parse the response with `ApplicationSchema`.
 
-    **Modified files:**
+  **Modified files:**
 
-    - `packages/modules/app/src/AppClient.ts`
+  - `packages/modules/app/src/AppClient.ts`
 
-    **Changes:**
+  **Changes:**
 
-    - Replaced `res.json()` with `jsonSelector(res)`
-    - Parsed the response using `ApplicationSchema.array().parse(response.value)`
+  - Replaced `res.json()` with `jsonSelector(res)`
+  - Parsed the response using `ApplicationSchema.array().parse(response.value)`
 
 ## 6.1.0
 
@@ -58,81 +70,81 @@
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - Added `updateSetting` and `updateSettingAsync` to the `App` class. This allows updating a setting in settings without the need to handle the settings object directly. This wil ensure that the settings are mutated correctly.
 
-    ```ts
-    const app = new App();
-    // the app class will fetch the latest settings before updating the setting
-    app.updateSetting('property', 'value');
-    ```
+  ```ts
+  const app = new App();
+  // the app class will fetch the latest settings before updating the setting
+  app.updateSetting("property", "value");
+  ```
 
-    example of flux state of settings:
+  example of flux state of settings:
 
-    ```ts
-    const app = new App();
-    const settings = app.getSettings();
+  ```ts
+  const app = new App();
+  const settings = app.getSettings();
 
-    setTimeout(() => {
-        settings.foo = 'foo';
-        app.updateSettingsAsync(settings);
-    }, 1000);
+  setTimeout(() => {
+    settings.foo = "foo";
+    app.updateSettingsAsync(settings);
+  }, 1000);
 
-    setTimeout(() => {
-        settings.bar = 'bar';
-        app.updateSettingsAsync(settings);
-        // foo is now reset to its original value, which is not what we want
-    }, 2000);
-    ```
+  setTimeout(() => {
+    settings.bar = "bar";
+    app.updateSettingsAsync(settings);
+    // foo is now reset to its original value, which is not what we want
+  }, 2000);
+  ```
 
 - [#2577](https://github.com/equinor/fusion-framework/pull/2577) [`c3ba9f1`](https://github.com/equinor/fusion-framework/commit/c3ba9f109d9f96d6dc6ee2f0ddac00c8b3090982) Thanks [@eikeland](https://github.com/eikeland)! - #### Changes:
 
-    1. **AppClient.ts**
-        - Added `updateAppSettings` method to set app settings by appKey.
-    2. **AppModuleProvider.ts**
-        - Added `updateAppSettings` method to update app settings.
-    3. **App.ts**
-        - Added `updateSettings` and `updateSettingsAsync` methods to set app settings.
-        - Added effects to monitor and dispatch events for settings updates.
-    4. **actions.ts**
-        - Added `updateSettings` async action for updating settings.
-    5. **create-reducer.ts**
-        - Added reducer case for `updateSettings.success` to update state settings.
-    6. **create-state.ts**
-        - Added `handleUpdateSettings` flow to handle updating settings.
-    7. **events.ts**
-        - Added new events: `onAppSettingsUpdate`, `onAppSettingsUpdated`, and `onAppSettingsUpdateFailure`.
-    8. **flows.ts**
-        - Added `handleUpdateSettings` flow to handle the set settings action.
-    9. **package.json**
-        - Added `settings` entry to exports and types.
-    10. **index.ts**
-        - Created new file to export `useAppSettings`.
-    11. **useAppSettings.ts**
-        - Created new hook for handling app settings.
-    12. **app-proxy-plugin.ts**
-        - Add conditional handler for persons/me/appKey/settings to prevent matching against appmanifest path
+  1. **AppClient.ts**
+     - Added `updateAppSettings` method to set app settings by appKey.
+  2. **AppModuleProvider.ts**
+     - Added `updateAppSettings` method to update app settings.
+  3. **App.ts**
+     - Added `updateSettings` and `updateSettingsAsync` methods to set app settings.
+     - Added effects to monitor and dispatch events for settings updates.
+  4. **actions.ts**
+     - Added `updateSettings` async action for updating settings.
+  5. **create-reducer.ts**
+     - Added reducer case for `updateSettings.success` to update state settings.
+  6. **create-state.ts**
+     - Added `handleUpdateSettings` flow to handle updating settings.
+  7. **events.ts**
+     - Added new events: `onAppSettingsUpdate`, `onAppSettingsUpdated`, and `onAppSettingsUpdateFailure`.
+  8. **flows.ts**
+     - Added `handleUpdateSettings` flow to handle the set settings action.
+  9. **package.json**
+     - Added `settings` entry to exports and types.
+  10. **index.ts**
+      - Created new file to export `useAppSettings`.
+  11. **useAppSettings.ts**
+      - Created new hook for handling app settings.
+  12. **app-proxy-plugin.ts**
+      - Add conditional handler for persons/me/appKey/settings to prevent matching against appmanifest path
 
 ## 6.0.3
 
 ### Patch Changes
 
 - Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
-    - @equinor/fusion-observable@8.4.3
-    - @equinor/fusion-query@5.1.5
+  - @equinor/fusion-observable@8.4.3
+  - @equinor/fusion-query@5.1.5
 
 ## 6.0.2
 
 ### Patch Changes
 
 - Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
-    - @equinor/fusion-observable@8.4.2
-    - @equinor/fusion-query@5.1.4
+  - @equinor/fusion-observable@8.4.2
+  - @equinor/fusion-query@5.1.4
 
 ## 6.0.1
 
 ### Patch Changes
 
 - [#2520](https://github.com/equinor/fusion-framework/pull/2520) [`248ee1f`](https://github.com/equinor/fusion-framework/commit/248ee1f83978a158dfb88dd47d8e8bcaac0e3574) Thanks [@eikeland](https://github.com/eikeland)! - ### Changes:
-    - Updated the `AppClient` class to modify the query path in the `fn` method for fetching app manifests:
-        - Changed the path from `/apps/${appKey}` to `/persons/me/apps/${appKey}`.
+  - Updated the `AppClient` class to modify the query path in the `fn` method for fetching app manifests:
+    - Changed the path from `/apps/${appKey}` to `/persons/me/apps/${appKey}`.
 
 ## 6.0.0
 
@@ -140,84 +152,84 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adjusted module to the new app service API.
 
-    > [!WARNING]
-    > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
+  > [!WARNING]
+  > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
-    **Added**
+  **Added**
 
-    - Introduced `AppClient` class to handle application manifest and configuration queries.
-    - Added `zod` to validate the application manifest.
+  - Introduced `AppClient` class to handle application manifest and configuration queries.
+  - Added `zod` to validate the application manifest.
 
-    **Changed**
+  **Changed**
 
-    - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
-    - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
-    - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
+  - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
+  - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
+  - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
 
-    **Migration**
+  **Migration**
 
-    before:
+  before:
 
-    ```ts
-    configurator.setClient({
-        getAppManifest: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-        getAppManifests: {
-            client: {
-                fn: () => httpClient.json$<ApiApp[]>(`/apps`),
-            },
-            key: () => `all-apps`,
-        },
-        getAppConfig: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-    });
-    ```
+  ```ts
+  configurator.setClient({
+    getAppManifest: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+    getAppManifests: {
+      client: {
+        fn: () => httpClient.json$<ApiApp[]>(`/apps`),
+      },
+      key: () => `all-apps`,
+    },
+    getAppConfig: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+  });
+  ```
 
-    after:
+  after:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    configurator.setClient(new AppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  configurator.setClient(new AppClient());
+  ```
 
-    custom client implementation:
+  custom client implementation:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    class CustomAppClient implements IAppClient { ... }
-    configurator.setClient(new CustomAppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  class CustomAppClient implements IAppClient { ... }
+  configurator.setClient(new CustomAppClient());
+  ```
 
 ## 5.3.11
 
 ### Patch Changes
 
 - Updated dependencies [[`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d)]:
-    - @equinor/fusion-observable@8.4.1
-    - @equinor/fusion-query@5.1.3
+  - @equinor/fusion-observable@8.4.1
+  - @equinor/fusion-query@5.1.3
 
 ## 5.3.10
 
 ### Patch Changes
 
 - Updated dependencies [[`be2e925`](https://github.com/equinor/fusion-framework/commit/be2e92532f4a4b8f0b2c9e12d4adf942d380423e)]:
-    - @equinor/fusion-query@5.1.2
+  - @equinor/fusion-query@5.1.2
 
 ## 5.3.9
 
 ### Patch Changes
 
 - Updated dependencies [[`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594)]:
-    - @equinor/fusion-observable@8.4.0
-    - @equinor/fusion-query@5.1.1
+  - @equinor/fusion-observable@8.4.0
+  - @equinor/fusion-query@5.1.1
 
 ## 5.3.8
 
@@ -227,50 +239,50 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee)]:
-    - @equinor/fusion-query@5.1.0
-    - @equinor/fusion-observable@8.3.3
+  - @equinor/fusion-query@5.1.0
+  - @equinor/fusion-observable@8.3.3
 
 ## 5.3.7
 
@@ -278,57 +290,57 @@
 
 - [#2235](https://github.com/equinor/fusion-framework/pull/2235) [`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb) Thanks [@odinr](https://github.com/odinr)! - - **Refactored**: The `actionBaseType` function has been renamed to `getBaseType` and its implementation has been updated.
 
-    - **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
+  - **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
 
 - [#2248](https://github.com/equinor/fusion-framework/pull/2248) [`da9dd83`](https://github.com/equinor/fusion-framework/commit/da9dd83c9352def5365b6c962dc8443589ac9526) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - #2235 renamed a method and changed type. This PR forgot to change to the correct param when using this method. Fixes typo - update to use actions `type` in the reducer.
 
 - Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb)]:
-    - @equinor/fusion-observable@8.3.2
-    - @equinor/fusion-query@5.0.5
+  - @equinor/fusion-observable@8.3.2
+  - @equinor/fusion-query@5.0.5
 
 ## 5.3.6
 
 ### Patch Changes
 
 - Updated dependencies [[`1681940`](https://github.com/equinor/fusion-framework/commit/16819401db191321637fb2a17390abd98738c103), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
-    - @equinor/fusion-query@5.0.4
-    - @equinor/fusion-observable@8.3.1
+  - @equinor/fusion-query@5.0.4
+  - @equinor/fusion-observable@8.3.1
 
 ## 5.3.5
 
 ### Patch Changes
 
 - Updated dependencies [[`6a81125`](https://github.com/equinor/fusion-framework/commit/6a81125ca856bbddbd1ec9e66a30e887cef93f66), [`cd737c2`](https://github.com/equinor/fusion-framework/commit/cd737c2f916747965ece46ed6f33fdadb776c90b)]:
-    - @equinor/fusion-query@5.0.3
+  - @equinor/fusion-query@5.0.3
 
 ## 5.3.4
 
 ### Patch Changes
 
 - Updated dependencies [[`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995)]:
-    - @equinor/fusion-query@5.0.2
+  - @equinor/fusion-query@5.0.2
 
 ## 5.3.3
 
 ### Patch Changes
 
 - Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
-    - @equinor/fusion-query@5.0.1
+  - @equinor/fusion-query@5.0.1
 
 ## 5.3.2
 
 ### Patch Changes
 
 - Updated dependencies [[`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2)]:
-    - @equinor/fusion-query@5.0.0
+  - @equinor/fusion-query@5.0.0
 
 ## 5.3.1
 
 ### Patch Changes
 
 - Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a), [`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883)]:
-    - @equinor/fusion-observable@8.3.0
-    - @equinor/fusion-query@4.2.0
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-query@4.2.0
 
 ## 5.3.0
 
@@ -339,8 +351,8 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-observable@8.2.0
-    - @equinor/fusion-query@4.1.0
+  - @equinor/fusion-observable@8.2.0
+  - @equinor/fusion-query@4.1.0
 
 ## 5.2.14
 
@@ -354,21 +366,21 @@
 
 - [#1763](https://github.com/equinor/fusion-framework/pull/1763) [`1ca8264`](https://github.com/equinor/fusion-framework/commit/1ca826489a0d1dd755324344a12bbf6659a3be12) Thanks [@odinr](https://github.com/odinr)! - improve type of current application
 
-    - result will be `undefined` if current application has never been set
-    - result will be `IApplication` if current application is set
-    - result will be `null` if current application is cleared
+  - result will be `undefined` if current application has never been set
+  - result will be `IApplication` if current application is set
+  - result will be `null` if current application is cleared
 
 - Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
-    - @equinor/fusion-observable@8.1.5
-    - @equinor/fusion-query@4.0.6
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-query@4.0.6
 
 ## 5.2.12
 
 ### Patch Changes
 
 - Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
-    - @equinor/fusion-observable@8.1.4
-    - @equinor/fusion-query@4.0.5
+  - @equinor/fusion-observable@8.1.4
+  - @equinor/fusion-query@4.0.5
 
 ## 5.2.11
 
@@ -377,8 +389,8 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-observable@8.1.3
-    - @equinor/fusion-query@4.0.4
+  - @equinor/fusion-observable@8.1.3
+  - @equinor/fusion-query@4.0.4
 
 ## 5.2.10
 
@@ -391,14 +403,14 @@
 ### Patch Changes
 
 - [#1529](https://github.com/equinor/fusion-framework/pull/1529) [`8274dca1`](https://github.com/equinor/fusion-framework/commit/8274dca10a773e1d29ffbce82a6f6f2bae818316) Thanks [@odinr](https://github.com/odinr)! - - improved app event dispatch
-    - added mapping for all app events
+  - added mapping for all app events
 
 ## 5.2.8
 
 ### Patch Changes
 
 - Updated dependencies [[`446b63ce`](https://github.com/equinor/fusion-framework/commit/446b63ce44b59a3aaab4399c0d877d3a1b560a0e)]:
-    - @equinor/fusion-query@4.0.3
+  - @equinor/fusion-query@4.0.3
 
 ## 5.2.7
 
@@ -406,10 +418,10 @@
 
 - [#1305](https://github.com/equinor/fusion-framework/pull/1305) [`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9) Thanks [@odinr](https://github.com/odinr)! - fixed duplicate calls from flows
 
-    alignment after changes to `@equinor/fusion-query`
+  alignment after changes to `@equinor/fusion-query`
 
 - Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-    - @equinor/fusion-query@4.0.2
+  - @equinor/fusion-query@4.0.2
 
 ## 5.2.6
 
@@ -418,30 +430,30 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-observable@8.1.2
-    - @equinor/fusion-query@4.0.1
+  - @equinor/fusion-observable@8.1.2
+  - @equinor/fusion-query@4.0.1
 
 ## 5.2.5
 
 ### Patch Changes
 
 - Updated dependencies [[`ebcabd0e`](https://github.com/equinor/fusion-framework/commit/ebcabd0e6945e1420a0a9a7d82bd9255da1b8578), [`8739a5a6`](https://github.com/equinor/fusion-framework/commit/8739a5a65d8aaa46ce9ef56cce013efeeb006e8a)]:
-    - @equinor/fusion-query@4.0.0
+  - @equinor/fusion-query@4.0.0
 
 ## 5.2.4
 
 ### Patch Changes
 
 - Updated dependencies [[`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760), [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4)]:
-    - @equinor/fusion-observable@8.1.1
-    - @equinor/fusion-query@3.0.7
+  - @equinor/fusion-observable@8.1.1
+  - @equinor/fusion-query@3.0.7
 
 ## 5.2.3
 
 ### Patch Changes
 
 - Updated dependencies [[`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594)]:
-    - @equinor/fusion-query@3.0.6
+  - @equinor/fusion-query@3.0.6
 
 ## 5.2.2
 
@@ -449,15 +461,15 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-observable@8.1.0
-    - @equinor/fusion-query@3.0.5
+  - @equinor/fusion-observable@8.1.0
+  - @equinor/fusion-query@3.0.5
 
 ## 5.2.1
 
@@ -471,21 +483,21 @@
 
 - [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Create and expose interface for App
 
-    - deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
+  - deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
 
-    this should not create any breaking changes since apps was only created from provider.
-    if the class is still needed it can be imported:
+  this should not create any breaking changes since apps was only created from provider.
+  if the class is still needed it can be imported:
 
-    ```ts
-    import { App } from '@equinor/fusion-framework-module-app/app';
-    ```
+  ```ts
+  import { App } from "@equinor/fusion-framework-module-app/app";
+  ```
 
 - [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Allow updating manifest of application
 
-    - add meta data for `setManifest` action to flag if `merge` or `replace`
-    - add method on `App` to update manifest, _default flag `merge`_
-    - check in state reducer if `setManifest` action is `update` or `merge`
-    - update flow `handleFetchManifest` to prop passing of flag
+  - add meta data for `setManifest` action to flag if `merge` or `replace`
+  - add method on `App` to update manifest, _default flag `merge`_
+  - check in state reducer if `setManifest` action is `update` or `merge`
+  - update flow `handleFetchManifest` to prop passing of flag
 
 ## 5.1.3
 
@@ -493,9 +505,9 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

@@ -1,11 +1,23 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- [#2852](https://github.com/equinor/fusion-framework/pull/2852) [`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d) Thanks [@odinr](https://github.com/odinr)! - replaced forEach with for-of loops for better readability
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`6efabb7`](https://github.com/equinor/fusion-framework/commit/6efabb7837a97319e976e122db855d8b88b031a6), [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-framework-module-msal@4.0.1
+
 ## 6.2.1
 
 ### Patch Changes
 
 - Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
-    - @equinor/fusion-framework-module-msal@4.0.0
+  - @equinor/fusion-framework-module-msal@4.0.0
 
 ## 6.2.0
 
@@ -13,144 +25,150 @@
 
 - [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Added a new operator `capitalizeRequestMethodOperator` to ensure that the HTTP method of a given request is in uppercase.
 
-    - Introduced `capitalizeRequestMethodOperator` which processes an HTTP request object and converts its method to uppercase.
-    - Logs a warning if the HTTP method was converted, providing information about the change and a reference to RFC 7231 Section 4.1.
+  - Introduced `capitalizeRequestMethodOperator` which processes an HTTP request object and converts its method to uppercase.
+  - Logs a warning if the HTTP method was converted, providing information about the change and a reference to RFC 7231 Section 4.1.
 
-    **Example usage:**
+  **Example usage:**
 
-    ```typescript
-    import { capitalizeRequestMethodOperator } from '@equinor/fusion-query';
+  ```typescript
+  import { capitalizeRequestMethodOperator } from "@equinor/fusion-query";
 
-    const operator = capitalizeRequestMethodOperator();
-    const request = { method: 'get' };
-    const updatedRequest = operator(request);
-    console.log(updatedRequest.method); // Outputs: 'GET'
-    ```
+  const operator = capitalizeRequestMethodOperator();
+  const request = { method: "get" };
+  const updatedRequest = operator(request);
+  console.log(updatedRequest.method); // Outputs: 'GET'
+  ```
 
-    Adding the operator to the `HttpClient`:
+  Adding the operator to the `HttpClient`:
 
-    ```typescript
-    const httpClient = new HttpClient();
-    httpClient.requestHandler.add('capatalize-method', capitalizeRequestMethodOperator());
+  ```typescript
+  const httpClient = new HttpClient();
+  httpClient.requestHandler.add(
+    "capatalize-method",
+    capitalizeRequestMethodOperator()
+  );
 
-    // transforms `method` to uppercase and logs a warning.
-    httpClient.get('https://example.com', { method: 'get' });
-    ```
+  // transforms `method` to uppercase and logs a warning.
+  httpClient.get("https://example.com", { method: "get" });
+  ```
 
 - [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - The `HttpClientConfigurator` now has by default the `capitalizeRequestMethodOperator` and `requestValidationOperator` enabled.
 
-    **CapitalizeRequestMethodOperator**
+  **CapitalizeRequestMethodOperator**
 
-    This operator will capitalize the HTTP method name before sending the request. This is useful when you are using a client that requires the HTTP method to be capitalized. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
+  This operator will capitalize the HTTP method name before sending the request. This is useful when you are using a client that requires the HTTP method to be capitalized. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
 
-    ```typescript
-    httpConfig.defaultHttpRequestHandler.remove('capitalize-method');
-    ```
+  ```typescript
+  httpConfig.defaultHttpRequestHandler.remove("capitalize-method");
+  ```
 
-    > [!NOTE]
-    > This operator is enabled by default and will log to the console if the method is not capitalized.
+  > [!NOTE]
+  > This operator is enabled by default and will log to the console if the method is not capitalized.
 
-    **RequestValidationOperator**
+  **RequestValidationOperator**
 
-    This operator will parse and validate the request before sending it. If the request is invalid, the error will be logged to the console. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
+  This operator will parse and validate the request before sending it. If the request is invalid, the error will be logged to the console. If you want to disable this operator, you can do so by removing it from the `HttpClientConfigurator`:
 
-    ```typescript
-    httpConfig.defaultHttpRequestHandler.remove('validate-request');
-    ```
+  ```typescript
+  httpConfig.defaultHttpRequestHandler.remove("validate-request");
+  ```
 
-    > [!NOTE]
-    > This operator is enabled by default and will log to the console if the request parameters are invalid.
+  > [!NOTE]
+  > This operator is enabled by default and will log to the console if the request parameters are invalid.
 
-    If you wish stricter validation, you can enable the `strict` mode by setting the `strict` property to `true`:
+  If you wish stricter validation, you can enable the `strict` mode by setting the `strict` property to `true`:
 
-    ```typescript
-    import { requestValidationOperator } from '@equinor/fusion-framework-module-http/operators';
+  ```typescript
+  import { requestValidationOperator } from '@equinor/fusion-framework-module-http/operators';
 
-    httpConfig.defaultHttpRequestHandler.set(
-      'validate-request'
-      requestValidationOperator({
-        strict: true, // will throw error if schema is not valid
-        parse: true // will not allow additional properties
-      })
-    );
-    ```
+  httpConfig.defaultHttpRequestHandler.set(
+    'validate-request'
+    requestValidationOperator({
+      strict: true, // will throw error if schema is not valid
+      parse: true // will not allow additional properties
+    })
+  );
+  ```
 
 - [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - Added `remove` to the `ProcessOperators` to allow for the removal of a specific operator. This is useful for removing operators that are not desired, example default operators included in initial configuration.
 
-    example:
+  example:
 
-    ```typescript
-    httpClient.requestHandler.remove('capitalize-method');
-    ```
+  ```typescript
+  httpClient.requestHandler.remove("capitalize-method");
+  ```
 
-    > [!NOTE]
-    > There are currently no code completion for the `remove` method, so you will need to know the name of the operator you want to remove. We assume this is so low level that if you are removing operators you know what the name of the operator is.
+  > [!NOTE]
+  > There are currently no code completion for the `remove` method, so you will need to know the name of the operator you want to remove. We assume this is so low level that if you are removing operators you know what the name of the operator is.
 
-    > [!TIP]
-    > If you only wish to replace the operator with another operator, you can use the `set` method instead of `remove` and `add`.
+  > [!TIP]
+  > If you only wish to replace the operator with another operator, you can use the `set` method instead of `remove` and `add`.
 
 - [#2491](https://github.com/equinor/fusion-framework/pull/2491) [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51) Thanks [@odinr](https://github.com/odinr)! - **New Feature: Enhanced `requestValidationOperator`**
 
-    The `requestValidationOperator` is a utility function that validates incoming requests against a Zod schema. This function has two options: `strict` and `parse`. The `strict` option allows you to enforce strict validation, while the `parse` option enables you to return the parsed request object if it passes validation.
+  The `requestValidationOperator` is a utility function that validates incoming requests against a Zod schema. This function has two options: `strict` and `parse`. The `strict` option allows you to enforce strict validation, while the `parse` option enables you to return the parsed request object if it passes validation.
 
-    The `requestValidationOperator` is meant to be used as a request operator in the Fusion API framework. It is a higher-order function that takes a Zod schema as an argument and returns a function that validates incoming requests against that schema.
+  The `requestValidationOperator` is meant to be used as a request operator in the Fusion API framework. It is a higher-order function that takes a Zod schema as an argument and returns a function that validates incoming requests against that schema.
 
-    | Option                | Description                                                                                                                      | Usage                                                                                                                                 |
-    | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-    | **Strict Validation** | When `strict` is set to `true`, the validation will fail if there are additional properties not defined in the schema.           | If `strict` is set to `false` or omitted, additional properties will be allowed and passed through without causing validation errors. |
-    | **Parse Option**      | When `parse` is enabled, the function will return the parsed and potentially transformed request object if it passes validation. | If `parse` is not enabled, the function will not return anything even if the request object is valid.                                 |
+  | Option                | Description                                                                                                                      | Usage                                                                                                                                 |
+  | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+  | **Strict Validation** | When `strict` is set to `true`, the validation will fail if there are additional properties not defined in the schema.           | If `strict` is set to `false` or omitted, additional properties will be allowed and passed through without causing validation errors. |
+  | **Parse Option**      | When `parse` is enabled, the function will return the parsed and potentially transformed request object if it passes validation. | If `parse` is not enabled, the function will not return anything even if the request object is valid.                                 |
 
-    To use the new `strict` and `parse` options, update your code as follows:
+  To use the new `strict` and `parse` options, update your code as follows:
 
-    Example usage with strict validation:
+  Example usage with strict validation:
 
-    ```typescript
-    const operator = requestValidationOperator({ strict: true });
+  ```typescript
+  const operator = requestValidationOperator({ strict: true });
 
-    // This will throw an error because of invalid method and extra property.
-    operator({
-        method: 'post',
-        body: 'foo',
-        extraProperty: 'This should not be here',
-    });
-    ```
+  // This will throw an error because of invalid method and extra property.
+  operator({
+    method: "post",
+    body: "foo",
+    extraProperty: "This should not be here",
+  });
+  ```
 
-    Example usage with parsing enabled:
+  Example usage with parsing enabled:
 
-    ```typescript
-    // Example usage with parsing enabled
-    const operator = requestValidationOperator({ parse: true });
+  ```typescript
+  // Example usage with parsing enabled
+  const operator = requestValidationOperator({ parse: true });
 
-    // will return { method: 'GET' }
-    const parsedRequest = operator({
-        method: 'GET',
-        extraProperty: 'This should not be here',
-    });
-    ```
+  // will return { method: 'GET' }
+  const parsedRequest = operator({
+    method: "GET",
+    extraProperty: "This should not be here",
+  });
+  ```
 
-    Example usage with both strict validation and parsing enabled:
+  Example usage with both strict validation and parsing enabled:
 
-    ```typescript
-    const operator = requestValidationOperator({ strict: true, parse: true });
+  ```typescript
+  const operator = requestValidationOperator({ strict: true, parse: true });
 
-    // will throw an error because of extra property.
-    const parsedStrictRequest = operator({
-        method: 'GET',
-        extraProperty: 'This should not be here',
-    });
-    ```
+  // will throw an error because of extra property.
+  const parsedStrictRequest = operator({
+    method: "GET",
+    extraProperty: "This should not be here",
+  });
+  ```
 
-    Example usage with the `HttpClient`:
+  Example usage with the `HttpClient`:
 
-    ```typescript
-    const httpClient = new HttpClient();
+  ```typescript
+  const httpClient = new HttpClient();
 
-    // Add the request validation operator to the HttpClient.
-    httpClient.requestHandler.add('validate-init', requestValidationOperator({ parse: true }));
+  // Add the request validation operator to the HttpClient.
+  httpClient.requestHandler.add(
+    "validate-init",
+    requestValidationOperator({ parse: true })
+  );
 
-    // will throw an error because of invalid method.
-    httpClient.get('https://example.com', { method: 'get' });
-    ```
+  // will throw an error because of invalid method.
+  httpClient.get("https://example.com", { method: "get" });
+  ```
 
 ## 6.1.0
 
@@ -158,35 +176,35 @@
 
 - [#2452](https://github.com/equinor/fusion-framework/pull/2452) [`c776845`](https://github.com/equinor/fusion-framework/commit/c776845e753acf4a0bceda1c59d31e5939c44c31) Thanks [@odinr](https://github.com/odinr)! - **@equinor/fusion-framework-module-http**
 
-    `HttpClient._resolveUrl` now supports resolving URLs with a base URL that contains a path.
+  `HttpClient._resolveUrl` now supports resolving URLs with a base URL that contains a path.
 
-    before:
+  before:
 
-    ```typescript
-    const client = new HttpClient('https://example.com/test/me');
-    client.fetch('/api'); // https://example.com/api
-    ```
+  ```typescript
+  const client = new HttpClient("https://example.com/test/me");
+  client.fetch("/api"); // https://example.com/api
+  ```
 
-    now:
+  now:
 
-    ```typescript
-    const client = new HttpClient('https://example.com/test/me');
-    client.fetch('/api'); // https://example.com/test/me/api
-    ```
+  ```typescript
+  const client = new HttpClient("https://example.com/test/me");
+  client.fetch("/api"); // https://example.com/test/me/api
+  ```
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
-    - @equinor/fusion-framework-module-msal@3.1.5
+  - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module-msal@3.1.5
 
 ## 6.0.3
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-framework-module-msal@3.1.4
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-framework-module-msal@3.1.4
 
 ## 6.0.2
 
@@ -195,8 +213,8 @@
 - [#2358](https://github.com/equinor/fusion-framework/pull/2358) [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb) Thanks [@eikeland](https://github.com/eikeland)! - Updating vitest to 2.0.4. Setting vitest as devDependency in fusion-query. Updating vite to 5.3.4
 
 - Updated dependencies [[`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-framework-module@4.3.3
-    - @equinor/fusion-framework-module-msal@3.1.3
+  - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module-msal@3.1.3
 
 ## 6.0.1
 
@@ -204,13 +222,13 @@
 
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - Updated documentation in `README.md` for http module.
 
-    - added introduction to http module
-    - added concepts section which highlights the key concepts of http module
-    - added sequence diagram for http request execution
-    - added examples for http module
-    - improved documentation for configuring http module
-    - improved documentation for working with http clients
-    - improved the formatting of the documentation
+  - added introduction to http module
+  - added concepts section which highlights the key concepts of http module
+  - added sequence diagram for http request execution
+  - added examples for http module
+  - improved documentation for configuring http module
+  - improved documentation for working with http clients
+  - improved the formatting of the documentation
 
 - [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
 
@@ -218,55 +236,55 @@
 
 - [#2324](https://github.com/equinor/fusion-framework/pull/2324) [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9) Thanks [@odinr](https://github.com/odinr)! - - Added a new type `ResponseSelector<TResult, TResponse>`: a function that takes a `Response` object and returns an observable stream of type `TResult`. The `ResponseSelector` type has two template parameters: `TResult` and `TResponse`.
 
-    - Updated the `FetchRequestInit` type to include a new property `selector` of type `ResponseSelector<TReturn, TResponse>`, which allows specifying a response selector function.
-    - Updated the blob-selector and json-selector functions to use the new `ResponseSelector` type.
+  - Updated the `FetchRequestInit` type to include a new property `selector` of type `ResponseSelector<TReturn, TResponse>`, which allows specifying a response selector function.
+  - Updated the blob-selector and json-selector functions to use the new `ResponseSelector` type.
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-framework-module-msal@3.1.2
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-framework-module-msal@3.1.2
 
 ## 6.0.0
 
@@ -274,99 +292,107 @@
 
 - [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - The `blob` and `blob# Change Log methods in the `HttpClient` class have been updated to provide a more robust and flexible API for fetching blob resources.
 
-    1. The `blob` and `blob# Change Log methods now accept an optional `args`parameter of type`FetchRequestInit<T, TRequest, TResponse>`, where `T` is the type of the expected blob result. This allows consumers to customize the fetch request and response handling.
-    2. The `blob` and `blob# Change Log methods now return a `Promise<T>`and`StreamResponse<T>`respectively, where`T` is the type of the expected blob result. This allows consumers to handle the blob data in a more type-safe manner.
-    3. The `blobSelector` function has been updated to extract the filename (if available) from the `content-disposition` header and return it along with the blob data in a `BlobResult` object.
-    4. If you were previously using the `blob` or `blob# Change Log methods and expecting a `Blob`result, you must now use the new`BlobResult` type, which includes the filename (if available) and the blob data.
+  1. The `blob` and `blob# Change Log methods now accept an optional `args`parameter of type`FetchRequestInit<T, TRequest, TResponse>`, where `T` is the type of the expected blob result. This allows consumers to customize the fetch request and response handling.
+  2. The `blob` and `blob# Change Log methods now return a `Promise<T>`and`StreamResponse<T>`respectively, where`T` is the type of the expected blob result. This allows consumers to handle the blob data in a more type-safe manner.
+  3. The `blobSelector` function has been updated to extract the filename (if available) from the `content-disposition` header and return it along with the blob data in a `BlobResult` object.
+  4. If you were previously using the `blob` or `blob# Change Log methods and expecting a `Blob`result, you must now use the new`BlobResult` type, which includes the filename (if available) and the blob data.
 
-    > [!WARNING]
-    > This alters the return type of the `blob` and `blob# Change Log methods, which is a **breaking change**.
+  > [!WARNING]
+  > This alters the return type of the `blob` and `blob# Change Log methods, which is a **breaking change**.
 
-    Example:
+  Example:
 
-    ```typescript
-    const blobResult = await httpClient.blob('/path/to/blob');
+  ```typescript
+  const blobResult = await httpClient.blob("/path/to/blob");
+  console.log(blobResult.filename); // 'example.pdf'
+  console.log(blobResult.blob); // Blob instance
+  ```
+
+  1. If you were providing a custom selector function to the `blob` or `blob# Change Log methods, you can now use the new `BlobResult` type in your selector function.
+
+  Example:
+
+  ```typescript
+  const customBlobSelector = async (
+    response: Response
+  ): Promise<{ filename: string; blob: Blob }> => {
+    // Extract filename and blob from the response
+    const { filename, blob } = await blobSelector(response);
+    return { filename, blob };
+  };
+
+  const blobResult = await httpClient.blob("/path/to/blob", {
+    selector: customBlobSelector,
+  });
+  console.log(blobResult.filename); // 'example.pdf'
+  console.log(blobResult.blob); // Blob instance
+  ```
+
+  3. If you were using the `blob# Change Log method and expecting a `StreamResponse<Blob>`, you can now use the new `StreamResponse<T>`type, where`T` is the type of the expected blob result.
+
+  Example:
+
+  ```typescript
+  const blobStream = httpClient.blob$("/path/to/blob");
+  blobStream.subscribe((blobResult) => {
     console.log(blobResult.filename); // 'example.pdf'
     console.log(blobResult.blob); // Blob instance
-    ```
-
-    1. If you were providing a custom selector function to the `blob` or `blob# Change Log methods, you can now use the new `BlobResult` type in your selector function.
-
-    Example:
-
-    ```typescript
-    const customBlobSelector = async (
-        response: Response,
-    ): Promise<{ filename: string; blob: Blob }> => {
-        // Extract filename and blob from the response
-        const { filename, blob } = await blobSelector(response);
-        return { filename, blob };
-    };
-
-    const blobResult = await httpClient.blob('/path/to/blob', { selector: customBlobSelector });
-    console.log(blobResult.filename); // 'example.pdf'
-    console.log(blobResult.blob); // Blob instance
-    ```
-
-    3. If you were using the `blob# Change Log method and expecting a `StreamResponse<Blob>`, you can now use the new `StreamResponse<T>`type, where`T` is the type of the expected blob result.
-
-    Example:
-
-    ```typescript
-    const blobStream = httpClient.blob$('/path/to/blob');
-    blobStream.subscribe((blobResult) => {
-        console.log(blobResult.filename); // 'example.pdf'
-        console.log(blobResult.blob); // Blob instance
-    });
-    ```
+  });
+  ```
 
 ### Patch Changes
 
 - [#2196](https://github.com/equinor/fusion-framework/pull/2196) [`1e60919`](https://github.com/equinor/fusion-framework/commit/1e60919e83fb65528c88f604d7bd43299ec412e1) Thanks [@odinr](https://github.com/odinr)! - The `jsonSelector` function was not checking the error type in the `catch` block.
   This lead to not throwing the error with parsed data, but always throwing a parser error, where the correct error was `cause` in the `ErrorOptions`
 
-    **BREAKING CHANGE:**
+  **BREAKING CHANGE:**
 
-    If for some reason developers has catched the error and assumed the `cause` property would give the proper error data, this will no longer be the case.
+  If for some reason developers has catched the error and assumed the `cause` property would give the proper error data, this will no longer be the case.
 
-    ```ts
-    try {
-        await jsonSelector(response);
-    } catch (error) {
-        if (error instanceof HttpJsonResponseError) {
-            const { data, cause } = error;
-            if (data) {
-                console.error('the request was not `ok`, see provided error data', data);
-            } else {
-                console.error('failed to parse data from response, see provided cause', cause);
-            }
-        }
-    }
-    ```
-
-    ```diff
-    try {
-      await jsonSelector(response);
-    } catch (error) {
-      if(error instanceof HttpJsonResponseError) {
-    -    const data = error.cause instanceof HttpJsonResponseError ? err.cause.data : null;
-    +    const data = error instanceof HttpJsonResponseError ? error.data : null;
-        if(data) {
-          console.error('the request was not `ok`, see provided error data', data);
-        } else {
-          console.error('failed to parse data from response, see provided cause', error.cause);
-        }
+  ```ts
+  try {
+    await jsonSelector(response);
+  } catch (error) {
+    if (error instanceof HttpJsonResponseError) {
+      const { data, cause } = error;
+      if (data) {
+        console.error(
+          "the request was not `ok`, see provided error data",
+          data
+        );
+      } else {
+        console.error(
+          "failed to parse data from response, see provided cause",
+          cause
+        );
       }
     }
-    ```
+  }
+  ```
+
+  ```diff
+  try {
+    await jsonSelector(response);
+  } catch (error) {
+    if(error instanceof HttpJsonResponseError) {
+  -    const data = error.cause instanceof HttpJsonResponseError ? err.cause.data : null;
+  +    const data = error instanceof HttpJsonResponseError ? error.data : null;
+      if(data) {
+        console.error('the request was not `ok`, see provided error data', data);
+      } else {
+        console.error('failed to parse data from response, see provided cause', error.cause);
+      }
+    }
+  }
+  ```
 
 ## 5.2.3
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-framework-module-msal@3.1.1
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-framework-module-msal@3.1.1
 
 ## 5.2.2
 
@@ -382,48 +408,48 @@
 
 - [#2043](https://github.com/equinor/fusion-framework/pull/2043) [`4af517f`](https://github.com/equinor/fusion-framework/commit/4af517f107f960aa1dc7459451d99e2e83d350ee) Thanks [@odinr](https://github.com/odinr)! - When adding operators to request and response handler to an http client instanstance, the values where added to the configured handlers permanently
 
-    ```ts
-    // create a new client from configuration
-    const fooClient = provider.createClient('foo');
-    fooClient.requestHandler.setHeader('x-foo', 'bar');
+  ```ts
+  // create a new client from configuration
+  const fooClient = provider.createClient("foo");
+  fooClient.requestHandler.setHeader("x-foo", "bar");
 
-    // generate a RequestInit object
-    const fooRequest = await lastValueFrom(
-        fooClient.requestHandler.process({ path: '/api', uri: fooClient.uri }),
-    );
+  // generate a RequestInit object
+  const fooRequest = await lastValueFrom(
+    fooClient.requestHandler.process({ path: "/api", uri: fooClient.uri })
+  );
 
-    expect((fooRequest.headers as Headers)?.get('x-foo')).toBe('bar');
+  expect((fooRequest.headers as Headers)?.get("x-foo")).toBe("bar");
 
-    // create a new client from the same configuration
-    const barClient = provider.createClient('foo');
+  // create a new client from the same configuration
+  const barClient = provider.createClient("foo");
 
-    // generate a RequestInit object
-    const barRequest = await lastValueFrom(
-        barClient.requestHandler.process({ path: '/api', uri: barClient.uri }),
-    );
+  // generate a RequestInit object
+  const barRequest = await lastValueFrom(
+    barClient.requestHandler.process({ path: "/api", uri: barClient.uri })
+  );
 
-    // expect the request header to not been modified
-    // FAILED
-    expect((barRequest.headers as Headers)?.get('x-foo')).toBeUndefined();
-    ```
+  // expect the request header to not been modified
+  // FAILED
+  expect((barRequest.headers as Headers)?.get("x-foo")).toBeUndefined();
+  ```
 
-    modified the `ProcessOperators` to accept operators on creation, which are clone to the instance.
+  modified the `ProcessOperators` to accept operators on creation, which are clone to the instance.
 
-    ```diff
-    --- a/packages/modules/http/src/lib/client/client.ts
-    +++ a/packages/modules/http/src/lib/client/client.ts
-    constructor(
-        public uri: string,
-        options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>,
-    ) {
-    -   this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
-    +   this.requestHandler = new HttpRequestHandler<TRequest>(options?.requestHandler);
-    -   this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
-    +   this.responseHandler = new HttpResponseHandler<TResponse>(options?.responseHandler);
-        this._init();
-    }
+  ```diff
+  --- a/packages/modules/http/src/lib/client/client.ts
+  +++ a/packages/modules/http/src/lib/client/client.ts
+  constructor(
+      public uri: string,
+      options?: Partial<HttpClientCreateOptions<TRequest, TResponse>>,
+  ) {
+  -   this.requestHandler = options?.requestHandler ?? new HttpRequestHandler<TRequest>();
+  +   this.requestHandler = new HttpRequestHandler<TRequest>(options?.requestHandler);
+  -   this.responseHandler = options?.responseHandler ?? new HttpResponseHandler<TResponse>();
+  +   this.responseHandler = new HttpResponseHandler<TResponse>(options?.responseHandler);
+      this._init();
+  }
 
-    ```
+  ```
 
 ## 5.2.0
 
@@ -434,23 +460,23 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-framework-module-msal@3.1.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-module-msal@3.1.0
 
 ## 5.1.6
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
-    - @equinor/fusion-framework-module-msal@3.0.10
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module-msal@3.0.10
 
 ## 5.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`5eab8af`](https://github.com/equinor/fusion-framework/commit/5eab8afe3c3106cc67ad14ce4cbee6c7e4e8dfb1)]:
-    - @equinor/fusion-framework-module-msal@3.0.9
+  - @equinor/fusion-framework-module-msal@3.0.9
 
 ## 5.1.4
 
@@ -464,23 +490,23 @@
 
 - [#1621](https://github.com/equinor/fusion-framework/pull/1621) [`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee) Thanks [@odinr](https://github.com/odinr)! - **Improves error handling when processing json http response**
 
-    In packages/modules/http/src/errors.ts:
+  In packages/modules/http/src/errors.ts:
 
-    - The class HttpResponseError now has a generic parameter TResponse.
-        - Added a static property Name to the class.
-    - Added a new class HttpJsonResponseError which extends HttpResponseError and also has generic parameters TType and TResponse.
-        - Added a static property Name to the class.
-        - Added a public property data of type TType.
-        - Modified the constructor to accept an optional data parameter.
+  - The class HttpResponseError now has a generic parameter TResponse.
+    - Added a static property Name to the class.
+  - Added a new class HttpJsonResponseError which extends HttpResponseError and also has generic parameters TType and TResponse.
+    - Added a static property Name to the class.
+    - Added a public property data of type TType.
+    - Modified the constructor to accept an optional data parameter.
 
-    In packages/modules/http/src/lib/selectors/json-selector.ts:
+  In packages/modules/http/src/lib/selectors/json-selector.ts:
 
-    - Added an import statement for HttpJsonResponseError.
-    - Modified the jsonSelector function to handle errors when parsing the response.
-        - Added a try-catch block.
-        - Changed the JSON parsing logic to store the parsed data in a variable data.
-        - If the response is not OK, a HttpJsonResponseError is thrown with the appropriate error message, response object, and data property.
-        - If there is an error parsing the response, a HttpJsonResponseError is thrown with the appropriate error message, response object, and cause property.
+  - Added an import statement for HttpJsonResponseError.
+  - Modified the jsonSelector function to handle errors when parsing the response.
+    - Added a try-catch block.
+    - Changed the JSON parsing logic to store the parsed data in a variable data.
+    - If the response is not OK, a HttpJsonResponseError is thrown with the appropriate error message, response object, and data property.
+    - If there is an error parsing the response, a HttpJsonResponseError is thrown with the appropriate error message, response object, and cause property.
 
 ## 5.1.2
 
@@ -489,8 +515,8 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-framework-module-msal@3.0.8
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework-module-msal@3.0.8
 
 ## 5.1.1
 
@@ -499,8 +525,8 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-framework-module-msal@3.0.7
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-framework-module-msal@3.0.7
 
 ## 5.1.0
 
@@ -508,22 +534,22 @@
 
 - [#1242](https://github.com/equinor/fusion-framework/pull/1242) [`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa) Thanks [@odinr](https://github.com/odinr)! - add method for executing blob requests
 
-    - added selector for extracting blob from response
-    - added function for fetching blob as stream or promise on the http client
+  - added selector for extracting blob from response
+  - added function for fetching blob as stream or promise on the http client
 
-    ```tsx
-    const data = await client.blob('/person/photo');
-    const url = URL.createObjectURL(blob);
-    return <img src={url} />;
-    ```
+  ```tsx
+  const data = await client.blob("/person/photo");
+  const url = URL.createObjectURL(blob);
+  return <img src={url} />;
+  ```
 
 ## 5.0.6
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-framework-module-msal@3.0.6
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module-msal@3.0.6
 
 ## 5.0.5
 
@@ -531,19 +557,19 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - [#1163](https://github.com/equinor/fusion-framework/pull/1163) [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3) Thanks [@odinr](https://github.com/odinr)! - Append `Accecpt: application/json` to request headers
 
-    when using the `json# Change Log or `json`function on the`HttpClient`add`Accecpt: application/json` to the request header
+  when using the `json# Change Log or `json`function on the`HttpClient`add`Accecpt: application/json` to the request header
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-framework-module-msal@3.0.5
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module-msal@3.0.5
 
 ## 5.0.4
 
@@ -552,8 +578,8 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework-module@4.2.1
-    - @equinor/fusion-framework-module-msal@3.0.4
+  - @equinor/fusion-framework-module@4.2.1
+  - @equinor/fusion-framework-module-msal@3.0.4
 
 ## 5.0.3
 
@@ -561,13 +587,13 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework-module@4.2.0
-    - @equinor/fusion-framework-module-msal@3.0.3
+  - @equinor/fusion-framework-module@4.2.0
+  - @equinor/fusion-framework-module-msal@3.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

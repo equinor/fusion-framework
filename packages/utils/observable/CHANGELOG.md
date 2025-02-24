@@ -1,5 +1,13 @@
 # Change Log
 
+## 8.4.5
+
+### Patch Changes
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - Conformed to Biome `linter.correctness.useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
 ## 8.4.4
 
 ### Patch Changes
@@ -30,61 +38,61 @@
 
 - [#2353](https://github.com/equinor/fusion-framework/pull/2353) [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594) Thanks [@odinr](https://github.com/odinr)! - Added new constructor overloads and a `select` method to `FlowSubject` for enhanced state management and selection capabilities.
 
-    The `FlowSubject` class now supports constructor overloading, allowing for more flexible initialization with either a `ReducerWithInitialState<S, A>` or a `Reducer<S, A>` along with an `initialState`. This change enables users to set up the initial state of their `FlowSubject` instances in a way that best suits their application's needs.
+  The `FlowSubject` class now supports constructor overloading, allowing for more flexible initialization with either a `ReducerWithInitialState<S, A>` or a `Reducer<S, A>` along with an `initialState`. This change enables users to set up the initial state of their `FlowSubject` instances in a way that best suits their application's needs.
 
-    Additionally, a new `select` method has been introduced. This method allows users to select and emit derived states from the `FlowSubject`'s state based on custom logic. The `select` method takes a `selector` function for computing the derived state and an optional `comparator` function for custom comparison logic, making state management more versatile and efficient.
+  Additionally, a new `select` method has been introduced. This method allows users to select and emit derived states from the `FlowSubject`'s state based on custom logic. The `select` method takes a `selector` function for computing the derived state and an optional `comparator` function for custom comparison logic, making state management more versatile and efficient.
 
-    The `selector` exposes an shorthand method for selecting derived states from the `FlowSubject`'s state without the need to import and use `map` and `distinctUntilChanged` operators from `RxJS`.
+  The `selector` exposes an shorthand method for selecting derived states from the `FlowSubject`'s state without the need to import and use `map` and `distinctUntilChanged` operators from `RxJS`.
 
-    Consumers should update their code to utilize the new constructor overloads for initializing `FlowSubject` instances as needed. For advanced state management scenarios, consider using the `select` method to work with derived states efficiently. These changes are backward compatible and aim to provide more flexibility and functionality to the `FlowSubject` class.
+  Consumers should update their code to utilize the new constructor overloads for initializing `FlowSubject` instances as needed. For advanced state management scenarios, consider using the `select` method to work with derived states efficiently. These changes are backward compatible and aim to provide more flexibility and functionality to the `FlowSubject` class.
 
-    ```typescript
-    /** Example of using the new constructor with a reducer with initial state */
-    const reducerWithInitial = createReducer(
-        { count: 0 }, // initial state
-        (builder) => {
-            builder.addCase('increment', (state) => {
-                state.count += 1;
-            });
-            builder.addCase('decrement', (state) => {
-                state.count -= 1;
-            });
-        },
-    );
-    const subject = new FlowSubject(reducerWithInitial);
-    ```
-
-    ```typescript
-    /** Example of using the new constructor with a plain reducer and initial state */
-    const reducer = (state, action) => {
-      switch(action.type) {
-        case 'increment':
-          return { ...state, count: state.count + 1 };
-        case 'decrement':
-          return return { ...state, count: state.count - 1 };
-      }
+  ```typescript
+  /** Example of using the new constructor with a reducer with initial state */
+  const reducerWithInitial = createReducer(
+    { count: 0 }, // initial state
+    (builder) => {
+      builder.addCase("increment", (state) => {
+        state.count += 1;
+      });
+      builder.addCase("decrement", (state) => {
+        state.count -= 1;
+      });
     }
-    const flowSubject = new FlowSubject(reducer, { count: 0 });
-    ```
+  );
+  const subject = new FlowSubject(reducerWithInitial);
+  ```
 
-    ```typescript
-    /** Example of using the new select method */
-    flowSubject
-        .select(
-            /** selector function */
-            (state) => state.count,
-            /** comparator function, optional, will use equal by default */
-            (prev, next) => prev === next,
-        )
-        .subscribe(
-            /** subscriber function */
-            (count) => console.log(count),
-        );
+  ```typescript
+  /** Example of using the new constructor with a plain reducer and initial state */
+  const reducer = (state, action) => {
+    switch(action.type) {
+      case 'increment':
+        return { ...state, count: state.count + 1 };
+      case 'decrement':
+        return return { ...state, count: state.count - 1 };
+    }
+  }
+  const flowSubject = new FlowSubject(reducer, { count: 0 });
+  ```
 
-    flowSubject.next({ type: 'increment' }); // logs 1
-    flowSubject.next({ type: 'increment' }); // logs 2
-    flowSubject.next({ type: 'decrement' }); // logs 1
-    ```
+  ```typescript
+  /** Example of using the new select method */
+  flowSubject
+    .select(
+      /** selector function */
+      (state) => state.count,
+      /** comparator function, optional, will use equal by default */
+      (prev, next) => prev === next
+    )
+    .subscribe(
+      /** subscriber function */
+      (count) => console.log(count)
+    );
+
+  flowSubject.next({ type: "increment" }); // logs 1
+  flowSubject.next({ type: "increment" }); // logs 2
+  flowSubject.next({ type: "decrement" }); // logs 1
+  ```
 
 ### Patch Changes
 
@@ -100,60 +108,60 @@
 
 - [#2319](https://github.com/equinor/fusion-framework/pull/2319) [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated `uuid` from `^9.0.16` to `^10.0.0`. This update includes breaking changes where support for Node.js versions 12 and 14 has been dropped, and Node.js version 20 is now supported. Additionally, it introduces support for RFC9562 MAX, v6, v7, and v8 UUIDs.
 
-    **Migration Guide**
-    Consumers should ensure their environments are using Node.js version 16 or higher to avoid compatibility issues. If you are using Fusion Framework, you do not need to take any action as Fusion Framework already requires Node.js version 18 or higher.
+  **Migration Guide**
+  Consumers should ensure their environments are using Node.js version 16 or higher to avoid compatibility issues. If you are using Fusion Framework, you do not need to take any action as Fusion Framework already requires Node.js version 18 or higher.
 
-    [Link to `immer` v10.0.0 release notes](https://github.com/uuidjs/uuid/blob/main/CHANGELOG.md)
+  [Link to `immer` v10.0.0 release notes](https://github.com/uuidjs/uuid/blob/main/CHANGELOG.md)
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 ## 8.3.2
 
 ### Patch Changes
 
 - [#2235](https://github.com/equinor/fusion-framework/pull/2235) [`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb) Thanks [@odinr](https://github.com/odinr)! - - **Refactored**: The `actionBaseType` function has been renamed to `getBaseType` and its implementation has been updated.
-    - **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
+  - **Added**: New utility types and functions for handling action types and payloads in a more type-safe manner.
 
 ## 8.3.1
 
@@ -161,14 +169,14 @@
 
 - [#2204](https://github.com/equinor/fusion-framework/pull/2204) [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab) Thanks [@odinr](https://github.com/odinr)! - Updated `@testing-library/react` dev dependency from `^14.2.0` to `^15.0.0`.
 
-    This is a patch bump because it only updates a dev dependency, which does not affect the public API or functionality of the `@equinor/fusion-framework-observable` package. Consumers of this package do not need to make any changes.
+  This is a patch bump because it only updates a dev dependency, which does not affect the public API or functionality of the `@equinor/fusion-framework-observable` package. Consumers of this package do not need to make any changes.
 
-    The `@testing-library/react` library is used internally for unit testing React components. Updating to the latest version ensures we have the latest testing utilities and improvements.
+  The `@testing-library/react` library is used internally for unit testing React components. Updating to the latest version ensures we have the latest testing utilities and improvements.
 
-    Highlights from the `@testing-library/react` v15.0.0 changelog:
+  Highlights from the `@testing-library/react` v15.0.0 changelog:
 
-    - Minimum supported Node.js version is 18.0
-    - New version of `@testing-library/dom` changes various roles. Check out the [changed types](https://github.com/testing-library/dom-testing-library/releases/tag/v10.0.0) if you are using `ByRole` queries.
+  - Minimum supported Node.js version is 18.0
+  - New version of `@testing-library/dom` changes various roles. Check out the [changed types](https://github.com/testing-library/dom-testing-library/releases/tag/v10.0.0) if you are using `ByRole` queries.
 
 ## 8.3.0
 
@@ -218,7 +226,7 @@
 
 - [#1213](https://github.com/equinor/fusion-framework/pull/1213) [`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760) Thanks [@eikeland](https://github.com/eikeland)! - # package.json setting type.module
 
-    Removing type.module from package config since it was causing issues in @equinor/fusion-cli
+  Removing type.module from package config since it was causing issues in @equinor/fusion-cli
 
 - [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4) Thanks [@odinr](https://github.com/odinr)! - expose `castDraft` from immer, since reused when creating reducers
 
@@ -228,70 +236,75 @@
 
 - [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Use initial state from observable if observable has value property
 
-    - update typing og arguments
-    - update initial state to fallback to `observable.value`
-        - _`opt.initial` will supersede `observable.value`_
-        - internally `useLayoutEffect` subscribes to subject, so `opt.initial` will be overridden in next `tick`
-    - when provided subject changes instance, subscription will set current state to `observable.value` of the new subject
-        - only applies if new observable has value property
+  - update typing og arguments
+  - update initial state to fallback to `observable.value`
+    - _`opt.initial` will supersede `observable.value`_
+    - internally `useLayoutEffect` subscribes to subject, so `opt.initial` will be overridden in next `tick`
+  - when provided subject changes instance, subscription will set current state to `observable.value` of the new subject
+    - only applies if new observable has value property
 
-    update typing when using stateful observable in `useObservableState`
+  update typing when using stateful observable in `useObservableState`
 
-    if the source has a value property, the state will return the type of the observable
+  if the source has a value property, the state will return the type of the observable
 
-    _previously the return type was observable type or `undefined`, since the initial state would be undefined before source emits values_
+  _previously the return type was observable type or `undefined`, since the initial state would be undefined before source emits values_
 
-    ```ts
-    /** value: {foo:string}|undefined  */
-    const { value } = useObservableState(source$ as Observable<{ foo: string }>);
-    /** value: {foo:string}  */
-    const { value } = useObservableState(source$ as BehaviorSubject<{ foo: string }>);
+  ```ts
+  /** value: {foo:string}|undefined  */
+  const { value } = useObservableState(source$ as Observable<{ foo: string }>);
+  /** value: {foo:string}  */
+  const { value } = useObservableState(
+    source$ as BehaviorSubject<{ foo: string }>
+  );
 
-    /* override initial value  */
-    const { value } = useObservableState(source$ as BehaviorSubject<{ foo: string }>, {
-        initial: 'bar',
-    });
-    ```
+  /* override initial value  */
+  const { value } = useObservableState(
+    source$ as BehaviorSubject<{ foo: string }>,
+    {
+      initial: "bar",
+    }
+  );
+  ```
 
 - [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Add operator for using string property selector on `Observable<Record<string, unknown>>`
 
-    example:
+  example:
 
-    ```ts
-    // Observable<{foo: {bar: string}}>
-    observable.pipe(mapProp('foo')); // Observable<{bar:string}>
-    observable.pipe(mapProp('foo.bar')); // Observable<string>
-    ```
+  ```ts
+  // Observable<{foo: {bar: string}}>
+  observable.pipe(mapProp("foo")); // Observable<{bar:string}>
+  observable.pipe(mapProp("foo.bar")); // Observable<string>
+  ```
 
 - [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - Allow using string path for observable selector
 
-    > simplify usage of `useObservableSelector`
+  > simplify usage of `useObservableSelector`
 
-    ```ts
-    // new
-    useObservableSelector(source$, 'foo.bar');
-    // existing
-    useObservableSelector(
-        source$,
-        useCallback((source) => source.foo.bar, []),
-    );
-    ```
+  ```ts
+  // new
+  useObservableSelector(source$, "foo.bar");
+  // existing
+  useObservableSelector(
+    source$,
+    useCallback((source) => source.foo.bar, [])
+  );
+  ```
 
 ### Patch Changes
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1099](https://github.com/equinor/fusion-framework/pull/1099) [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647) Thanks [@odinr](https://github.com/odinr)! - fix typing of `useObservableInputState`
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
@@ -305,13 +318,13 @@
 
 - [#1077](https://github.com/equinor/fusion-framework/pull/1077) [`b16e93e2`](https://github.com/equinor/fusion-framework/commit/b16e93e23e456ab065a414f4bdc44445b6e9ad9f) Thanks [@odinr](https://github.com/odinr)! - renamed `useObservableEpic` to `useObservableFlow`
 
-    - rename source file
-    - mark `useObservableEpic` as **deprecated**
-    - update index source file
+  - rename source file
+  - mark `useObservableEpic` as **deprecated**
+  - update index source file
 
 - [#1045](https://github.com/equinor/fusion-framework/pull/1045) [`38869a87`](https://github.com/equinor/fusion-framework/commit/38869a87788c340d363e9be1e7fc6ce0e29efa63) Thanks [@eikeland](https://github.com/eikeland)! - # @equinor/fusion-observable
 
-    Adding Immer as dependecy to @equinor/fusion-observable
+  Adding Immer as dependecy to @equinor/fusion-observable
 
 ## 8.0.2
 
@@ -319,9 +332,9 @@
 
 - [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - fix linting
 
-    when using `React.useCallback` inside another hook, the callback function cant resolve input type of callback.
+  when using `React.useCallback` inside another hook, the callback function cant resolve input type of callback.
 
-    https://github.com/equinor/fusion-framework/blob/ddc5bdbc0e0f8c61affb66631fe59366785ee474/packages/utils/observable/src/react/useObservableRef.ts#L15-L18
+  https://github.com/equinor/fusion-framework/blob/ddc5bdbc0e0f8c61affb66631fe59366785ee474/packages/utils/observable/src/react/useObservableRef.ts#L15-L18
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

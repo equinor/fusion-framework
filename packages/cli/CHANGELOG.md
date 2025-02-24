@@ -1,5 +1,19 @@
 # Change Log
 
+## 10.5.2
+
+### Patch Changes
+
+- [#2852](https://github.com/equinor/fusion-framework/pull/2852) [`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d) Thanks [@odinr](https://github.com/odinr)! - replaced forEach with for-of loops for better readability
+
+- [#2851](https://github.com/equinor/fusion-framework/pull/2851) [`c1c9dfa`](https://github.com/equinor/fusion-framework/commit/c1c9dfa5bf0323ab4e146c45c475fa4f6af61088) Thanks [@odinr](https://github.com/odinr)! - fixed links with blank targets and svg without title
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - Conformed to Biome `linter.correctness.useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- [#2836](https://github.com/equinor/fusion-framework/pull/2836) [`6961024`](https://github.com/equinor/fusion-framework/commit/6961024f4ea330ac5d742037623834ee95b05b2b) Thanks [@dependabot](https://github.com/apps/dependabot)! - updated @equinor/fusion-wc-person to 3.1.5
+
 ## 10.5.1
 
 ### Patch Changes
@@ -1328,7 +1342,7 @@
           },
         },
       },
-    }),
+    })
   );
   ```
 
