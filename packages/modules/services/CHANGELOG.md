@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.1.1
+
+### Patch Changes
+
+- [#2854](https://github.com/equinor/fusion-framework/pull/2854) [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24) Thanks [@odinr](https://github.com/odinr)! - removed useless switch cases
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+
 ## 5.1.0
 
 ### Minor Changes
@@ -12,9 +23,9 @@
 
 - [#2650](https://github.com/equinor/fusion-framework/pull/2650) [`2343667`](https://github.com/equinor/fusion-framework/commit/234366756878550ed7405610f384d69fb6a89967) Thanks [@odinr](https://github.com/odinr)! - Fixed `isBookmarkInFavorites` by altering `generateRequestParameters` which had a copy paste bug (wrong request method). Also disabled the `validate_api_request` response operation for now, it was throwing an error on all response code which waas not **OK**.
 
-    > in a future update, the `ResponseHandler` will provide the operators with the `Request` object, so they can access the request method and other request properties.
+  > in a future update, the `ResponseHandler` will provide the operators with the `Request` object, so they can access the request method and other request properties.
 
-    Also fixed the `headSelector` to only check response code, since a `HEAD` request does not return a body.
+  Also fixed the `headSelector` to only check response code, since a `HEAD` request does not return a body.
 
 ## 5.0.0
 
@@ -22,16 +33,16 @@
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - Total rework of api interface for bookmarks.
 
-    The current version misrepresents the api, and does not provide a good interface for working with bookmarks. So was decided to rework the api interface to better represent the api, and provide a more robust interface for working with bookmarks. Instead of fixing the current implementation, it was decided to rework the entire module to save time and confusion in the future.
+  The current version misrepresents the api, and does not provide a good interface for working with bookmarks. So was decided to rework the api interface to better represent the api, and provide a more robust interface for working with bookmarks. Instead of fixing the current implementation, it was decided to rework the entire module to save time and confusion in the future.
 
-    > This module is meant for internal use only, and should not be used directly by applications, so the breaking changes should not affect any applications. Ancestor modules should be updated to reflect the changes in this module.
+  > This module is meant for internal use only, and should not be used directly by applications, so the breaking changes should not affect any applications. Ancestor modules should be updated to reflect the changes in this module.
 
-    **BREAKING CHANGES:**
+  **BREAKING CHANGES:**
 
-    - api client has been updated to reflect the new api endpoints and request/response types
-    - models have been replaced with infered `zod` schemas
-    - request and responses are now parsed and validated using `zod` schemas
-    - file structure has been updated to reflect the new api client structure
+  - api client has been updated to reflect the new api endpoints and request/response types
+  - models have been replaced with infered `zod` schemas
+  - request and responses are now parsed and validated using `zod` schemas
+  - file structure has been updated to reflect the new api client structure
 
 ## 4.1.5
 
@@ -44,21 +55,21 @@
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module@4.3.5
 
 ## 4.1.3
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-framework-module@4.3.4
 
 ## 4.1.2
 
 ### Patch Changes
 
 - Updated dependencies [[`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module@4.3.3
 
 ## 4.1.1
 
@@ -68,49 +79,49 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-framework-module@4.3.2
 
 ## 4.1.0
 
@@ -118,33 +129,36 @@
 
 - [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - ## @equinor/fusion-framework-module-services
 
-    Updated the `PeopleApiClient.photo` method to properly type the response as `PersonPhotoApiResponse<TVersion>` instead of `Blob`. This allows for more accurate type checking when using the method.
+  Updated the `PeopleApiClient.photo` method to properly type the response as `PersonPhotoApiResponse<TVersion>` instead of `Blob`. This allows for more accurate type checking when using the method.
 
-    To update your code:
+  To update your code:
 
-    - If you are using the `PeopleApiClient.photo` method directly, no changes are needed. The method will now properly type the response.
-    - If you have custom type assertions or checks around the response from `PeopleApiClient.photo`, you may need to update them to handle `PersonPhotoApiResponse<TVersion>` instead of `Blob`.
+  - If you are using the `PeopleApiClient.photo` method directly, no changes are needed. The method will now properly type the response.
+  - If you have custom type assertions or checks around the response from `PeopleApiClient.photo`, you may need to update them to handle `PersonPhotoApiResponse<TVersion>` instead of `Blob`.
 
-    Example:
+  Example:
 
-    ```ts
-    // Before
-    const photoResponse: Blob = await peopleApiClient.photo('v2', 'blob', { azureId: '123' });
-    console.log(typeof photoResponse); // Blob
+  ```ts
+  // Before
+  const photoResponse: Blob = await peopleApiClient.photo("v2", "blob", {
+    azureId: "123",
+  });
+  console.log(typeof photoResponse); // Blob
 
-    // After
-    const photoResponse: PersonPhotoApiResponse<'v2'> = await peopleApiClient.photo('v2', 'blob', {
-        azureId: '123',
+  // After
+  const photoResponse: PersonPhotoApiResponse<"v2"> =
+    await peopleApiClient.photo("v2", "blob", {
+      azureId: "123",
     });
-    console.log(typeof photoResponse); // Object - { filename: string, blob: Blob }
-    ```
+  console.log(typeof photoResponse); // Object - { filename: string, blob: Blob }
+  ```
 
 ## 4.0.2
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2)]:
-    - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-framework-module@4.3.1
 
 ## 4.0.1
 
@@ -161,14 +175,14 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-module@4.3.0
 
 ## 3.2.4
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module@4.2.7
 
 ## 3.2.3
 
@@ -177,7 +191,7 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework-module@4.2.6
 
 ## 3.2.2
 
@@ -185,9 +199,9 @@
 
 - [#1282](https://github.com/equinor/fusion-framework/pull/1282) [`ddc31c35`](https://github.com/equinor/fusion-framework/commit/ddc31c3571e36be057095238cf22e78051f423b0) Thanks [@odinr](https://github.com/odinr)! - add util for checking if object is person
 
-    > extremely crude, but good enough until backend comes of with new models or endpoint
+  > extremely crude, but good enough until backend comes of with new models or endpoint
 
-    _updated typings for person v4_
+  _updated typings for person v4_
 
 ## 3.2.1
 
@@ -196,7 +210,7 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-framework-module@4.2.5
 
 ## 3.2.0
 
@@ -204,23 +218,23 @@
 
 - [#1243](https://github.com/equinor/fusion-framework/pull/1243) [`f277c7fc`](https://github.com/equinor/fusion-framework/commit/f277c7fc54ca2ebe75ba1dda94a0d72eb7c8e15b) Thanks [@odinr](https://github.com/odinr)! - Added person services
 
-    > **for internal usage only!**
+  > **for internal usage only!**
 
-    - add function for fetching person details
-    - add function for querying persons
-    - add function for downloading person photo
+  - add function for fetching person details
+  - add function for querying persons
+  - add function for downloading person photo
 
-    ```ts
-    const personApi = await modules.services.createPeopleClient();
-    personApi.query('v2', 'json
-    ```
+  ```ts
+  const personApi = await modules.services.createPeopleClient();
+  personApi.query('v2', 'json
+  ```
 
 ## 3.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.1.4
 
@@ -228,12 +242,12 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.1.3
 
@@ -582,7 +596,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.1.4
 
@@ -590,12 +604,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.1.3
 
@@ -944,7 +958,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.1.4
 
@@ -952,12 +966,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.1.3
 
@@ -1303,16 +1317,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - [#1254](https://github.com/equinor/fusion-framework/pull/1254) [`a2d2dee9`](https://github.com/equinor/fusion-framework/commit/a2d2dee987673171ad91daec98cb530649da5849) Thanks [@odinr](https://github.com/odinr)! - Update people client to reflect Fusion API
 
-    - added models for v2 and v4
-    - added expand logic for person detail `roles` `positions` `contracts` `manager` `companies`
-    - changed api client to now include args and init (previously args where extracted from call parameters) to correctly type response models
+  - added models for v2 and v4
+  - added expand logic for person detail `roles` `positions` `contracts` `manager` `companies`
+  - changed api client to now include args and init (previously args where extracted from call parameters) to correctly type response models
 
 ## 3.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.1.4
 
@@ -1320,12 +1334,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.1.3
 

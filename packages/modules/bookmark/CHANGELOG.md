@@ -1,22 +1,34 @@
 # Change Log
 
+## 2.1.2
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`2fe6241`](https://github.com/equinor/fusion-framework/commit/2fe624186640c3b30079c7d76f0e3af65f64f5d2), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-observable@8.4.5
+  - @equinor/fusion-query@5.2.2
+  - @equinor/fusion-log@1.1.1
+
 ## 2.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1)]:
-    - @equinor/fusion-observable@8.4.4
-    - @equinor/fusion-query@5.2.1
+  - @equinor/fusion-observable@8.4.4
+  - @equinor/fusion-query@5.2.1
 
 ## 2.1.0
 
 ### Minor Changes
 
 - [#2691](https://github.com/equinor/fusion-framework/pull/2691) [`6ead547`](https://github.com/equinor/fusion-framework/commit/6ead547b869cd8a431876e4316c18cb98094a6fb) Thanks [@odinr](https://github.com/odinr)! - - Exposed the `IBookmarkProvider` interface and updated references.
-    - Improved handling of the parent provider in `BookmarkProvider`.
-    - Fixed `BookmarkProvider.on` to only emit when the source of the event is the provider.
-    - Refactored `BookmarkProvider.generatePayload` to better handle the creation and update of bookmark payloads.
-    - Ensured all observable executions to the API are terminated after the first successful or failed response.
+  - Improved handling of the parent provider in `BookmarkProvider`.
+  - Fixed `BookmarkProvider.on` to only emit when the source of the event is the provider.
+  - Refactored `BookmarkProvider.generatePayload` to better handle the creation and update of bookmark payloads.
+  - Ensured all observable executions to the API are terminated after the first successful or failed response.
 
 ### Patch Changes
 
@@ -27,15 +39,15 @@
 ### Patch Changes
 
 - Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
-    - @equinor/fusion-query@5.2.0
+  - @equinor/fusion-query@5.2.0
 
 ## 2.0.1
 
 ### Patch Changes
 
 - Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
-    - @equinor/fusion-observable@8.4.3
-    - @equinor/fusion-query@5.1.5
+  - @equinor/fusion-observable@8.4.3
+  - @equinor/fusion-query@5.1.5
 
 ## 2.0.0
 
@@ -43,76 +55,76 @@
 
 - [#2410](https://github.com/equinor/fusion-framework/pull/2410) [`9d1cb90`](https://github.com/equinor/fusion-framework/commit/9d1cb9003fa10e7ccaa95c20ef86f0a618034641) Thanks [@odinr](https://github.com/odinr)! - rewrite bookmark module
 
-    Needed rewrite of the bookmark module to better represent the api, and provide a more robust interface for working with bookmarks. Instead of fixing the current implementation, it was decided to rework the entire module to save time and confusion in the future.
+  Needed rewrite of the bookmark module to better represent the api, and provide a more robust interface for working with bookmarks. Instead of fixing the current implementation, it was decided to rework the entire module to save time and confusion in the future.
 
-    The v1 implementation had strong coupling with the portal code and was not a good representation of the api. The new implementation is more robust and independent of source systems. The new implementation uses zod schemas to validate requests and responses.
+  The v1 implementation had strong coupling with the portal code and was not a good representation of the api. The new implementation is more robust and independent of source systems. The new implementation uses zod schemas to validate requests and responses.
 
-    The new implementation is not backwards compatible with the v1 implementation, so all ancestor modules should be updated to reflect the changes in this module.
+  The new implementation is not backwards compatible with the v1 implementation, so all ancestor modules should be updated to reflect the changes in this module.
 
-    The new implementation has better state management and error handling, and should be easier to work with than the v1 implementation.
+  The new implementation has better state management and error handling, and should be easier to work with than the v1 implementation.
 
-    **Highlights:**
+  **Highlights:**
 
-    - has validation of configuration of the module.
-    - uses the `BaseConfigBuilder` pattern for configuration.
-    - has validation of requests and responses using zod schemas.
-    - has better error handling and state management.
-    - has better separation of concerns.
-    - has better documentation.
-    - has better state management.
-    - has better flow control.
-    - has better logging.
+  - has validation of configuration of the module.
+  - uses the `BaseConfigBuilder` pattern for configuration.
+  - has validation of requests and responses using zod schemas.
+  - has better error handling and state management.
+  - has better separation of concerns.
+  - has better documentation.
+  - has better state management.
+  - has better flow control.
+  - has better logging.
 
-    **Migration:**
+  **Migration:**
 
-    - update config for enabling the module
-    - check all direct access to provider interface if they are still valid
+  - update config for enabling the module
+  - check all direct access to provider interface if they are still valid
 
-    **Breaking changes:**
+  **Breaking changes:**
 
-    - The provider interface has changed
-    - The client interface has changed
-    - The configuration interface has changed
+  - The provider interface has changed
+  - The client interface has changed
+  - The configuration interface has changed
 
 ## 1.2.13
 
 ### Patch Changes
 
 - Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
-    - @equinor/fusion-observable@8.4.2
-    - @equinor/fusion-query@5.1.4
+  - @equinor/fusion-observable@8.4.2
+  - @equinor/fusion-query@5.1.4
 
 ## 1.2.12
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module@4.3.5
 
 ## 1.2.11
 
 ### Patch Changes
 
 - Updated dependencies [[`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d)]:
-    - @equinor/fusion-observable@8.4.1
-    - @equinor/fusion-query@5.1.3
+  - @equinor/fusion-observable@8.4.1
+  - @equinor/fusion-query@5.1.3
 
 ## 1.2.10
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`be2e925`](https://github.com/equinor/fusion-framework/commit/be2e92532f4a4b8f0b2c9e12d4adf942d380423e), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-query@5.1.2
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-query@5.1.2
 
 ## 1.2.9
 
 ### Patch Changes
 
 - Updated dependencies [[`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-observable@8.4.0
-    - @equinor/fusion-query@5.1.1
-    - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-observable@8.4.0
+  - @equinor/fusion-query@5.1.1
+  - @equinor/fusion-framework-module@4.3.3
 
 ## 1.2.8
 
@@ -122,104 +134,104 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-query@5.1.0
-    - @equinor/fusion-observable@8.3.3
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-query@5.1.0
+  - @equinor/fusion-observable@8.3.3
 
 ## 1.2.7
 
 ### Patch Changes
 
 - Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb)]:
-    - @equinor/fusion-observable@8.3.2
-    - @equinor/fusion-query@5.0.5
+  - @equinor/fusion-observable@8.3.2
+  - @equinor/fusion-query@5.0.5
 
 ## 1.2.6
 
 ### Patch Changes
 
 - Updated dependencies [[`1681940`](https://github.com/equinor/fusion-framework/commit/16819401db191321637fb2a17390abd98738c103), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
-    - @equinor/fusion-query@5.0.4
-    - @equinor/fusion-observable@8.3.1
+  - @equinor/fusion-query@5.0.4
+  - @equinor/fusion-observable@8.3.1
 
 ## 1.2.5
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`6a81125`](https://github.com/equinor/fusion-framework/commit/6a81125ca856bbddbd1ec9e66a30e887cef93f66), [`cd737c2`](https://github.com/equinor/fusion-framework/commit/cd737c2f916747965ece46ed6f33fdadb776c90b)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-query@5.0.3
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-query@5.0.3
 
 ## 1.2.4
 
 ### Patch Changes
 
 - Updated dependencies [[`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995)]:
-    - @equinor/fusion-query@5.0.2
+  - @equinor/fusion-query@5.0.2
 
 ## 1.2.3
 
 ### Patch Changes
 
 - Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
-    - @equinor/fusion-query@5.0.1
+  - @equinor/fusion-query@5.0.1
 
 ## 1.2.2
 
 ### Patch Changes
 
 - Updated dependencies [[`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2)]:
-    - @equinor/fusion-query@5.0.0
+  - @equinor/fusion-query@5.0.0
 
 ## 1.2.1
 
 ### Patch Changes
 
 - Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a), [`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883)]:
-    - @equinor/fusion-observable@8.3.0
-    - @equinor/fusion-query@4.2.0
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-query@4.2.0
 
 ## 1.2.0
 
@@ -230,24 +242,24 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-observable@8.2.0
-    - @equinor/fusion-query@4.1.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-observable@8.2.0
+  - @equinor/fusion-query@4.1.0
 
 ## 1.1.2
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module@4.2.7
 
 ## 1.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
-    - @equinor/fusion-observable@8.1.5
-    - @equinor/fusion-query@4.0.6
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-query@4.0.6
 
 ## 1.1.0
 
@@ -260,8 +272,8 @@
 ### Patch Changes
 
 - Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
-    - @equinor/fusion-observable@8.1.4
-    - @equinor/fusion-query@4.0.5
+  - @equinor/fusion-observable@8.1.4
+  - @equinor/fusion-query@4.0.5
 
 ## 1.0.16
 
@@ -270,9 +282,9 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-observable@8.1.3
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-query@4.0.4
+  - @equinor/fusion-observable@8.1.3
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-query@4.0.4
 
 ## 1.0.15
 
@@ -280,23 +292,23 @@
 
 - [`6f8c32b8`](https://github.com/equinor/fusion-framework/commit/6f8c32b8e0ae1f4431d09d201b2a305a883cf886) Thanks [@odinr](https://github.com/odinr)! - After creating a bookmark the bookmark module will no longer set it as current. This makes sense because the application is already in the correct state when the bookmark was created
 
-    see: #1547
+  see: #1547
 
-    https://github.com/equinor/fusion-framework/blob/main/packages/modules/navigation/src/module.ts#L13
+  https://github.com/equinor/fusion-framework/blob/main/packages/modules/navigation/src/module.ts#L13
 
 ## 1.0.14
 
 ### Patch Changes
 
 - Updated dependencies [[`446b63ce`](https://github.com/equinor/fusion-framework/commit/446b63ce44b59a3aaab4399c0d877d3a1b560a0e)]:
-    - @equinor/fusion-query@4.0.3
+  - @equinor/fusion-query@4.0.3
 
 ## 1.0.13
 
 ### Patch Changes
 
 - Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-    - @equinor/fusion-query@4.0.2
+  - @equinor/fusion-query@4.0.2
 
 ## 1.0.12
 
@@ -305,32 +317,32 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-observable@8.1.2
-    - @equinor/fusion-query@4.0.1
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-observable@8.1.2
+  - @equinor/fusion-query@4.0.1
 
 ## 1.0.11
 
 ### Patch Changes
 
 - Updated dependencies [[`ebcabd0e`](https://github.com/equinor/fusion-framework/commit/ebcabd0e6945e1420a0a9a7d82bd9255da1b8578), [`8739a5a6`](https://github.com/equinor/fusion-framework/commit/8739a5a65d8aaa46ce9ef56cce013efeeb006e8a)]:
-    - @equinor/fusion-query@4.0.0
+  - @equinor/fusion-query@4.0.0
 
 ## 1.0.10
 
 ### Patch Changes
 
 - Updated dependencies [[`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760), [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4), [`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-observable@8.1.1
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-query@3.0.7
+  - @equinor/fusion-observable@8.1.1
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-query@3.0.7
 
 ## 1.0.9
 
 ### Patch Changes
 
 - Updated dependencies [[`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594)]:
-    - @equinor/fusion-query@3.0.6
+  - @equinor/fusion-query@3.0.6
 
 ## 1.0.8
 
@@ -338,16 +350,16 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-observable@8.1.0
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-query@3.0.5
+  - @equinor/fusion-observable@8.1.0
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-query@3.0.5
 
 ## 1.0.7
 

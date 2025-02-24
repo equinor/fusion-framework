@@ -1,5 +1,22 @@
 # poc-portal
 
+## 1.0.29
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`c1c9dfa`](https://github.com/equinor/fusion-framework/commit/c1c9dfa5bf0323ab4e146c45c475fa4f6af61088), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`6efabb7`](https://github.com/equinor/fusion-framework/commit/6efabb7837a97319e976e122db855d8b88b031a6), [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d), [`6961024`](https://github.com/equinor/fusion-framework/commit/6961024f4ea330ac5d742037623834ee95b05b2b)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-framework-module-http@6.2.2
+  - @equinor/fusion-framework-module-app@6.1.5
+  - @equinor/fusion-framework-cli@10.5.2
+  - @equinor/fusion-framework-react-app@6.0.1
+  - @equinor/fusion-framework-module-msal@4.0.1
+  - @equinor/fusion-framework-module-service-discovery@8.0.7
+  - @equinor/fusion-framework-react@7.4.1
+  - @equinor/fusion-framework@7.3.1
+
 ## 1.0.28
 
 ### Patch Changes

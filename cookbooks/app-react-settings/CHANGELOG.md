@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-settings
 
+## 1.0.2
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
 ## 1.0.1
 
 ### Patch Changes

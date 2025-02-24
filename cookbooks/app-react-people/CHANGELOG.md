@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.5.4
+
+### Patch Changes
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - fixed `useExhaustiveDependencies`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`68b180c`](https://github.com/equinor/fusion-framework/commit/68b180c687ad1939d4f3df185c634f5046a55f63), [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module-navigation@4.0.8
+
 ## 4.5.3
 
 ### Patch Changes
@@ -18,7 +29,7 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Cleaned up app config
 
-    Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.
+  Removed `app.config.*` from the cookbook apps to prevent confusion when using the cookbook apps as a template for new apps.
 
 ## 4.5.0
 
@@ -29,14 +40,14 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-navigation@4.0.7
+  - @equinor/fusion-framework-module-navigation@4.0.7
 
 ## 4.4.4
 
 ### Patch Changes
 
 - Updated dependencies [[`80cc4e9`](https://github.com/equinor/fusion-framework/commit/80cc4e95a8f2dd8e8aae9752412faefdb457e9e2)]:
-    - @equinor/fusion-framework-module-navigation@4.0.6
+  - @equinor/fusion-framework-module-navigation@4.0.6
 
 ## 4.4.3
 
@@ -44,10 +55,10 @@
 
 - [#2403](https://github.com/equinor/fusion-framework/pull/2403) [`67ea61d`](https://github.com/equinor/fusion-framework/commit/67ea61dad8f50e8b8b977008b26374c2f982eb4d) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.40.1 to 0.41.2
 
-    [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
+  [see EDS changelog](https://github.com/equinor/design-system/blob/develop/packages/eds-core-react/CHANGELOG.md)
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-navigation@4.0.5
+  - @equinor/fusion-framework-module-navigation@4.0.5
 
 ## 4.4.2
 
@@ -58,7 +69,7 @@
 - [#2350](https://github.com/equinor/fusion-framework/pull/2350) [`960ca34`](https://github.com/equinor/fusion-framework/commit/960ca34cae26f386e28c16bac00e7932f4f9199a) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @equinor/eds-core-react from 0.38.0 to 0.40.1
 
 - Updated dependencies [[`1a215c4`](https://github.com/equinor/fusion-framework/commit/1a215c45c97d2dfdc8127dc752ec21951bb048be)]:
-    - @equinor/fusion-framework-module-navigation@4.0.4
+  - @equinor/fusion-framework-module-navigation@4.0.4
 
 ## 4.4.1
 
@@ -67,7 +78,7 @@
 - [#2333](https://github.com/equinor/fusion-framework/pull/2333) [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1) Thanks [@odinr](https://github.com/odinr)! - Updated `TypeScript` to 5.5.3
 
 - Updated dependencies [[`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module-navigation@4.0.3
+  - @equinor/fusion-framework-module-navigation@4.0.3
 
 ## 4.4.0
 
@@ -75,17 +86,17 @@
 
 - [#2197](https://github.com/equinor/fusion-framework/pull/2197) [`5426b23`](https://github.com/equinor/fusion-framework/commit/5426b232656ce7a87517fae61e50bb43743e6372) Thanks [@odinr](https://github.com/odinr)! - - Added documentation and examples for using components from the `@equinor/fusion-react-person` package.
 
-    - Implemented a `useSearchPersons` hook to search for persons using the People API.
-    - Added a `searchPerson` function to perform person searches with an HTTP client.
-    - Created new types for the person search API response and error handling.
-    - Updated the `HomePage` component with an overview of working with the People API.
-    - Enhanced the `ListItemPage` component to fetch and display a list of persons based on a search query.
+  - Implemented a `useSearchPersons` hook to search for persons using the People API.
+  - Added a `searchPerson` function to perform person searches with an HTTP client.
+  - Created new types for the person search API response and error handling.
+  - Updated the `HomePage` component with an overview of working with the People API.
+  - Enhanced the `ListItemPage` component to fetch and display a list of persons based on a search query.
 
-    The `@equinor/fusion-framework-cookbook-app-react-people` package lacked documentation and examples for consuming the `@equinor/fusion-react-person` components. The changes aim to provide clear guidance and showcase how to interact with the People API to fetch and display person information.
+  The `@equinor/fusion-framework-cookbook-app-react-people` package lacked documentation and examples for consuming the `@equinor/fusion-react-person` components. The changes aim to provide clear guidance and showcase how to interact with the People API to fetch and display person information.
 
-    By adding the `useSearchPersons` hook and `searchPerson` function, developers how to implement functionality to their applications. The new types for the API response and error handling improve type safety and provide a structured way to handle different error scenarios.
+  By adding the `useSearchPersons` hook and `searchPerson` function, developers how to implement functionality to their applications. The new types for the API response and error handling improve type safety and provide a structured way to handle different error scenarios.
 
-    The updates to the `HomePage` and `ListItemPage` components demonstrate practical usage of the People API and components, making it easier for developers to understand and implement similar functionality in their own applications.
+  The updates to the `HomePage` and `ListItemPage` components demonstrate practical usage of the People API and components, making it easier for developers to understand and implement similar functionality in their own applications.
 
 ### Patch Changes
 
@@ -99,7 +110,7 @@
 - [#2182](https://github.com/equinor/fusion-framework/pull/2182) [`13d1ae4`](https://github.com/equinor/fusion-framework/commit/13d1ae4cf2147cd2a4527bad2a7023b4ac4b9bbb) Thanks [@odinr](https://github.com/odinr)! - updated all cookbooks to use `workspace:^` as a dependency version.
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-navigation@4.0.2
+  - @equinor/fusion-framework-module-navigation@4.0.2
 
 ## 4.3.3
 
@@ -107,7 +118,7 @@
 
 - [#2135](https://github.com/equinor/fusion-framework/pull/2135) [`3cd63d5`](https://github.com/equinor/fusion-framework/commit/3cd63d58e4e3ffd15bccdebaa94b391e3e3d12f0) Thanks [@odinr](https://github.com/odinr)! - Updated the React people cookbook to handle content height correctly in the dev portal
 
-    The React people cookbook previously had an issue where the content height was not calculated correctly when running in the dev portal environment. This changeset fixes that issue by adjusting the height calculation logic to work properly in the dev portal.
+  The React people cookbook previously had an issue where the content height was not calculated correctly when running in the dev portal environment. This changeset fixes that issue by adjusting the height calculation logic to work properly in the dev portal.
 
 ## 4.3.2
 
@@ -116,7 +127,7 @@
 - [#2098](https://github.com/equinor/fusion-framework/pull/2098) [`5093391`](https://github.com/equinor/fusion-framework/commit/5093391eabda84873041ee89632f26770734b03c) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore(deps): bump @equinor/eds-core-react from 0.36.1 to 0.37.0
 
 - Updated dependencies [[`0f95a74`](https://github.com/equinor/fusion-framework/commit/0f95a74b78cb5e86bc14c4a0f1f1715415746ef5)]:
-    - @equinor/fusion-framework-module-navigation@4.0.1
+  - @equinor/fusion-framework-module-navigation@4.0.1
 
 ## 4.3.1
 
@@ -133,7 +144,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module-navigation@4.0.0
+  - @equinor/fusion-framework-module-navigation@4.0.0
 
 ## 4.2.2
 
@@ -158,35 +169,35 @@
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-navigation@3.1.4
+  - @equinor/fusion-framework-module-navigation@3.1.4
 
 ## 4.1.6
 
 ### Patch Changes
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module-navigation@3.1.3
+  - @equinor/fusion-framework-module-navigation@3.1.3
 
 ## 4.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`a8f0f061`](https://github.com/equinor/fusion-framework/commit/a8f0f061dbde9efb3e2faf11fdb9c886d2277723)]:
-    - @equinor/fusion-framework-module-navigation@3.1.2
+  - @equinor/fusion-framework-module-navigation@3.1.2
 
 ## 4.1.4
 
 ### Patch Changes
 
 - Updated dependencies [[`e2ec89f4`](https://github.com/equinor/fusion-framework/commit/e2ec89f457135037e2a333a61ba546fee6d99cd8)]:
-    - @equinor/fusion-framework-module-navigation@3.1.1
+  - @equinor/fusion-framework-module-navigation@3.1.1
 
 ## 4.1.3
 
 ### Patch Changes
 
 - Updated dependencies [[`6f542d4c`](https://github.com/equinor/fusion-framework/commit/6f542d4c7c01ae94c28b7e82efba800a902a7633)]:
-    - @equinor/fusion-framework-module-navigation@3.1.0
+  - @equinor/fusion-framework-module-navigation@3.1.0
 
 ## 4.1.2
 
@@ -218,15 +229,15 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 ## 4.0.21
 

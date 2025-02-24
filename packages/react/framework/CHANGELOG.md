@@ -1,5 +1,20 @@
 # Change Log
 
+## 7.4.1
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module-feature-flag@1.1.13
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-framework-react-module@3.1.7
+  - @equinor/fusion-observable@8.4.5
+  - @equinor/fusion-framework-react-module-signalr@3.0.22
+  - @equinor/fusion-framework@7.3.1
+  - @equinor/fusion-framework-react-module-http@8.0.2
+
 ## 7.4.0
 
 ### Minor Changes
@@ -9,77 +24,77 @@
 ### Patch Changes
 
 - Updated dependencies [[`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa)]:
-    - @equinor/fusion-framework@7.3.0
-    - @equinor/fusion-framework-module-feature-flag@1.1.12
-    - @equinor/fusion-framework-react-module-http@8.0.1
-    - @equinor/fusion-framework-react-module-signalr@3.0.21
+  - @equinor/fusion-framework@7.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.12
+  - @equinor/fusion-framework-react-module-http@8.0.1
+  - @equinor/fusion-framework-react-module-signalr@3.0.21
 
 ## 7.3.8
 
 ### Patch Changes
 
 - Updated dependencies [[`7f4a381`](https://github.com/equinor/fusion-framework/commit/7f4a381ee3594a8cc1c77f0c13c1ba70223d8bf1)]:
-    - @equinor/fusion-observable@8.4.4
-    - @equinor/fusion-framework-module-feature-flag@1.1.12
-    - @equinor/fusion-framework@7.2.16
-    - @equinor/fusion-framework-react-module-signalr@3.0.20
+  - @equinor/fusion-observable@8.4.4
+  - @equinor/fusion-framework-module-feature-flag@1.1.12
+  - @equinor/fusion-framework@7.2.16
+  - @equinor/fusion-framework-react-module-signalr@3.0.20
 
 ## 7.3.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.15
-    - @equinor/fusion-framework-module-feature-flag@1.1.11
+  - @equinor/fusion-framework@7.2.15
+  - @equinor/fusion-framework-module-feature-flag@1.1.11
 
 ## 7.3.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.14
+  - @equinor/fusion-framework@7.2.14
 
 ## 7.3.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.13
-    - @equinor/fusion-framework-react-module-signalr@3.0.19
+  - @equinor/fusion-framework@7.2.13
+  - @equinor/fusion-framework-react-module-signalr@3.0.19
 
 ## 7.3.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.12
+  - @equinor/fusion-framework@7.2.12
 
 ## 7.3.3
 
 ### Patch Changes
 
 - Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
-    - @equinor/fusion-framework-module-feature-flag@1.1.11
-    - @equinor/fusion-observable@8.4.3
-    - @equinor/fusion-framework@7.2.11
-    - @equinor/fusion-framework-react-module-signalr@3.0.18
+  - @equinor/fusion-framework-module-feature-flag@1.1.11
+  - @equinor/fusion-observable@8.4.3
+  - @equinor/fusion-framework@7.2.11
+  - @equinor/fusion-framework-react-module-signalr@3.0.18
 
 ## 7.3.2
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.10
+  - @equinor/fusion-framework@7.2.10
 
 ## 7.3.1
 
 ### Patch Changes
 
 - Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
-    - @equinor/fusion-framework-module-feature-flag@1.1.10
-    - @equinor/fusion-observable@8.4.2
-    - @equinor/fusion-framework@7.2.9
-    - @equinor/fusion-framework-react-module-signalr@3.0.17
+  - @equinor/fusion-framework-module-feature-flag@1.1.10
+  - @equinor/fusion-observable@8.4.2
+  - @equinor/fusion-framework@7.2.9
+  - @equinor/fusion-framework-react-module-signalr@3.0.17
 
 ## 7.3.0
 
@@ -87,93 +102,93 @@
 
 - [#2494](https://github.com/equinor/fusion-framework/pull/2494) [`e11ad64`](https://github.com/equinor/fusion-framework/commit/e11ad64a42210443bdfd9ab9eb2fb95e7e345251) Thanks [@odinr](https://github.com/odinr)! - Adjusted module to the new app service API.
 
-    > [!WARNING]
-    > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
+  > [!WARNING]
+  > This will introduce breaking changes to the configuration of `AppConfigurator.client`.
 
-    **Added**
+  **Added**
 
-    - Introduced `AppClient` class to handle application manifest and configuration queries.
-    - Added `zod` to validate the application manifest.
+  - Introduced `AppClient` class to handle application manifest and configuration queries.
+  - Added `zod` to validate the application manifest.
 
-    **Changed**
+  **Changed**
 
-    - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
-    - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
-    - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
+  - Updated `AppModuleProvider` to use `AppClient` for fetching application manifests and configurations.
+  - Modified `AppConfigurator` to utilize `AppClient` for client configuration.
+  - Updated `useApps` hook with new input parameter for `filterByCurrentUser` in `fusion-framework-react`.
 
-    **Migration**
+  **Migration**
 
-    before:
+  before:
 
-    ```ts
-    configurator.setClient({
-        getAppManifest: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-        getAppManifests: {
-            client: {
-                fn: () => httpClient.json$<ApiApp[]>(`/apps`),
-            },
-            key: () => `all-apps`,
-        },
-        getAppConfig: {
-            client: {
-                fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
-            },
-            key: ({ appKey }) => appKey,
-        },
-    });
-    ```
+  ```ts
+  configurator.setClient({
+    getAppManifest: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+    getAppManifests: {
+      client: {
+        fn: () => httpClient.json$<ApiApp[]>(`/apps`),
+      },
+      key: () => `all-apps`,
+    },
+    getAppConfig: {
+      client: {
+        fn: ({ appKey }) => httpClient.json$<ApiApp>(`/apps/${appKey}/config`),
+      },
+      key: ({ appKey }) => appKey,
+    },
+  });
+  ```
 
-    after:
+  after:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    configurator.setClient(new AppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  configurator.setClient(new AppClient());
+  ```
 
-    custom client implementation:
+  custom client implementation:
 
-    ```ts
-    import { AppClient } from `@equinor/fusion-framework-module-app`;
-    class CustomAppClient implements IAppClient { ... }
-    configurator.setClient(new CustomAppClient());
-    ```
+  ```ts
+  import { AppClient } from `@equinor/fusion-framework-module-app`;
+  class CustomAppClient implements IAppClient { ... }
+  configurator.setClient(new CustomAppClient());
+  ```
 
 ## 7.2.3
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.8
-    - @equinor/fusion-framework-module-feature-flag@1.1.9
-    - @equinor/fusion-framework-react-module-http@8.0.0
-    - @equinor/fusion-framework-react-module-signalr@3.0.16
+  - @equinor/fusion-framework@7.2.8
+  - @equinor/fusion-framework-module-feature-flag@1.1.9
+  - @equinor/fusion-framework-react-module-http@8.0.0
+  - @equinor/fusion-framework-react-module-signalr@3.0.16
 
 ## 7.2.2
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
-    - @equinor/fusion-framework-react-module-signalr@3.0.15
-    - @equinor/fusion-framework@7.2.7
-    - @equinor/fusion-framework-module-feature-flag@1.1.9
-    - @equinor/fusion-framework-react-module-http@7.0.0
-    - @equinor/fusion-framework-react-module@3.1.6
+  - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-react-module-signalr@3.0.15
+  - @equinor/fusion-framework@7.2.7
+  - @equinor/fusion-framework-module-feature-flag@1.1.9
+  - @equinor/fusion-framework-react-module-http@7.0.0
+  - @equinor/fusion-framework-react-module@3.1.6
 
 ## 7.2.1
 
 ### Patch Changes
 
 - Updated dependencies [[`f7c143d`](https://github.com/equinor/fusion-framework/commit/f7c143d44a88cc25c377d3ce8c3d1744114b891d)]:
-    - @equinor/fusion-observable@8.4.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.8
-    - @equinor/fusion-framework@7.2.6
-    - @equinor/fusion-framework-react-module-signalr@3.0.14
+  - @equinor/fusion-observable@8.4.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.8
+  - @equinor/fusion-framework@7.2.6
+  - @equinor/fusion-framework-react-module-signalr@3.0.14
 
 ## 7.2.0
 
@@ -181,50 +196,50 @@
 
 - [#2425](https://github.com/equinor/fusion-framework/pull/2425) [`843edd9`](https://github.com/equinor/fusion-framework/commit/843edd96f2a01ebd814766105902977cdc1cdf8e) Thanks [@odinr](https://github.com/odinr)! - These changes ensure that the `Framework` component and `createFrameworkProvider` function are consistent with the updated configuration approach and support module instances from the parent context.
 
-    **Updated Framework Component:**
+  **Updated Framework Component:**
 
-    - Added `useModules` hook to import modules from the parent context.
-    - Updated the `createFrameworkProvider` function to accept a `ref` parameter for module instances.
+  - Added `useModules` hook to import modules from the parent context.
+  - Updated the `createFrameworkProvider` function to accept a `ref` parameter for module instances.
 
-    **Updated create-framework-provider Function:**
+  **Updated create-framework-provider Function:**
 
-    - Added `ref` parameter to the `createFrameworkProvider` function to support module instances.
-    - Updated the example usage in the documentation to reflect the changes.
+  - Added `ref` parameter to the `createFrameworkProvider` function to support module instances.
+  - Updated the example usage in the documentation to reflect the changes.
 
-    **Misc:**
+  **Misc:**
 
-    - Replaced deprecated import of `FusionConfigurator` with `FrameworkConfigurator` (renaming).
+  - Replaced deprecated import of `FusionConfigurator` with `FrameworkConfigurator` (renaming).
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-framework@7.2.5
-    - @equinor/fusion-framework-module-feature-flag@1.1.7
-    - @equinor/fusion-framework-react-module@3.1.5
-    - @equinor/fusion-framework-react-module-http@6.0.3
-    - @equinor/fusion-framework-react-module-signalr@3.0.13
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-framework@7.2.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.7
+  - @equinor/fusion-framework-react-module@3.1.5
+  - @equinor/fusion-framework-react-module-http@6.0.3
+  - @equinor/fusion-framework-react-module-signalr@3.0.13
 
 ## 7.1.4
 
 ### Patch Changes
 
 - Updated dependencies [[`bbde502`](https://github.com/equinor/fusion-framework/commit/bbde502e638f459379f63968febbc97ebe282b76), [`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`e092f75`](https://github.com/equinor/fusion-framework/commit/e092f7599f1f2e0e0676a9f10565299272813594), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-observable@8.4.0
-    - @equinor/fusion-framework-module@4.3.3
-    - @equinor/fusion-framework-module-feature-flag@1.1.6
-    - @equinor/fusion-framework@7.2.4
-    - @equinor/fusion-framework-react-module-http@6.0.2
-    - @equinor/fusion-framework-react-module@3.1.4
-    - @equinor/fusion-framework-react-module-signalr@3.0.12
+  - @equinor/fusion-observable@8.4.0
+  - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.6
+  - @equinor/fusion-framework@7.2.4
+  - @equinor/fusion-framework-react-module-http@6.0.2
+  - @equinor/fusion-framework-react-module@3.1.4
+  - @equinor/fusion-framework-react-module-signalr@3.0.12
 
 ## 7.1.3
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.2.3
-    - @equinor/fusion-framework-module-feature-flag@1.1.5
+  - @equinor/fusion-framework@7.2.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.5
 
 ## 7.1.2
 
@@ -234,65 +249,65 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-framework-react-module-signalr@3.0.11
-    - @equinor/fusion-framework-module-feature-flag@1.1.5
-    - @equinor/fusion-framework-react-module@3.1.3
-    - @equinor/fusion-framework-react-module-http@6.0.1
-    - @equinor/fusion-observable@8.3.3
-    - @equinor/fusion-framework@7.2.2
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-framework-react-module-signalr@3.0.11
+  - @equinor/fusion-framework-module-feature-flag@1.1.5
+  - @equinor/fusion-framework-react-module@3.1.3
+  - @equinor/fusion-framework-react-module-http@6.0.1
+  - @equinor/fusion-observable@8.3.3
+  - @equinor/fusion-framework@7.2.2
 
 ## 7.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`97e41a5`](https://github.com/equinor/fusion-framework/commit/97e41a55d05644b6684c6cb165b65b115bd416eb)]:
-    - @equinor/fusion-observable@8.3.2
-    - @equinor/fusion-framework-module-feature-flag@1.1.4
-    - @equinor/fusion-framework@7.2.1
-    - @equinor/fusion-framework-react-module-signalr@3.0.10
+  - @equinor/fusion-observable@8.3.2
+  - @equinor/fusion-framework-module-feature-flag@1.1.4
+  - @equinor/fusion-framework@7.2.1
+  - @equinor/fusion-framework-react-module-signalr@3.0.10
 
 ## 7.1.0
 
@@ -300,94 +315,94 @@
 
 - [#2181](https://github.com/equinor/fusion-framework/pull/2181) [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8) Thanks [@odinr](https://github.com/odinr)! - If you were previously using the `blob` or `blob# Change Log methods from the `IHttpClient`and expecting a`Blob`result, you must now use the new`BlobResult` type, which includes the filename (if available) and the blob data.
 
-    **Migration Guide:**
+  **Migration Guide:**
 
-    ```typescript
-    // Before
-    const blob = await httpClient.blob('/path/to/blob');
-    console.log(blob); // Blob instance
+  ```typescript
+  // Before
+  const blob = await httpClient.blob("/path/to/blob");
+  console.log(blob); // Blob instance
 
-    // After
-    const blobResult = await httpClient.blob<Blob>('/path/to/blob');
-    console.log(blobResult.filename); // 'example.pdf'
-    console.log(blobResult.blob); // Blob instance
-    ```
+  // After
+  const blobResult = await httpClient.blob<Blob>("/path/to/blob");
+  console.log(blobResult.filename); // 'example.pdf'
+  console.log(blobResult.blob); // Blob instance
+  ```
 
 ### Patch Changes
 
 - Updated dependencies [[`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8), [`72f48ec`](https://github.com/equinor/fusion-framework/commit/72f48eccc7262f6c419c60cc32f0dc829601ceab)]:
-    - @equinor/fusion-framework@7.2.0
-    - @equinor/fusion-observable@8.3.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.3
-    - @equinor/fusion-framework-react-module-http@6.0.0
-    - @equinor/fusion-framework-react-module-signalr@3.0.9
+  - @equinor/fusion-framework@7.2.0
+  - @equinor/fusion-observable@8.3.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.3
+  - @equinor/fusion-framework-react-module-http@6.0.0
+  - @equinor/fusion-framework-react-module-signalr@3.0.9
 
 ## 7.0.8
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-framework@7.1.8
-    - @equinor/fusion-framework-module-feature-flag@1.1.2
-    - @equinor/fusion-framework-react-module@3.1.2
-    - @equinor/fusion-framework-react-module-http@5.0.4
-    - @equinor/fusion-framework-react-module-signalr@3.0.8
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-framework@7.1.8
+  - @equinor/fusion-framework-module-feature-flag@1.1.2
+  - @equinor/fusion-framework-react-module@3.1.2
+  - @equinor/fusion-framework-react-module-http@5.0.4
+  - @equinor/fusion-framework-react-module-signalr@3.0.8
 
 ## 7.0.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.1.7
-    - @equinor/fusion-framework-react-module-signalr@3.0.7
+  - @equinor/fusion-framework@7.1.7
+  - @equinor/fusion-framework-react-module-signalr@3.0.7
 
 ## 7.0.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.1.6
-    - @equinor/fusion-framework-react-module-signalr@3.0.6
+  - @equinor/fusion-framework@7.1.6
+  - @equinor/fusion-framework-react-module-signalr@3.0.6
 
 ## 7.0.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework@7.1.5
-    - @equinor/fusion-framework-react-module-signalr@3.0.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework@7.1.5
+  - @equinor/fusion-framework-react-module-signalr@3.0.5
 
 ## 7.0.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.1.4
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework-react-module-http@5.0.3
-    - @equinor/fusion-framework-react-module-signalr@3.0.4
+  - @equinor/fusion-framework@7.1.4
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework-react-module-http@5.0.3
+  - @equinor/fusion-framework-react-module-signalr@3.0.4
 
 ## 7.0.3
 
 ### Patch Changes
 
 - Updated dependencies [[`572a199`](https://github.com/equinor/fusion-framework/commit/572a199b8b3070af16d76238aa30d7aaf36a115a)]:
-    - @equinor/fusion-observable@8.3.0
-    - @equinor/fusion-framework-module-feature-flag@1.1.1
-    - @equinor/fusion-framework@7.1.3
-    - @equinor/fusion-framework-react-module-signalr@3.0.3
+  - @equinor/fusion-observable@8.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.1
+  - @equinor/fusion-framework@7.1.3
+  - @equinor/fusion-framework-react-module-signalr@3.0.3
 
 ## 7.0.2
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.1.2
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
-    - @equinor/fusion-framework-react-module-http@5.0.2
-    - @equinor/fusion-framework-react-module-signalr@3.0.2
+  - @equinor/fusion-framework@7.1.2
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-framework-react-module-http@5.0.2
+  - @equinor/fusion-framework-react-module-signalr@3.0.2
 
 ## 7.0.1
 
@@ -396,11 +411,11 @@
 - [#1981](https://github.com/equinor/fusion-framework/pull/1981) [`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc) Thanks [@eikeland](https://github.com/eikeland)! - Align package exports with node10+ documentation.
 
 - Updated dependencies [[`3d068b5`](https://github.com/equinor/fusion-framework/commit/3d068b5a7b214b62fcae5546f08830ea90f872dc)]:
-    - @equinor/fusion-framework-react-module-signalr@3.0.1
-    - @equinor/fusion-framework-react-module@3.1.1
-    - @equinor/fusion-framework@7.1.1
-    - @equinor/fusion-framework-react-module-http@5.0.1
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-framework-react-module-signalr@3.0.1
+  - @equinor/fusion-framework-react-module@3.1.1
+  - @equinor/fusion-framework@7.1.1
+  - @equinor/fusion-framework-react-module-http@5.0.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
 
 ## 7.0.0
 
@@ -411,34 +426,34 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-framework-react-module-signalr@3.0.0
-    - @equinor/fusion-framework-module-feature-flag@1.1.0
-    - @equinor/fusion-framework-react-module@3.1.0
-    - @equinor/fusion-framework-react-module-http@5.0.0
-    - @equinor/fusion-observable@8.2.0
-    - @equinor/fusion-framework@7.1.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-react-module-signalr@3.0.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.0
+  - @equinor/fusion-framework-react-module@3.1.0
+  - @equinor/fusion-framework-react-module-http@5.0.0
+  - @equinor/fusion-observable@8.2.0
+  - @equinor/fusion-framework@7.1.0
 
 ## 6.0.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.33
+  - @equinor/fusion-framework@7.0.33
 
 ## 6.0.4
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.32
+  - @equinor/fusion-framework@7.0.32
 
 ## 6.0.3
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.31
+  - @equinor/fusion-framework@7.0.31
 
 ## 6.0.2
 
@@ -447,12 +462,12 @@
 - [#1791](https://github.com/equinor/fusion-framework/pull/1791) [`2a813bc`](https://github.com/equinor/fusion-framework/commit/2a813bc0a32f53e7515f16f8b5cba1cf1e5018a3) Thanks [@yusijs](https://github.com/yusijs)! - propagate error from useApps if it fails
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
-    - @equinor/fusion-framework@7.0.30
-    - @equinor/fusion-framework-module-feature-flag@1.0.2
-    - @equinor/fusion-framework-react-module@3.0.8
-    - @equinor/fusion-framework-react-module-http@4.0.6
-    - @equinor/fusion-framework-react-module-signalr@2.0.18
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework@7.0.30
+  - @equinor/fusion-framework-module-feature-flag@1.0.2
+  - @equinor/fusion-framework-react-module@3.0.8
+  - @equinor/fusion-framework-react-module-http@4.0.6
+  - @equinor/fusion-framework-react-module-signalr@2.0.18
 
 ## 6.0.1
 
@@ -460,16 +475,16 @@
 
 - [#1766](https://github.com/equinor/fusion-framework/pull/1766) [`fdbe12f`](https://github.com/equinor/fusion-framework/commit/fdbe12f258aeb98d91094f16f2d8ce229d7b13ee) Thanks [@odinr](https://github.com/odinr)! - - The return type of the `useCurrentApp` function has been changed. The `currentApp` property can now be `undefined` or `null`, in addition to `CurrentApp<TModules, TEnv>`.
 
-    - The initial value for `useObservableState` has been set to `provider.current`.
-    - The assignment of `module` has been updated to handle the case where `modules` is `undefined`.
-    - The return type of the `useCurrentAppModules` function has been changed. The `modules` property can now be `undefined` or `null`, in addition to `AppModulesInstance<TModules>`.
-    - The initial value for `useObservableState` has been updated to handle the case where `currentApp` is `undefined`.
+  - The initial value for `useObservableState` has been set to `provider.current`.
+  - The assignment of `module` has been updated to handle the case where `modules` is `undefined`.
+  - The return type of the `useCurrentAppModules` function has been changed. The `modules` property can now be `undefined` or `null`, in addition to `AppModulesInstance<TModules>`.
+  - The initial value for `useObservableState` has been updated to handle the case where `currentApp` is `undefined`.
 
 - Updated dependencies [[`036546f`](https://github.com/equinor/fusion-framework/commit/036546f2e3d9c0d289c7145da84e940673027b5e), [`d0c0c6a`](https://github.com/equinor/fusion-framework/commit/d0c0c6a971a478e3f447663bf50b4e3a7cb1517e)]:
-    - @equinor/fusion-observable@8.1.5
-    - @equinor/fusion-framework-module-feature-flag@1.0.1
-    - @equinor/fusion-framework@7.0.29
-    - @equinor/fusion-framework-react-module-signalr@2.0.17
+  - @equinor/fusion-observable@8.1.5
+  - @equinor/fusion-framework-module-feature-flag@1.0.1
+  - @equinor/fusion-framework@7.0.29
+  - @equinor/fusion-framework-react-module-signalr@2.0.17
 
 ## 6.0.0
 
@@ -477,61 +492,61 @@
 
 - [#1747](https://github.com/equinor/fusion-framework/pull/1747) [`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e) Thanks [@odinr](https://github.com/odinr)! - refactor framework feature flag hooks
 
-    - useCurrentAppFeatures
-    - _useFeature (internal)_
-    - _useFeatures (internal)_
-    - useFrameworkFeature
-    - useFrameworkFeatures
+  - useCurrentAppFeatures
+  - _useFeature (internal)_
+  - _useFeatures (internal)_
+  - useFrameworkFeature
+  - useFrameworkFeatures
 
-    > [!CAUTION] > `useCurrentAppModules` does no longer return `Observable<AppModulesInstance>`, but current state of `AppModulesInstance | null`
+  > [!CAUTION] > `useCurrentAppModules` does no longer return `Observable<AppModulesInstance>`, but current state of `AppModulesInstance | null`
 
 ### Patch Changes
 
 - Updated dependencies [[`8b031c3`](https://github.com/equinor/fusion-framework/commit/8b031c31f314deeffdf395fc847e4279b61aab7e)]:
-    - @equinor/fusion-framework-module-feature-flag@1.0.0
+  - @equinor/fusion-framework-module-feature-flag@1.0.0
 
 ## 5.3.9
 
 ### Patch Changes
 
 - Updated dependencies [[`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d), [`1918c82`](https://github.com/equinor/fusion-framework/commit/1918c8228bc7158c4c358aa8f5688342e3b11b1d)]:
-    - @equinor/fusion-framework-module-feature-flag@0.0.1
+  - @equinor/fusion-framework-module-feature-flag@0.0.1
 
 ## 5.3.8
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.28
-    - @equinor/fusion-framework-react-module-http@4.0.5
-    - @equinor/fusion-framework-react-module-signalr@2.0.16
+  - @equinor/fusion-framework@7.0.28
+  - @equinor/fusion-framework-react-module-http@4.0.5
+  - @equinor/fusion-framework-react-module-signalr@2.0.16
 
 ## 5.3.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.27
-    - @equinor/fusion-framework-react-module-http@4.0.4
-    - @equinor/fusion-framework-react-module-signalr@2.0.15
+  - @equinor/fusion-framework@7.0.27
+  - @equinor/fusion-framework-react-module-http@4.0.4
+  - @equinor/fusion-framework-react-module-signalr@2.0.15
 
 ## 5.3.6
 
 ### Patch Changes
 
 - Updated dependencies [[`cce198d`](https://github.com/equinor/fusion-framework/commit/cce198d6a91fb7912265d4383246dc405cf17a17), [`f85316f`](https://github.com/equinor/fusion-framework/commit/f85316f2344258896a77ef602bd4047dfa553788)]:
-    - @equinor/fusion-framework-react-module-http@4.0.3
-    - @equinor/fusion-framework@7.0.26
-    - @equinor/fusion-framework-react-module-signalr@2.0.14
+  - @equinor/fusion-framework-react-module-http@4.0.3
+  - @equinor/fusion-framework@7.0.26
+  - @equinor/fusion-framework-react-module-signalr@2.0.14
 
 ## 5.3.5
 
 ### Patch Changes
 
 - Updated dependencies [[`6ffaabf`](https://github.com/equinor/fusion-framework/commit/6ffaabf120704f2f4f4074a0fa0a17faf77fe22a)]:
-    - @equinor/fusion-observable@8.1.4
-    - @equinor/fusion-framework@7.0.25
-    - @equinor/fusion-framework-react-module-signalr@2.0.13
+  - @equinor/fusion-observable@8.1.4
+  - @equinor/fusion-framework@7.0.25
+  - @equinor/fusion-framework-react-module-signalr@2.0.13
 
 ## 5.3.4
 
@@ -540,28 +555,28 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-observable@8.1.3
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-framework@7.0.24
-    - @equinor/fusion-framework-react-module-signalr@2.0.12
-    - @equinor/fusion-framework-react-module@3.0.7
-    - @equinor/fusion-framework-react-module-http@4.0.2
+  - @equinor/fusion-observable@8.1.3
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework@7.0.24
+  - @equinor/fusion-framework-react-module-signalr@2.0.12
+  - @equinor/fusion-framework-react-module@3.0.7
+  - @equinor/fusion-framework-react-module-http@4.0.2
 
 ## 5.3.3
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.23
-    - @equinor/fusion-framework-react-module-signalr@2.0.11
+  - @equinor/fusion-framework@7.0.23
+  - @equinor/fusion-framework-react-module-signalr@2.0.11
 
 ## 5.3.2
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.22
-    - @equinor/fusion-framework-react-module-signalr@2.0.10
+  - @equinor/fusion-framework@7.0.22
+  - @equinor/fusion-framework-react-module-signalr@2.0.10
 
 ## 5.3.1
 
@@ -570,12 +585,12 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework@7.0.21
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-framework-react-module-http@4.0.1
-    - @equinor/fusion-framework-react-module@3.0.6
-    - @equinor/fusion-framework-react-module-signalr@2.0.9
-    - @equinor/fusion-observable@8.1.2
+  - @equinor/fusion-framework@7.0.21
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-framework-react-module-http@4.0.1
+  - @equinor/fusion-framework-react-module@3.0.6
+  - @equinor/fusion-framework-react-module-signalr@2.0.9
+  - @equinor/fusion-observable@8.1.2
 
 ## 5.3.0
 
@@ -583,41 +598,41 @@
 
 - [`3896fbec`](https://github.com/equinor/fusion-framework/commit/3896fbec3458dbe2ebd66e772465d5f89cd20658) Thanks [@odinr](https://github.com/odinr)! - Create module provider when creating framework provider
 
-    `useModule(...)` did not work previously within framework (portal) context since no context provider was created
+  `useModule(...)` did not work previously within framework (portal) context since no context provider was created
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.20
-    - @equinor/fusion-framework-react-module-http@4.0.0
-    - @equinor/fusion-framework-react-module-signalr@2.0.8
+  - @equinor/fusion-framework@7.0.20
+  - @equinor/fusion-framework-react-module-http@4.0.0
+  - @equinor/fusion-framework-react-module-signalr@2.0.8
 
 ## 5.2.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.19
-    - @equinor/fusion-framework-react-module-signalr@2.0.7
+  - @equinor/fusion-framework@7.0.19
+  - @equinor/fusion-framework-react-module-signalr@2.0.7
 
 ## 5.2.6
 
 ### Patch Changes
 
 - Updated dependencies [[`6f64d1aa`](https://github.com/equinor/fusion-framework/commit/6f64d1aa5e44af37f0abd76cef36e87761134760), [`758eaaf4`](https://github.com/equinor/fusion-framework/commit/758eaaf436ae28d180e7d91818b41abe0d9624c4), [`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-observable@8.1.1
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-framework@7.0.18
-    - @equinor/fusion-framework-react-module-http@3.0.5
-    - @equinor/fusion-framework-react-module-signalr@2.0.6
+  - @equinor/fusion-observable@8.1.1
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework@7.0.18
+  - @equinor/fusion-framework-react-module-http@3.0.5
+  - @equinor/fusion-framework-react-module-signalr@2.0.6
 
 ## 5.2.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework@7.0.17
-    - @equinor/fusion-framework-react-module-signalr@2.0.5
+  - @equinor/fusion-framework@7.0.17
+  - @equinor/fusion-framework-react-module-signalr@2.0.5
 
 ## 5.2.4
 
@@ -625,24 +640,24 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1125](https://github.com/equinor/fusion-framework/pull/1125) [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump react and @types/react to react 18.2
 
-    only dev deps updated should not affect any consumers
+  only dev deps updated should not affect any consumers
 
-    see [react changelog](https://github.com/facebook/react/releases) for details
+  see [react changelog](https://github.com/facebook/react/releases) for details
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`8e7ae77c`](https://github.com/equinor/fusion-framework/commit/8e7ae77cfcadddc4b59e6bb57e620b84e5e1c647), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-react-module-signalr@2.0.4
-    - @equinor/fusion-framework-react-module-http@3.0.4
-    - @equinor/fusion-observable@8.1.0
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-framework@7.0.16
+  - @equinor/fusion-framework-react-module-signalr@2.0.4
+  - @equinor/fusion-framework-react-module-http@3.0.4
+  - @equinor/fusion-observable@8.1.0
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework@7.0.16
 
 ## 5.2.3
 
@@ -650,7 +665,7 @@
 
 - [#1047](https://github.com/equinor/fusion-framework/pull/1047) [`1a2880d2`](https://github.com/equinor/fusion-framework/commit/1a2880d2e4c80ac5ce08f63ca3699fe77e4b565c) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump @typescript-eslint/eslint-plugin from 5.59.11 to 6.1.0
 
-    only style semantics updated
+  only style semantics updated
 
 ## 5.2.2
 
@@ -659,7 +674,7 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework@7.0.15
+  - @equinor/fusion-framework@7.0.15
 
 ## 5.2.1
 
@@ -667,7 +682,7 @@
 
 - [#943](https://github.com/equinor/fusion-framework/pull/943) [`6fb3fb86`](https://github.com/equinor/fusion-framework/commit/6fb3fb8610f5ed5777d13bde71d8d92b0da31d8a) Thanks [@odinr](https://github.com/odinr)! - update typing to typescript 5
 
-    provider from `createFrameworkProvider` was missing typehint of children
+  provider from `createFrameworkProvider` was missing typehint of children
 
 ## 5.2.0
 
@@ -675,14 +690,14 @@
 
 - [#927](https://github.com/equinor/fusion-framework/pull/927) [`8bc4c5d6`](https://github.com/equinor/fusion-framework/commit/8bc4c5d6ed900e424efcab5572047c106d7ec04a) Thanks [@odinr](https://github.com/odinr)! - Create and expose interface for App
 
-    - deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
+  - deprecate [AppModuleProvider.createApp](https://github.com/equinor/fusion-framework/blob/cf08d5ae3cef473e5025fd973a2a7a45a3b22dee/packages/modules/app/src/AppModuleProvider.ts#L171)
 
-    this should not create any breaking changes since apps was only created from provider.
-    if the class is still needed it can be imported:
+  this should not create any breaking changes since apps was only created from provider.
+  if the class is still needed it can be imported:
 
-    ```ts
-    import { App } from '@equinor/fusion-framework-module-app/app';
-    ```
+  ```ts
+  import { App } from "@equinor/fusion-framework-module-app/app";
+  ```
 
 ## 5.1.4
 
@@ -690,14 +705,14 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework@7.0.14
-    - @equinor/fusion-framework-react-module-context@6.0.9
-    - @equinor/fusion-framework-react-module-http@3.0.3
+  - @equinor/fusion-framework@7.0.14
+  - @equinor/fusion-framework-react-module-context@6.0.9
+  - @equinor/fusion-framework-react-module-http@3.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

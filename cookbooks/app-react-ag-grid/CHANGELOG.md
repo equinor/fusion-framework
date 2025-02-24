@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.6.7
+
+### Patch Changes
+
+- [#2855](https://github.com/equinor/fusion-framework/pull/2855) [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1) Thanks [@odinr](https://github.com/odinr)! - fixed `useExhaustiveDependencies`
+
+- [#2850](https://github.com/equinor/fusion-framework/pull/2850) [`44bf009`](https://github.com/equinor/fusion-framework/commit/44bf00943dc585ad646d5f271e6767662abae2b1) Thanks [@odinr](https://github.com/odinr)! - refactored code to conform with Biome `useButtonType`
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`c1c9dfa`](https://github.com/equinor/fusion-framework/commit/c1c9dfa5bf0323ab4e146c45c475fa4f6af61088), [`811f1a0`](https://github.com/equinor/fusion-framework/commit/811f1a0139ff4d1b0c3fba1ec2b77cc84ba080d1), [`78ec0ed`](https://github.com/equinor/fusion-framework/commit/78ec0edcf9d3578a79654696c6fdaaefd59b5fe4), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d), [`6961024`](https://github.com/equinor/fusion-framework/commit/6961024f4ea330ac5d742037623834ee95b05b2b)]:
+  - @equinor/fusion-framework-cli@10.5.2
+  - @equinor/fusion-framework-react-app@6.0.1
+  - @equinor/fusion-framework-react-ag-grid@33.1.0
+
 ## 0.6.6
 
 ### Patch Changes

@@ -1,46 +1,57 @@
 # Change Log
 
+## 8.0.7
+
+### Patch Changes
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`2fe6241`](https://github.com/equinor/fusion-framework/commit/2fe624186640c3b30079c7d76f0e3af65f64f5d2), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+  - @equinor/fusion-framework-module-http@6.2.2
+  - @equinor/fusion-query@5.2.2
+
 ## 8.0.6
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-http@6.2.1
+  - @equinor/fusion-framework-module-http@6.2.1
 
 ## 8.0.5
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.2.1
+  - @equinor/fusion-query@5.2.1
 
 ## 8.0.4
 
 ### Patch Changes
 
 - Updated dependencies [[`a965fbe`](https://github.com/equinor/fusion-framework/commit/a965fbeb9544b74f7d7b4aaa1e57c50d2ae4a564)]:
-    - @equinor/fusion-query@5.2.0
+  - @equinor/fusion-query@5.2.0
 
 ## 8.0.3
 
 ### Patch Changes
 
 - Updated dependencies [[`30767a2`](https://github.com/equinor/fusion-framework/commit/30767a2f72b54c2a3ea98ce08186017e34ae16bd)]:
-    - @equinor/fusion-query@5.1.5
+  - @equinor/fusion-query@5.1.5
 
 ## 8.0.2
 
 ### Patch Changes
 
 - Updated dependencies [[`21db01b`](https://github.com/equinor/fusion-framework/commit/21db01bbe5113b07aaa715d554378561e1a5223d)]:
-    - @equinor/fusion-query@5.1.4
+  - @equinor/fusion-query@5.1.4
 
 ## 8.0.1
 
 ### Patch Changes
 
 - Updated dependencies [[`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51), [`73af73e`](https://github.com/equinor/fusion-framework/commit/73af73e5582ca27b132210af8ba308b80e036d51)]:
-    - @equinor/fusion-framework-module-http@6.2.0
+  - @equinor/fusion-framework-module-http@6.2.0
 
 ## 8.0.0
 
@@ -49,95 +60,97 @@
 - [#2459](https://github.com/equinor/fusion-framework/pull/2459) [`15152e4`](https://github.com/equinor/fusion-framework/commit/15152e413c054a5f57af93211a470c98c7696caa) Thanks [@odinr](https://github.com/odinr)! - The Service Discovery module has been totally revamped to provide a more flexible and robust solution for service discovery in the Fusion Framework.
   The module now relies on the Fusion Service Discovery API to fetch services and their configurations, which allows for more dynamic and real-time service discovery.
 
-    The module now follows the "best practices" for configuration and usage, and it is now easier to configure and use the Service Discovery module in your applications. But this also means that the module has breaking changes that may require updates to existing implementations.
+  The module now follows the "best practices" for configuration and usage, and it is now easier to configure and use the Service Discovery module in your applications. But this also means that the module has breaking changes that may require updates to existing implementations.
 
-    > [!NOTE]
-    > This module can still be configured to resolve custom services, as long as the client implements the `IServiceDiscoveryClient` interface.
+  > [!NOTE]
+  > This module can still be configured to resolve custom services, as long as the client implements the `IServiceDiscoveryClient` interface.
 
-    **Documentation Updates**
+  **Documentation Updates**
 
-    - The README file has been updated to reflect the new configuration options and usage patterns for the Service Discovery module.
-    - Added sections for simple and advanced configurations, including examples of how to override the default HTTP client key and set a custom service discovery client.
+  - The README file has been updated to reflect the new configuration options and usage patterns for the Service Discovery module.
+  - Added sections for simple and advanced configurations, including examples of how to override the default HTTP client key and set a custom service discovery client.
 
-    **Code Changes:**
+  **Code Changes:**
 
-    - 🔨 package.json: Added `zod` as a new dependency for schema validation.
-    - 💫 api-schema.ts: Added schema for the expected response from the `ServiceProviderClient`
-    - 💫 client.ts: Created `serviceResponseSelector` for parsing and validating client respons.
-    - 🔨 client.ts: Updated `IServiceDiscoveryClient` interface to include methods for resolving services and fetching services from the API.
-    - 🔨 client.ts: Updated `ServiceDiscoveryClient` to use the new `serviceResponseSelector`
-    - 💫 configurator.ts: Introduced new methods for setting and configuring the service discovery client.
-    - 🔨 configurator.ts: Updated `ServiceDiscoveryConfigurator` to extend the `BaseConfigBuilder`
-    - 🔨 configurator.ts: Added error handling and validation for required configurations.
+  - 🔨 package.json: Added `zod` as a new dependency for schema validation.
+  - 💫 api-schema.ts: Added schema for the expected response from the `ServiceProviderClient`
+  - 💫 client.ts: Created `serviceResponseSelector` for parsing and validating client respons.
+  - 🔨 client.ts: Updated `IServiceDiscoveryClient` interface to include methods for resolving services and fetching services from the API.
+  - 🔨 client.ts: Updated `ServiceDiscoveryClient` to use the new `serviceResponseSelector`
+  - 💫 configurator.ts: Introduced new methods for setting and configuring the service discovery client.
+  - 🔨 configurator.ts: Updated `ServiceDiscoveryConfigurator` to extend the `BaseConfigBuilder`
+  - 🔨 configurator.ts: Added error handling and validation for required configurations.
 
-    **BREAKING CHANGES:**
+  **BREAKING CHANGES:**
 
-    - The type `Service` has deprecated the `defaultScopes` property in favor of `scopes`.
-    - The `IServiceDiscoveryClient` interface has been updated, which may require changes in implementations that use this interface.
-    - The `ServiceDiscoveryConfigurator` now extends `BaseConfigBuilder`, which will affect existing configurations.
-    - The `ServiceDiscoveryProvider.resolveServices` method now returns `Service[]` (previously `Environment`).
+  - The type `Service` has deprecated the `defaultScopes` property in favor of `scopes`.
+  - The `IServiceDiscoveryClient` interface has been updated, which may require changes in implementations that use this interface.
+  - The `ServiceDiscoveryConfigurator` now extends `BaseConfigBuilder`, which will affect existing configurations.
+  - The `ServiceDiscoveryProvider.resolveServices` method now returns `Service[]` (previously `Environment`).
 
-    > [!NOTE]
-    > Only the `ServiceDiscoveryProvider.resolveServices` should affect end-users,
-    > as it changes the return type of the method.
-    > The other changes are internal and should not affect existing implementations.
+  > [!NOTE]
+  > Only the `ServiceDiscoveryProvider.resolveServices` should affect end-users,
+  > as it changes the return type of the method.
+  > The other changes are internal and should not affect existing implementations.
 
-    **Consumer Migration Guide:**
+  **Consumer Migration Guide:**
 
-    `defaultScopes` has been replaced with `scopes` in the `Service` type. Update your code to use the new property.
+  `defaultScopes` has been replaced with `scopes` in the `Service` type. Update your code to use the new property.
 
-    If you are using the `ServiceDiscoveryProvider.resolveServices` method, update your code to expect an array of `Service` objects instead of an `Environment` object.
+  If you are using the `ServiceDiscoveryProvider.resolveServices` method, update your code to expect an array of `Service` objects instead of an `Environment` object.
 
-    ```typescript
-    // Before
-    const { services } = await serviceDiscoveryProvider.resolveServices('my-service');
-    // After
-    const services = await serviceDiscoveryProvider.resolveServices('my-service');
-    ```
+  ```typescript
+  // Before
+  const { services } = await serviceDiscoveryProvider.resolveServices(
+    "my-service"
+  );
+  // After
+  const services = await serviceDiscoveryProvider.resolveServices("my-service");
+  ```
 
-    > [!WARNING]
-    > The preious `Environment` object had a `clientId` property, which is now removed, since every service can have its own client id, hence the `scopes` property in the `Service` object.
+  > [!WARNING]
+  > The preious `Environment` object had a `clientId` property, which is now removed, since every service can have its own client id, hence the `scopes` property in the `Service` object.
 
-    **Configuration Migration Guide:**
+  **Configuration Migration Guide:**
 
-    > If you are consuming the `@equinor/fusion-framework` and only configuring the http client, no changes are required.
+  > If you are consuming the `@equinor/fusion-framework` and only configuring the http client, no changes are required.
 
-    If you are manually enabling the Service Discovery module, update your configuration to use the new methods provided by `ServiceDiscoveryConfigurator`.
-    Refer to the updated README for detailed configuration examples and usage patterns.
+  If you are manually enabling the Service Discovery module, update your configuration to use the new methods provided by `ServiceDiscoveryConfigurator`.
+  Refer to the updated README for detailed configuration examples and usage patterns.
 
-    > [!WARNING]
-    > The `ServiceDiscoveryConfigurator` now extends `BaseConfigBuilder`, which means that the configuration methods have changed.
+  > [!WARNING]
+  > The `ServiceDiscoveryConfigurator` now extends `BaseConfigBuilder`, which means that the configuration methods have changed.
 
 ### Patch Changes
 
 - Updated dependencies [[`c776845`](https://github.com/equinor/fusion-framework/commit/c776845e753acf4a0bceda1c59d31e5939c44c31), [`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module-http@6.1.0
-    - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module-http@6.1.0
+  - @equinor/fusion-framework-module@4.3.5
 
 ## 7.1.13
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.1.3
+  - @equinor/fusion-query@5.1.3
 
 ## 7.1.12
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`be2e925`](https://github.com/equinor/fusion-framework/commit/be2e92532f4a4b8f0b2c9e12d4adf942d380423e), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
-    - @equinor/fusion-query@5.1.2
-    - @equinor/fusion-framework-module-http@6.0.3
+  - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-query@5.1.2
+  - @equinor/fusion-framework-module-http@6.0.3
 
 ## 7.1.11
 
 ### Patch Changes
 
 - Updated dependencies [[`decb9e9`](https://github.com/equinor/fusion-framework/commit/decb9e9e3d1bb1b0577b729a1e7ae812afdd83cb), [`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-framework-module-http@6.0.2
-    - @equinor/fusion-query@5.1.1
-    - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module-http@6.0.2
+  - @equinor/fusion-query@5.1.1
+  - @equinor/fusion-framework-module@4.3.3
 
 ## 7.1.10
 
@@ -147,117 +160,117 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee), [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`788d0b9`](https://github.com/equinor/fusion-framework/commit/788d0b93edc25e5b682d88c58614560c204c1af9), [`29ff796`](https://github.com/equinor/fusion-framework/commit/29ff796ebb3a643c604e4153b6798bde5992363c), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee), [`5e20ce1`](https://github.com/equinor/fusion-framework/commit/5e20ce17af709f0443b7110bfc952ff8d8d81dee)]:
-    - @equinor/fusion-framework-module@4.3.2
-    - @equinor/fusion-query@5.1.0
-    - @equinor/fusion-framework-module-http@6.0.1
+  - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-query@5.1.0
+  - @equinor/fusion-framework-module-http@6.0.1
 
 ## 7.1.9
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@5.0.5
+  - @equinor/fusion-query@5.0.5
 
 ## 7.1.8
 
 ### Patch Changes
 
 - Updated dependencies [[`1e60919`](https://github.com/equinor/fusion-framework/commit/1e60919e83fb65528c88f604d7bd43299ec412e1), [`1681940`](https://github.com/equinor/fusion-framework/commit/16819401db191321637fb2a17390abd98738c103), [`ba2379b`](https://github.com/equinor/fusion-framework/commit/ba2379b177f23ccc023894e36e50d7fc56c929c8)]:
-    - @equinor/fusion-framework-module-http@6.0.0
-    - @equinor/fusion-query@5.0.4
+  - @equinor/fusion-framework-module-http@6.0.0
+  - @equinor/fusion-query@5.0.4
 
 ## 7.1.7
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`6a81125`](https://github.com/equinor/fusion-framework/commit/6a81125ca856bbddbd1ec9e66a30e887cef93f66), [`cd737c2`](https://github.com/equinor/fusion-framework/commit/cd737c2f916747965ece46ed6f33fdadb776c90b)]:
-    - @equinor/fusion-framework-module@4.3.1
-    - @equinor/fusion-query@5.0.3
-    - @equinor/fusion-framework-module-http@5.2.3
+  - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-query@5.0.3
+  - @equinor/fusion-framework-module-http@5.2.3
 
 ## 7.1.6
 
 ### Patch Changes
 
 - Updated dependencies [[`bd3d3e1`](https://github.com/equinor/fusion-framework/commit/bd3d3e165b3cbcef8f2c7b3219d21387731e5995)]:
-    - @equinor/fusion-query@5.0.2
+  - @equinor/fusion-query@5.0.2
 
 ## 7.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`491c2e0`](https://github.com/equinor/fusion-framework/commit/491c2e05a2383dc7aa310f11ba6f7325a69e7197)]:
-    - @equinor/fusion-query@5.0.1
+  - @equinor/fusion-query@5.0.1
 
 ## 7.1.4
 
 ### Patch Changes
 
 - Updated dependencies [[`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2), [`b9c1643`](https://github.com/equinor/fusion-framework/commit/b9c164337d984e760d4701d1c534b14cb52aa7e2)]:
-    - @equinor/fusion-query@5.0.0
+  - @equinor/fusion-query@5.0.0
 
 ## 7.1.3
 
 ### Patch Changes
 
 - Updated dependencies [[`fab2d22`](https://github.com/equinor/fusion-framework/commit/fab2d22f56772c02b1c1e5688cea1dd376edfcb3)]:
-    - @equinor/fusion-framework-module-http@5.2.2
+  - @equinor/fusion-framework-module-http@5.2.2
 
 ## 7.1.2
 
 ### Patch Changes
 
 - Updated dependencies [[`f5e4090`](https://github.com/equinor/fusion-framework/commit/f5e4090fa285db8dc10e09b450cee5767437d883)]:
-    - @equinor/fusion-query@4.2.0
+  - @equinor/fusion-query@4.2.0
 
 ## 7.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`4af517f`](https://github.com/equinor/fusion-framework/commit/4af517f107f960aa1dc7459451d99e2e83d350ee), [`4af517f`](https://github.com/equinor/fusion-framework/commit/4af517f107f960aa1dc7459451d99e2e83d350ee)]:
-    - @equinor/fusion-framework-module-http@5.2.1
+  - @equinor/fusion-framework-module-http@5.2.1
 
 ## 7.1.0
 
@@ -268,52 +281,52 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
-    - @equinor/fusion-framework-module-http@5.2.0
-    - @equinor/fusion-query@4.1.0
+  - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-module-http@5.2.0
+  - @equinor/fusion-query@4.1.0
 
 ## 7.0.20
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
-    - @equinor/fusion-framework-module-http@5.1.6
+  - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module-http@5.1.6
 
 ## 7.0.19
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@4.0.6
+  - @equinor/fusion-query@4.0.6
 
 ## 7.0.18
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-framework-module-http@5.1.5
+  - @equinor/fusion-framework-module-http@5.1.5
 
 ## 7.0.17
 
 ### Patch Changes
 
 - Updated dependencies [[`1e4ba77`](https://github.com/equinor/fusion-framework/commit/1e4ba7707d3ce5cfd9c8d6673f760523aa47a45e)]:
-    - @equinor/fusion-framework-module-http@5.1.4
+  - @equinor/fusion-framework-module-http@5.1.4
 
 ## 7.0.16
 
 ### Patch Changes
 
 - Updated dependencies [[`0af3540`](https://github.com/equinor/fusion-framework/commit/0af3540340bac85a19ca3a8ec4e0ccd42b3090ee)]:
-    - @equinor/fusion-framework-module-http@5.1.3
+  - @equinor/fusion-framework-module-http@5.1.3
 
 ## 7.0.15
 
 ### Patch Changes
 
 - Updated dependencies []:
-    - @equinor/fusion-query@4.0.5
+  - @equinor/fusion-query@4.0.5
 
 ## 7.0.14
 
@@ -322,23 +335,23 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module@4.2.6
-    - @equinor/fusion-framework-module-http@5.1.2
-    - @equinor/fusion-query@4.0.4
+  - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework-module-http@5.1.2
+  - @equinor/fusion-query@4.0.4
 
 ## 7.0.13
 
 ### Patch Changes
 
 - Updated dependencies [[`446b63ce`](https://github.com/equinor/fusion-framework/commit/446b63ce44b59a3aaab4399c0d877d3a1b560a0e)]:
-    - @equinor/fusion-query@4.0.3
+  - @equinor/fusion-query@4.0.3
 
 ## 7.0.12
 
 ### Patch Changes
 
 - Updated dependencies [[`7ad31761`](https://github.com/equinor/fusion-framework/commit/7ad3176102f92da108b67ede6fdf29b76149bed9)]:
-    - @equinor/fusion-query@4.0.2
+  - @equinor/fusion-query@4.0.2
 
 ## 7.0.11
 
@@ -347,17 +360,17 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module-http@5.1.1
-    - @equinor/fusion-framework-module@4.2.5
-    - @equinor/fusion-query@4.0.1
+  - @equinor/fusion-framework-module-http@5.1.1
+  - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-query@4.0.1
 
 ## 7.0.10
 
 ### Patch Changes
 
 - Updated dependencies [[`8e9e34a0`](https://github.com/equinor/fusion-framework/commit/8e9e34a06a6905d092ad8ca3f9330a3699da20fa), [`ebcabd0e`](https://github.com/equinor/fusion-framework/commit/ebcabd0e6945e1420a0a9a7d82bd9255da1b8578), [`8739a5a6`](https://github.com/equinor/fusion-framework/commit/8739a5a65d8aaa46ce9ef56cce013efeeb006e8a)]:
-    - @equinor/fusion-framework-module-http@5.1.0
-    - @equinor/fusion-query@4.0.0
+  - @equinor/fusion-framework-module-http@5.1.0
+  - @equinor/fusion-query@4.0.0
 
 ## 7.0.9
 
@@ -370,16 +383,16 @@
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
-    - @equinor/fusion-query@3.0.7
-    - @equinor/fusion-framework-module-http@5.0.6
+  - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-query@3.0.7
+  - @equinor/fusion-framework-module-http@5.0.6
 
 ## 7.0.7
 
 ### Patch Changes
 
 - Updated dependencies [[`066d843c`](https://github.com/equinor/fusion-framework/commit/066d843c88cb974150f23f4fb9e7d0b066c93594)]:
-    - @equinor/fusion-query@3.0.6
+  - @equinor/fusion-query@3.0.6
 
 ## 7.0.6
 
@@ -387,16 +400,16 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - [#1145](https://github.com/equinor/fusion-framework/pull/1145) [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272) Thanks [@dependabot](https://github.com/apps/dependabot)! - build(deps): bump rxjs from 7.5.7 to [7.8.1](https://github.com/ReactiveX/rxjs/blob/7.8.1/CHANGELOG.md)
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`2dccccd1`](https://github.com/equinor/fusion-framework/commit/2dccccd124fbe3cdde2132c29c27d3da9fc6f1f5), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272), [`52d98701`](https://github.com/equinor/fusion-framework/commit/52d98701627e93c7284c0b9a5bfd8dab1da43bd3)]:
-    - @equinor/fusion-framework-module@4.2.3
-    - @equinor/fusion-framework-module-http@5.0.5
-    - @equinor/fusion-query@3.0.5
+  - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module-http@5.0.5
+  - @equinor/fusion-query@3.0.5
 
 ## 7.0.5
 
@@ -405,8 +418,8 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework-module-http@5.0.4
-    - @equinor/fusion-framework-module@4.2.1
+  - @equinor/fusion-framework-module-http@5.0.4
+  - @equinor/fusion-framework-module@4.2.1
 
 ## 7.0.4
 
@@ -414,13 +427,13 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework-module@4.2.0
-    - @equinor/fusion-framework-module-http@5.0.3
+  - @equinor/fusion-framework-module@4.2.0
+  - @equinor/fusion-framework-module-http@5.0.3
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.

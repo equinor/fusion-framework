@@ -1,69 +1,82 @@
 # Change Log
 
+## 4.0.1
+
+### Patch Changes
+
+- [#2865](https://github.com/equinor/fusion-framework/pull/2865) [`6efabb7`](https://github.com/equinor/fusion-framework/commit/6efabb7837a97319e976e122db855d8b88b031a6) Thanks [@odinr](https://github.com/odinr)! - hotfix: added `defaultConfig` to `AuthProvider.createProxyProvider` to allow legacy child providers to access the `config` object.
+
+- [#2854](https://github.com/equinor/fusion-framework/pull/2854) [`1953dd2`](https://github.com/equinor/fusion-framework/commit/1953dd217d85fa4880856b2c97b6305fcbaf2e24) Thanks [@odinr](https://github.com/odinr)! - removed useless switch cases
+
+- [#2848](https://github.com/equinor/fusion-framework/pull/2848) [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d) Thanks [@odinr](https://github.com/odinr)! - Refactored imports to use `type` when importing types from a module, to conform with the `useImportType` rule in Biome.
+
+- Updated dependencies [[`ba5d12e`](https://github.com/equinor/fusion-framework/commit/ba5d12eba0a38db412353765e997d02c1fbb478d), [`dcd2fb1`](https://github.com/equinor/fusion-framework/commit/dcd2fb1394e175d0cc2a4289ed3ede8e0271d67d)]:
+  - @equinor/fusion-framework-module@4.3.6
+
 ## 4.0.0
 
 ### Major Changes
 
 - [#2814](https://github.com/equinor/fusion-framework/pull/2814) [`ea4b522`](https://github.com/equinor/fusion-framework/commit/ea4b5221b30719289fc947b5dbb0acd3ea52ffaa) Thanks [@odinr](https://github.com/odinr)! - Rework of the MSAL module to support module hoisting. This means that sub modules instances will proxy the parent module instance. This means that the module instance will be shared between all instances of the module.
 
-    **Highlights:**
+  **Highlights:**
 
-    - Versioning module, config and provider.
-    - Interfaces for MSAL versions
-    - Proxy provider instances for sub modules.
-    - Transpile provider implementation to requested version.
-    - Configurator using `BaseConfigBuilder` (aligned with other modules)
+  - Versioning module, config and provider.
+  - Interfaces for MSAL versions
+  - Proxy provider instances for sub modules.
+  - Transpile provider implementation to requested version.
+  - Configurator using `BaseConfigBuilder` (aligned with other modules)
 
-    **BREAKING CHANGES:**
+  **BREAKING CHANGES:**
 
-    - `configureMsal` has changed parameter signature to `configureMsal(msalConfigurator: MsalConfigurator): void`
-    - Added `enableMsal` with parameter signature to `enableMsal(configurator: IModulesConfigurator, configureMsal: (msalConfigurator: MsalConfigurator) => void): void`
+  - `configureMsal` has changed parameter signature to `configureMsal(msalConfigurator: MsalConfigurator): void`
+  - Added `enableMsal` with parameter signature to `enableMsal(configurator: IModulesConfigurator, configureMsal: (msalConfigurator: MsalConfigurator) => void): void`
 
-    **How to migrate:**
+  **How to migrate:**
 
-    > **As an application no changes are required, the module will work as before.**
+  > **As an application no changes are required, the module will work as before.**
 
-    ```diff
-    import { configureMsal } from '@equinor/fusion-framework-module-msal';
+  ```diff
+  import { configureMsal } from '@equinor/fusion-framework-module-msal';
 
-    -  configureMsal(
-    -    {
-    -        tenantId: '{TENANT_ID}',
-    -        clientId: '{CLIENT_ID}',
-    -        redirectUri: '/authentication/login-callback',
-    -    },
-    -    { requiresAuth: true }
-    - );
-    + enableMsal(configurator, (msalConfigurator) => {
-    +    msalConfigurator.setClientConfig({
-    +       tenantId: '{TENANT_ID}',
-    +       clientId: '{CLIENT_ID}',
-    +       redirectUri: '/authentication/login-callback',
-    +    });
-    +    msalConfigurator.requiresAuth(true);
-    +})
-    ```
+  -  configureMsal(
+  -    {
+  -        tenantId: '{TENANT_ID}',
+  -        clientId: '{CLIENT_ID}',
+  -        redirectUri: '/authentication/login-callback',
+  -    },
+  -    { requiresAuth: true }
+  - );
+  + enableMsal(configurator, (msalConfigurator) => {
+  +    msalConfigurator.setClientConfig({
+  +       tenantId: '{TENANT_ID}',
+  +       clientId: '{CLIENT_ID}',
+  +       redirectUri: '/authentication/login-callback',
+  +    });
+  +    msalConfigurator.requiresAuth(true);
+  +})
+  ```
 
 ## 3.1.5
 
 ### Patch Changes
 
 - Updated dependencies [[`2644b3d`](https://github.com/equinor/fusion-framework/commit/2644b3d63939aede736a3b1950db32dbd487877d)]:
-    - @equinor/fusion-framework-module@4.3.5
+  - @equinor/fusion-framework-module@4.3.5
 
 ## 3.1.4
 
 ### Patch Changes
 
 - Updated dependencies [[`75d676d`](https://github.com/equinor/fusion-framework/commit/75d676d2c7919f30e036b5ae97c4d814c569aa87), [`00d5e9c`](https://github.com/equinor/fusion-framework/commit/00d5e9c632876742c3d2a74efea2f126a0a169d9)]:
-    - @equinor/fusion-framework-module@4.3.4
+  - @equinor/fusion-framework-module@4.3.4
 
 ## 3.1.3
 
 ### Patch Changes
 
 - Updated dependencies [[`a1524e9`](https://github.com/equinor/fusion-framework/commit/a1524e9c4d83778da3db42dbcf99908b776a0592)]:
-    - @equinor/fusion-framework-module@4.3.3
+  - @equinor/fusion-framework-module@4.3.3
 
 ## 3.1.2
 
@@ -73,56 +86,56 @@
 
 - [#2320](https://github.com/equinor/fusion-framework/pull/2320) [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee) Thanks [@odinr](https://github.com/odinr)! - Removed the `removeComments` option from the `tsconfig.base.json` file.
 
-    Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
+  Removing the `removeComments` option allows TypeScript to preserve comments in the compiled JavaScript output. This can be beneficial for several reasons:
 
-    1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
-    2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
-    3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
+  1. Improved debugging: Preserved comments can help developers understand the code better during debugging sessions.
+  2. Documentation: JSDoc comments and other important code documentation will be retained in the compiled output.
+  3. Source map accuracy: Keeping comments can lead to more accurate source maps, which is crucial for debugging and error tracking.
 
-    No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
+  No action is required from consumers of the library. This change affects the build process and doesn't introduce any breaking changes or new features.
 
-    Before:
+  Before:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "removeComments": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    After:
+  After:
 
-    ```json
-    {
-        "compilerOptions": {
-            "module": "ES2022",
-            "target": "ES6",
-            "incremental": true,
-            "preserveConstEnums": true,
-            "sourceMap": true,
-            "moduleResolution": "node"
-        }
+  ```json
+  {
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES6",
+      "incremental": true,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "moduleResolution": "node"
     }
-    ```
+  }
+  ```
 
-    This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
+  This change ensures that comments are preserved in the compiled output, potentially improving the development and debugging experience for users of the Fusion Framework.
 
 - Updated dependencies [[`2f74edc`](https://github.com/equinor/fusion-framework/commit/2f74edcd4a3ea2b87d69f0fd63492145c3c01663), [`86d55b8`](https://github.com/equinor/fusion-framework/commit/86d55b8d27a572f3f62170b1e72aceda54f955e1), [`1dd85f3`](https://github.com/equinor/fusion-framework/commit/1dd85f3a408a73df556d1812a5f280945cc100ee)]:
-    - @equinor/fusion-framework-module@4.3.2
+  - @equinor/fusion-framework-module@4.3.2
 
 ## 3.1.1
 
 ### Patch Changes
 
 - Updated dependencies [[`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2), [`fb424be`](https://github.com/equinor/fusion-framework/commit/fb424be24ad9349d01daef91a01c464d7b1413d2)]:
-    - @equinor/fusion-framework-module@4.3.1
+  - @equinor/fusion-framework-module@4.3.1
 
 ## 3.1.0
 
@@ -133,14 +146,14 @@
 ### Patch Changes
 
 - Updated dependencies [[`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904), [`f3ae28d`](https://github.com/equinor/fusion-framework/commit/f3ae28dc6d1d5043605e07e2cd2e83ae799cd904)]:
-    - @equinor/fusion-framework-module@4.3.0
+  - @equinor/fusion-framework-module@4.3.0
 
 ## 3.0.10
 
 ### Patch Changes
 
 - Updated dependencies [[`152cf73`](https://github.com/equinor/fusion-framework/commit/152cf73d39eb32ccbaddaa6941e315c437c4972d)]:
-    - @equinor/fusion-framework-module@4.2.7
+  - @equinor/fusion-framework-module@4.2.7
 
 ## 3.0.9
 
@@ -155,7 +168,7 @@
 - [#1595](https://github.com/equinor/fusion-framework/pull/1595) [`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125) Thanks [@Gustav-Eikaas](https://github.com/Gustav-Eikaas)! - support for module resolution NodeNext & Bundler
 
 - Updated dependencies [[`9c24e84`](https://github.com/equinor/fusion-framework/commit/9c24e847d041dea8384c77439e6b237f5bdb3125)]:
-    - @equinor/fusion-framework-module@4.2.6
+  - @equinor/fusion-framework-module@4.2.6
 
 ## 3.0.7
 
@@ -164,14 +177,14 @@
 - [`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc) Thanks [@odinr](https://github.com/odinr)! - force patch bump, realign missing snapshot
 
 - Updated dependencies [[`b5dfe5d2`](https://github.com/equinor/fusion-framework/commit/b5dfe5d29a249e0cca6c9589322931dfedd06acc)]:
-    - @equinor/fusion-framework-module@4.2.5
+  - @equinor/fusion-framework-module@4.2.5
 
 ## 3.0.6
 
 ### Patch Changes
 
 - Updated dependencies [[`9076a498`](https://github.com/equinor/fusion-framework/commit/9076a49876e7a414a27557b7fb9095a67fe3a57f)]:
-    - @equinor/fusion-framework-module@4.2.4
+  - @equinor/fusion-framework-module@4.2.4
 
 ## 3.0.5
 
@@ -179,12 +192,12 @@
 
 - [#1109](https://github.com/equinor/fusion-framework/pull/1109) [`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862) Thanks [@odinr](https://github.com/odinr)! - Change packaged manager from yarn to pnpm
 
-    conflicts of `@types/react` made random outcomes when using `yarn`
+  conflicts of `@types/react` made random outcomes when using `yarn`
 
-    this change should not affect consumer of the packages, but might conflict dependent on local package manager.
+  this change should not affect consumer of the packages, but might conflict dependent on local package manager.
 
 - Updated dependencies [[`7ec195d4`](https://github.com/equinor/fusion-framework/commit/7ec195d42098fec8794db13e83b71ef7753ff862), [`d276fc5d`](https://github.com/equinor/fusion-framework/commit/d276fc5d514566d05c64705076a1cb91c6a44272)]:
-    - @equinor/fusion-framework-module@4.2.3
+  - @equinor/fusion-framework-module@4.2.3
 
 ## 3.0.4
 
@@ -193,7 +206,7 @@
 - [#946](https://github.com/equinor/fusion-framework/pull/946) [`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352) Thanks [@odinr](https://github.com/odinr)! - Build/update typescript to 5
 
 - Updated dependencies [[`5a160d88`](https://github.com/equinor/fusion-framework/commit/5a160d88981ddfe861d391cfefe10f54dda3d352)]:
-    - @equinor/fusion-framework-module@4.2.1
+  - @equinor/fusion-framework-module@4.2.1
 
 ## 3.0.3
 
@@ -201,12 +214,12 @@
 
 - [#905](https://github.com/equinor/fusion-framework/pull/905) [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c) Thanks [@odinr](https://github.com/odinr)! - **🚧 Chore: dedupe packages**
 
-    - align all versions of typescript
-    - update types to build
-        - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
+  - align all versions of typescript
+  - update types to build
+    - a couple of typecasts did not [satisfies](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#satisfies-support-in-jsdoc) and was recasted as `unknwon`, marked with `TODO`, should be fixed in future
 
 - Updated dependencies [[`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`76b30c1e`](https://github.com/equinor/fusion-framework/commit/76b30c1e86db3db18adbe759bb1e39885de1c898), [`83ee5abf`](https://github.com/equinor/fusion-framework/commit/83ee5abf7bcab193c85980e5ae44895cd7f6f08d), [`7500ec2c`](https://github.com/equinor/fusion-framework/commit/7500ec2c9ca9b926a19539fc97c61c67f76fc8d9), [`060818eb`](https://github.com/equinor/fusion-framework/commit/060818eb04ebb9ed6deaed1f0b4530201b1181cf), [`3efbf0bb`](https://github.com/equinor/fusion-framework/commit/3efbf0bb93fc11aa158872cd6ab98a22bcfb59e5), [`a7858a1c`](https://github.com/equinor/fusion-framework/commit/a7858a1c01542e2dc94370709f122b4b99c3219c)]:
-    - @equinor/fusion-framework-module@4.2.0
+  - @equinor/fusion-framework-module@4.2.0
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
