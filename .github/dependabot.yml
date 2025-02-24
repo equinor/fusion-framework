@@ -10,8 +10,9 @@ updates:
       ag-grid:
         applies-to: version-updates
         patterns:
-          - "@ag-grid-enterprise/*"
-          - "@ag-grid-community/*"
+          - "ag-grid-enterprise"
+          - "ag-grid-community"
+          - "ag-grid-react"
       vuepress:
         applies-to: version-updates
         patterns:
