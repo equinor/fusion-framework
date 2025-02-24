@@ -1,22 +1,22 @@
 // todo: move to utils
 const deepFreeze = <T extends Record<string, unknown>>(obj: T): T => {
-    Object.keys(obj).forEach((property) => {
-        if (
-            typeof obj[property] === 'object' &&
-            obj[property] !== null &&
-            !Object.isFrozen(obj[property])
-        ) {
-            deepFreeze(obj[property] as Record<string, unknown>);
-        }
-    });
-    return Object.freeze(obj);
+  for (const property of Object.keys(obj)) {
+    if (
+      typeof obj[property] === 'object' &&
+      obj[property] !== null &&
+      !Object.isFrozen(obj[property])
+    ) {
+      deepFreeze(obj[property] as Record<string, unknown>);
+    }
+  }
+  return Object.freeze(obj);
 };
 
 export type ConfigEnvironment = Record<string, unknown>;
 
 export type ConfigEndPoint = {
-    url: string;
-    scopes: string[];
+  url: string;
+  scopes: string[];
 };
 
 /**
@@ -50,46 +50,46 @@ export type ConfigEndPoint = {
  * @param {string} key - The key of the endpoint to retrieve.
  */
 export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironment> {
-    #endpoints: Record<string, ConfigEndPoint>;
+  #endpoints: Record<string, ConfigEndPoint>;
 
-    /**
-     * The environment configuration for the application.
-     * This property is read-only and is of type `TEnvironment`.
-     */
-    public readonly environment: TEnvironment;
+  /**
+   * The environment configuration for the application.
+   * This property is read-only and is of type `TEnvironment`.
+   */
+  public readonly environment: TEnvironment;
 
-    /**
-     * @deprecated Use `getEndpoint` instead.
-     *
-     * Retrieves the endpoints as a record of strings. This method returns a proxy
-     * that maps the endpoint names to their respective URLs.
-     *
-     * @returns {Record<string, string | undefined>} A record where the keys are endpoint names and the values are their URLs.
-     */
-    public get endpoints(): Record<string, string | undefined> {
-        console.warn('endpoints is deprecated, use getEndpoint instead');
-        return new Proxy(this.#endpoints, {
-            get(target, prop): string | undefined {
-                return target[prop as string]?.url;
-            },
-        }) as unknown as Record<string, string>;
-    }
+  /**
+   * @deprecated Use `getEndpoint` instead.
+   *
+   * Retrieves the endpoints as a record of strings. This method returns a proxy
+   * that maps the endpoint names to their respective URLs.
+   *
+   * @returns {Record<string, string | undefined>} A record where the keys are endpoint names and the values are their URLs.
+   */
+  public get endpoints(): Record<string, string | undefined> {
+    console.warn('endpoints is deprecated, use getEndpoint instead');
+    return new Proxy(this.#endpoints, {
+      get(target, prop): string | undefined {
+        return target[prop as string]?.url;
+      },
+    }) as unknown as Record<string, string>;
+  }
 
-    constructor(config: {
-        environment?: TEnvironment | null;
-        endpoints?: Record<string, ConfigEndPoint>;
-    }) {
-        this.environment = deepFreeze(config.environment ?? {}) as TEnvironment;
-        this.#endpoints = config.endpoints ?? {};
-    }
+  constructor(config: {
+    environment?: TEnvironment | null;
+    endpoints?: Record<string, ConfigEndPoint>;
+  }) {
+    this.environment = deepFreeze(config.environment ?? {}) as TEnvironment;
+    this.#endpoints = config.endpoints ?? {};
+  }
 
-    /**
-     * Retrieves the configuration endpoint associated with the given key.
-     *
-     * @param key - The key corresponding to the desired configuration endpoint.
-     * @returns The configuration endpoint if found, otherwise `undefined`.
-     */
-    getEndpoint(key: string): ConfigEndPoint | undefined {
-        return this.#endpoints[key];
-    }
+  /**
+   * Retrieves the configuration endpoint associated with the given key.
+   *
+   * @param key - The key corresponding to the desired configuration endpoint.
+   * @returns The configuration endpoint if found, otherwise `undefined`.
+   */
+  getEndpoint(key: string): ConfigEndPoint | undefined {
+    return this.#endpoints[key];
+  }
 }

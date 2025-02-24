@@ -10,11 +10,11 @@ import { resolveLogLevel } from './resolve-log-level';
  * - `Debug`: Detailed information, typically of interest only when diagnosing problems.
  */
 export enum LogLevel {
-    None = 0, // No logging will be performed.
-    Error = 1, // Due to a more serious problem, the software has not been able to perform some function.
-    Warning = 2, // An indication that something unexpected happened, or indicative of some problem in the near future.
-    Info = 3, // Confirmation that things are working as expected.
-    Debug = 4, // Detailed information, typically of interest only when diagnosing problems.
+  None = 0, // No logging will be performed.
+  Error = 1, // Due to a more serious problem, the software has not been able to perform some function.
+  Warning = 2, // An indication that something unexpected happened, or indicative of some problem in the near future.
+  Info = 3, // Confirmation that things are working as expected.
+  Debug = 4, // Detailed information, typically of interest only when diagnosing problems.
 }
 
 /**
@@ -28,21 +28,21 @@ export enum LogLevel {
  * @returns {LogLevel} The resolved default log level.
  */
 const resolveDefaultLogLevel = (): LogLevel => {
-    // Check if FUSION_LOG_LEVEL is set in environment variables
-    const envLogLevel = process.env.FUSION_LOG_LEVEL;
+  // Check if FUSION_LOG_LEVEL is set in environment variables
+  const envLogLevel = process.env.FUSION_LOG_LEVEL;
 
-    if (envLogLevel) {
-        try {
-            // Attempt to parse the log level from the environment variable
-            return resolveLogLevel(envLogLevel);
-        } catch (error) {
-            // If parsing fails, return Debug level in development, otherwise Error level
-            return process.env.NODE_ENV === 'development' ? LogLevel.Debug : LogLevel.Error;
-        }
+  if (envLogLevel) {
+    try {
+      // Attempt to parse the log level from the environment variable
+      return resolveLogLevel(envLogLevel);
+    } catch (error) {
+      // If parsing fails, return Debug level in development, otherwise Error level
+      return process.env.NODE_ENV === 'development' ? LogLevel.Debug : LogLevel.Error;
     }
+  }
 
-    // Default to Error level if FUSION_LOG_LEVEL is not set
-    return LogLevel.Error;
+  // Default to Error level if FUSION_LOG_LEVEL is not set
+  return LogLevel.Error;
 };
 
 export const defaultLogLevel = resolveDefaultLogLevel();

@@ -1,4 +1,4 @@
-import { BookmarkModule, IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkModule, IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 import { useModule } from '@equinor/fusion-framework-react-module';
 
 /**
@@ -6,4 +6,4 @@ import { useModule } from '@equinor/fusion-framework-react-module';
  * @returns The bookmark provider or undefined if it is not available.
  */
 export const useBookmarkProvider = (): IBookmarkProvider | undefined =>
-    useModule<BookmarkModule>('bookmark');
+  useModule<BookmarkModule>('bookmark');

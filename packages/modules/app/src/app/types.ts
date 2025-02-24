@@ -1,13 +1,13 @@
-import { ActionBaseType } from '@equinor/fusion-observable';
+import type { ActionBaseType } from '@equinor/fusion-observable';
 import type {
-    AppManifest,
-    AppConfig,
-    AppModulesInstance,
-    AppScriptModule,
-    ConfigEnvironment,
-    AppSettings,
+  AppManifest,
+  AppConfig,
+  AppModulesInstance,
+  AppScriptModule,
+  ConfigEnvironment,
+  AppSettings,
 } from '../types';
-import { Actions } from './actions';
+import type { Actions } from './actions';
 
 /**
  * Represents the state of an application bundle.
@@ -24,17 +24,17 @@ import { Actions } from './actions';
  * @property {AppModulesInstance<TModules>} [instance] - An optional instance of the application modules.
  */
 export type AppBundleState<
-    TConfig extends ConfigEnvironment = ConfigEnvironment,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TModules = any,
+  TConfig extends ConfigEnvironment = ConfigEnvironment,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TModules = any,
 > = {
-    appKey: string;
-    status: Set<ActionBaseType<Actions>>;
-    manifest?: AppManifest;
-    config?: AppConfig<TConfig>;
-    settings?: AppSettings;
-    modules?: AppScriptModule;
-    instance?: AppModulesInstance<TModules>;
+  appKey: string;
+  status: Set<ActionBaseType<Actions>>;
+  manifest?: AppManifest;
+  config?: AppConfig<TConfig>;
+  settings?: AppSettings;
+  modules?: AppScriptModule;
+  instance?: AppModulesInstance<TModules>;
 };
 
 /**
@@ -44,7 +44,7 @@ export type AppBundleState<
  * @template TModules - The type of modules included in the application bundle, defaults to `any`.
  */
 export type AppBundleStateInitial<
-    TConfig extends ConfigEnvironment = ConfigEnvironment,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TModules = any,
+  TConfig extends ConfigEnvironment = ConfigEnvironment,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TModules = any,
 > = Omit<AppBundleState<TConfig, TModules>, 'status'>;

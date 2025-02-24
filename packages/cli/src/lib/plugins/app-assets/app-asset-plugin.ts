@@ -5,7 +5,7 @@ import { resolveAssetId } from './resolve-asset-id.js';
 import { createExtensionFilterPattern } from './extension-filter-pattern.js';
 
 import { ASSET_EXTENSIONS, PLUGIN_NAME } from './static.js';
-import { PluginContext } from 'rollup';
+import type { PluginContext } from 'rollup';
 
 const defaultInclude = createExtensionFilterPattern(ASSET_EXTENSIONS);
 
@@ -39,75 +39,75 @@ const defaultInclude = createExtensionFilterPattern(ASSET_EXTENSIONS);
  * ```
  */
 export const AppAssetExportPlugin = (
-    options: {
-        name?: string;
-        include?: FilterPattern;
-        exclude?: FilterPattern;
-    } = {},
+  options: {
+    name?: string;
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  } = {},
 ): Plugin => {
-    const { name, include = defaultInclude, exclude } = options;
+  const { name, include = defaultInclude, exclude } = options;
 
-    let viteConfig: ResolvedConfig;
+  let viteConfig: ResolvedConfig;
 
-    const assetsPathMap = new Map<string, string | null>();
+  const assetsPathMap = new Map<string, string | null>();
 
-    const filter = createFilter(include, exclude);
+  const filter = createFilter(include, exclude);
 
-    return {
-        name: PLUGIN_NAME,
-        enforce: 'pre',
-        apply: 'build',
-        configResolved(config) {
-            viteConfig = config;
+  return {
+    name: PLUGIN_NAME,
+    enforce: 'pre',
+    apply: 'build',
+    configResolved(config) {
+      viteConfig = config;
+    },
+    async resolveId(source, importer, opts) {
+      if (viteConfig.build.lib === false) {
+        this.warn('this plugin is only for vite build lib');
+      }
+      // skip resolves triggered by plugin self
+      if (opts.custom?.caller === PLUGIN_NAME) {
+        return null;
+      }
+
+      // resolve asset ID, the ID should refer to the actual asset file
+      const assetId = await resolveAssetId(this as PluginContext, source, importer ?? '', {
+        ...opts,
+        custom: {
+          ...opts.custom,
+          caller: PLUGIN_NAME,
         },
-        async resolveId(source, importer, opts) {
-            if (viteConfig.build.lib === false) {
-                this.warn('this plugin is only for vite build lib');
-            }
-            // skip resolves triggered by plugin self
-            if (opts.custom?.caller === PLUGIN_NAME) {
-                return null;
-            }
+      });
 
-            // resolve asset ID, the ID should refer to the actual asset file
-            const assetId = await resolveAssetId(this as PluginContext, source, importer ?? '', {
-                ...opts,
-                custom: {
-                    ...opts.custom,
-                    caller: PLUGIN_NAME,
-                },
-            });
+      // skip if asset is not found or filtered out
+      const { id } = assetId ?? {};
+      const shouldIncludeAsset = id && filter(id);
+      if (!shouldIncludeAsset) {
+        return null;
+      }
 
-            // skip if asset is not found or filtered out
-            const { id } = assetId ?? {};
-            const shouldIncludeAsset = id && filter(id);
-            if (!shouldIncludeAsset) {
-                return null;
-            }
-
-            try {
-                // emit asset and index the asset path
-                const { outDir, assetsDir } = viteConfig.build;
-                const assetPath = emitAssetSync(this as PluginContext, id, {
-                    name,
-                    outDir,
-                    assetsDir,
-                });
-                assetsPathMap.set(id, assetPath!);
-            } catch (err) {
-                this.warn((err as Error).message);
-                return null;
-            }
-        },
-        load(id) {
-            // lookup asset path and export as URL
-            const assetPath = assetsPathMap.get(id);
-            if (assetPath) {
-                // ensure asset path is relative from the script load path
-                return `export default new URL(/* @vite-ignore */'${assetPath}', import.meta.url).href`;
-            }
-        },
-    };
+      try {
+        // emit asset and index the asset path
+        const { outDir, assetsDir } = viteConfig.build;
+        const assetPath = emitAssetSync(this as PluginContext, id, {
+          name,
+          outDir,
+          assetsDir,
+        });
+        assetsPathMap.set(id, assetPath!);
+      } catch (err) {
+        this.warn((err as Error).message);
+        return null;
+      }
+    },
+    load(id) {
+      // lookup asset path and export as URL
+      const assetPath = assetsPathMap.get(id);
+      if (assetPath) {
+        // ensure asset path is relative from the script load path
+        return `export default new URL(/* @vite-ignore */'${assetPath}', import.meta.url).href`;
+      }
+    },
+  };
 };
 
 export default AppAssetExportPlugin;

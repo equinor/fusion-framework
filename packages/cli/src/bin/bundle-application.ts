@@ -10,46 +10,46 @@ import { createBuildManifest } from './create-export-manifest.js';
 import { fileExistsSync } from '../lib/utils/file-exists.js';
 
 export const bundleApplication = async (options: { outDir: string; archive: string }) => {
-    const { outDir, archive } = options;
+  const { outDir, archive } = options;
 
-    const spinner = Spinner.Global({ prefixText: chalk.dim('pack') });
+  const spinner = Spinner.Global({ prefixText: chalk.dim('pack') });
 
-    spinner.start('build application');
-    const { pkg } = await buildApplication({ outDir });
-    spinner.succeed();
+  spinner.start('build application');
+  const { pkg } = await buildApplication({ outDir });
+  spinner.succeed();
 
-    spinner.start('generate manifest');
-    const buildManifest = await createBuildManifest({ outputFile: `${outDir}/app-manifest.json` });
-    spinner.succeed('generated manifest:', '\n' + JSON.stringify(buildManifest, undefined, 2));
+  spinner.start('generate manifest');
+  const buildManifest = await createBuildManifest({ outputFile: `${outDir}/app-manifest.json` });
+  spinner.succeed('generated manifest:', '\n' + JSON.stringify(buildManifest, undefined, 2));
 
-    const bundle = new AdmZip();
+  const bundle = new AdmZip();
 
-    bundle.addLocalFolder(outDir);
-    spinner.info(`added ./${outDir}`);
+  bundle.addLocalFolder(outDir);
+  spinner.info(`added ./${outDir}`);
 
-    const appDir = dirname(pkg.path);
+  const appDir = dirname(pkg.path);
 
-    /* Files to add to zip package */
-    const addFiles = ['package.json', 'LICENSE.md', 'README.md', 'CHANGELOG.md'];
-    addFiles.forEach((file) => {
-        const filePath = resolve(appDir, file);
-        if (fileExistsSync(filePath)) {
-            bundle.addLocalFile(filePath);
-            spinner.info(`added ${file}`);
-        } else {
-            spinner.warn(`missing ${file}`);
-        }
-    });
-
-    spinner.start('compressing content');
-    if (!fileExistsSync(dirname(archive))) {
-        await mkdir(dirname(archive), { recursive: true });
+  /* Files to add to zip package */
+  const addFiles = ['package.json', 'LICENSE.md', 'README.md', 'CHANGELOG.md'];
+  for (const file of addFiles) {
+    const filePath = resolve(appDir, file);
+    if (fileExistsSync(filePath)) {
+      bundle.addLocalFile(filePath);
+      spinner.info(`added ${file}`);
+    } else {
+      spinner.warn(`missing ${file}`);
     }
+  }
 
-    bundle.writeZip(archive);
-    spinner.succeed(
-        'Bundle complete',
-        formatPath(archive, { relative: true }),
-        formatByteSize(archive),
-    );
+  spinner.start('compressing content');
+  if (!fileExistsSync(dirname(archive))) {
+    await mkdir(dirname(archive), { recursive: true });
+  }
+
+  bundle.writeZip(archive);
+  spinner.succeed(
+    'Bundle complete',
+    formatPath(archive, { relative: true }),
+    formatByteSize(archive),
+  );
 };

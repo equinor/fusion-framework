@@ -1,4 +1,4 @@
-import { type Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
 import parseJsonFromRequest from '../../utils/parse-json-request.js';
 
@@ -6,17 +6,17 @@ import parseJsonFromRequest from '../../utils/parse-json-request.js';
  * Options for configuring the AppSettingsPlugin.
  */
 export interface AppSettingsPluginOptions {
-    /**
-     * A string or regular expression to match specific settings.
-     * If provided, only settings that match this pattern will be considered.
-     */
-    match?: string | RegExp;
+  /**
+   * A string or regular expression to match specific settings.
+   * If provided, only settings that match this pattern will be considered.
+   */
+  match?: string | RegExp;
 
-    /**
-     * A record of default settings to be used if no other settings are provided.
-     * The keys are setting names and the values are the default values for those settings.
-     */
-    defaultSettings?: Record<string, unknown>;
+  /**
+   * A record of default settings to be used if no other settings are provided.
+   * The keys are setting names and the values are the default values for those settings.
+   */
+  defaultSettings?: Record<string, unknown>;
 }
 
 /**
@@ -34,25 +34,25 @@ export interface AppSettingsPluginOptions {
  * - Responds with the current application settings in JSON format.
  */
 export function appSettingsPlugin(options: AppSettingsPluginOptions): Plugin {
-    let appSettings = options.defaultSettings ?? {};
-    const pathMatch = new RegExp(options.match ?? '/persons/me/apps/.*/settings');
-    return {
-        name: 'app-settings',
-        configureServer(server) {
-            server.middlewares.use(async (req, res, next) => {
-                if (!req.url?.match(pathMatch)) {
-                    return next();
-                }
+  let appSettings = options.defaultSettings ?? {};
+  const pathMatch = new RegExp(options.match ?? '/persons/me/apps/.*/settings');
+  return {
+    name: 'app-settings',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (!req.url?.match(pathMatch)) {
+          return next();
+        }
 
-                if (req.method === 'PUT') {
-                    appSettings = await parseJsonFromRequest(req);
-                }
+        if (req.method === 'PUT') {
+          appSettings = await parseJsonFromRequest(req);
+        }
 
-                res.setHeader('content-type', 'application/json');
-                res.end(JSON.stringify(appSettings));
-            });
-        },
-    };
+        res.setHeader('content-type', 'application/json');
+        res.end(JSON.stringify(appSettings));
+      });
+    },
+  };
 }
 
 export default appSettingsPlugin;

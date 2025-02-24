@@ -1,6 +1,6 @@
 import {
-    jsonSelector,
-    type ResponseSelector,
+  jsonSelector,
+  type ResponseSelector,
 } from '@equinor/fusion-framework-module-http/selectors';
 
 import { AppConfig } from './AppConfig';
@@ -15,11 +15,11 @@ import { ApiAppConfigSchema } from './schemas';
  * @throws Will throw an error if the response cannot be parsed or does not conform to the expected schema.
  */
 export const AppConfigSelector: ResponseSelector<AppConfig> = async (response) => {
-    // Select the JSON data from the response
-    const raw = await jsonSelector(response);
+  // Select the JSON data from the response
+  const raw = await jsonSelector(response);
 
-    // Parse the JSON data using the API application configuration schema
-    const data = ApiAppConfigSchema.parse(raw);
+  // Parse the JSON data using the API application configuration schema
+  const data = ApiAppConfigSchema.parse(raw);
 
-    return new AppConfig(data);
+  return new AppConfig(data);
 };

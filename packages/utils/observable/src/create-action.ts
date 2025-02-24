@@ -3,8 +3,8 @@
  * taken from https://github.com/reduxjs/redux-toolkit/tree/master/packages/toolkit/src
  */
 
-import { Action, PayloadAction } from './types/actions';
-import { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from './types/ts-helpers';
+import type { Action, PayloadAction } from './types/actions';
+import type { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from './types/ts-helpers';
 
 /**
  * A "prepare" method to be used as the second parameter of `createAction`.
@@ -16,36 +16,35 @@ import { IfMaybeUndefined, IfVoid, IsAny, IsUnknownOrNonInferrable } from './typ
  * @public
  */
 export type PrepareAction<P> =
-    | ((...args: any[]) => { payload: P })
-    | ((...args: any[]) => { payload: P; meta: any })
-    | ((...args: any[]) => { payload: P; error: any })
-    | ((...args: any[]) => { payload: P; meta: any; error: any });
+  | ((...args: any[]) => { payload: P })
+  | ((...args: any[]) => { payload: P; meta: any })
+  | ((...args: any[]) => { payload: P; error: any })
+  | ((...args: any[]) => { payload: P; meta: any; error: any });
 
 /**
  * Internal version of `ActionCreatorWithPreparedPayload`. Not to be used externally.
  *
  */
 export type _ActionCreatorWithPreparedPayload<
-    PA extends PrepareAction<any> | void,
-    T extends string = string,
-> =
-    PA extends PrepareAction<infer P>
-        ? ActionCreatorWithPreparedPayload<
-              Parameters<PA>,
-              P,
-              T,
-              ReturnType<PA> extends {
-                  error: infer E;
-              }
-                  ? E
-                  : never,
-              ReturnType<PA> extends {
-                  meta: infer M;
-              }
-                  ? M
-                  : never
-          >
-        : void;
+  PA extends PrepareAction<any> | void,
+  T extends string = string,
+> = PA extends PrepareAction<infer P>
+  ? ActionCreatorWithPreparedPayload<
+      Parameters<PA>,
+      P,
+      T,
+      ReturnType<PA> extends {
+        error: infer E;
+      }
+        ? E
+        : never,
+      ReturnType<PA> extends {
+        meta: infer M;
+      }
+        ? M
+        : never
+    >
+  : void;
 
 /**
  * Basic type for all action creators.
@@ -53,8 +52,8 @@ export type _ActionCreatorWithPreparedPayload<
  * @inheritdoc {redux#ActionCreator}
  */
 export interface BaseActionCreator<P, T extends string = string, M = never, E = never> {
-    type: T;
-    match: (action: Action) => action is PayloadAction<P, T, M, E>;
+  type: T;
+  match: (action: Action) => action is PayloadAction<P, T, M, E>;
 }
 
 /**
@@ -71,18 +70,18 @@ export interface BaseActionCreator<P, T extends string = string, M = never, E = 
  * @public
  */
 export interface ActionCreatorWithPreparedPayload<
-    Args extends unknown[],
-    P,
-    T extends string = string,
-    E = never,
-    M = never,
+  Args extends unknown[],
+  P,
+  T extends string = string,
+  E = never,
+  M = never,
 > extends BaseActionCreator<P, T, M, E> {
-    /**
-     * Calling this {@link redux#ActionCreator} with `Args` will return
-     * an Action with a payload of type `P` and (depending on the `PrepareAction`
-     * method used) a `meta`- and `error` property of types `M` and `E` respectively.
-     */
-    (...args: Args): PayloadAction<P, T, M, E>;
+  /**
+   * Calling this {@link redux#ActionCreator} with `Args` will return
+   * an Action with a payload of type `P` and (depending on the `PrepareAction`
+   * method used) a `meta`- and `error` property of types `M` and `E` respectively.
+   */
+  (...args: Args): PayloadAction<P, T, M, E>;
 }
 
 /**
@@ -93,13 +92,13 @@ export interface ActionCreatorWithPreparedPayload<
  * @public
  */
 export interface ActionCreatorWithOptionalPayload<P, T extends string = string>
-    extends BaseActionCreator<P, T> {
-    /**
-     * Calling this {@link redux#ActionCreator} with an argument will
-     * return a {@link PayloadAction} of type `T` with a payload of `P`.
-     * Calling it without an argument will return a PayloadAction with a payload of `undefined`.
-     */
-    (payload?: P): PayloadAction<P, T>;
+  extends BaseActionCreator<P, T> {
+  /**
+   * Calling this {@link redux#ActionCreator} with an argument will
+   * return a {@link PayloadAction} of type `T` with a payload of `P`.
+   * Calling it without an argument will return a PayloadAction with a payload of `undefined`.
+   */
+  (payload?: P): PayloadAction<P, T>;
 }
 
 /**
@@ -110,12 +109,12 @@ export interface ActionCreatorWithOptionalPayload<P, T extends string = string>
  * @public
  */
 export interface ActionCreatorWithoutPayload<T extends string = string>
-    extends BaseActionCreator<undefined, T> {
-    /**
-     * Calling this {@link redux#ActionCreator} will
-     * return a {@link PayloadAction} of type `T` with a payload of `undefined`
-     */
-    (): PayloadAction<undefined, T>;
+  extends BaseActionCreator<undefined, T> {
+  /**
+   * Calling this {@link redux#ActionCreator} will
+   * return a {@link PayloadAction} of type `T` with a payload of `undefined`
+   */
+  (): PayloadAction<undefined, T>;
 }
 
 /**
@@ -126,12 +125,12 @@ export interface ActionCreatorWithoutPayload<T extends string = string>
  * @public
  */
 export interface ActionCreatorWithPayload<P, T extends string = string>
-    extends BaseActionCreator<P, T> {
-    /**
-     * Calling this {@link redux#ActionCreator} with an argument will
-     * return a {@link PayloadAction} of type `T` with a payload of `P`
-     */
-    (payload: P): PayloadAction<P, T>;
+  extends BaseActionCreator<P, T> {
+  /**
+   * Calling this {@link redux#ActionCreator} with an argument will
+   * return a {@link PayloadAction} of type `T` with a payload of `P`
+   */
+  (payload: P): PayloadAction<P, T>;
 }
 
 /**
@@ -142,13 +141,13 @@ export interface ActionCreatorWithPayload<P, T extends string = string>
  * @public
  */
 export interface ActionCreatorWithNonInferrablePayload<T extends string = string>
-    extends BaseActionCreator<unknown, T> {
-    /**
-     * Calling this {@link redux#ActionCreator} with an argument will
-     * return a {@link PayloadAction} of type `T` with a payload
-     * of exactly the type of the argument.
-     */
-    <PT>(payload: PT): PayloadAction<PT, T>;
+  extends BaseActionCreator<unknown, T> {
+  /**
+   * Calling this {@link redux#ActionCreator} with an argument will
+   * return a {@link PayloadAction} of type `T` with a payload
+   * of exactly the type of the argument.
+   */
+  <PT>(payload: PT): PayloadAction<PT, T>;
 }
 
 /**
@@ -161,33 +160,33 @@ export interface ActionCreatorWithNonInferrablePayload<T extends string = string
  * @public
  */
 export type PayloadActionCreator<
-    P = void,
-    T extends string = string,
-    PA extends PrepareAction<P> | void = void,
+  P = void,
+  T extends string = string,
+  PA extends PrepareAction<P> | void = void,
 > = IfPrepareActionMethodProvided<
-    PA,
-    _ActionCreatorWithPreparedPayload<PA, T>,
-    // else
-    IsAny<
+  PA,
+  _ActionCreatorWithPreparedPayload<PA, T>,
+  // else
+  IsAny<
+    P,
+    ActionCreatorWithPayload<any, T>,
+    IsUnknownOrNonInferrable<
+      P,
+      ActionCreatorWithNonInferrablePayload<T>,
+      // else
+      IfVoid<
         P,
-        ActionCreatorWithPayload<any, T>,
-        IsUnknownOrNonInferrable<
-            P,
-            ActionCreatorWithNonInferrablePayload<T>,
-            // else
-            IfVoid<
-                P,
-                ActionCreatorWithoutPayload<T>,
-                // else
-                IfMaybeUndefined<
-                    P,
-                    ActionCreatorWithOptionalPayload<P, T>,
-                    // else
-                    ActionCreatorWithPayload<P, T>
-                >
-            >
+        ActionCreatorWithoutPayload<T>,
+        // else
+        IfMaybeUndefined<
+          P,
+          ActionCreatorWithOptionalPayload<P, T>,
+          // else
+          ActionCreatorWithPayload<P, T>
         >
+      >
     >
+  >
 >;
 
 /**
@@ -204,7 +203,7 @@ export type PayloadActionCreator<
  * @public
  */
 export function createAction<P = void, T extends string = string>(
-    type: T,
+  type: T,
 ): PayloadActionCreator<P, T>;
 
 /**
@@ -221,36 +220,36 @@ export function createAction<P = void, T extends string = string>(
  * @public
  */
 export function createAction<PA extends PrepareAction<any>, T extends string = string>(
-    type: T,
-    prepareAction: PA,
+  type: T,
+  prepareAction: PA,
 ): PayloadActionCreator<ReturnType<PA>['payload'], T, PA>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function createAction(type: string, prepareAction?: PrepareAction<any>): any {
-    function actionCreator(...args: any[]) {
-        if (prepareAction) {
-            const prepared = prepareAction(...args);
-            if (!prepared) {
-                throw new Error('prepareAction did not return an object');
-            }
+  function actionCreator(...args: any[]) {
+    if (prepareAction) {
+      const prepared = prepareAction(...args);
+      if (!prepared) {
+        throw new Error('prepareAction did not return an object');
+      }
 
-            return {
-                type,
-                payload: prepared.payload,
-                ...('meta' in prepared && { meta: prepared.meta }),
-                ...('error' in prepared && { error: prepared.error }),
-            };
-        }
-        return { type, payload: args[0] };
+      return {
+        type,
+        payload: prepared.payload,
+        ...('meta' in prepared && { meta: prepared.meta }),
+        ...('error' in prepared && { error: prepared.error }),
+      };
     }
+    return { type, payload: args[0] };
+  }
 
-    actionCreator.toString = () => `${type}`;
+  actionCreator.toString = () => `${type}`;
 
-    actionCreator.type = type;
+  actionCreator.type = type;
 
-    actionCreator.match = (action: Action): action is PayloadAction => action.type === type;
+  actionCreator.match = (action: Action): action is PayloadAction => action.type === type;
 
-    return actionCreator;
+  return actionCreator;
 }
 
 export const actionSuffixDivider = '::';
@@ -259,8 +258,8 @@ export const matchActionSuffix = (suffix: string) => new RegExp(`${actionSuffixD
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivider}${infer R}`
-    ? A
-    : never;
+  ? A
+  : never;
 
 /**
  * Extracts the base type from an action type string.
@@ -274,7 +273,7 @@ type BaseType<T extends string> = T extends `${infer A}${typeof actionSuffixDivi
  * @returns The base type of the action type string, or `never` if the input string does not match the expected format.
  */
 export function getBaseType<T extends string>(type: T): BaseType<T> {
-    return type.replace(matchActionSuffix('\\w+$'), '') as BaseType<T>;
+  return type.replace(matchActionSuffix('\\w+$'), '') as BaseType<T>;
 }
 
 /**
@@ -288,13 +287,13 @@ export function getBaseType<T extends string>(type: T): BaseType<T> {
  * @public
  */
 export function getType<T extends string>(actionCreator: PayloadActionCreator<any, T>): T {
-    return `${actionCreator}` as T;
+  return `${actionCreator}` as T;
 }
 
 // helper types for more readable typings
 
 type IfPrepareActionMethodProvided<PA extends PrepareAction<any> | void, True, False> = PA extends (
-    ...args: any[]
+  ...args: any[]
 ) => any
-    ? True
-    : False;
+  ? True
+  : False;

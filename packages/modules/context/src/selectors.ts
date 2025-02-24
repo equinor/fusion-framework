@@ -1,4 +1,7 @@
-import { ApiVersion, ApiContextEntity } from '@equinor/fusion-framework-module-services/context';
+import type {
+  ApiVersion,
+  ApiContextEntity,
+} from '@equinor/fusion-framework-module-services/context';
 import type { GetContextResponse } from '@equinor/fusion-framework-module-services/context/get';
 import type { QueryContextResponse } from '@equinor/fusion-framework-module-services/context/query';
 import type { RelatedContextResponse } from '@equinor/fusion-framework-module-services/context/related';
@@ -11,9 +14,9 @@ import type { ContextItem, ContextItemType } from './types';
  * @returns The parsed context item type.
  */
 const parseContextType = (type: GetContextResponse<'v1'>['type']): ContextItemType => ({
-    id: type.id,
-    isChildType: type.isChildType,
-    parentTypeIds: type.parentTypeIds ?? [],
+  id: type.id,
+  isChildType: type.isChildType,
+  parentTypeIds: type.parentTypeIds ?? [],
 });
 
 /**
@@ -22,18 +25,18 @@ const parseContextType = (type: GetContextResponse<'v1'>['type']): ContextItemTy
  * @returns The parsed ContextItem object.
  */
 const parseContextItem = (item: ApiContextEntity<ApiVersion.v1>): ContextItem => {
-    return {
-        id: item.id,
-        externalId: item.externalId ?? undefined,
-        isActive: item.isActive,
-        isDeleted: item.isDeleted,
-        created: new Date(item.created),
-        source: item.source ?? undefined,
-        title: item.title ?? undefined,
-        type: parseContextType(item.type),
-        // TODO
-        value: item.value ?? {},
-    };
+  return {
+    id: item.id,
+    externalId: item.externalId ?? undefined,
+    isActive: item.isActive,
+    isDeleted: item.isDeleted,
+    created: new Date(item.created),
+    source: item.source ?? undefined,
+    title: item.title ?? undefined,
+    type: parseContextType(item.type),
+    // TODO
+    value: item.value ?? {},
+  };
 };
 
 /**
@@ -42,8 +45,8 @@ const parseContextItem = (item: ApiContextEntity<ApiVersion.v1>): ContextItem =>
  * @returns A promise that resolves to the context item.
  */
 export const getContextSelector = async (response: Response): Promise<ContextItem> => {
-    const result = (await response.json()) as GetContextResponse<'v1'>;
-    return parseContextItem(result);
+  const result = (await response.json()) as GetContextResponse<'v1'>;
+  return parseContextItem(result);
 };
 
 /**
@@ -52,8 +55,8 @@ export const getContextSelector = async (response: Response): Promise<ContextIte
  * @returns A promise that resolves to an array of context items.
  */
 export const queryContextSelector = async (response: Response): Promise<ContextItem[]> => {
-    const result = (await response.json()) as QueryContextResponse<'v1'>;
-    return result.map(parseContextItem);
+  const result = (await response.json()) as QueryContextResponse<'v1'>;
+  return result.map(parseContextItem);
 };
 
 /**
@@ -62,6 +65,6 @@ export const queryContextSelector = async (response: Response): Promise<ContextI
  * @returns A promise that resolves to an array of ContextItem objects.
  */
 export const relatedContextSelector = async (response: Response): Promise<ContextItem[]> => {
-    const result = (await response.json()) as RelatedContextResponse<'v1'>;
-    return result.map(parseContextItem);
+  const result = (await response.json()) as RelatedContextResponse<'v1'>;
+  return result.map(parseContextItem);
 };

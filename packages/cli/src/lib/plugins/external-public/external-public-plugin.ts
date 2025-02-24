@@ -30,94 +30,90 @@ import { createFilter, type FilterPattern, type ResolvedConfig, type Plugin } fr
  * - Responds with the transformed HTML, setting appropriate headers.
  */
 export const externalPublicPlugin = (
-    path: string,
-    options?: {
-        include?: FilterPattern;
-        exclude?: FilterPattern;
-    },
+  path: string,
+  options?: {
+    include?: FilterPattern;
+    exclude?: FilterPattern;
+  },
 ): Plugin => {
-    let viteConfig: ResolvedConfig;
+  let viteConfig: ResolvedConfig;
 
-    const assetFilter = createFilter(options?.include, options?.exclude);
+  const assetFilter = createFilter(options?.include, options?.exclude);
 
-    return {
-        name: 'fusion:external-public',
-        apply: 'serve',
-        configResolved(config) {
-            viteConfig = config;
-        },
-        configureServer(server) {
-            // serve the static assets from the provided path
-            server.middlewares.use(async (req, res, next) => {
-                const [urlPath] = req.url!.split('?');
+  return {
+    name: 'fusion:external-public',
+    apply: 'serve',
+    configResolved(config) {
+      viteConfig = config;
+    },
+    configureServer(server) {
+      // serve the static assets from the provided path
+      server.middlewares.use(async (req, res, next) => {
+        const [urlPath] = req.url!.split('?');
 
-                const assetPath = join(path, urlPath);
+        const assetPath = join(path, urlPath);
 
-                if (
-                    !assetFilter(assetPath) ||
-                    // skip if the request is for index.html
-                    req.url?.match('index.html') ||
-                    // skip if request is for a source file
-                    existsSync(join(viteConfig.root, urlPath)) ||
-                    // skip if asset is in publicDir
-                    existsSync(join(viteConfig.publicDir, urlPath)) ||
-                    // skip if asset does not exist
-                    !existsSync(assetPath)
-                ) {
-                    return next();
-                }
+        if (
+          !assetFilter(assetPath) ||
+          // skip if the request is for index.html
+          req.url?.match('index.html') ||
+          // skip if request is for a source file
+          existsSync(join(viteConfig.root, urlPath)) ||
+          // skip if asset is in publicDir
+          existsSync(join(viteConfig.publicDir, urlPath)) ||
+          // skip if asset does not exist
+          !existsSync(assetPath)
+        ) {
+          return next();
+        }
 
-                try {
-                    const content = readFileSync(assetPath);
-                    const contentType = mime.getType(assetPath) || 'application/octet-stream';
-                    res.writeHead(200, {
-                        'content-type': contentType,
-                        'content-length': Buffer.byteLength(content),
-                        'cache-control': 'no-cache',
-                        ...server.config.server.headers,
-                    });
-                    res.end(content);
-                } catch (e) {
-                    next(e);
-                }
-            });
+        try {
+          const content = readFileSync(assetPath);
+          const contentType = mime.getType(assetPath) || 'application/octet-stream';
+          res.writeHead(200, {
+            'content-type': contentType,
+            'content-length': Buffer.byteLength(content),
+            'cache-control': 'no-cache',
+            ...server.config.server.headers,
+          });
+          res.end(content);
+        } catch (e) {
+          next(e);
+        }
+      });
 
-            // intercept requests to serve the index.html file
-            server.middlewares.use(async (req, res, next) => {
-                if (
-                    // Only accept GET or HEAD
-                    (req.method !== 'GET' && req.method !== 'HEAD') ||
-                    // Only accept text/html
-                    !req.headers.accept?.includes('text/html')
-                ) {
-                    return next();
-                }
-                try {
-                    // load the raw html from provided path
-                    const htmlRaw = readFileSync(join(path, 'index.html'), 'utf-8');
-                    // transform the html, this is where vite plugin hooks are applied
-                    const html = await server.transformIndexHtml(
-                        req.url!,
-                        htmlRaw,
-                        req.originalUrl,
-                    );
+      // intercept requests to serve the index.html file
+      server.middlewares.use(async (req, res, next) => {
+        if (
+          // Only accept GET or HEAD
+          (req.method !== 'GET' && req.method !== 'HEAD') ||
+          // Only accept text/html
+          !req.headers.accept?.includes('text/html')
+        ) {
+          return next();
+        }
+        try {
+          // load the raw html from provided path
+          const htmlRaw = readFileSync(join(path, 'index.html'), 'utf-8');
+          // transform the html, this is where vite plugin hooks are applied
+          const html = await server.transformIndexHtml(req.url!, htmlRaw, req.originalUrl);
 
-                    // apply content headers and configured additional headers
-                    res.writeHead(200, {
-                        'content-type': 'text/html',
-                        'content-length': Buffer.byteLength(html),
-                        'cache-control': 'no-cache',
-                        ...server.config.server.headers,
-                    });
+          // apply content headers and configured additional headers
+          res.writeHead(200, {
+            'content-type': 'text/html',
+            'content-length': Buffer.byteLength(html),
+            'cache-control': 'no-cache',
+            ...server.config.server.headers,
+          });
 
-                    // send the transformed html and end the response
-                    res.end(html);
-                } catch (e) {
-                    next(e);
-                }
-            });
-        },
-    };
+          // send the transformed html and end the response
+          res.end(html);
+        } catch (e) {
+          next(e);
+        }
+      });
+    },
+  };
 };
 
 export default externalPublicPlugin;

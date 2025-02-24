@@ -1,6 +1,6 @@
 import { castDraft, createReducer as makeReducer } from '@equinor/fusion-observable';
 
-import { Actions, actions } from './actions';
+import { type Actions, actions } from './actions';
 
 import type { QueryClientRequest, QueryClientState } from './types';
 
@@ -29,65 +29,65 @@ import type { QueryClientRequest, QueryClientState } from './types';
  * @returns A reducer function tailored for managing the state of query client operations.
  */
 export const createReducer = <TArgs = unknown>(initial: QueryClientState<TArgs> = {}) =>
-    makeReducer<QueryClientState<TArgs>, Actions>(initial, (builder) => {
-        builder.addCase(actions.request, (state, action) => {
-            // When an action of type 'request' is dispatched, this case handler will be invoked.
-            // It updates the state by setting a new `QueryClientRequest` object for the key specified by `action.meta.transaction`.
-            // The new `QueryClientRequest` object is created by merging `action.payload` and `action.meta`, and initializing
-            // `execution` as an empty array, `errors` as an empty array, and `status` as 'idle'.
-            state[action.meta.transaction] = castDraft({
-                ...action.payload,
-                ...action.meta,
-                execution: [],
-                errors: [],
-                status: 'idle',
-            } as QueryClientRequest<TArgs>);
-        });
-
-        builder.addCase(actions.execute, (state, action) => {
-            // Locates the query entry in the state using the transaction ID provided in `action.payload`.
-            const entry = state[action.payload];
-            if (entry) {
-                // If the entry is found, logs the current timestamp to the `execution` array
-                // to indicate when the execution action was triggered.
-                entry.execution.push(Date.now());
-                // Updates the status of the entry to 'active' to reflect that the execution
-                // process has started.
-                entry.status = 'active';
-            }
-        });
-
-        builder.addCase(actions.execute.success, (state, action) => {
-            // When an action of type 'execute.success' is dispatched, this case handler will be invoked.
-            // It removes the query entry from the state using the transaction ID provided in `action.payload.transaction`.
-            delete state[action.payload.transaction];
-        });
-
-        builder.addCase(actions.execute.failure, (state, action) => {
-            // Locates the query entry in the state using the transaction ID provided in `action.meta`.
-            const entry = state[action.meta.transaction];
-            if (entry) {
-                // If the entry is found, the error information from `action.payload` is added to the `errors` array of the entry.
-                // This allows tracking of all errors that have occurred during the execution of the query.
-                entry.errors.push(action.payload);
-                // The status of the entry is updated to 'failed' to indicate that the query execution has encountered an error.
-                entry.status = 'failed';
-            }
-        });
-
-        builder.addCase(actions.error, (state, action) => {
-            // When an action of type 'error' is dispatched, this case handler will be invoked.
-            // This handler removes the query entry from the state using the transaction ID provided in `action.meta.transaction`.
-            // This is typically used to clean up any state associated with a transaction that has encountered an irrecoverable error.
-            delete state[action.meta.transaction];
-        });
-
-        builder.addCase(actions.cancel, (state, action) => {
-            // When an action of type 'cancel' is dispatched, this case handler will be invoked.
-            // It removes the query entry from the state using the transaction ID provided in `action.meta.transaction`.
-            // This is useful for cleaning up any state associated with a transaction that is no longer needed, effectively canceling the operation.
-            delete state[action.meta.transaction];
-        });
+  makeReducer<QueryClientState<TArgs>, Actions>(initial, (builder) => {
+    builder.addCase(actions.request, (state, action) => {
+      // When an action of type 'request' is dispatched, this case handler will be invoked.
+      // It updates the state by setting a new `QueryClientRequest` object for the key specified by `action.meta.transaction`.
+      // The new `QueryClientRequest` object is created by merging `action.payload` and `action.meta`, and initializing
+      // `execution` as an empty array, `errors` as an empty array, and `status` as 'idle'.
+      state[action.meta.transaction] = castDraft({
+        ...action.payload,
+        ...action.meta,
+        execution: [],
+        errors: [],
+        status: 'idle',
+      } as QueryClientRequest<TArgs>);
     });
+
+    builder.addCase(actions.execute, (state, action) => {
+      // Locates the query entry in the state using the transaction ID provided in `action.payload`.
+      const entry = state[action.payload];
+      if (entry) {
+        // If the entry is found, logs the current timestamp to the `execution` array
+        // to indicate when the execution action was triggered.
+        entry.execution.push(Date.now());
+        // Updates the status of the entry to 'active' to reflect that the execution
+        // process has started.
+        entry.status = 'active';
+      }
+    });
+
+    builder.addCase(actions.execute.success, (state, action) => {
+      // When an action of type 'execute.success' is dispatched, this case handler will be invoked.
+      // It removes the query entry from the state using the transaction ID provided in `action.payload.transaction`.
+      delete state[action.payload.transaction];
+    });
+
+    builder.addCase(actions.execute.failure, (state, action) => {
+      // Locates the query entry in the state using the transaction ID provided in `action.meta`.
+      const entry = state[action.meta.transaction];
+      if (entry) {
+        // If the entry is found, the error information from `action.payload` is added to the `errors` array of the entry.
+        // This allows tracking of all errors that have occurred during the execution of the query.
+        entry.errors.push(action.payload);
+        // The status of the entry is updated to 'failed' to indicate that the query execution has encountered an error.
+        entry.status = 'failed';
+      }
+    });
+
+    builder.addCase(actions.error, (state, action) => {
+      // When an action of type 'error' is dispatched, this case handler will be invoked.
+      // This handler removes the query entry from the state using the transaction ID provided in `action.meta.transaction`.
+      // This is typically used to clean up any state associated with a transaction that has encountered an irrecoverable error.
+      delete state[action.meta.transaction];
+    });
+
+    builder.addCase(actions.cancel, (state, action) => {
+      // When an action of type 'cancel' is dispatched, this case handler will be invoked.
+      // It removes the query entry from the state using the transaction ID provided in `action.meta.transaction`.
+      // This is useful for cleaning up any state associated with a transaction that is no longer needed, effectively canceling the operation.
+      delete state[action.meta.transaction];
+    });
+  });
 
 export default createReducer;

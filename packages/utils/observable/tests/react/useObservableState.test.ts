@@ -7,30 +7,30 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useObservableState } from '../../src/react';
 
 describe('useObservableState', () => {
-    it('should sync state with an Observable', async () => {
-        const subject = new Subject();
-        const { result } = renderHook(() => useObservableState(subject));
+  it('should sync state with an Observable', async () => {
+    const subject = new Subject();
+    const { result } = renderHook(() => useObservableState(subject));
 
-        expect(result.current.value).toBeUndefined;
+    expect(result.current.value).toBeUndefined;
 
-        await waitFor(() => {
-            subject.next(1);
-        });
-
-        expect(result.current.value).toBe(1);
+    await waitFor(() => {
+      subject.next(1);
     });
 
-    it('should sync state with an Stateful Observable', async () => {
-        const subject = new BehaviorSubject(0);
-        const { result } = renderHook(() => useObservableState(subject));
+    expect(result.current.value).toBe(1);
+  });
 
-        expect(result.current.value).toBeUndefined;
-        expect(result.current.value).toBe(0);
+  it('should sync state with an Stateful Observable', async () => {
+    const subject = new BehaviorSubject(0);
+    const { result } = renderHook(() => useObservableState(subject));
 
-        await waitFor(() => {
-            subject.next(1);
-        });
+    expect(result.current.value).toBeUndefined;
+    expect(result.current.value).toBe(0);
 
-        expect(result.current.value).toBe(1);
+    await waitFor(() => {
+      subject.next(1);
     });
+
+    expect(result.current.value).toBe(1);
+  });
 });

@@ -9,13 +9,13 @@ import { FlexGrid } from '../Styled';
  * In this example the `PersonCard` will request the profile photo from the `PersonProvider` by either the `azureId` or `upn`.
  */
 export const CardPage = () => {
-    return (
-        <>
-            <h2>Card</h2>
-            <FlexGrid>
-                <PersonCard azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa" />
-                <PersonCard upn="handah@equinor.com" />
-            </FlexGrid>
-        </>
-    );
+  return (
+    <>
+      <h2>Card</h2>
+      <FlexGrid>
+        <PersonCard azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa" />
+        <PersonCard upn="handah@equinor.com" />
+      </FlexGrid>
+    </>
+  );
 };

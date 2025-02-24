@@ -45,68 +45,67 @@ type UpdateSettingFunction<T, O = T> = (currentSetting: T | undefined) => O;
  * });
  */
 export const useAppSetting = <
-    TSettings extends Record<string, unknown> = AppSettings,
-    TProp extends keyof TSettings = keyof TSettings,
+  TSettings extends Record<string, unknown> = AppSettings,
+  TProp extends keyof TSettings = keyof TSettings,
 >(
-    prop: TProp,
-    defaultValue?: TSettings[TProp],
-    hooks?: AppSettingsStatusHooks & {
-        onError?: (error: Error | null) => void;
-        onUpdated?: () => void;
-    },
+  prop: TProp,
+  defaultValue?: TSettings[TProp],
+  hooks?: AppSettingsStatusHooks & {
+    onError?: (error: Error | null) => void;
+    onUpdated?: () => void;
+  },
 ): [
-    TSettings[TProp] | undefined,
-    (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => void,
+  TSettings[TProp] | undefined,
+  (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => void,
 ] => {
-    const [{ onError, onUpdated, onLoading, onUpdating }] = useState(() => hooks ?? {});
+  const [{ onError, onUpdated, onLoading, onUpdating }] = useState(() => hooks ?? {});
 
-    const { currentApp = null } = useCurrentApp();
+  const { currentApp = null } = useCurrentApp();
 
-    // create a subject to manage the setting value
-    const subject = useMemo(() => {
-        return new BehaviorSubject<TSettings[TProp] | undefined>(defaultValue);
-        // Only create a new subject when the current app changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentApp]);
+  // create a subject to manage the setting value
+  // biome-ignore lint/correctness/useExhaustiveDependencies: new subject when app changes
+  const subject = useMemo(() => {
+    return new BehaviorSubject<TSettings[TProp] | undefined>(defaultValue);
+  }, [currentApp]);
 
-    useLayoutEffect(() => {
-        const sub = currentApp?.settings$
-            .pipe(map((settings) => (settings as TSettings)[prop]))
-            .subscribe(subject);
-        return () => sub?.unsubscribe();
-    }, [currentApp, subject, prop]);
+  useLayoutEffect(() => {
+    const sub = currentApp?.settings$
+      .pipe(map((settings) => (settings as TSettings)[prop]))
+      .subscribe(subject);
+    return () => sub?.unsubscribe();
+  }, [currentApp, subject, prop]);
 
-    // subscribe to the setting value
-    const { value: setting } = useObservableState(subject);
+  // subscribe to the setting value
+  const { value: setting } = useObservableState(subject);
 
-    // update function
-    const setSetting = useCallback(
-        (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
-            if (!currentApp) {
-                return onError?.(new Error('App is not available'));
-            }
+  // update function
+  const setSetting = useCallback(
+    (update: TSettings[TProp] | UpdateSettingFunction<TSettings[TProp]>) => {
+      if (!currentApp) {
+        return onError?.(new Error('App is not available'));
+      }
 
-            // resolve setting value with the provided value or function
-            const value =
-                typeof update === 'function'
-                    ? (update as UpdateSettingFunction<TSettings[TProp]>)(subject.value)
-                    : update;
+      // resolve setting value with the provided value or function
+      const value =
+        typeof update === 'function'
+          ? (update as UpdateSettingFunction<TSettings[TProp]>)(subject.value)
+          : update;
 
-            currentApp.updateSetting<TSettings, TProp>(prop, value).subscribe({
-                error: onError,
-                complete: onUpdated,
-            });
-        },
-        [currentApp, subject, prop, onError, onUpdated],
-    );
+      currentApp.updateSetting<TSettings, TProp>(prop, value).subscribe({
+        error: onError,
+        complete: onUpdated,
+      });
+    },
+    [currentApp, subject, prop, onError, onUpdated],
+  );
 
-    // status hooks
-    useAppSettingsStatus(currentApp, {
-        onLoading,
-        onUpdating,
-    });
+  // status hooks
+  useAppSettingsStatus(currentApp, {
+    onLoading,
+    onUpdating,
+  });
 
-    return [setting, setSetting];
+  return [setting, setSetting];
 };
 
 export default useAppSetting;

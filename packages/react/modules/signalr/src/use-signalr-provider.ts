@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { ISignalRProvider, Topic } from '@equinor/fusion-framework-module-signalr';
+import type { ISignalRProvider, Topic } from '@equinor/fusion-framework-module-signalr';
 
 export const useSignalRProvider = <T>(
-    provider: ISignalRProvider,
-    hubId: string,
-    topicId: string,
+  provider: ISignalRProvider,
+  hubId: string,
+  topicId: string,
 ): Topic<T> => {
-    const topic = useMemo(() => provider.connect<T>(hubId, topicId), [provider, hubId, topicId]);
-    return topic;
+  const topic = useMemo(() => provider.connect<T>(hubId, topicId), [provider, hubId, topicId]);
+  return topic;
 };

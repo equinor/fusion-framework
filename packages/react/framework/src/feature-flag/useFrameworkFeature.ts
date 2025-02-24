@@ -1,4 +1,4 @@
-import { type FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
+import type { FeatureFlagModule } from '@equinor/fusion-framework-module-feature-flag';
 
 import { useFrameworkModule } from '../useFrameworkModule';
 import { useFeature } from './useFeature';
@@ -12,11 +12,11 @@ import { useFeature } from './useFeature';
  * @throws {Error} - If feature flagging is not enabled in the framework.
  */
 export const useFrameworkFeature = <T>(key: string): ReturnType<typeof useFeature<T>> => {
-    const provider = useFrameworkModule<FeatureFlagModule>('featureFlag');
-    if (!provider) {
-        throw Error('Feature flagging is not enabled in the framework');
-    }
-    return useFeature(provider, key);
+  const provider = useFrameworkModule<FeatureFlagModule>('featureFlag');
+  if (!provider) {
+    throw Error('Feature flagging is not enabled in the framework');
+  }
+  return useFeature(provider, key);
 };
 
 export default useFrameworkFeature;

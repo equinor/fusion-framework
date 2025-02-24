@@ -1,4 +1,4 @@
-import { AssertFeatureFlag } from './types';
+import type { AssertFeatureFlag } from './types';
 
 /**
  * Asserts if a feature flag is enabled feature flag.
@@ -7,8 +7,8 @@ import { AssertFeatureFlag } from './types';
  * @returns `true` if the feature flag is enabled, `false` otherwise.
  */
 export const assertFeatureFlag: AssertFeatureFlag = (options) => {
-    if (options.value === '0' || options.value === 'false') {
-        return false;
-    }
-    return true;
+  if (options.value === '0' || options.value === 'false') {
+    return false;
+  }
+  return true;
 };

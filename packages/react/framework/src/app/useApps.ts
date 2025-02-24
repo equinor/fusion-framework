@@ -1,14 +1,14 @@
-import { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useMemo } from 'react';
 
 import { useAppProvider } from './useAppProvider';
 
 type UseAppsArgs = {
-    /** @deprecated - no longer available */
-    includeHidden?: boolean;
-    // only show apps that the current user has access to
-    filterByCurrentUser?: boolean;
+  /** @deprecated - no longer available */
+  includeHidden?: boolean;
+  // only show apps that the current user has access to
+  filterByCurrentUser?: boolean;
 };
 
 /**
@@ -18,25 +18,24 @@ type UseAppsArgs = {
  * @since 7.1.1
  */
 export const useApps = (
-    args?: UseAppsArgs,
+  args?: UseAppsArgs,
 ): { apps: AppManifest[] | undefined; isLoading: boolean; error: unknown } => {
-    const provider = useAppProvider();
+  const provider = useAppProvider();
 
-    const { filterByCurrentUser } = args || {};
+  const { filterByCurrentUser } = args || {};
 
-    const {
-        value: apps,
-        complete,
-        error,
-    } = useObservableState(
-        useMemo(
-            () =>
-                provider.getAppManifests(filterByCurrentUser ? { filterByCurrentUser } : undefined),
-            [provider, filterByCurrentUser],
-        ),
-    );
+  const {
+    value: apps,
+    complete,
+    error,
+  } = useObservableState(
+    useMemo(
+      () => provider.getAppManifests(filterByCurrentUser ? { filterByCurrentUser } : undefined),
+      [provider, filterByCurrentUser],
+    ),
+  );
 
-    return { apps, isLoading: !complete, error };
+  return { apps, isLoading: !complete, error };
 };
 
 export default useApps;

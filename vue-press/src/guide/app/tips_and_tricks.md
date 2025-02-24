@@ -42,29 +42,3 @@ ncu -i -f /fusion-framework/ -t latest
 ![npm](https://img.shields.io/npm/v/@equinor/eslint-config-fusion?label=@equinor/eslint-config-fusion&style=for-the-badge)
 
 :::
-
-```yaml
-name: Lint project files
-on: [pull_request]
-jobs:
-  eslint:
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - name: Install Node Dependencies
-        run: npm ci
-      - name: Save Code Linting Report JSON
-        # "lint:report": "eslint --output-file eslint-report.log.json --format json ./src/**"
-        run: npm run lint:report
-        continue-on-error: true
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@1.2.0
-        with:
-          repo-token: "${{ github.token }}"
-          report-json: "eslint-report.log.json"
-      - name: Upload ESLint report
-        uses: actions/upload-artifact@v4
-        with:
-          name: eslint-report.log.json
-          path: eslint-report.log.json
-```

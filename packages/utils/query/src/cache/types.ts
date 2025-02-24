@@ -6,36 +6,36 @@
  * @typeParam TArgs - The type of the arguments associated with the cache record.
  */
 export type QueryCacheRecord<TType = unknown, TArgs = unknown> = {
-    /**
-     * The value of the cache record, which can be of any type.
-     */
-    value: TType;
-    /**
-     * The arguments associated with the cache record, which can be of any type.
-     */
-    args: TArgs;
+  /**
+   * The value of the cache record, which can be of any type.
+   */
+  value: TType;
+  /**
+   * The arguments associated with the cache record, which can be of any type.
+   */
+  args: TArgs;
 
-    uuid?: string;
-    /**
-     * A unique identifier for the transaction associated with the cache record.
-     */
-    transaction: string;
-    /**
-     * The timestamp when the cache record was created, represented as a number.
-     */
-    created: number;
-    /**
-     * An optional timestamp when the cache record was last updated, represented as a number.
-     */
-    updated?: number;
-    /**
-     * An optional count of how many times the cache record has been updated.
-     */
-    updates?: number;
-    /**
-     * An optional timestamp when the cache record was last mutated, represented as a number.
-     */
-    mutated?: number;
+  uuid?: string;
+  /**
+   * A unique identifier for the transaction associated with the cache record.
+   */
+  transaction: string;
+  /**
+   * The timestamp when the cache record was created, represented as a number.
+   */
+  created: number;
+  /**
+   * An optional timestamp when the cache record was last updated, represented as a number.
+   */
+  updated?: number;
+  /**
+   * An optional count of how many times the cache record has been updated.
+   */
+  updates?: number;
+  /**
+   * An optional timestamp when the cache record was last mutated, represented as a number.
+   */
+  mutated?: number;
 };
 
 /**
@@ -45,8 +45,8 @@ export type QueryCacheRecord<TType = unknown, TArgs = unknown> = {
  * @typeParam TArgs - The type of the arguments associated with the cache records.
  */
 export type QueryCacheStateData<TType = unknown, TArgs = unknown> = Record<
-    string,
-    QueryCacheRecord<TType, TArgs>
+  string,
+  QueryCacheRecord<TType, TArgs>
 >;
 
 /**
@@ -54,14 +54,14 @@ export type QueryCacheStateData<TType = unknown, TArgs = unknown> = Record<
  * @typeParam TType - The type of the value to be mutated in the cache.
  */
 export type QueryCacheMutation<TType = unknown> = {
-    /**
-     * The new value to be set in the cache record.
-     */
-    value: TType;
-    /**
-     * An optional timestamp when the mutation occurred, represented as a number.
-     */
-    updated?: number;
+  /**
+   * The new value to be set in the cache record.
+   */
+  value: TType;
+  /**
+   * An optional timestamp when the mutation occurred, represented as a number.
+   */
+  updated?: number;
 };
 
 /**
@@ -82,6 +82,6 @@ export type QueryCacheState<TType = unknown, TArgs = unknown> = QueryCacheStateD
  * zero if they are considered equal, or a positive number if `a` should come after `b`.
  */
 export type CacheSortFn<TType = any, TArgs = any> = (
-    a: QueryCacheRecord<TType, TArgs>,
-    b: QueryCacheRecord<TType, TArgs>,
+  a: QueryCacheRecord<TType, TArgs>,
+  b: QueryCacheRecord<TType, TArgs>,
 ) => number;

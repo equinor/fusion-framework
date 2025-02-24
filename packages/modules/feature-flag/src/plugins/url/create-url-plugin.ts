@@ -1,9 +1,9 @@
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
-import { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
-import { type IFeatureFlagProvider } from '../../FeatureFlagProvider';
+import type { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 
 import { assertFeatureFlag } from './assert-feature-flag';
 
@@ -11,95 +11,93 @@ import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback, IFeatureFlag }
 import type { AssertFeatureFlag, Path } from './types';
 
 export const createUrlPlugin = (
-    features: Array<IFeatureFlag | string>,
-    options?: {
-        isFeatureEnabled?: AssertFeatureFlag;
-    },
+  features: Array<IFeatureFlag | string>,
+  options?: {
+    isFeatureEnabled?: AssertFeatureFlag;
+  },
 ): FeatureFlagPluginConfigCallback => {
-    if (!features.length) {
-        return () => Promise.resolve({});
+  if (!features.length) {
+    return () => Promise.resolve({});
+  }
+
+  /** when toggling, we are only interested in the keys */
+  const featureKeys = features.map((x) => (typeof x === 'string' ? x : x.key));
+
+  return async (configArgs) => {
+    if (!configArgs.hasModule('navigation')) {
+      throw Error('missing navigation module');
     }
 
-    /** when toggling, we are only interested in the keys */
-    const featureKeys = features.map((x) => (typeof x === 'string' ? x : x.key));
+    const navigation = await configArgs.requireInstance<INavigationProvider>('navigation');
 
-    return async (configArgs) => {
-        if (!configArgs.hasModule('navigation')) {
-            throw Error('missing navigation module');
-        }
+    /** if no assertion provided, use default */
+    const { isFeatureEnabled = assertFeatureFlag } = options ?? {};
 
-        const navigation = await configArgs.requireInstance<INavigationProvider>('navigation');
+    return {
+      order: -1,
+      initial: async () => features.filter((x): x is IFeatureFlag => typeof x !== 'string'),
+      connect(args: { provider: IFeatureFlagProvider }) {
+        const { provider } = args;
 
-        /** if no assertion provided, use default */
-        const { isFeatureEnabled = assertFeatureFlag } = options ?? {};
+        const subscription = new Subscription();
 
-        return {
-            order: -1,
-            initial: async () => features.filter((x): x is IFeatureFlag => typeof x !== 'string'),
-            connect(args: { provider: IFeatureFlagProvider }) {
-                const { provider } = args;
+        /** shutdown signal */
+        const teardown$ = new Subject();
 
-                const subscription = new Subscription();
+        /** stream of path changes */
+        const path$ = new Subject<Path>();
 
-                /** shutdown signal */
-                const teardown$ = new Subject();
+        /** only include features defined in creation */
+        const feature$ = provider.features$.pipe(
+          map((x) => Object.values(x)),
+          map((flags) => flags.filter((flag) => featureKeys.includes(flag.key))),
+        );
 
-                /** stream of path changes */
-                const path$ = new Subject<Path>();
+        /** Observes path changes of the navigator and toggles feature flags */
+        const change$ = path$.pipe(
+          withLatestFrom(feature$),
+          map(([path, flags]): Array<{ key: string; enabled: boolean }> => {
+            const search = new URLSearchParams(path.search);
+            return flags.reduce(
+              (acc, flag) => {
+                const { key } = flag;
+                if (search.has(key)) {
+                  const value = search.get(key);
+                  const enabled = isFeatureEnabled({
+                    feature: flag,
+                    value,
+                    path,
+                  });
+                  acc.push({ key, enabled });
+                }
+                return acc;
+              },
+              [] as Array<{ key: string; enabled: boolean }>,
+            );
+          }),
+          takeUntil(teardown$),
+        );
 
-                /** only include features defined in creation */
-                const feature$ = provider.features$.pipe(
-                    map((x) => Object.values(x)),
-                    map((flags) => flags.filter((flag) => featureKeys.includes(flag.key))),
-                );
+        subscription.add(change$.subscribe((features) => provider.toggleFeatures(features)));
 
-                /** Observes path changes of the navigator and toggles feature flags */
-                const change$ = path$.pipe(
-                    withLatestFrom(feature$),
-                    map(([path, flags]): Array<{ key: string; enabled: boolean }> => {
-                        const search = new URLSearchParams(path.search);
-                        return flags.reduce(
-                            (acc, flag) => {
-                                const { key } = flag;
-                                if (search.has(key)) {
-                                    const value = search.get(key);
-                                    const enabled = isFeatureEnabled({
-                                        feature: flag,
-                                        value,
-                                        path,
-                                    });
-                                    acc.push({ key, enabled });
-                                }
-                                return acc;
-                            },
-                            [] as Array<{ key: string; enabled: boolean }>,
-                        );
-                    }),
-                    takeUntil(teardown$),
-                );
+        /** when disposed, signal teardown of processes */
+        subscription.add(() => path$.complete());
 
-                subscription.add(
-                    change$.subscribe((features) => provider.toggleFeatures(features)),
-                );
+        /** subscribe to navigation events  */
+        subscription.add(
+          navigation.navigator.listen((e) => {
+            path$.next(e.location);
+          }),
+        );
 
-                /** when disposed, signal teardown of processes */
-                subscription.add(() => path$.complete());
+        /** resolve initial */
+        path$.next(navigation.path);
 
-                /** subscribe to navigation events  */
-                subscription.add(
-                    navigation.navigator.listen((e) => {
-                        path$.next(e.location);
-                    }),
-                );
-
-                /** resolve initial */
-                path$.next(navigation.path);
-
-                /** teardown */
-                return subscription;
-            },
-        } satisfies FeatureFlagPlugin;
-    };
+        /** teardown */
+        return subscription;
+      },
+    } satisfies FeatureFlagPlugin;
+  };
 };
 
 export default createUrlPlugin;

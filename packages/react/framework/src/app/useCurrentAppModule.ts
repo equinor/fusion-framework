@@ -1,9 +1,9 @@
-import { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
-import {
-    ModuleKey,
-    type AnyModule,
-    ModuleTypes,
-    ModuleType,
+import type { AppModules, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type {
+  ModuleKey,
+  AnyModule,
+  ModuleTypes,
+  ModuleType,
 } from '@equinor/fusion-framework-module';
 import useCurrentAppModules from './useCurrentAppModules';
 
@@ -18,28 +18,28 @@ import useCurrentAppModules from './useCurrentAppModules';
  *  - when undefined is, the application has not enabled the requested module
  */
 export const useCurrentAppModule = <
-    TType extends AnyModule | unknown = unknown,
-    TKey extends string = ModuleKey<ModuleTypes<AppModules<[TType]>>>,
+  TType extends AnyModule | unknown = unknown,
+  TKey extends string = ModuleKey<ModuleTypes<AppModules<[TType]>>>,
 >(
-    moduleKey: TKey,
+  moduleKey: TKey,
 ): {
-    module?:
-        | (TType extends AnyModule
-              ? ModuleType<TType>
-              : AppModulesInstance[Extract<keyof AppModulesInstance, TKey>])
-        | null;
-    error?: unknown;
-    complete: boolean;
+  module?:
+    | (TType extends AnyModule
+        ? ModuleType<TType>
+        : AppModulesInstance[Extract<keyof AppModulesInstance, TKey>])
+    | null;
+  error?: unknown;
+  complete: boolean;
 } => {
-    const { modules, error, complete } = useCurrentAppModules();
-    const module =
-        modules === null
-            ? null
-            : modules === undefined
-              ? undefined
-              : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (modules[moduleKey as keyof typeof modules] as any);
-    return { module, error, complete };
+  const { modules, error, complete } = useCurrentAppModules();
+  const module =
+    modules === null
+      ? null
+      : modules === undefined
+        ? undefined
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (modules[moduleKey as keyof typeof modules] as any);
+  return { module, error, complete };
 };
 
 export default useCurrentAppModule;

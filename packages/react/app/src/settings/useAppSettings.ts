@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo } from 'react';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, type Observable } from 'rxjs';
 
-import { type AppSettings } from '@equinor/fusion-framework-module-app';
+import type { AppSettings } from '@equinor/fusion-framework-module-app';
 
 import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 import { useObservableState } from '@equinor/fusion-observable/react';
@@ -47,53 +47,52 @@ type UpdateSettingsFunction<T, O = T> = (currentSettings: T | undefined) => O;
  * });
  */
 export const useAppSettings = <TSettings extends Record<string, unknown> = AppSettings>(
-    defaultValue?: TSettings,
-    hooks?: AppSettingsStatusHooks & {
-        onError?: (error: Error | null) => void;
-        onUpdated?: () => void;
-    },
+  defaultValue?: TSettings,
+  hooks?: AppSettingsStatusHooks & {
+    onError?: (error: Error | null) => void;
+    onUpdated?: () => void;
+  },
 ): [TSettings, (settings: TSettings | UpdateSettingsFunction<TSettings>) => void] => {
-    const { onError, onUpdated, onLoading, onUpdating } = hooks ?? {};
-    const { currentApp = null } = useCurrentApp();
+  const { onError, onUpdated, onLoading, onUpdating } = hooks ?? {};
+  const { currentApp = null } = useCurrentApp();
 
-    const subject = useMemo(() => {
-        return new BehaviorSubject<TSettings>(defaultValue ?? ({} as TSettings));
-        // Only create a new subject when the current app changes
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentApp]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: create new subject when app changes
+  const subject = useMemo(() => {
+    return new BehaviorSubject<TSettings>(defaultValue ?? ({} as TSettings));
+  }, [currentApp]);
 
-    // connect the subject to the current app settings stream
-    useLayoutEffect(() => {
-        const sub = (currentApp?.settings$ as Observable<TSettings>).subscribe(subject);
-        return () => sub?.unsubscribe();
-    }, [currentApp, subject]);
+  // connect the subject to the current app settings stream
+  useLayoutEffect(() => {
+    const sub = (currentApp?.settings$ as Observable<TSettings>).subscribe(subject);
+    return () => sub?.unsubscribe();
+  }, [currentApp, subject]);
 
-    // subscribe to the subject to get the latest settings
-    const { value: settings } = useObservableState(subject, { initial: defaultValue });
+  // subscribe to the subject to get the latest settings
+  const { value: settings } = useObservableState(subject, { initial: defaultValue });
 
-    const setSettings = useCallback(
-        (update: TSettings | UpdateSettingsFunction<TSettings>) => {
-            if (!currentApp) {
-                return onError?.(new Error('App is not available'));
-            }
+  const setSettings = useCallback(
+    (update: TSettings | UpdateSettingsFunction<TSettings>) => {
+      if (!currentApp) {
+        return onError?.(new Error('App is not available'));
+      }
 
-            // resolve settings with the provided value or function
-            const settings = typeof update === 'function' ? update(subject.value) : update;
+      // resolve settings with the provided value or function
+      const settings = typeof update === 'function' ? update(subject.value) : update;
 
-            currentApp.updateSettings(settings).subscribe({
-                next: () => {
-                    onUpdated?.();
-                    onError?.(null);
-                },
-                error: onError,
-            });
+      currentApp.updateSettings(settings).subscribe({
+        next: () => {
+          onUpdated?.();
+          onError?.(null);
         },
-        [currentApp, subject, onError, onUpdated],
-    );
+        error: onError,
+      });
+    },
+    [currentApp, subject, onError, onUpdated],
+  );
 
-    useAppSettingsStatus(currentApp, { onLoading, onUpdating });
+  useAppSettingsStatus(currentApp, { onLoading, onUpdating });
 
-    return [settings, setSettings];
+  return [settings, setSettings];
 };
 
 export default useAppSettings;

@@ -1,5 +1,5 @@
 import { map, distinctUntilChanged } from 'rxjs/operators';
-import { type OperatorFunction } from 'rxjs';
+import type { OperatorFunction } from 'rxjs';
 import type { IFeatureFlag } from '../FeatureFlag';
 
 /**
@@ -9,8 +9,8 @@ import type { IFeatureFlag } from '../FeatureFlag';
  * @returns A boolean value indicating whether the feature flag matches the specified type.
  */
 export interface FeatureSelectorFn<T = unknown> {
-    (feature: IFeatureFlag): feature is IFeatureFlag<T>;
-    (feature: IFeatureFlag): boolean;
+  (feature: IFeatureFlag): feature is IFeatureFlag<T>;
+  (feature: IFeatureFlag): boolean;
 }
 
 export type FeatureSelector<T = unknown> = string | FeatureSelectorFn<T>;
@@ -33,9 +33,9 @@ type Features = Record<string, IFeatureFlag>;
  * @returns An operator function that filters the features and returns an array of IFeatureFlag.
  */
 export const filterFeatures =
-    (selector: FeatureSelectorFn): OperatorFunction<Features, Array<IFeatureFlag>> =>
-    (source$) =>
-        source$.pipe(map((features) => Object.values(features).filter(selector)));
+  (selector: FeatureSelectorFn): OperatorFunction<Features, Array<IFeatureFlag>> =>
+  (source$) =>
+    source$.pipe(map((features) => Object.values(features).filter(selector)));
 
 /**
  * Finds a feature flag based on the provided selector and comparator.
@@ -47,17 +47,17 @@ export const filterFeatures =
  * @returns {OperatorFunction<Features, IFeatureFlag<T> | undefined>} - The operator function that performs the feature flag search.
  */
 export const findFeature = <T = unknown>(
-    selector: FeatureSelector<T>,
-    comparator?: FeatureComparator<T>,
+  selector: FeatureSelector<T>,
+  comparator?: FeatureComparator<T>,
 ): OperatorFunction<Features, IFeatureFlag<T> | undefined> => {
-    const findFn: (feature: IFeatureFlag) => feature is IFeatureFlag<T> =
-        typeof selector === 'function'
-            ? selector
-            : (feature: IFeatureFlag): feature is IFeatureFlag<T> => feature.key === selector;
-    return (source$) => {
-        return source$.pipe(
-            map((features) => Object.values(features).find(findFn)),
-            distinctUntilChanged(comparator),
-        );
-    };
+  const findFn: (feature: IFeatureFlag) => feature is IFeatureFlag<T> =
+    typeof selector === 'function'
+      ? selector
+      : (feature: IFeatureFlag): feature is IFeatureFlag<T> => feature.key === selector;
+  return (source$) => {
+    return source$.pipe(
+      map((features) => Object.values(features).find(findFn)),
+      distinctUntilChanged(comparator),
+    );
+  };
 };

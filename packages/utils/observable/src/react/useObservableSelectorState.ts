@@ -1,6 +1,6 @@
 import { useObservableSelector } from './useObservableSelector';
 import { useObservableState } from './useObservableState';
-import { Observable } from '../types';
+import type { Observable } from '../types';
 
 /**
  * @deprecated use useObservableState (since ^8.1)
@@ -19,15 +19,15 @@ import { Observable } from '../types';
  * @returns Observable property of subject
  */
 export function useObservableSelectorState<TType, TValue>(
-    subject: Observable<TType>,
-    selector: (state: TType) => TValue,
-    options?: {
-        initial?: TValue;
-        compare?: (x: TValue, y: TValue) => boolean;
-    },
+  subject: Observable<TType>,
+  selector: (state: TType) => TValue,
+  options?: {
+    initial?: TValue;
+    compare?: (x: TValue, y: TValue) => boolean;
+  },
 ) {
-    const selector$ = useObservableSelector(subject, selector, options?.compare);
-    return useObservableState(selector$, {
-        initial: options?.initial,
-    });
+  const selector$ = useObservableSelector(subject, selector, options?.compare);
+  return useObservableState(selector$, {
+    initial: options?.initial,
+  });
 }

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": ["tsconfig.json", "package.json", "./turbo"]
+  },
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 100,
+    "useEditorconfig": true,
+    "indentStyle": "space"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noBannedTypes": "warn",
+        "useLiteralKeys": "warn",
+        "useOptionalChain": "warn"
+      },
+      "performance": {
+        "noAccumulatingSpread": "warn"
+      },
+      "style": {
+        "noParameterAssign": "warn",
+        "useShorthandFunctionType": "warn",
+        "noUselessElse": "warn",
+        "useExportType": "warn",
+        "useLiteralEnumMembers": "warn",
+        "noNonNullAssertion": "warn",
+        "noUnusedTemplateLiteral": "warn",
+        "noCommaOperator": "warn",
+        "useNodejsImportProtocol": "warn",
+        "useTemplate": "warn",
+        "useSelfClosingElements": "warn",
+        "noInferrableTypes": "warn",
+        "useDefaultParameterLast": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noEmptyBlockStatements": "warn",
+        "noConfusingVoidType": "warn",
+        "noGlobalIsNan": "warn",
+        "noDoubleEquals": "warn",
+        "noAssignInExpressions": "warn",
+        "noImplicitAnyLet": "warn"
+      }
+    },
+    "ignore": [
+      "node_modules",
+      "**/dist/**",
+      "**/*.config.js",
+      "**/version.ts",
+      "vue-press/src/.vuepress"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "overrides": [
+    {
+      "include": ["packages/react/**"]
+    }
+  ]
+}

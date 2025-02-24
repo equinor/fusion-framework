@@ -1,15 +1,15 @@
 import type { ApiFeatureFlagPlugin, IApiPluginClient } from './types';
 
 export class ApiPlugin implements ApiFeatureFlagPlugin {
-    #apiClient: IApiPluginClient;
+  #apiClient: IApiPluginClient;
 
-    constructor(apiClient: IApiPluginClient) {
-        this.#apiClient = apiClient;
-    }
+  constructor(apiClient: IApiPluginClient) {
+    this.#apiClient = apiClient;
+  }
 
-    initial() {
-        return this.#apiClient.getFeatureFlags();
-    }
+  initial() {
+    return this.#apiClient.getFeatureFlags();
+  }
 }
 
 export default ApiPlugin;

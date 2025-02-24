@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
-import { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import type { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 const BOOKMARK_ID_PARM = 'bookmarkId';
@@ -16,42 +16,42 @@ type AppPathResolver = (appKey: string) => string;
  * default configuration is /apps/:appKey
  */
 export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): void => {
-    const {
-        event,
-        context,
-        navigation: { navigator },
-    } = useFramework<[BookmarkModule, NavigationModule]>().modules;
+  const {
+    event,
+    context,
+    navigation: { navigator },
+  } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
-    useLayoutEffect(() => {
-        const sub = event.addEventListener('onBookmarkChanged', (e) => {
-            const { appKey, context: bookmarkContext } = e.detail;
+  useLayoutEffect(() => {
+    const sub = event.addEventListener('onBookmarkChanged', (e) => {
+      const { appKey, context: bookmarkContext } = e.detail;
 
-            const pathname = args.resolveAppPath(appKey);
+      const pathname = args.resolveAppPath(appKey);
 
-            if (navigator.location.pathname !== pathname) {
-                const { hash, search } = navigator.location;
+      if (navigator.location.pathname !== pathname) {
+        const { hash, search } = navigator.location;
 
-                const to = {
-                    pathname,
-                    search: removeBookmarkIdFromURL(search),
-                    hash,
-                };
-                navigator.push(to);
-            }
+        const to = {
+          pathname,
+          search: removeBookmarkIdFromURL(search),
+          hash,
+        };
+        navigator.push(to);
+      }
 
-            if (bookmarkContext) {
-                context.currentContext?.id !== bookmarkContext.id &&
-                    context.setCurrentContextByIdAsync(bookmarkContext.id);
-            }
-        });
-        return sub;
-    }, [args, context, event, navigator]);
+      if (bookmarkContext) {
+        context.currentContext?.id !== bookmarkContext.id &&
+          context.setCurrentContextByIdAsync(bookmarkContext.id);
+      }
+    });
+    return sub;
+  }, [args, context, event, navigator]);
 };
 
 function removeBookmarkIdFromURL(searchParams: string): string {
-    const params = new URLSearchParams(searchParams);
-    params.delete(BOOKMARK_ID_PARM);
-    return `?${params.toString()}`;
+  const params = new URLSearchParams(searchParams);
+  params.delete(BOOKMARK_ID_PARM);
+  return `?${params.toString()}`;
 }
 
 export default useBookmarkNavigate;

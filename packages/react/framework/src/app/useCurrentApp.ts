@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 
 import { useObservableState } from '@equinor/fusion-observable/react';
 
-import { type AnyModule } from '@equinor/fusion-framework-module';
-import {
-    ConfigEnvironment,
-    type AppModule,
-    type CurrentApp,
+import type { AnyModule } from '@equinor/fusion-framework-module';
+import type {
+  ConfigEnvironment,
+  AppModule,
+  CurrentApp,
 } from '@equinor/fusion-framework-module-app';
 
 import { useFramework } from '../useFramework';
@@ -20,26 +20,26 @@ import { useFramework } from '../useFramework';
  * @template TEnv type hint what kind of environment config the application has
  */
 export const useCurrentApp = <
-    TModules extends Array<AnyModule> = [],
-    TEnv extends ConfigEnvironment = ConfigEnvironment,
+  TModules extends Array<AnyModule> = [],
+  TEnv extends ConfigEnvironment = ConfigEnvironment,
 >(): {
-    currentApp?: CurrentApp<TModules, TEnv> | null;
-    setCurrentApp: (appKey: string) => void;
-    clearCurrentApp: () => void;
-    error?: unknown;
+  currentApp?: CurrentApp<TModules, TEnv> | null;
+  setCurrentApp: (appKey: string) => void;
+  clearCurrentApp: () => void;
+  error?: unknown;
 } => {
-    const provider = useFramework<[AppModule]>().modules.app;
-    if (!provider) {
-        throw Error('Current framework does not have AppModule configured');
-    }
-    const currentApp$ = useMemo(() => provider.current$, [provider]);
-    const { value, error } = useObservableState(currentApp$, { initial: provider.current });
-    return {
-        currentApp: value as CurrentApp<TModules, TEnv>,
-        setCurrentApp: useMemo(() => provider.setCurrentApp.bind(provider), [provider]),
-        clearCurrentApp: useMemo(() => provider.clearCurrentApp.bind(provider), [provider]),
-        error,
-    };
+  const provider = useFramework<[AppModule]>().modules.app;
+  if (!provider) {
+    throw Error('Current framework does not have AppModule configured');
+  }
+  const currentApp$ = useMemo(() => provider.current$, [provider]);
+  const { value, error } = useObservableState(currentApp$, { initial: provider.current });
+  return {
+    currentApp: value as CurrentApp<TModules, TEnv>,
+    setCurrentApp: useMemo(() => provider.setCurrentApp.bind(provider), [provider]),
+    clearCurrentApp: useMemo(() => provider.clearCurrentApp.bind(provider), [provider]),
+    error,
+  };
 };
 
 export default useCurrentApp;

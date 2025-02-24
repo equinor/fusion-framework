@@ -12,15 +12,15 @@ import { z } from 'zod';
  *   - `scopes` (optional): An array of strings representing the scopes. Defaults to an empty array.
  */
 export const ApiAppConfigSchema = z.object({
-    environment: z.record(z.any()).optional().default({}),
-    endpoints: z
-        .record(
-            z.object({
-                url: z.string(),
-                scopes: z.array(z.string()).optional().default([]),
-            }),
-        )
-        .optional(),
+  environment: z.record(z.any()).optional().default({}),
+  endpoints: z
+    .record(
+      z.object({
+        url: z.string(),
+        scopes: z.array(z.string()).optional().default([]),
+      }),
+    )
+    .optional(),
 });
 
 export type ApiAppConfig = z.infer<typeof ApiAppConfigSchema>;
@@ -38,31 +38,29 @@ export type ApiAppConfig = z.infer<typeof ApiAppConfigSchema>;
  * - `isExpired` (boolean | nullish): Indicates whether the account is expired, which can be null or undefined.
  */
 const ApiApplicationPersonSchema = z.object({
-    azureUniqueId: z.string({ description: 'The unique identifier for the person in Azure.' }),
-    displayName: z.string({ description: 'The display name of the person.' }),
-    mail: z
-        .string({ description: 'The email address of the person, which can be null or undefined.' })
-        .nullish(),
-    upn: z
-        .string({
-            description:
-                'The User Principal Name (UPN) of the person, which can be null or undefined.',
-        })
-        .nullish(),
-    accountType: z.string({
-        description: 'The type of account the person has.',
-    }),
-    accountClassification: z
-        .string({
-            description: 'The classification of the account, which can be null or undefined.',
-        })
-        .nullish(),
-    isExpired: z
-        .boolean({
-            description:
-                'Indicates whether the account is expired, which can be null or undefined.',
-        })
-        .nullish(),
+  azureUniqueId: z.string({ description: 'The unique identifier for the person in Azure.' }),
+  displayName: z.string({ description: 'The display name of the person.' }),
+  mail: z
+    .string({ description: 'The email address of the person, which can be null or undefined.' })
+    .nullish(),
+  upn: z
+    .string({
+      description: 'The User Principal Name (UPN) of the person, which can be null or undefined.',
+    })
+    .nullish(),
+  accountType: z.string({
+    description: 'The type of account the person has.',
+  }),
+  accountClassification: z
+    .string({
+      description: 'The classification of the account, which can be null or undefined.',
+    })
+    .nullish(),
+  isExpired: z
+    .boolean({
+      description: 'Indicates whether the account is expired, which can be null or undefined.',
+    })
+    .nullish(),
 });
 
 /**
@@ -83,18 +81,18 @@ const ApiApplicationPersonSchema = z.object({
  * - `uploadedBy`: An optional schema for the person who uploaded the build.
  */
 export const ApiApplicationBuildSchema = z.object({
-    version: z.string(),
-    entryPoint: z.string(),
-    tags: z.array(z.string()).nullish(),
-    tag: z.enum(['latest', 'preview']).nullish(),
-    assetPath: z.string().nullish(),
-    configUrl: z.string().nullish(),
-    timestamp: z.string().nullish(),
-    commitSha: z.string().nullish(),
-    githubRepo: z.string().nullish(),
-    projectPage: z.string().nullish(),
-    allowedExtensions: z.array(z.string()).nullish(),
-    uploadedBy: ApiApplicationPersonSchema.nullish(),
+  version: z.string(),
+  entryPoint: z.string(),
+  tags: z.array(z.string()).nullish(),
+  tag: z.enum(['latest', 'preview']).nullish(),
+  assetPath: z.string().nullish(),
+  configUrl: z.string().nullish(),
+  timestamp: z.string().nullish(),
+  commitSha: z.string().nullish(),
+  githubRepo: z.string().nullish(),
+  projectPage: z.string().nullish(),
+  allowedExtensions: z.array(z.string()).nullish(),
+  uploadedBy: ApiApplicationPersonSchema.nullish(),
 });
 
 /**
@@ -124,33 +122,33 @@ export const ApiApplicationBuildSchema = z.object({
  * - `build` (ApiApplicationBuildSchema | nullish): Build details of the application.
  */
 export const ApiApplicationSchema = z.object({
-    appKey: z.string(),
-    displayName: z.string(),
-    description: z.string(),
-    type: z.string(),
-    isPinned: z.boolean().nullish(),
-    templateSource: z.string().nullish(),
-    category: z
-        .object({
-            id: z.string(),
-            name: z.string(),
-            displayName: z.string(),
-            color: z.string(),
-            defaultIcon: z.string(),
-            sortOrder: z.number(),
-        })
-        .nullish(),
-    visualization: z
-        .object({
-            color: z.string().nullish(),
-            icon: z.string().nullish(),
-            sortOrder: z.number(),
-        })
-        .nullish(),
-    keywords: z.array(z.string()).nullish(),
-    admins: z.array(ApiApplicationPersonSchema).nullish(),
-    owners: z.array(ApiApplicationPersonSchema).nullish(),
-    build: ApiApplicationBuildSchema.nullish(),
+  appKey: z.string(),
+  displayName: z.string(),
+  description: z.string(),
+  type: z.string(),
+  isPinned: z.boolean().nullish(),
+  templateSource: z.string().nullish(),
+  category: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      displayName: z.string(),
+      color: z.string(),
+      defaultIcon: z.string(),
+      sortOrder: z.number(),
+    })
+    .nullish(),
+  visualization: z
+    .object({
+      color: z.string().nullish(),
+      icon: z.string().nullish(),
+      sortOrder: z.number(),
+    })
+    .nullish(),
+  keywords: z.array(z.string()).nullish(),
+  admins: z.array(ApiApplicationPersonSchema).nullish(),
+  owners: z.array(ApiApplicationPersonSchema).nullish(),
+  build: ApiApplicationBuildSchema.nullish(),
 });
 
 export type ApiApplication = z.infer<typeof ApiApplicationSchema>;

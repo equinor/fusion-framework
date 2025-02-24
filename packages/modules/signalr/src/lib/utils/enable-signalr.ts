@@ -1,21 +1,21 @@
 import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
+import type { SignalRModuleConfigBuilderCallback } from '../../SignalRModuleConfigurator';
 import { module } from '../../SignalRModule';
 import { configureFromFramework } from './configure-from-framework';
 
 export interface enableSignalR {
-    (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        configurator: IModulesConfigurator<any, any>,
-        name: string,
-        cb: SignalRModuleConfigBuilderCallback,
-    ): void;
-    (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        configurator: IModulesConfigurator<any, any>,
-        name: string,
-        options: { service: string; path: string },
-    ): void;
+  (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    configurator: IModulesConfigurator<any, any>,
+    name: string,
+    cb: SignalRModuleConfigBuilderCallback,
+  ): void;
+  (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    configurator: IModulesConfigurator<any, any>,
+    name: string,
+    options: { service: string; path: string },
+  ): void;
 }
 
 /**
@@ -46,26 +46,26 @@ export interface enableSignalR {
  ```
  */
 export function enableSignalR(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    configurator: IModulesConfigurator<any, any>,
-    name: string,
-    optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  configurator: IModulesConfigurator<any, any>,
+  name: string,
+  optionsOrCallback: SignalRModuleConfigBuilderCallback | { service: string; path: string },
 ) {
-    if (typeof optionsOrCallback === 'function') {
-        configurator.addConfig({
-            module,
-            configure: (signalRConfigurator) => {
-                signalRConfigurator.onCreateConfig(optionsOrCallback);
-            },
-        });
-    } else {
-        configurator.addConfig({
-            module,
-            configure: (signalRConfigurator) => {
-                signalRConfigurator.onCreateConfig((builder) =>
-                    configureFromFramework({ name, ...optionsOrCallback }, builder),
-                );
-            },
-        });
-    }
+  if (typeof optionsOrCallback === 'function') {
+    configurator.addConfig({
+      module,
+      configure: (signalRConfigurator) => {
+        signalRConfigurator.onCreateConfig(optionsOrCallback);
+      },
+    });
+  } else {
+    configurator.addConfig({
+      module,
+      configure: (signalRConfigurator) => {
+        signalRConfigurator.onCreateConfig((builder) =>
+          configureFromFramework({ name, ...optionsOrCallback }, builder),
+        );
+      },
+    });
+  }
 }

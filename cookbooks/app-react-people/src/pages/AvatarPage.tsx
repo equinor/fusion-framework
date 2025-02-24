@@ -11,13 +11,13 @@ import { FlexGrid } from '../Styled';
  * @returns A React element representing the Avatar page.
  */
 export const AvatarPage = () => {
-    return (
-        <>
-            <h2>Avatar</h2>
-            <FlexGrid>
-                <PersonAvatar azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa" />
-                <PersonAvatar upn="handah@equinor.com" />
-            </FlexGrid>
-        </>
-    );
+  return (
+    <>
+      <h2>Avatar</h2>
+      <FlexGrid>
+        <PersonAvatar azureId="cbc6480d-12c1-467e-b0b8-cfbb22612daa" />
+        <PersonAvatar upn="handah@equinor.com" />
+      </FlexGrid>
+    </>
+  );
 };

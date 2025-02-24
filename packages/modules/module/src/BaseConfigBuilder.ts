@@ -1,7 +1,7 @@
 import { EMPTY, from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
 import { catchError, filter, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
-import { Modules, ModuleType } from './types';
-import { type DotPath, type DotPathType } from './utils/dot-path';
+import type { Modules, ModuleType } from './types';
+import type { DotPath, DotPathType } from './utils/dot-path';
 
 /**
  * Recursively assigns a configuration value to a nested object property.
@@ -16,29 +16,29 @@ import { type DotPath, type DotPathType } from './utils/dot-path';
  * @returns The modified object.
  */
 const assignConfigValue = <T>(
-    obj: Record<string, unknown>,
-    prop: string | string[],
-    value: unknown,
+  obj: Record<string, unknown>,
+  prop: string | string[],
+  value: unknown,
 ): T => {
-    // Split the property path into individual parts
-    const props = typeof prop === 'string' ? prop.split('.') : prop;
+  // Split the property path into individual parts
+  const props = typeof prop === 'string' ? prop.split('.') : prop;
 
-    // Get the first property in the path
-    const attr = props.shift();
+  // Get the first property in the path
+  const attr = props.shift();
 
-    // If there is a property to process
-    if (attr) {
-        // Create the nested object if it doesn't exist
-        obj[attr] ??= {};
+  // If there is a property to process
+  if (attr) {
+    // Create the nested object if it doesn't exist
+    obj[attr] ??= {};
 
-        // If there are more properties in the path, recurse
-        props.length
-            ? assignConfigValue(obj[attr] as Record<string, unknown>, props, value)
-            : Object.assign(obj, { [attr]: value });
-    }
+    // If there are more properties in the path, recurse
+    props.length
+      ? assignConfigValue(obj[attr] as Record<string, unknown>, props, value)
+      : Object.assign(obj, { [attr]: value });
+  }
 
-    // Return the modified object
-    return obj as T;
+  // Return the modified object
+  return obj as T;
 };
 
 /**
@@ -48,34 +48,34 @@ const assignConfigValue = <T>(
  * @template TRef - The type of the reference or parent module.
  */
 export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
-    config: TConfig;
+  config: TConfig;
 
-    /** reference, parent modules */
-    ref?: TRef;
+  /** reference, parent modules */
+  ref?: TRef;
 
-    /**
-     * request a sibling module
-     * @template TKey name of module
-     * @argument module name of module
-     */
-    requireInstance<TKey extends string = Extract<keyof Modules, string>>(
-        module: TKey,
-    ): Promise<ModuleType<Modules[TKey]>>;
+  /**
+   * request a sibling module
+   * @template TKey name of module
+   * @argument module name of module
+   */
+  requireInstance<TKey extends string = Extract<keyof Modules, string>>(
+    module: TKey,
+  ): Promise<ModuleType<Modules[TKey]>>;
 
-    /**
-     * request a sibling module
-     * @template T module type
-     * @argument module name of module
-     */
-    requireInstance<T>(module: string): Promise<T>;
+  /**
+   * request a sibling module
+   * @template T module type
+   * @argument module name of module
+   */
+  requireInstance<T>(module: string): Promise<T>;
 
-    /**
-     * check if a module is included in the scope
-     * @template TKey name of module
-     * @argument module name of the module
-     */
-    hasModule<TKey extends string = Extract<keyof Modules, string>>(module: TKey): boolean;
-    hasModule(module: string): boolean;
+  /**
+   * check if a module is included in the scope
+   * @template TKey name of module
+   * @argument module name of the module
+   */
+  hasModule<TKey extends string = Extract<keyof Modules, string>>(module: TKey): boolean;
+  hasModule(module: string): boolean;
 };
 
 /**
@@ -100,7 +100,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
  * @returns An Observable that emits the return value of the callback function or void.
  */
 export type ConfigBuilderCallback<TReturn = unknown> = (
-    args: ConfigBuilderCallbackArgs,
+  args: ConfigBuilderCallbackArgs,
 ) => ObservableInput<TReturn | void>;
 
 /**
@@ -181,197 +181,195 @@ export type ConfigBuilderCallback<TReturn = unknown> = (
  *
  */
 export abstract class BaseConfigBuilder<TConfig extends object = Record<string, unknown>> {
-    /** internal hashmap of registered callback functions */
-    #configCallbacks = {} as Record<string, ConfigBuilderCallback>;
+  /** internal hashmap of registered callback functions */
+  #configCallbacks = {} as Record<string, ConfigBuilderCallback>;
 
-    /**
-     * request the builder to generate config
-     * @param init config builder callback arguments
-     * @param initial optional initial config
-     * @returns observable configuration object
-     * @sealed
-     */
-    public createConfig(
-        init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>,
-    ): Observable<TConfig> {
-        return from(this._createConfig(init, initial));
-    }
+  /**
+   * request the builder to generate config
+   * @param init config builder callback arguments
+   * @param initial optional initial config
+   * @returns observable configuration object
+   * @sealed
+   */
+  public createConfig(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<TConfig>,
+  ): Observable<TConfig> {
+    return from(this._createConfig(init, initial));
+  }
 
-    /**
-     * Asynchronously creates a configuration object of type `TConfig` based on the provided `init` callback and optional `initial` partial configuration.
-     *
-     * @see async version of {@link BaseConfigBuilder.createConfig}
-     * @param init - A callback function that is responsible for initializing the configuration object.
-     * @param initial - An optional partial configuration object that will be merged with the result of the `init` callback.
-     * @returns A Promise that resolves to the created configuration object of type `TConfig`.
-     * @protected
-     * @sealed
-     */
-    public async createConfigAsync(
-        init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>,
-    ): Promise<TConfig> {
-        return lastValueFrom(this.createConfig(init, initial));
-    }
+  /**
+   * Asynchronously creates a configuration object of type `TConfig` based on the provided `init` callback and optional `initial` partial configuration.
+   *
+   * @see async version of {@link BaseConfigBuilder.createConfig}
+   * @param init - A callback function that is responsible for initializing the configuration object.
+   * @param initial - An optional partial configuration object that will be merged with the result of the `init` callback.
+   * @returns A Promise that resolves to the created configuration object of type `TConfig`.
+   * @protected
+   * @sealed
+   */
+  public async createConfigAsync(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<TConfig>,
+  ): Promise<TConfig> {
+    return lastValueFrom(this.createConfig(init, initial));
+  }
 
-    /**
-     * Sets a configuration callback for the specified target path in the configuration.
-     *
-     * @param target - The target path in the configuration to set the callback for.
-     * @param cb - The callback function to be executed when the configuration for the specified target path is updated.
-     * @template TKey - a key of the config object
-     * @protected
-     * @sealed
-     */
-    protected _set<TTarget extends DotPath<TConfig>>(
-        target: TTarget,
-        cb: ConfigBuilderCallback<DotPathType<TConfig, TTarget>>,
-    ) {
-        this.#configCallbacks[target] = cb;
-    }
+  /**
+   * Sets a configuration callback for the specified target path in the configuration.
+   *
+   * @param target - The target path in the configuration to set the callback for.
+   * @param cb - The callback function to be executed when the configuration for the specified target path is updated.
+   * @template TKey - a key of the config object
+   * @protected
+   * @sealed
+   */
+  protected _set<TTarget extends DotPath<TConfig>>(
+    target: TTarget,
+    cb: ConfigBuilderCallback<DotPathType<TConfig, TTarget>>,
+  ) {
+    this.#configCallbacks[target] = cb;
+  }
 
-    /**
-     * Retrieves the configuration callback for the specified target path in the configuration.
-     *
-     * @param target - The target path in the configuration to retrieve the callback for.
-     * @returns The configuration builder callback for the specified target, or `undefined` if no callback is registered.
-     * @protected
-     * @sealed
-     */
-    protected _get<TTarget extends DotPath<TConfig>>(
-        target: TTarget,
-    ): ConfigBuilderCallback<DotPathType<TConfig, TTarget>> | undefined {
-        return this.#configCallbacks[target] as ConfigBuilderCallback<
-            DotPathType<TConfig, TTarget>
-        >;
-    }
+  /**
+   * Retrieves the configuration callback for the specified target path in the configuration.
+   *
+   * @param target - The target path in the configuration to retrieve the callback for.
+   * @returns The configuration builder callback for the specified target, or `undefined` if no callback is registered.
+   * @protected
+   * @sealed
+   */
+  protected _get<TTarget extends DotPath<TConfig>>(
+    target: TTarget,
+  ): ConfigBuilderCallback<DotPathType<TConfig, TTarget>> | undefined {
+    return this.#configCallbacks[target] as ConfigBuilderCallback<DotPathType<TConfig, TTarget>>;
+  }
 
-    /**
-     * Checks if the given target path exists in the configuration callbacks.
-     * @param target - The target path to check.
-     * @returns `true` if the target path exists in the configuration callbacks, `false` otherwise.
-     * @protected
-     * @sealed
-     */
-    protected _has<TTarget extends DotPath<TConfig>>(target: TTarget): boolean {
-        return target in this.#configCallbacks;
-    }
+  /**
+   * Checks if the given target path exists in the configuration callbacks.
+   * @param target - The target path to check.
+   * @returns `true` if the target path exists in the configuration callbacks, `false` otherwise.
+   * @protected
+   * @sealed
+   */
+  protected _has<TTarget extends DotPath<TConfig>>(target: TTarget): boolean {
+    return target in this.#configCallbacks;
+  }
 
-    /**
-     * Builds and processes the configuration object by executing all registered configuration callbacks, merging the results and post-processing the result.
-     *
-     * @example
-     * ```ts
-     * _createConfig(init, initial) {
-     *   if(!(this._has('foo.bar') || initial?.foo?.bar)){
-     *     console.warn(`'foo.bar' is not configured, adding default value`);
-     *     this._set('foo.bar', async(args) => {
-     *        if(!args.hasModule('some_module')){
-     *           throw Error(`'some_module' is not configured`);
-     *        }
-     *        const someModule = await arg.requireInstance('some_module');
-     *        return someModule.doSomething();
-     *     });
-     *   }
-     *   super._createConfig(init, initial);
-     * }
-     * ```
-     *
-     * @param init - The configuration builder callback arguments, which include the module context and other relevant data.
-     * @param initial - An optional partial configuration object to use as the initial base for the configuration.
-     * @returns An observable that emits the processed configuration.
-     * @protected
-     */
-    protected _createConfig(
-        init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>,
-    ): ObservableInput<TConfig> {
-        // Build the initial configuration and then process it
-        return from(this._buildConfig(init, initial)).pipe(
-            // Process the built configuration with the provided initialization arguments
-            switchMap((config) => this._processConfig(config, init)),
-        );
-    }
+  /**
+   * Builds and processes the configuration object by executing all registered configuration callbacks, merging the results and post-processing the result.
+   *
+   * @example
+   * ```ts
+   * _createConfig(init, initial) {
+   *   if(!(this._has('foo.bar') || initial?.foo?.bar)){
+   *     console.warn(`'foo.bar' is not configured, adding default value`);
+   *     this._set('foo.bar', async(args) => {
+   *        if(!args.hasModule('some_module')){
+   *           throw Error(`'some_module' is not configured`);
+   *        }
+   *        const someModule = await arg.requireInstance('some_module');
+   *        return someModule.doSomething();
+   *     });
+   *   }
+   *   super._createConfig(init, initial);
+   * }
+   * ```
+   *
+   * @param init - The configuration builder callback arguments, which include the module context and other relevant data.
+   * @param initial - An optional partial configuration object to use as the initial base for the configuration.
+   * @returns An observable that emits the processed configuration.
+   * @protected
+   */
+  protected _createConfig(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<TConfig>,
+  ): ObservableInput<TConfig> {
+    // Build the initial configuration and then process it
+    return from(this._buildConfig(init, initial)).pipe(
+      // Process the built configuration with the provided initialization arguments
+      switchMap((config) => this._processConfig(config, init)),
+    );
+  }
 
-    /**
-     * Builds the configuration object by executing all registered configuration callbacks and merging the results.
-     *
-     * @note overriding this method is not recommended, use {@link BaseConfigBuilder._createConfig} instead.
-     * - use {@link BaseConfigBuilder._createConfig} to add custom initialization logic before building the configuration.
-     * - use {@link BaseConfigBuilder._processConfig} to validate and post-process the configuration.
-     *
-     *
-     * @param init - The initialization arguments passed to the configuration callbacks.
-     * @param initial - An optional partial configuration object to use as the initial state.
-     * @returns An observable that emits the final configuration object.
-     * @protected
-     * @sealed
-     * @readonly
-     */
-    protected _buildConfig(
-        init: ConfigBuilderCallbackArgs,
-        initial?: Partial<TConfig>,
-    ): ObservableInput<Partial<TConfig>> {
-        return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
-            // Transform each config callback into a target-value pair
-            mergeMap(([target, cb]) =>
-                from(cb(init)).pipe(
-                    // Filter out undefined values, mostly for void return types
-                    filter((value) => value !== undefined),
-                    // Map the value to a target-value pair
-                    map((value) => ({ target, value })),
-                    catchError((error) => {
-                        console.error(
-                            `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
-                            error,
-                        );
-                        return EMPTY;
-                    }),
-                ),
-            ),
-            // Reduce the target-value pairs into a single configuration object
-            reduce(
-                // Assign each value to the corresponding target in the accumulator
-                (acc, { target, value }) => assignConfigValue(acc, target, value),
-                // Initialize accumulator with initial config or empty object
-                initial ?? ({} as TConfig),
-            ),
-        );
-    }
+  /**
+   * Builds the configuration object by executing all registered configuration callbacks and merging the results.
+   *
+   * @note overriding this method is not recommended, use {@link BaseConfigBuilder._createConfig} instead.
+   * - use {@link BaseConfigBuilder._createConfig} to add custom initialization logic before building the configuration.
+   * - use {@link BaseConfigBuilder._processConfig} to validate and post-process the configuration.
+   *
+   *
+   * @param init - The initialization arguments passed to the configuration callbacks.
+   * @param initial - An optional partial configuration object to use as the initial state.
+   * @returns An observable that emits the final configuration object.
+   * @protected
+   * @sealed
+   * @readonly
+   */
+  protected _buildConfig(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<TConfig>,
+  ): ObservableInput<Partial<TConfig>> {
+    return from(Object.entries<ConfigBuilderCallback>(this.#configCallbacks)).pipe(
+      // Transform each config callback into a target-value pair
+      mergeMap(([target, cb]) =>
+        from(cb(init)).pipe(
+          // Filter out undefined values, mostly for void return types
+          filter((value) => value !== undefined),
+          // Map the value to a target-value pair
+          map((value) => ({ target, value })),
+          catchError((error) => {
+            console.error(
+              `Failed to execute config callback: ${cb.name} for attribute: '${target}'`,
+              error,
+            );
+            return EMPTY;
+          }),
+        ),
+      ),
+      // Reduce the target-value pairs into a single configuration object
+      reduce(
+        // Assign each value to the corresponding target in the accumulator
+        (acc, { target, value }) => assignConfigValue(acc, target, value),
+        // Initialize accumulator with initial config or empty object
+        initial ?? ({} as TConfig),
+      ),
+    );
+  }
 
-    /**
-     * internal post process of config creation.
-     * override this method for post processing of config
-     *
-     * can be used for adding required config attributes which might not been
-     * added config callbacks for
-     *
-     * @example
-     * ```ts
-     * protected _processConfig(config, init) {
-     *     if(!config.foo){
-     *         config.foo = 1;
-     *     } elseif(!isNaN(config.foo)) {
-     *       throw Error(`'foo' is not a number`);
-     *     } elseif(config.foo < 0) {
-     *       throw Error(`'foo' is negative`);
-     *     } elseif(config.foo > 100) {
-     *       throw Error(`'foo' is too large`);
-     *     }
-     *     return config;
-     * }
-     * ```
-     *
-     * @param config - The partial configuration object to process.
-     * @param _init - Additional configuration arguments (not used in this implementation).
-     * @returns An observable input that emits the processed configuration object.
-     * @protected
-     */
-    protected _processConfig(
-        config: Partial<TConfig>,
-        _init: ConfigBuilderCallbackArgs,
-    ): ObservableInput<TConfig> {
-        return of(config as TConfig);
-    }
+  /**
+   * internal post process of config creation.
+   * override this method for post processing of config
+   *
+   * can be used for adding required config attributes which might not been
+   * added config callbacks for
+   *
+   * @example
+   * ```ts
+   * protected _processConfig(config, init) {
+   *     if(!config.foo){
+   *         config.foo = 1;
+   *     } elseif(!isNaN(config.foo)) {
+   *       throw Error(`'foo' is not a number`);
+   *     } elseif(config.foo < 0) {
+   *       throw Error(`'foo' is negative`);
+   *     } elseif(config.foo > 100) {
+   *       throw Error(`'foo' is too large`);
+   *     }
+   *     return config;
+   * }
+   * ```
+   *
+   * @param config - The partial configuration object to process.
+   * @param _init - Additional configuration arguments (not used in this implementation).
+   * @returns An observable input that emits the processed configuration object.
+   * @protected
+   */
+  protected _processConfig(
+    config: Partial<TConfig>,
+    _init: ConfigBuilderCallbackArgs,
+  ): ObservableInput<TConfig> {
+    return of(config as TConfig);
+  }
 }

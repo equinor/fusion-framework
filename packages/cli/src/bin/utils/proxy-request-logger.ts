@@ -1,4 +1,4 @@
-import { type ClientRequest } from 'http';
+import type { ClientRequest } from 'http';
 import { Spinner } from './spinner.js';
 import { formatPath, chalk } from './format.js';
 
@@ -15,22 +15,22 @@ import { formatPath, chalk } from './format.js';
  * - On an error, the spinner fails.
  */
 export const proxyRequestLogger = (proxyReq: ClientRequest) => {
-    const spinner = Spinner.Clone();
-    spinner.ora.suffixText = formatPath(
-        [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
-    );
-    spinner.start('proxy request');
-    proxyReq.on('response', (res) => {
-        if (Number(res.statusCode) < 400) {
-            spinner.succeed();
-        } else {
-            spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
-        }
-        spinner.stop();
-    });
-    proxyReq.on('error', () => {
-        spinner.fail();
-    });
+  const spinner = Spinner.Clone();
+  spinner.ora.suffixText = formatPath(
+    [proxyReq.protocol, '//', proxyReq.host, proxyReq.path].join(''),
+  );
+  spinner.start('proxy request');
+  proxyReq.on('response', (res) => {
+    if (Number(res.statusCode) < 400) {
+      spinner.succeed();
+    } else {
+      spinner.warn(chalk.yellow(res.statusMessage ?? `${res.statusCode} `));
+    }
+    spinner.stop();
+  });
+  proxyReq.on('error', () => {
+    spinner.fail();
+  });
 };
 
 export default proxyRequestLogger;

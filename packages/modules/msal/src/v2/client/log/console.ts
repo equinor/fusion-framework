@@ -14,42 +14,45 @@ type ConsoleLevel = 'error' | 'warn' | 'info' | 'debug';
  * ```
  */
 export class ConsoleLogger extends Logger {
-    /**
-     * @param logLevel - 0-1-2-3 (error-warning-info-debug) if not provided all records logged
-     */
-    constructor(logLevel?: LogLevel) {
-        super({
-            logLevel,
-            loggerCallback: (...args: [LogLevel, string, boolean]) => this.loggerCallback(...args),
-        });
-    }
+  /**
+   * @param logLevel - 0-1-2-3 (error-warning-info-debug) if not provided all records logged
+   */
+  constructor(logLevel?: LogLevel) {
+    super({
+      logLevel,
+      loggerCallback: (...args: [LogLevel, string, boolean]) => this.loggerCallback(...args),
+    });
+  }
 
-    /** @inheritdoc */
-    protected loggerCallback(lvl: LogLevel, msg: string, _containsPii?: boolean): void {
-        console[this.getLogType(lvl)](
-            `%c FUSION::MSAL %c %s`,
-            'border: 1px solid;',
-            'border: none;',
-            msg,
-        );
-    }
+  /** @inheritdoc */
+  protected loggerCallback(lvl: LogLevel, msg: string, _containsPii?: boolean): void {
+    console[this.getLogType(lvl)](
+      `%c FUSION::MSAL %c %s`,
+      'border: 1px solid;',
+      'border: none;',
+      msg,
+    );
+  }
 
-    /**
-     * Map log level to console log function type
-     */
-    protected getLogType = (lvl: LogLevel): ConsoleLevel => {
-        switch (lvl) {
-            case LogLevel.Error:
-                return 'error';
-            case LogLevel.Warning:
-                return 'warn';
-            case LogLevel.Info:
-                return 'info';
-            case LogLevel.Verbose:
-            default:
-                return 'debug';
-        }
-    };
+  /**
+   * Map log level to console log function type
+   *
+   * @default LogLevel.Verbose
+   */
+  protected getLogType = (lvl: LogLevel): ConsoleLevel => {
+    switch (lvl) {
+      case LogLevel.Error:
+        return 'error';
+      case LogLevel.Warning:
+        return 'warn';
+      case LogLevel.Info:
+        return 'info';
+      case LogLevel.Verbose:
+        return 'debug';
+      default:
+        return this.getLogType(LogLevel.Verbose);
+    }
+  };
 }
 
 export default ConsoleLogger;

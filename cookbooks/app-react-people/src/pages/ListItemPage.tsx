@@ -14,20 +14,20 @@ const demoSearch = 'FOIT CON PDL';
  * @returns A `PersonListItem` component with the data from the `person` object.
  */
 const mapPersonToListItem = (person: ApiPersonSearchResultV2) => (
-    <PersonListItem
-        key={person.azureUniqueId}
-        dataSource={{
-            azureId: person.azureUniqueId!,
-            name: person.name,
-            mail: person.mail,
-            jobTitle: person.jobTitle,
-            department: person.department,
-            mobilePhone: person.mobilePhone,
-            officeLocation: person.officeLocation,
-            upn: person.upn,
-            accountType: person.accountType,
-        }}
-    />
+  <PersonListItem
+    key={person.azureUniqueId}
+    dataSource={{
+      azureId: person.azureUniqueId ?? '0000-0000-0000-0000-0000',
+      name: person.name,
+      mail: person.mail,
+      jobTitle: person.jobTitle,
+      department: person.department,
+      mobilePhone: person.mobilePhone,
+      officeLocation: person.officeLocation,
+      upn: person.upn,
+      accountType: person.accountType,
+    }}
+  />
 );
 /**
  * Renders a page that displays a list of persons based on a search query.
@@ -42,38 +42,38 @@ const mapPersonToListItem = (person: ApiPersonSearchResultV2) => (
  * @returns A React component that renders the list of persons.
  */
 export const ListItemPage = () => {
-    // Fetch and handle search results for persons
-    const { persons, error, isSearching } = useSearchPersons(demoSearch);
+  // Fetch and handle search results for persons
+  const { persons, error, isSearching } = useSearchPersons(demoSearch);
 
-    // Display error message if there was an issue fetching the data
-    if (error) {
-        return (
-            <div>
-                <p>
-                    {error.name}: {error.message}
-                </p>
-                <pre>{JSON.stringify(error.data ?? error.cause, null, 2)}</pre>
-            </div>
-        );
-    }
-
-    // Display loading message while fetching data
-    if (isSearching) {
-        return <div>Fetching demo data for [{demoSearch}] ...</div>;
-    }
-
-    // Render the list of persons
+  // Display error message if there was an issue fetching the data
+  if (error) {
     return (
-        <>
-            <h2>PersonListItems ({demoSearch})</h2>
-            <FlexGridColumn>
-                {persons.map(mapPersonToListItem)}
-                {/*
+      <div>
+        <p>
+          {error.name}: {error.message}
+        </p>
+        <pre>{JSON.stringify(error.data ?? error.cause, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  // Display loading message while fetching data
+  if (isSearching) {
+    return <div>Fetching demo data for [{demoSearch}] ...</div>;
+  }
+
+  // Render the list of persons
+  return (
+    <>
+      <h2>PersonListItems ({demoSearch})</h2>
+      <FlexGridColumn>
+        {persons.map(mapPersonToListItem)}
+        {/*
                   // Alternative way of mapping components, where the host people resolver is used.
                   // Note this will cause the host to re-resolve each person and use the data from the host api. 
                   persons.map(person => (<PersonListItem key={person.azureUniqueId} azureId={person.azureUniqueId} />))
                  */}
-            </FlexGridColumn>
-        </>
-    );
+      </FlexGridColumn>
+    </>
+  );
 };

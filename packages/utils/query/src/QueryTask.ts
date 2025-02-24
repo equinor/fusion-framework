@@ -1,9 +1,9 @@
-import { Subject, Subscription } from 'rxjs';
+import { Subject, type Subscription } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import { QueryOptions, QueryTaskCompleted } from './types';
-import { QueryClientJob } from './client/QueryClientJob';
+import type { QueryOptions, QueryTaskCompleted } from './types';
+import type { QueryClientJob } from './client/QueryClientJob';
 import { v4 as generateGUID } from 'uuid';
-import { type ILogger } from '@equinor/fusion-log';
+import type { ILogger } from '@equinor/fusion-log';
 
 /**
  * The `QueryTask` class is designed to manage and execute query operations efficiently. It extends the RxJS `Subject` to
@@ -44,68 +44,68 @@ import { type ILogger } from '@equinor/fusion-log';
  * @template TArgs - The type of the query arguments.
  */
 export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> {
-    #created: number = Date.now();
-    /**
-     * Gets the creation timestamp of the query task.
-     */
-    get created(): number {
-        return this.#created;
-    }
+  #created: number = Date.now();
+  /**
+   * Gets the creation timestamp of the query task.
+   */
+  get created(): number {
+    return this.#created;
+  }
 
-    #uuid: string = generateGUID();
-    /**
-     * Gets the unique identifier of the query task.
-     */
-    get uuid(): string {
-        return this.#uuid;
-    }
+  #uuid: string = generateGUID();
+  /**
+   * Gets the unique identifier of the query task.
+   */
+  get uuid(): string {
+    return this.#uuid;
+  }
 
-    /**
-     * Initializes a new instance of the QueryTask class.
-     * @param key A string representing the key associated with the query.
-     * @param args The arguments required for performing the query.
-     * @param options Optional. Additional options that may influence the query execution.
-     */
-    constructor(
-        public readonly key: string,
-        public readonly args: TArgs,
-        public readonly options?: Partial<QueryOptions<TType, TArgs>>,
-    ) {
-        super();
-    }
+  /**
+   * Initializes a new instance of the QueryTask class.
+   * @param key A string representing the key associated with the query.
+   * @param args The arguments required for performing the query.
+   * @param options Optional. Additional options that may influence the query execution.
+   */
+  constructor(
+    public readonly key: string,
+    public readonly args: TArgs,
+    public readonly options?: Partial<QueryOptions<TType, TArgs>>,
+  ) {
+    super();
+  }
 
-    /**
-     * Processes the given `QueryClientJob`, applying necessary transformations and finalizations.
-     * Once the job completes, it notifies all subscribers with the result and logs the completion.
-     *
-     * @param job The `QueryClientJob` to be processed.
-     * @param logger Optional. A logger for logging the completion of the job.
-     * @returns A subscription to the job's result.
-     */
-    processJob(job: QueryClientJob<TType, TArgs>, logger?: ILogger): Subscription {
-        return job
-            .pipe(
-                map((result) => {
-                    const { key, uuid, created } = this;
-                    return {
-                        key,
-                        uuid,
-                        created,
-                        status: 'complete',
-                        transaction: job.transaction,
-                        complete: result.completed,
-                        value: result.value,
-                    } satisfies QueryTaskCompleted<TType>;
-                }),
-                finalize(() => {
-                    logger?.debug(`QueryTask complete`, {
-                        uuid: this.uuid,
-                        key: this.key,
-                        job: { status: job.status, transaction: job.transaction },
-                    });
-                    job.complete();
-                }),
-            )
-            .subscribe(this);
-    }
+  /**
+   * Processes the given `QueryClientJob`, applying necessary transformations and finalizations.
+   * Once the job completes, it notifies all subscribers with the result and logs the completion.
+   *
+   * @param job The `QueryClientJob` to be processed.
+   * @param logger Optional. A logger for logging the completion of the job.
+   * @returns A subscription to the job's result.
+   */
+  processJob(job: QueryClientJob<TType, TArgs>, logger?: ILogger): Subscription {
+    return job
+      .pipe(
+        map((result) => {
+          const { key, uuid, created } = this;
+          return {
+            key,
+            uuid,
+            created,
+            status: 'complete',
+            transaction: job.transaction,
+            complete: result.completed,
+            value: result.value,
+          } satisfies QueryTaskCompleted<TType>;
+        }),
+        finalize(() => {
+          logger?.debug(`QueryTask complete`, {
+            uuid: this.uuid,
+            key: this.key,
+            job: { status: job.status, transaction: job.transaction },
+          });
+          job.complete();
+        }),
+      )
+      .subscribe(this);
+  }
 }

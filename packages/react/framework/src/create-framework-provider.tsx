@@ -1,4 +1,5 @@
-import React, { lazy } from 'react';
+import type React from 'react';
+import { lazy } from 'react';
 import initFusion from '@equinor/fusion-framework';
 import { FrameworkConfigurator } from '@equinor/fusion-framework';
 
@@ -26,22 +27,22 @@ import { ModuleProvider } from '@equinor/fusion-framework-react-module';
  * ```
  */
 export const createFrameworkProvider = <
-    TModules extends Array<AnyModule> = [],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    TRef extends ModulesInstanceType<[AnyModule]> = any,
+  TModules extends Array<AnyModule> = [],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TRef extends ModulesInstanceType<[AnyModule]> = any,
 >(
-    cb: (configurator: FrameworkConfigurator<TModules>, ref?: TRef) => void | Promise<void>,
-    ref?: TRef,
+  cb: (configurator: FrameworkConfigurator<TModules>, ref?: TRef) => void | Promise<void>,
+  ref?: TRef,
 ): React.LazyExoticComponent<React.FunctionComponent<React.PropsWithChildren<unknown>>> =>
-    lazy(async () => {
-        const configurator = new FrameworkConfigurator<TModules>();
-        await cb(configurator, ref);
-        const framework = await initFusion(configurator, ref);
-        return {
-            default: ({ children }: { children?: React.ReactNode }) => (
-                <FrameworkProvider value={framework}>
-                    <ModuleProvider value={framework.modules}>{children}</ModuleProvider>
-                </FrameworkProvider>
-            ),
-        };
-    });
+  lazy(async () => {
+    const configurator = new FrameworkConfigurator<TModules>();
+    await cb(configurator, ref);
+    const framework = await initFusion(configurator, ref);
+    return {
+      default: ({ children }: { children?: React.ReactNode }) => (
+        <FrameworkProvider value={framework}>
+          <ModuleProvider value={framework.modules}>{children}</ModuleProvider>
+        </FrameworkProvider>
+      ),
+    };
+  });

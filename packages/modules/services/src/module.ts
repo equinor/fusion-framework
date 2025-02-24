@@ -1,16 +1,16 @@
 import type {
-    IModuleConfigurator,
-    IModulesConfigurator,
-    Module,
+  IModuleConfigurator,
+  IModulesConfigurator,
+  Module,
 } from '@equinor/fusion-framework-module';
 import type { HttpModule, IHttpClientProvider } from '@equinor/fusion-framework-module-http';
 import type {
-    ServiceDiscoveryModule,
-    ServiceDiscoveryProvider,
+  ServiceDiscoveryModule,
+  ServiceDiscoveryProvider,
 } from '@equinor/fusion-framework-module-service-discovery';
 
-import { IApiConfigurator, ApiConfigurator } from './configurator';
-import { IApiProvider, ApiProvider } from './provider';
+import { type IApiConfigurator, ApiConfigurator } from './configurator';
+import { type IApiProvider, ApiProvider } from './provider';
 
 import type { ApiClientFactory } from './types';
 
@@ -19,52 +19,50 @@ export type ServicesModuleKey = 'services';
 export const moduleKey: ServicesModuleKey = 'services';
 
 export type ServicesModule = Module<
-    ServicesModuleKey,
-    IApiProvider,
-    IApiConfigurator,
-    [HttpModule, ServiceDiscoveryModule]
+  ServicesModuleKey,
+  IApiProvider,
+  IApiConfigurator,
+  [HttpModule, ServiceDiscoveryModule]
 >;
 
 /**
  * Method to trying to resolve method for creating an IHttpClient
  */
 const createDefaultClient =
-    (http: IHttpClientProvider, serviceDiscovery?: ServiceDiscoveryProvider): ApiClientFactory =>
-    async (name: string) => {
-        if (http.hasClient(name)) {
-            return http.createClient(name);
-        }
-        if (serviceDiscovery) {
-            return serviceDiscovery.createClient(name);
-        }
-        throw Error(`failed to create http client for service ${name}`);
-    };
+  (http: IHttpClientProvider, serviceDiscovery?: ServiceDiscoveryProvider): ApiClientFactory =>
+  async (name: string) => {
+    if (http.hasClient(name)) {
+      return http.createClient(name);
+    }
+    if (serviceDiscovery) {
+      return serviceDiscovery.createClient(name);
+    }
+    throw Error(`failed to create http client for service ${name}`);
+  };
 
 /**
  *  Configure http-client
  */
 export const module: ServicesModule = {
-    name: moduleKey,
-    configure: () => new ApiConfigurator(),
-    initialize: async ({ ref, config, requireInstance, hasModule }) => {
-        /** we can not create this callback within the configuration, since it might require other modules. */
-        if (!config.createClient) {
-            const http = await requireInstance('http');
-            const serviceDiscovery: ServiceDiscoveryProvider | undefined = hasModule(
-                'serviceDiscovery',
-            )
-                ? /** if the module is within module, await creation */
-                  await requireInstance('serviceDiscovery')
-                : /** try to load parent service discovery provider */
-                  ref?.serviceDiscovery;
+  name: moduleKey,
+  configure: () => new ApiConfigurator(),
+  initialize: async ({ ref, config, requireInstance, hasModule }) => {
+    /** we can not create this callback within the configuration, since it might require other modules. */
+    if (!config.createClient) {
+      const http = await requireInstance('http');
+      const serviceDiscovery: ServiceDiscoveryProvider | undefined = hasModule('serviceDiscovery')
+        ? /** if the module is within module, await creation */
+          await requireInstance('serviceDiscovery')
+        : /** try to load parent service discovery provider */
+          ref?.serviceDiscovery;
 
-            config.createClient = createDefaultClient(http, serviceDiscovery);
-        }
-        if (!config.createClient) {
-            throw Error('missing configuration for creating API client');
-        }
-        return new ApiProvider(config as Required<IApiConfigurator>);
-    },
+      config.createClient = createDefaultClient(http, serviceDiscovery);
+    }
+    if (!config.createClient) {
+      throw Error('missing configuration for creating API client');
+    }
+    return new ApiProvider(config as Required<IApiConfigurator>);
+  },
 };
 
 /**
@@ -72,10 +70,10 @@ export const module: ServicesModule = {
  * @param config - configuration object
  */
 export const enableServices = (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: IModulesConfigurator<any, any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  config: IModulesConfigurator<any, any>,
 ): void => {
-    config.addConfig({ module });
+  config.addConfig({ module });
 };
 
 /**
@@ -87,18 +85,18 @@ export const enableServices = (
  * @returns Configuration object
  */
 export const configureServices = (
-    configure: (configurator: IApiConfigurator) => void,
+  configure: (configurator: IApiConfigurator) => void,
 ): IModuleConfigurator<ServicesModule> => {
-    return {
-        module,
-        configure,
-    };
+  return {
+    module,
+    configure,
+  };
 };
 
 declare module '@equinor/fusion-framework-module' {
-    interface Modules {
-        services: ServicesModule;
-    }
+  interface Modules {
+    services: ServicesModule;
+  }
 }
 
 export default module;

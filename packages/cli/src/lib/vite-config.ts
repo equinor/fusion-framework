@@ -7,12 +7,12 @@ import { createViteLogger } from './vite-logger.js';
 import { AssertionError, assertObject } from './utils/assert.js';
 
 import {
-    loadConfig,
-    resolveConfig,
-    type FindConfigOptions,
-    type ResolvedConfig,
-    ConfigExecuterEnv,
-    initiateConfig,
+  loadConfig,
+  resolveConfig,
+  type FindConfigOptions,
+  type ResolvedConfig,
+  type ConfigExecuterEnv,
+  initiateConfig,
 } from './utils/config.js';
 
 // Plugins
@@ -24,89 +24,88 @@ import { fileExistsSync } from './utils/file-exists.js';
 const configFilename = 'app.vite.config';
 
 export function assertViteConfig(config: UserConfig): asserts config {
-    assertObject(config);
+  assertObject(config);
 }
 
 export const loadViteConfig = (filename?: string) =>
-    loadConfig<UserConfig>(filename ?? configFilename);
+  loadConfig<UserConfig>(filename ?? configFilename);
 
 export const resolveViteConfig = async (
-    options?: FindConfigOptions & {
-        file?: string;
-    },
+  options?: FindConfigOptions & {
+    file?: string;
+  },
 ): Promise<ResolvedConfig<UserConfigFn> | void> => {
-    if (options?.file) {
-        const config = await loadViteConfig(options.file);
-        return {
-            config,
-            path: options.file,
-        };
-    }
-    return resolveConfig(configFilename, { find: options });
+  if (options?.file) {
+    const config = await loadViteConfig(options.file);
+    return {
+      config,
+      path: options.file,
+    };
+  }
+  return resolveConfig(configFilename, { find: options });
 };
 
 export const createAppViteConfig = async (
-    env: ConfigExecuterEnv,
-    options?: FindConfigOptions & {
-        file?: string;
-    },
+  env: ConfigExecuterEnv,
+  options?: FindConfigOptions & {
+    file?: string;
+  },
 ): Promise<{ config?: UserConfig; path?: string } | void> => {
-    const resolved = await resolveViteConfig(options);
-    if (resolved) {
-        const config = (await initiateConfig(resolved.config, env)) ?? {};
-        return { config, path: resolved.path };
-    } else if (options?.file) {
-        throw new AssertionError({
-            message: `Expected to load config from ${options.file}`,
-            expected: '<file>',
-        });
-    }
+  const resolved = await resolveViteConfig(options);
+  if (resolved) {
+    const config = (await initiateConfig(resolved.config, env)) ?? {};
+    return { config, path: resolved.path };
+  } else if (options?.file) {
+    throw new AssertionError({
+      message: `Expected to load config from ${options.file}`,
+      expected: '<file>',
+    });
+  }
 };
 
 export const resolveEntryPoint = (
-    cwd?: string,
-    dir?: string,
-    opt?: { files?: string[] },
+  cwd?: string,
+  dir?: string,
+  opt?: { files?: string[] },
 ): string | undefined => {
-    cwd ??= process.cwd();
-    dir ??= 'src';
-    const files = opt?.files ?? ['index.ts', 'index.tsx', 'main.ts', 'main.tsx'];
-    return files
-        .map((file) => [dir, file].join('/'))
-        .find((file) => fileExistsSync(nodePath.resolve(cwd!, file)));
+  cwd ??= process.cwd();
+  dir ??= 'src';
+  const files = opt?.files ?? ['index.ts', 'index.tsx', 'main.ts', 'main.tsx'];
+  return files
+    .map((file) => [dir, file].join('/'))
+    .find((file) => fileExistsSync(nodePath.resolve(cwd!, file)));
 };
 
 export const createViteConfig = async (
-    env: ConfigExecuterEnv,
-    overrides?: UserConfig,
+  env: ConfigExecuterEnv,
+  overrides?: UserConfig,
 ): Promise<UserConfig> => {
-    const { root = process.cwd() } = env;
-    const entry = String(resolveEntryPoint(root));
-    const defaultConfig = defineConfig({
-        plugins: [
-            tsconfigPaths(),
-            viteEnv({
-                NODE_ENV: env.mode,
-                FUSION_LOG_LEVEL:
-                    (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
-            }),
-        ],
-        mode: env.mode,
-        root,
-        appType: 'custom',
-        build: {
-            lib: {
-                entry,
-                fileName: 'app-bundle',
-                formats: ['es'],
-            },
-            rollupOptions: {
-                output: {
-                    manualChunks: undefined,
-                },
-            },
+  const { root = process.cwd() } = env;
+  const entry = String(resolveEntryPoint(root));
+  const defaultConfig = defineConfig({
+    plugins: [
+      tsconfigPaths(),
+      viteEnv({
+        NODE_ENV: env.mode,
+        FUSION_LOG_LEVEL: (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
+      }),
+    ],
+    mode: env.mode,
+    root,
+    appType: 'custom',
+    build: {
+      lib: {
+        entry,
+        fileName: 'app-bundle',
+        formats: ['es'],
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
         },
-        customLogger: createViteLogger(),
-    });
-    return overrides ? mergeConfig(defaultConfig, overrides) : defaultConfig;
+      },
+    },
+    customLogger: createViteLogger(),
+  });
+  return overrides ? mergeConfig(defaultConfig, overrides) : defaultConfig;
 };

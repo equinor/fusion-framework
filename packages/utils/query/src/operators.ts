@@ -16,9 +16,9 @@ import type { QueryQueueFn } from './types';
  *          stream where each item is processed in sequence by the provided callback.
  */
 export const concatQueue: QueryQueueFn =
-    (...args) =>
-    (source$) =>
-        source$.pipe(concatMap(...args));
+  (...args) =>
+  (source$) =>
+    source$.pipe(concatMap(...args));
 
 /**
  * Takes a function that transforms each item in a queue and returns an Observable.
@@ -31,9 +31,9 @@ export const concatQueue: QueryQueueFn =
  *          stream where each item is processed concurrently by the provided callback.
  */
 export const mergeQueue: QueryQueueFn =
-    (...args) =>
-    (source$) =>
-        source$.pipe(mergeMap(...args));
+  (...args) =>
+  (source$) =>
+    source$.pipe(mergeMap(...args));
 
 /**
  * Takes a function that transforms each item in a queue and returns an Observable.
@@ -47,9 +47,9 @@ export const mergeQueue: QueryQueueFn =
  *          item's result is emitted.
  */
 export const switchQueue: QueryQueueFn =
-    (...args) =>
-    (source$) =>
-        source$.pipe(switchMap(...args));
+  (...args) =>
+  (source$) =>
+    source$.pipe(switchMap(...args));
 
 /**
  * Transforms an Observable stream of `QueryTaskValue<TType>` into an Observable stream of `TType`.
@@ -59,5 +59,5 @@ export const switchQueue: QueryQueueFn =
  * @returns An Observable stream of `TType` where each emitted item is the `value` property from the input stream.
  */
 export const queryValue = <TType, TArgs>(
-    source$: ReturnType<Query<TType, TArgs>['query']>,
+  source$: ReturnType<Query<TType, TArgs>['query']>,
 ): Observable<TType> => source$.pipe(map((entry) => entry.value));

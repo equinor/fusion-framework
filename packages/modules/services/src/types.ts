@@ -1,8 +1,8 @@
-import {
-    ClientRequestInit,
-    IHttpClient,
-    StreamResponse,
-    BlobResult,
+import type {
+  ClientRequestInit,
+  IHttpClient,
+  StreamResponse,
+  BlobResult,
 } from '@equinor/fusion-framework-module-http/client';
 
 /**
@@ -12,7 +12,7 @@ import {
  * @returns A Promise that resolves to an instance of the HTTP client.
  */
 export type ApiClientFactory<TClient extends IHttpClient = IHttpClient> = (
-    name: string,
+  name: string,
 ) => Promise<TClient>;
 
 /**
@@ -24,27 +24,27 @@ export type ApiClientFactory<TClient extends IHttpClient = IHttpClient> = (
  * @param init - Optional initialization options for the API client request.
  */
 export type ApiClientArguments<TClient extends IHttpClient, TResult = unknown> = [
-    path: string,
-    init?: ClientRequestInit<TClient, TResult>,
+  path: string,
+  init?: ClientRequestInit<TClient, TResult>,
 ];
 
 /**
  * Execute methods on the IHttpClient
  */
 export type ClientMethod<T = unknown> = {
-    /**
-     * Fetch JSON data from a service
-     */
-    json: Promise<T>;
-    /**
-     * Fetch JSON data from a service as observable
-     */
-    json$: StreamResponse<T>;
+  /**
+   * Fetch JSON data from a service
+   */
+  json: Promise<T>;
+  /**
+   * Fetch JSON data from a service as observable
+   */
+  json$: StreamResponse<T>;
 };
 
 export type ClientDataMethod<T extends BlobResult = BlobResult> = {
-    blob: Promise<T>;
-    blob$: StreamResponse<T>;
+  blob: Promise<T>;
+  blob$: StreamResponse<T>;
 };
 
 export type ClientMethodType = keyof ClientMethod;
@@ -97,16 +97,16 @@ export type ClientMethodType = keyof ClientMethod;
  *   values are a subset of `AllowedTypes`.
  */
 export type FilterAllowedApiVersions<
-    TAvailableTypes extends Record<string, string>,
-    TAllowedTypes extends string | number | symbol = keyof TAvailableTypes,
+  TAvailableTypes extends Record<string, string>,
+  TAllowedTypes extends string | number | symbol = keyof TAvailableTypes,
 > = {
-    [K in keyof TAvailableTypes]: TAvailableTypes extends Record<K, infer V>
-        ? K extends TAllowedTypes
-            ? K | V
-            : V extends TAllowedTypes
-              ? V | K
-              : never
-        : never;
+  [K in keyof TAvailableTypes]: TAvailableTypes extends Record<K, infer V>
+    ? K extends TAllowedTypes
+      ? K | V
+      : V extends TAllowedTypes
+        ? V | K
+        : never
+    : never;
 }[keyof TAvailableTypes];
 
 /**
@@ -118,11 +118,11 @@ export type FilterAllowedApiVersions<
  * @returns The API version type if it is available and allowed, otherwise `never`.
  */
 export type ExtractApiVersion<
-    TAvailableTypes extends Record<string, string>,
-    TVersion extends string,
-    TAllowedTypes extends string | number | symbol = FilterAllowedApiVersions<TAvailableTypes>,
+  TAvailableTypes extends Record<string, string>,
+  TVersion extends string,
+  TAllowedTypes extends string | number | symbol = FilterAllowedApiVersions<TAvailableTypes>,
 > = TVersion extends keyof TAvailableTypes
-    ? TAvailableTypes[TVersion]
-    : TVersion extends TAllowedTypes
-      ? TVersion
-      : never;
+  ? TAvailableTypes[TVersion]
+  : TVersion extends TAllowedTypes
+    ? TVersion
+    : never;

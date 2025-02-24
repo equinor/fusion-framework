@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { chevron_down, chevron_right } from '@equinor/eds-icons';
 
@@ -7,7 +7,7 @@ import { tokens } from '@equinor/eds-tokens';
 import styled from 'styled-components';
 
 const Styled = {
-    Button: styled(Button)`
+  Button: styled(Button)`
         width: 100%;
         padding: 0;
         padding-top: 0.5rem;
@@ -23,7 +23,7 @@ const Styled = {
             background: none;
         }
     `,
-    List: styled.ol`
+  List: styled.ol`
         margin-left: 0.7rem;
         padding-left: 1rem;
         display: flex;
@@ -34,24 +34,24 @@ const Styled = {
 };
 
 Icon.add({
-    chevron_down,
-    chevron_right,
+  chevron_down,
+  chevron_right,
 });
 
 type SectionProps = {
-    readonly name: string;
-    readonly children: ReactNode;
+  readonly name: string;
+  readonly children: ReactNode;
 };
 export const Section = ({ children, name }: SectionProps) => {
-    const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
 
-    return (
-        <div>
-            <Styled.Button variant="ghost" onClick={() => setIsExpanded((s) => !s)}>
-                <Icon name={isExpanded ? chevron_down.name : chevron_right.name} />
-                <Typography variant="h6">{name}</Typography>
-            </Styled.Button>
-            {isExpanded && <Styled.List>{children}</Styled.List>}
-        </div>
-    );
+  return (
+    <div>
+      <Styled.Button variant="ghost" onClick={() => setIsExpanded((s) => !s)}>
+        <Icon name={isExpanded ? chevron_down.name : chevron_right.name} />
+        <Typography variant="h6">{name}</Typography>
+      </Styled.Button>
+      {isExpanded && <Styled.List>{children}</Styled.List>}
+    </div>
+  );
 };

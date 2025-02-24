@@ -4,110 +4,110 @@ import { type PropsWithChildren, createContext, useCallback, useContext, useStat
 import { CreateBookmarkModal } from './create-bookmark';
 import { EditBookmarkModal } from './edit-bookmark';
 import { ImportBookmarkModal } from './import-bookmark';
-import { type IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
+import type { IBookmarkProvider } from '@equinor/fusion-framework-module-bookmark';
 
 type BookmarkApp = {
-    appKey: string;
-    name?: string;
+  appKey: string;
+  name?: string;
 };
 
 type BookmarkUser = {
-    id: string;
-    name?: string;
+  id: string;
+  name?: string;
 };
 
 type ProviderState = {
-    provider?: IBookmarkProvider;
-    currentApp?: BookmarkApp | null;
-    currentUser?: BookmarkUser | null;
-    showCreateBookmark: () => void;
-    showEditBookmark: (bookmarkId: string) => void;
-    addBookmarkToClipboard: (bookmarkId: string) => void;
+  provider?: IBookmarkProvider;
+  currentApp?: BookmarkApp | null;
+  currentUser?: BookmarkUser | null;
+  showCreateBookmark: () => void;
+  showEditBookmark: (bookmarkId: string) => void;
+  addBookmarkToClipboard: (bookmarkId: string) => void;
 };
 
 const bookmarkProviderContext = createContext<ProviderState | null>(null);
 
 type BookmarkProviderProps = {
-    readonly provider?: IBookmarkProvider;
-    readonly currentApp?: BookmarkApp;
-    readonly currentUser?: BookmarkUser;
+  readonly provider?: IBookmarkProvider;
+  readonly currentApp?: BookmarkApp;
+  readonly currentUser?: BookmarkUser;
 };
 
 export const useBookmarkComponentContext = () =>
-    useContext(bookmarkProviderContext) as ProviderState;
+  useContext(bookmarkProviderContext) as ProviderState;
 
 export const BookmarkProvider = (props: PropsWithChildren<BookmarkProviderProps>) => {
-    const { provider, currentApp, currentUser, children } = props;
+  const { provider, currentApp, currentUser, children } = props;
 
-    const [isCreateBookmarkOpen, setIsCreateBookmarkOpen] = useState(false);
-    const [editBookmarkId, setEditBookmarkId] = useState<string | undefined>();
+  const [isCreateBookmarkOpen, setIsCreateBookmarkOpen] = useState(false);
+  const [editBookmarkId, setEditBookmarkId] = useState<string | undefined>();
 
-    const showCreateBookmark = useCallback(() => {
-        setIsCreateBookmarkOpen(true);
-    }, []);
+  const showCreateBookmark = useCallback(() => {
+    setIsCreateBookmarkOpen(true);
+  }, []);
 
-    const [snackbarContent, setSnackbarContent] = useState('');
+  const [snackbarContent, setSnackbarContent] = useState('');
 
-    const addBookmarkToClipboard = useCallback((bookmarkId: string) => {
-        const url = new URL(window.location.toString());
-        url.searchParams.set('bookmarkId', bookmarkId);
-        navigator.clipboard.writeText(String(url));
-        setSnackbarContent('Bookmark url copied to clipboard');
-    }, []);
+  const addBookmarkToClipboard = useCallback((bookmarkId: string) => {
+    const url = new URL(window.location.toString());
+    url.searchParams.set('bookmarkId', bookmarkId);
+    navigator.clipboard.writeText(String(url));
+    setSnackbarContent('Bookmark url copied to clipboard');
+  }, []);
 
-    if (!provider) {
-        return (
-            <bookmarkProviderContext.Provider
-                value={{
-                    provider: undefined,
-                    currentApp,
-                    currentUser,
-                    showCreateBookmark,
-                    showEditBookmark: setEditBookmarkId,
-                    addBookmarkToClipboard,
-                }}
-            >
-                {children}
-            </bookmarkProviderContext.Provider>
-        );
-    }
-
+  if (!provider) {
     return (
-        <bookmarkProviderContext.Provider
-            value={{
-                provider,
-                currentApp,
-                currentUser,
-                showCreateBookmark,
-                showEditBookmark: setEditBookmarkId,
-                addBookmarkToClipboard,
-            }}
-        >
-            <CreateBookmarkModal isOpen={isCreateBookmarkOpen} onClose={setIsCreateBookmarkOpen} />
-            {editBookmarkId && (
-                <EditBookmarkModal
-                    isOpen={!!editBookmarkId}
-                    onClose={() => setEditBookmarkId(undefined)}
-                    bookmarkId={editBookmarkId}
-                />
-            )}
-            <ImportBookmarkModal />
-            <Snackbar
-                autoHideDuration={2000}
-                onClose={() => setSnackbarContent('')}
-                open={!!snackbarContent}
-            >
-                {snackbarContent}
-            </Snackbar>
-            {children}
-        </bookmarkProviderContext.Provider>
+      <bookmarkProviderContext.Provider
+        value={{
+          provider: undefined,
+          currentApp,
+          currentUser,
+          showCreateBookmark,
+          showEditBookmark: setEditBookmarkId,
+          addBookmarkToClipboard,
+        }}
+      >
+        {children}
+      </bookmarkProviderContext.Provider>
     );
+  }
+
+  return (
+    <bookmarkProviderContext.Provider
+      value={{
+        provider,
+        currentApp,
+        currentUser,
+        showCreateBookmark,
+        showEditBookmark: setEditBookmarkId,
+        addBookmarkToClipboard,
+      }}
+    >
+      <CreateBookmarkModal isOpen={isCreateBookmarkOpen} onClose={setIsCreateBookmarkOpen} />
+      {editBookmarkId && (
+        <EditBookmarkModal
+          isOpen={!!editBookmarkId}
+          onClose={() => setEditBookmarkId(undefined)}
+          bookmarkId={editBookmarkId}
+        />
+      )}
+      <ImportBookmarkModal />
+      <Snackbar
+        autoHideDuration={2000}
+        onClose={() => setSnackbarContent('')}
+        open={!!snackbarContent}
+      >
+        {snackbarContent}
+      </Snackbar>
+      {children}
+    </bookmarkProviderContext.Provider>
+  );
 };
 
 declare module '@equinor/fusion-framework-module-event' {
-    interface FrameworkEventMap {
-        // onBookmarkOpen: FrameworkEvent<FrameworkEventInit<boolean, unknown>>;
-        onBookmarkEdit: FrameworkEvent<FrameworkEventInit<{ bookmarkId: string }, unknown>>;
-        onBookmarkUrlCopy: FrameworkEvent<FrameworkEventInit<{ url: string }, unknown>>;
-    }
+  interface FrameworkEventMap {
+    // onBookmarkOpen: FrameworkEvent<FrameworkEventInit<boolean, unknown>>;
+    onBookmarkEdit: FrameworkEvent<FrameworkEventInit<{ bookmarkId: string }, unknown>>;
+    onBookmarkUrlCopy: FrameworkEvent<FrameworkEventInit<{ url: string }, unknown>>;
+  }
 }

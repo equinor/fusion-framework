@@ -1,13 +1,13 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../../../types';
-import { ApiVersion } from '../../static';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../../../types';
+import type { ApiVersion } from '../../static';
 
 import { generateParameters } from './generate-parameters';
 
 import type {
-    GetUserNotificationSettingsArgs,
-    GetUserNotificationsSettingsResult,
-    GetUserNotificationSettingsResponse,
+  GetUserNotificationSettingsArgs,
+  GetUserNotificationsSettingsResult,
+  GetUserNotificationSettingsResponse,
 } from './types';
 
 /**
@@ -17,21 +17,21 @@ import type {
  * @param method - client method to call
  */
 export const getUserNotificationSettings =
-    <
-        TVersion extends string = keyof typeof ApiVersion,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
-    >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <T = GetUserNotificationSettingsResponse<TVersion>>(
-        args: GetUserNotificationSettingsArgs<TVersion>,
-        init?: ClientRequestInit<TClient, T>,
-    ): GetUserNotificationsSettingsResult<TVersion, TMethod, T> =>
-        client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as GetUserNotificationsSettingsResult<TVersion, TMethod, T>;
+  <
+    TVersion extends string = keyof typeof ApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient,
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod,
+  ) =>
+  <T = GetUserNotificationSettingsResponse<TVersion>>(
+    args: GetUserNotificationSettingsArgs<TVersion>,
+    init?: ClientRequestInit<TClient, T>,
+  ): GetUserNotificationsSettingsResult<TVersion, TMethod, T> =>
+    client[method](
+      ...generateParameters<T, TVersion, TClient>(version, args, init),
+    ) as GetUserNotificationsSettingsResult<TVersion, TMethod, T>;
 
 export default getUserNotificationSettings;

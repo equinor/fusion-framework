@@ -1,13 +1,13 @@
-import { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
-import { ClientMethod } from '../../../types';
-import { ApiVersion } from '../../static';
+import type { ClientRequestInit, IHttpClient } from '@equinor/fusion-framework-module-http/client';
+import type { ClientMethod } from '../../../types';
+import type { ApiVersion } from '../../static';
 
 import { generateParameters } from './generate-parameters';
 
 import type {
-    PatchNotificationArgs,
-    PatchNotificationResponse,
-    PatchNotificationResult,
+  PatchNotificationArgs,
+  PatchNotificationResponse,
+  PatchNotificationResult,
 } from './types';
 
 /**
@@ -17,21 +17,21 @@ import type {
  * @param method - client method to call
  */
 export const updateSeenByUser =
-    <
-        TVersion extends string = keyof typeof ApiVersion,
-        TMethod extends keyof ClientMethod = keyof ClientMethod,
-        TClient extends IHttpClient = IHttpClient,
-    >(
-        client: TClient,
-        version: TVersion,
-        method: TMethod = 'json' as TMethod,
-    ) =>
-    <T = PatchNotificationResponse<TVersion>>(
-        args: PatchNotificationArgs<TVersion>,
-        init?: ClientRequestInit<TClient, T>,
-    ): PatchNotificationResult<TVersion, TMethod, T> =>
-        client[method](
-            ...generateParameters<T, TVersion, TClient>(version, args, init),
-        ) as PatchNotificationResult<TVersion, TMethod, T>;
+  <
+    TVersion extends string = keyof typeof ApiVersion,
+    TMethod extends keyof ClientMethod = keyof ClientMethod,
+    TClient extends IHttpClient = IHttpClient,
+  >(
+    client: TClient,
+    version: TVersion,
+    method: TMethod = 'json' as TMethod,
+  ) =>
+  <T = PatchNotificationResponse<TVersion>>(
+    args: PatchNotificationArgs<TVersion>,
+    init?: ClientRequestInit<TClient, T>,
+  ): PatchNotificationResult<TVersion, TMethod, T> =>
+    client[method](
+      ...generateParameters<T, TVersion, TClient>(version, args, init),
+    ) as PatchNotificationResult<TVersion, TMethod, T>;
 
 export default updateSeenByUser;
