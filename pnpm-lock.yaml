@@ -637,7 +637,7 @@ importers:
         version: 11.0.0
       semver:
         specifier: ^7.5.4
-        version: 7.7.0
+        version: 7.7.1
       vite:
         specifier: ^6.0.7
         version: 6.1.1(@types/node@20.14.12)(jiti@2.4.2)(sass@1.84.0)(stylus@0.64.0)(yaml@2.7.0)
@@ -1029,7 +1029,7 @@ importers:
         version: 7.8.1
       semver:
         specifier: ^7.5.4
-        version: 7.7.0
+        version: 7.7.1
     devDependencies:
       '@types/node':
         specifier: ^20.11.14
@@ -1054,7 +1054,7 @@ importers:
         version: 7.5.8
       semver:
         specifier: ^7.5.4
-        version: 7.7.0
+        version: 7.7.1
       zod:
         specifier: ^3.23.8
         version: 3.24.2
@@ -8039,11 +8039,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.7.0:
-    resolution: {integrity: sha512-DrfFnPzblFmNrIZzg5RzHegbiRWg7KMR7btwi2yjHwx06zsUbO5g613sVwEV7FTwmzJu+Io0lJe2GJ3LxqpvBQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
@@ -13621,7 +13616,7 @@ snapshots:
       debug: 4.4.0
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.0
+      semver: 7.7.1
       tsutils: 3.21.0(typescript@5.5.4)
     optionalDependencies:
       typescript: 5.5.4
@@ -13653,7 +13648,7 @@ snapshots:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.5.4)
       eslint: 9.20.0(jiti@2.4.2)
       eslint-scope: 5.1.1
-      semver: 7.7.0
+      semver: 7.7.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -16773,7 +16768,7 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.0
+      semver: 7.7.1
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
@@ -17755,8 +17750,6 @@ snapshots:
   semver@5.7.2: {}
 
   semver@6.3.1: {}
-
-  semver@7.7.0: {}
 
   semver@7.7.1: {}
 
