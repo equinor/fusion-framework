@@ -27,8 +27,8 @@
     },
     "dependencies": {
         "@equinor/fusion-framework-module-services": "workspace:^",
-        "@equinor/fusion-framework-react-module": "workspace:^",
         "@equinor/fusion-framework-react": "workspace:^",
+        "@equinor/fusion-framework-react-module": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
         "rxjs": "^7.8.1"
     },
