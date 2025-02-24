@@ -27,14 +27,20 @@ export const emitAssetSync = (
     assetsDir?: string;
   } = {},
 ): string | null => {
+  // extract options and set defaults
   const { outDir = 'dist', assetsDir = 'assets', name = '[name].[ext]' } = options;
+
+  // extract original file name and resource query
   const [originalFileName, resourceQuery] = id.split('?');
 
-  // read asset content, early return if not found
+  // read asset content, throw error if content is empty
   const content = readAssetContentSync(id);
   if (!content || content.byteLength === 0) {
     throw new Error(`Could not read asset content for ${id}`);
   }
+
+  // convert content to Uint8Array
+  const source = new Uint8Array(content);
 
   // generate asset file name
   const url = interpolateName(
@@ -50,14 +56,15 @@ export const emitAssetSync = (
   const fileName = assetPath.replace(`?${resourceQuery}`, '');
   const fullName = path.join(path.isAbsolute(outDir) ? process.cwd() : '', outDir, assetPath);
 
-  // write asset to file
+  // emit asset file to output directory
   context.emitFile({
     fileName,
     name: fullName,
     type: 'asset',
-    source: content,
+    source,
   });
 
+  // return the path of the emitted asset relative to the assets directory
   return assetPath;
 };
 

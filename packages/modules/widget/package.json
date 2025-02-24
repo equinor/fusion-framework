@@ -48,7 +48,7 @@
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-service-discovery": "workspace:^",
         "@equinor/fusion-query": "workspace:^",
-        "typescript": "^5.5.4"
+        "typescript": "^5.7.3"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
