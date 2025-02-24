@@ -1338,6 +1338,9 @@ importers:
       '@equinor/fusion-framework-react':
         specifier: workspace:^
         version: link:../../framework
+      '@equinor/fusion-framework-react-module':
+        specifier: workspace:^
+        version: link:../../modules/module
       '@equinor/fusion-query':
         specifier: workspace:^
         version: link:../../../utils/query
