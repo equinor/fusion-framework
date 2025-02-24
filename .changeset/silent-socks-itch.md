@@ -1,6 +1,6 @@
 ---
-"@equinor/fusion-framework-module-ag-grid": patch
-"@equinor/fusion-framework-react-ag-grid": patch
+"@equinor/fusion-framework-module-ag-grid": minor
+"@equinor/fusion-framework-react-ag-grid": minor
 ---
 
 chore: bump the ag-grid from 33.0.3 to 33.1.1
