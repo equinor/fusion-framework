@@ -165,8 +165,9 @@ export class Widget {
    */
   public getConfig(force_refresh = false): Observable<WidgetConfig> {
     return new Observable((subscriber) => {
-      if (this.#state.value.manifest) {
-        subscriber.next(this.#state.value.config);
+      const currentValue = this.#state.value;
+      if (currentValue.manifest && currentValue.config) {
+        subscriber.next(currentValue.config);
         if (!force_refresh) {
           return subscriber.complete();
         }

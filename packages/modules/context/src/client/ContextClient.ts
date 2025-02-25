@@ -9,7 +9,11 @@ import type { ContextItem } from '../types';
 
 export type GetContextParameters = { id: string };
 
-export class ContextClient extends Observable<ContextItem | null> {
+/**
+ * @todo - add documentation
+ * @todo - should this have `undefined` as a valid value?
+ */
+export class ContextClient extends Observable<ContextItem | null | undefined> {
   #client: Query<ContextItem, { id: string }>;
   /** might change to reactive state, for comparing state with reducer */
   #currentContext$: BehaviorSubject<ContextItem | null | undefined>;
