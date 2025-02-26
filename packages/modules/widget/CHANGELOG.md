@@ -1,5 +1,14 @@
 # Change Log
 
+## 9.0.4
+
+### Patch Changes
+
+- [#2863](https://github.com/equinor/fusion-framework/pull/2863) [`11e18fd`](https://github.com/equinor/fusion-framework/commit/11e18fd755e65d1bbbb9b98638fdb9a98c2c23ab) Thanks [@dependabot](https://github.com/apps/dependabot)! - Added check to `Widget.getConfig` to ensure that `undefined` config should not be emitted,
+  since the return type is `Observable<WidgetConfig>`,
+  so should not be breaking changed.
+  All though this might has been emitting undefined before, this might break some code that relies on this behavior.
+
 ## 9.0.3
 
 ### Patch Changes

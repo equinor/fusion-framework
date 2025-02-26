@@ -1,5 +1,15 @@
 # poc-portal
 
+## 1.0.30
+
+### Patch Changes
+
+- Updated dependencies [[`012e69c`](https://github.com/equinor/fusion-framework/commit/012e69cacf0601c00de550545fa8cd93538f12c8), [`5bc278a`](https://github.com/equinor/fusion-framework/commit/5bc278a456d5b4b258f82a83a54558df45124427)]:
+  - @equinor/fusion-framework-cli@10.5.3
+  - @equinor/fusion-framework@7.3.2
+  - @equinor/fusion-framework-react-app@6.0.2
+  - @equinor/fusion-framework-react@7.4.2
+
 ## 1.0.29
 
 ### Patch Changes

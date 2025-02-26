@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react@7.4.2
+
 ## 1.5.4
 
 ### Patch Changes

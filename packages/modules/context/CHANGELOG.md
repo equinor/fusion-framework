@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.18
+
+### Patch Changes
+
+- [#2863](https://github.com/equinor/fusion-framework/pull/2863) [`11e18fd`](https://github.com/equinor/fusion-framework/commit/11e18fd755e65d1bbbb9b98638fdb9a98c2c23ab) Thanks [@dependabot](https://github.com/apps/dependabot)! - Fixed matching type of `ContextClient` to extended `Observable` type. Only refactor, no functional changes.
+
+  **note:** _the context client context item observable should not be able to be undefined, only item or `null`. this should be fixed in the future, added `@todo` comment to remind us to fix this in the future._
+
 ## 5.0.17
 
 ### Patch Changes
