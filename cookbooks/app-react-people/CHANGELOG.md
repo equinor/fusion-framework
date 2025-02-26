@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.5.5
+
+### Patch Changes
+
+- [#2877](https://github.com/equinor/fusion-framework/pull/2877) [`b547618`](https://github.com/equinor/fusion-framework/commit/b547618f2dfbebc350f4285c36ab481f591c0c5c) Thanks [@odinr](https://github.com/odinr)! - update fusion react and web components
+
 ## 4.5.4
 
 ### Patch Changes
