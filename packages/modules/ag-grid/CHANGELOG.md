@@ -1,5 +1,14 @@
 # Change Log
 
+## 33.1.1
+
+### Patch Changes
+
+- [#2873](https://github.com/equinor/fusion-framework/pull/2873) [`6eacdcc`](https://github.com/equinor/fusion-framework/commit/6eacdccbe29ed0da21a217f6e593e39e29de3eea) Thanks [@odinr](https://github.com/odinr)! - Fixed a bug where when creating a new theme, parts where not added from the source theme to the new theme.
+
+  This was due to the fact that the `parts` attribute was not being copied over to the new theme,
+  since `withPart` is an immutable operation and the result was not being assigned to the new theme.
+
 ## 33.1.0
 
 ### Minor Changes

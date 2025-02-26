@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.5.3
+
+### Patch Changes
+
+- [#2870](https://github.com/equinor/fusion-framework/pull/2870) [`012e69c`](https://github.com/equinor/fusion-framework/commit/012e69cacf0601c00de550545fa8cd93538f12c8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.1.1 to 6.2.0
+
+- [#2867](https://github.com/equinor/fusion-framework/pull/2867) [`5bc278a`](https://github.com/equinor/fusion-framework/commit/5bc278a456d5b4b258f82a83a54558df45124427) Thanks [@odinr](https://github.com/odinr)! - Ensures App Assets plugin emits source as `Uint8Array`, previously it was emitting as `Buffer`, which was not catched by `Typescript` < 5.7.
+
 ## 10.5.2
 
 ### Patch Changes
