@@ -1,4 +1,4 @@
-import { type Part, type Theme, themeAlpine, createTheme, createPart } from 'ag-grid-community';
+import { type Part, type Theme, createPart, createTheme, themeAlpine } from 'ag-grid-community';
 
 /**
  * The Fusion theme for AG Grid.
