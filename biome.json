@@ -41,7 +41,6 @@
         "noCommaOperator": "warn",
         "useNodejsImportProtocol": "warn",
         "useTemplate": "warn",
-        "useSelfClosingElements": "warn",
         "noInferrableTypes": "warn",
         "useDefaultParameterLast": "warn"
       },

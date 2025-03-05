@@ -77,15 +77,15 @@ export const SelectorPage = () => {
       <section>
         <Story>
           <p>Standard</p>
-          <PersonSelect placeholder="Search for person"></PersonSelect>
+          <PersonSelect placeholder="Search for person" />
         </Story>
         <Story>
           <p>Property: selectedPerson upn</p>
-          <PersonSelect selectedPerson={'handah@equinor.com'}></PersonSelect>
+          <PersonSelect selectedPerson={'handah@equinor.com'} />
         </Story>
         <Story>
           <p>Property: selectedPerson azureId</p>
-          <PersonSelect selectedPerson={'cbc6480d-12c1-467e-b0b8-cfbb22612daa'}></PersonSelect>
+          <PersonSelect selectedPerson={'cbc6480d-12c1-467e-b0b8-cfbb22612daa'} />
         </Story>
         <Story>
           <p>Controlled component:</p>
@@ -93,7 +93,7 @@ export const SelectorPage = () => {
             selectedPerson={null}
             placeholder="Search for person"
             onSelect={selectPersonCallback}
-          ></PersonSelect>
+          />
           <p>Selected persons:</p>
           <ul
             style={{
