@@ -28,7 +28,7 @@ export const HeaderActions = (props: HeaderActionProps) => {
         <Icon data={tag} />
       </Button>
       <Button onClick={() => togglePerson((x) => !x)} variant="ghost_icon">
-        <fwc-person-avatar size="small" azureId={userAzureId} clickable={false}></fwc-person-avatar>
+        <fwc-person-avatar size="small" azureId={userAzureId} clickable={false} />
       </Button>
     </TopBar.Actions>
   );

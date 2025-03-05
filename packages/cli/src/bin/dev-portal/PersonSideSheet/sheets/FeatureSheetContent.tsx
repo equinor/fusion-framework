@@ -20,13 +20,13 @@ export const FeatureSheetContent = ({ navigate }: SheetContentProps) => {
       <div>
         <div>
           <Button variant="ghost" onClick={() => navigate()}>
-            <Icon name="arrow_back"></Icon>
-            <Icon name="category"></Icon>
+            <Icon name="arrow_back" />
+            <Icon name="category" />
             My Features
           </Button>
         </div>
       </div>
-      <Divider></Divider>
+      <Divider />
       <div>
         <Tabs activeTab={tab} onChange={(index) => setTab(index)}>
           <Tabs.List>
