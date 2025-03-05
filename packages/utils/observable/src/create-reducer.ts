@@ -86,7 +86,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
     getInitialState = () => frozenInitialState;
   }
 
-  function reducer(state = getInitialState(), action: A): S {
+  function reducer(state: S | undefined, action: A): S {
     let caseReducers = [
       actionsMap[action.type],
       ...finalActionMatchers.filter(({ matcher }) => matcher(action)).map(({ reducer }) => reducer),
@@ -135,7 +135,7 @@ export function createReducer<S extends NotFunction, A extends Action = AnyActio
       }
 
       return previousState;
-    }, state);
+    }, state ?? getInitialState());
   }
 
   reducer.getInitialState = getInitialState;
