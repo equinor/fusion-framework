@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.5.5
+
+### Patch Changes
+
+- [#2888](https://github.com/equinor/fusion-framework/pull/2888) [`a1deeb0`](https://github.com/equinor/fusion-framework/commit/a1deeb07fd60c61eecd61ef038544ecb7c274271) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update `@equinor/fusion-react-context-selector` to 1.0.4
+
 ## 10.5.4
 
 ### Patch Changes
