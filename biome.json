@@ -24,7 +24,7 @@
       "recommended": true,
       "complexity": {
         "noBannedTypes": "warn",
-        "useLiteralKeys": "warn",
+        "useLiteralKeys": "error",
         "useOptionalChain": "warn"
       },
       "performance": {
