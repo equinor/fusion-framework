@@ -23,7 +23,7 @@ export class TelemetryProvider implements ITelemetryProvider {
 
     client.loadAppInsights();
 
-    if (this._auth && this._auth.defaultAccount) {
+    if (this._auth?.defaultAccount) {
       // TODO - local or home account??
       client.setAuthenticatedUserContext(this._auth.defaultAccount.localAccountId);
     } else {
