@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.54
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510)]:
+  - @equinor/fusion-framework-react-module-context@6.2.20
+  - @equinor/fusion-observable@8.4.6
+  - @equinor/fusion-framework-react-app@6.0.3
+  - @equinor/fusion-framework-cli@10.5.6
+
 ## 4.1.53
 
 ### Patch Changes
