@@ -1,5 +1,19 @@
 # Change Log
 
+## 9.0.5
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`fdd057e`](https://github.com/equinor/fusion-framework/commit/fdd057e0920ffb93e07b6338e3ff592a65dabbc6), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424)]:
+  - @equinor/fusion-framework-module-service-discovery@8.0.8
+  - @equinor/fusion-observable@8.4.6
+  - @equinor/fusion-framework-module@4.3.7
+  - @equinor/fusion-framework-module-event@4.3.2
+  - @equinor/fusion-framework-module-http@6.2.3
+  - @equinor/fusion-query@5.2.3
+
 ## 9.0.4
 
 ### Patch Changes

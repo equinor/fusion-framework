@@ -1,5 +1,31 @@
 # Change Log
 
+## 8.4.6
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive unit tests for the `createReducer` function to ensure its correct functionality. The tests cover the following scenarios:
+
+  - Creating a reducer function.
+  - Creating a reducer with a default value from a function.
+  - Handling actions and updating state correctly.
+  - Handling multiple actions and updating state correctly.
+  - Handling default cases when no action matches.
+  - Handling matchers correctly.
+
+  These tests improve the reliability and maintainability of the `createReducer` function by verifying its behavior in various use cases.
+
+- [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - Refactor:
+
+  - Fix issue where the default case reducer could be undefined.
+  - Improve type definitions for `ActionReducerMapBuilder` to ensure better type safety and compatibility.
+
+- [#2892](https://github.com/equinor/fusion-framework/pull/2892) [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to use default parameters last
+
+  - Fixed the `createReducer` function in `create-reducer.ts` to properly handle the initial state when it is undefined.
+
 ## 8.4.5
 
 ### Patch Changes

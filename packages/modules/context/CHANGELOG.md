@@ -1,5 +1,15 @@
 # Change Log
 
+## 5.0.19
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237)]:
+  - @equinor/fusion-framework-module@4.3.7
+  - @equinor/fusion-query@5.2.3
+
 ## 5.0.18
 
 ### Patch Changes
