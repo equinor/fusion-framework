@@ -37,6 +37,6 @@
         "@microsoft/applicationinsights-web": "^3.0.2"
     },
     "devDependencies": {
-        "typescript": "^5.7.3"
+        "typescript": "^5.8.2"
     }
 }

@@ -39,7 +39,7 @@
     "devDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
         "rxjs": "^7.8.1",
-        "typescript": "^5.7.3"
+        "typescript": "^5.8.2"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
