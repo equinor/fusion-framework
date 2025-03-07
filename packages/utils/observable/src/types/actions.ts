@@ -15,7 +15,7 @@ export type Action<T extends TypeConstant = TypeConstant> = { type: T };
  */
 export interface AnyAction extends Action {
   // Allows any extra properties to be defined in an action.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for an explicit `any` type
   [extraProps: string]: any;
 }
 
@@ -26,7 +26,7 @@ export interface AnyAction extends Action {
  * @param args - The arguments used to construct the action object.
  * @returns An action of type `T`.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for an explicit `any` type
 export type ActionCreator<T extends Action = AnyAction> = (...args: any[]) => T;
 
 /**
@@ -121,13 +121,13 @@ export type PayloadAction<P = void, T extends string = string, M = never, E = ne
   payload: P;
   type: T;
 } & ([M] extends [never]
-  ? // eslint-disable-next-line @typescript-eslint/ban-types
+  ? // biome-ignore lint/complexity/noBannedTypes: This is a valid use case for an empty object type
     {}
   : {
       meta: M;
     }) &
   ([E] extends [never]
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
+    ? // biome-ignore lint/complexity/noBannedTypes: This is a valid use case for an empty object type
       {}
     : {
         error: E;
