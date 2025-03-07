@@ -139,9 +139,9 @@ export class HttpClientConfigurator<TClient extends IHttpClient>
   /** default request handler for http clients, applied on creation */
   readonly defaultHttpRequestHandler = new HttpRequestHandler<HttpClientRequestInitType<TClient>>({
     // convert all request methods to uppercase
-    ['capitalize-method']: capitalizeRequestMethodOperator(),
+    'capitalize-method': capitalizeRequestMethodOperator(),
     // validate the request object
-    ['request-validation']: requestValidationOperator(),
+    'request-validation': requestValidationOperator(),
   });
 
   /**
