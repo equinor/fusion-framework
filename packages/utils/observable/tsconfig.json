@@ -6,7 +6,7 @@
     "declarationDir": "./dist/types",
   },
   "include": [
-    "src/**/*", "tests/*",
+    "src/**/*",
   ],
   "exclude": [
     "src/__tests__",
