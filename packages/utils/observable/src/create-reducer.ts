@@ -258,7 +258,6 @@ export function executeReducerBuilderCallback<TState, TAction extends AnyAction>
     },
     addMatcher<A>(
       matcher: TypeGuard<A>,
-      // reducer: CaseReducer<TState, A>
       reducer: CaseReducer<TState, A extends AnyAction ? A : TAction>,
     ) {
       if (process.env.NODE_ENV !== 'production') {
