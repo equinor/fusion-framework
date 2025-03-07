@@ -23,7 +23,7 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noBannedTypes": "warn",
+        "noBannedTypes": "error",
         "useLiteralKeys": "warn",
         "useOptionalChain": "warn"
       },

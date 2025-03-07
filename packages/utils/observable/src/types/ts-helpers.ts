@@ -28,19 +28,9 @@ export type IfVoid<P, True, False> = [void] extends [P] ? True : False;
  */
 export type IsUnknownOrNonInferrable<T, True, False> = IsUnknown<T, True, False>;
 
-/**
- * Helper type. Passes T out again, but boxes it in a way that it cannot
- * "widen" the type by accident if it is a generic that should be inferred
- * from elsewhere.
- *
- * ref https://github.com/Microsoft/TypeScript/issues/14829#issuecomment-322267089
- *
- */
-export type NoInfer<T> = [T][T extends any ? 0 : never];
-
 export type TypeGuard<T> = (value: any) => value is T;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// biome-ignore lint/complexity/noBannedTypes: This is a valid use case for an empty object type
 export type NotFunction<T = unknown> = T extends Function ? never : T;
 
 export type NestedKeys<TObject extends object> = {
