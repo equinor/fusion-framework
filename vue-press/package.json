@@ -14,15 +14,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.19",
-    "@vuepress/cli": "2.0.0-rc.19",
-    "@vuepress/client": "2.0.0-rc.19",
-    "@vuepress/plugin-register-components": "2.0.0-rc.66",
-    "@vuepress/utils": "2.0.0-rc.19",
+    "@vuepress/bundler-vite": "2.0.0-rc.20",
+    "@vuepress/cli": "2.0.0-rc.20",
+    "@vuepress/client": "2.0.0-rc.20",
+    "@vuepress/plugin-register-components": "2.0.0-rc.82",
+    "@vuepress/utils": "2.0.0-rc.20",
     "mermaid": "^11.0.2",
     "typescript": "^5.8.2",
     "vue": "^3.4.38",
-    "vuepress": "2.0.0-rc.19",
-    "vuepress-theme-hope": "2.0.0-rc.59"
+    "vuepress": "2.0.0-rc.20",
+    "vuepress-theme-hope": "2.0.0-rc.74"
   }
 }
