@@ -107,7 +107,7 @@ export class LegacyAuthContainer extends AuthContainer {
   protected async __acquireTokenAsync(app: AuthApp): Promise<string | null> {
     const defaultScope = app.clientId + '/.default';
     const res = await this.#auth.acquireToken({ scopes: [defaultScope] });
-    if (res && res.accessToken) {
+    if (res?.accessToken) {
       return res.accessToken;
     }
     throw Error('failed to aquire token');
