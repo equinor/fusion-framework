@@ -50,22 +50,22 @@ export const createServiceResolver = async (
   );
 
   return {
-    getContextBaseUrl: () => services.serviceMap['context'].uri,
+    getContextBaseUrl: () => services.serviceMap.context.uri,
     getDataProxyBaseUrl: () => services.serviceMap['data-proxy'].uri,
-    getFusionBaseUrl: () => services.serviceMap['portal'].uri,
+    getFusionBaseUrl: () => services.serviceMap.portal.uri,
     getMeetingsBaseUrl: () => services.serviceMap['meeting-v2'].uri,
-    getOrgBaseUrl: () => services.serviceMap['org'].uri,
-    getPowerBiBaseUrl: () => services.serviceMap['powerbi'].uri,
-    getProjectsBaseUrl: () => services.serviceMap['projects'].uri,
-    getTasksBaseUrl: () => services.serviceMap['tasks'].uri,
-    getFusionTasksBaseUrl: () => services.serviceMap['tasks'].uri,
-    getPeopleBaseUrl: () => services.serviceMap['people'].uri,
-    getReportsBaseUrl: () => services.serviceMap['reports'].uri,
+    getOrgBaseUrl: () => services.serviceMap.org.uri,
+    getPowerBiBaseUrl: () => services.serviceMap.powerbi.uri,
+    getProjectsBaseUrl: () => services.serviceMap.projects.uri,
+    getTasksBaseUrl: () => services.serviceMap.tasks.uri,
+    getFusionTasksBaseUrl: () => services.serviceMap.tasks.uri,
+    getPeopleBaseUrl: () => services.serviceMap.people.uri,
+    getReportsBaseUrl: () => services.serviceMap.reports.uri,
     // TODO - What?!?
     getPowerBiApiBaseUrl: () => 'https://api.powerbi.com/v1.0/myorg',
-    getNotificationBaseUrl: () => services.serviceMap['notification'].uri,
-    getInfoUrl: () => services.serviceMap['info'].uri,
-    getBookmarksBaseUrl: () => services.serviceMap['bookmarks'].uri,
+    getNotificationBaseUrl: () => services.serviceMap.notification.uri,
+    getInfoUrl: () => services.serviceMap.info.uri,
+    getBookmarksBaseUrl: () => services.serviceMap.bookmarks.uri,
   };
 };
 
