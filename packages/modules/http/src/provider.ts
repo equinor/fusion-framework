@@ -128,7 +128,7 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     const options = { requestHandler };
     const instance = new ctor(baseUri || '', options) as TClient;
     Object.assign(instance, { defaultScopes });
-    onCreate && onCreate(instance as TClient);
+    onCreate?.(instance as TClient);
     return instance as TClient;
   }
 

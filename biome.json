@@ -23,7 +23,9 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "useOptionalChain": "warn"
+        "noBannedTypes": "warn",
+        "useLiteralKeys": "error",
+        "useOptionalChain": "error"
       },
       "performance": {
         "noAccumulatingSpread": "warn"

@@ -15,7 +15,7 @@ export const enableWidgetModule = (
   configurator.addConfig({
     module,
     configure: (widgetConfigurator) => {
-      builder && builder(widgetConfigurator);
+      builder?.(widgetConfigurator);
     },
   });
 };

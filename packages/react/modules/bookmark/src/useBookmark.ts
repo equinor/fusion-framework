@@ -150,8 +150,8 @@ export const useBookmark = (args?: useBookmarkArgs): useBookmarkResult => {
 
   const setCurrentBookmark = useCallback(
     (IdOrItem: Bookmark | string | null): void => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      bookmarkProvider && bookmarkProvider.setCurrentBookmark(IdOrItem as any);
+      // biome-ignore lint/suspicious/noExplicitAny: allowed
+      bookmarkProvider?.setCurrentBookmark(IdOrItem as any);
     },
     [bookmarkProvider],
   );
