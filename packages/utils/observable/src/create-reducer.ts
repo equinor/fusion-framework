@@ -2,17 +2,16 @@ import { produce as createNextState, isDraft, isDraftable } from 'immer';
 
 import type { Draft } from 'immer';
 
-import type { NoInfer, TypeGuard } from './types/ts-helpers';
-import type { Action, ActionType, ActionTypes, AnyAction, ExtractAction } from './types/actions';
+import type { TypeGuard } from './types/ts-helpers';
+import type { Action, ActionType, AnyAction, ExtractAction } from './types/actions';
 import type { ReducerWithInitialState } from './types/reducers';
-import { ac } from 'vitest/dist/chunks/reporters.C_zwCd4j';
 
 function freezeDraftable<T>(val: T) {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: This is a valid use case for an empty block statement
   return isDraftable(val) ? createNextState(val, () => {}) : val;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// biome-ignore lint/complexity/noBannedTypes: This is a valid use case for an empty object type
 type NotFunction<T = unknown> = T extends Function ? never : T;
 
 function isStateFunction<S>(x: unknown): x is () => S {
@@ -24,11 +23,11 @@ export type ActionMatcherDescription<S, A extends AnyAction> = {
   reducer: CaseReducer<S, NoInfer<A>>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for any
 type ActionMatcherDescriptionCollection<S> = Array<ActionMatcherDescription<S, any>>;
 
 interface TypedActionCreator<Type extends string> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for any
   (...args: any[]): Action<Type>;
   type: Type;
 }
@@ -36,9 +35,11 @@ interface TypedActionCreator<Type extends string> {
 type CaseReducer<S = unknown, A extends Action = AnyAction> = (
   state: Draft<S>,
   action: A,
+  // biome-ignore lint/suspicious/noConfusingVoidType: This is a valid use case for void
 ) => S | void | Draft<S>;
 
 type CaseReducers<S, AS extends Record<string, Action>> = {
+  // biome-ignore lint/suspicious/noConfusingVoidType: This is a valid use case for void
   [T in keyof AS]: AS[T] extends Action ? CaseReducer<S, AS[T]> : void;
 };
 
