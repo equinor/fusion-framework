@@ -23,7 +23,7 @@ export class ConsoleLogger implements IConsoleLogger {
       'background: rgb(179, 13, 47); color: white; padding: 1px;',
       'background: rgb(244, 244, 244); color: rgb(36, 55, 70); padding: 1px;',
       'background: none; color: inherit',
-      ...msg.reduce((c: unknown[], n: unknown) => [...c, n, '\n'], []),
+      ...msg.reduce((c: unknown[], n: unknown) => c.concat(n, '\n'), []),
     ];
   }
 
