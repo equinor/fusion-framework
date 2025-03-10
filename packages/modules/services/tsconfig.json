@@ -7,7 +7,7 @@
     
     "paths": {
       "@equinor/fusion-framework-module-services": [
-        "."
+        "./"
       ],
       "@equinor/fusion-framework-module-services/*": [
         "./*"
@@ -29,10 +29,11 @@
     }
   ],
   "include": [
-    "src/**/*",
+    "src/**/*", "tests/**/*",
   ],
   "exclude": [
     "node_modules",
-    "lib"
+    "lib",
+    "tests"
   ]
 }
