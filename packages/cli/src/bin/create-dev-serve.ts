@@ -15,6 +15,7 @@ import deepmerge from 'deepmerge/index.js';
 
 import ViteRestart from 'vite-plugin-restart';
 import { appProxyPlugin } from '../lib/plugins/app-proxy/app-proxy-plugin.js';
+import { helpProxyPlugin } from '../lib/plugins/help-proxy/help-proxy-plugin.js';
 import { appSettingsPlugin } from '../lib/plugins/app-settings/index.js';
 import { externalPublicPlugin } from '../lib/plugins/external-public/external-public-plugin.js';
 
@@ -117,6 +118,14 @@ export const createDevServer = async (options: {
           generateConfig,
           generateManifest,
           manifestPath: `persons/me/apps/${appKey}`,
+        },
+      }),
+      // Proxy help assets request to help service.
+      helpProxyPlugin({
+        proxy: {
+          path: '/help-proxy',
+          target: 'https://help.ci.api.fusion-dev.net/',
+          onProxyReq: proxyRequestLogger,
         },
       }),
       // Restart the server when config changes or the dev portal source is updated
