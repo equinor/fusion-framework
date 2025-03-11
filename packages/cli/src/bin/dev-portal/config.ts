@@ -71,9 +71,27 @@ export const configure = async (config: FrameworkConfigurator) => {
     console.log('framework config done');
   });
 
-  config.onInitialized(async () => {
+  config.onInitialized(async (modules) => {
     // fusion.auth.defaultClient.setLogger(new ConsoleLogger(0));
     console.debug('📒 subscribing to all events');
+
+    // Call the help-proxy endpoint to aquire a access token.
+    // @see lib.plugins/help-proxy
+    try {
+      await modules.http
+        .createClient({
+          defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+        })
+        .fetch('/help-proxy', {
+          method: 'OPTIONS',
+        });
+    } catch (e) {
+      const error = e as Error;
+      console.error(
+        'Could not call help-proxy OPTIONS call to aquire an access token',
+        error.message,
+      );
+    }
   });
 };
 
