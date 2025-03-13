@@ -10,39 +10,88 @@ import type {
   QueryContextOdataParameters,
 } from './types';
 
-const buildOdataFilter = (filterObj: QueryContextOdataFilter) => {
-  return Object.keys(filterObj).reduce((acc, key) => {
-    switch (key) {
-      case 'type':
-        return filterObj[key]?.length ? { ...acc, [key]: { in: filterObj[key] } } : acc;
-      default:
-        return { ...acc, [key]: filterObj[key as keyof typeof filterObj] };
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }, {} as any);
-};
+/**
+ * Builds an OData filter object from the given filter object.
+ *
+ * This function takes a `QueryContextOdataFilter` object and transforms it into an OData filter object.
+ * It iterates over the keys of the input object and processes each key according to specific rules.
+ *
+ * @param filterObj - The filter object to be transformed into an OData filter.
+ * @returns A record representing the OData filter.
+ *
+ * @example
+ * ```typescript
+ * const filterObj = { type: ['exampleType'], otherKey: 'value' };
+ * const odataFilter = buildOdataFilter(filterObj);
+ * // odataFilter will be { $filter: { in: ['exampleType'] }, otherKey: 'value' }
+ * ```
+ */
+function buildOdataFilter(filterObj: QueryContextOdataFilter) {
+  return Object.keys(filterObj).reduce(
+    (acc, key) => {
+      switch (key) {
+        case 'type':
+          if (filterObj[key]?.length) {
+            acc[key] = { in: filterObj[key] };
+          }
+          break;
+        default:
+          acc[key] = filterObj[key as keyof typeof filterObj];
+          break;
+      }
+      return acc;
+    },
+    {} as Record<string, unknown>,
+  );
+}
 
-const buildOdataObject = (parameters: QueryContextOdataParameters) => {
+/**
+ * Builds an OData object from the given query context parameters.
+ *
+ * This function processes the provided parameters, filters out any entries with falsy values,
+ * and constructs an OData object. It handles specific keys, such as 'filter', with custom logic.
+ *
+ * @param parameters - The query context parameters to be converted into an OData object.
+ * @returns An OData object constructed from the provided parameters.
+ */
+function buildOdataObject(parameters: QueryContextOdataParameters) {
   return Object.entries(parameters)
     .filter(([_, value]) => !!value)
-    .reduce((acc, [key, value]) => {
-      switch (key) {
-        case 'filter':
-          return {
-            ...acc,
-            [key]: buildOdataFilter(value as QueryContextOdataFilter),
-          };
-        default:
-          return { ...acc, [key]: parameters[key as keyof typeof parameters] };
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, {} as any);
-};
+    .reduce(
+      (acc, [key, value]) => {
+        switch (key) {
+          case 'filter':
+            acc[key] = buildOdataFilter(value as QueryContextOdataFilter);
+            break;
+          default:
+            acc[key] = parameters[key as keyof typeof parameters];
+            break;
+        }
+        return acc;
+      },
+      {} as Record<string, unknown>,
+    );
+}
 
-const createSearchParameters = (args: string | QueryContextOdataParameters) => {
+/**
+ * Creates search parameters based on the provided arguments.
+ *
+ * @param args - A string or an object containing OData query parameters.
+ * @returns A string representing the search parameters.
+ */
+function createSearchParameters(args: string | QueryContextOdataParameters) {
   return typeof args === 'string' ? args : buildOdataQuery(buildOdataObject(args));
-};
+}
 
+/**
+ * Generates an endpoint URL based on the provided API version and query context arguments.
+ *
+ * @template TVersion - The type of the API version, defaults to the keys of `ApiVersion`.
+ * @param version - The API version to use for generating the endpoint.
+ * @param args - The query context arguments specific to the provided API version.
+ * @returns The generated endpoint URL as a string.
+ * @throws {UnsupportedApiVersion} If the provided API version is not supported.
+ */
 export const generateEndpoint = <TVersion extends string = keyof typeof ApiVersion>(
   version: TVersion,
   args: QueryContextArgs<TVersion>,

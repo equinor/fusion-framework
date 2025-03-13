@@ -28,7 +28,7 @@
         "useOptionalChain": "error"
       },
       "performance": {
-        "noAccumulatingSpread": "warn"
+        "noAccumulatingSpread": "error"
       },
       "style": {
         "noParameterAssign": "warn",

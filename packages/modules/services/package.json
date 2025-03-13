@@ -102,7 +102,8 @@
     },
     "scripts": {
         "build": "tsc -b",
-        "prepack": "pnpm build"
+        "prepack": "pnpm build",
+        "test": "vitest"
     },
     "keywords": [],
     "author": "",
@@ -123,7 +124,10 @@
         "@equinor/fusion-framework-module": "workspace:^",
         "@equinor/fusion-framework-module-http": "workspace:^",
         "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-        "typescript": "^5.8.2"
+        "@faker-js/faker": "^9.5.1",
+        "msw": "^2.7.3",
+        "typescript": "^5.8.2",
+        "vitest": "^2.0.5"
     },
     "peerDependencies": {
         "@equinor/fusion-framework-module": "workspace:^",
