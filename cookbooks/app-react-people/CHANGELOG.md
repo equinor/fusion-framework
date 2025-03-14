@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.5.6
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- [#2890](https://github.com/equinor/fusion-framework/pull/2890) [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to self-closing tags for components
+
+  - Updated `SelectorPage.tsx` to use self-closing tags for `PersonSelect` components.
+  - Updated `Header.Actions.tsx` to use self-closing tags for `fwc-person-avatar` component.
+  - Updated `FeatureSheetContent.tsx` to use self-closing tags for `Icon` and `Divider` components.
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237)]:
+  - @equinor/fusion-framework-module-navigation@4.0.9
+
 ## 4.5.5
 
 ### Patch Changes

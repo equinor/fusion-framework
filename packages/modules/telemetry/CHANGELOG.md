@@ -1,5 +1,17 @@
 # Change Log
 
+## 4.1.8
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- [#2901](https://github.com/equinor/fusion-framework/pull/2901) [`8c6c598`](https://github.com/equinor/fusion-framework/commit/8c6c598fce973f9c24426d5e108cc3301d2da139) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to Biome `useOptionalChain`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237)]:
+  - @equinor/fusion-framework-module@4.3.7
+  - @equinor/fusion-framework-module-msal@4.0.2
+
 ## 4.1.7
 
 ### Patch Changes
