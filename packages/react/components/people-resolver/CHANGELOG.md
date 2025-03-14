@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.7
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`0a7cfc1`](https://github.com/equinor/fusion-framework/commit/0a7cfc18a2debea272bc934c473ede9510c0368d)]:
+  - @equinor/fusion-framework-react-module@3.1.8
+  - @equinor/fusion-framework-module-services@5.1.2
+  - @equinor/fusion-framework-react@7.4.3
+  - @equinor/fusion-query@5.2.3
+
 ## 1.5.6
 
 ### Patch Changes

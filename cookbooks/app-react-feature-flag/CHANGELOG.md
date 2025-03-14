@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.34
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`4ab33e9`](https://github.com/equinor/fusion-framework/commit/4ab33e91d827d4ff28947eab6c856e9e49866a6f), [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`8c6c598`](https://github.com/equinor/fusion-framework/commit/8c6c598fce973f9c24426d5e108cc3301d2da139), [`d20db24`](https://github.com/equinor/fusion-framework/commit/d20db24c73690e90a5860fe5160909c77efa41cb), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`fdd057e`](https://github.com/equinor/fusion-framework/commit/fdd057e0920ffb93e07b6338e3ff592a65dabbc6), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`e695290`](https://github.com/equinor/fusion-framework/commit/e69529086e90b1d0d8aaf6d4b1de0e1167ce9424), [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510)]:
+  - @equinor/fusion-framework-cli@10.6.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.14
+  - @equinor/fusion-framework-module-navigation@4.0.9
+  - @equinor/fusion-observable@8.4.6
+  - @equinor/fusion-framework-module-http@6.2.3
+  - @equinor/fusion-framework-react-app@6.0.3
+
 ## 1.3.33
 
 ### Patch Changes

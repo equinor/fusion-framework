@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.6.11
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`4ab33e9`](https://github.com/equinor/fusion-framework/commit/4ab33e91d827d4ff28947eab6c856e9e49866a6f), [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510)]:
+  - @equinor/fusion-framework-cli@10.6.0
+  - @equinor/fusion-framework-react-ag-grid@33.1.2
+  - @equinor/fusion-framework-react-app@6.0.3
+
 ## 0.6.10
 
 ### Patch Changes

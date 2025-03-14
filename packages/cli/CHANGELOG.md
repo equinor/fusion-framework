@@ -1,5 +1,21 @@
 # Change Log
 
+## 10.6.0
+
+### Minor Changes
+
+- [#2907](https://github.com/equinor/fusion-framework/pull/2907) [`4ab33e9`](https://github.com/equinor/fusion-framework/commit/4ab33e91d827d4ff28947eab6c856e9e49866a6f) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add `help-proxy` plugin for the CLI.
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- [#2890](https://github.com/equinor/fusion-framework/pull/2890) [`1ad39f5`](https://github.com/equinor/fusion-framework/commit/1ad39f509a33627f2ad877a4125386a80ab8f510) Thanks [@odinr](https://github.com/odinr)! - refactor: adhere to self-closing tags for components
+
+  - Updated `SelectorPage.tsx` to use self-closing tags for `PersonSelect` components.
+  - Updated `Header.Actions.tsx` to use self-closing tags for `fwc-person-avatar` component.
+  - Updated `FeatureSheetContent.tsx` to use self-closing tags for `Icon` and `Divider` components.
+
 ## 10.5.5
 
 ### Patch Changes
