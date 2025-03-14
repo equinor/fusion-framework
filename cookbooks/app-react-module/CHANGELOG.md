@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.5
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
 ## 0.2.4
 
 ### Patch Changes

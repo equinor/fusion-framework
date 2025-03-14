@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-react-widget
 
+## 1.1.30
+
+### Patch Changes
+
+- [#2885](https://github.com/equinor/fusion-framework/pull/2885) [`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update he `Typescript` version `^5.7.3` to `^5.8.2`
+
+- Updated dependencies [[`abb3560`](https://github.com/equinor/fusion-framework/commit/abb3560a22ad8830df19904272035458433f4237), [`8c6c598`](https://github.com/equinor/fusion-framework/commit/8c6c598fce973f9c24426d5e108cc3301d2da139)]:
+  - @equinor/fusion-framework-react-module@3.1.8
+  - @equinor/fusion-framework-react@7.4.3
+  - @equinor/fusion-framework-module@4.3.7
+  - @equinor/fusion-framework-module-widget@9.0.5
+  - @equinor/fusion-framework@7.3.3
+  - @equinor/fusion-framework-widget@1.1.29
+
 ## 1.1.29
 
 ### Patch Changes
