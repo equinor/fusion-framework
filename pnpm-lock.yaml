@@ -298,7 +298,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^0.43.0
-        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
@@ -391,7 +391,7 @@ importers:
     dependencies:
       '@equinor/eds-core-react':
         specifier: ^0.43.0
-        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/eds-icons':
         specifier: ^0.22.0
         version: 0.22.0
@@ -409,7 +409,7 @@ importers:
         version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
         specifier: ^6.0.7
-        version: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -656,7 +656,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.43.0
-        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/eds-icons':
         specifier: ^0.22.0
         version: 0.22.0
@@ -719,7 +719,7 @@ importers:
         version: 0.3.0(react@18.3.1)
       '@equinor/fusion-react-side-sheet':
         specifier: 1.3.5
-        version: 1.3.5(@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 1.3.5(@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-react-styles':
         specifier: ^0.6.4
         version: 0.6.4(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -773,7 +773,7 @@ importers:
         version: 7.8.2
       styled-components:
         specifier: ^6.0.7
-        version: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
@@ -1307,7 +1307,7 @@ importers:
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.43.0
-        version: 0.43.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
+        version: 0.43.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
       '@equinor/eds-icons':
         specifier: ^0.22.0
         version: 0.22.0
@@ -1316,7 +1316,7 @@ importers:
         version: 0.9.2
       '@equinor/eds-utils':
         specifier: ^0.8.5
-        version: 0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
+        version: 0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../../modules/app
@@ -1334,7 +1334,7 @@ importers:
         version: 18.3.1
       styled-components:
         specifier: ^6.0.7
-        version: 6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+        version: 6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
@@ -1998,6 +1998,10 @@ packages:
 
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.26.10':
+    resolution: {integrity: sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.26.7':
@@ -2696,8 +2700,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
 
-  '@eslint-community/eslint-utils@4.4.1':
-    resolution: {integrity: sha512-s3O3waFUrMV8P/XaF/+ZTp1X9XBZW1a4B97ZnjQF2KYWaFD2A8KyFBsrsfSjEmjn3RGWAIuvlneuZm3CUK3jbA==}
+  '@eslint-community/eslint-utils@4.5.1':
+    resolution: {integrity: sha512-soEIOALTfTK6EjmKMMoLugwaP0rzkad90iIWd1hMO9ARkSAyjfMfkRRhLvD5qH7vvM0Cg72pieUfR6yh6XxC4w==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -2733,6 +2737,7 @@ packages:
   '@faker-js/faker@9.5.1':
     resolution: {integrity: sha512-0fzMEDxkExR2cn731kpDaCCnBGBUOIXEi2S1N5l8Hltp6aPf4soTMJ+g4k8r2sI5oB+rpwIW8Uy/6jkwGpnWPg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
@@ -6171,8 +6176,8 @@ packages:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
     engines: {node: '>=8.0.0'}
 
-  eslint-scope@8.2.0:
-    resolution: {integrity: sha512-PHlWUfG6lvPc3yvP5A4PNyBL1W8fkDUccmI21JUu/+GKZBoH/W5u6usENXUrWFRsyoW5ACUjFGgAFQp5gUlb/A==}
+  eslint-scope@8.3.0:
+    resolution: {integrity: sha512-pUNxi75F8MJ/GdeKtVLSbYg4ZI34J6C0C7sbL4YOp2exGwen7ZsuBqKzUhXd0qMQ362yET3z+uPwKeg/0C2XCQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   eslint-visitor-keys@3.4.3:
@@ -8322,8 +8327,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  styled-components@6.1.15:
-    resolution: {integrity: sha512-PpOTEztW87Ua2xbmLa7yssjNyUF9vE7wdldRfn1I2E6RTkqknkBYpj771OxM/xrvRGinLy2oysa7GOd7NcZZIA==}
+  styled-components@6.1.16:
+    resolution: {integrity: sha512-KpWB6ORAWGmbWM10cDJfEV6sXc/uVkkkQV3SLwTNQ/E/PqWgNHIoMSLh1Lnk2FkB9+JHK7uuMq1i+9ArxDD7iQ==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
@@ -9371,6 +9376,10 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  '@babel/runtime@7.26.10':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
   '@babel/runtime@7.26.7':
     dependencies:
       regenerator-runtime: 0.14.1
@@ -9665,12 +9674,12 @@ snapshots:
 
   '@emotion/unitless@0.8.1': {}
 
-  '@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.26.7
       '@equinor/eds-icons': 0.22.0
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/eds-utils': 0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@equinor/eds-utils': 0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@floating-ui/react': 0.27.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@internationalized/date': 3.7.0
       '@react-aria/utils': 3.27.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -9682,14 +9691,14 @@ snapshots:
       react: 18.3.1
       react-aria: 3.37.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
-      styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      styled-components: 6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@equinor/eds-core-react@0.43.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1))':
+  '@equinor/eds-core-react@0.43.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.26.7
       '@equinor/eds-icons': 0.22.0
       '@equinor/eds-tokens': 0.9.2
-      '@equinor/eds-utils': 0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
+      '@equinor/eds-utils': 0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1))
       '@floating-ui/react': 0.27.3(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
       '@internationalized/date': 3.7.0
       '@react-aria/utils': 3.27.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
@@ -9701,7 +9710,7 @@ snapshots:
       react: 18.3.1
       react-aria: 3.37.0(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
       react-dom: 19.0.0(react@18.3.1)
-      styled-components: 6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+      styled-components: 6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
 
   '@equinor/eds-icons@0.19.3': {}
 
@@ -9711,21 +9720,21 @@ snapshots:
 
   '@equinor/eds-tokens@0.9.2': {}
 
-  '@equinor/eds-utils@0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/eds-utils@0.8.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.26.0
       '@equinor/eds-tokens': 0.9.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      styled-components: 6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@equinor/eds-utils@0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1))':
+  '@equinor/eds-utils@0.8.6(react-dom@19.0.0(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.26.0
       '@equinor/eds-tokens': 0.9.2
       react: 18.3.1
       react-dom: 19.0.0(react@18.3.1)
-      styled-components: 6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
+      styled-components: 6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1)
 
   '@equinor/eslint-config-fusion-react@2.1.1(@equinor/eslint-config-fusion@2.3.0(eslint@9.21.0(jiti@2.4.2))(prettier@3.5.2)(typescript@5.8.2))(eslint@9.21.0(jiti@2.4.2))':
     dependencies:
@@ -9853,15 +9862,15 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-side-sheet@1.3.5(@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/fusion-react-side-sheet@1.3.5(@equinor/eds-core-react@0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.9.2)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@equinor/eds-core-react': 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@equinor/eds-core-react': 0.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/eds-icons': 0.22.0
       '@equinor/eds-tokens': 0.9.2
       re-resizable: 6.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-keyed-flatten-children: 3.2.0(react@18.3.1)
-      styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      styled-components: 6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.3
       react-dom: 18.3.1(react@18.3.1)
@@ -10237,7 +10246,7 @@ snapshots:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.4.1(eslint@9.21.0(jiti@2.4.2))':
+  '@eslint-community/eslint-utils@4.5.1(eslint@9.21.0(jiti@2.4.2))':
     dependencies:
       eslint: 9.21.0(jiti@2.4.2)
       eslint-visitor-keys: 3.4.3
@@ -13232,7 +13241,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/runtime': 7.26.9
+      '@babel/runtime': 7.26.10
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -13688,7 +13697,7 @@ snapshots:
 
   '@typescript-eslint/utils@7.18.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.21.0(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.21.0(jiti@2.4.2))
       '@typescript-eslint/scope-manager': 7.18.0
       '@typescript-eslint/types': 7.18.0
       '@typescript-eslint/typescript-estree': 7.18.0(typescript@5.8.2)
@@ -13994,7 +14003,7 @@ snapshots:
   '@vuepress/helper@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vue/shared': 3.5.13
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       cheerio: 1.0.0
       fflate: 0.8.2
       gray-matter: 4.0.3
@@ -14033,7 +14042,7 @@ snapshots:
 
   '@vuepress/plugin-active-header-links@2.0.0-rc.55(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14043,7 +14052,7 @@ snapshots:
   '@vuepress/plugin-back-to-top@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14082,7 +14091,7 @@ snapshots:
   '@vuepress/plugin-copy-code@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14092,7 +14101,7 @@ snapshots:
   '@vuepress/plugin-copyright@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14118,7 +14127,7 @@ snapshots:
       '@mdit/plugin-container': 0.13.1(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -14160,7 +14169,7 @@ snapshots:
       '@mdit/plugin-tab': 0.13.2(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14171,7 +14180,7 @@ snapshots:
   '@vuepress/plugin-notice@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14190,7 +14199,7 @@ snapshots:
   '@vuepress/plugin-photo-swipe@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       photoswipe: 5.4.4
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14210,7 +14219,7 @@ snapshots:
   '@vuepress/plugin-redirect@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       cac: 6.7.14
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14321,28 +14330,11 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/core@11.3.0(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 11.3.0
-      '@vueuse/shared': 11.3.0(vue@3.5.13(typescript@5.8.2))
-      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
   '@vueuse/metadata@11.3.0': {}
 
   '@vueuse/shared@11.3.0(vue@3.4.38(typescript@5.8.2))':
     dependencies:
       vue-demi: 0.14.10(vue@3.4.38(typescript@5.8.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
-  '@vueuse/shared@11.3.0(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -15501,7 +15493,7 @@ snapshots:
       esrecurse: 4.3.0
       estraverse: 4.3.0
 
-  eslint-scope@8.2.0:
+  eslint-scope@8.3.0:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
@@ -15512,7 +15504,7 @@ snapshots:
 
   eslint@9.21.0(jiti@2.4.2):
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.1(eslint@9.21.0(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.5.1(eslint@9.21.0(jiti@2.4.2))
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.19.2
       '@eslint/core': 0.12.0
@@ -15529,7 +15521,7 @@ snapshots:
       cross-spawn: 7.0.6
       debug: 4.4.0
       escape-string-regexp: 4.0.0
-      eslint-scope: 8.2.0
+      eslint-scope: 8.3.0
       eslint-visitor-keys: 4.2.0
       espree: 10.3.0
       esquery: 1.6.0
@@ -18058,7 +18050,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-components@6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  styled-components@6.1.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.2.2
       '@emotion/unitless': 0.8.1
@@ -18072,7 +18064,7 @@ snapshots:
       stylis: 4.3.2
       tslib: 2.6.2
 
-  styled-components@6.1.15(react-dom@19.0.0(react@18.3.1))(react@18.3.1):
+  styled-components@6.1.16(react-dom@19.0.0(react@18.3.1))(react@18.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.2.2
       '@emotion/unitless': 0.8.1
@@ -18696,10 +18688,6 @@ snapshots:
     dependencies:
       vue: 3.4.38(typescript@5.8.2)
 
-  vue-demi@0.14.10(vue@3.5.13(typescript@5.8.2)):
-    dependencies:
-      vue: 3.5.13(typescript@5.8.2)
-
   vue-router@4.5.0(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
@@ -18730,7 +18718,7 @@ snapshots:
       '@stackblitz/sdk': 1.11.0
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       balloon-css: 1.2.0
       create-codepen: 2.0.0
       qrcode: 1.5.4
@@ -18763,7 +18751,7 @@ snapshots:
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       balloon-css: 1.2.0
       js-yaml: 4.1.0
       vue: 3.5.13(typescript@5.8.2)
@@ -18780,7 +18768,7 @@ snapshots:
   vuepress-shared@2.0.0-rc.59(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))):
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       dayjs: 1.11.13
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
