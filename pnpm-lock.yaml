@@ -1164,7 +1164,7 @@ importers:
         version: link:../msal
       '@microsoft/applicationinsights-web':
         specifier: ^3.0.2
-        version: 3.3.5(tslib@2.8.1)
+        version: 3.3.6(tslib@2.8.1)
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -3285,13 +3285,13 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-analytics-js@3.3.5':
-    resolution: {integrity: sha512-79EfjQpch2x/B6Ae9dKQixwewWkPSR5vF3KtiJtTZV5udQdlgrcVZgtk3RlqdSaWEMC/xcwBXl7bCiKntd+v/g==}
+  '@microsoft/applicationinsights-analytics-js@3.3.6':
+    resolution: {integrity: sha512-fyT1aXlv+SWR5VpwySe3079+PiJWzY6pznz83Tx8yjJMQMp5m1twlNxkbuJwYWJBz581ApbA5YNWaTF0U6L5RA==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
-  '@microsoft/applicationinsights-cfgsync-js@3.3.5':
-    resolution: {integrity: sha512-18Kct8zgtKq6Vyl1uzGQlAHFZ2D5bJWvGsDkC4OsEduqAHRfA5mfizvtmHJoTTHgTg9mPvdTLDcSpuntndEu4g==}
+  '@microsoft/applicationinsights-cfgsync-js@3.3.6':
+    resolution: {integrity: sha512-tCpN8cBqpqmgr94vR0eqCOpIYcXOVBXAWJGqwq6UpmRvV8YWGGvQfNkHAwHG0F2XGbNpmZejHA7H88VCA1XkgA==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3300,8 +3300,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-channel-js@3.3.5':
-    resolution: {integrity: sha512-q9iE5alabgddwnxIDxgYLwC/3OMjYNOPk87p3jY+KxO0UmJGhiv7C1uI62zpx4AHBGT2+q6pMbIZdgld9TmMrw==}
+  '@microsoft/applicationinsights-channel-js@3.3.6':
+    resolution: {integrity: sha512-dnFpTaviD8Ufx3ZJnionvSffwbOwo5EbcsQoIIWV3IC3i4dR6v45Ct7SsQMmyrhMEJYkPD7ddvKdgH89OYuCbQ==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3310,8 +3310,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-common@3.3.5':
-    resolution: {integrity: sha512-zZgMOY3ePBhjTrZ8+MXwAb0Y+Yi4iVDKOqIaz/KoCmj1BxX5JKFgaqYiN8Tvu5O0YPJpEKS4coYXRHbStDm/Hw==}
+  '@microsoft/applicationinsights-common@3.3.6':
+    resolution: {integrity: sha512-XuqWwbDSW7DuagcUy9Op7UFZeAyjU9RWuIQppxlTGrITa7PF5QmsyvjCiSsBRy7vMt/q42qnmOYoHwhL7KoyOQ==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3320,8 +3320,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-core-js@3.3.5':
-    resolution: {integrity: sha512-8Gg18W5eOE3usXtkZ5iOqWAMU97hyjb7Oi1CtkWmxEoMUHMlQmqUD62n9BmVq/s5YfbUihGZHxc0keMJy0txAA==}
+  '@microsoft/applicationinsights-core-js@3.3.6':
+    resolution: {integrity: sha512-Yv09rk/QdLhM4Dr29WKi4xWmsnTJpuGE95kuKsBxSlzFYlC3foYAZ5wowsNU6Yscpv6TJQRd6RksMIEGV6Uz5Q==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3330,8 +3330,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-dependencies-js@3.3.5':
-    resolution: {integrity: sha512-6yCrMUjgzzGHelj4UcEftFelcBUoEXmmLP7cuur/+MgfULiNUNbhIcyM0NzehbzDU2h51mQmMapwdw6R7goKFQ==}
+  '@microsoft/applicationinsights-dependencies-js@3.3.6':
+    resolution: {integrity: sha512-kupRktpsFwxhCMqkr+fidjGxygDJTHDmzAHq/ylEPY6GZpdWLPTjMJwIVjfxI2uxLw8c2xLP0Ufc4am5UU8KJw==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3340,8 +3340,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-properties-js@3.3.5':
-    resolution: {integrity: sha512-5pPCys+9CVaW9PlEon7HmGPeNynUch5MZzj4x884TTpl1idKI9GRNVYRpzhivwabaMNvvQIqLBpIMacaD1Xc0w==}
+  '@microsoft/applicationinsights-properties-js@3.3.6':
+    resolution: {integrity: sha512-LgSGYvsBmwZc9DuKbb8n82R5OtmIFh6IxNpchbYNtN9PkYqGSStvsC1k0kFvtgxUoUpFsbXiPELc3Lftx1j5hA==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3356,8 +3356,8 @@ packages:
     peerDependencies:
       tslib: '*'
 
-  '@microsoft/applicationinsights-web@3.3.5':
-    resolution: {integrity: sha512-lf1eqFXDL1m7ObychpecTChiUXtMltTxekETJjp05nK8X618mmfcnTCdJgWSvmAG2m09GNz6Wd26omJlNknSdQ==}
+  '@microsoft/applicationinsights-web@3.3.6':
+    resolution: {integrity: sha512-jwCsndqjNxFN2ikQG3M4SiWCP8qOPBQnSadLup8sSiPjHH4w3UJ74a9sUgEkodt78I2ic21XG8/shrlO2LHlQw==}
     peerDependencies:
       tslib: '>= 1.0.0'
 
@@ -3380,8 +3380,8 @@ packages:
   '@nevware21/ts-async@0.5.4':
     resolution: {integrity: sha512-IBTyj29GwGlxfzXw2NPnzty+w0Adx61Eze1/lknH/XIVdxtF9UnOpk76tnrHXWa6j84a1RR9hsOcHQPFv9qJjA==}
 
-  '@nevware21/ts-utils@0.11.6':
-    resolution: {integrity: sha512-OUUJTh3fnaUSzg9DEHgv3d7jC+DnPL65mIO7RaR+jWve7+MmcgIvF79gY97DPQ4frH+IpNR78YAYd/dW4gK3kg==}
+  '@nevware21/ts-utils@0.11.8':
+    resolution: {integrity: sha512-62Y1mHgSu99IK4BRKC3sxdj/uIBHy6SDof3WUd29jom2HQy8sGCUdbYtFwMOkbUS6rahkL11Eg/ImtwsQsCnyw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -11005,23 +11005,23 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-analytics-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-analytics-js@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-cfgsync-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-cfgsync-js@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-channel-js@2.8.18(tslib@2.8.1)':
@@ -11032,14 +11032,14 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-channel-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-channel-js@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-common@2.8.18(tslib@2.8.1)':
@@ -11049,12 +11049,12 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-common@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-common@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-core-js@2.8.18(tslib@2.8.1)':
@@ -11063,12 +11063,12 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-core-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-core-js@3.3.6(tslib@2.8.1)':
     dependencies:
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-dependencies-js@2.8.18(tslib@2.8.1)':
@@ -11079,14 +11079,14 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-dependencies-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-dependencies-js@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-properties-js@2.8.18(tslib@2.8.1)':
@@ -11097,20 +11097,20 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-properties-js@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-properties-js@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/applicationinsights-shims@2.0.2': {}
 
   '@microsoft/applicationinsights-shims@3.0.1':
     dependencies:
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
 
   '@microsoft/applicationinsights-web@2.8.18(tslib@2.8.1)':
     dependencies:
@@ -11124,26 +11124,26 @@ snapshots:
       '@microsoft/dynamicproto-js': 1.1.11
       tslib: 2.8.1
 
-  '@microsoft/applicationinsights-web@3.3.5(tslib@2.8.1)':
+  '@microsoft/applicationinsights-web@3.3.6(tslib@2.8.1)':
     dependencies:
-      '@microsoft/applicationinsights-analytics-js': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-cfgsync-js': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-channel-js': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-common': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-core-js': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-dependencies-js': 3.3.5(tslib@2.8.1)
-      '@microsoft/applicationinsights-properties-js': 3.3.5(tslib@2.8.1)
+      '@microsoft/applicationinsights-analytics-js': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-cfgsync-js': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-channel-js': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-common': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-core-js': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-dependencies-js': 3.3.6(tslib@2.8.1)
+      '@microsoft/applicationinsights-properties-js': 3.3.6(tslib@2.8.1)
       '@microsoft/applicationinsights-shims': 3.0.1
       '@microsoft/dynamicproto-js': 2.0.3
       '@nevware21/ts-async': 0.5.4
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
       tslib: 2.8.1
 
   '@microsoft/dynamicproto-js@1.1.11': {}
 
   '@microsoft/dynamicproto-js@2.0.3':
     dependencies:
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
 
   '@microsoft/signalr@7.0.14':
     dependencies:
@@ -11180,9 +11180,9 @@ snapshots:
 
   '@nevware21/ts-async@0.5.4':
     dependencies:
-      '@nevware21/ts-utils': 0.11.6
+      '@nevware21/ts-utils': 0.11.8
 
-  '@nevware21/ts-utils@0.11.6': {}
+  '@nevware21/ts-utils@0.11.8': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -13994,7 +13994,7 @@ snapshots:
   '@vuepress/helper@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vue/shared': 3.5.13
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       cheerio: 1.0.0
       fflate: 0.8.2
       gray-matter: 4.0.3
@@ -14033,7 +14033,7 @@ snapshots:
 
   '@vuepress/plugin-active-header-links@2.0.0-rc.55(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14043,7 +14043,7 @@ snapshots:
   '@vuepress/plugin-back-to-top@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14082,7 +14082,7 @@ snapshots:
   '@vuepress/plugin-copy-code@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14092,7 +14092,7 @@ snapshots:
   '@vuepress/plugin-copyright@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14118,7 +14118,7 @@ snapshots:
       '@mdit/plugin-container': 0.13.1(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -14160,7 +14160,7 @@ snapshots:
       '@mdit/plugin-tab': 0.13.2(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14171,7 +14171,7 @@ snapshots:
   '@vuepress/plugin-notice@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14190,7 +14190,7 @@ snapshots:
   '@vuepress/plugin-photo-swipe@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       photoswipe: 5.4.4
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14210,7 +14210,7 @@ snapshots:
   '@vuepress/plugin-redirect@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       cac: 6.7.14
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14321,28 +14321,11 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/core@11.3.0(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 11.3.0
-      '@vueuse/shared': 11.3.0(vue@3.5.13(typescript@5.8.2))
-      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
   '@vueuse/metadata@11.3.0': {}
 
   '@vueuse/shared@11.3.0(vue@3.4.38(typescript@5.8.2))':
     dependencies:
       vue-demi: 0.14.10(vue@3.4.38(typescript@5.8.2))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
-  '@vueuse/shared@11.3.0(vue@3.5.13(typescript@5.8.2))':
-    dependencies:
-      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -18696,10 +18679,6 @@ snapshots:
     dependencies:
       vue: 3.4.38(typescript@5.8.2)
 
-  vue-demi@0.14.10(vue@3.5.13(typescript@5.8.2)):
-    dependencies:
-      vue: 3.5.13(typescript@5.8.2)
-
   vue-router@4.5.0(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
@@ -18730,7 +18709,7 @@ snapshots:
       '@stackblitz/sdk': 1.11.0
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       balloon-css: 1.2.0
       create-codepen: 2.0.0
       qrcode: 1.5.4
@@ -18763,7 +18742,7 @@ snapshots:
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       balloon-css: 1.2.0
       js-yaml: 4.1.0
       vue: 3.5.13(typescript@5.8.2)
@@ -18780,7 +18759,7 @@ snapshots:
   vuepress-shared@2.0.0-rc.59(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))):
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
       dayjs: 1.11.13
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
