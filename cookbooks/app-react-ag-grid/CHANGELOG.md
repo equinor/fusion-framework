@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.6.0
+  - @equinor/fusion-framework-react-app@6.0.4
+
 ## 0.6.11
 
 ### Patch Changes
