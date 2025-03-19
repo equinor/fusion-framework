@@ -85,9 +85,9 @@
         "@equinor/fusion-framework-module-feature-flag": "workspace:^",
         "@equinor/fusion-framework-module-msal": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@types/react": "^18.2.50",
+        "@types/react": "^19.0.11",
         "@types/react-dom": "^18.2.7",
-        "react": "^18.2.0",
+        "react": "^19.0.0",
         "react-dom": "^18.2.0",
         "typescript": "^5.8.2"
     },

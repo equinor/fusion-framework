@@ -18,9 +18,9 @@
         "@equinor/fusion-framework-react-app": "workspace:^",
         "@equinor/fusion-framework-react-module-context": "workspace:^",
         "@equinor/fusion-observable": "workspace:^",
-        "@types/react": "^18.2.50",
+        "@types/react": "^19.0.11",
         "@types/react-dom": "^18.0.8",
-        "react": "^18.2.0",
+        "react": "^19.0.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
