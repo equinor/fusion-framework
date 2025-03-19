@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.1.7
+
+### Patch Changes
+
+- [#2917](https://github.com/equinor/fusion-framework/pull/2917) [`378f897`](https://github.com/equinor/fusion-framework/commit/378f89707a357d165b84ea82b74147b7f0d87f52) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Add `webpackIgnore` to module import for application
+
 ## 6.1.6
 
 ### Patch Changes
