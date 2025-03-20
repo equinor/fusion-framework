@@ -1,0 +1,14 @@
+{
+  "name": "@equinor/fusion-framework-dev-server",
+  "version": "0.0.0",
+  "description": "Package for running a development server for fusion-framework",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": ["dev-server", "fusion-framework", "vite", "typescript"],
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
