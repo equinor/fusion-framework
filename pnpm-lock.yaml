@@ -778,6 +778,12 @@ importers:
         specifier: ^5.8.2
         version: 5.8.2
 
+  packages/dev-server:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.8.2
+
   packages/framework:
     dependencies:
       '@equinor/fusion-framework-module':
