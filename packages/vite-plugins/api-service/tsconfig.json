@@ -1,14 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "dist/esm",
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
     "rootDir": "src",
-    "target": "ESNext",
     "declarationDir": "./dist/types",
     "baseUrl": ".",
-    "types": [
-      "vite/client"
-    ],
   },
   "include": [
     "src/**/*",
