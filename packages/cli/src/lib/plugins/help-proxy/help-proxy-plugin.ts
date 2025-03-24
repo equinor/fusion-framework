@@ -88,11 +88,11 @@ export const helpProxyPlugin = (options: HelpProxyPluginOptions): Plugin => {
     },
     configureServer(server) {
       server.middlewares.use(proxyPath, async (req, res, next) => {
-        if (req.headers.authorization) {
-          __HELP_API_TOKEN__ = req.headers.authorization || '';
-          res.end();
-          return;
-        }
+        if (req.originalUrl?.startsWith(proxyPath) && req.method === 'OPTIONS' && req.headers.authorization) {  
+          __HELP_API_TOKEN__ = req.headers.authorization || '';  
+          res.end();  
+          return;  
+        }  
         next();
       });
     },
