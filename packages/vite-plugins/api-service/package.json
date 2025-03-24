@@ -1,42 +1,33 @@
 {
-  "name": "@equinor/fusion-framework-dev-server",
+  "name": "@equinor/fusion-framework-vite-plugin-api-service",
   "version": "0.0.0",
-  "description": "Package for running a development server for fusion-framework",
+  "description": "Vite plugin for proxying service discovery and mocking",
   "type": "module",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
-    },
-    "./plugin-api-service": {
-      "import": "./dist/esm/plugin/api-service/index.js",
-      "types": "./dist/types/plugin/api-service/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "plugin-api-service": [
-        "dist/types/plugin/api-service/index.d.ts"
-      ]
-    }
-  },
   "directories": {
     "dist": "dist"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/dev-server"
+    "directory": "packages/vite-plugins/api-service"
   },
   "scripts": {
     "build": "tsc -b",
     "test": "vitest"
   },
   "keywords": [
-    "dev-server",
-    "fusion-framework",
     "vite",
+    "fusion-framework",
+    "dev-server",
+    "service-discovery",
+    "mocking",
     "typescript"
   ],
   "license": "ISC",
