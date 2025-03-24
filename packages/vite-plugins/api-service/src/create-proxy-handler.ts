@@ -1,15 +1,9 @@
 import type ProxyServer from 'http-proxy';
+import { responseInterceptor } from 'http-proxy-middleware';
+import type { ProxyOptions } from 'vite';
 
-import type {
-  ApiRoute,
-  JsonData,
-  ApiProxyHandler,
-  PluginLogger,
-  IncomingRequest,
-} from './types.js';
+import type { ApiRoute, JsonData, ApiProxyHandler } from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
-import { createResponseInterceptor } from './create-response-interceptor.js';
-import type { Connect } from 'vite';
 
 /**
  * A type representing a function that processes API response data and transforms it
@@ -28,10 +22,7 @@ export type ApiDataProcessor<
   TResult extends JsonData = TResponse,
 > = (
   data: TResponse,
-  args: {
-    route: string;
-    request: Connect.IncomingMessage;
-  },
+  proxyRoute: string,
 ) => {
   data: TResult;
   routes?: ApiRoute[];
@@ -62,20 +53,13 @@ export function createProxyHandler<
   generateRoutes: ApiDataProcessor<TResponse, TResult>,
   args?: {
     route?: string;
-    apiRoute?: string;
     proxyOptions?: Omit<
       ApiProxyHandler['createProxyOptions'] | ReturnType<ApiProxyHandler['createProxyOptions']>,
       'target' | 'transformResponse' | 'selfHandleResponse'
     >;
-    logger?: PluginLogger;
   },
 ): ApiProxyHandler {
-  const {
-    route = DEFAULT_VALUES.SERVICES_PATH,
-    apiRoute = DEFAULT_VALUES.API_PATH,
-    proxyOptions = {},
-    logger,
-  } = args ?? {};
+  const { route = DEFAULT_VALUES.SERVICES_PATH, proxyOptions = {} } = args ?? {};
 
   // Initialize routes - this will be updated on each response
   let apiRoutes: ApiRoute[] | undefined;
@@ -92,33 +76,19 @@ export function createProxyHandler<
         typeof proxyOptions === 'function' ? proxyOptions(...args) : proxyOptions;
 
       // Configure the proxy server
-      const configure = (proxyServer: ProxyServer) => {
-        proxyServer.on('proxyRes', (proxyRes, req, res) => {
-          // initialize the interceptor since the `generateRoutes` requires the request
-          const interceptor = createResponseInterceptor(
-            (data: TResponse) => {
-              const { data: transformedData, routes } = generateRoutes(data, {
-                route: apiRoute,
-                request: req,
-              });
-              apiRoutes = routes;
-              return transformedData;
-            },
-            {
-              logger,
-            },
-          );
-          // execute the interceptor
-          interceptor(proxyRes, req, res);
+      const configure = (proxyServer: ProxyServer, options: ProxyOptions) => {
+        proxyServer.on('proxyRes', async (proxyReq, req, res) => {
+          const interceptor = responseInterceptor(async (responseBuffer): Promise<string> => {
+            const response = JSON.parse(responseBuffer.toString()) as TResponse;
+            const { data, routes } = generateRoutes(response, route);
+            apiRoutes = routes;
+            return JSON.stringify(data);
+          });
+          interceptor(proxyReq, req, res);
         });
-        proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
-          logger?.info(
-            `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
-          );
-        });
-        proxyServer.on('error', (err) => {
-          logger?.error(`proxy for ${apiRoute} to ${target} failed: ${err.message}`);
-        });
+        if (providedOptions?.configure) {
+          providedOptions.configure(proxyServer, options);
+        }
       };
 
       return {

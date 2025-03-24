@@ -1,12 +1,6 @@
 import httpProxy from 'http-proxy';
 
-import type {
-  ApiRoute,
-  ServerListener,
-  PluginLogger,
-  ProxyListener,
-  IncomingRequest,
-} from './types.js';
+import type { ApiRoute, ServerListener, PluginLogger, ProxyListener } from './types.js';
 import { createRouteMatcher } from './create-route-matcher.js';
 import { InvalidRouteError, validateRoute } from './validate-route.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
@@ -67,7 +61,7 @@ function processesRoute(
 
   // if route has middleware, execute it
   if (route.middleware) {
-    logger?.info(`executing route middleware on match ${route.match} -> ${req.originalUrl}`);
+    logger?.debug('executing route middleware');
     if (route.proxy) {
       logger?.warn('route.middleware and route.proxy are both defined. Using middleware');
     }
@@ -81,69 +75,29 @@ function processesRoute(
     req.url = rewrite(req.url ?? '');
   }
 
+  logger?.debug(`Creating proxy server for ${requestUrl} -> ${proxyOptions.target}`);
+
   const proxyServer = httpProxy.createProxyServer({
     selfHandleResponse: !!transformResponse,
     prependPath: true,
-    secure: process.env.NODE_ENV === 'production',
-    changeOrigin: true,
     ...proxyOptions,
   });
 
-  proxyServer.on('error', (err) => {
-    logger?.error(`proxy for ${requestUrl} to ${proxyOptions.target} failed: ${err.message}`);
-    res.writeHead(500, { 'Content-Type': 'text/plain' });
-    res.end(`Proxy error: ${err.message}`);
-  });
-
-  proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
-    // Set the original request URL
-    logger?.info(
-      `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
-    );
-  });
-
-  proxyServer.on('proxyRes', (proxyRes, req: IncomingRequest) => {
-    const { headers, statusMessage, statusCode = 500 } = proxyRes;
-    const message = `Received response for ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
-
-    res.writeHead(statusCode, {
-      ...headers,
-      'x-proxy-rewrite-target': proxyOptions.target,
-    });
-
-    if (statusCode ?? 0 >= 400) {
-      logger?.error(message);
-      logger?.debug({
-        request: {
-          url: req.originalUrl,
-          headers: req.headers,
-        },
-        response: {
-          statusCode,
-          statusMessage,
-          headers,
-        },
-      });
-    } else {
-      logger?.debug(message);
-    }
-  });
-
   if (options?.onProxyRes) {
-    logger?.debug('adding custom onProxyRes handler');
     proxyServer.on('proxyRes', options.onProxyRes);
   }
 
   if (transformResponse) {
-    logger?.debug('adding response interceptor');
-    proxyServer.on('proxyRes', createResponseInterceptor(transformResponse, { logger }));
+    proxyServer.on('proxyRes', createResponseInterceptor(transformResponse));
   }
 
   // if provided route has configure method, call it
   if (configure) {
-    logger?.debug('configuring proxy server');
+    logger?.debug('Configuring proxy server');
     configure(proxyServer, proxyOptions);
   }
+
+  logger?.debug('Proxying request');
 
   proxyServer.web(req, res);
 }
@@ -166,7 +120,7 @@ export function processRoutes(
 
   for (const route of routes) {
     if (!req.url) continue;
-    const match = createRouteMatcher(route)(req.url ?? '', req);
+    const match = createRouteMatcher(route)(req.url, req);
     if (match) {
       const [req, res, next] = middlewareArgs;
       req.params = typeof match === 'object' ? match.params : {};

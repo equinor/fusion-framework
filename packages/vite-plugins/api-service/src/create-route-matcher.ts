@@ -1,4 +1,4 @@
-import pathToRegexp from 'path-to-regexp';
+import { match } from 'path-to-regexp';
 
 import type { ApiRoute, IncomingRequest, RequestParams } from './types.js';
 
@@ -39,7 +39,7 @@ export type MatchResult<T extends RequestParams> = boolean | { params: T };
 export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Matcher<T> {
   if (typeof route.match === 'string') {
     return (path: string): MatchResult<T> => {
-      return pathToRegexp.match<T>(route.match as string)(path);
+      return match<T>(route.match as string)(path);
     };
   }
   return route.match as Matcher<T>;

@@ -7,6 +7,10 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./plugin-api-service": {
+      "import": "./dist/esm/plugin/api-service/index.js",
+      "types": "./dist/types/plugin/api-service/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -30,7 +34,10 @@
     "@equinor/fusion-log": "workspace:^"
   },
   "devDependencies": {
+    "@types/http-proxy": "^1.17.16",
+    "nock": "^14.0.1",
     "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
     "vite": "^6.2.5"
   },
   "peerDependencies": {
