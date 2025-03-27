@@ -95,6 +95,7 @@ export class AppClient implements IAppClient {
           });
         },
       },
+      queueOperator: "merge",
       key: ({ appKey }) => appKey,
       expire,
     });
@@ -131,6 +132,7 @@ export class AppClient implements IAppClient {
           });
         },
       },
+      queueOperator: "merge",
       key: (args) => JSON.stringify(args),
       expire,
     });
