@@ -138,6 +138,23 @@ export interface IContextProvider {
     context: ContextItem<Record<string, unknown>> | null,
     opt?: { validate?: boolean; resolve?: boolean },
   ): Promise<ContextItem<Record<string, unknown>> | null>;
+
+  /**
+   * Method for extracting context id from a path.
+   *
+   * @param path path to resolve context from
+   * @returns the resolved context item id
+   */
+  extractContextIdFromPath?: (path: string) => string | undefined;
+
+  /**
+   * Method for generating path from a context item.
+   *
+   * @param context context item to generate path from
+   * @param path current path
+   * @returns path for the context item
+   */
+  generatePathFromContext?: (context: ContextItem, path: string) => string | undefined;
 }
 
 export class ContextProvider implements IContextProvider {
@@ -204,6 +221,15 @@ export class ContextProvider implements IContextProvider {
     // set the resolve and validate context functions
     config.resolveContext && (this.resolveContext = config.resolveContext?.bind(this));
     config.validateContext && (this.validateContext = config.validateContext?.bind(this));
+
+    if (config.extractContextIdFromPath) {
+      // @ts-ignore
+      this.extractContextIdFromPath = config.extractContextIdFromPath;
+    }
+    if (config.generatePathFromContext) {
+      // @ts-ignore
+      this.generatePathFromContext = config.generatePathFromContext;
+    }
 
     this.#contextType = config.contextType;
     this.#contextFilter = config.contextFilter;

@@ -74,6 +74,25 @@ export class ContextConfigBuilder<
     this.config.resolveContext = fn;
   }
 
+  /**
+   * Sets the function responsible for extracting the context ID from a given path.
+   *
+   * @param fn - A function that defines how to extract the context ID from a path.
+   *             This function should match the type defined in `ContextModuleConfig['extractContextIdFromPath']`.
+   */
+  setContextPathExtractor(fn: ContextModuleConfig['extractContextIdFromPath']) {
+    this.config.extractContextIdFromPath = fn;
+  }
+
+  /**
+   * Sets the function responsible for generating a path from the context.
+   *
+   * @param fn - A function that takes a context and generates a corresponding path.
+   */
+  setContextPathGenerator(fn: ContextModuleConfig['generatePathFromContext']) {
+    this.config.generatePathFromContext = fn;
+  }
+
   setResolveInitialContext(fn: ContextModuleConfig['resolveInitialContext']) {
     this.config.resolveInitialContext = fn;
   }
