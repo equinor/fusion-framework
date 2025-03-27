@@ -40,6 +40,9 @@ export interface ContextModuleConfig {
   /** set initial context from parent, will await resolve */
   skipInitialContext?: boolean;
 
+  extractContextIdFromPath?: (path: string) => string | undefined;
+  generatePathFromContext?: (context: ContextItem, path: string) => string | undefined;
+
   /**
    * Method for generating context query parameters.
    */
@@ -105,7 +108,14 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       Promise.resolve({} as Partial<ContextModuleConfig>),
     );
 
-    config.resolveInitialContext ??= resolveInitialContext();
+    console.log(999, 'createConfig', config);
+
+    config.resolveInitialContext ??= resolveInitialContext({
+      path: {
+        extract: config.extractContextIdFromPath,
+        validate: config.extractContextIdFromPath ? () => true : undefined,
+      },
+    });
 
     // TODO - make less lazy
     config.client ??= await (async (): Promise<ContextModuleConfig['client']> => {

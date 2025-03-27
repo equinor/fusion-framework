@@ -64,13 +64,16 @@ export const useAppContextNavigation = () => {
         }
 
         // extract the context id from the current path
-        const pathContextId = extractContextIdFromPath(currentPathname);
+        const pathContextId =
+          context?.extractContextIdFromPath?.(currentPathname) ??
+          extractContextIdFromPath(currentPathname);
 
         // generate path to the selected context
         const pathname = pathContextId
           ? item
             ? // context id exists in the url, replace it with the new context id
-              currentPathname.replace(pathContextId, item.id)
+              (context?.generatePathFromContext?.(item, currentPathname) ??
+              currentPathname.replace(pathContextId, item.id))
             : // context was cleared, set the path to the root
               '/'
           : // could not find context id in the url, set the path to the new context id
@@ -87,7 +90,10 @@ export const useAppContextNavigation = () => {
         // if app has its own navigation, use it to navigate
         if (appNavigation) {
           // update the path of the app navigation, preserving search and hash
-          appNavigation.replace({ ...appNavigation.path, pathname });
+          appNavigation.replace({
+            ...appNavigation.path,
+            pathname,
+          });
         } else {
           // update the path of the portal navigation, preserving search and hash
           navigation.replace({ ...navigation.path, pathname });
