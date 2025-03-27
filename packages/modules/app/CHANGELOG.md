@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.1.8
+
+### Patch Changes
+
+- [#2929](https://github.com/equinor/fusion-framework/pull/2929) [`e3de5fa`](https://github.com/equinor/fusion-framework/commit/e3de5fa01528705f8032f673bb03fe48ac97a152) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Added `queueOperator: "merge"` to manifest and config in AppClient
+
 ## 6.1.7
 
 ### Patch Changes
