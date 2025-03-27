@@ -1,6 +1,6 @@
 {
     "name": "@equinor/fusion-imports",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Package import files and configurations",
     "keywords": [
         "esbuild",
