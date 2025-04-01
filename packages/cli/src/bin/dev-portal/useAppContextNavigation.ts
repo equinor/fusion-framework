@@ -2,7 +2,11 @@ import { useCallback } from 'react';
 
 import { useCurrentAppModules } from '@equinor/fusion-framework-react/app';
 
-import type { ContextItem, ContextModule, IContextProvider } from '@equinor/fusion-framework-module-context';
+import type {
+  ContextItem,
+  ContextModule,
+  IContextProvider,
+} from '@equinor/fusion-framework-module-context';
 import { extractContextIdFromPath } from '@equinor/fusion-framework-module-context/utils';
 
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
@@ -13,22 +17,27 @@ import { useFrameworkModule } from '@equinor/fusion-framework-react';
 
 type CurrentAppModules = [ContextModule, NavigationModule];
 
-const generatePathname = (currentPathname: string, item: ContextItem, context?: IContextProvider, pathContextId?: string) => {
+const generatePathname = (
+  currentPathname: string,
+  item: ContextItem,
+  context?: IContextProvider,
+  pathContextId?: string,
+) => {
   if (pathContextId) {
     // context id exists in the url, replace it with the new context id
-    const pathname = (context?.generatePathFromContext?.(item, currentPathname) ??
-      currentPathname.replace(pathContextId, item.id))
+    const pathname =
+      context?.generatePathFromContext?.(item, currentPathname) ??
+      currentPathname.replace(pathContextId, item.id);
 
     console.debug(
       `🌍 Portal: context changed, navigating to app's context url:`,
-        `found context id [${pathContextId}] in url, replacing with [${pathname}]`
+      `found context id [${pathContextId}] in url, replacing with [${pathname}]`,
     );
 
     return pathname;
   }
   // could not find context id in the url, set the path to the new context id
-  const pathname = context?.generatePathFromContext?.(item, currentPathname) ??
-    `/${item?.id}`;
+  const pathname = context?.generatePathFromContext?.(item, currentPathname) ?? `/${item?.id}`;
 
   console.debug(
     `🌍 Portal: context changed, navigating to app's context url:`,
@@ -97,7 +106,8 @@ export const useAppContextNavigation = () => {
           currentPathname,
           item,
           context,
-          context?.extractContextIdFromPath?.(currentPathname) ?? extractContextIdFromPath(currentPathname),
+          context?.extractContextIdFromPath?.(currentPathname) ??
+            extractContextIdFromPath(currentPathname),
         );
 
         // if app has its own navigation, use it to navigate
