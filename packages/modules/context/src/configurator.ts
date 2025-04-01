@@ -108,8 +108,6 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
       Promise.resolve({} as Partial<ContextModuleConfig>),
     );
 
-    console.log(999, 'createConfig', config);
-
     config.resolveInitialContext ??= resolveInitialContext({
       path: {
         extract: config.extractContextIdFromPath,
