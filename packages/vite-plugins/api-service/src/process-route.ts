@@ -61,7 +61,7 @@ function processesRoute(
 
   // if route has middleware, execute it
   if (route.middleware) {
-    logger?.debug('executing route middleware');
+    logger?.debug(`executing route middleware on match ${route.match} -> ${req.originalUrl}`);
     if (route.proxy) {
       logger?.warn('route.middleware and route.proxy are both defined. Using middleware');
     }
@@ -75,29 +75,31 @@ function processesRoute(
     req.url = rewrite(req.url ?? '');
   }
 
-  logger?.debug(`Creating proxy server for ${requestUrl} -> ${proxyOptions.target}`);
+  logger?.debug(`creating proxy server for ${requestUrl} -> ${proxyOptions.target}`);
 
   const proxyServer = httpProxy.createProxyServer({
     selfHandleResponse: !!transformResponse,
     prependPath: true,
+    secure: process.env.NODE_ENV === 'production',
+    changeOrigin: true,
     ...proxyOptions,
   });
 
   if (options?.onProxyRes) {
+    logger?.debug('adding custom onProxyRes handler');
     proxyServer.on('proxyRes', options.onProxyRes);
   }
 
   if (transformResponse) {
-    proxyServer.on('proxyRes', createResponseInterceptor(transformResponse));
+    logger?.debug('adding response interceptor');
+    proxyServer.on('proxyRes', createResponseInterceptor(transformResponse, { logger }));
   }
 
   // if provided route has configure method, call it
   if (configure) {
-    logger?.debug('Configuring proxy server');
+    logger?.debug('configuring proxy server');
     configure(proxyServer, proxyOptions);
   }
-
-  logger?.debug('Proxying request');
 
   proxyServer.web(req, res);
 }
@@ -120,7 +122,7 @@ export function processRoutes(
 
   for (const route of routes) {
     if (!req.url) continue;
-    const match = createRouteMatcher(route)(req.url, req);
+    const match = createRouteMatcher(route)(req.url ?? '', req);
     if (match) {
       const [req, res, next] = middlewareArgs;
       req.params = typeof match === 'object' ? match.params : {};
