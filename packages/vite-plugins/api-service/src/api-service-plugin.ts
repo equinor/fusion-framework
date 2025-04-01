@@ -2,7 +2,7 @@ import type { Plugin } from 'vite';
 
 import { type ProcessRouteOptions, processRoutes } from './process-route.js';
 
-import type { ApiProxyHandler, ApiRoute } from './types.js';
+import type { ApiProxyHandler, ApiRoute, PluginLogger } from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
 
 const pluginName = 'fusion:dev_server::api-proxy';
@@ -28,7 +28,11 @@ export type PluginOptions = {
   /**
    * options for processing the routes
    */
-  process?: ProcessRouteOptions;
+  process?: Omit<ProcessRouteOptions, 'logger'>;
+  /**
+   * logger for the plugin
+   */
+  logger?: PluginLogger;
 };
 
 /**
@@ -53,7 +57,7 @@ export type PluginOptions = {
 export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
   const { routes, proxyHandler } = args;
 
-  const logger = options?.process?.logger;
+  const { logger } = options ?? {};
 
   // Plugin requires either routes or/and proxyHandler
   if (!args.routes && !args.proxyHandler) {
@@ -62,7 +66,7 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
 
   const proxyBase = options?.route ?? DEFAULT_VALUES.API_PATH;
 
-  logger?.debug(pluginName, `Setting up API proxy at ${proxyBase}`);
+  logger?.debug(`Setting up API proxy at ${proxyBase}`);
 
   return {
     name: 'fusion:api-proxy',
@@ -73,25 +77,23 @@ export function plugin(args: PluginArguments, options?: PluginOptions): Plugin {
         config.server.proxy = Object.assign({}, config.server.proxy, {
           [proxyHandler.route]: proxyOptions,
         });
-        logger?.debug(
-          pluginName,
-          `Proxying API requests for ${proxyHandler.route} to ${proxyOptions.target}`,
-        );
+        logger?.debug(`Proxying API requests for ${proxyHandler.route} to ${proxyOptions.target}`);
       }
     },
     configureServer(server) {
       // first handle provided routes
       if (routes) {
         server.middlewares.use(proxyBase, async (req, res, next) => {
-          processRoutes(routes, [req, res, next], options?.process);
+          processRoutes(routes, [req, res, next], { ...options?.process, logger });
         });
-        logger?.debug(pluginName, `Added custom routes [${routes.length}] at ${proxyBase}`);
+        logger?.debug(`Added custom routes [${routes.length}] at ${proxyBase}`);
       }
 
       // then handle proxy handler routes
       if (proxyHandler) {
         server.middlewares.use(proxyBase, async (req, res, next) => {
-          processRoutes(proxyHandler.routes, [req, res, next], options?.process);
+          logger?.debug(`Processing proxy routes [${proxyHandler.routes.length}] at ${proxyBase}`);
+          processRoutes(proxyHandler.routes, [req, res, next], { ...options?.process, logger });
         });
       }
     },
