@@ -2,7 +2,7 @@ import { responseInterceptor } from 'http-proxy-middleware';
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import type { JsonData, ProxyListener } from './types.js';
+import type { IncomingRequest, JsonData, PluginLogger, ProxyListener } from './types.js';
 
 type ResponseInterceptorCallback<TResponse, TResult> = (
   data: TResponse,
@@ -58,13 +58,56 @@ type ResponseInterceptorCallback<TResponse, TResult> = (
 export function createResponseInterceptor<
   TResponse extends JsonData,
   TResult extends JsonData = TResponse,
->(callback: ResponseInterceptorCallback<TResponse, TResult>): ProxyListener {
+>(
+  callback: ResponseInterceptorCallback<TResponse, TResult>,
+  options?: { logger?: PluginLogger },
+): ProxyListener {
+  const { logger } = options ?? {};
   // Callback function for standard proxy handler
   return async (
     proxyRes: IncomingMessage,
-    req: IncomingMessage,
+    req: IncomingRequest,
     res: ServerResponse,
   ): Promise<void> => {
+    // @ts-ignore
+    logger?.debug(`intercepted response from ${req.originalUrl}`);
+
+    const { headers, statusMessage, statusCode = 500 } = proxyRes;
+
+    // Check if the response status code indicates an error
+    // If the status code is 2xx, we can proceed with the transformation
+    // If the status code is 4xx or 5xx, we should skip the transformation
+    // and return the original response to the client
+    if (statusCode >= 400) {
+      logger?.error(`${statusCode} - response is not OK, skipping transformation\n`, {
+        request: {
+          url: req.originalUrl,
+          headers: req.headers,
+        },
+        response: {
+          statusCode,
+          statusMessage,
+          headers,
+        },
+      });
+      res.writeHead(proxyRes.statusCode ?? 500, {
+        'x-proxy-error': 'true',
+        'x-proxy-status-code': statusCode,
+        'x-proxy-status-message': statusMessage,
+      });
+      proxyRes.pipe(res);
+      return;
+    }
+
+    // Check if the response content type is JSON
+    // If the content type is not JSON, we should skip the transformation
+    // and return the original response to the client
+    if (!headers['content-type']?.includes('application/json')) {
+      logger?.debug('response is not JSON, skipping transformation');
+      proxyRes.pipe(res);
+      return;
+    }
+
     // Apply the response interceptor
     const interceptor = responseInterceptor(async (responseBuffer): Promise<string> => {
       // Parse the response data and apply the callback transformation
