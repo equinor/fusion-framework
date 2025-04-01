@@ -1,9 +1,8 @@
 import type ProxyServer from 'http-proxy';
-import { responseInterceptor } from 'http-proxy-middleware';
-import type { ProxyOptions } from 'vite';
 
-import type { ApiRoute, JsonData, ApiProxyHandler } from './types.js';
+import type { ApiRoute, JsonData, ApiProxyHandler, PluginLogger } from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
+import { createResponseInterceptor } from './create-response-interceptor.js';
 
 /**
  * A type representing a function that processes API response data and transforms it
@@ -53,13 +52,20 @@ export function createProxyHandler<
   generateRoutes: ApiDataProcessor<TResponse, TResult>,
   args?: {
     route?: string;
+    apiRoute?: string;
     proxyOptions?: Omit<
       ApiProxyHandler['createProxyOptions'] | ReturnType<ApiProxyHandler['createProxyOptions']>,
       'target' | 'transformResponse' | 'selfHandleResponse'
     >;
+    logger?: PluginLogger;
   },
 ): ApiProxyHandler {
-  const { route = DEFAULT_VALUES.SERVICES_PATH, proxyOptions = {} } = args ?? {};
+  const {
+    route = DEFAULT_VALUES.SERVICES_PATH,
+    apiRoute = DEFAULT_VALUES.API_PATH,
+    proxyOptions = {},
+    logger,
+  } = args ?? {};
 
   // Initialize routes - this will be updated on each response
   let apiRoutes: ApiRoute[] | undefined;
@@ -76,19 +82,23 @@ export function createProxyHandler<
         typeof proxyOptions === 'function' ? proxyOptions(...args) : proxyOptions;
 
       // Configure the proxy server
-      const configure = (proxyServer: ProxyServer, options: ProxyOptions) => {
-        proxyServer.on('proxyRes', async (proxyReq, req, res) => {
-          const interceptor = responseInterceptor(async (responseBuffer): Promise<string> => {
-            const response = JSON.parse(responseBuffer.toString()) as TResponse;
-            const { data, routes } = generateRoutes(response, route);
-            apiRoutes = routes;
-            return JSON.stringify(data);
-          });
-          interceptor(proxyReq, req, res);
+      const configure = (proxyServer: ProxyServer) => {
+        proxyServer.on(
+          'proxyRes',
+          createResponseInterceptor(
+            (data: TResponse) => {
+              const { data: transformedData, routes } = generateRoutes(data, apiRoute);
+              apiRoutes = routes;
+              return transformedData;
+            },
+            {
+              logger,
+            },
+          ),
+        );
+        proxyServer.on('error', (err) => {
+          logger?.error(`proxy for ${apiRoute} to ${target} failed: ${err.message}`);
         });
-        if (providedOptions?.configure) {
-          providedOptions.configure(proxyServer, options);
-        }
       };
 
       return {
