@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import type { ConfigEnv, ProxyOptions, UserConfig } from 'vite';
+import type { ConfigEnv, Connect, ProxyOptions, UserConfig } from 'vite';
 
 import type ProxyServer from 'http-proxy';
 import type { Matcher } from './create-route-matcher.js';
@@ -16,7 +16,7 @@ import type { Matcher } from './create-route-matcher.js';
  *
  * Use this type to define a logger that adheres to these specific logging methods.
  */
-export type PluginLogger = Pick<Console, 'debug' | 'log' | 'warn' | 'error'>;
+export type PluginLogger = Pick<Console, 'debug' | 'info' | 'warn' | 'error'>;
 
 /**
  * Represents JSON data which can be of various types including:
@@ -38,15 +38,7 @@ export type JsonData = Record<string, unknown> | Array<unknown> | string | numbe
  */
 export type ProxyMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
-/**
- * Represents a function that is called to pass control to the next middleware
- * in the chain. If an error is provided as an argument, it indicates that an
- * error occurred and should be handled by error-handling middleware.
- *
- * @param err - Optional parameter representing an error. If provided, it signals
- *              an error condition to the next middleware.
- */
-export type NextFunction = (err?: unknown) => void;
+export type NextFunction = Connect.NextFunction;
 
 /**
  * Represents a mapping of request parameter names to their corresponding string values.
@@ -64,7 +56,7 @@ export type RequestParams = Record<string, string>;
  * @property params - An optional object containing route parameters extracted
  *                    from the request URL.
  */
-export type IncomingRequest = IncomingMessage & { params?: RequestParams };
+export type IncomingRequest = Connect.IncomingMessage & { params?: RequestParams };
 
 /**
  * Represents a server listener function that handles incoming requests.
@@ -91,7 +83,7 @@ export type ServerListener = (
  */
 export type ProxyListener = (
   proxyRes: IncomingMessage,
-  req: IncomingMessage,
+  req: IncomingRequest,
   res: ServerResponse,
 ) => void;
 
