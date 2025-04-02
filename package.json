@@ -37,11 +37,7 @@
     "changeset:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
-  "keywords": [
-    "react",
-    "fusion",
-    "components"
-  ],
+  "keywords": ["react", "fusion", "components"],
   "author": "Odin Thomas Rochmann <odin.rochmann@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -67,10 +63,6 @@
     "typescript": ">=4.8"
   },
   "workspaces": {
-    "packages": [
-      "packages/**",
-      "cookbooks/*",
-      "vue-press"
-    ]
+    "packages": ["packages/**", "cookbooks/*", "vue-press"]
   }
 }

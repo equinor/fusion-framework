@@ -1,71 +1,63 @@
 {
-    "name": "@equinor/fusion-framework-module-http",
-    "version": "6.2.3",
-    "description": "",
-    "main": "dist/esm/index.js",
-    "types": "index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./client": {
-            "import": "./dist/esm/lib/client/index.js",
-            "types": "./dist/types/lib/client/index.d.ts"
-        },
-        "./operators": {
-            "import": "./dist/esm/lib/operators/index.js",
-            "types": "./dist/types/lib/operators/index.d.ts"
-        },
-        "./selectors": {
-            "import": "./dist/esm/lib/selectors/index.js",
-            "types": "./dist/types/lib/selectors/index.d.ts"
-        },
-        "./errors": {
-            "import": "./dist/esm/errors.js",
-            "types": "./dist/types/errors.d.ts"
-        }
+  "name": "@equinor/fusion-framework-module-http",
+  "version": "6.2.3",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
-            ],
-            "client": [
-                "dist/types/lib/client/index.d.ts"
-            ],
-            "operators": [
-                "dist/types/lib/operators/index.d.ts"
-            ],
-            "selectors": [
-                "dist/types/lib/selectors/index.d.ts"
-            ]
-        }
+    "./client": {
+      "import": "./dist/esm/lib/client/index.js",
+      "types": "./dist/types/lib/client/index.d.ts"
     },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build",
-        "test": "vitest"
+    "./operators": {
+      "import": "./dist/esm/lib/operators/index.js",
+      "types": "./dist/types/lib/operators/index.d.ts"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
+    "./selectors": {
+      "import": "./dist/esm/lib/selectors/index.js",
+      "types": "./dist/types/lib/selectors/index.d.ts"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/http"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "rxjs": "^7.8.1",
-        "zod": "^3.23.8"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.2",
-        "vitest": "^2.0.5"
+    "./errors": {
+      "import": "./dist/esm/errors.js",
+      "types": "./dist/types/errors.d.ts"
     }
+  },
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"],
+      "client": ["dist/types/lib/client/index.d.ts"],
+      "operators": ["dist/types/lib/operators/index.d.ts"],
+      "selectors": ["dist/types/lib/selectors/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/http"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "rxjs": "^7.8.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^2.0.5"
+  }
 }

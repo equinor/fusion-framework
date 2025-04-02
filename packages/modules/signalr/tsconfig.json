@@ -3,8 +3,7 @@
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
-    "declarationDir": "./dist/types",
-    
+    "declarationDir": "./dist/types"
   },
   "references": [
     {
@@ -17,11 +16,6 @@
       "path": "../event"
     }
   ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

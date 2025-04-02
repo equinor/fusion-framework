@@ -4,14 +4,10 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    
+
     "paths": {
-      "@equinor/fusion-framework-module-services": [
-        "./"
-      ],
-      "@equinor/fusion-framework-module-services/*": [
-        "./*"
-      ]
+      "@equinor/fusion-framework-module-services": ["./"],
+      "@equinor/fusion-framework-module-services/*": ["./*"]
     }
   },
   "references": [
@@ -28,12 +24,6 @@
       "path": "../service-discovery"
     }
   ],
-  "include": [
-    "src/**/*", "tests/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "tests"
-  ]
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "lib", "tests"]
 }

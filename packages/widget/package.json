@@ -1,48 +1,44 @@
 {
-    "name": "@equinor/fusion-framework-widget",
-    "version": "1.1.30",
-    "description": "",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "types": "./dist/types/index.d.ts",
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [
-        "fusion",
-        "fusion-framework",
-        "utility"
-    ],
-    "homepage": "https://equinor.github.io/fusion-framework/",
-    "author": {
-        "name": "Odin thomas Rochmann",
-        "email": "oroc@equinor.com",
-        "url": "https://github.com/odinr"
-    },
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/widget"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework": "workspace:^",
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-event": "workspace:^",
-        "@equinor/fusion-framework-module-http": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@equinor/fusion-framework-module-widget": "workspace:^"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.2"
+  "name": "@equinor/fusion-framework-widget",
+  "version": "1.1.30",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
+  },
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["fusion", "fusion-framework", "utility"],
+  "homepage": "https://equinor.github.io/fusion-framework/",
+  "author": {
+    "name": "Odin thomas Rochmann",
+    "email": "oroc@equinor.com",
+    "url": "https://github.com/odinr"
+  },
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/widget"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-widget": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
 }

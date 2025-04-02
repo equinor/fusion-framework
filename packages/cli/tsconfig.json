@@ -6,8 +6,8 @@
     "target": "ES6",
     "declarationDir": "./dist/types",
     "baseUrl": ".",
-    "jsx": "react-jsx",
-      },
+    "jsx": "react-jsx"
+  },
   "references": [
     {
       "path": "../utils/observable"
@@ -46,11 +46,6 @@
       "path": "../react/components/people-resolver"
     }
   ],
-  "include": [
-    "src/**/*",
-    "types/*"
-  ],
-  "exclude": [
-    "node_modules",
-  ],
+  "include": ["src/**/*", "types/*"],
+  "exclude": ["node_modules"]
 }

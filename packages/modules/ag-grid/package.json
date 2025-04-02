@@ -1,55 +1,50 @@
 {
-    "name": "@equinor/fusion-framework-module-ag-grid",
-    "version": "33.2.0",
-    "description": "Fusion module for using AG Grid",
-    "main": "dist/esm/index.js",
-    "types": "dist/types/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./themes": {
-            "import": "./dist/esm/themes.js",
-            "types": "./dist/types/themes.d.ts"
-        },
-        "./package.json": "./package.json",
-        "./README.md": "./README.md"
+  "name": "@equinor/fusion-framework-module-ag-grid",
+  "version": "33.2.0",
+  "description": "Fusion module for using AG Grid",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "typesVersions": {
-        "*": {
-            "themes": [
-                "dist/types/themes.d.ts"
-            ]
-        }
+    "./themes": {
+      "import": "./dist/esm/themes.js",
+      "types": "./dist/types/themes.d.ts"
     },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [
-        "ag-grid",
-        "table"
-    ],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/ag-grid"
-    },
-    "devDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "ag-grid-community": "33.2.1",
-        "ag-grid-enterprise": "33.2.1",
-        "typescript": "^5.8.2"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "ag-grid-community": ">=33.0.3",
-        "ag-grid-enterprise": ">=33.0.3"
+    "./package.json": "./package.json",
+    "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    "*": {
+      "themes": ["dist/types/themes.d.ts"]
     }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["ag-grid", "table"],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/ag-grid"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "ag-grid-community": "33.2.1",
+    "ag-grid-enterprise": "33.2.1",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "ag-grid-community": ">=33.0.3",
+    "ag-grid-enterprise": ">=33.0.3"
+  }
 }

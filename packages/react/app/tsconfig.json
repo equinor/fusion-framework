@@ -5,8 +5,8 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "paths": {
-      "react": [ "./node_modules/@types/react" ],
-    },
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "references": [
     {
@@ -35,16 +35,11 @@
     },
     {
       "path": "../modules/bookmark"
-    },    
+    },
     {
       "path": "../widget"
-    },
+    }
   ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }

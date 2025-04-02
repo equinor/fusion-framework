@@ -1,49 +1,47 @@
 {
-    "name": "@equinor/fusion-framework-module-navigation",
-    "version": "4.0.9",
-    "description": "",
-    "sideEffects": false,
-    "main": "dist/esm/index.js",
-    "types": "index.d.ts",
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/navigation"
-    },
-    "dependencies": {
-        "@remix-run/router": "^1.8.0"
-    },
-    "devDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "rxjs": "^7.8.1",
-        "typescript": "^5.8.2"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@remix-run/router": "^1.8.0",
-        "rxjs": "^7.0.0"
+  "name": "@equinor/fusion-framework-module-navigation",
+  "version": "4.0.9",
+  "description": "",
+  "sideEffects": false,
+  "main": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"]
     }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/navigation"
+  },
+  "dependencies": {
+    "@remix-run/router": "^1.8.0"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@remix-run/router": "^1.8.0",
+    "rxjs": "^7.0.0"
+  }
 }

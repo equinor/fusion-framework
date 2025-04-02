@@ -1,42 +1,36 @@
 {
-    "name": "@equinor/fusion-framework-module-telemetry",
-    "version": "4.1.8",
-    "description": "Fusion module for using Microsoft Telemetry",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "types": "dist/types/index.d.ts",
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [
-        "telemetry",
-        "fusion",
-        "microsoft",
-        "utility",
-        ""
-    ],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/telemetry"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@microsoft/applicationinsights-web": "^3.0.2"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.2"
+  "name": "@equinor/fusion-framework-module-telemetry",
+  "version": "4.1.8",
+  "description": "Fusion module for using Microsoft Telemetry",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
+  },
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["telemetry", "fusion", "microsoft", "utility", ""],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/telemetry"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@microsoft/applicationinsights-web": "^3.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
 }

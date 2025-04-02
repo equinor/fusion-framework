@@ -11,16 +11,11 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "rootDir": "src",
-    
-    "jsx": "react-jsx",
+
+    "jsx": "react-jsx"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"],
   "references": [
     {
       "path": "../../packages/modules/ag-grid"

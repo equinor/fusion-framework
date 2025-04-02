@@ -1,54 +1,52 @@
 {
-    "name": "@equinor/fusion-framework-react-module-signalr",
-    "version": "3.0.23",
-    "description": "",
-    "sideEffects": false,
-    "main": "dist/esm/index.js",
-    "types": "index.d.ts",
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react/modules/signalr"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module-signalr": "workspace:^"
-    },
-    "devDependencies": {
-        "@types/react": "^18.2.50",
-        "react": "^18.2.0",
-        "typescript": "^5.8.2"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-react-module": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0"
-    },
-    "peerDependenciesMeta": {
-        "@types/react": {
-            "optional": true
-        }
+  "name": "@equinor/fusion-framework-react-module-signalr",
+  "version": "3.0.23",
+  "description": "",
+  "sideEffects": false,
+  "main": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"]
     }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/react/modules/signalr"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module-signalr": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.50",
+    "react": "^18.2.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  }
 }

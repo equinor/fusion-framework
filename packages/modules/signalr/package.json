@@ -1,59 +1,56 @@
 {
-    "name": "@equinor/fusion-framework-module-signalr",
-    "version": "5.0.2",
-    "description": "",
-    "sideEffects": false,
-    "main": "dist/esm/index.js",
-    "types": "dist/types/index.d.ts",
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "./dist/types/index.d.ts",
-                "dist/types/*"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/signalr"
-    },
-    "dependencies": {
-        "@microsoft/signalr": "^7.0.10",
-        "rxjs": "^7.8.1"
-    },
-    "devDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "typescript": "^5.8.2"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@equinor/fusion-framework-module-service-discovery": "workspace:^"
-    },
-    "peerDependenciesMeta": {
-        "@equinor/fusion-framework-module-service-discovery": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-module-msal": {
-            "optional": true
-        }
+  "name": "@equinor/fusion-framework-module-signalr",
+  "version": "5.0.2",
+  "description": "",
+  "sideEffects": false,
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["./dist/types/index.d.ts", "dist/types/*"]
     }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/signalr"
+  },
+  "dependencies": {
+    "@microsoft/signalr": "^7.0.10",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-service-discovery": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-msal": {
+      "optional": true
+    }
+  }
 }
