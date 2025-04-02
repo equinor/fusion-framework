@@ -1,5 +1,11 @@
 # Change Log
 
+## 33.2.0
+
+### Minor Changes
+
+- [#2925](https://github.com/equinor/fusion-framework/pull/2925) [`fc54cdf`](https://github.com/equinor/fusion-framework/commit/fc54cdfcacc8b05ffb1c024478133f414f73de19) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: update ag-grid to v33.2.1
+
 ## 33.1.2
 
 ### Patch Changes

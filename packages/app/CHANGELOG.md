@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.3.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework@7.3.4
+  - @equinor/fusion-framework-module-bookmark@2.1.3
+
 ## 9.3.5
 
 ### Patch Changes
