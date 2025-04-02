@@ -1,5 +1,12 @@
 # Change Log
 
+## 6.2.21
+
+### Patch Changes
+
+- Updated dependencies [[`5da6b2d`](https://github.com/equinor/fusion-framework/commit/5da6b2d4cb7fb93ff3784753a0052d3362ab828d)]:
+  - @equinor/fusion-framework-module-context@5.1.0
+
 ## 6.2.20
 
 ### Patch Changes
