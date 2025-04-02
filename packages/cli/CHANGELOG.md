@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.6.1
+
+### Patch Changes
+
+- [#2913](https://github.com/equinor/fusion-framework/pull/2913) [`4b3a72b`](https://github.com/equinor/fusion-framework/commit/4b3a72b57d1069ea4e3fc72d852cbef03bf00d60) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.1.1 to 6.2.2
+
+- [#2920](https://github.com/equinor/fusion-framework/pull/2920) [`8362ea2`](https://github.com/equinor/fusion-framework/commit/8362ea223dd9909cb523f0353c80d52aab573a5f) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/fusion-react-side-sheet from 1.3.5 to 1.3.6
+
 ## 10.6.0
 
 ### Minor Changes

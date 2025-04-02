@@ -17,10 +17,10 @@ function stringToSeed(uuid: string): number {
 /**
  * Since generation of dates might have a slight difference in milliseconds
  * we normalize the date to the nearest minute, so we can compare them.
- * 
+ *
  * @note
  * This might fail at exactly midnight, but the odds for that are slim. Rerun the test if it fails.
- * 
+ *
  * @param date date to normalize
  * @returns string
  */
