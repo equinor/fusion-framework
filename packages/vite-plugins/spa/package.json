@@ -1,0 +1,47 @@
+{
+  "name": "@equinor/fusion-framework-vite-plugin-spa",
+  "version": "0.0.0",
+  "description": "Vite plugin for SPA development",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./html": {
+      "types": "./dist/types/html/index.d.ts",
+      "import": "./dist/hml/index.js"
+    }
+  },
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/vite-plugins/spa"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest"
+  },
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "typescript"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vite": "^6.0.7"
+  }
+}
