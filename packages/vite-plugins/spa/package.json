@@ -26,12 +26,7 @@
     "build": "tsc -b",
     "test": "vitest"
   },
-  "keywords": [
-    "vite",
-    "fusion-framework",
-    "dev-server",
-    "typescript"
-  ],
+  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
   "license": "ISC",
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

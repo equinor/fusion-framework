@@ -103,9 +103,9 @@ fetch('/app-proxy/assets/some-app/resource-path/resource.json');
 > The `/@fusion-api/app` points to proxy route which can be intercepted in the dev-server. 
 > This endpoint is generated from the service discovery configuration and will dynamically proxy the request to the service discovery endpoint.  
 
-## Configuring threw `.env` file
+## Configuring through `.env` file
 
-The plugin can be configured threw a `.env` file. The plugin will read the `.env` file and override the properties in the `generateTemplateEnv` function.
+The plugin can be configured through a `.env` file. The plugin will read the `.env` file and override the properties in the `generateTemplateEnv` function.
 
 The property names are prefixed with `FUSION_SPA_` and snake cased. 
 
