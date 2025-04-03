@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.0
+
+### Minor Changes
+
+- [#2944](https://github.com/equinor/fusion-framework/pull/2944) [`ba22ea9`](https://github.com/equinor/fusion-framework/commit/ba22ea9899a78f4c1e8d019b352eaad1e8b31c60) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add docs about Context's new methods `setContextPathExtractor` and `setContextPathGenerator`
+
 ## 0.3.3
 
 ### Patch Changes
