@@ -1,47 +1,43 @@
 {
-    "name": "@equinor/fusion-framework-module-event",
-    "version": "4.3.2",
-    "description": "Fusion module for events",
-    "main": "./dist/esm/index.js",
-    "module": "./dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [
-        "config"
-    ],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/event"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "lodash.clonedeep": "^4.5.0"
-    },
-    "devDependencies": {
-        "@types/lodash.clonedeep": "^4.5.9",
-        "rxjs": "^7.8.1",
-        "typescript": "^5.8.2"
-    },
-    "types": "index.d.ts",
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
-            ]
-        }
+  "name": "@equinor/fusion-framework-module-event",
+  "version": "4.3.2",
+  "description": "Fusion module for events",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["config"],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/event"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "lodash.clonedeep": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.9",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.8.2"
+  },
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"]
+    }
+  }
 }

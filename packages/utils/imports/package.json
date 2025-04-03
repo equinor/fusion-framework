@@ -1,52 +1,43 @@
 {
-    "name": "@equinor/fusion-imports",
-    "version": "1.0.0",
-    "description": "Package import files and configurations",
-    "keywords": [
-        "esbuild",
-        "typescript",
-        "transpiling",
-        "node",
-        "runtime"
-    ],
-    "license": "ISC",
-    "type": "module",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "types": "dist/types/index.d.ts",
-    "directories": {
-        "dist": "dist"
-    },
-    "files": [
-        "dist",
-        "src"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/utils/transpile"
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build",
-        "test": "vitest"
-    },
-    "bugs": {
-        "url": "https://github.com/equinor/fusion-framework/issues"
-    },
-    "devDependencies": {
-        "@types/node": "^20.11.14",
-        "esbuild": "^0.25.1",
-        "memfs": "^4.17.0",
-        "typescript": "^5.8.2",
-        "vitest": "^2.0.5"
+  "name": "@equinor/fusion-imports",
+  "version": "1.0.0",
+  "description": "Package import files and configurations",
+  "keywords": ["esbuild", "typescript", "transpiling", "node", "runtime"],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "files": ["dist", "src"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/utils/transpile"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "bugs": {
+    "url": "https://github.com/equinor/fusion-framework/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.14",
+    "esbuild": "^0.25.1",
+    "memfs": "^4.17.0",
+    "typescript": "^5.8.2",
+    "vitest": "^2.0.5"
+  }
 }

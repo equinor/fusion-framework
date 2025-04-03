@@ -5,7 +5,6 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "removeComments": false
-    
   },
   "references": [
     {
@@ -21,11 +20,6 @@
       "path": "../service-discovery"
     }
   ],
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }

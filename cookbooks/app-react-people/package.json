@@ -1,36 +1,36 @@
 {
-    "name": "@equinor/fusion-framework-cookbook-app-react-people",
-    "version": "4.5.6",
-    "description": "",
-    "private": true,
-    "type": "module",
-    "main": "src/index.ts",
-    "scripts": {
-        "dev": "fusion-framework-cli app dev",
-        "build": "fusion-framework-cli app build",
-        "build:pack": "fusion-framework-cli app pack",
-        "docker": "cd .. && sh docker-script.sh app-react"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@equinor/fusion-framework-cli": "workspace:^",
-        "@equinor/fusion-framework-react-app": "workspace:^",
-        "@equinor/fusion-observable": "workspace:^",
-        "@equinor/fusion-query": "workspace:^",
-        "@types/react": "^18.2.50",
-        "@types/react-dom": "^18.2.7",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "typescript": "^5.8.2"
-    },
-    "dependencies": {
-        "@equinor/eds-core-react": "^0.43.0",
-        "@equinor/eds-icons": "^0.22.0",
-        "@equinor/fusion-framework-module-navigation": "workspace:^",
-        "@equinor/fusion-react-person": "^0.10.3",
-        "@remix-run/router": "^1.8.0",
-        "react-router-dom": "^6.16.0",
-        "styled-components": "^6.0.7"
-    }
+  "name": "@equinor/fusion-framework-cookbook-app-react-people",
+  "version": "4.5.6",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "fusion-framework-cli app dev",
+    "build": "fusion-framework-cli app build",
+    "build:pack": "fusion-framework-cli app pack",
+    "docker": "cd .. && sh docker-script.sh app-react"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:^",
+    "@equinor/fusion-framework-react-app": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
+    "@equinor/fusion-query": "workspace:^",
+    "@types/react": "^18.2.50",
+    "@types/react-dom": "^18.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@equinor/eds-core-react": "^0.43.0",
+    "@equinor/eds-icons": "^0.22.0",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-react-person": "^0.10.3",
+    "@remix-run/router": "^1.8.0",
+    "react-router-dom": "^6.16.0",
+    "styled-components": "^6.0.7"
+  }
 }

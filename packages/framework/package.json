@@ -1,50 +1,46 @@
 {
-    "name": "@equinor/fusion-framework",
-    "version": "7.3.4",
-    "description": "",
-    "main": "dist/esm/index.js",
-    "types": "dist/types/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [
-        "fusion",
-        "fusion-framework",
-        "utility"
-    ],
-    "homepage": "https://equinor.github.io/fusion-framework/",
-    "author": {
-        "name": "Odin thomas Rochmann",
-        "email": "oroc@equinor.com",
-        "url": "https://github.com/odinr"
-    },
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/framework"
-    },
-    "dependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-context": "workspace:^",
-        "@equinor/fusion-framework-module-event": "workspace:^",
-        "@equinor/fusion-framework-module-http": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-        "@equinor/fusion-framework-module-services": "workspace:^",
-        "rxjs": "^7.8.1"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.2"
+  "name": "@equinor/fusion-framework",
+  "version": "7.3.4",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["fusion", "fusion-framework", "utility"],
+  "homepage": "https://equinor.github.io/fusion-framework/",
+  "author": {
+    "name": "Odin thomas Rochmann",
+    "email": "oroc@equinor.com",
+    "url": "https://github.com/odinr"
+  },
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/framework"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@equinor/fusion-framework-module-services": "workspace:^",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
 }

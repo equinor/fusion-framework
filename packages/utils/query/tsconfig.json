@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist/esm",
     "rootDir": "src",
-    "declarationDir": "./dist/types",
+    "declarationDir": "./dist/types"
   },
   "references": [
     {
@@ -13,10 +13,6 @@
       "path": "../log"
     }
   ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

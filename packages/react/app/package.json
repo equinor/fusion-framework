@@ -1,159 +1,141 @@
 {
-    "name": "@equinor/fusion-framework-react-app",
-    "version": "6.0.6",
-    "description": "",
-    "main": "./dist/esm/index.js",
-    "types": "./dist/types/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/types/index.d.ts",
-            "import": "./dist/esm/index.js"
-        },
-        "./bookmark": {
-            "types": "./dist/types/bookmark/index.d.ts",
-            "import": "./dist/esm/bookmark/index.js"
-        },
-        "./context": {
-            "types": "./dist/types/context/index.d.ts",
-            "import": "./dist/esm/context/index.js"
-        },
-        "./feature-flag": {
-            "types": "./dist/types/feature-flag/index.d.ts",
-            "import": "./dist/esm/feature-flag/index.js"
-        },
-        "./framework": {
-            "types": "./dist/types/framework/index.d.ts",
-            "import": "./dist/esm/framework/index.js"
-        },
-        "./http": {
-            "types": "./dist/types/http/index.d.ts",
-            "import": "./dist/esm/http/index.js"
-        },
-        "./msal": {
-            "types": "./dist/types/msal/index.d.ts",
-            "import": "./dist/esm/msal/index.js"
-        },
-        "./navigation": {
-            "types": "./dist/types/navigation/index.d.ts",
-            "import": "./dist/esm/navigation/index.js"
-        },
-        "./settings": {
-            "types": "./dist/types/settings/index.d.ts",
-            "import": "./dist/esm/settings/index.js"
-        },
-        "./widget": {
-            "types": "./dist/types/widget/index.d.ts",
-            "import": "./dist/esm/widget/index.js"
-        }
+  "name": "@equinor/fusion-framework-react-app",
+  "version": "6.0.6",
+  "description": "",
+  "main": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js"
     },
-    "typesVersions": {
-        "*": {
-            "bookmark": [
-                "dist/types/bookmark/index.d.ts"
-            ],
-            "context": [
-                "dist/types/context/index.d.ts"
-            ],
-            "feature-flag": [
-                "dist/types/feature-flag/index.d.ts"
-            ],
-            "framework": [
-                "dist/types/framework/index.d.ts"
-            ],
-            "http": [
-                "dist/types/http/index.d.ts"
-            ],
-            "msal": [
-                "dist/types/msal/index.d.ts"
-            ],
-            "navigation": [
-                "dist/types/navigation/index.d.ts"
-            ],
-            "settings": [
-                "dist/types/settings/index.d.ts"
-            ],
-            "widget": [
-                "dist/types/widget/index.d.ts"
-            ]
-        }
+    "./bookmark": {
+      "types": "./dist/types/bookmark/index.d.ts",
+      "import": "./dist/esm/bookmark/index.js"
     },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
+    "./context": {
+      "types": "./dist/types/context/index.d.ts",
+      "import": "./dist/esm/context/index.js"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
+    "./feature-flag": {
+      "types": "./dist/types/feature-flag/index.d.ts",
+      "import": "./dist/esm/feature-flag/index.js"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react"
+    "./framework": {
+      "types": "./dist/types/framework/index.d.ts",
+      "import": "./dist/esm/framework/index.js"
     },
-    "dependencies": {
-        "@equinor/fusion-framework-app": "workspace:^",
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-app": "workspace:^",
-        "@equinor/fusion-framework-module-navigation": "workspace:^",
-        "@equinor/fusion-framework-react": "workspace:^",
-        "@equinor/fusion-framework-react-module": "workspace:^",
-        "@equinor/fusion-framework-react-module-http": "workspace:^"
+    "./http": {
+      "types": "./dist/types/http/index.d.ts",
+      "import": "./dist/esm/http/index.js"
     },
-    "devDependencies": {
-        "@equinor/fusion-framework-module-ag-grid": "workspace:^",
-        "@equinor/fusion-framework-module-event": "workspace:^",
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
-        "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@equinor/fusion-framework-react-widget": "workspace:^",
-        "@equinor/fusion-observable": "workspace:^",
-        "@types/react": "^18.2.50",
-        "@types/react-dom": "^18.2.7",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "rxjs": "^7.8.1",
-        "typescript": "^5.8.2"
+    "./msal": {
+      "types": "./dist/types/msal/index.d.ts",
+      "import": "./dist/esm/msal/index.js"
     },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0",
-        "rxjs": "^7.8.1"
+    "./navigation": {
+      "types": "./dist/types/navigation/index.d.ts",
+      "import": "./dist/esm/navigation/index.js"
     },
-    "peerDependenciesMeta": {
-        "@equinor/fusion-framework-react-module-ag-grid": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-react-module-context": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-module-navigation": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-react-module-bookmark": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-module-feature-flag": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-react-widget": {
-            "optional": true
-        },
-        "@equinor/fusion-observable": {
-            "optional": true
-        },
-        "@types/react": {
-            "optional": true
-        },
-        "react-dom": {
-            "optional": true
-        },
-        "rxjs": {
-            "optional": true
-        }
+    "./settings": {
+      "types": "./dist/types/settings/index.d.ts",
+      "import": "./dist/esm/settings/index.js"
+    },
+    "./widget": {
+      "types": "./dist/types/widget/index.d.ts",
+      "import": "./dist/esm/widget/index.js"
     }
+  },
+  "typesVersions": {
+    "*": {
+      "bookmark": ["dist/types/bookmark/index.d.ts"],
+      "context": ["dist/types/context/index.d.ts"],
+      "feature-flag": ["dist/types/feature-flag/index.d.ts"],
+      "framework": ["dist/types/framework/index.d.ts"],
+      "http": ["dist/types/http/index.d.ts"],
+      "msal": ["dist/types/msal/index.d.ts"],
+      "navigation": ["dist/types/navigation/index.d.ts"],
+      "settings": ["dist/types/settings/index.d.ts"],
+      "widget": ["dist/types/widget/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/react"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-app": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-react": "workspace:^",
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "@equinor/fusion-framework-react-module-http": "workspace:^"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module-ag-grid": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
+    "@equinor/fusion-framework-react-module-context": "workspace:^",
+    "@equinor/fusion-framework-react-widget": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
+    "@types/react": "^18.2.50",
+    "@types/react-dom": "^18.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "rxjs": "^7.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-react-module-ag-grid": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-module-context": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-navigation": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-module-bookmark": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-feature-flag": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-widget": {
+      "optional": true
+    },
+    "@equinor/fusion-observable": {
+      "optional": true
+    },
+    "@types/react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "rxjs": {
+      "optional": true
+    }
+  }
 }

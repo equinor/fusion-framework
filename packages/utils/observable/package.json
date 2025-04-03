@@ -1,91 +1,80 @@
 {
-    "name": "@equinor/fusion-observable",
-    "version": "8.4.6",
-    "description": "WIP",
-    "keywords": [
-        "observable",
-        "react",
-        "fusion",
-        "equinor"
-    ],
-    "homepage": "https://equinor.github.io/fusion-framework/",
-    "license": "ISC",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./operators": {
-            "import": "./dist/esm/operators/index.js",
-            "types": "./dist/types/operators/index.d.ts"
-        },
-        "./react": {
-            "import": "./dist/esm/react/index.js",
-            "types": "./dist/types/react/index.d.ts"
-        }
+  "name": "@equinor/fusion-observable",
+  "version": "8.4.6",
+  "description": "WIP",
+  "keywords": ["observable", "react", "fusion", "equinor"],
+  "homepage": "https://equinor.github.io/fusion-framework/",
+  "license": "ISC",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "types": "dist/types/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "operators": [
-                "dist/types/operators/index.d.ts"
-            ],
-            "react": [
-                "dist/types/react/index.d.ts"
-            ]
-        }
+    "./operators": {
+      "import": "./dist/esm/operators/index.js",
+      "types": "./dist/types/operators/index.d.ts"
     },
-    "directories": {
-        "dist": "dist"
-    },
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/utils/observable"
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "lint": "eslint --ext .ts,.tsx,.js src/",
-        "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
-        "prepack": "pnpm build",
-        "test": "vitest",
-        "test:report": "vitest --report",
-        "test:coverage": "vitest run --coverage",
-        "test:coverage:all": "vitest run --coverage.enabled --coverage.all"
-    },
-    "bugs": {
-        "url": "https://github.com/equinor/fusion-framework/issues"
-    },
-    "dependencies": {
-        "immer": "^9.0.16",
-        "rxjs": "^7.8.1",
-        "uuid": "^11.0.3"
-    },
-    "devDependencies": {
-        "@testing-library/react": "^16.0.0",
-        "@types/node": "^20.11.14",
-        "@types/react": "^18.2.50",
-        "@types/uuid": "^10.0.0",
-        "happy-dom": "^17.0.3",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "typescript": "^5.8.2",
-        "vitest": "^2.0.5"
-    },
-    "peerDependencies": {
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0"
-    },
-    "peerDependenciesMeta": {
-        "@types/react": {
-            "optional": true
-        }
+    "./react": {
+      "import": "./dist/esm/react/index.js",
+      "types": "./dist/types/react/index.d.ts"
     }
+  },
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "operators": ["dist/types/operators/index.d.ts"],
+      "react": ["dist/types/react/index.d.ts"]
+    }
+  },
+  "directories": {
+    "dist": "dist"
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/utils/observable"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint --ext .ts,.tsx,.js src/",
+    "lint:fix": "eslint --ext .ts,.tsx,.js src/ --fix",
+    "prepack": "pnpm build",
+    "test": "vitest",
+    "test:report": "vitest --report",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:all": "vitest run --coverage.enabled --coverage.all"
+  },
+  "bugs": {
+    "url": "https://github.com/equinor/fusion-framework/issues"
+  },
+  "dependencies": {
+    "immer": "^9.0.16",
+    "rxjs": "^7.8.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@types/node": "^20.11.14",
+    "@types/react": "^18.2.50",
+    "@types/uuid": "^10.0.0",
+    "happy-dom": "^17.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.2",
+    "vitest": "^2.0.5"
+  },
+  "peerDependencies": {
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  }
 }

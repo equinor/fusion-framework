@@ -1,136 +1,112 @@
 {
-    "name": "@equinor/fusion-framework-module-services",
-    "version": "5.1.2",
-    "description": "",
-    "sideEffects": false,
-    "main": "dist/esm/index.js",
-    "types": "index.d.ts",
-    "typesVersions": {
-        ">=4.2": {
-            "*": [
-                "dist/types/*"
-            ],
-            "notification": [
-                "dist/types/notification/index"
-            ],
-            "context": [
-                "dist/types/context/index"
-            ],
-            "context/get": [
-                "dist/types/context/get/index"
-            ],
-            "context/query": [
-                "dist/types/context/query/index"
-            ],
-            "context/related": [
-                "dist/types/context/related/index"
-            ],
-            "people": [
-                "dist/types/people/index"
-            ],
-            "people/utils": [
-                "dist/types/people/utils"
-            ],
-            "people/get": [
-                "dist/types/people/person-details/index"
-            ],
-            "people/query": [
-                "dist/types/people/query/index"
-            ],
-            "people/photo": [
-                "dist/types/people/person-photo/index"
-            ],
-            "bookmarks": [
-                "dist/types/bookmarks/index"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./bookmarks": {
-            "import": "./dist/esm/bookmarks/index.js",
-            "types": "./dist/types/bookmarks/index.d.ts"
-        },
-        "./context": {
-            "import": "./dist/esm/context/index.js",
-            "types": "./dist/types/context/index.d.ts"
-        },
-        "./context/get": {
-            "import": "./dist/esm/context/get/index.js",
-            "types": "./dist/types/context/get/index.d.ts"
-        },
-        "./context/query": {
-            "import": "./dist/esm/context/query/index.js",
-            "types": "./dist/types/context/query/index.d.ts"
-        },
-        "./context/related": {
-            "import": "./dist/esm/context/related/index.js",
-            "types": "./dist/types/context/related/index.d.ts"
-        },
-        "./notification": {
-            "import": "./dist/esm/notification/index.js",
-            "types": "./dist/types/notification/index.d.ts"
-        },
-        "./people": {
-            "import": "./dist/esm/people/index.js",
-            "types": "./dist/types/people/index.d.ts"
-        },
-        "./people/utils": {
-            "import": "./dist/esm/people/utils.js",
-            "types": "./dist/types/people/utils.d.ts"
-        },
-        "./people/get": {
-            "import": "./dist/esm/people/person-details/index.js",
-            "types": "./dist/types/people/person-details/index.d.ts"
-        },
-        "./people/query": {
-            "import": "./dist/esm/people/query/index.js",
-            "types": "./dist/types/people/query/index.d.ts"
-        },
-        "./people/photo": {
-            "import": "./dist/esm/people/person-photo/index.js",
-            "types": "./dist/types/people/person-photo/index.d.ts"
-        },
-        "./errors": {
-            "import": "./dist/esm/errors.js",
-            "types": "./dist/types/errors.d.ts"
-        },
-        "./package.json": "./package.json"
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build",
-        "test": "vitest"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/services"
-    },
-    "dependencies": {
-        "odata-query": "^7.0.4",
-        "zod": "^3.23.8"
-    },
-    "devDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-module-http": "workspace:^",
-        "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-        "@faker-js/faker": "^9.5.1",
-        "msw": "^2.7.3",
-        "typescript": "^5.8.2",
-        "vitest": "^2.0.5"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module": "workspace:^",
-        "odata-query": "^7.0.4"
+  "name": "@equinor/fusion-framework-module-services",
+  "version": "5.1.2",
+  "description": "",
+  "sideEffects": false,
+  "main": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"],
+      "notification": ["dist/types/notification/index"],
+      "context": ["dist/types/context/index"],
+      "context/get": ["dist/types/context/get/index"],
+      "context/query": ["dist/types/context/query/index"],
+      "context/related": ["dist/types/context/related/index"],
+      "people": ["dist/types/people/index"],
+      "people/utils": ["dist/types/people/utils"],
+      "people/get": ["dist/types/people/person-details/index"],
+      "people/query": ["dist/types/people/query/index"],
+      "people/photo": ["dist/types/people/person-photo/index"],
+      "bookmarks": ["dist/types/bookmarks/index"]
     }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./bookmarks": {
+      "import": "./dist/esm/bookmarks/index.js",
+      "types": "./dist/types/bookmarks/index.d.ts"
+    },
+    "./context": {
+      "import": "./dist/esm/context/index.js",
+      "types": "./dist/types/context/index.d.ts"
+    },
+    "./context/get": {
+      "import": "./dist/esm/context/get/index.js",
+      "types": "./dist/types/context/get/index.d.ts"
+    },
+    "./context/query": {
+      "import": "./dist/esm/context/query/index.js",
+      "types": "./dist/types/context/query/index.d.ts"
+    },
+    "./context/related": {
+      "import": "./dist/esm/context/related/index.js",
+      "types": "./dist/types/context/related/index.d.ts"
+    },
+    "./notification": {
+      "import": "./dist/esm/notification/index.js",
+      "types": "./dist/types/notification/index.d.ts"
+    },
+    "./people": {
+      "import": "./dist/esm/people/index.js",
+      "types": "./dist/types/people/index.d.ts"
+    },
+    "./people/utils": {
+      "import": "./dist/esm/people/utils.js",
+      "types": "./dist/types/people/utils.d.ts"
+    },
+    "./people/get": {
+      "import": "./dist/esm/people/person-details/index.js",
+      "types": "./dist/types/people/person-details/index.d.ts"
+    },
+    "./people/query": {
+      "import": "./dist/esm/people/query/index.js",
+      "types": "./dist/types/people/query/index.d.ts"
+    },
+    "./people/photo": {
+      "import": "./dist/esm/people/person-photo/index.js",
+      "types": "./dist/types/people/person-photo/index.d.ts"
+    },
+    "./errors": {
+      "import": "./dist/esm/errors.js",
+      "types": "./dist/types/errors.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/services"
+  },
+  "dependencies": {
+    "odata-query": "^7.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@faker-js/faker": "^9.5.1",
+    "msw": "^2.7.3",
+    "typescript": "^5.8.2",
+    "vitest": "^2.0.5"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "odata-query": "^7.0.4"
+  }
 }

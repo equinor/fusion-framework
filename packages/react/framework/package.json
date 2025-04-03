@@ -1,121 +1,109 @@
 {
-    "name": "@equinor/fusion-framework-react",
-    "version": "7.4.4",
-    "description": "",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./app": {
-            "import": "./dist/esm/app/index.js",
-            "types": "./dist/types/app/index.d.ts"
-        },
-        "./feature-flag": {
-            "import": "./dist/esm/feature-flag/index.js",
-            "types": "./dist/types/feature-flag/index.d.ts"
-        },
-        "./context": {
-            "import": "./dist/esm/context/index.js",
-            "types": "./dist/types/context/index.d.ts"
-        },
-        "./hooks": {
-            "import": "./dist/esm/hooks/index.js",
-            "types": "./dist/types/hooks/index.d.ts"
-        },
-        "./http": {
-            "import": "./dist/esm/http/index.js",
-            "types": "./dist/types/http/index.d.ts"
-        },
-        "./signalr": {
-            "import": "./dist/esm/signalr/index.js",
-            "types": "./dist/types/signalr/index.d.ts"
-        }
+  "name": "@equinor/fusion-framework-react",
+  "version": "7.4.4",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "types": "dist/types/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "app": [
-                "dist/types/app/index.d.ts"
-            ],
-            "feature-flag": [
-                "dist/types/feature-flag/index.d.ts"
-            ],
-            "context": [
-                "dist/types/context/index.d.ts"
-            ],
-            "hooks": [
-                "dist/types/hooks/index.d.ts"
-            ],
-            "http": [
-                "dist/types/http/index.d.ts"
-            ],
-            "signalr": [
-                "dist/types/signalr/index.d.ts"
-            ]
-        }
+    "./app": {
+      "import": "./dist/esm/app/index.js",
+      "types": "./dist/types/app/index.d.ts"
     },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
+    "./feature-flag": {
+      "import": "./dist/esm/feature-flag/index.js",
+      "types": "./dist/types/feature-flag/index.d.ts"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
+    "./context": {
+      "import": "./dist/esm/context/index.js",
+      "types": "./dist/types/context/index.d.ts"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/react/framework"
+    "./hooks": {
+      "import": "./dist/esm/hooks/index.js",
+      "types": "./dist/types/hooks/index.d.ts"
     },
-    "dependencies": {
-        "@equinor/fusion-framework": "workspace:^",
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@equinor/fusion-framework-react-module": "workspace:^",
-        "@equinor/fusion-framework-react-module-http": "workspace:^",
-        "@equinor/fusion-observable": "workspace:^",
-        "rxjs": "^7.8.1"
+    "./http": {
+      "import": "./dist/esm/http/index.js",
+      "types": "./dist/types/http/index.d.ts"
     },
-    "devDependencies": {
-        "@equinor/fusion-framework-module-app": "workspace:^",
-        "@equinor/fusion-framework-module-event": "workspace:^",
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
-        "@equinor/fusion-framework-module-msal": "workspace:^",
-        "@equinor/fusion-framework-react-module-context": "workspace:^",
-        "@types/react": "^18.2.50",
-        "@types/react-dom": "^18.2.7",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "typescript": "^5.8.2"
-    },
-    "peerDependencies": {
-        "@equinor/fusion-framework-module-feature-flag": "workspace:^",
-        "@equinor/fusion-framework-react-module-signalr": "workspace:^",
-        "@types/react": "^17.0.0 || ^18.0.0",
-        "react": "^17.0.0 || ^18.0.0",
-        "react-dom": "^17.0.0 || ^18.0.0"
-    },
-    "peerDependenciesMeta": {
-        "@equinor/fusion-framework-module-event": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-react-module-context": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-react-module-signalr": {
-            "optional": true
-        },
-        "@equinor/fusion-framework-module-feature-flag": {
-            "optional": true
-        },
-        "@types/react": {
-            "optional": true
-        },
-        "react-dom": {
-            "optional": true
-        }
+    "./signalr": {
+      "import": "./dist/esm/signalr/index.js",
+      "types": "./dist/types/signalr/index.d.ts"
     }
+  },
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "app": ["dist/types/app/index.d.ts"],
+      "feature-flag": ["dist/types/feature-flag/index.d.ts"],
+      "context": ["dist/types/context/index.d.ts"],
+      "hooks": ["dist/types/hooks/index.d.ts"],
+      "http": ["dist/types/http/index.d.ts"],
+      "signalr": ["dist/types/signalr/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/react/framework"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "@equinor/fusion-framework-react-module-http": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-react-module-context": "workspace:^",
+    "@types/react": "^18.2.50",
+    "@types/react-dom": "^18.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module-feature-flag": "workspace:^",
+    "@equinor/fusion-framework-react-module-signalr": "workspace:^",
+    "@types/react": "^17.0.0 || ^18.0.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-event": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-module-context": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-react-module-signalr": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-feature-flag": {
+      "optional": true
+    },
+    "@types/react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  }
 }

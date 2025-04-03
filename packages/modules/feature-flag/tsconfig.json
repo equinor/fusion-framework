@@ -5,13 +5,8 @@
     "rootDir": "src",
     "declarationDir": "./dist/types"
   },
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"],
   "references": [
     {
       "path": "../module"
@@ -27,6 +22,6 @@
     },
     {
       "path": "../../utils/observable"
-    },
-  ],
+    }
+  ]
 }

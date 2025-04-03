@@ -32,14 +32,8 @@
     },
     {
       "path": "../../packages/cli"
-    },
-    
+    }
   ],
-  "include": [
-    "src/**/*",
-    "types/*"
-, "app.config.ts"  ],
-  "exclude": [
-    "node_modules",
-  ],
+  "include": ["src/**/*", "types/*", "app.config.ts"],
+  "exclude": ["node_modules"]
 }

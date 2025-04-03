@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
-    
-    "jsx": "react-jsxdev",
+
+    "jsx": "react-jsxdev"
   },
   "references": [
     {
@@ -14,13 +14,8 @@
     },
     {
       "path": "../../packages/cli"
-    },
+    }
   ],
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib"]
 }

@@ -1,49 +1,47 @@
 {
-    "name": "@equinor/fusion-framework-module-msal",
-    "version": "4.0.2",
-    "description": "",
-    "main": "dist/esm/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/esm/index.js",
-            "types": "./dist/types/index.d.ts"
-        },
-        "./v2": {
-            "import": "./dist/esm/v2/index.js",
-            "types": "./dist/types/v2/index.d.ts"
-        }
+  "name": "@equinor/fusion-framework-module-msal",
+  "version": "4.0.2",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "types": "dist/types/index.d.ts",
-    "typesVersions": {
-        "*": {
-            "v2": [
-                "dist/types/v2/index.d.ts"
-            ]
-        }
-    },
-    "scripts": {
-        "build": "tsc -b",
-        "prepack": "pnpm build"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "publishConfig": {
-        "access": "public"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/equinor/fusion-framework.git",
-        "directory": "packages/modules/msal"
-    },
-    "dependencies": {
-        "@azure/msal-browser": "^2.21.0",
-        "@equinor/fusion-framework-module": "workspace:^",
-        "@types/semver": "^7.5.0",
-        "semver": "^7.5.4",
-        "zod": "^3.23.8"
-    },
-    "devDependencies": {
-        "typescript": "^5.8.2"
+    "./v2": {
+      "import": "./dist/esm/v2/index.js",
+      "types": "./dist/types/v2/index.d.ts"
     }
+  },
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "v2": ["dist/types/v2/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/msal"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^2.21.0",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@types/semver": "^7.5.0",
+    "semver": "^7.5.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
 }

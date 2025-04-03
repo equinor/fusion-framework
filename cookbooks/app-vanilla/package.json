@@ -1,20 +1,20 @@
 {
-    "name": "@equinor/fusion-framework-cookbook-app-vanilla",
-    "version": "1.0.3",
-    "description": "",
-    "private": true,
-    "type": "module",
-    "main": "src/index.ts",
-    "scripts": {
-        "build": "fusion-framework-cli app build",
-        "dev": "fusion-framework-cli app dev",
-        "docker": "cd .. && sh docker-script.sh app-react"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@equinor/fusion-framework-app": "workspace:^",
-        "@equinor/fusion-framework-cli": "workspace:^",
-        "typescript": "^5.8.2"
-    }
+  "name": "@equinor/fusion-framework-cookbook-app-vanilla",
+  "version": "1.0.3",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "fusion-framework-cli app build",
+    "dev": "fusion-framework-cli app dev",
+    "docker": "cd .. && sh docker-script.sh app-react"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@equinor/fusion-framework-app": "workspace:^",
+    "@equinor/fusion-framework-cli": "workspace:^",
+    "typescript": "^5.8.2"
+  }
 }
