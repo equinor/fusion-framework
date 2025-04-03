@@ -20,8 +20,7 @@
   },
   "include": [
     "packages/**/src/**/*.ts",
-    "packages/**/src/**/*.tsx",
-    "packages/vite-plugins/spa/vite-env.d.ts"
+    "packages/**/src/**/*.tsx"
   ],
   "exclude": ["node_modules", "dist", "lib", "*.spec.ts"]
 }
