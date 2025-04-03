@@ -1,6 +1,12 @@
 import httpProxy from 'http-proxy';
 
-import type { ApiRoute, ServerListener, PluginLogger, ProxyListener } from './types.js';
+import type {
+  ApiRoute,
+  ServerListener,
+  PluginLogger,
+  ProxyListener,
+  IncomingRequest,
+} from './types.js';
 import { createRouteMatcher } from './create-route-matcher.js';
 import { InvalidRouteError, validateRoute } from './validate-route.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
@@ -61,7 +67,7 @@ function processesRoute(
 
   // if route has middleware, execute it
   if (route.middleware) {
-    logger?.debug(`executing route middleware on match ${route.match} -> ${req.originalUrl}`);
+    logger?.info(`executing route middleware on match ${route.match} -> ${req.originalUrl}`);
     if (route.proxy) {
       logger?.warn('route.middleware and route.proxy are both defined. Using middleware');
     }
@@ -75,14 +81,51 @@ function processesRoute(
     req.url = rewrite(req.url ?? '');
   }
 
-  logger?.debug(`creating proxy server for ${requestUrl} -> ${proxyOptions.target}`);
-
   const proxyServer = httpProxy.createProxyServer({
     selfHandleResponse: !!transformResponse,
     prependPath: true,
     secure: process.env.NODE_ENV === 'production',
     changeOrigin: true,
     ...proxyOptions,
+  });
+
+  proxyServer.on('error', (err) => {
+    logger?.error(`proxy for ${requestUrl} to ${proxyOptions.target} failed: ${err.message}`);
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`Proxy error: ${err.message}`);
+  });
+
+  proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
+    // Set the original request URL
+    logger?.info(
+      `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
+    );
+  });
+
+  proxyServer.on('proxyRes', (proxyRes, req: IncomingRequest) => {
+    const { headers, statusMessage, statusCode = 500 } = proxyRes;
+    const message = `Received response for ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
+    if (proxyRes.statusCode ?? 0 >= 400) {
+      logger?.error(message);
+      logger?.debug({
+        request: {
+          url: req.originalUrl,
+          headers: req.headers,
+        },
+        response: {
+          statusCode,
+          statusMessage,
+          headers,
+        },
+      });
+      res.writeHead(proxyRes.statusCode ?? 500, {
+        'x-proxy-error': 'true',
+        'x-proxy-status-code': statusCode,
+        'x-proxy-status-message': statusMessage,
+      });
+    } else {
+      logger?.debug(message);
+    }
   });
 
   if (options?.onProxyRes) {
