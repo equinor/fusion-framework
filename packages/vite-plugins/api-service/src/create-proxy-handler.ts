@@ -1,6 +1,12 @@
 import type ProxyServer from 'http-proxy';
 
-import type { ApiRoute, JsonData, ApiProxyHandler, PluginLogger } from './types.js';
+import type {
+  ApiRoute,
+  JsonData,
+  ApiProxyHandler,
+  PluginLogger,
+  IncomingRequest,
+} from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
 
@@ -96,6 +102,12 @@ export function createProxyHandler<
             },
           ),
         );
+        proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
+          // Set the original request URL
+          logger?.info(
+            `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
+          );
+        });
         proxyServer.on('error', (err) => {
           logger?.error(`proxy for ${apiRoute} to ${target} failed: ${err.message}`);
         });

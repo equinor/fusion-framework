@@ -6,14 +6,8 @@
     "module": "NodeNext",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-    "baseUrl": ".",
+    "baseUrl": "."
   },
-  "include": [
-    "src/**/*",
-    "tests/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "tests",
-  ]
+  "include": ["src/**/*", "tests/*"],
+  "exclude": ["node_modules", "tests"]
 }
