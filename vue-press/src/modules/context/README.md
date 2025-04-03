@@ -271,6 +271,43 @@ export const configure = (configurator) => {
 ```
 :::
 
+#### setContextPathExtractor
+
+Sets method which extracts the context id from the url. This id can be used to
+look up the context (`ContextClient.get({value})`).
+
+See [setContextPathGenerator](#setcontextpathextractor).
+
+```ts
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    builder.setContextPathExtractor((path: string) => {
+      const [,contextId] = path.match(/\/?app\/([^/]+)/) ?? [];
+      return contextId;
+    });
+  });
+}
+```
+
+#### setContextPathGenerator
+
+Sets method to generate a path containing an identifier for the resolved context item.
+
+See [setContextPathExtractor](#setcontextpathextractor).
+
+```ts
+export const configure = (configurator) => {
+  enableContext(configurator, (builder) => {
+    builder.setContextPathGenerator((item, path) => {
+      // replace the current app key with the new app key
+      // example: /app/old-app-key/overview -> /app/new-app-key/overview
+      const newPath = path.replace(/^(\/)?app\/[^/]+(.*)$/, `/app/${item.value.appKey}$2`);
+      return newPath;
+    });
+  });
+}
+```
+
 ::: info QueryClient
 currently `setContextParameterFn` requires an return type of `string | QueryContextParameters`,
 but this method is creating the parameters to the query function.
