@@ -45,7 +45,7 @@
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
-    "immer": "^9.0.16",
+    "immer": "^10.1.1",
     "rxjs": "^7.8.1",
     "uuid": "^11.0.3"
   },
