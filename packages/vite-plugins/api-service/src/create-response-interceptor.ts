@@ -72,29 +72,13 @@ export function createResponseInterceptor<
     // @ts-ignore
     logger?.debug(`intercepted response from ${req.originalUrl}`);
 
-    const { headers, statusMessage, statusCode = 500 } = proxyRes;
+    const { headers, statusCode = 500 } = proxyRes;
 
     // Check if the response status code indicates an error
     // If the status code is 2xx, we can proceed with the transformation
     // If the status code is 4xx or 5xx, we should skip the transformation
     // and return the original response to the client
     if (statusCode >= 400) {
-      logger?.error(`${statusCode} - response is not OK, skipping transformation\n`, {
-        request: {
-          url: req.originalUrl,
-          headers: req.headers,
-        },
-        response: {
-          statusCode,
-          statusMessage,
-          headers,
-        },
-      });
-      res.writeHead(proxyRes.statusCode ?? 500, {
-        'x-proxy-error': 'true',
-        'x-proxy-status-code': statusCode,
-        'x-proxy-status-message': statusMessage,
-      });
       proxyRes.pipe(res);
       return;
     }
