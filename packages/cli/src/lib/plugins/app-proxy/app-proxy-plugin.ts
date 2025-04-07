@@ -115,7 +115,6 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
   const {
     proxy: { onProxyReq = () => void 0, path: proxyPath, target },
   } = options;
-  console.log('proxying requests to', target, proxyPath);
   return {
     name: 'fusion:app-proxy',
     apply: 'serve',
