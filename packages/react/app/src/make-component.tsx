@@ -60,7 +60,7 @@ export const makeComponent = <
     const { fusion } = args;
 
     modules.event.dispatchEvent('onReactAppLoaded', {
-      detail: { modules, fusion },
+      detail: { modules, fusion, env: args.env },
       source: Component,
     });
 
@@ -76,7 +76,7 @@ export const makeComponent = <
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
     onReactAppLoaded: FrameworkEvent<
-      FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion }, React.ComponentType>
+      FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion, env: AppEnv }, React.ComponentType>
     >;
   }
 }

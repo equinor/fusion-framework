@@ -87,7 +87,7 @@ export const createComponent =
       })) as unknown as AppModulesInstance;
 
       modules.event.dispatchEvent('onReactAppLoaded', {
-        detail: { modules, fusion },
+        detail: { modules, fusion, env: env },
         source: Component,
       });
       return {
@@ -107,7 +107,7 @@ export const createComponent =
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
     onReactAppLoaded: FrameworkEvent<
-      FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion }, React.ComponentType>
+      FrameworkEventInit<{ modules: AppModulesInstance; fusion: Fusion, env: AppEnv }, React.ComponentType>
     >;
   }
 }
