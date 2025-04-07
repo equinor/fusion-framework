@@ -1,5 +1,11 @@
 # Change Log
 
+## 33.2.1
+
+### Patch Changes
+
+- [#2956](https://github.com/equinor/fusion-framework/pull/2956) [`40127f5`](https://github.com/equinor/fusion-framework/commit/40127f59d3b88adc17fad944ba5589eefb739ca8) Thanks [@odinr](https://github.com/odinr)! - added EDS accent color
+
 ## 33.2.0
 
 ### Minor Changes
