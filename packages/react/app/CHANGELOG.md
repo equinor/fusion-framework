@@ -1,5 +1,17 @@
 # Change Log
 
+## 6.0.7
+
+### Patch Changes
+
+- [#2955](https://github.com/equinor/fusion-framework/pull/2955) [`6f104e2`](https://github.com/equinor/fusion-framework/commit/6f104e2ed191e77c6127376e035bbf7af80f166b) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add env to 'onReactAppLoaded' event
+  - Prevent context provider change if app key is not current app for 'onReactAppLoaded'
+- Updated dependencies [[`5139102`](https://github.com/equinor/fusion-framework/commit/5139102838c30f73f3fcbc81fb6e78814f86445c)]:
+  - @equinor/fusion-framework-react@7.4.5
+  - @equinor/fusion-framework-app@9.3.7
+  - @equinor/fusion-framework-module-app@6.1.8
+  - @equinor/fusion-framework-react-module-http@8.0.4
+
 ## 6.0.6
 
 ### Patch Changes

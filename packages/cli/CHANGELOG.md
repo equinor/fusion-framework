@@ -1,5 +1,14 @@
 # Change Log
 
+## 10.7.1
+
+### Patch Changes
+
+- [#2954](https://github.com/equinor/fusion-framework/pull/2954) [`aac72ce`](https://github.com/equinor/fusion-framework/commit/aac72ce780588c72eb517d3e8c4860f002cc570d) Thanks [@odinr](https://github.com/odinr)! - fixed issues with overriding proxy options
+
+- [#2955](https://github.com/equinor/fusion-framework/pull/2955) [`6f104e2`](https://github.com/equinor/fusion-framework/commit/6f104e2ed191e77c6127376e035bbf7af80f166b) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - - Add env to 'onReactAppLoaded' event
+  - Prevent context provider change if app key is not current app for 'onReactAppLoaded'
+
 ## 10.7.0
 
 ### Minor Changes
