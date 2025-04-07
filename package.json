@@ -25,6 +25,7 @@
     "build:affected": "turbo build --filter=...[origin/main] build",
     "build:clean": "pnpm clean:build && pnpm build --force",
     "check": "biome check",
+    "check:fix": "biome check --fix",
     "check:errors": "biome check --diagnostic-level=error",
     "lint": "biome lint",
     "lint:staged": "biome lint --staged",
@@ -33,7 +34,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
-    "changeset:version": "changeset version && pnpm install --lockfile-only",
+    "changeset:version": "changeset version && pnpm install --lockfile-only && pnpm check:fix",
     "changeset:publish": "pnpm changeset tag && pnpm publish -r"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
