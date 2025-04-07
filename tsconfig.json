@@ -18,9 +18,6 @@
       "@equinor/fusion-query": ["./utils/query/src"]
     }
   },
-  "include": [
-    "packages/**/src/**/*.ts",
-    "packages/**/src/**/*.tsx"
-  ],
+  "include": ["packages/**/src/**/*.ts", "packages/**/src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "lib", "*.spec.ts"]
 }

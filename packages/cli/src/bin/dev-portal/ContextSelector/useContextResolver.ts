@@ -131,7 +131,10 @@ export const useContextResolver = (): {
       framework.modules.event.addEventListener('onReactAppLoaded', (e) => {
         // Only change provider if event is for current app
         if (e.detail.env.manifest.appKey === framework.modules.app.current?.appKey) {
-          console.debug('useContextResolver::onReactAppLoaded', 'using legacy register hack method');
+          console.debug(
+            'useContextResolver::onReactAppLoaded',
+            'using legacy register hack method',
+          );
           return onContextProviderChange(e.detail.modules);
         }
       }),
