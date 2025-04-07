@@ -67,22 +67,20 @@ export const helpProxyPlugin = (options: HelpProxyPluginOptions): Plugin => {
     apply: 'serve',
     config(config) {
       config.server ??= {};
-      config.server.proxy = {
-        // proxy all api calls to the Fusion Help Proxy path
-        [proxyPath]: {
-          target,
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(proxyPath, ''),
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq) => {
-              if (__HELP_API_TOKEN__) {
-                // apply token to proxy request
-                proxyReq.setHeader('authorization', __HELP_API_TOKEN__);
-              }
-            });
-            proxy.on('proxyReq', onProxyReq);
-          },
+      config.server.proxy ??= {};
+      config.server.proxy[proxyPath] = {
+        target,
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(proxyPath, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            if (__HELP_API_TOKEN__) {
+              // apply token to proxy request
+              proxyReq.setHeader('authorization', __HELP_API_TOKEN__);
+            }
+          });
+          proxy.on('proxyReq', onProxyReq);
         },
       };
     },
