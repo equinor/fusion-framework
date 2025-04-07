@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.2.4
+
+### Patch Changes
+
+- [#2952](https://github.com/equinor/fusion-framework/pull/2952) [`e164abc`](https://github.com/equinor/fusion-framework/commit/e164abcf52ff84d181ed5406d2a28441d54da9a8) Thanks [@odinr](https://github.com/odinr)! - fix(http): resovle relative urls
+
 ## 6.2.3
 
 ### Patch Changes

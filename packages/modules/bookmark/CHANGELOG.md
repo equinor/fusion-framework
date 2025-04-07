@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.4
+
+### Patch Changes
+
+- [#2950](https://github.com/equinor/fusion-framework/pull/2950) [`88aab5c`](https://github.com/equinor/fusion-framework/commit/88aab5c50c3ae77d80ce420902db0ba843a8d85f) Thanks [@odinr](https://github.com/odinr)! - added missing return statement for `addStateCreator` method.
+
 ## 2.1.3
 
 ### Patch Changes

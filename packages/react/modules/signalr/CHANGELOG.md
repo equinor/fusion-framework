@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.24
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-signalr@5.0.3
+
 ## 3.0.23
 
 ### Patch Changes

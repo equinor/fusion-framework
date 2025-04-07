@@ -1,5 +1,17 @@
 # Change Log
 
+## 7.4.5
+
+### Patch Changes
+
+- [#2953](https://github.com/equinor/fusion-framework/pull/2953) [`5139102`](https://github.com/equinor/fusion-framework/commit/5139102838c30f73f3fcbc81fb6e78814f86445c) Thanks [@odinr](https://github.com/odinr)! - Added optional parent `ModulesInstance` when creating `Framework` component
+
+- Updated dependencies []:
+  - @equinor/fusion-framework@7.3.5
+  - @equinor/fusion-framework-module-feature-flag@1.1.14
+  - @equinor/fusion-framework-react-module-http@8.0.4
+  - @equinor/fusion-framework-react-module-signalr@3.0.24
+
 ## 7.4.4
 
 ### Patch Changes
