@@ -25,10 +25,7 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": [
-    "ag-grid",
-    "table"
-  ],
+  "keywords": ["ag-grid", "table"],
   "author": "",
   "license": "ISC",
   "publishConfig": {
