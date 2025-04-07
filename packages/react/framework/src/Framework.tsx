@@ -10,7 +10,7 @@ export const Framework = (
   props: PropsWithChildren<{
     readonly configure: ConfigureCallback;
     readonly fallback: NonNullable<ReactNode> | null;
-    // biome-ignore lint/suspicious/noExplicitAny: should alow any
+    // biome-ignore lint/suspicious/noExplicitAny: should allow any
     readonly parent?: ModulesInstance<any>;
   }>,
 ) => {
