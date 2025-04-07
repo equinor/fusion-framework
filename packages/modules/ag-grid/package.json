@@ -18,9 +18,7 @@
   },
   "typesVersions": {
     "*": {
-      "themes": [
-        "dist/types/themes.d.ts"
-      ]
+      "themes": ["dist/types/themes.d.ts"]
     }
   },
   "scripts": {
