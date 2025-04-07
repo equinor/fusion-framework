@@ -115,31 +115,30 @@ export const appProxyPlugin = (options: AppProxyPluginOptions): Plugin => {
   const {
     proxy: { onProxyReq = () => void 0, path: proxyPath, target },
   } = options;
+  console.log('proxying requests to', target, proxyPath);
   return {
     name: 'fusion:app-proxy',
     apply: 'serve',
     config(config) {
       config.server ??= {};
-      config.server.proxy = {
-        // proxy all api calls to the fusion apps backend
-        [proxyPath]: {
-          target,
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(proxyPath, ''),
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq) => {
-              const token = proxyReq.getHeader('authorization');
-              if (typeof token === 'string') {
-                // preserve token for executing proxy assets
-                __APP_API_TOKEN__ = token;
-              } else if (__APP_API_TOKEN__) {
-                // apply token to proxy request
-                proxyReq.setHeader('authorization', __APP_API_TOKEN__);
-              }
-            });
-            proxy.on('proxyReq', onProxyReq);
-          },
+      config.server.proxy ??= {};
+      config.server.proxy[proxyPath] = {
+        target,
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(proxyPath, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            const token = proxyReq.getHeader('authorization');
+            if (typeof token === 'string') {
+              // preserve token for executing proxy assets
+              __APP_API_TOKEN__ = token;
+            } else if (__APP_API_TOKEN__) {
+              // apply token to proxy request
+              proxyReq.setHeader('authorization', __APP_API_TOKEN__);
+            }
+          });
+          proxy.on('proxyReq', onProxyReq);
         },
       };
     },
