@@ -157,7 +157,7 @@ importers:
     dependencies:
       '@remix-run/router':
         specifier: ^1.8.0
-        version: 1.22.0
+        version: 1.23.0
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -403,7 +403,7 @@ importers:
         version: 0.10.3(react@18.3.1)
       '@remix-run/router':
         specifier: ^1.8.0
-        version: 1.22.0
+        version: 1.23.0
       react-router-dom:
         specifier: ^6.16.0
         version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -452,7 +452,7 @@ importers:
         version: link:../../packages/react/app
       '@remix-run/router':
         specifier: ^1.8.0
-        version: 1.22.0
+        version: 1.23.0
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.3
@@ -1067,7 +1067,7 @@ importers:
     dependencies:
       '@remix-run/router':
         specifier: ^1.8.0
-        version: 1.22.0
+        version: 1.23.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -4470,8 +4470,8 @@ packages:
     resolution: {integrity: sha512-L3jkqmqoSVBVKHfpGZmLrex0lxR5SucGA0sUfFzGctehw+S/ggL9L/0NnC5mw6P8HUWpFZ3nQw3cRApjjWx9Sw==}
     engines: {node: '>=14.0.0'}
 
-  '@remix-run/router@1.22.0':
-    resolution: {integrity: sha512-MBOl8MeOzpK0HQQQshKB7pABXbmyHizdTpqnrIseTbsv0nAepwC2ENZa1aaBExNQcpLoXmWthhak8SABLzvGPw==}
+  '@remix-run/router@1.23.0':
+    resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
     engines: {node: '>=14.0.0'}
 
   '@rollup/rollup-android-arm-eabi@4.38.0':
@@ -13411,7 +13411,7 @@ snapshots:
 
   '@remix-run/router@1.18.0': {}
 
-  '@remix-run/router@1.22.0': {}
+  '@remix-run/router@1.23.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.38.0':
     optional: true
