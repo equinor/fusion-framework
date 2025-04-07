@@ -1,10 +1,13 @@
 import { type Part, type Theme, createPart, createTheme, themeAlpine } from 'ag-grid-community';
 
+import { tokens } from '@equinor/eds-tokens';
+
 /**
  * The Fusion theme for AG Grid.
  */
 export const fusionTheme: Theme = themeAlpine.withParams({
   fontFamily: 'Equinor, sans-serif',
+  accentColor: tokens.colors.interactive.primary__resting.hex,
 });
 
 /**

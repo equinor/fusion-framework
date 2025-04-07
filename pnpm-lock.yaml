@@ -810,6 +810,10 @@ importers:
         version: 5.8.2
 
   packages/modules/ag-grid:
+    dependencies:
+      '@equinor/eds-tokens':
+        specifier: ^0.9.2
+        version: 0.9.2
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -14309,7 +14313,7 @@ snapshots:
   '@vuepress/helper@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vue/shared': 3.5.13
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       cheerio: 1.0.0
       fflate: 0.8.2
       gray-matter: 4.0.3
@@ -14348,7 +14352,7 @@ snapshots:
 
   '@vuepress/plugin-active-header-links@2.0.0-rc.55(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14358,7 +14362,7 @@ snapshots:
   '@vuepress/plugin-back-to-top@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14397,7 +14401,7 @@ snapshots:
   '@vuepress/plugin-copy-code@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14407,7 +14411,7 @@ snapshots:
   '@vuepress/plugin-copyright@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14433,7 +14437,7 @@ snapshots:
       '@mdit/plugin-container': 0.13.1(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -14475,7 +14479,7 @@ snapshots:
       '@mdit/plugin-tab': 0.13.2(markdown-it@14.1.0)
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14486,7 +14490,7 @@ snapshots:
   '@vuepress/plugin-notice@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
     transitivePeerDependencies:
@@ -14505,7 +14509,7 @@ snapshots:
   '@vuepress/plugin-photo-swipe@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       photoswipe: 5.4.4
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14525,7 +14529,7 @@ snapshots:
   '@vuepress/plugin-redirect@2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       cac: 6.7.14
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
@@ -14636,11 +14640,28 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@vueuse/core@11.3.0(vue@3.5.13(typescript@5.8.2))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.20
+      '@vueuse/metadata': 11.3.0
+      '@vueuse/shared': 11.3.0(vue@3.5.13(typescript@5.8.2))
+      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@vueuse/metadata@11.3.0': {}
 
   '@vueuse/shared@11.3.0(vue@3.4.38(typescript@5.8.2))':
     dependencies:
       vue-demi: 0.14.10(vue@3.4.38(typescript@5.8.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
+  '@vueuse/shared@11.3.0(vue@3.5.13(typescript@5.8.2))':
+    dependencies:
+      vue-demi: 0.14.10(vue@3.5.13(typescript@5.8.2))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -19044,6 +19065,10 @@ snapshots:
     dependencies:
       vue: 3.4.38(typescript@5.8.2)
 
+  vue-demi@0.14.10(vue@3.5.13(typescript@5.8.2)):
+    dependencies:
+      vue: 3.5.13(typescript@5.8.2)
+
   vue-router@4.5.0(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
@@ -19074,7 +19099,7 @@ snapshots:
       '@stackblitz/sdk': 1.11.0
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       balloon-css: 1.2.0
       create-codepen: 2.0.0
       qrcode: 1.5.4
@@ -19107,7 +19132,7 @@ snapshots:
       '@types/markdown-it': 14.1.2
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
       '@vuepress/plugin-sass-palette': 2.0.0-rc.56(sass@1.85.1)(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       balloon-css: 1.2.0
       js-yaml: 4.1.0
       vue: 3.5.13(typescript@5.8.2)
@@ -19124,7 +19149,7 @@ snapshots:
   vuepress-shared@2.0.0-rc.59(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))):
     dependencies:
       '@vuepress/helper': 2.0.0-rc.56(typescript@5.8.2)(vuepress@2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2)))
-      '@vueuse/core': 11.3.0(vue@3.4.38(typescript@5.8.2))
+      '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.2))
       dayjs: 1.11.13
       vue: 3.5.13(typescript@5.8.2)
       vuepress: 2.0.0-rc.19(@vuepress/bundler-vite@2.0.0-rc.19(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(typescript@5.8.2)(yaml@2.7.0))(typescript@5.8.2)(vue@3.4.38(typescript@5.8.2))
