@@ -104,7 +104,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    */
   addStateCreator<T extends BookmarkData>(fn: BookmarkPayloadGenerator<T>) {
     console.warn('addStateCreator is deprecated, use addPayloadGenerator instead');
-    this.addPayloadGenerator(fn);
+    return this.addPayloadGenerator(fn);
   }
 
   /**
