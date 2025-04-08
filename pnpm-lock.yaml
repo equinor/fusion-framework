@@ -780,31 +780,22 @@ importers:
 
   packages/dev-server:
     dependencies:
-      http-proxy:
-        specifier: ^1.18.1
-        version: 1.18.1(debug@4.4.0)
-      http-proxy-middleware:
-        specifier: ^3.0.3
-        version: 3.0.3
-      path-to-regexp:
-        specifier: ^8.2.0
-        version: 8.2.0
+      '@equinor/fusion-framework-vite-plugin-api-service':
+        specifier: workspace:^
+        version: link:../vite-plugins/api-service
+      '@equinor/fusion-framework-vite-plugin-spa':
+        specifier: workspace:^
+        version: link:../vite-plugins/spa
+      '@equinor/fusion-log':
+        specifier: workspace:^
+        version: link:../utils/log
     devDependencies:
-      '@types/http-proxy':
-        specifier: ^1.17.16
-        version: 1.17.16
-      nock:
-        specifier: ^14.0.1
-        version: 14.0.1
       typescript:
         specifier: ^5.5.4
         version: 5.8.2
       vite:
         specifier: ^6.0.7
         version: 6.2.5(@types/node@22.13.5)(jiti@2.4.2)(sass@1.85.1)(stylus@0.64.0)(yaml@2.7.0)
-      vitest:
-        specifier: ^2.0.5
-        version: 2.0.5(@types/node@22.13.5)(happy-dom@17.1.8)(sass@1.85.1)(stylus@0.64.0)
 
   packages/framework:
     dependencies:
