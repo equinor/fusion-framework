@@ -7,20 +7,9 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
-    },
-    "./plugin-api-service": {
-      "import": "./dist/esm/plugin/api-service/index.js",
-      "types": "./dist/types/plugin/api-service/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "plugin-api-service": [
-        "dist/types/plugin/api-service/index.d.ts"
-      ]
-    }
-  },
   "directories": {
     "dist": "dist"
   },
@@ -33,23 +22,18 @@
     "build": "tsc -b",
     "test": "vitest"
   },
-  "keywords": [
-    "dev-server",
-    "fusion-framework",
-    "vite",
-    "typescript"
-  ],
+  "keywords": ["dev-server", "fusion-framework", "vite", "typescript"],
   "license": "ISC",
   "dependencies": {
-    "http-proxy": "^1.18.1",
-    "http-proxy-middleware": "^3.0.3",
-    "path-to-regexp": "^8.2.0"
+    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
+    "@equinor/fusion-framework-vite-plugin-spa": "workspace:^",
+    "@equinor/fusion-log": "workspace:^"
   },
   "devDependencies": {
-    "@types/http-proxy": "^1.17.16",
-    "nock": "^14.0.1",
     "typescript": "^5.5.4",
-    "vite": "^6.0.7",
-    "vitest": "^2.0.5"
+    "vite": "^6.0.7"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.7"
   }
 }
