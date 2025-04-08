@@ -8,6 +8,14 @@ import {
 } from '@equinor/fusion-framework-module-service-discovery';
 import { registerServiceWorker } from './register-service-worker.js';
 
+// @todo - add type for portal manifest when available
+type PortalManifest = {
+  build: {
+    config: Record<string, unknown>;
+    entrypoint: string;
+  };
+};
+
 // Allow dynamic import without vite
 const importWithoutVite = <T>(path: string): Promise<T> => import(/* @vite-ignore */ path);
 
@@ -55,14 +63,14 @@ enableMSAL(configurator, (builder) => {
   await registerServiceWorker(ref);
 
   // create a client for the portal service - this is used to fetch the portal manifest
-  const portalClient = await ref.serviceDiscovery.createClient('portal-service');
+  const portalClient = await ref.serviceDiscovery.createClient('portals');
 
   // fetch the portal manifest - this is used to load the portal template
   const portalId = import.meta.env.FUSION_SPA_PORTAL_ID;
-  const portal_manifest = await portalClient.json<{
-    bundle: { entrypoint: string };
-    config: Record<string, unknown>;
-  }>(`/portal/${portalId}/manifest`);
+  const portalTag = import.meta.env.FUSION_SPA_PORTAL_TAG ?? 'latest';
+  const portal_manifest = await portalClient.json<PortalManifest>(
+    `/portals/${portalId}@${portalTag}`,
+  );
 
   // create a entrypoint for the portal - this is used to render the portal
   const el = document.createElement('div');
@@ -71,9 +79,9 @@ enableMSAL(configurator, (builder) => {
   // @todo: should test if the entrypoint is external or internal
   // @todo: add proper return type
   const { render } = await importWithoutVite<Promise<{ render: (...args: unknown[]) => void }>>(
-    portal_manifest.bundle.entrypoint,
+    portal_manifest.build.entrypoint,
   );
 
   // render the portal - this will load the portal template and render it
-  render(el, { ref, config: portal_manifest.config });
+  render(el, { ref, manifest: portal_manifest });
 })();

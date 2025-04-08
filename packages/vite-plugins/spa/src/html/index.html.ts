@@ -24,8 +24,18 @@ export const html = `
       <title>%FUSION_SPA_TITLE%</title>
       <meta name="mode" content="%MODE%">
       <meta name="fusion-spa-plugin-version" content="${version}">
-      <script type="module" src="%FUSION_SPA_BOOTSTRAP%"></script>
       <link rel="stylesheet" href="https://cdn.eds.equinor.com/font/equinor-font.css" />
+      <script type="module" src="%FUSION_SPA_BOOTSTRAP%"></script>
+      <script>
+        // suppress console error for custom elements already defined. 
+        // WebComponents should be added by the portal, but not removed from application
+        const _customElementsDefine = window.customElements.define;
+        window.customElements.define = (name, cl, conf) => {
+          if (!customElements.get(name)) {
+            _customElementsDefine.call(window.customElements, name, cl, conf);
+          }
+        };
+      </script>
       <style>
         html, body {
           margin: 0;
