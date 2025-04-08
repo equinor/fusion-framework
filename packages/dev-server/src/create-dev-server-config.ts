@@ -1,5 +1,4 @@
 import { defineConfig, mergeConfig, type UserConfig } from 'vite';
-
 import apiServicePlugin, {
   createProxyHandler,
 } from '@equinor/fusion-framework-vite-plugin-api-service';
