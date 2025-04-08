@@ -105,7 +105,13 @@ function processesRoute(
   proxyServer.on('proxyRes', (proxyRes, req: IncomingRequest) => {
     const { headers, statusMessage, statusCode = 500 } = proxyRes;
     const message = `Received response for ${req.originalUrl} -> ${statusCode} ${statusMessage}`;
-    if (proxyRes.statusCode ?? 0 >= 400) {
+
+    res.writeHead(statusCode, {
+      ...headers,
+      'x-proxy-rewrite-target': proxyOptions.target,
+    });
+
+    if (statusCode ?? 0 >= 400) {
       logger?.error(message);
       logger?.debug({
         request: {
@@ -117,11 +123,6 @@ function processesRoute(
           statusMessage,
           headers,
         },
-      });
-      res.writeHead(proxyRes.statusCode ?? 500, {
-        'x-proxy-error': 'true',
-        'x-proxy-status-code': statusCode,
-        'x-proxy-status-message': statusMessage,
       });
     } else {
       logger?.debug(message);
