@@ -9,6 +9,7 @@ import type {
 } from './types.js';
 import { DEFAULT_VALUES } from './constants.js';
 import { createResponseInterceptor } from './create-response-interceptor.js';
+import type { Connect } from 'vite';
 
 /**
  * A type representing a function that processes API response data and transforms it
@@ -27,7 +28,10 @@ export type ApiDataProcessor<
   TResult extends JsonData = TResponse,
 > = (
   data: TResponse,
-  proxyRoute: string,
+  args: {
+    route: string;
+    request: Connect.IncomingMessage;
+  },
 ) => {
   data: TResult;
   routes?: ApiRoute[];
@@ -89,21 +93,25 @@ export function createProxyHandler<
 
       // Configure the proxy server
       const configure = (proxyServer: ProxyServer) => {
-        proxyServer.on(
-          'proxyRes',
-          createResponseInterceptor(
+        proxyServer.on('proxyRes', (proxyRes, req, res) => {
+          // initialize the interceptor since the `generateRoutes` requires the request
+          const interceptor = createResponseInterceptor(
             (data: TResponse) => {
-              const { data: transformedData, routes } = generateRoutes(data, apiRoute);
+              const { data: transformedData, routes } = generateRoutes(data, {
+                route: apiRoute,
+                request: req,
+              });
               apiRoutes = routes;
               return transformedData;
             },
             {
               logger,
             },
-          ),
-        );
+          );
+          // execute the interceptor
+          interceptor(proxyRes, req, res);
+        });
         proxyServer.on('proxyReq', (proxyReq, req: IncomingRequest) => {
-          // Set the original request URL
           logger?.info(
             `Proxying ${req.originalUrl} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
           );
