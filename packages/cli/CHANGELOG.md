@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.7.2
+
+### Patch Changes
+
+- [#2962](https://github.com/equinor/fusion-framework/pull/2962) [`79f1205`](https://github.com/equinor/fusion-framework/commit/79f120535caf65e5f2a97dbca666165b55e53320) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update `@equinor/fusion-wc-person` to 3.1.7
+
 ## 10.7.1
 
 ### Patch Changes
