@@ -1,10 +1,5 @@
 import type { ApiDataProcessor, ApiRoute } from '@equinor/fusion-framework-vite-plugin-api-service';
-
-export type FusionService = {
-  key: string;
-  uri: string;
-  name: string;
-};
+import type { FusionService } from './types.js';
 
 /**
  * Processes an array of Fusion services, remapping their URIs to proxy through the development server
