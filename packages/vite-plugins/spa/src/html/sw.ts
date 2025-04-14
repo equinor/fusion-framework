@@ -199,8 +199,8 @@ self.addEventListener('fetch', (event: FetchEvent) => {
       }
 
       // if the matched config has a rewrite, rewrite the url
-      if (matchedConfig.rewrite) {
-        url.pathname = url.pathname.replace(matchedConfig?.url, matchedConfig?.rewrite || '');
+      if (typeof matchedConfig.rewrite === 'string') {
+        url.pathname = url.pathname.replace(matchedConfig?.url, matchedConfig.rewrite);
       }
 
       // fetch the request with the modified url and headers
