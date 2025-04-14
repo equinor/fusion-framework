@@ -46,7 +46,7 @@ export type NextFunction = Connect.NextFunction;
  * This type is commonly used to define query parameters or path parameters
  * in an API request.
  */
-export type RequestParams = Record<string, string>;
+export type RequestParams = Record<string, string | string[]>;
 
 /**
  * Represents an incoming HTTP request, extending the `IncomingMessage` interface
