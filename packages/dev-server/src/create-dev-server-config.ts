@@ -1,13 +1,15 @@
 import { defineConfig, mergeConfig, type UserConfig } from 'vite';
-import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types';
 
-import defaultProcessServices from './process-services';
 import apiServicePlugin, {
   createProxyHandler,
 } from '@equinor/fusion-framework-vite-plugin-api-service';
 
 import fusionSpaPlugin from '@equinor/fusion-framework-vite-plugin-spa';
 import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
+
+import defaultProcessServices from './process-services.js';
+
+import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types.js';
 
 const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server') => {
   const logger = new ConsoleLogger(title);
