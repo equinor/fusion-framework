@@ -1,9 +1,9 @@
-export type { ILogger } from './Logger.interface';
+export type { ILogger } from './Logger.interface.js';
 
-export { ConsoleLogger } from './ConsoleLogger';
+export { ConsoleLogger } from './ConsoleLogger.js';
 
-export { defaultLogLevel, LogLevel } from './static';
+export { defaultLogLevel, LogLevel } from './static.js';
 
-export { resolveLogLevel } from './resolve-log-level';
+export { resolveLogLevel } from './resolve-log-level.js';
 
-export { version } from './version';
+export { version } from './version.js';

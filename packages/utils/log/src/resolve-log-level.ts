@@ -1,4 +1,4 @@
-import { LogLevel } from './static';
+import { LogLevel } from './static.js';
 
 /**
  * Resolves a log level from a string representation.

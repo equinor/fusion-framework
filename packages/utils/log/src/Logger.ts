@@ -1,8 +1,8 @@
 import { Subject, type Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { LogLevel, defaultLogLevel } from './static';
-import type { ILogger } from './Logger.interface';
-import { version } from './version';
+import { LogLevel, defaultLogLevel } from './static.js';
+import type { ILogger } from './Logger.interface.js';
+import { version } from './version.js';
 
 /**
  * Defines an abstract base class for a logger implementation that provides common logging functionality.
