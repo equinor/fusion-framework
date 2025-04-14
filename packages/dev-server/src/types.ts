@@ -1,20 +1,22 @@
 import type { ApiDataProcessor, ApiRoute } from '@equinor/fusion-framework-vite-plugin-api-service';
 import type { FusionTemplateEnv, TemplateEnvFn } from '@equinor/fusion-framework-vite-plugin-spa';
 import type { ConsoleLogger } from '@equinor/fusion-log';
-import type { FusionService } from './process-services';
+
+export type FusionService = {
+  key: string;
+  uri: string;
+  name: string;
+};
 
 export {
   FusionTemplateEnv as TemplateEnv,
   TemplateEnvFn,
 } from '@equinor/fusion-framework-vite-plugin-spa';
 
+export { UserConfig as DevServerOverrides } from 'vite';
+
 export type DevServerOptions<TEnv extends Partial<FusionTemplateEnv> = Partial<FusionTemplateEnv>> =
   {
-    assets?: Array<{
-      url: string;
-      scopes: string[];
-      rewrite?: string;
-    }>;
     spa?: {
       templateEnv: TEnv | TemplateEnvFn<TEnv>;
     };
