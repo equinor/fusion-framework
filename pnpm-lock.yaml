@@ -794,7 +794,7 @@ importers:
         specifier: ^5.5.4
         version: 5.8.3
       vite:
-        specifier: ^6.0.7
+        specifier: ^6.2.5
         version: 6.2.5(@types/node@22.14.1)(sass-embedded@1.86.3)
 
   packages/framework:
@@ -1824,7 +1824,7 @@ importers:
         specifier: ^5.5.4
         version: 5.8.3
       vite:
-        specifier: ^6.0.7
+        specifier: ^6.2.5
         version: 6.2.5(@types/node@22.14.1)(sass-embedded@1.86.3)
       vitest:
         specifier: ^2.0.5
@@ -1852,7 +1852,7 @@ importers:
         specifier: ^5.5.4
         version: 5.8.3
       vite:
-        specifier: ^6.0.7
+        specifier: ^6.2.5
         version: 6.2.5(@types/node@22.14.1)(sass-embedded@1.86.3)
 
   packages/widget:
