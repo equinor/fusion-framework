@@ -1269,9 +1269,6 @@ importers:
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../modules/context
-      '@equinor/fusion-framework-react-widget':
-        specifier: workspace:^
-        version: link:../widget
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
@@ -1668,46 +1665,6 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.3.1
-      typescript:
-        specifier: ^5.8.2
-        version: 5.8.3
-
-  packages/react/widget:
-    dependencies:
-      '@equinor/fusion-framework':
-        specifier: workspace:^
-        version: link:../../framework
-      '@equinor/fusion-framework-module':
-        specifier: workspace:^
-        version: link:../../modules/module
-      '@equinor/fusion-framework-module-widget':
-        specifier: workspace:^
-        version: link:../../modules/widget
-      '@equinor/fusion-framework-react':
-        specifier: workspace:^
-        version: link:../framework
-      '@equinor/fusion-framework-react-module':
-        specifier: workspace:^
-        version: link:../modules/module
-      '@equinor/fusion-framework-widget':
-        specifier: workspace:^
-        version: link:../../widget
-    devDependencies:
-      '@equinor/fusion-framework-module-event':
-        specifier: workspace:^
-        version: link:../../modules/event
-      '@types/react':
-        specifier: ^18.2.50
-        version: 18.3.20
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.6(@types/react@18.3.20)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.8.3

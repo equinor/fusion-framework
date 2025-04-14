@@ -35,9 +35,6 @@
     },
     {
       "path": "../modules/bookmark"
-    },
-    {
-      "path": "../widget"
     }
   ],
   "include": ["src/**/*"],

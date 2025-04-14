@@ -21,7 +21,7 @@ import useAppModules from '../useAppModules';
  */
 export const useCurrentBookmark = <TData extends BookmarkData>(
   payloadGenerator?: BookmarkPayloadGenerator<TData>,
-) => {
+): ReturnType<typeof _useCurrentBookmark<TData>> => {
   const appBookmarkProvider = useAppModules<[BookmarkModule]>().bookmark;
   const frameworkBookmarkProvider = useFrameworkModule<BookmarkModule>('bookmark');
   if (!appBookmarkProvider) {
