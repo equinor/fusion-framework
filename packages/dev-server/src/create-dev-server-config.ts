@@ -72,7 +72,6 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
       }),
     },
     server: {
-      port: 3000,
       ...server,
     },
     plugins: [
