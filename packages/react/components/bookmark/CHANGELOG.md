@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.0.14
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-module-bookmark@3.0.6
+  - @equinor/fusion-framework-react@7.4.6
+
 ## 1.0.13
 
 ### Patch Changes

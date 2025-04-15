@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`08a4ebb`](https://github.com/equinor/fusion-framework/commit/08a4ebb74b9ce9da8c7a4b4dabe3cd476c67a86e)]:
+  - @equinor/fusion-log@1.1.3
+
 ## 5.2.3
 
 ### Patch Changes

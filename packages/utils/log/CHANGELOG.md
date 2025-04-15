@@ -1,5 +1,11 @@
 # @equinor/fusion-log
 
+## 1.1.3
+
+### Patch Changes
+
+- [#2972](https://github.com/equinor/fusion-framework/pull/2972) [`08a4ebb`](https://github.com/equinor/fusion-framework/commit/08a4ebb74b9ce9da8c7a4b4dabe3cd476c67a86e) Thanks [@odinr](https://github.com/odinr)! - update imports to use module syntax and add type field in package.json
+
 ## 1.1.2
 
 ### Patch Changes
