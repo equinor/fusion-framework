@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.1.3
+
+### Patch Changes
+
+- [`134863f`](https://github.com/equinor/fusion-framework/commit/134863fa96bcd5f799bc621f755b1605d0c1255c) Thanks [@odinr](https://github.com/odinr)! - updated type def to 4.7+
+
 ## 5.1.2
 
 ### Patch Changes
