@@ -32,7 +32,9 @@ export default defineConfig({
 fusionSpaPlugin({
   generateTemplateEnv: () => ({
     title: "My App",
-    portalId: "my-portal",
+    portal: {
+      id: "my-portal"
+    },
     serviceDiscovery: {
       url: "https://my-server.com/service-discovery",
       scopes: ["api://my-app/scope"],

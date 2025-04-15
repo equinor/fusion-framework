@@ -26,7 +26,9 @@ import { createDevServer } from "@equinor/fusion-framework-dev-server";
 const devServer = await createDevServer({
   spa: {
     templateEnv: {
-      portalId: "dev-portal",
+      portal: {
+        id: "dev-portal",
+      },
       title: "My Test Dev Server",
     },
   },

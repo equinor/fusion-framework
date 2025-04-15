@@ -24,7 +24,9 @@ The dev server requires a basic configuration object to be passed to it.
 const devServer = await createDevServer({
   spa: {
     templateEnv: {
-      portalId: 'dev-portal',
+      portal: {
+        id: '@equinor/fusion-framework-dev-portal',
+      }
       title: 'My Test Dev Server',
       serviceDiscovery: {
         url: 'https://location.of.your.service.discovery',
