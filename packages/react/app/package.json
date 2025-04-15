@@ -90,7 +90,6 @@
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
-    "@equinor/fusion-framework-react-widget": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
@@ -120,9 +119,6 @@
       "optional": true
     },
     "@equinor/fusion-framework-module-feature-flag": {
-      "optional": true
-    },
-    "@equinor/fusion-framework-react-widget": {
       "optional": true
     },
     "@equinor/fusion-observable": {

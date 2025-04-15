@@ -8,7 +8,7 @@ export default {
   name: 'AgGridVersion',
   computed: {
     version() {
-      return agGridModule.dependencies['@ag-grid-enterprise/core'].slice(1);
+      return agGridModule.devDependencies['ag-grid-enterprise'].slice(1);
     },
   },
 };
