@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import type { ILogger } from './Logger.interface';
-import Logger from './Logger';
-import { LogLevel } from './static';
+import type { ILogger } from './Logger.interface.js';
+import Logger from './Logger.js';
+import { LogLevel } from './static.js';
 
 /**
  * Provides a console-based logger implementation that supports different log levels.
