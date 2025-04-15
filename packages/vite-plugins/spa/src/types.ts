@@ -18,7 +18,10 @@ export type FusionTemplateEnv = {
   bootstrap: string;
 
   /** Id of the portal to load */
-  portalId: string;
+  portal: {
+    id: string;
+    tag?: string;
+  };
 
   /** Service discovery configuration */
   serviceDiscovery: {
