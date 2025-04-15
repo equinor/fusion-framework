@@ -22,7 +22,7 @@ import type {
 } from '@equinor/fusion-react-context-selector';
 import type { AppModulesInstance } from '@equinor/fusion-framework-app';
 import type { QueryClientError } from '@equinor/fusion-query/client';
-import type { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors';
+import type { FusionContextSearchError } from '@equinor/fusion-framework-module-context/errors.js';
 
 function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();

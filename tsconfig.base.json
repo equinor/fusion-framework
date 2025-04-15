@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "strict": true,
-    "module": "ES2022",
-    "target": "ES6",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "incremental": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "stripInternal": true,
