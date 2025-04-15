@@ -1,4 +1,4 @@
-import { resolveLogLevel } from './resolve-log-level';
+import { resolveLogLevel } from './resolve-log-level.js';
 
 /**
  * Defines the different log levels that can be used to control the verbosity of logging.
