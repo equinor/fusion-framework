@@ -1,3 +1,7 @@
+---
+"@equinor/fusion-framework-dev-server": major
+---
+
 Introduced a new package, `@equinor/fusion-framework-dev-server`, designed to provide a development server tailored for Fusion Framework applications. Built on top of Vite, it seamlessly integrates Vite and Fusion Framework configurations.
 
 **Features**
