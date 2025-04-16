@@ -30,7 +30,7 @@ export const PersonSideSheet = ({ azureId, isOpen, onClose }: PersonSideSheetPro
   }, [currentSheet]);
 
   const navigateCallback = useCallback((sheet: string) => {
-    setCurrentSheet(sheet ?? 'default');
+    setCurrentSheet(sheet ?? 'landing');
   }, []);
 
   return (
