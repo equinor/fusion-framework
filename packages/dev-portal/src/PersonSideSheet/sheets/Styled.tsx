@@ -15,7 +15,7 @@ export const Styled = {
   SwitchLabel: styled.div`
         display: flex;
         flex-direction: column;
-        align-items: left;
+        align-items: flex-start;
         justify-content: center;
         width: 85%;
         transform: scale(0.9);
