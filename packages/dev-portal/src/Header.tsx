@@ -5,7 +5,7 @@ import { FusionLogo } from './FusionLogo';
 /* typescript reference for makeStyles */
 // import '@material-ui/styles';
 
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { add, menu, tag } from '@equinor/eds-icons';
 import { Icon, TopBar } from '@equinor/eds-core-react';
 Icon.add({ menu, add, tag });
