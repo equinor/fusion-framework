@@ -19,7 +19,7 @@ importers:
         version: 2.28.1
       '@vitest/coverage-v8':
         specifier: ^2.0.1
-        version: 2.1.9(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))
+        version: 2.1.9(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))
       genversion:
         specifier: ^3.1.1
         version: 3.2.0
@@ -43,10 +43,10 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))
+        version: 0.11.1(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))
 
   cookbooks/app-react:
     devDependencies:
@@ -1024,7 +1024,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/modules/module:
     dependencies:
@@ -1128,13 +1128,13 @@ importers:
         version: 9.6.0
       msw:
         specifier: ^2.7.3
-        version: 2.7.3(@types/node@22.14.1)(typescript@5.8.3)
+        version: 2.7.5(@types/node@22.14.1)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.3(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/modules/signalr:
     dependencies:
@@ -1685,7 +1685,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/utils/log:
     dependencies:
@@ -1704,7 +1704,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/utils/observable:
     dependencies:
@@ -1744,7 +1744,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/utils/query:
     dependencies:
@@ -1781,7 +1781,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3)
 
   packages/widget:
     dependencies:
@@ -2766,8 +2766,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
 
-  '@eslint-community/eslint-utils@4.6.0':
-    resolution: {integrity: sha512-WhCn7Z7TauhBtmzhvKpoQs0Wwb/kBcy4CwpuI0/eEIr2Lx2auxmulAzLr91wVZJaz47iUZdkXOK7WlAfxGKCnA==}
+  '@eslint-community/eslint-utils@4.6.1':
+    resolution: {integrity: sha512-KTsJMmobmbrFLe3LDh0PC2FXpcSYJt/MLjlkh/9LEnmKYLSYmT/0EW9JWANjeoemiuZrmogti0tW5Ch+qNUYDw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -3777,8 +3777,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@pkgr/core@0.2.3':
-    resolution: {integrity: sha512-yMV8bb9prWI21N6FsrnPCbhoYb8UUvYCDGoSvPHBloVC095Ef2ker43hzXkJ6TpJPw53S8FeFYkARa7GGIGwxg==}
+  '@pkgr/core@0.2.4':
+    resolution: {integrity: sha512-ROFF39F6ZrnzSUEmQQZUar0Jt4xVoP9WnDRdWwF4NNcXs3xBTLgBUDoOwW141y1jP+S8nahIbdxbFC7IShw9Iw==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
   '@react-aria/breadcrumbs@3.5.22':
@@ -7249,18 +7249,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.7.3:
-    resolution: {integrity: sha512-+mycXv8l2fEAjFZ5sjrtjJDmm2ceKGjrNbBr1durRg6VkU9fNUE/gsmQ51hWbHqs+l35W1iM+ZsmOD9Fd6lspw==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      typescript: '>= 4.8.x'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  msw@2.7.4:
-    resolution: {integrity: sha512-A2kuMopOjAjNEYkn0AnB1uj+x7oBjLIunFk7Ud4icEnVWFf6iBekn8oXW4zIwcpfEdWP9sLqyVaHVzneWoGEww==}
+  msw@2.7.5:
+    resolution: {integrity: sha512-00MyTlY3TJutBa5kiU+jWiz2z5pNJDYHn2TgPkGkh92kMmNH43RqvMXd8y/7HxNn8RjzUbvZWYZjcS36fdb6sw==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -8591,6 +8581,10 @@ packages:
 
   type-fest@4.39.1:
     resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
+    engines: {node: '>=16'}
+
+  type-fest@4.40.0:
+    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
     engines: {node: '>=16'}
 
   typed-array-buffer@1.0.3:
@@ -10300,7 +10294,7 @@ snapshots:
       eslint: 9.24.0
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.6.0(eslint@9.24.0)':
+  '@eslint-community/eslint-utils@4.6.1(eslint@9.24.0)':
     dependencies:
       eslint: 9.24.0
       eslint-visitor-keys: 3.4.3
@@ -11574,7 +11568,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@pkgr/core@0.2.3': {}
+  '@pkgr/core@0.2.4': {}
 
   '@react-aria/breadcrumbs@3.5.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -13798,7 +13792,7 @@ snapshots:
 
   '@typescript-eslint/utils@7.18.0(eslint@9.24.0)(typescript@5.8.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.6.0(eslint@9.24.0)
+      '@eslint-community/eslint-utils': 4.6.1(eslint@9.24.0)
       '@typescript-eslint/scope-manager': 7.18.0
       '@typescript-eslint/types': 7.18.0
       '@typescript-eslint/typescript-estree': 7.18.0(typescript@5.8.3)
@@ -13846,7 +13840,7 @@ snapshots:
       vite: 6.0.14(@types/node@22.14.1)(sass-embedded@1.86.3)
       vue: 3.5.13(typescript@5.8.3)
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -13860,7 +13854,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
+      vitest: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -13871,31 +13865,22 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.9(msw@2.7.3(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))':
+  '@vitest/mocker@2.1.9(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.17(@types/node@20.17.30)(sass-embedded@1.86.3))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.7.3(@types/node@22.14.1)(typescript@5.8.3)
-      vite: 5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3)
-
-  '@vitest/mocker@2.1.9(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.17(@types/node@20.17.30)(sass-embedded@1.86.3))':
-    dependencies:
-      '@vitest/spy': 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.17
-    optionalDependencies:
-      msw: 2.7.4(@types/node@20.17.30)(typescript@5.8.3)
+      msw: 2.7.5(@types/node@20.17.30)(typescript@5.8.3)
       vite: 5.4.17(@types/node@20.17.30)(sass-embedded@1.86.3)
 
-  '@vitest/mocker@2.1.9(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))':
+  '@vitest/mocker@2.1.9(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.7.4(@types/node@22.14.1)(typescript@5.8.3)
+      msw: 2.7.5(@types/node@22.14.1)(typescript@5.8.3)
       vite: 5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3)
 
   '@vitest/pretty-format@2.1.9':
@@ -15545,7 +15530,7 @@ snapshots:
 
   eslint@9.24.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.6.0(eslint@9.24.0)
+      '@eslint-community/eslint-utils': 4.6.1(eslint@9.24.0)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.20.0
       '@eslint/config-helpers': 0.2.1
@@ -16772,32 +16757,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.7.3(@types/node@22.14.1)(typescript@5.8.3):
-    dependencies:
-      '@bundled-es-modules/cookie': 2.0.1
-      '@bundled-es-modules/statuses': 1.0.1
-      '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.9(@types/node@22.14.1)
-      '@mswjs/interceptors': 0.37.6
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/until': 2.1.0
-      '@types/cookie': 0.6.0
-      '@types/statuses': 2.0.5
-      graphql: 16.10.0
-      headers-polyfill: 4.0.3
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      path-to-regexp: 6.3.0
-      picocolors: 1.1.1
-      strict-event-emitter: 0.5.1
-      type-fest: 4.39.1
-      yargs: 17.7.2
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - '@types/node'
-
-  msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3):
+  msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
@@ -16815,7 +16775,7 @@ snapshots:
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
       strict-event-emitter: 0.5.1
-      type-fest: 4.39.1
+      type-fest: 4.40.0
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.8.3
@@ -16823,7 +16783,7 @@ snapshots:
       - '@types/node'
     optional: true
 
-  msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3):
+  msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
@@ -16841,13 +16801,12 @@ snapshots:
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
       strict-event-emitter: 0.5.1
-      type-fest: 4.39.1
+      type-fest: 4.40.0
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.8.3
     transitivePeerDependencies:
       - '@types/node'
-    optional: true
 
   mute-stream@0.0.8: {}
 
@@ -18248,7 +18207,7 @@ snapshots:
 
   synckit@0.11.4:
     dependencies:
-      '@pkgr/core': 0.2.3
+      '@pkgr/core': 0.2.4
       tslib: 2.8.1
 
   tabbable@6.2.0: {}
@@ -18389,6 +18348,8 @@ snapshots:
   type-fest@0.8.1: {}
 
   type-fest@4.39.1: {}
+
+  type-fest@4.40.0: {}
 
   typed-array-buffer@1.0.3:
     dependencies:
@@ -18665,15 +18626,15 @@ snapshots:
       fsevents: 2.3.3
       sass-embedded: 1.86.3
 
-  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)):
+  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)):
     dependencies:
       '@actions/core': 1.11.1
-      vitest: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
+      vitest: 2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3)
 
-  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3):
+  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.86.3):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.4(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.17(@types/node@20.17.30)(sass-embedded@1.86.3))
+      '@vitest/mocker': 2.1.9(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.17(@types/node@20.17.30)(sass-embedded@1.86.3))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -18706,46 +18667,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.3(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3):
+  vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.3(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))
-      '@vitest/pretty-format': 2.1.9
-      '@vitest/runner': 2.1.9
-      '@vitest/snapshot': 2.1.9
-      '@vitest/spy': 2.1.9
-      '@vitest/utils': 2.1.9
-      chai: 5.2.0
-      debug: 4.4.0
-      expect-type: 1.2.1
-      magic-string: 0.30.17
-      pathe: 1.1.2
-      std-env: 3.9.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.0.2
-      tinyrainbow: 1.2.0
-      vite: 5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3)
-      vite-node: 2.1.9(@types/node@22.14.1)(sass-embedded@1.86.3)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 22.14.1
-      happy-dom: 17.4.4
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.1.9(@types/node@22.14.1)(happy-dom@17.4.4)(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(sass-embedded@1.86.3):
-    dependencies:
-      '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.4(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))
+      '@vitest/mocker': 2.1.9(msw@2.7.5(@types/node@22.14.1)(typescript@5.8.3))(vite@5.4.17(@types/node@22.14.1)(sass-embedded@1.86.3))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
