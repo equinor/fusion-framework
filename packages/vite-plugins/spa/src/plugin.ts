@@ -66,13 +66,14 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       const env = { ...pluginEnv, ...loadedEnv };
 
-      log?.info('plugin environment\n', env);
+      log?.debug('plugin environment\n', env);
 
       // define environment variables
       config.define ??= {};
       for (const [key, value] of Object.entries(env)) {
         config.define[`import.meta.env.${key}`] = value;
       }
+      log?.info(`plugin configured for ${env.FUSION_SPA_PORTAL_ID}`);
     },
     configureServer(server) {
       // Apply SPA fallback
