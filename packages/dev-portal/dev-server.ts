@@ -5,8 +5,6 @@ import { name } from './package.json' assert { type: 'json' };
 
 dotenv.config();
 
-console.log(process.env);
-
 const clientId = process.env.FUSION_MSAL_CLIENT_ID;
 const tenantId = process.env.FUSION_MSAL_TENANT_ID;
 const serviceDiscoveryUrl = process.env.FUSION_SERVICE_DISCOVERY_URL;
