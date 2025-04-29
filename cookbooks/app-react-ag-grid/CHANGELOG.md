@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.18
+
+### Patch Changes
+
+- Updated dependencies [[`2261a46`](https://github.com/equinor/fusion-framework/commit/2261a46407f186f219270f46fb0414a0ac08d754), [`f1aabc3`](https://github.com/equinor/fusion-framework/commit/f1aabc3729ffce35fc510ea690418067e0cc8ab0), [`cf67e87`](https://github.com/equinor/fusion-framework/commit/cf67e87c0bf83230fa77ff7a66254cd615675c34)]:
+  - @equinor/fusion-framework-react-ag-grid@33.2.2
+  - @equinor/fusion-framework-cli@10.7.3
+  - @equinor/fusion-framework-react-app@6.0.8
+
 ## 0.6.17
 
 ### Patch Changes

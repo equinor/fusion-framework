@@ -1,5 +1,16 @@
 # Change Log
 
+## 21.0.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-app@6.0.8
+  - @equinor/fusion-framework@7.3.6
+  - @equinor/fusion-framework-app@9.3.8
+  - @equinor/fusion-framework-module-app@6.1.9
+  - @equinor/fusion-framework-module-service-discovery@8.0.10
+
 ## 21.0.7
 
 ### Patch Changes

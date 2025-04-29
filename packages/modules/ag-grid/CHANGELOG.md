@@ -1,5 +1,13 @@
 # Change Log
 
+## 33.2.2
+
+### Patch Changes
+
+- [#2998](https://github.com/equinor/fusion-framework/pull/2998) [`2261a46`](https://github.com/equinor/fusion-framework/commit/2261a46407f186f219270f46fb0414a0ac08d754) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update deps `ag-grid-community`, `ag-grid-enterprise` and `ag-grid-react` to 33.2.4
+
+- [#2966](https://github.com/equinor/fusion-framework/pull/2966) [`f1aabc3`](https://github.com/equinor/fusion-framework/commit/f1aabc3729ffce35fc510ea690418067e0cc8ab0) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump the ag-grid from 33.2.1 to 33.2.2
+
 ## 33.2.1
 
 ### Patch Changes
