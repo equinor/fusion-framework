@@ -4,6 +4,7 @@
   "description": "Fusion module for events",
   "main": "./dist/esm/index.js",
   "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -33,11 +34,5 @@
     "@types/lodash.clonedeep": "^4.5.9",
     "rxjs": "^7.8.1",
     "typescript": "^5.8.2"
-  },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": ["dist/types/*"]
-    }
   }
 }

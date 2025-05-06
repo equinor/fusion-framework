@@ -14,11 +14,6 @@
       "import": "./dist/esm/enable-bookmark.js"
     }
   },
-  "typesVersions": {
-    "*": {
-      "enable-bookmark": ["dist/types/enable-bookmark.d.ts"]
-    }
-  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"

@@ -3,6 +3,7 @@
   "version": "2.1.5",
   "description": "",
   "main": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -12,12 +13,6 @@
     "./utils": {
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
-    }
-  },
-  "types": "./dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "utils": ["dist/types/utils/index.d.ts"]
     }
   },
   "scripts": {

@@ -3,6 +3,7 @@
   "version": "3.0.7",
   "description": "",
   "main": "dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -11,12 +12,6 @@
     "./portal": {
       "import": "./dist/esm/portal/index.js",
       "types": "./dist/types/portal/index.d.ts"
-    }
-  },
-  "types": "./dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "portal": ["dist/types/portal/index.d.ts"]
     }
   },
   "scripts": {
