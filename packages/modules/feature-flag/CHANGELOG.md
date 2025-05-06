@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-module-feature-flag
 
+## 1.1.15
+
+### Patch Changes
+
+- [#3012](https://github.com/equinor/fusion-framework/pull/3012) [`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43) Thanks [@odinr](https://github.com/odinr)! - removed `typesVersions` from packages, since we no longer support TS < 4.7, also corrected `types` path in package.json
+
+- Updated dependencies [[`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43)]:
+  - @equinor/fusion-observable@8.4.7
+  - @equinor/fusion-framework-module@4.3.8
+
 ## 1.1.14
 
 ### Patch Changes

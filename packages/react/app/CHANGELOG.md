@@ -1,5 +1,21 @@
 # Change Log
 
+## 6.0.10
+
+### Patch Changes
+
+- [#3012](https://github.com/equinor/fusion-framework/pull/3012) [`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43) Thanks [@odinr](https://github.com/odinr)! - removed `typesVersions` from packages, since we no longer support TS < 4.7, also corrected `types` path in package.json
+
+- Updated dependencies [[`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43)]:
+  - @equinor/fusion-framework-module-navigation@4.0.10
+  - @equinor/fusion-framework-react@7.4.8
+  - @equinor/fusion-framework-module@4.3.8
+  - @equinor/fusion-framework-module-msal@4.0.3
+  - @equinor/fusion-framework-module-app@6.1.10
+  - @equinor/fusion-framework-app@9.3.10
+  - @equinor/fusion-framework-react-module@3.1.9
+  - @equinor/fusion-framework-react-module-http@8.0.5
+
 ## 6.0.9
 
 ### Patch Changes

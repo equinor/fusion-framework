@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.0.26
+
+### Patch Changes
+
+- [#3012](https://github.com/equinor/fusion-framework/pull/3012) [`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43) Thanks [@odinr](https://github.com/odinr)! - removed `typesVersions` from packages, since we no longer support TS < 4.7, also corrected `types` path in package.json
+
+- Updated dependencies [[`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43)]:
+  - @equinor/fusion-framework-module-signalr@5.0.5
+  - @equinor/fusion-framework-react-module@3.1.9
+
 ## 3.0.25
 
 ### Patch Changes

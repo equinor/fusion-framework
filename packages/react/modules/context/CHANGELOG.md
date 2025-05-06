@@ -1,5 +1,15 @@
 # Change Log
 
+## 6.2.24
+
+### Patch Changes
+
+- Updated dependencies [[`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43)]:
+  - @equinor/fusion-observable@8.4.7
+  - @equinor/fusion-query@5.2.5
+  - @equinor/fusion-framework-module-context@5.1.3
+  - @equinor/fusion-framework-react-module@3.1.9
+
 ## 6.2.23
 
 ### Patch Changes
