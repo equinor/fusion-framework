@@ -1,5 +1,12 @@
 # Change Log
 
+## 7.4.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework@7.3.7
+
 ## 7.4.6
 
 ### Patch Changes

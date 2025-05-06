@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.1.2
+
+### Patch Changes
+
+- [#3010](https://github.com/equinor/fusion-framework/pull/3010) [`2c9fcd6`](https://github.com/equinor/fusion-framework/commit/2c9fcd6bcacb3e1b94d7aa4ad2e9d216a329faa5) Thanks [@odinr](https://github.com/odinr)! - Fixed path for base type in package json
+
 ## 5.1.1
 
 ### Patch Changes
