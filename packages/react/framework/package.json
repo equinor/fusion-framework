@@ -3,6 +3,7 @@
   "version": "7.4.7",
   "description": "",
   "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -31,17 +32,6 @@
     "./signalr": {
       "import": "./dist/esm/signalr/index.js",
       "types": "./dist/types/signalr/index.d.ts"
-    }
-  },
-  "types": "dist/types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "app": ["dist/types/app/index.d.ts"],
-      "feature-flag": ["dist/types/feature-flag/index.d.ts"],
-      "context": ["dist/types/context/index.d.ts"],
-      "hooks": ["dist/types/hooks/index.d.ts"],
-      "http": ["dist/types/http/index.d.ts"],
-      "signalr": ["dist/types/signalr/index.d.ts"]
     }
   },
   "scripts": {

@@ -3,6 +3,7 @@
   "version": "4.3.7",
   "description": "",
   "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -11,13 +12,6 @@
     "./provider": {
       "import": "./dist/esm/lib/provider/index.js",
       "types": "./dist/types/lib/provider/index.d.ts"
-    }
-  },
-  "types": "index.d.ts",
-  "typesVersions": {
-    ">=4.2": {
-      "*": ["dist/types/*"],
-      "provider": ["dist/types/lib/provider/index"]
     }
   },
   "scripts": {
