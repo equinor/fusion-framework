@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.4.8
+
+### Patch Changes
+
+- [#3014](https://github.com/equinor/fusion-framework/pull/3014) [`1b0b947`](https://github.com/equinor/fusion-framework/commit/1b0b947134c967b3bb3a9c218f76123a872651bc) Thanks [@odinr](https://github.com/odinr)! - Added new export for actions
+
 ## 8.4.7
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.4.9
+
+### Patch Changes
+
+- Updated dependencies [[`1b0b947`](https://github.com/equinor/fusion-framework/commit/1b0b947134c967b3bb3a9c218f76123a872651bc)]:
+  - @equinor/fusion-observable@8.4.8
+  - @equinor/fusion-framework-module-feature-flag@1.1.16
+  - @equinor/fusion-framework@7.3.9
+  - @equinor/fusion-framework-react-module-signalr@3.0.27
+
 ## 7.4.8
 
 ### Patch Changes

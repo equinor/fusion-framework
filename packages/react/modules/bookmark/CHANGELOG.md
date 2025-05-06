@@ -1,5 +1,14 @@
 # Change Log
 
+## 3.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`1b0b947`](https://github.com/equinor/fusion-framework/commit/1b0b947134c967b3bb3a9c218f76123a872651bc)]:
+  - @equinor/fusion-observable@8.4.8
+  - @equinor/fusion-framework-module-bookmark@2.1.7
+  - @equinor/fusion-framework-react@7.4.9
+
 ## 3.0.8
 
 ### Patch Changes
