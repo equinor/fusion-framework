@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.63
+
+### Patch Changes
+
+- Updated dependencies [[`1b0b947`](https://github.com/equinor/fusion-framework/commit/1b0b947134c967b3bb3a9c218f76123a872651bc)]:
+  - @equinor/fusion-observable@8.4.8
+  - @equinor/fusion-framework-cli@10.7.3
+  - @equinor/fusion-framework-react-app@6.0.11
+  - @equinor/fusion-framework-react-module-context@6.2.25
+
 ## 4.1.62
 
 ### Patch Changes

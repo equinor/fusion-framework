@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.0.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-service-discovery@8.0.12
+
 ## 5.0.5
 
 ### Patch Changes
