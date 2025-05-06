@@ -1,7 +1,7 @@
 name: PR
 
 on: 
-  pull_request: 
+  pull_request_target:  
     types: 
       - ready_for_review
       - opened
@@ -46,7 +46,7 @@ jobs:
           if_false: '1'
       - uses: actions/checkout@v4
         with:
-          ref: "${{ github.event.pull_request.merge_commit_sha }}"
+          ref: "${{ github.event.pull_request.head.sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
       
       - name: Setup node and install deps
