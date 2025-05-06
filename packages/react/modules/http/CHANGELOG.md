@@ -1,5 +1,13 @@
 # Change Log
 
+## 8.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`f53b60b`](https://github.com/equinor/fusion-framework/commit/f53b60b7805706ce7617e614f0ac0c24317a2e43)]:
+  - @equinor/fusion-framework-module-http@6.2.5
+  - @equinor/fusion-framework-react-module@3.1.9
+
 ## 8.0.4
 
 ### Patch Changes
