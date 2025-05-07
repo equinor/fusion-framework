@@ -1,0 +1,45 @@
+{
+  "name": "@equinor/fusion-load-env",
+  "version": "0.0.0",
+  "description": "Package loading environment variables from .env files",
+  "keywords": ["env", "typescript", "node", "runtime"],
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "files": ["dist", "src"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/utils/transpile"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest",
+    "test:run": "vitest --run"
+  },
+  "bugs": {
+    "url": "https://github.com/equinor/fusion-framework/issues"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "dotenv-expand": "^12.0.2"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.5",
+    "typescript": "^5.2.2"
+  }
+}

@@ -1687,6 +1687,22 @@ importers:
         specifier: ^2.0.5
         version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
+  packages/utils/load-env:
+    dependencies:
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
+      dotenv-expand:
+        specifier: ^12.0.2
+        version: 12.0.2
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.8.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+
   packages/utils/log:
     dependencies:
       chalk:
@@ -6074,6 +6090,14 @@ packages:
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
+
+  dotenv-expand@12.0.2:
+    resolution: {integrity: sha512-lXpXz2ZE1cea1gL4sz2Ipj8y4PiVjytYr3Ij0SWoms1PGxIv7m2CRKuRuCRtHdVuvM/hNJPMxt5PbhboNC4dPQ==}
+    engines: {node: '>=12'}
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
 
   dotenv@8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
@@ -15533,6 +15557,12 @@ snapshots:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
       domhandler: 5.0.3
+
+  dotenv-expand@12.0.2:
+    dependencies:
+      dotenv: 16.5.0
+
+  dotenv@16.5.0: {}
 
   dotenv@8.6.0: {}
 
