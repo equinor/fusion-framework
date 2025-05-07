@@ -19,7 +19,7 @@ importers:
         version: 2.29.3
       '@vitest/coverage-v8':
         specifier: ^2.0.1
-        version: 2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
+        version: 2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
       genversion:
         specifier: ^3.1.1
         version: 3.2.0
@@ -43,10 +43,10 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
+        version: 0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
 
   cookbooks/app-react:
     devDependencies:
@@ -1024,7 +1024,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/modules/module:
     dependencies:
@@ -1128,13 +1128,13 @@ importers:
         version: 9.7.0
       msw:
         specifier: ^2.7.3
-        version: 2.7.3(@types/node@22.15.3)(typescript@5.8.3)
+        version: 2.7.6(@types/node@22.15.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.3(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/modules/signalr:
     dependencies:
@@ -1685,7 +1685,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/load-env:
     dependencies:
@@ -1701,7 +1701,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/log:
     dependencies:
@@ -1720,7 +1720,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/observable:
     dependencies:
@@ -1760,7 +1760,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/query:
     dependencies:
@@ -1797,7 +1797,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/widget:
     dependencies:
@@ -2048,6 +2048,9 @@ packages:
 
   '@bufbuild/protobuf@2.2.5':
     resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
+
+  '@bufbuild/protobuf@2.3.0':
+    resolution: {integrity: sha512-WK6zH4MtBp/uesX8KGCnwDDRVnEVHUvwjsigKXcSR57Oo8Oyv1vRS9qyUlSP+6KWRl5z8tNAU5qpf3QodeVYxA==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -6609,10 +6612,6 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  graphql@16.10.0:
-    resolution: {integrity: sha512-AjqGKbDGUFRKIRCP9tCKiIGHyriz2oHEbPIbEtcSLSs4YjReZOIPQQWek4+6hjw62H9QShXHyaGivGiYVLeYFQ==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-
   graphql@16.11.0:
     resolution: {integrity: sha512-mS1lbMsxgQj6hge1XZ6p7GPhbrtFwUFYi3wRzXAC/FmYnyXMTvvI3td3rjmQ2u8ewXueaSvRPWaEcgVVOT9Jnw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
@@ -6742,6 +6741,9 @@ packages:
 
   immutable@5.1.1:
     resolution: {integrity: sha512-3jatXi9ObIsPGr3N5hGw/vWWcTkq6hUYhpQz4k0wLC+owqWi/LiugIw9x0EdNZ2yGedKN/HzePiBvaJRXa0Ujg==}
+
+  immutable@5.1.2:
+    resolution: {integrity: sha512-qHKXW1q6liAk1Oys6umoaZbDRqjcjgSrbnrifHsfsttza7zcvRAsL7mMV6xWcyhwQy7Xj5v4hhbr6b+iDYwlmQ==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -7400,18 +7402,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.7.3:
-    resolution: {integrity: sha512-+mycXv8l2fEAjFZ5sjrtjJDmm2ceKGjrNbBr1durRg6VkU9fNUE/gsmQ51hWbHqs+l35W1iM+ZsmOD9Fd6lspw==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      typescript: '>= 4.8.x'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  msw@2.7.5:
-    resolution: {integrity: sha512-00MyTlY3TJutBa5kiU+jWiz2z5pNJDYHn2TgPkGkh92kMmNH43RqvMXd8y/7HxNn8RjzUbvZWYZjcS36fdb6sw==}
+  msw@2.7.6:
+    resolution: {integrity: sha512-P+rwn43ktxN8ghcl8q+hSAUlEi0PbJpDhGmDkw4zeUnRj3hBCVynWD+dTu38yLYKCE9ZF1OYcvpy7CTBRcqkZA==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -8883,8 +8875,8 @@ packages:
     resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
     engines: {node: '>=16'}
 
-  type-fest@4.40.1:
-    resolution: {integrity: sha512-9YvLNnORDpI+vghLU/Nf+zSv0kL47KbVJ1o3sKgoTefl6i+zebxbiDQWoe/oWWqPhIgQdRZRT1KA9sCPL810SA==}
+  type-fest@4.41.0:
+    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
 
   typed-array-buffer@1.0.3:
@@ -9756,6 +9748,9 @@ snapshots:
   '@braintree/sanitize-url@7.1.1': {}
 
   '@bufbuild/protobuf@2.2.5': {}
+
+  '@bufbuild/protobuf@2.3.0':
+    optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
     dependencies:
@@ -14214,7 +14209,7 @@ snapshots:
       vite: 6.0.15(@types/node@22.15.3)(sass-embedded@1.86.3)
       vue: 3.5.13(typescript@5.8.3)
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -14228,7 +14223,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14239,31 +14234,22 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.9(msw@2.7.3(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))':
+  '@vitest/mocker@2.1.9(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.18(@types/node@20.17.30)(sass-embedded@1.87.0))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.7.3(@types/node@22.15.3)(typescript@5.8.3)
-      vite: 5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0)
-
-  '@vitest/mocker@2.1.9(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.18(@types/node@20.17.30)(sass-embedded@1.87.0))':
-    dependencies:
-      '@vitest/spy': 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.17
-    optionalDependencies:
-      msw: 2.7.5(@types/node@20.17.30)(typescript@5.8.3)
+      msw: 2.7.6(@types/node@20.17.30)(typescript@5.8.3)
       vite: 5.4.18(@types/node@20.17.30)(sass-embedded@1.87.0)
 
-  '@vitest/mocker@2.1.9(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))':
+  '@vitest/mocker@2.1.9(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.7.5(@types/node@22.15.3)(typescript@5.8.3)
+      msw: 2.7.6(@types/node@22.15.3)(typescript@5.8.3)
       vite: 5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0)
 
   '@vitest/pretty-format@2.1.9':
@@ -16290,10 +16276,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql@16.10.0: {}
-
-  graphql@16.11.0:
-    optional: true
+  graphql@16.11.0: {}
 
   gray-matter@4.0.3:
     dependencies:
@@ -16420,6 +16403,9 @@ snapshots:
   immer@9.0.21: {}
 
   immutable@5.1.1: {}
+
+  immutable@5.1.2:
+    optional: true
 
   import-fresh@3.3.1:
     dependencies:
@@ -17153,32 +17139,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.7.3(@types/node@22.15.3)(typescript@5.8.3):
-    dependencies:
-      '@bundled-es-modules/cookie': 2.0.1
-      '@bundled-es-modules/statuses': 1.0.1
-      '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.9(@types/node@22.15.3)
-      '@mswjs/interceptors': 0.37.6
-      '@open-draft/deferred-promise': 2.2.0
-      '@open-draft/until': 2.1.0
-      '@types/cookie': 0.6.0
-      '@types/statuses': 2.0.5
-      graphql: 16.10.0
-      headers-polyfill: 4.0.3
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      path-to-regexp: 6.3.0
-      picocolors: 1.1.1
-      strict-event-emitter: 0.5.1
-      type-fest: 4.39.1
-      yargs: 17.7.2
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - '@types/node'
-
-  msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3):
+  msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
@@ -17196,7 +17157,7 @@ snapshots:
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
       strict-event-emitter: 0.5.1
-      type-fest: 4.40.1
+      type-fest: 4.41.0
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.8.3
@@ -17204,7 +17165,7 @@ snapshots:
       - '@types/node'
     optional: true
 
-  msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3):
+  msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
@@ -17222,13 +17183,12 @@ snapshots:
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
       strict-event-emitter: 0.5.1
-      type-fest: 4.40.1
+      type-fest: 4.41.0
       yargs: 17.7.2
     optionalDependencies:
       typescript: 5.8.3
     transitivePeerDependencies:
       - '@types/node'
-    optional: true
 
   mute-stream@0.0.8: {}
 
@@ -18407,10 +18367,10 @@ snapshots:
 
   sass-embedded@1.87.0:
     dependencies:
-      '@bufbuild/protobuf': 2.2.5
+      '@bufbuild/protobuf': 2.3.0
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
-      immutable: 5.1.1
+      immutable: 5.1.2
       rxjs: 7.8.2
       supports-color: 8.1.1
       sync-child-process: 1.0.2
@@ -18897,8 +18857,7 @@ snapshots:
 
   type-fest@4.39.1: {}
 
-  type-fest@4.40.1:
-    optional: true
+  type-fest@4.41.0: {}
 
   typed-array-buffer@1.0.3:
     dependencies:
@@ -19181,15 +19140,15 @@ snapshots:
       fsevents: 2.3.3
       sass-embedded: 1.87.0
 
-  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)):
+  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)):
     dependencies:
       '@actions/core': 1.11.1
-      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
-  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0):
+  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.18(@types/node@20.17.30)(sass-embedded@1.87.0))
+      '@vitest/mocker': 2.1.9(msw@2.7.6(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.18(@types/node@20.17.30)(sass-embedded@1.87.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -19222,46 +19181,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.3(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0):
+  vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.3(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))
-      '@vitest/pretty-format': 2.1.9
-      '@vitest/runner': 2.1.9
-      '@vitest/snapshot': 2.1.9
-      '@vitest/spy': 2.1.9
-      '@vitest/utils': 2.1.9
-      chai: 5.2.0
-      debug: 4.4.0
-      expect-type: 1.2.1
-      magic-string: 0.30.17
-      pathe: 1.1.2
-      std-env: 3.9.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.0.2
-      tinyrainbow: 1.2.0
-      vite: 5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0)
-      vite-node: 2.1.9(@types/node@22.15.3)(sass-embedded@1.87.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 22.15.3
-      happy-dom: 17.4.4
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
-  vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.4)(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0):
-    dependencies:
-      '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.7.5(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))
+      '@vitest/mocker': 2.1.9(msw@2.7.6(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.18(@types/node@22.15.3)(sass-embedded@1.87.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
