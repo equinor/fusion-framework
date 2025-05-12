@@ -25,6 +25,10 @@
       "types": "./dist/types/framework/index.d.ts",
       "import": "./dist/esm/framework/index.js"
     },
+    "./help-center": {
+      "types": "./dist/types/help-center/index.d.ts",
+      "import": "./dist/esm/help-center/index.js"
+    },
     "./http": {
       "types": "./dist/types/http/index.d.ts",
       "import": "./dist/esm/http/index.js"
