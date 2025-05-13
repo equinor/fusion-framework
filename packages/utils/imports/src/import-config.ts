@@ -1,7 +1,7 @@
 import path from 'node:path';
-import { importScript, type ImportScriptOptions, type EsmModule } from './import-script';
-import { importJSON } from './import-json';
-import { resolveConfigFile } from './resolve-config-file';
+import { importScript, type ImportScriptOptions, type EsmModule } from './import-script.js';
+import { importJSON } from './import-json.js';
+import { resolveConfigFile } from './resolve-config-file.js';
 
 export type ConfigContent = Record<string, unknown> | unknown[] | string | number | boolean | null;
 
@@ -24,9 +24,15 @@ type ImportConfigOptions<
   baseDir?: string;
   extensions?: string[];
   script?: {
-    resolve?: (module: M) => C;
+    resolve?: (module: M) => C | Promise<C>;
     esBuildOptions?: ImportScriptOptions;
   };
+};
+
+export type ImportConfigResult<C extends ConfigContent> = {
+  path: string;
+  extension: string;
+  config: C;
 };
 
 /**
@@ -46,22 +52,29 @@ type ImportConfigOptions<
  * @throws Will throw an error if the configuration file cannot be resolved or imported.
  */
 export async function importConfig<C extends ConfigContent, M extends EsmModule = EsmModule>(
-  basename: string,
+  basename: string | string[],
   options: ImportConfigOptions<C, M> = {},
-): Promise<C> {
+): Promise<ImportConfigResult<C>> {
   const { baseDir, extensions, script } = options;
   const filePath = await resolveConfigFile(basename, { baseDir, extensions });
-  const fileExtension = path.extname(filePath);
+  const fileExt = path.extname(filePath);
 
-  switch (fileExtension) {
-    case '.json':
-      return importJSON<C>(filePath);
-    default: {
-      const resolve = script?.resolve ?? ((module: M) => module.default as C);
-      const module = await importScript<M>(filePath, script?.esBuildOptions);
-      return resolve(module);
+  const config = await (async () => {
+    switch (fileExt) {
+      case '.json':
+        return importJSON<C>(filePath);
+      default: {
+        const resolve = script?.resolve ?? ((module: M) => module.default as C);
+        const module = await importScript<M>(filePath, script?.esBuildOptions);
+        return resolve(module);
+      }
     }
-  }
+  })();
+  return {
+    path: filePath,
+    extension: fileExt,
+    config,
+  };
 }
 
 export default importConfig;
