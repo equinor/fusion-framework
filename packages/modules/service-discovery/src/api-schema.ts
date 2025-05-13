@@ -18,7 +18,6 @@ const ApiService = z
     ...value,
     /** @deprecated use `scopes`  */
     get defaultScopes() {
-      console.warn('The `defaultScopes` property is deprecated. Use `scopes` instead.');
       return value.scopes ?? [];
     },
   }));
