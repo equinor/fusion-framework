@@ -19,7 +19,7 @@ describe('import-config', () => {
   it('should load config from a json file', async () => {
     vol.writeFileSync('config.json', JSON.stringify(mockConfig));
     const result = await importConfig('config');
-    expect(result).toMatchObject(mockConfig);
+    expect(result.config).toMatchObject(mockConfig);
   });
 
   it('should load config from a javascript file', async () => {
@@ -31,7 +31,7 @@ describe('import-config', () => {
       ),
     );
     const result = await importConfig('config');
-    expect(result).toMatchObject(mockConfig);
+    expect(result.config).toMatchObject(mockConfig);
   });
 
   it('should prefer typescript over javascript', async () => {
@@ -47,7 +47,8 @@ describe('import-config', () => {
       ),
     );
     const result = await importConfig('config');
-    expect(result).toMatchObject(mockConfig);
+    expect(result.config).toMatchObject(mockConfig);
+    expect(result.extension).toBe('.ts');
     expect(vol.existsSync('config.js')).toBe(true);
   });
 
@@ -62,7 +63,21 @@ describe('import-config', () => {
         resolve: (module: Module) => module.foo(1),
       },
     });
-    expect(result).toBe(2);
+    expect(result.config).toBe(2);
+  });
+
+  it('should load a config with a custom async resolver', async () => {
+    type Module = { foo: (value: number) => Promise<number> };
+    vol.writeFileSync(
+      'config.ts',
+      generateFileContent('export const foo = async (value: number) => value + 1;'),
+    );
+    const result = await importConfig('config', {
+      script: {
+        resolve: async (module: Module) => module.foo(1),
+      },
+    });
+    expect(result.config).toBe(2);
   });
 
   it('should throw an error if the config file does not exist', async () => {

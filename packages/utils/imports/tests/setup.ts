@@ -31,6 +31,14 @@ export const memfsPlugin: EsBuildPlugin = {
       const contents = String(vol.readFileSync(args.path, 'utf-8'));
       return { contents, loader: extname(args.path).slice(1) as 'js' | 'ts' };
     });
+
+    build.onEnd((result) => {
+      for (const file of result.outputFiles ?? []) {
+        const { path, contents } = file;
+        vol.mkdirSync(dirname(path), { recursive: true });
+        vol.writeFileSync(path, contents);
+      }
+    });
   },
 };
 
@@ -47,6 +55,7 @@ beforeAll(() => {
       original.importScript(path, {
         ...options,
         plugins: (options?.plugins ?? []).concat(memfsPlugin),
+        write: false,
       });
     return {
       importScript,
