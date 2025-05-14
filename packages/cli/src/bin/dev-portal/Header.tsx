@@ -25,8 +25,6 @@ import { PersonSideSheet } from './PersonSideSheet';
 import { BookmarkSideSheet } from './BookMarkSideSheet';
 
 import { HeaderActions } from './Header.Actions';
-import { useAppFaqsQuery } from './HelpChat/hooks/faq/useAppFaqsQuery';
-import { FusionAssistantModal } from './help-chat/FusionAssistantModal';
 
 const Styled = {
   Title: styled.div`
@@ -50,12 +48,6 @@ export const Header = () => {
   const { currentApp } = useCurrentApp();
 
   const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
-
-  const { data: faqs } = useAppFaqsQuery({
-    appKey: currentApp?.appKey ?? '',
-    queryKeys: ['chat', 'help', currentApp?.appKey ?? '', 'faqs'],
-    enabled: !!currentApp,
-  });
 
   return (
     <BookmarkProvider
@@ -91,9 +83,7 @@ export const Header = () => {
         azureId={currentUser?.localAccountId}
         isOpen={isPersonSheetOpen}
         onClose={() => setIsPersonSheetOpen(!isPersonSheetOpen)}
-      />
-      
-      <FusionAssistantModal />
+      />      
     </BookmarkProvider>
   );
 };

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 import { useAppContextNavigation } from './useAppContextNavigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { FusionAssistantModal } from './help-chat/FusionAssistantModal';
 
 const Styled = {
   ContentContainer: styled.div`
@@ -44,7 +45,10 @@ const Root = () => {
         </QueryClientProvider>
       </Styled.Head>
       <Styled.Main>
-        <Outlet />
+        <>
+          <Outlet />
+          <FusionAssistantModal />
+        </>
       </Styled.Main>
     </Styled.ContentContainer>
   );

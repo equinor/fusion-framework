@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from 'react';
 import { AssistantRuntimeProvider, useLocalRuntime } from "@assistant-ui/react";
 import {

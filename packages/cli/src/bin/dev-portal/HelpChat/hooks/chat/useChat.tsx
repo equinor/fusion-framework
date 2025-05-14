@@ -17,8 +17,9 @@ export const useChat = (args: {
 }) => {
   const { question, appKey, queryKeys, enabled } = args;
 
+  console.log( 'httpClient', 'not yet dady');
   const httpClient = useHttpClient('help-chat');
-
+  console.log( 'httpClient', httpClient);
   const chatAnswer = (question: string, signal: AbortSignal) => {
   return {
     async *[Symbol.asyncIterator]() {
