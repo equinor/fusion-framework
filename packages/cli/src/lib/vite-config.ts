@@ -1,6 +1,7 @@
 import nodePath from 'node:path';
 
 import { defineConfig, mergeConfig, type UserConfig, type UserConfigFn } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 
 import { createViteLogger } from './vite-logger.js';
 
@@ -89,7 +90,13 @@ export const createViteConfig = async (
         NODE_ENV: env.mode,
         FUSION_LOG_LEVEL: (process.env.FUSION_LOG_LEVEL ?? env.mode === 'development') ? '3' : '1',
       }),
+      tailwindcss(),
     ],
+    resolve: {
+      alias: {
+        "@": nodePath.resolve(nodePath.dirname(''), "./src"),
+      },
+    },
     mode: env.mode,
     root,
     appType: 'custom',

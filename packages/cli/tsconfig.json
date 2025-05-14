@@ -5,7 +5,10 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": ".",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "references": [
     {
