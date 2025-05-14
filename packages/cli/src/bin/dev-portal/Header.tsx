@@ -25,6 +25,9 @@ import { PersonSideSheet } from './PersonSideSheet';
 import { BookmarkSideSheet } from './BookMarkSideSheet';
 
 import { HeaderActions } from './Header.Actions';
+import { useAppFaqsQuery } from './HelpChat/hooks/faq/useAppFaqsQuery';
+import { useHttpClient } from '@equinor/fusion-framework-react-app/http';
+import { useChat } from './HelpChat/hooks/chat/useChat';
 
 const Styled = {
   Title: styled.div`
@@ -48,6 +51,44 @@ export const Header = () => {
   const { currentApp } = useCurrentApp();
 
   const { module: bookmarkProvider } = useCurrentAppModule<BookmarkModule>('bookmark');
+
+  const { data: faqs } = useAppFaqsQuery({
+    appKey: currentApp?.appKey ?? '',
+    queryKeys: ['chat', 'help', currentApp?.appKey ?? '', 'faqs'],
+    enabled: !!currentApp,
+  });
+
+  const question = 'explain a contract';
+
+  const { data: chatAnswer } = useChat({
+    appKey: currentApp?.appKey ?? '',
+    queryKeys: ['chat', 'help', currentApp?.appKey ?? ''].concat(question.split(' ')),
+    question: question,
+    enabled: !!currentApp,
+  }); // @TODO: Remove
+
+  for (const part of chatAnswer ?? []) {
+    console.log(999, part); // @TODO: Remove
+  }
+
+  // @TODO: @eikeland here is the usage
+  // async *run({ messages, abortSignal, context }) {
+  //   const { data: chatAnswer } = useChat({
+  //     appKey: currentApp?.appKey ?? '',
+  //     queryKeys: ['chat', 'help', currentApp?.appKey ?? ''].concat(question.split(' ')),
+  //     question: question,
+  //     enabled: !!currentApp,
+  //   });
+
+  //   let text = "";
+  //   for (const part of chatAnswer ?? []) {
+  //     text += part
+
+  //     yield {
+  //       content: [{ type: "text", text }],
+  //     };
+  //   }
+  // },
 
   return (
     <BookmarkProvider

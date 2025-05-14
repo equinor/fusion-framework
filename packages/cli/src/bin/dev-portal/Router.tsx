@@ -9,6 +9,7 @@ import type { NavigationModule } from '@equinor/fusion-framework-module-navigati
 import { useState } from 'react';
 import { styled } from 'styled-components';
 import { useAppContextNavigation } from './useAppContextNavigation';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Styled = {
   ContentContainer: styled.div`
@@ -31,12 +32,16 @@ const Styled = {
     `,
 };
 
+const queryClient = new QueryClient();
+
 const Root = () => {
   useBookmarkNavigate({ resolveAppPath: (appKey: string) => `/apps/${appKey}` });
   return (
     <Styled.ContentContainer>
       <Styled.Head>
-        <Header />
+        <QueryClientProvider client={queryClient}>
+          <Header />
+        </QueryClientProvider>
       </Styled.Head>
       <Styled.Main>
         <Outlet />

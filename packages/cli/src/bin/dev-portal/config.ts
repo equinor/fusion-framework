@@ -17,6 +17,16 @@ export const configure = async (config: FrameworkConfigurator) => {
     },
   });
 
+  config.configureHttpClient('help', {
+    baseUri: 'https://help.ci.api.fusion-dev.net/',
+    defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+  });
+
+  config.configureHttpClient('help-chat', {
+    baseUri: 'https://1579.admin.pr.api.fusion-dev.net/',
+    defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+  });
+
   // Add custom client for app
   config.configureHttpClient('app', {
     baseUri: new URL('/apps-proxy/', window.location.href).href,
