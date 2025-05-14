@@ -99,6 +99,30 @@ importers:
         specifier: ^5.8.2
         version: 5.8.3
 
+  cookbooks/app-react-apploader:
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.3.20
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.6(@types/react@18.3.20)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.3
+
   cookbooks/app-react-assets:
     devDependencies:
       '@equinor/fusion-framework-cli':
@@ -19849,7 +19873,7 @@ snapshots:
     dependencies:
       esbuild: 0.24.2
       postcss: 8.5.3
-      rollup: 4.39.0
+      rollup: 4.41.0
     optionalDependencies:
       '@types/node': 22.15.3
       fsevents: 2.3.3
@@ -19861,7 +19885,7 @@ snapshots:
       fdir: 6.4.4(picomatch@4.0.2)
       picomatch: 4.0.2
       postcss: 8.5.3
-      rollup: 4.39.0
+      rollup: 4.41.0
       tinyglobby: 0.2.13
     optionalDependencies:
       '@types/node': 20.17.30
