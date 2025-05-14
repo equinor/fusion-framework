@@ -1,3 +1,3 @@
 # React Apploader cookbook
 
-Load other Fusion apps inside your app
+App for loading other apps inside your app when cooking with Fusion-Framework
