@@ -879,7 +879,7 @@ You can customize the behavior of the SSE stream by providing options to the `ss
 /** Example of customizing SSE behavior with options */
 const customEventStream$ = client.sse$<MyEventData & { timestamp: Date }>(
   '/custom-events', 
-  null, 
+  { method: 'POST', body: 'tell me a joke' }, 
   {
     dataParser: (data) => {
       const parsedData = JSON.parse(data) as MyEventData;
