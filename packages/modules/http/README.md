@@ -18,13 +18,13 @@ Whether you're building a simple application or a complex portal, the Fusion Fra
 
 ## Package
 
-| Namespace | Description |
-|-----------|-------------|
-| `@equinor/fusion-framework-module-http` | http module
-| `@equinor/fusion-framework-module-http/client` | http clients
-| `@equinor/fusion-framework-module-http/selectors` | http selectors
-| `@equinor/fusion-framework-module-http/operators` | http client operators
-| `@equinor/fusion-framework-module-http/errors` | http client errors
+| Namespace                                         | Description           |
+| ------------------------------------------------- | --------------------- |
+| `@equinor/fusion-framework-module-http`           | http module           |
+| `@equinor/fusion-framework-module-http/client`    | http clients          |
+| `@equinor/fusion-framework-module-http/selectors` | http selectors        |
+| `@equinor/fusion-framework-module-http/operators` | http client operators |
+| `@equinor/fusion-framework-module-http/errors`    | http client errors    |
 
 ## Usage
 Working with Fusion Framework, HTTP clients are defined during the configuration phase. The configuration is called by the Framework during initialization, ensuring that the HTTP clients are ready to be used. This approach allows for centralized and optimized client configuration, promoting consistency, performance, and security in HTTP communication within the Fusion Framework ecosystem.
@@ -179,15 +179,15 @@ By following this approach, you can enhance the efficiency, consistency, securit
 
 When configuring an HTTP client in the Fusion Framework, you can specify various settings to customize its behavior. The following options are available for configuring an HTTP client:
 
-| Property | Description |
-|----------|-------------|
-| `baseUri` | The base URI for the API endpoint. |
-| `defaultScopes` | The default scopes for MSAL authentication. |
-| `selector` | The response selector for processing the response. |
-| `onCreate` | A callback function to execute when the client is created. |
-| `requestHandler` | The request operators for processing outgoing requests. |
-| `responseHandler` | The response operators for processing incoming responses. |
-| `ctor` | The constructor function for a custom client. |
+| Property          | Description                                                |
+| ----------------- | ---------------------------------------------------------- |
+| `baseUri`         | The base URI for the API endpoint.                         |
+| `defaultScopes`   | The default scopes for MSAL authentication.                |
+| `selector`        | The response selector for processing the response.         |
+| `onCreate`        | A callback function to execute when the client is created. |
+| `requestHandler`  | The request operators for processing outgoing requests.    |
+| `responseHandler` | The response operators for processing incoming responses.  |
+| `ctor`            | The constructor function for a custom client.              |
 
 
 ### Basic configuration
@@ -807,6 +807,12 @@ client.blob('/image.jpg').then(
   }
 );
 
+/** example of Server Sent Events */
+client.sse$('/chatbot', {
+  method: 'POST',
+  body: { prompt: 'Tell me a joke' }
+})
+
 /** Example of executing named function */
 client.execute<Users>('json', '/users'); // same as client.json<Users>('/users');
 
@@ -827,3 +833,162 @@ client.response$.subscribe(response => {
   console.log('Incoming response:', response);
 });
 ```
+
+### Server-Sent Events (SSE)
+
+The HTTP client supports Server-Sent Events (SSE) through the `sse$` method. While this feature is versatile and can be used for various real-time communication scenarios, such as notifications, dashboards, or collaborative tools, it was primarily developed to facilitate streaming responses from chatbots. 
+
+Key benefits of SSE:
+- Ideal for live updates, such as chatbot interactions, notifications, or collaborative tools.
+- Provides an efficient way to handle server-driven data updates.
+- Simplifies real-time communication with minimal setup.
+
+The `sse$` method enables you to subscribe to a continuous stream of events sent by the server, making it particularly useful for applications requiring dynamic, real-time interactions, such as conversational AI or chatbot systems. This functionality ensures seamless and efficient communication between the client and server, enhancing the user experience in scenarios where immediate feedback or updates are critical.
+
+#### Usage
+
+The `sse$` method returns an observable that emits events as they are received from the server. It uses `client.fetch$` under the hood, abstracting common boilerplate code such as setting headers, configuring the request, and handling the response stream.
+
+```typescript
+/** Example of using the sse$ method to subscribe to server-sent events */
+const eventStream$ = client.sse$<{ message: string }>('/events');
+
+const subscription = eventStream$.subscribe({
+  next: (event) => console.log('Received event:', event),
+  error: (error) => console.error('An error occurred:', error),
+  complete: () => console.log('Event stream completed'),
+});
+
+// To stop listening to events, unsubscribe from the observable
+subscription.unsubscribe();
+```
+
+#### Options
+
+| Option           | Description                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| `dataParser`     | A function to parse the raw event data into a desired format.                        |
+| `skipHeartbeats` | A boolean indicating whether to skip heartbeat events (default: `false`).            |
+| `eventFilter`    | An array of event types to filter. Only events matching these types will be emitted. |
+
+#### Customizing SSE Behavior
+
+You can customize the behavior of the SSE stream by providing options to the `sse$` method. For example, you can specify a custom data parser or handle reconnection logic.
+
+```typescript
+/** Example of customizing SSE behavior with options */
+const customEventStream$ = client.sse$<MyEventData & { timestamp: Date }>(
+  '/custom-events', 
+  { method: 'POST', body: 'tell me a joke' }, 
+  {
+    dataParser: (data) => {
+      const parsedData = JSON.parse(data) as MyEventData;
+      return { ...parsedData, timestamp: new Date() };
+    },
+  }
+);
+
+customEventStream$.subscribe({
+  next: (event) => console.log('Custom event received:', event),
+  error: (error) => console.error('An error occurred:', error),
+  complete: () => console.log('Custom event stream completed'),
+});
+```
+
+#### Aborting SSE Requests
+
+You can abort an SSE request by using the `abort` method of the HTTP client or by unsubscribing from the observable.
+
+```typescript
+/** Example of aborting an SSE request */
+const abortController = new AbortController();
+
+const abortableEventStream$ = client.sse$<{ message: string }>('/abortable-events', {
+  signal: abortController.signal,
+});
+
+const subscription = abortableEventStream$.subscribe({
+  next: (event) => console.log('Received event:', event),
+  error: (error) => console.error('An error occurred:', error),
+  complete: () => console.log('Event stream completed'),
+});
+
+// Abort the request
+abortController.abort();
+```
+
+> [!NOTE]
+> Unsubscribing from the observable will also abort the SSE request automatically.
+
+#### Using `sseSelector` with `httpClient.fetch`
+
+If you need to create an SSE call from scratch without using the `sse$` method, you can use the `sseSelector` directly with the `httpClient.fetch` method. Here's an example:
+
+```typescript
+import { createSseSelector } from '@equinor/fusion-framework-module-http/selectors';
+
+/** Example of using sseSelector with httpClient.fetch */
+const sseSelector = createSseSelector<{ message: string }>({
+  dataParser: (data) => JSON.parse(data),
+  skipHeartbeats: true,
+  eventFilter: ['message', 'update'],
+});
+
+const headers = new Headers({
+  'Accept': 'text/event-stream',
+  'Cache-Control': 'no-cache',
+  'Connection': 'keep-alive',
+});
+
+const sseStream$ = client.fetch('/events', {
+  selector: sseSelector,
+  headers,
+  method: 'GET', // SSE calls typically use GET
+});
+
+const subscription = sseStream$.subscribe({
+  next: (event) => console.log('Received event:', event),
+  error: (error) => console.error('An error occurred:', error),
+  complete: () => console.log('Event stream completed'),
+});
+
+// To stop listening to events, unsubscribe from the observable
+subscription.unsubscribe();
+```
+
+#### Using `sseMap` with `client.fetch$`
+
+The `sseMap` operator can be used with `client.fetch$` to process Server-Sent Events (SSE) in a declarative manner. This approach allows you to handle SSE streams while leveraging the flexibility of RxJS.
+
+```typescript
+import { sseMap } from '@equinor/fusion-framework-module-http/operators';
+
+/** Example of using sseMap with client.fetch$ */
+const sseStream$ = client.fetch$('/events', {
+  method: 'GET',
+  headers: {
+    'Accept': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+  },
+}).pipe(
+  sseMap<{ message: string }>({
+    dataParser: (data) => JSON.parse(data),
+    skipHeartbeats: true,
+    eventFilter: ['message', 'update'],
+  }),
+);
+
+const subscription = sseStream$.subscribe({
+  next: (event) => console.log('Received event:', event),
+  error: (error) => console.error('An error occurred:', error),
+  complete: () => console.log('SSE stream completed'),
+});
+
+// To stop listening to events, unsubscribe from the observable
+subscription.unsubscribe();
+```
+
+This example demonstrates how to use `sseMap` with `client.fetch$` to process SSE data efficiently.
+
+This approach provides more flexibility for customizing the SSE behavior while still leveraging the `httpClient.fetch` method. However, for most use cases, `client.sse$` is recommended as it simplifies the process by abstracting common boilerplate code.

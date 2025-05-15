@@ -14,10 +14,17 @@ import type {
   FetchResponse,
   IHttpClient,
   JsonRequest,
+  ResponseSelector,
   StreamResponse,
 } from './types';
 
 import { HttpResponseError } from '../../errors';
+import {
+  createSseSelector,
+  SseSelector,
+  type ServerSentEvent,
+  type SseSelectorOptions,
+} from '../selectors/sse-selector';
 
 /**
  * Configuration options for creating an `HttpClient` instance.
@@ -220,6 +227,51 @@ export class HttpClient<
     args?: FetchRequestInit<T, TRequest, TResponse>,
   ): Promise<T> {
     return firstValueFrom(this.blob$(path, args));
+  }
+
+  /**
+   * Initiates a Server-Sent Events (SSE) stream request to the specified path and returns a stream of events.
+   *
+   * @template T - The type of the event data expected from the SSE stream.
+   * @param path - The endpoint path to connect to for the SSE stream.
+   * @param args - Optional fetch request initialization options, including headers and abort signal.
+   * @param options - Optional selector options for customizing the SSE stream, excluding the abort signal.
+   *
+   * @returns A `StreamResponse` that emits `ServerSentEvent<T>` objects as they are received from the server.
+   *
+   * @example
+   * const sse$ = httpClient.sse(
+   *  '/events',
+   *  { method: 'POST', body: JSON.stringify({ prompt: 'tell me a joke' }) },
+   *  { eventFilter: ['message'] }
+   * );
+   * sse$.subscribe({
+   *  next: (event) => console.log(event),
+   *  error: (err) => console.error(err),
+   *  complete: () => console.log('Completed'),
+   * });
+   */
+  public sse$<T = unknown>(
+    path: string,
+    args?: FetchRequestInit<ServerSentEvent<T>, TRequest, TResponse> | null,
+    options?: Omit<SseSelectorOptions<T>, 'abortSignal'>,
+  ): StreamResponse<ServerSentEvent<T>> {
+    // Setup default common headers for SSE
+    const headers = new Headers(args?.headers);
+    headers.append('Accept', 'text/event-stream');
+    headers.append('Content-Type', 'text/event-stream');
+    headers.append('Cache-Control', 'no-cache');
+    headers.append('Connection', 'keep-alive');
+
+    // Create the selector using the provided options and the abort signal from args
+    const selector = createSseSelector<T>({ ...options, abortSignal: args?.signal });
+
+    // Call the fetch$ method with the provided path and the constructed init object
+    return this._fetch$(path, { selector, ...args, headers } as FetchRequestInit<
+      ServerSentEvent<T>,
+      TRequest,
+      TResponse
+    >);
   }
 
   /** @deprecated */
