@@ -16,7 +16,6 @@ export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element =
     
     refWrapp.current.appendChild(appRef.current);
   }, [appRef]);
-  
   if (loading) {
     return <div>Loading {appKey}</div>;
   }
