@@ -2,7 +2,13 @@
   "name": "@equinor/fusion-imports",
   "version": "1.1.0",
   "description": "Package import files and configurations",
-  "keywords": ["esbuild", "typescript", "transpiling", "node", "runtime"],
+  "keywords": [
+    "esbuild",
+    "typescript",
+    "transpiling",
+    "node",
+    "runtime"
+  ],
   "license": "ISC",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -16,7 +22,10 @@
   "directories": {
     "dist": "dist"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -39,8 +48,13 @@
   "devDependencies": {
     "@types/node": "^20.11.14",
     "esbuild": "^0.25.1",
+    "fs-monkey": "^1.0.6",
     "memfs": "^4.17.0",
     "typescript": "^5.8.2",
+    "unionfs": "^4.5.4",
     "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "read-package-up": "^11.0.0"
   }
 }

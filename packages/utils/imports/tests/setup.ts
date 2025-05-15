@@ -5,6 +5,7 @@ import { dirname, extname, resolve } from 'node:path';
 import type { Plugin as EsBuildPlugin } from 'esbuild';
 
 import { vol } from 'memfs';
+import { cwd } from 'node:process';
 
 export const memfsPlugin: EsBuildPlugin = {
   name: 'memfs',
