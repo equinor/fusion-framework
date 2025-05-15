@@ -40,3 +40,27 @@ export class HttpJsonResponseError<
     this.data = options?.data;
   }
 }
+
+export class HttpStreamResponseError<
+  TType = unknown,
+  TResponse = Response,
+> extends HttpResponseError<TResponse> {
+  static Name = 'HttpStreamResponseError';
+  public readonly data?: TType;
+
+  constructor(message: string, response: TResponse, options?: ErrorOptions & { data?: TType }) {
+    super(message, response, options);
+    this.name = HttpStreamResponseError.Name;
+    this.data = options?.data;
+  }
+}
+
+export class ServerSentEventResponseError<
+  TType = unknown,
+  TResponse = Response,
+> extends HttpResponseError<TResponse> {
+  constructor(message: string, response: TResponse, options?: ErrorOptions & { data?: TType }) {
+    super(message, response, options);
+    this.name = 'ServerSentEventResponseError';
+  }
+}

@@ -14,10 +14,17 @@ import type {
   FetchResponse,
   IHttpClient,
   JsonRequest,
+  ResponseSelector,
   StreamResponse,
 } from './types';
 
 import { HttpResponseError } from '../../errors';
+import {
+  createSseSelector,
+  SseSelector,
+  type ServerSentEvent,
+  type SseSelectorOptions,
+} from '../selectors/sse-selector';
 
 /**
  * Configuration options for creating an `HttpClient` instance.
@@ -220,6 +227,25 @@ export class HttpClient<
     args?: FetchRequestInit<T, TRequest, TResponse>,
   ): Promise<T> {
     return firstValueFrom(this.blob$(path, args));
+  }
+
+  public sse$<T = unknown>(
+    path: string,
+    args?: FetchRequestInit<ServerSentEvent<T>, TRequest, TResponse> | null,
+    options?: Omit<SseSelectorOptions<T>, 'abortSignal'>,
+  ): StreamResponse<ServerSentEvent<T>> {
+    const headers = new Headers(args?.headers);
+    headers.append('Accept', 'text/event-stream');
+    headers.append('Content-Type', 'text/event-stream');
+    headers.append('Cache-Control', 'no-cache');
+    headers.append('Connection', 'keep-alive');
+
+    const selector = createSseSelector<T>({ ...options, abortSignal: args?.signal });
+    return this._fetch$(path, { selector, ...args, headers } as FetchRequestInit<
+      ServerSentEvent<T>,
+      TRequest,
+      TResponse
+    >);
   }
 
   /** @deprecated */
