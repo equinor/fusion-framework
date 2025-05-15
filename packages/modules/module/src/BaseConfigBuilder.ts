@@ -1,7 +1,7 @@
 import { EMPTY, from, lastValueFrom, of, type Observable, type ObservableInput } from 'rxjs';
 import { catchError, filter, map, mergeMap, reduce, switchMap } from 'rxjs/operators';
 import type { Modules, ModuleType } from './types';
-import type { DotPath, DotPathType } from './utils/dot-path';
+import type { DotPathType, DotPathUnion } from './utils/dot-path';
 
 /**
  * Recursively assigns a configuration value to a nested object property.
@@ -101,6 +101,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
  */
 export type ConfigBuilderCallback<TReturn = unknown> = (
   args: ConfigBuilderCallbackArgs,
+  // biome-ignore lint/suspicious/noConfusingVoidType: not confusing in this context
 ) => ObservableInput<TReturn | void>;
 
 /**
@@ -224,10 +225,13 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    * @protected
    * @sealed
    */
-  protected _set<TTarget extends DotPath<TConfig>>(
+  protected _set<TTarget extends DotPathUnion<TConfig>>(
     target: TTarget,
-    cb: ConfigBuilderCallback<DotPathType<TConfig, TTarget>>,
+    value_or_cb:
+      | DotPathType<TConfig, TTarget>
+      | ConfigBuilderCallback<DotPathType<TConfig, TTarget>>,
   ) {
+    const cb = typeof value_or_cb === 'function' ? value_or_cb : async () => value_or_cb;
     this.#configCallbacks[target] = cb;
   }
 
@@ -239,7 +243,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    * @protected
    * @sealed
    */
-  protected _get<TTarget extends DotPath<TConfig>>(
+  protected _get<TTarget extends DotPathUnion<TConfig>>(
     target: TTarget,
   ): ConfigBuilderCallback<DotPathType<TConfig, TTarget>> | undefined {
     return this.#configCallbacks[target] as ConfigBuilderCallback<DotPathType<TConfig, TTarget>>;
@@ -252,7 +256,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
    * @protected
    * @sealed
    */
-  protected _has<TTarget extends DotPath<TConfig>>(target: TTarget): boolean {
+  protected _has<TTarget extends DotPathUnion<TConfig>>(target: TTarget): boolean {
     return target in this.#configCallbacks;
   }
 
