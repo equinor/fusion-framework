@@ -3,7 +3,7 @@ import { useAppLoader } from './useAppLoader';
 
 export type FusionApploaderProps = {
   appKey: string;
-}
+};
 
 export const FusionApploader = ({appKey}: FusionApploaderProps): JSX.Element => {
   const refWrapp = useRef<HTMLDivElement | null>(null);
