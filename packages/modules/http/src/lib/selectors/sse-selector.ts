@@ -216,7 +216,8 @@ export type SseSelector<TData = unknown, TResponse extends Response = Response> 
  * @param options - Optional configuration for event filtering and heartbeat handling.
  * @param options.eventFilter - Filter events by type (single string or array).
  * @param options.skipHeartbeats - Skip empty/heartbeat events if true.
- * @param options.maxRetries - Maximum number of reconnection attempts (default: 3).
+ * @param options.dataParser - Custom parser for the data field.
+ * @param options.abortSignal - Abort signal to cancel the stream.
  * @returns An Observable emitting parsed ServerSentEvent objects.
  * @throws ServerSentEventResponseError if response is invalid or stream fails.
  */
