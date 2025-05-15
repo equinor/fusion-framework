@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- [#3029](https://github.com/equinor/fusion-framework/pull/3029) [`a297265`](https://github.com/equinor/fusion-framework/commit/a29726554526a4feb6e41c6a9d9db5a4f2b01d3d) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add `useHelpCenter` hook to programmatically be able to open help side sheet.
+
 ## 6.0.10
 
 ### Patch Changes

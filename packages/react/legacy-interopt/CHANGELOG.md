@@ -1,5 +1,12 @@
 # Change Log
 
+## 22.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`a297265`](https://github.com/equinor/fusion-framework/commit/a29726554526a4feb6e41c6a9d9db5a4f2b01d3d)]:
+  - @equinor/fusion-framework-react-app@6.1.0
+
 ## 21.0.10
 
 ### Patch Changes
