@@ -49,7 +49,7 @@ export const useAppLoader = ({appKey}: ApploaderProps): {
               env: { basename, config, manifest, props: {} },
             });
           }
-          throw Error("Application is not supported, no render function provided");
+          throw Error('Application is not supported, no render function provided');
         } catch (error) {
           console.error("App loading Error: ", error);
           setError(error as Error);
