@@ -101,6 +101,21 @@ class RequiredModuleTimeoutError extends Error {
 }
 
 /**
+ * A callback type used to configure a module's configuration.
+ *
+ * @template TModule - The type of the module being configured. Must extend `AnyModule`.
+ * @template TRef - An optional reference type that can be used during configuration. Defaults to `unknown`.
+ *
+ * @param config - The configuration object for the specified module type.
+ * @param ref - An optional reference object that can be used to assist in the configuration process.
+ * @returns A `void` or a `Promise<void>` indicating that the configuration process may be asynchronous.
+ */
+export type ModuleConfiguratorConfigCallback<TModule extends AnyModule, TRef = unknown> = (
+  config: ModuleConfigType<TModule>,
+  ref?: TRef,
+) => void | Promise<void>;
+
+/**
  * Callback function type for configuring modules.
  * @template TRef The reference type.
  * @param config The modules configuration.

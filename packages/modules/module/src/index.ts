@@ -12,6 +12,7 @@ export {
 } from './BaseConfigBuilder';
 
 export {
+  type ModuleConfiguratorConfigCallback,
   type IModuleConfigurator,
   type IModulesConfigurator,
   ModulesConfigurator,
