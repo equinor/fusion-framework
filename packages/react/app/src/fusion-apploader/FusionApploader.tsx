@@ -7,7 +7,7 @@ export type FusionApploaderProps = {
 
 export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element => {
   const refWrapp = useRef<HTMLDivElement | null>(null);
-  const { loading, error, appRef } = useAppLoader({appKey});
+  const { loading, error, appRef } = useAppLoader({ appKey });
 
   useEffect(() => {
     if (!refWrapp.current || !appRef.current) {
