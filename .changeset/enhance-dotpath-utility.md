@@ -1,5 +1,5 @@
 ---
-"fusion-framework": minor
+"@equinor/fusion-framework-module": minor
 ---
 
 ### Enhance DotPath Utility and Config Builder Flexibility
