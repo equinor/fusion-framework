@@ -20,7 +20,12 @@ export type DotPath<TObject, Depth extends number = 5> = Depth extends 0
         }[keyof Required<TObject> & string]
     : never;
 
-type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+// The Decrement type array is used to control recursion depth in the DotPath utility.
+// Each index represents the current depth, and the value at that index is the next depth.
+// For example, at depth 5, the next depth is 4. This allows the utility to "count down"
+// recursion levels until it reaches 0, at which point recursion stops.
+// Extend this array if deeper recursion levels are needed in the future.
+type Decrement = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
 // DotPathUnion for unions
 // biome-ignore lint/suspicious/noExplicitAny: necessary
