@@ -1,4 +1,11 @@
 import { type ChatModelAdapter } from '@assistant-ui/react';
+type MessageData = {
+  choices: {
+    delta: {
+      content?: string;
+    }
+  }[]
+}
 
 export const useFusionAdapter = (): ChatModelAdapter => {
   return {
@@ -26,45 +33,31 @@ export const useFusionAdapter = (): ChatModelAdapter => {
         throw new Error("ReadableStream not supported or response body is null.");
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        // Decode the chunk and append it to the buffer
-        buffer += decoder.decode(value, { stream: true });
-        
-        let text = '';
-
-        // Process the buffer for complete JSON objects
-        let boundary = buffer.indexOf('\n\n'); // Assuming chunks are newline-delimited
-        while (boundary !== -1) {
-          const jsonChunk = buffer.slice(0, boundary).trim();
-          buffer = buffer.slice(boundary + 1);
-
-          if (jsonChunk) {
-            try {
-              const parsed = JSON.parse(jsonChunk.replace('data: ', ''));
-              text += parsed.choices[0].delta.content || '';
-              yield {
-                content: [
-                  {
-                    type: "text",
-                    text,
-                  },
-                ],
-              };
-            } catch (error) {
-              console.error("Failed to parse JSON chunk:", jsonChunk, error);
+      const reader = response.body?.getReader();
+        const utf8Decoder = new TextDecoder('utf-8');
+        if (reader) {
+          while (true) {
+            const {done, value: chunk} = await reader.read();
+            if (done) {
+        reader?.releaseLock()
+              break;
+            }
+            const text = utf8Decoder.decode(chunk);
+            const messages = text.split('\n\n').filter(Boolean);
+            for (const message of messages) {
+              if (message.startsWith('data: ')) {
+                const messageData = JSON.parse(message.substring(6)) as MessageData;
+                const word = messageData.choices.map((choice) => choice.delta.content).join();
+                yield {
+                  content: [{
+                    type: 'text',
+                    text: word,
+                  }]
+                };
+              }
             }
           }
-
-          boundary = buffer.indexOf('\n');
         }
       }
-    }
   };
 };
