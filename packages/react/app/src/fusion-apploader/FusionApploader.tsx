@@ -5,7 +5,7 @@ export type FusionApploaderProps = {
   appKey: string;
 };
 
-export const FusionApploader = ({appKey}: FusionApploaderProps): JSX.Element => {
+export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element => {
   const refWrapp = useRef<HTMLDivElement | null>(null);
   const { loading, error, appRef } = useAppLoader({appKey});
 
