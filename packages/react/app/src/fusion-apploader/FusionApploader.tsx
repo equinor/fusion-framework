@@ -19,7 +19,6 @@ export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element =
   if (loading) {
     return <div>Loading {appKey}</div>;
   }
-  
   if (error) {
     return <div>Error loading {appKey}. Error: {error.message}</div>;
   }
