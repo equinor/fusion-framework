@@ -31,7 +31,6 @@ export const useAppLoader = ({
   useEffect(() => {
     setLoading(true);
     setError(undefined);
-    
     const subscription$ = loadedApp?.initialize().subscribe({
       next: ({ manifest, script, config }) => {
         /* Application Element for mounting */
