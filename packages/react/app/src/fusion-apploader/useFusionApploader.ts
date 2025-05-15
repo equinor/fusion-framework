@@ -5,7 +5,34 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 import type { FusionApploaderProps as ApploaderProps } from './FusionApploader';
 
-export const useAppLoader = ({
+/**
+ * React hook for dynamically loading and mounting a Fusion child app inside a parent Fusion app.
+ * Handles loading state, error reporting, and provides a reference to the mounted app’s DOM element.
+ *
+ * @param { Object } params
+ * @param { string } params.appKey - The key of the Fusion app to load and mount.
+ * @returns {{
+ *   loading: boolean,
+ *   error: Error | undefined,
+ *   appRef: React.RefObject<HTMLDivElement | null>
+ * }} An object containing loading state, error, and a ref to the mounted app element.
+ *
+ * @example
+ * ```typescript
+ * const { loading, error, appRef } = useFusionApploader({ appKey: 'my-app' });
+ *
+ * useEffect(() => {
+ *   if (containerRef.current && appRef.current) {
+ *     containerRef.current.appendChild(appRef.current);
+ *   }
+ * }, [appRef.current]);
+ *
+ * if (loading) return <div>Loading...</div>;
+ * if (error) return <div>Error: {error.message}</div>;
+ * return <div ref={containerRef} />;
+ * ```
+ */
+export const useFusionApploader = ({
   appKey,
 }: ApploaderProps): {
   loading: boolean;
@@ -22,6 +49,7 @@ export const useAppLoader = ({
    * aka the parent app that is loading the child app.
    */
   const fusionApp = useMemo(() => fusion.modules.app.current, [fusion]);
+
   /**
    * The app to be mounted
    * aka the child app that is being loaded.
