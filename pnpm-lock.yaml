@@ -1681,12 +1681,18 @@ importers:
       esbuild:
         specifier: ^0.25.1
         version: 0.25.2
+      fs-monkey:
+        specifier: ^1.0.6
+        version: 1.0.6
       memfs:
         specifier: ^4.17.0
         version: 4.17.0
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
+      unionfs:
+        specifier: ^4.5.4
+        version: 4.5.4
       vitest:
         specifier: ^2.0.5
         version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.4)(msw@2.7.5(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
@@ -6498,6 +6504,9 @@ packages:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
 
+  fs-monkey@1.0.6:
+    resolution: {integrity: sha512-b1FMfwetIKymC0eioW7mTywihSQE4oLzQn1dB6rZB5fx/3NpNEdAWeCSMB+60/AeT0TCXsxzAlcYVEFCTAksWg==}
+
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
@@ -8943,6 +8952,9 @@ packages:
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
     engines: {node: '>=18'}
+
+  unionfs@4.5.4:
+    resolution: {integrity: sha512-qI3RvJwwdFcWUdZz1dWgAyLSfGlY2fS2pstvwkZBUTnkxjcnIvzriBLtqJTKz9FtArAvJeiVCqHlxhOw8Syfyw==}
 
   unist-util-is@6.0.0:
     resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
@@ -16154,6 +16166,8 @@ snapshots:
       jsonfile: 4.0.0
       universalify: 0.1.2
 
+  fs-monkey@1.0.6: {}
+
   fs.realpath@1.0.0: {}
 
   fsevents@2.3.3:
@@ -18963,6 +18977,10 @@ snapshots:
   unicorn-magic@0.1.0: {}
 
   unicorn-magic@0.3.0: {}
+
+  unionfs@4.5.4:
+    dependencies:
+      fs-monkey: 1.0.6
 
   unist-util-is@6.0.0:
     dependencies:
