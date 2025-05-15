@@ -45,8 +45,8 @@ export const useAppLoader = ({appKey}: ApploaderProps): {
           const render = script.renderApp ?? script.default;
           if (render) {
             return render(appRef.current, {
-                fusion,
-                env: { basename, config, manifest, props: {} },
+              fusion,
+              env: { basename, config, manifest, props: {} },
             });
           }
           throw Error("Application is not supported, no render function provided");
