@@ -63,7 +63,6 @@ export const useAppLoader = ({appKey}: ApploaderProps): {
         setLoading(false);
       },
     });
-    
     return () => {
       subscription$.unsubscribe();
     };
