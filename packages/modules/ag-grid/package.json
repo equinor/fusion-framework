@@ -33,8 +33,8 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-grid-community": "33.2.4",
-    "ag-grid-enterprise": "33.2.4",
+    "ag-grid-community": "33.3.0",
+    "ag-grid-enterprise": "33.3.0",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
