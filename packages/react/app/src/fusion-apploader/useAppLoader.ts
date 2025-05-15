@@ -18,7 +18,7 @@ export const useAppLoader = ({
   const fusion = useFramework<[AppModule]>();
 
   /**
-   * The current fusion app. 
+   * The current fusion app.
    * aka the parent app that is loading the child app.
    */
   const fusionApp = useMemo(() => fusion.modules.app.current, [fusion]);
