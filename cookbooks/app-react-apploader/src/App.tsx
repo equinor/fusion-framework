@@ -1,7 +1,6 @@
 import { FusionApploader } from '@equinor/fusion-framework-react-app/fusion-apploader';
 
 export const App = () => {
-
   return (
     <div>
       <h1>Hello Fusion app</h1>
