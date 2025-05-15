@@ -1,4 +1,6 @@
-import { loadEnv, type ConfigEnv, type Plugin } from 'vite';
+import type { Plugin } from 'vite';
+
+import mergeWith from 'lodash.mergewith';
 
 import defaultTemplate from './html/index.html.js';
 
@@ -64,7 +66,7 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
       log?.debug('plugin loaded environment\n', pluginEnv);
 
-      const env = { ...pluginEnv, ...loadedEnv };
+      const env = mergeWith(pluginEnv, loadedEnv);
 
       log?.debug('plugin environment\n', env);
 
