@@ -51,7 +51,7 @@ export const useAppLoader = ({appKey}: ApploaderProps): {
           }
           throw Error('Application is not supported, no render function provided');
         } catch (error) {
-          console.error("App loading Error: ", error);
+          console.error('App loading Error: ', error);
           setError(error as Error);
         }
       },
