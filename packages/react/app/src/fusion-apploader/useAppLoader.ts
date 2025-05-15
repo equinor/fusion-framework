@@ -5,7 +5,9 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 import type { FusionApploaderProps as ApploaderProps } from './FusionApploader';
 
-export const useAppLoader = ({appKey}: ApploaderProps): {
+export const useAppLoader = ({
+  appKey,
+}: ApploaderProps): {
   loading: boolean;
   error: Error | undefined;
   appRef: React.RefObject<HTMLDivElement | null>;
