@@ -20,7 +20,11 @@ export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element =
     return <div>Loading {appKey}</div>;
   }
   if (error) {
-    return <div>Error loading {appKey}. Error: {error.message}</div>;
+    return (
+      <div>
+        Error loading {appKey}. Error: {error.message}
+      </div>
+    );
   }
 
   return <div ref={refWrapp}></div>;
