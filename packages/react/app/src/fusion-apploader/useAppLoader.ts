@@ -22,7 +22,6 @@ export const useAppLoader = ({
    * aka the parent app that is loading the child app.
    */
   const fusionApp = useMemo(() => fusion.modules.app.current, [fusion]);
-  
   /**
    * The app to be mounted
    * aka the child app that is being loaded.
