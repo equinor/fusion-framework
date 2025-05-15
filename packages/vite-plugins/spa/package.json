@@ -26,16 +26,23 @@
     "build": "tsc -b",
     "test": "vitest"
   },
-  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "typescript"
+  ],
   "license": "ISC",
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^"
+    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
+    "lodash.mergewith": "^4.6.2"
   },
   "devDependencies": {
+    "@types/lodash.mergewith": "^4.6.9",
     "typescript": "^5.5.4",
     "vite": "^6.2.5"
   }
