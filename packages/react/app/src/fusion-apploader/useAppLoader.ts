@@ -36,8 +36,8 @@ export const useAppLoader = ({appKey}: ApploaderProps): {
         /* Application Element for mounting */
         appRef.current = document.createElement('div');
         appRef.current.id = manifest.appKey;
-        appRef.current.style.display = "contents";
-        
+        appRef.current.style.display = 'contents';
+
         /* Use basename of current fusionApp */
         const basename = `/apps/${fusionApp?.appKey}`;
 
