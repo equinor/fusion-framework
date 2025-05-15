@@ -11,9 +11,9 @@ export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element =
 
   useEffect(() => {
     if (!refWrapp.current || !appRef.current) {
-      return
-    };
-    
+      return;
+    }
+
     refWrapp.current.appendChild(appRef.current);
   }, [appRef]);
   if (loading) {
