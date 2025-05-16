@@ -39,7 +39,7 @@ export const useFusionApploader = ({
   error: Error | undefined;
   appRef: React.RefObject<HTMLDivElement | null>;
 } => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>();
   const appRef = useRef<HTMLDivElement | null>(null);
   const fusion = useFramework<[AppModule]>();
