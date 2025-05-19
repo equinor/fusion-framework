@@ -1,5 +1,19 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- [#3040](https://github.com/equinor/fusion-framework/pull/3040) [`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42) Thanks [@odinr](https://github.com/odinr)! - ### Enhance DotPath Utility and Config Builder Flexibility
+
+  - Improved the `DotPath` utility to support deeper type resolution, including arrays and nominal class types.
+  - Updated `BaseConfigBuilder` to use the new `DotPathUnion` and `DotPathType` types for better type safety and flexibility.
+  - Enhanced `_set` in `BaseConfigBuilder` to accept both direct values and callbacks, improving usability.
+  - Introduced and exported `ModuleConfiguratorConfigCallback` type for better type safety in module configuration.
+  - Re-exported `ModuleConfiguratorConfigCallback` in the public API for accessibility.
+
+  These changes improve type safety, developer experience, and flexibility when working with nested configurations and module builders.
+
 ## 4.3.8
 
 ### Patch Changes

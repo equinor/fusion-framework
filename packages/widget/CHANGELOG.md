@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.1.35
+
+### Patch Changes
+
+- Updated dependencies [[`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42), [`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d)]:
+  - @equinor/fusion-framework-module@4.4.0
+  - @equinor/fusion-framework-module-http@6.3.0
+  - @equinor/fusion-framework@7.3.9
+  - @equinor/fusion-framework-module-event@4.3.4
+  - @equinor/fusion-framework-module-msal@4.0.4
+  - @equinor/fusion-framework-module-widget@10.0.0
+
 ## 1.1.34
 
 ### Patch Changes

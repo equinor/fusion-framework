@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 33.2.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-ag-grid@34.0.0
+
 ## 33.2.3
 
 ### Patch Changes
