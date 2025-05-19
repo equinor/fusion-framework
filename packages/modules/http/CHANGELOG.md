@@ -1,5 +1,27 @@
 # Change Log
 
+## 6.3.0
+
+### Minor Changes
+
+- [#3038](https://github.com/equinor/fusion-framework/pull/3038) [`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d) Thanks [@odinr](https://github.com/odinr)! - ### Added
+
+  - Introduced support for Server-Sent Events (SSE) in the HTTP module.
+    - Added `sse# Change Log method to `HttpClient` for subscribing to SSE streams.
+    - Added `sseMap` operator for handling SSE in RxJS pipelines.
+    - Added `createSseSelector` for transforming SSE responses into observables.
+    - Enhanced error handling with `ServerSentEventResponseError`.
+
+  ### Documentation
+
+  - Updated README with examples and usage details for SSE support.
+
+### Patch Changes
+
+- Updated dependencies [[`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42)]:
+  - @equinor/fusion-framework-module@4.4.0
+  - @equinor/fusion-framework-module-msal@4.0.4
+
 ## 6.2.5
 
 ### Patch Changes
