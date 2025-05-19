@@ -1,5 +1,6 @@
 import type { ObservableInput, Observable } from 'rxjs';
 import type { IHttpRequestHandler, IHttpResponseHandler } from '../operators/types';
+import { ServerSentEvent, SseSelectorOptions } from '../selectors/sse-selector';
 
 /**
  * Represents a stream of response data.
@@ -158,6 +159,12 @@ export interface IHttpClient<TRequest extends FetchRequest = FetchRequest, TResp
     path: string,
     init?: FetchRequestInit<T, TRequest, TResponse>,
   ): StreamResponse<T>;
+
+  sse$<T = unknown>(
+    path: string,
+    args?: FetchRequestInit<ServerSentEvent<T>, TRequest, TResponse> | null,
+    options?: Omit<SseSelectorOptions<T>, 'abortSignal'>,
+  ): StreamResponse<ServerSentEvent<T>>
 
   /**
    * Fetch a resource as a promise.
