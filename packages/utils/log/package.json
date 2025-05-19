@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-log",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Log utils for Fusion front-end development",
   "keywords": ["equinor", "fusion", "log", "console", "util"],
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/utils/log/#readme",

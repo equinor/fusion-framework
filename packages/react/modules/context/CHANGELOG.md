@@ -1,5 +1,14 @@
 # Change Log
 
+## 6.2.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-context@6.0.0
+  - @equinor/fusion-framework-react-module@3.1.10
+  - @equinor/fusion-query@5.2.6
+
 ## 6.2.24
 
 ### Patch Changes

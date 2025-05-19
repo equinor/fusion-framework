@@ -1,5 +1,16 @@
 # Change Log
 
+## 10.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42), [`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d)]:
+  - @equinor/fusion-framework-module@4.4.0
+  - @equinor/fusion-framework-module-http@6.3.0
+  - @equinor/fusion-framework-module-event@4.3.4
+  - @equinor/fusion-framework-module-service-discovery@8.0.12
+  - @equinor/fusion-query@5.2.6
+
 ## 9.0.8
 
 ### Patch Changes

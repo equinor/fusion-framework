@@ -1,5 +1,19 @@
 # Change Log
 
+## 6.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42)]:
+  - @equinor/fusion-framework-module@4.4.0
+  - @equinor/fusion-framework-app@9.3.11
+  - @equinor/fusion-framework-module-app@6.1.11
+  - @equinor/fusion-framework-module-msal@4.0.4
+  - @equinor/fusion-framework-module-navigation@5.0.0
+  - @equinor/fusion-framework-react@7.4.9
+  - @equinor/fusion-framework-react-module@3.1.10
+  - @equinor/fusion-framework-react-module-http@9.0.0
+
 ## 6.1.0
 
 ### Minor Changes
