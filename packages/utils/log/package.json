@@ -45,7 +45,7 @@
     "vitest": "^2.0.5"
   },
   "peerDependencies": {
-    "chalk": ">5",
+    "chalk": ">=5",
     "rxjs": ">7"
   }
 }
