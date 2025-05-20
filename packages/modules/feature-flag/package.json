@@ -20,6 +20,13 @@
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/index.d.ts"],
+      "plugins": ["dist/types/plugins/index.d.ts"],
+      "selectors": ["dist/types/utils/selectors.d.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"

@@ -29,6 +29,14 @@
       "types": "./dist/types/operators.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      "cache": ["dist/types/cache/index.d.ts"],
+      "client": ["dist/types/client/index.d.ts"],
+      "operators": ["dist/types/operators.d.ts"],
+      "react": ["dist/types/react/index.d.ts"]
+    }
+  },
   "directories": {
     "dist": "dist"
   },
