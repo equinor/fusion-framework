@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.4.1
+
+### Patch Changes
+
+- [`e49f916`](https://github.com/equinor/fusion-framework/commit/e49f9161557202df57248d02ade4d2ef50231bdc) Thanks [@odinr](https://github.com/odinr)! - Fix: Improve error handling and logging in module initialization and post-initialization.
+
+  - Improved error logging when `_initialize` fails
+  - Ensure that error is piped to subscribe of `_initialize` when errors occurs
+
+- [#3054](https://github.com/equinor/fusion-framework/pull/3054) [`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Re-add typesVersions from package.json files
+
 ## 4.4.0
 
 ### Minor Changes
