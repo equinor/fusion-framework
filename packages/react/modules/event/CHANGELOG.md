@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.2.13
+
+### Patch Changes
+
+- Updated dependencies [[`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module-event@4.3.5
+  - @equinor/fusion-framework-react-module@3.1.11
+
 ## 3.2.12
 
 ### Patch Changes

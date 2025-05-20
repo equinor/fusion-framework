@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-query",
-  "version": "5.2.6",
+  "version": "5.2.7",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
