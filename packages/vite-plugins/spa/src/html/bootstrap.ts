@@ -72,8 +72,11 @@ enableMSAL(configurator, (builder) => {
     `/portals/${portalId}@${portalTag}`,
   );
 
+  const portal_config = await portalClient.json(`/portals/${portalId}@${portalTag}/config`);
+
   // create a entrypoint for the portal - this is used to render the portal
   const el = document.createElement('div');
+  document.body.innerHTML = '';
   document.body.appendChild(el);
 
   // @todo: should test if the entrypoint is external or internal
@@ -83,5 +86,5 @@ enableMSAL(configurator, (builder) => {
   );
 
   // render the portal - this will load the portal template and render it
-  render(el, { ref, manifest: portal_manifest });
+  render(el, { ref, manifest: portal_manifest, config: portal_config });
 })();
