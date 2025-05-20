@@ -16,6 +16,11 @@
     "./package.json": "./package.json",
     "./README.md": "./README.md"
   },
+  "typesVersions": {
+    "*": {
+      "themes": ["dist/types/themes.d.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
