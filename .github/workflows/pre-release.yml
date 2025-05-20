@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Realse tag (PR)' 
+        description: 'Release tag (PR)' 
         default: 'beta'    
         required: true
   workflow_call: 
     inputs:
       tag:
         type: string
-        description: 'Realse tag (PR)' 
+        description: 'Release tag (PR)' 
         required: true
 
 
