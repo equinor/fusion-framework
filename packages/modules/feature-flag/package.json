@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-feature-flag",
-  "version": "1.1.15",
+  "version": "1.1.18",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -19,6 +19,13 @@
     },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/index.d.ts"],
+      "plugins": ["dist/types/plugins/index.d.ts"],
+      "selectors": ["dist/types/utils/selectors.d.ts"]
+    }
   },
   "scripts": {
     "build": "tsc -b",

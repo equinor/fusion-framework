@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-ag-grid",
-  "version": "33.2.3",
+  "version": "33.2.6",
   "description": "Fusion module for using AG Grid",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -23,6 +23,11 @@
     },
     "./package.json": "./package.json",
     "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    "*": {
+      "themes": ["dist/types/themes.d.ts"]
+    }
   },
   "scripts": {
     "build": "tsc -b",

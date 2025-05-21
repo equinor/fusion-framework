@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-legacy-interopt",
-  "version": "22.0.0",
+  "version": "23.0.2",
   "description": "Library for interopt legacy fusion applications",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -12,6 +12,11 @@
     "./components": {
       "import": "./dist/esm/components/index.js",
       "types": "./dist/types/components/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "components": ["dist/types/components/index.d.ts"]
     }
   },
   "scripts": {

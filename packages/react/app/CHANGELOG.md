@@ -1,5 +1,49 @@
 # Change Log
 
+## 6.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428)]:
+  - @equinor/fusion-framework-module-navigation@5.0.2
+  - @equinor/fusion-framework-module@4.4.2
+  - @equinor/fusion-framework-module-app@6.1.13
+  - @equinor/fusion-framework-react@7.4.11
+  - @equinor/fusion-framework-app@9.3.13
+  - @equinor/fusion-framework-module-msal@4.0.6
+  - @equinor/fusion-framework-react-module@3.1.12
+  - @equinor/fusion-framework-react-module-http@9.0.2
+
+## 6.1.2
+
+### Patch Changes
+
+- [#3054](https://github.com/equinor/fusion-framework/pull/3054) [`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Re-add typesVersions from package.json files
+
+- Updated dependencies [[`e49f916`](https://github.com/equinor/fusion-framework/commit/e49f9161557202df57248d02ade4d2ef50231bdc), [`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module@4.4.1
+  - @equinor/fusion-framework-module-navigation@5.0.1
+  - @equinor/fusion-framework-react@7.4.10
+  - @equinor/fusion-framework-module-msal@4.0.5
+  - @equinor/fusion-framework-module-app@6.1.12
+  - @equinor/fusion-framework-app@9.3.12
+  - @equinor/fusion-framework-react-module@3.1.11
+  - @equinor/fusion-framework-react-module-http@9.0.1
+
+## 6.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42)]:
+  - @equinor/fusion-framework-module@4.4.0
+  - @equinor/fusion-framework-app@9.3.11
+  - @equinor/fusion-framework-module-app@6.1.11
+  - @equinor/fusion-framework-module-msal@4.0.4
+  - @equinor/fusion-framework-module-navigation@5.0.0
+  - @equinor/fusion-framework-react@7.4.9
+  - @equinor/fusion-framework-react-module@3.1.10
+  - @equinor/fusion-framework-react-module-http@9.0.0
+
 ## 6.1.0
 
 ### Minor Changes

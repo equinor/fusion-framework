@@ -1,5 +1,40 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.46
+
+### Patch Changes
+
+- Updated dependencies [[`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428)]:
+  - @equinor/fusion-framework-module-navigation@5.0.2
+  - @equinor/fusion-observable@8.4.9
+  - @equinor/fusion-framework-cli@10.7.3
+  - @equinor/fusion-framework-module-feature-flag@1.1.18
+  - @equinor/fusion-framework-react-app@6.1.3
+  - @equinor/fusion-framework-module-http@6.3.2
+
+## 1.3.45
+
+### Patch Changes
+
+- Updated dependencies [[`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module-feature-flag@1.1.17
+  - @equinor/fusion-framework-module-navigation@5.0.1
+  - @equinor/fusion-observable@8.4.8
+  - @equinor/fusion-framework-module-http@6.3.1
+  - @equinor/fusion-framework-react-app@6.1.2
+  - @equinor/fusion-framework-cli@10.7.3
+
+## 1.3.44
+
+### Patch Changes
+
+- Updated dependencies [[`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d)]:
+  - @equinor/fusion-framework-module-http@6.3.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.16
+  - @equinor/fusion-framework-module-navigation@5.0.0
+  - @equinor/fusion-framework-react-app@6.1.1
+  - @equinor/fusion-framework-cli@10.7.3
+
 ## 1.3.43
 
 ### Patch Changes

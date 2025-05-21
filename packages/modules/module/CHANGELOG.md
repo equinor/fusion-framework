@@ -1,5 +1,36 @@
 # Change Log
 
+## 4.4.2
+
+### Patch Changes
+
+- [#3057](https://github.com/equinor/fusion-framework/pull/3057) [`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428) Thanks [@odinr](https://github.com/odinr)! - fixed `typeVersions`
+
+## 4.4.1
+
+### Patch Changes
+
+- [`e49f916`](https://github.com/equinor/fusion-framework/commit/e49f9161557202df57248d02ade4d2ef50231bdc) Thanks [@odinr](https://github.com/odinr)! - Fix: Improve error handling and logging in module initialization and post-initialization.
+
+  - Improved error logging when `_initialize` fails
+  - Ensure that error is piped to subscribe of `_initialize` when errors occurs
+
+- [#3054](https://github.com/equinor/fusion-framework/pull/3054) [`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Re-add typesVersions from package.json files
+
+## 4.4.0
+
+### Minor Changes
+
+- [#3040](https://github.com/equinor/fusion-framework/pull/3040) [`efd70a3`](https://github.com/equinor/fusion-framework/commit/efd70a34f734e0c155d3440e35ce4fa11a7abc42) Thanks [@odinr](https://github.com/odinr)! - ### Enhance DotPath Utility and Config Builder Flexibility
+
+  - Improved the `DotPath` utility to support deeper type resolution, including arrays and nominal class types.
+  - Updated `BaseConfigBuilder` to use the new `DotPathUnion` and `DotPathType` types for better type safety and flexibility.
+  - Enhanced `_set` in `BaseConfigBuilder` to accept both direct values and callbacks, improving usability.
+  - Introduced and exported `ModuleConfiguratorConfigCallback` type for better type safety in module configuration.
+  - Re-exported `ModuleConfiguratorConfigCallback` in the public API for accessibility.
+
+  These changes improve type safety, developer experience, and flexibility when working with nested configurations and module builders.
+
 ## 4.3.8
 
 ### Patch Changes

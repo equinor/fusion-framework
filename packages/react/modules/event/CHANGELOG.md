@@ -1,5 +1,29 @@
 # Change Log
 
+## 3.2.14
+
+### Patch Changes
+
+- Updated dependencies [[`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428)]:
+  - @equinor/fusion-framework-module-event@4.3.6
+  - @equinor/fusion-framework-react-module@3.1.12
+
+## 3.2.13
+
+### Patch Changes
+
+- Updated dependencies [[`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module-event@4.3.5
+  - @equinor/fusion-framework-react-module@3.1.11
+
+## 3.2.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-event@4.3.4
+  - @equinor/fusion-framework-react-module@3.1.10
+
 ## 3.2.11
 
 ### Patch Changes

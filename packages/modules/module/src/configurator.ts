@@ -431,6 +431,10 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
           /** push instance */
           instance$.next(Object.assign(instance$.value, { [name]: module }));
         },
+        error: (err) => {
+          logger.error('🚨 failed to initialize', err);
+          instance$.error(err);
+        },
         complete: () => instance$.complete(),
       });
 

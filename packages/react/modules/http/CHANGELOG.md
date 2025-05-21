@@ -1,5 +1,29 @@
 # Change Log
 
+## 9.0.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@6.3.2
+  - @equinor/fusion-framework-react-module@3.1.12
+
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module-http@6.3.1
+  - @equinor/fusion-framework-react-module@3.1.11
+
+## 9.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`7a0a510`](https://github.com/equinor/fusion-framework/commit/7a0a510e0af1f0769c596e1b9aaa391250efd95d)]:
+  - @equinor/fusion-framework-module-http@6.3.0
+  - @equinor/fusion-framework-react-module@3.1.10
+
 ## 8.0.5
 
 ### Patch Changes

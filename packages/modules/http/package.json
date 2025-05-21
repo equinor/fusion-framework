@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-http",
-  "version": "6.2.5",
+  "version": "6.3.2",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -24,6 +24,14 @@
     "./errors": {
       "import": "./dist/esm/errors.js",
       "types": "./dist/types/errors.d.ts"
+    }
+  },
+  "typesVersions": {
+    ">=4.2": {
+      "*": ["dist/types/*"],
+      "client": ["dist/types/lib/client/index.d.ts"],
+      "operators": ["dist/types/lib/operators/index.d.ts"],
+      "selectors": ["dist/types/lib/selectors/index.d.ts"]
     }
   },
   "scripts": {

@@ -1,5 +1,31 @@
 # Change Log
 
+## 3.0.29
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-signalr@6.0.2
+  - @equinor/fusion-framework-react-module@3.1.12
+
+## 3.0.28
+
+### Patch Changes
+
+- [#3054](https://github.com/equinor/fusion-framework/pull/3054) [`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Re-add typesVersions from package.json files
+
+- Updated dependencies [[`c6af3a3`](https://github.com/equinor/fusion-framework/commit/c6af3a3c926fb245e9d056b506d47b8bf4f1efde)]:
+  - @equinor/fusion-framework-module-signalr@6.0.1
+  - @equinor/fusion-framework-react-module@3.1.11
+
+## 3.0.27
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-signalr@6.0.0
+  - @equinor/fusion-framework-react-module@3.1.10
+
 ## 3.0.26
 
 ### Patch Changes
