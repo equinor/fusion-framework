@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.1.4
+
+### Patch Changes
+
+- [#3060](https://github.com/equinor/fusion-framework/pull/3060) [`35cbd12`](https://github.com/equinor/fusion-framework/commit/35cbd12b3ca6d42b0b8b6f8a40dd500fcd1e3672) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add comments to the `useHelpCenter` hook
+
 ## 6.1.3
 
 ### Patch Changes
