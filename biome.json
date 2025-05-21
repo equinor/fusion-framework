@@ -44,9 +44,9 @@
         "noInferrableTypes": "warn"
       },
       "suspicious": {
+        "noConfusingVoidType": "info",
         "noExplicitAny": "warn",
         "noEmptyBlockStatements": "warn",
-        "noConfusingVoidType": "warn",
         "noGlobalIsNan": "warn",
         "noDoubleEquals": "warn",
         "noAssignInExpressions": "warn",
