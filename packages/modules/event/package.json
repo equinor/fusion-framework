@@ -11,6 +11,11 @@
       "types": "./dist/types/index.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/index.d.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
@@ -34,10 +39,5 @@
     "@types/lodash.clonedeep": "^4.5.9",
     "rxjs": "^7.8.1",
     "typescript": "^5.8.2"
-  },
-  "typesVersions": {
-    ">=4.2": {
-      "*": ["dist/types/*"]
-    }
   }
 }

@@ -21,6 +21,13 @@
       "types": "./dist/types/react/index.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/index.d.ts"],
+      "operators": ["dist/types/operators/index.d.ts"],
+      "react": ["dist/types/react/index.d.ts"]
+    }
+  },
   "directories": {
     "dist": "dist"
   },
@@ -32,12 +39,6 @@
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
     "directory": "packages/utils/observable"
-  },
-  "typesVersions": {
-    "*": {
-      "operators": ["dist/types/operators/index.d.ts"],
-      "react": ["dist/types/react/index.d.ts"]
-    }
   },
   "scripts": {
     "build": "tsc -b",
