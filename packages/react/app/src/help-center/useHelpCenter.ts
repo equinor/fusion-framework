@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import useAppModule from '../useAppModule';
 
-type HelpCenterEventDetailBase<T extends string, V extends Record<string, unknown> = {}> = {
+type HelpCenterEventDetailBase<
+  T extends string,
+  V extends Record<string, unknown> = Record<string, unknown>,
+> = {
   page: T;
 } & V;
 
@@ -34,7 +37,44 @@ export type HelpCenterOpenEventDetail =
 
 export const EVENT_NAME = '@Portal::FusionHelp::open';
 
-export const useHelpCenter = () => {
+/**
+ * Interface for requesting help features.
+ */
+export interface HelpCenter {
+  /**
+   * Requesting the portal to open the help sidesheet on the normal page
+   */
+  openHelp(): void;
+
+  /**
+   * Requesting the portal to open the help sidesheet on the article page.
+   *
+   * @param {string} articleId - The articleId, slug or identifier to show.
+   */
+  openArticle(articleId: string): void;
+
+  /**
+   * Requesting the portal to open the help sidesheet on the FAQs page.
+   */
+  openFaqs(): void;
+
+  /**
+   * Requesting the portal to open the help sidesheet on the search page.
+   *
+   * @param {string} search - The search string.
+   */
+  openSearch(search: string): void;
+
+  /**
+   * Requesting the portal to open the help sidesheet on the governance tab.
+   */
+  openGovernance(): void;
+}
+
+/**
+ * Hook for accessing help center.
+ */
+export const useHelpCenter = (): HelpCenter => {
   const eventModule = useAppModule('event');
 
   const openHelp = useCallback((): void => {
