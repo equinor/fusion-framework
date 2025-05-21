@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.4.2
+
+### Patch Changes
+
+- [#3057](https://github.com/equinor/fusion-framework/pull/3057) [`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428) Thanks [@odinr](https://github.com/odinr)! - fixed `typeVersions`
+
 ## 4.4.1
 
 ### Patch Changes

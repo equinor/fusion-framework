@@ -1,5 +1,15 @@
 # Change Log
 
+## 6.0.2
+
+### Patch Changes
+
+- [#3057](https://github.com/equinor/fusion-framework/pull/3057) [`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428) Thanks [@odinr](https://github.com/odinr)! - fixed `typeVersions`
+
+- Updated dependencies [[`96bb1fb`](https://github.com/equinor/fusion-framework/commit/96bb1fb744d8dc2410e99fea6ca948d2d5489428)]:
+  - @equinor/fusion-framework-module@4.4.2
+  - @equinor/fusion-query@5.2.8
+
 ## 6.0.1
 
 ### Patch Changes
