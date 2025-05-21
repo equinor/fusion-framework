@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-observable",
-  "version": "8.4.8",
+  "version": "8.4.9",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://equinor.github.io/fusion-framework/",

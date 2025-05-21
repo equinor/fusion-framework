@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.24
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.7.3
+  - @equinor/fusion-framework-react-app@6.1.3
+  - @equinor/fusion-framework-react-ag-grid@33.2.6
+
 ## 0.6.23
 
 ### Patch Changes
