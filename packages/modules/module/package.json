@@ -15,9 +15,9 @@
     }
   },
   "typesVersions": {
-    ">=4.2": {
-      "*": ["dist/types/*"],
-      "provider": ["dist/types/lib/provider/index"]
+    "*": {
+      ".": ["dist/types/index.d.ts"],
+      "provider": ["dist/types/lib/provider/index.d.ts"]
     }
   },
   "scripts": {

@@ -19,6 +19,13 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/index.d.ts"],
+      "errors.js": ["dist/types/errors.d.ts"],
+      "utils": ["dist/types/utils/index.d.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"

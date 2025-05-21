@@ -18,6 +18,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "themes": ["dist/types/themes.d.ts"]
     }
   },
