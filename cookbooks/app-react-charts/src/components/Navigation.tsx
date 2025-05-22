@@ -13,19 +13,19 @@ export const Navigation = () => {
       label: 'Home',
       icon: home,
       onClick: () => navigate('/'),
-      active: currentPath === '/',
+      active: currentPath.startsWith('/'),
     },
     {
       label: 'Bar Chart',
       icon: bar_chart,
       onClick: () => navigate('bar-chart'),
-      active: currentPath === '/bar-chart',
+      active: currentPath.startsWith('/bar-chart'),
     },
     {
       label: 'Line Chart',
       icon: timeline,
       onClick: () => navigate('line-chart'),
-      active: currentPath === '/line-chart',
+      active: currentPath.startsWith('/line-chart'),
     },
   ];
 
