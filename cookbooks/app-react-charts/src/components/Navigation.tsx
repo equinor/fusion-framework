@@ -13,7 +13,7 @@ export const Navigation = () => {
       label: 'Home',
       icon: home,
       onClick: () => navigate('/'),
-      active: currentPath.startsWith('/'),
+      active: currentPath === '/',
     },
     {
       label: 'Bar Chart',
