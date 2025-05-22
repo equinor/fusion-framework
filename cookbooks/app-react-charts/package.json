@@ -5,6 +5,11 @@
   "private": true,
   "type": "module",
   "main": "src/index.ts",
+  "manifest": {
+    "name": "cookbook-chart",
+    "shortName": "cookbook-chart",
+    "description": "this is only a test application, do NOT publish to production"
+  },
   "scripts": {
     "build": "fusion-framework-cli app build",
     "dev": "fusion-framework-cli app dev",

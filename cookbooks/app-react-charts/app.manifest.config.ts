@@ -1,5 +1,8 @@
-import { defineAppManifest } from '@equinor/fusion-framework-cli';
+import { defineAppManifest } from "@equinor/fusion-framework-cli";
 
 export default defineAppManifest(async () => {
-  // Define your app manifest here
+	// Define your app manifest here
+	return {
+		appKey: "cookbook-chart"
+	};
 });
