@@ -25,6 +25,10 @@
       "types": "./dist/types/framework/index.d.ts",
       "import": "./dist/esm/framework/index.js"
     },
+    "./fusion-apploader": {
+      "types": "./dist/types/fusion-apploader/index.d.ts",
+      "import": "./dist/esm/fusion-apploader/index.js"
+    },
     "./help-center": {
       "types": "./dist/types/help-center/index.d.ts",
       "import": "./dist/esm/help-center/index.js"
