@@ -1,5 +1,5 @@
 import { SideBar, SidebarLinkProps } from "@equinor/eds-core-react";
-import { list, support, search, home, bar_chart } from "@equinor/eds-icons";
+import { home, bar_chart, timeline } from "@equinor/eds-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export const Navigation = () => {
@@ -16,16 +16,16 @@ export const Navigation = () => {
 			active: currentPath === "/"
 		},
 		{
-			label: "Chart 1",
+			label: "Bar Chart",
 			icon: bar_chart,
-			onClick: () => navigate("chart1"),
-			active: currentPath === "/chart1"
+			onClick: () => navigate("bar-chart"),
+			active: currentPath === "/bar-chart"
 		},
 		{
-			label: "Chart 2",
-			icon: bar_chart,
-			onClick: () => navigate("chart2"),
-			active: currentPath === "/chart2"
+			label: "Line Chart",
+			icon: timeline,
+			onClick: () => navigate("line-chart"),
+			active: currentPath === "/line-chart"
 		}
 	];
 

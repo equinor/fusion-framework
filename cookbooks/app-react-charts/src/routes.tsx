@@ -1,13 +1,16 @@
 import { Outlet, type RouteObject } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import { ChartOne } from "./pages/ChartOne";
-import { ChartTwo } from "./pages/ChartTwo";
+import { BarChart } from "./pages/BarChart";
+import { LineChart } from "./pages/LineChart";
+import HomePage from "./pages/HomePage";
 
 const Root = () => {
 	return (
 		<div style={{ display: "flex", gap: 20 }}>
 			<Navigation />
-			<Outlet />
+			<div style={{ flexGrow: 1 }}>
+				<Outlet />
+			</div>
 		</div>
 	);
 };
@@ -19,15 +22,15 @@ export const routes: RouteObject[] = [
 		children: [
 			{
 				index: true,
-				element: <h1>Home</h1>
+				Component: HomePage
 			},
 			{
-				path: "chart1/*",
-				Component: ChartOne
+				path: "bar-chart/*",
+				Component: BarChart
 			},
 			{
-				path: "chart2/*",
-				Component: ChartTwo
+				path: "line-chart/*",
+				Component: LineChart
 			}
 		]
 	}

@@ -194,6 +194,13 @@ importers:
         version: 5.8.3
 
   cookbooks/app-react-charts:
+    dependencies:
+      chart.js:
+        specifier: ^4.4.9
+        version: 4.4.9
+      react-chartjs-2:
+        specifier: ^5.3.0
+        version: 5.3.0(chart.js@4.4.9)(react@18.3.1)
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.45.0
@@ -8152,6 +8159,12 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
+  react-chartjs-2@5.3.0:
+    resolution: {integrity: sha512-UfZZFnDsERI3c3CZGxzvNJd02SHjaSJ8kgW1djn65H1KK8rehwTjyrRKOG3VTMG8wtHZ5rgAO5oTHtHi9GCCmw==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
@@ -11155,8 +11168,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@kurkle/color@0.3.4':
-    optional: true
+  '@kurkle/color@0.3.4': {}
 
   '@lit-labs/observers@2.0.5':
     dependencies:
@@ -15387,7 +15399,6 @@ snapshots:
   chart.js@4.4.9:
     dependencies:
       '@kurkle/color': 0.3.4
-    optional: true
 
   check-error@2.1.1: {}
 
@@ -18324,6 +18335,11 @@ snapshots:
       '@react-types/shared': 3.29.0(react@18.3.1)
       react: 18.3.1
       react-dom: 19.1.0(react@18.3.1)
+
+  react-chartjs-2@5.3.0(chart.js@4.4.9)(react@18.3.1):
+    dependencies:
+      chart.js: 4.4.9
+      react: 18.3.1
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
