@@ -45,9 +45,7 @@ export const BarChart = () => {
       <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Icon data={bar_chart} size={32} color="#60a5fa" /> Bar Chart Example
       </h2>
-      <div style={{ width: '100%', maxWidth: '600px', margin: 'auto' }}>
-        <Bar data={data} options={options} />
-      </div>
+      <Bar data={data} options={options} />
     </div>
   );
 };

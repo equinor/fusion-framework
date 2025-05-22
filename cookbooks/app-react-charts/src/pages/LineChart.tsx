@@ -56,7 +56,7 @@ export const LineChart = () => {
   };
 
   return (
-    <div>
+    <div style={{ width: '100%', maxWidth: '600px' }}>
       <h2>📈 Line Chart Example</h2>
       <Line data={data} options={options} />
     </div>
