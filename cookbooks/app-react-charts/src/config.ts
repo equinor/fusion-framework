@@ -1,4 +1,4 @@
-import { AppModuleInitiator } from "@equinor/fusion-framework-react-app";
+import type { AppModuleInitiator } from "@equinor/fusion-framework-react-app";
 import { enableNavigation } from "@equinor/fusion-framework-module-navigation";
 
 export const configure: AppModuleInitiator = (configurator, args) => {

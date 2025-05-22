@@ -1,3 +1,3 @@
-# React cookbook
+# React cookbook for chart
 
-App for cooking with Fusion-Framework and React
+This cookbook provides practical examples and best practices for integrating and using Chart.js in React applications.
