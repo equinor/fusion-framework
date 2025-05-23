@@ -28,43 +28,101 @@ function capitalizeFirstLetter(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
+function convertGraphic(
+  graphic: ContextItem['graphic'],
+): Pick<ContextResultItem, 'graphic' | 'graphicType'> {
+  if (graphic === undefined) {
+    return {};
+  }
+
+  if (typeof graphic === 'string') {
+    return {
+      graphicType: graphic.startsWith('<')
+        ? 'inline-html'
+        : ('eds' as unknown as ContextResultItem['graphicType']),
+      graphic: graphic,
+    };
+  }
+
+  if (graphic.type === 'svg') {
+    return {
+      graphicType: 'inline-svg',
+      graphic: graphic.content,
+    };
+  }
+
+  return {
+    graphicType: 'inline-html',
+    graphic: graphic.content,
+  };
+}
+
+function convertMeta(meta: ContextItem['meta']): Pick<ContextResultItem, 'metaType' | 'meta'> {
+  if (meta === undefined) {
+    return {};
+  }
+
+  if (typeof meta === 'string') {
+    return {
+      metaType: meta.startsWith('<')
+        ? 'inline-html'
+        : ('eds' as unknown as ContextResultItem['metaType']),
+      meta: meta,
+    };
+  }
+
+  if (meta.type === 'svg') {
+    return {
+      metaType: 'inline-svg',
+      meta: meta.content,
+    };
+  }
+
+  return {
+    metaType: 'inline-html',
+    meta: meta.content,
+  };
+}
+
 /**
  * Map context query result to ContextSelectorResult.
  * Add any icons to selected types by using the 'graphic' property
  * @param src context query result
  * @returns src mapped to ContextResult type
  */
-const mapper = (src: Array<ContextItem>): ContextResult => {
+const mapper = (src: ContextItem<{ taskState?: string; state?: string }>[]): ContextResult => {
   return src.map((i) => {
     const baseResult = {
       id: i.id,
       title: i.title,
       subTitle: i.subTitle ?? i.type.id,
-      graphic: i.graphic,
-      meta: i.meta,
+      ...convertGraphic(i.graphic),
+      ...convertMeta(i.meta),
     };
 
-    switch (i.type.id) {
-      case 'EquinorTask':
-        return {
-          ...baseResult,
-          meta:
-            i.value.taskState && i.value.taskState !== 'Active'
-              ? `<fwc-chip disabled variant="outlined" value="${i.value.taskState}" />`
-              : '',
-        };
-      case 'OrgChart':
-        return {
-          ...baseResult,
-          graphic: 'list',
-          meta:
-            i.value.state && (i.value.state as string).toLowerCase() !== 'active'
-              ? `<fwc-chip disabled variant="outlined" value="${capitalizeFirstLetter(i.value.state as string)}" />`
-              : '',
-        };
-      default:
-        return baseResult;
+    // Displays the status of the EquinorTask if it is not 'active'
+    const isEquinorTaskInactive = !!(
+      i.value.taskState && i.value.taskState.toLowerCase() !== 'active'
+    );
+    if (i.type.id === 'EquinorTask' && isEquinorTaskInactive) {
+      baseResult.meta = `<fwc-chip disabled variant="outlined" value="${i.value.taskState}" />`;
+      baseResult.metaType = 'inline-html';
     }
+
+    if (i.type.id === 'OrgChart') {
+      // Org charts should always have 'list' icon
+      baseResult.graphic = 'list';
+      baseResult.graphicType = 'eds' as unknown as ContextResultItem['graphicType'];
+
+      // Displays the org chart status if it is not 'active'
+      const isOrgChartInactive = !!(i.value.state && i.value.state.toLowerCase() !== 'active');
+      if (isOrgChartInactive) {
+        baseResult.meta = `<fwc-chip disabled variant="outlined" value="${capitalizeFirstLetter(i.value.state ?? '')}" />`;
+        baseResult.metaType = 'inline-html';
+      }
+    }
+
+    return baseResult;
   });
 };
 
