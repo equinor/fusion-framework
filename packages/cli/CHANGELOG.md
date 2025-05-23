@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.7.4
+
+### Patch Changes
+
+- [#3064](https://github.com/equinor/fusion-framework/pull/3064) [`231e24e`](https://github.com/equinor/fusion-framework/commit/231e24eef9ca33db2fbde2fdd1c918eeb620c8c4) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add support for html and svg in meta and graphic for context result
+
 ## 10.7.3
 
 ### Patch Changes
