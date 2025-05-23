@@ -728,7 +728,7 @@ importers:
         version: 1.2.2
       '@equinor/fusion-wc-person':
         specifier: ^3.1.8
-        version: 3.1.8
+        version: 3.1.9
       '@material-ui/styles':
         specifier: ^4.11.5
         version: 4.11.5(@types/react@18.3.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1388,7 +1388,7 @@ importers:
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
         specifier: ^3.1.8
-        version: 3.1.8
+        version: 3.1.9
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.20
@@ -2364,11 +2364,14 @@ packages:
   '@equinor/fusion-wc-list@1.1.3':
     resolution: {integrity: sha512-eKzpPA1/8k6uQu6/5ozfywJWHUBPcwOzcZbHz4/Rzu1fb5b932Eot/yUsacDRhnSigbgBvsOqU0phDp2OuV6yA==}
 
+  '@equinor/fusion-wc-list@1.1.4':
+    resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
+
   '@equinor/fusion-wc-person@3.1.7':
     resolution: {integrity: sha512-iT8WB8W/4hwpx/LWnvwE00ATHjjikmrRnbR3PMj0sV/V/13PAwGwahsmBRze18AlDUDTf/Z4zDCPA6bkn8XNUg==}
 
-  '@equinor/fusion-wc-person@3.1.8':
-    resolution: {integrity: sha512-sgRGVjLfvCk4upvmlDn5FQLyuvt/VAq7uNF/X5DlXUs5jQBQ76yXQDd3BAKQ0IHexYd5dnG4R8z/KOjfKUy8rA==}
+  '@equinor/fusion-wc-person@3.1.9':
+    resolution: {integrity: sha512-xnVuEDpaMQurEVx5VMSPKjRm5QyUkOH8N9xYXEBjEdEvlHX42kcjw2VCtsBv1S1BP5zB/jAyYlPuAx/dlFaysA==}
 
   '@equinor/fusion-wc-picture@3.1.1':
     resolution: {integrity: sha512-TeZd46sjyg43HHlbE4h9Ebk9wCBnif5j9XGodIdVTCaC7rLz2YEd7C6RS7vj3nS+goFIZmowiUUmg6gZemzY4w==}
@@ -2897,8 +2900,14 @@ packages:
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
 
+  '@floating-ui/core@1.7.0':
+    resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
+
   '@floating-ui/dom@1.6.13':
     resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+
+  '@floating-ui/dom@1.7.0':
+    resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
 
   '@floating-ui/react-dom@2.1.2':
     resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
@@ -7336,6 +7345,9 @@ packages:
   lit@3.2.1:
     resolution: {integrity: sha512-1BBa1E/z0O9ye5fZprPtdqnc0BFzxIxTTOO/tQFmyC/hj1O3jL4TfmLBw0WEwjAokdLwpclkvGgDJwTIh0/22w==}
 
+  lit@3.3.0:
+    resolution: {integrity: sha512-DGVsqsOIHBww2DqnuZzW7QsuCdahp50ojuDaBPC7jUDRpYoH0z7kHBBYZewRzer75FwtrkmkKk7iOAwSaWdBmw==}
+
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
     engines: {node: '>=8.9.0'}
@@ -10536,6 +10548,17 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.2.0
 
+  '@equinor/fusion-wc-list@1.1.4':
+    dependencies:
+      '@equinor/fusion-wc-checkbox': 1.1.2
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-divider': 1.1.2
+      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-wc-radio': 1.1.2
+      '@equinor/fusion-web-theme': 0.1.10
+      '@material/mwc-list': 0.27.0
+      lit: 3.3.0
+
   '@equinor/fusion-wc-person@3.1.7':
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.3
@@ -10552,21 +10575,21 @@ snapshots:
       '@lit-labs/task': 3.1.0
       lit: 3.2.1
 
-  '@equinor/fusion-wc-person@3.1.8':
+  '@equinor/fusion-wc-person@3.1.9':
     dependencies:
       '@equinor/fusion-wc-avatar': 3.2.3
       '@equinor/fusion-wc-badge': 1.3.2
       '@equinor/fusion-wc-button': 2.4.2
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-list': 1.1.3
+      '@equinor/fusion-wc-list': 1.1.4
       '@equinor/fusion-wc-skeleton': 2.1.2
       '@equinor/fusion-wc-textinput': 1.1.4
       '@equinor/fusion-web-theme': 0.1.10
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/dom': 1.7.0
       '@lit-labs/observers': 2.0.5
       '@lit-labs/task': 3.1.0
-      lit: 3.2.1
+      lit: 3.3.0
 
   '@equinor/fusion-wc-picture@3.1.1':
     dependencies:
@@ -10597,7 +10620,7 @@ snapshots:
       '@equinor/fusion-wc-core': 2.0.0
       '@equinor/fusion-wc-divider': 1.1.2
       '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-list': 1.1.3
+      '@equinor/fusion-wc-list': 1.1.4
       '@equinor/fusion-wc-textinput': 1.1.4
       '@equinor/fusion-web-theme': 0.1.10
       '@lit-labs/task': 3.1.0
@@ -10933,20 +10956,29 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/core@1.7.0':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/dom@1.6.13':
     dependencies:
       '@floating-ui/core': 1.6.9
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/dom@1.7.0':
+    dependencies:
+      '@floating-ui/core': 1.7.0
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/react-dom@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/dom': 1.7.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
   '@floating-ui/react-dom@2.1.2(react-dom@19.1.0(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/dom': 1.7.0
       react: 18.3.1
       react-dom: 19.1.0(react@18.3.1)
 
@@ -11185,7 +11217,7 @@ snapshots:
 
   '@lit/task@1.0.2':
     dependencies:
-      '@lit/reactive-element': 2.0.4
+      '@lit/reactive-element': 2.1.0
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -16545,7 +16577,7 @@ snapshots:
 
   giscus@1.6.0:
     dependencies:
-      lit: 3.2.1
+      lit: 3.3.0
 
   github-from-package@0.0.0: {}
 
@@ -17278,6 +17310,12 @@ snapshots:
       lit-html: 3.2.1
 
   lit@3.2.1:
+    dependencies:
+      '@lit/reactive-element': 2.1.0
+      lit-element: 4.2.0
+      lit-html: 3.3.0
+
+  lit@3.3.0:
     dependencies:
       '@lit/reactive-element': 2.1.0
       lit-element: 4.2.0
