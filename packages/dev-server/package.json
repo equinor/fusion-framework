@@ -31,8 +31,8 @@
   },
   "devDependencies": {
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5",
-    "vite": "^6.2.5"
+    "vite": "^6.3.5",
+    "vitest": "^2.0.5"
   },
   "peerDependencies": {
     "vite": "^6.0.7"

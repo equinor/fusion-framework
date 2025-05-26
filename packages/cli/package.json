@@ -2,11 +2,7 @@
   "name": "@equinor/fusion-framework-cli",
   "version": "10.7.3",
   "homepage": "https://github.com/equinor/fusion-framework",
-  "keywords": [
-    "Fusion",
-    "Fusion Framework",
-    "CLI"
-  ],
+  "keywords": ["Fusion", "Fusion Framework", "CLI"],
   "author": "",
   "license": "ISC",
   "publishConfig": {
