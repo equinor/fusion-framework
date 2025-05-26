@@ -1,3 +1,5 @@
+export type { UserConfig } from 'vite';
+
 export { processServices } from './process-services.js';
 
 export { default, createDevServer } from './create-dev-server.js';
