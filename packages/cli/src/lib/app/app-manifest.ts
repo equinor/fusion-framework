@@ -24,7 +24,7 @@ export type { AppManifest } from '@equinor/fusion-framework-module-app';
 export type AppManifestFn = <T extends Partial<AppManifest> = Partial<AppManifest>>(
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
-) => T | Promise<T> | void; // Supports both sync and async manifest generation.
+) => T | void | Promise<T | void>; // Supports both sync and async manifest generation.
 
 /**
  * Utility to define an application manifest in a type-safe and organized manner.

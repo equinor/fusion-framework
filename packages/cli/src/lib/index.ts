@@ -6,4 +6,4 @@ export { initializeFramework, type FusionFramework } from './framework.node.js';
 
 // Legacy imports - these will be removed in the next major version
 // @todo - remove these imports, introduced in v11
-export * from './legacy.js';
+export { defineAppConfig, defineAppManifest } from './legacy.js';

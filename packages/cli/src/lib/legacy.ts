@@ -22,7 +22,7 @@ export const defineAppConfig = (...args: Parameters<typeof _defineConfig>) => {
     ),
   );
   // Forward the call to the new implementation
-  _defineConfig(...args);
+  return _defineConfig(...args);
 };
 
 /**
@@ -45,5 +45,5 @@ export const defineAppManifest = (...args: Parameters<typeof _defineManifest>) =
     ),
   );
   // Forward the call to the new implementation
-  _defineManifest(...args);
+  return _defineManifest(...args);
 };
