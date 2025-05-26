@@ -1,8 +1,22 @@
 import assert, { AssertionError } from 'node:assert';
+import { fileExists } from './file-exists.js';
 
+/**
+ * Re-exports the core Node.js assert function and AssertionError class.
+ * Useful for consistent assertion handling throughout the codebase.
+ */
 export { assert, AssertionError };
 
+/**
+ * Asserts that the provided value is a valid number (not NaN).
+ * Throws an AssertionError if the value is not a number.
+ *
+ * @param value - The value to check for being a number.
+ * @param message - Optional custom error message for assertion failure.
+ * @throws {AssertionError} If value is NaN.
+ */
 export function assertNumber(value: unknown, message?: string): asserts value {
+  // Ensure the value is not NaN; this does not check for type 'number'.
   assert(
     !Number.isNaN(value),
     new AssertionError({
@@ -13,16 +27,57 @@ export function assertNumber(value: unknown, message?: string): asserts value {
   );
 }
 
+/**
+ * Asserts that a file exists at the given path.
+ * Throws an error if the file does not exist.
+ *
+ * @param value - The file path to check.
+ * @param message - Optional custom error message for assertion failure.
+ * @throws {AssertionError} If the file does not exist.
+ */
+export const assertFileExists = (value: unknown, message?: string): asserts value => {
+  // Use fileExists utility to check for file presence.
+  assert(fileExists(value as string), message ?? `file ${String(value)} does not exist`);
+};
+
+/**
+ * Asserts that the provided value is an object.
+ * Throws an error if the value is not an object.
+ *
+ * @param value - The value to check for being an object.
+ * @param message - Optional custom error message or Error instance.
+ * @throws {AssertionError} If value is not an object.
+ */
 export function assertObject(value: object, message?: string | Error): asserts value {
+  // typeof null is 'object', so this does not exclude null values.
   assert(typeof value === 'object', message);
 }
 
+/**
+ * Asserts that a specific property exists and has a value on an object.
+ * Used internally for property value checks.
+ *
+ * @param value - The value of the property to check.
+ * @param prop - The property key being checked.
+ * @param message - Optional custom error message.
+ * @throws {AssertionError} If the property value is falsy.
+ */
 function assertObjectEntryValue<P>(value: unknown, prop: P, message?: string): asserts value {
+  // Checks for truthy value; falsy values (0, '', false) will fail.
   assert(!!value, message ?? `missing value of property ${prop}`);
 }
 
+/**
+ * Asserts that an object contains the specified properties and that each property has a value.
+ * Allows for custom assertion logic and pre-message prefixing.
+ *
+ * @typeParam T - The object type to check.
+ * @typeParam P - The array of property keys to check on the object.
+ * @param value - The object to check.
+ * @param options - Optional settings for property keys, assertion function, and message prefix.
+ * @throws {AssertionError} If any property is missing or fails the assertion.
+ */
 export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
-  // extends Record<string, unknown> = unknown>(
   value: T,
   options?: {
     props?: P;
@@ -30,12 +85,18 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
     preMessage?: string;
   },
 ): asserts value {
+  // Use preMessage to prefix all assertion messages for context.
   const preMessage = options?.preMessage ?? '';
+  // Ensure the value is an object before checking properties.
   assert(typeof value === 'object', `${preMessage} to be an <object>`);
+  // Use custom assertion if provided, otherwise default.
   const assertion: typeof assertObjectEntryValue<P> = options?.assertion ?? assertObjectEntryValue;
+  // Use provided property list or all keys of the object.
   const props = options?.props ?? Object.keys(value);
   for (const prop of props) {
+    // Check that the property exists on the object.
     assert(prop in value, `${preMessage} to have property [${String(prop)}]`);
+    // Check that the property value passes the assertion.
     assertion(
       value[prop as keyof T],
       prop as unknown as P,

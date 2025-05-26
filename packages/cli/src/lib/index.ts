@@ -1,11 +1,9 @@
-export { mergeManifests, defineAppManifest, type AppManifestFn } from './app-manifest.js';
+export type { RuntimeEnv } from './types.js';
 
-export { defineAppConfig, type AppConfigFn, type AppConfigExport } from './app-config.js';
+export type { ResolvedPackage } from './utils/resolve-package.js';
 
-export {
-  defineAppPackage,
-  resolveAppKey,
-  resolveEntryPoint,
-  type AppPackageJson,
-  type ResolvedAppPackage,
-} from './app-package.js';
+export { initializeFramework, type FusionFramework } from './framework.node.js';
+
+// Legacy imports - these will be removed in the next major version
+// @todo - remove these imports, introduced in v11
+export * from './legacy.js';
