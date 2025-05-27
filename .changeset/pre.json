@@ -61,5 +61,19 @@
     "@equinor/fusion-framework-widget": "1.1.38",
     "@equinor/fusion-framework-docs": "0.4.0"
   },
-  "changesets": []
+  "changesets": [
+    "bright-bushes-share",
+    "chatty-bats-tell",
+    "chubby-eels-post",
+    "eleven-dingos-decide",
+    "fetch-portal-config-in-bootstrap",
+    "fix-http-acquire-access-token",
+    "forty-doors-pump",
+    "fresh-years-rush",
+    "hot-pots-cheer",
+    "lovely-paths-attend",
+    "nice-plants-punch",
+    "small-memes-enjoy",
+    "tasty-cities-relate"
+  ]
 }

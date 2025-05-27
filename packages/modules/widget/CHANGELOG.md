@@ -1,5 +1,13 @@
 # Change Log
 
+## 10.0.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
+  - @equinor/fusion-framework-module-http@6.3.3-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.0
+
 ## 10.0.2
 
 ### Patch Changes
