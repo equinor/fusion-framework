@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      chalk:
+        specifier: ^5.3.0
+        version: 5.4.1
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
