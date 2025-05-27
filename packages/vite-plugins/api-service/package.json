@@ -1,0 +1,46 @@
+{
+  "name": "@equinor/fusion-framework-vite-plugin-api-service",
+  "version": "0.0.0",
+  "description": "Vite plugin for proxying service discovery and mocking",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/vite-plugins/api-service"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest"
+  },
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "service-discovery",
+    "mocking",
+    "typescript"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "http-proxy": "^1.18.1",
+    "http-proxy-middleware": "^3.0.3",
+    "path-to-regexp": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/http-proxy": "^1.17.16",
+    "nock": "^14.0.1",
+    "typescript": "^5.5.4",
+    "vite": "^6.3.5",
+    "vitest": "^2.0.5"
+  }
+}

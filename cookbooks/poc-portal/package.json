@@ -2,7 +2,7 @@
   "name": "poc-portal",
   "version": "1.0.47",
   "description": "",
-  "main": "src/index.tsx",
+  "main": "dist/main.js",
   "private": true,
   "scripts": {
     "dev": "fusion-framework-cli app dev -d './dev-portal'",

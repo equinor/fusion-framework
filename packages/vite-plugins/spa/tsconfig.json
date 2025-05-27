@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
