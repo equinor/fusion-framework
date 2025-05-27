@@ -141,6 +141,8 @@ A minimal example for a Fusion Framework app:
 
 ## Troubleshooting
 
+If you encounter errors like `libsecret-1.so.0: cannot open shared object file`, it means `libsecret` is missing. see the [libsecret installation guide](./docs/libsecret.md) for instructions on how to install it based on your operating system.
+
 - **Command not found?** Ensure your `node_modules/.bin` is in your PATH or use `pnpm`/`npx`.
 - **Authentication issues?** See [Authentication](./docs/auth.md) for troubleshooting tokens and login.
 - **Build errors?** Check your app's manifest and config files for typos or missing fields.

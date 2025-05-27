@@ -3,3 +3,5 @@
 - [ ] add documentation for mocking api services in the dev portal
 - [ ] Add breaking change for `app.manifest` regarding return type.
 - [ ] figure out why `import { defineAppManifest } from '@equinor/fusion-framework-cli/` does not work
+- [ ] include libsecret installation instructions newsletter
+- [ ] Write doc that void is no longer supported in app.manifest and app config
