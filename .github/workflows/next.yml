@@ -18,19 +18,7 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
     steps:
-      - name: Check for pre.json
-        id: check_prejson
-        continue-on-error: true
-        run: |
-          echo "Checking for ./changesets/pre.json"
-          if [ -f ./changesets/press.json ]; then
-            exit 0
-          else
-            exit 1
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.check_prejson.outcome == 'success'
         with:
           fetch-depth: 0
 
