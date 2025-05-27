@@ -4,7 +4,7 @@
   "description": "React application using framework context with a custom error",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/main.js",
   "scripts": {
     "pre-build": "tsc -b",
     "build": "fusion-framework-cli app build",

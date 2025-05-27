@@ -39,6 +39,6 @@
   "devDependencies": {
     "@types/lodash.mergewith": "^4.6.9",
     "typescript": "^5.5.4",
-    "vite": "^6.2.5"
+    "vite": "^6.3.5"
   }
 }
