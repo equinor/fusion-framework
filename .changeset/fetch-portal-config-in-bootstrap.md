@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-vite-plugins-spa": patch
+"@equinor/fusion-framework-vite-plugin-spa": patch
 ---
 
 Fetch and pass portal config to portal render function in bootstrap.ts
