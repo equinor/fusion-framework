@@ -21,7 +21,7 @@ export type { AppManifest } from '@equinor/fusion-framework-module-app';
  * - This type is generic to allow for partial or full manifest overrides.
  * - Returning void allows for side-effect-only functions, but returning the manifest is preferred for clarity.
  */
-export type AppManifestFn = <T extends Partial<AppManifest> = Partial<AppManifest>>(
+export type AppManifestFn<T extends AppManifest = AppManifest> = (
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
 ) => T | void | Promise<T | void>; // Supports both sync and async manifest generation.

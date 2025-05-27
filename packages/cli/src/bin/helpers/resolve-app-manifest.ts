@@ -36,6 +36,18 @@ export const resolveAppManifest = async (
       file: options?.manifestPath,
     });
 
+    if (!manifest.build) {
+      throw new Error(
+        `Application manifest for ${manifest.appKey} does not contain build information, please check the manifest file.`,
+      );
+    }
+
+    if (env.command === 'serve') {
+      // Only set assetPath when not building for production
+      // This helps with local development and preview environments
+      manifest.build.assetPath = `/bundles/apps/${manifest.appKey}/${manifest.build.version}`;
+    }
+
     // Successfully loaded manifest from file.
     options?.log?.succeed('generated manifest from', formatPath(path, { relative: true }));
     return manifest;

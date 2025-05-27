@@ -59,10 +59,6 @@ export const createAppManifestFromPackage = (
   const appKey = packageJson.name.replace(/^@|\w.*\//gm, '');
   const version = packageJson.version;
 
-  // Only set assetPath when not building for production
-  // This helps with local development and preview environments
-  const assetPath = env.command === 'build' ? undefined : `bundles/apps/${appKey}/${version}`;
-
   // Try to resolve the GitHub repo from package or git config
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
 
@@ -75,7 +71,6 @@ export const createAppManifestFromPackage = (
     type: 'standalone',
     build: {
       entryPoint,
-      assetPath,
       githubRepo,
       version,
       timestamp: new Date().toISOString(), // Build timestamp for traceability

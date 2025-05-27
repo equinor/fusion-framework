@@ -1,8 +1,7 @@
-import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
+import { defineAppManifest, mergeAppManifests } from '@equinor/fusion-framework-cli/app';
 
-export default defineAppManifest(async (_, { base }) => {
-  return {
-    ...base,
+export default defineAppManifest((_, { base }) => {
+  return mergeAppManifests(base, {
     appKey: 'test-assets',
-  };
+  });
 });

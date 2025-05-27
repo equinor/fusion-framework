@@ -111,6 +111,8 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
                 entrypoint: portalEntryPoint,
               },
             },
+            // @todo - replace with real portal config when available
+            config: {},
           },
         }
       : {}),

@@ -27,7 +27,7 @@ type PortalManifest = {
  * PortalConfig is a placeholder for portal-specific configuration.
  * Replace 'any' with a more specific type as needed.
  */
-type PortalConfig = any;
+type PortalConfig = Record<string, unknown>; // Use a more specific type if available
 
 /**
  * Options for creating a dev server configuration.
@@ -41,7 +41,7 @@ export type CreateDevServerOptions = {
   template?: Partial<FusionTemplateEnv>;
   portal?: {
     manifest: PortalManifest;
-    config?: PortalConfig;
+    config: PortalConfig;
   };
   app?: {
     manifest: AppManifest;
@@ -161,7 +161,7 @@ const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?:
 const applyPortalRouting = (
   base: DevServerOptions,
   manifest: PortalManifest,
-  config?: PortalConfig,
+  config: PortalConfig,
 ) => {
   base.api.routes ??= [];
 
@@ -233,6 +233,8 @@ export const createDevServer = async (
   overrides?: UserConfig,
 ) => {
   const baseConfig = createDevServerConfig(options);
-  const config = await loadDevServerConfig(env, baseConfig);
+  const config = await loadDevServerConfig(env, baseConfig).catch(() => {
+    return { config: baseConfig };
+  });
   return createDevServerFn(config.config, overrides);
 };

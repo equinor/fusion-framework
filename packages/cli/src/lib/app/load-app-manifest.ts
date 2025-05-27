@@ -4,6 +4,7 @@ import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '../types.js';
 import type { AppManifestFn } from './app-manifest.js';
+import mergeAppManifests from './merge-app-manifest.js';
 
 /**
  * Represents the export type for an application manifest, which can either be
@@ -24,8 +25,8 @@ export type AppManifestExport = AppManifest | AppManifestFn;
  * @property file - The file path of the manifest to load. Defaults to `app.manifest` or environment-specific variants.
  * @property extensions - An array of file extensions to consider when resolving the manifest.
  */
-export type LoadAppManifestOptions<T extends Partial<AppManifest>> = {
-  base?: T;
+export type LoadAppManifestOptions = {
+  base?: AppManifest;
   file?: string | string[];
   extensions?: string[];
 };
@@ -38,8 +39,8 @@ export type LoadAppManifestOptions<T extends Partial<AppManifest>> = {
  * @property path - The file path where the manifest was loaded from.
  * @property extension - The file extension of the manifest file.
  */
-type LoadAppManifestResult<T extends Partial<AppManifest>> = {
-  manifest: T;
+type LoadAppManifestResult = {
+  manifest: AppManifest;
   path: string;
   extension: string;
 };
@@ -54,17 +55,16 @@ type LoadAppManifestResult<T extends Partial<AppManifest>> = {
  * If the specified file is not found and the runtime environment includes an `environment` property,
  * the function will attempt to load a manifest file specific to that environment (e.g., `app.manifest.<environment>`).
  *
- * @template T - The type of the application manifest, extending a partial `AppManifest`.
  * @param env - The runtime environment object, containing information such as the root directory and environment name.
  * @param options - Optional parameters for loading the manifest.
  * @returns A promise that resolves to an object containing the loaded manifest, the file path, and the file extension.
  * @throws {FileNotFoundError} If the manifest file cannot be found and no fallback is available.
  * @public
  */
-export const loadAppManifest = async <T extends Partial<AppManifest> = AppManifest>(
+export const loadAppManifest = async (
   env: RuntimeEnv,
-  options?: LoadAppManifestOptions<T>,
-): Promise<LoadAppManifestResult<T>> => {
+  options?: LoadAppManifestOptions,
+): Promise<LoadAppManifestResult> => {
   // Suggest config filenames based on environment
   const suggestions = options?.file ?? [
     `app.manifest.${env.environment}`,
@@ -72,36 +72,39 @@ export const loadAppManifest = async <T extends Partial<AppManifest> = AppManife
     'app.manifest.config',
   ];
   // Use importConfig to dynamically import and resolve the manifest
-  const importResult = await importConfig(suggestions, {
-    baseDir: env.root,
-    extensions: options?.extensions,
-    script: {
-      /**
-       * Custom resolver for the imported manifest module.
-       *
-       * This function determines if the imported module's default export is a function or an object.
-       * If it's a function, it is invoked with the runtime environment and the base manifest, allowing
-       * for dynamic manifest generation. If it's an object, it is used directly as the manifest.
-       *
-       * @param module - The imported module containing the manifest export (either function or object).
-       * @returns The resolved manifest of type T.
-       */
-      resolve: async (module: { default: AppManifestExport }): Promise<T> => {
-        const base: T = options?.base ?? ({} as T); // Use provided base or fallback to empty object
-        // If the module's default export is a function, invoke it with the environment and base manifest
-        if (typeof module.default === 'function') {
-          const result = (await module.default(env, { base })) ?? base;
-          return result ?? base; // Always return a manifest, fallback to base if undefined
-        }
-        // If the module's default export is not a function, treat it as a manifest object
-        return (module.default as T) ?? base; // Use the object or fallback to base
+  const importResult = await importConfig<AppManifest, { default: AppManifestExport }>(
+    suggestions,
+    {
+      baseDir: env.root,
+      extensions: options?.extensions,
+      script: {
+        /**
+         * Custom resolver for the imported manifest module.
+         *
+         * This function determines if the imported module's default export is a function or an object.
+         * If it's a function, it is invoked with the runtime environment and the base manifest, allowing
+         * for dynamic manifest generation. If it's an object, it is used directly as the manifest.
+         *
+         * @param module - The imported module containing the manifest export (either function or object).
+         * @returns The resolved manifest of type T.
+         */
+        resolve: async (module) => {
+          const base: AppManifest = options?.base ?? ({} as AppManifest); // Use provided base or fallback to empty object
+          // If the module's default export is a function, invoke it with the environment and base manifest
+          if (typeof module.default === 'function') {
+            const result = await module.default(env, { base });
+            return mergeAppManifests(base, result ?? {}); // Merge and cast to Record<string, unknown>
+          }
+          // If the module's default export is not a function, treat it as a manifest object
+          return mergeAppManifests(base, module.default ?? {});
+        },
       },
     },
-  });
+  );
   // Return the loaded manifest, file path, and extension for further use
   // Maintainers: This return structure is used by downstream consumers to access the manifest and its metadata
   return {
-    manifest: importResult.config as T,
+    manifest: importResult.config,
     path: importResult.path,
     extension: importResult.extension,
   };
