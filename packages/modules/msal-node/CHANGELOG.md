@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 0.1.1-next.0
+
+### Patch Changes
+
+- [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - added lazy loading of msal cache to prevent required libsec to be loaded when not needed. CI/CD only uses tokens
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-environment-variables",
-  "version": "1.0.4",
+  "version": "1.0.5-next.0",
   "description": "",
   "private": true,
   "type": "module",
