@@ -1,6 +1,6 @@
 // ConsoleLogger provides a unified interface for logging and spinner-based feedback in CLI tools.
 // It wraps a Spinner instance and exposes methods for different log levels and progress reporting.
-import { Spinner, type SpinnerOptions } from './Spinner.js';
+import { Spinner } from './spinner.js';
 
 /**
  * ConsoleLogger is a utility class for logging progress, status, and debug information in CLI applications.

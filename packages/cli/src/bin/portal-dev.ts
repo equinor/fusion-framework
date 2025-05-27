@@ -1,9 +1,9 @@
 import { resolve } from 'node:path';
 
 import type { RuntimeEnv } from '../lib';
-import { createDevServerConfig, createDevServer, type ConsoleLogger } from './utils';
+import { createDevServer, type ConsoleLogger } from './utils';
 
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 
 /**
  * Starts the portal development server for local development and testing.
@@ -46,7 +46,7 @@ export const startPortalDevServer = async (options?: {
   const portalId = '@equinor/fusion-framework-dev-portal';
 
   // Resolve the application's package.json for root and metadata
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   // Setup the runtime environment for the dev server
   const env: RuntimeEnv = {

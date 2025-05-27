@@ -3,7 +3,7 @@ import { writeFile } from '../lib/utils';
 
 import { formatPath, type ConsoleLogger } from './utils';
 
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
 
 /**
@@ -49,7 +49,7 @@ interface GenerateApplicationConfigOptions {
 export const generateApplicationConfig = async (options?: GenerateApplicationConfigOptions) => {
   const { log } = options ?? {};
   // Resolve the application's package.json for root and metadata
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   // Setup the runtime environment for config resolution
   const env: RuntimeEnv = {

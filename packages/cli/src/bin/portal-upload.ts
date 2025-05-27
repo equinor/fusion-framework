@@ -19,7 +19,7 @@ import { loadMetadata } from './helpers/load-bundle-metadata';
  *
  * @public
  */
-export type UploadApplicationOptions = {
+export type UploadPortalOptions = {
   fileOrBundle: string | AdmZip;
   name?: string;
   framework: FusionFramework;
@@ -38,7 +38,7 @@ export type UploadApplicationOptions = {
  * @throws If bundle reading or upload fails, or if the portal service returns an error status.
  * @public
  */
-export const uploadPortalBundle = async (opt: UploadApplicationOptions) => {
+export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
   const { log, framework } = opt;
 
   // Load the bundle from file or use the provided AdmZip instance

@@ -13,7 +13,7 @@ import { resolvePackage } from '../../lib/utils';
  * @returns A promise that resolves to the package information, including its packageJson and root directory.
  * @throws Will throw an error if the package resolution fails.
  */
-export async function resolveAppPackage(log?: ConsoleLogger | null) {
+export async function resolveProjectPackage(log?: ConsoleLogger | null) {
   // Start the logging for package resolution
   log?.start('resolve project package');
   try {
@@ -34,4 +34,4 @@ export async function resolveAppPackage(log?: ConsoleLogger | null) {
   }
 }
 
-export default resolveAppPackage;
+export default resolveProjectPackage;

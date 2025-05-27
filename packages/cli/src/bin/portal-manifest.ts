@@ -2,7 +2,7 @@ import type { RuntimeEnv } from '../lib';
 import type { ConsoleLogger } from './utils';
 
 import { resolvePortalManifest } from './helpers/resolve-portal-manifest.js';
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 
 /**
  * Options for resolving the portal manifest.
@@ -13,7 +13,7 @@ import { resolveAppPackage } from './helpers/resolve-project-package.js';
  *
  * @public
  */
-export type ResolveAppManifestOptions = {
+export type ResolvePortalManifestOptions = {
   /**
    * Logger instance for outputting progress and debug information (optional).
    */
@@ -39,11 +39,11 @@ export type ResolveAppManifestOptions = {
  * @throws Will throw an error if resolving the application package or manifest fails.
  * @public
  */
-export const loadPortalManifest = async (options: ResolveAppManifestOptions) => {
+export const loadPortalManifest = async (options: ResolvePortalManifestOptions) => {
   const { log } = options ?? {};
 
   // Resolve the application's package.json for root and metadata
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   log?.debug('package', pkg);
   // Setup the runtime environment for manifest resolution

@@ -2,7 +2,7 @@ import type { RuntimeEnv } from '../lib';
 import type { ConsoleLogger } from './utils';
 
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 
 /**
  * Options for resolving the application manifest.
@@ -43,7 +43,7 @@ export const loadAppManifest = async (options: ResolveAppManifestOptions) => {
   const { log } = options ?? {};
 
   // Resolve the application's package.json for root and metadata
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   log?.debug('package', pkg);
   // Setup the runtime environment for manifest resolution

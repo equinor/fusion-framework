@@ -6,7 +6,7 @@ import {
   type FusionFrameworkSettings,
 } from '../lib/framework.node.js';
 
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
 
 /**
@@ -41,7 +41,7 @@ export const checkApp = async (options: AppCheckOptions) => {
   const { log } = options;
 
   // Resolve the application's package.json for metadata and dependencies
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   // Resolve the application manifest for the build/production mode
   // Manifest contains the appKey and other app metadata

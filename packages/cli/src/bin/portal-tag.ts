@@ -34,7 +34,7 @@ export enum AllowedTags {
  *
  * @public
  */
-export type TagApplicationOptions = {
+export type TagPortalOptions = {
   tag: AllowedTags;
   name: string;
   version: string;
@@ -53,7 +53,7 @@ export type TagApplicationOptions = {
  * @throws If the tag, name, or version is invalid, or if the tag operation fails.
  * @public
  */
-export const tagPortal = async (options: TagApplicationOptions) => {
+export const tagPortal = async (options: TagPortalOptions) => {
   const { tag, name, version, framework, log } = options;
 
   // Validate tag value

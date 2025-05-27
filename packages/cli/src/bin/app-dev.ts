@@ -4,7 +4,7 @@ import { fileExistsSync } from '../lib/utils/file-exists.js';
 import type { RuntimeEnv } from '../lib/types.js';
 
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
-import { resolveAppPackage } from './helpers/resolve-project-package.js';
+import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
 
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
@@ -61,7 +61,7 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   const portalId = '@equinor/fusion-framework-dev-portal';
 
   // Resolve the application's package.json for root and metadata
-  const pkg = await resolveAppPackage(log);
+  const pkg = await resolveProjectPackage(log);
 
   // Setup the runtime environment for the dev server
   const env: RuntimeEnv = {
