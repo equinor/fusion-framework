@@ -18,6 +18,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@equinor/eds-core-react": "^0.43.0",
     "@equinor/eds-icons": "^0.22.0",

@@ -24,6 +24,9 @@
   },
   "keywords": ["dev-server", "fusion-framework", "vite", "typescript"],
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
     "@equinor/fusion-framework-vite-plugin-spa": "workspace:^",

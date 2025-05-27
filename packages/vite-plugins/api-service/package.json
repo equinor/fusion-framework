@@ -31,6 +31,9 @@
     "typescript"
   ],
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.3",
