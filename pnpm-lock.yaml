@@ -652,7 +652,7 @@ importers:
         version: 4.3.2(typescript@5.8.3)(vite@6.3.5(@types/node@20.17.30)(sass-embedded@1.87.0))
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.45.0
@@ -850,7 +850,7 @@ importers:
         version: 11.1.0
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -921,7 +921,7 @@ importers:
         version: 5.8.3
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
 
   packages/modules/context:
     dependencies:
@@ -1017,7 +1017,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1061,7 +1061,7 @@ importers:
         version: 7.7.2
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1118,7 +1118,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1131,7 +1131,7 @@ importers:
         version: 7.0.9
       zod:
         specifier: ^3.23.8
-        version: 3.25.27
+        version: 3.25.32
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -2019,6 +2019,10 @@ packages:
     resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.27.3':
+    resolution: {integrity: sha512-7EYtGezsdiDMyY80+65EzwiGmcJqpmcZCojSXaRgdrBaGtWTgDZKq69cPIVped6MkIM78cTQ2GOiEYjwOlG4xw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.27.0':
     resolution: {integrity: sha512-2ncevenBqXI6qRMukPlXwHKHchC7RyMuu4xv5JBXRfOGVcTy1mXCD12qrp7Jsoxll1EV3+9sE4GugBVRjT2jFA==}
     engines: {node: '>=6.9.0'}
@@ -2093,8 +2097,8 @@ packages:
   '@bufbuild/protobuf@2.2.5':
     resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
 
-  '@bufbuild/protobuf@2.5.0':
-    resolution: {integrity: sha512-nniMblXT+dNyubek2OLKAYJnG/in4tmfS2c5CDnIvqfF9kFlERSG3FCBvmdqerpkWuPv0qhdGKReQ2OqKPG20w==}
+  '@bufbuild/protobuf@2.5.1':
+    resolution: {integrity: sha512-lut4UTvKL8tqtend0UDu7R79/n9jA7Jtxf77RNPbxtmWqfWI4qQ9bTjf7KCS4vfqLmpQbuHr1ciqJumAgJODdw==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -9914,8 +9918,8 @@ packages:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
 
-  zod@3.25.27:
-    resolution: {integrity: sha512-xkYsE+ztNLzBeoAG8Ipd2ICr86gyMpovQlB+Vid1LT7V16/Dj0z+Up1u1qxNX58cmJ/AtG2mvGw/7+jK48xEYw==}
+  zod@3.25.32:
+    resolution: {integrity: sha512-OSm2xTIRfW8CV5/QKgngwmQW/8aPfGdaQFlrGoErlgg/Epm7cjb6K6VEyExfe65a3VybUOnu381edLb0dfJl0g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -10073,6 +10077,8 @@ snapshots:
 
   '@babel/runtime@7.27.1': {}
 
+  '@babel/runtime@7.27.3': {}
+
   '@babel/template@7.27.0':
     dependencies:
       '@babel/code-frame': 7.26.2
@@ -10137,7 +10143,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.2.5': {}
 
-  '@bufbuild/protobuf@2.5.0':
+  '@bufbuild/protobuf@2.5.1':
     optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -14183,7 +14189,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.3
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -19006,7 +19012,7 @@ snapshots:
 
   sass-embedded@1.87.0:
     dependencies:
-      '@bufbuild/protobuf': 2.5.0
+      '@bufbuild/protobuf': 2.5.1
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.2
@@ -20223,6 +20229,6 @@ snapshots:
 
   yoctocolors@2.1.1: {}
 
-  zod@3.25.27: {}
+  zod@3.25.32: {}
 
   zwitch@2.0.4: {}
