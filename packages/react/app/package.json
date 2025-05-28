@@ -60,6 +60,7 @@
       "context": ["dist/types/context/index.d.ts"],
       "feature-flag": ["dist/types/feature-flag/index.d.ts"],
       "framework": ["dist/types/framework/index.d.ts"],
+      "fusion-apploader": ["dist/types/fusion-apploader/index.d.ts"],
       "help-center": ["dist/types/help-center/index.d.ts"],
       "http": ["dist/types/http/index.d.ts"],
       "msal": ["dist/types/msal/index.d.ts"],
