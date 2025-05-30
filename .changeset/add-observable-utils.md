@@ -13,7 +13,7 @@ These utilities let you accept and process values in many forms—plain values, 
 
 **Example usage:**
 ```ts
-import { isObservableInput, toObservable } from '@fusion-framework/utils-observable';
+import { isObservableInput, toObservable } from '@equinor/fusion-observable';
 
 isObservableInput(Promise.resolve(1)); // true
 

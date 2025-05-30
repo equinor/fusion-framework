@@ -7,7 +7,7 @@ A utility to check if a value is an observable-like input (Observable, Promise, 
 **Example:**
 
 ```ts
-import { isObservableInput } from '@fusion-framework/utils-observable';
+import { isObservableInput } from '@equinor/fusion-observable';
 import { of } from 'rxjs';
 
 isObservableInput(Promise.resolve(1)); // true
@@ -18,12 +18,14 @@ isObservableInput({}); // false
 
 ## `toObservable`
 
+```ts
+import { toObservable } from '@equinor/fusion-observable';
 A utility to convert various input types (value, function, promise, observable, iterable) into a consistent Observable stream. This allows you to handle inputs uniformly without worrying about their original type.
 **Example:**
 
 ```ts
 import { lastValueFrom, Observable } from 'rxjs';
-import { toObservable, type DynamicInputValue } from '@fusion-framework/utils-observable';
+import { toObservable, type DynamicInputValue } from '@equinor/fusion-observable';
 
 const flexibleHandler = async (input: DynamicInputValue<{foo: string}>) => {
   return lastValueFrom(toObservable(input));
