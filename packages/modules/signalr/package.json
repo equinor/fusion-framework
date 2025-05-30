@@ -12,8 +12,8 @@
     }
   },
   "typesVersions": {
-    ">=4.2": {
-      "*": ["./dist/types/index.d.ts", "dist/types/*"]
+    "*": {
+      ".": ["dist/types/index.d.ts"]
     }
   },
   "scripts": {

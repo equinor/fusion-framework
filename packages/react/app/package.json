@@ -52,6 +52,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "bookmark": ["dist/types/bookmark/index.d.ts"],
       "context": ["dist/types/context/index.d.ts"],
       "feature-flag": ["dist/types/feature-flag/index.d.ts"],

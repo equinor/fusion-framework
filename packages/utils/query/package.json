@@ -20,17 +20,18 @@
       "import": "./dist/esm/client/index.js",
       "types": "./dist/types/client/index.d.ts"
     },
-    "./react": {
-      "import": "./dist/esm/react/index.js",
-      "types": "./dist/types/react/index.d.ts"
-    },
     "./operators": {
       "import": "./dist/esm/operators.js",
       "types": "./dist/types/operators.d.ts"
+    },
+    "./react": {
+      "import": "./dist/esm/react/index.js",
+      "types": "./dist/types/react/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "cache": ["dist/types/cache/index.d.ts"],
       "client": ["dist/types/client/index.d.ts"],
       "operators": ["dist/types/operators.d.ts"],
