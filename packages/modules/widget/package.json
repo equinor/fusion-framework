@@ -16,6 +16,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "errors.js": ["dist/types/errors.d.ts"]
     }
   },

@@ -16,6 +16,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "enable-bookmark": ["dist/types/enable-bookmark.d.ts"]
     }
   },
