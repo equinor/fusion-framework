@@ -16,6 +16,10 @@
       "import": "./dist/esm/operators/index.js",
       "types": "./dist/types/operators/index.d.ts"
     },
+    "./actions": {
+      "import": "./dist/esm/actions.js",
+      "types": "./dist/types/actions.d.ts"
+    },
     "./react": {
       "import": "./dist/esm/react/index.js",
       "types": "./dist/types/react/index.d.ts"
