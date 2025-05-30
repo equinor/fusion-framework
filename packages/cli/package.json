@@ -31,6 +31,14 @@
       "import": "./dist/lib/plugins/external-public/index.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/lib/index.d.ts"],
+      "plugin-app-assets": ["dist/types/bin/plugins/app-assets/index.d.ts"],
+      "plugin-app-proxy": ["dist/types/lib/plugins/app-proxy/index.d.ts"],
+      "plugin-external-public": ["dist/types/lib/plugins/external-public/index.d.ts"]
+    }
+  },
   "scripts": {
     "prebuild": "pnpm build:source",
     "build": "pnpm build:source && pnpm build:dev-server",
