@@ -19,7 +19,7 @@ importers:
         version: 2.29.4
       '@vitest/coverage-v8':
         specifier: ^2.0.1
-        version: 2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
+        version: 2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
       genversion:
         specifier: ^3.1.1
         version: 3.2.0
@@ -43,10 +43,10 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
+        version: 0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))
 
   cookbooks/app-react:
     devDependencies:
@@ -1024,7 +1024,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/modules/module:
     dependencies:
@@ -1147,13 +1147,13 @@ importers:
         version: 9.8.0
       msw:
         specifier: ^2.7.3
-        version: 2.8.4(@types/node@22.15.3)(typescript@5.8.3)
+        version: 2.8.6(@types/node@22.15.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/modules/signalr:
     dependencies:
@@ -1714,7 +1714,7 @@ importers:
         version: 4.5.4
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/load-env:
     dependencies:
@@ -1730,7 +1730,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/log:
     dependencies:
@@ -1749,7 +1749,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/observable:
     dependencies:
@@ -1789,7 +1789,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/utils/query:
     dependencies:
@@ -1826,7 +1826,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
+        version: 2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0)
 
   packages/widget:
     dependencies:
@@ -2019,6 +2019,10 @@ packages:
     resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.27.3':
+    resolution: {integrity: sha512-7EYtGezsdiDMyY80+65EzwiGmcJqpmcZCojSXaRgdrBaGtWTgDZKq69cPIVped6MkIM78cTQ2GOiEYjwOlG4xw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.27.0':
     resolution: {integrity: sha512-2ncevenBqXI6qRMukPlXwHKHchC7RyMuu4xv5JBXRfOGVcTy1mXCD12qrp7Jsoxll1EV3+9sE4GugBVRjT2jFA==}
     engines: {node: '>=6.9.0'}
@@ -2093,8 +2097,8 @@ packages:
   '@bufbuild/protobuf@2.2.5':
     resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
 
-  '@bufbuild/protobuf@2.5.0':
-    resolution: {integrity: sha512-nniMblXT+dNyubek2OLKAYJnG/in4tmfS2c5CDnIvqfF9kFlERSG3FCBvmdqerpkWuPv0qhdGKReQ2OqKPG20w==}
+  '@bufbuild/protobuf@2.5.1':
+    resolution: {integrity: sha512-lut4UTvKL8tqtend0UDu7R79/n9jA7Jtxf77RNPbxtmWqfWI4qQ9bTjf7KCS4vfqLmpQbuHr1ciqJumAgJODdw==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -3106,8 +3110,8 @@ packages:
   '@iconify/utils@2.3.0':
     resolution: {integrity: sha512-GmQ78prtwYW6EtzXRU1rY+KwOKfz32PD7iJh6Iyqw68GiKuoZ2A6pRtzWONz5VQJbp50mEjXh/7NkumtrAgRKA==}
 
-  '@inquirer/confirm@5.1.10':
-    resolution: {integrity: sha512-FxbQ9giWxUWKUk2O5XZ6PduVnH2CZ/fmMKMBkH71MHJvWr7WL5AHKevhzF1L5uYWB2P548o1RzVxrNd3dpmk6g==}
+  '@inquirer/confirm@5.1.12':
+    resolution: {integrity: sha512-dpq+ielV9/bqgXRUbNH//KsY6WEw9DrGPmipkpmgC1Y46cwuBTNx7PXFWTjc3MQ+urcc0QxoVHcMI0FW4Ok0hg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -3115,8 +3119,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/core@10.1.11':
-    resolution: {integrity: sha512-BXwI/MCqdtAhzNQlBEFE7CEflhPkl/BqvAuV/aK6lW3DClIfYVDWPP/kXuXHtBWC7/EEbNqd/1BGq2BGBBnuxw==}
+  '@inquirer/core@10.1.13':
+    resolution: {integrity: sha512-1viSxebkYN2nJULlzCxES6G9/stgHSepZ9LqqfdIGPHj5OHhiBUXVS0a6R0bEC2A+VL4D9w6QB66ebCr6HGllA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -3124,12 +3128,12 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/figures@1.0.11':
-    resolution: {integrity: sha512-eOg92lvrn/aRUqbxRyvpEWnrvRuTYRifixHkYVpJiygTgVSBIHDqLh0SrMQXkafvULg3ck11V7xvR+zcgvpHFw==}
+  '@inquirer/figures@1.0.12':
+    resolution: {integrity: sha512-MJttijd8rMFcKJC8NYmprWr6hD3r9Gd9qUC0XwPNwoEPWSMVJwA2MlXxF+nhZZNMY+HXsWa+o7KY2emWYIn0jQ==}
     engines: {node: '>=18'}
 
-  '@inquirer/type@3.0.6':
-    resolution: {integrity: sha512-/mKVCtVpyBu3IDarv0G+59KC4stsD5mDsGpYh+GKs1NZT88Jh52+cuoA1AtLk2Q0r/quNl+1cSUyLRHBFeD0XA==}
+  '@inquirer/type@3.0.7':
+    resolution: {integrity: sha512-PfunHQcjwnju84L+ycmcMKB/pTPIngjUJvfnRhKY6FKPuYXlM4aQCb/nIdTFR6BEhMjFvngzvng/vBAJMZpLSA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -3700,8 +3704,8 @@ packages:
   '@microsoft/signalr@8.0.7':
     resolution: {integrity: sha512-PHcdMv8v5hJlBkRHAuKG5trGViQEkPYee36LnJQx4xHOQ5LL4X0nEWIxOp5cCtZ7tu+30quz5V3k0b1YNuc6lw==}
 
-  '@mswjs/interceptors@0.37.6':
-    resolution: {integrity: sha512-wK+5pLK5XFmgtH3aQ2YVvA3HohS3xqV/OxuVOdNx9Wpnz7VE/fnC+e1A7ln6LFYeck7gOJ/dsZV6OLplOtAJ2w==}
+  '@mswjs/interceptors@0.38.7':
+    resolution: {integrity: sha512-Jkb27iSn7JPdkqlTqKfhncFfnEZsIJVYxsFbUSWEkxdIPdsyngrhoDBk0/BGD2FQcRH99vlRrkHpNTyKqI+0/w==}
     engines: {node: '>=18'}
 
   '@nevware21/ts-async@0.5.4':
@@ -7721,8 +7725,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.8.4:
-    resolution: {integrity: sha512-GLU8gx0o7RBG/3x/eTnnLd5S5ZInxXRRRMN8GJwaPZ4jpJTxzQfWGvwr90e8L5dkKJnz+gT4gQYCprLy/c4kVw==}
+  msw@2.8.6:
+    resolution: {integrity: sha512-fpwS5PnENnf7q7VF2ev00yfzmNXW78McKNgyaHaXQgz7p9pV8b2qQx1FoI0QA4BOxaVGBB6zBQUV4QWaK3G40g==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -10073,6 +10077,8 @@ snapshots:
 
   '@babel/runtime@7.27.1': {}
 
+  '@babel/runtime@7.27.3': {}
+
   '@babel/template@7.27.0':
     dependencies:
       '@babel/code-frame': 7.26.2
@@ -10137,7 +10143,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.2.5': {}
 
-  '@bufbuild/protobuf@2.5.0':
+  '@bufbuild/protobuf@2.5.1':
     optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -11211,25 +11217,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@inquirer/confirm@5.1.10(@types/node@20.17.30)':
+  '@inquirer/confirm@5.1.12(@types/node@20.17.30)':
     dependencies:
-      '@inquirer/core': 10.1.11(@types/node@20.17.30)
-      '@inquirer/type': 3.0.6(@types/node@20.17.30)
+      '@inquirer/core': 10.1.13(@types/node@20.17.30)
+      '@inquirer/type': 3.0.7(@types/node@20.17.30)
     optionalDependencies:
       '@types/node': 20.17.30
     optional: true
 
-  '@inquirer/confirm@5.1.10(@types/node@22.15.3)':
+  '@inquirer/confirm@5.1.12(@types/node@22.15.3)':
     dependencies:
-      '@inquirer/core': 10.1.11(@types/node@22.15.3)
-      '@inquirer/type': 3.0.6(@types/node@22.15.3)
+      '@inquirer/core': 10.1.13(@types/node@22.15.3)
+      '@inquirer/type': 3.0.7(@types/node@22.15.3)
     optionalDependencies:
       '@types/node': 22.15.3
 
-  '@inquirer/core@10.1.11(@types/node@20.17.30)':
+  '@inquirer/core@10.1.13(@types/node@20.17.30)':
     dependencies:
-      '@inquirer/figures': 1.0.11
-      '@inquirer/type': 3.0.6(@types/node@20.17.30)
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@20.17.30)
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
       mute-stream: 2.0.0
@@ -11240,10 +11246,10 @@ snapshots:
       '@types/node': 20.17.30
     optional: true
 
-  '@inquirer/core@10.1.11(@types/node@22.15.3)':
+  '@inquirer/core@10.1.13(@types/node@22.15.3)':
     dependencies:
-      '@inquirer/figures': 1.0.11
-      '@inquirer/type': 3.0.6(@types/node@22.15.3)
+      '@inquirer/figures': 1.0.12
+      '@inquirer/type': 3.0.7(@types/node@22.15.3)
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
       mute-stream: 2.0.0
@@ -11253,14 +11259,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.3
 
-  '@inquirer/figures@1.0.11': {}
+  '@inquirer/figures@1.0.12': {}
 
-  '@inquirer/type@3.0.6(@types/node@20.17.30)':
+  '@inquirer/type@3.0.7(@types/node@20.17.30)':
     optionalDependencies:
       '@types/node': 20.17.30
     optional: true
 
-  '@inquirer/type@3.0.6(@types/node@22.15.3)':
+  '@inquirer/type@3.0.7(@types/node@22.15.3)':
     optionalDependencies:
       '@types/node': 22.15.3
 
@@ -12051,7 +12057,7 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@mswjs/interceptors@0.37.6':
+  '@mswjs/interceptors@0.38.7':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -14183,7 +14189,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.3
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -14672,7 +14678,7 @@ snapshots:
       vite: 6.0.15(@types/node@22.15.3)(sass-embedded@1.86.3)
       vue: 3.5.13(typescript@5.8.3)
 
-  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))':
+  '@vitest/coverage-v8@2.1.9(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -14686,7 +14692,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14697,22 +14703,22 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.9(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.19(@types/node@20.17.30)(sass-embedded@1.87.0))':
+  '@vitest/mocker@2.1.9(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.19(@types/node@20.17.30)(sass-embedded@1.87.0))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.8.4(@types/node@20.17.30)(typescript@5.8.3)
+      msw: 2.8.6(@types/node@20.17.30)(typescript@5.8.3)
       vite: 5.4.19(@types/node@20.17.30)(sass-embedded@1.87.0)
 
-  '@vitest/mocker@2.1.9(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.19(@types/node@22.15.3)(sass-embedded@1.87.0))':
+  '@vitest/mocker@2.1.9(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.19(@types/node@22.15.3)(sass-embedded@1.87.0))':
     dependencies:
       '@vitest/spy': 2.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      msw: 2.8.4(@types/node@22.15.3)(typescript@5.8.3)
+      msw: 2.8.6(@types/node@22.15.3)(typescript@5.8.3)
       vite: 5.4.19(@types/node@22.15.3)(sass-embedded@1.87.0)
 
   '@vitest/pretty-format@2.1.9':
@@ -17734,13 +17740,13 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3):
+  msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
       '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.10(@types/node@20.17.30)
-      '@mswjs/interceptors': 0.37.6
+      '@inquirer/confirm': 5.1.12(@types/node@20.17.30)
+      '@mswjs/interceptors': 0.38.7
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/until': 2.1.0
       '@types/cookie': 0.6.0
@@ -17760,13 +17766,13 @@ snapshots:
       - '@types/node'
     optional: true
 
-  msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3):
+  msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
       '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.10(@types/node@22.15.3)
-      '@mswjs/interceptors': 0.37.6
+      '@inquirer/confirm': 5.1.12(@types/node@22.15.3)
+      '@mswjs/interceptors': 0.38.7
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/until': 2.1.0
       '@types/cookie': 0.6.0
@@ -19006,7 +19012,7 @@ snapshots:
 
   sass-embedded@1.87.0:
     dependencies:
-      '@bufbuild/protobuf': 2.5.0
+      '@bufbuild/protobuf': 2.5.1
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.2
@@ -19810,15 +19816,15 @@ snapshots:
       fsevents: 2.3.3
       sass-embedded: 1.87.0
 
-  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)):
+  vitest-github-actions-reporter@0.11.1(vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)):
     dependencies:
       '@actions/core': 1.11.1
-      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
+      vitest: 2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0)
 
-  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0):
+  vitest@2.1.9(@types/node@20.17.30)(happy-dom@17.4.7)(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.87.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.8.4(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.19(@types/node@20.17.30)(sass-embedded@1.87.0))
+      '@vitest/mocker': 2.1.9(msw@2.8.6(@types/node@20.17.30)(typescript@5.8.3))(vite@5.4.19(@types/node@20.17.30)(sass-embedded@1.87.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -19851,10 +19857,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0):
+  vitest@2.1.9(@types/node@22.15.3)(happy-dom@17.4.7)(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(sass-embedded@1.87.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.8.4(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.19(@types/node@22.15.3)(sass-embedded@1.87.0))
+      '@vitest/mocker': 2.1.9(msw@2.8.6(@types/node@22.15.3)(typescript@5.8.3))(vite@5.4.19(@types/node@22.15.3)(sass-embedded@1.87.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
