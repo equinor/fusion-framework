@@ -819,11 +819,11 @@ importers:
         specifier: workspace:^
         version: link:../module
       ag-grid-community:
-        specifier: 33.2.4
-        version: 33.2.4
+        specifier: 33.3.1
+        version: 33.3.1
       ag-grid-enterprise:
-        specifier: 33.2.4
-        version: 33.2.4
+        specifier: 33.3.1
+        version: 33.3.1
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
@@ -1230,14 +1230,14 @@ importers:
         specifier: workspace:*
         version: link:../../modules/ag-grid
       ag-grid-community:
-        specifier: 33.2.4
-        version: 33.2.4
+        specifier: 33.3.1
+        version: 33.3.1
       ag-grid-enterprise:
-        specifier: 33.2.4
-        version: 33.2.4
+        specifier: 33.3.1
+        version: 33.3.1
       ag-grid-react:
-        specifier: 33.2.4
-        version: 33.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 33.3.1
+        version: 33.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
@@ -2019,6 +2019,10 @@ packages:
     resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.27.4':
+    resolution: {integrity: sha512-t3yaEOuGu9NlIZ+hIeGbBjFtZT7j2cb2tg0fuaJKeGotchRjjLfrBA9Kwf8quhpP1EUuxModQg04q/mBwyg8uA==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.27.0':
     resolution: {integrity: sha512-2ncevenBqXI6qRMukPlXwHKHchC7RyMuu4xv5JBXRfOGVcTy1mXCD12qrp7Jsoxll1EV3+9sE4GugBVRjT2jFA==}
     engines: {node: '>=6.9.0'}
@@ -2093,8 +2097,8 @@ packages:
   '@bufbuild/protobuf@2.2.5':
     resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
 
-  '@bufbuild/protobuf@2.5.0':
-    resolution: {integrity: sha512-nniMblXT+dNyubek2OLKAYJnG/in4tmfS2c5CDnIvqfF9kFlERSG3FCBvmdqerpkWuPv0qhdGKReQ2OqKPG20w==}
+  '@bufbuild/protobuf@2.5.1':
+    resolution: {integrity: sha512-lut4UTvKL8tqtend0UDu7R79/n9jA7Jtxf77RNPbxtmWqfWI4qQ9bTjf7KCS4vfqLmpQbuHr1ciqJumAgJODdw==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -5567,29 +5571,29 @@ packages:
     resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
     engines: {node: '>=12.0'}
 
-  ag-charts-community@11.2.4:
-    resolution: {integrity: sha512-L4DDGpCP1IVjjgacADRMPSucUiH7CU4nLJFFI/eWkv+ee0WOte7XIgIiwzUci+UD4IhLHu5zwbOoHdZ9LX/E5w==}
+  ag-charts-community@11.3.1:
+    resolution: {integrity: sha512-s4zFvFY1DzF6HHLkdT4H5LHpZE8ybMdzsCGGE6AnU7/mh5oCW62M3fvNSKCU0RlGqj58VNHa6bkCc/EogZtTfw==}
 
-  ag-charts-core@11.2.4:
-    resolution: {integrity: sha512-RiN2GXSBuYBAGhbfxiQjhM+pDnJ+2iT/W0r/2KHBHXI8Bv89l+jYKBunb/4SqcP6/DBaxhh+yESk25dYj391Bg==}
+  ag-charts-core@11.3.1:
+    resolution: {integrity: sha512-7x4y3UNgkHKHnEVfhcbgFj1XTcFh620H5xa2OXdWVoyr+sN6wNRuEt7a34BnXI/DQHrC2rvKgu7CdycYB/8cEg==}
 
-  ag-charts-enterprise@11.2.4:
-    resolution: {integrity: sha512-4msY1swe0GwEytQI9H3ANM+pMWVeAa8u8yGcZJ8kMzTFB3urNjXXGmYLZ7rQCiPfzLUuY25iGKf36ToUMHrrNA==}
+  ag-charts-enterprise@11.3.1:
+    resolution: {integrity: sha512-tt+5WPHRSgN3+c03evMNoWYjdwpUpgookChTMfVslL4yL31Ee2JHPvMsHNcYt01oBclaeszPjIL+dAAS7JtdSA==}
 
-  ag-charts-locale@11.2.4:
-    resolution: {integrity: sha512-hArufzKISb/5UJtIPfTKu3TvSQ3ZAuwMrOsn8F6I4rOwJnNxbZYeQvm2yiKXx9D7hMhr3d1lNZxNIlKOrMZY/w==}
+  ag-charts-locale@11.3.1:
+    resolution: {integrity: sha512-PLuCYd1TbQGPlG5nWuXxyNeeDtTfslBA1Hg/Vh21NdAfW5SXfD8HQqwAbCM/vwWH6xv4SOJBrEx3TplNL2yIlg==}
 
-  ag-charts-types@11.2.4:
-    resolution: {integrity: sha512-a1aQjtQ9ZH+J8BF3YcWAIHUt9ZLiL9IVZ8R5h7z2CkTNu2TPq5UlsCcF0/YZKc1M8CM0CdSNLSGQuWUwDNxAcA==}
+  ag-charts-types@11.3.1:
+    resolution: {integrity: sha512-kUSSypwsmkQDT5Oqgcr3zYQShzQuhvYeHaT1l2ocUrz3hBzkIiYwzp9CVG3Vs//M9TUCJLTcR0CBIr9ADhPITw==}
 
-  ag-grid-community@33.2.4:
-    resolution: {integrity: sha512-7XT1+wxmMlMVXB27BJOzlft9ATB0C5HOJcCGMc8dCO2W17JXbNknVEEDGTBKoSvA4Cei8sARrRDxmPgY8mWopQ==}
+  ag-grid-community@33.3.1:
+    resolution: {integrity: sha512-c3JXKY5K5V5KVZ6rhFc13hK/8UzaZNwTqL70YKkqUbqwOcogDVVeG4I25W6o5YOlFO6LFN/5xFnFPASWn4LwBw==}
 
-  ag-grid-enterprise@33.2.4:
-    resolution: {integrity: sha512-JFFm0d/7+cdTR/J0oMRwwKfFHII5xsYCw3t6ef1iQHjhpIR9H3vv6XVGL41aYvwuaQcZM4kDWZnwlVfjGFC47w==}
+  ag-grid-enterprise@33.3.1:
+    resolution: {integrity: sha512-R2IPHIfo7gTIgOtDNOaCY53+qqyEsdVCFcZT/TajQrZRu7d5LG1HMc2fAiLniUK7rYL6wkk2yLao/EZkjwFIrA==}
 
-  ag-grid-react@33.2.4:
-    resolution: {integrity: sha512-rP6zwrGxRimAf6blJQZDahE0t2LM2zqqOEEeBacD6M5coWP+zOESja9vklpyzU+UfIlyqToZ2O+rboBQt3Wqxg==}
+  ag-grid-react@33.3.1:
+    resolution: {integrity: sha512-CHuuHxzuz2rsKuyxjuGnBadwm0/I2DCG4j1WgIa2wJkdlTUrcKjF6RD9qwfRLYKA4P40shG640emVuU6/qiZLA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -6498,8 +6502,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-prettier@5.4.0:
-    resolution: {integrity: sha512-BvQOvUhkVQM1i63iMETK9Hjud9QhqBnbtT1Zc642p9ynzBuCe5pybkOnvqZIBypXmMlsGcnU4HZ8sCTPfpAexA==}
+  eslint-plugin-prettier@5.4.1:
+    resolution: {integrity: sha512-9dF+KuU/Ilkq27A8idRP7N2DH8iUR6qXcjF3FR2wETY21PZdBrIjwCau8oboyGj9b7etWmTGEeM8e7oOed6ZWg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       '@types/eslint': '>=8.0.0'
@@ -9043,8 +9047,8 @@ packages:
     resolution: {integrity: sha512-GTt8rSKje5FilG+wEdfCkOcLL7LWqpMlr2c3LRuKt/YXxcJ52aGSbGBAdI4L3aaqfrBt6y711El53ItyH1NWzg==}
     engines: {node: '>=16.0.0'}
 
-  synckit@0.11.6:
-    resolution: {integrity: sha512-2pR2ubZSV64f/vqm9eLPz/KOvR9Dm+Co/5ChLgeHl0yEDRc6h5hXHoxEQH8Y5Ljycozd3p1k5TTSVdzYGkPvLw==}
+  synckit@0.11.8:
+    resolution: {integrity: sha512-+XZ+r1XGIJGeQk3VvXhT6xx/VpbHsRzsTkGgF6E5RX9TTXD0118l87puaEBZ566FhqblC6U0d4XnubznJDm30A==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
   tabbable@6.2.0:
@@ -10073,6 +10077,8 @@ snapshots:
 
   '@babel/runtime@7.27.1': {}
 
+  '@babel/runtime@7.27.4': {}
+
   '@babel/template@7.27.0':
     dependencies:
       '@babel/code-frame': 7.26.2
@@ -10137,7 +10143,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.2.5': {}
 
-  '@bufbuild/protobuf@2.5.0':
+  '@bufbuild/protobuf@2.5.1':
     optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -10420,7 +10426,7 @@ snapshots:
       '@typescript-eslint/parser': 7.18.0(eslint@9.25.1)(typescript@5.8.3)
       eslint: 9.25.1
       eslint-config-prettier: 9.1.0(eslint@9.25.1)
-      eslint-plugin-prettier: 5.4.0(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3)
+      eslint-plugin-prettier: 5.4.1(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3)
       prettier: 3.5.3
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -14183,7 +14189,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.1
+      '@babel/runtime': 7.27.4
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -15243,43 +15249,43 @@ snapshots:
 
   adm-zip@0.5.16: {}
 
-  ag-charts-community@11.2.4:
+  ag-charts-community@11.3.1:
     dependencies:
-      ag-charts-core: 11.2.4
-      ag-charts-locale: 11.2.4
-      ag-charts-types: 11.2.4
+      ag-charts-core: 11.3.1
+      ag-charts-locale: 11.3.1
+      ag-charts-types: 11.3.1
     optional: true
 
-  ag-charts-core@11.2.4:
+  ag-charts-core@11.3.1:
     dependencies:
-      ag-charts-types: 11.2.4
+      ag-charts-types: 11.3.1
     optional: true
 
-  ag-charts-enterprise@11.2.4:
+  ag-charts-enterprise@11.3.1:
     dependencies:
-      ag-charts-community: 11.2.4
-      ag-charts-core: 11.2.4
+      ag-charts-community: 11.3.1
+      ag-charts-core: 11.3.1
     optional: true
 
-  ag-charts-locale@11.2.4:
+  ag-charts-locale@11.3.1:
     optional: true
 
-  ag-charts-types@11.2.4: {}
+  ag-charts-types@11.3.1: {}
 
-  ag-grid-community@33.2.4:
+  ag-grid-community@33.3.1:
     dependencies:
-      ag-charts-types: 11.2.4
+      ag-charts-types: 11.3.1
 
-  ag-grid-enterprise@33.2.4:
+  ag-grid-enterprise@33.3.1:
     dependencies:
-      ag-grid-community: 33.2.4
+      ag-grid-community: 33.3.1
     optionalDependencies:
-      ag-charts-community: 11.2.4
-      ag-charts-enterprise: 11.2.4
+      ag-charts-community: 11.3.1
+      ag-charts-enterprise: 11.3.1
 
-  ag-grid-react@33.2.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  ag-grid-react@33.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      ag-grid-community: 33.2.4
+      ag-grid-community: 33.3.1
       prop-types: 15.8.1
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -16360,12 +16366,12 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-prettier@5.4.0(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3):
+  eslint-plugin-prettier@5.4.1(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3):
     dependencies:
       eslint: 9.25.1
       prettier: 3.5.3
       prettier-linter-helpers: 1.0.0
-      synckit: 0.11.6
+      synckit: 0.11.8
     optionalDependencies:
       eslint-config-prettier: 9.1.0(eslint@9.25.1)
 
@@ -19006,7 +19012,7 @@ snapshots:
 
   sass-embedded@1.87.0:
     dependencies:
-      '@bufbuild/protobuf': 2.5.0
+      '@bufbuild/protobuf': 2.5.1
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.2
@@ -19357,7 +19363,7 @@ snapshots:
 
   sync-message-port@1.1.3: {}
 
-  synckit@0.11.6:
+  synckit@0.11.8:
     dependencies:
       '@pkgr/core': 0.2.4
 
