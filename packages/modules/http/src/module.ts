@@ -79,12 +79,12 @@ export const module: HttpMsalModule = {
         const { scopes = [] } = request;
         if (scopes.length) {
           /** TODO should be try catch, check caller for handling */
-          const token = await authProvider.acquireToken({
+          const accessToken = await authProvider.acquireAccessToken({
             scopes,
           });
-          if (token) {
+          if (accessToken) {
             const headers = new Headers(request.headers);
-            headers.set('Authorization', `Bearer ${token.accessToken}`);
+            headers.set('Authorization', `Bearer ${accessToken}`);
             return { ...request, headers };
           }
         }

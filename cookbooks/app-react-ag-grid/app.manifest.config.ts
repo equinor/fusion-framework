@@ -1,3 +1,5 @@
-import { defineAppManifest } from '@equinor/fusion-framework-cli';
+import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
 
-export default defineAppManifest(async () => ({ appKey: 'cookbook-ag-grid' }));
+export default defineAppManifest((_, { base }) => {
+  base.appKey = 'cookbook-ag-grid';
+});

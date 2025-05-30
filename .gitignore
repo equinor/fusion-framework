@@ -127,3 +127,5 @@ yalc.lock
 .yalc
 
 app-bundle.zip
+
+packages/cli/bin/build

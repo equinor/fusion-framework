@@ -1,5 +1,17 @@
 # Change Log
 
+## 23.0.5-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
+  - @equinor/fusion-framework-module-http@6.3.3-next.0
+  - @equinor/fusion-framework-app@9.3.15-next.0
+  - @equinor/fusion-framework@7.3.13-next.0
+  - @equinor/fusion-framework-module-app@6.1.13
+  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.0
+  - @equinor/fusion-framework-react-app@6.1.6-next.0
+
 ## 23.0.4
 
 ### Patch Changes

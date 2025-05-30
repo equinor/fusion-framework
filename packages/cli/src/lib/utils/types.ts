@@ -2,6 +2,8 @@ export type RecursivePartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U> ? Array<Value<U>> : Value<T[P]>;
 };
 type AllowedPrimitives =
+  // biome-ignore lint/complexity/noBannedTypes: no better way to do this?
+  | Function
   | boolean
   | string
   | number

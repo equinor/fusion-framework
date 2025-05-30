@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.27-next.0
+
+### Patch Changes
+
+- [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - fixed package.json main to point to dist
+
+- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
+  - @equinor/fusion-framework-cli@11.0.0-next.0
+  - @equinor/fusion-framework-react-app@6.1.6-next.0
+
 ## 0.6.26
 
 ### Patch Changes
