@@ -27,3 +27,7 @@ export {
 export { createReducer, ActionReducerMapBuilder } from './create-reducer';
 
 export { createState, type FlowState } from './create-state';
+
+export { isObservableInput } from './is-observable-input';
+
+export { toObservable, type DynamicInputValue } from './to-observable';
