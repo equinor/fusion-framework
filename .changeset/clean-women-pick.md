@@ -21,5 +21,5 @@
 chore: update package typesVersions
 
 - Updated package.json typesVersions.
-- Ensures backward compatibility with older node verisons.
+- Ensures backward compatibility with older node versions.
 - Ensured consistency with workspace and repository configuration.
