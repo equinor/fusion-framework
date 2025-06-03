@@ -1,3 +1,4 @@
+import { z } from 'zod';
 /**
  * Zod schema for validating the build section of the PortalManifest object.
  *
@@ -7,8 +8,6 @@
  * - Maintainers: Update this schema if the build contract changes.
  * - This schema is the canonical source for portal build validation and structure.
  */
-import { z } from 'zod';
-
 export const PortalManifestBuildSchema = z.object({
   // Main entry point for the portal (required)
   templateEntry: z

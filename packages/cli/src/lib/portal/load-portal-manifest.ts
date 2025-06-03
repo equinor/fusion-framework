@@ -35,7 +35,7 @@ export type PortalManifestExport<T extends Partial<PortalManifest>> = T | Portal
  * @property path - The file system path to the manifest file.
  * @property extension - The file extension of the manifest file.
  */
-type LoadAppManifestResult<T extends Partial<PortalManifest>> = {
+type LoadPortalManifestResult<T extends Partial<PortalManifest>> = {
   manifest: T;
   path: string;
   extension: string;
@@ -61,7 +61,7 @@ export type LoadPortalManifestOptions<T extends Partial<PortalManifest>> = {
  * @template T - The type of the portal manifest, extending Partial<PortalManifest>. Defaults to PortalManifest.
  * @param env - The runtime environment containing configuration such as the root directory and environment name.
  * @param options - Optional settings for loading the manifest.
- * @returns A promise that resolves to a `LoadAppManifestResult<T>` containing the loaded manifest, the file path, and the file extension.
+ * @returns A promise that resolves to a `LoadPortalManifestResult<T>` containing the loaded manifest, the file path, and the file extension.
  *
  * This function is the main entry point for loading portal manifest files. It supports merging with a base manifest, custom file name suggestions, and extension filtering.
  *
@@ -73,7 +73,7 @@ export type LoadPortalManifestOptions<T extends Partial<PortalManifest>> = {
 export const loadPortalManifest = async <T extends Partial<PortalManifest> = PortalManifest>(
   env: RuntimeEnv,
   options?: LoadPortalManifestOptions<T>,
-): Promise<LoadAppManifestResult<T>> => {
+): Promise<LoadPortalManifestResult<T>> => {
   // Determine manifest file name suggestions, defaulting to environment-specific and generic names
   const suggestions = options?.file ?? [`portal.manifest.${env.environment}`, 'portal.manifest'];
 

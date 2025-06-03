@@ -17,9 +17,10 @@ import {
  * Used for dev server portal routing and config.
  */
 type PortalManifest = {
-  id: string;
+  name: string;
   build: {
-    entrypoint: string;
+    templateEntry: string;
+    assetPath?: string; // Optional, used for local dev server routing
   };
 };
 
@@ -47,7 +48,7 @@ export type CreateDevServerOptions = {
     manifest: AppManifest;
     config?: ApiAppConfig;
   };
-  server?: DevServerOptions['server'];
+  // server?: DevServerOptions['server'];
 };
 
 /**
@@ -107,22 +108,10 @@ const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?:
   }
   base.api.routes ??= [];
 
-  console.warn(
-    '\n\n:::',
-    'Adding app routing for',
-    appKey,
-    'version',
-    build.version,
-    'tag',
-    build.tag,
-    ':::\n\n',
-  );
-
   // add rewrite to local fs
   base.api.routes.push({
     match: `/apps/bundles/apps/${appKey}@${build.version}/*path`,
     middleware: async (req, res, next) => {
-      console.warn('\n\n\n--', req.params, '--\n\n\n');
       const location = req.params?.path as string[];
       if (Array.isArray(location) === false) {
         next();
@@ -177,8 +166,10 @@ const applyPortalRouting = (
 ) => {
   base.api.routes ??= [];
 
+  // @todo - might add correct tag handling later
+
   base.api.routes.push({
-    match: `/portals/portals/${manifest.id}{@:tag}`,
+    match: `/portals/portals/${manifest.name}{@:tag}`,
     middleware: async (_req, res) => {
       res.writeHead(200, {
         'content-type': 'application/json',
@@ -187,7 +178,7 @@ const applyPortalRouting = (
     },
   });
   base.api.routes.push({
-    match: `/portals/portals/${manifest.id}{@:tag}/config`,
+    match: `/portals/portals/${manifest.name}{@:tag}/config`,
     middleware: async (_req, res) => {
       res.writeHead(200, {
         'content-type': 'application/json',
@@ -225,7 +216,6 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
         };
       },
     },
-    server: options.server,
   };
 
   if (options.app) {

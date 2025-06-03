@@ -62,15 +62,15 @@ export const createPortalManifestFromPackage = (
   assert(packageJson.version, 'expected [version] in packageJson');
 
   // Determine the entry point for the portal based on environment (prod/dev)
-  const entryPoint = resolvePortalEntryPoint(env, packageJson);
+  const templateEntry = resolvePortalEntryPoint(env, packageJson);
 
-  // Extract appKey from package name by removing the scope and leading @
-  // Example: '@scope/app-name' -> 'app-name'
+  // Extract portal id from package name by removing the scope and leading @
+  // Example: '@scope/portal-name' -> 'portal-name'
   const name = packageJson.name.replace(/^@|\w.*\//gm, '');
   const version = packageJson.version;
 
   // Only set assetPath when not building for production (used for dev/preview)
-  const assetPath = env.command === 'build' ? undefined : `bundles/portals/${name}/${version}`;
+  const assetPath = env.command === 'build' ? undefined : '/@fs';
 
   // Attempt to resolve GitHub repo from package, fallback to local git remote
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
@@ -81,7 +81,7 @@ export const createPortalManifestFromPackage = (
     displayName: packageJson.name,
     description: packageJson.description || '',
     build: {
-      templateEntry: entryPoint,
+      templateEntry,
       schemaEntry: 'portal.schema.json',
       assetPath,
       githubRepo,

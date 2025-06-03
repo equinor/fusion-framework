@@ -10,6 +10,9 @@ import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
 import { createDevServer } from './utils/create-dev-server.js';
 
+import { readPackageUp } from 'read-package-up';
+import { dirname } from 'node:path';
+
 /**
  * Options for starting the application development server.
  *
@@ -82,11 +85,16 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   const appConfig = await resolveAppConfig(env, { log, config: options?.config });
 
   // Attempt to resolve the portal entry point if the portal is local
-  let portalEntryPoint: string | undefined;
+  let templateEntry: string | undefined;
+  let templateFilePath: string | undefined;
   const portalFilePath = fileURLToPath(import.meta.resolve(portalId));
   if (fileExistsSync(portalFilePath)) {
     // If the portal file exists locally, set the entry point for the dev server
-    portalEntryPoint = `/@fs${portalFilePath}`;
+    templateEntry = portalFilePath;
+    // Resolve the directory of the portal file for potential asset paths
+    templateFilePath = await readPackageUp({ cwd: portalFilePath }).then((x) =>
+      x ? dirname(x?.path) : undefined,
+    );
   } else {
     // Otherwise, log that the portal is external and skip entry point resolution
     log?.info(`Portal ${portalId} is external, skipping entry point resolution`);
@@ -95,36 +103,45 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   log?.start('Starting app development server...');
 
   // Create the dev server configuration, including portal and app settings
-  const devServer = await createDevServer(env, {
-    template: {
-      portal: {
-        id: portalId,
+  const devServer = await createDevServer(
+    env,
+    {
+      template: {
+        portal: {
+          id: portalId,
+        },
+      },
+      // If a local portal entry point is found, add it to the config
+      ...(templateEntry
+        ? {
+            portal: {
+              manifest: {
+                name: portalId,
+                build: {
+                  templateEntry,
+                  assetPath: '/@fs',
+                },
+              },
+              // @todo - replace with real portal config when available
+              config: {},
+            },
+          }
+        : {}),
+      app: {
+        manifest: appManifest,
+        config: appConfig,
       },
     },
-    // If a local portal entry point is found, add it to the config
-    ...(portalEntryPoint
-      ? {
-          portal: {
-            manifest: {
-              id: portalId,
-              build: {
-                entrypoint: portalEntryPoint,
-              },
-            },
-            // @todo - replace with real portal config when available
-            config: {},
-          },
-        }
-      : {}),
-    app: {
-      manifest: appManifest,
-      config: appConfig,
+    {
+      server: {
+        port: options?.port || 3000,
+        host: 'localhost',
+        fs: {
+          allow: templateFilePath ? [pkg.root, templateFilePath] : [pkg.root],
+        },
+      },
     },
-    server: {
-      port: options?.port || 3000, // Default to port 3000 if not specified
-      host: 'localhost', // Use localhost for local development
-    },
-  });
+  );
 
   await devServer.listen();
 

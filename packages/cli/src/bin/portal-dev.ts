@@ -1,9 +1,8 @@
-import { resolve } from 'node:path';
-
 import type { RuntimeEnv } from '../lib';
 import { createDevServer, type ConsoleLogger } from './utils';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
+import { resolvePortalManifest } from './helpers/resolve-portal-manifest';
 
 /**
  * Starts the portal development server for local development and testing.
@@ -42,9 +41,6 @@ export const startPortalDevServer = async (options?: {
 }) => {
   const { log } = options ?? {};
 
-  // The portalId is currently hardcoded, but could be made configurable in the future
-  const portalId = '@equinor/fusion-framework-dev-portal';
-
   // Resolve the application's package.json for root and metadata
   const pkg = await resolveProjectPackage(log);
 
@@ -57,20 +53,11 @@ export const startPortalDevServer = async (options?: {
     command: 'serve', // Command is always 'serve' for dev
   };
 
-  // @todo - replace with resolvePortalManifest
-  // Dummy implementation for resolving the portal manifest
-  const resolvePortalManifest = async (...args: unknown[]) => {
-    // Returns a dummy manifest for development; replace with real logic as needed
-    return {
-      id: 'dev-portal-dummy',
-      build: {
-        entrypoint: resolve(env.root || '', 'src/index.ts'),
-        // if this is portal - portal-template-manifest
-        template: {},
-      },
-    };
-  };
-  const portalManifest = await resolvePortalManifest();
+  // Resolve the portal manifest using the environment and manifest path
+  const portalManifest = await resolvePortalManifest(env, pkg, {
+    log,
+    manifestPath: options?.manifest,
+  });
 
   // Dummy implementation for resolving the portal config
   const resolvePortalConfig = async (...args: unknown[]) => ({ foo: 'bar' });
@@ -81,20 +68,28 @@ export const startPortalDevServer = async (options?: {
   log?.start('Starting app development server...');
 
   // Create the dev server configuration, including portal and server settings
-  const devServer = await createDevServer(env, {
-    template: {
+  const devServer = await createDevServer(
+    env,
+    {
+      template: {
+        portal: {
+          id: portalManifest.name,
+        },
+      },
       portal: {
-        id: portalManifest.id,
+        manifest: portalManifest,
+        config: portalConfig,
       },
     },
-    portal: {
-      manifest: portalManifest,
-      config: portalConfig,
+    {
+      server: {
+        port: options?.server?.port,
+        fs: {
+          allow: [pkg.root], // Allow access to the root directory
+        },
+      },
     },
-    server: {
-      port: options?.server?.port,
-    },
-  });
+  );
 
   await devServer.listen();
 
