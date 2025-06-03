@@ -62,6 +62,7 @@
     "@equinor/fusion-framework-docs": "0.4.0"
   },
   "changesets": [
+    "add-prepack-to-dev-portal-and-dev-server",
     "bright-bushes-share",
     "chatty-bats-tell",
     "chubby-eels-post",

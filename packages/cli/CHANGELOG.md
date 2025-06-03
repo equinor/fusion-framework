@@ -1,5 +1,13 @@
 # Change Log
 
+## 11.0.0-next.2
+
+### Patch Changes
+
+- Updated dependencies [[`84c16d7`](https://github.com/equinor/fusion-framework/commit/84c16d74c3235f809ce4c3e75868be12010ed695)]:
+  - @equinor/fusion-framework-dev-portal@1.0.0-next.1
+  - @equinor/fusion-framework-dev-server@1.0.0-next.1
+
 ## 11.0.0-next.1
 
 ### Patch Changes
