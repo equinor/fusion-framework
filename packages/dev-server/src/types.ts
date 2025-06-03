@@ -41,8 +41,4 @@ export type DevServerOptions<TEnv extends Partial<FusionTemplateEnv> = Partial<F
       level?: number;
       logger?: ConsoleLogger;
     };
-    server?: {
-      port?: number;
-      host?: string;
-    };
   };

@@ -49,7 +49,7 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
   options: DevServerOptions<TEnv>,
   overrides?: UserConfig,
 ): UserConfig => {
-  const { spa, api, log, server } = options;
+  const { spa, api, log } = options;
   const processServices = api.processServices ?? defaultProcessServices;
   const generateTemplateEnv: TemplateEnvFn<TEnv> =
     // ensure that the templateEnv is a function
@@ -69,9 +69,6 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
       'process.env': JSON.stringify({
         FUSION_LOG_LEVEL: String(logger.level),
       }),
-    },
-    server: {
-      ...server,
     },
     plugins: [
       apiServicePlugin(
