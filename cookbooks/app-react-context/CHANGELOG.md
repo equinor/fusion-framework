@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.69-next.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@11.0.0-next.4
+
 ## 4.1.69-next.3
 
 ### Patch Changes
