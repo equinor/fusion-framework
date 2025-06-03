@@ -49,9 +49,6 @@ describe('createReducer', () => {
   });
 
   describe('toObservable', () => {
-    it('should produce correct type for ObservableInput', () => {
-      // Type-level test moved to dynamic-input-value.type-test.ts
-    });
     it('should wrap a primitive value in an Observable', async () => {
       const values: number[] = [];
       toObservable(42).subscribe((v) => values.push(v));
