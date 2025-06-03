@@ -12,7 +12,11 @@ import { isObservableInput } from './is-observable-input';
  * @template T The value type.
  * @template TArgs The argument type(s) for the function variant.
  */
-export type DynamicInputValue<T, TArgs> = T | ((...args: TArgs[]) => T) | ObservableInput<T>;
+// biome-ignore lint/suspicious/noExplicitAny: must be any to allow any type of input
+export type DynamicInputValue<T, TArgs extends any[] = []> =
+  | T
+  | ObservableInput<T>
+  | ((...args: TArgs) => T | ObservableInput<T>);
 
 /**
  * Converts a dynamic input (value, function, or ObservableInput) to an RxJS Observable.
@@ -44,9 +48,10 @@ export type DynamicInputValue<T, TArgs> = T | ((...args: TArgs[]) => T) | Observ
  * // Primitive
  * toObservable(42).subscribe(x => console.log(x)); // 42
  */
-export function toObservable<T, TArgs>(
+// biome-ignore lint/suspicious/noExplicitAny: must be any to allow any type of input
+export function toObservable<T, TArgs extends any[]>(
   input: DynamicInputValue<T, TArgs>,
-  ...args: TArgs[]
+  ...args: TArgs
 ): Observable<T> {
   // If input is already an ObservableInput (Observable, Promise, Iterable, etc), use RxJS 'from' to convert it
   if (isObservableInput(input)) {
