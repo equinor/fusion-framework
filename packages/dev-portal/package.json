@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "tsx dev-server.ts",
-    "build": "vite build",
+    "build": "tsc -b --noCheck && vite build",
     "build:clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo && pnpm build",
     "prepack": "pnpm build"
   },

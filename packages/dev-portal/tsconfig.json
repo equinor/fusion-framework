@@ -18,7 +18,13 @@
       "path": "../modules/http"
     },
     {
+      "path": "../modules/app"
+    },
+    {
       "path": "../modules/context"
+    },
+    {
+      "path": "../modules/feature-flag"
     },
     {
       "path": "../modules/navigation"
@@ -31,6 +37,9 @@
     },
     {
       "path": "../app"
+    },
+    {
+      "path": "../framework"
     },
     {
       "path": "../react/framework"
