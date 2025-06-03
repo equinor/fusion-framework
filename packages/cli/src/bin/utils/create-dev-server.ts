@@ -107,10 +107,22 @@ const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?:
   }
   base.api.routes ??= [];
 
+  console.warn(
+    '\n\n:::',
+    'Adding app routing for',
+    appKey,
+    'version',
+    build.version,
+    'tag',
+    build.tag,
+    ':::\n\n',
+  );
+
   // add rewrite to local fs
   base.api.routes.push({
-    match: `/apps/bundles/apps/${manifest.appKey}/${build.version}/*path`,
+    match: `/apps/bundles/apps/${appKey}@${build.version}/*path`,
     middleware: async (req, res, next) => {
+      console.warn('\n\n\n--', req.params, '--\n\n\n');
       const location = req.params?.path as string[];
       if (Array.isArray(location) === false) {
         next();

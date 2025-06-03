@@ -58,6 +58,7 @@ export const createAppManifestFromPackage = (
   // This ensures a normalized, unique key for the app
   const appKey = packageJson.name.replace(/^@|\w.*\//gm, '');
   const version = packageJson.version;
+  const assetPath = env.command === 'build' ? undefined : `/bundles/apps/${appKey}@${version}`;
 
   // Try to resolve the GitHub repo from package or git config
   const githubRepo = resolveRepoFromPackage(packageJson) ?? resolveGitRemoteUrl();
@@ -71,6 +72,7 @@ export const createAppManifestFromPackage = (
     type: 'standalone',
     build: {
       entryPoint,
+      assetPath,
       githubRepo,
       version,
       timestamp: new Date().toISOString(), // Build timestamp for traceability
