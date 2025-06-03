@@ -1,5 +1,25 @@
 # Change Log
 
+## 11.0.0-next.5
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a3ce07a`](https://github.com/equinor/fusion-framework/commit/a3ce07a367ae8d5a6dbac438c25928df54aefecf) Thanks [@odinr](https://github.com/odinr)! - - Portal manifest now uses `name` (unscoped) and `templateEntry` instead of `id` and `entrypoint` for improved consistency with app manifests.
+
+  - Dev server configuration and routing updated to expect and utilize the new manifest structure.
+  - Asset paths for development and preview builds now use `/@fs` for more reliable local development.
+  - Type safety and schema validation for portal manifests have been improved.
+  - Minor typos fixed and comments clarified throughout related files.
+
+  This refactor unifies manifest handling between apps and portals, simplifies local development, and ensures better type safety and validation. It also improves maintainability and developer experience by making configuration more predictable and robust.
+
+### Patch Changes
+
+- Updated dependencies [[`2ed792a`](https://github.com/equinor/fusion-framework/commit/2ed792a1118f3726f811c4dbdf8d25c69d7bb756), [`d9a7ada`](https://github.com/equinor/fusion-framework/commit/d9a7ada786bfac3a0714f38c1379b5aac09a0f71)]:
+  - @equinor/fusion-framework-dev-server@1.0.0-next.3
+  - @equinor/fusion-imports@1.1.1-next.0
+  - @equinor/fusion-framework-dev-portal@1.0.0-next.2
+
 ## 11.0.0-next.4
 
 ### Patch Changes

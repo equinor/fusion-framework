@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.0.0-next.2
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`ca8d6c8`](https://github.com/equinor/fusion-framework/commit/ca8d6c834f9df35041ce8c7e2563c452d8b19276) Thanks [@odinr](https://github.com/odinr)! - Allow the plugin to access the template file by updating the Vite server file system allow list. This ensures the template can be served correctly during development.
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`7878f59`](https://github.com/equinor/fusion-framework/commit/7878f591c528d463bfbe558094c2c31004db8586) Thanks [@odinr](https://github.com/odinr)! - Update bootstrap logic to improve service discovery, authentication, and portal manifest loading. Refactored the initialization sequence and clarified environment variable usage in `bootstrap.ts`. No breaking changes expected.
+
+- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
+  - @equinor/fusion-framework-module@4.4.3-next.0
+  - @equinor/fusion-framework-module-http@6.3.3-next.1
+  - @equinor/fusion-framework-module-msal@4.0.7-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.1
+
 ## 1.0.0-next.1
 
 ### Patch Changes

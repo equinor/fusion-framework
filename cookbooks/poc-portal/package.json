@@ -1,6 +1,6 @@
 {
   "name": "poc-portal",
-  "version": "1.0.48-next.4",
+  "version": "1.0.48-next.5",
   "description": "",
   "main": "dist/main.js",
   "private": true,

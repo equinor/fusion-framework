@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.2.29-next.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-context@6.0.4-next.0
+  - @equinor/fusion-framework-react-module@3.1.13-next.0
+
 ## 6.2.28
 
 ### Patch Changes

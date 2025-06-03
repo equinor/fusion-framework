@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.0.0-next.3
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`2ed792a`](https://github.com/equinor/fusion-framework/commit/2ed792a1118f3726f811c4dbdf8d25c69d7bb756) Thanks [@odinr](https://github.com/odinr)! - removed options for server options for `createDevServerConfig`, use overrides instead on `createDevServer`
+
+- Updated dependencies [[`ca8d6c8`](https://github.com/equinor/fusion-framework/commit/ca8d6c834f9df35041ce8c7e2563c452d8b19276), [`7878f59`](https://github.com/equinor/fusion-framework/commit/7878f591c528d463bfbe558094c2c31004db8586)]:
+  - @equinor/fusion-framework-vite-plugin-spa@1.0.0-next.2
+
 ## 1.0.0-next.2
 
 ### Patch Changes

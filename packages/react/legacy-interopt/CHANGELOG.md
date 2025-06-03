@@ -1,5 +1,19 @@
 # Change Log
 
+## 23.0.5-next.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.15-next.1
+  - @equinor/fusion-framework@7.3.13-next.1
+  - @equinor/fusion-framework-module-app@6.1.13
+  - @equinor/fusion-framework-module-http@6.3.3-next.1
+  - @equinor/fusion-framework-module-msal@4.0.7-next.0
+  - @equinor/fusion-framework-module-navigation@5.0.3-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.1
+  - @equinor/fusion-framework-react-app@6.1.6-next.1
+
 ## 23.0.5-next.0
 
 ### Patch Changes
