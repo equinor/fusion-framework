@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.27-next.3
+
+### Patch Changes
+
+- Updated dependencies [[`eac2234`](https://github.com/equinor/fusion-framework/commit/eac22349aa3ec6d76ed85b6d5a20966a56c32046)]:
+  - @equinor/fusion-framework-cli@11.0.0-next.3
+
 ## 0.6.27-next.2
 
 ### Patch Changes

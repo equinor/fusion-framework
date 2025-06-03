@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-dev-portal",
-  "version": "1.0.0-next.1",
+  "version": "1.0.0-next.2",
   "description": "",
   "type": "module",
   "module": "./dist/main.js",
