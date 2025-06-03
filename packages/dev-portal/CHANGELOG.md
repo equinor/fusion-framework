@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.0-next.2
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`ba060b7`](https://github.com/equinor/fusion-framework/commit/ba060b7a5fcc4f84891cb416b4d2f7fde231a368) Thanks [@odinr](https://github.com/odinr)! - migrate build system from Rollup to Vite
+
 ## 1.0.0-next.1
 
 ### Patch Changes

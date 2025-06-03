@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.7-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`7f852bd`](https://github.com/equinor/fusion-framework/commit/7f852bd2f91b980b5bf76f54943b99fa4615f41e) Thanks [@odinr](https://github.com/odinr)! - update import path for defineAppConfig in app.config.ts files
+
 ## 4.1.7-next.0
 
 ### Patch Changes
