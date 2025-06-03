@@ -12,7 +12,8 @@ import { registerServiceWorker } from './register-service-worker.js';
 type PortalManifest = {
   build: {
     config: Record<string, unknown>;
-    entrypoint: string;
+    templateEntry: string;
+    assetPath?: string;
   };
 };
 
@@ -79,11 +80,14 @@ enableMSAL(configurator, (builder) => {
   document.body.innerHTML = '';
   document.body.appendChild(el);
 
+  const portalEntryPoint = [portal_manifest.build.assetPath, portal_manifest.build.templateEntry]
+    .filter(Boolean)
+    .join('/');
+
   // @todo: should test if the entrypoint is external or internal
   // @todo: add proper return type
-  const { render } = await importWithoutVite<Promise<{ render: (...args: unknown[]) => void }>>(
-    portal_manifest.build.entrypoint,
-  );
+  const { render } =
+    await importWithoutVite<Promise<{ render: (...args: unknown[]) => void }>>(portalEntryPoint);
 
   // render the portal - this will load the portal template and render it
   render(el, { ref, manifest: portal_manifest, config: portal_config });
