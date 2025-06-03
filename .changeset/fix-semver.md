@@ -1,5 +1,5 @@
 ---
-"@fusion-framework/modules-module": patch
+"@equinor/fusion-framework-module": patch
 ---
 
 Fix: Update `SemanticVersion` to use the default import from `semver` for compatibility and correct type usage.
