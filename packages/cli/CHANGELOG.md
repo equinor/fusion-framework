@@ -1,5 +1,16 @@
 # Change Log
 
+## 11.0.0-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`f8a4db1`](https://github.com/equinor/fusion-framework/commit/f8a4db1208ef98eea7f6f286087338ee74858434) Thanks [@odinr](https://github.com/odinr)! - Update `.npmignore` and `package.json` to improve package publishing:
+
+  - Ensure `bin` directory is included in published files by updating `.npmignore` and adding it to the `files` array in `package.json`.
+  - Add `repository` field to `package.json` for better metadata.
+
+  These changes help ensure all necessary files are included in the published package and improve discoverability and metadata for consumers.
+
 ## 11.0.0-next.0
 
 ### Major Changes
