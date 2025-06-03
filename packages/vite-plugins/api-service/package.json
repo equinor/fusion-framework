@@ -20,7 +20,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "vitest"
+    "test": "vitest",
+    "prepack": "pnpm build"
   },
   "keywords": [
     "vite",

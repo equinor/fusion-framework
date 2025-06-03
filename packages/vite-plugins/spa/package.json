@@ -24,7 +24,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "vitest"
+    "test": "vitest",
+    "prepack": "pnpm build"
   },
   "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
   "license": "ISC",
