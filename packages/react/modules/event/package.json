@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module-event",
-  "version": "3.2.14",
+  "version": "3.2.15-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {

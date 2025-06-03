@@ -1,5 +1,17 @@
 # Change Log
 
+## 7.4.13-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
+  - @equinor/fusion-framework-module@4.4.3-next.0
+  - @equinor/fusion-framework@7.3.13-next.1
+  - @equinor/fusion-framework-module-feature-flag@1.1.19-next.0
+  - @equinor/fusion-framework-react-module@3.1.13-next.0
+  - @equinor/fusion-framework-react-module-http@9.0.3-next.1
+  - @equinor/fusion-framework-react-module-signalr@3.0.30-next.1
+
 ## 7.4.13-next.0
 
 ### Patch Changes

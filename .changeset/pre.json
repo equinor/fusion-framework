@@ -64,6 +64,7 @@
   "changesets": [
     "add-prepack-script-to-vite-plugins",
     "add-prepack-to-dev-portal-and-dev-server",
+    "allow-template-access",
     "bright-bushes-share",
     "chatty-bats-tell",
     "chubby-eels-post",
@@ -71,6 +72,7 @@
     "eleven-dingos-decide",
     "fetch-portal-config-in-bootstrap",
     "fix-http-acquire-access-token",
+    "fix-semver",
     "forty-doors-pump",
     "fresh-years-rush",
     "hot-pots-cheer",
@@ -79,7 +81,11 @@
     "new-hoops-sit",
     "nice-plants-punch",
     "open-parks-sip",
+    "patch-create-dev-server-config",
+    "patch-files-field-fusion-imports",
+    "portal-manifest-refactor",
     "small-memes-enjoy",
-    "tasty-cities-relate"
+    "tasty-cities-relate",
+    "update-bootstrap-logic"
   ]
 }

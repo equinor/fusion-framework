@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.3.13-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
+  - @equinor/fusion-framework-module@4.4.3-next.0
+  - @equinor/fusion-framework-module-context@6.0.4-next.0
+  - @equinor/fusion-framework-module-event@4.3.7-next.0
+  - @equinor/fusion-framework-module-http@6.3.3-next.1
+  - @equinor/fusion-framework-module-msal@4.0.7-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.1
+  - @equinor/fusion-framework-module-services@6.0.3-next.0
+
 ## 7.3.13-next.0
 
 ### Patch Changes

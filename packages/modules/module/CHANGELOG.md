@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.4.3-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6) Thanks [@odinr](https://github.com/odinr)! - Fix: Update `SemanticVersion` to use the default import from `semver` for compatibility and correct type usage.
+
 ## 4.4.2
 
 ### Patch Changes
