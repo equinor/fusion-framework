@@ -1,20 +1,19 @@
-import { type ITelemetryConfigurator, TelemetryConfigurator } from './configurator';
-import { type ITelemetryProvider, TelemetryProvider } from './provider';
 import type { Module } from '@equinor/fusion-framework-module';
-import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+import type { ITelemetryProvider } from './TelemetryProvider.interface';
+import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface';
+import { TelemetryConfigurator } from './TelemetryConfigurator';
+import { TelemetryProvider } from './TelemetryProvider';
 
-export type TelemetryModule = Module<
-  'telemetry',
-  ITelemetryProvider,
-  ITelemetryConfigurator,
-  [MsalModule]
->;
+export type TelemetryModule = Module<'telemetry', ITelemetryProvider, ITelemetryConfigurator>;
 
 export const module: TelemetryModule = {
   name: 'telemetry',
   configure: () => new TelemetryConfigurator(),
-  initialize: async ({ config, requireInstance }): Promise<ITelemetryProvider> =>
-    new TelemetryProvider(config, await requireInstance('auth')),
+  initialize: async (args): Promise<ITelemetryProvider> => {
+    const config = await (args.config as TelemetryConfigurator).createConfigAsync(args);
+    const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
+    return new TelemetryProvider(config, { event, parent: args.ref?.telemetry });
+  },
 };
 
 export default module;

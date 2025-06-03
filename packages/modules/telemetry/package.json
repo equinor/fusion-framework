@@ -7,6 +7,10 @@
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./application-insights": {
+      "import": "./dist/esm/application-insights/index.js",
+      "types": "./dist/types/application-insights/index.d.ts"
     }
   },
   "types": "dist/types/index.d.ts",
@@ -27,10 +31,25 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-msal": "workspace:^",
-    "@microsoft/applicationinsights-web": "^3.0.2"
+    "@equinor/fusion-observable": "workspace:^",
+    "deepmerge": "^4.3.1",
+    "rxjs": "^7.8.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module-event": "workspace:^",
     "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@microsoft/applicationinsights-web": "^3.0.2"
+  },
+  "peerDependenciesMeta": {
+    "@microsoft/applicationinsights-web": {
+      "optional": true
+    },
+    "@equinor/fusion-framework-module-event": {
+      "optional": true
+    }
   }
 }
