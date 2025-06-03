@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`84c16d7`](https://github.com/equinor/fusion-framework/commit/84c16d74c3235f809ce4c3e75868be12010ed695) Thanks [@odinr](https://github.com/odinr)! - Add `prepack` script to `dev-portal` and `dev-server` packages
+
+  - Added a `prepack` script to `@equinor/fusion-framework-dev-portal` and `@equinor/fusion-framework-dev-server` to ensure the build runs before packaging.
+  - This helps guarantee that the latest build artifacts are included when publishing these packages.
+
 ## 1.0.0-next.0
 
 ### Major Changes
