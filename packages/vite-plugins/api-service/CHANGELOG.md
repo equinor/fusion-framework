@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`96ad5d3`](https://github.com/equinor/fusion-framework/commit/96ad5d3a3aafe7adf5bd7f8e48e58bb19aa95ba8) Thanks [@odinr](https://github.com/odinr)! - Add prepack script to run build before packaging
+
+  A `prepack` script was added to both the SPA and API service Vite plugin packages. This ensures the build step runs automatically before packaging, improving reliability of published artifacts.
+
 ## 1.0.0-next.0
 
 ### Major Changes
