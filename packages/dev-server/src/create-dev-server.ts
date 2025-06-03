@@ -1,5 +1,5 @@
 import { createServer, type UserConfig } from 'vite';
-import createDevServerConfig from './create-dev-server-config.js';
+import { createDevServerConfig } from './create-dev-server-config.js';
 
 import type { DevServerOptions } from './types.js';
 

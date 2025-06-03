@@ -6,7 +6,7 @@ import apiServicePlugin, {
 import fusionSpaPlugin from '@equinor/fusion-framework-vite-plugin-spa';
 import { ConsoleLogger, LogLevel } from '@equinor/fusion-log';
 
-import defaultProcessServices from './process-services.js';
+import { processServices as defaultProcessServices } from './process-services.js';
 
 import type { DevServerOptions, TemplateEnv, TemplateEnvFn } from './types.js';
 
