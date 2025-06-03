@@ -8,6 +8,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": ["bin", "dist", "docs", "CHANGELOG.md", "README.md"],
   "type": "module",
   "bin": {
     "fusion-framework-cli": "./bin/cli.mjs"
@@ -35,6 +36,11 @@
       "types": "./dist/types/bin/index.d.ts",
       "import": "./bin/build/bin.js"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli"
   },
   "scripts": {
     "prebuild": "tsc -b",

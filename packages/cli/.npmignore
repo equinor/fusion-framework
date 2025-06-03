@@ -1,4 +1,5 @@
 *
 !CHANGELOG.md
 !dist/**/*
+!bin/**/*
 dist/dev-portal
