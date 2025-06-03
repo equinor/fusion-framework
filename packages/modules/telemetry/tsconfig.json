@@ -11,6 +11,9 @@
     },
     {
       "path": "../msal"
+    },
+    {
+      "path": "../event"
     }
   ],
   "include": ["src/**/*"],
