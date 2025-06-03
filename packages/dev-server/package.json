@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "tsc -b",
+    "prepack": "pnpm build",
     "test": "vitest"
   },
   "keywords": ["dev-server", "fusion-framework", "vite", "typescript"],

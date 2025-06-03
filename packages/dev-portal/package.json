@@ -13,7 +13,8 @@
   "scripts": {
     "start": "tsx dev-server.ts",
     "build": "rollup -c rollup.config.js",
-    "build:clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo && pnpm build"
+    "build:clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo && pnpm build",
+    "prepack": "pnpm build"
   },
   "keywords": [],
   "author": "",
