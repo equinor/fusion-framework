@@ -75,6 +75,13 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
       for (const [key, value] of Object.entries(env)) {
         config.define[`import.meta.env.${key}`] = value;
       }
+
+      config.server ??= {};
+      config.server.fs ??= {};
+      config.server.fs.allow ??= [];
+      // allow access to the template file
+      config.server.fs.allow.push(new URL('./html', import.meta.url).pathname);
+
       log?.info(`plugin configured for ${env.FUSION_SPA_PORTAL_ID}`);
     },
     configureServer(server) {
