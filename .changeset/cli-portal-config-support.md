@@ -1,5 +1,6 @@
 ---
-"@equinor/fusion-cli": minor
+"@equinor/fusion-framework-cli": minor
+---
 
 cli: add portal config support
 

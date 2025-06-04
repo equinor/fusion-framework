@@ -2,8 +2,6 @@
 "@equinor/fusion-framework-vite-plugin-spa": major
 ---
 
----
-
 **New Package: Fusion Framework Vite SPA Plugin**
 
 This plugin enables building single-page applications (SPAs) with Vite. It provides features such as service discovery, MSAL authentication, and service worker configuration.
