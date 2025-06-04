@@ -11,7 +11,8 @@
   "files": ["bin", "dist", "docs", "CHANGELOG.md", "README.md"],
   "type": "module",
   "bin": {
-    "fusion-framework-cli": "./bin/cli.mjs"
+    "fusion-framework-cli": "./bin/cli.mjs",
+    "ffc": "./bin/cli.mjs"
   },
   "main": "./bin/main.js",
   "types": "./dist/types/lib.d.ts",
