@@ -6,14 +6,14 @@
 
 import chalk from 'chalk';
 
-import packCommand, { defaultArchive } from './pack.js';
+import packCommand, { DEFAULT_ARCHIVE } from './pack.js';
 packCommand.alias('build-pack').hook('preAction', (thisCommand) => {
   if (process.argv[3] === 'build-pack') {
     console.warn(
       chalk.bgRedBright.bold('The command "build-pack" is deprecated. Please use "pack" instead.'),
     );
     if (!thisCommand.getOptionValue('archive')) {
-      thisCommand.setOptionValue('archive', defaultArchive);
+      thisCommand.setOptionValue('archive', DEFAULT_ARCHIVE);
     }
   }
 });
@@ -29,13 +29,13 @@ uploadCommand.alias('build-upload').hook('preAction', (thisCommand) => {
     if (thisCommand.getOptionValue('service')) {
       throw new Error('The --service option is deprecated. Please use --env instead.');
     }
-    const bundle = thisCommand.getOptionValue('bundle') ?? defaultArchive;
+    const bundle = thisCommand.getOptionValue('bundle') ?? DEFAULT_ARCHIVE;
     process.argv[4] = bundle;
   }
 });
 
 import manifestCommand from './manifest.js';
-manifestCommand.alias('build-manifest').hook('preAction', (thisCommand) => {
+manifestCommand.alias('build-manifest').hook('preAction', () => {
   if (process.argv[3] === 'build-manifest') {
     console.warn(
       chalk.bgRedBright.bold(

@@ -1,6 +1,6 @@
 import { createCommand } from 'commander';
 
-import { defaultArchive } from './pack.js';
+import { DEFAULT_ARCHIVE } from './pack.js';
 
 import { withAuthOptions } from '../../options/auth.js';
 import { createEnvOption } from '../../options/env.js';
@@ -39,16 +39,22 @@ import { initializeFramework } from '../../../lib';
  */
 export const command = withAuthOptions(
   createCommand('upload')
-    .description(
+    .description('Upload a Fusion application bundle to the Fusion App Store.')
+    .addHelpText(
+      'after',
       [
-        'Upload a Fusion application bundle to the Fusion App Store.',
         '',
-        'This command uploads a distributable application bundle (e.g., app-bundle.zip) to the Fusion app registry, making it available for deployment and management.',
+        'Uploads a Fusion application bundle to the Fusion App Store.',
+        'Uploads a distributable application bundle (e.g., app-bundle.zip) to the Fusion app registry.',
+        'Supports specifying application key, environment, and debug mode.',
+        '',
+        'Arguments:',
+        '  [bundle]   Application bundle to upload (default: app-bundle.zip)',
         '',
         'Options:',
-        '  --appKey <string>   Specify the application key (if omitted, resolved from manifest)',
-        '  --env <env>         Target environment (production, staging, etc.)',
-        '  --debug             Enable verbose logging for troubleshooting',
+        '  -k, --appKey <string> Application key (if not provided, resolved from manifest)',
+        '  -e, --env <env>      Target environment',
+        '  -d, --debug          Enable debug mode for verbose logging',
         '',
         'Examples:',
         '  $ fusion upload',
@@ -59,7 +65,7 @@ export const command = withAuthOptions(
     .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)
     .option('-k, --appKey <string>', 'Application key (if not provided, resolved from manifest)')
     .addOption(createEnvOption({ allowDev: false }))
-    .argument('[bundle]', 'Application bundle to upload (default: app-bundle.zip)', defaultArchive)
+    .argument('[bundle]', 'Application bundle to upload (default: app-bundle.zip)', DEFAULT_ARCHIVE)
     .action(async (bundle, options) => {
       const log = new ConsoleLogger('portal:upload', {
         debug: options.debug,

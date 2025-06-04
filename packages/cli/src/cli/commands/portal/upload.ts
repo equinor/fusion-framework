@@ -9,17 +9,19 @@ import { uploadPortalBundle } from '../../../bin/portal-upload.js';
 
 export const command = withAuthOptions(
   createCommand('upload')
-    .description(
+    .description('Upload a Fusion portal bundle to the portal registry.')
+    .addHelpText(
+      'after',
       [
-        'Upload a Fusion portal bundle to the Fusion portal registry for deployment.',
+        'Uploads a distributable Fusion portal bundle to the portal registry for deployment.',
         '',
-        'This command uploads a distributable portal bundle to the Fusion portal registry using the current authentication and environment.',
-        'Supports debug mode and custom environment selection.',
+        'Options:',
+        '  --env      Target environment',
+        '  -d, --debug    Enable debug mode for verbose logging',
         '',
         'Examples:',
-        '  $ fusion portal upload my-portal-bundle.zip',
-        '  $ fusion portal upload my-portal-bundle.zip --env prod',
-        '  $ fusion portal upload my-portal-bundle.zip --debug',
+        '  $ fusion-framework-cli portal upload my-portal-bundle.zip',
+        '  $ fusion-framework-cli portal upload my-portal-bundle.zip --env prod',
       ].join('\n'),
     )
     .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)

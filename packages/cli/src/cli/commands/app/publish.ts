@@ -45,12 +45,24 @@ import { tagApplication, AllowedTags } from '../../../bin/app-tag.js';
  */
 export const command = withAuthOptions(
   createCommand('publish')
-    .description(
+    .description('Build, upload, and tag your Fusion application for deployment.')
+    .addHelpText(
+      'after',
       [
-        'Build, upload, and tag your Fusion application for deployment to the Fusion portal.',
         '',
-        'This command bundles your app, uploads it to the Fusion app store, and applies a tag for versioning.',
-        'You can specify the environment, manifest file, and tag to use. Debug mode and authentication options are supported.',
+        'Builds, uploads, and tags a Fusion application for deployment to the Fusion portal.',
+        'Bundles the app, uploads it to the Fusion app store, and applies a tag for versioning.',
+        'Supports specifying environment, manifest file, and tag.',
+        'Debug mode and authentication options are supported.',
+        '',
+        'Arguments:',
+        '  [bundle]   Path to the app bundle to upload',
+        '',
+        'Options:',
+        '  -d, --debug          Enable debug mode for verbose logging (default: false)',
+        '  -e, --env <env>      Target environment',
+        '  -m, --manifest       Manifest file to use for bundling (e.g., app.manifest.ts)',
+        '  -t, --tag            Tag to apply to the published app (latest | preview)',
         '',
         'Examples:',
         '  $ fusion publish',

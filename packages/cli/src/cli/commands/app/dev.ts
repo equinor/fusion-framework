@@ -31,12 +31,19 @@ import { ConsoleLogger } from '../../../bin/utils';
  * @see startAppDevServer for implementation details
  */
 export const command = createCommand('dev')
-  .description(
+  .description('Start the application in development mode.')
+  .addHelpText(
+    'after',
     [
-      'Start the application in development mode.',
       '',
-      'This command launches the development server for your application.',
-      'You can specify a custom manifest or config file, set the runtime environment, and choose the port.',
+      'Starts the application in development mode with a local dev server.',
+      '',
+      'Options:',
+      '  --debug              Enable debug mode',
+      '  --manifest <path>    Path to the app manifest file (app.manifest[.env]?.[ts,js,json])',
+      '  --config <path>      Path to the app config file (app.config[.env]?.[ts,js,json])',
+      '  --env <environment>  Runtime environment for the dev server (default: local)',
+      '  --port <port>        Port for the development server (default: 3000)',
       '',
       'Examples:',
       '  $ fusion app dev',

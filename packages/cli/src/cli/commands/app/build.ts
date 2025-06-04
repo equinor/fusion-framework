@@ -29,10 +29,20 @@ import { buildApplication } from '../../../bin/app-build.js';
  */
 export const command = createCommand('build')
   .description(
+    'Build the application using a manifest file and environment-specific configuration.',
+  )
+  .addHelpText(
+    'after',
     [
-      'Build the application using a manifest file and environment-specific configuration.',
-      'If no manifest is provided, the command will search for a default app.manifest.[ts|js|json] in the current directory.',
+      'Builds the application using a manifest file and environment-specific configuration.',
+      'If no manifest is provided, searches for a default app.manifest.[ts|js|json] in the current directory.',
       'You can use environment variables to customize the build process.',
+      '',
+      'Arguments:',
+      '  [manifest]   Manifest file to use for building (e.g., app.manifest.ts)',
+      '',
+      'Options:',
+      '  -d, --debug  Enable debug mode for verbose logging (default: false)',
       '',
       'Examples:',
       '  $ fusion build',

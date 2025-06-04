@@ -14,7 +14,29 @@ import publishCommand from './publish.js';
 import './alias.js';
 
 export const command = createCommand('app')
-  .description('Develop and deploy Fusion applications')
+  .description(
+    'Develop, build, configure, and deploy Fusion applications from your workspace root.',
+  )
+  .addHelpText(
+    'after',
+    [
+      '',
+      'The "app" command is your main entry point for managing Fusion applications in this workspace.',
+      '',
+      'It provides access to subcommands for every stage of the application lifecycle, including development, building, packaging, configuration, deployment, and release management.',
+      '',
+      'All available subcommands are listed below automatically. For details and options for a specific subcommand, run:',
+      '  fusion app <subcommand> --help',
+      '',
+      'Typical usage:',
+      '  - Run and test your app locally with the dev subcommand',
+      '  - Build, bundle, and configure your app for deployment',
+      '  - Upload, publish, and tag releases to the Fusion App Store',
+      '  - Check registration and generate manifests as needed',
+      '',
+      'This command should be run from your app root directory.',
+    ].join('\n'),
+  )
   .addCommand(buildCommand)
   .addCommand(packCommand)
   .addCommand(checkCommand)

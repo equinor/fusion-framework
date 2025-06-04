@@ -8,6 +8,7 @@ import packCommand from './pack.js';
 import uploadCommand from './upload.js';
 import tagCommand from './tag.js';
 import publishCommand from './publish.js';
+import configCommand from './config.js';
 
 export const command = createCommand('portal')
   .description('Develop and deploy portal templates')
@@ -18,6 +19,7 @@ export const command = createCommand('portal')
   .addCommand(packCommand)
   .addCommand(uploadCommand)
   .addCommand(tagCommand)
-  .addCommand(publishCommand);
+  .addCommand(publishCommand)
+  .addCommand(configCommand);
 
 export default command;

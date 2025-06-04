@@ -35,15 +35,17 @@ import { stdout } from 'node:process';
  *   -o, --output <stdout|path> Output to stdout or a file (default: stdout)
  *
  * Example:
- *   $ fusion config app.config.ts
- *   $ fusion config app.config.prod.ts --output ./dist/app.config.json
- *   $ fusion config --publish --manifest app.manifest.ts --env prod
+ *   $ fusion-framework-cli config app.config.ts
+ *   $ fusion-framework-cli config app.config.prod.ts --output ./dist/app.config.json
+ *   $ fusion-framework-cli config --publish --manifest app.manifest.ts --env prod
  *
  * @see generateApplicationConfig, publishAppConfig for implementation details
  */
 export const command = withAuthOptions(
   createCommand('config')
-    .description(
+    .description('Generate or publish the Fusion application configuration file.')
+    .addHelpText(
+      'after',
       [
         'Generate and/or publish the application configuration for Fusion apps.',
         '',
@@ -51,11 +53,22 @@ export const command = withAuthOptions(
         'Options [token, tenant, client, manifest] are only relevant when --publish is used.',
         'Option [-e, --env] cannot be set to dev when --publish is used.',
         '',
+        'Arguments:',
+        '  [config]   Config build file to use (e.g., app.config[.env]?.[ts,js,json])',
+        '',
+        'Options:',
+        '  --debug              Enable debug mode for verbose logging',
+        '  --silent             Silent mode, suppresses output except errors',
+        '  --publish            Publish config to Fusion app registry',
+        '  --manifest <path>    Path to the app manifest file (required with --publish)',
+        '  -e, --env <env>      Target environment',
+        '  -o, --output <stdout|path> Output to stdout or a file (default: stdout)',
+        '',
         'Examples:',
-        '  $ fusion config app.config.ts',
-        '  $ fusion config app.config.prod.ts --output ./dist/app.config.json',
-        '  $ fusion config --publish --manifest app.manifest.ts --env prod',
-        '  $ fusion config --env prod my-custom.config.ts',
+        '  $ fusion-framework-cli config app.config.ts',
+        '  $ fusion-framework-cli config app.config.prod.ts --output ./dist/app.config.json',
+        '  $ fusion-framework-cli config --publish --manifest app.manifest.ts --env prod',
+        '  $ fusion-framework-cli config --env prod my-custom.config.ts',
       ].join('\n'),
     )
     .option('--debug', 'Enable debug mode for verbose logging')

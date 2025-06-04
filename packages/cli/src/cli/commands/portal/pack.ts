@@ -4,17 +4,23 @@ import { ConsoleLogger } from '../../../bin/utils';
 import { bundlePortal } from '../../../bin';
 
 export const command = createCommand('pack')
-  .description(
+  .description('Bundle the Fusion portal into a deployable archive.')
+  .addHelpText(
+    'after',
     [
-      'Create a distributable bundle of the Fusion portal application for deployment.',
+      'Bundles the Fusion portal using the provided manifest and schema into a zip archive for deployment.',
       '',
-      'This command packages the portal app, allowing you to specify the output archive, manifest, and schema files.',
-      'Supports debug mode for verbose logging.',
+      'If no manifest is provided, a default portal.manifest.[ts|js|json] is used from the current directory.',
+      '',
+      'Options:',
+      '  -a, --archive   Name of the output archive file (default: out/bundle.zip)',
+      '  --schema       Schema file to use for validation',
+      '  -d, --debug    Enable debug mode for verbose logging',
       '',
       'Examples:',
-      '  $ fusion portal pack',
-      '  $ fusion portal pack --archive my-portal.zip --schema portal.schema.json',
-      '  $ fusion portal pack app.manifest.prod.ts --debug',
+      '  $ fusion-framework-cli portal pack',
+      '  $ fusion-framework-cli portal pack --archive my-portal.zip --schema portal.schema.json',
+      '  $ fusion-framework-cli portal pack portal.manifest.prod.ts --debug',
     ].join('\n'),
   )
   .option(
@@ -26,7 +32,7 @@ export const command = createCommand('pack')
   .option('--schema [string]', 'Schema file to use for validation')
   .argument(
     '[manifest]',
-    'Manifest file to use for bundling (e.g., app.manifest[.env]?.[ts,js,json])',
+    'Manifest file to use for bundling (e.g., portal.manifest[.env]?.[ts,js,json])',
   )
   .action(async (manifest, options) => {
     const log = new ConsoleLogger('portal:pack', {

@@ -41,13 +41,26 @@ import loadAppManifest from '../../../bin/app-manifest.js';
  */
 export const command = withAuthOptions(
   createCommand('tag')
-    .description(
+    .description('Tag your Fusion application with a specific version or preview.')
+    .addHelpText(
+      'after',
       [
-        'Tag your Fusion application with a specific version or preview in the Fusion app registry.',
         '',
-        'This command applies a tag to the specified application version, making it easy to manage releases and previews.',
-        'You can provide the app key and version directly, or let the command resolve them from the manifest file.',
+        'Tags a Fusion application with a specific version or preview in the Fusion app registry.',
+        'Applies a tag to the specified application version for release management.',
+        'App key and version can be provided or resolved from the manifest file.',
         'Supports environment selection, debug, and silent modes.',
+        '',
+        'Arguments:',
+        '  <tag>   Tag to apply (latest | preview | stable)',
+        '',
+        'Options:',
+        '  --appKey <string>    Application key (if not provided, resolved from manifest)',
+        '  -v, --version <string> Version to tag (if not provided, resolved from manifest)',
+        '  -m, --manifest <string> Manifest file to use for resolving app key and version',
+        '  --debug              Enable debug mode for verbose logging',
+        '  --silent             Silent mode, suppresses output except errors',
+        '  -e, --env <env>      Target environment',
         '',
         'Examples:',
         '  $ fusion tag latest',

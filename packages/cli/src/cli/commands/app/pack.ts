@@ -2,7 +2,7 @@ import { createCommand } from 'commander';
 import { bundleApp } from '../../../bin';
 import { ConsoleLogger } from '../../../bin/utils';
 
-export const defaultArchive = 'app-bundle.zip';
+export const DEFAULT_ARCHIVE = 'app-bundle.zip' as const;
 
 /**
  * CLI command: `pack`
@@ -33,14 +33,22 @@ export const defaultArchive = 'app-bundle.zip';
  * @see bundleApp for implementation details
  */
 export const command = createCommand('pack')
-  .description(
+  .description('Create a distributable app bundle of the application.')
+  .addHelpText(
+    'after',
     [
-      'Create a distributable app bundle of the application.',
-      'The bundle includes all necessary files for deployment.',
-      'You can specify the output filename and directory.',
-      'Optionally, provide a manifest file to customize the bundle.',
-      'If no manifest is provided, the command will look for a default app.manifest.[ts|js|json] in the current directory.',
-      'For more details, see the Fusion Framework documentation.',
+      'Creates a distributable app bundle of the application.',
+      'Bundles all necessary files for deployment.',
+      'You can specify the output filename and directory, and optionally provide a manifest file.',
+      'If no manifest is provided, defaults to app.manifest.[ts|js|json] in the current directory.',
+      '',
+      'Arguments:',
+      '  [manifest]   Manifest file to use for bundling (e.g., app.manifest.ts)',
+      '',
+      'Options:',
+      '  -a, --archive        Name of the output archive file (default: app-bundle.zip)',
+      '  -o, --output         Directory where the archive will be saved (default: current working directory)',
+      '  -d, --debug          Enable debug mode for verbose logging',
       '',
       'Examples:',
       '  $ fusion pack',
@@ -50,7 +58,7 @@ export const command = createCommand('pack')
   .option(
     '-a, --archive [string]',
     'Name of the output archive file (default: app-bundle.zip)',
-    defaultArchive,
+    DEFAULT_ARCHIVE,
   )
   .option(
     '-o, --output [string]',

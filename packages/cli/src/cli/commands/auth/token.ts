@@ -12,24 +12,31 @@ import { withAuthOptions } from '../../options/auth.js';
  *
  * This command retrieves an access token for the specified scopes, tenant, and client.
  * Supports debug and silent modes for flexible output.
- *
- * @example
- *   $ fusion token
- *   $ fusion token --scope api://my-app/.default
- *   $ fusion token --tenant my-tenant --client my-client-id --silent
  */
 export const command = createCommand('token')
   .description(
+    'Acquire and print an access token for Fusion APIs using your current authentication context.',
+  )
+  .addHelpText(
+    'after',
     [
+      '',
       'Acquire and print an access token for Fusion APIs using your current authentication context.',
       '',
       'This command retrieves an access token for the specified scopes, tenant, and client.',
       'Supports debug and silent modes for flexible output.',
       '',
+      'Options:',
+      '  --tenant <tenantId>   Specify the tenant ID',
+      '  --client <clientId>   Specify the client ID',
+      '  --scope <scope>       Specify the scope(s) for authentication',
+      '  --debug               Enable debug mode for verbose logging',
+      '  --silent              Only output the token (no extra logging)',
+      '',
       'Examples:',
-      '  $ fusion token',
-      '  $ fusion token --scope api://my-app/.default',
-      '  $ fusion token --tenant my-tenant --client my-client-id --silent',
+      '  $ fusion-framework-cli token',
+      '  $ fusion-framework-cli token --scope api://my-app/.default',
+      '  $ fusion-framework-cli token --tenant my-tenant --client my-client-id --silent',
     ].join('\n'),
   )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)

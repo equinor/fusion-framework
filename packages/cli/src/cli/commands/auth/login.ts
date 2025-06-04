@@ -10,24 +10,31 @@ import { withAuthOptions } from '../../options/auth.js';
  *
  * This command initializes the Fusion Framework and opens a browser window for secure login.
  * Supports custom tenant, client, and scope options for advanced authentication scenarios.
- *
- * @example
- *   $ fusion login
- *   $ fusion login --tenant my-tenant --client my-client-id --scope api://my-app/.default
  */
 const DEFAULT_SERVER_PORT = 49741 as const;
 
 export const command = createCommand('login')
   .description(
+    'Authenticate and log in to Fusion Framework using interactive browser-based authentication.',
+  )
+  .addHelpText(
+    'after',
     [
+      '',
       'Authenticate and log in to Fusion Framework using interactive browser-based authentication.',
       '',
       'This command initializes the Fusion Framework and opens a browser window for secure login.',
       'Supports custom tenant, client, and scope options for advanced authentication scenarios.',
       '',
+      'Options:',
+      '  --tenant <tenantId>   Specify the tenant ID',
+      '  --client <clientId>   Specify the client ID',
+      '  --scope <scope>       Specify the scope(s) for authentication',
+      '  --debug               Enable debug mode for verbose logging',
+      '',
       'Examples:',
-      '  $ fusion login',
-      '  $ fusion login --tenant my-tenant --client my-client-id --scope api://my-app/.default',
+      '  $ fusion-framework-cli login',
+      '  $ fusion-framework-cli login --tenant my-tenant --client my-client-id --scope api://my-app/.default',
     ].join('\n'),
   )
   .action(async (options) => {

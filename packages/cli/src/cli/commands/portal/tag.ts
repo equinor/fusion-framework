@@ -12,18 +12,23 @@ import { type RuntimeEnv, initializeFramework } from '../../../lib';
 
 export const command = withAuthOptions(
   createCommand('tag')
-    .description(
+    .description('Tag your Fusion portal with a specific version or label.')
+    .addHelpText(
+      'after',
       [
-        'Tag your Fusion portal application with a specific version or preview in the Fusion portal registry.',
+        'Tags your Fusion portal with a specific version or label in the portal registry.',
         '',
-        'This command applies a tag to the specified portal version, making it easy to manage releases and previews.',
-        'You can provide the portal name and version directly, or let the command resolve them from the manifest file.',
-        'Supports environment selection, debug, and silent modes.',
+        'Options:',
+        '  -n, --name      Portal name (if not provided, resolved from manifest)',
+        '  -m, --manifest  Manifest file to use for resolving portal name and version',
+        '  -v, --version   Version to tag (if not provided, resolved from manifest)',
+        '  --env          Target environment',
+        '  -d, --debug    Enable debug mode for verbose logging',
+        '  --silent       Silent mode, suppresses output except errors',
         '',
         'Examples:',
-        '  $ fusion portal tag latest',
-        '  $ fusion portal tag preview --env prod --manifest portal.manifest.prod.ts',
-        '  $ fusion portal tag stable --name my-portal --version 1.2.3',
+        '  $ fusion-framework-cli portal tag latest',
+        '  $ fusion-framework-cli portal tag preview --env prod --manifest portal.manifest.prod.ts',
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))

@@ -15,18 +15,22 @@ import chalk from 'chalk';
 
 export const command = withAuthOptions(
   createCommand('publish')
-    .description(
+    .description('Build, upload, and tag your Fusion portal bundle for deployment.')
+    .addHelpText(
+      'after',
       [
-        'Build, upload, and tag your Fusion portal bundle for deployment to the Fusion portal registry.',
+        'Builds, uploads, and tags your Fusion portal bundle for deployment to the portal registry.',
         '',
-        'This command bundles the portal, uploads it to the registry, and applies a tag for versioning.',
-        'You can specify the environment, manifest file, schema, and tag. Debug mode and authentication options are supported.',
+        'Options:',
+        '  --env         Target environment',
+        '  -m, --manifest  Manifest file to use for bundling',
+        '  --schema      Schema file to use for validation',
+        '  -t, --tag     Tag to apply to the published portal',
+        '  -d, --debug   Enable debug mode for verbose logging',
         '',
         'Examples:',
-        '  $ fusion portal publish',
-        '  $ fusion portal publish --env prod --manifest portal.manifest.prod.ts',
-        '  $ fusion portal publish --tag latest --debug',
-        '  $ fusion portal publish --schema portal.schema.json',
+        '  $ fusion-framework-cli portal publish',
+        '  $ fusion-framework-cli portal publish --env prod --manifest portal.manifest.prod.ts',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)

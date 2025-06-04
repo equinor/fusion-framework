@@ -39,13 +39,23 @@ import { stdout } from 'node:process';
  * @see loadAppManifest for implementation details
  */
 export const command = createCommand('manifest')
-  .description(
+  .description('Build and output the application manifest for Fusion apps.')
+  .addHelpText(
+    'after',
     [
-      'Build and output the application manifest for Fusion apps.',
       '',
-      'By default, the manifest is printed to stdout. Use --output to write it to a file.',
+      'Builds and outputs the application manifest for Fusion apps.',
+      'By default, prints the manifest to stdout. Use --output to write to a file.',
       'You can specify a custom manifest build file or use the default (app.manifest[.env]?.[ts,js,json]).',
       'Supports debug and silent modes for flexible output.',
+      '',
+      'Arguments:',
+      '  [manifest]   Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])',
+      '',
+      'Options:',
+      '  -d, --debug          Enable debug mode for verbose logging',
+      '  -o, --output         Write manifest to the specified file (default: stdout)',
+      '  -s, --silent         Silent mode, suppresses output except errors',
       '',
       'Examples:',
       '  $ fusion manifest',

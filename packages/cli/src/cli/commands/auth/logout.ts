@@ -10,22 +10,26 @@ import { withAuthOptions } from '../../options/auth.js';
  *
  * This command removes your current authentication state from the Fusion Framework CLI.
  * Supports custom tenant and client options for advanced scenarios.
- *
- * @example
- *   $ fusion logout
- *   $ fusion logout --tenant my-tenant --client my-client-id
  */
 export const command = createCommand('logout')
-  .description(
+  .description('Log out from Fusion Framework and clear your authentication session.')
+  .addHelpText(
+    'after',
     [
+      '',
       'Log out from Fusion Framework and clear your authentication session.',
       '',
       'This command removes your current authentication state from the Fusion Framework CLI.',
       'Supports custom tenant and client options for advanced scenarios.',
       '',
+      'Options:',
+      '  --tenant <tenantId>   Specify the tenant ID',
+      '  --client <clientId>   Specify the client ID',
+      '  --debug               Enable debug mode for verbose logging',
+      '',
       'Examples:',
-      '  $ fusion logout',
-      '  $ fusion logout --tenant my-tenant --client my-client-id',
+      '  $ fusion-framework-cli logout',
+      '  $ fusion-framework-cli logout --tenant my-tenant --client my-client-id',
     ].join('\n'),
   )
   .action(async (options) => {

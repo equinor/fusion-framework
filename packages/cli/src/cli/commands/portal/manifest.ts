@@ -11,18 +11,22 @@ import { ConsoleLogger } from '../../../bin/utils';
 import { fileExistsSync } from '../../../lib/utils';
 
 export const command = createCommand('manifest')
-  .description(
+  .description('Generate or validate a Fusion portal manifest file.')
+  .addHelpText(
+    'after',
     [
-      'Build and output the portal manifest for Fusion apps.',
+      'Generates or validates a Fusion portal manifest file.',
       '',
-      'By default, the manifest is printed to stdout. Use --output to write it to a file.',
-      'You can specify a custom manifest build file or use the default (app.manifest[.env]?.[ts,js,json]).',
-      'Supports debug and silent modes for flexible output.',
+      'If no manifest is provided, a default portal.manifest.[ts|js|json] is used from the current directory.',
+      '',
+      'Options:',
+      '  -o, --output   Write manifest to the specified file (default: stdout)',
+      '  -d, --debug    Enable debug mode for verbose logging',
+      '  -s, --silent   Silent mode, suppresses output except errors',
       '',
       'Examples:',
-      '  $ fusion portal manifest',
-      '  $ fusion portal manifest app.manifest.prod.ts --output ./dist/portal.manifest.json',
-      '  $ fusion portal manifest --debug',
+      '  $ fusion-framework-cli portal manifest',
+      '  $ fusion-framework-cli portal manifest portal.manifest.prod.ts --output ./dist/portal.manifest.json',
     ].join('\n'),
   )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)

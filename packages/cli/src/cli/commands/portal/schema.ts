@@ -10,18 +10,21 @@ import { createEnvOption } from '../../options/env.js';
 import { importJSON } from '@equinor/fusion-imports';
 
 export const command = createCommand('schema')
-  .description(
+  .description('Generate or validate a Fusion portal schema file.')
+  .addHelpText(
+    'after',
     [
-      'Generate and validate the JSON schema for the Fusion portal application.',
+      'Generates or validates a Fusion portal schema file.',
       '',
-      'This command generates a schema file for your portal app, optionally writes it to a file, and can validate a JSON file against the generated schema.',
-      'Supports environment selection, debug mode, and output to stdout or file.',
+      'Options:',
+      '  -o, --output   Output file name (default: stdout)',
+      '  -v, --validate Validate the generated schema against a JSON file',
+      '  -d, --debug    Enable debug mode for verbose logging',
       '',
       'Examples:',
-      '  $ fusion portal schema',
-      '  $ fusion portal schema --output portal.schema.json',
-      '  $ fusion portal schema --validate my-config.json',
-      '  $ fusion portal schema portal.schema.prod.ts --debug',
+      '  $ fusion-framework-cli portal schema',
+      '  $ fusion-framework-cli portal schema --output portal.schema.json',
+      '  $ fusion-framework-cli portal schema --validate my-config.json',
     ].join('\n'),
   )
   .addOption(createEnvOption({ allowDev: true }))

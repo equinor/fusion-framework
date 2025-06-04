@@ -1,16 +1,18 @@
+import { createCommand } from 'commander';
+
+import { ConsoleLogger } from '../../../bin/utils';
+
+import { initializeFramework } from '../../../lib/framework.node.js';
+
+import { withAuthOptions } from '../../options/auth.js';
+import { createEnvOption } from '../../options/env';
+
 /**
  * The `resolve` command resolves and displays information about a service registered in Fusion service discovery.
  *
  * This command looks up a service by name and prints its discovery details using the current authentication and environment.
  *
  * Supports environment selection and authentication options.
- *
- * ## Examples
- *
- * ```sh
- * $ fusion resolve my-service
- * $ fusion resolve my-service --env prod
- * ```
  *
  * @command resolve
  * @description Resolve and display information about a service registered in Fusion service discovery.
@@ -21,28 +23,25 @@
  * @option {string} --clientId - Client ID for authentication.
  * @returns {Promise<void>} Prints the resolved service details to the console.
  */
-
-import { createCommand } from 'commander';
-
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { initializeFramework } from '../../../lib/framework.node.js';
-
-import { withAuthOptions } from '../../options/auth.js';
-import { createEnvOption } from '../../options/env';
-
 const command = withAuthOptions(
   createCommand('resolve')
     .description(
+      'Resolve and display information about a service registered in Fusion service discovery.',
+    )
+    .addHelpText(
+      'after',
       [
+        '',
         'Resolve and display information about a service registered in Fusion service discovery.',
         '',
         'This command looks up a service by name and prints its discovery details using the current authentication and environment.',
-        'Supports environment selection and authentication options.',
         '',
         'Examples:',
-        '  $ fusion resolve my-service',
-        '  $ fusion resolve my-service --env prod',
+        '  $ fusion-framework-cli resolve my-service',
+        '  $ fusion-framework-cli resolve my-service --env prod',
+        '  $ fusion-framework-cli resolve my-service --env test --tenantId my-tenant --clientId my-client-id',
+        '',
+        'The command will print the resolved service details to the console.',
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
