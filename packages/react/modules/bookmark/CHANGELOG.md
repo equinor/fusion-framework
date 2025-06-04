@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.5
+
+### Patch Changes
+
+- [#3109](https://github.com/equinor/fusion-framework/pull/3109) [`08c3a15`](https://github.com/equinor/fusion-framework/commit/08c3a150a3b6fa2297bc714e91debbb1011009f2) Thanks [@Noggling](https://github.com/Noggling)! - update useBookmarkNavigate to trigger on onCurrentBookmarkChanged event
+
 ## 4.0.4
 
 ### Patch Changes
