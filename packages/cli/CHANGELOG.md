@@ -1,5 +1,28 @@
 # Change Log
 
+## 11.0.0-next.6
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`87bfb21`](https://github.com/equinor/fusion-framework/commit/87bfb21c588a434b574b8cd408bb5dc2642f0974) Thanks [@odinr](https://github.com/odinr)! - improve help output for all commands
+
+  - All CLI commands now provide more detailed and consistent help output, including arguments, options, and usage examples.
+  - Updated descriptions and help text for all app, portal, and auth commands to improve discoverability and onboarding.
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`c4cb2f7`](https://github.com/equinor/fusion-framework/commit/c4cb2f798d9804438bc216096cf4089097b3d31c) Thanks [@odinr](https://github.com/odinr)! - cli: add portal config support
+
+  - Added support for loading and resolving portal configuration files via `loadPortalConfig` and `resolvePortalConfig` helpers.
+  - Introduced `PortalConfig`, `PortalConfigFn`, and `definePortalConfig` types/utilities for authoring static or dynamic portal configs.
+  - Updated dev server logic to use resolved portal config.
+  - Exposed new config utilities from `lib/portal` index.
+
+  This enables flexible, type-safe portal configuration for local development and deployment scenarios.
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b8ed76f`](https://github.com/equinor/fusion-framework/commit/b8ed76f3a6d89b89315c58ec7743f5b0b7303371) Thanks [@odinr](https://github.com/odinr)! - Added alias for fusion-framework-cli to ffc
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`7b8aca4`](https://github.com/equinor/fusion-framework/commit/7b8aca443197791053da20f3b43784ec69f3f4b7) Thanks [@odinr](https://github.com/odinr)! - - Added a new command to the CLI for managing portal configuration.
+  - This update introduces enhanced support for portal config operations via the `@equinor/fusion-framework-cli` package.
+
 ## 11.0.0-next.5
 
 ### Minor Changes

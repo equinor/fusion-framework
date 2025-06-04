@@ -69,6 +69,8 @@
     "chatty-bats-tell",
     "chubby-eels-post",
     "clever-candies-smash",
+    "cli-improve-help-output",
+    "cli-portal-config-support",
     "eleven-dingos-decide",
     "fetch-portal-config-in-bootstrap",
     "fix-http-acquire-access-token",
@@ -84,6 +86,8 @@
     "patch-create-dev-server-config",
     "patch-files-field-fusion-imports",
     "portal-manifest-refactor",
+    "pretty-peas-rule",
+    "rotten-glasses-turn",
     "small-memes-enjoy",
     "tasty-cities-relate",
     "update-bootstrap-logic"
