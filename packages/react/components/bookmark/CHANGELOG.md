@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.21
+
+### Patch Changes
+
+- [#3097](https://github.com/equinor/fusion-framework/pull/3097) [`a2551fe`](https://github.com/equinor/fusion-framework/commit/a2551fe0267b4098c711b902ac4f53b91dff06df) Thanks [@Noggling](https://github.com/Noggling)! - Added the ability to copy bookmarks to the clipboard in the bookmark component when bookmark is shared with the user. This allows users to easily share bookmarks with others by copying the bookmark link to their clipboard.
+
+- Updated dependencies [[`d247ec7`](https://github.com/equinor/fusion-framework/commit/d247ec7482a4d5231657875f6c6733ce37df07c9), [`89f80e4`](https://github.com/equinor/fusion-framework/commit/89f80e41dac04e71518c7314cada86ecc835708d)]:
+  - @equinor/fusion-observable@8.5.0
+  - @equinor/fusion-framework-react@7.4.13
+  - @equinor/fusion-framework-react-module-bookmark@4.0.4
+
 ## 1.0.20
 
 ### Patch Changes

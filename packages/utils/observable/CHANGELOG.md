@@ -1,5 +1,37 @@
 # Change Log
 
+## 8.5.0
+
+### Minor Changes
+
+- [#3083](https://github.com/equinor/fusion-framework/pull/3083) [`d247ec7`](https://github.com/equinor/fusion-framework/commit/d247ec7482a4d5231657875f6c6733ce37df07c9) Thanks [@odinr](https://github.com/odinr)! - Add `isObservableInput` and `toObservable` utilities to make it easier to work with dynamic or flexible values—such as configuration, runtime data, or any input that might be a value, function, promise, or stream.
+
+  These utilities let you accept and process values in many forms—plain values, functions, promises, or streams (observables)—and always handle them in a consistent, observable-based way. This is especially helpful when you want to let users or other code supply input as a direct value, a callback (sync or async), or even a stream, and you want to process the result the same way regardless of the input type. While this is most commonly useful for runtime configuration, feature toggles, or similar scenarios, it can be applied to any case where input flexibility is needed.
+
+  **Why use this?**
+
+  - Accept config, data, or handlers in any form: value, function, promise, or observable.
+  - Write code that is agnostic to how the input is provided—no need for manual type checks or branching logic.
+  - Great for plugin systems, runtime config, feature toggles, or APIs that want to be flexible and future-proof.
+
+  **Example usage:**
+
+  ```ts
+  import { isObservableInput, toObservable } from "@equinor/fusion-observable";
+
+  isObservableInput(Promise.resolve(1)); // true
+
+  // Always get an Observable, no matter the input type
+  const obs$ = toObservable(() => 42);
+  ```
+
+  See the package README for more details and advanced usage.
+
+- [#3096](https://github.com/equinor/fusion-framework/pull/3096) [`89f80e4`](https://github.com/equinor/fusion-framework/commit/89f80e41dac04e71518c7314cada86ecc835708d) Thanks [@odinr](https://github.com/odinr)! - - Improved the `DynamicInputValue` type in `to-observable.ts` to better support functions with arguments and ObservableInput return types.
+  - Updated the `toObservable` function signature for more accurate argument typing and handling.
+  - Renamed test file from `observable.ts` to `observable.test.ts` for consistency with test conventions.
+  - No breaking changes; all existing usages remain compatible.
+
 ## 8.4.9
 
 ### Patch Changes
