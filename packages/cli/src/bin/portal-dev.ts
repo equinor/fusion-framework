@@ -2,7 +2,8 @@ import type { RuntimeEnv } from '../lib';
 import { createDevServer, type ConsoleLogger } from './utils';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
-import { resolvePortalManifest } from './helpers/resolve-portal-manifest';
+import { resolvePortalManifest } from './helpers/resolve-portal-manifest.js';
+import { resolvePortalConfig } from './helpers/resolve-portal-config.js';
 
 /**
  * Starts the portal development server for local development and testing.
@@ -41,7 +42,7 @@ export const startPortalDevServer = async (options?: {
 }) => {
   const { log } = options ?? {};
 
-  // Resolve the application's package.json for root and metadata
+  // Resolve the portals's package.json for root and metadata
   const pkg = await resolveProjectPackage(log);
 
   // Setup the runtime environment for the dev server
@@ -58,9 +59,6 @@ export const startPortalDevServer = async (options?: {
     log,
     manifestPath: options?.manifest,
   });
-
-  // Dummy implementation for resolving the portal config
-  const resolvePortalConfig = async (...args: unknown[]) => ({ foo: 'bar' });
 
   // Resolve the portal config (replace with real logic as needed)
   const portalConfig = await resolvePortalConfig(env, { log, config: options?.config });
