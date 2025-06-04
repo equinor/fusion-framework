@@ -1,5 +1,6 @@
 ---
-"@fusion-framework/utils-observable": minor
+"@equinor/fusion-observable": minor
+---
 
 - Improved the `DynamicInputValue` type in `to-observable.ts` to better support functions with arguments and ObservableInput return types.
 - Updated the `toObservable` function signature for more accurate argument typing and handling.
