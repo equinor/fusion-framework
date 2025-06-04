@@ -7,5 +7,7 @@ export { startAppDevServer } from './app-dev.js';
 export { buildPortal } from './portal-build.js';
 export { bundlePortal } from './portal-pack.js';
 export { loadPortalManifest } from './portal-manifest.js';
+export { generatePortalConfig } from './portal-config.js';
+export { publishPortalConfig } from './portal-config-publish.js';
 
 export { pack } from './pack.js';
