@@ -26,6 +26,9 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
+      "community": ["dist/types/community.d.ts"],
+      "enterprise": ["dist/types/enterprise.d.ts"],
       "themes": ["dist/types/themes.d.ts"]
     }
   },
