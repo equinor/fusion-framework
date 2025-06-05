@@ -1,5 +1,14 @@
 # Change Log
 
+## 10.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593)]:
+  - @equinor/fusion-observable@8.5.1
+  - @equinor/fusion-query@5.2.10
+  - @equinor/fusion-framework-module-service-discovery@8.0.16
+
 ## 10.0.3
 
 ### Patch Changes

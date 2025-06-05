@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.2.10
+
+### Patch Changes
+
+- Updated dependencies [[`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593)]:
+  - @equinor/fusion-observable@8.5.1
+
 ## 5.2.9
 
 ### Patch Changes
