@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.5.1
+
+### Patch Changes
+
+- [#3086](https://github.com/equinor/fusion-framework/pull/3086) [`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593) Thanks [@Noggling](https://github.com/Noggling)! - Added new export for actions
+
 ## 8.5.0
 
 ### Minor Changes
