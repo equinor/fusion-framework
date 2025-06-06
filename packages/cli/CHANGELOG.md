@@ -1,5 +1,13 @@
 # Change Log
 
+## 11.0.0-next.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.0.0-next.2
+  - @equinor/fusion-framework-dev-server@1.0.0-next.4
+
 ## 11.0.0-next.6
 
 ### Minor Changes

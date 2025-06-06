@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.4.3-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f) Thanks [@odinr](https://github.com/odinr)! - Expose `satisfies` method on `SemanticVersion` class to allow version range checks directly on instances. This change extends the `SemVer` class and adds a `satisfies` method for convenience and improved API usability.
+
 ## 4.4.3-next.0
 
 ### Patch Changes

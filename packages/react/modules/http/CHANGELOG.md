@@ -1,5 +1,13 @@
 # Change Log
 
+## 9.0.3-next.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-http@6.3.3-next.2
+  - @equinor/fusion-framework-react-module@3.1.13-next.1
+
 ## 9.0.3-next.1
 
 ### Patch Changes
