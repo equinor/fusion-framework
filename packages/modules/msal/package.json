@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
-  "version": "4.0.7-next.0",
+  "version": "4.0.7-next.1",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
