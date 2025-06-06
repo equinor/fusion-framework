@@ -1,10 +1,18 @@
 import type { Module } from '@equinor/fusion-framework-module';
+
+import type { EventModule } from '@equinor/fusion-framework-module-event';
+
 import type { ITelemetryProvider } from './TelemetryProvider.interface';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface';
 import { TelemetryConfigurator } from './TelemetryConfigurator';
 import { TelemetryProvider } from './TelemetryProvider';
 
-export type TelemetryModule = Module<'telemetry', ITelemetryProvider, ITelemetryConfigurator>;
+export type TelemetryModule = Module<
+  'telemetry',
+  ITelemetryProvider,
+  ITelemetryConfigurator,
+  [EventModule, TelemetryModule]
+>;
 
 export const module: TelemetryModule = {
   name: 'telemetry',

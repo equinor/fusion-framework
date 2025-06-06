@@ -47,7 +47,7 @@ export class TelemetryProvider
 
   constructor(
     config: TelemetryConfig,
-    args?: { event?: EventModuleProvider; parent?: ITelemetryProvider },
+    args?: { event?: IEventModuleProvider; parent?: ITelemetryProvider },
   ) {
     super({ version, config });
 
