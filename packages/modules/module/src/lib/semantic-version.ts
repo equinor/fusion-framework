@@ -1,12 +1,12 @@
-import semver from 'semver';
+import { SemVer, satisfies } from 'semver';
 
 /**
  * Extension of {@link SemVer} to expose `satisfies`
  * @see {@link [SemVer](https://www.npmjs.com/package/semver)}
  */
-export class SemanticVersion extends semver.SemVer {
-  public satisfies(arg: Parameters<typeof semver.satisfies>[1]) {
-    return semver.satisfies(this, arg);
+export class SemanticVersion extends SemVer {
+  public satisfies(arg: Parameters<typeof satisfies>[1]) {
+    return satisfies(this, arg);
   }
 }
 
