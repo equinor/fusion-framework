@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.0.0-next.6
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`713cb15`](https://github.com/equinor/fusion-framework/commit/713cb15c5f1607e7f7285940a58165d97d8e41df) Thanks [@odinr](https://github.com/odinr)! - Refactor plugin internals for improved Vite compatibility and maintainability:
+
+  - Made `resolveId` and `config` hooks async to support dynamic import resolution for virtual modules.
+  - Improved resource alias resolution for `/@fusion-spa-bootstrap.js` and `/@fusion-spa-sw.js` using `import.meta.resolve` and `fileURLToPath`.
+  - Enhanced environment variable handling by merging plugin and loaded environments, and defining them on `config.define`.
+  - Ensured the Vite dev server allows access to the correct `../html` directory for SPA templates.
+  - Added more robust logging for environment configuration and plugin setup.
+
 ## 1.0.0-next.5
 
 ### Minor Changes
