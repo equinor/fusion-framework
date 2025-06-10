@@ -168,6 +168,23 @@ type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
 
 export type ModuleInstance = ModulesInstanceType<Modules>;
 
+export enum ModuleEventLevel {
+  Debug = 0,
+  Information = 1,
+  Warning = 2,
+  Error = 3,
+  Critical = 4,
+}
+
+export type ModuleEvent = {
+  name: string;
+  level: ModuleEventLevel;
+  message?: string;
+  properties?: Record<string, unknown>;
+  error?: unknown;
+  metric?: number;
+};
+
 export interface ILogger {
   debug: (...msg: unknown[]) => void;
   info: (...msg: unknown[]) => void;
