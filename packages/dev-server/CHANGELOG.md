@@ -1,5 +1,12 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.0.0-next.5
+
+### Patch Changes
+
+- Updated dependencies [[`8870e73`](https://github.com/equinor/fusion-framework/commit/8870e73bd6d4141142c69c11c67b5b154bc80023)]:
+  - @equinor/fusion-framework-vite-plugin-spa@1.0.0-next.4
+
 ## 1.0.0-next.4
 
 ### Patch Changes
