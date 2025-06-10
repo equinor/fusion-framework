@@ -1,24 +1,14 @@
 {
   "name": "@equinor/fusion-framework-cli",
-  "version": "11.0.0-next.7",
+  "version": "11.0.0-next.8",
   "homepage": "https://github.com/equinor/fusion-framework",
-  "keywords": [
-    "Fusion",
-    "Fusion Framework",
-    "CLI"
-  ],
+  "keywords": ["Fusion", "Fusion Framework", "CLI"],
   "author": "",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "bin",
-    "dist",
-    "docs",
-    "CHANGELOG.md",
-    "README.md"
-  ],
+  "files": ["bin", "dist", "docs", "CHANGELOG.md", "README.md"],
   "type": "module",
   "bin": {
     "fusion-framework-cli": "./bin/cli.mjs",

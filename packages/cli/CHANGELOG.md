@@ -1,5 +1,13 @@
 # Change Log
 
+## 11.0.0-next.8
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`5e7d06c`](https://github.com/equinor/fusion-framework/commit/5e7d06c412997e3162971212c9ee61cade636543) Thanks [@odinr](https://github.com/odinr)! - - Update dependencies and devDependencies in `package.json`.
+  - Adjusted `exports` field for additional subpaths.
+  - No user-facing changes.
+
 ## 11.0.0-next.7
 
 ### Patch Changes
