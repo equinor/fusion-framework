@@ -597,12 +597,6 @@ importers:
 
   packages/cli:
     dependencies:
-      '@azure/msal-node':
-        specifier: ^3.5.1
-        version: 3.5.3
-      '@azure/msal-node-extensions':
-        specifier: ^1.5.11
-        version: 1.5.13
       '@equinor/fusion-framework-dev-portal':
         specifier: workspace:^
         version: link:../dev-portal
@@ -636,6 +630,9 @@ importers:
       is-ci:
         specifier: ^4.1.0
         version: 4.1.0
+      keytar:
+        specifier: 7.9.0
+        version: 7.9.0
       lodash.mergewith:
         specifier: ^4.6.2
         version: 4.6.2

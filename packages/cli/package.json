@@ -2,13 +2,23 @@
   "name": "@equinor/fusion-framework-cli",
   "version": "11.0.0-next.7",
   "homepage": "https://github.com/equinor/fusion-framework",
-  "keywords": ["Fusion", "Fusion Framework", "CLI"],
+  "keywords": [
+    "Fusion",
+    "Fusion Framework",
+    "CLI"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
   },
-  "files": ["bin", "dist", "docs", "CHANGELOG.md", "README.md"],
+  "files": [
+    "bin",
+    "dist",
+    "docs",
+    "CHANGELOG.md",
+    "README.md"
+  ],
   "type": "module",
   "bin": {
     "fusion-framework-cli": "./bin/cli.mjs",
@@ -50,30 +60,29 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@azure/msal-node": "^3.5.1",
-    "@azure/msal-node-extensions": "^1.5.11",
     "@equinor/fusion-framework-dev-portal": "workspace:^",
     "@equinor/fusion-framework-dev-server": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
     "adm-zip": "^0.5.10",
-    "ajv": "^8.17.1",
-    "chalk": "^5.3.0",
     "commander": "^13.0.0",
-    "is-ci": "^4.1.0",
-    "lodash.mergewith": "^4.6.2",
-    "open": "^10.1.1",
+    "keytar": "7.9.0",
     "ora": "^8.0.1",
-    "pretty-bytes": "^7.0.0",
-    "read-package-up": "^11.0.0",
-    "rollup": "^4.39.0",
-    "type-fest": "^4.40.0",
     "vite": "^6.3.5",
+    "chalk": "^5.3.0",
+    "read-package-up": "^11.0.0",
     "zod": "^3.25.20"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
+    "pretty-bytes": "^7.0.0",
+    "is-ci": "^4.1.0",
+    "open": "^10.1.1",
+    "lodash.mergewith": "^4.6.2",
+    "type-fest": "^4.40.0",
+    "rollup": "^4.39.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
@@ -87,6 +96,9 @@
   },
   "peerDependenciesMeta": {
     "typescript": {
+      "optional": true
+    },
+    "keytar": {
       "optional": true
     }
   }

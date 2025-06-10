@@ -18,6 +18,6 @@ export default [
     },
 
     external: [...Object.keys(pkg.dependencies)],
-    plugins: [json(), resolve(), commonjs()],
+    plugins: [json(), resolve({ preferBuiltins: true }), commonjs()],
   },
 ];
