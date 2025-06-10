@@ -1,7 +1,9 @@
 import { importConfig } from '@equinor/fusion-imports';
 
+import mergeWith from 'lodash.mergewith';
+
 import { PortalManifestSchema } from './portal-manifest.schema.js';
-import type { RuntimeEnv } from '../types';
+import type { RecursivePartial, RuntimeEnv } from '../types';
 import type { PortalManifest } from './portal-manifest.js';
 
 /**
@@ -15,7 +17,7 @@ import type { PortalManifest } from './portal-manifest.js';
 export type PortalManifestFn<T extends Partial<PortalManifest>> = (
   env: RuntimeEnv,
   args: { base: T },
-) => T | Promise<T | void> | T | void;
+) => Promise<RecursivePartial<T> | void> | RecursivePartial<T> | void;
 
 /**
  * Represents a value that can either be a partial portal manifest object or a function returning such an object.
@@ -86,14 +88,16 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
       resolve: async (module: { default: PortalManifestExport<T> }): Promise<T> => {
         // Use the provided base manifest or an empty object as the starting point
         const base: T = options?.base ?? ({} as T);
+        let overrides: RecursivePartial<T> | undefined;
         // If the manifest export is a function, call it with the environment and base manifest
         if (typeof module.default === 'function') {
           // Await the result of the manifest function, falling back to base if undefined
-          const result = (await module.default(env, { base })) ?? base;
-          return result ?? base;
+          overrides = (await module.default(env, { base })) ?? undefined;
+        } else {
+          // If the manifest export is not a function, treat it as an object
+          overrides = module.default as RecursivePartial<T>;
         }
-        // If the manifest export is an object, merge or return it directly
-        return (module.default as T) ?? base;
+        return mergeWith(base, overrides);
       },
     },
   });

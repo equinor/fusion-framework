@@ -64,7 +64,7 @@ enableMSAL(configurator, (builder) => {
   await registerServiceWorker(ref);
 
   // create a client for the portal service - this is used to fetch the portal manifest
-  const portalClient = await ref.serviceDiscovery.createClient('portals');
+  const portalClient = await ref.serviceDiscovery.createClient('portal-config');
 
   // fetch the portal manifest - this is used to load the portal template
   const portalId = import.meta.env.FUSION_SPA_PORTAL_ID;

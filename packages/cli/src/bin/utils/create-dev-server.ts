@@ -42,7 +42,7 @@ export type CreateDevServerOptions = {
   template?: Partial<FusionTemplateEnv>;
   portal?: {
     manifest: PortalManifest;
-    config: PortalConfig;
+    config?: PortalConfig;
   };
   app?: {
     manifest: AppManifest;
@@ -162,14 +162,15 @@ const applyAppRouting = (base: DevServerOptions, manifest: AppManifest, config?:
 const applyPortalRouting = (
   base: DevServerOptions,
   manifest: PortalManifest,
-  config: PortalConfig,
+  config?: PortalConfig,
 ) => {
   base.api.routes ??= [];
 
   // @todo - might add correct tag handling later
+  const serviceName = 'portal-config';
 
   base.api.routes.push({
-    match: `/portals/portals/${manifest.name}{@:tag}`,
+    match: `/${serviceName}/portals/${manifest.name}{@:tag}`,
     middleware: async (_req, res) => {
       res.writeHead(200, {
         'content-type': 'application/json',
@@ -177,15 +178,18 @@ const applyPortalRouting = (
       res.end(JSON.stringify(manifest));
     },
   });
-  base.api.routes.push({
-    match: `/portals/portals/${manifest.name}{@:tag}/config`,
-    middleware: async (_req, res) => {
-      res.writeHead(200, {
-        'content-type': 'application/json',
-      });
-      res.end(JSON.stringify(config));
-    },
-  });
+  // @TODO - should config be allowed, dev-server.config could be used instead
+  if (config) {
+    base.api.routes.push({
+      match: `/${serviceName}/portals/${manifest.name}{@:tag}/config`,
+      middleware: async (_req, res) => {
+        res.writeHead(200, {
+          'content-type': 'application/json',
+        });
+        res.end(JSON.stringify(config));
+      },
+    });
+  }
 };
 
 /**
