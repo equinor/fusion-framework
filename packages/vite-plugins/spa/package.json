@@ -6,12 +6,8 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
+      "import": "./dist/bin/index.js",
       "types": "./dist/types/index.d.ts"
-    },
-    "./html": {
-      "import": "./dist/esm/html/index.js",
-      "types": "./dist/types/html/index.d.ts"
     }
   },
   "directories": {
@@ -23,12 +19,17 @@
     "directory": "packages/vite-plugins/spa"
   },
   "scripts": {
+    "prebuild": "tsc -b",
     "build": "rollup -c rollup.config.js",
-    "postbuild": "tsc --emitDeclarationOnly",
     "test": "vitest",
     "prepack": "pnpm build"
   },
-  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "typescript"
+  ],
   "license": "ISC",
   "publishConfig": {
     "access": "public"
