@@ -424,7 +424,7 @@ importers:
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
         specifier: ^0.10.3
-        version: 0.10.4(react@18.3.1)
+        version: 0.10.5(react@18.3.1)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.23.0
@@ -2048,8 +2048,8 @@ packages:
     resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@7.27.4':
-    resolution: {integrity: sha512-t3yaEOuGu9NlIZ+hIeGbBjFtZT7j2cb2tg0fuaJKeGotchRjjLfrBA9Kwf8quhpP1EUuxModQg04q/mBwyg8uA==}
+  '@babel/runtime@7.27.6':
+    resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -2134,8 +2134,8 @@ packages:
   '@bufbuild/protobuf@2.2.5':
     resolution: {integrity: sha512-/g5EzJifw5GF8aren8wZ/G5oMuPoGeS6MQD3ca8ddcvdXR5UELUfdTZITCGNhNXynY/AYl3Z4plmxdj/tRl/hQ==}
 
-  '@bufbuild/protobuf@2.5.1':
-    resolution: {integrity: sha512-lut4UTvKL8tqtend0UDu7R79/n9jA7Jtxf77RNPbxtmWqfWI4qQ9bTjf7KCS4vfqLmpQbuHr1ciqJumAgJODdw==}
+  '@bufbuild/protobuf@2.5.2':
+    resolution: {integrity: sha512-foZ7qr0IsUBjzWIq+SuBLfdQCpJ1j8cTuNNT4owngTHoN5KsJb8L9t65fzz7SCeSWzescoOil/0ldqiL041ABg==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -2314,8 +2314,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-person@0.10.4':
-    resolution: {integrity: sha512-gF4E69HxL/4VISEknpjYvrK73+VeDbEcxqHPG0foCWEHIr/mrfxHcSeqxRYU3T/Hq26Mx5bY39RTLt+ePBmmCw==}
+  '@equinor/fusion-react-person@0.10.5':
+    resolution: {integrity: sha512-EDjbea1mWnqetTShHNrj0/PzuKjx/W6aYtxWRPMLK6NSOx/m9YjTzNcPhlpItsQ6N0/cbxKYj0+6YWbf2TwX3g==}
 
   '@equinor/fusion-react-progress-indicator@0.3.0':
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
@@ -2369,6 +2369,11 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
+  '@equinor/fusion-react-utils@2.2.3':
+    resolution: {integrity: sha512-dZ6EhF0f03v3bz1fBz7eR0zb1FeclpxrRH3LAZqf2GeNMBpIohvYhQtKMd2+S4C6x19pwgn7Z19A9jHwrvq84w==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+
   '@equinor/fusion-wc-avatar@3.2.3':
     resolution: {integrity: sha512-R4QrPz+lzIdYnc1s/6RixQb6MQ/sn1t1h+/P9MictC1bpxXaBKNA7XonxOXQyP9ivZHXLIZK8lNW6vtxiZXurQ==}
 
@@ -2405,11 +2410,14 @@ packages:
   '@equinor/fusion-wc-list@1.1.3':
     resolution: {integrity: sha512-eKzpPA1/8k6uQu6/5ozfywJWHUBPcwOzcZbHz4/Rzu1fb5b932Eot/yUsacDRhnSigbgBvsOqU0phDp2OuV6yA==}
 
-  '@equinor/fusion-wc-person@3.1.7':
-    resolution: {integrity: sha512-iT8WB8W/4hwpx/LWnvwE00ATHjjikmrRnbR3PMj0sV/V/13PAwGwahsmBRze18AlDUDTf/Z4zDCPA6bkn8XNUg==}
+  '@equinor/fusion-wc-list@1.1.4':
+    resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
 
   '@equinor/fusion-wc-person@3.1.8':
     resolution: {integrity: sha512-sgRGVjLfvCk4upvmlDn5FQLyuvt/VAq7uNF/X5DlXUs5jQBQ76yXQDd3BAKQ0IHexYd5dnG4R8z/KOjfKUy8rA==}
+
+  '@equinor/fusion-wc-person@3.1.9':
+    resolution: {integrity: sha512-xnVuEDpaMQurEVx5VMSPKjRm5QyUkOH8N9xYXEBjEdEvlHX42kcjw2VCtsBv1S1BP5zB/jAyYlPuAx/dlFaysA==}
 
   '@equinor/fusion-wc-picture@3.1.1':
     resolution: {integrity: sha512-TeZd46sjyg43HHlbE4h9Ebk9wCBnif5j9XGodIdVTCaC7rLz2YEd7C6RS7vj3nS+goFIZmowiUUmg6gZemzY4w==}
@@ -3088,8 +3096,14 @@ packages:
   '@floating-ui/core@1.6.9':
     resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
 
+  '@floating-ui/core@1.7.1':
+    resolution: {integrity: sha512-azI0DrjMMfIug/ExbBaeDVJXcY0a7EPvPjb2xAJPa4HeimBX+Z18HK8QQR3jb6356SnDDdxx+hinMLcJEDdOjw==}
+
   '@floating-ui/dom@1.6.13':
     resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+
+  '@floating-ui/dom@1.7.1':
+    resolution: {integrity: sha512-cwsmW/zyw5ltYTUeeYJ60CnQuPqmGwuGVhG9w0PRaRKkAyi38BT5CKrpIbb+jtahSwUl04cWzSx9ZOIxeS6RsQ==}
 
   '@floating-ui/react-dom@2.1.2':
     resolution: {integrity: sha512-06okr5cgPzMNBy+Ycse2A6udMi4bqwW/zgBF/rwjcNqWkyr82Mcg8b0vjX8OJpZFy/FKjJmw6wV7t44kK6kW7A==}
@@ -5046,6 +5060,9 @@ packages:
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
+  '@types/estree@1.0.8':
+    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
 
@@ -5604,6 +5621,11 @@ packages:
 
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.15.0:
+    resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -6594,16 +6616,16 @@ packages:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
     engines: {node: '>=8.0.0'}
 
-  eslint-scope@8.3.0:
-    resolution: {integrity: sha512-pUNxi75F8MJ/GdeKtVLSbYg4ZI34J6C0C7sbL4YOp2exGwen7ZsuBqKzUhXd0qMQ362yET3z+uPwKeg/0C2XCQ==}
+  eslint-scope@8.4.0:
+    resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   eslint-visitor-keys@3.4.3:
     resolution: {integrity: sha512-wpc+LXeiyiisxPlEkUzU6svyS1frIO3Mgxj1fdy7Pm8Ygzguax2N3Fa/D/ag1WqbOprdI+uY6wMUl8/a2G+iag==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  eslint-visitor-keys@4.2.0:
-    resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
+  eslint-visitor-keys@4.2.1:
+    resolution: {integrity: sha512-Uhdk5sfqcee/9H/rCOJikYz67o0a2Tw2hGRPOG2Y1R2dg7brRe1uG0yaNQDHu+TO/uQPF/5eCapvYSmHUjt7JQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   eslint@9.25.1:
@@ -6616,8 +6638,8 @@ packages:
       jiti:
         optional: true
 
-  espree@10.3.0:
-    resolution: {integrity: sha512-0QYC8b24HWY8zjRnDTL6RiHfDbAWn63qb4LMj1Z4b076A4une81+z03Kg7l7mn/48PUTqoLptSXez8oknU8Clg==}
+  espree@10.4.0:
+    resolution: {integrity: sha512-j6PAQ2uUr79PZhBjP5C5fhl8e39FmRnOjsD5lGnWrFU8i2G776tBK7+nP8KuQUTTyAZUwfQqXAgrVH5MbH9CYQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   esprima@4.0.1:
@@ -7523,6 +7545,9 @@ packages:
 
   lit@3.2.1:
     resolution: {integrity: sha512-1BBa1E/z0O9ye5fZprPtdqnc0BFzxIxTTOO/tQFmyC/hj1O3jL4TfmLBw0WEwjAokdLwpclkvGgDJwTIh0/22w==}
+
+  lit@3.3.0:
+    resolution: {integrity: sha512-DGVsqsOIHBww2DqnuZzW7QsuCdahp50ojuDaBPC7jUDRpYoH0z7kHBBYZewRzer75FwtrkmkKk7iOAwSaWdBmw==}
 
   loader-utils@2.0.4:
     resolution: {integrity: sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==}
@@ -10128,7 +10153,7 @@ snapshots:
 
   '@babel/runtime@7.27.1': {}
 
-  '@babel/runtime@7.27.4': {}
+  '@babel/runtime@7.27.6': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -10211,7 +10236,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.2.5': {}
 
-  '@bufbuild/protobuf@2.5.1':
+  '@bufbuild/protobuf@2.5.2':
     optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -10551,7 +10576,7 @@ snapshots:
 
   '@equinor/fusion-react-checkbox@0.5.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
       '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-formfield': 1.1.2
     transitivePeerDependencies:
@@ -10571,7 +10596,7 @@ snapshots:
 
   '@equinor/fusion-react-divider@0.2.13(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
       '@equinor/fusion-wc-divider': 0.2.23
       '@lit-labs/react': 1.2.1
     transitivePeerDependencies:
@@ -10579,14 +10604,14 @@ snapshots:
 
   '@equinor/fusion-react-icon@0.2.17(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.2(react@18.3.1)
+      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
-  '@equinor/fusion-react-person@0.10.4(react@18.3.1)':
+  '@equinor/fusion-react-person@0.10.5(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.2(react@18.3.1)
-      '@equinor/fusion-wc-person': 3.1.7
+      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
+      '@equinor/fusion-wc-person': 3.1.9
     transitivePeerDependencies:
       - react
 
@@ -10641,6 +10666,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@equinor/fusion-react-utils@2.2.2(react@18.3.1)':
+    dependencies:
+      date-fns: 4.1.0
+      react: 18.3.1
+
+  '@equinor/fusion-react-utils@2.2.3(react@18.3.1)':
     dependencies:
       date-fns: 4.1.0
       react: 18.3.1
@@ -10724,21 +10754,16 @@ snapshots:
       '@material/mwc-list': 0.27.0
       lit: 3.2.0
 
-  '@equinor/fusion-wc-person@3.1.7':
+  '@equinor/fusion-wc-list@1.1.4':
     dependencies:
-      '@equinor/fusion-wc-avatar': 3.2.3
-      '@equinor/fusion-wc-badge': 1.3.2
-      '@equinor/fusion-wc-button': 2.4.2
+      '@equinor/fusion-wc-checkbox': 1.1.2
       '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-divider': 1.1.2
       '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-list': 1.1.3
-      '@equinor/fusion-wc-skeleton': 2.1.2
-      '@equinor/fusion-wc-textinput': 1.1.4
+      '@equinor/fusion-wc-radio': 1.1.2
       '@equinor/fusion-web-theme': 0.1.10
-      '@floating-ui/dom': 1.6.13
-      '@lit-labs/observers': 2.0.5
-      '@lit-labs/task': 3.1.0
-      lit: 3.2.1
+      '@material/mwc-list': 0.27.0
+      lit: 3.3.0
 
   '@equinor/fusion-wc-person@3.1.8':
     dependencies:
@@ -10755,6 +10780,22 @@ snapshots:
       '@lit-labs/observers': 2.0.5
       '@lit-labs/task': 3.1.0
       lit: 3.2.1
+
+  '@equinor/fusion-wc-person@3.1.9':
+    dependencies:
+      '@equinor/fusion-wc-avatar': 3.2.3
+      '@equinor/fusion-wc-badge': 1.3.2
+      '@equinor/fusion-wc-button': 2.4.2
+      '@equinor/fusion-wc-core': 2.0.0
+      '@equinor/fusion-wc-icon': 2.3.1
+      '@equinor/fusion-wc-list': 1.1.4
+      '@equinor/fusion-wc-skeleton': 2.1.2
+      '@equinor/fusion-wc-textinput': 1.1.4
+      '@equinor/fusion-web-theme': 0.1.10
+      '@floating-ui/dom': 1.7.1
+      '@lit-labs/observers': 2.0.5
+      '@lit-labs/task': 3.1.0
+      lit: 3.3.0
 
   '@equinor/fusion-wc-picture@3.1.1':
     dependencies:
@@ -11169,7 +11210,7 @@ snapshots:
     dependencies:
       ajv: 6.12.6
       debug: 4.4.1
-      espree: 10.3.0
+      espree: 10.4.0
       globals: 14.0.0
       ignore: 5.3.2
       import-fresh: 3.3.1
@@ -11196,9 +11237,18 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.9
 
+  '@floating-ui/core@1.7.1':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
   '@floating-ui/dom@1.6.13':
     dependencies:
       '@floating-ui/core': 1.6.9
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/dom@1.7.1':
+    dependencies:
+      '@floating-ui/core': 1.7.1
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/react-dom@2.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -11209,7 +11259,7 @@ snapshots:
 
   '@floating-ui/react-dom@2.1.2(react-dom@19.1.0(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/dom': 1.6.13
+      '@floating-ui/dom': 1.7.1
       react: 18.3.1
       react-dom: 19.1.0(react@18.3.1)
 
@@ -14259,7 +14309,7 @@ snapshots:
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.27.4
+      '@babel/runtime': 7.27.6
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -14432,6 +14482,8 @@ snapshots:
   '@types/earcut@2.1.4': {}
 
   '@types/estree@1.0.7': {}
+
+  '@types/estree@1.0.8': {}
 
   '@types/fs-extra@11.0.4':
     dependencies:
@@ -15313,11 +15365,13 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  acorn-jsx@5.3.2(acorn@8.14.1):
+  acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
-      acorn: 8.14.1
+      acorn: 8.15.0
 
   acorn@8.14.1: {}
+
+  acorn@8.15.0: {}
 
   adm-zip@0.5.16: {}
 
@@ -16511,14 +16565,14 @@ snapshots:
       esrecurse: 4.3.0
       estraverse: 4.3.0
 
-  eslint-scope@8.3.0:
+  eslint-scope@8.4.0:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
 
   eslint-visitor-keys@3.4.3: {}
 
-  eslint-visitor-keys@4.2.0: {}
+  eslint-visitor-keys@4.2.1: {}
 
   eslint@9.25.1:
     dependencies:
@@ -16533,16 +16587,16 @@ snapshots:
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
       debug: 4.4.1
       escape-string-regexp: 4.0.0
-      eslint-scope: 8.3.0
-      eslint-visitor-keys: 4.2.0
-      espree: 10.3.0
+      eslint-scope: 8.4.0
+      eslint-visitor-keys: 4.2.1
+      espree: 10.4.0
       esquery: 1.6.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
@@ -16560,11 +16614,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  espree@10.3.0:
+  espree@10.4.0:
     dependencies:
-      acorn: 8.14.1
-      acorn-jsx: 5.3.2(acorn@8.14.1)
-      eslint-visitor-keys: 4.2.0
+      acorn: 8.15.0
+      acorn-jsx: 5.3.2(acorn@8.15.0)
+      eslint-visitor-keys: 4.2.1
 
   esprima@4.0.1: {}
 
@@ -16820,7 +16874,7 @@ snapshots:
 
   giscus@1.6.0:
     dependencies:
-      lit: 3.2.1
+      lit: 3.3.0
 
   github-from-package@0.0.0: {}
 
@@ -17550,6 +17604,12 @@ snapshots:
       lit-html: 3.2.1
 
   lit@3.2.1:
+    dependencies:
+      '@lit/reactive-element': 2.1.0
+      lit-element: 4.2.0
+      lit-html: 3.3.0
+
+  lit@3.3.0:
     dependencies:
       '@lit/reactive-element': 2.1.0
       lit-element: 4.2.0
@@ -19095,7 +19155,7 @@ snapshots:
 
   sass-embedded@1.87.0:
     dependencies:
-      '@bufbuild/protobuf': 2.5.1
+      '@bufbuild/protobuf': 2.5.2
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.2
