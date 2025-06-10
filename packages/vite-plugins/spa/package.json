@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vite-plugin-spa",
-  "version": "1.0.0-next.5",
+  "version": "1.0.0-next.6",
   "description": "Vite plugin for SPA development",
   "type": "module",
   "types": "dist/types/index.d.ts",
