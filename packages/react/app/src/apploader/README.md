@@ -1,36 +1,36 @@
-# `@equinor/fusion-framework-react-app/fusion-apploader`
+# `@equinor/fusion-framework-react-app/apploader`
 
-[FusionApploader](#fusionapploader) component and [useFusionApploader](#usefusionapploader) is intended to be used to embed Fusion applications inside other Fusion application.
+[Apploader](#apploader) component and [useApploader](#useapploader) is intended to be used to embed Fusion applications inside other Fusion application.
 
 > [!WARNING]
-> `FusionApploader` is an experimental poc.
+> `Apploader` is an experimental poc.
 >
 > The embedded application will likely have issues with routing, context and other framework functionality, so use with care.
 >
 > Should only be used to embed 'simple' applications like **PowerBI** and **PowerApps**.
 
-## FusionApploader
+## Apploader
 
 React component for embeding a Fusion child application inside a parent Fusion application.
 
 Handles loading and error states, and mounts the child app's DOM element into a container div.
 
-If you need to customise the error and loading messages, then use the hook ``useFusionApploader`` and create your own component.
+If you need to customise the error and loading messages, then use the hook ``useApploader`` and create your own component.
 
 ### Example usage
 
 ```typescript
-<FusionApploader appKey="my-app" />
+<Apploader appKey="my-app" />
 ```
 
-## useFusionApploader
+## useApploader
 
 A React hook for dynamically loading and mounting a Fusion child app inside a parent Fusion app. Handles loading state, error reporting, and provides a reference to the mounted app’s DOM element.
 
 ### Signature
 
 ```typescript
-useFusionApploader({ appKey }: { appKey: string }): {
+useApploader({ appKey }: { appKey: string }): {
   loading: boolean;
   error: Error | undefined;
   appRef: React.RefObject<HTMLDivElement | null>;
@@ -51,11 +51,11 @@ useFusionApploader({ appKey }: { appKey: string }): {
 
 ```typescript
 import React, { useEffect, useRef } from 'react';
-import { useFusionApploader } from './useFusionAppLoader';
+import { useApploader } from './useAppLoader';
 
 const MyAppLoader = ({ appKey }: { appKey: string }) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const { loading, error, appRef } = useFusionApploader({ appKey });
+  const { loading, error, appRef } = useApploader({ appKey });
 
   useEffect(() => {
     if (wrapperRef.current && appRef.current) {

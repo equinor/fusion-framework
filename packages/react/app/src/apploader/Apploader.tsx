@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react';
-import { useFusionApploader } from './useFusionApploader';
+import { useApploader } from './useApploader';
 
-export type FusionApploaderProps = {
+export type ApploaderProps = {
   appKey: string;
 };
 
 /**
- * FusionApploader component
+ * Apploader component
  *
  * Embeds a Fusion child application inside a parent Fusion application.
  * Handles loading and error states, and mounts the child app's DOM element into a container div.
  *
- * @param { FusionApploaderProps } props - The props for the component.
+ * @param { ApploaderProps } props - The props for the component.
  * @param { string } props.appKey - The key of the Fusion app to load and mount.
  * @returns { JSX.Element } The rendered component, which displays loading, error, or the embedded app.
  *
  * @example
- * <FusionApploader appKey="my-app" />
+ * <Apploader appKey="my-app" />
  */
-export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element => {
+export const Apploader = ({ appKey }: ApploaderProps): JSX.Element => {
   const refWrapp = useRef<HTMLDivElement | null>(null);
-  const { loading, error, appRef } = useFusionApploader({ appKey });
+  const { loading, error, appRef } = useApploader({ appKey });
 
   useEffect(() => {
     if (!refWrapp.current || !appRef.current) {
@@ -44,4 +44,4 @@ export const FusionApploader = ({ appKey }: FusionApploaderProps): JSX.Element =
   return <div ref={refWrapp} />;
 };
 
-export default FusionApploader;
+export default Apploader;

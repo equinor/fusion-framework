@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
-import type { FusionApploaderProps as ApploaderProps } from './FusionApploader';
+import type { ApploaderProps } from './Apploader';
 
 /**
  * React hook for dynamically loading and mounting a Fusion child app inside a parent Fusion app.
@@ -19,7 +19,7 @@ import type { FusionApploaderProps as ApploaderProps } from './FusionApploader';
  *
  * @example
  * ```typescript
- * const { loading, error, appRef } = useFusionApploader({ appKey: 'my-app' });
+ * const { loading, error, appRef } = useApploader({ appKey: 'my-app' });
  *
  * useEffect(() => {
  *   if (containerRef.current && appRef.current) {
@@ -32,7 +32,7 @@ import type { FusionApploaderProps as ApploaderProps } from './FusionApploader';
  * return <div ref={containerRef} />;
  * ```
  */
-export const useFusionApploader = ({
+export const useApploader = ({
   appKey,
 }: ApploaderProps): {
   loading: boolean;
