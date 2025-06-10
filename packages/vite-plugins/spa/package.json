@@ -37,17 +37,18 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "lodash.mergewith": "^4.6.2"
+  },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
-    "@types/lodash.mergewith": "^4.6.9",
-    "lodash.mergewith": "^4.6.2",
+    "@types/lodash.mergewith": "^4.6.2",
     "rollup": "^4.39.0",
     "typescript": "^5.5.4",
     "vite": "^6.3.5"
