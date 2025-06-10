@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.0.0-next.5
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`ea96493`](https://github.com/equinor/fusion-framework/commit/ea96493d95336f682e31a7b63161783ae7c99a63) Thanks [@odinr](https://github.com/odinr)! - Refactor build output and entrypoints for SPA Vite plugin:
+
+  - Change main export entrypoint to `./dist/bin/index.js` (was `./dist/esm/index.js`).
+  - Remove the `./html` export subpath.
+  - Update Rollup config to bundle from `dist/esm` to `dist/bin` and adjust input/output accordingly.
+  - Remove `postbuild` script and add `prebuild` script for TypeScript project references build.
+  - Minor formatting improvements in `package.json`.
+
+  These changes improve the build pipeline and clarify the published entrypoints for consumers.
+
 ## 1.0.0-next.4
 
 ### Patch Changes

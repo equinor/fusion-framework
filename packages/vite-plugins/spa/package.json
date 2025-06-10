@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-vite-plugin-spa",
-  "version": "1.0.0-next.4",
+  "version": "1.0.0-next.5",
   "description": "Vite plugin for SPA development",
   "type": "module",
   "types": "dist/types/index.d.ts",
@@ -24,12 +24,7 @@
     "test": "vitest",
     "prepack": "pnpm build"
   },
-  "keywords": [
-    "vite",
-    "fusion-framework",
-    "dev-server",
-    "typescript"
-  ],
+  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
   "license": "ISC",
   "publishConfig": {
     "access": "public"

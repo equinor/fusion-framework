@@ -5,7 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 export default [
   {
     input: {
-      'index': 'dist/esm/index.js',
+      index: 'dist/esm/index.js',
       'html/bootstrap': 'dist/esm/html/bootstrap.js',
       'html/sw': 'dist/esm/html/sw.js',
     },
