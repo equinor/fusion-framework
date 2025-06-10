@@ -606,54 +606,24 @@ importers:
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../utils/imports
-      '@rollup/plugin-commonjs':
-        specifier: ^28.0.3
-        version: 28.0.3(rollup@4.41.1)
-      '@rollup/plugin-json':
-        specifier: ^6.1.0
-        version: 6.1.0(rollup@4.41.1)
-      '@rollup/plugin-node-resolve':
-        specifier: ^16.0.1
-        version: 16.0.1(rollup@4.41.1)
       adm-zip:
         specifier: ^0.5.10
         version: 0.5.16
-      ajv:
-        specifier: ^8.17.1
-        version: 8.17.1
       chalk:
         specifier: ^5.3.0
         version: 5.4.1
       commander:
         specifier: ^13.0.0
         version: 13.1.0
-      is-ci:
-        specifier: ^4.1.0
-        version: 4.1.0
       keytar:
         specifier: 7.9.0
         version: 7.9.0
-      lodash.mergewith:
-        specifier: ^4.6.2
-        version: 4.6.2
-      open:
-        specifier: ^10.1.1
-        version: 10.1.2
       ora:
         specifier: ^8.0.1
         version: 8.2.0
-      pretty-bytes:
-        specifier: ^7.0.0
-        version: 7.0.0
       read-package-up:
         specifier: ^11.0.0
         version: 11.0.0
-      rollup:
-        specifier: ^4.39.0
-        version: 4.41.1
-      type-fest:
-        specifier: ^4.40.0
-        version: 4.41.0
       vite:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@20.17.50)(sass-embedded@1.89.1)(tsx@4.19.4)
@@ -676,6 +646,15 @@ importers:
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../modules/service-discovery
+      '@rollup/plugin-commonjs':
+        specifier: ^28.0.3
+        version: 28.0.3(rollup@4.41.1)
+      '@rollup/plugin-json':
+        specifier: ^6.1.0
+        version: 6.1.0(rollup@4.41.1)
+      '@rollup/plugin-node-resolve':
+        specifier: ^16.0.1
+        version: 16.0.1(rollup@4.41.1)
       '@types/adm-zip':
         specifier: ^0.5.0
         version: 0.5.7
@@ -685,9 +664,30 @@ importers:
       '@types/node':
         specifier: ^20.11.14
         version: 20.17.50
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
+      is-ci:
+        specifier: ^4.1.0
+        version: 4.1.0
+      lodash.mergewith:
+        specifier: ^4.6.2
+        version: 4.6.2
+      open:
+        specifier: ^10.1.1
+        version: 10.1.2
+      pretty-bytes:
+        specifier: ^7.0.0
+        version: 7.0.0
+      rollup:
+        specifier: ^4.39.0
+        version: 4.41.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      type-fest:
+        specifier: ^4.40.0
+        version: 4.41.0
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
