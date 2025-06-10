@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.0.0-next.8
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`5973182`](https://github.com/equinor/fusion-framework/commit/5973182b156adb56137f1fc683635ae15274cc57) Thanks [@odinr](https://github.com/odinr)! - Update portal config and manifest API routes and types for consistency:
+
+  - Change dev server API route for portal manifest/config from `/portals/portals/...` to `/portal-config/portals/...` for alignment with client usage.
+  - Make portal config optional in dev server route and type definitions.
+  - Update SPA bootstrap to use `portal-config` as the service discovery client key.
+  - Refactor portal manifest/config loading and merging to use `RecursivePartial` and `lodash.mergewith` for deep merge support.
+  - Remove unused zod import from portal config type.
+
+  These changes improve consistency, flexibility, and correctness in portal manifest/config handling across CLI and SPA plugin.
+
 ## 1.0.0-next.7
 
 ### Patch Changes

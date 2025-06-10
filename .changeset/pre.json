@@ -89,6 +89,7 @@
     "open-parks-sip",
     "patch-create-dev-server-config",
     "patch-files-field-fusion-imports",
+    "portal-config-api-route-update",
     "portal-manifest-refactor",
     "pretty-peas-rule",
     "rotten-glasses-turn",

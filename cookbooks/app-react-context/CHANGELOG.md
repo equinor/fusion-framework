@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.69-next.14
+
+### Patch Changes
+
+- Updated dependencies [[`5973182`](https://github.com/equinor/fusion-framework/commit/5973182b156adb56137f1fc683635ae15274cc57)]:
+  - @equinor/fusion-framework-cli@11.0.0-next.14
+
 ## 4.1.69-next.13
 
 ### Patch Changes
