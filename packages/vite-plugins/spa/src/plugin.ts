@@ -1,5 +1,7 @@
 import type { Plugin } from 'vite';
 
+import { fileURLToPath } from 'node:url';
+
 import mergeWith from 'lodash.mergewith';
 
 import defaultTemplate from './html/index.html.js';
@@ -44,16 +46,22 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
 
   return {
     name: 'fusion-framework-plugin-spa',
-    resolveId(id) {
+    resolveId: async (id) => {
       // resolve resource aliases to the correct path
       switch (id) {
-        case '/@fusion-spa-bootstrap.js':
-          return new URL('./html/bootstrap.js', import.meta.url).pathname;
-        case '/@fusion-spa-sw.js':
-          return new URL('./html/sw.js', import.meta.url).pathname;
+        case '/@fusion-spa-bootstrap.js': {
+          const file = await import.meta.resolve(
+            '@equinor/fusion-framework-vite-plugin-spa/bootstrap.js',
+          );
+          return fileURLToPath(file);
+        }
+        case '/@fusion-spa-sw.js': {
+          const file = await import.meta.resolve('@equinor/fusion-framework-vite-plugin-spa/sw.js');
+          return fileURLToPath(file);
+        }
       }
     },
-    config(config, configEnv) {
+    config: async (config, configEnv) => {
       const templateEnvPrefix = options?.templateEnvPrefix ?? 'FUSION_SPA_';
       // generate environment variables from plugin options
       const pluginEnvObj = { ...defaultEnv, ...options?.generateTemplateEnv?.(configEnv) };
@@ -79,8 +87,8 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
       config.server ??= {};
       config.server.fs ??= {};
       config.server.fs.allow ??= [];
-      // allow access to the template file
-      config.server.fs.allow.push(new URL('./html', import.meta.url).pathname);
+      // allow access to the html directory
+      config.server.fs.allow.push(new URL('../html', import.meta.url).pathname);
 
       log?.info(`plugin configured for ${env.FUSION_SPA_PORTAL_ID}`);
     },

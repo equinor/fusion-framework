@@ -6,8 +6,16 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/bin/index.js",
+      "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./bootstrap.js": {
+      "import": "./dist/html/bootstrap.js",
+      "types": "./dist/types/bootstrap.d.ts"
+    },
+    "./sw.js": {
+      "import": "./dist/html/sw.js",
+      "types": "./dist/types/sw.d.ts"
     }
   },
   "directories": {
@@ -19,8 +27,8 @@
     "directory": "packages/vite-plugins/spa"
   },
   "scripts": {
-    "prebuild": "tsc -b",
-    "build": "rollup -c rollup.config.js",
+    "build": "tsc -b",
+    "postbuild": "rollup -c rollup.config.js",
     "test": "vitest",
     "prepack": "pnpm build"
   },

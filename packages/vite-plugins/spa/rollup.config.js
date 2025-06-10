@@ -5,18 +5,16 @@ import commonjs from '@rollup/plugin-commonjs';
 export default [
   {
     input: {
-      index: 'dist/esm/index.js',
       'html/bootstrap': 'dist/esm/html/bootstrap.js',
       'html/sw': 'dist/esm/html/sw.js',
     },
     output: {
       format: 'esm',
-      dir: 'dist/bin',
+      dir: 'dist',
       entryFileNames: '[name].js',
       sourcemap: true,
       strict: false,
     },
-    external: ['fsevents', 'jiti', 'lightningcss', 'yaml'],
     plugins: [resolve({ preferBuiltins: true }), commonjs()],
   },
 ];
