@@ -75,6 +75,7 @@
     "eleven-dingos-decide",
     "fetch-portal-config-in-bootstrap",
     "fix-http-acquire-access-token",
+    "fix-lodash-mergewith-deps",
     "fix-semver",
     "forty-doors-pump",
     "fresh-years-rush",
