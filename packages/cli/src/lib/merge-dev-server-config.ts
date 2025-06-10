@@ -4,19 +4,20 @@ import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
 import type { RecursivePartial } from './utils/types';
 
 /**
- * Customizer function for lodash.mergeWith to handle merging arrays.
+ * Customizer function for merging objects, intended for use with utilities like `_.mergeWith`.
  *
- * If the property being merged is an array, the source value replaces the object value.
- * This prevents arrays from being concatenated, which is the default lodash behavior.
+ * - If either `objValue` or `srcValue` is an array, replaces the target array with the source array,
+ *   concatenating the source array with the target array (source first).
+ * - For non-array values, allows the default merge behavior.
  *
- * @param objValue - The value from the base object.
- * @param srcValue - The value from the overrides object.
- * @returns The value to use in the merged result, or undefined to use default merging.
+ * @param objValue - The destination value being merged.
+ * @param srcValue - The source value being merged.
+ * @returns The merged value if custom logic applies, otherwise `undefined` to use default merging.
  */
 const customizer = (objValue: unknown, srcValue: unknown) => {
-  if (Array.isArray(objValue)) {
+  if (Array.isArray(objValue) || Array.isArray(srcValue)) {
     // Replace arrays instead of merging/concatenating them
-    return srcValue;
+    return ((srcValue as Array<unknown>) ?? []).concat(objValue ?? []);
   }
   // For non-arrays, use default merge behavior
 };
