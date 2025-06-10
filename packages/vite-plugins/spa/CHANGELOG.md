@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.0.0-next.7
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`23fdc8a`](https://github.com/equinor/fusion-framework/commit/23fdc8a80d21ff063b17d8c596c0afc0a891305f) Thanks [@odinr](https://github.com/odinr)! - Fix dependency and devDependency declarations for lodash.mergewith:
+
+  - Move "lodash.mergewith" to dependencies and ensure correct version for @types/lodash.mergewith in devDependencies.
+  - Remove duplicate and misplaced entries for lodash.mergewith and its types.
+  - Remove unused @equinor/fusion-framework-vite-plugin-api-service from devDependencies.
+  - Update lockfile to match package.json changes.
+
+  This ensures correct dependency management and resolves potential issues with type resolution and package installation.
+
 ## 1.0.0-next.6
 
 ### Patch Changes
