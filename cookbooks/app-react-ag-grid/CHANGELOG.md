@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.27-next.9
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@11.0.0-next.9
+
 ## 0.6.27-next.8
 
 ### Patch Changes
