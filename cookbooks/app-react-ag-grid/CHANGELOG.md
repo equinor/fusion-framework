@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.29
+
+### Patch Changes
+
+- Updated dependencies [[`bfa2317`](https://github.com/equinor/fusion-framework/commit/bfa2317c1d23bd606fdbc2e9857b0be69b08e720)]:
+  - @equinor/fusion-framework-react-app@6.2.0
+
 ## 0.6.28
 
 ### Patch Changes
