@@ -93,6 +93,7 @@
     "semantic-version-satisfies",
     "small-memes-enjoy",
     "tasty-cities-relate",
-    "update-bootstrap-logic"
+    "update-bootstrap-logic",
+    "update-spa-plugin-build-output"
   ]
 }
