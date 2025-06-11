@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-bookmark",
-  "version": "2.1.11",
+  "version": "2.1.12",
   "description": "",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
