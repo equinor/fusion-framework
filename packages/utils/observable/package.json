@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-observable",
-  "version": "8.4.9",
+  "version": "8.5.1",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://equinor.github.io/fusion-framework/",
@@ -15,6 +15,10 @@
     "./operators": {
       "import": "./dist/esm/operators/index.js",
       "types": "./dist/types/operators/index.d.ts"
+    },
+    "./actions": {
+      "import": "./dist/esm/actions.js",
+      "types": "./dist/types/actions.d.ts"
     },
     "./react": {
       "import": "./dist/esm/react/index.js",

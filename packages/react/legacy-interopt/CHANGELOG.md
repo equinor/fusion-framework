@@ -1,5 +1,36 @@
 # Change Log
 
+## 24.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`bfa2317`](https://github.com/equinor/fusion-framework/commit/bfa2317c1d23bd606fdbc2e9857b0be69b08e720)]:
+  - @equinor/fusion-framework-react-app@6.2.0
+
+## 23.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593)]:
+  - @equinor/fusion-observable@8.5.1
+  - @equinor/fusion-framework-module-app@6.1.15
+  - @equinor/fusion-framework-react-app@6.1.7
+  - @equinor/fusion-framework-app@9.3.16
+  - @equinor/fusion-framework-module-service-discovery@8.0.16
+  - @equinor/fusion-framework@7.3.14
+
+## 23.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`d247ec7`](https://github.com/equinor/fusion-framework/commit/d247ec7482a4d5231657875f6c6733ce37df07c9), [`89f80e4`](https://github.com/equinor/fusion-framework/commit/89f80e41dac04e71518c7314cada86ecc835708d)]:
+  - @equinor/fusion-observable@8.5.0
+  - @equinor/fusion-framework-module-app@6.1.14
+  - @equinor/fusion-framework-react-app@6.1.6
+  - @equinor/fusion-framework-app@9.3.15
+  - @equinor/fusion-framework-module-service-discovery@8.0.15
+  - @equinor/fusion-framework@7.3.13
+
 ## 23.0.4
 
 ### Patch Changes
