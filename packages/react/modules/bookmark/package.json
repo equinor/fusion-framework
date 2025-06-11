@@ -16,6 +16,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "portal": ["dist/types/portal/index.d.ts"]
     }
   },
