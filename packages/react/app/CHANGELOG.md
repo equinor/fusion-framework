@@ -1,42 +1,127 @@
 # Change Log
 
-## 6.1.6-next.2
+## 6.2.1
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework-app@9.3.15-next.2
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-module-msal@4.0.7-next.1
-  - @equinor/fusion-framework-module-navigation@5.0.3-next.1
-  - @equinor/fusion-framework-react@7.4.13-next.2
-  - @equinor/fusion-framework-react-module@3.1.13-next.1
-  - @equinor/fusion-framework-react-module-http@9.0.3-next.2
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
 
-## 6.1.6-next.1
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
 
-### Patch Changes
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-navigation@5.0.3
+  - @equinor/fusion-framework-react@7.4.15
+  - @equinor/fusion-framework-module-msal@4.0.7
+  - @equinor/fusion-framework-module-app@6.1.16
+  - @equinor/fusion-framework-app@9.3.17
+  - @equinor/fusion-framework-react-module-http@9.0.3
 
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework-app@9.3.15-next.1
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-module-msal@4.0.7-next.0
-  - @equinor/fusion-framework-module-navigation@5.0.3-next.0
-  - @equinor/fusion-framework-react@7.4.13-next.1
-  - @equinor/fusion-framework-react-module@3.1.13-next.0
-  - @equinor/fusion-framework-react-module-http@9.0.3-next.1
+## 6.2.0
 
-## 6.1.6-next.0
+### Minor Changes
+
+- [#3039](https://github.com/equinor/fusion-framework/pull/3039) [`bfa2317`](https://github.com/equinor/fusion-framework/commit/bfa2317c1d23bd606fdbc2e9857b0be69b08e720) Thanks [@eikeland](https://github.com/eikeland)! - `@equinor/fusion-framework-react-app/fusion-apploader`
+
+  [FusionApploader](#fusionapploader) component and [useFusionApploader](#usefusionapploader) is intended to be used to embed Fusion applications inside other Fusion application.
+
+  > [!WARNING] > `FusionApploader` is an experimental poc.
+  >
+  > The embedded application will likely have issues with routing, context and other framework functionality, so use with care.
+  >
+  > Should only be used to embed 'simple' applications like **PowerBI** and **PowerApps**.
+
+  ## FusionApploader
+
+  React component for embeding a Fusion child application inside a parent Fusion application.
+
+  Handles loading and error states, and mounts the child app's DOM element into a container div.
+
+  If you need to customise the error and loading messages, then use the hook `useFusionApploader` and create your own component.
+
+  ### Example usage
+
+  ```typescript
+  <FusionApploader appKey="my-app" />
+  ```
+
+  ## useFusionApploader
+
+  A React hook for dynamically loading and mounting a Fusion child app inside a parent Fusion app. Handles loading state, error reporting, and provides a reference to the mounted app’s DOM element.
+
+  ### Signature
+
+  ```typescript
+  useFusionApploader({ appKey }: { appKey: string }): {
+    loading: boolean;
+    error: Error | undefined;
+    appRef: React.RefObject<HTMLDivElement | null>;
+  }
+  ```
+
+  ### Parameters
+
+  `appKey (string)`: The key of the Fusion app to load and mount.
+
+  ### Returns
+
+  - **loading** `(boolean)`: true while the app is loading.
+  - **error** `(Error | undefined)`: Error object if loading fails, otherwise undefined.
+  - **appRef** `(React.RefObject<HTMLDivElement | null>)`: Ref to the DOM element where the child app is mounted.
+
+  ### Usage Example
+
+  ```typescript
+  import React, { useEffect, useRef } from "react";
+  import { useFusionApploader } from "./useFusionAppLoader";
+
+  const MyAppLoader = ({ appKey }: { appKey: string }) => {
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
+    const { loading, error, appRef } = useFusionApploader({ appKey });
+
+    useEffect(() => {
+      if (wrapperRef.current && appRef.current) {
+        wrapperRef.current.appendChild(appRef.current);
+      }
+    }, [appRef.current]);
+
+    if (loading) return <div>Loading {appKey}...</div>;
+    if (error)
+      return (
+        <div>
+          Error loading {appKey}: {error.message}
+        </div>
+      );
+
+    return <div ref={wrapperRef} />;
+  };
+  ```
+
+  ### Notes
+
+  - The hook is designed to be used in a parent Fusion app context.
+  - The returned appRef should be appended to a container element in your component.
+  - Handles subscription and cleanup automatically.
+  - Useful for micro-frontend scenarios where apps are loaded dynamically.
+
+## 6.1.7
 
 ### Patch Changes
 
 - Updated dependencies []:
-  - @equinor/fusion-framework-app@9.3.15-next.0
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-react-module-http@9.0.3-next.0
-  - @equinor/fusion-framework-react@7.4.13-next.0
+  - @equinor/fusion-framework-module-app@6.1.15
+  - @equinor/fusion-framework-react@7.4.14
+  - @equinor/fusion-framework-app@9.3.16
+
+## 6.1.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-app@6.1.14
+  - @equinor/fusion-framework-react@7.4.13
+  - @equinor/fusion-framework-app@9.3.15
 
 ## 6.1.5
 

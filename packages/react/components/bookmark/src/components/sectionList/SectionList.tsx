@@ -41,8 +41,18 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
       const appKey = currentApp?.appKey;
       const bookmarkId = bookmark.id;
       const isOwner = bookmark.createdBy.id === user?.localAccountId;
+
+      const copyUrl = {
+        name: 'Copy URL',
+        disabled: false,
+        onClick: async () => {
+          addBookmarkToClipboard(bookmark.id);
+        },
+        Icon: <Icon name="share" />,
+      };
+
       if (isOwner) {
-        return [
+        const ownerOptions = [
           {
             name: 'Edit',
             disabled: appKey !== bookmark.appKey,
@@ -112,25 +122,28 @@ export const SectionList = ({ bookmarkGroups }: SectionListProps) => {
             Icon: <Icon name="share" />,
           },
         ] as MenuOption[];
-      } else {
-        return [
-          {
-            name: 'Unfavourite',
-            disabled: false,
-            onClick: () => {
-              from(provider.removeBookmarkAsFavorite(bookmark.id)).subscribe({
-                error(err) {
-                  console.error('Failed to remove bookmark from favorites', err);
-                },
-                complete() {
-                  console.debug('Bookmark removed from favorites');
-                },
-              });
-            },
-            Icon: <Icon name="close" />,
-          },
-        ];
+
+        return bookmark.isShared ? [...ownerOptions, copyUrl] : ownerOptions;
       }
+
+      return [
+        copyUrl,
+        {
+          name: 'Unfavourite',
+          disabled: false,
+          onClick: () => {
+            from(provider.removeBookmarkAsFavorite(bookmark.id)).subscribe({
+              error(err) {
+                console.error('Failed to remove bookmark from favorites', err);
+              },
+              complete() {
+                console.debug('Bookmark removed from favorites');
+              },
+            });
+          },
+          Icon: <Icon name="close" />,
+        },
+      ];
     },
     [provider, showEditBookmark, addBookmarkToClipboard, user, currentApp?.appKey],
   );
