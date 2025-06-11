@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-app",
-  "version": "9.3.15-next.2",
+  "version": "9.3.17",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -16,6 +16,7 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
       "enable-bookmark": ["dist/types/enable-bookmark.d.ts"]
     }
   },

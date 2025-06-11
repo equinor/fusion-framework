@@ -1,18 +1,14 @@
 # @equinor/fusion-framework-react-ag-grid
 
-## 33.2.7-next.1
+## 33.2.7
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-ag-grid@34.0.3-next.1
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
 
-## 33.2.7-next.0
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-ag-grid@34.0.3-next.0
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
 
 ## 33.2.6
 

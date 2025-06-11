@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-app",
-  "version": "6.1.6-next.2",
+  "version": "6.2.1",
   "description": "",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -8,6 +8,10 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js"
+    },
+    "./apploader": {
+      "types": "./dist/types/apploader/index.d.ts",
+      "import": "./dist/esm/apploader/index.js"
     },
     "./bookmark": {
       "types": "./dist/types/bookmark/index.d.ts",
@@ -52,6 +56,8 @@
   },
   "typesVersions": {
     "*": {
+      ".": ["dist/types/index.d.ts"],
+      "apploader": ["dist/types/apploader/index.d.ts"],
       "bookmark": ["dist/types/bookmark/index.d.ts"],
       "context": ["dist/types/context/index.d.ts"],
       "feature-flag": ["dist/types/feature-flag/index.d.ts"],

@@ -1,8 +1,8 @@
 {
   "name": "poc-portal",
-  "version": "1.0.48-next.14",
+  "version": "1.0.51",
   "description": "",
-  "main": "dist/main.js",
+  "main": "src/index.tsx",
   "private": true,
   "scripts": {
     "dev": "fusion-framework-cli app dev -d './dev-portal'",

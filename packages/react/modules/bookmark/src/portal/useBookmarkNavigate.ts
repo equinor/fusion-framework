@@ -23,8 +23,13 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
   } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
   useLayoutEffect(() => {
-    const sub = event.addEventListener('onBookmarkChanged', (e) => {
-      const { appKey, context: bookmarkContext } = e.detail;
+    const sub = event.addEventListener('onCurrentBookmarkChanged', (e) => {
+      const appKey = e.detail?.appKey;
+      const bookmarkContext = e.detail?.context;
+
+      if (!appKey || !bookmarkContext) {
+        return;
+      }
 
       const pathname = args.resolveAppPath(appKey);
 

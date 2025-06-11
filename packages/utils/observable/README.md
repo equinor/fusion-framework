@@ -1,5 +1,63 @@
 # Observable
 
+## `isObservableInput`
+
+A utility to check if a value is an observable-like input (Observable, Promise, or Iterable). Useful for writing flexible APIs or utilities that can accept a wide range of input types.
+
+**Example:**
+
+```ts
+import { isObservableInput } from '@equinor/fusion-observable';
+import { of } from 'rxjs';
+
+isObservableInput(Promise.resolve(1)); // true
+isObservableInput([1, 2, 3]); // true
+isObservableInput(of(42)); // true
+isObservableInput({}); // false
+```
+
+## `toObservable`
+
+```ts
+import { toObservable } from '@equinor/fusion-observable';
+A utility to convert various input types (value, function, promise, observable, iterable) into a consistent Observable stream. This allows you to handle inputs uniformly without worrying about their original type.
+**Example:**
+
+```ts
+import { lastValueFrom, Observable } from 'rxjs';
+import { toObservable, type DynamicInputValue } from '@equinor/fusion-observable';
+
+const flexibleHandler = async (input: DynamicInputValue<{foo: string}>) => {
+  return lastValueFrom(toObservable(input));
+};
+
+// All of these work the same way:
+flexibleHandler(Promise.resolve({foo: 'bar'})).then(console.log); // {foo: 'bar'}
+flexibleHandler({foo: 'baz'}).then(console.log); // {foo: 'baz'}
+flexibleHandler(() => ({foo: 'qux'})).then(console.log); // {foo: 'qux'}
+flexibleHandler(async () => ({foo: 'async'})).then(console.log); // {foo: 'async'}
+flexibleHandler(new Observable((subscriber) => {
+  subscriber.next({foo: 'bar'}); // skipped
+  subscriber.next({foo: 'baz'});
+  subscriber.complete();
+})).then(console.log); // {foo: 'baz'}
+```
+
+*Works with iterables and async generators too:*
+```ts
+function* gen() {
+  yield 1;
+  yield 2;
+}
+toObservable(gen()).subscribe(console.log); // 1, 2
+
+async function* asyncGen() {
+  yield 'a';
+  yield 'b';
+}
+toObservable(asyncGen()).subscribe(console.log); // 'a', 'b'
+```
+
 
 ## React
 

@@ -1,32 +1,42 @@
 # Change Log
 
-## 4.0.4-next.2
+## 4.0.7
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework-module-bookmark@2.1.10-next.1
-  - @equinor/fusion-framework-react@7.4.13-next.2
-  - @equinor/fusion-framework-react-module@3.1.13-next.1
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
 
-## 4.0.4-next.1
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
 
-### Patch Changes
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.12
+  - @equinor/fusion-framework-react@7.4.15
 
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework-module-bookmark@2.1.10-next.0
-  - @equinor/fusion-framework-react@7.4.13-next.1
-  - @equinor/fusion-framework-react-module@3.1.13-next.0
-
-## 4.0.4-next.0
+## 4.0.6
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-module-bookmark@2.1.9
-  - @equinor/fusion-framework-react@7.4.13-next.0
+- Updated dependencies [[`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593)]:
+  - @equinor/fusion-observable@8.5.1
+  - @equinor/fusion-framework-module-bookmark@2.1.11
+  - @equinor/fusion-framework-react@7.4.14
+
+## 4.0.5
+
+### Patch Changes
+
+- [#3109](https://github.com/equinor/fusion-framework/pull/3109) [`08c3a15`](https://github.com/equinor/fusion-framework/commit/08c3a150a3b6fa2297bc714e91debbb1011009f2) Thanks [@Noggling](https://github.com/Noggling)! - update useBookmarkNavigate to trigger on onCurrentBookmarkChanged event
+
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`d247ec7`](https://github.com/equinor/fusion-framework/commit/d247ec7482a4d5231657875f6c6733ce37df07c9), [`89f80e4`](https://github.com/equinor/fusion-framework/commit/89f80e41dac04e71518c7314cada86ecc835708d)]:
+  - @equinor/fusion-observable@8.5.0
+  - @equinor/fusion-framework-module-bookmark@2.1.10
+  - @equinor/fusion-framework-react@7.4.13
 
 ## 4.0.3
 

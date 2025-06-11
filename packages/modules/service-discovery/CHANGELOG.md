@@ -1,27 +1,26 @@
 # Change Log
 
-## 8.0.15-next.2
+## 8.0.17
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework-module-http@6.3.3-next.2
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-http@6.3.3
+  - @equinor/fusion-query@5.2.11
 
-## 8.0.15-next.1
-
-### Patch Changes
-
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework-module-http@6.3.3-next.1
-
-## 8.0.15-next.0
+## 8.0.16
 
 ### Patch Changes
 
-- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
-  - @equinor/fusion-framework-module-http@6.3.3-next.0
+- Updated dependencies []:
+  - @equinor/fusion-query@5.2.10
+
+## 8.0.15
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-query@5.2.9
 
 ## 8.0.14
 

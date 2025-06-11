@@ -1,38 +1,32 @@
 # Change Log
 
-## 7.3.13-next.2
+## 7.3.15
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework-module-context@6.0.4-next.1
-  - @equinor/fusion-framework-module-event@4.3.7-next.1
-  - @equinor/fusion-framework-module-http@6.3.3-next.2
-  - @equinor/fusion-framework-module-msal@4.0.7-next.1
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.2
-  - @equinor/fusion-framework-module-services@6.0.3-next.1
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-services@6.0.3
+  - @equinor/fusion-framework-module-http@6.3.3
+  - @equinor/fusion-framework-module-msal@4.0.7
+  - @equinor/fusion-framework-module-context@6.0.6
+  - @equinor/fusion-framework-module-service-discovery@8.0.17
 
-## 7.3.13-next.1
+## 7.3.14
 
 ### Patch Changes
 
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework-module-context@6.0.4-next.0
-  - @equinor/fusion-framework-module-event@4.3.7-next.0
-  - @equinor/fusion-framework-module-http@6.3.3-next.1
-  - @equinor/fusion-framework-module-msal@4.0.7-next.0
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.1
-  - @equinor/fusion-framework-module-services@6.0.3-next.0
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-context@6.0.5
+  - @equinor/fusion-framework-module-service-discovery@8.0.16
+  - @equinor/fusion-framework-module-services@6.0.2
 
-## 7.3.13-next.0
+## 7.3.13
 
 ### Patch Changes
 
-- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
-  - @equinor/fusion-framework-module-http@6.3.3-next.0
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.0
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-context@6.0.4
+  - @equinor/fusion-framework-module-service-discovery@8.0.15
   - @equinor/fusion-framework-module-services@6.0.2
 
 ## 7.3.12
