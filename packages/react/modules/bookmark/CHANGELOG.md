@@ -1,5 +1,19 @@
 # Change Log
 
+## 4.0.7
+
+### Patch Changes
+
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
+
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
+
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.12
+  - @equinor/fusion-framework-react@7.4.15
+
 ## 4.0.6
 
 ### Patch Changes
