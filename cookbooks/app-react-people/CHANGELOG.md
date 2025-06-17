@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.5.13-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-framework-module-navigation@5.0.4-next.0
+
 ## 4.5.12
 
 ### Patch Changes
