@@ -38,6 +38,15 @@
       "import": "./bin/build/bin.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/lib/index.d.ts"],
+      "app": ["dist/types/lib/app/index.d.ts"],
+      "portal": ["dist/types/lib/portal/index.d.ts"],
+      "dev-server": ["dist/types/lib/dev-server.d.ts"],
+      "bin": ["dist/types/bin/index.d.ts"]
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",

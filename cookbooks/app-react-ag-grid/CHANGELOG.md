@@ -1,116 +1,36 @@
 # Change Log
 
-## 0.6.27-next.14
+## 0.6.30
 
 ### Patch Changes
 
-- Updated dependencies [[`5973182`](https://github.com/equinor/fusion-framework/commit/5973182b156adb56137f1fc683635ae15274cc57)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.14
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-react-ag-grid@33.2.7
+  - @equinor/fusion-framework-react-app@6.2.1
+  - @equinor/fusion-framework-cli@10.7.4
 
-## 0.6.27-next.13
-
-### Patch Changes
-
-- Updated dependencies [[`32273e1`](https://github.com/equinor/fusion-framework/commit/32273e19dd89ed7b51fac175e1e5a0b82c7ba8ec)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.13
-
-## 0.6.27-next.12
+## 0.6.29
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.12
+- Updated dependencies [[`bfa2317`](https://github.com/equinor/fusion-framework/commit/bfa2317c1d23bd606fdbc2e9857b0be69b08e720)]:
+  - @equinor/fusion-framework-react-app@6.2.0
 
-## 0.6.27-next.11
+## 0.6.28
 
 ### Patch Changes
 
 - Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.11
+  - @equinor/fusion-framework-cli@10.7.4
+  - @equinor/fusion-framework-react-app@6.1.7
 
-## 0.6.27-next.10
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.10
-
-## 0.6.27-next.9
+## 0.6.27
 
 ### Patch Changes
 
 - Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.9
-
-## 0.6.27-next.8
-
-### Patch Changes
-
-- Updated dependencies [[`5e7d06c`](https://github.com/equinor/fusion-framework/commit/5e7d06c412997e3162971212c9ee61cade636543)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.8
-
-## 0.6.27-next.7
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.7
-  - @equinor/fusion-framework-react-app@6.1.6-next.2
-  - @equinor/fusion-framework-react-ag-grid@33.2.7-next.1
-
-## 0.6.27-next.6
-
-### Patch Changes
-
-- Updated dependencies [[`87bfb21`](https://github.com/equinor/fusion-framework/commit/87bfb21c588a434b574b8cd408bb5dc2642f0974), [`c4cb2f7`](https://github.com/equinor/fusion-framework/commit/c4cb2f798d9804438bc216096cf4089097b3d31c), [`b8ed76f`](https://github.com/equinor/fusion-framework/commit/b8ed76f3a6d89b89315c58ec7743f5b0b7303371), [`7b8aca4`](https://github.com/equinor/fusion-framework/commit/7b8aca443197791053da20f3b43784ec69f3f4b7)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.6
-
-## 0.6.27-next.5
-
-### Patch Changes
-
-- Updated dependencies [[`a3ce07a`](https://github.com/equinor/fusion-framework/commit/a3ce07a367ae8d5a6dbac438c25928df54aefecf)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.5
-  - @equinor/fusion-framework-react-app@6.1.6-next.1
-  - @equinor/fusion-framework-react-ag-grid@33.2.7-next.0
-
-## 0.6.27-next.4
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.4
-
-## 0.6.27-next.3
-
-### Patch Changes
-
-- Updated dependencies [[`eac2234`](https://github.com/equinor/fusion-framework/commit/eac22349aa3ec6d76ed85b6d5a20966a56c32046)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.3
-
-## 0.6.27-next.2
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@11.0.0-next.2
-
-## 0.6.27-next.1
-
-### Patch Changes
-
-- Updated dependencies [[`f8a4db1`](https://github.com/equinor/fusion-framework/commit/f8a4db1208ef98eea7f6f286087338ee74858434)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.1
-
-## 0.6.27-next.0
-
-### Patch Changes
-
-- [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - fixed package.json main to point to dist
-
-- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.0
-  - @equinor/fusion-framework-react-app@6.1.6-next.0
+  - @equinor/fusion-framework-cli@10.7.4
+  - @equinor/fusion-framework-react-app@6.1.6
 
 ## 0.6.26
 

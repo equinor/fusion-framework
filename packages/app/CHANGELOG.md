@@ -1,40 +1,39 @@
 # Change Log
 
-## 9.3.15-next.2
+## 9.3.17
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework@7.3.13-next.2
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-module-bookmark@2.1.10-next.1
-  - @equinor/fusion-framework-module-event@4.3.7-next.1
-  - @equinor/fusion-framework-module-http@6.3.3-next.2
-  - @equinor/fusion-framework-module-msal@4.0.7-next.1
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
 
-## 9.3.15-next.1
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
 
-### Patch Changes
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.12
+  - @equinor/fusion-framework-module-http@6.3.3
+  - @equinor/fusion-framework-module-msal@4.0.7
+  - @equinor/fusion-framework-module-app@6.1.16
+  - @equinor/fusion-framework@7.3.15
 
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework@7.3.13-next.1
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-module-bookmark@2.1.10-next.0
-  - @equinor/fusion-framework-module-event@4.3.7-next.0
-  - @equinor/fusion-framework-module-http@6.3.3-next.1
-  - @equinor/fusion-framework-module-msal@4.0.7-next.0
-
-## 9.3.15-next.0
+## 9.3.16
 
 ### Patch Changes
 
-- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
-  - @equinor/fusion-framework-module-http@6.3.3-next.0
-  - @equinor/fusion-framework@7.3.13-next.0
-  - @equinor/fusion-framework-module-app@6.1.13
-  - @equinor/fusion-framework-module-bookmark@2.1.9
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-app@6.1.15
+  - @equinor/fusion-framework-module-bookmark@2.1.11
+  - @equinor/fusion-framework@7.3.14
+
+## 9.3.15
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-app@6.1.14
+  - @equinor/fusion-framework-module-bookmark@2.1.10
+  - @equinor/fusion-framework@7.3.13
 
 ## 9.3.14
 

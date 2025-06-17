@@ -1,32 +1,37 @@
 # Change Log
 
-## 10.0.3-next.2
+## 10.0.5
 
 ### Patch Changes
 
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-  - @equinor/fusion-framework-module-event@4.3.7-next.1
-  - @equinor/fusion-framework-module-http@6.3.3-next.2
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.2
+- [#3088](https://github.com/equinor/fusion-framework/pull/3088) [`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d) Thanks [@eikeland](https://github.com/eikeland)! - chore: update package typesVersions
 
-## 10.0.3-next.1
+  - Updated package.json typesVersions.
+  - Ensures backward compatibility with older node versions.
+  - Ensured consistency with workspace and repository configuration.
 
-### Patch Changes
+- Updated dependencies [[`7441b13`](https://github.com/equinor/fusion-framework/commit/7441b13aa50dd7362d1629086a27b6b4e571575d)]:
+  - @equinor/fusion-framework-module-http@6.3.3
+  - @equinor/fusion-query@5.2.11
+  - @equinor/fusion-framework-module-service-discovery@8.0.17
 
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
-  - @equinor/fusion-framework-module-event@4.3.7-next.0
-  - @equinor/fusion-framework-module-http@6.3.3-next.1
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.1
-
-## 10.0.3-next.0
+## 10.0.4
 
 ### Patch Changes
 
-- Updated dependencies [[`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13), [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13)]:
-  - @equinor/fusion-framework-module-http@6.3.3-next.0
-  - @equinor/fusion-framework-module-service-discovery@8.0.15-next.0
+- Updated dependencies [[`0d22e3c`](https://github.com/equinor/fusion-framework/commit/0d22e3c486ab11c40f14fb1f11f0b718e7bf1593)]:
+  - @equinor/fusion-observable@8.5.1
+  - @equinor/fusion-query@5.2.10
+  - @equinor/fusion-framework-module-service-discovery@8.0.16
+
+## 10.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`d247ec7`](https://github.com/equinor/fusion-framework/commit/d247ec7482a4d5231657875f6c6733ce37df07c9), [`89f80e4`](https://github.com/equinor/fusion-framework/commit/89f80e41dac04e71518c7314cada86ecc835708d)]:
+  - @equinor/fusion-observable@8.5.0
+  - @equinor/fusion-query@5.2.9
+  - @equinor/fusion-framework-module-service-discovery@8.0.15
 
 ## 10.0.2
 
