@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-http",
-  "version": "6.3.3",
+  "version": "6.3.4-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",

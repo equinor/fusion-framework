@@ -1,5 +1,20 @@
 # Change Log
 
+## 7.3.16-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-framework-module@4.4.3-next.2
+  - @equinor/fusion-framework-module-event@4.3.7-next.2
+  - @equinor/fusion-framework-module-http@6.3.4-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.18-next.0
+  - @equinor/fusion-framework-module-services@6.0.4-next.0
+  - @equinor/fusion-framework-module-context@6.0.7-next.0
+  - @equinor/fusion-framework-module-msal@4.0.8-next.0
+
 ## 7.3.15
 
 ### Patch Changes
