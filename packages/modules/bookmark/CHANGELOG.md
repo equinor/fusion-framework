@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.13
+
+### Patch Changes
+
+- [#3148](https://github.com/equinor/fusion-framework/pull/3148) [`9cc3adc`](https://github.com/equinor/fusion-framework/commit/9cc3adcf502a3488a80c7a9b2a71eae0910a7b9f) Thanks [@Noggling](https://github.com/Noggling)! - Allow reselection of the current bookmark by removing the check that prevented setting the same bookmark as current. This enables applications to reselect a bookmark even if it is already active, supporting scenarios where application state changes require a re-selection event.
+
 ## 2.1.12
 
 ### Patch Changes

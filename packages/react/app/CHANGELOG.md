@@ -1,5 +1,12 @@
 # Change Log
 
+## 6.2.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.18
+
 ## 6.2.1
 
 ### Patch Changes
