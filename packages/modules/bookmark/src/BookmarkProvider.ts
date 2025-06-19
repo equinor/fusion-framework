@@ -168,7 +168,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * Gets the currently active bookmark (if any).
    */
   public get currentBookmark$(): Observable<Bookmark | null | undefined> {
-    return this.#store.select(activeBookmarkSelector, deepEqual);
+    return this.#store.select(activeBookmarkSelector);
   }
 
   /**
