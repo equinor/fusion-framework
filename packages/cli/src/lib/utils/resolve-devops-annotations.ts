@@ -26,7 +26,7 @@
  *   - To add more annotations, extract additional environment variables as needed and include them in the returned object.
  *   - For custom pipelines or self-hosted agents, verify that all required environment variables are available.
  */
-export const resolveAnnotations = (): Record<string, string> => {
+export const resolveDevopsAnnotations = (): Record<string, string> => {
   // Extract Azure DevOps build and repository information from environment variables
   const runId = process.env.BUILD_BUILDID || 'unknown'; // Unique build/run identifier
   const repository = process.env.BUILD_REPOSITORY_NAME || 'unknown'; // Repository name
@@ -59,4 +59,4 @@ export const resolveAnnotations = (): Record<string, string> => {
   return annotations;
 };
 
-export default resolveAnnotations;
+export default resolveDevopsAnnotations;

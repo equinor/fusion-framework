@@ -2,8 +2,7 @@ import { createCommand } from 'commander';
 
 import { NoAccountsError } from '@equinor/fusion-framework-module-msal-node/error';
 
-import { ConsoleLogger } from '../../../bin/utils';
-import { initializeFramework } from '../../../lib/framework.node.js';
+import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
 

@@ -1,26 +1,7 @@
-import mergeWith from 'lodash.mergewith';
+import deepmerge from 'deepmerge';
 
 import type { DevServerOptions } from '@equinor/fusion-framework-dev-server';
-import type { RecursivePartial } from './utils/types';
-
-/**
- * Customizer function for merging objects, intended for use with utilities like `_.mergeWith`.
- *
- * - If either `objValue` or `srcValue` is an array, replaces the target array with the source array,
- *   concatenating the source array with the target array (source first).
- * - For non-array values, allows the default merge behavior.
- *
- * @param objValue - The destination value being merged.
- * @param srcValue - The source value being merged.
- * @returns The merged value if custom logic applies, otherwise `undefined` to use default merging.
- */
-const customizer = (objValue: unknown, srcValue: unknown) => {
-  if (Array.isArray(objValue) || Array.isArray(srcValue)) {
-    // Replace arrays instead of merging/concatenating them
-    return ((srcValue as Array<unknown>) ?? []).concat(objValue ?? []);
-  }
-  // For non-arrays, use default merge behavior
-};
+import type { RecursivePartial } from './utils/types.js';
 
 /**
  * Merges a base development server configuration with an overrides object.
@@ -39,7 +20,7 @@ export const mergeDevServerConfig = (
   overrides: RecursivePartial<DevServerOptions>,
 ): DevServerOptions => {
   // Use lodash.mergeWith to merge base and overrides, applying the customizer for arrays
-  return mergeWith(base, overrides, customizer) as DevServerOptions;
+  return deepmerge(base, overrides) as DevServerOptions;
 };
 
 // Export as default for convenience in imports

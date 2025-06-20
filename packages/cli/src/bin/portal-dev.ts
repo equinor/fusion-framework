@@ -1,5 +1,6 @@
-import type { RuntimeEnv } from '../lib';
-import { createDevServer, type ConsoleLogger } from './utils';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
+import { createDevServer, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolvePortalManifest } from './helpers/resolve-portal-manifest.js';

@@ -1,13 +1,17 @@
 import { createCommand } from 'commander';
 
+// @ts-ignore - @todo - fix this import
 import Ajv2020 from 'ajv/dist/2020';
 
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-
-import { loadPortalSchema } from '../../../lib/portal';
-import { writeFile } from '../../../lib/utils/write-file.js';
-import { createEnvOption } from '../../options/env.js';
 import { importJSON } from '@equinor/fusion-imports';
+
+import { loadPortalSchema } from '@equinor/fusion-framework-cli/portal';
+
+import { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+
+import { writeFile } from '@equinor/fusion-framework-cli/utils';
+
+import { createEnvOption } from '../../options/env.js';
 
 export const command = createCommand('schema')
   .description('Generate or validate a Fusion portal schema file.')

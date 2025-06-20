@@ -2,13 +2,14 @@ import { createCommand } from 'commander';
 
 import { DEFAULT_ARCHIVE } from './pack.js';
 
+import {
+  initializeFramework,
+  ConsoleLogger,
+  uploadApplication,
+} from '@equinor/fusion-framework-cli/bin';
+
 import { withAuthOptions } from '../../options/auth.js';
 import { createEnvOption } from '../../options/env.js';
-
-import { uploadApplication } from '../../../bin/app-upload.js';
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-
-import { initializeFramework } from '../../../lib';
 
 /**
  * CLI command: `upload`

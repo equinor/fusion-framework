@@ -4,9 +4,9 @@ import {
   initializeFramework,
   type FusionEnv,
   type FusionFrameworkSettings,
-} from '../lib/framework.node.js';
+} from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger } from './utils';
+import { formatPath, chalk, type ConsoleLogger } from './utils/index.js';
 
 import { generateApplicationConfig } from './app-config.js';
 import { loadAppManifest } from './app-manifest.js';

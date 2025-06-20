@@ -2,8 +2,11 @@ import { loadConfigFromFile, mergeConfig, type UserConfig } from 'vite';
 
 import { basename, dirname, extname } from 'node:path';
 
-import type { RuntimeEnv } from '../../lib';
-import { resolveEntryPoint, type ResolvedPackage } from '../../lib/utils';
+import {
+  resolveEntryPoint,
+  type RuntimeEnv,
+  type ResolvedPackage,
+} from '@equinor/fusion-framework-cli/lib';
 
 /**
  * Loads and merges the Vite configuration for a given package and environment.

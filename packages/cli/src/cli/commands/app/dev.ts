@@ -1,7 +1,6 @@
 import { createCommand } from 'commander';
 
-import { startAppDevServer } from '../../../bin';
-import { ConsoleLogger } from '../../../bin/utils';
+import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 /**
  * CLI command: `dev`

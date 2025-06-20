@@ -2,17 +2,17 @@ import { createCommand } from 'commander';
 
 import type AdmZip from 'adm-zip';
 
+import {
+  initializeFramework,
+  bundleApp,
+  ConsoleLogger,
+  uploadApplication,
+  tagApplication,
+  AllowedAppTags,
+} from '@equinor/fusion-framework-cli/bin';
+
 import { withAuthOptions } from '../../options/auth.js';
 import { createEnvOption } from '../../options/env.js';
-
-import { bundleApp } from '../../../bin';
-import { initializeFramework } from '../../../lib';
-
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-
-import { uploadApplication } from '../../../bin/app-upload.js';
-
-import { tagApplication, AllowedTags } from '../../../bin/app-tag.js';
 
 /**
  * CLI command: `publish`
@@ -75,8 +75,8 @@ export const command = withAuthOptions(
     .option('-m, --manifest [string]', 'Manifest file to use for bundling (e.g., app.manifest.ts)')
     .option(
       '-t, --tag [string]',
-      `Tag to apply to the published app (${Object.values(AllowedTags).join(' | ')})`,
-      AllowedTags.Latest,
+      `Tag to apply to the published app (${Object.values(AllowedAppTags).join(' | ')})`,
+      AllowedAppTags.Latest,
     )
     .argument('[bundle]', 'Path to the app bundle to upload')
     .action(async (bundle, options) => {

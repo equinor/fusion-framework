@@ -1,3 +1,4 @@
+export { assert } from './assert.js';
 export { resolveEntryPoint } from './resolve-source-entry-point.js';
 export { resolvePackage, type ResolvedPackage } from './resolve-package.js';
 export { fileExists, fileExistsSync } from './file-exists.js';

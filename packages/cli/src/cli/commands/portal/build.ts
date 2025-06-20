@@ -1,6 +1,5 @@
 import { createCommand } from 'commander';
-import { ConsoleLogger } from '../../../bin/utils';
-import { buildPortal } from '../../../bin/portal-build.js';
+import { ConsoleLogger, buildPortal } from '@equinor/fusion-framework-cli/bin';
 
 export const command = createCommand('build')
   .description('Build the Fusion portal from a manifest file with environment-specific settings.')

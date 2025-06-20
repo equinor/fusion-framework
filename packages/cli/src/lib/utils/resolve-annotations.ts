@@ -1,5 +1,5 @@
-import resolveGithubAnnotations from './resolve-github-annotations.js';
-import resolveDevopsAnnotations from './resolve-devops-annotations.js';
+import { resolveGithubAnnotations } from './resolve-github-annotations.js';
+import { resolveDevopsAnnotations } from './resolve-devops-annotations.js';
 
 /**
  * Resolves CI/CD environment-specific annotation variables.

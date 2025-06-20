@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import AdmZip from 'adm-zip';
 
+import type { FusionFramework } from './framework.node.js';
+
 import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
-import type { ConsoleLogger } from './utils';
-import type { FusionFramework } from '../lib/framework.node.js';
+import type { ConsoleLogger } from './utils/index.js';
 
 /**
  * Options for uploading an application bundle to the app service.

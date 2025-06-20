@@ -1,7 +1,8 @@
-import type { ConsoleLogger } from '../utils';
+import { resolvePackage } from '@equinor/fusion-framework-cli/lib';
+
+import type { ConsoleLogger } from '../utils/index.js';
 
 import { chalk } from '../utils/format.js';
-import { resolvePackage } from '../../lib/utils';
 
 /**
  * Resolves the application package by fetching its metadata and logging relevant information.

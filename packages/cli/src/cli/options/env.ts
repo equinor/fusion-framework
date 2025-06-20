@@ -1,8 +1,6 @@
 import { createOption } from 'commander';
 
-import { resolveDefaultEnv, FusionEnv } from '../../lib/framework.node.js';
-
-export type { FusionEnv } from '../../lib/framework.node.js';
+import { resolveDefaultEnv, FusionEnv } from '@equinor/fusion-framework-cli/bin';
 
 /**
  * Creates an environment option for Fusion Framework CLI commands.

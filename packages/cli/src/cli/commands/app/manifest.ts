@@ -1,14 +1,13 @@
 import { createCommand } from 'commander';
 
-import { ConsoleLogger } from '../../../bin/utils';
-
-import loadAppManifest from '../../../bin/app-manifest.js';
-import { fileExistsSync } from '../../../lib/utils';
-
 import { dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 import { writeFile } from 'node:fs/promises';
 import { stdout } from 'node:process';
+
+import { ConsoleLogger, loadAppManifest } from '@equinor/fusion-framework-cli/bin';
+
+import { fileExistsSync } from '../../../lib/utils/file-exists.js';
 
 /**
  * CLI command: `manifest`

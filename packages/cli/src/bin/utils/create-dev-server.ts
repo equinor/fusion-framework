@@ -1,8 +1,7 @@
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import type { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
-import type { RuntimeEnv } from '../../lib';
-import { loadDevServerConfig } from '../../lib/dev-server.js';
+import { loadDevServerConfig, type RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import {
   processServices,

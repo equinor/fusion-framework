@@ -1,7 +1,6 @@
 import { createCommand } from 'commander';
 
-import { ConsoleLogger } from '../../../bin/utils';
-import { startPortalDevServer } from '../../../bin/portal-dev.js';
+import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-cli/bin';
 
 export const command = createCommand('dev')
   .description('Start a local development server for the Fusion portal.')

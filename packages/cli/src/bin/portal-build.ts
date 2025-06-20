@@ -1,7 +1,11 @@
 import { build as viteBuild } from 'vite';
 
-import type { RuntimeEnv } from '../lib';
-import { type ConsoleLogger, chalk } from './utils';
+import {
+  initializeFramework,
+  type FusionEnv,
+  type FusionFrameworkSettings,
+} from './framework.node.js';
+import { type ConsoleLogger, chalk } from './utils/index.js';
 
 import { loadViteConfig } from './helpers/load-vite-config.js';
 
@@ -20,7 +24,7 @@ import { loadPortalManifest } from './portal-manifest.js';
  * @public
  */
 export type BuildApplicationOptions = {
-  env?: Partial<RuntimeEnv>;
+  env?: Partial<FusionEnv>;
   manifest?: string;
   log?: ConsoleLogger | null;
 };

@@ -1,5 +1,6 @@
 import { importConfig } from '@equinor/fusion-imports';
-import type { RuntimeEnv } from '../types';
+
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 /**
  * Represents a generic portal schema as a record of key-value pairs.

@@ -1,11 +1,13 @@
 import { createCommand } from 'commander';
 
+import {
+  initializeFramework,
+  uploadPortalBundle,
+  ConsoleLogger,
+} from '@equinor/fusion-framework-cli/bin';
+
 import { withAuthOptions } from '../../options/auth.js';
 import { createEnvOption } from '../../options/env.js';
-
-import { ConsoleLogger } from '../../../bin/utils';
-import { initializeFramework } from '../../../lib';
-import { uploadPortalBundle } from '../../../bin/portal-upload.js';
 
 export const command = withAuthOptions(
   createCommand('upload')

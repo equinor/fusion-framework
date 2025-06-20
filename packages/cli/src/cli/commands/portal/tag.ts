@@ -1,14 +1,16 @@
 import { createCommand } from 'commander';
 
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
+import {
+  initializeFramework,
+  loadPortalManifest,
+  tagPortal,
+  ConsoleLogger,
+} from '@equinor/fusion-framework-cli/bin';
+
 import { createEnvOption } from '../../options/env.js';
 import { withAuthOptions } from '../../options/auth.js';
-
-import { tagPortal } from '../../../bin/portal-tag.js';
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-
-import { loadPortalManifest } from '../../../bin/portal-manifest.js';
-
-import { type RuntimeEnv, initializeFramework } from '../../../lib';
 
 export const command = withAuthOptions(
   createCommand('tag')

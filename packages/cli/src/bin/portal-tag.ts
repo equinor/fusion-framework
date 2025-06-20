@@ -1,8 +1,8 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
 
-import { chalk, formatPath, type ConsoleLogger } from './utils';
+import type { FusionFramework } from './framework.node.js';
 
-import type { FusionFramework } from '../lib/framework.node.js';
+import { chalk, formatPath, type ConsoleLogger } from './utils/index.js';
 
 /**
  * Allowed tags for portal versions in the portal service.
@@ -63,7 +63,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
   }
   // Validate portal name
   if (!name) {
-    log?.fail('🤪', 'Application name is required.');
+    log?.fail('🤪', 'Portal name is required.');
     process.exit(1);
   }
   // Validate version
@@ -73,7 +73,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
   }
 
   // Log the tagging action for traceability
-  log?.info('Tagging application:', chalk.greenBright(`${name}@${tag}`, version));
+  log?.info('Tagging portal:', chalk.greenBright(`${name}@${tag}`, version));
 
   // Create a client for the 'portal-config' service
   const client = await framework.serviceDiscovery.createClient('portal-config');

@@ -1,6 +1,6 @@
 import { createCommand } from 'commander';
-import { ConsoleLogger } from '../../../bin/utils';
-import { buildApplication } from '../../../bin/app-build.js';
+
+import { ConsoleLogger, buildApplication } from '@equinor/fusion-framework-cli/bin';
 
 /**
  * CLI command: `build`

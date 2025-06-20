@@ -5,10 +5,8 @@ import { mkdir } from 'node:fs/promises';
 import { writeFile } from 'node:fs/promises';
 import { stdout } from 'node:process';
 
-import { loadPortalManifest } from '../../../bin';
-
-import { ConsoleLogger } from '../../../bin/utils';
-import { fileExistsSync } from '../../../lib/utils';
+import { ConsoleLogger, loadPortalManifest } from '@equinor/fusion-framework-cli/bin';
+import { fileExistsSync } from '@equinor/fusion-framework-cli/utils';
 
 export const command = createCommand('manifest')
   .description('Generate or validate a Fusion portal manifest file.')

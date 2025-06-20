@@ -8,7 +8,18 @@
   "publishConfig": {
     "access": "public"
   },
-  "files": ["bin", "dist", "docs", "CHANGELOG.md", "README.md"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "./bin",
+    "./dist/esm/lib",
+    "./dist/esm/version.js",
+    "./dist/types",
+    "./docs",
+    "./CHANGELOG.md",
+    "./README.md"
+  ],
   "type": "module",
   "bin": {
     "fusion-framework-cli": "./bin/cli.mjs",
@@ -35,8 +46,19 @@
     },
     "./bin": {
       "types": "./dist/types/bin/index.d.ts",
-      "import": "./bin/build/bin.js"
-    }
+      "import": "./bin/build/bin.mjs"
+    },
+    "./lib": {
+      "types": "./dist/types/lib/index.d.ts",
+      "import": "./dist/esm/lib/index.js"
+    },
+    "./utils": {
+      "types": "./dist/types/lib/utils/index.d.ts",
+      "import": "./dist/esm/lib/utils/index.js"
+    },
+    "./package.json": "./package.json",
+    "./README.md": "./README.md",
+    "./CHANGELOG.md": "./CHANGELOG.md"
   },
   "typesVersions": {
     "*": {
@@ -44,7 +66,9 @@
       "app": ["dist/types/lib/app/index.d.ts"],
       "portal": ["dist/types/lib/portal/index.d.ts"],
       "dev-server": ["dist/types/lib/dev-server.d.ts"],
-      "bin": ["dist/types/bin/index.d.ts"]
+      "bin": ["dist/types/bin/index.d.ts"],
+      "lib": ["dist/types/lib/index.d.ts"],
+      "utils": ["dist/types/lib/utils/index.d.ts"]
     }
   },
   "repository": {
@@ -62,35 +86,35 @@
     "@equinor/fusion-framework-dev-portal": "workspace:^",
     "@equinor/fusion-framework-dev-server": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
-    "adm-zip": "^0.5.10",
     "commander": "^13.0.0",
-    "keytar": "7.9.0",
+    "deepmerge": "^4.3.1",
     "ora": "^8.0.1",
-    "vite": "^6.3.5",
-    "chalk": "^5.3.0",
     "read-package-up": "^11.0.0",
+    "vite": "^6.3.5",
     "zod": "^3.25.20"
   },
   "devDependencies": {
-    "ajv": "^8.17.1",
-    "pretty-bytes": "^7.0.0",
-    "is-ci": "^4.1.0",
-    "open": "^10.1.1",
-    "lodash.mergewith": "^4.6.2",
-    "type-fest": "^4.40.0",
-    "rollup": "^4.39.0",
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.1",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-msal-node": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
     "@types/adm-zip": "^0.5.0",
-    "@types/lodash.mergewith": "^4.6.9",
     "@types/node": "^20.11.14",
+    "adm-zip": "^0.5.10",
+    "ajv": "^8.17.1",
+    "chalk": "^5.3.0",
+    "is-ci": "^4.1.0",
+    "open": "^10.1.1",
+    "pretty-bytes": "^7.0.0",
+    "rollup": "^4.39.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rxjs": "^7.8.1",
+    "type-fest": "^4.40.0",
     "typescript": "^5.8.2"
   },
   "peerDependenciesMeta": {

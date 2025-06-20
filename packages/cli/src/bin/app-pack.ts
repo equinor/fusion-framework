@@ -1,8 +1,9 @@
-import type { RuntimeEnv } from '../lib';
-import { buildApplication } from './app-build';
-import { pack } from './pack';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import type { ConsoleLogger } from './utils/ConsoleLogger';
+import { buildApplication } from './app-build.js';
+import { pack } from './pack.js';
+
+import type { ConsoleLogger } from './utils/ConsoleLogger.js';
 
 /**
  * Options for bundling the application into an archive.
