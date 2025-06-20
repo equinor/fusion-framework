@@ -1,7 +1,8 @@
-import type { RuntimeEnv } from '../lib';
-import { writeFile } from '../lib/utils';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { formatPath, type ConsoleLogger } from './utils';
+import { writeFile } from '../lib/utils/index.js';
+
+import { formatPath, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolvePortalConfig } from './helpers/resolve-portal-config.js';

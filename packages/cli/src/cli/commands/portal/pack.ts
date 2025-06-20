@@ -1,7 +1,5 @@
 import { createCommand } from 'commander';
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { bundlePortal } from '../../../bin';
+import { ConsoleLogger, bundlePortal } from '@equinor/fusion-framework-cli/bin';
 
 export const command = createCommand('pack')
   .description('Bundle the Fusion portal into a deployable archive.')

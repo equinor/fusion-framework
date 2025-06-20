@@ -1,9 +1,11 @@
-import type { RuntimeEnv } from '../lib';
-import { loadPortalSchema } from '../lib/portal';
-import { pack } from './pack';
-import { buildPortal } from './portal-build';
+import { loadPortalSchema } from '@equinor/fusion-framework-cli/portal';
 
-import type { ConsoleLogger } from './utils/ConsoleLogger';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
+import { pack } from './pack.js';
+import { buildPortal } from './portal-build.js';
+
+import type { ConsoleLogger } from './utils/ConsoleLogger.js';
 
 /**
  * Options for bundling a portal into an archive for distribution or deployment.

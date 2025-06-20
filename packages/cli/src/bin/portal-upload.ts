@@ -1,9 +1,9 @@
 import AdmZip from 'adm-zip';
 
-import { chalk, type ConsoleLogger } from './utils';
-
-import type { FusionFramework } from '../lib/framework.node.js';
-import { loadMetadata } from './helpers/load-bundle-metadata';
+import type { FusionFramework } from './framework.node.js';
+import type { ConsoleLogger } from './utils/ConsoleLogger.js';
+import { chalk } from './utils/index.js';
+import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
 /**
  * Options for uploading a portal bundle to the portal service.

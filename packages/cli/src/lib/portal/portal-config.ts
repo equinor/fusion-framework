@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from '../types';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 /**
  * Represents the configuration object for a portal.

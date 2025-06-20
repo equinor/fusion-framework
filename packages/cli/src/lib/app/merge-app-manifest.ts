@@ -1,9 +1,9 @@
-import mergeWith from 'lodash.mergewith';
+import mergeWith from 'deepmerge';
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import type { RecursivePartial } from '../utils/types.js';
 
 /**
- * Deeply merges two application manifests using lodash's mergeWith.
+ * Deeply merges two application manifests using deepmerge.
  *
  * This utility is intended for combining a base manifest with an override manifest,
  * supporting recursive merging of nested properties. It is commonly used in scenarios

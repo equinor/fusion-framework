@@ -1,10 +1,10 @@
 import type { PackageJson } from 'type-fest';
 
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
 import { assert, assertObject } from '../utils/assert.js';
 import { resolveAnnotations } from '../utils/resolve-annotations.js';
 import { resolveEntryPoint } from '../utils/resolve-source-entry-point.js';
-
-import type { RuntimeEnv } from '../types';
 
 import { resolveRepoFromPackage } from '../utils/resolve-package-repo.js';
 import { resolveGitRemoteUrl } from '../utils/resolve-git-remote-url.js';

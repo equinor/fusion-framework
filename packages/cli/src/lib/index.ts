@@ -1,8 +1,9 @@
 export type { RuntimeEnv } from './types.js';
 
-export type { ResolvedPackage } from './utils/resolve-package.js';
+export { resolvePackage, type ResolvedPackage } from './utils/resolve-package.js';
+export { resolveEntryPoint } from './utils/resolve-source-entry-point.js';
 
-export { initializeFramework, type FusionFramework } from './framework.node.js';
+export { loadDevServerConfig } from './load-dev-server-config.js';
 
 // Legacy imports - these will be removed in the next major version
 // @todo - remove these imports, introduced in v11

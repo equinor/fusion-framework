@@ -1,12 +1,17 @@
 import { createCommand } from 'commander';
 
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
+import {
+  initializeFramework,
+  ConsoleLogger,
+  loadAppManifest,
+  tagApplication,
+  AllowedAppTags,
+} from '@equinor/fusion-framework-cli/bin';
+
 import { createEnvOption } from '../../options/env.js';
 import { withAuthOptions } from '../../options/auth.js';
-
-import { tagApplication, AllowedTags } from '../../../bin/app-tag.js';
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-import { initializeFramework, type RuntimeEnv } from '../../../lib';
-import loadAppManifest from '../../../bin/app-manifest.js';
 
 /**
  * CLI command: `tag`
@@ -74,7 +79,7 @@ export const command = withAuthOptions(
     .option('-m, --manifest <string>', 'Manifest file to use for resolving app key and version')
     .option('--debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
-    .argument('<tag>', `Tag to apply (${Object.values(AllowedTags).join(' | ')})`)
+    .argument('<tag>', `Tag to apply (${Object.values(AllowedAppTags).join(' | ')})`)
     .action(async (tag, options) => {
       const log = options.silent ? null : new ConsoleLogger('app:tag', { debug: options.debug });
 

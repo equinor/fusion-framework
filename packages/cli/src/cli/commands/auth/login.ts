@@ -1,7 +1,8 @@
-import chalk from 'chalk';
 import { createCommand } from 'commander';
-import { ConsoleLogger } from '../../../bin/utils/ConsoleLogger.js';
-import { initializeFramework } from '../../../lib/framework.node.js';
+
+import chalk from 'chalk';
+
+import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
 

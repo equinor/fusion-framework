@@ -1,13 +1,17 @@
 import { createCommand } from 'commander';
+
+import { stdout } from 'node:process';
+
 import chalk from 'chalk';
 
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { generateApplicationConfig, publishAppConfig } from '../../../bin';
+import {
+  ConsoleLogger,
+  generateApplicationConfig,
+  publishAppConfig,
+} from '@equinor/fusion-framework-cli/bin';
 
 import { createEnvOption } from '../../options/env.js';
 import { withAuthOptions } from '../../options/auth.js';
-import { stdout } from 'node:process';
 
 /**
  * CLI command: `config`

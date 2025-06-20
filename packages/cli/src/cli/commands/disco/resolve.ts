@@ -1,11 +1,9 @@
 import { createCommand } from 'commander';
 
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { initializeFramework } from '../../../lib/framework.node.js';
+import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
-import { createEnvOption } from '../../options/env';
+import { createEnvOption } from '../../options/env.js';
 
 /**
  * The `resolve` command resolves and displays information about a service registered in Fusion service discovery.

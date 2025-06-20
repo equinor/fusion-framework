@@ -1,10 +1,10 @@
-import type { ConsoleLogger } from './utils';
-
 import {
   initializeFramework,
   type FusionEnv,
   type FusionFrameworkSettings,
-} from '../lib/framework.node.js';
+} from './framework.node.js';
+
+import type { ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';

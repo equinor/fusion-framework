@@ -1,17 +1,18 @@
 import { createCommand } from 'commander';
 
+import chalk from 'chalk';
+
 import { withAuthOptions } from '../../options/auth.js';
 import { createEnvOption } from '../../options/env.js';
 
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { bundlePortal } from '../../../bin';
-
-import { uploadPortalBundle } from '../../../bin/portal-upload.js';
-import { tagPortal, AllowedTags } from '../../../bin/portal-tag.js';
-
-import { initializeFramework } from '../../../lib/framework.node.js';
-import chalk from 'chalk';
+import {
+  initializeFramework,
+  ConsoleLogger,
+  bundlePortal,
+  uploadPortalBundle,
+  tagPortal,
+  AllowedPortalTags,
+} from '@equinor/fusion-framework-cli/bin';
 
 export const command = withAuthOptions(
   createCommand('publish')
@@ -42,8 +43,8 @@ export const command = withAuthOptions(
     .option('--schema [string]', 'Schema file to use for validation')
     .option(
       '-t, --tag [string]',
-      `Tag to apply to the published portal (${Object.values(AllowedTags).join(' | ')})`,
-      AllowedTags.Latest,
+      `Tag to apply to the published portal (${Object.values(AllowedPortalTags).join(' | ')})`,
+      AllowedPortalTags.Latest,
     )
     .action(async (options) => {
       const log = new ConsoleLogger('portal:publish', {

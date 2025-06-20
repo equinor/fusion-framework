@@ -1,10 +1,9 @@
 import { createCommand } from 'commander';
 
+import { checkApp, ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+
 import { createEnvOption } from '../../options/env.js';
 import { withAuthOptions } from '../../options/auth.js';
-
-import { checkApp } from '../../../bin/app-check.js';
-import { ConsoleLogger } from '../../../bin/utils';
 
 /**
  * CLI command: `check`

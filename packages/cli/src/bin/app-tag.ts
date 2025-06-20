@@ -1,7 +1,8 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
 
-import type { FusionFramework } from '../lib';
-import { type ConsoleLogger, formatPath, chalk } from './utils';
+import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
+
+import { type ConsoleLogger, formatPath, chalk } from './utils/index.js';
 
 /**
  * Allowed tags for application versions in the app service.

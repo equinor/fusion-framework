@@ -5,8 +5,8 @@ import type { ReadResult as PackageInfo } from 'read-package-up';
 import { dirname, resolve } from 'node:path';
 import { mkdir, stat } from 'node:fs/promises';
 
-import { formatByteSize, formatPath, chalk, type ConsoleLogger } from './utils';
-import { fileExistsSync } from '../lib/utils';
+import { formatByteSize, formatPath, chalk, type ConsoleLogger } from './utils/index.js';
+import { fileExistsSync } from '../lib/utils/index.js';
 
 /* Files to add to zip package */
 const addFiles = ['package.json', 'LICENSE.md', 'README.md', 'CHANGELOG.md'];

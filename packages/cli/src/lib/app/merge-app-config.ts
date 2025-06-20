@@ -1,5 +1,5 @@
-import mergeWith from 'lodash.mergewith';
-import type { AppConfig } from './app-config';
+import deepmerge from 'deepmerge';
+import type { AppConfig } from '@equinor/fusion-framework-cli/app';
 
 /**
  * Merges a base application configuration object with an overrides object,
@@ -14,9 +14,15 @@ import type { AppConfig } from './app-config';
  */
 export const mergeAppConfig = <T extends AppConfig>(base: T, overrides: Partial<T>): T => {
   // if scopes are provided in overrides, use the new scopes
-  return mergeWith(base, overrides, (_, value, key) => {
-    if (key === 'scopes') {
-      return value;
-    }
-  }) as T;
+  return deepmerge(base, overrides, {
+    customMerge: (key) => {
+      if (key === 'scopes') {
+        return (_target, source) => {
+          // If scopes are provided in overrides, replace the base scopes with the new ones
+          return source;
+        };
+      }
+      return undefined; // Use default merging for other keys
+    },
+  });
 };

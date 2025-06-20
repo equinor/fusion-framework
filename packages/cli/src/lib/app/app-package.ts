@@ -8,7 +8,8 @@ import {
 } from 'read-package-up';
 
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
-import { assert } from '../utils/assert.js';
+
+import { assert } from '@equinor/fusion-framework-cli/utils';
 
 /**
  * Extended type for application package.json, optionally including a manifest.

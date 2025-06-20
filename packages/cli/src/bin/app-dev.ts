@@ -1,7 +1,8 @@
 import { fileURLToPath } from 'node:url';
 
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
 import { fileExistsSync } from '../lib/utils/file-exists.js';
-import type { RuntimeEnv } from '../lib/types.js';
 
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
@@ -12,6 +13,11 @@ import { createDevServer } from './utils/create-dev-server.js';
 
 import { readPackageUp } from 'read-package-up';
 import { dirname } from 'node:path';
+import {
+  initializeFramework,
+  type FusionEnv,
+  type FusionFrameworkSettings,
+} from './framework.node.js';
 
 /**
  * Options for starting the application development server.

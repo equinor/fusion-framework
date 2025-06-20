@@ -118,7 +118,7 @@ function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, 
  *   - To add more annotations, extract additional environment variables as needed and include them in the returned object.
  *   - For custom workflows or self-hosted runners, verify that all required environment variables are available.
  */
-export const resolveAnnotations = (): Record<string, string> => {
+export const resolveGithubAnnotations = (): Record<string, string> => {
   // Extract event name from environment
   const eventName = process.env.GITHUB_EVENT_NAME || 'unknown';
   // Extract actor (user who triggered the workflow)
@@ -158,4 +158,4 @@ export const resolveAnnotations = (): Record<string, string> => {
   return annotations;
 };
 
-export default resolveAnnotations;
+export default resolveGithubAnnotations;

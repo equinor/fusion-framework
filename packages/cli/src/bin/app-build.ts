@@ -6,13 +6,12 @@ import type { ReadResult as PackageInfo } from 'read-package-up';
 
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
-import type { ConsoleLogger } from './utils';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import type { RuntimeEnv } from '../lib';
+import type { ConsoleLogger } from './utils/index.js';
 
 import { loadViteConfig } from './helpers/load-vite-config.js';
-
-import loadAppManifest from './app-manifest';
+import { loadAppManifest } from './app-manifest.js';
 
 /**
  * Options for building an application.

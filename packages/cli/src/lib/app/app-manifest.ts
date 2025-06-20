@@ -1,5 +1,6 @@
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
-import type { RuntimeEnv } from '../types';
+
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 /**
  * Type representing the application manifest structure used by the Fusion Framework.

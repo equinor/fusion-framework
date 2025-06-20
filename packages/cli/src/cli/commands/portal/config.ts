@@ -1,13 +1,17 @@
 import { createCommand } from 'commander';
+
+import { stdout } from 'node:process';
+
 import chalk from 'chalk';
 
-import { ConsoleLogger } from '../../../bin/utils';
-
-import { generatePortalConfig, publishPortalConfig } from '../../../bin';
+import {
+  ConsoleLogger,
+  generatePortalConfig,
+  publishPortalConfig,
+} from '@equinor/fusion-framework-cli/bin';
 
 import { createEnvOption } from '../../options/env.js';
 import { withAuthOptions } from '../../options/auth.js';
-import { stdout } from 'node:process';
 
 /**
  * CLI command: `portal config`

@@ -1,6 +1,8 @@
 import type z from 'zod';
-import type { RuntimeEnv } from '../types';
-import type { ApiAppConfig, ApiAppConfigSchema } from './schemas';
+
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+
+import type { ApiAppConfig, ApiAppConfigSchema } from './schemas.js';
 
 export type { ApiAppConfig as AppConfig } from './schemas.js';
 

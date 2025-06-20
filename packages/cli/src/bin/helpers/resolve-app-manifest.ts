@@ -1,9 +1,10 @@
 import { FileNotFoundError } from '@equinor/fusion-imports';
 
-import type { RuntimeEnv, ResolvedPackage } from '../../lib';
-import { loadAppManifest, createAppManifestFromPackage } from '../../lib/app';
+import { loadAppManifest, createAppManifestFromPackage } from '@equinor/fusion-framework-cli/app';
 
-import type { ConsoleLogger } from '../utils';
+import type { RuntimeEnv, ResolvedPackage } from '@equinor/fusion-framework-cli/lib';
+
+import type { ConsoleLogger } from '../utils/index.js';
 import { chalk, formatPath } from '../utils/format.js';
 
 /**

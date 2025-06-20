@@ -1,16 +1,15 @@
 import { FileNotFoundError } from '@equinor/fusion-imports';
 
-import type { RuntimeEnv } from '../../lib';
-
-import type { ConsoleLogger } from '../utils';
-import { chalk, formatPath } from '../utils/format.js';
-import type { ResolvedPackage } from '../../lib/utils/resolve-package.js';
+import type { ResolvedPackage, RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import {
-  createPortalManifestFromPackage,
   loadPortalManifest,
+  createPortalManifestFromPackage,
   type PortalManifest,
-} from '../../lib/portal';
+} from '@equinor/fusion-framework-cli/portal';
+
+import type { ConsoleLogger } from '../utils/index.js';
+import { chalk, formatPath } from '../utils/format.js';
 
 /**
  * Resolves the portal manifest for a given runtime environment and package.

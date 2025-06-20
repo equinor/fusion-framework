@@ -20,3 +20,5 @@ export const resolveGitCommitSha = (ref = 'HEAD'): string | undefined => {
     return undefined; // Return undefined if the command fails or ref is not valid
   }
 };
+
+export default resolveGitCommitSha;

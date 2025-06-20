@@ -1,11 +1,10 @@
 import { FileNotFoundError } from '@equinor/fusion-imports';
 
-import type { RuntimeEnv } from '../../lib';
+import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+import { loadPortalConfig, type PortalConfig } from '@equinor/fusion-framework-cli/portal';
 
-import type { ConsoleLogger } from '../utils';
+import type { ConsoleLogger } from '../utils/index.js';
 import { chalk, formatPath } from '../utils/format.js';
-
-import { loadPortalConfig, type PortalConfig } from '../../lib/portal';
 
 /**
  * Resolves the portal configuration based on the provided runtime environment and options.

@@ -1,10 +1,15 @@
-import type { RuntimeEnv } from '../lib';
-import { writeFile } from '../lib/utils';
+import type { RuntimeEnv } from '../lib/index.js';
+import { writeFile } from '../lib/utils/index.js';
 
-import { formatPath, type ConsoleLogger } from './utils';
+import { formatPath, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppConfig } from './helpers/resolve-app-config.js';
+import {
+  initializeFramework,
+  type FusionEnv,
+  type FusionFrameworkSettings,
+} from './framework.node.js';
 
 /**
  * Options for generating the application configuration.

@@ -4,9 +4,9 @@ import {
   initializeFramework,
   type FusionEnv,
   type FusionFrameworkSettings,
-} from '../lib/framework.node.js';
+} from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger } from './utils';
+import { formatPath, chalk, type ConsoleLogger } from './utils/index.js';
 
 import { generatePortalConfig } from './portal-config.js';
 
