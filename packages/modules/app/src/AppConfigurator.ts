@@ -38,17 +38,18 @@ export class AppConfigurator
     init: ModuleInitializerArgs<IAppConfigurator, [HttpModule, ServiceDiscoveryModule]>,
   ): Promise<IHttpClient> {
     const http = await init.requireInstance('http');
+    const serviceName = 'apps';
     /** check if the http provider has configure a client */
-    if (http.hasClient(moduleKey)) {
-      return http.createClient(moduleKey);
-    } else {
-      /** load service discovery module */
-      const serviceDiscovery = await init.requireInstance('serviceDiscovery');
-
-      // TODO - remove when refactor portal service!
-      /** resolve and create a client from discovery */
-      return await serviceDiscovery.createClient('apps');
+    if (http.hasClient(serviceName)) {
+      return http.createClient(serviceName);
     }
+
+    /** load service discovery module */
+    const serviceDiscovery = await init.requireInstance('serviceDiscovery');
+
+    // TODO - remove when refactor portal service!
+    /** resolve and create a client from discovery */
+    return await serviceDiscovery.createClient(serviceName);
   }
 
   public setClient(
