@@ -12,7 +12,7 @@ import {
  * This hook returns an observable state object that represents the current environment configuration.
  * The environment configuration is retrieved from the app module provided by the framework.
  *
- * @note This hook is only available when the app module is loaded (should be always for applications).
+ * @remarks This hook is only available when the app module is loaded (should be always for applications).
  * This hook in theory should always have a value if config was provided for the application, but is async by nature, hence the `complete` and `error` properties.
  *
  * @example

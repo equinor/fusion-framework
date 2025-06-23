@@ -14,7 +14,7 @@ import { createEnvOption } from '../../options/env.js';
  *
  * @command resolve
  * @description Resolve and display information about a service registered in Fusion service discovery.
- * @argument {string} service - Name of the service to resolve in Fusion service discovery.
+ * @param {string} service - Name of the service to resolve in Fusion service discovery.
  * @option {string} --env - Environment to use (e.g., prod, test).
  * @option {string} --token - Authentication token.
  * @option {string} --tenantId - Tenant ID for authentication.

@@ -1,5 +1,5 @@
 ---
-title: Migration Guide: v10 to v11 CLI Command Changes
+title: Migration Guide - v10 to v11 CLI Command Changes
 description: >
   Comprehensive guide to migrating CLI commands from v10 to v11 of the Fusion Framework, including deprecated commands, new command names, authentication changes, and best practices for updating scripts and pipelines.
 category: cli
