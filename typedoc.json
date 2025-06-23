@@ -1,0 +1,21 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "out": "typedoc",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/**"],
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeNotDocumented": true,
+  "excludeExternals": true,
+  "excludeReferences": true,
+  "externalPattern": ["**/node_modules/**"],
+  "exclude": ["node_modules/**", "**/node_modules/**"],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-remove-references"],
+  "readme": "none",
+  "hideBreadcrumbs": true,
+  "hidePageTitle": true,
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}
