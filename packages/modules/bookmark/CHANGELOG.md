@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.14
+
+### Patch Changes
+
+- [#3151](https://github.com/equinor/fusion-framework/pull/3151) [`9982c09`](https://github.com/equinor/fusion-framework/commit/9982c096f57e7928dbb65b3ca1d647646852963f) Thanks [@Noggling](https://github.com/Noggling)! - Remove unnecessary deepEqual check from the currentBookmark$ selector to ensure the current bookmark is always emitted, even when re-selected. This improves consistency and ensures consumers receive updates as expected.
+
 ## 2.1.13
 
 ### Patch Changes
