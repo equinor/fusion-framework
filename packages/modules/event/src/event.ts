@@ -57,7 +57,7 @@ export interface IFrameworkEvent<
   /**
    * Updates the details of the framework event.
    *
-   * @note updating the details should only be allowed if the event is mutable.
+   * @remarks updating the details should only be allowed if the event is mutable.
    *
    * @param fn - A function that takes the current draft of the event details and returns the updated details, or `void` to cancel the update.
    */
@@ -271,7 +271,7 @@ export class FrameworkEvent<
   /**
    * Updates the event details using the provided function.
    *
-   * @note If the event details are not mutable, an error will be thrown.
+   * @remarks If the event details are not mutable, an error will be thrown.
    *
    * @see {FrameworkEvent.originalDetail}
    *

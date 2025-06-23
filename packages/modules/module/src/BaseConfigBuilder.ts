@@ -56,7 +56,7 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
   /**
    * request a sibling module
    * @template TKey name of module
-   * @argument module name of module
+   * @param module name of module
    */
   requireInstance<TKey extends string = Extract<keyof Modules, string>>(
     module: TKey,
@@ -65,14 +65,14 @@ export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
   /**
    * request a sibling module
    * @template T module type
-   * @argument module name of module
+   * @param module name of module
    */
   requireInstance<T>(module: string): Promise<T>;
 
   /**
    * check if a module is included in the scope
    * @template TKey name of module
-   * @argument module name of the module
+   * @param module name of the module
    */
   hasModule<TKey extends string = Extract<keyof Modules, string>>(module: TKey): boolean;
   hasModule(module: string): boolean;
@@ -217,11 +217,16 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
   }
 
   /**
-   * Sets a configuration callback for the specified target path in the configuration.
+   * Sets a configuration value or a callback for a specific dot-path target within the configuration object.
    *
-   * @param target - The target path in the configuration to set the callback for.
-   * @param cb - The callback function to be executed when the configuration for the specified target path is updated.
-   * @template TKey - a key of the config object
+   * @typeParam TTarget - The dot-path string representing the target property in the configuration.
+   * @param target - The dot-path key indicating where in the configuration the value or callback should be set.
+   * @param value_or_cb - Either a direct value to set at the target location, or a callback function that returns the value (possibly asynchronously).
+   *
+   * @remarks
+   * If a function is provided as `value_or_cb`, it will be used as a callback for deferred or computed configuration values.
+   * Otherwise, the value is wrapped in an async function for consistency.
+   *
    * @protected
    * @sealed
    */
@@ -299,7 +304,7 @@ export abstract class BaseConfigBuilder<TConfig extends object = Record<string, 
   /**
    * Builds the configuration object by executing all registered configuration callbacks and merging the results.
    *
-   * @note overriding this method is not recommended, use {@link BaseConfigBuilder._createConfig} instead.
+   * @remarks overriding this method is not recommended, use {@link BaseConfigBuilder._createConfig} instead.
    * - use {@link BaseConfigBuilder._createConfig} to add custom initialization logic before building the configuration.
    * - use {@link BaseConfigBuilder._processConfig} to validate and post-process the configuration.
    *

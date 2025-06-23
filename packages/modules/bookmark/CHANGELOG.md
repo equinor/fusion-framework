@@ -1,10 +1,16 @@
 # Change Log
 
-## 2.1.13
+## 2.1.13-next.0
 
 ### Patch Changes
 
-- [#3148](https://github.com/equinor/fusion-framework/pull/3148) [`9cc3adc`](https://github.com/equinor/fusion-framework/commit/9cc3adcf502a3488a80c7a9b2a71eae0910a7b9f) Thanks [@Noggling](https://github.com/Noggling)! - Allow reselection of the current bookmark by removing the check that prevented setting the same bookmark as current. This enables applications to reselect a bookmark even if it is already active, supporting scenarios where application state changes require a re-selection event.
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-observable@8.5.2-next.0
+  - @equinor/fusion-framework-module@4.4.3-next.2
+  - @equinor/fusion-query@5.2.12-next.0
+  - @equinor/fusion-log@1.1.5-next.0
 
 ## 2.1.12
 

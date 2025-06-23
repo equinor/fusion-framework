@@ -5,8 +5,6 @@ import {
   type ModulesInstance,
 } from '@equinor/fusion-framework-module';
 
-import { createAuthClient } from './create-auth-client';
-
 import type { MsalNodeModule } from './module.js';
 import type { AuthConfig } from './AuthConfigurator.interface.js';
 
@@ -37,7 +35,13 @@ export class AuthConfigurator extends BaseConfigBuilder<AuthConfig> {
   }
 
   setClientConfig(tenantId: string, clientId: string): void {
-    this._set('client', () => createAuthClient(tenantId, clientId));
+    this._set('client', async () => {
+      // Dynamically import the createAuthClient function since the client uses `libsecret``
+      // which is not default installed in all environments.
+      // This avoids installing `libsecret` in environments where it is not needed, like CI/CD pipelines.
+      const { createAuthClient } = await import('./create-auth-client.js');
+      return createAuthClient(tenantId, clientId);
+    });
   }
 
   setServerPort(port: number) {

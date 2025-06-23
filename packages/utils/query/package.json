@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-query",
-  "version": "5.2.11",
+  "version": "5.2.12-next.0",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/observable#readme",
@@ -38,10 +38,7 @@
       "react": ["dist/types/react/index.d.ts"]
     }
   },
-  "directories": {
-    "dist": "dist"
-  },
-  "files": ["dist"],
+  "files": ["dist", "src"],
   "publishConfig": {
     "access": "public"
   },

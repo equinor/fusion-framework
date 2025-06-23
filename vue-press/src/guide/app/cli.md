@@ -20,7 +20,7 @@ npm i -D '@equinor/fusion-framework-cli'
 
 ```ts
 // app.config.ts
-import { defineAppConfig } from '@equinor/fusion-framework-cli';
+import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
 export default defineAppConfig() => (
     {
         environment: {

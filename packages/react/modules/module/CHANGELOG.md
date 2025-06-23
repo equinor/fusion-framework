@@ -1,5 +1,30 @@
 # Change Log
 
+## 3.1.13-next.2
+
+### Patch Changes
+
+- [#3137](https://github.com/equinor/fusion-framework/pull/3137) [`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461) Thanks [@odinr](https://github.com/odinr)! - updates from main
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-framework-module@4.4.3-next.2
+
+## 3.1.13-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
+  - @equinor/fusion-framework-module@4.4.3-next.1
+
+## 3.1.13-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
+  - @equinor/fusion-framework-module@4.4.3-next.0
+
 ## 3.1.12
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-observable",
-  "version": "8.5.1",
+  "version": "8.5.2-next.0",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://equinor.github.io/fusion-framework/",
@@ -32,10 +32,7 @@
       "react": ["dist/types/react/index.d.ts"]
     }
   },
-  "directories": {
-    "dist": "dist"
-  },
-  "files": ["dist"],
+  "files": ["dist", "src"],
   "publishConfig": {
     "access": "public"
   },
@@ -67,7 +64,7 @@
     "@types/node": "^20.11.14",
     "@types/react": "^18.2.50",
     "@types/uuid": "^10.0.0",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^17.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2",

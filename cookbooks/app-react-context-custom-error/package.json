@@ -1,10 +1,10 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-context-custom-error",
-  "version": "4.1.73",
+  "version": "4.1.73-next.1",
   "description": "React application using framework context with a custom error",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "pre-build": "tsc -b",
     "build": "fusion-framework-cli app build",

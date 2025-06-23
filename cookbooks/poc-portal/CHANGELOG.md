@@ -1,12 +1,30 @@
 # poc-portal
 
-## 1.0.52
+## 1.0.52-next.1
 
 ### Patch Changes
 
-- Updated dependencies []:
-  - @equinor/fusion-framework-cli@10.7.4
-  - @equinor/fusion-framework-react-app@6.2.2
+- Updated dependencies [[`4a237a0`](https://github.com/equinor/fusion-framework/commit/4a237a0287caf6af5a516df43ce35278b5ed7089), [`4a237a0`](https://github.com/equinor/fusion-framework/commit/4a237a0287caf6af5a516df43ce35278b5ed7089)]:
+  - @equinor/fusion-framework-cli@11.0.0-next.16
+
+## 1.0.52-next.0
+
+### Patch Changes
+
+- [#3137](https://github.com/equinor/fusion-framework/pull/3137) [`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461) Thanks [@odinr](https://github.com/odinr)! - updates from main
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-framework-module@4.4.3-next.2
+  - @equinor/fusion-framework-module-http@6.3.4-next.0
+  - @equinor/fusion-framework-cli@11.0.0-next.15
+  - @equinor/fusion-framework-module-service-discovery@8.0.18-next.0
+  - @equinor/fusion-framework-react@7.4.16-next.0
+  - @equinor/fusion-framework-module-msal@4.0.8-next.0
+  - @equinor/fusion-framework@7.3.16-next.0
+  - @equinor/fusion-framework-react-app@6.2.2-next.0
+  - @equinor/fusion-framework-module-app@6.1.17-next.0
 
 ## 1.0.51
 

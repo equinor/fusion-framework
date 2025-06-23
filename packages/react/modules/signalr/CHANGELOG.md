@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.0.33-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
+  - @equinor/fusion-framework-react-module@3.1.13-next.2
+  - @equinor/fusion-framework-module-signalr@6.0.6-next.0
+
 ## 3.0.32
 
 ### Patch Changes

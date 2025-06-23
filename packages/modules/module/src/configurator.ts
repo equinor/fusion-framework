@@ -131,7 +131,7 @@ export type ModuleConfiguratorConfigCallback<TModule extends AnyModule, TRef = u
  * @param config The modules configuration.
  * @param ref Optional reference parameter.
  */
-type ModulesConfiguratorConfigCallback<TRef> = (
+export type ModulesConfiguratorConfigCallback<TRef> = (
   config: ModulesConfig<[AnyModule]>,
   ref?: TRef,
 ) => void | Promise<void>;
@@ -157,6 +157,8 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
   /**
    * Array of configuration callbacks.
+   * @protected
+   * @sealed
    */
   protected _configs: Array<ModulesConfiguratorConfigCallback<TRef>> = [];
 

@@ -1,0 +1,56 @@
+{
+  "name": "@equinor/fusion-framework-vite-plugin-spa",
+  "version": "1.0.0-next.9",
+  "description": "Vite plugin for SPA development",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./bootstrap.js": {
+      "import": "./dist/html/bootstrap.js",
+      "types": "./dist/types/bootstrap.d.ts"
+    },
+    "./sw.js": {
+      "import": "./dist/html/sw.js",
+      "types": "./dist/types/sw.d.ts"
+    }
+  },
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/vite-plugins/spa"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "postbuild": "rollup -c rollup.config.js",
+    "test": "vitest",
+    "prepack": "pnpm build"
+  },
+  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "lodash.mergewith": "^4.6.2"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/lodash.mergewith": "^4.6.2",
+    "rollup": "^4.39.0",
+    "typescript": "^5.5.4",
+    "vite": "^6.3.5"
+  }
+}
