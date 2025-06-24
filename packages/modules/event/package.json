@@ -11,6 +11,11 @@
       "types": "./dist/types/index.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      ".": ["dist/types/index.d.ts"]
+    }
+  },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"

@@ -23,6 +23,8 @@ export type {
   BookmarkPayloadGenerator,
 } from './BookmarkProvider.interface';
 
+export type { BookmarkProviderEventMap as BookmarkProviderEvents } from './BookmarkProvider.events.js';
+
 export { enableBookmark } from './enable-bookmark';
 
 export * from './types';

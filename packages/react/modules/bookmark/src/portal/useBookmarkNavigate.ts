@@ -1,6 +1,9 @@
 import { useLayoutEffect } from 'react';
 import { useFramework } from '@equinor/fusion-framework-react';
-import type { BookmarkModule } from '@equinor/fusion-framework-module-bookmark';
+import type {
+  BookmarkModule,
+  BookmarkProviderEvents,
+} from '@equinor/fusion-framework-module-bookmark';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
 const BOOKMARK_ID_PARM = 'bookmarkId';
@@ -23,32 +26,35 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
   } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
   useLayoutEffect(() => {
-    const sub = event.addEventListener('onCurrentBookmarkChanged', (e) => {
-      const appKey = e.detail?.appKey;
-      const bookmarkContext = e.detail?.context;
+    const sub = event.addEventListener(
+      'onCurrentBookmarkChanged',
+      (e: BookmarkProviderEvents['onCurrentBookmarkChanged']) => {
+        const appKey = e.detail?.appKey;
+        const bookmarkContext = e.detail?.context;
 
-      if (!appKey || !bookmarkContext) {
-        return;
-      }
+        if (!appKey || !bookmarkContext) {
+          return;
+        }
 
-      const pathname = args.resolveAppPath(appKey);
+        const pathname = args.resolveAppPath(appKey);
 
-      if (navigator.location.pathname !== pathname) {
-        const { hash, search } = navigator.location;
+        if (navigator.location.pathname !== pathname) {
+          const { hash, search } = navigator.location;
 
-        const to = {
-          pathname,
-          search: removeBookmarkIdFromURL(search),
-          hash,
-        };
-        navigator.push(to);
-      }
+          const to = {
+            pathname,
+            search: removeBookmarkIdFromURL(search),
+            hash,
+          };
+          navigator.push(to);
+        }
 
-      if (bookmarkContext) {
-        context.currentContext?.id !== bookmarkContext.id &&
-          context.setCurrentContextByIdAsync(bookmarkContext.id);
-      }
-    });
+        if (bookmarkContext) {
+          context.currentContext?.id !== bookmarkContext.id &&
+            context.setCurrentContextByIdAsync(bookmarkContext.id);
+        }
+      },
+    );
     return sub;
   }, [args, context, event, navigator]);
 };

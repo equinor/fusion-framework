@@ -37,7 +37,6 @@
     "read-package-up": "^11.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.14",
     "esbuild": "^0.25.1",
     "fs-monkey": "^1.0.6",
     "memfs": "^4.17.0",
