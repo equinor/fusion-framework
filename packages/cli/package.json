@@ -1,8 +1,12 @@
 {
   "name": "@equinor/fusion-framework-cli",
-  "version": "11.0.0-next.16",
+  "version": "11.0.0-next.17",
   "homepage": "https://github.com/equinor/fusion-framework",
-  "keywords": ["Fusion", "Fusion Framework", "CLI"],
+  "keywords": [
+    "Fusion",
+    "Fusion Framework",
+    "CLI"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -62,13 +66,27 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/lib/index.d.ts"],
-      "app": ["dist/types/lib/app/index.d.ts"],
-      "portal": ["dist/types/lib/portal/index.d.ts"],
-      "dev-server": ["dist/types/lib/dev-server.d.ts"],
-      "bin": ["dist/types/bin/index.d.ts"],
-      "lib": ["dist/types/lib/index.d.ts"],
-      "utils": ["dist/types/lib/utils/index.d.ts"]
+      ".": [
+        "dist/types/lib/index.d.ts"
+      ],
+      "app": [
+        "dist/types/lib/app/index.d.ts"
+      ],
+      "portal": [
+        "dist/types/lib/portal/index.d.ts"
+      ],
+      "dev-server": [
+        "dist/types/lib/dev-server.d.ts"
+      ],
+      "bin": [
+        "dist/types/bin/index.d.ts"
+      ],
+      "lib": [
+        "dist/types/lib/index.d.ts"
+      ],
+      "utils": [
+        "dist/types/lib/utils/index.d.ts"
+      ]
     }
   },
   "repository": {
