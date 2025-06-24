@@ -1,4 +1,5 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
 import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
 
@@ -75,7 +76,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
   // Create a client for the 'apps' service
   const appClient = await framework.serviceDiscovery.createClient('apps');
   // Subscribe to outgoing requests for logging and debugging
-  appClient.request$.subscribe((request) => {
+  appClient.request$.subscribe((request: FetchRequest) => {
     log?.debug('Request:', request);
     log?.info('🌎', 'Executing request to:', formatPath(request.uri));
   });

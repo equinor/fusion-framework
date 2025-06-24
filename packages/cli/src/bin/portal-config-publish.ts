@@ -1,4 +1,5 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
 import {
   initializeFramework,
@@ -54,7 +55,7 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
   // Create a client for the 'portals' service
   const portalClient = await framework.serviceDiscovery.createClient('portals');
   // Subscribe to outgoing requests for logging and debugging
-  portalClient.request$.subscribe((request) => {
+  portalClient.request$.subscribe((request: FetchRequest) => {
     log?.debug('Request:', request);
     log?.info('🌎', 'Executing request to:', formatPath(request.uri));
   });

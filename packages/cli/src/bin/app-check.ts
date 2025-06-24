@@ -1,3 +1,5 @@
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
+
 import {
   initializeFramework,
   type FusionEnv,
@@ -62,7 +64,7 @@ export const checkApp = async (options: AppCheckOptions) => {
   const appClient = await framework.serviceDiscovery.createClient('apps');
 
   // Subscribe to outgoing requests for logging and debugging
-  appClient.request$.subscribe((request) => {
+  appClient.request$.subscribe((request: FetchRequest) => {
     log?.info('🌎', 'Executing request to:', request.uri);
     log?.debug('Request:', request);
   });
