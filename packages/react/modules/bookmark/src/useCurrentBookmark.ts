@@ -8,7 +8,6 @@ import type {
 import { useObservableState } from '@equinor/fusion-observable/react';
 import { useBookmarkProvider } from './useBookmarkProvider';
 import { EMPTY, from } from 'rxjs';
-import { useCurrentApp } from '@equinor/fusion-framework-react/app';
 
 export type useCurrentBookmarkOptions<TData extends BookmarkData> = {
   payloadGenerator?: BookmarkPayloadGenerator<TData>;
