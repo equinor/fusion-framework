@@ -26,3 +26,5 @@ export type {
 export { enableBookmark } from './enable-bookmark';
 
 export * from './types';
+
+export { bookmarkWithDataSchema } from './bookmark.schemas';
