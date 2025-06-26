@@ -86,13 +86,12 @@ export class ContextModuleConfigurator implements IContextModuleConfigurator {
   ): Promise<IApiProvider> {
     if (init.hasModule('services')) {
       return init.requireInstance('services');
-    } else {
-      const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)?.services;
-      if (parentServiceModule) {
-        return parentServiceModule;
-      }
+    }
+    const parentServiceModule = (init.ref as ModulesInstanceType<[ServicesModule]>)?.services;
+    if (!parentServiceModule) {
       throw Error('no service services provider configures [ServicesModule]');
     }
+    return parentServiceModule;
   }
 
   public async createConfig(
