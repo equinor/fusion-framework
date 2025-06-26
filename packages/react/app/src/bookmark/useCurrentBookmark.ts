@@ -38,8 +38,11 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
     provider: appBookmarkProvider ?? frameworkBookmarkProvider,
     payloadGenerator,
   });
+
+  const currentBookmarkAppKey = currentBookmark?.appKey;
+
   return {
-    currentBookmark: currentBookmark?.appKey === currentApp?.appKey ? currentBookmark : null,
+    currentBookmark: currentBookmarkAppKey === currentApp?.appKey ? currentBookmark : null,
     setCurrentBookmark,
   };
 };
