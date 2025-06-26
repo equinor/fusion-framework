@@ -4,6 +4,7 @@ import {
   type useCurrentBookmarkReturn,
   useCurrentBookmark as _useCurrentBookmark,
   type BookmarkModule,
+  type Bookmark,
   bookmarkWithDataSchema,
 } from '@equinor/fusion-framework-react-module-bookmark';
 
@@ -40,7 +41,9 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
     payloadGenerator,
   });
 
-  const currentBookmarkAppKey = bookmarkWithDataSchema().parse(currentBookmark).appKey;
+  const currentBookmarkAppKey = bookmarkWithDataSchema().safeParse(currentBookmark).success
+    ? bookmarkWithDataSchema().parse(currentBookmark).appKey
+    : null;
 
   return {
     currentBookmark: currentBookmarkAppKey === currentApp?.appKey ? currentBookmark : null,
