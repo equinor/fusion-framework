@@ -1,5 +1,11 @@
 # Change Log
 
+## 10.7.5
+
+### Patch Changes
+
+- [#3164](https://github.com/equinor/fusion-framework/pull/3164) [`31e4477`](https://github.com/equinor/fusion-framework/commit/31e447749cffc6d05e9dc3aef8ec49bd29751714) Thanks [@Noggling](https://github.com/Noggling)! - Fixes a bug where the app module was not using the correct configured HTTP client. Updates the configuration to ensure the app module uses the HTTP client that matches its expected name.
+
 ## 10.7.4
 
 ### Patch Changes
