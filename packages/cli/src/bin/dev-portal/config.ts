@@ -17,8 +17,8 @@ export const configure = async (config: FrameworkConfigurator) => {
     },
   });
 
-  // Add custom client for app
-  config.configureHttpClient('app', {
+  // Add custom client for apps
+  config.configureHttpClient('apps', {
     baseUri: new URL('/apps-proxy/', window.location.href).href,
     defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
   });
