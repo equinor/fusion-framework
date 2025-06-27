@@ -3,16 +3,14 @@ import { concatMap, Subject, type Observable, type Subscription } from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
-import type {
-  EventModuleProvider,
-  IEventModuleProvider,
-} from '@equinor/fusion-framework-module-event';
+import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
+
 import type { DynamicInputValue } from '@equinor/fusion-observable';
 
 import type { MetaData, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import { version } from './version.js';
 import { TelemetryType } from './static.js';
-import type { TelemetryAdapter, TelemetryItem } from './types.js';
+import type { TelemetryAdapter, TelemetryAdapters, TelemetryItem } from './types.js';
 import {
   TelemetryExceptionSchema,
   TelemetryCustomEventSchema,
@@ -301,5 +299,20 @@ export class TelemetryProvider
       ...data,
       value: duration,
     });
+  }
+
+  /**
+   * Retrieves a telemetry adapter by its identifier.
+   *
+   * @typeParam T - The key of the `TelemetryAdapter` to retrieve.
+   * @param identifier - The identifier of the telemetry adapter to retrieve.
+   * @returns The telemetry adapter corresponding to the given identifier, or `undefined` if not found.
+   */
+  public getAdapter<T extends keyof TelemetryAdapters>(
+    identifier: T,
+  ): TelemetryAdapters[T] | undefined {
+    return this.#adapters.find((adapter) => adapter.identifier === identifier) as
+      | TelemetryAdapters[T]
+      | undefined;
   }
 }

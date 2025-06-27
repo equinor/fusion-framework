@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { TelemetryItem } from './types.js';
+import type { TelemetryAdapters, TelemetryItem } from './types.js';
 import type { TelemetryItemSchema } from './schemas.js';
 import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js';
 
@@ -93,4 +93,11 @@ export interface ITelemetryProvider {
   measure(
     data: Omit<z.input<typeof TelemetryItemSchema>, 'type'>,
   ): (data?: Omit<z.input<typeof TelemetryItemSchema>, 'type'>) => void;
+
+  /**
+   * Get a telemetry adapter by its identifier.
+   * @param identifier - The unique identifier of the telemetry adapter to retrieve.
+   * @returns The telemetry adapter instance if found, or undefined if not found.
+   */
+  getAdapter<T extends keyof TelemetryAdapters>(identifier: T): TelemetryAdapters[T] | undefined;
 }
