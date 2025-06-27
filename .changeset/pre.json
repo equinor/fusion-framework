@@ -76,6 +76,7 @@
     "cli-node-version-check",
     "cli-patch-update",
     "cli-portal-config-support",
+    "cli-portal-tag-package",
     "eleven-dingos-decide",
     "fetch-portal-config-in-bootstrap",
     "fix-http-acquire-access-token",

@@ -34,7 +34,7 @@
     "@equinor/fusion-log": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
+    "typescript": "^5.8.2",
     "vite": "^6.3.5",
     "vitest": "^2.0.5"
   },

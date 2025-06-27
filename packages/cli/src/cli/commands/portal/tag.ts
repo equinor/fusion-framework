@@ -34,11 +34,11 @@ export const command = withAuthOptions(
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
-    .option('-n, --name <string>', 'Portal name (if not provided, resolved from manifest)')
     .option(
       '-m, --manifest <string>',
-      'Manifest file to use for resolving portal name and version (only used when --name or --version is not provided)',
+      'Manifest file to use for resolving portal name and version (only used when --package is not provided)',
     )
+    .option('-p, --package [package@version]', 'Package to tag (e.g., my-portal@1.0.0)')
     .option('-v, --version <string>', 'Version to tag (if not provided, resolved from manifest)')
     .option('-d, --debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
@@ -53,16 +53,21 @@ export const command = withAuthOptions(
         root: process.cwd(),
       };
 
-      let name: string = options.name;
-      let version: string = options.version;
+      let [name, version] = (options.package ?? '').split('@');
       if (!name || !version) {
         const { manifest: portalManifest } = await loadPortalManifest({
           log,
           manifest: options.manifest,
           env,
         });
-        name = name ?? portalManifest.name;
-        version = version ?? portalManifest.build?.version;
+        if (!portalManifest) {
+          log?.error(
+            '😢 No portal manifest found. Please provide a valid manifest file or package name',
+          );
+          process.exit(1);
+        }
+        name = portalManifest.name;
+        version = portalManifest.build.version;
       }
 
       log?.start('Initializing Fusion Framework...');

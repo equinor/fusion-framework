@@ -61,7 +61,6 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",
-    "@types/node": "^20.11.14",
     "@types/react": "^18.2.50",
     "@types/uuid": "^10.0.0",
     "happy-dom": "^17.0.3",

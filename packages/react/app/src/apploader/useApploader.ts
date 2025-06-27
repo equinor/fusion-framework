@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useFramework } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
+import type App from '@equinor/fusion-framework-module-app/app';
 
 import type { ApploaderProps } from './Apploader';
 
@@ -54,13 +55,17 @@ export const useApploader = ({
    * The app to be mounted
    * aka the child app that is being loaded.
    */
-  const loadedApp = useMemo(() => fusion.modules.app.createApp({ appKey }), [fusion, appKey]);
+  const loadedApp = useMemo((): App => fusion.modules.app.createApp({ appKey }), [fusion, appKey]);
 
   useEffect(() => {
     setLoading(true);
     setError(undefined);
-    const subscription$ = loadedApp?.initialize().subscribe({
-      next: ({ manifest, script, config }) => {
+
+    if (!loadedApp) return;
+
+    const subscription$ = loadedApp.initialize().subscribe({
+      next: (value) => {
+        const { manifest, script, config } = value;
         /* Application Element for mounting */
         appRef.current = document.createElement('div');
         appRef.current.id = manifest.appKey;

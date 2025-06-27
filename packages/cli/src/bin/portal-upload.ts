@@ -1,4 +1,5 @@
 import AdmZip from 'adm-zip';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
 import type { FusionFramework } from './framework.node.js';
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
@@ -63,7 +64,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
     // Create a client for the 'portal-config' service
     const appClient = await framework.serviceDiscovery.createClient('portal-config');
     // Subscribe to outgoing requests for logging and debugging
-    appClient.request$.subscribe((request) => {
+    appClient.request$.subscribe((request: FetchRequest) => {
       log?.info('🌎', 'Executing request to:', request.uri);
       log?.debug('Request:', request);
     });

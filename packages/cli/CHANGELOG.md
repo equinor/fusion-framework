@@ -1,5 +1,17 @@
 # Change Log
 
+## 11.0.0-next.17
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`95af813`](https://github.com/equinor/fusion-framework/commit/95af813b87f7686b8c909ec8e5178079d3ffd776) Thanks [@odinr](https://github.com/odinr)! - fix(cli): update portal tag command to use --package option for name@version
+
+  - Replaces --name and --version options with a single --package [package@version] option for tagging portals.
+  - Updates manifest resolution logic to fallback only when --package is not provided.
+  - Improves error handling and help text for clarity.
+
+  This makes the CLI usage more consistent and user-friendly when tagging portal versions.
+
 ## 11.0.0-next.16
 
 ### Minor Changes

@@ -5,7 +5,8 @@
     "rootDir": "src",
     "declarationDir": "./dist/types",
     "baseUrl": ".",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "lib": ["dom", "esnext", "webworker"]
   },
   "references": [
     {

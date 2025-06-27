@@ -1,4 +1,5 @@
 import { HttpJsonResponseError } from '@equinor/fusion-framework-module-http/errors';
+import type { FetchRequest } from '@equinor/fusion-framework-module-http/client';
 
 import type { FusionFramework } from './framework.node.js';
 
@@ -78,7 +79,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
   // Create a client for the 'portal-config' service
   const client = await framework.serviceDiscovery.createClient('portal-config');
   // Subscribe to outgoing requests for logging and debugging
-  client.request$.subscribe((request) => {
+  client.request$.subscribe((request: FetchRequest) => {
     log?.debug('Request:', request);
     log?.info('🌎', 'Executing request to:', formatPath(request.uri));
   });
