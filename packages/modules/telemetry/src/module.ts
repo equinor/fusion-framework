@@ -2,10 +2,10 @@ import type { Module } from '@equinor/fusion-framework-module';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
-import type { ITelemetryProvider } from './TelemetryProvider.interface';
-import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface';
-import { TelemetryConfigurator } from './TelemetryConfigurator';
-import { TelemetryProvider } from './TelemetryProvider';
+import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
+import { TelemetryConfigurator } from './TelemetryConfigurator.js';
+import { TelemetryProvider } from './TelemetryProvider.js';
 
 export type TelemetryModule = Module<
   'telemetry',

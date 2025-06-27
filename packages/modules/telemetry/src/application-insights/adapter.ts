@@ -4,14 +4,14 @@ import {
   type IPlugin,
 } from '@microsoft/applicationinsights-web';
 
-import { TelemetryType } from '../static';
+import { TelemetryType } from '../static.js';
 
 import type {
   TelemetryAdapter,
   TelemetryItem,
   TelemetryException,
   TelemetryMetric,
-} from '../types';
+} from '../types.js';
 
 export type ApplicationInsightsClientConfig = {
   snippet: Snippet;

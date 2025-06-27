@@ -4,7 +4,7 @@ import type {
   TelemetryEventSchema,
   TelemetryExceptionSchema,
   TelemetryMetricSchema,
-} from './schemas';
+} from './schemas.js';
 
 /**
  * Represents a telemetry item as defined by the {@link TelemetryItemSchema}.

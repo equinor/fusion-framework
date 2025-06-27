@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { TelemetryLevel, TelemetryType } from './static';
+import { TelemetryLevel, TelemetryType } from './static.js';
 
 /**
  * Schema for a telemetry item, defining the structure and validation rules for telemetry data.

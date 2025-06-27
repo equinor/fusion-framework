@@ -1,5 +1,5 @@
-import type { ApplicationInsightsAdapter } from './adapter';
-export { ApplicationInsightsAdapter } from './adapter';
+import type { ApplicationInsightsAdapter } from './adapter.js';
+export { ApplicationInsightsAdapter } from './adapter.js';
 
 declare module '@equinor/fusion-framework-module-telemetry' {
   interface TelemetryAdapters {
