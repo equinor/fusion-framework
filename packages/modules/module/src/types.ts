@@ -353,3 +353,21 @@ export type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
  * @see ModulesInstanceType
  */
 export type ModuleInstance = ModulesInstanceType<Modules>;
+
+export enum ModuleEventLevel {
+  Debug = 0,
+  Information = 1,
+  Warning = 2,
+  Error = 3,
+  Critical = 4,
+}
+
+export type ModuleEvent = {
+  level: ModuleEventLevel;
+  name: string;
+  message: string;
+  // biome-ignore lint/suspicious/noExplicitAny: any is used here to allow flexibility in the properties
+  properties?: Record<string, any>; // Additional properties related to the event
+  error?: unknown; // Optional error object if the event is related to an error
+  metric?: number; // Optional metric value associated with the event
+};

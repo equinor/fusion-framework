@@ -25,9 +25,7 @@ import {
   type ModuleType,
 } from './types';
 
-import { SemanticVersion } from './lib/semantic-version';
 import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
-import { count } from 'console';
 
 /**
  * Represents a configurator for modules.
