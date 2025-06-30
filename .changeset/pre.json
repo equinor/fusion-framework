@@ -79,6 +79,7 @@
     "cli-portal-tag-package",
     "eleven-dingos-decide",
     "fetch-portal-config-in-bootstrap",
+    "fix-dev-server-config-array-merging",
     "fix-http-acquire-access-token",
     "fix-lodash-mergewith-deps",
     "fix-semver",
