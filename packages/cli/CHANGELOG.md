@@ -1,5 +1,15 @@
 # Change Log
 
+## 11.0.0-next.18
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`774c436`](https://github.com/equinor/fusion-framework/commit/774c43633698255b7d540da26443562e6d6b055f) Thanks [@odinr](https://github.com/odinr)! - fix: improve dev server config merging for arrays of route objects
+
+  - Added a custom array merge strategy in `mergeDevServerConfig` to merge arrays of route objects by their `match` property, ensuring uniqueness and correct precedence.
+  - Other arrays are merged as unique sets.
+  - This prevents duplicate routes and ensures that overrides take precedence as expected.
+
 ## 11.0.0-next.17
 
 ### Patch Changes
