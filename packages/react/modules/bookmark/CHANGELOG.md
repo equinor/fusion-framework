@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.10
+
+### Patch Changes
+
+- [#3166](https://github.com/equinor/fusion-framework/pull/3166) [`a506490`](https://github.com/equinor/fusion-framework/commit/a5064902f84d59eec7f64df13057918fcff1aad1) Thanks [@Noggling](https://github.com/Noggling)! - Update selector logic to only return a bookmark if its appKey matches the current app's appKey. This ensures bookmarks are correctly filtered and only relevant bookmarks are returned for the active application.
+
 ## 4.0.9
 
 ### Patch Changes

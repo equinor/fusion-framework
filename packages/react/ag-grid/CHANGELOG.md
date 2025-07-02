@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 33.2.8
+
+### Patch Changes
+
+- [#3176](https://github.com/equinor/fusion-framework/pull/3176) [`3ac52b3`](https://github.com/equinor/fusion-framework/commit/3ac52b3c74a8b2d860346fe3ae35b5d02354d27b) Thanks [@EdwardBrunton](https://github.com/EdwardBrunton)! - Exports AgGridReactProps to allow consumers to use ag-grid-react without installing the package directly
+
 ## 33.2.7
 
 ### Patch Changes
