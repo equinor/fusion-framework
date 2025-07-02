@@ -4,7 +4,6 @@ import {
   type useCurrentBookmarkReturn,
   useCurrentBookmark as _useCurrentBookmark,
   type BookmarkModule,
-  type Bookmark,
   bookmarkWithDataSchema,
 } from '@equinor/fusion-framework-react-module-bookmark';
 
