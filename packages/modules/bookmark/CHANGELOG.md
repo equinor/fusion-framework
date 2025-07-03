@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.15
+
+### Patch Changes
+
+- [#3182](https://github.com/equinor/fusion-framework/pull/3182) [`0bdd7f4`](https://github.com/equinor/fusion-framework/commit/0bdd7f4c3f166421b7703c374821b52a578a24e6) Thanks [@Noggling](https://github.com/Noggling)! - Enable MapSet in the bookmark module since a new Set is used in BookmarkState.
+
 ## 2.1.14
 
 ### Patch Changes

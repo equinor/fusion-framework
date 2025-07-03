@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.56
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.7.5
+  - @equinor/fusion-framework-react-app@6.2.4
+
 ## 1.3.55
 
 ### Patch Changes
