@@ -12,6 +12,9 @@ import { bookmarkActions, type BookmarkActions } from './BookmarkProvider.action
 import type { BookmarkState } from './BookmarkProvider.store';
 import type { BookmarkFlowError } from './BookmarkProvider.error';
 import type { BookmarkWithoutData } from './types';
+import { enableMapSet } from 'immer';
+
+enableMapSet();
 
 /**
  * Utility function that extracts the base action type from a given action object.
