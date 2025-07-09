@@ -1743,8 +1743,8 @@ importers:
   packages/utils/load-env:
     dependencies:
       dotenv:
-        specifier: ^16.5.0
-        version: 16.5.0
+        specifier: ^17.2.0
+        version: 17.2.0
       dotenv-expand:
         specifier: ^12.0.2
         version: 12.0.2
@@ -6416,8 +6416,12 @@ packages:
     resolution: {integrity: sha512-lXpXz2ZE1cea1gL4sz2Ipj8y4PiVjytYr3Ij0SWoms1PGxIv7m2CRKuRuCRtHdVuvM/hNJPMxt5PbhboNC4dPQ==}
     engines: {node: '>=12'}
 
-  dotenv@16.5.0:
-    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+  dotenv@16.6.1:
+    resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
   dotenv@8.6.0:
@@ -6582,8 +6586,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
 
-  eslint-plugin-prettier@5.5.0:
-    resolution: {integrity: sha512-8qsOYwkkGrahrgoUv76NZi23koqXOGiiEzXMrT8Q7VcYaUISR+5MorIUxfWqYXN0fN/31WbSrxCxFkVQ43wwrA==}
+  eslint-plugin-prettier@5.5.1:
+    resolution: {integrity: sha512-dobTkHT6XaEVOo8IO90Q4DOSxnm3Y151QxPJlM/vKC0bVy+d6cVWQZLlFiuZPP0wS6vZwSKeJgKkcS+KfMBlRw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       '@types/eslint': '>=8.0.0'
@@ -10377,7 +10381,7 @@ snapshots:
       '@typescript-eslint/parser': 7.18.0(eslint@9.25.1)(typescript@5.8.3)
       eslint: 9.25.1
       eslint-config-prettier: 9.1.0(eslint@9.25.1)
-      eslint-plugin-prettier: 5.5.0(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3)
+      eslint-plugin-prettier: 5.5.1(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3)
       prettier: 3.5.3
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -16045,9 +16049,11 @@ snapshots:
 
   dotenv-expand@12.0.2:
     dependencies:
-      dotenv: 16.5.0
+      dotenv: 16.6.1
 
-  dotenv@16.5.0: {}
+  dotenv@16.6.1: {}
+
+  dotenv@17.2.0: {}
 
   dotenv@8.6.0: {}
 
@@ -16369,7 +16375,7 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-prettier@5.5.0(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3):
+  eslint-plugin-prettier@5.5.1(eslint-config-prettier@9.1.0(eslint@9.25.1))(eslint@9.25.1)(prettier@3.5.3):
     dependencies:
       eslint: 9.25.1
       prettier: 3.5.3
