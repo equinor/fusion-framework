@@ -355,11 +355,11 @@ export type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
 export type ModuleInstance = ModulesInstanceType<Modules>;
 
 export enum ModuleEventLevel {
-  Debug = 0,
-  Information = 1,
+  NONE = 0,
+  Error = 1,
   Warning = 2,
-  Error = 3,
-  Critical = 4,
+  Information = 3,
+  Debug = 4,
 }
 
 export type ModuleEvent = {

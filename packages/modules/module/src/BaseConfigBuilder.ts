@@ -47,9 +47,7 @@ const assignConfigValue = <T>(
  * @template TConfig - The type of the configuration object.
  * @template TRef - The type of the reference or parent module.
  */
-export type ConfigBuilderCallbackArgs<TConfig = unknown, TRef = unknown> = {
-  config: TConfig;
-
+export type ConfigBuilderCallbackArgs<TRef = unknown> = {
   /** reference, parent modules */
   ref?: TRef;
 

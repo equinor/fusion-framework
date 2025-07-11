@@ -5,7 +5,7 @@ import {
   firstValueFrom,
   from,
   lastValueFrom,
-  Subject,
+  ReplaySubject,
   throwError,
 } from 'rxjs';
 import type { Observable } from 'rxjs';
@@ -37,7 +37,7 @@ export interface IModulesConfigurator<
   TModules extends Array<AnyModule> = Array<AnyModule>,
   TRef = any,
 > {
-  events: Observable<ModuleEvent>;
+  event$: Observable<ModuleEvent>;
 
   /**
    * Configures the modules using the provided module configurators.
@@ -142,10 +142,10 @@ export type ModulesConfiguratorConfigCallback<TRef> = (
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
   implements IModulesConfigurator<TModules, TRef>
 {
-  #events: Subject<ModuleEvent> = new Subject<ModuleEvent>();
+  #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>();
 
-  public get events(): IModulesConfigurator<TModules, TRef>['events'] {
-    return this.#events.asObservable();
+  public get event$(): IModulesConfigurator<TModules, TRef>['event$'] {
+    return this.#event$.asObservable();
   }
 
   /**
@@ -324,7 +324,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
   }
 
   protected _registerEvent(event: ModuleEvent): void {
-    this.#events.next(event);
+    this.#event$.next(event);
   }
 
   /**
@@ -916,5 +916,6 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
           }
         }),
     );
+    this.#event$.complete();
   }
 }
