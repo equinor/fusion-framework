@@ -1,5 +1,23 @@
 # Change Log
 
+## 6.3.0-next.1
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b9f540c`](https://github.com/equinor/fusion-framework/commit/b9f540c7539556ac0be6b19818343f46c797c4b7) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useCurrentBookmark` to use the new type and filter bookmarks by `appKey` matching the current app.
+
+  - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
+  - Updated logic in `packages/react/app/src/bookmark/useCurrentBookmark.ts` to use new type and filter by appKey
+
+### Patch Changes
+
+- Updated dependencies [[`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module-app@6.1.17-next.1
+  - @equinor/fusion-framework-module-msal@4.0.8-next.1
+  - @equinor/fusion-framework-app@10.0.0-next.1
+  - @equinor/fusion-framework-react@7.4.16-next.1
+  - @equinor/fusion-framework-react-module-http@9.0.4-next.1
+
 ## 6.2.2-next.0
 
 ### Patch Changes

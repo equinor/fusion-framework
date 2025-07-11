@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module-bookmark",
-  "version": "4.0.8-next.0",
+  "version": "4.0.8-next.1",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -16,8 +16,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "portal": ["dist/types/portal/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "portal": [
+        "dist/types/portal/index.d.ts"
+      ]
     }
   },
   "scripts": {

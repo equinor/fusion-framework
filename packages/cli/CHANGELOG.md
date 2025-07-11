@@ -1,5 +1,18 @@
 # Change Log
 
+## 11.0.0-next.19
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad) Thanks [@odinr](https://github.com/odinr)! - Upgrade zod dependency to ^3.25.76 in all affected packages.
+
+  - Updated zod version in dependencies and devDependencies.
+  - Updated pnpm-lock.yaml to reflect new zod version.
+  - No code changes, dependency update only.
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.0.0-next.3
+
 ## 11.0.0-next.18
 
 ### Patch Changes

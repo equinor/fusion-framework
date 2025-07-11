@@ -32,7 +32,12 @@
     "test": "vitest",
     "prepack": "pnpm build"
   },
-  "keywords": ["vite", "fusion-framework", "dev-server", "typescript"],
+  "keywords": [
+    "vite",
+    "fusion-framework",
+    "dev-server",
+    "typescript"
+  ],
   "license": "ISC",
   "publishConfig": {
     "access": "public"
