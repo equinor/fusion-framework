@@ -16,8 +16,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "v2": ["dist/types/v2/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "v2": [
+        "dist/types/v2/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -40,7 +44,7 @@
     "@equinor/fusion-framework-module": "workspace:^",
     "@types/semver": "^7.5.0",
     "semver": "^7.5.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "typescript": "^5.8.2"

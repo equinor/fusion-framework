@@ -17,8 +17,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "utils": ["dist/types/utils/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "utils": [
+        "dist/types/utils/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -54,6 +58,6 @@
     "@equinor/fusion-framework-module-services": "workspace:^",
     "@types/uuid": "^9.0.8",
     "typescript": "^5.8.2",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   }
 }
