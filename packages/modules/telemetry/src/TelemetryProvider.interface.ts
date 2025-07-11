@@ -1,8 +1,10 @@
 import type { z } from 'zod';
 
 import type { TelemetryAdapters, TelemetryItem } from './types.js';
-import type { TelemetryItemSchema } from './schemas.js';
+import type { TelemetryExceptionSchema, TelemetryMetricSchema } from './schemas.js';
 import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js';
+import type { Observable } from 'rxjs';
+import type { IMeasurement } from './Measurement.interface.js';
 
 /**
  * Interface for telemetry providers used to track and measure telemetry events.
@@ -32,6 +34,7 @@ import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js'
  * - `TelemetryScope.Framework` - Reserved for internal use only (framework development)
  */
 export interface ITelemetryProvider {
+  items: Observable<TelemetryItem>;
   /**
    * Track a telemetry event.
    *
@@ -74,7 +77,46 @@ export interface ITelemetryProvider {
    *   scope: TelemetryScope.Application
    * });
    */
-  track(item: TelemetryItem): void;
+  track<T extends TelemetryItem>(item: T): void;
+
+  /**
+   * Track a telemetry event with a specific type.
+   *
+   * @param item - The telemetry item to be tracked, excluding the 'type' property. The type will default to `TelemetryType.Event`.
+   *
+   * @example
+   * provider.trackEvent({
+   *   name: 'user_signup',
+   *   properties: { userId: '456' },
+   * });
+   */
+  trackEvent(item: Omit<TelemetryItem, 'type'> & { type?: TelemetryType.Event }): void;
+
+  /**
+   * Track a telemetry exception.
+   *
+   * @param data - The telemetry exception data to be tracked, excluding the 'type' property.
+   *
+   * @example
+   * provider.trackException({
+   *   name: 'api_error',
+   *   properties: { message: 'Request failed', code: 500 },
+   * });
+   */
+  trackException(data: Omit<z.input<typeof TelemetryExceptionSchema>, 'type'>): void;
+
+  /**
+   * Track a telemetry metric.
+   *
+   * @param data - The telemetry metric data to be tracked, excluding the 'type' property.
+   * @example
+   * provider.trackMetric({
+   *   name: 'load_time',
+   *   value: 1234,
+   *   properties: { page: 'home' },
+   * });
+   */
+  trackMetric(data: Omit<z.input<typeof TelemetryMetricSchema>, 'type'>): void;
 
   /**
    * Start a measurement for a telemetry event. Returns a function to complete the measurement.
@@ -90,9 +132,7 @@ export interface ITelemetryProvider {
    * // Optionally, provide updated data when ending the measurement:
    * end({ properties: { page: 'home', status: 'success' } });
    */
-  measure(
-    data: Omit<z.input<typeof TelemetryItemSchema>, 'type'>,
-  ): (data?: Omit<z.input<typeof TelemetryItemSchema>, 'type'>) => void;
+  measure(data: Omit<z.input<typeof TelemetryMetricSchema>, 'type' | 'value'>): IMeasurement;
 
   /**
    * Get a telemetry adapter by its identifier.

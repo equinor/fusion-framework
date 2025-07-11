@@ -1,13 +1,12 @@
-import deepmerge from 'deepmerge';
-import { concatMap, Subject, type Observable, type Subscription } from 'rxjs';
+import { lastValueFrom, map, Subject, type Observable, type Subscription } from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import type { DynamicInputValue } from '@equinor/fusion-observable';
+import { toObservable, type DynamicInputValue } from '@equinor/fusion-observable';
 
-import type { MetaData, TelemetryConfig } from './TelemetryConfigurator.interface.js';
+import type { TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import { version } from './version.js';
 import { TelemetryType } from './static.js';
 import type { TelemetryAdapter, TelemetryAdapters, TelemetryItem } from './types.js';
@@ -20,8 +19,37 @@ import {
 } from './schemas.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { TelemetryErrorEvent, TelemetryEvent } from './events.js';
-import { mergeMetadata, resolveMetadataAsync } from './metadata.js';
+import { Measurement } from './Measurement.js';
+import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
 
+/**
+ * Provides telemetry tracking, event dispatching, and adapter integration for application instrumentation.
+ *
+ * The `TelemetryProvider` class is responsible for collecting, processing, and relaying telemetry data such as events,
+ * exceptions, metrics, and custom events. It supports adapter-based processing, event provider integration, and
+ * hierarchical telemetry relaying to parent providers. Telemetry items are validated and dispatched to registered
+ * adapters and event providers, with robust error handling and metadata merging.
+ *
+ * @remarks
+ * - Integrates with adapters for extensible telemetry processing.
+ * - Supports event provider for dispatching telemetry as events.
+ * - Allows relaying telemetry data to a parent provider, merging metadata as needed.
+ * - Provides utility methods for tracking and measuring telemetry items.
+ * - Handles error reporting via telemetry error events.
+ *
+ * @example
+ * ```typescript
+ * const provider = new TelemetryProvider(config, { event: eventProvider });
+ * provider.track({ type: TelemetryType.Event, name: 'user_login', metadata: { userId: '123' } });
+ * const end = provider.measure({ name: 'load_time' });
+ * // ... do work ...
+ * end();
+ * ```
+ *
+ * @typeParam TelemetryConfig - The configuration type for telemetry.
+ * @implements ITelemetryProvider
+ * @extends BaseModuleProvider<TelemetryConfig>
+ */
 export class TelemetryProvider
   extends BaseModuleProvider<TelemetryConfig>
   implements ITelemetryProvider
@@ -38,26 +66,36 @@ export class TelemetryProvider
     return this.#items.asObservable();
   }
 
-  #metadata: DynamicInputValue<MetaData> | undefined;
-  get metadata(): Promise<MetaData> {
-    return resolveMetadataAsync(this.#metadata).then((value) => value ?? {});
+  #metadata: DynamicInputValue<TelemetryItem['metadata']> | undefined;
+  get metadata(): Promise<TelemetryItem['metadata']> {
+    const metadata$ = toObservable(this.#metadata).pipe(map((value) => value ?? {}));
+    return lastValueFrom(metadata$);
   }
 
-  constructor(
-    config: TelemetryConfig,
-    args?: { event?: IEventModuleProvider; parent?: ITelemetryProvider },
-  ) {
+  constructor(config: TelemetryConfig, deps?: { event?: IEventModuleProvider }) {
     super({ version, config });
 
     this.#adapters = config?.adapters ?? [];
     this.#metadata = config?.metadata;
     this.#defaultScope = config?.defaultScope ?? [];
 
-    this.#eventProvider = args?.event;
+    this.#eventProvider = deps?.event;
 
-    this._initialize(args?.parent);
+    this._initialize(config.parent);
   }
 
+  /**
+   * Initializes the telemetry provider by setting up necessary connections and teardown logic.
+   *
+   * @param parent Optional parent telemetry provider to which telemetry data can be relayed.
+   *
+   * - Connects adapters to process emitted telemetry items.
+   * - Emits telemetry items as events if an event provider is available.
+   * - Relays telemetry data to the parent provider if provided.
+   * - Ensures the internal subject is completed when the provider is destroyed.
+   *
+   * @protected
+   */
   protected _initialize(parent?: ITelemetryProvider): void {
     // Connect adapters to the telemetry items, processing each item as it is emitted
     this._addTeardown(this._connectAdapters());
@@ -82,6 +120,7 @@ export class TelemetryProvider
    * If an adapter throws, the error is dispatched as a telemetry error event.
    *
    * @returns Subscription to the telemetry item stream
+   * @protected
    */
   protected _connectAdapters(): Subscription {
     return this.#items.subscribe((item) => {
@@ -103,39 +142,24 @@ export class TelemetryProvider
   }
 
   /**
-   * Relays telemetry data to a parent provider, merging metadata from config and item.
-   * If metadata resolution fails, dispatches an error and falls back to the original item.
+   * Relays telemetry data items to a target telemetry provider.
    *
-   * @param target - The parent telemetry provider to relay data to
-   * @returns Subscription to the relayed telemetry item stream
+   * Subscribes to the internal telemetry item stream and forwards each processed item
+   * to the specified target provider by invoking its `track` method.
+   *
+   * @param target - The telemetry provider to which telemetry data should be relayed.
+   * @returns A Subscription object that can be used to unsubscribe from the relay.
    */
   protected _relayTelemetryData(target: ITelemetryProvider): Subscription {
-    // Use concatMap to handle async metadata resolution for each item
-    const items$ = this.#items.pipe(
-      concatMap(async (item) => {
-        try {
-          // Merge config metadata and item metadata (item metadata takes precedence)
-          const metadata = mergeMetadata(await this.metadata, item.metadata);
-          return { ...item, metadata };
-        } catch (error) {
-          // If metadata resolution fails, dispatch an error and use the original item
-          this._dispatchError(
-            new Error(`Failed to resolve metadata for telemetry item "${item.name}"`, {
-              cause: error,
-            }),
-          );
-          return item; // Fallback to item without metadata
-        }
-      }),
-    );
     // Subscribe to the processed stream and forward each item to the parent provider
-    return items$.subscribe((item) => target.track(item));
+    return this.#items.subscribe((item) => target.track(item));
   }
 
   /**
    * Dispatches a telemetry event to the event provider, if available.
    *
    * @param item - The telemetry item to dispatch as an event
+   * @protected
    */
   protected _dispatchEntityEvent(item: TelemetryItem): void {
     if (this.#eventProvider) {
@@ -144,6 +168,12 @@ export class TelemetryProvider
     }
   }
 
+  /**
+   * Dispatches a telemetry error event using the internal event provider, if available.
+   *
+   * @param error - The error instance to be dispatched with the telemetry error event.
+   * @protected
+   */
   protected _dispatchError(error: Error): void {
     if (this.#eventProvider) {
       this.#eventProvider.dispatchEvent(new TelemetryErrorEvent(error, this));
@@ -163,30 +193,41 @@ export class TelemetryProvider
    * });
    */
   public track(item: z.input<typeof TelemetryItemSchema>): void {
-    // Deconstruct the telemetry item to separate the type from the rest of the properties.
-    // This allows us to handle the item based on its type, while passing the remaining properties
-    // (such as name, metadata, etc.) to the appropriate handler. The rest object is also used to
-    // merge/extend the scope with the default scope for consistent scoping across all telemetry items.
-    const { type, ...rest } = item;
-    // Merge the default scope with any scope provided in the item, ensuring all items have the correct scope context.
-    const defaultScope = new Set([...this.#defaultScope, ...(rest.scope ?? [])]);
-    // Reconstruct the entry with the merged scope for downstream handlers.
-    const entry = { type, ...rest, scope: defaultScope };
-    // Dispatch to the correct handler based on the telemetry type.
-    switch (type) {
+    switch (item.type) {
       case TelemetryType.Event:
-        this.trackEvent(entry);
+        this.trackEvent(item);
         break;
       case TelemetryType.Exception:
-        this.trackException(entry as z.input<typeof TelemetryExceptionSchema>);
+        this.trackException(item as z.input<typeof TelemetryExceptionSchema>);
         break;
       case TelemetryType.Metric:
-        this.trackMetric(entry as z.input<typeof TelemetryMetricSchema>);
+        this.trackMetric(item as z.input<typeof TelemetryMetricSchema>);
         break;
       case TelemetryType.Custom:
-        this.trackCustom(entry as z.input<typeof TelemetryCustomEventSchema>);
+        this.trackCustom(item as z.input<typeof TelemetryCustomEventSchema>);
         break;
     }
+  }
+
+  /**
+   * Tracks a telemetry item by merging the default scope with the item's scope (if provided),
+   * ensuring that all telemetry items have the correct scope context. The merged item is then
+   * emitted to downstream handlers.
+   *
+   * @param item - The telemetry item to be tracked, conforming to the input schema of `TelemetryItemSchema`.
+   *
+   * @protected
+   */
+  protected async _track(item: z.input<typeof TelemetryItemSchema>): Promise<void> {
+    this.#items.next(
+      mergeTelemetryItem(
+        {
+          metadata: await this.metadata,
+          scope: this.#defaultScope,
+        },
+        item,
+      ),
+    );
   }
 
   /**
@@ -204,17 +245,8 @@ export class TelemetryProvider
    */
   public measure(
     data: Omit<z.input<typeof TelemetryItemSchema>, 'type'>,
-  ): (data?: Omit<z.input<typeof TelemetryItemSchema>, 'type'>) => void {
-    this.startMetric(data);
-    return (endData?: Omit<z.input<typeof TelemetryItemSchema>, 'type' | 'name'>) => {
-      if (endData) {
-        this.endMetric(
-          deepmerge(data, endData) as Omit<z.input<typeof TelemetryItemSchema>, 'type'>,
-        );
-      } else {
-        this.endMetric(data);
-      }
-    };
+  ): ReturnType<ITelemetryProvider['measure']> {
+    return new Measurement(this, data);
   }
 
   /**
@@ -225,7 +257,7 @@ export class TelemetryProvider
    * provider.trackEvent({ name: 'button_click', metadata: { button: 'save' } });
    */
   public trackEvent(data: Omit<z.input<typeof TelemetryEventSchema>, 'type'>): void {
-    this.#items.next(TelemetryEventSchema.parse({ ...data, type: TelemetryType.Event }));
+    this._track(TelemetryEventSchema.parse({ ...data, type: TelemetryType.Event }));
   }
 
   /**
@@ -236,7 +268,7 @@ export class TelemetryProvider
    * provider.trackException({ name: 'api_error', metadata: { code: 500 } });
    */
   public trackException(data: Omit<z.input<typeof TelemetryExceptionSchema>, 'type'>): void {
-    this.#items.next(TelemetryExceptionSchema.parse({ ...data, type: TelemetryType.Exception }));
+    this._track(TelemetryExceptionSchema.parse({ ...data, type: TelemetryType.Exception }));
   }
 
   /**
@@ -247,7 +279,7 @@ export class TelemetryProvider
    * provider.trackMetric({ name: 'response_time', value: 123 });
    */
   public trackMetric(data: Omit<z.input<typeof TelemetryMetricSchema>, 'type'>): void {
-    this.#items.next(TelemetryMetricSchema.parse({ ...data, type: TelemetryType.Metric }));
+    this._track(TelemetryMetricSchema.parse({ ...data, type: TelemetryType.Metric }));
   }
 
   /**
@@ -258,47 +290,7 @@ export class TelemetryProvider
    * provider.trackCustom({ name: 'custom_event', metadata: { foo: 'bar' } });
    */
   public trackCustom(data: Omit<z.input<typeof TelemetryCustomEventSchema>, 'type'>): void {
-    this.#items.next(TelemetryCustomEventSchema.parse({ ...data, type: TelemetryType.Custom }));
-  }
-
-  /**
-   * Starts timing a metric. Stores the start time for the given metric name.
-   * Returns a function that, when called, ends the metric.
-   *
-   * @param data - The metric data (without type)
-   * @returns A function to end the metric
-   * @example
-   * const end = provider.startMetric({ name: 'db_query' });
-   * // ...
-   * end();
-   */
-  public startMetric(data: Omit<z.input<typeof TelemetryItemSchema>, 'type'>): VoidFunction {
-    // @todo - check if name is already started
-    this.#startTimes.set(data.name, performance.now());
-    return () => this.endMetric(data);
-  }
-
-  /**
-   * Ends a metric measurement, calculates the duration, and tracks the metric.
-   * If the metric was not started, logs a warning.
-   *
-   * @param data - The metric data (without type)
-   * @example
-   * provider.endMetric({ name: 'db_query' });
-   */
-  public endMetric(data: Omit<z.input<typeof TelemetryItemSchema>, 'type'>): void {
-    const startTime = this.#startTimes.get(data.name);
-    if (startTime === undefined) {
-      this._dispatchError(new Error(`Metric "${data.name}" was not started. Cannot end metric.`));
-      return;
-    }
-    const duration = performance.now() - startTime;
-    this.#startTimes.delete(data.name);
-
-    this.trackMetric({
-      ...data,
-      value: duration,
-    });
+    this._track(TelemetryCustomEventSchema.parse({ ...data, type: TelemetryType.Custom }));
   }
 
   /**

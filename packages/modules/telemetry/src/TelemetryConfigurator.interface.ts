@@ -1,16 +1,6 @@
-import type { TelemetryAdapter } from './types.js';
+import type { TelemetryAdapter, TelemetryItem } from './types.js';
 import type { DynamicInputValue } from '@equinor/fusion-observable';
-import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
-
-/**
- * Represents a generic metadata object with string keys and values of any type.
- * Useful for attaching arbitrary information to telemetry events or configurations.
- *
- * @remarks
- * The values can be of any type, allowing for flexible metadata structures.
- */
-export type MetaData = Record<string, unknown>;
 
 /**
  * Configuration options for telemetry integration.
@@ -24,8 +14,7 @@ export type MetaData = Record<string, unknown>;
 export type TelemetryConfig = {
   adapters?: TelemetryAdapter[];
   parent?: ITelemetryProvider;
-  event?: IEventModuleProvider;
-  metadata?: DynamicInputValue<MetaData>;
+  metadata?: DynamicInputValue<TelemetryItem['metadata']>;
   defaultScope?: string[];
 };
 
@@ -37,6 +26,14 @@ export type TelemetryConfig = {
  * @interface ITelemetryConfigurator
  */
 export interface ITelemetryConfigurator {
+  /**
+   * Sets the parent telemetry provider for hierarchical telemetry propagation.
+   *
+   * @param parent - The parent telemetry provider instance.
+   * @returns The configurator instance for method chaining.
+   */
+  setParent(parent: ITelemetryProvider | undefined): this;
+
   /**
    * Registers a telemetry adapter to be used for event reporting.
    *

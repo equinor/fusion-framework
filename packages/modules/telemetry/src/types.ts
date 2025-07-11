@@ -4,6 +4,7 @@ import type {
   TelemetryEventSchema,
   TelemetryExceptionSchema,
   TelemetryMetricSchema,
+  TelemetryCustomEventSchema,
 } from './schemas.js';
 
 /**
@@ -44,6 +45,17 @@ export type TelemetryException = z.infer<typeof TelemetryExceptionSchema>;
  * @see TelemetryMetricSchema
  */
 export type TelemetryMetric = z.infer<typeof TelemetryMetricSchema>;
+
+/**
+ * Represents a custom telemetry event as defined by the {@link TelemetryCustomEventSchema}.
+ *
+ * This type is inferred from the Zod schema and includes all properties and validation rules
+ * specified in the schema. It is used to capture custom telemetry events that do not fit into
+ * the standard event, exception, or metric categories.
+ *
+ * @see TelemetryCustomEventSchema
+ */
+export type TelemetryCustomEvent = z.infer<typeof TelemetryCustomEventSchema>;
 
 /**
  * Represents an adapter for processing telemetry items.

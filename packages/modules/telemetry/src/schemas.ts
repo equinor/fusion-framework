@@ -24,7 +24,11 @@ export const TelemetryItemSchema = z.object({
     .optional()
     .describe('Optional additional properties for the telemetry item.'),
   metadata: z.record(z.unknown()).optional().describe('Optional metadata for the telemetry item.'),
-  scope: z.set(z.string()).optional().describe('Optional scope for the telemetry item.'),
+  scope: z
+    .array(z.string())
+    .optional()
+    .describe('Optional scope for the telemetry item.')
+    .transform((scopes) => [...new Set(scopes)]),
 });
 
 /**
@@ -67,14 +71,42 @@ export const TelemetryCustomEventSchema = TelemetryEventSchema.extend({
   type: z.literal(TelemetryType.Custom),
 }).passthrough();
 
+/**
+ * Parses a telemetry item according to the `TelemetryItemSchema`.
+ *
+ * @param item - The input object to be parsed, expected to conform to the input type of `TelemetryItemSchema`.
+ * @returns The parsed telemetry item, conforming to the inferred type of `TelemetryItemSchema
+ */
 export function parseTelemetryItem(
-  item: z.input<typeof TelemetryExceptionSchema>,
+  item: z.input<typeof TelemetryEventSchema>,
 ): z.infer<typeof TelemetryEventSchema>;
 
+/**
+ * Parses a telemetry item according to the `TelemetryExceptionSchema`.
+ *
+ * @param item - The input object to be parsed, expected to conform to the input type of `TelemetryExceptionSchema`.
+ * @returns The parsed telemetry item, conforming to the inferred type of `TelemetryExceptionSchema`.
+ */
+export function parseTelemetryItem(
+  item: z.input<typeof TelemetryExceptionSchema>,
+): z.infer<typeof TelemetryExceptionSchema>;
+
+/**
+ * Parses a telemetry item according to the `TelemetryMetricSchema`.
+ *
+ * @param item - The input object to be parsed, expected to conform to the input type of `TelemetryMetricSchema`.
+ * @returns The parsed telemetry item, conforming to the inferred type of `TelemetryMetricSchema`.
+ */
 export function parseTelemetryItem(
   item: z.input<typeof TelemetryMetricSchema>,
 ): z.infer<typeof TelemetryMetricSchema>;
 
+/**
+ * Parses a telemetry item using the `TelemetryCustomEventSchema`.
+ *
+ * @param item - The input object to be parsed, expected to conform to the input type of `TelemetryCustomEventSchema`.
+ * @returns The parsed telemetry item, conforming to the inferred type of `TelemetryCustomEventSchema`.
+ */
 export function parseTelemetryItem(
   item: z.input<typeof TelemetryCustomEventSchema>,
 ): z.infer<typeof TelemetryCustomEventSchema>;

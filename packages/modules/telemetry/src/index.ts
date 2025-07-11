@@ -6,9 +6,22 @@ export {
 export type {
   ITelemetryConfigurator,
   TelemetryConfig,
-  MetaData,
 } from './TelemetryConfigurator.interface.js';
 
 export type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+
+export { BaseTelemetryAdapter, type TelemetryAdapter } from './TelemetryAdapter.js';
+
+export { TelemetryLevel, TelemetryType } from './static.js';
+
+export type {
+  TelemetryItem,
+  TelemetryEvent,
+  TelemetryException,
+  TelemetryMetric,
+  TelemetryCustomEvent,
+} from './types.js';
+
+export { enableTelemetry } from './enable-telemetry.js';
 
 export { default } from './module.js';

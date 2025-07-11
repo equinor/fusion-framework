@@ -13,11 +13,11 @@
  * @property {TelemetryLevel.Critical} Critical - A severe error that may cause the system to stop functioning.
  */
 export enum TelemetryLevel {
-  Verbose = 0,
-  Information = 1,
+  NONE = 0,
+  Error = 1,
   Warning = 2,
-  Error = 3,
-  Critical = 4,
+  Information = 3,
+  Debug = 4,
 }
 
 /**
