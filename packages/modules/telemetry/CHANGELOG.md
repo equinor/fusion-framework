@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.1.14-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module-msal@4.0.8-next.1
+
 ## 4.1.14-next.0
 
 ### Patch Changes

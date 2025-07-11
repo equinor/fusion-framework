@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.1.42-next.1
+
+### Patch Changes
+
+- Updated dependencies [[`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module-http@6.3.4-next.1
+  - @equinor/fusion-framework-module-msal@4.0.8-next.1
+  - @equinor/fusion-framework@7.3.16-next.1
+  - @equinor/fusion-framework-module-widget@10.0.6-next.1
+
 ## 1.1.42-next.0
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # Change Log
 
+## 2.2.0-next.1
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b9f540c`](https://github.com/equinor/fusion-framework/commit/b9f540c7539556ac0be6b19818343f46c797c4b7) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useCurrentBookmark` to use the new type and filter bookmarks by `appKey` matching the current app.
+
+  - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
+  - Updated logic in `packages/react/app/src/bookmark/useCurrentBookmark.ts` to use new type and filter by appKey
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad) Thanks [@odinr](https://github.com/odinr)! - Upgrade zod dependency to ^3.25.76 in all affected packages.
+
+  - Updated zod version in dependencies and devDependencies.
+  - Updated pnpm-lock.yaml to reflect new zod version.
+  - No code changes, dependency update only.
+
 ## 2.1.13-next.0
 
 ### Patch Changes

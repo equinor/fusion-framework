@@ -66,6 +66,7 @@
     "add-prepack-script-to-vite-plugins",
     "add-prepack-to-dev-portal-and-dev-server",
     "allow-template-access",
+    "bookmark-refactor-appkey-filter",
     "bright-bushes-share",
     "chatty-bats-tell",
     "chubby-eels-post",
@@ -105,6 +106,7 @@
     "spa-plugin-vite-async-hooks",
     "tasty-cities-relate",
     "update-bootstrap-logic",
-    "update-spa-plugin-build-output"
+    "update-spa-plugin-build-output",
+    "zod-upgrade"
   ]
 }
