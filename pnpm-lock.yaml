@@ -649,8 +649,8 @@ importers:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1)(tsx@4.20.1)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -853,7 +853,7 @@ importers:
         version: 6.3.5(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1)(tsx@4.20.1)
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/framework:
     dependencies:
@@ -926,8 +926,8 @@ importers:
         specifier: ^11.0.3
         version: 11.1.0
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -997,8 +997,8 @@ importers:
         specifier: ^5.8.2
         version: 5.8.3
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
 
   packages/modules/context:
     dependencies:
@@ -1093,15 +1093,15 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/modules/module:
     dependencies:
@@ -1134,8 +1134,8 @@ importers:
         specifier: ^7.5.4
         version: 7.7.2
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1191,8 +1191,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1204,8 +1204,8 @@ importers:
         specifier: ^7.0.4
         version: 7.0.9
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1227,7 +1227,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/modules/signalr:
     dependencies:
@@ -1785,7 +1785,7 @@ importers:
         version: 4.5.4
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/utils/load-env:
     dependencies:
@@ -1801,7 +1801,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/utils/log:
     dependencies:
@@ -1817,7 +1817,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/utils/observable:
     dependencies:
@@ -1888,7 +1888,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/vite-plugins/api-service:
     dependencies:
@@ -1916,7 +1916,7 @@ importers:
         version: 6.3.5(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1)(tsx@4.20.1)
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@24.0.3)(happy-dom@17.6.3)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
+        version: 2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1)
 
   packages/vite-plugins/spa:
     dependencies:
@@ -4939,6 +4939,9 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
+  '@types/node@20.19.7':
+    resolution: {integrity: sha512-1GM9z6BJOv86qkPvzh2i6VW5+VVrXxCLknfmTkWEqz+6DqosiY28XUWCTmBcJ0ACzKqx/iwdIREfo1fwExIlkA==}
+
   '@types/node@24.0.3':
     resolution: {integrity: sha512-R4I/kzCYAdRLzfiCabn9hxWfbuHS573x+r0dJMkkzThEa7pbrcDWK+9zu3e7aBOouf+rQAciqPFMnxwr0aWgKg==}
 
@@ -5002,6 +5005,9 @@ packages:
 
   '@types/webpack-env@1.18.8':
     resolution: {integrity: sha512-G9eAoJRMLjcvN4I08wB5I7YofOb/kaJNd5uoCMX+LbKXTPCF+ZIHuqTnFaK9Jz1rgs035f9JUPUhNFtqgucy/A==}
+
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
@@ -6335,6 +6341,10 @@ packages:
 
   happy-dom@17.6.3:
     resolution: {integrity: sha512-UVIHeVhxmxedbWPCfgS55Jg2rDfwf2BCKeylcPSqazLz5w3Kri7Q4xdBJubsr/+VUzFLh0VjIvh13RaDA2/Xug==}
+    engines: {node: '>=20.0.0'}
+
+  happy-dom@18.0.1:
+    resolution: {integrity: sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==}
     engines: {node: '>=20.0.0'}
 
   hard-rejection@2.1.0:
@@ -8247,6 +8257,9 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
@@ -8831,8 +8844,8 @@ packages:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -13156,6 +13169,11 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
+  '@types/node@20.19.7':
+    dependencies:
+      undici-types: 6.21.0
+    optional: true
+
   '@types/node@24.0.3':
     dependencies:
       undici-types: 7.8.0
@@ -13214,6 +13232,9 @@ snapshots:
   '@types/web-bluetooth@0.0.20': {}
 
   '@types/webpack-env@1.18.8': {}
+
+  '@types/whatwg-mimetype@3.0.2':
+    optional: true
 
   '@ungap/structured-clone@1.3.0': {}
 
@@ -14888,6 +14909,13 @@ snapshots:
     dependencies:
       webidl-conversions: 7.0.0
       whatwg-mimetype: 3.0.0
+
+  happy-dom@18.0.1:
+    dependencies:
+      '@types/node': 20.19.7
+      '@types/whatwg-mimetype': 3.0.2
+      whatwg-mimetype: 3.0.0
+    optional: true
 
   hard-rejection@2.1.0: {}
 
@@ -17077,6 +17105,9 @@ snapshots:
 
   ufo@1.6.1: {}
 
+  undici-types@6.21.0:
+    optional: true
+
   undici-types@7.8.0: {}
 
   undici@5.29.0:
@@ -17282,6 +17313,42 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.0.3
       happy-dom: 17.6.3
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vitest@2.1.9(@types/node@24.0.3)(happy-dom@18.0.1)(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(sass-embedded@1.89.2)(terser@5.43.1):
+    dependencies:
+      '@vitest/expect': 2.1.9
+      '@vitest/mocker': 2.1.9(msw@2.10.2(@types/node@24.0.3)(typescript@5.8.3))(vite@5.4.19(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1))
+      '@vitest/pretty-format': 2.1.9
+      '@vitest/runner': 2.1.9
+      '@vitest/snapshot': 2.1.9
+      '@vitest/spy': 2.1.9
+      '@vitest/utils': 2.1.9
+      chai: 5.2.0
+      debug: 4.4.1
+      expect-type: 1.2.1
+      magic-string: 0.30.17
+      pathe: 1.1.2
+      std-env: 3.9.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.2
+      tinypool: 1.0.2
+      tinyrainbow: 1.2.0
+      vite: 5.4.19(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1)
+      vite-node: 2.1.9(@types/node@24.0.3)(sass-embedded@1.89.2)(terser@5.43.1)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.0.3
+      happy-dom: 18.0.1
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -17580,6 +17647,6 @@ snapshots:
 
   yoctocolors@2.1.1: {}
 
-  zod@3.25.67: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}
