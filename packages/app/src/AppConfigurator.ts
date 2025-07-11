@@ -18,6 +18,7 @@ import http, {
 import auth from '@equinor/fusion-framework-module-msal';
 
 import type { AppEnv, AppModules } from './types';
+import { map } from 'rxjs/operators';
 
 /**
  * Configurator for configuring application modules
@@ -74,9 +75,14 @@ export class AppConfigurator<
   extends ModulesConfigurator<AppModules<TModules>, TRef>
   implements IAppConfigurator<TModules, TRef>
 {
+  get event$() {
+    return super.event$.pipe(
+      map((event) => ({ ...event, name: `AppConfigurator::${event.name}` })),
+    );
+  }
+
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
-    this.logger = new ModuleConsoleLogger('AppConfigurator');
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {

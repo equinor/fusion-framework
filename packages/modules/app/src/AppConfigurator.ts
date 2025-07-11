@@ -6,8 +6,6 @@ import {
 import type { HttpModule, IHttpClient } from '@equinor/fusion-framework-module-http';
 import type { ServiceDiscoveryModule } from '@equinor/fusion-framework-module-service-discovery';
 
-import { moduleKey } from './module';
-
 import AppClient, { type IAppClient } from './AppClient';
 
 export interface AppModuleConfig {

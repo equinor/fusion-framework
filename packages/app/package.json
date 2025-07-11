@@ -16,15 +16,23 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "enable-bookmark": ["dist/types/enable-bookmark.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "enable-bookmark": [
+        "dist/types/enable-bookmark.d.ts"
+      ]
     }
   },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["fusion", "fusion-framework", "utility"],
+  "keywords": [
+    "fusion",
+    "fusion-framework",
+    "utility"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",
@@ -46,7 +54,8 @@
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
-    "@equinor/fusion-framework-module-msal": "workspace:^"
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
