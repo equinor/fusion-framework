@@ -63,7 +63,7 @@ jobs:
           filter-user: "reviewdog"
 
       - name: Lint source files
-        uses: mongolyy/reviewdog-action-biome@v1
+        uses: mongolyy/reviewdog-action-biome@v2
         with:
           github_token: ${{ github.token }}
           reporter: ${{ steps.reporter.outputs.value }}
