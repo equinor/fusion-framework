@@ -29,6 +29,8 @@ export interface IAppConfigurator<
   TModules extends Array<AnyModule> | unknown = unknown,
   TRef extends FusionModulesInstance = FusionModulesInstance,
 > extends IModulesConfigurator<AppModules<TModules>, TRef> {
+  readonly manifest: AppEnv['manifest'];
+
   /**
    * [optional]
    * enable/configure the http module
@@ -74,9 +76,16 @@ export class AppConfigurator<
   extends ModulesConfigurator<AppModules<TModules>, TRef>
   implements IAppConfigurator<TModules, TRef>
 {
+  #manifest: AppEnv['manifest']; // @TODO: Freeze manifest/obj
+
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
     this.logger = new ModuleConsoleLogger('AppConfigurator');
+    this.#manifest = env.manifest;
+  }
+
+  get manifest() {
+    return this.#manifest;
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {

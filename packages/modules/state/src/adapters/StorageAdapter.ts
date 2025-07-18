@@ -1,4 +1,6 @@
-// @TODO: remove
+import type { ObservableInput } from 'rxjs';
+import type { AllowedValue, IStateItem } from '../StateItem';
+
 const ID_SEPARATOR = '::';
 
 const extractId = (key: string): { namespace: string; id: string } => {
@@ -6,15 +8,19 @@ const extractId = (key: string): { namespace: string; id: string } => {
   return { namespace, id };
 };
 
-export interface IStorageAdapter<TType = unknown> extends Iterable<TType> {
-  setItem(key: string, item: TType): void;
+export interface IStorageAdapter<TType extends AllowedValue = AllowedValue> extends Iterable<TType> {
+  order?: number;
+  readonly initial?: ObservableInput<IStateItem[]>;
+  setItem(key: string, item: TType): ObservableInput<void>;
+  setItems?(items: { key: string, value?: TType }[]): ObservableInput<void>;
   removeItem(key: string): void;
   getItem<T = TType>(key: string): T | undefined;
   getItems<T = TType>(): Record<string, T>;
   clear(): void;
 }
 
-export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
+export abstract class StorageAdapter<TType extends AllowedValue> implements IStorageAdapter<TType> {
+  #order?: number;
   #storage: Storage;
   constructor(
     public readonly namespace: string,
@@ -29,12 +35,28 @@ export class StorageAdapter<TType = unknown> implements IStorageAdapter<TType> {
     }
   }
 
+  set order(order: number) {
+    this.#order = order;
+  }
+
+  get order(): number {
+    return this.#order || -1;
+  }
+
+  abstract get initial(): ObservableInput<IStateItem[]>;
+
   generateId(key: string): string {
     return [this.namespace, key].join(ID_SEPARATOR);
   }
 
-  setItem(key: string, item: TType) {
-    this.#storage.setItem(this.generateId(key), JSON.stringify(item));
+  async setItem(key: string, value: TType): Promise<void> {
+    this.#storage.setItem(this.generateId(key), JSON.stringify(value));
+  }
+
+  async setItems(items: { key: string; value?: TType }[]): Promise<void> {
+    for (const item of items) {
+      this.#storage.setItem(this.generateId(item.key), JSON.stringify(item.value));
+    }
   }
 
   removeItem(key: string): void {
