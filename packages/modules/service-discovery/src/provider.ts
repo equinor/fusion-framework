@@ -9,6 +9,8 @@ import type {
 
 import type { Service } from './types';
 import type { ServiceDiscoveryConfig } from './configurator';
+import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { tr } from 'zod/v4/locales';
 
 export interface IServiceDiscoveryProvider {
   /**
@@ -75,21 +77,63 @@ export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
     protected readonly _http: ModuleType<HttpModule>,
   ) {}
 
-  public resolveServices(): Promise<Service[]> {
-    return this.config.discoveryClient.resolveServices();
+  public async resolveServices(): Promise<Service[]> {
+    const { telemetry, discoveryClient } = this.config;
+    const measure = telemetry?.measure({
+      name: 'service-discovery.resolveServices',
+      level: TelemetryLevel.Debug,
+    });
+    try {
+      const services = await discoveryClient.resolveServices();
+      measure?.measure();
+      return services;
+    } catch (exception) {
+      measure?.measure({ properties: { error: String(exception) } });
+      if (exception instanceof Error) {
+        telemetry?.trackException({
+          name: 'service-discovery.resolveServices.error',
+          exception,
+        });
+      }
+      throw exception;
+    }
   }
 
   public async resolveService(key: string): Promise<Service> {
-    return this.config.discoveryClient.resolveService(key);
+    const { telemetry, discoveryClient } = this.config;
+    const measure = telemetry?.measure({
+      name: 'service-discovery.resolveServices',
+      level: TelemetryLevel.Debug,
+      properties: { key },
+    });
+    try {
+      const service = await discoveryClient.resolveService(key);
+      measure?.measure();
+      return service;
+    } catch (exception) {
+      measure?.measure({ properties: { error: String(exception) } });
+      if (exception instanceof Error) {
+        telemetry?.trackException({
+          name: 'service-discovery.resolveService.error',
+          exception,
+          properties: { key },
+        });
+      }
+      throw exception;
+    }
   }
 
   public async createClient(
     name: string,
     opt?: Omit<HttpClientOptions, 'baseUri' | 'defaultScopes' | 'ctor'>,
   ): Promise<IHttpClient> {
+    const { telemetry } = this.config;
     const service = await this.resolveService(name);
     if (!service) {
-      throw Error(`Could not load configuration of service [${name}]`);
+      const error = Error(`Could not load configuration of service [${name}]`);
+      error.name = 'ServiceDiscoveryError';
+      telemetry?.trackException({ name: 'service-discovery.createClient.error', exception: error });
+      throw error;
     }
     return this._http.createClient({
       ...opt,

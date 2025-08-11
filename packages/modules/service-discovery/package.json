@@ -33,6 +33,18 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-query": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    }
   }
 }
