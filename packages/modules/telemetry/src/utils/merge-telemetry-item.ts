@@ -49,10 +49,7 @@ export const mergeTelemetryItem = (
   if (target.type && source.type && target.type !== source.type) {
     throw new Error('Mismatched telemetry item types.');
   }
-  return {
-    ...target,
-    ...source,
-    scope: [...new Set([...(target.scope ?? []), ...(source.scope ?? [])])],
-    metadata: mergeMetadata(target.metadata, source.metadata),
-  } as TelemetryItem;
+  const scope = [...new Set([...(target.scope ?? []), ...(source.scope ?? [])])];
+  const metadata = mergeMetadata(target.metadata, source.metadata);
+  return { ...target, ...source, scope, metadata } as TelemetryItem;
 };

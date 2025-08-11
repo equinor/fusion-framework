@@ -3,7 +3,7 @@ import { TelemetryProvider } from '../src/TelemetryProvider';
 import { TelemetryType } from '../src/static';
 import { TelemetryEvent, TelemetryErrorEvent } from '../src/events';
 import type { TelemetryConfig } from '../src/TelemetryConfigurator.interface';
-import type { TelemetryAdapter, TelemetryItem } from '../src/types';
+import type { TelemetryAdapter } from '../src/types';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 vi.stubGlobal('performance', {
@@ -105,10 +105,10 @@ describe('TelemetryProvider', () => {
   });
 
   it('should merge defaultScope with item scope', async () => {
-    provider.trackEvent({ name: 'scoped', scope: ['custom'] });
+    provider.trackEvent({ name: 'scoped', scope: ['custom', 'foobar'] });
     await vi.waitFor(() => {
       expect(adapter.processItem).toHaveBeenCalledWith(
-        expect.objectContaining({ scope: ['default', 'custom'] }),
+        expect.objectContaining({ scope: ['custom', 'foobar', 'default'] }),
       );
     });
   });

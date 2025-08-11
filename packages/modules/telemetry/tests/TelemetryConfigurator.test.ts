@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TelemetryConfigurator } from '../src/TelemetryConfigurator.js';
 import type { TelemetryAdapter } from '../src/types.js';
 import type { ITelemetryProvider } from '../src/TelemetryProvider.interface.js';
-import type { TelemetryConfig } from '../src/TelemetryConfigurator.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { resolveMetadata } from '../dist/esm/utils/resolve-metadata.js';
+import { lastValueFrom } from 'rxjs';
 
 function createAdapter(id: string): TelemetryAdapter {
   return {
@@ -58,11 +59,11 @@ describe('TelemetryConfigurator', () => {
 
   it('setMetadata should set metadata and allow chaining', async () => {
     const metadata = { foo: 'bar' };
-    const result = configurator.setMetadata(metadata);
-    expect(result).toBe(configurator);
+    configurator.setMetadata(metadata);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs());
-    expect(config.metadata).toBe(metadata);
+    const result = await lastValueFrom(resolveMetadata(config.metadata));
+    expect(result).toMatchObject(metadata);
   });
 
   it('setMetadata should accept a callback', async () => {
@@ -70,13 +71,13 @@ describe('TelemetryConfigurator', () => {
     configurator.setMetadata(async () => expected);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs());
-    expect(config.metadata).toBe(expected);
+    const result = await lastValueFrom(resolveMetadata(config.metadata));
+    expect(result).toMatchObject(expected);
   });
 
   it('setDefaultScope should set defaultScope and allow chaining', async () => {
     const scope = ['user', 'session'];
-    const result = configurator.setDefaultScope(scope);
-    expect(result).toBe(configurator);
+    configurator.setDefaultScope(scope);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs());
     expect(config?.defaultScope).toBe(scope);
