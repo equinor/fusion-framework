@@ -1,15 +1,18 @@
-import { lastValueFrom, map, Subject, type Observable, type Subscription } from 'rxjs';
+import { from, Subject, type Observable, type Subscription } from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
-import { toObservable, type DynamicInputValue } from '@equinor/fusion-observable';
-
 import type { TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import { version } from './version.js';
 import { TelemetryType } from './static.js';
-import type { TelemetryAdapter, TelemetryAdapters, TelemetryItem } from './types.js';
+import type {
+  MetadataExtractor,
+  TelemetryAdapter,
+  TelemetryAdapters,
+  TelemetryItem,
+} from './types.js';
 import {
   TelemetryExceptionSchema,
   TelemetryCustomEventSchema,
@@ -21,6 +24,8 @@ import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { TelemetryErrorEvent, TelemetryEvent } from './events.js';
 import { Measurement } from './Measurement.js';
 import { mergeTelemetryItem } from './utils/merge-telemetry-item.js';
+import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import { applyMetadata } from './utils/resolve-metadata.js';
 
 /**
  * Provides telemetry tracking, event dispatching, and adapter integration for application instrumentation.
@@ -56,7 +61,6 @@ export class TelemetryProvider
 {
   #items: Subject<TelemetryItem> = new Subject();
   #adapters: Array<TelemetryAdapter>;
-  #startTimes: Map<string, number> = new Map();
 
   #defaultScope: string[];
 
@@ -66,10 +70,11 @@ export class TelemetryProvider
     return this.#items.asObservable();
   }
 
-  #metadata: DynamicInputValue<TelemetryItem['metadata']> | undefined;
-  get metadata(): Promise<TelemetryItem['metadata']> {
-    const metadata$ = toObservable(this.#metadata).pipe(map((value) => value ?? {}));
-    return lastValueFrom(metadata$);
+  #metadata?: MetadataExtractor;
+
+  #modules: ModulesInstanceType<Modules> | undefined;
+  set modules(value: ModulesInstanceType<Modules>) {
+    this.#modules = value;
   }
 
   constructor(config: TelemetryConfig, deps?: { event?: IEventModuleProvider }) {
@@ -82,6 +87,14 @@ export class TelemetryProvider
     this.#eventProvider = deps?.event;
 
     this._initialize(config.parent);
+
+    if (config.items$) {
+      this._addTeardown(
+        from(config.items$).subscribe((item) => {
+          this.track(item);
+        }),
+      );
+    }
   }
 
   /**
@@ -219,15 +232,21 @@ export class TelemetryProvider
    * @protected
    */
   protected async _track(item: z.input<typeof TelemetryItemSchema>): Promise<void> {
-    this.#items.next(
-      mergeTelemetryItem(
-        {
-          metadata: await this.metadata,
-          scope: this.#defaultScope,
-        },
-        item,
-      ),
-    );
+    const mergedItem = mergeTelemetryItem(item, {
+      scope: this.#defaultScope,
+    });
+    if (this.#metadata) {
+      applyMetadata(this.#metadata, {
+        modules: this.#modules,
+        item: mergedItem,
+      }).subscribe((nextItem) => {
+        // Emit the item after applying metadata
+        this.#items.next(nextItem);
+      });
+    } else {
+      // If no metadata extractor is provided, emit the item directly
+      this.#items.next(mergedItem);
+    }
   }
 
   /**

@@ -15,6 +15,8 @@ export { BaseTelemetryAdapter, type TelemetryAdapter } from './TelemetryAdapter.
 export { TelemetryLevel, TelemetryType } from './static.js';
 
 export type {
+  MetadataExtractor,
+  MetadataExtractorArgs,
   TelemetryItem,
   TelemetryEvent,
   TelemetryException,

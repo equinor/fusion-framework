@@ -1,8 +1,13 @@
-import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import { from } from 'rxjs';
+import { concatMap, last, scan } from 'rxjs/operators';
+
+import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
 import type { TelemetryAdapter } from './types.js';
 import type { ITelemetryConfigurator, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+import { toObservable } from '@equinor/fusion-observable';
+import { mergeMetadata } from './utils/merge-telemetry-item.js';
 
 /**
  * Configures telemetry settings for the application.
@@ -33,10 +38,20 @@ export class TelemetryConfigurator
   implements ITelemetryConfigurator
 {
   #adapters: Record<string, TelemetryAdapter> = {};
+  #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
     super();
     this._set('adapters', async () => Object.values(this.#adapters));
+    this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
+      const metadataItems = this.#metadata;
+      return (...args) =>
+        from(metadataItems).pipe(
+          concatMap((metadata) => toObservable(metadata, ...args)),
+          scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
+          last(),
+        );
+    });
   }
 
   /**
@@ -53,13 +68,14 @@ export class TelemetryConfigurator
   /**
    * Sets the metadata configuration for telemetry.
    *
+   * @remarks
+   * All setting will accumulate, and the metadata will be merged.
+   *
    * @param metadata - The metadata object or a callback function that receives and returns the metadata configuration.
    * @returns The current instance for method chaining.
    */
-  public setMetadata(
-    metadata: TelemetryConfig['metadata'] | ConfigBuilderCallback<TelemetryConfig['metadata']>,
-  ): this {
-    this._set('metadata', metadata);
+  public setMetadata(metadata: TelemetryConfig['metadata']): this {
+    this.#metadata.push(metadata);
     return this;
   }
 
@@ -82,6 +98,11 @@ export class TelemetryConfigurator
    */
   public setParent(parent: ITelemetryProvider | undefined): this {
     this._set('parent', parent);
+    return this;
+  }
+
+  public attachItems(item$: TelemetryConfig['items$']): this {
+    this._set('items$', item$);
     return this;
   }
 }

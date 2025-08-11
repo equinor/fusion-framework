@@ -1,4 +1,8 @@
 import type z from 'zod';
+
+import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-module';
+import type { DynamicInputValue } from '@equinor/fusion-observable';
+
 import type {
   TelemetryItemSchema,
   TelemetryEventSchema,
@@ -6,6 +10,34 @@ import type {
   TelemetryMetricSchema,
   TelemetryCustomEventSchema,
 } from './schemas.js';
+
+export type MetadataExtractorArgs = {
+  /**
+   * The modules instance, which may be undefined.
+   * This is typically used to access module-specific data or functionality.
+   */
+  modules?: ModulesInstanceType<Modules>;
+
+  /**
+   * The telemetry item from which metadata is extracted.
+   * This is the source of the metadata to be processed.
+   */
+  item: TelemetryItem;
+};
+/**
+ * Represents a function that extracts metadata from a telemetry item.
+ *
+ * @template TelemetryItem.metadata - The type of metadata to extract.
+ * @template [ModulesInstanceType<Modules> | undefined] - The arguments required for extraction, typically an instance of modules or undefined.
+ *
+ * @remarks
+ * This type is used to define extractors that can dynamically retrieve metadata from telemetry items,
+ * potentially using module instances as context.
+ */
+export type MetadataExtractor = DynamicInputValue<
+  TelemetryItem['metadata'],
+  [MetadataExtractorArgs]
+>;
 
 /**
  * Represents a telemetry item as defined by the {@link TelemetryItemSchema}.

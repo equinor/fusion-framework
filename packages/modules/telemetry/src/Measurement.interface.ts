@@ -134,7 +134,7 @@ export interface IMeasurement extends Disposable {
    * measurement's result.
    * This is useful for performance tracking and telemetry in applications.
    */
-  measure(data?: MeasurementData, options?: MeasureOptions): number;
+  measure(data?: Partial<MeasurementData>, options?: MeasureOptions): number;
 
   /**
    * Resolves a promise and includes measurement data.

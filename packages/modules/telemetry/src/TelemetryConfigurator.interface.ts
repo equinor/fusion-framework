@@ -1,21 +1,22 @@
-import type { TelemetryAdapter, TelemetryItem } from './types.js';
-import type { DynamicInputValue } from '@equinor/fusion-observable';
+import type { MetadataExtractor, TelemetryAdapter, TelemetryItem } from './types.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+import type { ObservableInput } from 'rxjs';
 
 /**
- * Configuration options for telemetry integration.
+ * Configuration options for setting up telemetry within the application.
  *
- * @property adapters - Optional array of telemetry adapters to be used for event reporting.
- * @property parent - Optional parent telemetry provider for hierarchical telemetry propagation.
- * @property event - Optional event module provider for event handling and dispatching.
- * @property metadata - Optional dynamic input value containing metadata to be associated with telemetry events.
- * @property defaultScope - Optional array of strings specifying the default scope for telemetry events.
+ * @property adapters - Optional array of telemetry adapters to be used for sending telemetry data.
+ * @property parent - Optional parent telemetry provider for hierarchical telemetry configuration.
+ * @property metadata - Optional function or extractor to provide additional metadata for telemetry items.
+ * @property defaultScope - Optional array of strings defining the default scope for telemetry events.
+ * @property items$ - Optional observable input stream of telemetry items to be processed.
  */
 export type TelemetryConfig = {
   adapters?: TelemetryAdapter[];
   parent?: ITelemetryProvider;
-  metadata?: DynamicInputValue<TelemetryItem['metadata']>;
+  metadata?: MetadataExtractor;
   defaultScope?: string[];
+  items$?: ObservableInput<TelemetryItem>;
 };
 
 /**
@@ -57,4 +58,12 @@ export interface ITelemetryConfigurator {
    * @returns The configurator instance for method chaining.
    */
   setDefaultScope(scope: string[]): this;
+
+  /**
+   * Attaches an observable stream of telemetry items to the configurator.
+   *
+   * @param item$ - An observable input stream of telemetry items.
+   * @returns The configurator instance for method chaining.
+   */
+  attachItems(item$: ObservableInput<TelemetryItem>): this;
 }

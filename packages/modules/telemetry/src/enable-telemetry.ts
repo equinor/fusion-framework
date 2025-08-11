@@ -2,50 +2,42 @@ import type { IModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import { module, type TelemetryModule } from './module.js';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
+import { mapConfiguratorEvents } from './utils/map-configurator-events.js';
 
 /**
- * Enables the Telemetry module by adding its configuration to the provided modules configurator.
+ * Enables telemetry for a given module configurator.
  *
- * @param configurator - The modules configurator instance to which the Telemetry module configuration will be added.
- * @param options - Optional configuration for customizing the Telemetry module lifecycle:
- *   - `configure`: A callback to further configure the Telemetry module.
- *   - `initialize`: A callback to customize the initialization logic of the Telemetry module.
- *   - `postInitialize`: A callback to run custom logic after the Telemetry module has been initialized.
+ * @param configurator - The module configurator instance to which telemetry should be attached.
+ * @param options - Optional configuration for telemetry setup.
+ * @param options.attachConfiguratorEvents - If true, attaches configurator events to the telemetry builder.
+ * @param options.configure - An optional callback to further configure the telemetry builder. Can be synchronous or asynchronous.
  *
  * @remarks
- * This function wraps the Telemetry module's configuration, initialization, and post-initialization
- * steps, allowing consumers to inject custom logic at each stage via the `options` parameter.
+ * This function adds telemetry configuration to the provided configurator. It supports attaching configurator events
+ * and allows for additional custom configuration via the `configure` callback.
+ *
+ * @remarks
+ * `attachConfiguratorEvents` allows for the automatic attachment of configurator events to the telemetry builder,
+ * ensuring that relevant events are captured and processed. __NOTE__ if the configurator crashes before the telemetry
+ * builder is fully initialized, some events may be missed.
  */
 export const enableTelemetry = (
   // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
   options?: {
-    configure?: (configurator: ITelemetryConfigurator) => void;
-    initialize?: TelemetryModule['initialize'];
-    postInitialize?: TelemetryModule['postInitialize'];
+    attachConfiguratorEvents?: boolean;
+    configure?: (configurator: ITelemetryConfigurator, ref?: any) => void | Promise<void>;
   },
 ): void => {
   configurator.addConfig({
-    module: {
-      name: module.name,
-      configure: async () => {
-        const configurator = module.configure();
-        if (options?.configure) {
-          await Promise.resolve(options.configure(configurator));
-        }
-        return configurator;
-      },
-      initialize: async (args) => {
-        if (options?.initialize) {
-          await Promise.resolve(options.initialize(args));
-        }
-        return module.initialize(args);
-      },
-      postInitialize: async (args) => {
-        if (options?.postInitialize) {
-          await Promise.resolve(options.postInitialize(args));
-        }
-      },
-    } satisfies TelemetryModule,
+    module,
+    configure: async (builder, ref) => {
+      if (options?.attachConfiguratorEvents) {
+        builder.attachItems(mapConfiguratorEvents(configurator));
+      }
+      if (options?.configure) {
+        await Promise.resolve(options.configure(builder, ref));
+      }
+    },
   });
 };
