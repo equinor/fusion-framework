@@ -15,7 +15,7 @@ import { TelemetryType, type TelemetryItem } from '@equinor/fusion-framework-mod
  * - If the event contains a `metric`, the item is marked as a metric with its value.
  * - Otherwise, the item is treated as a standard event.
  *
- * The resulting telemetry items include event name, type, level, message, properties, and a fixed scope of `['core', 'configuration']`.
+ * The resulting telemetry items include event name, type, level, message, properties, and a fixed scope of `['configuration']`.
  */
 export const mapConfiguratorEvents = (
   // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
@@ -31,7 +31,7 @@ export const mapConfiguratorEvents = (
           message: event.message,
           ...event.properties,
         },
-        scope: ['core', 'configuration'],
+        scope: ['configuration'],
       } satisfies TelemetryItem;
 
       if (event.error) {
