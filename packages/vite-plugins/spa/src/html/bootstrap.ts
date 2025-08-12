@@ -12,7 +12,6 @@ import {
   TelemetryLevel,
   type TelemetryModule,
 } from '@equinor/fusion-framework-module-telemetry';
-import { mapConfiguratorEvents } from '@equinor/fusion-framework-module-telemetry/utils';
 import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
 
 import { registerServiceWorker } from './register-service-worker.js';
@@ -66,15 +65,27 @@ enableMSAL(configurator, (builder) => {
 });
 
 enableTelemetry(configurator, {
+  attachConfiguratorEvents: true,
   configure: (builder) => {
     builder.setAdapter(new ConsoleAdapter());
-    builder.setMetadata({
-      spa_version: version,
+    builder.setMetadata(({ modules }) => {
+      const metadata = {
+        fusion: {
+          spa: {
+            version,
+          },
+        },
+        // biome-ignore lint/suspicious/noExplicitAny: we need to use any here to allow dynamic properties
+      } as Record<string, any>;
+      if (modules?.auth) {
+        metadata.fusion.user = {
+          id: modules.auth.defaultAccount?.homeAccountId,
+          name: modules.auth.defaultAccount?.name,
+          email: modules.auth.defaultAccount?.username,
+        };
+      }
+      return metadata;
     });
-  },
-  postInitialize: async (args) => {
-    // todo: add unsubscribe logic to dispose
-    mapConfiguratorEvents(configurator).subscribe((event) => args.instance.track(event));
   },
 });
 
