@@ -1,8 +1,10 @@
 import type { Fusion } from '@equinor/fusion-framework';
 import type { AnyModule } from '@equinor/fusion-framework-module';
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 import { AppConfigurator } from './AppConfigurator';
 import type { AppModulesInstance, AppModuleInitiator, AppEnv } from './types';
+import type { MetadataExtractor } from '../../modules/telemetry/src/types';
 
 /**
  * 
@@ -39,7 +41,32 @@ export const configureModules =
    * @returns initialized app modules
    */
   async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
+    const { fusion } = args;
+    // args.fusion.modules.telemetry.
     const configurator = new AppConfigurator<TModules, TRef['modules'], TEnv>(args.env);
+
+    const metadataExtractor: MetadataExtractor = () => {
+      return {
+        fusion: {
+          type: 'app-telemetry',
+          app: {
+            key: args.env.manifest?.appKey || 'unknown-app',
+            version: args.env.manifest?.build?.version || 'unknown-version',
+          },
+        },
+      };
+    };
+
+    enableTelemetry(configurator, {
+      attachConfiguratorEvents: true,
+      configure: (builder) => {
+        builder.setMetadata(metadataExtractor);
+        builder.setParent(fusion.modules.telemetry);
+        builder.setDefaultScope(['app']);
+      },
+    });
+
+    // select metadata from CustomEvent WHERE metadata.type === 'app-telemetry'
     if (cb) {
       await Promise.resolve(cb(configurator, args));
     }
