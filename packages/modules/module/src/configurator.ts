@@ -7,9 +7,18 @@ import {
   lastValueFrom,
   ReplaySubject,
   throwError,
+  type Observable,
 } from 'rxjs';
-import type { Observable } from 'rxjs';
-import { catchError, filter, map, mergeMap, reduce, tap, timeout } from 'rxjs/operators';
+import {
+  catchError,
+  defaultIfEmpty,
+  filter,
+  map,
+  mergeMap,
+  reduce,
+  tap,
+  timeout,
+} from 'rxjs/operators';
 
 import {
   ModuleEventLevel,
@@ -27,6 +36,8 @@ import {
 
 import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
 
+import { version } from './version';
+
 /**
  * Represents a configurator for modules.
  *
@@ -37,7 +48,8 @@ export interface IModulesConfigurator<
   TModules extends Array<AnyModule> = Array<AnyModule>,
   TRef = any,
 > {
-  event$: Observable<ModuleEvent>;
+  readonly version: string;
+  readonly event$: Observable<ModuleEvent>;
 
   /**
    * Configures the modules using the provided module configurators.
@@ -142,8 +154,11 @@ export type ModulesConfiguratorConfigCallback<TRef> = (
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
   implements IModulesConfigurator<TModules, TRef>
 {
-  #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>();
+  get version(): string {
+    return version;
+  }
 
+  #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>();
   public get event$(): IModulesConfigurator<TModules, TRef>['event$'] {
     return this.#event$.asObservable();
   }
@@ -721,7 +736,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     const instance = await lastValueFrom(instance$);
     const initTime = Math.round(performance.now() - initStartTime);
     this._registerEvent({
-      level: ModuleEventLevel.Information,
+      level: ModuleEventLevel.Debug,
       name: '_initialize.complete',
       message: `Modules instance created in ${initTime}ms`,
       properties: {
@@ -784,6 +799,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
               },
             });
           }),
+          defaultIfEmpty(null),
           catchError((err) => {
             this._registerEvent({
               level: ModuleEventLevel.Warning,
@@ -862,7 +878,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
     const postInitCompleteTime = Math.round(performance.now() - postInitStart);
     this._registerEvent({
-      level: ModuleEventLevel.Information,
+      level: ModuleEventLevel.Debug,
       name: '_postInitialize.complete',
       message: 'Post-initialization complete',
       properties: {
