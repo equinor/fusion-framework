@@ -9,7 +9,27 @@ import {
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { version } from './version';
+
 export const configure = async (config: FrameworkConfigurator) => {
+  enableTelemetry(config, {
+    attachConfiguratorEvents: true,
+    configure: (builder, ref) => {
+      builder.setMetadata(() => ({
+        fusion: {
+          type: 'portal-telemetry',
+          portal: {
+            version,
+            name: 'Fusion Dev Portal',
+          },
+        },
+      }));
+      builder.setDefaultScope(['portal']);
+      builder.setParent(ref.telemetry);
+    },
+  });
+
   enableAppModule(config);
 
   enableNavigation(config);
@@ -22,8 +42,6 @@ export const configure = async (config: FrameworkConfigurator) => {
       identifier: 'fusion-cli',
       name: 'Fusion CLI',
     });
-    // builder.setFilter('application', true);
-    // builder.setLogLevel(4);
   });
 
   /* Adds demo portal features to cli */
@@ -45,13 +63,7 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  config.onConfigured(() => {
-    console.log('framework config done');
-  });
-
   config.onInitialized(async (modules) => {
-    // fusion.auth.defaultClient.setLogger(new ConsoleLogger(0));
-    console.debug('📒 subscribing to all events');
     // @ts-ignore
     window.Fusion = { modules };
   });
