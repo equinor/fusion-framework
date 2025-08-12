@@ -13,6 +13,9 @@
       "path": "../modules/event"
     },
     {
+      "path": "../modules/telemetry"
+    },
+    {
       "path": "../modules/http"
     },
     {

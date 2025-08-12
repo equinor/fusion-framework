@@ -1,8 +1,4 @@
-import {
-  type AnyModule,
-  ModuleConsoleLogger,
-  ModulesConfigurator,
-} from '@equinor/fusion-framework-module';
+import { type AnyModule, ModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
 
@@ -19,9 +15,12 @@ import context from '@equinor/fusion-framework-module-context';
 
 import disco from '@equinor/fusion-framework-module-service-discovery';
 import services from '@equinor/fusion-framework-module-services';
+import telemetry, { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 import type { FusionModules } from './types';
 import type { AuthClientConfig } from '@equinor/fusion-framework-module-msal/v2';
+import { version } from './version';
+import { map } from 'rxjs/operators';
 
 /**
  * Module configurator for Framework modules
@@ -33,8 +32,29 @@ export class FrameworkConfigurator<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
+  get event$() {
+    return super.event$.pipe(
+      map((event) => ({ ...event, name: `FrameworkConfigurator::${event.name}` })),
+    );
+  }
+
   constructor() {
-    super([event, auth, http, disco, services, context]);
+    super([event, auth, http, disco, services, context, telemetry]);
+
+    // default configuration
+    enableTelemetry(this, {
+      configure: (builder) => {
+        builder.setMetadata({
+          fusion: {
+            type: 'framework-telemetry',
+            framework: {
+              version,
+            },
+          },
+        });
+        builder.setDefaultScope(['framework']);
+      },
+    });
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {
@@ -64,6 +84,10 @@ export class FrameworkConfigurator<
 
   public configureServiceDiscovery(args: { client: HttpClientOptions<HttpClientMsal> }) {
     this.configureHttpClient('service_discovery', args.client);
+  }
+
+  public configureTelemetry(cb: Parameters<typeof enableTelemetry>[1]): void {
+    enableTelemetry(this, cb);
   }
 }
 
