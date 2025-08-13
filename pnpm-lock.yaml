@@ -1735,7 +1735,7 @@ importers:
         version: 5.8.3
       unionfs:
         specifier: ^4.5.4
-        version: 4.5.4
+        version: 4.6.0
       vitest:
         specifier: ^2.0.5
         version: 2.1.9(@types/node@20.17.30)(happy-dom@18.0.1)(msw@2.10.2(@types/node@20.17.30)(typescript@5.8.3))(sass-embedded@1.89.2)
@@ -9244,8 +9244,8 @@ packages:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
     engines: {node: '>=18'}
 
-  unionfs@4.5.4:
-    resolution: {integrity: sha512-qI3RvJwwdFcWUdZz1dWgAyLSfGlY2fS2pstvwkZBUTnkxjcnIvzriBLtqJTKz9FtArAvJeiVCqHlxhOw8Syfyw==}
+  unionfs@4.6.0:
+    resolution: {integrity: sha512-fJAy3gTHjFi5S3TP5EGdjs/OUMFFvI/ady3T8qVuZfkv8Qi8prV/Q8BuFEgODJslhZTT2z2qdD2lGdee9qjEnA==}
 
   unist-util-is@6.0.0:
     resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
@@ -19499,7 +19499,7 @@ snapshots:
 
   unicorn-magic@0.3.0: {}
 
-  unionfs@4.5.4:
+  unionfs@4.6.0:
     dependencies:
       fs-monkey: 1.0.6
 
