@@ -126,7 +126,7 @@ export type QueryCtorOptions<TDataType, TQueryArguments> = {
    * An optional logger instance for logging events and operations within the Query class.
    * If not provided, a ConsoleLogger will be used with default settings.
    */
-  logger?: ILogger;
+  logger?: ILogger | ((namespace: string) => ILogger);
 };
 
 /**
@@ -326,7 +326,7 @@ export class Query<TDataType, TQueryArguments = any> {
    * A private logger instance used for logging events and operations within the Query class.
    * If a logger is not provided in the constructor options, a default ConsoleLogger is used.
    */
-  #logger: ILogger;
+  #logger?: ILogger;
 
   /**
    * A public getter for the client instance.
@@ -348,6 +348,10 @@ export class Query<TDataType, TQueryArguments = any> {
     return this.#cache;
   }
 
+  static createDefaultLogger = (namespace: string): ILogger => {
+    return new ConsoleLogger('Query', namespace);
+  };
+
   /**
    * The constructor for the Query class.
    * It initializes the query client, cache, and sets up the query request queue.
@@ -357,7 +361,8 @@ export class Query<TDataType, TQueryArguments = any> {
    * @param options - The constructor options for the Query instance.
    */
   constructor(options: QueryCtorOptions<TDataType, TQueryArguments>) {
-    this.#logger = options.logger ?? new ConsoleLogger('Query', this.#namespace);
+    this.#logger =
+      typeof options.logger === 'function' ? options.logger(this.#namespace) : options.logger;
 
     this.#generateCacheKey = (args: TQueryArguments) => {
       // Use the provided key generation function from options and namespace to ensure unique cache keys across instances
@@ -373,7 +378,7 @@ export class Query<TDataType, TQueryArguments = any> {
     } else {
       this.#client = new QueryClient(options.client.fn, {
         // Create a sub-logger for the client for more granular logging
-        logger: this.#logger.createSubLogger('Client'),
+        logger: this.#logger?.createSubLogger('Client'),
         // Spread any additional options provided for the client
         ...options.client.options,
       });
@@ -403,14 +408,14 @@ export class Query<TDataType, TQueryArguments = any> {
     this.#subscription.add(
       this.#queue$
         .pipe(
-          tap((key) => this.#logger.debug('Task added to queue', { key })),
+          tap((key) => this.#logger?.debug('Task added to queue', { key })),
           // skip tasks that are not in the ongoing tasks record
           filter((key) => !!(key in this.#tasks)),
           // Apply the queue operator to the query requests, which controls the execution order
           queueOperator((key) => {
             const task = this.#tasks[key];
             const { args, options, uuid } = task;
-            this.#logger.debug('Task selected from queue', {
+            this.#logger?.debug('Task selected from queue', {
               key,
               task: task.uuid,
               args,
@@ -419,7 +424,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
             // Check if the task is still observed, if not, skip it
             if (!task?.observed) {
-              this.#logger.debug('Task skipped', {
+              this.#logger?.debug('Task skipped', {
                 task: uuid,
               });
               delete this.#tasks[key];
@@ -435,7 +440,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
             return new Observable((subscriber) => {
               const { transaction } = job;
-              this.#logger.info('Task stated', {
+              this.#logger?.info('Task stated', {
                 task: uuid,
                 transaction,
               });
@@ -443,7 +448,7 @@ export class Query<TDataType, TQueryArguments = any> {
               // Add a cleanup function to the subscriber that will be called when the subscription is closed.
               // This function logs the task closure, cancels the job to prevent further processing, and removes the task from the ongoing tasks record.
               subscriber.add(() => {
-                this.#logger.debug('Task closed', {
+                this.#logger?.debug('Task closed', {
                   task: uuid,
                   transaction,
                   jobStatus: job.status,
@@ -492,7 +497,7 @@ export class Query<TDataType, TQueryArguments = any> {
           const { value, transaction } = task.result;
           const { args, key, uuid } = task.task;
 
-          this.#logger.debug('Task output added to cache', {
+          this.#logger?.debug('Task output added to cache', {
             uuid,
             args,
             key,
@@ -636,8 +641,10 @@ export class Query<TDataType, TQueryArguments = any> {
         throw new Error(
           `Cannot mutate cache item with key ${key}: item not found and option "allowCreation" is false`,
         );
-      } else if (options.allowCreation === false) {
-        /** does not allow creation, can not mutate */
+      }
+      if (options.allowCreation === false) {
+        // does not allow creation, can not mutate
+        // biome-ignore lint/suspicious/noEmptyBlockStatements: should return a no-op function
         return () => {};
       }
       const { value } = typeof changes === 'function' ? changes() : changes;
@@ -728,7 +735,7 @@ export class Query<TDataType, TQueryArguments = any> {
     const key = this.#generateCacheKey(args);
     const task = this._createTask(key, args, options);
 
-    this.#logger.debug('New query created', { key, args, options });
+    this.#logger?.debug('New query created', { key, args, options });
 
     return task;
   }
@@ -777,12 +784,12 @@ export class Query<TDataType, TQueryArguments = any> {
     return new Observable((subscriber) => {
       if (options?.signal) {
         if (options?.signal.aborted) {
-          this.#logger.debug('Abort signal already triggered by caller', { key });
+          this.#logger?.debug('Abort signal already triggered by caller', { key });
           return subscriber.complete();
         }
         subscriber.add(
           fromEvent(options?.signal, 'abort').subscribe(() => {
-            this.#logger.debug('Abort signal triggered by caller', { key });
+            this.#logger?.debug('Abort signal triggered by caller', { key });
             subscriber.complete();
           }),
         );
@@ -793,7 +800,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
       // If a cache entry exists and is valid, emit it as the next value to the subscriber.
       if (cacheEntry) {
-        this.#logger.debug('Query has cache', {
+        this.#logger?.debug('Query has cache', {
           key,
           cacheEntry,
         });
@@ -813,7 +820,7 @@ export class Query<TDataType, TQueryArguments = any> {
           hasValidCache,
         } satisfies QueryTaskCached<TDataType>;
 
-        this.#logger.info('Query cache valid, completing', {
+        this.#logger?.debug('Query cache valid, completing', {
           hasValidCache,
           suppressInvalid,
           record,
@@ -834,7 +841,7 @@ export class Query<TDataType, TQueryArguments = any> {
           return subscriber.complete();
         }
         // This will fetch new data and update the cache entry with the latest result.
-        this.#logger.debug('Query cache entry is invalid, proceeding to fetch new data', {
+        this.#logger?.debug('Query cache entry is invalid, proceeding to fetch new data', {
           key,
         });
       }
@@ -847,7 +854,7 @@ export class Query<TDataType, TQueryArguments = any> {
       // Connect the subscriber to the task to receive updates on the query's execution and results.
       subscriber.add(task.subscribe(subscriber));
 
-      this.#logger.info(
+      this.#logger?.info(
         isExistingTask ? 'Query connected to existing task' : 'Query started new task',
         {
           key,

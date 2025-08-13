@@ -17,7 +17,7 @@ import type {
   QueryClientResult,
   QueryClientRequest,
 } from './types';
-import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
+import type { ILogger } from '@equinor/fusion-log';
 import { QueryClientJob } from './QueryClientJob';
 
 /**
@@ -64,7 +64,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
   #subscription: Subscription;
 
   /** Logger instance for outputting debug and error information. */
-  #logger: ILogger;
+  #logger?: ILogger;
 
   /**
    * Indicates whether the QueryClient has been closed and is no longer accepting new actions.
@@ -150,31 +150,31 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
     );
 
     // Initialize the logger or use the provided one.
-    this.#logger = options?.logger ?? new ConsoleLogger('QueryClient');
+    this.#logger = options?.logger;
 
     // Register effects to log different actions.
     this.#state.addEffect(actions.request.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job requested', { transaction, payload });
+      this.#logger?.debug('Job requested', { transaction, payload });
     });
 
     this.#state.addEffect(actions.execute.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job executing', { transaction, payload });
+      this.#logger?.debug('Job executing', { transaction, payload });
     });
 
     this.#state.addEffect(actions.execute.success.type, ({ payload }) => {
-      this.#logger.info('Job complete', { ...payload });
+      this.#logger?.info('Job complete', { ...payload });
     });
 
     this.#state.addEffect(actions.execute.failure.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job failed', { transaction, payload });
+      this.#logger?.debug('Job failed', { transaction, payload });
     });
 
     this.#state.addEffect(actions.cancel.type, ({ payload: { reason }, meta: { transaction } }) => {
-      this.#logger.debug('Job canceled', { transaction, reason });
+      this.#logger?.debug('Job canceled', { transaction, reason });
     });
 
     this.#state.addEffect(actions.error.type, ({ payload: { transaction, error } }) => {
-      this.#logger.error('Job error', { transaction, error });
+      this.#logger?.error('Job error', { transaction, error });
     });
   }
 
@@ -259,17 +259,17 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
       // If no specific transaction is provided, iterate through all transactions
       // in the state and cancel each one, applying a generic cancellation reason.
       for (const key of Object.keys(this.#state.value)) {
-        this.cancel(key, `all transactions requested canceled`);
+        this.cancel(key, 'all transactions requested canceled');
       }
     } else if (this.#state.value[transaction]) {
       // If a specific transaction is provided and it exists in the state,
       // dispatch a cancellation action with an optional reason or a default message.
-      reason ??= `cancelation requested for job: ${transaction}`;
-      this.#state.next(actions.cancel(transaction, reason));
+      const cancellationReason = reason ?? `cancellation requested for job: ${transaction}`;
+      this.#state.next(actions.cancel(transaction, cancellationReason));
     } else {
       // If a specific transaction is provided but it does not exist in the state,
       // log a warning indicating that there is nothing to cancel.
-      this.#logger.warn(`Task not registered, nothing to cancel`, {
+      this.#logger?.warn('Task not registered, nothing to cancel', {
         transaction,
         reason,
       });
