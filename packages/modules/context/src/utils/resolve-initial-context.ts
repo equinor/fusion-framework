@@ -1,7 +1,7 @@
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { ContextModule } from '../module';
 import type { ContextModuleConfig } from '../configurator';
-import { concat, EMPTY, first, of } from 'rxjs';
+import { concat, defaultIfEmpty, EMPTY, first, of } from 'rxjs';
 
 import { type ContextPathResolveArgs, resolveContextFromPath } from './resolve-context-from-path';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
@@ -46,7 +46,10 @@ export const resolveInitialContext =
     return concat(
       pathname ? pathResolver(pathname) : EMPTY,
       resolveContextFromParent({ ref, modules }),
-    ).pipe(first());
+    ).pipe(
+      defaultIfEmpty(undefined), // Ensure we always have a value to work with
+      first(),
+    );
   };
 
 export default resolveInitialContext;

@@ -614,6 +614,9 @@ importers:
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../modules/msal
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../modules/telemetry
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -757,6 +760,9 @@ importers:
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../modules/services
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../modules/telemetry
       '@equinor/fusion-framework-react':
         specifier: workspace:^
         version: link:../react/framework
@@ -881,6 +887,9 @@ importers:
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../modules/services
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../modules/telemetry
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1197,6 +1206,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
