@@ -13,6 +13,16 @@ The changeset approach in Changesets brings several benefits to your versioning 
 
 The changeset-centered workflow in Changesets brings clarity, efficiency, and reliability to your versioning and release management process.
 
+## Best Practices
+
+- **Prefer a single package per changeset:** Each changeset should ideally affect only one package. This keeps versioning and changelogs clear and makes releases easier to manage.
+- **Scope committed files and changesets:** Try to keep your commits and changesets focused. It's better to have multiple small commits and changesets than a single large one. This improves traceability and makes reviewing and releasing changes safer and more predictable.
+- **Write clear, concise, and descriptive summaries:** Each changeset should include a summary that accurately describes the change and its impact.
+- **Use semantic versioning thoughtfully:** Choose patch, minor, or major version bumps based on the actual impact of the change, following semver guidelines.
+- **Avoid mixing unrelated changes:** Do not group unrelated changes in a single changeset. Separate them for clarity and easier tracking.
+- **Review changesets for accuracy and completeness:** Before merging, ensure the changeset correctly reflects the changes and includes all necessary details.
+- **Keep changesets up to date:** If your PR evolves during review, update the changeset to match the final set of changes.
+
 ## How to write a changeset
 
 All PR should have a changeset if it changes code in any of the Fusion Framework packages. Changeset can be done from the PR UI or manually.
@@ -20,7 +30,7 @@ All PR should have a changeset if it changes code in any of the Fusion Framework
 1. Create a new file in the `.changesets` folder with the name of the package you want to change (use random human readable names by default for these files to avoid collisions when generating them. e.g., `happy-sock-monster.md`).
 2. Add all affected packages to markdown metadata (front matter) using the format "PACKAGE_NAME": VERSION_TAG (e.g., `"@equinor/fusion-query": patch`).
 3. Write a brief description of the change(s).
-4. Add sections for each package that was changed.
+4. Add sections for each package that was changed _(if multiple packages were changed)_.
 5. Explain in detailed why and what changes made to the package.
 6. _(optional)_ Explain in detail how a consumer should update their code
 7. _(optional)_ Include code blocks with examples of how to use new features or migrate breaking changes.
