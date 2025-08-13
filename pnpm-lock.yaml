@@ -1095,7 +1095,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^3.5.1
-        version: 3.6.1
+        version: 3.7.1
       '@azure/msal-node-extensions':
         specifier: ^1.5.11
         version: 1.5.14
@@ -1945,12 +1945,12 @@ packages:
     resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.7.0':
-    resolution: {integrity: sha512-m9M5hoFoxhe/HlXNVa4qBHekrX60CVPkWzsjhKQGuzw/OPOmurosKRPDIMn8fug/E1hHI5v33DvT1LVJfItjcg==}
+  '@azure/msal-common@15.11.0':
+    resolution: {integrity: sha512-1IseGNH6XGWe+5xhZlhasTJP6Ob7tnVSlfFUnjdeH4Kik0n1SORTmdB6xxTwbx9Ro8EuO0XaRzpdABWSf15sdg==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.7.1':
-    resolution: {integrity: sha512-a0eowoYfRfKZEjbiCoA5bPT3IlWRAdGSvi63OU23Hv+X6EI8gbvXCoeqokUceFMoT9NfRUWTJSx5FiuzruqT8g==}
+  '@azure/msal-common@15.7.0':
+    resolution: {integrity: sha512-m9M5hoFoxhe/HlXNVa4qBHekrX60CVPkWzsjhKQGuzw/OPOmurosKRPDIMn8fug/E1hHI5v33DvT1LVJfItjcg==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node-extensions@1.5.14':
@@ -1960,8 +1960,8 @@ packages:
   '@azure/msal-node-runtime@0.18.2':
     resolution: {integrity: sha512-v45fyBQp80BrjZAeGJXl+qggHcbylQiFBihr0ijO2eniDCW9tz5TZBKYsqzH06VuiRaVG/Sa0Hcn4pjhJqFSTw==}
 
-  '@azure/msal-node@3.6.1':
-    resolution: {integrity: sha512-ctcVz4xS+st5KxOlQqgpvA+uDFAa59CvkmumnuhlD2XmNczloKBdCiMQG7/TigSlaeHe01qoOlDjz3TyUAmKUg==}
+  '@azure/msal-node@3.7.1':
+    resolution: {integrity: sha512-ZTopY+BmE/OubqTXEQ5Eq+h6M5NKTchQBtvLj1tgiAf26lk2C+9jJTvtHjcyzE3iWn3wzySJLa4ArcjHJaZMQw==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.27.1':
@@ -9895,9 +9895,9 @@ snapshots:
 
   '@azure/msal-common@13.3.3': {}
 
-  '@azure/msal-common@15.7.0': {}
+  '@azure/msal-common@15.11.0': {}
 
-  '@azure/msal-common@15.7.1': {}
+  '@azure/msal-common@15.7.0': {}
 
   '@azure/msal-node-extensions@1.5.14':
     dependencies:
@@ -9907,9 +9907,9 @@ snapshots:
 
   '@azure/msal-node-runtime@0.18.2': {}
 
-  '@azure/msal-node@3.6.1':
+  '@azure/msal-node@3.7.1':
     dependencies:
-      '@azure/msal-common': 15.7.1
+      '@azure/msal-common': 15.11.0
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
