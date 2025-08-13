@@ -1,17 +1,31 @@
 # Change Log
 
-## 4.0.8-next.0
+## 4.0.11
 
 ### Patch Changes
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+- Updated dependencies [[`0bdd7f4`](https://github.com/equinor/fusion-framework/commit/0bdd7f4c3f166421b7703c374821b52a578a24e6)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.15
 
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-framework-react-module@3.1.13-next.2
-  - @equinor/fusion-observable@8.5.2-next.0
-  - @equinor/fusion-framework-module@4.4.3-next.2
-  - @equinor/fusion-framework-module-bookmark@2.1.13-next.0
-  - @equinor/fusion-framework-react@7.4.16-next.0
+## 4.0.10
+
+### Patch Changes
+
+- [#3166](https://github.com/equinor/fusion-framework/pull/3166) [`a506490`](https://github.com/equinor/fusion-framework/commit/a5064902f84d59eec7f64df13057918fcff1aad1) Thanks [@Noggling](https://github.com/Noggling)! - Update selector logic to only return a bookmark if its appKey matches the current app's appKey. This ensures bookmarks are correctly filtered and only relevant bookmarks are returned for the active application.
+
+## 4.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`9982c09`](https://github.com/equinor/fusion-framework/commit/9982c096f57e7928dbb65b3ca1d647646852963f)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.14
+
+## 4.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`9cc3adc`](https://github.com/equinor/fusion-framework/commit/9cc3adcf502a3488a80c7a9b2a71eae0910a7b9f)]:
+  - @equinor/fusion-framework-module-bookmark@2.1.13
 
 ## 4.0.7
 

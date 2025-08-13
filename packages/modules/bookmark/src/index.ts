@@ -28,3 +28,5 @@ export type { BookmarkProviderEventMap as BookmarkProviderEvents } from './Bookm
 export { enableBookmark } from './enable-bookmark';
 
 export * from './types';
+
+export { bookmarkWithDataSchema } from './bookmark.schemas';

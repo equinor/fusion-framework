@@ -34,7 +34,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
   const { payloadGenerator, provider = baseProvider } =
     typeof args === 'function' ? { payloadGenerator: args } : (args ?? {});
 
-  const { value: bookmark } = useObservableState(
+  const { value: currentBookmark } = useObservableState(
     useMemo(() => provider?.currentBookmark$ ?? EMPTY, [provider]),
     {
       initial: provider?.currentBookmark,
@@ -57,7 +57,7 @@ export const useCurrentBookmark = <TData extends BookmarkData>(
     }
   }, [provider, payloadGenerator]);
 
-  return { currentBookmark: bookmark as Bookmark<TData> | null, setCurrentBookmark };
+  return { currentBookmark: currentBookmark as Bookmark<TData> | null, setCurrentBookmark };
 };
 
 export default useCurrentBookmark;

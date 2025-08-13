@@ -36,6 +36,10 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
           return;
         }
 
+        if (!appKey || !bookmarkContext) {
+          return;
+        }
+
         const pathname = args.resolveAppPath(appKey);
 
         if (navigator.location.pathname !== pathname) {

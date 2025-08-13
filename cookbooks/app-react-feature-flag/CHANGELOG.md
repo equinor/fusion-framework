@@ -1,39 +1,35 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
-## 1.3.53-next.3
+## 1.3.56
 
 ### Patch Changes
 
-- Updated dependencies [[`774c436`](https://github.com/equinor/fusion-framework/commit/774c43633698255b7d540da26443562e6d6b055f)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.18
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.7.5
+  - @equinor/fusion-framework-react-app@6.2.4
 
-## 1.3.53-next.2
-
-### Patch Changes
-
-- Updated dependencies [[`95af813`](https://github.com/equinor/fusion-framework/commit/95af813b87f7686b8c909ec8e5178079d3ffd776)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.17
-
-## 1.3.53-next.1
+## 1.3.55
 
 ### Patch Changes
 
-- Updated dependencies [[`4a237a0`](https://github.com/equinor/fusion-framework/commit/4a237a0287caf6af5a516df43ce35278b5ed7089), [`4a237a0`](https://github.com/equinor/fusion-framework/commit/4a237a0287caf6af5a516df43ce35278b5ed7089)]:
-  - @equinor/fusion-framework-cli@11.0.0-next.16
+- Updated dependencies [[`31e4477`](https://github.com/equinor/fusion-framework/commit/31e447749cffc6d05e9dc3aef8ec49bd29751714)]:
+  - @equinor/fusion-framework-cli@10.7.5
 
-## 1.3.53-next.0
+## 1.3.54
 
 ### Patch Changes
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.7.4
+  - @equinor/fusion-framework-react-app@6.2.3
 
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-observable@8.5.2-next.0
-  - @equinor/fusion-framework-module-http@6.3.4-next.0
-  - @equinor/fusion-framework-cli@11.0.0-next.15
-  - @equinor/fusion-framework-module-feature-flag@1.1.22-next.0
-  - @equinor/fusion-framework-module-navigation@5.0.4-next.0
-  - @equinor/fusion-framework-react-app@6.2.2-next.0
+## 1.3.53
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@10.7.4
+  - @equinor/fusion-framework-react-app@6.2.2
 
 ## 1.3.52
 

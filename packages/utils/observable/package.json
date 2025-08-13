@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-observable",
-  "version": "8.5.2-next.0",
+  "version": "8.5.1",
   "description": "WIP",
   "keywords": ["observable", "react", "fusion", "equinor"],
   "homepage": "https://equinor.github.io/fusion-framework/",
@@ -63,7 +63,7 @@
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.50",
     "@types/uuid": "^10.0.0",
-    "happy-dom": "^17.0.3",
+    "happy-dom": "^18.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2",

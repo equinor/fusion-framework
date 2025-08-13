@@ -1,16 +1,22 @@
 # Change Log
 
-## 2.1.13-next.0
+## 2.1.15
 
 ### Patch Changes
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+- [#3182](https://github.com/equinor/fusion-framework/pull/3182) [`0bdd7f4`](https://github.com/equinor/fusion-framework/commit/0bdd7f4c3f166421b7703c374821b52a578a24e6) Thanks [@Noggling](https://github.com/Noggling)! - Enable MapSet in the bookmark module since a new Set is used in BookmarkState.
 
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-observable@8.5.2-next.0
-  - @equinor/fusion-framework-module@4.4.3-next.2
-  - @equinor/fusion-query@5.2.12-next.0
-  - @equinor/fusion-log@1.1.5-next.0
+## 2.1.14
+
+### Patch Changes
+
+- [#3151](https://github.com/equinor/fusion-framework/pull/3151) [`9982c09`](https://github.com/equinor/fusion-framework/commit/9982c096f57e7928dbb65b3ca1d647646852963f) Thanks [@Noggling](https://github.com/Noggling)! - Remove unnecessary deepEqual check from the currentBookmark$ selector to ensure the current bookmark is always emitted, even when re-selected. This improves consistency and ensures consumers receive updates as expected.
+
+## 2.1.13
+
+### Patch Changes
+
+- [#3148](https://github.com/equinor/fusion-framework/pull/3148) [`9cc3adc`](https://github.com/equinor/fusion-framework/commit/9cc3adcf502a3488a80c7a9b2a71eae0910a7b9f) Thanks [@Noggling](https://github.com/Noggling)! - Allow reselection of the current bookmark by removing the check that prevented setting the same bookmark as current. This enables applications to reselect a bookmark even if it is already active, supporting scenarios where application state changes require a re-selection event.
 
 ## 2.1.12
 

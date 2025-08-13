@@ -52,7 +52,7 @@
     "@changesets/cli": "^2.26.2",
     "@vitest/coverage-v8": "^2.0.1",
     "genversion": "^3.1.1",
-    "happy-dom": "^17.0.3",
+    "happy-dom": "^18.0.1",
     "lerna-update-wizard": "^1.1.2",
     "rimraf": "^6.0.0",
     "tslib": "^2.6.1",

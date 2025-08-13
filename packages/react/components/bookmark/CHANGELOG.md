@@ -1,15 +1,32 @@
 # Change Log
 
-## 1.0.25-next.0
+## 1.0.28
 
 ### Patch Changes
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-module-bookmark@4.0.11
 
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-observable@8.5.2-next.0
-  - @equinor/fusion-framework-react-module-bookmark@4.0.8-next.0
-  - @equinor/fusion-framework-react@7.4.16-next.0
+## 1.0.27
+
+### Patch Changes
+
+- Updated dependencies [[`a506490`](https://github.com/equinor/fusion-framework/commit/a5064902f84d59eec7f64df13057918fcff1aad1)]:
+  - @equinor/fusion-framework-react-module-bookmark@4.0.10
+
+## 1.0.26
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-module-bookmark@4.0.9
+
+## 1.0.25
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-react-module-bookmark@4.0.8
 
 ## 1.0.24
 

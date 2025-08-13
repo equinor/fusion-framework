@@ -1,21 +1,28 @@
 # Change Log
 
-## 24.0.2-next.0
+## 24.0.4
 
 ### Patch Changes
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.20
+  - @equinor/fusion-framework-react-app@6.2.4
 
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-observable@8.5.2-next.0
-  - @equinor/fusion-framework-module-http@6.3.4-next.0
-  - @equinor/fusion-framework-module-service-discovery@8.0.18-next.0
-  - @equinor/fusion-framework-module-navigation@5.0.4-next.0
-  - @equinor/fusion-framework-module-msal@4.0.8-next.0
-  - @equinor/fusion-framework@7.3.16-next.0
-  - @equinor/fusion-framework-react-app@6.2.2-next.0
-  - @equinor/fusion-framework-app@9.3.18-next.0
-  - @equinor/fusion-framework-module-app@6.1.17-next.0
+## 24.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.19
+  - @equinor/fusion-framework-react-app@6.2.3
+
+## 24.0.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.18
+  - @equinor/fusion-framework-react-app@6.2.2
 
 ## 24.0.1
 

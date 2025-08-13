@@ -79,7 +79,7 @@ export const uploadApplication = async (
     // Upload the bundle as a zip file to the app service
     const response = await appClient.fetch(`/bundles/apps/${name}`, {
       method: 'POST',
-      body: new Blob([content], {
+      body: new Blob([content as Uint8Array<ArrayBuffer>], {
         type: 'application/zip',
       }),
       headers: {

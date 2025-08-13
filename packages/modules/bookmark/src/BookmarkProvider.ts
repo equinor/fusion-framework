@@ -168,7 +168,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * Gets the currently active bookmark (if any).
    */
   public get currentBookmark$(): Observable<Bookmark | null | undefined> {
-    return this.#store.select(activeBookmarkSelector, deepEqual);
+    return this.#store.select(activeBookmarkSelector);
   }
 
   /**
@@ -593,10 +593,7 @@ export class BookmarkProvider implements IBookmarkProvider {
   public setCurrentBookmark<T extends BookmarkData>(
     bookmark_or_id: Bookmark<T> | string | null,
   ): Observable<Bookmark<T> | null> {
-    // check if the bookmark is already the current bookmark
-    if (bookmark_or_id == this.currentBookmark) return of(bookmark_or_id);
-
-    this._log?.debug(`setting current bookmark`, bookmark_or_id);
+    this._log?.debug('setting current bookmark', bookmark_or_id);
 
     // resolve the next bookmark
     const next$: Observable<Bookmark<T> | null> =

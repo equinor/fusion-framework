@@ -72,7 +72,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
     // Upload the bundle as a zip file to the portal service
     const response = await appClient.fetch(`/bundles/templates/${name}`, {
       method: 'POST',
-      body: new Blob([content], {
+      body: new Blob([content as Uint8Array<ArrayBuffer>], {
         type: 'application/zip',
       }),
       headers: {
