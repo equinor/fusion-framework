@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 0.1.2
+
+### Patch Changes
+
+- [`391c618`](https://github.com/equinor/fusion-framework/commit/391c618a8ff4e808d904941b0425961a79def7e7) Thanks [@odinr](https://github.com/odinr)! - bump @azure/msal-node from 3.6.1 to 3.7.0
+
 ## 0.1.1
 
 ### Patch Changes

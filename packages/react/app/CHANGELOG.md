@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.2.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-app@9.3.21
+  - @equinor/fusion-framework-react@7.4.16
+
 ## 6.2.4
 
 ### Patch Changes
