@@ -1,9 +1,9 @@
 import type { Module } from '@equinor/fusion-framework-module';
-import { AuthConfigurator } from './AuthConfigurator';
-import { AuthProvider } from './AuthProvider';
-import { AuthTokenProvider } from './AuthTokenProvider';
-import { AuthProviderInteractive } from './AuthProviderInteractive';
-import type { IAuthProvider } from './AuthProvider.interface';
+import { AuthConfigurator } from './AuthConfigurator.js';
+import { AuthProvider } from './AuthProvider.js';
+import { AuthTokenProvider } from './AuthTokenProvider.js';
+import { AuthProviderInteractive } from './AuthProviderInteractive.js';
+import type { IAuthProvider } from './AuthProvider.interface.js';
 
 /**
  * MSAL Node authentication module for the Fusion Framework.
