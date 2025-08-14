@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-services",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "description": "",
   "sideEffects": false,
   "main": "dist/esm/index.js",
@@ -99,7 +99,7 @@
     "directory": "packages/modules/services"
   },
   "dependencies": {
-    "odata-query": "^7.0.4",
+    "odata-query": "^8.0.4",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -113,6 +113,6 @@
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "odata-query": "^7.0.4"
+    "odata-query": "^8.0.4"
   }
 }

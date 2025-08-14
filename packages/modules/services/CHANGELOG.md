@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.0.4
+
+### Patch Changes
+
+- [#3252](https://github.com/equinor/fusion-framework/pull/3252) [`4447dd9`](https://github.com/equinor/fusion-framework/commit/4447dd9da60305eade68241ffbe670c4c7dde19a) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump odata-query from 7.0.9 to 8.0.4
+
 ## 6.0.3
 
 ### Patch Changes

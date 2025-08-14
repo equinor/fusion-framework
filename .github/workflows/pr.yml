@@ -1,7 +1,7 @@
 name: PR
 
 on: 
-  pull_request_target:  
+  pull_request:  
     types: 
       - ready_for_review
       - opened
@@ -44,7 +44,7 @@ jobs:
           cond: ${{ github.actor != 'dependabot[bot]' }}
           if_true: '0' 
           if_false: '1'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: "${{ github.event.pull_request.head.sha }}"
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
