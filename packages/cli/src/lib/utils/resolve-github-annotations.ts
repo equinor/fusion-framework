@@ -117,7 +117,6 @@ function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, 
     head_commit: payload.head_commit?.id, // SHA of the head commit
     after: payload.after, // SHA after the event
     ref: payload.ref, // Branch or tag ref
-    workflow: payload.workflow, // Workflow name
     release: {}, // Will be populated if this is a release event
     pull_request: {}, // Will be populated if this is a pull request event
   };
@@ -171,6 +170,7 @@ function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, 
  *   - GITHUB_REPOSITORY: Repository in the format owner/repo
  *   - GITHUB_SERVER_URL: Base URL of the GitHub server (defaults to https://github.com)
  *   - GITHUB_EVENT_PATH: Path to the event payload file (JSON)
+ *   - GITHUB_WORKFLOW: Name of the workflow
  *
  * Notes for maintainers:
  *   - The event payload can be large; consider truncating or parsing if only specific fields are needed.
@@ -191,6 +191,10 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
   const runId = process.env.GITHUB_RUN_ID || 'unknown';
   // Extract repository in the format owner/repo
   const repository = process.env.GITHUB_REPOSITORY || 'unknown';
+
+  // Extract workflow name
+  const workflow = process.env.GITHUB_WORKFLOW || 'unknown';
+
   // Extract server URL (defaults to public GitHub if not set)
   const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
   // Extract event payload path and read payload if available
@@ -216,6 +220,7 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
     runId,
     repository,
     runUrl,
+    workflow,
     ...extractPayloadAnnotations(payload),
   };
   // Return the resolved annotation variables
