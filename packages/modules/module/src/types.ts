@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type SemanticVersion from './lib/semantic-version';
+import type SemanticVersion from './lib/semantic-version.js';
 import type { ObservableInput } from 'rxjs';
 
 /**

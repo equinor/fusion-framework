@@ -2,7 +2,7 @@
 import { BehaviorSubject, EMPTY, firstValueFrom, from, lastValueFrom, throwError } from 'rxjs';
 import { catchError, filter, map, mergeMap, reduce, tap, timeout } from 'rxjs/operators';
 
-import { type IModuleConsoleLogger, ModuleConsoleLogger } from './logger';
+import { type IModuleConsoleLogger, ModuleConsoleLogger } from './logger.js';
 
 import type {
   AnyModule,
@@ -14,10 +14,10 @@ import type {
   ModulesInstance,
   ModulesInstanceType,
   ModuleType,
-} from './types';
+} from './types.js';
 
-import { SemanticVersion } from './lib/semantic-version';
-import { BaseModuleProvider, type IModuleProvider } from './lib/provider';
+import { SemanticVersion } from './lib/semantic-version.js';
+import { BaseModuleProvider, type IModuleProvider } from './lib/provider/index.js';
 
 /**
  * Represents a configurator for modules.

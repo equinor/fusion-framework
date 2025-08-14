@@ -2,6 +2,7 @@
   "name": "@equinor/fusion-framework-module",
   "version": "4.4.3-next.2",
   "description": "",
+  "type": "module",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IModulesConfigurator } from './configurator';
+import type { IModulesConfigurator } from './configurator.js';
 
-import type { AnyModule } from './types';
+import type { AnyModule } from './types.js';
 
 /**
  * Initializes the provided modules using the given configurator.

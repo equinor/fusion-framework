@@ -1,4 +1,4 @@
-import type { AnyModule } from './types';
+import type { AnyModule } from './types.js';
 
 export interface IConsoleLogger {
   level: 0 | 1 | 2 | 3 | 4;
