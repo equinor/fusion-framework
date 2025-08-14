@@ -28,6 +28,16 @@ jobs:
         shell: bash
         run: pnpm build:packages
 
+      - name: Build Application
+        working-directory: ./cookbooks/app-react
+        run: pnpm app:pack
+
+      - name: Upload packed app as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle.zip
+          path: ./cookbooks/app-react/app-bundle.zip
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -49,4 +59,4 @@ jobs:
             
       - name: Upload application bundle
         working-directory: ./cookbooks/app-react
-        run: pnpm publish:app
+        run: pnpm app:publish
