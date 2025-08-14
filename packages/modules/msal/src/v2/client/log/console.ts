@@ -27,7 +27,7 @@ export class ConsoleLogger extends Logger {
   /** @inheritdoc */
   protected loggerCallback(lvl: LogLevel, msg: string, _containsPii?: boolean): void {
     console[this.getLogType(lvl)](
-      `%c FUSION::MSAL %c %s`,
+      '%c FUSION::MSAL %c %s',
       'border: 1px solid;',
       'border: none;',
       msg,

@@ -15,7 +15,9 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["config"],
+  "keywords": [
+    "config"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {

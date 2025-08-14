@@ -317,9 +317,9 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
       try {
         logger.debug(`🏗📌 post configure hooks [${afterConfiguration.length}]`);
         await Promise.allSettled(afterConfiguration.map((x) => Promise.resolve(x(config))));
-        logger.debug(`🏗📌 post configure hooks complete`);
+        logger.debug('🏗📌 post configure hooks complete');
       } catch (err) {
-        logger.warn(`🏗📌 post configure hook failed`, err);
+        logger.warn('🏗📌 post configure hook failed', err);
       }
     }
   }
@@ -407,7 +407,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
               ) {
                 // TODO change to warn in future
                 logger.debug(
-                  `🤷 module does not extends the [BaseModuleProvider] or exposes [SemanticVersion]`,
+                  '🤷 module does not extends the [BaseModuleProvider] or exposes [SemanticVersion]',
                 );
                 try {
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -417,7 +417,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
                       ? module.version
                       : new SemanticVersion(module.version ?? '0.0.0-unknown');
                 } catch (err) {
-                  logger.error(`🚨 failed to set module version`);
+                  logger.error('🚨 failed to set module version');
                 }
               }
               logger.debug(`🚀 initialized ${logger.formatModuleName(module)}`);
@@ -497,9 +497,9 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
       try {
         logger.debug(`🚀📌 post configure hooks [${afterInit.length}]`);
         await Promise.allSettled(afterInit.map((x) => Promise.resolve(x(instance))));
-        logger.debug(`🚀📌 post configure hooks complete`);
+        logger.debug('🚀📌 post configure hooks complete');
       } catch (err) {
-        logger.warn(`🚀📌 post configure hook failed`, err);
+        logger.warn('🚀📌 post configure hook failed', err);
       }
     }
 

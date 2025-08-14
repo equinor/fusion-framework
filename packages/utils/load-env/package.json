@@ -2,7 +2,12 @@
   "name": "@equinor/fusion-load-env",
   "version": "1.0.0",
   "description": "Package loading environment variables from .env files",
-  "keywords": ["env", "typescript", "node", "runtime"],
+  "keywords": [
+    "env",
+    "typescript",
+    "node",
+    "runtime"
+  ],
   "license": "ISC",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -16,7 +21,10 @@
   "directories": {
     "dist": "dist"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "publishConfig": {
     "access": "public"
   },

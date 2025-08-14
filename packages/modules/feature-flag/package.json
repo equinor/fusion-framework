@@ -22,9 +22,15 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "plugins": ["dist/types/plugins/index.d.ts"],
-      "selectors": ["dist/types/utils/selectors.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "plugins": [
+        "dist/types/plugins/index.d.ts"
+      ],
+      "selectors": [
+        "dist/types/utils/selectors.d.ts"
+      ]
     }
   },
   "scripts": {

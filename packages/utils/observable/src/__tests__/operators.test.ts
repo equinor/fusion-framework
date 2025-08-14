@@ -14,7 +14,7 @@ describe('operators', () => {
   });
 
   it('should map an action', (complete) => {
-    const action = { type: `map-action`, payload: 'test-map-action' } as const;
+    const action = { type: 'map-action', payload: 'test-map-action' } as const;
     of(action)
       .pipe(mapAction('map-action', (action) => action.payload))
       .subscribe({
@@ -26,7 +26,7 @@ describe('operators', () => {
   });
 
   it('should async map an action', (complete) => {
-    const action = { type: `map-action`, payload: 'test-map-action' } as const;
+    const action = { type: 'map-action', payload: 'test-map-action' } as const;
     of(action)
       .pipe(switchMapAction('map-action', async (action) => action.payload))
       .subscribe({

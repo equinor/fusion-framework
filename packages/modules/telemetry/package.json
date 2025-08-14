@@ -14,7 +14,12 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["telemetry", "fusion", "microsoft", "utility"],
+  "keywords": [
+    "telemetry",
+    "fusion",
+    "microsoft",
+    "utility"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {

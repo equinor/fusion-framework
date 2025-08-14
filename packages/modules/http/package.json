@@ -28,11 +28,21 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "client": ["dist/types/lib/client/index.d.ts"],
-      "operators": ["dist/types/lib/operators/index.d.ts"],
-      "selectors": ["dist/types/lib/selectors/index.d.ts"],
-      "errors": ["dist/types/errors.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "client": [
+        "dist/types/lib/client/index.d.ts"
+      ],
+      "operators": [
+        "dist/types/lib/operators/index.d.ts"
+      ],
+      "selectors": [
+        "dist/types/lib/selectors/index.d.ts"
+      ],
+      "errors": [
+        "dist/types/errors.d.ts"
+      ]
     }
   },
   "scripts": {

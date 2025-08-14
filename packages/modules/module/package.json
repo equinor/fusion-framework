@@ -16,8 +16,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "provider": ["dist/types/lib/provider/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "provider": [
+        "dist/types/lib/provider/index.d.ts"
+      ]
     }
   },
   "scripts": {

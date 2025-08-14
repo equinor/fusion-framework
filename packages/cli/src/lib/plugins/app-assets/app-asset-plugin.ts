@@ -39,11 +39,7 @@ const defaultInclude = createExtensionFilterPattern(ASSET_EXTENSIONS);
  * ```
  */
 export const AppAssetExportPlugin = (
-  options: {
-    name?: string;
-    include?: FilterPattern;
-    exclude?: FilterPattern;
-  } = {},
+  options: { name?: string; include?: FilterPattern; exclude?: FilterPattern } = {},
 ): Plugin => {
   const { name, include = defaultInclude, exclude } = options;
 

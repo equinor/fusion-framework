@@ -18,7 +18,13 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["msal", "msal-node", "node", "auth", "authentication"],
+  "keywords": [
+    "msal",
+    "msal-node",
+    "node",
+    "auth",
+    "authentication"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {

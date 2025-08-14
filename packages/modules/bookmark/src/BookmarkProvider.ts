@@ -401,14 +401,14 @@ export class BookmarkProvider implements IBookmarkProvider {
   public generatePayload<T extends BookmarkData>(
     initial?: Partial<T> | null,
   ): Observable<T | null | undefined> {
-    this._log?.debug(`generating payload`, initial);
+    this._log?.debug('generating payload', initial);
 
     /**
      * Observable that emits the generated payload.
      */
     const result$ = from(this.#payloadGenerators).pipe(
       mergeScan((acc, generator) => this._producePayload(acc, generator), initial ?? {}, 1),
-      tap((payload) => this._log?.debug(`generated payload`, { initial, payload })),
+      tap((payload) => this._log?.debug('generated payload', { initial, payload })),
     ) as Observable<T | null | undefined>;
 
     return result$;
@@ -511,7 +511,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    */
   public getAllBookmarks(): Observable<Bookmarks> {
     return new Observable<Bookmarks>((observer) => {
-      this._log?.debug(`fetching all bookmarks`);
+      this._log?.debug('fetching all bookmarks');
 
       // generate the filter parameters
       const filter$ = forkJoin({
@@ -560,7 +560,7 @@ export class BookmarkProvider implements IBookmarkProvider {
         filter(bookmarkActions.fetchBookmarks.success.match),
         map((a) => a.payload),
         tap((bookmarks) => {
-          this._log?.debug(`fetched all bookmarks`, bookmarks);
+          this._log?.debug('fetched all bookmarks', bookmarks);
         }),
         raceWith(failure$),
         first(),

@@ -1,7 +1,11 @@
 {
   "name": "@equinor/fusion-framework-cli",
   "version": "10.7.5",
-  "keywords": ["Fusion", "Fusion Framework", "CLI"],
+  "keywords": [
+    "Fusion",
+    "Fusion Framework",
+    "CLI"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -33,10 +37,18 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/lib/index.d.ts"],
-      "plugin-app-assets": ["dist/types/bin/plugins/app-assets/index.d.ts"],
-      "plugin-app-proxy": ["dist/types/lib/plugins/app-proxy/index.d.ts"],
-      "plugin-external-public": ["dist/types/lib/plugins/external-public/index.d.ts"]
+      ".": [
+        "dist/types/lib/index.d.ts"
+      ],
+      "plugin-app-assets": [
+        "dist/types/bin/plugins/app-assets/index.d.ts"
+      ],
+      "plugin-app-proxy": [
+        "dist/types/lib/plugins/app-proxy/index.d.ts"
+      ],
+      "plugin-external-public": [
+        "dist/types/lib/plugins/external-public/index.d.ts"
+      ]
     }
   },
   "scripts": {

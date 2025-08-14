@@ -8,7 +8,7 @@ import { fileExists } from './file-exists.js';
 
 export const transpile = async (file: string) => {
   const pkg = await readPackageUp();
-  assert(pkg, `failed to resolve bundle package`);
+  assert(pkg, 'failed to resolve bundle package');
 
   const pkgRoot = dirname(pkg.path);
 

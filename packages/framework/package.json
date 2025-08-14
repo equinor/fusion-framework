@@ -14,7 +14,11 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["fusion", "fusion-framework", "utility"],
+  "keywords": [
+    "fusion",
+    "fusion-framework",
+    "utility"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",
