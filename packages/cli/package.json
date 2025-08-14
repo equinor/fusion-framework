@@ -103,6 +103,7 @@
   "dependencies": {
     "@equinor/fusion-framework-dev-portal": "workspace:^",
     "@equinor/fusion-framework-dev-server": "workspace:^",
+    "@equinor/fusion-framework-module-msal-node": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
     "commander": "^13.0.0",
     "deepmerge": "^4.3.1",
@@ -115,7 +116,6 @@
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
-    "@equinor/fusion-framework-module-msal-node": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-json": "^6.1.0",
@@ -136,9 +136,6 @@
   },
   "peerDependenciesMeta": {
     "typescript": {
-      "optional": true
-    },
-    "keytar": {
       "optional": true
     }
   }

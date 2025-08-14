@@ -630,6 +630,9 @@ importers:
       '@equinor/fusion-framework-dev-server':
         specifier: workspace:^
         version: link:../dev-server
+      '@equinor/fusion-framework-module-msal-node':
+        specifier: workspace:^
+        version: link:../modules/msal-node
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../utils/imports
@@ -661,9 +664,6 @@ importers:
       '@equinor/fusion-framework-module-http':
         specifier: workspace:^
         version: link:../modules/http
-      '@equinor/fusion-framework-module-msal-node':
-        specifier: workspace:^
-        version: link:../modules/msal-node
       '@equinor/fusion-framework-module-service-discovery':
         specifier: workspace:^
         version: link:../modules/service-discovery
