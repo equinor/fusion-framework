@@ -1,4 +1,6 @@
+# Required permissions for OIDC/Azure login
 permissions:
+  id-token: write
   contents: read
 
 name: App Test
