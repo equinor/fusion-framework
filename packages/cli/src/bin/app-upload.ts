@@ -61,6 +61,12 @@ export const uploadApplication = async (
         process.exit(1);
       });
 
+  log?.info('📦', `Uploading application bundle for ${chalk.bold(name)}`);
+  log?.debug(
+    'Bundle contents:',
+    (await bundle.getEntries()).map((entry) => entry.entryName),
+  );
+
   // Read the bundle content as a buffer
   const content = await bundle.toBufferPromise().catch((error) => {
     log?.error('Failed to read bundle content:', error);
