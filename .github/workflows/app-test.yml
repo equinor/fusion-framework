@@ -4,8 +4,8 @@ name: App Test
 
 on:
   pull_request:
-    types: 
-      - ready_for_review
+    branches:
+      - next
   release:
     types:
       - published
