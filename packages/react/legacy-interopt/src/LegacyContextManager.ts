@@ -22,7 +22,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
     history: History;
     featureLogger: FeatureLogger;
   }) {
-    super(new LocalStorageProvider(`FUSION_CURRENT_CONTEXT`, new EventHub()));
+    super(new LocalStorageProvider('FUSION_CURRENT_CONTEXT', new EventHub()));
 
     this.#framework = args.framework;
 

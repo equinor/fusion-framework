@@ -259,7 +259,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
       // If no specific transaction is provided, iterate through all transactions
       // in the state and cancel each one, applying a generic cancellation reason.
       for (const key of Object.keys(this.#state.value)) {
-        this.cancel(key, `all transactions requested canceled`);
+        this.cancel(key, 'all transactions requested canceled');
       }
     } else if (this.#state.value[transaction]) {
       // If a specific transaction is provided and it exists in the state,
@@ -269,7 +269,7 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
     } else {
       // If a specific transaction is provided but it does not exist in the state,
       // log a warning indicating that there is nothing to cancel.
-      this.#logger.warn(`Task not registered, nothing to cancel`, {
+      this.#logger.warn('Task not registered, nothing to cancel', {
         transaction,
         reason,
       });

@@ -41,9 +41,7 @@ export class AuthProvider implements IAuthProvider {
    * @returns A promise that resolves to the acquired access token as a string.
    * @throws An error if the token acquisition process fails.
    */
-  public async acquireAccessToken(options: {
-    scopes: string[];
-  }): Promise<string> {
+  public async acquireAccessToken(options: { scopes: string[] }): Promise<string> {
     const { accessToken } = await this.acquireToken(options);
     return accessToken;
   }
@@ -96,9 +94,7 @@ export class AuthProvider implements IAuthProvider {
    * @throws {@link NoAccountsError} If no accounts are found in the cache and interactive login is not allowed.
    * @throws {@link SilentTokenAcquisitionError} If an error occurs during silent token acquisition.
    */
-  public async acquireToken(options: {
-    scopes: string[];
-  }): Promise<AuthenticationResult> {
+  public async acquireToken(options: { scopes: string[] }): Promise<AuthenticationResult> {
     const account = await this.getAccount();
     if (!account) {
       throw new NoAccountsError('No accounts found in cache');
