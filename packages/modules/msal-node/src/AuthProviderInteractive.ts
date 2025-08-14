@@ -105,9 +105,7 @@ export class AuthProviderInteractive extends AuthProvider {
    * @throws {@link NoAccountsError} If no accounts are found in the cache and interactive login is not allowed.
    * @throws {@link SilentTokenAcquisitionError} If an error occurs during silent token acquisition.
    */
-  public async acquireToken(options: {
-    scopes: string[];
-  }): Promise<AuthenticationResult> {
+  public async acquireToken(options: { scopes: string[] }): Promise<AuthenticationResult> {
     const { scopes } = options ?? { scopes: [] };
     if ((await this.getAccount()) === null) {
       return this.login({ scopes });

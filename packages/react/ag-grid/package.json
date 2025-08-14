@@ -26,17 +26,28 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "community": ["dist/types/community.d.ts"],
-      "enterprise": ["dist/types/enterprise.d.ts"],
-      "themes": ["dist/types/themes.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "community": [
+        "dist/types/community.d.ts"
+      ],
+      "enterprise": [
+        "dist/types/enterprise.d.ts"
+      ],
+      "themes": [
+        "dist/types/themes.d.ts"
+      ]
     }
   },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["ag-grid", "table"],
+  "keywords": [
+    "ag-grid",
+    "table"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {

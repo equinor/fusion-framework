@@ -98,7 +98,7 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
           } satisfies QueryTaskCompleted<TType>;
         }),
         finalize(() => {
-          logger?.debug(`QueryTask complete`, {
+          logger?.debug('QueryTask complete', {
             uuid: this.uuid,
             key: this.key,
             job: { status: job.status, transaction: job.transaction },

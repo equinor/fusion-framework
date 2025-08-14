@@ -36,7 +36,7 @@ export const getEndpointUrl = async (
     );
 
     if (requestService.status === 401) {
-      throw new Error(`The provided FUSION_TOKEN is not valid. Refresh your token and try again.`);
+      throw new Error('The provided FUSION_TOKEN is not valid. Refresh your token and try again.');
     }
 
     if (!requestService.ok) {

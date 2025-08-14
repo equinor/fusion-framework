@@ -27,11 +27,21 @@
   "types": "dist/types/index.d.ts",
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "errors.js": ["dist/types/errors.d.ts"],
-      "schemas.js": ["dist/types/schemas.d.ts"],
-      "app": ["dist/types/app/index.d.ts"],
-      "app/*.js": ["dist/types/app/*.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "errors.js": [
+        "dist/types/errors.d.ts"
+      ],
+      "schemas.js": [
+        "dist/types/schemas.d.ts"
+      ],
+      "app": [
+        "dist/types/app/index.d.ts"
+      ],
+      "app/*.js": [
+        "dist/types/app/*.d.ts"
+      ]
     }
   },
   "scripts": {

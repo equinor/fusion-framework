@@ -2,7 +2,12 @@
   "name": "@equinor/fusion-observable",
   "version": "8.5.1",
   "description": "WIP",
-  "keywords": ["observable", "react", "fusion", "equinor"],
+  "keywords": [
+    "observable",
+    "react",
+    "fusion",
+    "equinor"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "license": "ISC",
   "main": "dist/esm/index.js",
@@ -27,15 +32,23 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "operators": ["dist/types/operators/index.d.ts"],
-      "react": ["dist/types/react/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "operators": [
+        "dist/types/operators/index.d.ts"
+      ],
+      "react": [
+        "dist/types/react/index.d.ts"
+      ]
     }
   },
   "directories": {
     "dist": "dist"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
