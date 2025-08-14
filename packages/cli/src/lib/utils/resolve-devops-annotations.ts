@@ -1,10 +1,36 @@
 /**
+ * Represents metadata annotations related to a DevOps pipeline run.
+ *
+ * @property runId - The unique identifier for the pipeline run.
+ * @property pipelineName - The name of the pipeline.
+ * @property repository - The name or URL of the source code repository.
+ * @property project - The name of the project within the DevOps organization.
+ * @property orgUrl - The URL of the DevOps organization.
+ * @property actor - The user or service that triggered the pipeline run.
+ * @property branch - The branch name associated with the pipeline run.
+ * @property commitId - The commit SHA or identifier for the pipeline run.
+ * @property runUrl - The URL to view the pipeline run details.
+ */
+export interface DevopsAnnotations {
+  runId: string;
+  pipelineName: string;
+  repository: string;
+  project: string;
+  orgUrl: string;
+  actor: string;
+  branch: string;
+  commitId: string;
+  runUrl: string;
+  reason: string;
+}
+
+/**
  * Resolves Azure DevOps-specific annotation variables from environment variables.
  *
  * This function extracts relevant build and repository information from Azure DevOps environment variables.
  * It constructs a set of annotation variables that can be used for reporting or logging purposes in CI/CD pipelines.
  *
- * @returns {Record<string, string>} An object containing Azure DevOps annotation variables such as runId, repository,
+ * @returns {DevopsAnnotations} An object containing Azure DevOps annotation variables such as runId, repository,
  * project, orgUrl, actor, branch, commitId, and runUrl. If a variable is not found, its value defaults to 'unknown'.
  *
  * Environment variables used by this function (see: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-pipelines&tabs=yaml):
@@ -26,15 +52,17 @@
  *   - To add more annotations, extract additional environment variables as needed and include them in the returned object.
  *   - For custom pipelines or self-hosted agents, verify that all required environment variables are available.
  */
-export const resolveDevopsAnnotations = (): Record<string, string> => {
+export const resolveDevopsAnnotations = (): DevopsAnnotations => {
   // Extract Azure DevOps build and repository information from environment variables
   const runId = process.env.BUILD_BUILDID || 'unknown'; // Unique build/run identifier
+  const pipelineName = process.env.BUILD_DEFINITIONNAME || 'unknown';
   const repository = process.env.BUILD_REPOSITORY_NAME || 'unknown'; // Repository name
   const project = process.env.SYSTEM_TEAMPROJECT || 'unknown'; // Project name
   const orgUrl = process.env.SYSTEM_COLLECTIONURI || 'unknown'; // Organization URL
   const actor = process.env.BUILD_REQUESTEDFOR || 'unknown'; // User who requested the build
   const branch = process.env.BUILD_SOURCEBRANCH || 'unknown'; // Source branch name
   const commitId = process.env.BUILD_SOURCEVERSION || 'unknown'; // Commit SHA
+  const reason = process.env.BUILD_REASON || 'unknown'; // Reason for the build
 
   // Construct a direct URL to the build results if all required parts are available
   let runUrl = 'unknown';
@@ -44,8 +72,9 @@ export const resolveDevopsAnnotations = (): Record<string, string> => {
   }
 
   // Aggregate all annotation variables into a single object for easy consumption
-  const annotations: Record<string, string> = {
+  const annotations: DevopsAnnotations = {
     runId,
+    pipelineName,
     repository,
     project,
     orgUrl,
@@ -53,6 +82,7 @@ export const resolveDevopsAnnotations = (): Record<string, string> => {
     branch,
     commitId,
     runUrl,
+    reason,
   };
 
   // Return the resolved annotation variables

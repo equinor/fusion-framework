@@ -1,9 +1,6 @@
 import { readFileSync } from 'node:fs';
 
-/**
- * Interface for the expected structure of the GitHub Actions event payload.
- */
-export interface GithubEventPayload {
+type GithubEventPayload = {
   pull_request?: {
     number?: number;
     title?: string;
@@ -28,7 +25,74 @@ export interface GithubEventPayload {
   };
   workflow?: string;
   action?: string;
-}
+};
+
+/**
+ * Represents metadata and contextual information related to GitHub Actions workflows,
+ * pull requests, commits, releases, and associated actors.
+ *
+ * @property pull_request - Information about the pull request associated with the workflow run.
+ * @property pull_request.number - The pull request number.
+ * @property pull_request.title - The title of the pull request.
+ * @property pull_request.user - The user who created the pull request.
+ * @property pull_request.user.login - The login name of the pull request creator.
+ * @property pull_request.head - The head commit information of the pull request.
+ * @property pull_request.head.sha - The SHA of the head commit.
+ * @property pull_request.head.ref - The reference name of the head commit.
+ * @property pull_request.created_at - The creation timestamp of the pull request.
+ * @property pull_request.updated_at - The last update timestamp of the pull request.
+ * @property pull_request.html_url - The URL to view the pull request on GitHub.
+ * @property actor - The GitHub username of the actor who triggered the workflow.
+ * @property runId - The unique identifier of the workflow run.
+ * @property runUrl - The URL to view the workflow run on GitHub.
+ * @property repository - The full name of the repository (e.g., "owner/repo").
+ * @property after - The SHA of the commit after the workflow run.
+ * @property head_commit - Information about the head commit.
+ * @property head_commit.id - The SHA of the head commit.
+ * @property ref - The Git reference (e.g., "refs/heads/main").
+ * @property release - Information about the release associated with the workflow run.
+ * @property release.tag_name - The tag name of the release.
+ * @property release.name - The name of the release.
+ * @property release.body - The body or description of the release.
+ * @property release.draft - Indicates if the release is a draft.
+ * @property release.prerelease - Indicates if the release is a prerelease.
+ * @property release.created_at - The creation timestamp of the release.
+ * @property release.published_at - The publication timestamp of the release.
+ * @property release.html_url - The URL to view the release on GitHub.
+ * @property workflow - The name of the workflow.
+ * @property action - The name of the action being executed.
+ */
+export type GithubAnnotations = {
+  pull_request?: {
+    number?: number;
+    title?: string;
+    user?: { login?: string };
+    head?: { sha?: string; ref?: string };
+    created_at?: string;
+    updated_at?: string;
+    html_url?: string;
+  };
+  eventName: string;
+  actor?: string;
+  runId?: string;
+  runUrl?: string;
+  repository?: string;
+  after?: string;
+  head_commit?: string;
+  ref?: string;
+  release?: {
+    tag_name?: string;
+    name?: string;
+    body?: string;
+    draft?: boolean;
+    prerelease?: boolean;
+    created_at?: string;
+    published_at?: string;
+    html_url?: string;
+  };
+  workflow?: string;
+  action?: string;
+};
 
 /**
  * Extracts relevant annotation fields from the GitHub Actions event payload.
@@ -118,7 +182,7 @@ function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, 
  *   - To add more annotations, extract additional environment variables as needed and include them in the returned object.
  *   - For custom workflows or self-hosted runners, verify that all required environment variables are available.
  */
-export const resolveGithubAnnotations = (): Record<string, string> => {
+export const resolveGithubAnnotations = (): GithubAnnotations => {
   // Extract event name from environment
   const eventName = process.env.GITHUB_EVENT_NAME || 'unknown';
   // Extract actor (user who triggered the workflow)
@@ -146,7 +210,7 @@ export const resolveGithubAnnotations = (): Record<string, string> => {
     runUrl = `${serverUrl.replace(/\/$/, '')}/${repository}/actions/runs/${runId}`;
   }
   // Aggregate all annotation variables into a single object for easy consumption
-  const annotations: Record<string, string> = {
+  const annotations: GithubAnnotations = {
     eventName,
     actor,
     runId,
