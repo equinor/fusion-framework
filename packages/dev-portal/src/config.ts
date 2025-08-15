@@ -1,6 +1,6 @@
 import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import type { FrameworkConfigurator } from '@equinor/fusion-framework';
+import type { FrameworkConfigurator, Fusion } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
@@ -22,8 +22,6 @@ export const configure = async (config: FrameworkConfigurator) => {
       identifier: 'fusion-cli',
       name: 'Fusion CLI',
     });
-    // builder.setFilter('application', true);
-    // builder.setLogLevel(4);
   });
 
   /* Adds demo portal features to cli */
@@ -50,10 +48,8 @@ export const configure = async (config: FrameworkConfigurator) => {
   });
 
   config.onInitialized(async (modules) => {
-    // fusion.auth.defaultClient.setLogger(new ConsoleLogger(0));
     console.debug('📒 subscribing to all events');
-    // @ts-ignore
-    window.Fusion = { modules };
+    window.Fusion = { modules } as Fusion; // expose Fusion instance
   });
 };
 
