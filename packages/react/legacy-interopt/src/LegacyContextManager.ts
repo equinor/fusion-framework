@@ -30,10 +30,12 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
 
     context.currentContext$
       .pipe(
-        tap((x) => args.featureLogger.setCurrentContext(x?.id ?? null, x?.title ?? null)),
+        tap((x: ContextItem | null | undefined) =>
+          args.featureLogger.setCurrentContext(x?.id ?? null, x?.title ?? null),
+        ),
         filter((x): x is ContextItem => !!x),
         scan(
-          (acc, value) => {
+          (acc: ContextItem[], value: ContextItem) => {
             if (!acc.find((x) => x.id === value.id)) {
               return [value, ...acc].slice(0, 9);
             }
@@ -42,7 +44,7 @@ export class LegacyContextManager extends ReliableDictionary<ContextCache> {
           [] as Array<ContextItem>,
         ),
       )
-      .subscribe((values) => {
+      .subscribe((values: ContextItem[]) => {
         const currentContext = values.shift();
 
         this.setAsync('history', values);

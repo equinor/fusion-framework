@@ -18,7 +18,7 @@ type UpdateSettingsFunction<T, O = T> = (currentSettings: T | undefined) => O;
  * @param {TSettings} [defaultValue] - The default value for the settings.
  * @param hooks - Optional hooks to handle the status changes and errors.
  *
- * @note
+ * @remarks
  * `defaultValue` will only be used on the first render.
  * `hooks`must be memoized to avoid unnecessary re-renders.
  *

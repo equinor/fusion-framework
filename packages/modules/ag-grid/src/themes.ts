@@ -13,7 +13,7 @@ export const fusionTheme: Theme = themeAlpine.withParams({
 /**
  * Creates a new theme based on an existing theme.
  *
- * @note
+ * @remarks
  * Cloning a theme is necessary to create a local instance of the theme,
  * as AG Grid performs internal `instanceof` checks on the theme object and its parts.
  *

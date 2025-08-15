@@ -4,6 +4,7 @@ import { useFramework } from '@equinor/fusion-framework-react';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 
 import type { ApploaderProps } from './Apploader';
+import type { AppInitializeResult } from '@equinor/fusion-framework-module-app/app';
 
 /**
  * React hook for dynamically loading and mounting a Fusion child app inside a parent Fusion app.
@@ -60,7 +61,8 @@ export const useApploader = ({
     setLoading(true);
     setError(undefined);
     const subscription$ = loadedApp?.initialize().subscribe({
-      next: ({ manifest, script, config }) => {
+      next: (instance: AppInitializeResult) => {
+        const { manifest, script, config } = instance;
         /* Application Element for mounting */
         appRef.current = document.createElement('div');
         appRef.current.id = manifest.appKey;

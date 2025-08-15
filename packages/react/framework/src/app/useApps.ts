@@ -35,7 +35,7 @@ export const useApps = (
     ),
   );
 
-  return { apps, isLoading: !complete, error };
+  return { apps: apps as AppManifest[] | undefined, isLoading: !complete, error };
 };
 
 export default useApps;

@@ -31,7 +31,7 @@ export const requestValidationOperator =
      * not defined in the schema will cause the validation to fail. If set to false or omitted,
      * additional properties will be allowed and passed through without causing validation errors.
      *
-     * @note this option is only applicable when the `parse` option is enabled.
+     * @remarks this option is only applicable when the `parse` option is enabled.
      */
     strict?: boolean;
   }): ProcessOperator<T> =>

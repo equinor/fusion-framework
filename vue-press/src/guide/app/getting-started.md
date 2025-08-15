@@ -96,7 +96,7 @@ export default configure;
 @tab app.config.ts
 
 ```ts
-import { defineAppConfig } from '@equinor/fusion-framework-cli';
+import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
 export default defineAppConfig((_nev, { base }) =>
     return {
         environment: {

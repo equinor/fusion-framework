@@ -1,5 +1,5 @@
 import type { IModuleConfigurator, IModulesConfigurator } from '@equinor/fusion-framework-module';
-import { module, type MsalNodeModule } from './module';
+import { module, type MsalNodeModule } from './module.js';
 
 /**
  * Enables the MSAL Node module by registering its configuration with the provided modules configurator.

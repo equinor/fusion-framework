@@ -1,5 +1,16 @@
 /**
- * Represents an error that occurs during a search in the Fusion Context.
+ * Represents an error that occurs during a Fusion context search operation.
+ *
+ * This error provides a title and an optional description to give more context
+ * about the failure. It extends the built-in `Error` class and sets the error
+ * name to `'FusionContextSearchError'`.
+ *
+ * @example
+ * ```typescript
+ * throw new FusionContextSearchError({ title: 'Search failed', description: 'No results found.' });
+ * ```
+ *
+ * @public
  */
 export class FusionContextSearchError extends Error {
   #details;

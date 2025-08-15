@@ -21,11 +21,36 @@ export type ContextConfigBuilderCallback = <TDeps extends Array<AnyModule> = []>
   builder: ContextConfigBuilder<TDeps, ModuleInitializerArgs<IContextModuleConfigurator, TDeps>>,
 ) => void | Promise<void>;
 
-// TODO - this should extend the BaseConfigBuilder
-
+/**
+ * A builder class for configuring and customizing context module behavior within the Fusion Framework.
+ *
+ * `ContextConfigBuilder` provides a fluent API for setting up various aspects of context management,
+ * including context type, filtering, parent context connection, parameter resolution, validation,
+ * path extraction/generation, and client configuration for fetching context items.
+ *
+ * @typeParam TModules - An array of modules that extend `AnyModule`. Defaults to an empty array.
+ * @typeParam TInit - The initializer arguments for the module, extending `ModuleInitializerArgs`.
+ *
+ * @example
+ * ```typescript
+ * const builder = new ContextConfigBuilder(init);
+ * builder.setContextType(['ProjectMaster']);
+ * builder.setContextFilter(items => items.filter(ctx => ctx.isActive));
+ * builder.setContextClient({ get: fetchContextItem, query: fetchContextItems });
+ * ```
+ *
+ * @remarks
+ * - Use the provided setter methods to customize context behavior as needed.
+ * - The builder pattern allows chaining configuration methods for clarity and convenience.
+ * - The `requireInstance` method enables asynchronous retrieval of module instances by name.
+ *
+ * @todo - this should extend the BaseConfigBuilder
+ *
+ * @see ContextModuleConfig
+ * @see ModuleInitializerArgs
+ */
 export class ContextConfigBuilder<
   TModules extends Array<AnyModule> = [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TInit extends ModuleInitializerArgs<any, any> = ModuleInitializerArgs<
     ContextModuleConfigurator,
     TModules
@@ -45,31 +70,60 @@ export class ContextConfigBuilder<
 
   requireInstance<T>(module: string): Promise<T>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requireInstance(module: string): Promise<any> {
     return this.#init.requireInstance(module);
   }
 
+  /**
+   * Sets the context type for the current configuration.
+   *
+   * @param type - The context type to assign, as defined by `ContextModuleConfig['contextType']`.
+   */
   setContextType(type: ContextModuleConfig['contextType']) {
     this.config.contextType = type;
   }
 
+  /**
+   * Sets the context filter function for the configuration.
+   *
+   * @param filter - A function that determines whether a context should be included, as defined by `ContextModuleConfig['contextFilter']`.
+   */
   setContextFilter(filter: ContextModuleConfig['contextFilter']) {
     this.config.contextFilter = filter;
   }
 
+  /**
+   * Sets the function or configuration used to connect to a parent context.
+   *
+   * @param connect - The function or configuration that defines how to connect to the parent context.
+   */
   connectParentContext(connect: ContextModuleConfig['connectParentContext']) {
     this.config.connectParentContext = connect;
   }
 
+  /**
+   * Sets the function used to provide context parameters for the module configuration.
+   *
+   * @param fn - A function conforming to the `contextParameterFn` type defined in `ContextModuleConfig`.
+   */
   setContextParameterFn(fn: ContextModuleConfig['contextParameterFn']) {
     this.config.contextParameterFn = fn;
   }
 
+  /**
+   * Sets the function used to validate the context within the configuration.
+   *
+   * @param fn - A function that implements the `validateContext` signature from `ContextModuleConfig`.
+   */
   setValidateContext(fn: ContextModuleConfig['validateContext']) {
     this.config.validateContext = fn;
   }
 
+  /**
+   * Sets the function used to resolve the context for the module configuration.
+   *
+   * @param fn - A function that defines how the context should be resolved, conforming to the `resolveContext` type from `ContextModuleConfig`.
+   */
   setResolveContext(fn: ContextModuleConfig['resolveContext']) {
     this.config.resolveContext = fn;
   }
@@ -97,6 +151,18 @@ export class ContextConfigBuilder<
     this.config.resolveInitialContext = fn;
   }
 
+  /**
+   * Sets the context client configuration for fetching context items.
+   *
+   * This method allows you to provide custom query functions or query constructor options
+   * for retrieving single context items (`get`), querying multiple context items (`query`),
+   * and optionally fetching related context items (`related`). Each query can be provided
+   * as either a function or a configuration object. The expiration time for cached results
+   * can also be specified.
+   *
+   * @param client - An object containing the query functions or options for `get`, `query`, and optionally `related` context items.
+   * @param expire - Optional. The expiration time (in milliseconds) for cached query results. Defaults to 1 minute.
+   */
   setContextClient(
     client: {
       get:

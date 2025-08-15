@@ -21,6 +21,6 @@ export {
   FrameworkConfigurator as FusionConfigurator,
 } from './FrameworkConfigurator';
 
-export * from './types';
+export type { FusionModules, FusionModulesInstance, Fusion, FusionRenderFn } from './types';
 
 export { default, init } from './init';

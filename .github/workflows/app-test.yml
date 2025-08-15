@@ -1,0 +1,62 @@
+# Required permissions for OIDC/Azure login
+permissions:
+  id-token: write
+  contents: read
+
+name: App Test
+
+on:
+  # pull_request:
+  #   branches:
+  #     - main
+  release:
+    types:
+      - published
+
+jobs:
+  publish_application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node and install deps
+        uses: ./.github/workflows/actions/node-setup
+        with:
+          turbo-cache: true
+          
+      - name: Build project [all]
+        shell: bash
+        run: pnpm build:packages
+
+      - name: Build Application
+        working-directory: ./cookbooks/app-react
+        run: pnpm app:pack
+
+      - name: Upload packed app as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle.zip
+          path: ./cookbooks/app-react/app-bundle.zip
+
+      # - name: Azure login
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ddac50d6-82dc-497c-a2f5-0241909fa293
+      #     tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+      #     allow-no-subscriptions: true
+
+      # - name: Azure CLI
+      #   uses: azure/cli@v2
+      #   with:
+      #     azcliversion: latest
+      #     inlineScript: >
+      #       echo "FUSION_TOKEN=$(
+      #       az account get-access-token
+      #       --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default
+      #       --query accessToken
+      #       --output tsv
+      #       )" >> $GITHUB_ENV
+            
+      # - name: Upload application bundle
+      #   working-directory: ./cookbooks/app-react
+      #   run: pnpm app:publish

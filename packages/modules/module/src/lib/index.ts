@@ -1,2 +1,2 @@
-export { IModuleProvider } from './provider';
-export { SemanticVersion } from './semantic-version';
+export type { IModuleProvider } from './provider/IModuleProvider.js';
+export { SemanticVersion } from './semantic-version.js';

@@ -10,7 +10,7 @@ import type { IAppConfigurator } from './AppConfigurator';
  * This function will add the portals bookmark provider to the applications modules.
  * When adding a payload generator to the bookmark provider, we will intercept the teardown function and add it to a cleanup set.
  *
- * @note
+ * @remarks
  * The cleanup function will be called when the module is disposed.
  * There are no guarantees that the dispose function will be called, incase of weird behavior.
  */
@@ -47,7 +47,7 @@ export const enableBookmark = (config: IAppConfigurator): void => {
             /**
              * If the property is not addPayloadGenerator, we want to access the property on the provider
              *
-             * @note we can not use the Reflect API to access the property, as the provider is a proxy
+             * @remarks we can not use the Reflect API to access the property, as the provider is a proxy
              * and the Reflect API will not work as expected (can not access private properties)
              */
             if (prop in target) {

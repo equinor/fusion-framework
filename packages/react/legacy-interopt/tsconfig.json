@@ -4,8 +4,6 @@
     "outDir": "dist/esm",
     "rootDir": "src",
     "declarationDir": "./dist/types",
-
-    "skipLibCheck": true,
     "paths": {
       "react": ["./node_modules/@types/react"]
     }

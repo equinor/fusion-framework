@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-log",
-  "version": "1.1.4",
+  "version": "1.1.5-next.0",
   "description": "Log utils for Fusion front-end development",
   "keywords": ["equinor", "fusion", "log", "console", "util"],
   "homepage": "https://github.com/equinor/fusion-framework/tree/master/packages/utils/log/#readme",
@@ -14,10 +14,7 @@
     }
   },
   "types": "dist/types/index.d.ts",
-  "directories": {
-    "dist": "dist"
-  },
-  "files": ["dist"],
+  "files": ["dist", "src"],
   "publishConfig": {
     "access": "public"
   },
@@ -40,7 +37,6 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.14",
     "typescript": "^5.8.2",
     "vitest": "^2.0.5"
   },

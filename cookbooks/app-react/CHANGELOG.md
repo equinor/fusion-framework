@@ -1,5 +1,25 @@
 # Change Log
 
+## 4.1.7-next.2
+
+### Patch Changes
+
+- [#3137](https://github.com/equinor/fusion-framework/pull/3137) [`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461) Thanks [@odinr](https://github.com/odinr)! - updates from main
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+## 4.1.7-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`7f852bd`](https://github.com/equinor/fusion-framework/commit/7f852bd2f91b980b5bf76f54943b99fa4615f41e) Thanks [@odinr](https://github.com/odinr)! - update import path for defineAppConfig in app.config.ts files
+
+## 4.1.7-next.0
+
+### Patch Changes
+
+- [#3074](https://github.com/equinor/fusion-framework/pull/3074) [`6b034e5`](https://github.com/equinor/fusion-framework/commit/6b034e5459094cea0c0f2490335eef3092390a13) Thanks [@odinr](https://github.com/odinr)! - fixed package.json main to point to dist
+
 ## 4.1.6
 
 ### Patch Changes

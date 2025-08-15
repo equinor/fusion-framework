@@ -248,6 +248,12 @@ export interface IApp<
 
 const fallbackSettings: AppSettings = {};
 
+export type AppInitializeResult = {
+  manifest: AppManifest;
+  script: AppScriptModule;
+  config: AppConfig;
+};
+
 // TODO make streams distinct until changed from state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class App<
@@ -542,11 +548,7 @@ export class App<
     });
   }
 
-  public initialize(): Observable<{
-    manifest: AppManifest;
-    script: AppScriptModule;
-    config: AppConfig;
-  }> {
+  public initialize(): Observable<AppInitializeResult> {
     return new Observable((subscriber) => {
       // dispatch initialize action to indicate that the application is initializing
       this.#state.next(actions.initialize());

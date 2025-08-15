@@ -14,6 +14,7 @@ export interface INavigator<T extends NavigationUpdate = NavigationUpdate>
   readonly value: NavigationUpdate;
   readonly location: NavigationUpdate['location'];
   dispose: VoidFunction;
+  listen(listener: NavigationListener): VoidFunction;
 }
 
 /**

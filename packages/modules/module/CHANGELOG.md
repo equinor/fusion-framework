@@ -1,5 +1,25 @@
 # Change Log
 
+## 4.4.3-next.2
+
+### Patch Changes
+
+- [#3137](https://github.com/equinor/fusion-framework/pull/3137) [`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461) Thanks [@odinr](https://github.com/odinr)! - updates from main
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
+
+## 4.4.3-next.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f) Thanks [@odinr](https://github.com/odinr)! - Expose `satisfies` method on `SemanticVersion` class to allow version range checks directly on instances. This change extends the `SemVer` class and adds a `satisfies` method for convenience and improved API usability.
+
+## 4.4.3-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6) Thanks [@odinr](https://github.com/odinr)! - Fix: Update `SemanticVersion` to use the default import from `semver` for compatibility and correct type usage.
+
 ## 4.4.2
 
 ### Patch Changes

@@ -14,6 +14,16 @@ export type ContextModuleKey = 'context';
 
 export const moduleKey: ContextModuleKey = 'context';
 
+/**
+ * Represents a module for managing context within the framework.
+ *
+ * @typeParam ContextModuleKey - The unique key identifying the context module.
+ * @typeParam IContextProvider - The provider interface for context-related services.
+ * @typeParam IContextModuleConfigurator - The configurator interface for customizing the context module.
+ * @typeParam [ServicesModule, EventModule, NavigationModule] - The tuple of dependent modules required by the context module.
+ *
+ * @see Module
+ */
 export type ContextModule = Module<
   ContextModuleKey,
   IContextProvider,
@@ -21,6 +31,27 @@ export type ContextModule = Module<
   [ServicesModule, EventModule, NavigationModule]
 >;
 
+/**
+ * The `module` object implements the `ContextModule` interface and provides the configuration,
+ * initialization, and lifecycle management for the context module within the Fusion Framework.
+ *
+ * @remarks
+ * - The `configure` method returns a new `ContextModuleConfigurator` for module configuration.
+ * - The `initialize` method asynchronously creates a `ContextProvider` using the provided configuration,
+ *   optional event module, and optional parent context provider. It also sets up resource disposal and
+ *   post-initialization logic.
+ * - The `postInitialize` function (attached during initialization) resolves the initial context if available,
+ *   sets it as the current context, and connects to the parent context provider if configured to do so.
+ * - The `dispose` function ensures proper cleanup by unsubscribing from the provider's subscription.
+ *
+ * @property {string} name - The unique key identifying the module.
+ * @method configure - Returns a new instance of `ContextModuleConfigurator` for configuring the module.
+ * @method initialize - Asynchronously initializes the context provider, sets up context resolution,
+ *   and manages lifecycle hooks.
+ * @see ContextModule
+ * @see ContextModuleConfigurator
+ * @see ContextProvider
+ */
 export const module: ContextModule = {
   name: moduleKey,
   configure: () => new ContextModuleConfigurator(),

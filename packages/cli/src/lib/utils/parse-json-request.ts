@@ -10,7 +10,9 @@ import type { IncomingMessage } from 'node:http';
 export async function parseJsonFromRequest(req: IncomingMessage): Promise<Record<string, unknown>> {
   return await new Promise<Record<string, unknown>>((resolve, reject) => {
     let data = '';
-    req.on('data', (chunk) => (data += chunk.toString()));
+    req.on('data', (chunk) => {
+      data += chunk.toString();
+    });
     req.on('end', () => resolve(JSON.parse(data)));
     req.on('error', reject);
   });

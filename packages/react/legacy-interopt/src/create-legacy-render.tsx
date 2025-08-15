@@ -19,6 +19,7 @@ import { resolveInitialContext } from '@equinor/fusion-framework-module-context/
 
 import {
   enableNavigation,
+  type NavigationUpdate,
   type NavigationModule,
 } from '@equinor/fusion-framework-module-navigation';
 
@@ -36,7 +37,8 @@ const AppWrapper = (
   const { history, basename, appKey, children } = props;
   // biome-ignore lint/correctness/useExhaustiveDependencies: will be deprecated
   useLayoutEffect(() => {
-    return framework.modules.navigation.navigator.listen(({ location, action }) => {
+    return framework.modules.navigation.navigator.listen((update: NavigationUpdate) => {
+      const { action, location } = update;
       if (
         location.pathname.indexOf(basename) === -1 ||
         (location.pathname === [basename, history.location.pathname.replace(/^\//, '')].join('/') &&

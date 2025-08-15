@@ -13,10 +13,10 @@
       "path": "../module"
     },
     {
-      "path": "../services"
+      "path": "../event"
     },
     {
-      "path": "../event"
+      "path": "../services"
     },
     {
       "path": "../context"

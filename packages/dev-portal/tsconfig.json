@@ -1,0 +1,62 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../utils/observable"
+    },
+    {
+      "path": "../utils/query"
+    },
+    {
+      "path": "../modules/http"
+    },
+    {
+      "path": "../modules/app"
+    },
+    {
+      "path": "../modules/context"
+    },
+    {
+      "path": "../modules/feature-flag"
+    },
+    {
+      "path": "../modules/navigation"
+    },
+    {
+      "path": "../modules/bookmark"
+    },
+    {
+      "path": "../modules/app"
+    },
+    {
+      "path": "../app"
+    },
+    {
+      "path": "../framework"
+    },
+    {
+      "path": "../react/framework"
+    },
+    {
+      "path": "../react/modules/bookmark"
+    },
+    {
+      "path": "../react/components/bookmark"
+    },
+    {
+      "path": "../react/components/people-resolver"
+    },
+    {
+      "path": "../dev-server"
+    }
+  ],
+  "include": ["src/**/*", "start.ts"],
+  "exclude": ["node_modules"]
+}

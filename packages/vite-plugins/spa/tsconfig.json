@@ -1,0 +1,30 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "types": ["vite/client"],
+    "lib": ["dom", "esnext", "webworker"]
+  },
+  "references": [
+    {
+      "path": "../../modules/module"
+    },
+    {
+      "path": "../../modules/http"
+    },
+    {
+      "path": "../../modules/msal"
+    },
+    {
+      "path": "../../modules/service-discovery"
+    },
+    {
+      "path": "../../modules/services"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

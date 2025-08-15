@@ -38,16 +38,6 @@ export type ConfigEndPoint = {
  *
  * console.log(config.getEndpoint('api')); // { url: 'https://api.example.com' }
  * ```
- *
- * @param {Object} config - The configuration object.
- * @param {TEnvironment} [config.environment] - The environment configuration.
- * @param {Record<string, ConfigEndPoint>} [config.endpoints] - The endpoints configuration.
- *
- * @property {TEnvironment} [environment] - The environment configuration.
- * @property {Record<string, string | undefined>} endpoints - The endpoints configuration (deprecated).
- *
- * @method getEndpoint
- * @param {string} key - The key of the endpoint to retrieve.
  */
 export class AppConfig<TEnvironment extends ConfigEnvironment = ConfigEnvironment> {
   #endpoints: Record<string, ConfigEndPoint>;

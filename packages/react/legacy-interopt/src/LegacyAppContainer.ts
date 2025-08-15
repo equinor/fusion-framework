@@ -7,7 +7,7 @@ import {
   type TelemetryLogger,
 } from '@equinor/fusion';
 
-import type { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest, CurrentApp } from '@equinor/fusion-framework-module-app';
 import {
   type ActionTypes,
   createAction,
@@ -223,61 +223,63 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
 
     /** this is all legacy remove in future */
     this.#subscription.add(
-      framework.modules.app.current$.pipe(pairwise()).subscribe(([previous, current]) => {
-        const { manifests } = this.#state.value;
-        /** update current app state */
-        const currentManifest = current ? manifests[current.appKey] || null : null;
-        currentApp.state = currentManifest;
+      framework.modules.app.current$
+        .pipe(pairwise())
+        .subscribe(([previous, current]: [CurrentApp, CurrentApp]) => {
+          const { manifests } = this.#state.value;
+          /** update current app state */
+          const currentManifest = current ? manifests[current.appKey] || null : null;
+          currentApp.state = currentManifest;
 
-        /** notify that current application changed!  */
-        this.emit('change', currentManifest);
+          /** notify that current application changed!  */
+          this.emit('change', currentManifest);
 
-        /** update previous app state */
-        const previousManifest = previous ? manifests[previous.appKey] || null : null;
+          /** update previous app state */
+          const previousManifest = previous ? manifests[previous.appKey] || null : null;
 
-        if (previousManifest) {
-          previousApps.state = {
-            ...previousApps.state,
-            [previousManifest.key]: previousManifest,
-          };
-        }
+          if (previousManifest) {
+            previousApps.state = {
+              ...previousApps.state,
+              [previousManifest.key]: previousManifest,
+            };
+          }
 
-        /** log entry to Fusion feature logger */
-        // CHANGE: switched from currentManifest to current since
-        // currentManifest only loads when app is visited twice
-        featureLogger.setCurrentApp(current?.appKey || null);
-        featureLogger.log('App selected', '0.0.1', {
-          selectedApp: current
-            ? {
-                key: current.appKey,
-                name: current.manifest?.displayName ?? null,
-              }
-            : null,
-          previousApps: Object.keys(previousApps.state).map((key) => ({
-            key,
-            name: previousApps.state[key].name,
-          })),
-        });
+          /** log entry to Fusion feature logger */
+          // CHANGE: switched from currentManifest to current since
+          // currentManifest only loads when app is visited twice
+          featureLogger.setCurrentApp(current?.appKey || null);
+          featureLogger.log('App selected', '0.0.1', {
+            selectedApp: current
+              ? {
+                  key: current.appKey,
+                  name: current.manifest?.displayName ?? null,
+                }
+              : null,
+            previousApps: Object.keys(previousApps.state).map((key) => ({
+              key,
+              name: previousApps.state[key].name,
+            })),
+          });
 
-        if (!currentManifest?.context) {
-          // Reset context on feature logger if current app does not support it
-          featureLogger.setCurrentContext(null, null);
-        }
+          if (!currentManifest?.context) {
+            // Reset context on feature logger if current app does not support it
+            featureLogger.setCurrentContext(null, null);
+          }
 
-        /** log change in AI */
-        // TODO: will this logg property name?? manifest is of type {AppComponent, Render, key}
-        telemetryLogger.trackEvent({
-          name: 'App selected',
-          properties: {
-            previousApp: previousManifest ? previousManifest.name : null,
-            selectedApp: currentManifest?.name,
-            previousApps: Object.keys(previousApps.state).map(
-              (key) => previousApps.state[key].name,
-            ),
-            currentApp: currentManifest?.name,
-          },
-        });
-      }),
+          /** log change in AI */
+          // TODO: will this logg property name?? manifest is of type {AppComponent, Render, key}
+          telemetryLogger.trackEvent({
+            name: 'App selected',
+            properties: {
+              previousApp: previousManifest ? previousManifest.name : null,
+              selectedApp: currentManifest?.name,
+              previousApps: Object.keys(previousApps.state).map(
+                (key) => previousApps.state[key].name,
+              ),
+              currentApp: currentManifest?.name,
+            },
+          });
+        }),
     );
 
     this.on('fetch', (fetching) => (this.#isUpdating = fetching));
@@ -362,11 +364,11 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
           this.#lastUpdated = Date.now();
           resolve();
         },
-        error: (err) => {
+        error: (err: unknown) => {
           this.#updateTask.state = 'rejected';
           reject(err);
         },
-        next: (value) =>
+        next: (value: unknown) =>
           this.#state.next(
             actions.updateManifests(indexManifests(value as unknown as LegacyAppManifest[])),
           ),

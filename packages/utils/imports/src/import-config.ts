@@ -3,7 +3,8 @@ import { importScript, type ImportScriptOptions, type EsmModule } from './import
 import { importJSON } from './import-json.js';
 import { resolveConfigFile } from './resolve-config-file.js';
 
-export type ConfigContent = Record<string, unknown> | unknown[] | string | number | boolean | null;
+// biome-ignore lint/suspicious/noExplicitAny: allow any for flexibility in config content
+export type ConfigContent = Record<any, any> | any[] | string | number | boolean | null;
 
 /**
  * Options for configuring the import behavior.

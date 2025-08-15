@@ -4,7 +4,7 @@ import type {
   ModuleInitializerArgs,
   Modules,
   ModuleType,
-} from './types';
+} from './types.js';
 
 /**
  * @deprecated @see {@link BaseConfigBuilder}

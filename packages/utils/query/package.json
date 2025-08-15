@@ -38,10 +38,7 @@
       "react": ["dist/types/react/index.d.ts"]
     }
   },
-  "directories": {
-    "dist": "dist"
-  },
-  "files": ["dist"],
+  "files": ["dist", "src"],
   "publishConfig": {
     "access": "public"
   },
@@ -66,7 +63,6 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
-    "@types/node": "^20.11.14",
     "@types/react": "^18.2.50",
     "@types/uuid": "^10.0.0",
     "react": "^18.2.0",

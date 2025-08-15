@@ -19,7 +19,7 @@ export type EsmModule = Record<string, unknown> & {
 /**
  * Options for importing a script, excluding certain build options.
  *
- * @note when `write` is set to `false`, the output will be loaded from memory.
+ * @remarks when `write` is set to `false`, the output will be loaded from memory.
  *
  * This type is derived from `BuildOptions` but omits the following properties:
  * - `entryPoints`
