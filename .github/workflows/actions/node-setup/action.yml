@@ -16,12 +16,15 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: 'pnpm'
-
-    - name: enable turbo cache
+    
+    - name: Cache turbo build setup
       if: ${{ inputs.turbo-cache == 'true' }} 
-      uses: rharkor/caching-for-turbo@v2.2.5
+      uses: actions/cache@v4
       with:
-        cache-prefix: ${{ runner.os }}-node-${{ inputs.node-version }}_
+        path: .turbo
+        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-
 
     - name: install
       shell: bash
