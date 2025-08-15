@@ -56,6 +56,8 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
       commitId: annotation.head_commit,
     } satisfies ReleaseAnnotations;
 
+    console.log('Extracted GitHub annotations:', annotation);
+
     if (annotation.pull_request) {
       return {
         ...baseAnnotations,
