@@ -2,8 +2,6 @@
 "@equinor/fusion-framework-module-msal-node": major
 ---
 
-Major: explicit ESM module type and .js extensions for all internal imports
-
 This release makes `@equinor/fusion-framework-module-msal-node` an explicit ESM package by setting `type: "module"` in `package.json` and updating all internal TypeScript imports to use explicit `.js` extensions. This ensures compatibility with NodeNext module resolution and ESM environments, and aligns the runtime and published output with ESM standards.
 
 - All internal imports now use `.js` extensions (e.g., `import { X } from './foo.js'`)

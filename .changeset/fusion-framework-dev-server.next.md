@@ -4,6 +4,8 @@
 
 Introduced a new package, `@equinor/fusion-framework-dev-server`, designed to provide a development server tailored for Fusion Framework applications. Built on top of Vite, it seamlessly integrates Vite and Fusion Framework configurations.
 
+For more details, visit the [GitHub repository](https://github.com/equinor/fusion-framework/tree/main/packages/dev-server/README.md).
+
 **Features**
 
 - *`createDevServer` Function*: Simplifies the creation of a development server using a configuration object.
@@ -52,18 +54,3 @@ const devServer = await createDevServer({
 });
 ```
 
-*Using `createDevServerConfig`*
-
-```ts
-import { createDevServerConfig } from "@equinor/fusion-framework-dev-server";
-
-const config = createDevServerConfig({
-  spa: {
-    templateEnv: { API_URL: "https://api.example.com" },
-  },
-  api: {
-    serviceDiscoveryUrl: "https://discovery.example.com",
-    routes: ["/api"],
-  },
-});
-```

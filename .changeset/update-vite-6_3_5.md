@@ -1,6 +1,5 @@
 ---
 "@equinor/fusion-framework-vite-plugin-api-service": patch
-"@equinor/fusion-framework-vite-plugin-spa": patch
 "@equinor/fusion-framework-module-http": patch
 "@equinor/fusion-framework-dev-portal": patch
 "@equinor/fusion-framework-dev-server": patch

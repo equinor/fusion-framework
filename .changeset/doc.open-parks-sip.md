@@ -1,5 +1,4 @@
 ---
-"@equinor/fusion-framework-cookbook-app-react": patch
 "@equinor/fusion-framework-docs": patch
 ---
 
