@@ -75,7 +75,7 @@ When configuring authentication for the Fusion Framework CLI, you will encounter
 
 ## Local Development
 
-### Logging in with the CLI
+### Login in with the CLI
 
 For local development, you should authenticate interactively using the CLI's built-in login command. This uses the `interactive` authentication mode, which will prompt you to sign in via your browser and securely store your credentials for future CLI commands.
 
@@ -112,6 +112,22 @@ The CLI provides several authentication-related options for advanced scenarios o
 - Scopes must be non-empty strings.
 
 These options allow you to use the CLI with custom tenants, client apps, or tokens if needed, but for most development scenarios, the built-in defaults are sufficient and only the `--scope` option is commonly changed. This flexibility supports both simple and advanced authentication needs, making it easy to get started while enabling custom setups for more complex environments.
+
+### Acquiring token
+
+The `auth token` command is designed to show your access token for the current user.
+
+```sh
+fusion-framework-cli auth token
+```
+
+> [!TIP]
+> The `--silent` flag outputs only the token (no extra logging), which is useful for exporting the token as an environment variable or saving it to a file for local testing or scripting:
+> ```sh
+> export FUSION_TOKEN=$(fusion-framework-cli auth token --silent)
+> ```
+
+> [!Note] This command requires an interactive user context and MSAL Node. It is not suitable for CI/CD environments, as there is no user available in those scenarios. Use it for local development, testing, or whenever you need to preserve a Fusion token for your own scripts or tools.
 
 ## CI/CD
 
