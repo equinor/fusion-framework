@@ -130,11 +130,11 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
     }
 
     // Log and return the successful response
-    log?.succeed('Successfully uploaded application bundle');
+    log?.succeed('Successfully uploaded portal bundle');
     log?.debug('Response:', response);
   } catch (error) {
     // Log and exit on any error during upload
-    log?.fail('🙅‍♂️', 'Failed to upload application bundle');
+    log?.fail('🙅‍♂️', 'Failed to upload portal bundle');
     log?.error(error);
     process.exit(1);
   }
