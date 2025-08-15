@@ -68,8 +68,6 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
       sender_avatar_url: annotation.sender?.avatar_url,
     } satisfies ReleaseAnnotations;
 
-    console.log('Extracted GitHub annotations:', annotation);
-
     if (annotation.pull_request) {
       return {
         ...baseAnnotations,
