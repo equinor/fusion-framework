@@ -2,9 +2,6 @@ import { useCallback, useState } from 'react';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
-/* typescript reference for makeStyles */
-// import '@material-ui/styles';
-
 import styled from 'styled-components';
 import { add, menu, tag } from '@equinor/eds-icons';
 import { Icon, TopBar } from '@equinor/eds-core-react';
@@ -18,7 +15,7 @@ import type { BookmarkModule } from '@equinor/fusion-framework-react-module-book
 import { BookmarkProvider } from '@equinor/fusion-framework-react-components-bookmark';
 
 import PersonAvatarElement from '@equinor/fusion-wc-person/avatar';
-PersonAvatarElement;
+PersonAvatarElement; // Register the custom element - prevent tree-shaking
 
 import { PersonSideSheet } from './PersonSideSheet';
 
