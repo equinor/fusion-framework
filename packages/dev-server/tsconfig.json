@@ -14,6 +14,6 @@
       "path": "../vite-plugins/spa"
     }
   ],
-  "include": ["src/**/*", "tests/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "tests"]
 }
