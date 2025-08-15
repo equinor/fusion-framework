@@ -17,8 +17,7 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
  * ```
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: no structure yet defined
-export type PortalConfig = Record<any, any>; // TODO: Replace with a concrete type for portal config
+export type PortalConfig = Record<string, unknown>; // TODO: Replace with a concrete type for portal config
 
 /**
  * A function type for defining dynamic or static portal configuration.

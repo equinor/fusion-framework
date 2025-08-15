@@ -104,11 +104,11 @@ export const loadPortalConfig = <T extends PortalConfig = PortalConfig>(
         // and validate the result against the schema
         if (typeof module.default === 'function') {
           const result = (await module.default(base, env)) ?? base;
-          return schema.parse(result ?? base); // Validate and return
+          return schema.parse(result) as T; // Validate and return
         }
         // If the module's default export is not a function, treat it as a configuration object
         // and validate it against the schema
-        return schema.parse(module.default ?? base); // Validate and return
+        return schema.parse(module.default ?? base) as T; // Validate and return
       },
     },
   });
