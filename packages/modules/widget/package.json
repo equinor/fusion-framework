@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-widget",
-  "version": "10.0.5",
+  "version": "11.0.0-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -16,8 +16,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "errors.js": ["dist/types/errors.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "errors.js": [
+        "dist/types/errors.d.ts"
+      ]
     }
   },
   "scripts": {

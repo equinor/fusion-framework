@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-services",
-  "version": "6.0.4",
+  "version": "7.0.0-next.0",
   "description": "",
   "sideEffects": false,
   "main": "dist/esm/index.js",
@@ -66,20 +66,48 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "bookmarks": ["./dist/types/bookmarks/index.d.ts"],
-      "context": ["./dist/types/context/index.d.ts"],
-      "context/get": ["./dist/types/context/get/index.d.ts"],
-      "context/query": ["./dist/types/context/query/index.d.ts"],
-      "context/related": ["./dist/types/context/related/index.d.ts"],
-      "notification": ["./dist/types/notification/index.d.ts"],
-      "provider": ["./dist/types/provider.d.ts"],
-      "people": ["./dist/types/people/index.d.ts"],
-      "people/utils": ["./dist/types/people/utils.d.ts"],
-      "people/get": ["./dist/types/people/person-details/index.d.ts"],
-      "people/query": ["./dist/types/people/query/index.d.ts"],
-      "people/photo": ["./dist/types/people/person-photo/index.d.ts"],
-      "errors": ["./dist/types/errors.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "bookmarks": [
+        "./dist/types/bookmarks/index.d.ts"
+      ],
+      "context": [
+        "./dist/types/context/index.d.ts"
+      ],
+      "context/get": [
+        "./dist/types/context/get/index.d.ts"
+      ],
+      "context/query": [
+        "./dist/types/context/query/index.d.ts"
+      ],
+      "context/related": [
+        "./dist/types/context/related/index.d.ts"
+      ],
+      "notification": [
+        "./dist/types/notification/index.d.ts"
+      ],
+      "provider": [
+        "./dist/types/provider.d.ts"
+      ],
+      "people": [
+        "./dist/types/people/index.d.ts"
+      ],
+      "people/utils": [
+        "./dist/types/people/utils.d.ts"
+      ],
+      "people/get": [
+        "./dist/types/people/person-details/index.d.ts"
+      ],
+      "people/query": [
+        "./dist/types/people/query/index.d.ts"
+      ],
+      "people/photo": [
+        "./dist/types/people/person-photo/index.d.ts"
+      ],
+      "errors": [
+        "./dist/types/errors.d.ts"
+      ]
     }
   },
   "scripts": {

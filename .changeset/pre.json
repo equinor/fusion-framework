@@ -62,5 +62,21 @@
     "@equinor/fusion-framework-widget": "1.1.42",
     "@equinor/fusion-framework-docs": "0.4.0"
   },
-  "changesets": []
+  "changesets": [
+    "bookmark-refactor-appkey-filter",
+    "doc.open-parks-sip",
+    "fusion-framework-cli.next",
+    "fusion-framework-dev-portal.next",
+    "fusion-framework-dev-server.next",
+    "fusion-framework-module-http.next",
+    "fusion-framework-module-msal-node.next",
+    "fusion-framework-module.next",
+    "fusion-framework-react-components-people-provider.next",
+    "fusion-framework-vite-plugin-api-service.next",
+    "fusion-framework-vite-plugin-spa.next",
+    "fusion-imports.next",
+    "module.fix-semver",
+    "update-vite-6_3_5",
+    "zod-upgrade"
+  ]
 }
