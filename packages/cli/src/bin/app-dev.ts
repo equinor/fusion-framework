@@ -13,11 +13,6 @@ import { createDevServer } from './utils/create-dev-server.js';
 
 import { readPackageUp } from 'read-package-up';
 import { dirname } from 'node:path';
-import {
-  initializeFramework,
-  type FusionEnv,
-  type FusionFrameworkSettings,
-} from './framework.node.js';
 
 /**
  * Options for starting the application development server.
