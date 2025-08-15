@@ -28,13 +28,30 @@ export type Matcher<T extends RequestParams = RequestParams> = (
 export type MatchResult<T extends RequestParams> = boolean | { params: T };
 
 /**
- * Creates a route matcher function for a given API route.
+ * Creates a route matcher function based on the provided API route definition.
  *
- * @param route - The API route object containing the match criteria.
- *                The `match` property can either be a string (interpreted as a path-to-regexp pattern)
- *                or a function that takes a path string and returns a boolean or undefined.
- * @returns A function that takes a path string as input and returns a boolean
- *          indicating whether the path matches the route's criteria.
+ * This utility supports two types of matching strategies:
+ * - **String pattern matching:** If `route.match` is a string, it is interpreted as a
+ *   {@link https://www.npmjs.com/package/path-to-regexp | path-to-regexp} pattern. The generated matcher
+ *   will extract dynamic parameters from the path and return them as an object if the path matches.
+ * - **Custom matcher function:** If `route.match` is a function, it is used directly as the matcher,
+ *   allowing for advanced or custom matching logic that can utilize both the path and the request object.
+ *
+ * @typeParam T - The type of request parameters to extract from the path, extending `RequestParams`.
+ * @param route - The API route definition, which specifies either a string pattern or a custom matcher function.
+ * @returns A matcher function that takes a path and request, returning either a boolean or an object containing extracted parameters.
+ *
+ * @example
+ * // Using a string pattern to extract parameters:
+ * const matcher = createRouteMatcher<{ id: string }>({ match: '/user/:id' });
+ * const result = matcher('/user/42', req); // { params: { id: '42' } }
+ *
+ * @example
+ * // Using a custom matcher function:
+ * const customMatcher = createRouteMatcher(
+ *   { match: (path, req) => path === '/health' && req.method === 'GET' }
+ * );
+ * const result = customMatcher('/health', req); // true
  */
 export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Matcher<T> {
   if (typeof route.match === 'string') {
