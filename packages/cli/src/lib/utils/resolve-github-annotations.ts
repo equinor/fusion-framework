@@ -63,6 +63,16 @@ type GithubEventPayload = {
  * @property action - The name of the action being executed.
  */
 export type GithubAnnotations = {
+  workflow?: string;
+  action?: string;
+  eventName: string;
+  actor?: string;
+  runId?: string;
+  runUrl?: string;
+  repository?: string;
+  after?: string;
+  head_commit?: string;
+  ref?: string;
   pull_request?: {
     number?: number;
     title?: string;
@@ -72,16 +82,8 @@ export type GithubAnnotations = {
     updated_at?: string;
     html_url?: string;
   };
-  eventName: string;
-  actor?: string;
-  runId?: string;
-  runUrl?: string;
-  repository?: string;
-  after?: string;
-  head_commit?: string;
-  ref?: string;
   release?: {
-    tag_name?: string;
+    tag?: string;
     name?: string;
     body?: string;
     draft?: boolean;
@@ -90,8 +92,6 @@ export type GithubAnnotations = {
     published_at?: string;
     html_url?: string;
   };
-  workflow?: string;
-  action?: string;
 };
 
 /**
@@ -111,6 +111,7 @@ export type GithubAnnotations = {
  * @returns An object with selected fields for release and pull request events, as well as general event context.
  */
 function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, unknown> {
+  console.log('Extracting GitHub event annotations from payload:', payload);
   // Initialize annotation object with general event context
   const annotation: Record<string, unknown> = {
     action: payload.action, // The event action (e.g., published, created, closed)

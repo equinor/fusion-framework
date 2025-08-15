@@ -68,7 +68,7 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
     if (annotation.release) {
       return {
         ...baseAnnotations,
-        tag: annotation.release.tag_name,
+        tag: annotation.release.tag,
         htmlUrl: annotation.release.html_url,
       } satisfies ReleaseAnnotations;
     }

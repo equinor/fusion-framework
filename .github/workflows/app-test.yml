@@ -38,25 +38,25 @@ jobs:
           name: app-bundle.zip
           path: ./cookbooks/app-react/app-bundle.zip
 
-      - name: Azure login
-        uses: azure/login@v2
-        with:
-          client-id: ddac50d6-82dc-497c-a2f5-0241909fa293
-          tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
-          allow-no-subscriptions: true
+      # - name: Azure login
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ddac50d6-82dc-497c-a2f5-0241909fa293
+      #     tenant-id: 3aa4a235-b6e2-48d5-9195-7fcf05b459b0
+      #     allow-no-subscriptions: true
 
-      - name: Azure CLI
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: >
-            echo "FUSION_TOKEN=$(
-            az account get-access-token
-            --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default
-            --query accessToken
-            --output tsv
-            )" >> $GITHUB_ENV
+      # - name: Azure CLI
+      #   uses: azure/cli@v2
+      #   with:
+      #     azcliversion: latest
+      #     inlineScript: >
+      #       echo "FUSION_TOKEN=$(
+      #       az account get-access-token
+      #       --scope 5a842df8-3238-415d-b168-9f16a6a6031b/.default
+      #       --query accessToken
+      #       --output tsv
+      #       )" >> $GITHUB_ENV
             
-      - name: Upload application bundle
-        working-directory: ./cookbooks/app-react
-        run: pnpm app:publish
+      # - name: Upload application bundle
+      #   working-directory: ./cookbooks/app-react
+      #   run: pnpm app:publish
