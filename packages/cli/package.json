@@ -65,7 +65,7 @@
     "semver": "^7.5.4",
     "vite": "^6.0.7",
     "vite-plugin-environment": "^1.1.3",
-    "vite-plugin-restart": "^0.4.0",
+    "vite-plugin-restart": "^1.0.0",
     "vite-tsconfig-paths": "^4.2.0",
     "zod": "^3.23.8"
   },
