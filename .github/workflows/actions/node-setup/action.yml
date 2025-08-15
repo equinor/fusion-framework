@@ -19,7 +19,7 @@ runs:
 
     - name: enable turbo cache
       if: ${{ inputs.turbo-cache == 'true' }} 
-      uses: dtinth/setup-github-actions-caching-for-turbo@v1
+      uses: rharkor/caching-for-turbo@v2.2.5
       with:
         cache-prefix: ${{ runner.os }}-node-${{ inputs.node-version }}_
 
