@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-app",
-  "version": "9.3.21",
+  "version": "10.0.0-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -16,15 +16,23 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "enable-bookmark": ["dist/types/enable-bookmark.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "enable-bookmark": [
+        "dist/types/enable-bookmark.d.ts"
+      ]
     }
   },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["fusion", "fusion-framework", "utility"],
+  "keywords": [
+    "fusion",
+    "fusion-framework",
+    "utility"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",

@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module",
-  "version": "4.4.3-next.2",
+  "version": "5.0.0-next.3",
   "description": "",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -17,8 +17,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "provider": ["dist/types/lib/provider/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "provider": [
+        "dist/types/lib/provider/index.d.ts"
+      ]
     }
   },
   "scripts": {
