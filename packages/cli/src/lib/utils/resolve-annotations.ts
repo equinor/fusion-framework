@@ -19,15 +19,21 @@ import { resolveDevopsAnnotations } from './resolve-devops-annotations.js';
 export type ReleaseAnnotations = {
   source: string;
   reason: string;
-  repository?: string;
   actor?: string;
   workflow?: string;
   runId?: string;
   branch?: string;
   commitId?: string;
   runUrl?: string;
+  repository?: string;
+  repository_homepage?: string;
+  repository_license?: string;
+  repository_owner?: string;
+  repository_owner_avatar_url?: string;
   htmlUrl?: string;
   tag?: string;
+  sender_login?: string;
+  sender_avatar_url?: string;
 };
 
 /**
@@ -49,11 +55,17 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
       source: 'github',
       reason: annotation.eventName,
       workflow: annotation.workflow,
-      repository: annotation.repository,
       runId: annotation.runId,
       runUrl: annotation.runUrl,
+      commitId: annotation.head_commit?.id,
+      repository: annotation.repository?.name,
+      repository_homepage: annotation.repository?.homepage,
+      repository_license: annotation.repository?.license?.name,
+      repository_owner: annotation.repository?.owner?.login,
+      repository_owner_avatar_url: annotation.repository?.owner?.avatar_url,
       actor: annotation.actor,
-      commitId: annotation.head_commit,
+      sender_login: annotation.sender?.login,
+      sender_avatar_url: annotation.sender?.avatar_url,
     } satisfies ReleaseAnnotations;
 
     console.log('Extracted GitHub annotations:', annotation);
@@ -70,7 +82,7 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
     if (annotation.release) {
       return {
         ...baseAnnotations,
-        tag: annotation.release.tag,
+        tag: annotation.release.tag_name,
         htmlUrl: annotation.release.html_url,
       } satisfies ReleaseAnnotations;
     }

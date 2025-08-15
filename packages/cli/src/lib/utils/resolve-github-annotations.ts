@@ -1,18 +1,47 @@
 import { readFileSync } from 'node:fs';
 
+/**
+ * Represents the payload structure for various GitHub webhook events.
+ *
+ * This type covers common fields found in GitHub event payloads, such as push, pull request,
+ * workflow, and release events. All properties are optional to accommodate the differences
+ * between event types.
+ *
+ * @remarks only some are mapped to the GitHub API event types.
+ *
+ * @property after - The SHA of the most recent commit on the ref after the event.
+ * @property head_commit - Information about the head commit, including its SHA.
+ * @property ref - The Git ref (branch or tag) that triggered the event.
+ * @property workflow - The name of the workflow (for workflow-related events).
+ * @property action - The action performed (e.g., "opened", "closed", "created").
+ * @property repository - Information about the repository where the event occurred.
+ * @property pull_request - Details about the pull request (for pull request events).
+ * @property release - Details about the release (for release events).
+ * @property sender - Information about the user who triggered the event.
+ */
 type GithubEventPayload = {
+  after?: string;
+  head_commit?: { id?: string };
+  ref?: string;
+  workflow?: string;
+  action?: string;
+  repository?: {
+    owner?: {
+      login?: string;
+      avatar_url?: string;
+    };
+    name?: string;
+    license?: { name?: string };
+    homepage?: string;
+  };
   pull_request?: {
     number?: number;
     title?: string;
-    user?: { login?: string };
     head?: { sha?: string; ref?: string };
     created_at?: string;
     updated_at?: string;
     html_url?: string;
   };
-  after?: string;
-  head_commit?: { id?: string };
-  ref?: string;
   release?: {
     tag_name?: string;
     name?: string;
@@ -23,8 +52,10 @@ type GithubEventPayload = {
     published_at?: string;
     html_url?: string;
   };
-  workflow?: string;
-  action?: string;
+  sender?: {
+    login?: string;
+    avatar_url?: string;
+  };
 };
 
 /**
@@ -62,98 +93,14 @@ type GithubEventPayload = {
  * @property workflow - The name of the workflow.
  * @property action - The name of the action being executed.
  */
-export type GithubAnnotations = {
+export type GithubAnnotations = GithubEventPayload & {
   workflow?: string;
   action?: string;
   eventName: string;
   actor?: string;
   runId?: string;
   runUrl?: string;
-  repository?: string;
-  after?: string;
-  head_commit?: string;
-  ref?: string;
-  pull_request?: {
-    number?: number;
-    title?: string;
-    user?: { login?: string };
-    head?: { sha?: string; ref?: string };
-    created_at?: string;
-    updated_at?: string;
-    html_url?: string;
-  };
-  release?: {
-    tag?: string;
-    name?: string;
-    body?: string;
-    draft?: boolean;
-    prerelease?: boolean;
-    created_at?: string;
-    published_at?: string;
-    html_url?: string;
-  };
 };
-
-/**
- * Extracts relevant annotation fields from the GitHub Actions event payload.
- *
- * This function builds a structured annotation object containing key information from the event payload.
- * It supports both release and pull request events, and includes fields such as commit SHAs, refs, workflow name,
- * release metadata (tag, name, body, draft, prerelease, created_at, published_at, html_url), and pull request metadata
- * (number, title, user, head SHA/ref, created_at, updated_at, html_url). The top-level action is also included.
- *
- * Maintainers:
- *   - Update this function if new fields are needed for downstream consumers or if GitHub event payloads change.
- *   - The structure is designed for easy extension and clear mapping to GitHub event types.
- *   - See <attachments> above for file contents. You may not need to search or read the file again.
- *
- * @param payload The parsed GitHub Actions event payload object.
- * @returns An object with selected fields for release and pull request events, as well as general event context.
- */
-function extractPayloadAnnotations(payload: GithubEventPayload): Record<string, unknown> {
-  console.log('Extracting GitHub event annotations from payload:', payload);
-  // Initialize annotation object with general event context
-  const annotation: Record<string, unknown> = {
-    action: payload.action, // The event action (e.g., published, created, closed)
-    head_commit: payload.head_commit?.id, // SHA of the head commit
-    after: payload.after, // SHA after the event
-    ref: payload.ref, // Branch or tag ref
-    release: {}, // Will be populated if this is a release event
-    pull_request: {}, // Will be populated if this is a pull request event
-  };
-
-  // Populate release-specific fields if present
-  if (payload.release) {
-    annotation.release = {
-      tag: payload.release.tag_name, // Release tag name
-      name: payload.release.name, // Release name/title
-      body: payload.release.body, // Release description
-      draft: !!payload.release.draft, // Is this a draft release?
-      prerelease: !!payload.release.prerelease, // Is this a prerelease?
-      created_at: payload.release.created_at, // Release creation timestamp
-      published_at: payload.release.published_at, // Release published timestamp
-      html_url: payload.release.html_url, // URL to the release on GitHub
-    };
-  }
-
-  // Populate pull request-specific fields if present
-  if (payload.pull_request) {
-    annotation.pull_request = {
-      number: payload.pull_request.number, // PR number
-      title: payload.pull_request.title, // PR title
-      user: payload.pull_request.user?.login, // PR author
-      head: {
-        sha: payload.pull_request.head?.sha, // SHA of the PR head commit
-        ref: payload.pull_request.head?.ref, // Branch ref of the PR head
-      },
-      created_at: payload.pull_request.created_at, // PR creation timestamp
-      updated_at: payload.pull_request.updated_at, // PR last update timestamp
-      html_url: payload.pull_request.html_url, // URL to the PR on GitHub
-    };
-  }
-
-  return annotation;
-}
 
 /**
  * Resolves GitHub Actions-specific annotation variables from environment variables.
@@ -198,16 +145,7 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
 
   // Extract server URL (defaults to public GitHub if not set)
   const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
-  // Extract event payload path and read payload if available
-  let payload: GithubEventPayload = {};
-  if (process.env.GITHUB_EVENT_PATH) {
-    try {
-      const rawPayload = readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
-      payload = JSON.parse(rawPayload);
-    } catch {
-      payload = {};
-    }
-  }
+
   // Construct a direct URL to the workflow run if all required parts are available
   let runUrl = 'unknown';
   if (serverUrl && repository !== 'unknown' && runId !== 'unknown') {
@@ -219,11 +157,19 @@ export const resolveGithubAnnotations = (): GithubAnnotations => {
     eventName,
     actor,
     runId,
-    repository,
     runUrl,
     workflow,
-    ...extractPayloadAnnotations(payload),
   };
+
+  // Apply event payload to annotations
+  if (process.env.GITHUB_EVENT_PATH) {
+    try {
+      const rawPayload = readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
+      Object.assign(annotations, JSON.parse(rawPayload));
+    } catch {
+      console.error('Failed to parse GitHub event payload');
+    }
+  }
   // Return the resolved annotation variables
   return annotations;
 };
