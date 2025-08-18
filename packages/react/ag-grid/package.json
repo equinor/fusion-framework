@@ -26,28 +26,17 @@
   },
   "typesVersions": {
     "*": {
-      ".": [
-        "dist/types/index.d.ts"
-      ],
-      "community": [
-        "dist/types/community.d.ts"
-      ],
-      "enterprise": [
-        "dist/types/enterprise.d.ts"
-      ],
-      "themes": [
-        "dist/types/themes.d.ts"
-      ]
+      ".": ["dist/types/index.d.ts"],
+      "community": ["dist/types/community.d.ts"],
+      "enterprise": ["dist/types/enterprise.d.ts"],
+      "themes": ["dist/types/themes.d.ts"]
     }
   },
   "scripts": {
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": [
-    "ag-grid",
-    "table"
-  ],
+  "keywords": ["ag-grid", "table"],
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -62,7 +51,7 @@
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
     "ag-grid-community": "34.1.1",
     "ag-grid-enterprise": "34.1.1",
-    "ag-grid-react": "33.2.4"
+    "ag-grid-react": "34.1.1"
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",
