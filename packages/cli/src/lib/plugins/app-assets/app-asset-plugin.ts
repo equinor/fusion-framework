@@ -70,13 +70,18 @@ export const AppAssetExportPlugin = (
       }
 
       // resolve asset ID, the ID should refer to the actual asset file
-      const assetId = await resolveAssetId(this as PluginContext, source, importer ?? '', {
-        ...opts,
-        custom: {
-          ...opts.custom,
-          caller: PLUGIN_NAME,
+      const assetId = await resolveAssetId(
+        this as unknown as PluginContext,
+        source,
+        importer ?? '',
+        {
+          ...opts,
+          custom: {
+            ...opts.custom,
+            caller: PLUGIN_NAME,
+          },
         },
-      });
+      );
 
       // skip if asset is not found or filtered out
       const { id } = assetId ?? {};
@@ -88,12 +93,16 @@ export const AppAssetExportPlugin = (
       try {
         // emit asset and index the asset path
         const { outDir, assetsDir } = viteConfig.build;
-        const assetPath = emitAssetSync(this as PluginContext, id, {
+        const assetPath = emitAssetSync(this as unknown as PluginContext, id, {
           name,
           outDir,
           assetsDir,
         });
-        assetsPathMap.set(id, assetPath!);
+        if (assetPath === null) {
+          this.warn(`Failed to emit asset for id: ${id}`);
+          return null;
+        }
+        assetsPathMap.set(id, assetPath);
       } catch (err) {
         this.warn((err as Error).message);
         return null;
