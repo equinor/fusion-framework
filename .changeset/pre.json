@@ -20,7 +20,7 @@
     "@equinor/fusion-framework-cookbook-app-vanilla": "1.0.3",
     "poc-portal": "1.0.56",
     "@equinor/fusion-framework-app": "9.3.21",
-    "@equinor/fusion-framework-cli": "10.7.5",
+    "@equinor/fusion-framework-cli": "10.7.6",
     "@equinor/fusion-framework-dev-portal": "0.0.0",
     "@equinor/fusion-framework-dev-server": "0.0.0",
     "@equinor/fusion-framework": "7.3.16",

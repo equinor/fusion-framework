@@ -1,29 +1,12 @@
 # Change Log
 
-## 34.0.3-next.2
+## 34.1.0
 
-### Patch Changes
+### Minor Changes
 
-- [#3137](https://github.com/equinor/fusion-framework/pull/3137) [`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461) Thanks [@odinr](https://github.com/odinr)! - updates from main
+- [#3268](https://github.com/equinor/fusion-framework/pull/3268) [`7ef5afc`](https://github.com/equinor/fusion-framework/commit/7ef5afc96a8c2cebecedc85703be820d84e3885a) Thanks [@odinr](https://github.com/odinr)! - Upgrade `ag-grid` from version 33.2.4 to 34.1.1.
 
-- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128) Thanks [@odinr](https://github.com/odinr)! - merge with main
-
-- Updated dependencies [[`7c58c78`](https://github.com/equinor/fusion-framework/commit/7c58c7868c66b1fc0f720b4ed13d39e0fe505461), [`db34d90`](https://github.com/equinor/fusion-framework/commit/db34d9003d64e4c7cb46cf0c95f0c7a0e7587128)]:
-  - @equinor/fusion-framework-module@4.4.3-next.2
-
-## 34.0.3-next.1
-
-### Patch Changes
-
-- Updated dependencies [[`bbda62d`](https://github.com/equinor/fusion-framework/commit/bbda62def35c8e8b742d90459680f7199c4ece0f)]:
-  - @equinor/fusion-framework-module@4.4.3-next.1
-
-## 34.0.3-next.0
-
-### Patch Changes
-
-- Updated dependencies [[`53ef326`](https://github.com/equinor/fusion-framework/commit/53ef32633ce1c050e20614f1343148327a40b2e6)]:
-  - @equinor/fusion-framework-module@4.4.3-next.0
+  > this upgrade may include new features, bug fixes, and breaking changes. Please review the ag-grid release notes for details: https://github.com/ag-grid/ag-grid/releases
 
 ## 34.0.2
 

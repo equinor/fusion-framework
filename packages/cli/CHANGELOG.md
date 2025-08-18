@@ -1,5 +1,19 @@
 # Change Log
 
+## 10.7.6
+
+### Patch Changes
+
+- [#3268](https://github.com/equinor/fusion-framework/pull/3268) [`7ef5afc`](https://github.com/equinor/fusion-framework/commit/7ef5afc96a8c2cebecedc85703be820d84e3885a) Thanks [@odinr](https://github.com/odinr)! - Fix: Improve type safety and error handling in `AppAssetExportPlugin` (app-assets plugin).
+
+  - Use `unknown as PluginContext` for type casting in `resolveId` and `emitAssetSync` calls.
+  - Add null check and warning if asset emission fails.
+  - Minor code style and safety improvements.
+
+  This change improves plugin robustness and aligns with best practices for Vite/Rollup plugin development.
+
+- [#3268](https://github.com/equinor/fusion-framework/pull/3268) [`7ef5afc`](https://github.com/equinor/fusion-framework/commit/7ef5afc96a8c2cebecedc85703be820d84e3885a) Thanks [@odinr](https://github.com/odinr)! - Upgraded rollup from `4.22.4` to `4.46.3`
+
 ## 10.7.5
 
 ### Patch Changes
