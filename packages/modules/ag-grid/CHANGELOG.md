@@ -1,5 +1,13 @@
 # Change Log
 
+## 34.1.0
+
+### Minor Changes
+
+- [#3268](https://github.com/equinor/fusion-framework/pull/3268) [`7ef5afc`](https://github.com/equinor/fusion-framework/commit/7ef5afc96a8c2cebecedc85703be820d84e3885a) Thanks [@odinr](https://github.com/odinr)! - Upgrade `ag-grid` from version 33.2.4 to 34.1.1.
+
+  > this upgrade may include new features, bug fixes, and breaking changes. Please review the ag-grid release notes for details: https://github.com/ag-grid/ag-grid/releases
+
 ## 34.0.2
 
 ### Patch Changes
