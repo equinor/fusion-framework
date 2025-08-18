@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.0.0
+
+### Major Changes
+
+- [`be5b478`](https://github.com/equinor/fusion-framework/commit/be5b4782928824e3d479f5e23ea66f46a45f6c5d) Thanks [@odinr](https://github.com/odinr)! - Upgrade ag-grid from version 33.2.4 to 34.1.1.
+
 ## 33.3.0
 
 ### Minor Changes
