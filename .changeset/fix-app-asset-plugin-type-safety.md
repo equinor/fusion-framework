@@ -1,6 +1,5 @@
 ---
 "@equinor/fusion-framework-cli": patch
-
 ---
 
 Fix: Improve type safety and error handling in `AppAssetExportPlugin` (app-assets plugin).
