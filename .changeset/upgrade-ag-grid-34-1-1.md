@@ -1,5 +1,5 @@
 ---
-'@fusion-framework/modules-ag-grid': minor
+'@equinor/fusion-framework-module-ag-grid': minor
 '@equinor/fusion-framework-react-ag-grid': minor
 ---
 
