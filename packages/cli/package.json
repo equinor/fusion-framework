@@ -97,7 +97,7 @@
     "@equinor/fusion-wc-person": "^3.1.8",
     "@material-ui/styles": "^4.11.5",
     "@types/adm-zip": "^0.5.0",
-    "@types/loader-utils": "^2.0.6",
+    "@types/loader-utils": "^3.0.0",
     "@types/node": "^20.11.14",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
