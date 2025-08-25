@@ -1,4 +1,15 @@
-# @equinor/fusion-framework-app
+---
+title: "@equinor/fusion-framework-app"
+description: "Application foundation package for the Fusion Framework"
+category: "Application"
+tag:
+  - app
+  - core
+  - foundation
+  - modules
+  - framework
+  - typescript
+---
 
 Configuration and initialization layer for Fusion applications.
 
