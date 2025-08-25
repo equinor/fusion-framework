@@ -123,8 +123,7 @@
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
-    "@equinor/fusion-framework-react-module-http": "workspace:^",
-    "fast-deep-equal": "^3.1.3"
+    "@equinor/fusion-framework-react-module-http": "workspace:^"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-ag-grid": "workspace:^",
