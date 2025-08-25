@@ -16,7 +16,21 @@ import http, {
 
 import auth from '@equinor/fusion-framework-module-msal';
 
-import type { AppEnv, AppModules } from './types';
+import type { AppEnv, AppModules, AppModulesInstance } from './types';
+import { AppModulesConfiguredEvent, AppModulesInitializedEvent } from './events';
+import { AppConfiguratorError } from './error';
+import { deepClone, deepFreeze, type DeepImmutable } from './utils';
+
+/**
+ * Type definition for AppConfigurator constructor
+ */
+export type AppConfiguratorConstructor<
+  TModules extends readonly AnyModule[] = [],
+  TRef extends FusionModulesInstance = FusionModulesInstance,
+  TEnv extends AppEnv = AppEnv,
+> = {
+  new (env: TEnv, ref?: TRef): IAppConfigurator<TModules, TRef>;
+};
 
 /**
  * Contract for configuring Fusion application modules.
@@ -44,6 +58,8 @@ export interface IAppConfigurator<
   TModules extends Array<AnyModule> | unknown = unknown,
   TRef extends FusionModulesInstance = FusionModulesInstance,
 > extends IModulesConfigurator<AppModules<TModules>, TRef> {
+  readonly manifest: DeepImmutable<AppEnv['manifest']>;
+
   /**
    * Configure the HTTP module with custom settings.
    *
@@ -98,9 +114,9 @@ export interface IAppConfigurator<
  * Configurator that bootstraps default Fusion application modules and provides
  * helper methods for HTTP client and service-discovery setup.
  *
- * `AppConfigurator` is created internally by {@link configureModules}. It registers
+ * `AppConfigurator` is created internally by {\@link configureModules}. It registers
  * the `event`, `http`, and `msal` (auth) modules by default and reads any HTTP
- * endpoints declared in the application’s environment config.
+ * endpoints declared in the application's environment config.
  *
  * @template TModules - Additional application-specific modules beyond the defaults.
  * @template TRef - The resolved Fusion modules instance used as an initialization reference.
@@ -130,6 +146,8 @@ export class AppConfigurator<
    */
   static readonly className: string = 'AppConfigurator';
 
+  #manifest: DeepImmutable<AppEnv['manifest']>;
+
   /**
    * Create an application configurator with default modules and environment.
    *
@@ -137,11 +155,34 @@ export class AppConfigurator<
    * HTTP clients declared in `env.config.endpoints`.
    *
    * @param env - The application environment containing manifest, config, and optional basename.
+   * @param ref - Optional reference to the Fusion modules instance, used for event dispatching.
    */
-  constructor(public readonly env: TEnv) {
+  constructor(
+    public readonly env: TEnv,
+    ref?: TRef,
+  ) {
     super([event, http, auth]);
-
+    this.#manifest = deepFreeze(deepClone(env.manifest));
     this._configureHttpClientsFromAppConfig();
+
+    this.onConfigured((configs) => {
+      const configuredEvent = new AppModulesConfiguredEvent<TModules>({
+        detail: {
+          appKey: this.#manifest.appKey,
+          configs,
+        },
+      });
+      ref?.event.dispatchEvent(configuredEvent);
+    });
+  }
+
+  /**
+   * The immutable application manifest.
+   *
+   * Deeply frozen at construction time to prevent accidental mutations.
+   */
+  get manifest(): DeepImmutable<AppEnv['manifest']> {
+    return this.#manifest;
   }
 
   /**
@@ -207,7 +248,10 @@ export class AppConfigurator<
         const service = await ref?.serviceDiscovery.resolveService(serviceName);
         // Guard: service must resolve before the HTTP client can be configured.
         if (!service) {
-          throw Error(`failed to configure service [${serviceName}]`);
+          throw new AppConfiguratorError(
+            `Unable to resolve service [${serviceName}] during configuration.`,
+            'configuration',
+          );
         }
 
         // Check if serviceName is already configured (potentially with app-config)
