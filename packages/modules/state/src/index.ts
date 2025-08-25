@@ -6,6 +6,8 @@ export { StateModuleConfigurator } from './StateModuleConfigurator.js';
 
 export { enableStateModule } from './enable-state-module.js';
 
+export { StateModule, module, module as default } from './StateModule.js';
+
 export type {
   AllowedValue,
   StateItem,
