@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client';
 import type { FusionRenderFn } from '@equinor/fusion-framework';
-import { Framework, Fusion } from '@equinor/fusion-framework-react';
+import { Framework } from '@equinor/fusion-framework-react';
 import { ThemeProvider, theme } from '@equinor/fusion-react-styles';
 
 import { PeopleResolverProvider } from '@equinor/fusion-framework-react-components-people-provider';
