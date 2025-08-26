@@ -117,8 +117,8 @@ import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
 
 export default defineAppManifest(async (env, { base }) => ({
   ...base,
-  name: 'My Fusion App',
-  version: '0.0.1',
+  appKey: 'my-app',
+  displayName: 'My First Awesome Fusion App'
   // Add more manifest fields as needed
 }));
 ```
@@ -147,6 +147,15 @@ pnpm fusion-framework-cli dev
 ```
 
 ### 5. Log in to Fusion Framework (if needed)
+
+> [!NOTE] 
+> __All HTTP requests to Fusion services require an authorized user.__  
+> For example, before running `fusion-framework-cli app publish`, make sure you are authenticated using `fusion-framework-cli auth login`.
+
+> [!WARNING]
+> The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.  
+>  
+> See [Authentication](./auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
 
 ```sh
 pnpm fusion-framework-cli auth login
