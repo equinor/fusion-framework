@@ -74,7 +74,7 @@ export interface IFrameworkEvent<
  * @template TDetail - type of event detail, event data payload
  * @template TSource - type of event source
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: generic type parameters need flexibility
 export type FrameworkEventInit<TDetail = any, TSource = any> = {
   /** Event data */
   detail: TDetail;

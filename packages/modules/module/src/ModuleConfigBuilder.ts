@@ -11,7 +11,7 @@ import type {
  */
 export abstract class ModuleConfigBuilder<
   TModules extends Array<AnyModule> | unknown = unknown,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: generic config type needs flexibility
   TConfig = any,
 > {
   #init: ModuleInitializerArgs<TConfig, CombinedModules<TModules, Array<Modules[keyof Modules]>>>;
@@ -49,7 +49,7 @@ export abstract class ModuleConfigBuilder<
    */
   public requireInstance<T>(module: string): Promise<T>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: method overload requires any for flexibility
   public requireInstance(module: string): Promise<any> {
     return this.#init.requireInstance(module);
   }
