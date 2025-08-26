@@ -7,7 +7,8 @@ This release makes `@equinor/fusion-framework-module-msal-node` an explicit ESM 
 - All internal imports now use `.js` extensions (e.g., `import { X } from './foo.js'`)
 - `package.json` now explicitly sets `"type": "module"`
 - `tsconfig.json` updated to use `module` and `moduleResolution` set to `NodeNext`
-- No runtime logic changes
+- **Dynamic import for libsecret dependency**: Converted `createAuthClient` to use dynamic imports to avoid requiring `libsecret` installation in environments where it's not needed (like CI/CD pipelines)
+- No other runtime logic changes
 
 **BREAKING CHANGE:**
 Consumers must use ESM-compatible tooling and update any imports of this package to use explicit `.js` extensions for internal imports. CommonJS is no longer supported. This may require changes to build tooling, import paths, and runtime environments if not already ESM-ready.

@@ -24,13 +24,9 @@
 - **Dev Server Config:** Refactored config loading and merging, added `RecursivePartial` type, custom array merge strategy, and improved documentation. Arrays of route objects are now merged by `match` property to ensure uniqueness.
 - **Node Version Check:** Added Node.js version check and LTS recommendation to CLI entrypoint. Build config injects version info via environment variables.
 
-
 **Other**
 
 - Improved maintainability, type safety, and developer experience throughout the CLI and dev server packages.
-
----
-
 
 **Note:**
 - The removal of Vite config and schema utilities is a breaking change for users who previously relied on CLI-provided defaults. Please migrate to custom configuration as needed.
@@ -41,11 +37,6 @@
   -import { defineAppConfig } from '@equinor/fusion-framework-cli';
   +import { defineAppConfig } from '@equinor/fusion-framework-cli/app';
   ```
-
----
-
-
----
 
 **Further Reading & Documentation Highlights**
 
@@ -63,7 +54,5 @@
   - Deprecated commands (`build-pack`, `build-upload`, etc.) are replaced by `pack`, `upload`, etc. Use `--env` instead of `--service`.
   - The CLI supports "build once, deploy many" CI/CD workflows.
   - Utilities like `mergeAppManifests` are available for advanced config/manifest merging.
-
----
 
 This consolidated changeset replaces all previous CLI-related changesets for this release.
