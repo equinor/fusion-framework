@@ -98,6 +98,18 @@ pnpm init
 }
 ```
 
+> **Build Output Configuration:**
+> The CLI uses the `main` field (or `module` field) in your `package.json` to determine where to output the built application bundle. If neither field is specified, it defaults to `./dist/bundle.js`. 
+> 
+> **Why this approach?** Using the `main`/`module` fields ensures your package works correctly when served directly or when developing portals with internal references. This follows Node.js package conventions and enables proper module resolution.
+> 
+> **Important:** The output directory cannot be the project root, the `src` directory, or the current working directory. Always specify a dedicated build directory like `dist/`, `build/`, or similar.
+>
+> **Examples:**
+> - `"main": "dist/index.js"` → outputs to `dist/index.js`
+> - `"module": "build/app.esm.js"` → outputs to `build/app.esm.js`
+> - No `main`/`module` specified → defaults to `dist/bundle.js`
+
 #### Example `app.manifest.ts`
 
 ```ts
@@ -144,7 +156,7 @@ pnpm fusion-framework-cli auth login
 
 ```sh
 pnpm fusion-framework-cli publish --env <environment>
-pnpm fusion-framework-cli app config --upload --env <environment>
+pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 
 > **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](./docs/auth.md) for details.
@@ -292,7 +304,7 @@ jobs:
       - name: Publish application
         run: pnpm exec fusion-framework-cli app upload --env ${{ matrix.env }} app-bundle.zip
       - step: Upload configuration
-        run: pnpm exec fusion-framework-cli app config --upload --env ${{ matrix.env }}
+        run: pnpm exec fusion-framework-cli app config --publish --env ${{ matrix.env }}
 ```
 
 > [!TIP]
@@ -305,7 +317,7 @@ You can use environment variables in your app configuration to inject secrets or
 
 ```yml
 step: Upload configuration
-run: pnpm exec fusion-framework-cli app config --upload --env ${{ matrix.env }}
+run: pnpm exec fusion-framework-cli app config --publish --env ${{ matrix.env }}
 with:
   CONFIG_VALUE_FOO: ${{ VAR.ENVIRONMENT_CONFIG_VALUE }}
   CONFIG_VALUE_BAR: ${{ SECRETS.ENVIRONMENT_CONFIG_SECRET_VALUE }}
@@ -342,6 +354,7 @@ The Fusion Framework CLI provides a suite of commands to support the full applic
 - [Pack](#pack) — Bundle your app into a distributable archive.
 - [Upload](#upload) — Upload your app bundle to the Fusion app store.
 - [Tag](#tag) — Tag a published app version for release management.
+- [Manifest](#manifest) — Generate your app manifest file.
 - [Check](#check) — Verify your app's registration status.
 - [Aliases](#aliases) — Deprecated commands and their replacements.
 
@@ -383,7 +396,7 @@ Publish your application to the Fusion app store (registry) for deployment. This
 | ------------------ | --------------------------------------------------------------------------------------------------- | ----------------- |
 | `[bundle]`         | Path to the app bundle to upload. If omitted, the CLI will build and bundle your app automatically. |                   |
 | `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
-| `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`).                                        | `app.manifest.ts` |
+| `-m`, `--manifest` | Manifest file to use for bundling (e.g., `app.manifest.ts`) (optional).                             | `app.manifest.ts` |
 | `-t`, `--tag`      | Tag to apply to the published app (`latest` \| `preview`).                                          | `latest`          |
 | `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
 | `--token`          | Authentication token for Fusion.                                                                    |                   |
@@ -474,6 +487,14 @@ pnpm fusion-framework-cli build
 pnpm fusion-framework-cli build app.manifest.dev.ts --debug
 ```
 
+> [!NOTE]
+> The build output location is determined by the `main` field (or `module` field) in your `package.json`. If neither field is specified, the CLI defaults to `./dist/bundle.js`. This approach ensures your package works correctly when served directly or when developing portals with internal references, following Node.js package conventions for proper module resolution. The output directory cannot be the project root, the `src` directory, or the current working directory.
+>
+> **Examples:**
+> - `"main": "dist/index.js"` → builds to `dist/index.js`
+> - `"module": "build/app.esm.js"` → builds to `build/app.esm.js`
+> - No `main`/`module` specified → defaults to `dist/bundle.js`
+
 ### Pack
 
 Build a distributable app bundle archive for deployment.
@@ -562,16 +583,41 @@ pnpm fusion-framework-cli app tag <tag> [options]
 ```sh
 pnpm fusion-framework-cli app tag latest
 pnpm fusion-framework-cli app tag preview --env prod --manifest app.manifest.prod.ts
-pnpm fusion-framework-cli app tag stable --appKey my-app --version 1.2.3
+pnpm fusion-framework-cli app tag latest --appKey my-app --version 1.2.3
 ```
 
 > [!TIP] You can roll back a release by tagging a previous build as `latest`. Simply run the tag command with the desired version to make it the active release for deployment.
 
 > [!NOTE]
 > - The `tag` command requires a published application version. You can specify the app key and version directly, or let the CLI resolve them from your manifest file.
-> - Supported tags are: `latest`, `preview`, and `stable`.
+> - Supported tags are: `latest` and `preview`.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If tagging fails, an error will be logged and the process will exit with a non-zero code.
+
+### Manifest
+
+Generate and output your application manifest for Fusion apps.
+
+| Option/Argument       | Description                                                                | Default / Example |
+| --------------------- | -------------------------------------------------------------------------- | ----------------- |
+| `[manifest]`          | Manifest build file to use (e.g., `app.manifest[.env]?.[ts,js,json]`).   | `app.manifest.ts` |
+| `-d, --debug`         | Enable debug mode for verbose logging.                                    | `false`           |
+| `-o, --output <path>` | Write manifest to the specified file (default: stdout).                   | `stdout`          |
+| `-s, --silent`        | Silent mode, suppresses output except errors.                             | `false`           |
+
+**Usage:**
+```sh
+pnpm fusion-framework-cli app manifest [manifest] [options]
+```
+
+**Examples:**
+```sh
+pnpm fusion-framework-cli app manifest
+pnpm fusion-framework-cli app manifest app.manifest.prod.ts --output ./dist/app.manifest.json
+pnpm fusion-framework-cli app manifest --debug
+```
+
+> **Tip:** By default, the manifest is printed to stdout. Use `--output` to write it to a file for use in CI/CD pipelines or for inspection.
 
 ### Check
 

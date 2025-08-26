@@ -33,11 +33,11 @@ With v11, we switched to using the Fusion Framework itself for CLI operations. T
 - **Reduced duplication:** By reusing core modules, bug fixes and new features are shared between CLI and Framework code.
 - **Performance:** The framework is now initialized only when needed (e.g., for HTTP calls or authentication), improving startup time and resource usage.
 
-## Deprecated App Command Aliases
+## Command Changes
 
-This guide covers command changes for the `fusion-framework-cli app` scope.
+### Deprecated App Command Aliases
 
-The following table lists the old commands and their new equivalents:
+The following `fusion-framework-cli app` commands have been renamed:
 
 | Old Command    | New Command |
 | -------------- | ----------- |
@@ -46,29 +46,41 @@ The following table lists the old commands and their new equivalents:
 | build-manifest | manifest    |
 | build-publish  | publish     |
 
-When using a deprecated command, the CLI will display a warning message and guide you to use the new command. Deprecated options such as `--service` are no longer supported; use `--env` instead.
-
 > [!WARNING]
-> The deprecated commands will continue to work for now, but they are scheduled for removal in the next major release. Please migrate to the new commands as soon as possible.
+> **Deprecated commands will be removed in the next major release.** While they continue to work with warning messages, please migrate to the new commands immediately.
 
-### Additional Notes
-- The deprecated `--service` option is no longer supported. Use `--env` for environment selection.
-- Only the new command names will be supported in future versions. Update your CI/CD pipelines and documentation as soon as possible.
-- The deprecated commands are maintained for backward compatibility during the transition to v11, but will be removed in the next major release. Please migrate to the new commands as soon as possible.
+### Option Changes
+- **Removed:** `--service` option
+- **Use instead:** `--env` for environment selection
 
 ## Authentication Changes
-- The `FUSION_TOKEN` environment variable should only be used for CI/CD and automated deployments.
-- For local development, users should authenticate interactively by running:
+
+Authentication behavior has been updated to improve security and consistency:
+
+- **For CI/CD and automation:** Continue using the `FUSION_TOKEN` environment variable
+- **For local development:** Use interactive authentication:
   ```sh
   fusion-framework-cli auth login
   ```
-  before executing any commands.
 
-## What to Check When Migrating
-- Update all scripts, documentation, and CI/CD pipelines to use the new command names.
-- Remove any usage of the deprecated `--service` option and replace it with `--env`.
-- Ensure your local development workflow uses `fusion-framework-cli auth login` for authentication.
-- Review any custom integrations that may rely on CLI startup behavior, as initialization is now on-demand.
+## Migration Checklist
 
-For more details, see the CLI release notes or run `pnpm fusion-framework-cli app --help`.
+When upgrading from v10 to v11, ensure you:
+
+- [ ] **Update command names** in all scripts and CI/CD pipelines:
+  - `build-pack` → `pack`
+  - `build-upload` → `upload` 
+  - `build-manifest` → `manifest`
+  - `build-publish` → `publish`
+- [ ] **Replace `--service` with `--env`** for environment selection
+- [ ] **Update local development workflow** to use `fusion-framework-cli auth login`
+- [ ] **Review custom integrations** that may depend on CLI startup behavior (now on-demand)
+- [ ] **Update documentation** and team guidelines with new command syntax
+
+## Getting Help
+
+For additional information:
+- Run `pnpm fusion-framework-cli app --help` to see current command options
+- Check the CLI release notes for detailed changes
+- Review related documentation: [Authentication](./auth.md) and [Application Commands](./application.md)
 
