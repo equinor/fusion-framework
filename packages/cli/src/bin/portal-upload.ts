@@ -28,6 +28,44 @@ export type UploadPortalOptions = {
 };
 
 /**
+ * Handles HTTP response errors during the upload process by throwing descriptive errors
+ * based on the response status code.
+ *
+ * @param response - The HTTP response object from the upload request.
+ * @param name - The name of the resource being uploaded.
+ * @throws {Error} Throws an error with a specific message depending on the response status:
+ * - 409: Version already published.
+ * - 410: Resource removed.
+ * - 404: Resource not found.
+ * - 401/403: Operation not allowed for the user's role.
+ * - 500: Internal server error.
+ * - Any other status: Generic upload failure message.
+ */
+function processUploadError(response: Response, name: string) {
+  switch (response.status) {
+    case 409:
+      throw new Error(
+        `${response.status} - Version is already published, please generate a new release`,
+      );
+    case 410:
+      throw new Error(`${response.status} - ${name} is removed from Fusion`);
+    case 404:
+      throw new Error(`${response.status} - ${name} not found`);
+    case 401:
+    case 403:
+      throw new Error(`${response.status} - This is not allowed for your role on ${name}`);
+    case 500:
+      throw new Error(
+        `${response.status} - Internal server error, please try again later or contact support`,
+      );
+    default:
+      throw new Error(
+        `Failed to upload bundle. HTTP status ${response.status}, ${response.statusText}`,
+      );
+  }
+}
+
+/**
  * Uploads a portal bundle to the portal service for publishing or updating a portal template.
  *
  * This function loads the bundle, resolves the portal name (from argument or metadata),
@@ -97,36 +135,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
       }
 
       // Handle specific HTTP status codes for user-friendly error messages
-      if (response.status === 409) {
-        log?.fail(
-          `🤬 - ${response.status} - `,
-          'Version is already published, please generate a new release',
-        );
-        process.exit(1);
-      }
-      if (response.status === 410) {
-        log?.fail(`🤬 - ${response.status} - `, `${name} is removed from Fusion`);
-        process.exit(1);
-      }
-      if (response.status === 404) {
-        log?.fail(`🤬 - ${response.status} - `, `${name} not found`);
-        process.exit(1);
-      }
-      if (response.status === 401 || response.status === 403) {
-        log?.fail(`🤬 - ${response.status} - `, `This is not allowed for your role on ${name}`);
-        process.exit(1);
-      }
-      if (response.status === 500) {
-        log?.fail(
-          `🤬 - ${response.status} - `,
-          'Internal server error, please try again later or contact support',
-        );
-        process.exit(1);
-      }
-      // Throw for any other error status
-      throw new Error(
-        `Failed to upload bundle. HTTP status ${response.status}, ${response.statusText}`,
-      );
+      processUploadError(response, name);
     }
 
     // Log and return the successful response
