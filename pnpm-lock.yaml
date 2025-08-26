@@ -675,8 +675,8 @@ importers:
         specifier: ^4.2.0
         version: 4.3.2(typescript@5.8.3)(vite@6.3.5(@types/node@20.17.30)(sass-embedded@1.90.0)(sass@1.90.0))
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.45.0
@@ -873,8 +873,8 @@ importers:
         specifier: ^11.0.3
         version: 11.1.0
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -944,8 +944,8 @@ importers:
         specifier: ^5.8.2
         version: 5.8.3
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
 
   packages/modules/context:
     dependencies:
@@ -1040,8 +1040,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1084,8 +1084,8 @@ importers:
         specifier: ^7.5.4
         version: 7.7.2
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1141,8 +1141,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.2
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1154,8 +1154,8 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       zod:
-        specifier: ^3.23.8
-        version: 3.25.67
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -2138,8 +2138,8 @@ packages:
   '@bufbuild/protobuf@2.5.2':
     resolution: {integrity: sha512-foZ7qr0IsUBjzWIq+SuBLfdQCpJ1j8cTuNNT4owngTHoN5KsJb8L9t65fzz7SCeSWzescoOil/0ldqiL041ABg==}
 
-  '@bufbuild/protobuf@2.6.3':
-    resolution: {integrity: sha512-w/gJKME9mYN7ZoUAmSMAWXk4hkVpxRKvEJCb3dV5g9wwWdxTJJ0ayOJAVcNxtdqaxDyFuC0uz4RSGVacJ030PQ==}
+  '@bufbuild/protobuf@2.7.0':
+    resolution: {integrity: sha512-qn6tAIZEw5i/wiESBF4nQxZkl86aY4KoO0IkUa2Lh+rya64oTOdJQFlZuMwI1Qz9VBJQrQC4QlSA2DNek5gCOA==}
 
   '@bundled-es-modules/cookie@2.0.1':
     resolution: {integrity: sha512-8o+5fRPLNbjbdGRRmJj3h6Hh1AQJf2dk3qQ/5ZFb+PXkRNiSoMGGUKlsgLfrxneb72axVJyIYji64E2+nNfYyw==}
@@ -3174,8 +3174,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/confirm@5.1.15':
-    resolution: {integrity: sha512-SwHMGa8Z47LawQN0rog0sT+6JpiL0B7eW9p1Bb7iCeKDGTI5Ez25TSc2l8kw52VV7hA4sX/C78CGkMrKXfuspA==}
+  '@inquirer/confirm@5.1.16':
+    resolution: {integrity: sha512-j1a5VstaK5KQy8Mu8cHmuQvN1Zc62TbLhjJxwHvKPPKEoowSF6h/0UdOpA9DNdWZ+9Inq73+puRq1df6OJ8Sag==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -3192,8 +3192,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/core@10.1.15':
-    resolution: {integrity: sha512-8xrp836RZvKkpNbVvgWUlxjT4CraKk2q+I3Ksy+seI2zkcE+y6wNs1BVhgcv8VyImFecUhdQrYLdW32pAjwBdA==}
+  '@inquirer/core@10.2.0':
+    resolution: {integrity: sha512-NyDSjPqhSvpZEMZrLCYUquWNl+XC/moEcVFqS55IEYIYsY0a1cUCevSqk7ctOlnm/RaSBU5psFryNlxcmGrjaA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -10104,12 +10104,16 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
+  yoctocolors-cjs@2.1.3:
+    resolution: {integrity: sha512-U/PBtDf35ff0D8X8D0jfdzHYEPFxAI7jJlxZXwCSez5M3190m+QobIfh+sWDWSHMCWWJN2AWamkegn6vr6YBTw==}
+    engines: {node: '>=18'}
+
   yoctocolors@2.1.1:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+  zod@4.1.1:
+    resolution: {integrity: sha512-SgMZK/h8Tigt9nnKkfJMvB/mKjiJXaX26xegP4sa+0wHIFVFWVlsQGdhklDmuargBD3Hsi3rsQRIzwJIhTPJHA==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -10352,7 +10356,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.5.2': {}
 
-  '@bufbuild/protobuf@2.6.3':
+  '@bufbuild/protobuf@2.7.0':
     optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -11460,17 +11464,17 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.3.0
 
-  '@inquirer/confirm@5.1.15(@types/node@20.17.30)':
+  '@inquirer/confirm@5.1.16(@types/node@20.17.30)':
     dependencies:
-      '@inquirer/core': 10.1.15(@types/node@20.17.30)
+      '@inquirer/core': 10.2.0(@types/node@20.17.30)
       '@inquirer/type': 3.0.8(@types/node@20.17.30)
     optionalDependencies:
       '@types/node': 20.17.30
     optional: true
 
-  '@inquirer/confirm@5.1.15(@types/node@24.3.0)':
+  '@inquirer/confirm@5.1.16(@types/node@24.3.0)':
     dependencies:
-      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/core': 10.2.0(@types/node@24.3.0)
       '@inquirer/type': 3.0.8(@types/node@24.3.0)
     optionalDependencies:
       '@types/node': 24.3.0
@@ -11489,7 +11493,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.3.0
 
-  '@inquirer/core@10.1.15(@types/node@20.17.30)':
+  '@inquirer/core@10.2.0(@types/node@20.17.30)':
     dependencies:
       '@inquirer/figures': 1.0.13
       '@inquirer/type': 3.0.8(@types/node@20.17.30)
@@ -11498,12 +11502,12 @@ snapshots:
       mute-stream: 2.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.2
+      yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 20.17.30
     optional: true
 
-  '@inquirer/core@10.1.15(@types/node@24.3.0)':
+  '@inquirer/core@10.2.0(@types/node@24.3.0)':
     dependencies:
       '@inquirer/figures': 1.0.13
       '@inquirer/type': 3.0.8(@types/node@24.3.0)
@@ -11512,7 +11516,7 @@ snapshots:
       mute-stream: 2.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.2
+      yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.3.0
     optional: true
@@ -18152,7 +18156,7 @@ snapshots:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
       '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.15(@types/node@20.17.30)
+      '@inquirer/confirm': 5.1.16(@types/node@20.17.30)
       '@mswjs/interceptors': 0.39.6
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/until': 2.1.0
@@ -18178,7 +18182,7 @@ snapshots:
       '@bundled-es-modules/cookie': 2.0.1
       '@bundled-es-modules/statuses': 1.0.1
       '@bundled-es-modules/tough-cookie': 0.1.6
-      '@inquirer/confirm': 5.1.15(@types/node@24.3.0)
+      '@inquirer/confirm': 5.1.16(@types/node@24.3.0)
       '@mswjs/interceptors': 0.39.6
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/until': 2.1.0
@@ -19411,7 +19415,7 @@ snapshots:
 
   sass-embedded@1.90.0:
     dependencies:
-      '@bufbuild/protobuf': 2.6.3
+      '@bufbuild/protobuf': 2.7.0
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.3
@@ -20683,8 +20687,11 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
+  yoctocolors-cjs@2.1.3:
+    optional: true
+
   yoctocolors@2.1.1: {}
 
-  zod@3.25.67: {}
+  zod@4.1.1: {}
 
   zwitch@2.0.4: {}
