@@ -1,0 +1,28 @@
+{
+  "name": "@equinor/fusion-framework-cookbook-app-react-state",
+  "version": "0.0.0",
+  "description": "A comprehensive cookbook demonstrating how to use the Fusion Framework state module with useAppState hook for managing application state in React apps.",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "fusion-framework-cli app dev",
+    "build": "fusion-framework-cli app build",
+    "build:pack": "fusion-framework-cli app pack",
+    "docker": "cd .. && sh docker-script.sh app-react"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@equinor/eds-core-react": "^0.45.0",
+    "@equinor/fusion-framework-cli": "workspace:^",
+    "@equinor/fusion-framework-module-state": "workspace:^",
+    "@equinor/fusion-framework-react-app": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
+    "@types/react": "^18.2.50",
+    "@types/react-dom": "^18.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.2"
+  }
+}
