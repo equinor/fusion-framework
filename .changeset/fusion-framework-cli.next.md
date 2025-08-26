@@ -9,7 +9,7 @@
 - **Command Structure:** CLI is now divided into three main groups: `bin` (executable functions), `commands` (CLI commands), and `lib` (for consumers, config, and utilities). This improves organization and modularity.
 - **BREAKING:** The `--service` flag has been removed. The CLI now uses service discovery via Fusion environment variables. All `app -build-???` commands are deprecated and will be removed in the next major version.
 
-- **Vite Config and Schema Utilities Removed:** All built-in Vite configuration files, Vite logger, and internal schema validation utilities have been removed from the CLI package. Users should now provide their own Vite configuration and schema validation as needed.
+- **Dev Server Abstraction:** Vite configuration and dev server functionality has been abstracted into the `@equinor/fusion-framework-dev-server` package. The CLI now provides a higher-level API that handles Vite configuration internally, eliminating the need for users to manage Vite configuration directly while still allowing for customization through configuration options.
 
 - **New Utility Functions:** The CLI now includes new utility modules for resolving CI/CD metadata (GitHub Actions, Azure DevOps), git commit and remote info, and package metadata. These utilities support advanced scripting and automation scenarios.
 
