@@ -1,5 +1,30 @@
 # Change Log
 
+## 2.2.0-next.0
+
+### Minor Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b9f540c`](https://github.com/equinor/fusion-framework/commit/b9f540c7539556ac0be6b19818343f46c797c4b7) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useBookmarkNavigate` to use proper TypeScript typing for bookmark events.
+
+  **Module Bookmark Changes:**
+
+  - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
+  - Added export for `BookmarkProviderEvents` type in `packages/modules/bookmark/src/index.ts`
+  - Updated JSDoc comment from `@note` to `@remarks` in `packages/modules/bookmark/src/BookmarkClient.ts`
+  - Reordered tsconfig references (event before services)
+
+  **React Changes:**
+
+  - Updated `packages/react/modules/bookmark/src/portal/useBookmarkNavigate.ts` to use proper TypeScript typing for bookmark provider events
+  - Removed React paths configuration from `packages/react/app/tsconfig.json`
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad) Thanks [@odinr](https://github.com/odinr)! - Upgrade zod dependency to ^3.25.76 in all affected packages.
+
+- Updated dependencies [[`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960)]:
+  - @equinor/fusion-framework-module@5.0.0-next.3
+
 ## 2.1.15
 
 ### Patch Changes

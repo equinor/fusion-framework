@@ -1,5 +1,12 @@
 # Change Log
 
+## 35.0.0-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960)]:
+  - @equinor/fusion-framework-module@5.0.0-next.3
+
 ## 34.1.0
 
 ### Minor Changes
