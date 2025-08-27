@@ -1148,7 +1148,7 @@ importers:
         version: 3.7.1
       '@azure/msal-node-extensions':
         specifier: ^1.5.11
-        version: 1.5.20
+        version: 1.5.22
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2055,8 +2055,12 @@ packages:
     resolution: {integrity: sha512-1IseGNH6XGWe+5xhZlhasTJP6Ob7tnVSlfFUnjdeH4Kik0n1SORTmdB6xxTwbx9Ro8EuO0XaRzpdABWSf15sdg==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-node-extensions@1.5.20':
-    resolution: {integrity: sha512-G7zQPRB84OgX/gMYikdd/CNvKK8iVj5tB8KH/blGZm5OnvMHc4yXe1rEuooMBVcAdKtFLdLotREQBIqRPog/Dg==}
+  '@azure/msal-common@15.12.0':
+    resolution: {integrity: sha512-4ucXbjVw8KJ5QBgnGJUeA07c8iznwlk5ioHIhI4ASXcXgcf2yRFhWzYOyWg/cI49LC9ekpFJeQtO3zjDTbl6TQ==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-node-extensions@1.5.22':
+    resolution: {integrity: sha512-pdHcoyxmCszjXhc59jZ+7WKH0ZqebH0ZVvKlBwFD57TQzAOnXPS6q76/dsVO/Y7EXAlvkoCmcebNc6eP4cQulA==}
     engines: {node: '>=16'}
 
   '@azure/msal-node-runtime@0.19.4':
@@ -2139,6 +2143,10 @@ packages:
 
   '@babel/runtime@7.28.2':
     resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.3':
+    resolution: {integrity: sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -8976,9 +8984,11 @@ snapshots:
 
   '@azure/msal-common@15.11.0': {}
 
-  '@azure/msal-node-extensions@1.5.20':
+  '@azure/msal-common@15.12.0': {}
+
+  '@azure/msal-node-extensions@1.5.22':
     dependencies:
-      '@azure/msal-common': 15.11.0
+      '@azure/msal-common': 15.12.0
       '@azure/msal-node-runtime': 0.19.4
       keytar: 7.9.0
 
@@ -9080,6 +9090,8 @@ snapshots:
       '@babel/helper-plugin-utils': 7.27.1
 
   '@babel/runtime@7.28.2': {}
+
+  '@babel/runtime@7.28.3': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -12584,7 +12596,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.28.2
+      '@babel/runtime': 7.28.3
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
