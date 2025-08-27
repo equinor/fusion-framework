@@ -12,7 +12,7 @@ runs:
 
     - name: Generate version
       shell: bash
-      run: npx changeset version
+      run: pnpm changeset version
       env:
         GITHUB_TOKEN: ${{ github.token }}
 

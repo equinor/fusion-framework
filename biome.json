@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["./turbo", "vue-press/src/.vuepress"]
+    "ignore": ["./turbo", "vue-press/src/.vuepress", "package.json", "pnpm-lock.yaml"]
   },
   "formatter": {
     "enabled": true,
@@ -44,9 +44,9 @@
         "noInferrableTypes": "warn"
       },
       "suspicious": {
+        "noConfusingVoidType": "info",
         "noExplicitAny": "warn",
         "noEmptyBlockStatements": "warn",
-        "noConfusingVoidType": "warn",
         "noGlobalIsNan": "warn",
         "noDoubleEquals": "warn",
         "noAssignInExpressions": "warn",

@@ -57,7 +57,7 @@ export interface IFrameworkEvent<
   /**
    * Updates the details of the framework event.
    *
-   * @note updating the details should only be allowed if the event is mutable.
+   * @remarks updating the details should only be allowed if the event is mutable.
    *
    * @param fn - A function that takes the current draft of the event details and returns the updated details, or `void` to cancel the update.
    */
@@ -74,7 +74,7 @@ export interface IFrameworkEvent<
  * @template TDetail - type of event detail, event data payload
  * @template TSource - type of event source
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: generic type parameters need flexibility
 export type FrameworkEventInit<TDetail = any, TSource = any> = {
   /** Event data */
   detail: TDetail;
@@ -271,7 +271,7 @@ export class FrameworkEvent<
   /**
    * Updates the event details using the provided function.
    *
-   * @note If the event details are not mutable, an error will be thrown.
+   * @remarks If the event details are not mutable, an error will be thrown.
    *
    * @see {FrameworkEvent.originalDetail}
    *

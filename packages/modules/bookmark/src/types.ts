@@ -6,7 +6,6 @@ import type {
   bookmarkSourceSystemSchema,
   bookmarksSchema,
   bookmarkUserSchema,
-  bookmarkWithDataSchema,
 } from './bookmark.schemas';
 
 import type { bookmarkConfigSchema } from './bookmark-config.schema';
@@ -37,10 +36,10 @@ export type BookmarkWithoutData = z.infer<typeof bookmarkSchema>;
  * Represents a bookmark with associated data.
  * @template T - The type of the bookmark data.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Bookmark<T extends BookmarkData = any> = z.infer<
-  ReturnType<typeof bookmarkWithDataSchema<T>>
->;
+// biome-ignore lint/suspicious/noExplicitAny: must be any to support all bookmark data types
+export type Bookmark<T extends BookmarkData = any> = BookmarkWithoutData & {
+  payload?: T;
+};
 
 /**
  * Represents the configuration options for a bookmark module.

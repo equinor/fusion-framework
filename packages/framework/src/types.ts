@@ -28,3 +28,5 @@ export interface Fusion<TModules extends Array<AnyModule> | unknown = unknown> {
    */
   modules: FusionModulesInstance<TModules>;
 }
+
+export type FusionRenderFn = (el: HTMLElement, args: { ref: ModulesInstance<AnyModule[]> }) => void;

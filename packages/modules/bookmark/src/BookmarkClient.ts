@@ -69,7 +69,7 @@ const parseBookmarkWithoutPayload = (value: unknown): BookmarkWithoutData => {
  *
  * Fetching single and all bookmarks will use Query from '@equinor/fusion-query' to cache the results.
  *
- * @note if you wish to implement your own bookmarks API client, you can do so by implementing the {@link IBookmarkClient} interface.
+ * @remarks if you wish to implement your own bookmarks API client, you can do so by implementing the {@link IBookmarkClient} interface.
  */
 export class BookmarkClient implements IBookmarkClient {
   #api: BookmarksApiClient<'json$'>;

@@ -1,0 +1,44 @@
+{
+  "name": "@equinor/fusion-framework-dev-server",
+  "version": "1.0.0-next.10",
+  "description": "Package for running a development server for fusion-framework",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/dev-server"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": ["dev-server", "fusion-framework", "vite", "typescript"],
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
+    "@equinor/fusion-framework-vite-plugin-spa": "workspace:^",
+    "@equinor/fusion-log": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vite": "^6.3.5",
+    "vitest": "^2.0.5"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.7"
+  }
+}

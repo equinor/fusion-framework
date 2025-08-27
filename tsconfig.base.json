@@ -4,14 +4,15 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "composite": true,
     "incremental": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "stripInternal": true,
+    "lib": ["esnext", "dom"],
+    "types": ["node"],
     "skipLibCheck": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "composite": true
+    "stripInternal": true
   }
 }

@@ -10,7 +10,7 @@ export const createServiceResolver = async (
   if (!clientId) {
     throw new Error('clientId is required');
   }
-  const services = await provider.resolveServices().then((services) =>
+  const services = await provider.resolveServices().then((services: Service[]) =>
     services.reduce(
       (acc, service) => {
         // try to get the client id from the scope
@@ -43,7 +43,7 @@ export const createServiceResolver = async (
     Object.entries(services.clientMap).map(async ([id, uris]) => {
       return authContainer.registerAppAsync(
         id,
-        uris.map((x) => x.uri),
+        (uris as Service[]).map((x: Service) => x.uri),
         true,
       );
     }),

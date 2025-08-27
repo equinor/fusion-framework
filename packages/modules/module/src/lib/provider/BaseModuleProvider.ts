@@ -1,6 +1,6 @@
-import SemanticVersion from '../semantic-version';
+import SemanticVersion from '../semantic-version.js';
 
-import type { IModuleProvider } from './IModuleProvider';
+import type { IModuleProvider } from './IModuleProvider.js';
 
 import { Subscription, type TeardownLogic } from 'rxjs';
 

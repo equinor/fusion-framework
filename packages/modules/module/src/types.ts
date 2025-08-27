@@ -1,8 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type SemanticVersion from './lib/semantic-version';
+import type SemanticVersion from './lib/semantic-version.js';
 import type { ObservableInput } from 'rxjs';
 
+/**
+ * Arguments passed to a module initializer function.
+ *
+ * @template TConfig - The type of the module's configuration object.
+ * @template TDeps - An array of module dependencies, each extending `AnyModule`. Defaults to an empty array.
+ *
+ * @property ref - Optional reference for internal use.
+ * @property config - The configuration object for the module.
+ * @property requireInstance - Function to asynchronously retrieve an instance of a required dependency module by name.
+ *   @param name - The key of the dependency module to retrieve.
+ *   @param wait - Optional timeout in milliseconds to wait for the module instance.
+ *   @returns A promise resolving to the instance of the requested dependency module.
+ * @property hasModule - Function to check if a module with the given key exists.
+ *   @param key - The key of the module to check.
+ *   @returns `true` if the module exists, otherwise `false`.
+ */
 export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> = {
   ref?: any;
   config: TConfig;
@@ -11,13 +27,12 @@ export type ModuleInitializerArgs<TConfig, TDeps extends Array<AnyModule> = []> 
     wait?: number,
   ) => Promise<ModulesInstanceType<TDeps>[TKey]>;
   hasModule: (key: string) => boolean;
-  // | ((key: Extract<keyof ModulesInstanceType<TDeps>, string>) => boolean)
 };
+
+// @todo - create a BaseModule which implements this interface
 
 /**
  * Interface which describes the structure of a module
- *
- * @TODO create a BaseModule which implements this interface
  *
  * @template TKey name of the module
  * @template TType module instance type
@@ -40,12 +55,11 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    *
    * Create a configurator builder which the consumer can use for configuring
    *
-   * @TODO change return type to `ObservableInput`
-   * @TODO add reference to `IConfigurationBuilder`
-   *
    * @param ref this would normally be the parent instance
    * @returns a configurator build
    */
+  // @todo - change return type to `ObservableInput`
+  // @todo - add reference to `IConfigurationBuilder`
   configure?: (ref?: any) => TConfig | Promise<TConfig>;
 
   /**
@@ -54,11 +68,10 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
    * This method is called after the module initiator has created config.
    * @see {@link Module.configure}
    *
-   * @TODO change return type to `ObservableInput`
-   *
    * @param config
    * @returns void
    */
+  // @todo - change return type to `ObservableInput`
   postConfigure?: (
     config: Record<TKey, TConfig> & ModulesConfigType<ModulesType<TDeps>>,
   ) => void | Promise<void>;
@@ -102,7 +115,27 @@ export interface Module<TKey extends string, TType, TConfig, TDeps extends Array
   }) => void | Promise<void>;
 }
 
+/**
+ * Represents a module with any type of configuration, state, dependencies, and services.
+ *
+ * This type is a generic alias for the `Module` type with all type parameters set to `any`,
+ * allowing for maximum flexibility when the specific types are not known or not important.
+ *
+ * @see Module
+ */
 export type AnyModule = Module<any, any, any, any>;
+
+/**
+ * Combines two module type arrays into a single tuple type.
+ *
+ * - If both `T1` and `T2` are arrays of `AnyModule`, returns a tuple with all elements from `T1` followed by all elements from `T2`.
+ * - If only `T1` is an array of `AnyModule`, returns `T1`.
+ * - If only `T2` is an array of `AnyModule`, returns `T2`.
+ * - Otherwise, returns `never`.
+ *
+ * @typeParam T1 - The first module type or array of modules.
+ * @typeParam T2 - The second module type or array of modules.
+ */
 export type CombinedModules<T1, T2> = T1 extends Array<AnyModule>
   ? T2 extends Array<AnyModule>
     ? [...T1, ...T2]
@@ -110,18 +143,90 @@ export type CombinedModules<T1, T2> = T1 extends Array<AnyModule>
   : T2 extends Array<AnyModule>
     ? T2
     : never;
+
+/**
+ * Represents an object whose properties are strings mapped to `AnyModule` instances.
+ * This type is useful for defining collections of modules indexed by string keys.
+ */
 export type AnyModuleInstance = Record<string, AnyModule>;
+
+/**
+ * Extracts the key type (`TKey`) from a `Module` type.
+ *
+ * @typeParam M - The `Module` type to extract the key from.
+ * @returns The key type (`TKey`) if `M` extends `Module`, otherwise `never`.
+ */
 export type ModuleKey<M> = M extends Module<infer TKey, any, any, any> ? TKey : never;
+
+/**
+ * Extracts the `TType` type parameter from a `Module` type.
+ *
+ * Given a type `M` that extends `Module<any, TType, any, any>`, this utility type
+ * will resolve to the `TType` parameter of that `Module`. If `M` does not match
+ * the expected `Module` structure, it resolves to `never`.
+ *
+ * @template M - The type to extract the module type from.
+ */
 export type ModuleType<M> = M extends Module<any, infer TType, any, any> ? TType : never;
+
+/**
+ * Extracts the union of module types from an array of modules.
+ *
+ * @typeParam M - An array of modules extending `AnyModule`.
+ * @returns The union type of all elements in the array `M`.
+ *
+ * @example
+ * type MyModules = [ModuleA, ModuleB];
+ * type Result = ModuleTypes<MyModules>; // Result is ModuleA | ModuleB
+ */
 export type ModuleTypes<M extends Array<AnyModule>> = M extends Array<infer U> ? U : never;
+
+/**
+ * Extracts the configuration type (`TType`) from a `Module` type.
+ *
+ * @typeParam M - The module type to extract the configuration type from.
+ * @returns The configuration type (`TType`) if `M` extends `Module<any, any, TType, any>`, otherwise `never`.
+ */
 export type ModuleConfigType<M> = M extends Module<any, any, infer TType, any> ? TType : never;
+
+/**
+ * Represents an instance of modules, providing both the resolved module types and a `dispose` method for cleanup.
+ *
+ * @typeParam TModules - The collection of modules, either as an array or a record of modules.
+ * @see ModulesInstanceType
+ * @see AnyModule
+ */
 export type ModulesInstance<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
   ModulesInstanceType<TModules> & { dispose: VoidFunction };
 
+/**
+ * Represents a collection of modules, where each property key is a string identifier
+ * and the value is an `AnyModule` instance.
+ *
+ * @remarks
+ * This interface is typically used to define a mapping of module names to their corresponding module implementations.
+ *
+ * @example
+ * ```typescript
+ * const modules: Modules = {
+ *   user: userModule,
+ *   auth: authModule,
+ * };
+ * ```
+ */
 export interface Modules {
   [Key: string]: AnyModule;
 }
 
+/**
+ * Maps an array of modules to an object type whose keys are the first generic parameter (`T`)
+ * of each `Module` in the array, and whose values are the corresponding module instances.
+ *
+ * @template M - An array of modules extending `AnyModule`.
+ * @typeParam M - The array of modules to be mapped.
+ * @returns An object type where each key is the unique identifier (`T`) of a module,
+ * and each value is the corresponding module instance from the array.
+ */
 export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
   ? {
       [K in keyof M as M[K] extends Module<infer T, any, any, any> ? T : never]: M[Extract<
@@ -131,7 +236,20 @@ export type ModulesType<M extends Array<AnyModule>> = M extends Array<AnyModule>
     }
   : never;
 
-/** Extract configs from modules  */
+/**
+ * Infers the configuration object type for a given set of modules.
+ *
+ * Accepts either an array of modules or a record (object) of modules, and produces
+ * the corresponding configuration object type for those modules.
+ *
+ * - If `TModules` is an array of modules, it maps the array to an object type using `ModulesType<TModules>`.
+ * - If `TModules` is a record of modules, it uses the record type directly.
+ * - Otherwise, resolves to `never`.
+ *
+ * @typeParam TModules - An array or record of modules extending `AnyModule`.
+ * @see ModulesObjectConfigType
+ * @see ModulesType
+ */
 export type ModulesConfigType<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
   TModules extends Array<AnyModule>
     ? ModulesObjectConfigType<ModulesType<TModules>>
@@ -139,6 +257,15 @@ export type ModulesConfigType<TModules extends Array<AnyModule> | Record<string,
       ? ModulesObjectConfigType<TModules>
       : never;
 
+/**
+ * Infers the instance type for a collection of modules, supporting both arrays and objects.
+ *
+ * - If `TModules` is an array of modules, resolves to the instance type of the corresponding modules object.
+ * - If `TModules` is an object mapping strings to modules, resolves to the instance type of that object.
+ * - Otherwise, resolves to `never`.
+ *
+ * @typeParam TModules - An array or object of modules to infer instance types from.
+ */
 export type ModulesInstanceType<TModules extends Array<AnyModule> | Record<string, AnyModule>> =
   TModules extends Array<AnyModule>
     ? ModulesObjectInstanceType<ModulesType<TModules>>
@@ -146,31 +273,83 @@ export type ModulesInstanceType<TModules extends Array<AnyModule> | Record<strin
       ? ModulesObjectInstanceType<TModules>
       : never;
 
+/**
+ * Interface for configuring modules and registering lifecycle callbacks.
+ *
+ * @typeParam M - A collection of modules, either as an array or a record.
+ *
+ * @property onAfterConfiguration - Registers a callback to be invoked after the modules' configuration phase.
+ * The callback receives the resolved configuration for the modules.
+ *
+ * @property onAfterInit - Registers a callback to be invoked after the modules have been initialized.
+ * The callback receives the initialized module instances.
+ */
 export interface IModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> {
   onAfterConfiguration: (cb: (config: ModulesConfigType<M>) => void | Promise<void>) => void;
   onAfterInit: (cb: (instance: ModulesInstanceType<M>) => void | Promise<void>) => void;
 }
 
+/**
+ * Represents the configuration type for a collection of modules.
+ *
+ * @typeParam M - An array or record of modules extending `AnyModule`.
+ * @see ModulesConfigType
+ * @see IModulesConfig
+ */
 export type ModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> =
   ModulesConfigType<M> & IModulesConfig<M>;
 
 /** === Internal helpers === */
 
-type ModulesObjectInstanceType<TModule extends Record<string, AnyModule>> = {
+/**
+ * @internal
+ *
+ * Maps the keys of a given modules object to their corresponding module instance types.
+ *
+ * @template TModule - An object type where each property is a module.
+ * @remarks
+ * This utility type iterates over the keys of `TModule`, extracting only string keys,
+ * and produces a new type where each key is associated with the result of `ModuleType`
+ * applied to the corresponding module.
+ *
+ * @example
+ * type MyModules = { foo: SomeModule; bar: AnotherModule };
+ * type Instances = ModulesObjectInstanceType<MyModules>;
+ * // Equivalent to: { foo: ModuleType<SomeModule>; bar: ModuleType<AnotherModule> }
+ */
+export type ModulesObjectInstanceType<TModule extends Record<string, AnyModule>> = {
   [TKey in keyof TModule as Extract<TKey, string>]: ModuleType<TModule[TKey]>;
 };
 
-type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
+/**
+ * @internal
+ *
+ * Maps an object of modules to their corresponding configuration types.
+ *
+ * @template M - An object type where each property is a module extending `AnyModule`.
+ * @remarks
+ * For each key in `M` that is a string, this type produces a property with the same key,
+ * whose value is the configuration type for the corresponding module.
+ *
+ * @example
+ * ```typescript
+ * type MyModules = { foo: FooModule; bar: BarModule };
+ * type MyConfigs = ModulesObjectConfigType<MyModules>;
+ * // Result: { foo: ModuleConfigType<FooModule>; bar: ModuleConfigType<BarModule> }
+ * ```
+ */
+export type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
   [K in keyof M as Extract<K, string>]: ModuleConfigType<M[K]>;
 };
 
 /** === */
 
+/**
+ * Represents an instance of the modules defined by the `Modules` type.
+ * This type is resolved using the `ModulesInstanceType` utility, which maps the module definitions
+ * to their corresponding instance types.
+ *
+ * @see Modules
+ * @see ModulesInstanceType
+ */
 export type ModuleInstance = ModulesInstanceType<Modules>;
-
-export interface ILogger {
-  debug: (...msg: unknown[]) => void;
-  info: (...msg: unknown[]) => void;
-  warn: (...msg: unknown[]) => void;
-  error: (...msg: unknown[]) => void;
-}
