@@ -33,8 +33,6 @@ keywords:
   - service discovery
 ---
 
-# Fusion Framework CLI
-
 [![npm version](https://img.shields.io/npm/v/@equinor/fusion-framework-cli.svg?style=flat)](https://www.npmjs.com/package/@equinor/fusion-framework-cli)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](./LICENSE)
 
@@ -42,30 +40,17 @@ keywords:
 
 ## Table of Contents
 
-- [Fusion Framework CLI](#fusion-framework-cli)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [Prerequisites](#prerequisites)
-  - [Features \& Benefits](#features--benefits)
-  - [Getting Started](#getting-started)
-    - [1. Install the CLI](#1-install-the-cli)
-    - [2. Initialize or update your app's manifest and config files](#2-initialize-or-update-your-apps-manifest-and-config-files)
-    - [3. Start the development server](#3-start-the-development-server)
-    - [4. Log in to the Fusion Framework (if needed)](#4-log-in-to-the-fusion-framework-if-needed)
-    - [5. Build and publish your app](#5-build-and-publish-your-app)
-    - [6. Upload configuration](#6-upload-configuration)
-  - [Common Commands](#common-commands)
-  - [Example: package.json](#example-packagejson)
-  - [Troubleshooting](#troubleshooting)
-    - [Common Issues](#common-issues)
-    - [Getting Help](#getting-help)
-  - [Documentation](#documentation)
-    - [📚 **Getting Started**](#-getting-started)
-    - [🔧 **Setup \& Configuration**](#-setup--configuration)
-    - [🚀 **Migration \& Updates**](#-migration--updates)
-    - [📖 **Additional Resources**](#-additional-resources)
-  - [Contributing](#contributing)
-  - [Tooling Roadmap](#tooling-roadmap)
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Features \& Benefits](#features--benefits)
+- [Getting Started](#getting-started)
+- [Common Commands](#common-commands)
+- [Example: package.json](#example-packagejson)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+  - [Getting Help](#getting-help)
 
 ## Overview
 
@@ -103,13 +88,13 @@ Fusion Framework CLI is a command-line tool for developing, building, and publis
 
 ## Getting Started
 
-### 1. Install the CLI
+**Install the CLI**
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli
 ```
 
-### 2. Initialize or update your app's manifest and config files
+**Initialize or update your app's manifest and config files**
 
 Create the required configuration files for your app:
 
@@ -118,25 +103,25 @@ Create the required configuration files for your app:
 
 See [Developing Apps](./docs/application.md) for detailed setup and configuration guidance.
 
-### 3. Start the development server
+**Start the development server**
 
 ```sh
 pnpm fusion-framework-cli dev
 ```
 
-### 4. Log in to the Fusion Framework (if needed)
+**Log in to the Fusion Framework (if needed)**
 
 ```sh
 pnpm fusion-framework-cli auth login
 ```
 
-### 5. Build and publish your app
+**Build and publish your app**
 
 ```sh
 pnpm fusion-framework-cli publish --env <environment>
 ```
 
-### 6. Upload configuration
+**Upload configuration**
 
 ```sh
 pnpm fusion-framework-cli app config --publish --env <environment>
@@ -185,24 +170,44 @@ A minimal example for a Fusion Framework app:
 
 > **Note:** The CLI determines the build output location from the `main` field in your package.json. If not specified, it defaults to `dist/bundle.js`.
 
+## Documentation
+
+**Getting Started**
+- [Developing Apps](./docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
+- [Developing Portals](./docs/portal.md): Guide to building, configuring, and publishing portal templates
+
+**Setup & Configuration**
+- [Authentication](./docs/auth.md): Setting up authentication for local development and CI/CD environments
+- [libsecret Installation](./docs/libsecret.md): Fix credential storage issues on Linux systems
+
+**Migration & Updates**
+- [Migration Guide: v10 to v11](./docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
+
+**Additional Resources**
+- [CLI Command Reference](./docs/application.md#commands): Detailed documentation of all available commands and options
+- [CI/CD Best Practices](./docs/application.md#cicd): Automated workflows and deployment strategies
+- [Troubleshooting Guide](./docs/application.md#troubleshooting--faq): Common issues and solutions
+
+> **Need more help?** Check the [docs folder](./docs/) for additional guides and examples.
+
 ## Troubleshooting
 
 ### Common Issues
 
-**🔐 Authentication & Credentials**
+**Authentication & Credentials**
 - **Authentication issues?** See [Authentication Guide](./docs/auth.md) for token setup and troubleshooting
 - **libsecret errors on Linux?** Install libsecret using our [installation guide](./docs/libsecret.md)
 
-**⚙️ CLI & Commands**
+**CLI & Commands**
 - **Command not found?** Ensure `node_modules/.bin` is in your PATH or use `pnpm`/`npx`
 - **Permission errors?** Check that you have the correct access rights to Fusion services
 
-**🛠️ Build & Development**
+**Build & Development**
 - **Build errors?** Verify your `app.manifest.ts` and `app.config.ts` files for syntax errors
 - **Dev server not starting?** Check for port conflicts (default: 3000) or use `--port` option
 - **Missing dependencies?** Ensure all required packages are installed with `pnpm install`
 
-**📦 Publishing & Deployment**
+**Publishing & Deployment**
 - **Upload failures?** Verify your app is registered in the Fusion App Admin
 - **Environment issues?** Check that you're using the correct `--env` parameter
 
@@ -212,34 +217,8 @@ A minimal example for a Fusion Framework app:
 - **Found a bug?** Open an issue on our GitHub repository
 - **Need support?** Check the [docs folder](./docs/) or reach out to the Fusion team
 
-## Documentation
-
-### 📚 **Getting Started**
-- [Developing Apps](./docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
-- [Developing Portals](./docs/portal.md): Guide to building, configuring, and publishing portal templates
-
-### 🔧 **Setup & Configuration**
-- [Authentication](./docs/auth.md): Setting up authentication for local development and CI/CD environments
-- [libsecret Installation](./docs/libsecret.md): Fix credential storage issues on Linux systems
-
-### 🚀 **Migration & Updates**
-- [Migration Guide: v10 to v11](./docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
-
-### 📖 **Additional Resources**
-- [CLI Command Reference](./docs/application.md#commands): Detailed documentation of all available commands and options
-- [CI/CD Best Practices](./docs/application.md#cicd): Automated workflows and deployment strategies
-- [Troubleshooting Guide](./docs/application.md#troubleshooting--faq): Common issues and solutions
-
-> **Need more help?** Check the [docs folder](./docs/) for additional guides and examples.
-
-## Contributing
-
-We welcome contributions! See our [contributing guide](../../contributing/development.md) for details on how to get started, coding standards, and submitting pull requests.
-
-## Tooling Roadmap
-
-- **Vitest integration** (coming soon)
 ---
 
 For more information, visit the [docs folder](./docs/) or open an issue for support.
+
 
