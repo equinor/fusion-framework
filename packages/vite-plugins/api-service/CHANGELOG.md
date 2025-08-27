@@ -1,5 +1,24 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.0.0-next.3
+
+### Major Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - Introducing a new Vite plugin for Fusion Framework applications that simplifies API development workflows through service discovery integration and API mocking.
+
+  Key capabilities:
+
+  - Proxy requests to backend services with automatic route generation
+  - Mock API responses for testing and development
+  - Intercept and transform API requests and responses
+  - Configure custom routes with middleware support
+
+  For complete documentation and examples, see the [API Service Plugin README](https://github.com/equinor/fusion-framework/tree/main/packages/vite-plugins/api-service/README.md).
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - update Vite to 6.3.5
+
 ## 1.0.0-next.2
 
 ### Patch Changes

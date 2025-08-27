@@ -1,5 +1,33 @@
 # Change Log
 
+## 6.2.6-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b9f540c`](https://github.com/equinor/fusion-framework/commit/b9f540c7539556ac0be6b19818343f46c797c4b7) Thanks [@odinr](https://github.com/odinr)! - Refactored the `Bookmark` type to be an intersection of `BookmarkWithoutData` and an optional `payload` property, improving type safety and flexibility. Updated `useBookmarkNavigate` to use proper TypeScript typing for bookmark events.
+
+  **Module Bookmark Changes:**
+
+  - Refactored `Bookmark` type in `packages/modules/bookmark/src/types.ts`
+  - Added export for `BookmarkProviderEvents` type in `packages/modules/bookmark/src/index.ts`
+  - Updated JSDoc comment from `@note` to `@remarks` in `packages/modules/bookmark/src/BookmarkClient.ts`
+  - Reordered tsconfig references (event before services)
+
+  **React Changes:**
+
+  - Updated `packages/react/modules/bookmark/src/portal/useBookmarkNavigate.ts` to use proper TypeScript typing for bookmark provider events
+  - Removed React paths configuration from `packages/react/app/tsconfig.json`
+
+- Updated dependencies [[`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module@5.0.0-next.3
+  - @equinor/fusion-framework-module-app@6.1.17-next.0
+  - @equinor/fusion-framework-module-msal@4.0.8-next.0
+  - @equinor/fusion-framework-app@10.0.0-next.0
+  - @equinor/fusion-framework-react-module-http@9.0.4-next.0
+  - @equinor/fusion-framework-module-navigation@6.0.0-next.0
+  - @equinor/fusion-framework-react@7.4.17-next.0
+  - @equinor/fusion-framework-react-module@3.1.13-next.3
+
 ## 6.2.5
 
 ### Patch Changes

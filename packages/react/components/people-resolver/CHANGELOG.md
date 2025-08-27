@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.22-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - update @equinor/fusion-wc-person dependency to version 3.1.8
+
+- Updated dependencies [[`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module-services@7.0.0-next.0
+  - @equinor/fusion-framework-react@7.4.17-next.0
+  - @equinor/fusion-framework-react-module@3.1.13-next.3
+
 ## 1.5.21
 
 ### Patch Changes

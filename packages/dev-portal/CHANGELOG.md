@@ -1,5 +1,29 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.0-next.4
+
+### Major Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - This release introduces a new package, `@equinor/fusion-framework-dev-portal`, as part of a refactor of the `@equinor/fusion-framework-cli`.
+  The refactor moves specific functionality and code related to the development portal into its own dedicated package to improve modularity and maintainability.
+
+  **Features**
+
+  - Development portal for the Fusion framework
+  - Support for MSAL authentication
+  - Integration with service discovery
+  - Environment variable configuration
+
+  This package is a small part of the refactoring of the `@equinor/fusion-framework-cli` and while it can be used standalone, it is recommended to use the `@equinor/fusion-framework-dev-server` package for a more complete development experience.
+
+  **Read More**
+
+  For more detailed information, usage examples, and advanced configuration, please refer to the [GitHub README](https://github.com/equinor/fusion-framework/tree/main/packages/dev-portal/README.md) for this package.
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - update Vite to 6.3.5
+
 ## 1.0.0-next.3
 
 ### Patch Changes

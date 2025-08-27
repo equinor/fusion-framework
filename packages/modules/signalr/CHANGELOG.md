@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.0.0-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module@5.0.0-next.3
+  - @equinor/fusion-framework-module-msal@4.0.8-next.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.18-next.0
+
 ## 6.0.5
 
 ### Patch Changes

@@ -1,8 +1,14 @@
 {
   "name": "@equinor/fusion-imports",
-  "version": "1.1.1-next.1",
+  "version": "1.1.1-next.2",
   "description": "Package import files and configurations",
-  "keywords": ["esbuild", "typescript", "transpiling", "node", "runtime"],
+  "keywords": [
+    "esbuild",
+    "typescript",
+    "transpiling",
+    "node",
+    "runtime"
+  ],
   "license": "ISC",
   "type": "module",
   "main": "dist/esm/index.js",
@@ -16,7 +22,10 @@
   "directories": {
     "dist": "dist"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "publishConfig": {
     "access": "public"
   },

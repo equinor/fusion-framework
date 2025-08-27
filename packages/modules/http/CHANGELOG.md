@@ -1,5 +1,23 @@
 # Change Log
 
+## 6.3.4-next.0
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - fix(http): use acquireAccessToken instead of acquireToken
+
+  - The HTTP module now uses the correct method `acquireAccessToken` from the auth provider to retrieve the access token for requests with scopes.
+  - This fixes compatibility with the new MSAL node module interface, which no longer exposes `acquireToken` but instead provides `acquireAccessToken` for token retrieval.
+  - Ensures the Authorization header is set correctly for authenticated HTTP requests.
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960) Thanks [@odinr](https://github.com/odinr)! - update Vite to 6.3.5
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad) Thanks [@odinr](https://github.com/odinr)! - Upgrade zod dependency to ^3.25.76 in all affected packages.
+
+- Updated dependencies [[`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`a29edcd`](https://github.com/equinor/fusion-framework/commit/a29edcdaa36c9f987f08101fc711ef036417a960), [`b18e3d5`](https://github.com/equinor/fusion-framework/commit/b18e3d52639cb02c2fa73adedf9584f0c290a5ad)]:
+  - @equinor/fusion-framework-module@5.0.0-next.3
+  - @equinor/fusion-framework-module-msal@4.0.8-next.0
+
 ## 6.3.3
 
 ### Patch Changes
