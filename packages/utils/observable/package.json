@@ -61,10 +61,10 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.0.0",
-    "@types/react": "^18.2.50",
+    "@types/react": "^19.1.12",
     "@types/uuid": "^10.0.0",
     "happy-dom": "^18.0.1",
-    "react": "^18.2.0",
+    "react": "^19.1.1",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2",
     "vitest": "^2.0.5"
