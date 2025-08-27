@@ -65,7 +65,7 @@
     "@types/uuid": "^10.0.0",
     "happy-dom": "^18.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.1.1",
     "typescript": "^5.8.2",
     "vitest": "^2.0.5"
   },
