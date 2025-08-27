@@ -1235,8 +1235,8 @@ importers:
         specifier: workspace:^
         version: link:../service-discovery
       '@microsoft/signalr':
-        specifier: ^7.0.10
-        version: 7.0.14
+        specifier: ^9.0.6
+        version: 9.0.6
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2139,6 +2139,10 @@ packages:
 
   '@babel/runtime@7.28.2':
     resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.3':
+    resolution: {integrity: sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -3624,11 +3628,11 @@ packages:
   '@microsoft/dynamicproto-js@2.0.3':
     resolution: {integrity: sha512-JTWTU80rMy3mdxOjjpaiDQsTLZ6YSGGqsjURsY6AUQtIj0udlF/jYmhdLZu8693ZIC0T1IwYnFa0+QeiMnziBA==}
 
-  '@microsoft/signalr@7.0.14':
-    resolution: {integrity: sha512-dnS7gSJF5LxByZwJaj82+F1K755ya7ttPT+JnSeCBef3sL8p8FBkHePXphK8NSuOquIb7vsphXWa28A+L2SPpw==}
-
   '@microsoft/signalr@8.0.17':
     resolution: {integrity: sha512-5pM6xPtKZNJLO0Tq5nQasVyPFwi/WBY3QB5uc/v3dIPTpS1JXQbaXAQAPxFoQ5rTBFE094w8bbqkp17F9ReQvA==}
+
+  '@microsoft/signalr@9.0.6':
+    resolution: {integrity: sha512-DrhgzFWI9JE4RPTsHYRxh4yr+OhnwKz8bnJe7eIi7mLLjqhJpEb62CiUy/YbFvLqLzcGzlzz1QWgVAW0zyipMQ==}
 
   '@mswjs/interceptors@0.39.6':
     resolution: {integrity: sha512-bndDP83naYYkfayr/qhBHMhk0YGwS1iv6vaEGcr0SQbO0IZtbOPqjKjds/WcG+bJA+1T5vCx6kprKOzn5Bg+Vw==}
@@ -9081,6 +9085,8 @@ snapshots:
 
   '@babel/runtime@7.28.2': {}
 
+  '@babel/runtime@7.28.3': {}
+
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -10839,7 +10845,7 @@ snapshots:
     dependencies:
       '@nevware21/ts-utils': 0.12.5
 
-  '@microsoft/signalr@7.0.14':
+  '@microsoft/signalr@8.0.17':
     dependencies:
       abort-controller: 3.0.0
       eventsource: 2.0.2
@@ -10851,7 +10857,7 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@microsoft/signalr@8.0.17':
+  '@microsoft/signalr@9.0.6':
     dependencies:
       abort-controller: 3.0.0
       eventsource: 2.0.2
@@ -12584,7 +12590,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.28.2
+      '@babel/runtime': 7.28.3
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
