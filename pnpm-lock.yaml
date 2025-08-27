@@ -570,6 +570,108 @@ importers:
         specifier: ^5.8.2
         version: 5.9.2
 
+  cookbooks/app-react-state:
+    dependencies:
+      '@equinor/eds-core-react':
+        specifier: ^0.45.0
+        version: 0.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-module-state':
+        specifier: workspace:^
+        version: link:../../packages/modules/state
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../packages/utils/observable
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.2
+
+  cookbooks/app-react-state-replication:
+    dependencies:
+      '@equinor/eds-core-react':
+        specifier: ^0.45.1
+        version: 0.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@equinor/eds-icons':
+        specifier: ^0.22.0
+        version: 0.22.0
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-module':
+        specifier: workspace:^
+        version: link:../../packages/modules/module
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:^
+        version: link:../../packages/modules/event
+      '@equinor/fusion-framework-module-navigation':
+        specifier: ^5.0.3
+        version: 5.0.3(@equinor/fusion-framework-module@packages+modules+module)(@remix-run/router@1.23.0)(rxjs@7.8.2)
+      '@equinor/fusion-framework-module-state':
+        specifier: workspace:^
+        version: link:../../packages/modules/state
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@equinor/fusion-observable':
+        specifier: workspace:^
+        version: link:../../packages/utils/observable
+      '@types/pouchdb':
+        specifier: ^6.4.2
+        version: 6.4.2
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@types/react-router-dom':
+        specifier: ^5.3.3
+        version: 5.3.3
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
+      pouchdb:
+        specifier: ^9.0.0
+        version: 9.0.0
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^7.8.2
+        version: 7.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      styled-components:
+        specifier: ^6.0.7
+        version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.2
+      uuid:
+        specifier: ^11.0.3
+        version: 11.1.0
+
   cookbooks/app-vanilla:
     devDependencies:
       '@equinor/fusion-framework-app':
@@ -1505,6 +1607,9 @@ importers:
       '@equinor/fusion-framework-module-msal':
         specifier: workspace:^
         version: link:../../modules/msal
+      '@equinor/fusion-framework-module-state':
+        specifier: workspace:^
+        version: link:../../modules/state
       '@equinor/fusion-framework-react-module-bookmark':
         specifier: workspace:^
         version: link:../modules/bookmark
@@ -2459,6 +2564,13 @@ packages:
   '@emotion/unitless@0.8.1':
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
 
+  '@equinor/eds-core-react@0.45.1':
+    resolution: {integrity: sha512-XMNjr7KLdUHULApRM3YoqBHVPoZVn5Z4rtVCGjAz2cwDcqMzv+R2cQ1flfBrb5ZD0/SUNpGMYOjSE1Z3RUyEaA==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+      styled-components: '>=5.1'
+
   '@equinor/eds-core-react@0.49.0':
     resolution: {integrity: sha512-nFShN+Jwm5SXtEAb+KC6OYxcSomgk6aTolG3JY6zhJ73pT2xVFZnTX8t2CLBu/w5T1EFb70TzkQJGKFUk1nMmA==}
     peerDependencies:
@@ -2480,6 +2592,13 @@ packages:
     resolution: {integrity: sha512-pDIFei0vsfN3GN12NKWqxskAkYBQd6+Dzjga2liuY81LfnlJs5g9NblamU9WY5w5YdVE5Z8FNjsMKDLs2JIWcw==}
     engines: {node: '>=10.0.0', pnpm: '>=4'}
 
+  '@equinor/eds-utils@0.8.7':
+    resolution: {integrity: sha512-ra4yKMSr5/yseSYqEm7L9fGqR3b2IMaR9leOxlDs37FleOIPL1tI+PvVK+vYGluRmid/uD8X95N/pRQoWR21ow==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+      styled-components: '>=5.1'
+
   '@equinor/eds-utils@0.9.0':
     resolution: {integrity: sha512-+HQ/Xs2fsqpm0RZExp1OqtTdjCqDFARFEplndsbmm9NCLuB2JTH4VZYxd2UL4GpD51CWR/ysmXj3M9Ou6A1HgQ==}
     peerDependencies:
@@ -2496,6 +2615,13 @@ packages:
       powerbi-client: ^2.22.3
       react: ^17.0.x
       react-router-dom: 5.x || ^6.0.0
+
+  '@equinor/fusion-framework-module-navigation@5.0.3':
+    resolution: {integrity: sha512-1egp86EYPmhBXj0zovBOwQ7387eJVlIgzRlsdtjjJqVJM/bNyuS3rtqnYe1ErorHjBZAJydD4a8RkilJ7OBuHw==}
+    peerDependencies:
+      '@equinor/fusion-framework-module': ^4.4.2
+      '@remix-run/router': ^1.8.0
+      rxjs: ^7.0.0
 
   '@equinor/fusion-observable@8.5.2':
     resolution: {integrity: sha512-cTJxucx3ECvDSel2Mc+0KPSuo0YRPdVzQJVsCqVCKlbubwzIzlcqZ6Qs5K36ykRtSIb4CTPnrVAMaQWnzLqfaQ==}
@@ -4817,8 +4943,17 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  '@tanstack/react-virtual@3.13.2':
+    resolution: {integrity: sha512-LceSUgABBKF6HSsHK2ZqHzQ37IKV/jlaWbHm+NyTa3/WNb/JZVcThDuTainf+PixltOOcFCYXwxbLpOX9sCx+g==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   '@tanstack/virtual-core@3.13.12':
     resolution: {integrity: sha512-1YBOJfRHV4sXUmWsFSf5rQor4Ss82G8dQWLRbnk3GA4jeP8hQt1hxXh0tmflpC0dz3VgEv/1+qwPyLeWkQuPFA==}
+
+  '@tanstack/virtual-core@3.13.2':
+    resolution: {integrity: sha512-Qzz4EgzMbO5gKrmqUondCjiHcuu4B1ftHb0pjCut661lXZdGoHeze9f/M8iwsK1t5LGR6aNuNGU7mxkowaW6RQ==}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -8039,6 +8174,13 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  react-router-dom@7.8.2:
+    resolution: {integrity: sha512-Z4VM5mKDipal2jQ385H6UBhiiEDlnJPx6jyWsTYoZQdl5TrjxEV2a9yl3Fi60NBJxYzOTGTTHXPi0pdizvTwow==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+
   react-router-dom@7.9.1:
     resolution: {integrity: sha512-U9WBQssBE9B1vmRjo9qTM7YRzfZ3lUxESIZnsf4VjR/lXYz9MHjvOxHzr/aUm4efpktbVOrF09rL/y4VHa8RMw==}
     engines: {node: '>=20.0.0'}
@@ -8056,6 +8198,16 @@ packages:
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
+
+  react-router@7.8.2:
+    resolution: {integrity: sha512-7M2fR1JbIZ/jFWqelpvSZx+7vd7UlBTfdZqf6OSdF9g6+sfdqJDAWcak6ervbHph200ePlu+7G8LdoiC3ReyAQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
 
   react-router@7.9.1:
     resolution: {integrity: sha512-pfAByjcTpX55mqSDGwGnY9vDCpxqBLASg0BMNAuMmpSGESo/TaOUG6BllhAtAkCGx8Rnohik/XtaqiYUJtgW2g==}
@@ -9892,6 +10044,25 @@ snapshots:
 
   '@emotion/unitless@0.8.1': {}
 
+  '@equinor/eds-core-react@0.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@equinor/eds-icons': 0.22.0
+      '@equinor/eds-tokens': 0.9.2
+      '@equinor/eds-utils': 0.8.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@floating-ui/react': 0.27.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@internationalized/date': 3.9.0
+      '@react-aria/utils': 3.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-stately/calendar': 3.8.4(react@18.3.1)
+      '@react-stately/datepicker': 3.15.1(react@18.3.1)
+      '@react-types/shared': 3.32.0(react@18.3.1)
+      '@tanstack/react-virtual': 3.13.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      downshift: 9.0.8(react@18.3.1)
+      react: 18.3.1
+      react-aria: 3.43.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
+      styled-components: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
   '@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -9918,6 +10089,14 @@ snapshots:
   '@equinor/eds-tokens@0.10.0': {}
 
   '@equinor/eds-tokens@0.9.2': {}
+
+  '@equinor/eds-utils@0.8.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@equinor/eds-tokens': 0.9.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-components: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   '@equinor/eds-utils@0.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
@@ -9965,6 +10144,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - react-dom
+
+  '@equinor/fusion-framework-module-navigation@5.0.3(@equinor/fusion-framework-module@packages+modules+module)(@remix-run/router@1.23.0)(rxjs@7.8.2)':
+    dependencies:
+      '@equinor/fusion-framework-module': link:packages/modules/module
+      '@remix-run/router': 1.23.0
+      rxjs: 7.8.2
 
   '@equinor/fusion-observable@8.5.2(@types/react@18.3.24)(react@18.3.1)':
     dependencies:
@@ -13085,7 +13270,15 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@tanstack/react-virtual@3.13.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@tanstack/virtual-core@3.13.12': {}
+
+  '@tanstack/virtual-core@3.13.2': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:
@@ -16974,6 +17167,12 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-router: 6.30.1(react@18.3.1)
 
+  react-router-dom@7.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-router: 7.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
   react-router-dom@7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -17011,6 +17210,14 @@ snapshots:
     dependencies:
       '@remix-run/router': 1.23.0
       react: 18.3.1
+
+  react-router@7.8.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      cookie: 1.0.2
+      react: 18.3.1
+      set-cookie-parser: 2.7.1
+    optionalDependencies:
+      react-dom: 18.3.1(react@18.3.1)
 
   react-router@7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
