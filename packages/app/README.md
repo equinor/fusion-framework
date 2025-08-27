@@ -134,6 +134,13 @@ const configure: AppModuleInitiator = (configurator) => {
 };
 ```
 
+> [!CAUTION]
+> The state management module is a powerful tool, but it`s important to know the potential pitfalls and limitations when using it in your application. The state management is global and can lead to unexpected behavior if not used carefully.
+>
+> __example 1:__ If you have multiple components that rely on the same state, updating the state in one component can cause re-renders in all components that use that state, potentially leading to performance issues.
+>
+> __example 2:__ The user has open multiple tabs of the application, and each tab is modifying the same state. This can lead to unexpected behavior, as changes made in one tab will be reflected to all tabs. (like storing user preferences for selected columns)
+
 #### Bookmarks
 
 [<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodules%2Fbookmark%2Fpackage.json&label=@equinor/fusion-framework-module-bookmark&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/modules/bookmark)

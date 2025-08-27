@@ -130,6 +130,13 @@ export const configure: ModuleInitiator = (appConfigurator) => {
 };
 ```
 
+> [!CAUTION]
+> The state management module is a powerful tool, but it`s important to know the potential pitfalls and limitations when using it in your application. The state management is global and can lead to unexpected behavior if not used carefully.
+>
+> __example 1:__ If you have multiple components that rely on the same state, updating the state in one component can cause re-renders in all components that use that state, potentially leading to performance issues.
+>
+> __example 2:__ The user has open multiple tabs of the application, and each tab is modifying the same state. This can lead to unexpected behavior, as changes made in one tab will be reflected to all tabs. _(like storing user preferences for selected columns)_
+
 ### Basic Usage
 
 Use `useAppState` just like React's `useState`, but with automatic persistence. The first parameter is a unique key, and the second is an options object with the default value:
@@ -178,21 +185,6 @@ const App = () => (
 );
 ```
 
-### Best Practices
-
-> [!WARNING]
-> **Avoid Stale Closures**: When updating state based on the current value, always use the updater function to prevent stale closure issues in concurrent updates.
-> 
-> ```typescript
-> const [count, setCount] = useAppState('counter', { defaultValue: 0 });
-> 
-> // ❌ Bad: Can use stale value in rapid updates
-> const increment = () => setCount(count + 1);
-> 
-> // ✅ Good: Always gets the latest value
-> const increment = () => setCount(prev => (prev || 0) + 1);
-> ```
-
 ### Advanced Usage
 
 **Complex Objects with TypeScript:**
@@ -224,6 +216,86 @@ const SettingsPanel = () => {
 // Remove from storage completely
 const clearSettings = () => setSettings(undefined);
 ```
+
+### Best Practices
+
+#### Avoid Stale Closures
+> [!WARNING]
+> When updating state based on the current value, always use the updater function to prevent stale closure issues in concurrent updates.
+ 
+ ```typescript
+ const [count, setCount] = useAppState('counter', { defaultValue: 0 });
+ 
+ // ❌ Bad: Can use stale value in rapid updates
+ const increment = () => setCount(count + 1);
+ 
+ // ✅ Good: Always gets the latest value
+ const increment = () => setCount(prev => (prev || 0) + 1);
+ ```
+
+#### State Key Organization
+
+Use hierarchical naming for better organization:
+
+```typescript
+// ✅ Good - hierarchical, descriptive
+'user.profile.personal'
+'user.preferences.theme'
+'app.settings.notifications'
+'feature.dashboard.filters'
+
+// ❌ Avoid - flat, unclear
+'userdata'
+'settings'
+'stuff'
+```
+
+#### Use strong typing
+
+```typescript
+// ✅ Good - strong typing
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+const [user, setUser] = useAppState<UserProfile>('user.profile');
+
+// ❌ Avoid - weak typing
+const [user, setUser] = useAppState('user.profile');
+```
+
+> [!TIP] Validate Complex Schemas
+> Use a library like `zod` or `yup` to validate complex state schemas before using them.
+> ```typescript
+> const userSchema = z.object({
+>   id: z.string().uuid(),
+>   name: z.string().min(2).max(100),
+>   email: z.string().email(),
+> });
+>
+> type UserProfile = z.infer<typeof userSchema>;
+>
+> // ✅ Good - strong typing with validation
+> const useMyUser = () => {
+>   const [value, setValue] = useAppState<UserProfile>('user.profile');
+>   const setUser = useCallback((user: UserProfile) => {
+>     if (userSchema.safeParse(user).success) {
+>       setValue(user);
+>       return true;
+>     } else {
+>       console.warn('Provided user is invalid');
+>       return false;
+>     }
+>   }, [setValue]);
+>   if(!userSchema.safeParse(value).success) {
+>     console.warn('Current user state is invalid');
+>     return null;
+>   }
+>   return value;
+> };
+> ```
 
 ## Feature Flag
 
