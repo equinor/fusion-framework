@@ -1,58 +1,4 @@
----
-title: Fusion Framework CLI
-description: >
-  Fusion Framework CLI is a powerful tool for developing, building, and publishing applications and portal templates within the Fusion Framework ecosystem. See the documentation for full guides, configuration, and advanced usage.
-tags: 
-  - fusion-framework
-  - cli
-  - app-development
-  - portal-development
-  - dev-server
-  - ci-cd
-  - authentication
-  - configuration
-  - manifest
-  - registry
-  - publishing
-  - service-discovery
-  - equinor
-  - documentation
-  - getting-started
-keywords:
-  - fusion framework
-  - cli
-  - app development
-  - portal development
-  - dev server
-  - authentication
-  - ci/cd
-  - configuration
-  - manifest
-  - publishing
-  - registry
-  - service discovery
----
-
-[![npm version](https://img.shields.io/npm/v/@equinor/fusion-framework-cli.svg?style=flat)](https://www.npmjs.com/package/@equinor/fusion-framework-cli)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](./LICENSE)
-
----
-
-## Table of Contents
-
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Features \& Benefits](#features--benefits)
-- [Getting Started](#getting-started)
-- [Common Commands](#common-commands)
-- [Example: package.json](#example-packagejson)
-- [Documentation](#documentation)
-- [Troubleshooting](#troubleshooting)
-  - [Common Issues](#common-issues)
-  - [Getting Help](#getting-help)
-
-## Overview
 
 Fusion Framework CLI is a command-line tool for developing, building, and publishing applications and portal templates within the Fusion Framework ecosystem. It streamlines workflows, automates common tasks, and supports modern CI/CD pipelines.
 
@@ -101,7 +47,7 @@ Create the required configuration files for your app:
 - `app.manifest.ts` - Defines your app's metadata and capabilities
 - `app.config.ts` - Contains runtime configuration and environment variables
 
-See [Developing Apps](./docs/application.md) for detailed setup and configuration guidance.
+See [Developing Apps](docs/application.md) for detailed setup and configuration guidance.
 
 **Start the development server**
 
@@ -127,7 +73,7 @@ pnpm fusion-framework-cli publish --env <environment>
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 
-> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](./docs/auth.md) for details.
+> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](docs/auth.md) for details.
 
 ## Common Commands
 
@@ -173,30 +119,28 @@ A minimal example for a Fusion Framework app:
 ## Documentation
 
 **Getting Started**
-- [Developing Apps](./docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
-- [Developing Portals](./docs/portal.md): Guide to building, configuring, and publishing portal templates
+- [Developing Apps](docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
+- [Developing Portals](docs/portal.md): Guide to building, configuring, and publishing portal templates
 
 **Setup & Configuration**
-- [Authentication](./docs/auth.md): Setting up authentication for local development and CI/CD environments
-- [libsecret Installation](./docs/libsecret.md): Fix credential storage issues on Linux systems
+- [Authentication](docs/auth.md): Setting up authentication for local development and CI/CD environments
+- [libsecret Installation](docs/libsecret.md): Fix credential storage issues on Linux systems
 
 **Migration & Updates**
-- [Migration Guide: v10 to v11](./docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
+- [Migration Guide: v10 to v11](docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
 
 **Additional Resources**
-- [CLI Command Reference](./docs/application.md#commands): Detailed documentation of all available commands and options
-- [CI/CD Best Practices](./docs/application.md#cicd): Automated workflows and deployment strategies
-- [Troubleshooting Guide](./docs/application.md#troubleshooting--faq): Common issues and solutions
+- [CLI Command Reference](docs/application.md#commands): Detailed documentation of all available commands and options
+- [CI/CD Best Practices](docs/application.md#ci-cd): Automated workflows and deployment strategies
+- [Troubleshooting Guide](docs/application.md#troubleshooting-faq): Common issues and solutions
 
-> **Need more help?** Check the [docs folder](./docs/) for additional guides and examples.
-
-## Troubleshooting
+  ## Troubleshooting
 
 ### Common Issues
 
 **Authentication & Credentials**
-- **Authentication issues?** See [Authentication Guide](./docs/auth.md) for token setup and troubleshooting
-- **libsecret errors on Linux?** Install libsecret using our [installation guide](./docs/libsecret.md)
+- **Authentication issues?** See [Authentication Guide](docs/auth.md) for token setup and troubleshooting
+- **libsecret errors on Linux?** Install libsecret using our [installation guide](docs/libsecret.md)
 
 **CLI & Commands**
 - **Command not found?** Ensure `node_modules/.bin` is in your PATH or use `pnpm`/`npx`
@@ -213,12 +157,7 @@ A minimal example for a Fusion Framework app:
 
 ### Getting Help
 
-- **Detailed troubleshooting:** See our [comprehensive troubleshooting guide](./docs/application.md#troubleshooting--faq)
+- **Detailed troubleshooting:** See our [comprehensive troubleshooting guide](docs/application.md#troubleshooting-faq)
 - **Found a bug?** Open an issue on our GitHub repository
-- **Need support?** Check the [docs folder](./docs/) or reach out to the Fusion team
-
----
-
-For more information, visit the [docs folder](./docs/) or open an issue for support.
-
+- **Need support?** Check the [docs folder](docs/) or reach out to the Fusion team
 

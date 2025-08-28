@@ -1,71 +1,10 @@
----
-title: Developing Apps with Fusion Framework CLI
-description: >
-  In-depth guide to building, configuring, and deploying applications using the Fusion Framework CLI. Includes setup, essential commands, configuration files, CI/CD best practices, troubleshooting, and advanced tips for modern app development.
-category: cli
-related:
-  - ./auth.md
-  - ./migration-v10-to-v11.md
-tags:
-  - getting-started
-  - app-development
-  - configuration
-  - deployment
-  - ci-cd
-  - commands
-  - troubleshooting
-  - release-management
-  - automation
-  - best-practices
-  - migration
-keywords:
-  - fusion-framework-cli upload
-  - fusion-framework-cli publish
-  - fusion-framework-cli tag
-  - fusion-framework-cli config
-  - fusion-framework-cli build
-  - fusion-framework-cli pack
-  - fusion-framework-cli check
-  - fusion-framework-cli manifest
-  - fusion-framework-cli troubleshooting
-  - fusion-framework-cli deployment
-  - fusion-framework-cli ci-cd
-  - fusion app upload
-  - fusion app publish
-  - fusion app tag
-  - fusion app config
-  - fusion app build
-  - fusion app pack
-  - fusion app check
-  - fusion app manifest
-  - fusion app troubleshooting
-  - fusion app deployment
-  - fusion app ci-cd
-  - fusion cli command reference
-  - fusion cli options
-  - fusion cli arguments
----
-
-# Fusion Framework CLI: Application Development Guide
-
-> **Table of Contents**
-> - [Getting Started](#getting-started)
-> - [Prerequisites](#prerequisites)
-> - [Troubleshooting & FAQ](#troubleshooting--faq)
-> - [Configuration](#configuration)
-> - [CI/CD Best Practices](#cicd)
-> - [Command Reference](#commands)
-> - [Migration & Deprecated Commands](#aliases)
-
----
-
 The Fusion Framework CLI empowers you to rapidly build, configure, and deploy modern applications with ease. Whether you’re starting a new project or maintaining an existing app, this CLI streamlines your workflow—from local development to production deployment.
 
 This guide will help you get set up, understand the most important commands, and follow best practices for configuration and CI/CD. Let’s get started building robust, scalable apps with Fusion Framework!
 
 ## Getting Started
 
-### 1. Install the CLI
+### Install the CLI
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli
@@ -73,7 +12,7 @@ pnpm add -D @equinor/fusion-framework-cli
 npm install --save-dev @equinor/fusion-framework-cli
 ```
 
-### 2. Scaffold a New App (if supported)
+### Scaffold a New App (if supported)
 
 > **Tip:** If you have a template or starter, clone it. Otherwise, create a new directory and initialize your project as below.
 
@@ -82,7 +21,7 @@ mkdir my-fusion-app && cd my-fusion-app
 pnpm init
 ```
 
-### 3. Create Required Files
+### Create Required Files
 
 #### Minimal `package.json` Example
 
@@ -140,13 +79,13 @@ export default defineAppConfig((env, args) => ({
 }));
 ```
 
-### 4. Start the Development Server
+### Start the Development Server
 
 ```sh
 pnpm fusion-framework-cli dev
 ```
 
-### 5. Log in to Fusion Framework (if needed)
+### Log in to Fusion Framework (if needed)
 
 > [!NOTE] 
 > __All HTTP requests to Fusion services require an authorized user.__  
@@ -155,7 +94,7 @@ pnpm fusion-framework-cli dev
 > [!WARNING]
 > The `fusion-framework-cli auth login` command is only available in interactive environments (such as your local terminal). For CI/CD pipelines or automated deployments, you must provide a valid authentication token using the `FUSION_TOKEN` environment variable.  
 >  
-> See [Authentication](./auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
+> See [Authentication](auth.md#setting-the-fusion-token-in-github) for details on setting up tokens for CI/CD.
 
 ```sh
 pnpm fusion-framework-cli auth login
@@ -317,7 +256,7 @@ jobs:
 ```
 
 > [!TIP]
-> see [setting-the-fusion-token-in-github](./auth.md#setting-the-fusion-token-in-github) for adding `FUSION_TOKEN` to your envirnoment
+> see [setting-the-fusion-token-in-github](auth.md#setting-the-fusion-token-in-github) for adding `FUSION_TOKEN` to your environment
 
 
 ### Example: Using Environment Variables in App Config
@@ -689,11 +628,11 @@ pnpm fusion-framework-cli build-pack
 
 > [!WARNING]
 > The deprecated commands will be removed in future versions. Please update your scripts and workflows to use the new command names (`pack`, `upload`, `manifest`, `publish`) to ensure compatibility with v11 and beyond.
-> For a full migration guide, see [Migration v10 to v11](./migration-v10-to-v11.md).
+> For a full migration guide, see [Migration v10 to v11](migration-v10-to-v11.md).
 
 ---
 
 > **Need more examples?**
-> - See the [cookbooks/](../../cookbooks/) directory for real-world app examples.
-> - For migration help, see [Migration v10 to v11](./migration-v10-to-v11.md).
-> - For advanced configuration, see [Authentication](./auth.md) and [CI/CD](#cicd).
+> - See the [cookbooks directory in the GitHub repository](https://github.com/equinor/fusion-framework/tree/main/cookbooks) for real-world app examples.
+> - For migration help, see [Migration v10 to v11](migration-v10-to-v11.md).
+> - For advanced configuration, see [Authentication](auth.md) and [CI/CD](#ci-cd).
