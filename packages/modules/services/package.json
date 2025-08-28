@@ -128,7 +128,7 @@
   },
   "dependencies": {
     "odata-query": "^8.0.4",
-    "zod": "^3.25.76"
+    "zod": "^4.1.4"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
