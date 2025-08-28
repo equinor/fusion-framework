@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework",
-  "version": "7.3.16",
+  "version": "7.3.17",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -14,7 +14,11 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["fusion", "fusion-framework", "utility"],
+  "keywords": [
+    "fusion",
+    "fusion-framework",
+    "utility"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",

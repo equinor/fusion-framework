@@ -1,5 +1,7 @@
 # Change Log
 
+## 4.2.2
+
 ## 4.2.2-next.1
 
 ### Patch Changes

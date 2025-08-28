@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react",
-  "version": "7.4.16",
+  "version": "7.4.17",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -36,13 +36,27 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "app": ["dist/types/app/index.d.ts"],
-      "feature-flag": ["dist/types/feature-flag/index.d.ts"],
-      "context": ["dist/types/context/index.d.ts"],
-      "hooks": ["dist/types/hooks/index.d.ts"],
-      "http": ["dist/types/http/index.d.ts"],
-      "signalr": ["dist/types/signalr/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "app": [
+        "dist/types/app/index.d.ts"
+      ],
+      "feature-flag": [
+        "dist/types/feature-flag/index.d.ts"
+      ],
+      "context": [
+        "dist/types/context/index.d.ts"
+      ],
+      "hooks": [
+        "dist/types/hooks/index.d.ts"
+      ],
+      "http": [
+        "dist/types/http/index.d.ts"
+      ],
+      "signalr": [
+        "dist/types/signalr/index.d.ts"
+      ]
     }
   },
   "scripts": {

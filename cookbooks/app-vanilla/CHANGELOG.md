@@ -1,5 +1,7 @@
 # @equinor/fusion-framework-cookbook-app-vanilla
 
+## 1.0.4
+
 ## 1.0.4-next.1
 
 ### Patch Changes

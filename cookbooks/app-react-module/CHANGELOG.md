@@ -1,5 +1,7 @@
 # Change Log
 
+## 0.2.6
+
 ## 0.2.6-next.1
 
 ### Patch Changes

@@ -1,5 +1,7 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 1.0.5
+
 ## 1.0.5-next.1
 
 ### Patch Changes
