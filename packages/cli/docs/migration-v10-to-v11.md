@@ -1,31 +1,3 @@
----
-title: Migration Guide - v10 to v11 CLI Command Changes
-description: >
-  Comprehensive guide to migrating CLI commands from v10 to v11 of the Fusion Framework, including deprecated commands, new command names, authentication changes, and best practices for updating scripts and pipelines.
-category: cli
-related:
-  - ./auth.md
-  - ./application.md
-tags:
-  - cli
-  - fusion-framework
-  - migration
-  - breaking-changes
-  - upgrade
-keywords:
-  - fusion framework
-  - cli commands
-  - v10 to v11 migration
-  - deprecated commands
-  - authentication changes
-  - service discovery
-  - environment configuration
-  - upgrade guide
-  - best practices
----
-
-# Migration Guide: v10 to v11 CLI Command Changes
-
 With v11, we switched to using the Fusion Framework itself for CLI operations. This change was made to reduce maintenance and improve consistency by reusing the same framework modules (such as service-discovery, authentication, and HTTP) in both Node.js and browser environments. By leveraging the Fusion Framework directly, CLI features and integrations stay up-to-date and benefit from shared improvements across the ecosystem.
 
 ## Why This Matters
@@ -79,15 +51,15 @@ Authentication behavior has been updated to improve security and consistency:
 
 When upgrading from v10 to v11, ensure you:
 
-- [ ] **Update command names** in all scripts and CI/CD pipelines:
-  - `build-pack` → `pack`
-  - `build-upload` → `upload` 
-  - `build-manifest` → `manifest`
-  - `build-publish` → `publish`
-- [ ] **Replace `--service` with `--env`** for environment selection
-- [ ] **Update local development workflow** to use `fusion-framework-cli auth login`
-- [ ] **Review custom integrations** that may depend on CLI startup behavior (now on-demand)
-- [ ] **Update documentation** and team guidelines with new command syntax
+- **Update command names** in all scripts and CI/CD pipelines:
+   - `build-pack` → `pack`
+   - `build-upload` → `upload` 
+   - `build-manifest` → `manifest`
+   - `build-publish` → `publish`
+- **Replace `--service` with `--env`** for environment selection
+- **Update local development workflow** to use `fusion-framework-cli auth login`
+- **Review custom integrations** that may depend on CLI startup behavior (now on-demand)
+- **Update documentation** and team guidelines with new command syntax
 
 ## Getting Help
 

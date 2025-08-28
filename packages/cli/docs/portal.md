@@ -1,37 +1,3 @@
----
-title: Developing Portals with Fusion Framework CLI
-description: >
-  Guide to building, configuring, and deploying portal templates using the Fusion Framework CLI. Includes setup, essential commands, configuration, troubleshooting, and best practices for portal development.
-category: cli
-related:
-  - ./auth.md
-tags:
-  - portal-development
-  - configuration
-  - deployment
-  - commands
-  - troubleshooting
-  - best-practices
-keywords:
-  - fusion-framework-cli portal
-  - fusion portal dev
-  - fusion portal build
-  - fusion portal pack
-  - fusion portal upload
-  - fusion portal tag
-  - fusion portal manifest
----
-
-# Fusion Framework CLI: Portal Template Development Guide
-
-> **Table of Contents**
-> - [Getting Started](#getting-started)
-> - [Portal Manifest](#portal-manifest)
-> - [Commands](#commands)
-> - [Troubleshooting & FAQ](#troubleshooting--faq)
-
----
-
 The Fusion Framework CLI enables you to build, configure, and deploy **portal templates** for the Fusion ecosystem. These commands are specifically for creating, building, and managing portal templates—not for managing actual portals.
 
 > **What is a Portal Template?**
@@ -44,7 +10,7 @@ This guide covers the essential commands and best practices for developing and m
 
 ## Getting Started
 
-### 1. Install the CLI
+### Install the CLI
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli
@@ -52,7 +18,7 @@ pnpm add -D @equinor/fusion-framework-cli
 npm install --save-dev @equinor/fusion-framework-cli
 ```
 
-### 2. Scaffold a New Portal
+### Scaffold a New Portal
 
 Create a new directory for your portal and initialize your project:
 
@@ -61,7 +27,7 @@ mkdir my-fusion-portal && cd my-fusion-portal
 pnpm init
 ```
 
-### 3. Create Required Files
+### Create Required Files
 
 - `portal.manifest.ts`: Defines your portal's metadata and configuration.
 - `portal.schema.ts` (optional): Defines the schema for portal configuration.
@@ -275,4 +241,4 @@ pnpm fusion-framework-cli portal schema portal.schema.prod.ts --debug
 
 ---
 
-For advanced configuration and authentication, see [Authentication](./auth.md).
+For advanced configuration and authentication, see [Authentication](auth.md).

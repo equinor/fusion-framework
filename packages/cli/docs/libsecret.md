@@ -1,34 +1,3 @@
----
-title: Enabling Secure Credential Storage with libsecret
-description: Instructions for installing libsecret on Linux to enable secure credential storage for your CLI.
-tags: 
-  - cli
-  - authentication
-  - keytar
-  - libsecret
-  - linux
-  - security
-  - credentials
-  - msal
-  - nodejs
-  - keychain
-keywords:
-  - secure credential storage
-  - keychain
-  - linux
-  - node.js
-  - password manager
-  - system keyring
-  - msal-node
-  - credential storage
-  - cross-platform
-  - token caching
-  - npm
-  - secrets
-  - cli authentication
-  - keytar troubleshooting
----
-
 This CLI enables secure authentication and persistent token caching by storing credentials in your system's keychain. It uses [`@azure/msal-node`](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-node) for authentication, which relies on the [`keytar`](https://github.com/atom/node-keytar) module for secure credential storage.
 
 > **What is `libsecret`?**  
