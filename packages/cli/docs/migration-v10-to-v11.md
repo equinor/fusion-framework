@@ -33,7 +33,19 @@ With v11, we switched to using the Fusion Framework itself for CLI operations. T
 - **Reduced duplication:** By reusing core modules, bug fixes and new features are shared between CLI and Framework code.
 - **Performance:** The framework is now initialized only when needed (e.g., for HTTP calls or authentication), improving startup time and resource usage.
 
-## Command Changes
+## Package Changes
+
+- The CLI will now resolve source entrypoint by default from `src/(index.tsx|ts)|(main.tsx|ts)` (unless configured otherwise).
+- The CLI will resolve the output entrypoint by `main`|`module` in `package.json`.
+  - This is to enable serving the application in preview mode (`import.meta.resolve('PACKAGE_NAME')`).
+
+> [!IMPORTANT]
+> Ensure your application is compatible with these changes before upgrading.
+> ```json
+> {
+>   "main": "dist/index.js",
+> }
+> ```
 
 ### Deprecated App Command Aliases
 
