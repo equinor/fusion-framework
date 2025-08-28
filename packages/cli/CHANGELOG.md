@@ -1,5 +1,27 @@
 # Change Log
 
+## 11.0.1
+
+### Patch Changes
+
+- [#3271](https://github.com/equinor/fusion-framework/pull/3271) [`7832bd7`](https://github.com/equinor/fusion-framework/commit/7832bd78843621ca95373596761bec29d4bdbbb8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependency `chalk` to ^5.6.0
+
+  - Updated `chalk` to version ^5.6.0 in root, CLI, and log utils packages.
+  - No breaking changes expected.
+
+  See [chalk changelog](https://github.com/chalk/chalk/releases) for details.
+
+- [#3309](https://github.com/equinor/fusion-framework/pull/3309) [`29efd10`](https://github.com/equinor/fusion-framework/commit/29efd10c48f9d11ba5aa7246d3217c5ea81ddc14) Thanks [@odinr](https://github.com/odinr)! - - Removed all YAML/Markdown frontmatter blocks from CLI documentation files in `/packages/cli/docs` and `/packages/cli/README.md` for a cleaner, more maintainable documentation source.
+
+  - Updated all internal documentation links to use relative paths without leading `./` for consistency and compatibility with VuePress.
+  - Updated the `TODO.md` file to remove completed or obsolete tasks and clarify remaining todos.
+
+- [#3300](https://github.com/equinor/fusion-framework/pull/3300) [`219c449`](https://github.com/equinor/fusion-framework/commit/219c4492cb9d8925cdf73f31fd6d6ad2507ed971) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump rollup from 4.46.2 to 4.49.0
+
+- Updated dependencies [[`6480bf1`](https://github.com/equinor/fusion-framework/commit/6480bf197db9428fed80299c235f0608db0ca6a3), [`152eecb`](https://github.com/equinor/fusion-framework/commit/152eecbccccd5ee3aafc5d59cebdb9b9554ca026), [`113a9ac`](https://github.com/equinor/fusion-framework/commit/113a9ac9b11f4cdb09dad22cbea010a3f5097343)]:
+  - @equinor/fusion-framework-dev-portal@1.0.1
+  - @equinor/fusion-framework-module-msal-node@1.0.1
+
 ## 11.0.0
 
 ### Major Changes

@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.0.2
+
+### Patch Changes
+
+- [#3281](https://github.com/equinor/fusion-framework/pull/3281) [`34aa93c`](https://github.com/equinor/fusion-framework/commit/34aa93cdbba337797ec20391390a5ca1038b6006) Thanks [@dependabot](https://github.com/apps/dependabot)! - - Updates `ag-grid-community` from 34.1.1 to 34.1.2
+  - Updates `ag-grid-enterprise` from 34.1.1 to 34.1.2
+- Updated dependencies [[`34aa93c`](https://github.com/equinor/fusion-framework/commit/34aa93cdbba337797ec20391390a5ca1038b6006)]:
+  - @equinor/fusion-framework-module-ag-grid@34.1.2
+
 ## 34.0.1
 
 ### Patch Changes
