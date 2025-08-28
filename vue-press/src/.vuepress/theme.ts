@@ -14,11 +14,7 @@ const navbar: NavbarOptions = [
   {
     text: 'CLI',
     link: '/cli/',
-  },
-  {
-    text: 'Roadmap',
-    link: '/roadmap/',
-  },
+  }
 ];
 
 export default hopeTheme({
@@ -29,19 +25,15 @@ export default hopeTheme({
   darkmode: 'switch',
   navbar,
   sidebar,
+  markdown: {
+    gfm: true,
+    alert: true,
+    mermaid: true,
+    tabs: true,
+    codeTabs: true
+  },
   plugins: {
     blog: true,
-    mdEnhance: {
-      mermaid: true,
-      codetabs: true,
-      tabs: true,
-      tasklist: true,
-      hint: true,
-      imgSize: true,
-      align: true,
-      gfm: true,
-      include: true,
-    },
     comment: {
       provider: 'Giscus',
       repo: 'equinor/fusion-framework',

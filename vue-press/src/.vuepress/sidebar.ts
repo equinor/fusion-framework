@@ -8,7 +8,6 @@ export default sidebar({
       children: [
         'app/',
         'app/getting-started',
-        'app/cli',
         {
           text: 'Cookbooks',
           link: 'app/cookbooks.md',
@@ -41,17 +40,32 @@ export default sidebar({
       link: 'README.md',
       children: [
         {
-          text: 'Commands',
-          link: 'docs/commands.md',
+          text: 'Authentication',
+          link: 'docs/auth.md',
+          children: [
+            {
+              text: 'LibSecret',
+              link: 'docs/libsecret.md',
+            },
+          ],
         },
         {
-          text: 'App Configuration',
-          link: 'docs/configuration.md',
+          text: 'Application',
+          link: 'docs/application.md',
         },
         {
-          text: 'Api Authentication',
-          link: 'docs/api-authentication.md',
+          text: 'Portal',
+          link: 'docs/portal.md',
         },
+        {
+          text: 'Migration',
+          children: [
+            {
+              text: 'v10 to v11',
+              link: 'docs/migration-v10-to-v11.md',
+            }
+          ]
+        }
       ],
     },
   ],
