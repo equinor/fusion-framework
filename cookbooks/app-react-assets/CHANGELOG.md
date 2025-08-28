@@ -1,5 +1,7 @@
 # @equinor/fusion-framework-cookbook-app-react-assets
 
+## 0.0.4
+
 ## 0.0.4-next.1
 
 ### Patch Changes

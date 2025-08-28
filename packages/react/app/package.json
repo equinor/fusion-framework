@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-app",
-  "version": "6.2.5",
+  "version": "6.2.6",
   "description": "",
   "main": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -56,18 +56,42 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["dist/types/index.d.ts"],
-      "apploader": ["dist/types/apploader/index.d.ts"],
-      "bookmark": ["dist/types/bookmark/index.d.ts"],
-      "context": ["dist/types/context/index.d.ts"],
-      "feature-flag": ["dist/types/feature-flag/index.d.ts"],
-      "framework": ["dist/types/framework/index.d.ts"],
-      "help-center": ["dist/types/help-center/index.d.ts"],
-      "http": ["dist/types/http/index.d.ts"],
-      "msal": ["dist/types/msal/index.d.ts"],
-      "navigation": ["dist/types/navigation/index.d.ts"],
-      "settings": ["dist/types/settings/index.d.ts"],
-      "widget": ["dist/types/widget/index.d.ts"]
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "apploader": [
+        "dist/types/apploader/index.d.ts"
+      ],
+      "bookmark": [
+        "dist/types/bookmark/index.d.ts"
+      ],
+      "context": [
+        "dist/types/context/index.d.ts"
+      ],
+      "feature-flag": [
+        "dist/types/feature-flag/index.d.ts"
+      ],
+      "framework": [
+        "dist/types/framework/index.d.ts"
+      ],
+      "help-center": [
+        "dist/types/help-center/index.d.ts"
+      ],
+      "http": [
+        "dist/types/http/index.d.ts"
+      ],
+      "msal": [
+        "dist/types/msal/index.d.ts"
+      ],
+      "navigation": [
+        "dist/types/navigation/index.d.ts"
+      ],
+      "settings": [
+        "dist/types/settings/index.d.ts"
+      ],
+      "widget": [
+        "dist/types/widget/index.d.ts"
+      ]
     }
   },
   "scripts": {

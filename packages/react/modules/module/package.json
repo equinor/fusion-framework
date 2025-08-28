@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module",
-  "version": "3.1.13-next.2",
+  "version": "3.1.13",
   "main": "dist/esm/index.js",
   "exports": {
     ".": {
@@ -13,7 +13,10 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["React", "@equinor/fusion-framework-module"],
+  "keywords": [
+    "React",
+    "@equinor/fusion-framework-module"
+  ],
   "description": "Utils for initializing and consuming fusion framework modules",
   "author": "odin.rochmann@gmail.com",
   "license": "ISC",

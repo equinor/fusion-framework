@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 1.1.1
+
+### Patch Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - Updated the `files` field in `package.json` to include both `dist` and `src` directories. No other changes were made.
+
 ## 1.1.1-next.1
 
 ### Patch Changes

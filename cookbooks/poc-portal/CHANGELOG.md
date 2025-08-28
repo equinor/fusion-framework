@@ -1,5 +1,20 @@
 # poc-portal
 
+## 1.0.58
+
+### Patch Changes
+
+- Updated dependencies [[`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253)]:
+  - @equinor/fusion-framework-react-app@6.2.6
+  - @equinor/fusion-framework-cli@11.0.0
+  - @equinor/fusion-framework-module-http@6.3.4
+  - @equinor/fusion-framework-module@5.0.0
+  - @equinor/fusion-framework-module-app@6.1.17
+  - @equinor/fusion-framework-module-msal@4.0.8
+  - @equinor/fusion-framework-module-service-discovery@8.0.18
+  - @equinor/fusion-framework@7.3.17
+  - @equinor/fusion-framework-react@7.4.17
+
 ## 1.0.57
 
 ### Patch Changes

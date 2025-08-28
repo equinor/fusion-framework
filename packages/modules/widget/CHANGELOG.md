@@ -1,5 +1,15 @@
 # Change Log
 
+## 11.0.0
+
+### Patch Changes
+
+- Updated dependencies [[`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253)]:
+  - @equinor/fusion-framework-module-http@6.3.4
+  - @equinor/fusion-framework-module@5.0.0
+  - @equinor/fusion-framework-module-service-discovery@8.0.18
+  - @equinor/fusion-framework-module-event@4.3.7
+
 ## 10.0.5
 
 ### Patch Changes

@@ -1,5 +1,25 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.0
+
+### Major Changes
+
+- [#3075](https://github.com/equinor/fusion-framework/pull/3075) [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253) Thanks [@odinr](https://github.com/odinr)! - This release makes `@equinor/fusion-framework-module-msal-node` an explicit ESM package by setting `type: "module"` in `package.json` and updating all internal TypeScript imports to use explicit `.js` extensions. This ensures compatibility with NodeNext module resolution and ESM environments, and aligns the runtime and published output with ESM standards.
+
+  - All internal imports now use `.js` extensions (e.g., `import { X } from './foo.js'`)
+  - `package.json` now explicitly sets `"type": "module"`
+  - `tsconfig.json` updated to use `module` and `moduleResolution` set to `NodeNext`
+  - **Dynamic import for libsecret dependency**: Converted `createAuthClient` to use dynamic imports to avoid requiring `libsecret` installation in environments where it's not needed (like CI/CD pipelines)
+  - No other runtime logic changes
+
+  **BREAKING CHANGE:**
+  Consumers must use ESM-compatible tooling and update any imports of this package to use explicit `.js` extensions for internal imports. CommonJS is no longer supported. This may require changes to build tooling, import paths, and runtime environments if not already ESM-ready.
+
+### Patch Changes
+
+- Updated dependencies [[`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253), [`8fffbfb`](https://github.com/equinor/fusion-framework/commit/8fffbfb12daa9748bf5290e5084cd4d409aed253)]:
+  - @equinor/fusion-framework-module@5.0.0
+
 ## 0.1.2
 
 ### Patch Changes

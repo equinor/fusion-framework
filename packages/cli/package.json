@@ -1,7 +1,11 @@
 {
   "name": "@equinor/fusion-framework-cli",
-  "version": "10.7.6",
-  "keywords": ["Fusion", "Fusion Framework", "CLI"],
+  "version": "11.0.0",
+  "keywords": [
+    "Fusion",
+    "Fusion Framework",
+    "CLI"
+  ],
   "author": "",
   "license": "ISC",
   "publishConfig": {

@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.5.13
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-module-navigation@6.0.0
+
 ## 4.5.12
 
 ### Patch Changes

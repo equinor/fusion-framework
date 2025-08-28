@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-widget",
-  "version": "1.1.42",
+  "version": "1.1.43",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
@@ -14,7 +14,11 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": ["fusion", "fusion-framework", "utility"],
+  "keywords": [
+    "fusion",
+    "fusion-framework",
+    "utility"
+  ],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",
