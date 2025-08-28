@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.31
+
+### Patch Changes
+
+- [#3298](https://github.com/equinor/fusion-framework/pull/3298) [`6480bf1`](https://github.com/equinor/fusion-framework/commit/6480bf197db9428fed80299c235f0608db0ca6a3) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.43.0 to 0.48.0
+
 ## 1.0.30
 
 ### Patch Changes

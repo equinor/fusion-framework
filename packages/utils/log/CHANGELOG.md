@@ -1,5 +1,16 @@
 # @equinor/fusion-log
 
+## 1.1.6
+
+### Patch Changes
+
+- [#3271](https://github.com/equinor/fusion-framework/pull/3271) [`7832bd7`](https://github.com/equinor/fusion-framework/commit/7832bd78843621ca95373596761bec29d4bdbbb8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependency `chalk` to ^5.6.0
+
+  - Updated `chalk` to version ^5.6.0 in root, CLI, and log utils packages.
+  - No breaking changes expected.
+
+  See [chalk changelog](https://github.com/chalk/chalk/releases) for details.
+
 ## 1.1.5
 
 ## 1.1.5-next.0

@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.1
+
+### Patch Changes
+
+- [#3298](https://github.com/equinor/fusion-framework/pull/3298) [`6480bf1`](https://github.com/equinor/fusion-framework/commit/6480bf197db9428fed80299c235f0608db0ca6a3) Thanks [@dependabot](https://github.com/apps/dependabot)! - bump @equinor/eds-core-react from 0.43.0 to 0.48.0
+
+- [#3306](https://github.com/equinor/fusion-framework/pull/3306) [`113a9ac`](https://github.com/equinor/fusion-framework/commit/113a9ac9b11f4cdb09dad22cbea010a3f5097343) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @vitejs/plugin-react from 4.7.0 to 5.0.2.
+
 ## 1.0.0
 
 ### Major Changes

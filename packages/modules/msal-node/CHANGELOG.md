@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.1
+
+### Patch Changes
+
+- [#3301](https://github.com/equinor/fusion-framework/pull/3301) [`152eecb`](https://github.com/equinor/fusion-framework/commit/152eecbccccd5ee3aafc5d59cebdb9b9554ca026) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependency `@azure/msal-node` from 3.7.1 to 3.7.3.
+
+  This update ensures compatibility with the latest features and fixes in `msal-node`.
+
 ## 1.0.0
 
 ### Major Changes
