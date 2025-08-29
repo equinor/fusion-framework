@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.3
+
+### Patch Changes
+
+- [`00c1851`](https://github.com/equinor/fusion-framework/commit/00c1851c1f80a89531796fb7487176867a4af533) Thanks [@odinr](https://github.com/odinr)! - fixed broken link in migration guide
+
 ## 0.4.2
 
 ### Patch Changes
