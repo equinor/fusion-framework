@@ -66,5 +66,5 @@ When upgrading from v10 to v11, ensure you:
 For additional information:
 - Run `pnpm fusion-framework-cli app --help` to see current command options
 - Check the CLI release notes for detailed changes
-- Review related documentation: [Authentication](./auth.md) and [Application Commands](./application.md)
+- Review related documentation: [Authentication](auth.md) and [Application Commands](application.md)
 
