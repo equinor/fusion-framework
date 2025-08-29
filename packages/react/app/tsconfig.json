@@ -16,10 +16,13 @@
       "path": "../framework"
     },
     {
-      "path": "../../modules/ag-grid"
+      "path": "../../modules/navigation"
     },
     {
-      "path": "../../modules/navigation"
+      "path": "../../modules/state"
+    },
+    {
+      "path": "../../modules/ag-grid"
     },
     {
       "path": "../modules/module"
