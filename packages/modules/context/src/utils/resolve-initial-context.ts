@@ -1,52 +1,71 @@
-import type { ModulesInstance } from '@equinor/fusion-framework-module';
-import type { ContextModule } from '../module';
+import { concat, of } from 'rxjs';
+import { defaultIfEmpty, first } from 'rxjs/operators';
+
+import { hasNavigationModule } from '@equinor/fusion-framework-module-navigation/utils';
+
 import type { ContextModuleConfig } from '../configurator';
-import { concat, EMPTY, first, of } from 'rxjs';
 
 import { type ContextPathResolveArgs, resolveContextFromPath } from './resolve-context-from-path';
-import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
+import { hasContextModule } from './has-context-module';
 
 /**
- * Resolves the initial context from the parent module.
+ * Creates a function to resolve the initial context for a Context Module.
  *
- * @param ref - parent modules.
- * @returns An Observable of the resolved initial context.
+ * This factory function returns a resolver that determines the initial context by:
+ * 1. Attempting to resolve context from the current URL path if navigation module is available
+ * 2. Falling back to parent context if path resolution fails or navigation is unavailable
+ * 3. Returning null if no context module is found
+ *
+ * @param options - Configuration options for context resolution
+ * @param options.path - Optional path resolution configuration
+ * @returns A function that resolves the initial context and returns it as an Observable
+ *
+ * The returned function:
+ * - Uses the navigation module's pathname from current modules or parent reference
+ * - Tries to resolve context from the path using the provided resolver
+ * - Falls back to the parent context if path resolution fails
+ * - Returns an Observable that emits null if no context is resolved
+ * - Always completes after emitting exactly one value (using first())
  */
-export const resolveContextFromParent: ContextModuleConfig['resolveInitialContext'] = ({ ref }) => {
-  const parentContext = (ref as ModulesInstance<[ContextModule]>)?.context;
-  // check if the parent has context module
-  if (!parentContext) {
-    throw Error(['resolveContextFromNavigation', 'ref does not support context!'].join('\n'));
-  }
-  // return the current context from the parent or empty if the parent does not have a context
-  return parentContext.currentContext ? of(parentContext.currentContext) : EMPTY;
-};
+export const resolveInitialContext = (options?: {
+  path?: ContextPathResolveArgs;
+}): Required<ContextModuleConfig>['resolveInitialContext'] => {
+  return (args) => {
+    const { ref, modules } = args;
 
-/**
- * Resolves the initial context for a Fusion Framework context module.
- *
- * will try to resolve the initial context from the path, and if that fails, it will try to resolve the context from the parent.
- *
- * @param options - Optional configuration for resolving the context path.
- * @returns A function that accepts the module's reference and modules, and returns an Observable of the resolved initial context.
- */
-export const resolveInitialContext =
-  (options?: {
-    path?: ContextPathResolveArgs;
-  }): Required<ContextModuleConfig>['resolveInitialContext'] =>
-  ({ ref, modules }) => {
-    const { context, navigation } = modules;
-    // create a path resolver from the context module
-    const pathResolver = resolveContextFromPath(context, options?.path);
-    // use the path from the navigation module, or the path from the parent navigation module
-    const pathname =
-      navigation?.path.pathname ??
-      (ref as Partial<ModulesInstance<[NavigationModule]>>).navigation?.path.pathname;
-    // try to resolve the context from the path, and if that fails, try to resolve the context from the parent
-    return concat(
-      pathname ? pathResolver(pathname) : EMPTY,
-      resolveContextFromParent({ ref, modules }),
-    ).pipe(first());
+    // use the navigation module's pathname if available from current modules or fall back to the parent's
+    const pathname = hasNavigationModule(modules)
+      ? modules.navigation.path.pathname
+      : hasNavigationModule(ref)
+        ? ref.navigation.path.pathname
+        : undefined;
+
+    // Get reference context module for potential fallback
+    const refContextModule = hasContextModule(ref) ? ref.context : undefined;
+
+    // Determine the context module from either current modules or parent reference
+    const contextModule = hasContextModule(modules) ? modules.context : refContextModule;
+
+    // if no context module is found, return an observable that emits null
+    if (!contextModule) return of(null);
+
+    // initiate context resolve function from path
+    const pathResolver = resolveContextFromPath(contextModule, options?.path);
+
+    // observable for parent context
+    const refContext$ = of(refContextModule?.currentContext ?? null);
+
+    // if pathname is available, try resolving context from it.
+    // if that fails, fall back to the parent context.
+    const initialContext$ = pathname ? concat(pathResolver(pathname), refContext$) : refContext$;
+
+    return initialContext$.pipe(
+      // ensure the observable emits null if the source completes without emitting a value
+      defaultIfEmpty(null),
+      // ensure the observable completes after emitting the first value
+      first(),
+    );
   };
+};
 
 export default resolveInitialContext;
