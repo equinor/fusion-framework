@@ -160,8 +160,7 @@ export class AppClient implements IAppClient {
     return this.#manifest.query(args).pipe(
       queryValue,
       catchError((err) => {
-        /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppManifestError) {
           throw cause;
@@ -188,7 +187,7 @@ export class AppClient implements IAppClient {
       map((res) => res.value as AppConfig<TType>),
       catchError((err) => {
         /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppConfigError) {
           throw cause;
@@ -206,7 +205,7 @@ export class AppClient implements IAppClient {
       queryValue,
       catchError((err) => {
         /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppSettingsError) {
           throw cause;
