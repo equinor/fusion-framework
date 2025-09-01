@@ -160,14 +160,13 @@ export class AppClient implements IAppClient {
     return this.#manifest.query(args).pipe(
       queryValue,
       catchError((err) => {
-        /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppManifestError) {
           throw cause;
         }
 
-        if (cause instanceof HttpJsonResponseError) {
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppManifestError.fromHttpResponse(cause.response, { cause });
         }
 
@@ -188,12 +187,12 @@ export class AppClient implements IAppClient {
       map((res) => res.value as AppConfig<TType>),
       catchError((err) => {
         /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppConfigError) {
           throw cause;
         }
-        if (cause instanceof HttpJsonResponseError) {
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppConfigError.fromHttpResponse(cause.response, { cause });
         }
         throw new AppConfigError('unknown', 'failed to load config', { cause });
@@ -206,12 +205,12 @@ export class AppClient implements IAppClient {
       queryValue,
       catchError((err) => {
         /** handle both direct errors and errors wrapped in a `cause` property */
-        const cause = err?.cause ?? err;
+        const cause = err?.cause || err;
 
         if (cause instanceof AppSettingsError) {
           throw cause;
         }
-        if (cause instanceof HttpJsonResponseError) {
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppSettingsError.fromHttpResponse(cause.response, { cause });
         }
         throw new AppSettingsError('unknown', 'failed to load settings', { cause });
