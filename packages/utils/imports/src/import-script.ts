@@ -1,6 +1,7 @@
 import { build, type BuildOptions } from 'esbuild';
 import { access } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { processAccessError } from './error.js';
 
 import { readPackageUp } from 'read-package-up';
@@ -105,7 +106,8 @@ export const importScript = async <M extends EsmModule>(
       return import(dataUrl);
     }
 
-    return import(outfile);
+    // Convert the outfile path to a file:// URL to ensure compatibility with ESM loader on Windows
+    return import(pathToFileURL(outfile).href);
   } catch (error) {
     throw new Error(
       `Failed to bundle '${entryPoint}' with esbuild. Check for syntax errors or unresolved imports.`,
