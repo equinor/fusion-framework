@@ -1,4 +1,5 @@
 import { loadConfigFromFile, mergeConfig, type UserConfig } from 'vite';
+import tsConfigPaths from 'vite-plugin-tsconfig-paths';
 
 import { basename, dirname, extname } from 'node:path';
 
@@ -48,7 +49,8 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
   // Merge default and local Vite configs
   return mergeConfig(
     {
-      root: root,
+      root,
+      plugins: [(tsConfigPaths as any)()],
       define: {
         // Set environment variables for the build
         'process.env.NODE_ENV': JSON.stringify(env.mode),
