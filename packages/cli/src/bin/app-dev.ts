@@ -100,6 +100,9 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
     // Otherwise, log that the portal is external and skip entry point resolution
     log?.info(`Portal ${portalId} is external, skipping entry point resolution`);
   }
+  const allowFs = templateFilePath ? [pkg.root, templateFilePath] : [pkg.root];
+
+  log?.debug(`File system access allowed for: \n${allowFs.join('\n')}\n`);
 
   log?.start('Starting app development server...');
 
@@ -138,7 +141,7 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
         port: options?.port || 3000,
         host: 'localhost',
         fs: {
-          allow: templateFilePath ? [pkg.root, templateFilePath] : [pkg.root],
+          allow: allowFs,
         },
       },
     },
