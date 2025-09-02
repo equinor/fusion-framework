@@ -1,5 +1,32 @@
 # @equinor/fusion-imports
 
+## 1.1.2
+
+### Patch Changes
+
+- [#3324](https://github.com/equinor/fusion-framework/pull/3324) [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c) Thanks [@odinr](https://github.com/odinr)! - Fixed incorrect repository directory reference in package.json.
+
+  - Corrected the repository directory from "packages/utils/transpile" to "packages/utils/imports" to match the actual package location
+
+- [#3324](https://github.com/equinor/fusion-framework/pull/3324) [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c) Thanks [@odinr](https://github.com/odinr)! - Changed `esbuild` from `devDependency` to `dependency` to fix Yarn Plug and Play compatibility.
+
+  - Fixes issue with Yarn Plug and Play where `@equinor/fusion-imports` tried to access esbuild but it wasn't declared in dependencies
+  - Moved esbuild from devDependencies to dependencies to resolve the ambiguous require call
+
+  Fixes: https://github.com/equinor/fusion/issues/641
+
+- [#3325](https://github.com/equinor/fusion-framework/pull/3325) [`866d1c5`](https://github.com/equinor/fusion-framework/commit/866d1c52ab86aaa742605e401d8633bc032efeb2) Thanks [@odinr](https://github.com/odinr)! - Fixed Windows compatibility issue with ESM loader when importing bundled scripts.
+
+  - Added `pathToFileURL` conversion before importing bundled scripts to prevent `ERR_UNSUPPORTED_ESM_URL_SCHEME` errors on Windows
+  - Windows absolute paths like `C:\path\to\file.js` are now properly converted to `file:///C:/path/to/file.js` URLs before being passed to the ESM loader
+  - This ensures cross-platform compatibility for dynamic imports in the CLI and build tools
+
+  The fix addresses the root cause of Windows ESM loader errors where Node.js would interpret Windows drive letters as URL protocols.
+
+  This fixes https://github.com/equinor/fusion/issues/642
+
+  The issue affects not only Windows but any environment where file paths contain characters that ESM might interpret as URL components (e.g., paths with special characters, drive letters, or percent-encoded characters).
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,5 +1,74 @@
 # Change Log
 
+## 11.1.0
+
+### Minor Changes
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Add `vite-plugin-tsconfig-paths` to allow apps to use path aliases in tsconfig, instead of defining them manually in Vite config.
+
+  > [!NOTE]
+  > Newer versions of Vite wont resolve files from `baseUrl` in `tsconfig.json`.
+  >
+  > To fix this, you can either:
+  >
+  > - Update import with full relative path
+  > - Add paths to `tsconfig.json`
+
+  example:
+
+  ```json
+  {
+    "compilerOptions": {
+      "baseUrl": "src",
+      "paths": {
+        "@/*": ["./*"]
+      }
+    }
+  }
+  ```
+
+  ```typescript
+  import { MyComponent } from "@/components";
+  ```
+
+  ‼️ Bad practice:
+
+  ```json
+  {
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "MyComponent": ["src/components/MyComponent"]
+      }
+    }
+  }
+  ```
+
+  ```typescript
+  import { MyComponent } from "MyComponent";
+  ```
+
+  > [!IMPORTANT]
+  > This is just best effort for resolving paths at build time. It does not guarantee that all paths will be resolved correctly in all scenarios. Please verify that your paths are working as expected after this update.
+
+### Patch Changes
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Added debug logging of included file system paths.
+
+  > [!Note] > _Vite will not resolve files outside the working directory unless explicitly allowed._
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Improved CLI logger by adding a missing argument for enhanced debugging.
+  Running `ffc app dev --debug` now provides more detailed output during development server startup.
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Fixed issue where app routing was not properly handled in the development server configuration. Some request where given with `/` instead of `@`, so now we support both formats.
+
+  example `/apps/bundles/apps/my-app/6.7.8/src/index.ts?import` was expected to be `/apps/bundles/apps/my-app@6.7.8/src/index.ts?import`.
+
+  Should fix https://github.com/equinor/fusion/issues/640
+
+- Updated dependencies [[`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c), [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c), [`866d1c5`](https://github.com/equinor/fusion-framework/commit/866d1c52ab86aaa742605e401d8633bc032efeb2)]:
+  - @equinor/fusion-imports@1.1.2
+
 ## 11.0.2
 
 ### Patch Changes
