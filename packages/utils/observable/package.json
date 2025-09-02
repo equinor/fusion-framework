@@ -55,7 +55,7 @@
     "url": "https://github.com/equinor/fusion-framework/issues"
   },
   "dependencies": {
-    "immer": "^9.0.16",
+    "immer": "^10.1.3",
     "rxjs": "^7.8.1",
     "uuid": "^11.0.3"
   },
