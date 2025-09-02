@@ -1764,13 +1764,13 @@ importers:
 
   packages/utils/imports:
     dependencies:
+      esbuild:
+        specifier: ^0.25.1
+        version: 0.25.9
       read-package-up:
         specifier: ^11.0.0
         version: 11.0.0
     devDependencies:
-      esbuild:
-        specifier: ^0.25.1
-        version: 0.25.9
       fs-monkey:
         specifier: ^1.0.6
         version: 1.1.0
