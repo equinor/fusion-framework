@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Improve `createRouteMatcher` to support multiple patterns and custom matcher functions. Adds better documentation and type safety for route matching.
+
+  > [!TIP] You can now pass an array of patterns to `createRouteMatcher`
+
+  ```typescript
+  const matcher = createRouteMatcher<{ id: string }>({
+    match: ["/user/:id", "/profile/:id"],
+  });
+  matcher("/user/42", req); // { params: { id: '42' } }
+  matcher("/profile/99", req); // { params: { id: '99' } }
+  ```
+
 ## 1.0.0
 
 ### Major Changes
