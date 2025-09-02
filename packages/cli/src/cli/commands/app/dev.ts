@@ -56,7 +56,7 @@ export const command = createCommand('dev')
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')
   .option('--port <port>', 'Port for the development server', '3000')
   .action(async (options) => {
-    const log = new ConsoleLogger('app:dev');
+    const log = new ConsoleLogger('app:dev', { debug: options.debug });
 
     log.start('Starting application in development mode...');
     startAppDevServer({
