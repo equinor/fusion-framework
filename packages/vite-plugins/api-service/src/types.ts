@@ -130,7 +130,7 @@ export type ApiRouteProxyOptions = Omit<ProxyServer.ServerOptions, 'target'> & {
   transformResponse?: (data: JsonData) => JsonData;
 };
 
-type RouteMatcher = string | Matcher;
+type RouteMatcher = string | string[] | Matcher;
 
 /**
  * Represents a middleware route configuration.

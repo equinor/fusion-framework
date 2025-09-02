@@ -54,10 +54,20 @@ export type MatchResult<T extends RequestParams> = boolean | { params: T };
  * const result = customMatcher('/health', req); // true
  */
 export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Matcher<T> {
-  if (typeof route.match === 'string') {
+  // extract the match patterns, if string wrap it to array
+  const match = typeof route.match === 'string' ? [route.match] : route.match;
+  if (Array.isArray(match)) {
+    // create a path-to-regexp matcher for each pattern
     return (path: string): MatchResult<T> => {
-      return pathToRegexp.match<T>(route.match as string)(path);
+      for (const pattern of match) {
+        const result = pathToRegexp.match<T>(pattern)(path);
+        if (result) {
+          return result;
+        }
+      }
+      // no match found
+      return false;
     };
   }
-  return route.match as Matcher<T>;
+  return match as Matcher<T>;
 }
