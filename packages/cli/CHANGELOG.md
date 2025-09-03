@@ -1,5 +1,20 @@
 # Change Log
 
+## 11.1.2
+
+### Patch Changes
+
+- [#3330](https://github.com/equinor/fusion-framework/pull/3330) [`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01) Thanks [@odinr](https://github.com/odinr)! - Enhanced Vite configuration with improved TypeScript path resolution and centralized config loading.
+
+  - Added `vite-tsconfig-paths` plugin for better TypeScript path resolution in development
+  - Refactored app and portal dev servers to use centralized `loadViteConfig` function
+  - Improved Vite config merging with `mergeConfigVite` for better configuration management
+  - Added debug logging for Vite and dev server configurations
+  - Moved output directory validation to build-time only for better performance
+
+- Updated dependencies [[`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01)]:
+  - @equinor/fusion-framework-dev-server@1.0.2
+
 ## 11.1.1
 
 ### Patch Changes
