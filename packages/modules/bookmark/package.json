@@ -58,6 +58,6 @@
     "@equinor/fusion-framework-module-services": "workspace:^",
     "@types/uuid": "^9.0.8",
     "typescript": "^5.8.2",
-    "zod": "^3.25.76"
+    "zod": "^4.1.5"
   }
 }
