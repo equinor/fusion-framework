@@ -1,0 +1,159 @@
+---
+description: TypeScript documentation guidelines for IntelliSense and maintainability
+globs: *.ts,*.tsx
+alwaysApply: true
+---
+
+# TypeScript Documentation Rules
+
+## TSDoc Comments for IntelliSense
+
+### Always Document Public APIs
+Add TSDoc comments to all exported functions, classes, interfaces, and types:
+
+```typescript
+/**
+ * Configuration options for the Fusion Framework
+ */
+export interface FrameworkConfig {
+  /** The name of the application */
+  name: string;
+  /** Optional environment settings */
+  environment?: Environment;
+}
+
+/**
+ * Creates and initializes a new Fusion Framework instance
+ * @param config - Configuration object for the framework
+ * @returns Promise resolving to the initialized framework
+ */
+export async function createFramework(config: FrameworkConfig): Promise<Framework> {
+  // implementation
+}
+```
+
+### Parameter and Return Documentation
+```typescript
+/**
+ * Loads configuration from a file or URL
+ * @param source - File path or URL to load configuration from
+ * @param options - Optional loading options
+ * @returns Promise resolving to parsed configuration object
+ * @throws {ConfigError} When configuration cannot be loaded or parsed
+ */
+export async function loadConfig(
+  source: string,
+  options?: LoadOptions
+): Promise<ConfigObject> {
+  // implementation
+}
+```
+
+## Inline Comments for Maintainers
+
+### Complex Logic
+Add comments for non-obvious logic, algorithms, or business rules:
+
+```typescript
+// Calculate retry delay with exponential backoff
+const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay);
+
+// Filter out invalid configurations before processing
+const validConfigs = configs.filter(config => {
+  // Skip configs without required authentication
+  if (!config.auth?.token) return false;
+
+  // Ensure environment is properly configured
+  return config.environment && config.environment.apiUrl;
+});
+```
+
+### Magic Numbers and Constants
+```typescript
+// Retry up to 3 times with 1 second base delay
+const MAX_RETRIES = 3;
+const BASE_DELAY = 1000;
+
+// Buffer size for streaming operations (64KB)
+const BUFFER_SIZE = 64 * 1024;
+```
+
+### Side Effects and Important Assumptions
+```typescript
+// IMPORTANT: This modifies the global state
+updateGlobalState(newState);
+
+// WARNING: Only call this once per session
+initializeDatabase();
+```
+
+## Documentation Guidelines
+
+### ✅ Do's
+- **Keep it simple and clear** - Use plain English
+- **Be specific** - Explain what, not just how
+- **Include examples** - When helpful for complex APIs
+- **Document edge cases** - Mention limitations and assumptions
+- **Update when code changes** - Keep documentation in sync
+
+### ❌ Don'ts
+- **Don't over-document** - Skip obvious things
+- **Don't repeat code** - Explain why, not what the code does
+- **Don't use jargon** - Unless it's domain-specific and explained
+- **Don't write essays** - Be concise but complete
+
+## Examples
+
+### Good Documentation
+```typescript
+/**
+ * Validates user permissions for a specific resource
+ * @param userId - The user's unique identifier
+ * @param resource - The resource being accessed
+ * @param action - The action being performed (read/write/delete)
+ * @returns True if user has permission, false otherwise
+ */
+function hasPermission(userId: string, resource: string, action: string): boolean {
+  // Check if user is admin (admins have all permissions)
+  if (isAdmin(userId)) return true;
+
+  // Check specific permission grants
+  return checkPermissionGrant(userId, resource, action);
+}
+```
+
+### Avoid This
+```typescript
+/**
+ * Function to check if user has permission
+ * @param userId string
+ * @param resource string
+ * @param action string
+ * @returns boolean
+ */
+function hasPermission(userId: string, resource: string, action: string): boolean {
+  // Check if user is admin
+  if (isAdmin(userId)) return true;
+  // Check permission
+  return checkPermissionGrant(userId, resource, action);
+}
+```
+
+## Quality Checklist
+
+Before committing:
+- [ ] All exported functions have TSDoc comments
+- [ ] Complex logic has explanatory comments
+- [ ] Magic numbers are explained with constants or comments
+- [ ] Side effects are clearly documented
+- [ ] Examples are provided for complex APIs
+- [ ] Documentation is kept in sync with code changes
+
+## IntelliSense Benefits
+
+Proper TSDoc comments provide:
+- **Function descriptions** in autocomplete
+- **Parameter hints** when calling functions
+- **Return type information** in tooltips
+- **Usage examples** in documentation popups
+- **Better IDE navigation** and refactoring support

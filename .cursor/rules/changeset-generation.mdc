@@ -1,0 +1,87 @@
+---
+description: Changeset generation guidelines and best practices
+alwaysApply: true
+requireFile: ./contributing/changeset.md
+---
+
+# Changeset Generation Rules
+
+## Always Output to Correct Directory
+
+When generating changesets, **always** create them in the `.changeset` directory (not `.changesets`). Changesets must follow the exact path structure:
+```
+.changesets/[filename].md
+```
+
+## Changeset Format Requirements
+
+### Frontmatter Structure
+Each changeset must include proper YAML frontmatter:
+```md
+---
+"@equinor/fusion-package-name": patch
+---
+
+Description of changes...
+```
+
+### Version Types
+Use semantic versioning appropriately:
+- `patch`: Backward compatible bug fixes
+- `minor`: Backward compatible new features
+- `major`: Breaking changes
+
+## Best Practices
+
+### Single Package Per Changeset
+**Prefer a single package per changeset:** Each changeset should ideally affect only one package. This keeps versioning and changelogs clear and makes releases easier to manage.
+
+### Clear and Descriptive Summaries
+- Write clear, concise, and descriptive summaries
+- Explain the impact of the change
+- Use present tense (e.g., "Add feature" not "Added feature")
+
+### Detailed Explanations
+For each package changed, provide:
+1. **What changed** - Brief description
+2. **Why it changed** - Rationale and benefits
+3. **How to migrate** (if applicable) - Consumer-facing changes
+4. **Code examples** (optional) - Usage examples for new features
+
+### File Naming
+- prefix with package name (exclude scope, example '@equinor')
+- generate a short name based on change.
+- Examples: `cli_added-feature-x.md`, `module-http_fixed-http-headers.md`
+
+## Quality Assurance
+
+Before finalizing:
+- [ ] Changeset correctly reflects the changes made
+- [ ] Version bump type is appropriate (patch/minor/major)
+- [ ] Description is clear and actionable
+- [ ] All affected packages are included
+- [ ] Follows the format from [contributing/changeset.md](mdc:contributing/changeset.md)
+
+## Example Format
+
+```md
+---
+"@equinor/fusion-framework-cli": patch
+---
+
+**@equinor/fusion-framework-cli:**
+
+Enhanced Vite configuration with improved TypeScript path resolution.
+
+- Removed deprecated `vite-plugin-tsconfig-paths` dependency
+- Updated `load-vite-config.ts` to remove plugin usage
+- Improved build performance and reduced bundle size
+```
+
+## Common Mistakes to Avoid
+
+- ❌ Creating changesets in wrong directory (should be `.changeset/`, not `.changesets/`)
+- ❌ Grouping unrelated changes in single changeset
+- ❌ Using vague or unclear descriptions
+- ❌ Forgetting to include all affected packages
+- ❌ Incorrect version bump types

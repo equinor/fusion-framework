@@ -1,0 +1,44 @@
+---
+description: Pull request generation guidelines and template usage
+alwaysApply: true
+requireFile: ./.github/PULL_REQUEST_TEMPLATE.md
+---
+
+# Pull Request Generation Rules
+
+## Always Use GitHub PR Template
+
+When generating pull request titles and bodies, **always** use the repository's GitHub PR template located at [`.github/PULL_REQUEST_TEMPLATE.md`](mdc:.github/PULL_REQUEST_TEMPLATE.md).
+
+## Template Structure Requirements
+
+The PR template includes these required sections that must be filled:
+
+### Why Section
+- **What kind of change does this PR introduce?** (e.g., feature, bug fix, refactor, etc.)
+- **What is the current behavior?** (describe existing behavior)
+- **What is the new behavior?** (describe what will change)
+- **Does this PR introduce a breaking change?** (yes/no and explanation)
+- **Other information?** (any additional context)
+- **closes:** (link to related issues)
+
+### Checkboxes Section
+All checkboxes in the template must be addressed:
+- [ ] Confirm changes to target branch validation
+- [ ] Confirm completion of self-review checklist
+- [ ] Confirm adherence to code of conduct
+
+## PR Title Format
+Follow conventional commit format for PR titles when possible:
+- `feat: add new feature`
+- `fix: resolve issue`
+- `refactor: improve code structure`
+- `docs: update documentation`
+- `chore: maintenance tasks`
+
+## Best Practices
+- Be descriptive but concise
+- Include relevant issue numbers
+- Reference any breaking changes clearly
+- Explain the rationale behind changes
+- Link to related PRs or issues

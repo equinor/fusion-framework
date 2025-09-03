@@ -1,0 +1,170 @@
+---
+description: Monorepo package resolution guidelines and import patterns
+alwaysApply: true
+requireFile: ./tsconfig.json
+requireFile: ./pnpm-workspace.yaml
+---
+
+# Monorepo Package Resolution Rules
+
+## Monorepo Structure Overview
+
+This is a **pnpm-based monorepo** with the following workspace structure:
+- `packages/` - Core framework packages
+- `cookbooks/` - Example implementations and templates
+- `vue-press/` - Documentation site
+
+## Package Resolution Patterns
+
+### TypeScript Path Mappings
+Based on [tsconfig.json](mdc:tsconfig.json), use these import patterns for monorepo packages:
+
+#### Framework Core Packages
+```typescript
+// Framework core
+import { Framework } from "@equinor/fusion-framework";
+
+// Framework modules
+import { Module } from "@equinor/fusion-framework-module";
+import { HttpModule } from "@equinor/fusion-framework-module-http";
+import { AuthModule } from "@equinor/fusion-framework-module-msal";
+
+// Framework utils
+import { Observable } from "@equinor/fusion-observable";
+import { Query } from "@equinor/fusion-query";
+```
+
+#### React Packages
+```typescript
+// React framework
+import { ReactFramework } from "@equinor/fusion-framework-react";
+
+// React modules
+import { ReactModule } from "@equinor/fusion-framework-react-module";
+import { HttpReactModule } from "@equinor/fusion-framework-react-module-http";
+
+// React components
+import { App } from "@equinor/fusion-framework-react-app";
+import { enableHttp } from "@equinor/fusion-framework-react-app/http";
+```
+
+#### Vite Plugins
+```typescript
+// Vite plugins (different scope)
+import apiService from "fusion-framework-vite-plugin-api-service";
+import spaPlugin from "fusion-framework-vite-plugin-spa";
+```
+
+### Wildcard Patterns
+The TypeScript configuration uses wildcards for scalable imports:
+
+```json
+{
+  "@equinor/fusion-framework-react-*": ["./react/*/src"],
+  "@equinor/fusion-framework-module-*": ["./modules/*/src"],
+  "@equinor/fusion-framework-*": ["./*/src"],
+  "fusion-framework-vite-plugin-*": ["./vite-plugins/*/src"]
+}
+```
+
+## Import Best Practices
+
+### ✅ Preferred Patterns
+```typescript
+// Always use scoped package names
+import { Framework } from "@equinor/fusion-framework";
+import { Module } from "@equinor/fusion-framework-module";
+
+// Use specific named imports when possible
+import { useFramework, useModule } from "@equinor/fusion-framework-react";
+
+// Use specific named imports when working with apps
+import { useFramework, useAppModule } from "@equinor/fusion-framework-react-app";
+import { useHttpClient } from "@equinor/fusion-framework-react-app/http";
+
+// Import types explicitly
+import type { FrameworkConfig } from "@equinor/fusion-framework";
+```
+
+### ❌ Avoid These Patterns
+```typescript
+// Don't use relative imports for monorepo packages
+import { Framework } from "../../../framework/src";
+
+// Don't use workspace: protocol in source code
+import { Module } from "workspace:@equinor/fusion-framework-module";
+
+// Don't use package.json paths
+import pkg from "../../package.json";
+```
+
+## Package Organization Guidelines
+
+### Directory Structure
+```
+packages/
+├── app/           # Application framework
+├── framework/     # Core framework
+├── modules/       # Framework modules
+│   ├── http/
+│   ├── auth/
+│   └── ...
+├── react/         # React integrations
+├── utils/         # Utility packages
+│   ├── observable/
+│   ├── query/
+│   └── ...
+├── cli/           # CLI tools
+├── dev-server/    # Development server
+└── vite-plugins/  # Vite plugins
+```
+
+### Source Directory Convention
+All packages follow the `src/` directory convention:
+- Source files: `packages/*/src/`
+- Entry points: `packages/*/src/index.ts`
+- Type definitions: Auto-generated in `dist/types/`
+
+## Development Workflow
+
+### Adding New Packages
+1. Create package in appropriate directory under `packages/`
+2. Add `src/index.ts` as entry point
+3. Update [tsconfig.json](mdc:tsconfig.json) path mappings if needed
+4. Ensure [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) includes the path
+
+### Cross-Package Dependencies
+```json
+{
+  "dependencies": {
+    "@equinor/fusion-framework": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^"
+  }
+}
+```
+
+### Testing Package Resolution
+```bash
+# Test TypeScript resolution
+pnpm tsc --noEmit
+
+# Test build process
+pnpm build
+
+# Test specific package
+pnpm --filter @equinor/fusion-framework build
+```
+
+## Common Issues & Solutions
+
+### Path Resolution Errors
+**Issue**: `Cannot find module '@equinor/fusion-framework'`
+**Solution**: Check [tsconfig.json](mdc:tsconfig.json) path mappings
+
+### Workspace Dependency Issues
+**Issue**: Package not found in workspace
+**Solution**: Verify [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml) includes the package path
+
+### Import Path Issues
+**Issue**: Relative imports not resolving correctly
+**Solution**: Use scoped package imports instead of relative paths
