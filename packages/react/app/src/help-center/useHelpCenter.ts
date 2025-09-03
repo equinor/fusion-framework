@@ -69,6 +69,11 @@ export interface HelpCenter {
    * Requesting the portal to open the help sidesheet on the governance tab.
    */
   openGovernance(): void;
+
+  /**
+   * Requesting the portal to open the help sidesheet on the release notes page.
+   */
+  openReleaseNotes(): void;
 }
 
 /**
@@ -125,12 +130,21 @@ export const useHelpCenter = (): HelpCenter => {
     });
   }, [eventModule.dispatchEvent]);
 
+  const openReleaseNotes = useCallback((): void => {
+    eventModule.dispatchEvent(EVENT_NAME, {
+      detail: {
+        page: 'release-notes',
+      },
+    });
+  }, [eventModule.dispatchEvent]);
+
   return {
     openHelp,
     openArticle,
     openFaqs,
     openSearch,
     openGovernance,
+    openReleaseNotes,
   };
 };
 
