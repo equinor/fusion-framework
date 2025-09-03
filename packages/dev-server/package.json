@@ -36,7 +36,9 @@
   "dependencies": {
     "@equinor/fusion-framework-vite-plugin-api-service": "workspace:^",
     "@equinor/fusion-framework-vite-plugin-spa": "workspace:^",
-    "@equinor/fusion-log": "workspace:^"
+    "@equinor/fusion-log": "workspace:^",
+    "@vitejs/plugin-react": "^5.0.2",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
