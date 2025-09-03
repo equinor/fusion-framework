@@ -17,7 +17,6 @@ import { readPackageUp } from 'read-package-up';
 import { dirname } from 'node:path';
 import { loadViteConfig } from './helpers/load-vite-config.js';
 
-
 /**
  * Options for starting the application development server.
  *
@@ -108,7 +107,6 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   const allowFs = templateFilePath ? [pkg.root, templateFilePath] : [pkg.root];
 
   log?.debug(`File system access allowed for: \n${allowFs.join('\n')}\n`);
-
 
   const viteConfig = mergeConfigVite(await loadViteConfig(env, pkg), {
     server: {

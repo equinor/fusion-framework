@@ -1,5 +1,20 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.0.2
+
+### Patch Changes
+
+- [#3330](https://github.com/equinor/fusion-framework/pull/3330) [`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev server configuration by removing `vite-tsconfig-paths` plugin.
+
+  > The responsibility for adding the `vite-tsconfig-paths` plugin has been moved to `@equinor/fusion-framework-cli`, which now provides it via the `overrides` parameter in `createDevServerConfig`. This ensures consistent TypeScript path resolution in both development and build environments.
+
+  - Removed `vite-tsconfig-paths` dependency from package.json
+  - Removed plugin usage from `create-dev-server-config.ts`
+
+  **Breaking change:**
+
+  If you use `@equinor/fusion-framework-dev-server` outside of the CLI, you must manually add the `vite-tsconfig-paths` plugin to your Vite config overrides to maintain the same TypeScript path resolution behavior.
+
 ## 1.0.1
 
 ### Patch Changes
