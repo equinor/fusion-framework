@@ -1,5 +1,7 @@
 import { fileURLToPath } from 'node:url';
 
+import { mergeConfig as mergeConfigVite } from 'vite';
+
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
 import { fileExistsSync } from '../lib/utils/file-exists.js';
@@ -9,10 +11,12 @@ import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
 
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
-import { createDevServer } from './utils/create-dev-server.js';
+import { createDevServer, type CreateDevServerOptions } from './utils/create-dev-server.js';
 
 import { readPackageUp } from 'read-package-up';
 import { dirname } from 'node:path';
+import { loadViteConfig } from './helpers/load-vite-config.js';
+
 
 /**
  * Options for starting the application development server.
@@ -100,52 +104,54 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
     // Otherwise, log that the portal is external and skip entry point resolution
     log?.info(`Portal ${portalId} is external, skipping entry point resolution`);
   }
+
   const allowFs = templateFilePath ? [pkg.root, templateFilePath] : [pkg.root];
 
   log?.debug(`File system access allowed for: \n${allowFs.join('\n')}\n`);
 
+
+  const viteConfig = mergeConfigVite(await loadViteConfig(env, pkg), {
+    server: {
+      port: options?.port || 3000,
+      host: 'localhost',
+      fs: {
+        allow: allowFs,
+      },
+    },
+  });
+
+  const devServerConfig: CreateDevServerOptions = {
+    template: {
+      portal: {
+        id: portalId,
+      },
+    },
+    app: {
+      manifest: appManifest,
+      config: appConfig,
+    },
+  };
+  // If a local portal entry point is found, add it to the config
+  if (templateEntry) {
+    devServerConfig.portal = {
+      manifest: {
+        name: portalId,
+        build: {
+          templateEntry,
+          assetPath: '/@fs',
+        },
+      },
+      config: {},
+    };
+  }
+
+  log?.debug('vite config:', viteConfig);
+  log?.debug('dev server config:', devServerConfig);
+
   log?.start('Starting app development server...');
 
   // Create the dev server configuration, including portal and app settings
-  const devServer = await createDevServer(
-    env,
-    {
-      template: {
-        portal: {
-          id: portalId,
-        },
-      },
-      // If a local portal entry point is found, add it to the config
-      ...(templateEntry
-        ? {
-            portal: {
-              manifest: {
-                name: portalId,
-                build: {
-                  templateEntry,
-                  assetPath: '/@fs',
-                },
-              },
-              // @todo - replace with real portal config when available
-              config: {},
-            },
-          }
-        : {}),
-      app: {
-        manifest: appManifest,
-        config: appConfig,
-      },
-    },
-    {
-      server: {
-        port: options?.port || 3000,
-        host: 'localhost',
-        fs: {
-          allow: allowFs,
-        },
-      },
-    },
-  );
+  const devServer = await createDevServer(env, devServerConfig, viteConfig);
 
   await devServer.listen();
 

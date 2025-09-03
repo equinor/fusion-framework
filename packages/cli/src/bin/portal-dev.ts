@@ -1,10 +1,13 @@
+import { mergeConfig as mergeConfigVite } from 'vite';
+
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 
-import { createDevServer, type ConsoleLogger } from './utils/index.js';
+import { createDevServer, type CreateDevServerOptions, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolvePortalManifest } from './helpers/resolve-portal-manifest.js';
 import { resolvePortalConfig } from './helpers/resolve-portal-config.js';
+import { loadViteConfig } from './helpers/load-vite-config.js';
 
 /**
  * Starts the portal development server for local development and testing.
@@ -64,31 +67,34 @@ export const startPortalDevServer = async (options?: {
   // Resolve the portal config (replace with real logic as needed)
   const portalConfig = await resolvePortalConfig(env, { log, config: options?.config });
 
+  const viteConfig = mergeConfigVite(await loadViteConfig(env, pkg), {
+    server: {
+      port: options?.server?.port,
+      fs: {
+        allow: [pkg.root],
+      },
+    },
+  });
+
+  const devServerConfig: CreateDevServerOptions = {
+    template: {
+      portal: {
+        id: portalManifest.name,
+      },
+    },
+    portal: {
+      manifest: portalManifest,
+      config: portalConfig,
+    },
+  };
+
+  log?.debug('vite config:', viteConfig);
+  log?.debug('dev server config:', devServerConfig);
+
   log?.start('Starting app development server...');
 
   // Create the dev server configuration, including portal and server settings
-  const devServer = await createDevServer(
-    env,
-    {
-      template: {
-        portal: {
-          id: portalManifest.name,
-        },
-      },
-      portal: {
-        manifest: portalManifest,
-        config: portalConfig,
-      },
-    },
-    {
-      server: {
-        port: options?.server?.port,
-        fs: {
-          allow: [pkg.root], // Allow access to the root directory
-        },
-      },
-    },
-  );
+  const devServer = await createDevServer(env, devServerConfig, viteConfig);
 
   await devServer.listen();
 
