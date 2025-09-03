@@ -1,5 +1,14 @@
 # Change Log
 
+## 11.1.1
+
+### Patch Changes
+
+- [#3327](https://github.com/equinor/fusion-framework/pull/3327) [`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa) Thanks [@odinr](https://github.com/odinr)! - moved plugin `vite-tsconfig-paths` to `@equinor/fusion-framework-dev-server`
+
+- Updated dependencies [[`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa)]:
+  - @equinor/fusion-framework-dev-server@1.0.1
+
 ## 11.1.0
 
 ### Minor Changes
