@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.0.1
+
+### Patch Changes
+
+- [#3327](https://github.com/equinor/fusion-framework/pull/3327) [`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev server configuration with improved React and TypeScript path resolution support.
+
+  - Added `@vitejs/plugin-react` for better React development experience
+  - Added `vite-tsconfig-paths` for improved TypeScript path resolution
+  - Updated `create-dev-server-config.ts` to include both plugins in the vite configuration
+
 ## 1.0.0
 
 ### Major Changes
