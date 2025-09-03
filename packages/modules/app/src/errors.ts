@@ -1,4 +1,4 @@
-type AppErrorType = 'not_found' | 'unauthorized' | 'unknown';
+type AppErrorType = 'not_found' | 'unauthorized' | 'unknown' | 'deleted';
 
 /**
  * Represents an error that occurs when loading an application manifest.
@@ -20,6 +20,8 @@ export class AppManifestError extends Error {
         );
       case 404:
         return new AppManifestError('not_found', 'application manifest not found', options);
+      case 410:
+        return new AppManifestError('deleted', 'application manifest deleted', options);
     }
     return new AppManifestError(
       'unknown',
@@ -63,6 +65,8 @@ export class AppConfigError extends Error {
         );
       case 404:
         return new AppConfigError('not_found', 'application config not found', options);
+      case 410:
+        return new AppConfigError('deleted', 'application config deleted', options);
     }
     return new AppConfigError(
       'unknown',
@@ -106,6 +110,8 @@ export class AppSettingsError extends Error {
         );
       case 404:
         return new AppSettingsError('not_found', 'application not found', options);
+      case 410:
+        return new AppSettingsError('deleted', 'application settings deleted', options);
     }
     return new AppSettingsError(
       'unknown',
