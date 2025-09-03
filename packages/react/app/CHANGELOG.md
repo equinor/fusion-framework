@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.2.7
+
+### Patch Changes
+
+- [#3322](https://github.com/equinor/fusion-framework/pull/3322) [`d362359`](https://github.com/equinor/fusion-framework/commit/d362359507e7c55f568ede09cc8e66feb197596a) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Added `openReleaseNotes` flag for `useHelpCenter` hook in `@equinor/fusion-framework-react-app`
+
 ## 6.2.6
 
 ### Patch Changes
