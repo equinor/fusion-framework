@@ -1,6 +1,5 @@
 import { defineConfig, mergeConfig, type UserConfig } from 'vite';
 
-import tsConfigPathsPlugin from 'vite-tsconfig-paths';
 import reactPlugin from '@vitejs/plugin-react';
 
 import apiServicePlugin, {
@@ -76,7 +75,6 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
     },
     plugins: [
       reactPlugin(),
-      tsConfigPathsPlugin(),
       apiServicePlugin(
         {
           proxyHandler: createProxyHandler(api.serviceDiscoveryUrl, processServices, {
