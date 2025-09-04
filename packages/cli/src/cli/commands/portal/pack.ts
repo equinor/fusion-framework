@@ -1,24 +1,44 @@
 import { createCommand } from 'commander';
 import { ConsoleLogger, bundlePortal } from '@equinor/fusion-framework-cli/bin';
 
+/**
+ * CLI command: `pack`
+ *
+ * Bundles the Fusion portal into a deployable archive.
+ *
+ * Features:
+ * - If no manifest is provided, a default portal.manifest(.$ENV)?.[ts|js|json] is used from the current directory.
+ * - Supports environment variables to customize the build process.
+ * - Provides a debug mode for verbose logging.
+ *
+ * Usage:
+ *   $ ffc portal pack [manifest] [options]
+ *
+ * Arguments:
+ *   [manifest]   Manifest file to use for bundling (e.g., portal.manifest.ts)
+ *
+ * Options:
+ *   -d, --debug  Enable debug mode for verbose logging (default: false)
+ *
+ * Example:
+ *   $ ffc portal pack portal.manifest.prod.ts --debug
+ *
+ * @see bundlePortal for build implementation details
+ */
 export const command = createCommand('pack')
   .description('Bundle the Fusion portal into a deployable archive.')
   .addHelpText(
     'after',
     [
-      'Bundles the Fusion portal using the provided manifest and schema into a zip archive for deployment.',
       '',
-      'If no manifest is provided, a default portal.manifest.[ts|js|json] is used from the current directory.',
+      'If no manifest is provided, a default portal.manifest(.$ENV)?.[ts|js|json] is used from the current directory.',
+      'example: `ffc portal pack --env prod` will search for `portal.manifest.prod.ts` then fallback to `portal.manifest.ts`',
       '',
-      'Options:',
-      '  -a, --archive   Name of the output archive file (default: out/bundle.zip)',
-      '  --schema       Schema file to use for validation',
-      '  -d, --debug    Enable debug mode for verbose logging',
+      'NOTE: portal manifest is not required, a default manifest will be generated if not provided',
       '',
       'Examples:',
-      '  $ fusion-framework-cli portal pack',
-      '  $ fusion-framework-cli portal pack --archive my-portal.zip --schema portal.schema.json',
-      '  $ fusion-framework-cli portal pack portal.manifest.prod.ts --debug',
+      '  $ ffc portal pack',
+      '  $ ffc portal pack portal.manifest.dev.ts --archive my-portal.zip --output ./dist',
     ].join('\n'),
   )
   .option(
@@ -30,7 +50,7 @@ export const command = createCommand('pack')
   .option('--schema [string]', 'Schema file to use for validation')
   .argument(
     '[manifest]',
-    'Manifest file to use for bundling (e.g., portal.manifest[.env]?.[ts,js,json])',
+    'Manifest file to use for bundling (e.g., my-portal.manifest.ts)',
   )
   .action(async (manifest, options) => {
     const log = new ConsoleLogger('portal:pack', {

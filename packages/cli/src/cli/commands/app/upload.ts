@@ -21,7 +21,7 @@ import { createEnvOption } from '../../options/env.js';
  * - Supports specifying application key, environment, and debug mode.
  *
  * Usage:
- *   $ fusion upload [bundle] [options]
+ *   $ ffc app upload [bundle] [options]
  *
  * Arguments:
  *   [bundle]             Application bundle to upload (default: app-bundle.zip)
@@ -32,9 +32,9 @@ import { createEnvOption } from '../../options/env.js';
  *   -d, --debug          Enable debug mode for verbose logging
  *
  * Example:
- *   $ fusion upload
- *   $ fusion upload my-app-bundle.zip --appKey my-app
- *   $ fusion upload --debug
+ *   $ ffc app upload
+ *   $ ffc app upload my-app-bundle.zip --appKey my-app
+ *   $ ffc app upload --debug
  *
  * @see uploadApplication for implementation details
  */
@@ -45,28 +45,18 @@ export const command = withAuthOptions(
       'after',
       [
         '',
-        'Uploads a Fusion application bundle to the Fusion App Store.',
-        'Uploads a distributable application bundle (e.g., app-bundle.zip) to the Fusion app registry.',
-        'Supports specifying application key, environment, and debug mode.',
-        '',
-        'Arguments:',
-        '  [bundle]   Application bundle to upload (default: app-bundle.zip)',
-        '',
-        'Options:',
-        '  -k, --appKey <string> Application key (if not provided, resolved from manifest)',
-        '  -e, --env <env>      Target environment',
-        '  -d, --debug          Enable debug mode for verbose logging',
+        'Uploads a distributable application bundle (e.g., app-bundle.zip) to the Fusion app store.',
         '',
         'Examples:',
-        '  $ fusion upload',
-        '  $ fusion upload my-app-bundle.zip --appKey my-app',
-        '  $ fusion upload --debug',
+        '  $ ffc app upload',
+        '  $ ffc app upload my-app-bundle.zip --appKey my-app',
+        '  $ ffc app upload --debug',
       ].join('\n'),
     )
     .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)
-    .option('-k, --appKey <string>', 'Application key (if not provided, resolved from manifest)')
+    .option('-k, --appKey <string>', 'Application key (if not provided, resolved from the build metadata of the bundle)')
     .addOption(createEnvOption({ allowDev: false }))
-    .argument('[bundle]', 'Application bundle to upload (default: app-bundle.zip)', DEFAULT_ARCHIVE)
+    .argument('[bundle]', 'Application bundle to upload', DEFAULT_ARCHIVE)
     .action(async (bundle, options) => {
       const log = new ConsoleLogger('portal:upload', {
         debug: options.debug,

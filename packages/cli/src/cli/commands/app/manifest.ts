@@ -19,7 +19,7 @@ import { fileExistsSync } from '../../../lib/utils/file-exists.js';
  * - Debug and silent modes for flexible output.
  *
  * Usage:
- *   $ fusion manifest [manifest] [options]
+ *   $ ffc app manifest [manifest] [options]
  *
  * Arguments:
  *   [manifest]           Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])
@@ -30,9 +30,9 @@ import { fileExistsSync } from '../../../lib/utils/file-exists.js';
  *   -s, --silent         Silent mode, suppresses output except errors
  *
  * Example:
- *   $ fusion manifest
- *   $ fusion manifest app.manifest.prod.ts --output ./dist/app.manifest.json
- *   $ fusion manifest --debug
+ *   $ ffc app manifest
+ *   $ ffc app manifest app.manifest.prod.ts --output ./dist/app.manifest.json
+ *   $ ffc app manifest --debug
  *
  * @see loadAppManifest for implementation details
  */
@@ -42,27 +42,20 @@ export const command = createCommand('manifest')
     'after',
     [
       '',
-      'Builds and outputs the application manifest for Fusion apps.',
-      'By default, prints the manifest to stdout. Use --output to write to a file.',
-      'You can specify a custom manifest build file or use the default (app.manifest[.env]?.[ts,js,json]).',
-      'Supports debug and silent modes for flexible output.',
+      'By default, outputs the generated manifest object to stdout or a file. Use --output to write to a file.',
       '',
-      'Arguments:',
-      '  [manifest]   Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])',
-      '',
-      'Options:',
-      '  -d, --debug          Enable debug mode for verbose logging',
-      '  -o, --output         Write manifest to the specified file (default: stdout)',
-      '  -s, --silent         Silent mode, suppresses output except errors',
+      'Note:',
+      '- If not `app.manifest(.$ENV)?.[ts|js|json]` is found it will fallback to generate a default manifest',
       '',
       'Examples:',
-      '  $ fusion manifest',
-      '  $ fusion manifest app.manifest.prod.ts --output ./dist/app.manifest.json',
-      '  $ fusion manifest --debug',
+      '  $ ffc app manifest',
+      '  $ ffc app manifest app.manifest.prod.ts --output ./dist/app.manifest.json',
+      '  $ ffc app manifest --silent | jq ".build.entryPoint"',
+      '  $ ffc app manifest --debug',
     ].join('\n'),
   )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)
-  .option('-o, --output <string>', 'Write manifest to the specified file', 'stdout')
+  .option('-o, --output <string>', 'Output the result to stdout or a file', 'stdout')
   .option('-s, --silent', 'Silent mode, suppresses output except errors')
   .argument('[manifest]', 'Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])')
   .action(async (manifest, opt) => {

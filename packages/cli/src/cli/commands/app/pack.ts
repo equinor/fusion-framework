@@ -16,7 +16,7 @@ export const DEFAULT_ARCHIVE = 'app-bundle.zip' as const;
  * - If no manifest is provided, defaults to app.manifest.[ts|js|json] in the current directory.
  *
  * Usage:
- *   $ fusion pack [manifest] [options]
+ *   $ ffc app pack [manifest] [options]
  *
  * Arguments:
  *   [manifest]           Manifest file to use for bundling (e.g., app.manifest.ts)
@@ -27,8 +27,8 @@ export const DEFAULT_ARCHIVE = 'app-bundle.zip' as const;
  *   -d, --debug          Enable debug mode for verbose logging
  *
  * Example:
- *   $ fusion pack
- *   $ fusion pack app.manifest.dev.ts --archive my-app.zip --output ./dist
+ *   $ ffc app pack
+ *   $ ffc app pack app.manifest.dev.ts --archive my-app.zip --output ./dist
  *
  * @see bundleApp for implementation details
  */
@@ -37,22 +37,15 @@ export const command = createCommand('pack')
   .addHelpText(
     'after',
     [
-      'Creates a distributable app bundle of the application.',
-      'Bundles all necessary files for deployment.',
-      'You can specify the output filename and directory, and optionally provide a manifest file.',
-      'If no manifest is provided, defaults to app.manifest.[ts|js|json] in the current directory.',
       '',
-      'Arguments:',
-      '  [manifest]   Manifest file to use for bundling (e.g., app.manifest.ts)',
+      'If no manifest is provided, a default app.manifest(.$ENV)?.[ts|js|json] is used from the current directory.',
+      'example: `ffc app pack --env prod` will search for `app.manifest.prod.ts` then fallback to `app.manifest.ts`',
       '',
-      'Options:',
-      '  -a, --archive        Name of the output archive file (default: app-bundle.zip)',
-      '  -o, --output         Directory where the archive will be saved (default: current working directory)',
-      '  -d, --debug          Enable debug mode for verbose logging',
+      'NOTE: app manifest is not required, a default manifest will be generated if not provided',
       '',
       'Examples:',
-      '  $ fusion pack',
-      '  $ fusion pack app.manifest.dev.ts --archive my-app.zip --output ./dist',
+      '  $ ffc app pack',
+      '  $ ffc app pack app.manifest.dev.ts --archive my-app.zip --output ./dist',
     ].join('\n'),
   )
   .option(

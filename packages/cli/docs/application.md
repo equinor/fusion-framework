@@ -575,7 +575,7 @@ Checks if your application is registered in the Fusion app store and helps ident
 | Option/Argument       | Description                                           | Default / Example |
 | --------------------- | ----------------------------------------------------- | ----------------- |
 | `-d`, `--debug`       | Enable debug mode for verbose logging.                | `false`           |
-| `--environment <env>` | Specify the environment (see available environments). |                   |
+| `-e`, `--env <env>`   | Specify the environment (see available environments). |                   |
 | `--token <token>`     | Provide an authentication token (if required).        |                   |
 
 **Usage:**
@@ -586,7 +586,7 @@ pnpm fusion-framework-cli app check [options]
 **Examples:**
 ```sh
 pnpm fusion-framework-cli app check
-pnpm fusion-framework-cli app check --environment prod --debug
+pnpm fusion-framework-cli app check --env prod --debug
 ```
 
 > [!NOTE]

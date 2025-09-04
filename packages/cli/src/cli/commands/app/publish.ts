@@ -25,7 +25,7 @@ import { createEnvOption } from '../../options/env.js';
  * - Debug mode and authentication options are supported.
  *
  * Usage:
- *   $ fusion publish [bundle] [options]
+ *   $ ffc app publish [bundle] [options]
  *
  * Arguments:
  *   [bundle]             Path to the app bundle to upload
@@ -37,37 +37,38 @@ import { createEnvOption } from '../../options/env.js';
  *   -t, --tag            Tag to apply to the published app (latest | preview)
  *
  * Example:
- *   $ fusion publish
- *   $ fusion publish --env prod --manifest app.manifest.prod.ts
- *   $ fusion publish --tag latest app.bundle.zip
+ *   $ ffc app publish
+ *   $ ffc app publish --env prod --manifest app.manifest.prod.ts
+ *   $ ffc app publish --tag latest app.bundle.zip
  *
  * @see uploadApplication, tagApplication for implementation details
  */
 export const command = withAuthOptions(
   createCommand('publish')
-    .description('Build, upload, and tag your Fusion application for deployment.')
+    .description('Deployment: Build, upload, and tag your Fusion application.')
     .addHelpText(
       'after',
       [
         '',
-        'Builds, uploads, and tags a Fusion application for deployment to the Fusion portal.',
-        'Bundles the app, uploads it to the Fusion app store, and applies a tag for versioning.',
-        'Supports specifying environment, manifest file, and tag.',
-        'Debug mode and authentication options are supported.',
+        'WHAT THIS COMMAND DOES:',
+        '  1. Builds your application (if no bundle provided)',
+        '  2. Uploads the bundle to Fusion app registry',
+        '  3. Tags the uploaded version for deployment',
         '',
-        'Arguments:',
-        '  [bundle]   Path to the app bundle to upload',
+        'If no manifest is provided, a default app.manifest(.$ENV)?.[ts|js|json] is used from the current directory.',
+        'example: `ffc app publish --env prod` will search for `app.manifest.prod.ts` then fallback to `app.manifest.ts`',
         '',
-        'Options:',
-        '  -d, --debug          Enable debug mode for verbose logging (default: false)',
-        '  -e, --env <env>      Target environment',
-        '  -m, --manifest       Manifest file to use for bundling (e.g., app.manifest.ts)',
-        '  -t, --tag            Tag to apply to the published app (latest | preview)',
+        'NOTE: app manifest is not required, a default manifest will be generated if not provided',
+        '',
+        'FIRST TIME PUBLISHING:',
+        '  - Ensure your app is registered in Fusion App Admin',
+        '  - Use `ffc app check` first to verify registration status',
+        '  - Start with a test environment before production',
         '',
         'Examples:',
-        '  $ fusion publish',
-        '  $ fusion publish --env prod --manifest app.manifest.prod.ts',
-        '  $ fusion publish --tag latest app.bundle.zip',
+        '  $ ffc app publish',
+        '  $ ffc app publish --env prod --manifest app.manifest.prod.ts',
+        '  $ ffc app publish --tag latest app.bundle.zip',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)

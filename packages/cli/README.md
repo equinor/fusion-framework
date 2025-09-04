@@ -82,6 +82,7 @@ pnpm fusion-framework-cli app config --publish --env <environment>
 | `pnpm fusion-framework-cli auth ...` | Authenticate with Fusion             |
 | `pnpm fusion-framework-cli app ...`    | Working with Fusion applications     |
 | `pnpm fusion-framework-cli portal ...` | Working with Fusion portal templates |
+| `pnpm fusion-framework-cli disco ...` | Service discovery and resolution     |
 
 ## Example: package.json
 

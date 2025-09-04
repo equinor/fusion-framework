@@ -2,21 +2,41 @@ import { createCommand } from 'commander';
 
 import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-cli/bin';
 
+/**
+ * CLI command: `dev`
+ *
+ * Starts the portal in development mode with a local dev server.
+ *
+ * Features:
+ * - Launches the development server for your portal.
+ * - Supports custom runtime environment and port selection.
+ * - Debug mode available for verbose logging.
+ *
+ * Usage:
+ *   $ ffc portal dev [options]
+ *
+ * Options:
+ *   --debug              Enable debug mode
+ *   --env <environment>  Runtime environment for the dev server (default: local)
+ *   --port <port>        Port for the development server (default: 3000)
+ *
+ * Example:
+ *   $ ffc portal dev
+ *   $ ffc portal dev --port 4000
+ *   $ ffc portal dev --debug
+ *
+ * @see startPortalDevServer for implementation details
+ */
 export const command = createCommand('dev')
   .description('Start a local development server for the Fusion portal.')
   .addHelpText(
     'after',
     [
       '',
-      'Starts a local development server for your Fusion portal.',
-      '',
-      'Options:',
-      '  -p, --port   Port to run the development server on (default: 3000)',
-      '  -d, --debug  Enable debug mode for verbose logging',
-      '',
       'Examples:',
-      '  $ fusion-framework-cli portal dev',
-      '  $ fusion-framework-cli portal dev --port 4000 --debug',
+      '  $ ffc portal dev',
+      '  $ ffc portal dev --port 4000',
+      '  $ ffc portal dev --debug',
     ].join('\n'),
   )
   .option('--debug', 'Enable debug mode')

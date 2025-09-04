@@ -13,22 +13,43 @@ import { writeFile } from '@equinor/fusion-framework-cli/utils';
 
 import { createEnvOption } from '../../options/env.js';
 
+/**
+ * CLI command: `schema`
+ *
+ * Generates or validates a Fusion portal schema file.
+ *
+ * Features:
+ * - Supports environment variables to customize the schema generation.
+ * - Provides a debug mode for verbose logging.
+ * 
+ * Usage:
+ *   $ ffc portal schema [schema] [options]
+ *
+ * Arguments:
+ *   [schema]   Schema build file to use (e.g., portal.schema[.env]?.[ts,js,json])
+ *
+ * Options:
+ *   -o, --output <string>  Output file name (default: stdout)
+ *   -d, --debug            Enable debug mode for verbose logging
+ *   -v, --validate <file>  Validate the generated schema against a JSON file
+ *
+ * Example:
+ *   $ ffc portal schema
+ *   $ ffc portal schema --output portal.schema.json
+ *   $ ffc portal schema --validate my-config.json
+ *
+ * @see loadPortalSchema for implementation details
+ */
 export const command = createCommand('schema')
   .description('Generate or validate a Fusion portal schema file.')
   .addHelpText(
     'after',
     [
-      'Generates or validates a Fusion portal schema file.',
-      '',
-      'Options:',
-      '  -o, --output   Output file name (default: stdout)',
-      '  -v, --validate Validate the generated schema against a JSON file',
-      '  -d, --debug    Enable debug mode for verbose logging',
       '',
       'Examples:',
-      '  $ fusion-framework-cli portal schema',
-      '  $ fusion-framework-cli portal schema --output portal.schema.json',
-      '  $ fusion-framework-cli portal schema --validate my-config.json',
+      '  $ ffc portal schema',
+      '  $ ffc portal schema --output portal.schema.json',
+      '  $ ffc portal schema --validate my-config.json',
     ].join('\n'),
   )
   .addOption(createEnvOption({ allowDev: true }))

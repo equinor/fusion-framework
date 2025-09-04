@@ -14,18 +14,7 @@ export const createEnvOption = (options: { default?: FusionEnv; allowDev: boolea
   const allowedEnvs = Object.values(FusionEnv).filter((env) =>
     env === FusionEnv.Development ? options.allowDev : true,
   );
-  return createOption(
-    '-e, --env <string>',
-    [
-      'Specify the environment to use for the Fusion Framework command.',
-      `Allowed values: [${allowedEnvs.join(', ')}, custom]`,
-      'You can also set the environment using the FUSION_ENV environment variable.',
-      `Defaults to ${options.default ?? resolveDefaultEnv(options.allowDev)}.`,
-      options.allowDev
-        ? 'Development environment is allowed.'
-        : 'Development environment is not allowed for this command.',
-    ].join(' '),
-  )
+  return createOption('-e, --env <string>', `Set environment [${allowedEnvs.join(', ')}, custom].`)
     .env('FUSION_ENV')
     .default(options.default ?? resolveDefaultEnv(options.allowDev));
 };
