@@ -35,7 +35,7 @@ export const command = createCommand('token')
     [
       '',
       'IMPORTANT LIMITATIONS:',
-      '  - Requires interactive user context (won\'t work in CI/CD pipelines)',
+      "  - Requires interactive user context (won't work in CI/CD pipelines)",
       '  - Only works with cached authentication from previous login',
       '  - Use FUSION_TOKEN environment variable for CI/CD instead',
       '',

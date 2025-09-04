@@ -48,10 +48,7 @@ export const command = createCommand('pack')
   )
   .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)
   .option('--schema [string]', 'Schema file to use for validation')
-  .argument(
-    '[manifest]',
-    'Manifest file to use for bundling (e.g., my-portal.manifest.ts)',
-  )
+  .argument('[manifest]', 'Manifest file to use for bundling (e.g., my-portal.manifest.ts)')
   .action(async (manifest, options) => {
     const log = new ConsoleLogger('portal:pack', {
       debug: options.debug,

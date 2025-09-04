@@ -23,7 +23,7 @@ import {
  * - Bundles the portal, uploads it to the Fusion portal registry, and applies a tag for versioning.
  * - Supports specifying environment, manifest file, and tag.
  * - Debug mode and authentication options are supported.
- * 
+ *
  * Usage:
  *   $ ffc portal publish [bundle] [options]
  *

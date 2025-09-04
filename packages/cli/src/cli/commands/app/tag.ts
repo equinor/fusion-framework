@@ -26,7 +26,9 @@ async function parseAppInfo(
   if (options.package) {
     const [name, version] = options.package.split('@');
     if (!name || !version) {
-      throw new Error('Package must be in format name@version (e.g., my-app@1.0.0). Please verify the package name and version with --package');
+      throw new Error(
+        'Package must be in format name@version (e.g., my-app@1.0.0). Please verify the package name and version with --package',
+      );
     }
     return { appKey: name, version };
   }
@@ -39,7 +41,9 @@ async function parseAppInfo(
 
   const version = appManifest.build?.version;
   if (!version) {
-    throw new Error(`Could not determine version from manifest. Please verify manifest ${options.manifest} or provide a package name and version with --package`);
+    throw new Error(
+      `Could not determine version from manifest. Please verify manifest ${options.manifest} or provide a package name and version with --package`,
+    );
   }
 
   return { appKey: appManifest.appKey, version };
@@ -92,8 +96,14 @@ export const command = withAuthOptions(
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
-    .option('-p, --package [package@version]', 'Package to tag in format name@version (e.g., my-app@1.0.0)')
-    .option('-m, --manifest <string>', 'Manifest file to use. Note: ignoring if --package is provided')
+    .option(
+      '-p, --package [package@version]',
+      'Package to tag in format name@version (e.g., my-app@1.0.0)',
+    )
+    .option(
+      '-m, --manifest <string>',
+      'Manifest file to use. Note: ignoring if --package is provided',
+    )
     .option('--debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
     .argument('<tag>', `Tag to apply (${Object.values(AllowedAppTags).join(' | ')})`)

@@ -54,7 +54,10 @@ export const command = withAuthOptions(
       ].join('\n'),
     )
     .option('-d, --debug [boolean]', 'Enable debug mode for verbose logging', false)
-    .option('-k, --appKey <string>', 'Application key (if not provided, resolved from the build metadata of the bundle)')
+    .option(
+      '-k, --appKey <string>',
+      'Application key (if not provided, resolved from the build metadata of the bundle)',
+    )
     .addOption(createEnvOption({ allowDev: false }))
     .argument('[bundle]', 'Application bundle to upload', DEFAULT_ARCHIVE)
     .action(async (bundle, options) => {

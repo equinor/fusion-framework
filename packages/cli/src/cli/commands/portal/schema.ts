@@ -21,7 +21,7 @@ import { createEnvOption } from '../../options/env.js';
  * Features:
  * - Supports environment variables to customize the schema generation.
  * - Provides a debug mode for verbose logging.
- * 
+ *
  * Usage:
  *   $ ffc portal schema [schema] [options]
  *

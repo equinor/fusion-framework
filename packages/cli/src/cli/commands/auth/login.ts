@@ -42,7 +42,7 @@ export const command = createCommand('login')
       '  3. Securely caches your tokens for future CLI commands',
       '  4. You only need to log in once per session',
       '',
-      'Note: Requires interactive environment (won\'t work in CI/CD pipelines)',
+      "Note: Requires interactive environment (won't work in CI/CD pipelines)",
       '',
       'Examples:',
       '  $ ffc auth login',

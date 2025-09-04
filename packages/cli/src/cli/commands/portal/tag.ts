@@ -25,7 +25,9 @@ async function parsePortalInfo(
   if (options.package) {
     const [name, version] = options.package.split('@');
     if (!name || !version) {
-      throw new Error('Package must be in format name@version (e.g., my-portal@1.0.0). Please verify the package name and version with --package');
+      throw new Error(
+        'Package must be in format name@version (e.g., my-portal@1.0.0). Please verify the package name and version with --package',
+      );
     }
     return { name, version };
   }
@@ -38,7 +40,9 @@ async function parsePortalInfo(
 
   const version = portalManifest.build?.version;
   if (!version) {
-    throw new Error(`Could not determine version from manifest. Please verify manifest ${options.manifest} or provide a package name and version with --package`);
+    throw new Error(
+      `Could not determine version from manifest. Please verify manifest ${options.manifest} or provide a package name and version with --package`,
+    );
   }
 
   return { name: portalManifest.name, version };
@@ -93,7 +97,10 @@ export const command = withAuthOptions(
       '-m, --manifest <string>',
       'Manifest file to use. Note: ignoring if --package is provided',
     )
-    .option('-p, --package [package@version]', 'Package to tag in format name@version (e.g., my-portal@1.0.0). If not provided, loaded from manifest')
+    .option(
+      '-p, --package [package@version]',
+      'Package to tag in format name@version (e.g., my-portal@1.0.0). If not provided, loaded from manifest',
+    )
     .option('-d, --debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
     .argument('<tag>', 'Tag to apply (latest | preview)')
