@@ -43,12 +43,12 @@ const command = withAuthOptions(
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
+    .option('--silent', 'Silent mode, suppresses output except errors')
     .argument('<service>', 'Name of the service to resolve in Fusion service discovery')
     .action(async (service: string, options) => {
-      const log = new ConsoleLogger('disco:resolve');
+      const log = options.silent ? null : new ConsoleLogger('disco:resolve');
 
-      log.start('Initializing Fusion Framework...');
-      console.log('Options:', options);
+      log?.start('Initializing Fusion Framework...');
       const framework = await initializeFramework({
         env: options.environment,
         auth: {
@@ -57,13 +57,16 @@ const command = withAuthOptions(
           clientId: options.clientId,
         },
       });
-      log.succeed('Initialized Fusion Framework');
+      log?.succeed('Initialized Fusion Framework');
 
-      log.start(`Resolving service ${service}...`);
+      log?.start(`Resolving service ${service}...`);
       const appClient = await framework.serviceDiscovery.resolveService(service);
-      log.succeed(`Resolved service ${service}`);
+      log?.succeed(`Resolved service ${service}`);
 
-      console.debug(appClient);
+      log?.debug(appClient);
+      if (options.silent) {
+        console.log(JSON.stringify(appClient, null, 2));
+      }
     }),
 );
 
