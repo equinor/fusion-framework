@@ -19,13 +19,18 @@ export const command = createCommand('dev')
       '  $ fusion-framework-cli portal dev --port 4000 --debug',
     ].join('\n'),
   )
-  .option('-p, --port <number>', 'Port to run the development server on', '3000')
-  .option('-d, --debug', 'Enable debug mode for verbose logging')
+  .option('--debug', 'Enable debug mode')
+  .option('--env <environment>', 'Runtime environment for the dev server', 'local')
+  .option('--port <port>', 'Port for the development server', '3000')
   .action(async (options) => {
     const log = new ConsoleLogger('portal:dev', { debug: options.debug });
 
-    log.start('Starting application in development mode...');
-    startPortalDevServer({ server: { port: Number(options.port) }, log });
+    log.start('Starting portal in development mode...');
+    startPortalDevServer({
+      server: { port: Number(options.port) },
+      log,
+      env: options.env,
+    });
     log.succeed('Development server started successfully.');
   });
 
