@@ -157,8 +157,8 @@ Tag a published portal template version in the Fusion portal registry.
 | Option/Argument   | Description                           | Default / Example |
 | ----------------- | ------------------------------------- | ----------------- |
 | `<tag>`           | Tag to apply (`latest` \| `preview`). |                   |
-| `--name <name>`   | Portal name.                          |                   |
-| `--version <ver>` | Version to tag.                       |                   |
+| `-p, --package`   | Package to tag in format name@version. |                   |
+| `-m, --manifest`  | Manifest file to use.                 | `portal.manifest.ts` |
 | `--token`         | Authentication token for Fusion.      |                   |
 | `--tenantId`      | Azure tenant ID for authentication.   |                   |
 | `--clientId`      | Azure client ID for authentication.   |                   |
@@ -170,8 +170,8 @@ pnpm fusion-framework-cli portal tag <tag> [options]
 
 **Examples:**
 ```sh
-pnpm fusion-framework-cli portal tag latest --name my-portal --version 1.0.0
-pnpm fusion-framework-cli portal tag preview --name my-portal --version 1.1.0-beta
+pnpm fusion-framework-cli portal tag latest --package my-portal@1.0.0
+pnpm fusion-framework-cli portal tag preview --package my-portal@1.1.0-beta
 ```
 
 ---
