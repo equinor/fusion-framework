@@ -3,7 +3,6 @@ import { createCommand } from 'commander';
 import { dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 import { writeFile } from 'node:fs/promises';
-import { stdout } from 'node:process';
 
 import { ConsoleLogger, loadAppManifest } from '@equinor/fusion-framework-cli/bin';
 
@@ -69,7 +68,7 @@ export const command = createCommand('manifest')
   .action(async (manifest, opt) => {
     const log = opt.silent ? null : new ConsoleLogger('app:manifest', { debug: opt.debug });
     const result = await loadAppManifest({ log, manifest });
-    if (opt.output) {
+    if (opt.output !== 'stdout') {
       const output = resolve(process.cwd(), opt.output);
       log?.start('Writing manifest to file', opt.output);
       // create the output directory if it doesn't exist
@@ -81,7 +80,7 @@ export const command = createCommand('manifest')
       await writeFile(output, JSON.stringify(result.manifest, null, 2));
       log?.succeed('Manifest written to file', output);
     } else {
-      stdout.write(JSON.stringify(result.manifest, null, 2));
+      console.log(JSON.stringify(result.manifest, null, 2));
     }
   });
 export default command;

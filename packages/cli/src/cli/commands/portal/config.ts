@@ -1,7 +1,5 @@
 import { createCommand } from 'commander';
 
-import { stdout } from 'node:process';
-
 import chalk from 'chalk';
 
 import {
@@ -125,7 +123,7 @@ export const command = withAuthOptions(
       });
 
       if (options.output === 'stdout') {
-        stdout.write(JSON.stringify(portalConfig, null, 2));
+        console.log(JSON.stringify(portalConfig, null, 2));
       }
     }),
 );

@@ -3,7 +3,6 @@ import { createCommand } from 'commander';
 import { dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 import { writeFile } from 'node:fs/promises';
-import { stdout } from 'node:process';
 
 import { ConsoleLogger, loadPortalManifest } from '@equinor/fusion-framework-cli/bin';
 import { fileExistsSync } from '@equinor/fusion-framework-cli/utils';
@@ -46,7 +45,7 @@ export const command = createCommand('manifest')
       await writeFile(output, JSON.stringify(result.manifest, null, 2));
       log?.succeed('Manifest written to file', output);
     } else {
-      stdout.write(JSON.stringify(result.manifest, null, 2));
+      console.log(JSON.stringify(result.manifest, null, 2));
     }
   });
 export default command;
