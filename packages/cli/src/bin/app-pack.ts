@@ -51,7 +51,7 @@ export const bundleApp = async (options: BundleAppOptions) => {
   };
 
   // Build the application and retrieve the manifest and package info
-  const { pkg, manifest: appManifest } = await buildApplication({ log, manifest });
+  const { pkg, manifest: appManifest } = await buildApplication({ env, log, manifest });
 
   // Ensure the manifest contains build configuration
   if (!appManifest.build) {
