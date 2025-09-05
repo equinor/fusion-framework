@@ -1,7 +1,7 @@
 {
   "name": "@equinor/fusion-framework-module-msal",
   "version": "4.0.8",
-  "description": "",
+  "description": "Microsoft Authentication Library (MSAL) integration module for Fusion Framework",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
