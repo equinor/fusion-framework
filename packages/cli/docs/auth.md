@@ -1,5 +1,7 @@
 The Fusion Framework CLI provides secure, robust authentication for both automation and interactive development scenarios by leveraging Microsoft's MSAL (Microsoft Authentication Library) and Azure Active Directory (Azure AD). Authentication is handled through the Fusion Framework for Node.js, using the `@equinor/fusion-framework-module-msal-node` package, which is built on top of Microsoft's official `msal-node` library. This ensures standards-compliant, up-to-date authentication flows and seamless integration across Fusion Framework applications and tools.
 
+For detailed information about the underlying authentication module, see the [MSAL Node Module documentation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/).
+
 ## Key features
 - **Multiple authentication modes:**
   - `token_only`: Use a pre-provided token (e.g., for CI/CD and automation).
@@ -160,4 +162,9 @@ runs:
       shell: bash
       run: |
         echo "FUSION_TOKEN=$(az account get-access-token --scope ${{ inputs.scope }} --query accessToken --output tsv)" >> $GITHUB_ENV
+
+## Additional Resources
+
+- [MSAL Node Module Documentation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/) - Complete reference for the underlying authentication module
+- [libsecret Setup Guide](https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html) - Platform-specific setup for secure credential storage on Linux systems
 ```
