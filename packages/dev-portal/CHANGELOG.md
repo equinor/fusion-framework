@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.2
+
+### Patch Changes
+
+- [#3332](https://github.com/equinor/fusion-framework/pull/3332) [`8c88574`](https://github.com/equinor/fusion-framework/commit/8c885745ee345cd7ef219b2cc469fd19c8687467) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump dotenv from 16.6.1 to 17.2.2
+
 ## 1.0.1
 
 ### Patch Changes

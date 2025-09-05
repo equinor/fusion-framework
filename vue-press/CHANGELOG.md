@@ -1,5 +1,96 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.4
+
+### Patch Changes
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b) Thanks [@odinr](https://github.com/odinr)! - Reorganized authentication documentation to improve maintainability and user experience.
+
+  - Removed local `libsecret.md` documentation file
+  - Updated all libsecret references to point to centralized MSAL Node module documentation
+  - Enhanced authentication guide with cross-references to underlying module documentation
+  - Improved documentation structure by consolidating authentication docs in the appropriate module packages
+
+  **Migration Notes:**
+
+  - libsecret installation guide is now available at: https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html
+  - All authentication-related documentation is now centralized in the MSAL Node module package
+
+- [#3340](https://github.com/equinor/fusion-framework/pull/3340) [`ba147d8`](https://github.com/equinor/fusion-framework/commit/ba147d80cf99c3b998f8299774e2d1815cb392f7) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated mermaid dependency from 11.10.1 to 11.11.0.
+
+  - Added support for new participant types (`actor`, `boundary`, `control`, `entity`, `database`, `collections`, `queue`) in sequence diagrams
+  - Improved mindmap rendering with multiple layouts and better edge intersections
+  - Fixed newline rendering in class diagrams
+  - Fixed arrow handling when auto number is enabled
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a) Thanks [@odinr](https://github.com/odinr)! - Comprehensive documentation overhaul with enhanced developer experience and platform-specific guidance.
+
+  - **Complete README rewrite** with modern structure and comprehensive examples
+  - **Added detailed API reference** with TypeScript interfaces and method documentation
+  - **Enhanced authentication mode documentation** with clear use cases and examples
+  - **Added comprehensive configuration guide** with required/optional settings tables
+  - **Created platform-specific libsecret setup guide** with Windows, macOS, and Linux instructions
+  - **Improved troubleshooting section** with common issues and platform-specific solutions
+  - **Added quick start examples** for all authentication modes (token_only, silent, interactive)
+  - **Enhanced security documentation** explaining platform keychains and encryption
+
+  **New Documentation:**
+
+  - `docs/libsecret.md` - Platform-specific credential storage setup guide
+  - Comprehensive Windows build tools installation instructions
+  - Enhanced Linux libsecret installation for multiple distributions
+  - macOS troubleshooting and setup guidance
+
+  **Key Improvements:**
+
+  - Clear separation between authentication modes with practical examples
+  - Platform-specific installation and troubleshooting guidance
+  - Better developer onboarding with quick start examples
+  - Comprehensive API reference with TypeScript interfaces
+  - Enhanced security documentation explaining credential storage
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`68dc22f`](https://github.com/equinor/fusion-framework/commit/68dc22f582bb68fbc94f29ad053122f81c049405) Thanks [@odinr](https://github.com/odinr)! - Enhanced documentation with comprehensive guides and improved developer experience.
+
+  - **Complete documentation rewrite** with better structure and organization
+  - **Added comprehensive API reference** with detailed interface documentation
+  - **Enhanced configuration guide** with clear required/optional settings tables
+  - **Added migration guide** for v4 breaking changes and module hoisting
+  - **Improved troubleshooting section** with common issues and solutions
+  - **Added quick start examples** with practical usage patterns
+  - **Enhanced module hoisting documentation** explaining shared authentication state
+  - **Added package description** for better npm package visibility
+
+  **Key Improvements:**
+
+  - Clear separation between required and optional configuration
+  - Comprehensive API reference with TypeScript interfaces
+  - Migration guidance for v4 breaking changes
+  - Better developer onboarding with quick start examples
+  - Enhanced troubleshooting with platform-specific solutions
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`2e96f24`](https://github.com/equinor/fusion-framework/commit/2e96f24766e424f0b7d0f88dd21b8616bc95774c) Thanks [@odinr](https://github.com/odinr)! - Restructured documentation to create dedicated authentication section with improved navigation and module organization.
+
+  - **Added new Authentication section** in sidebar navigation with dedicated auth module pages
+  - **Created MSAL Browser module page** (`modules/auth/msal/`) with comprehensive documentation
+  - **Created MSAL Node module page** (`modules/auth/msal-node/`) with detailed setup guides
+  - **Added libsecret setup guide** (`modules/auth/msal-node/docs/libsecret.md`) for platform-specific credential storage
+  - **Removed outdated MSAL placeholder** (`modules/msal/`) and replaced with proper authentication structure
+  - **Enhanced navigation structure** with clear separation between browser and Node.js authentication modules
+
+  **Documentation Structure:**
+
+  - New `/modules/auth/` section with dedicated authentication module pages
+  - Platform-specific setup guides for Windows, macOS, and Linux
+  - Comprehensive module documentation with proper frontmatter and tags
+  - Improved discoverability of authentication-related documentation
+
+  **Migration Notes:**
+
+  - Authentication documentation is now organized under `/modules/auth/`
+  - MSAL Browser docs: `/modules/auth/msal/`
+  - MSAL Node docs: `/modules/auth/msal-node/`
+  - libsecret setup: `/modules/auth/msal-node/docs/libsecret.html`
+
 ## 0.4.3
 
 ### Patch Changes

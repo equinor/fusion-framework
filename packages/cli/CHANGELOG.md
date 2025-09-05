@@ -1,5 +1,69 @@
 # Change Log
 
+## 11.1.3
+
+### Patch Changes
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Added `--silent` option to the `disco resolve` command to disable CLI logger output and only output structured JSON results for piping.
+
+  - Added `--silent` flag that completely disables the CLI logger and all logging output
+  - Only outputs the resolved service details as JSON when silent mode is enabled
+  - Enables piping the command output to other tools (e.g., `jq`, `grep`, etc.)
+  - Modified logging calls to use optional chaining for silent mode compatibility
+  - Cleaned up debug console.log statements
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Aligned portal dev command options with app dev command for consistency.
+
+  - Standardized option format from short flags to long flags (--debug, --port)
+  - Added --env option support for runtime environment configuration
+  - Updated logging message to be portal-specific ("Starting portal in development mode...")
+  - Enhanced startPortalDevServer function call to include env parameter
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b) Thanks [@odinr](https://github.com/odinr)! - Reorganized authentication documentation to improve maintainability and user experience.
+
+  - Removed local `libsecret.md` documentation file
+  - Updated all libsecret references to point to centralized MSAL Node module documentation
+  - Enhanced authentication guide with cross-references to underlying module documentation
+  - Improved documentation structure by consolidating authentication docs in the appropriate module packages
+
+  **Migration Notes:**
+
+  - libsecret installation guide is now available at: https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html
+  - All authentication-related documentation is now centralized in the MSAL Node module package
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed missing `env` parameter in `buildApplication` call within `bundleApp` function.
+
+  - Added the required `env` parameter to the `buildApplication` function call in `packages/cli/src/bin/app-pack.ts`
+  - This ensures the build process receives the correct runtime environment configuration
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed stdout concatenation issues in CLI commands that output JSON to stdout.
+
+  - Replaced `stdout.write()` with `console.log()` for proper newline handling in:
+    - `ffc app manifest` command
+    - `ffc app config` command
+    - `ffc portal manifest` command
+    - `ffc portal config` command
+  - Removed unused `stdout` imports
+  - Improved output consistency and piping compatibility
+
+  These changes ensure that shell prompts no longer concatenate to JSON output, making the commands safe to pipe to tools like `jq`.
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI command documentation and help text across all commands.
+
+  - Updated command examples to use `ffc` (alias) instead of `fusion-framework-cli`
+  - Improved TSDoc comments with comprehensive descriptions and examples
+  - Streamlined help text by removing redundant information and improving formatting
+  - Added proper @example and @remarks tags for better IntelliSense support
+  - Enhanced option descriptions for clarity and consistency
+
+  These changes improve the developer experience when using the CLI by providing clearer documentation and more accurate examples.
+
+  Thanks to [@estoksam](https://github.com/estoksam) for reporting the CLI command help text issues in [fusion#651](https://github.com/equinor/fusion/issues/651).
+
+- Updated dependencies [[`8c88574`](https://github.com/equinor/fusion-framework/commit/8c885745ee345cd7ef219b2cc469fd19c8687467), [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a)]:
+  - @equinor/fusion-framework-dev-portal@1.0.2
+  - @equinor/fusion-framework-module-msal-node@1.0.2
+
 ## 11.1.2
 
 ### Patch Changes
