@@ -14,6 +14,20 @@ import { withAuthOptions } from '../../options/auth.js';
  */
 const DEFAULT_SERVER_PORT = 49741 as const;
 
+/**
+ * Command to authenticate and log in to Fusion Framework using interactive browser-based authentication.
+ *
+ * This command initializes the Fusion Framework and opens a browser window for secure login.
+ * Supports custom tenant, client, and scope options for advanced authentication scenarios.
+ *
+ * @remarks
+ * - Opens a browser for user authentication.
+ * - Stores authentication state for future CLI commands.
+ *
+ * @example
+ *   $ ffc auth login
+ *   $ ffc auth login --tenant my-tenant --client my-client-id --scope api://my-app/.default
+ */
 export const command = createCommand('login')
   .description(
     'Authenticate and log in to Fusion Framework using interactive browser-based authentication.',
@@ -22,20 +36,17 @@ export const command = createCommand('login')
     'after',
     [
       '',
-      'Authenticate and log in to Fusion Framework using interactive browser-based authentication.',
+      'WHAT HAPPENS WHEN YOU RUN THIS COMMAND:',
+      '  1. Opens a browser window for Azure AD authentication',
+      '  2. Prompts you to sign in with your Fusion credentials',
+      '  3. Securely caches your tokens for future CLI commands',
+      '  4. You only need to log in once per session',
       '',
-      'This command initializes the Fusion Framework and opens a browser window for secure login.',
-      'Supports custom tenant, client, and scope options for advanced authentication scenarios.',
-      '',
-      'Options:',
-      '  --tenant <tenantId>   Specify the tenant ID',
-      '  --client <clientId>   Specify the client ID',
-      '  --scope <scope>       Specify the scope(s) for authentication',
-      '  --debug               Enable debug mode for verbose logging',
+      "Note: Requires interactive environment (won't work in CI/CD pipelines)",
       '',
       'Examples:',
-      '  $ fusion-framework-cli login',
-      '  $ fusion-framework-cli login --tenant my-tenant --client my-client-id --scope api://my-app/.default',
+      '  $ ffc auth login',
+      '  $ ffc auth login --tenant my-tenant --client my-client-id --scope api://my-app/.default',
     ].join('\n'),
   )
   .action(async (options) => {

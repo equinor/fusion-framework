@@ -512,8 +512,7 @@ The `tag` command applies a tag (such as `latest`, `preview`, or `stable`) to a 
 | Argument/Option           | Description                                                        | Default / Example |
 | ------------------------- | ------------------------------------------------------------------ | ----------------- |
 | `<tag>`                   | Tag to apply (`latest` \| `preview` \| `stable`).                  |                   |
-| `--appKey <string>`       | Application key. If not provided, resolved from the manifest file. |                   |
-| `-v, --version <string>`  | Version to tag. If not provided, resolved from the manifest file.  |                   |
+| `-p, --package`           | Package to tag in format name@version.                              |                   |
 | `-m, --manifest <string>` | Manifest file to use for resolving app key and version.            | `app.manifest.ts` |
 | `--debug`                 | Enable debug mode for verbose logging.                             | `false`           |
 | `--silent`                | Silent mode, suppresses output except errors.                      | `false`           |
@@ -531,13 +530,13 @@ pnpm fusion-framework-cli app tag <tag> [options]
 ```sh
 pnpm fusion-framework-cli app tag latest
 pnpm fusion-framework-cli app tag preview --env prod --manifest app.manifest.prod.ts
-pnpm fusion-framework-cli app tag latest --appKey my-app --version 1.2.3
+pnpm fusion-framework-cli app tag latest --package my-app@1.2.3
 ```
 
 > [!TIP] You can roll back a release by tagging a previous build as `latest`. Simply run the tag command with the desired version to make it the active release for deployment.
 
 > [!NOTE]
-> - The `tag` command requires a published application version. You can specify the app key and version directly, or let the CLI resolve them from your manifest file.
+> - The `tag` command requires a published application version. You can specify the package name and version using `--package`, or let the CLI resolve them from your manifest file.
 > - Supported tags are: `latest` and `preview`.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If tagging fails, an error will be logged and the process will exit with a non-zero code.
@@ -576,7 +575,7 @@ Checks if your application is registered in the Fusion app store and helps ident
 | Option/Argument       | Description                                           | Default / Example |
 | --------------------- | ----------------------------------------------------- | ----------------- |
 | `-d`, `--debug`       | Enable debug mode for verbose logging.                | `false`           |
-| `--environment <env>` | Specify the environment (see available environments). |                   |
+| `-e`, `--env <env>`   | Specify the environment (see available environments). |                   |
 | `--token <token>`     | Provide an authentication token (if required).        |                   |
 
 **Usage:**
@@ -587,7 +586,7 @@ pnpm fusion-framework-cli app check [options]
 **Examples:**
 ```sh
 pnpm fusion-framework-cli app check
-pnpm fusion-framework-cli app check --environment prod --debug
+pnpm fusion-framework-cli app check --env prod --debug
 ```
 
 > [!NOTE]

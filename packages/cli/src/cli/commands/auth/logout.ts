@@ -5,10 +5,20 @@ import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cl
 import { withAuthOptions } from '../../options/auth.js';
 
 /**
- * Command to log out from Fusion Framework and clear your authentication session.
+ * CLI command: `logout`
  *
- * This command removes your current authentication state from the Fusion Framework CLI.
- * Supports custom tenant and client options for advanced scenarios.
+ * Logs out the user from the Fusion Framework CLI and clears the authentication session.
+ *
+ * This command removes the current authentication state, effectively signing the user out.
+ * Supports specifying a custom tenant and client for advanced logout scenarios.
+ *
+ * @remarks
+ * - Useful for invalidating local authentication and ensuring a fresh login on next use.
+ * - Does not revoke tokens server-side; only clears local session.
+ *
+ * @example
+ *   $ ffc auth logout
+ *   $ ffc auth logout --tenant my-tenant --client my-client-id
  */
 export const command = createCommand('logout')
   .description('Log out from Fusion Framework and clear your authentication session.')
@@ -16,19 +26,19 @@ export const command = createCommand('logout')
     'after',
     [
       '',
-      'Log out from Fusion Framework and clear your authentication session.',
+      'WHAT THIS COMMAND DOES:',
+      '  - Removes your cached authentication tokens from local storage',
+      '  - Clears the current session (does not revoke tokens server-side)',
+      '  - You will need to run `ffc auth login` again for future commands',
       '',
-      'This command removes your current authentication state from the Fusion Framework CLI.',
-      'Supports custom tenant and client options for advanced scenarios.',
-      '',
-      'Options:',
-      '  --tenant <tenantId>   Specify the tenant ID',
-      '  --client <clientId>   Specify the client ID',
-      '  --debug               Enable debug mode for verbose logging',
+      'WHEN TO USE THIS COMMAND:',
+      '  - When switching between different user accounts',
+      '  - When troubleshooting authentication issues',
+      '  - When your cached tokens have expired and you want a fresh login',
       '',
       'Examples:',
-      '  $ fusion-framework-cli logout',
-      '  $ fusion-framework-cli logout --tenant my-tenant --client my-client-id',
+      '  $ ffc auth logout',
+      '  $ ffc auth logout --tenant my-tenant --client my-client-id',
     ].join('\n'),
   )
   .action(async (options) => {
