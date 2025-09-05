@@ -792,7 +792,7 @@ importers:
         version: 1.2.2
       '@equinor/fusion-wc-person':
         specifier: ^3.1.8
-        version: 3.1.9
+        version: 3.2.0
       '@material-ui/styles':
         specifier: ^4.11.5
         version: 4.11.5(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1468,7 +1468,7 @@ importers:
         version: link:../../../modules/event
       '@equinor/fusion-wc-person':
         specifier: ^3.1.8
-        version: 3.1.9
+        version: 3.2.0
       '@types/react':
         specifier: ^18.2.50
         version: 18.3.23
@@ -2147,6 +2147,10 @@ packages:
     resolution: {integrity: sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.28.4':
+    resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
     engines: {node: '>=6.9.0'}
@@ -2469,9 +2473,6 @@ packages:
 
   '@equinor/fusion-wc-list@1.1.4':
     resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
-
-  '@equinor/fusion-wc-person@3.1.9':
-    resolution: {integrity: sha512-xnVuEDpaMQurEVx5VMSPKjRm5QyUkOH8N9xYXEBjEdEvlHX42kcjw2VCtsBv1S1BP5zB/jAyYlPuAx/dlFaysA==}
 
   '@equinor/fusion-wc-person@3.2.0':
     resolution: {integrity: sha512-5h82tZ5kvqC+7jeaoe24Yu6Ul0ijdokp22MT4SoY7hZN+mDeWEeo0inSjs5vvRm9nFPhI44eYsJz3jTV0BNJlg==}
@@ -8886,6 +8887,8 @@ snapshots:
 
   '@babel/runtime@7.28.3': {}
 
+  '@babel/runtime@7.28.4': {}
+
   '@babel/template@7.27.2':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -9403,22 +9406,6 @@ snapshots:
       '@equinor/fusion-wc-radio': 1.1.2
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
-      lit: 3.3.0
-
-  '@equinor/fusion-wc-person@3.1.9':
-    dependencies:
-      '@equinor/fusion-wc-avatar': 3.2.3
-      '@equinor/fusion-wc-badge': 1.3.2
-      '@equinor/fusion-wc-button': 2.4.2
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-list': 1.1.4
-      '@equinor/fusion-wc-skeleton': 2.1.2
-      '@equinor/fusion-wc-textinput': 1.1.4
-      '@equinor/fusion-web-theme': 0.1.10
-      '@floating-ui/dom': 1.7.4
-      '@lit-labs/observers': 2.0.6
-      '@lit-labs/task': 3.1.0
       lit: 3.3.0
 
   '@equinor/fusion-wc-person@3.2.0':
@@ -12224,7 +12211,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.28.3
+      '@babel/runtime': 7.28.4
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
