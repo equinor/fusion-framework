@@ -42,12 +42,6 @@ export default sidebar({
         {
           text: 'Authentication',
           link: 'docs/auth.md',
-          children: [
-            {
-              text: 'LibSecret',
-              link: 'docs/libsecret.md',
-            },
-          ],
         },
         {
           text: 'Application',
@@ -78,6 +72,20 @@ export default sidebar({
     {
       text: 'Context',
       link: 'context/',
+    },
+    {
+      text: 'Authentication',
+      prefix: 'auth/',
+      children: [
+        {
+          text: 'Browser',
+          link: 'msal/',
+        },
+        {
+          text: 'NodeJS',
+          link: 'msal-node/',
+        },
+      ],
     },
     'app/',
     {
