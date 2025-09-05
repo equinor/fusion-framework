@@ -1,5 +1,35 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.2
+
+### Patch Changes
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a) Thanks [@odinr](https://github.com/odinr)! - Comprehensive documentation overhaul with enhanced developer experience and platform-specific guidance.
+
+  - **Complete README rewrite** with modern structure and comprehensive examples
+  - **Added detailed API reference** with TypeScript interfaces and method documentation
+  - **Enhanced authentication mode documentation** with clear use cases and examples
+  - **Added comprehensive configuration guide** with required/optional settings tables
+  - **Created platform-specific libsecret setup guide** with Windows, macOS, and Linux instructions
+  - **Improved troubleshooting section** with common issues and platform-specific solutions
+  - **Added quick start examples** for all authentication modes (token_only, silent, interactive)
+  - **Enhanced security documentation** explaining platform keychains and encryption
+
+  **New Documentation:**
+
+  - `docs/libsecret.md` - Platform-specific credential storage setup guide
+  - Comprehensive Windows build tools installation instructions
+  - Enhanced Linux libsecret installation for multiple distributions
+  - macOS troubleshooting and setup guidance
+
+  **Key Improvements:**
+
+  - Clear separation between authentication modes with practical examples
+  - Platform-specific installation and troubleshooting guidance
+  - Better developer onboarding with quick start examples
+  - Comprehensive API reference with TypeScript interfaces
+  - Enhanced security documentation explaining credential storage
+
 ## 1.0.1
 
 ### Patch Changes
