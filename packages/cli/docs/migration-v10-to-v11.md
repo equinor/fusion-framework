@@ -19,6 +19,18 @@ With v11, we switched to using the Fusion Framework itself for CLI operations. T
 > }
 > ```
 
+### Vite Configuration File Naming
+
+**Breaking Change:** The CLI now uses Vite's standard configuration file naming convention.
+
+- **Old behavior (v10):** CLI looked for `app.vite.config.ts`
+- **New behavior (v11):** CLI now looks for `vite.config.ts` (Vite's default)
+
+> [!WARNING]
+> **Action Required:** If you have a `app.vite.config.ts` file, rename it to `vite.config.ts` to ensure your Vite configurations are applied correctly in v11.
+> 
+> **Important:** Using `vite.config.ts` should be a last resort for custom setups. Instead, prefer configuring your application through the dev-server configuration (`dev-server.config.js`) to avoid unexpected behavior. The CLI provides higher-level configuration options that are better integrated with the Fusion Framework ecosystem.
+
 ### Deprecated App Command Aliases
 
 The following `fusion-framework-cli app` commands have been renamed:
@@ -51,6 +63,7 @@ Authentication behavior has been updated to improve security and consistency:
 
 When upgrading from v10 to v11, ensure you:
 
+- **Rename Vite configuration file** from `app.vite.config.ts` to `vite.config.ts`
 - **Update command names** in all scripts and CI/CD pipelines:
    - `build-pack` → `pack`
    - `build-upload` → `upload` 

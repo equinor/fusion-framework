@@ -195,6 +195,7 @@
   - **Dev Portal Modularization:** The dev portal has been moved to a separate package `@equinor/fusion-framework-dev-server`, enabling modular architecture and independent updates. The dev portal can be configured via `dev-server.config.js` and supports live preview and API mocking.
   - **Command Structure:** CLI is now divided into three main groups: `bin` (executable functions), `commands` (CLI commands), and `lib` (for consumers, config, and utilities). This improves organization and modularity.
   - **BREAKING:** The `--service` flag has been removed. The CLI now uses service discovery via Fusion environment variables. All `app -build-???` commands are deprecated and will be removed in the next major version.
+  - **BREAKING:** Vite configuration file naming has changed to follow Vite's standard convention. Rename `app.vite.config.ts` to `vite.config.ts` to ensure your Vite configurations are applied correctly. Note: Using `vite.config.ts` should be a last resort for custom setups - prefer dev-server configuration to avoid unexpected behavior.
 
   - **Dev Server Abstraction:** Vite configuration and dev server functionality has been abstracted into the `@equinor/fusion-framework-dev-server` package. The CLI now provides a higher-level API that handles Vite configuration internally, eliminating the need for users to manage Vite configuration directly while still allowing for customization through configuration options.
 
