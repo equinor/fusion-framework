@@ -1,5 +1,17 @@
 # Change Log
 
+## 6.1.18
+
+### Patch Changes
+
+- [#3315](https://github.com/equinor/fusion-framework/pull/3315) [`2ea9fb6`](https://github.com/equinor/fusion-framework/commit/2ea9fb63bdf967e0d010ddae2af9f6fb32077240) Thanks [@Noggling](https://github.com/Noggling)! - Improve error handling in AppClient
+
+  - Add support for HTTP 410 (Gone) status code handling across all error types
+  - Import and use `HttpJsonResponseError` for more specific error handling in `getAppManifest`
+  - Add 'deleted' error type to handle when application resources have been deleted
+  - Update error handling logic to properly handle different error types in the catch blocks
+  - Ensure proper error propagation and type checking for manifest, config, and settings errors
+
 ## 6.1.17
 
 ### Patch Changes
