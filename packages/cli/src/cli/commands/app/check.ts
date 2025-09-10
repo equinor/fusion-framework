@@ -17,15 +17,15 @@ import { withAuthOptions } from '../../options/auth.js';
  * - Provides a debug mode for verbose logging.
  *
  * Usage:
- *   $ fusion check [options]
+ *   $ ffc app check [options]
  *
  * Options:
  *   -d, --debug         Enable debug mode for verbose logging (default: false)
- *   --environment <env> Specify the environment (see available environments)
+ *   --env <env> Specify the environment (see available environments)
  *   --token <token>     Provide an authentication token (if required)
  *
  * Example:
- *   $ fusion check --environment prod --debug
+ *   $ ffc app check --env prod --debug
  *
  * @see checkApp for implementation details
  */
@@ -35,18 +35,17 @@ export const command = withAuthOptions(
     .addHelpText(
       'after',
       [
-        'Checks if the application is registered in the Fusion app store.',
+        '',
         'Verifies the registration status of your application in the Fusion app store.',
         'Helps identify issues with app registration or configuration.',
-        'Supports authentication and environment options. Provides a debug mode for verbose logging.',
         '',
-        'Options:',
-        '  -d, --debug         Enable debug mode for verbose logging (default: false)',
-        '  --environment <env> Specify the environment (see available environments)',
-        '  --token <token>     Provide an authentication token (if required)',
+        'FIRST TIME SETUP:',
+        '  Before checking app status, ensure your app is registered in the Fusion App Admin.',
+        '  The check command will tell you if your app is properly registered.',
         '',
         'Examples:',
-        '  $ fusion check --environment prod --debug',
+        '  $ ffc app check',
+        '  $ ffc app check --env prod --debug',
       ].join('\n'),
     )
     .option('-d, --debug', 'debug mode', false)
@@ -55,7 +54,7 @@ export const command = withAuthOptions(
       const log = new ConsoleLogger('app:check', { debug: !!options.debug });
       return checkApp({
         log,
-        environment: options.environment,
+        environment: options.env,
         auth: 'token' in options ? { token: options.token } : options,
       });
     }),

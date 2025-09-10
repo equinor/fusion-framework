@@ -1,125 +1,224 @@
-# Fusion MSAL Node Module
-
-`@equinor/fusion-framework-msal-node` enables secure authentication for the Fusion Framework in Node.js environments using Microsoft's MSAL (Microsoft Authentication Library) to integrate with Azure Active Directory (Azure AD).
+`@equinor/fusion-framework-module-msal-node` provides secure Azure AD authentication for Node.js applications using Microsoft's MSAL (Microsoft Authentication Library). Perfect for CLI tools, background services, and automated processes that need to authenticate with Microsoft services.
 
 ## Features
 
-- **Simple Token Acquisition**: Easy-to-use API for acquiring authentication tokens.
-- **Multiple Auth Flows**: Supports client credentials and other Azure AD authentication flows.
-- **Token Caching**: Built-in caching for improved performance and security.
-- **Fusion Framework Integration**: Seamless authentication across Fusion Framework applications.
-- **Authentication Modes**:
-  - `token_only`: Uses a pre-provided token for authentication (e.g., CI/CD, automation).
-  - `silent`: Acquires tokens silently using cached or refresh tokens (background services, scripts).
-  - `interactive`: Prompts users for authentication via a local HTTP server (CLI tools, development).
+- **Multiple Authentication Modes**: Choose the right auth flow for your use case
+- **Secure Token Storage**: Encrypted credential storage using platform keychains
+- **Easy Integration**: Simple API that works seamlessly with Fusion Framework
+- **Token Management**: Automatic token refresh and caching
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Zero Configuration**: Sensible defaults with optional customization
 
-## Authentication Modes
+## Quick Start
 
-The module supports three authentication modes to suit different use cases:
-
-| Mode          | Description                                                                  | Use Case                                   |
-| ------------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
-| `token_only`  | Uses a pre-obtained token, typically from environment variables.             | CI/CD pipelines, automated processes.      |
-| `silent`      | Acquires tokens silently using cached or refresh tokens, without user input. | Background services, pre-seeding commands. |
-| `interactive` | Prompts user login via a browser, using a local HTTP server for callbacks.   | CLI tools, development, manual operations. |
-
-### `token_only`
-Ideal for scenarios where a token is already available (e.g., via CI/CD). No interaction with Azure AD is required.
-
-### `silent`
-Uses cached or refresh tokens to authenticate without user interaction. Perfect for automated or background tasks.
-
-### `interactive`
-Requires user interaction, launching a local HTTP server to handle browser-based authentication. Suitable for CLI or development workflows.
-
-## Secure Token Storage
-
-The module leverages `@azure/msal-node-extensions` for secure, encrypted token storage:
-
-- **Encryption**: Tokens are encrypted at rest using platform-specific mechanisms (e.g., DPAPI on Windows, Keychain on macOS).
-- **Cross-Platform**: Supports Windows, macOS, and Linux.
-- **Persistence**: Tokens are stored securely for reuse across sessions, minimizing re-authentication.
-
-This ensures sensitive token data is protected, reducing the risk of unauthorized access.
-
-## Usage
-
-Below are examples for enabling the module in each authentication mode.
-
-### `token_only` Mode
-
-Use a pre-obtained token for authentication.
-
-```ts
-import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-msal-node';
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
-
-const configurator = new ModulesConfigurator<[MsalNodeModule]>();
-
-enableAuthModule(configurator, (builder) => {
-  builder.setMode('token_only');
-  builder.setAccessToken('your-access-token'); // Provide your token
-});
-
-const instance = await initialize();
-console.log(typeof instance.auth); // AuthTokenProvider
-console.log(await instance.auth.acquireAccessToken({ scopes: ['user.read'] }));
+```bash
+pnpm add @equinor/fusion-framework-module-msal-node
 ```
 
-### `silent` Mode
-
-Authenticate silently using cached or refresh tokens.
-
-```ts
-import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-msal-node';
+```typescript
+import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
-const configurator = new ModulesConfigurator<[MsalNodeModule]>();
-
-enableAuthModule(configurator, (builder) => {
-  builder.setMode('silent');
-  builder.setClientId('your-client-id'); // Azure AD client ID
-  builder.setTenantId('your-tenant-id'); // Azure AD tenant ID
-});
-
-const instance = await initialize();
-console.log(typeof instance.auth); // AuthTokenProvider
-console.log(await instance.auth.acquireAccessToken({ scopes: ['user.read'] }));
-```
-
-### `interactive` Mode
-
-Prompt the user for browser-based authentication.
-
-```ts
-import { enableAuthModule, type MsalNodeModule } from '@equinor/fusion-framework-msal-node';
-import { ModulesConfigurator } from '@equinor/fusion-framework-module';
-
-const configurator = new ModulesConfigurator<[MsalNodeModule]>();
+const configurator = new ModulesConfigurator();
 
 enableAuthModule(configurator, (builder) => {
   builder.setMode('interactive');
-  builder.setClientId('your-client-id'); // Azure AD client ID
-  builder.setTenantId('your-tenant-id'); // Azure AD tenant ID
-  builder.setServerPort(3000); // Local server port for auth callback
+  builder.setClientId('your-client-id');
+  builder.setTenantId('your-tenant-id');
+});
+
+const framework = await initialize();
+const token = await framework.auth.acquireAccessToken({ 
+  scopes: ['https://graph.microsoft.com/.default'] 
+});
+```
+
+## Authentication Modes
+
+Choose the authentication mode that best fits your application's needs:
+
+| Mode | Description | Best For | User Interaction |
+|------|-------------|----------|------------------|
+| **`token_only`** | Uses a pre-provided access token | CI/CD pipelines, serverless functions | None |
+| **`silent`** | Uses cached credentials for background auth | Background services, scheduled tasks | None |
+| **`interactive`** | Browser-based login with local server | CLI tools, development, user-facing apps | Required |
+
+### When to Use Each Mode
+
+- **`token_only`**: When you already have a valid access token (e.g., from environment variables, CI/CD secrets)
+- **`silent`**: When you need background authentication without user interaction (e.g., scheduled jobs, background services)
+- **`interactive`**: When you need user login (e.g., CLI tools, development environments, user-facing applications)
+
+## Secure Token Storage
+
+The module uses `@azure/msal-node-extensions` for enterprise-grade security:
+
+- **🔒 Platform Keychains**: Windows Credential Manager, macOS Keychain, Linux libsecret
+- **🔐 Encryption at Rest**: Tokens encrypted using platform-specific mechanisms
+- **🔄 Automatic Refresh**: Seamless token renewal without user intervention
+- **🌐 Cross-Platform**: Consistent security across Windows, macOS, and Linux
+
+## Usage Examples
+
+### Token-Only Mode (CI/CD)
+
+Perfect for automated processes where you already have a valid token:
+
+```typescript
+import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+
+const configurator = new ModulesConfigurator();
+
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('token_only');
+  builder.setAccessToken(process.env.ACCESS_TOKEN); // From CI/CD secrets
+});
+
+const framework = await initialize();
+const token = await framework.auth.acquireAccessToken({ 
+  scopes: ['https://graph.microsoft.com/.default'] 
+});
+```
+
+### Silent Mode (Background Services)
+
+For background services that need to authenticate without user interaction:
+
+```typescript
+import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+
+const configurator = new ModulesConfigurator();
+
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('silent');
+  builder.setClientId(process.env.AZURE_CLIENT_ID);
+  builder.setTenantId(process.env.AZURE_TENANT_ID);
+});
+
+const framework = await initialize();
+
+// This will use cached credentials or fail if no valid cache exists
+try {
+  const token = await framework.auth.acquireAccessToken({ 
+    scopes: ['https://graph.microsoft.com/.default'] 
+  });
+  console.log('Authenticated successfully');
+} catch (error) {
+  console.error('Silent authentication failed:', error.message);
+}
+```
+
+### Interactive Mode (CLI Tools)
+
+For CLI tools and development environments that require user login:
+
+```typescript
+import { enableAuthModule } from '@equinor/fusion-framework-module-msal-node';
+import { ModulesConfigurator } from '@equinor/fusion-framework-module';
+
+const configurator = new ModulesConfigurator();
+
+enableAuthModule(configurator, (builder) => {
+  builder.setMode('interactive');
+  builder.setClientId(process.env.AZURE_CLIENT_ID);
+  builder.setTenantId(process.env.AZURE_TENANT_ID);
+  builder.setServerPort(3000); // Optional: custom port
   builder.setServerOnOpen((url) => {
-    console.log(`Please navigate to: ${url}`);
+    console.log(`🌐 Please open your browser and navigate to: ${url}`);
   });
 });
 
-const instance = await initialize();
-console.log(typeof instance.auth); // AuthProviderInteractive
-console.log(await instance.auth.login({ scopes: ['user.read'] }));
+const framework = await initialize();
+
+// This will open a browser for user login
+const result = await framework.auth.login({ 
+  scopes: ['https://graph.microsoft.com/.default'] 
+});
+console.log('Login successful:', result.account?.username);
 ```
 
 ## Configuration
 
-- **Client ID and Tenant ID**: Obtain these from your Azure AD application registration.
-- **Scopes**: Specify required permissions (e.g., `['user.read']`) when acquiring tokens.
-- **Server Port**: For `interactive` mode, ensure the port is available and not blocked by firewalls.
+### Required Settings
+
+| Setting | Description | Required For |
+|---------|-------------|--------------|
+| `clientId` | Azure AD application client ID | `silent`, `interactive` |
+| `tenantId` | Azure AD tenant ID | `silent`, `interactive` |
+| `accessToken` | Pre-obtained access token | `token_only` |
+
+### Optional Settings
+
+| Setting | Description | Default | Mode |
+|---------|-------------|---------|------|
+| `serverPort` | Local server port for auth callbacks | `3000` | `interactive` |
+| `serverOnOpen` | Callback when browser opens | `undefined` | `interactive` |
+
+### Environment Variables
+
+```bash
+# Required for silent/interactive modes
+AZURE_CLIENT_ID=your-client-id
+AZURE_TENANT_ID=your-tenant-id
+
+# Required for token_only mode
+ACCESS_TOKEN=your-access-token
+```
+
+## API Reference
+
+### `enableAuthModule(configurator, configure)`
+
+Enables the MSAL Node module in your Fusion Framework application.
+
+**Parameters:**
+- `configurator`: `ModulesConfigurator` - The modules configurator instance
+- `configure`: `(builder: IAuthConfigurator) => void` - Configuration function
+
+### `IAuthProvider`
+
+The authentication provider interface available at `framework.auth`:
+
+```typescript
+interface IAuthProvider {
+  // Acquire an access token for the specified scopes
+  acquireAccessToken(options: { 
+    scopes: string[]; 
+    interactive?: boolean 
+  }): Promise<string>;
+  
+  // Login (interactive mode only)
+  login(options: { scopes: string[] }): Promise<AuthenticationResult>;
+  
+  // Logout (interactive mode only)
+  logout(): Promise<void>;
+}
+```
+
 
 ## Troubleshooting
 
-- **Token Issues**: Verify your token, client ID, or tenant ID are correct.
-- **Interactive Mode Fails**: Check if the specified port is free and accessible.
-- **Silent Mode Fails**: Ensure cached tokens or refresh tokens are valid.
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| **Invalid client/tenant ID** | Verify your Azure AD app registration settings |
+| **Port already in use** | Change the `serverPort` or kill the process using the port |
+| **Silent auth fails** | Ensure you've logged in interactively first to cache credentials |
+| **Token expired** | The module handles refresh automatically; check your scopes |
+| **Credential storage errors** | See our [credential storage guide](docs/libsecret.md) |
+
+### Getting Help
+
+- 📖 [Credential Storage Troubleshooting](docs/libsecret.md) - Platform-specific setup help
+- 🐛 [Report Issues](https://github.com/equinor/fusion/issues) - Bug reports and feature requests
+
+## Additional Resources
+
+- [Microsoft Graph API Documentation](https://docs.microsoft.com/en-us/graph/)
+- [Azure AD App Registration Guide](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
+- [MSAL Node Documentation](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-node)
+- [Fusion Framework Documentation](https://github.com/equinor/fusion-framework)
+

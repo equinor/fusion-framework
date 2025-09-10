@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-imports",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Package import files and configurations",
   "keywords": [
     "esbuild",
@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/equinor/fusion-framework.git",
-    "directory": "packages/utils/transpile"
+    "directory": "packages/utils/imports"
   },
   "scripts": {
     "build": "tsc -b",
@@ -43,10 +43,10 @@
     "url": "https://github.com/equinor/fusion-framework/issues"
   },
   "dependencies": {
+    "esbuild": "^0.25.1",
     "read-package-up": "^11.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.1",
     "fs-monkey": "^1.0.6",
     "memfs": "^4.17.0",
     "typescript": "^5.8.2",

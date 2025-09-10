@@ -30,25 +30,31 @@ const command = withAuthOptions(
       'after',
       [
         '',
-        'Resolve and display information about a service registered in Fusion service discovery.',
-        '',
         'This command looks up a service by name and prints its discovery details using the current authentication and environment.',
         '',
-        'Examples:',
-        '  $ fusion-framework-cli resolve my-service',
-        '  $ fusion-framework-cli resolve my-service --env prod',
-        '  $ fusion-framework-cli resolve my-service --env test --tenantId my-tenant --clientId my-client-id',
+        'USEFUL FOR:',
+        '  - Finding service endpoints for API calls',
+        '  - Debugging service connectivity issues',
+        '  - Getting service metadata and configuration',
         '',
-        'The command will print the resolved service details to the console.',
+        'OUTPUT FORMATS:',
+        '  - Normal: Pretty-printed JSON with service details',
+        '  - Silent: Raw JSON only (useful for scripts: --silent | jq ".uri")',
+        '',
+        'Examples:',
+        '  $ ffc disco resolve my-service',
+        '  $ ffc disco resolve my-service --silent | jq ".uri"',
+        '  $ ffc disco resolve my-service --env prod',
+        '  $ ffc disco resolve my-service --env test --tenantId my-tenant --clientId my-client-id',
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
+    .option('--silent', 'Silent mode, suppresses output except errors')
     .argument('<service>', 'Name of the service to resolve in Fusion service discovery')
     .action(async (service: string, options) => {
-      const log = new ConsoleLogger('disco:resolve');
+      const log = options.silent ? null : new ConsoleLogger('disco:resolve');
 
-      log.start('Initializing Fusion Framework...');
-      console.log('Options:', options);
+      log?.start('Initializing Fusion Framework...');
       const framework = await initializeFramework({
         env: options.environment,
         auth: {
@@ -57,13 +63,16 @@ const command = withAuthOptions(
           clientId: options.clientId,
         },
       });
-      log.succeed('Initialized Fusion Framework');
+      log?.succeed('Initialized Fusion Framework');
 
-      log.start(`Resolving service ${service}...`);
+      log?.start(`Resolving service ${service}...`);
       const appClient = await framework.serviceDiscovery.resolveService(service);
-      log.succeed(`Resolved service ${service}`);
+      log?.succeed(`Resolved service ${service}`);
 
-      console.debug(appClient);
+      log?.debug(appClient);
+      if (options.silent) {
+        console.log(JSON.stringify(appClient, null, 2));
+      }
     }),
 );
 

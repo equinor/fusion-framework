@@ -1,5 +1,162 @@
 # Change Log
 
+## 11.1.3
+
+### Patch Changes
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Added `--silent` option to the `disco resolve` command to disable CLI logger output and only output structured JSON results for piping.
+
+  - Added `--silent` flag that completely disables the CLI logger and all logging output
+  - Only outputs the resolved service details as JSON when silent mode is enabled
+  - Enables piping the command output to other tools (e.g., `jq`, `grep`, etc.)
+  - Modified logging calls to use optional chaining for silent mode compatibility
+  - Cleaned up debug console.log statements
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Aligned portal dev command options with app dev command for consistency.
+
+  - Standardized option format from short flags to long flags (--debug, --port)
+  - Added --env option support for runtime environment configuration
+  - Updated logging message to be portal-specific ("Starting portal in development mode...")
+  - Enhanced startPortalDevServer function call to include env parameter
+
+- [#3343](https://github.com/equinor/fusion-framework/pull/3343) [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b) Thanks [@odinr](https://github.com/odinr)! - Reorganized authentication documentation to improve maintainability and user experience.
+
+  - Removed local `libsecret.md` documentation file
+  - Updated all libsecret references to point to centralized MSAL Node module documentation
+  - Enhanced authentication guide with cross-references to underlying module documentation
+  - Improved documentation structure by consolidating authentication docs in the appropriate module packages
+
+  **Migration Notes:**
+
+  - libsecret installation guide is now available at: https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html
+  - All authentication-related documentation is now centralized in the MSAL Node module package
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed missing `env` parameter in `buildApplication` call within `bundleApp` function.
+
+  - Added the required `env` parameter to the `buildApplication` function call in `packages/cli/src/bin/app-pack.ts`
+  - This ensures the build process receives the correct runtime environment configuration
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Fixed stdout concatenation issues in CLI commands that output JSON to stdout.
+
+  - Replaced `stdout.write()` with `console.log()` for proper newline handling in:
+    - `ffc app manifest` command
+    - `ffc app config` command
+    - `ffc portal manifest` command
+    - `ffc portal config` command
+  - Removed unused `stdout` imports
+  - Improved output consistency and piping compatibility
+
+  These changes ensure that shell prompts no longer concatenate to JSON output, making the commands safe to pipe to tools like `jq`.
+
+- [#3341](https://github.com/equinor/fusion-framework/pull/3341) [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI command documentation and help text across all commands.
+
+  - Updated command examples to use `ffc` (alias) instead of `fusion-framework-cli`
+  - Improved TSDoc comments with comprehensive descriptions and examples
+  - Streamlined help text by removing redundant information and improving formatting
+  - Added proper @example and @remarks tags for better IntelliSense support
+  - Enhanced option descriptions for clarity and consistency
+
+  These changes improve the developer experience when using the CLI by providing clearer documentation and more accurate examples.
+
+  Thanks to [@estoksam](https://github.com/estoksam) for reporting the CLI command help text issues in [fusion#651](https://github.com/equinor/fusion/issues/651).
+
+- Updated dependencies [[`8c88574`](https://github.com/equinor/fusion-framework/commit/8c885745ee345cd7ef219b2cc469fd19c8687467), [`c1cd89a`](https://github.com/equinor/fusion-framework/commit/c1cd89abad4ca8f232a497316232d1f5ac8c530a)]:
+  - @equinor/fusion-framework-dev-portal@1.0.2
+  - @equinor/fusion-framework-module-msal-node@1.0.2
+
+## 11.1.2
+
+### Patch Changes
+
+- [#3330](https://github.com/equinor/fusion-framework/pull/3330) [`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01) Thanks [@odinr](https://github.com/odinr)! - Enhanced Vite configuration with improved TypeScript path resolution and centralized config loading.
+
+  - Added `vite-tsconfig-paths` plugin for better TypeScript path resolution in development
+  - Refactored app and portal dev servers to use centralized `loadViteConfig` function
+  - Improved Vite config merging with `mergeConfigVite` for better configuration management
+  - Added debug logging for Vite and dev server configurations
+  - Moved output directory validation to build-time only for better performance
+
+- Updated dependencies [[`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01)]:
+  - @equinor/fusion-framework-dev-server@1.0.2
+
+## 11.1.1
+
+### Patch Changes
+
+- [#3327](https://github.com/equinor/fusion-framework/pull/3327) [`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa) Thanks [@odinr](https://github.com/odinr)! - moved plugin `vite-tsconfig-paths` to `@equinor/fusion-framework-dev-server`
+
+- Updated dependencies [[`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa)]:
+  - @equinor/fusion-framework-dev-server@1.0.1
+
+## 11.1.0
+
+### Minor Changes
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Add `vite-plugin-tsconfig-paths` to allow apps to use path aliases in tsconfig, instead of defining them manually in Vite config.
+
+  > [!NOTE]
+  > Newer versions of Vite wont resolve files from `baseUrl` in `tsconfig.json`.
+  >
+  > To fix this, you can either:
+  >
+  > - Update import with full relative path
+  > - Add paths to `tsconfig.json`
+
+  example:
+
+  ```json
+  {
+    "compilerOptions": {
+      "baseUrl": "src",
+      "paths": {
+        "@/*": ["./*"]
+      }
+    }
+  }
+  ```
+
+  ```typescript
+  import { MyComponent } from "@/components";
+  ```
+
+  ‼️ Bad practice:
+
+  ```json
+  {
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "MyComponent": ["src/components/MyComponent"]
+      }
+    }
+  }
+  ```
+
+  ```typescript
+  import { MyComponent } from "MyComponent";
+  ```
+
+  > [!IMPORTANT]
+  > This is just best effort for resolving paths at build time. It does not guarantee that all paths will be resolved correctly in all scenarios. Please verify that your paths are working as expected after this update.
+
+### Patch Changes
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Added debug logging of included file system paths.
+
+  > [!Note] > _Vite will not resolve files outside the working directory unless explicitly allowed._
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Improved CLI logger by adding a missing argument for enhanced debugging.
+  Running `ffc app dev --debug` now provides more detailed output during development server startup.
+
+- [#3323](https://github.com/equinor/fusion-framework/pull/3323) [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab) Thanks [@odinr](https://github.com/odinr)! - Fixed issue where app routing was not properly handled in the development server configuration. Some request where given with `/` instead of `@`, so now we support both formats.
+
+  example `/apps/bundles/apps/my-app/6.7.8/src/index.ts?import` was expected to be `/apps/bundles/apps/my-app@6.7.8/src/index.ts?import`.
+
+  Should fix https://github.com/equinor/fusion/issues/640
+
+- Updated dependencies [[`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c), [`39188bf`](https://github.com/equinor/fusion-framework/commit/39188bfc84fe2b62f72b07acd58f10fe7149579c), [`866d1c5`](https://github.com/equinor/fusion-framework/commit/866d1c52ab86aaa742605e401d8633bc032efeb2)]:
+  - @equinor/fusion-imports@1.1.2
+
 ## 11.0.2
 
 ### Patch Changes

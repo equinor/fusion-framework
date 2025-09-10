@@ -7,10 +7,24 @@ import { ConsoleLogger, initializeFramework } from '@equinor/fusion-framework-cl
 import { withAuthOptions } from '../../options/auth.js';
 
 /**
- * Command to acquire and print an access token for Fusion APIs using your current authentication context.
+ * CLI command: `token`
+ *
+ * Acquires and prints an access token for Fusion APIs using your current authentication context.
  *
  * This command retrieves an access token for the specified scopes, tenant, and client.
  * Supports debug and silent modes for flexible output.
+ *
+ * @remarks
+ * - Supports specifying scopes, tenant, and client for advanced token acquisition.
+ * - Silent mode outputs only the token (no extra logging).
+ *
+ * @example
+ *   $ ffc auth token
+ *   $ export MY_TOKEN=$(ffc auth token --silent)
+ *   $ ffc auth token --scope api://my-app/.default
+ *   $ ffc auth token --tenant my-tenant --client my-client-id --silent
+ *
+ * @see acquireAccessToken for token acquisition implementation details
  */
 export const command = createCommand('token')
   .description(
@@ -20,22 +34,26 @@ export const command = createCommand('token')
     'after',
     [
       '',
-      'Acquire and print an access token for Fusion APIs using your current authentication context.',
+      'USAGE NOTES:',
+      '  - This command acquires an access token using your current interactive login session.',
+      '  - It is intended for local development, manual testing, and debugging authentication issues.',
       '',
-      'This command retrieves an access token for the specified scopes, tenant, and client.',
-      'Supports debug and silent modes for flexible output.',
+      'LIMITATIONS:',
+      '  - Requires an interactive user session (not suitable for CI/CD or headless environments).',
+      '  - Will only work if you have previously logged in using `ffc auth login`.',
+      '  - Does NOT prompt for login; if no cached credentials are found, you must log in first.',
+      '  - For automation or CI/CD, set the FUSION_TOKEN environment variable instead.',
       '',
-      'Options:',
-      '  --tenant <tenantId>   Specify the tenant ID',
-      '  --client <clientId>   Specify the client ID',
-      '  --scope <scope>       Specify the scope(s) for authentication',
-      '  --debug               Enable debug mode for verbose logging',
-      '  --silent              Only output the token (no extra logging)',
+      'BEST PRACTICES:',
+      '  - Use this command to quickly fetch a token for manual API calls or local scripts.',
+      '  - Use the --silent flag to output only the token (useful for scripting or piping).',
+      '  - Specify --scope, --tenant, or --client for advanced scenarios.',
       '',
-      'Examples:',
-      '  $ fusion-framework-cli token',
-      '  $ fusion-framework-cli token --scope api://my-app/.default',
-      '  $ fusion-framework-cli token --tenant my-tenant --client my-client-id --silent',
+      'EXAMPLES:',
+      '  $ ffc auth token',
+      '  $ export MY_TOKEN=$(ffc auth token --silent)',
+      '  $ ffc auth token --scope api://my-app/.default',
+      '  $ ffc auth token --tenant my-tenant --client my-client-id --silent',
     ].join('\n'),
   )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)
@@ -44,8 +62,6 @@ export const command = createCommand('token')
     const log = options.silent ? null : new ConsoleLogger('auth:token', { debug: options.debug });
 
     const scopes = typeof options.scope === 'string' ? [options.scope] : options.scope;
-
-    console.log('options');
 
     log?.info('Using tenant', options.tenantId);
     log?.info('Using client', options.clientId);

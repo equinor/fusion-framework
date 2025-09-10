@@ -14,31 +14,58 @@ import {
   AllowedPortalTags,
 } from '@equinor/fusion-framework-cli/bin';
 
+/**
+ * CLI command: `publish`
+ *
+ * Builds, uploads, and tags a Fusion portal bundle for deployment to the portal registry.
+ *
+ * Features:
+ * - Bundles the portal, uploads it to the Fusion portal registry, and applies a tag for versioning.
+ * - Supports specifying environment, manifest file, and tag.
+ * - Debug mode and authentication options are supported.
+ *
+ * Usage:
+ *   $ ffc portal publish [bundle] [options]
+ *
+ * Arguments:
+ *   [bundle]             Path to the portal bundle to upload
+ *
+ * Options:
+ *   -d, --debug          Enable debug mode for verbose logging
+ *   -e, --env <env>      Target environment
+ *   -m, --manifest       Manifest file to use for bundling
+ *   -t, --tag            Tag to apply to the published portal
+ *
+ * Example:
+ *   $ ffc portal publish
+ *   $ ffc portal publish --env prod --manifest portal.manifest.prod.ts
+ *   $ ffc portal publish --tag latest app.bundle.zip
+ *
+ * @see uploadPortalBundle, tagPortal for implementation details
+ */
 export const command = withAuthOptions(
   createCommand('publish')
     .description('Build, upload, and tag your Fusion portal bundle for deployment.')
     .addHelpText(
       'after',
       [
-        'Builds, uploads, and tags your Fusion portal bundle for deployment to the portal registry.',
         '',
-        'Options:',
-        '  --env         Target environment',
-        '  -m, --manifest  Manifest file to use for bundling',
-        '  --schema      Schema file to use for validation',
-        '  -t, --tag     Tag to apply to the published portal',
-        '  -d, --debug   Enable debug mode for verbose logging',
+        'If no manifest is provided, a default portal.manifest(.$ENV)?.[ts|js|json] is used from the current directory.',
+        'example: `ffc portal publish --env prod` will search for `portal.manifest.prod.ts` then fallback to `portal.manifest.ts`',
+        '',
+        'NOTE: portal manifest is not required, a default manifest will be generated if not provided',
         '',
         'Examples:',
-        '  $ fusion-framework-cli portal publish',
-        '  $ fusion-framework-cli portal publish --env prod --manifest portal.manifest.prod.ts',
+        '  $ ffc portal publish',
+        '  $ ffc portal publish --env prod --manifest portal.manifest.prod.ts',
+        '  $ ffc portal publish --tag latest portal.bundle.zip',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
     .addOption(createEnvOption({ allowDev: false }))
     .option(
       '-m, --manifest [string]',
-      'Manifest file to use for bundling (e.g., portal.manifest.ts)',
+      'Manifest file to use for bundling (e.g., my-portal.manifest.ts)',
     )
     .option('--schema [string]', 'Schema file to use for validation')
     .option(

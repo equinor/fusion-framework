@@ -1,4 +1,5 @@
 import { loadConfigFromFile, mergeConfig, type UserConfig } from 'vite';
+import tsConfigPaths from 'vite-tsconfig-paths';
 
 import { basename, dirname, extname } from 'node:path';
 
@@ -24,31 +25,34 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
   const outFile = packageJson.main ?? packageJson.module ?? './dist/bundle.js';
   const entrypoint = resolveEntryPoint(root);
 
-  // Prevent output directory from being the project root
-  if (dirname(outFile) === root) {
-    throw new Error(
-      'outDir cannot be root, please specify package.main or package.module in package.json',
-    );
-  }
+  if (env.command === 'build') {
+    // Prevent output directory from being the project root
+    if (dirname(outFile) === root) {
+      throw new Error(
+        'outDir cannot be root, please specify package.main or package.module in package.json',
+      );
+    }
 
-  // Prevent output directory from being the src directory
-  if (dirname(outFile) === 'src') {
-    throw new Error(
-      'outDir cannot be src, please specify package.main or package.module in package.json',
-    );
-  }
+    // Prevent output directory from being the src directory
+    if (dirname(outFile) === 'src') {
+      throw new Error(
+        'outDir cannot be src, please specify package.main or package.module in package.json',
+      );
+    }
 
-  // Prevent output directory from being the current working directory
-  if (dirname(outFile) === process.cwd()) {
-    throw new Error(
-      'outDir cannot be the current working directory, please specify package.main or package.module in package.json',
-    );
+    // Prevent output directory from being the current working directory
+    if (dirname(outFile) === process.cwd()) {
+      throw new Error(
+        'outDir cannot be the current working directory, please specify package.main or package.module in package.json',
+      );
+    }
   }
 
   // Merge default and local Vite configs
   return mergeConfig(
     {
-      root: root,
+      root,
+      plugins: [tsConfigPaths()],
       define: {
         // Set environment variables for the build
         'process.env.NODE_ENV': JSON.stringify(env.mode),

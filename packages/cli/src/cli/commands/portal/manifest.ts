@@ -3,36 +3,62 @@ import { createCommand } from 'commander';
 import { dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 import { writeFile } from 'node:fs/promises';
-import { stdout } from 'node:process';
 
 import { ConsoleLogger, loadPortalManifest } from '@equinor/fusion-framework-cli/bin';
 import { fileExistsSync } from '@equinor/fusion-framework-cli/utils';
 
+/**
+ * CLI command: `portal manifest`
+ *
+ * Generates or validates a Fusion portal manifest file.
+ *
+ * Features:
+ * - Outputs the generated manifest to stdout or a file (use --output).
+ * - Falls back to a default manifest if no `portal.manifest(.$ENV)?.[ts|js|json]` is found.
+ * - Supports debug and silent modes for flexible output.
+ *
+ * Usage:
+ *   $ ffc portal manifest [manifest] [options]
+ *
+ * Arguments:
+ *   [manifest]           Manifest build file to use (e.g., portal.manifest[.env]?.[ts,js,json])
+ *
+ * Options:
+ *   -d, --debug          Enable debug mode for verbose logging
+ *   -o, --output         Write manifest to the specified file (default: stdout)
+ *   -s, --silent         Silent mode, suppresses output except errors
+ *
+ * Example:
+ *   $ ffc portal manifest
+ *   $ ffc portal manifest portal.manifest.prod.ts --output ./dist/portal.manifest.json
+ *   $ ffc portal manifest --debug
+ *
+ * @see loadPortalManifest for implementation details
+ */
 export const command = createCommand('manifest')
   .description('Generate or validate a Fusion portal manifest file.')
   .addHelpText(
     'after',
     [
-      'Generates or validates a Fusion portal manifest file.',
       '',
-      'If no manifest is provided, a default portal.manifest.[ts|js|json] is used from the current directory.',
+      'By default, outputs the generated manifest object to stdout or a file. Use --output to write to a file.',
       '',
-      'Options:',
-      '  -o, --output   Write manifest to the specified file (default: stdout)',
-      '  -d, --debug    Enable debug mode for verbose logging',
-      '  -s, --silent   Silent mode, suppresses output except errors',
+      'Note:',
+      '- If not `portal.manifest(.$ENV)?.[ts|js|json]` is found it will fallback to generate a default manifest',
       '',
       'Examples:',
-      '  $ fusion-framework-cli portal manifest',
-      '  $ fusion-framework-cli portal manifest portal.manifest.prod.ts --output ./dist/portal.manifest.json',
+      '  $ ffc portal manifest',
+      '  $ ffc portal manifest portal.manifest.prod.ts --output ./dist/portal.manifest.json',
+      '  $ ffc portal manifest --silent | jq ".build.entryPoint"',
+      '  $ ffc portal manifest --debug',
     ].join('\n'),
   )
   .option('-d, --debug', 'Enable debug mode for verbose logging', false)
   .option('-o, --output <string>', 'Write manifest to the specified file', 'stdout')
   .option('-s, --silent', 'Silent mode, suppresses output except errors')
-  .argument('[manifest]', 'Manifest build file to use (e.g., app.manifest[.env]?.[ts,js,json])')
+  .argument('[manifest]', 'Manifest build file to use (e.g., portal.manifest[.env]?.[ts,js,json])')
   .action(async (manifest, opt) => {
-    const log = opt.silent ? null : new ConsoleLogger('app:manifest', { debug: opt.debug });
+    const log = opt.silent ? null : new ConsoleLogger('portal:manifest', { debug: opt.debug });
     const result = await loadPortalManifest({ log, manifest });
     if (opt.output) {
       const output = resolve(process.cwd(), opt.output);
@@ -46,7 +72,7 @@ export const command = createCommand('manifest')
       await writeFile(output, JSON.stringify(result.manifest, null, 2));
       log?.succeed('Manifest written to file', output);
     } else {
-      stdout.write(JSON.stringify(result.manifest, null, 2));
+      console.log(JSON.stringify(result.manifest, null, 2));
     }
   });
 export default command;

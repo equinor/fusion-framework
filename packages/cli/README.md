@@ -82,6 +82,7 @@ pnpm fusion-framework-cli app config --publish --env <environment>
 | `pnpm fusion-framework-cli auth ...` | Authenticate with Fusion             |
 | `pnpm fusion-framework-cli app ...`    | Working with Fusion applications     |
 | `pnpm fusion-framework-cli portal ...` | Working with Fusion portal templates |
+| `pnpm fusion-framework-cli disco ...` | Service discovery and resolution     |
 
 ## Example: package.json
 
@@ -124,7 +125,7 @@ A minimal example for a Fusion Framework app:
 
 **Setup & Configuration**
 - [Authentication](docs/auth.md): Setting up authentication for local development and CI/CD environments
-- [libsecret Installation](docs/libsecret.md): Fix credential storage issues on Linux systems
+- [libsecret Installation](https://equinor.github.io/fusion-framework/modules/auth/msal-node/docs/libsecret.html): Fix credential storage issues on Linux systems
 
 **Migration & Updates**
 - [Migration Guide: v10 to v11](docs/migration-v10-to-v11.md): Breaking changes, deprecated commands, and upgrade instructions
@@ -140,7 +141,7 @@ A minimal example for a Fusion Framework app:
 
 **Authentication & Credentials**
 - **Authentication issues?** See [Authentication Guide](docs/auth.md) for token setup and troubleshooting
-- **libsecret errors on Linux?** Install libsecret using our [installation guide](docs/libsecret.md)
+- **libsecret errors on Linux?** Install libsecret using our [installation guide](https://equinor.github.io/fusion-framework/modules/auth/msal-node/#troubleshooting)
 
 **CLI & Commands**
 - **Command not found?** Ensure `node_modules/.bin` is in your PATH or use `pnpm`/`npx`

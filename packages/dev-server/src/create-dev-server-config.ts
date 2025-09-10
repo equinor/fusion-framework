@@ -1,4 +1,7 @@
 import { defineConfig, mergeConfig, type UserConfig } from 'vite';
+
+import reactPlugin from '@vitejs/plugin-react';
+
 import apiServicePlugin, {
   createProxyHandler,
 } from '@equinor/fusion-framework-vite-plugin-api-service';
@@ -71,6 +74,7 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
       }),
     },
     plugins: [
+      reactPlugin(),
       apiServicePlugin(
         {
           proxyHandler: createProxyHandler(api.serviceDiscoveryUrl, processServices, {

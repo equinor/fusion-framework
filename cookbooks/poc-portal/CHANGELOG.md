@@ -1,5 +1,41 @@
 # poc-portal
 
+## 1.0.65
+
+### Patch Changes
+
+- Updated dependencies [[`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9), [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9), [`33054ac`](https://github.com/equinor/fusion-framework/commit/33054ac27b309e9d0301dd1f1d63639dac27f00b), [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9), [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9), [`cd09bef`](https://github.com/equinor/fusion-framework/commit/cd09befcdab4162a38d4dfd14f280ce228ea97d9), [`68dc22f`](https://github.com/equinor/fusion-framework/commit/68dc22f582bb68fbc94f29ad053122f81c049405)]:
+  - @equinor/fusion-framework-cli@11.1.3
+  - @equinor/fusion-framework-module-msal@4.0.9
+
+## 1.0.64
+
+### Patch Changes
+
+- Updated dependencies [[`3590104`](https://github.com/equinor/fusion-framework/commit/3590104bdf3bba3386cdec7e2692078e6a92bd01)]:
+  - @equinor/fusion-framework-cli@11.1.2
+
+## 1.0.63
+
+### Patch Changes
+
+- Updated dependencies [[`d362359`](https://github.com/equinor/fusion-framework/commit/d362359507e7c55f568ede09cc8e66feb197596a)]:
+  - @equinor/fusion-framework-react-app@6.2.7
+
+## 1.0.62
+
+### Patch Changes
+
+- Updated dependencies [[`22d6d3b`](https://github.com/equinor/fusion-framework/commit/22d6d3b7753da8ad30054839e8a6083850a208fa)]:
+  - @equinor/fusion-framework-cli@11.1.1
+
+## 1.0.61
+
+### Patch Changes
+
+- Updated dependencies [[`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab), [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab), [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab), [`8b2633d`](https://github.com/equinor/fusion-framework/commit/8b2633dca8e61e18f19e605f5338a9925a8588ab)]:
+  - @equinor/fusion-framework-cli@11.1.0
+
 ## 1.0.60
 
 ### Patch Changes
