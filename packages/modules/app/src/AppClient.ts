@@ -3,7 +3,11 @@ import { catchError, map, type Observable, type ObservableInput, tap } from 'rxj
 import { Query } from '@equinor/fusion-query';
 import { queryValue } from '@equinor/fusion-query/operators';
 
-import { HttpResponseError, type IHttpClient } from '@equinor/fusion-framework-module-http';
+import {
+  HttpJsonResponseError,
+  HttpResponseError,
+  type IHttpClient,
+} from '@equinor/fusion-framework-module-http';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
 import { ApiApplicationSchema } from './schemas';
@@ -156,14 +160,16 @@ export class AppClient implements IAppClient {
     return this.#manifest.query(args).pipe(
       queryValue,
       catchError((err) => {
-        /** extract cause, since error will be a `QueryError` */
-        const { cause } = err;
+        const cause = err?.cause || err;
+
         if (cause instanceof AppManifestError) {
           throw cause;
         }
-        if (cause instanceof HttpResponseError) {
+
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppManifestError.fromHttpResponse(cause.response, { cause });
         }
+
         throw new AppManifestError('unknown', 'failed to load manifest', { cause });
       }),
     );
@@ -180,12 +186,13 @@ export class AppClient implements IAppClient {
     return this.#config.query(args).pipe(
       map((res) => res.value as AppConfig<TType>),
       catchError((err) => {
-        /** extract cause, since error will be a `QueryError` */
-        const { cause } = err;
+        /** handle both direct errors and errors wrapped in a `cause` property */
+        const cause = err?.cause || err;
+
         if (cause instanceof AppConfigError) {
           throw cause;
         }
-        if (cause instanceof HttpResponseError) {
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppConfigError.fromHttpResponse(cause.response, { cause });
         }
         throw new AppConfigError('unknown', 'failed to load config', { cause });
@@ -197,12 +204,13 @@ export class AppClient implements IAppClient {
     return this.#settings.query(args).pipe(
       queryValue,
       catchError((err) => {
-        /** extract cause, since error will be a `QueryError` */
-        const { cause } = err;
+        /** handle both direct errors and errors wrapped in a `cause` property */
+        const cause = err?.cause || err;
+
         if (cause instanceof AppSettingsError) {
           throw cause;
         }
-        if (cause instanceof HttpResponseError) {
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
           throw AppSettingsError.fromHttpResponse(cause.response, { cause });
         }
         throw new AppSettingsError('unknown', 'failed to load settings', { cause });
