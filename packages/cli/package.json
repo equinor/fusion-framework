@@ -110,7 +110,7 @@
     "read-package-up": "^11.0.0",
     "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
-    "zod": "^3.25.76"
+    "zod": "^4.1.7"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
