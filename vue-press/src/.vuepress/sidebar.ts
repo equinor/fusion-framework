@@ -52,6 +52,10 @@ export default sidebar({
           link: 'docs/portal.md',
         },
         {
+          text: 'Dev Server',
+          link: 'docs/dev-server.md',
+        },
+        {
           text: 'Migration',
           children: [
             {
