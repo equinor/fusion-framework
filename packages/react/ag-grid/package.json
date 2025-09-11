@@ -60,9 +60,9 @@
   },
   "dependencies": {
     "@equinor/fusion-framework-module-ag-grid": "workspace:*",
-    "ag-grid-community": "34.1.2",
-    "ag-grid-enterprise": "34.1.2",
-    "ag-grid-react": "34.1.2"
+    "ag-grid-community": "34.2.0",
+    "ag-grid-enterprise": "34.2.0",
+    "ag-grid-react": "34.2.0"
   },
   "devDependencies": {
     "@equinor/fusion-framework-react-module": "workspace:^",
