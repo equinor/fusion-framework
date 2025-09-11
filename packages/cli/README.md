@@ -122,6 +122,7 @@ A minimal example for a Fusion Framework app:
 **Getting Started**
 - [Developing Apps](docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
 - [Developing Portals](docs/portal.md): Guide to building, configuring, and publishing portal templates
+- [Dev Server](docs/dev-server.md): Understanding how the development server works, including architecture and configuration
 
 **Setup & Configuration**
 - [Authentication](docs/auth.md): Setting up authentication for local development and CI/CD environments
