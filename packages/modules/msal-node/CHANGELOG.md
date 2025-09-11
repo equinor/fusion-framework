@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.3
+
+### Patch Changes
+
+- [#3361](https://github.com/equinor/fusion-framework/pull/3361) [`1f629b5`](https://github.com/equinor/fusion-framework/commit/1f629b556c4e26170b1eb6ad8823c082cb2ac59d) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add caution message about Linux support.
+
 ## 1.0.2
 
 ### Patch Changes

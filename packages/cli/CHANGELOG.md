@@ -1,5 +1,30 @@
 # Change Log
 
+## 11.2.0
+
+### Minor Changes
+
+- [#3362](https://github.com/equinor/fusion-framework/pull/3362) [`6151ff4`](https://github.com/equinor/fusion-framework/commit/6151ff429fc5dc221a4cb43f11362cf39c2a3136) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive dev-server documentation with architecture overview and configuration guide.
+
+  - Added new `docs/dev-server.md` with complete dev-server documentation
+  - Updated README.md to include dev-server documentation link
+  - Covers dev-server features, architecture, configuration, and troubleshooting
+
+### Patch Changes
+
+- [#3345](https://github.com/equinor/fusion-framework/pull/3345) [`0b53fa8`](https://github.com/equinor/fusion-framework/commit/0b53fa8dcd31b0b333a172bfcc15b342c5548bf9) Thanks [@odinr](https://github.com/odinr)! - Documented missing breaking change for Vite configuration file naming in CLI v11 migration guide and changelog.
+
+  - Added detailed explanation of `app.vite.config.ts` → `vite.config.ts` file naming change
+  - Emphasized that `vite.config.ts` should be a last resort for custom setups
+  - Recommended using `dev-server.config.js` instead to avoid unexpected behavior
+  - Updated migration checklist to include the file rename requirement
+  - Enhanced v11.0.0 changelog with the breaking change documentation
+
+  This addresses the undocumented breaking change that could cause time-consuming debugging for developers upgrading from v10 to v11.
+
+- Updated dependencies [[`1f629b5`](https://github.com/equinor/fusion-framework/commit/1f629b556c4e26170b1eb6ad8823c082cb2ac59d)]:
+  - @equinor/fusion-framework-module-msal-node@1.0.3
+
 ## 11.1.4
 
 ### Patch Changes
