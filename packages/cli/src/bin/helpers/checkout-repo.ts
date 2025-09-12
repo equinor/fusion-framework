@@ -10,7 +10,7 @@ import { assertGitHubCliExists, assertValidRepoFormat } from '../../lib/utils/as
 
 /**
  * GitHub domain constant for repository cloning.
- * 
+ *
  * Used to construct repository URLs for both HTTPS and SSH cloning methods.
  */
 const GITHUB_DOMAIN = 'github.com' as const;
@@ -37,7 +37,7 @@ function isGitRepository(dir: string): boolean {
   if (!existsSync(dir)) {
     return false;
   }
-  
+
   // Check if .git directory exists (for regular git repos) or .git file exists (for worktrees)
   const gitDir = join(dir, '.git');
   return existsSync(gitDir);
@@ -53,13 +53,18 @@ function isGitRepository(dir: string): boolean {
  */
 function hasCorrectRemoteOrigin(dir: string, expectedRepo: string): boolean {
   try {
-    const remoteUrl = String(execSync('git remote get-url origin', { 
-      cwd: dir, 
-      stdio: 'pipe' 
-    })).trim();
-    
+    const remoteUrl = String(
+      execSync('git remote get-url origin', {
+        cwd: dir,
+        stdio: 'pipe',
+      }),
+    ).trim();
+
     // Check if the remote URL contains the expected repository
-    return remoteUrl.includes(expectedRepo);
+    // Handle both HTTPS and SSH formats:
+    // - HTTPS: https://github.com/owner/repo.git
+    // - SSH: git@github.com:owner/repo.git
+    return remoteUrl.includes(expectedRepo) || remoteUrl.includes(expectedRepo.replace('/', ':'));
   } catch {
     return false;
   }
@@ -94,7 +99,7 @@ export interface CloneRepoOptions {
  * This function first checks if the repository already exists and is valid.
  * If it exists and has the correct remote origin, it will update to the latest changes.
  * Otherwise, it will clone the repository using the best available method.
- * 
+ *
  * This optimization significantly improves performance for repeated operations
  * by avoiding unnecessary re-cloning of the same repository.
  *
@@ -109,38 +114,44 @@ export function checkoutRepo(options: CloneRepoOptions): string {
   // Validate repository name format
   assertValidRepoFormat(repo);
 
-  const skipClone = isGitRepository(tempDir) && hasCorrectRemoteOrigin(tempDir, repo);
-
   // Check if repository already exists and is valid
-  if (skipClone) {
+  const isRepo = isGitRepository(tempDir);
+  const hasCorrectOrigin = hasCorrectRemoteOrigin(tempDir, repo);
+  log?.debug(`Repository check: isRepo=${isRepo}, hasCorrectOrigin=${hasCorrectOrigin}`);
+
+  if (isRepo && hasCorrectOrigin) {
     log?.debug('Repository already exists, updating to latest changes...');
-    
+
     try {
       // Fetch the latest changes first
-      execSync('git fetch origin', { 
-        cwd: tempDir, 
-        stdio: log ? 'inherit' : 'pipe' 
+      execSync('git fetch origin', {
+        cwd: tempDir,
+        stdio: log ? 'inherit' : 'pipe',
       });
-      
+
       // Get the default branch name
       let defaultBranch = 'main';
       try {
-        defaultBranch = String(execSync('git symbolic-ref refs/remotes/origin/HEAD', { 
-          cwd: tempDir, 
-          stdio: 'pipe' 
-        })).trim().replace('refs/remotes/origin/', '');
+        defaultBranch = String(
+          execSync('git symbolic-ref refs/remotes/origin/HEAD', {
+            cwd: tempDir,
+            stdio: 'pipe',
+          }),
+        )
+          .trim()
+          .replace('refs/remotes/origin/', '');
       } catch {
         // Fallback to main if we can't determine the default branch
         defaultBranch = 'main';
       }
-      
+
       // Reset to the latest commit on the default branch (discards any local changes)
       // This ensures we have a clean state matching the remote exactly
-      execSync(`git reset --hard origin/${defaultBranch}`, { 
-        cwd: tempDir, 
-        stdio: log ? 'inherit' : 'pipe' 
+      execSync(`git reset --hard origin/${defaultBranch}`, {
+        cwd: tempDir,
+        stdio: log ? 'inherit' : 'pipe',
       });
-      
+
       log?.succeed('Repository updated successfully');
       return tempDir;
     } catch (error) {
@@ -186,12 +197,14 @@ export function cloneRepoFromGitHub(options: CloneRepoOptions): string {
     if (existsSync(tempDir)) {
       log?.debug('Removing existing directory...');
       rmSync(tempDir, { recursive: true, force: true });
+    } else {
+      log?.debug('Directory does not exist, proceeding with clone...');
     }
 
     // Use gh repo clone command
     const cloneCommand = `gh repo clone "${repo}" "${tempDir}"`;
     log?.debug(`Executing: ${cloneCommand}`);
-    
+
     execSync(cloneCommand, {
       stdio: log ? 'inherit' : 'pipe',
     });
