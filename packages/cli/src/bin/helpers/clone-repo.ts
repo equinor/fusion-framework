@@ -94,8 +94,11 @@ export function cloneRepoFromGitHub(options: CloneRepoOptions): string {
 
   try {
     // Use gh repo clone command
-    execSync(`gh repo clone "${repo}" "${tempDir}"`, {
-      stdio: 'pipe',
+    const cloneCommand = `gh repo clone "${repo}" "${tempDir}"`;
+    log?.debug(`Executing: ${cloneCommand}`);
+    
+    execSync(cloneCommand, {
+      stdio: log ? 'inherit' : 'pipe',
     });
 
     log?.succeed('Repository cloned successfully using GitHub CLI');
@@ -133,7 +136,7 @@ export function cloneRepoFromGit(options: CloneRepoOptions): string {
       log?.debug(`Attempting to clone from ${url.includes('git@') ? 'SSH' : 'HTTPS'}...`);
 
       execSync(`git clone "${url}" "${tempDir}"`, {
-        stdio: 'pipe',
+        stdio: log ? 'inherit' : 'pipe',
       });
 
       log?.succeed('Repository cloned successfully using git');
