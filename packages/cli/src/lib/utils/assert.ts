@@ -1,5 +1,6 @@
 import assert, { AssertionError } from 'node:assert';
 import { fileExists } from './file-exists.js';
+import { gitCliExists } from './git-cli-exists.js';
 
 /**
  * Re-exports the core Node.js assert function and AssertionError class.
@@ -104,3 +105,33 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
     );
   }
 }
+/**
+ * Asserts that Git CLI is available and optionally configured.
+ * Throws an error if Git CLI is not available or not configured when required.
+ *
+ * @param requireConfig - Whether to require proper configuration (default: false).
+ * @param message - Optional custom error message for assertion failure.
+ * @throws {AssertionError} If Git CLI is not available or not configured when required.
+ */
+export function assertGitCliExists(checkConfiguration = false, message?: string): void {
+  const status = gitCliExists({ checkConfiguration });
+  
+  if (!status.available) {
+    throw new AssertionError({
+      message: message ?? 'Git CLI is not available. Please install Git from https://git-scm.com/',
+      actual: status,
+      expected: { available: true, configured: checkConfiguration },
+    });
+  }
+  
+  if (checkConfiguration && !status.configured) {
+    throw new AssertionError({
+      message:
+        message ??
+        'Git CLI is available but not configured. Please run "git config --global user.name" and "git config --global user.email"',
+      actual: status,
+      expected: { available: true, configured: true },
+    });
+  }
+}
+
