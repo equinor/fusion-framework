@@ -147,7 +147,7 @@ export function assertGitHubCliExists(requireAuth = false, message?: string): vo
  */
 export function assertGitCliExists(checkConfiguration = false, message?: string): void {
   const status = gitCliExists({ checkConfiguration });
-  
+
   if (!status.available) {
     throw new AssertionError({
       message: message ?? 'Git CLI is not available. Please install Git from https://git-scm.com/',
@@ -155,7 +155,7 @@ export function assertGitCliExists(checkConfiguration = false, message?: string)
       expected: { available: true, configured: checkConfiguration },
     });
   }
-  
+
   if (checkConfiguration && !status.configured) {
     throw new AssertionError({
       message:
@@ -167,3 +167,15 @@ export function assertGitCliExists(checkConfiguration = false, message?: string)
   }
 }
 
+/**
+ * Validates that a repository name follows the "owner/repo" format.
+ *
+ * @param repo - Repository name to validate.
+ * @throws If the repository name format is invalid.
+ * @public
+ */
+export function assertValidRepoFormat(repo: string): void {
+  if (!/^[^/]+\/[^/]+$/.test(repo)) {
+    throw new Error(`Invalid repository name format: ${repo}. Expected format: "owner/repo"`);
+  }
+}
