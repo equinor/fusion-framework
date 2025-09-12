@@ -1,5 +1,6 @@
 import assert, { AssertionError } from 'node:assert';
 import { fileExists } from './file-exists.js';
+import { githubCliExists } from './github-cli-exists.js';
 import { gitCliExists } from './git-cli-exists.js';
 
 /**
@@ -105,6 +106,37 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
     );
   }
 }
+
+/**
+ * Asserts that GitHub CLI is available and optionally authenticated.
+ * Throws an error if GitHub CLI is not available or not authenticated when required.
+ *
+ * @param requireAuth - Whether to require authentication (default: false).
+ * @param message - Optional custom error message for assertion failure.
+ * @throws {AssertionError} If GitHub CLI is not available or not authenticated when required.
+ */
+export function assertGitHubCliExists(requireAuth = false, message?: string): void {
+  const status = githubCliExists();
+
+  if (!status.available) {
+    throw new AssertionError({
+      message:
+        message ?? 'GitHub CLI is not available. Please install it from https://cli.github.com/',
+      actual: status,
+      expected: { available: true, authenticated: requireAuth },
+    });
+  }
+
+  if (requireAuth && !status.authenticated) {
+    throw new AssertionError({
+      message:
+        message ?? 'GitHub CLI is available but not authenticated. Please run "gh auth login"',
+      actual: status,
+      expected: { available: true, authenticated: true },
+    });
+  }
+}
+
 /**
  * Asserts that Git CLI is available and optionally configured.
  * Throws an error if Git CLI is not available or not configured when required.
