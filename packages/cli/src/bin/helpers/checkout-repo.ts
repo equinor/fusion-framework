@@ -3,6 +3,7 @@ import { execSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { existsSync, rmSync } from 'node:fs';
 
+import { isGitDir } from '../../lib/utils/is-git-dir.js';
 import { githubCliExists } from '../../lib/utils/github-cli-exists.js';
 
 import type { ConsoleLogger } from '../utils/ConsoleLogger.js';
@@ -24,23 +25,6 @@ const GITHUB_DOMAIN = 'github.com' as const;
  */
 function generateTmpDir(repo: string): string {
   return join(tmpdir(), 'ffc', 'repo', repo);
-}
-
-/**
- * Checks if a directory exists and is a valid git repository.
- *
- * @param dir - Directory path to check.
- * @returns True if the directory exists and is a git repository, false otherwise.
- * @internal
- */
-function isGitRepository(dir: string): boolean {
-  if (!existsSync(dir)) {
-    return false;
-  }
-
-  // Check if .git directory exists (for regular git repos) or .git file exists (for worktrees)
-  const gitDir = join(dir, '.git');
-  return existsSync(gitDir);
 }
 
 /**
@@ -67,6 +51,29 @@ function hasCorrectRemoteOrigin(dir: string, expectedRepo: string): boolean {
     return remoteUrl.includes(expectedRepo) || remoteUrl.includes(expectedRepo.replace('/', ':'));
   } catch {
     return false;
+  }
+}
+
+/**
+ * Gets the default branch name of a git repository.
+ *
+ * @param dir - Directory path to check.
+ * @returns The default branch name, falling back to 'main' if detection fails.
+ * @internal
+ */
+function getDefaultBranch(dir: string): string {
+  try {
+    return String(
+      execSync('git symbolic-ref refs/remotes/origin/HEAD', {
+        cwd: dir,
+        stdio: 'pipe',
+      }),
+    )
+      .trim()
+      .replace('refs/remotes/origin/', '');
+  } catch {
+    // Fallback to main if we can't determine the default branch
+    return 'main';
   }
 }
 
@@ -115,12 +122,12 @@ export function checkoutRepo(options: CloneRepoOptions): string {
   assertValidRepoFormat(repo);
 
   // Check if repository already exists and is valid
-  const isRepo = isGitRepository(tempDir);
-  const hasCorrectOrigin = hasCorrectRemoteOrigin(tempDir, repo);
-  log?.debug(`Repository check: isRepo=${isRepo}, hasCorrectOrigin=${hasCorrectOrigin}`);
+  const isRepo = isGitDir(tempDir);
+  const hasCorrectOrigin = isRepo ? hasCorrectRemoteOrigin(tempDir, repo) : false;
+  log?.debug('Repository check:', { repo, tempDir, isRepo, hasCorrectOrigin });
 
   if (isRepo && hasCorrectOrigin) {
-    log?.debug('Repository already exists, updating to latest changes...');
+    log?.start('Repository already exists, updating to latest changes...');
 
     try {
       // Fetch the latest changes first
@@ -130,20 +137,7 @@ export function checkoutRepo(options: CloneRepoOptions): string {
       });
 
       // Get the default branch name
-      let defaultBranch = 'main';
-      try {
-        defaultBranch = String(
-          execSync('git symbolic-ref refs/remotes/origin/HEAD', {
-            cwd: tempDir,
-            stdio: 'pipe',
-          }),
-        )
-          .trim()
-          .replace('refs/remotes/origin/', '');
-      } catch {
-        // Fallback to main if we can't determine the default branch
-        defaultBranch = 'main';
-      }
+      const defaultBranch = getDefaultBranch(tempDir);
 
       // Reset to the latest commit on the default branch (discards any local changes)
       // This ensures we have a clean state matching the remote exactly
@@ -155,7 +149,8 @@ export function checkoutRepo(options: CloneRepoOptions): string {
       log?.succeed('Repository updated successfully');
       return tempDir;
     } catch (error) {
-      log?.warn('Failed to update repository, will re-clone repository');
+      log?.fail('Failed to update repository, will re-clone repository');
+      log?.debug(error);
       // Fall through to cloning logic
     }
   }
@@ -184,10 +179,10 @@ export function checkoutRepo(options: CloneRepoOptions): string {
 export function cloneRepoFromGitHub(options: CloneRepoOptions): string {
   const { repo, tempDir = generateTmpDir(repo), log } = options;
 
+  log?.start('Using GitHub CLI to clone repository...');
+
   // Validate that GitHub CLI is available
   assertGitHubCliExists();
-
-  log?.debug('Using GitHub CLI to clone repository...');
 
   // Validate repository name format
   assertValidRepoFormat(repo);
@@ -212,6 +207,8 @@ export function cloneRepoFromGitHub(options: CloneRepoOptions): string {
     log?.succeed('Repository cloned successfully using GitHub CLI');
     return tempDir;
   } catch (error) {
+    log?.fail('GitHub CLI cloning failed');
+    log?.debug(error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     throw new Error(`GitHub CLI cloning failed: ${errorMessage}`);
   }
@@ -231,6 +228,8 @@ export function cloneRepoFromGitHub(options: CloneRepoOptions): string {
 export function cloneRepoFromGit(options: CloneRepoOptions): string {
   const { repo, tempDir = generateTmpDir(repo), log } = options;
 
+  log?.start('Using git commands to clone repository...');
+
   // Validate repository name format
   assertValidRepoFormat(repo);
 
@@ -238,6 +237,8 @@ export function cloneRepoFromGit(options: CloneRepoOptions): string {
   if (existsSync(tempDir)) {
     log?.debug('Removing existing directory...');
     rmSync(tempDir, { recursive: true, force: true });
+  } else {
+    log?.debug('Directory does not exist, proceeding with clone...');
   }
 
   // Try HTTPS first, then SSH if that fails
@@ -247,7 +248,8 @@ export function cloneRepoFromGit(options: CloneRepoOptions): string {
 
   for (const url of cloneUrls) {
     try {
-      log?.debug(`Attempting to clone from ${url.includes('git@') ? 'SSH' : 'HTTPS'}...`);
+      log?.info(`Attempting to clone from ${url.includes('git@') ? 'SSH' : 'HTTPS'}...`);
+      log?.debug(`Cloning from: ${url}`);
 
       execSync(`git clone "${url}" "${tempDir}"`, {
         stdio: log ? 'inherit' : 'pipe',
@@ -260,13 +262,14 @@ export function cloneRepoFromGit(options: CloneRepoOptions): string {
 
       // If this is the last attempt, don't continue
       if (url === cloneUrls[cloneUrls.length - 1]) {
-        break;
+        log?.fail('Git cloning failed');
+        log?.debug(lastError);
       }
     }
   }
 
   const errorMessage = lastError?.message || 'Unknown error';
-  throw new Error(`Git cloning failed: ${errorMessage}`);
+  throw new Error(`Git cloning failed: ${errorMessage}`, { cause: lastError });
 }
 
 export default checkoutRepo;
