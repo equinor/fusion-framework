@@ -230,6 +230,9 @@
 - Unit and integration testing
 - TypeScript support out of the box
 - Workspace-aware test configuration
+- Test files located in `src/__tests__` directories within each package
+- Test files use `.test.ts` or `.spec.ts` naming convention
+- `src/__tests__` directories must be excluded from TypeScript compilation in tsconfig.json
 
 **Biome**: Code formatting and linting
 - Fast, single-tool solution
