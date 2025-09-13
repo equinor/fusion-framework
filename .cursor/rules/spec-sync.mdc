@@ -1,0 +1,96 @@
+---
+globs: specs/**/*.md
+description: Rules for keeping spec files synchronized with implementation changes
+---
+
+# Spec File Synchronization Rules
+
+When working with spec files under the `specs/` directory, always ensure that input examples and execution flows are kept in sync with actual implementation changes.
+
+## Core Principle
+**Input examples must generate the same result as after changes are applied** - this ensures spec files remain accurate and useful for testing and validation.
+
+## Required Actions
+
+### 1. Update Input Examples
+When modifying functionality described in spec files:
+- [ ] Update any command examples in the **Input** section to reflect new syntax or parameters
+- [ ] Ensure example commands will work with the current implementation
+- [ ] Verify that example outputs match what the actual implementation produces
+
+### 2. Synchronize Execution Flows
+When changing implementation logic:
+- [ ] Update the **Execution Flow** section to match the actual code flow
+- [ ] Ensure step numbers and descriptions align with current implementation
+- [ ] Update any conditional logic or branching described in the flow
+
+### 3. Validate User Scenarios
+When modifying user-facing functionality:
+- [ ] Update **Acceptance Scenarios** to reflect new behavior
+- [ ] Ensure **Given/When/Then** statements match current implementation
+- [ ] Add new scenarios for new features or modified behavior
+- [ ] Remove or update scenarios that no longer apply
+
+### 4. Update Requirements
+When changing functionality:
+- [ ] Modify **Functional Requirements** to reflect new capabilities
+- [ ] Update requirement IDs if renumbering is needed
+- [ ] Ensure requirements are still testable and unambiguous
+- [ ] Add new requirements for new features
+
+### 5. Verify Examples Work
+Before completing changes:
+- [ ] Test that input examples from the spec actually work
+- [ ] Verify that running the examples produces the expected results
+- [ ] Ensure debug flags and optional parameters work as documented
+- [ ] Check that error conditions are handled as described
+
+## Common Sync Points
+
+### Command Syntax Changes
+- CLI command structure modifications
+- New flags or parameters added
+- Changed default behaviors
+- Alias command updates
+
+### User Flow Modifications
+- New interactive prompts
+- Changed prompt sequences
+- Modified validation logic
+- Updated error handling
+
+### Feature Additions/Removals
+- New capabilities added
+- Deprecated features removed
+- Changed integration points
+- Updated dependencies
+
+## Quality Checklist
+
+Before marking spec changes complete:
+- [ ] All input examples are executable and produce expected results
+- [ ] Execution flow matches actual code implementation
+- [ ] User scenarios reflect current user experience
+- [ ] Requirements are accurate and testable
+- [ ] No outdated information remains in the spec
+- [ ] Debug and verbose modes work as documented
+
+## Example Sync Pattern
+
+**Before Change:**
+```markdown
+**Input**: User description: "CLI command for creating applications, e.g. ffc app create my-new-app"
+```
+
+**After Implementation Change:**
+```markdown
+**Input**: User description: "CLI command for creating applications, e.g. ffc app create my-new-app --template react-app"
+```
+
+The spec input example now includes the new `--template` parameter that was added to the implementation.
+
+## Remember
+- Spec files are living documentation that must stay current
+- Outdated specs create confusion and reduce trust in documentation
+- Always test examples before committing spec changes
+- When in doubt, run the actual commands to verify accuracy
