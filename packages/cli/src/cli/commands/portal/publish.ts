@@ -1,5 +1,7 @@
 import { createCommand } from 'commander';
 
+import type AdmZip from 'adm-zip';
+
 import chalk from 'chalk';
 
 import { withAuthOptions } from '../../options/auth.js';
@@ -63,6 +65,8 @@ export const command = withAuthOptions(
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
     .addOption(createEnvOption({ allowDev: false }))
+
+    .argument('[bundle]', 'Portal Template bundle to upload')
     .option(
       '-m, --manifest [string]',
       'Manifest file to use for bundling (e.g., my-portal.manifest.ts)',
@@ -73,22 +77,37 @@ export const command = withAuthOptions(
       `Tag to apply to the published portal (${Object.values(AllowedPortalTags).join(' | ')})`,
       AllowedPortalTags.Latest,
     )
-    .action(async (options) => {
+    .action(async (bundle, options) => {
       const log = new ConsoleLogger('portal:publish', {
         debug: options.debug,
       });
 
       log?.info('Using environment:', chalk.redBright(options.env));
 
-      log.start('📦 Bundling Portal Template...');
-      const bundle = await bundlePortal({
-        log,
-        manifest: options.manifest,
-        schema: options.schema,
-      }).catch((error) => {
-        log.error('😢 Failed to create bundle:', error);
+      let archive: string | AdmZip;
+      if (bundle) {
+        log.info(`📦 Using provided bundle: ${bundle}`);
+        archive = bundle;
+      } else {
+        try {
+          log.start('📦 Bundling Portal Template...');
+          const buildResult = await bundlePortal({
+            log,
+            manifest: options.manifest,
+            schema: options.schema,
+          });
+          archive = buildResult.archive;
+        } catch (error) {
+          log.error('😢 Failed to create Portal Template bundle:', error);
+          process.exit(1);
+        }
+      }
+
+      if (!archive) {
+        log.error('😢 No bundle provided or created. Please specify a bundle file.');
         process.exit(1);
-      });
+      }
+
       log.succeed('📦 Bundling completed');
 
       log?.start('💾 Initializing Fusion Framework...');
@@ -103,17 +122,22 @@ export const command = withAuthOptions(
       log?.succeed('💾 Initialized Fusion Framework');
 
       log.start('🚀 Uploading Portal Template...');
-      await uploadPortalBundle({ log, framework, fileOrBundle: bundle.archive }).catch((error) => {
-        log.error('😢 Failed to upload bundle:', error);
+      const uploadResult = await uploadPortalBundle({
+        log,
+        framework,
+        fileOrBundle: archive,
+      }).catch((error) => {
+        log.error('😢 Failed to upload Portal Template bundle:', error);
         process.exit(1);
       });
       log.succeed('🚀 Upload completed');
+      log.debug('Upload result:', uploadResult);
 
       log.start('🏷️ Tagging Portal Template...');
       await tagPortal({
         tag: options.tag,
-        name: bundle.manifest.name,
-        version: bundle.manifest.build.version,
+        name: uploadResult.name,
+        version: uploadResult.version,
         framework,
         log,
       }).catch((error) => {
