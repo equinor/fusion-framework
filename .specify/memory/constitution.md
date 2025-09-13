@@ -64,7 +64,42 @@
 - Ensure state updates are immutable and predictable
 - Follow established patterns for state composition and testing
 
-### IV. Consumer-Facing APIs
+### IV. Test-Driven Development (TDD)
+**Always follow strict TDD practices: write failing tests first, make them pass, then refactor. Never add all tests at once - implement one feature at a time.**
+
+**Guidelines**:
+- **Red-Green-Refactor Cycle**: Write failing test → Make it pass → Refactor → Commit
+- **One Feature at a Time**: Implement one complete feature before moving to the next
+- **Test First**: Always write the test before writing any implementation code
+- **Failing Tests**: Tests must fail initially (RED phase) before implementation
+- **Green Phase**: Write minimal code to make tests pass
+- **Refactor Phase**: Improve code while keeping tests green
+- **Commit Frequently**: Commit after each complete cycle (test + implementation + refactor)
+
+**Implementation**:
+- Start with the simplest failing test for the current feature
+- Write only enough code to make the test pass
+- Refactor the code to improve quality while keeping tests green
+- Commit the complete feature before starting the next one
+- Never skip the RED phase - tests must fail first
+- Never add multiple features in one commit
+- Use descriptive test names that explain the expected behavior
+
+**Feature Development Process**:
+1. **Add a test** - Write a failing test for the next feature
+2. **Make it green** - Write minimal code to make the test pass
+3. **Refactor** - Improve code quality while keeping tests green
+4. **Commit** - Commit the complete feature
+5. **Next feature** - Repeat for the next feature
+
+**Testing Structure**:
+- Test files located in `src/__tests__` directories within each package
+- Test files use `.test.ts` or `.spec.ts` naming convention
+- `src/__tests__` directories must be excluded from TypeScript compilation in tsconfig.json
+- Use Vitest for unit and integration testing
+- Focus on interface contracts and behavior, not implementation details
+
+### V. Consumer-Facing APIs
 **Always design clean, intuitive, and well-documented APIs for external consumers and developers using the framework.**
 
 *See also: [Documentation](#v-documentation) for API documentation standards*
@@ -88,7 +123,7 @@
 - Implement proper error handling with descriptive error messages
 - Create cookbooks and examples for common use cases
 
-### V. Documentation
+### VI. Documentation
 **Always maintain comprehensive, clear, and up-to-date documentation that supports developer productivity and code understanding.**
 
 **Guidelines**:
@@ -106,10 +141,10 @@
 - Document architectural decisions in `docs/` directory for complex, in-depth documentation not suitable for README files
 - Keep documentation synchronized with code changes
 
-### VI. Changeset Management
+### VII. Changeset Management
 **Always use changesets to manage versioning, changelog generation, and release coordination across the monorepo.**
 
-*See also: [Git Practices](#vii-git-practices) for commit and changeset integration*
+*See also: [Git Practices](#viii-git-practices) for commit and changeset integration*
 
 **Guidelines**:
 - **Consistent Versioning**: Use semantic versioning (patch/minor/major) for all package releases
@@ -128,7 +163,7 @@
 - Follow established patterns for changeset naming and content
 - Review changesets before merging to ensure accuracy and completeness
 
-### VII. Git Practices
+### VIII. Git Practices
 **Always follow consistent Git practices to maintain a clean, linear history and clear change tracking.**
 
 **Guidelines**:
