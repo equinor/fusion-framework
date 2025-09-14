@@ -1,5 +1,6 @@
 import assert, { AssertionError } from 'node:assert';
 import { fileExists } from './file-exists.js';
+import { isGitDir } from './is-git-dir.js';
 
 /**
  * Re-exports the core Node.js assert function and AssertionError class.
@@ -103,4 +104,26 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
       `${preMessage} property [${String(prop)}] to have value`,
     );
   }
+}
+
+
+
+/**
+ * Asserts that a directory exists and is a valid git repository.
+ * Throws an error if the directory is not a git repository.
+ *
+ * @param dir - Directory path to check.
+ * @param message - Optional custom error message for assertion failure.
+ * @throws {AssertionError} If the directory is not a git repository.
+ * @public
+ */
+export function assertGitRepository(dir: string, message?: string): void {
+  assert(
+    isGitDir(dir),
+    new AssertionError({
+      message: message ?? `Directory is not a git repository: ${dir}`,
+      actual: dir,
+      expected: '<git repository>',
+    }),
+  );
 }
