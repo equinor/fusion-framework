@@ -49,10 +49,9 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
   // Execute the selected IDE command to open the project directory
   if (openInIDE) {
     try {
-      // execa handles signal cleanup automatically - no manual signal handling needed!
+      // Spawn detached process for IDE opening - IDE should run independently of CLI
       const child = execa(openInIDE, [targetDir], {
         stdio: 'inherit',
-        shell: true,
       });
 
       // Handle process completion
