@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execa } from 'execa';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
@@ -49,24 +49,27 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
   // Execute the selected IDE command to open the project directory
   if (openInIDE) {
     try {
-      const child = spawn(openInIDE, [targetDir], {
+      // execa handles signal cleanup automatically - no manual signal handling needed!
+      const child = execa(openInIDE, [targetDir], {
         stdio: 'inherit',
         shell: true,
       });
 
-      // Handle potential spawn errors (e.g., IDE command not found)
-      child.on('error', (err) => {
-        logger.error(`Failed to open IDE (${openInIDE}): ${err.message}`);
-      });
-
-      // Handle process exit with non-zero code
-      child.on('exit', (code) => {
-        if (code !== 0) {
-          logger.error(
-            `IDE process exited with code ${code}. The IDE may not have opened successfully.`,
-          );
-        }
-      });
+      // Handle process completion
+      child.then(
+        () => {
+          // Process completed successfully
+        },
+        (error: { exitCode?: number; message: string }) => {
+          if (error.exitCode !== 0) {
+            logger.error(
+              `IDE process exited with code ${error.exitCode}. The IDE may not have opened successfully.`,
+            );
+          } else {
+            logger.error(`Failed to open IDE (${openInIDE}): ${error.message}`);
+          }
+        },
+      );
     } catch (error) {
       logger.error(
         `Failed to spawn IDE process (${openInIDE}): ${error instanceof Error ? error.message : String(error)}`,

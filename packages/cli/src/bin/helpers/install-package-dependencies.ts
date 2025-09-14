@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execa } from 'execa';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../lib/utils/assert.js';
 
@@ -23,30 +23,26 @@ export async function installPackageDependencies(
     'Package manager must be npm or pnpm',
   );
 
-  return new Promise((resolve, reject) => {
-    logger?.start('Installing dependencies...');
+  logger?.start('Installing dependencies...');
 
-    const child = spawn(packageManager, ['install'], {
+  try {
+    // execa handles signal cleanup automatically - no manual signal handling needed!
+    await execa(packageManager, ['install'], {
       cwd: targetDir,
       stdio: 'inherit',
       shell: true,
     });
 
-    child.on('close', (code) => {
-      if (code === 0) {
-        logger?.succeed('Dependencies installed successfully!');
-        resolve(packageManager);
-      } else {
-        logger?.error(`${packageManager} install failed with exit code ${code}`);
-        reject(new Error(`${packageManager} install failed with exit code ${code}`));
-      }
-    });
-
-    child.on('error', (error) => {
-      logger?.error(`Failed to run ${packageManager} install: ${error.message}`);
-      reject(error);
-    });
-  });
+    logger?.succeed('Dependencies installed successfully!');
+    return packageManager;
+  } catch (error: any) {
+    if (error.exitCode !== 0) {
+      logger?.error(`${packageManager} install failed with exit code ${error.exitCode}`);
+      throw new Error(`${packageManager} install failed with exit code ${error.exitCode}`);
+    }
+    logger?.error(`Failed to run ${packageManager} install: ${error.message}`);
+    throw error;
+  }
 }
 
 export default installPackageDependencies;

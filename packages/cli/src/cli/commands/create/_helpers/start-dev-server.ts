@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execa } from 'execa';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
@@ -33,31 +33,34 @@ export async function startDevServer(
   if (startDev) {
     logger.debug(`Starting development server: ${targetDir}`);
     try {
-      const child = spawn(packageManager, ['run', 'dev'], {
+      // execa handles signal cleanup automatically - no manual signal handling needed!
+      const child = execa(packageManager, ['run', 'dev'], {
         cwd: targetDir,
         stdio: 'inherit',
         shell: true,
       });
 
-      // Handle potential spawn errors (e.g., package manager not found)
-      child.on('error', (err) => {
-        logger.error(`Failed to start development server with ${packageManager}: ${err.message}`);
-        logger.info(
-          `Make sure ${packageManager} is installed and the 'dev' script exists in package.json`,
-        );
-      });
-
-      // Handle process exit with non-zero code
-      child.on('exit', (code) => {
-        if (code !== 0) {
-          logger.error(
-            `Development server process exited with code ${code}. The server may not have started successfully.`,
-          );
-          logger.info(
-            `Check the output above for error details or try running '${packageManager} run dev' manually`,
-          );
-        }
-      });
+      // Handle process completion
+      child.then(
+        () => {
+          // Process completed successfully
+        },
+        (error: { exitCode?: number; message: string }) => {
+          if (error.exitCode !== 0) {
+            logger.error(
+              `Development server process exited with code ${error.exitCode}. The server may not have started successfully.`,
+            );
+            logger.info(
+              `Check the output above for error details or try running '${packageManager} run dev' manually`,
+            );
+          } else {
+            logger.error(`Failed to start development server with ${packageManager}: ${error.message}`);
+            logger.info(
+              `Make sure ${packageManager} is installed and the 'dev' script exists in package.json`,
+            );
+          }
+        },
+      );
       return true;
     } catch (error) {
       logger.error(

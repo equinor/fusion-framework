@@ -25,12 +25,14 @@ Add comprehensive create app command for generating Fusion applications from tem
 
 **Error Handling & Reliability**
 - Enhanced error handling for spawn operations in IDE opening and dev server startup
+- Migrated to execa for automatic process cleanup and better signal handling
 - Fixed misleading success messages by wrapping template copy operations in try-catch blocks
 - Improved error logging in repository cleanup operations for better debugging
 - Added proper CLI exit codes for operation failures
 - Enhanced TSDoc documentation and inline comments across helper functions
 
 **Dependencies**
-- Added new dependencies: `inquirer` and `@types/inquirer` for enhanced CLI experience
+- Added new dependencies: `inquirer`, `@types/inquirer`, and `execa` for enhanced CLI experience
+- Migrated process spawning from native child_process to execa for better process management
 
 The new command provides an intuitive way for developers to bootstrap new Fusion applications using predefined templates from the ecosystem while maintaining backward compatibility and providing robust error handling.
