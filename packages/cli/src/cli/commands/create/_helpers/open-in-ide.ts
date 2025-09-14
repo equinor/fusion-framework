@@ -6,8 +6,9 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
  * Prompts the user to open the newly created project in their preferred IDE.
  *
  * Displays a selection menu with supported IDEs (VS Code, Cursor) and executes
- * the appropriate command to open the project directory. If the user chooses
- * not to open an IDE, the function completes without action.
+ * the appropriate command to open the project directory. The IDE runs detached
+ * and independently of the CLI process. If the user chooses not to open an IDE,
+ * the function completes without action.
  *
  * @param targetDir - Absolute path to the project directory to open
  * @param logger - Console logger for displaying prompts and instructions
@@ -50,9 +51,14 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
   if (openInIDE) {
     try {
       // Spawn detached process for IDE opening - IDE should run independently of CLI
+      // NOTE: Using stdio: 'pipe' to avoid polluting CLI output with IDE messages
       const child = execa(openInIDE, [targetDir], {
-        stdio: 'inherit',
+        stdio: 'pipe',
+        detached: true,
       });
+
+      // Unref the child process to allow CLI to exit while IDE continues running
+      child.unref();
 
       // Handle process completion
       child.then(

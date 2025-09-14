@@ -45,6 +45,8 @@ export async function checkTargetDirectory(
         logger.succeed('Target directory cleaned successfully!');
       } catch (error) {
         logger.error(`Failed to clean target directory: ${error}`);
+        logger.info('Check directory permissions and ensure you have write access to the directory.');
+        logger.info('You may need to run the command with elevated privileges or manually remove the files.');
         throw error;
       }
     } else {
@@ -84,6 +86,8 @@ export async function checkTargetDirectory(
           logger.succeed('Target directory cleaned successfully!');
         } catch (error) {
           logger.error(`Failed to clean target directory: ${error}`);
+          logger.info('Check directory permissions and ensure you have write access to the directory.');
+          logger.info('You may need to run the command with elevated privileges or manually remove the files.');
           throw error;
         }
       } else {
@@ -94,6 +98,8 @@ export async function checkTargetDirectory(
     return true;
   } catch (error) {
     logger.error(`Failed to check target directory: ${error}`);
+    logger.info('Ensure the path is valid and accessible, and that you have read permissions for the directory.');
+    logger.info('Check if the directory path contains any invalid characters or if the path is too long.');
     throw error;
   }
 }

@@ -34,6 +34,8 @@ export async function startDevServer(
     logger.debug(`Starting development server: ${targetDir}`);
     try {
       // Spawn dev server process - will run in foreground but can be stopped with Ctrl+C
+      // NOTE: This intentionally blocks the CLI process to show dev server output.
+      // This is the desired behavior - users want to see the dev server startup and output.
       const child = spawn(packageManager, ['run', 'dev'], {
         cwd: targetDir,
         stdio: 'inherit',
