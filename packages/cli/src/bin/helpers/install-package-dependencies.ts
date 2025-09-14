@@ -1,4 +1,4 @@
-import { execa } from 'execa';
+import { execa, ExecaError } from 'execa';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../lib/utils/assert.js';
 
@@ -35,12 +35,12 @@ export async function installPackageDependencies(
 
     logger?.succeed('Dependencies installed successfully!');
     return packageManager;
-  } catch (error: any) {
-    if (error.exitCode !== 0) {
+  } catch (error) {
+    if (error instanceof ExecaError && error.exitCode !== 0) {
       logger?.error(`${packageManager} install failed with exit code ${error.exitCode}`);
       throw new Error(`${packageManager} install failed with exit code ${error.exitCode}`);
     }
-    logger?.error(`Failed to run ${packageManager} install: ${error.message}`);
+    logger?.error(`Failed to run ${packageManager} install: ${error instanceof Error ? error.message : String(error)}`);
     throw error;
   }
 }
