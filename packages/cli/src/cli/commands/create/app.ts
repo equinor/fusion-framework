@@ -112,7 +112,6 @@ async function createApplication(
   }
 }
 
-
 /**
  * CLI command for creating new Fusion Framework applications from templates.
  *
@@ -150,7 +149,7 @@ export const createAppCommand = (name: string) =>
       const logger = new ConsoleLogger('', {
         debug: options.debug,
       });
-      
+
       try {
         await createApplication(name, options, logger);
       } catch (error) {
