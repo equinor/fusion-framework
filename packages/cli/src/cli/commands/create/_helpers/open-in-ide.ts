@@ -25,7 +25,7 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
   // Present IDE selection menu to user with supported options
   const { openInIDE } = await inquirer.prompt([
     {
-      type: 'select',
+      type: 'list',
       name: 'openInIDE',
       message: '🚀 Open project in IDE?',
       default: false,
@@ -60,7 +60,7 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
           // Process completed successfully
         },
         (error: { exitCode?: number; message: string }) => {
-          if (error.exitCode !== 0) {
+          if (error.exitCode !== undefined && error.exitCode !== 0) {
             logger.error(
               `IDE process exited with code ${error.exitCode}. The IDE may not have opened successfully.`,
             );

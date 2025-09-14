@@ -37,7 +37,6 @@ export async function startDevServer(
       const child = spawn(packageManager, ['run', 'dev'], {
         cwd: targetDir,
         stdio: 'inherit',
-        shell: true,
       });
 
       // Handle potential spawn errors (e.g., package manager not found)
