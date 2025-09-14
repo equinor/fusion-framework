@@ -92,7 +92,7 @@ export const createAppCommand = (name: string) =>
         // Step 7: Copy template files and directories to target location
         // This creates the project structure based on the selected template
         try {
-          selectedTemplate.copyTo(targetDir);
+          await selectedTemplate.copyTo(targetDir);
           logger.succeed('Template resources copied successfully!');
         } catch (error) {
           logger.error(
