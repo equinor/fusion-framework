@@ -60,21 +60,16 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
       // Unref the child process to allow CLI to exit while IDE continues running
       child.unref();
 
-      // Handle process completion
-      child.then(
-        () => {
-          // Process completed successfully
-        },
-        (error: { exitCode?: number; message: string }) => {
-          if (error.exitCode !== undefined && error.exitCode !== 0) {
-            logger.error(
-              `IDE process exited with code ${error.exitCode}. The IDE may not have opened successfully.`,
-            );
-          } else {
-            logger.error(`Failed to open IDE (${openInIDE}): ${error.message}`);
-          }
-        },
-      );
+      // Handle process errors
+      child.catch((error: { exitCode?: number; message: string }) => {
+        if (error.exitCode !== undefined && error.exitCode !== 0) {
+          logger.error(
+            `IDE process exited with code ${error.exitCode}. The IDE may not have opened successfully.`,
+          );
+        } else {
+          logger.error(`Failed to open IDE (${openInIDE}): ${error.message}`);
+        }
+      });
     } catch (error) {
       logger.error(
         `Failed to spawn IDE process (${openInIDE}): ${error instanceof Error ? error.message : String(error)}`,

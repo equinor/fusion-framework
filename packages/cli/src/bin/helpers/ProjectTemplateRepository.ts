@@ -6,6 +6,7 @@ import assert from 'node:assert';
 import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
 import { parseTemplatesManifest } from './project-templates.schema.js';
+import { validateSafePath, safeRmSync } from '../../lib/utils/path-security.js';
 
 /**
  * Git protocol options for repository operations.
@@ -209,7 +210,11 @@ export class ProjectTemplateRepository {
   async cleanup(): Promise<boolean> {
     try {
       this.#log?.debug(`Removing repository directory: ${this.#baseDir}`);
-      rmSync(this.#baseDir, { recursive: true, force: true });
+
+      // Validate the base directory path for security
+      const validatedBaseDir = validateSafePath(this.#baseDir, tmpdir());
+      safeRmSync(validatedBaseDir, { recursive: true, force: true }, tmpdir());
+
       this.#log?.succeed('Repository directory cleaned up successfully!');
 
       // Reset initialization state since directory is removed

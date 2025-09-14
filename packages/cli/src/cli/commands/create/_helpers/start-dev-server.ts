@@ -41,17 +41,42 @@ export async function startDevServer(
         stdio: 'inherit',
       });
 
+      // Set a timeout to prevent indefinite hanging (e.g., 60 seconds)
+      const DEV_SERVER_TIMEOUT_MS = 60_000;
+      let timeoutReached = false;
+      const timeout = setTimeout(() => {
+        timeoutReached = true;
+        logger.error(
+          `Development server did not start within ${DEV_SERVER_TIMEOUT_MS / 1000} seconds and may be hanging. Terminating process.`,
+        );
+        child.kill('SIGTERM');
+        logger.info(
+          `You can try running '${packageManager} run dev' manually in the project directory.`,
+        );
+      }, DEV_SERVER_TIMEOUT_MS);
+
+      // Cleanup function to clear timeout and listeners
+      const cleanup = () => {
+        clearTimeout(timeout);
+        child.removeAllListeners('error');
+        child.removeAllListeners('exit');
+      };
+
       // Handle potential spawn errors (e.g., package manager not found)
       child.on('error', (err) => {
-        logger.error(`Failed to start development server with ${packageManager}: ${err.message}`);
-        logger.info(
-          `Make sure ${packageManager} is installed and the 'dev' script exists in package.json`,
-        );
+        cleanup();
+        if (!timeoutReached) {
+          logger.error(`Failed to start development server with ${packageManager}: ${err.message}`);
+          logger.info(
+            `Make sure ${packageManager} is installed and the 'dev' script exists in package.json`,
+          );
+        }
       });
 
       // Handle process exit with non-zero code
       child.on('exit', (code) => {
-        if (code !== 0) {
+        cleanup();
+        if (!timeoutReached && code !== 0) {
           logger.error(
             `Development server process exited with code ${code}. The server may not have started successfully.`,
           );

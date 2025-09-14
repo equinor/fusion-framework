@@ -2,6 +2,7 @@ import { existsSync, readdirSync, rmSync } from 'node:fs';
 import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { assert } from '../../../../lib/utils/assert.js';
+import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
 
 /**
  * Check if target directory exists and has content, then prompt user for action.
@@ -17,20 +18,34 @@ export async function checkTargetDirectory(
   clean = false,
 ): Promise<boolean> {
   assert(typeof targetDir === 'string', 'Target directory must be a string');
-  if (!existsSync(targetDir)) {
-    logger.debug(`Target directory does not exist: ${targetDir}`);
+
+  // Validate the target directory path for security
+  let validatedTargetDir: string;
+  try {
+    validatedTargetDir = validateSafePath(targetDir, process.cwd());
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`❌ Invalid target directory path: ${errorMessage}`);
+    logger.info(
+      '💡 Try using a relative path like "my-app" or ensure the absolute path is within the current directory.',
+    );
+    return false; // Return false to abort the operation instead of throwing
+  }
+
+  if (!existsSync(validatedTargetDir)) {
+    logger.debug(`Target directory does not exist: ${validatedTargetDir}`);
     return true;
   }
 
   try {
-    const contents = readdirSync(targetDir);
+    const contents = readdirSync(validatedTargetDir);
     if (contents.length === 0) {
-      logger.debug(`Target directory is empty: ${targetDir}`);
+      logger.debug(`Target directory is empty: ${validatedTargetDir}`);
       return true;
     }
 
     logger.warn(
-      `Target directory '${targetDir}' is not empty and contains ${contents.length} item(s).`,
+      `Target directory '${validatedTargetDir}' is not empty and contains ${contents.length} item(s).`,
     );
     logger.info(
       'Contents:',
@@ -41,7 +56,7 @@ export async function checkTargetDirectory(
       // Clean flag is set, automatically clean the directory
       logger.info('Cleaning target directory (--clean flag)...');
       try {
-        rmSync(targetDir, { recursive: true, force: true });
+        safeRmSync(validatedTargetDir, { recursive: true, force: true }, process.cwd());
         logger.succeed('Target directory cleaned successfully!');
       } catch (error) {
         logger.error(`Failed to clean target directory: ${error}`);
@@ -86,7 +101,7 @@ export async function checkTargetDirectory(
       if (action === 'clean') {
         logger.info('Cleaning target directory...');
         try {
-          rmSync(targetDir, { recursive: true, force: true });
+          safeRmSync(validatedTargetDir, { recursive: true, force: true }, process.cwd());
           logger.succeed('Target directory cleaned successfully!');
         } catch (error) {
           logger.error(`Failed to clean target directory: ${error}`);

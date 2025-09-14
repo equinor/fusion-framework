@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectTemplateRepository.js';
+import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
 
 /**
  * Sets up and initializes a project template repository for template access.
@@ -34,9 +35,11 @@ export async function setupRepository(
 
   if (clean) {
     logger.debug(`Removing repo dir: ${repoDir}`);
-    // Use rmSync for recursive directory removal (Node.js >= v14.14.0)
+    // Use safeRmSync for recursive directory removal with path validation
     try {
-      rmSync(repoDir, { recursive: true, force: true });
+      // Validate the repo directory path (should be within tmpdir)
+      const validatedRepoDir = validateSafePath(repoDir, tmpdir());
+      safeRmSync(validatedRepoDir, { recursive: true, force: true }, tmpdir());
     } catch (error) {
       // Log cleanup errors at debug level for troubleshooting
       logger.debug('Cleanup failed:', error);
