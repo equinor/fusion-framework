@@ -15,12 +15,12 @@ export type GitClientProtocol = 'https' | 'ssh';
 
 /**
  * Manages a Git repository containing project templates.
- * 
+ *
  * This class handles cloning, updating, and managing a template repository
  * that contains project templates defined in a templates.json manifest.
  * It provides methods for initializing the repository, fetching templates,
  * and cleaning up temporary files.
- * 
+ *
  * @example
  * ```typescript
  * const repo = new ProjectTemplateRepository('equinor/fusion-app-template', {
@@ -81,7 +81,7 @@ export class ProjectTemplateRepository {
 
   /**
    * Creates a new ProjectTemplateRepository instance.
-   * 
+   *
    * @param repo - The repository name (e.g., 'equinor/fusion-app-template')
    * @param options - Configuration options for the repository
    * @param options.baseDir - Base directory for the repository (defaults to temp directory)
@@ -109,13 +109,13 @@ export class ProjectTemplateRepository {
 
   /**
    * Initializes the repository by cloning or updating it.
-   * 
+   *
    * This method handles the complete repository setup process:
    * - Creates the base directory if it doesn't exist
    * - Clones the repository if it's not already initialized
    * - Updates the repository if it already exists
    * - Checks out the specified branch
-   * 
+   *
    * @throws {Error} If repository initialization fails
    */
   async initialize(): Promise<void> {
@@ -154,14 +154,14 @@ export class ProjectTemplateRepository {
 
   /**
    * Retrieves all available project templates from the repository.
-   * 
+   *
    * This method reads the templates.json manifest file from the repository
    * and parses it to create ProjectTemplate instances. It combines global
    * resources with template-specific resources to create complete templates.
-   * 
+   *
    * @returns Promise resolving to an array of available project templates
    * @throws {Error} If templates.json cannot be read or parsed
-   * 
+   *
    * @example
    * ```typescript
    * const templates = await repo.getAvailableTemplates();
@@ -184,11 +184,13 @@ export class ProjectTemplateRepository {
       this.#log?.debug('Parsing and validating template content...');
       const manifest = parseTemplatesManifest(templatesRaw);
       this.#log?.debug('Parsed template content...', manifest);
-      
+
       // Create ProjectTemplate instances, combining global and template-specific resources
       const templateItems = manifest.templates.map((template) => {
         const resources = [...(manifest.resources ?? []), ...template.resources];
-        return new ProjectTemplate({ ...template, resources }, this.#baseDir, { logger: this.#log });
+        return new ProjectTemplate({ ...template, resources }, this.#baseDir, {
+          logger: this.#log,
+        });
       });
       return templateItems;
     } catch (cause) {
@@ -201,7 +203,7 @@ export class ProjectTemplateRepository {
   /**
    * Clean up the repository directory by removing it from the filesystem.
    * This is useful for cleaning up temporary template repositories.
-   * 
+   *
    * @returns Promise resolving to true if cleanup was performed, false if failed
    */
   async cleanup(): Promise<boolean> {
@@ -209,7 +211,7 @@ export class ProjectTemplateRepository {
       this.#log?.debug(`Removing repository directory: ${this.#baseDir}`);
       rmSync(this.#baseDir, { recursive: true, force: true });
       this.#log?.succeed('Repository directory cleaned up successfully!');
-      
+
       // Reset initialization state since directory is removed
       this.#initialized = false;
       return true;

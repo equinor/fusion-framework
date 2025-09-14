@@ -11,9 +11,9 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
  * @returns Promise resolving to true if dev server was started, false if skipped
  */
 export async function startDevServer(
-  targetDir: string, 
-  packageManager: string, 
-  logger: ConsoleLogger
+  targetDir: string,
+  packageManager: string,
+  logger: ConsoleLogger,
 ): Promise<boolean> {
   const { startDev } = await inquirer.prompt([
     {

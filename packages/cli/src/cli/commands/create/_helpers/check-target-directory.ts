@@ -12,9 +12,9 @@ import { assert } from '../../../../lib/utils/assert.js';
  * @returns Promise resolving to true if should continue, false if should abort
  */
 export async function checkTargetDirectory(
-  targetDir: string, 
-  logger: ConsoleLogger, 
-  clean = false
+  targetDir: string,
+  logger: ConsoleLogger,
+  clean = false,
 ): Promise<boolean> {
   assert(typeof targetDir === 'string', 'Target directory must be a string');
   if (!existsSync(targetDir)) {

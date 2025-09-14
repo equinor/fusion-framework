@@ -6,17 +6,17 @@ import { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectTempla
 
 /**
  * Sets up and initializes a project template repository for template access.
- * 
+ *
  * This function creates a ProjectTemplateRepository instance and handles
  * the complete initialization process, including optional cleanup of existing
  * repository directories.
- * 
+ *
  * @param templateRepoName - Name of the template repository (e.g., 'equinor/fusion-app-template')
  * @param clean - Whether to clean the repo directory before cloning (removes existing directory)
  * @param branch - Git branch to checkout (defaults to 'main')
  * @param logger - Logger instance for output and debugging
  * @returns Promise resolving to the initialized repository ready for template access
- * 
+ *
  * @example
  * ```typescript
  * const repo = await setupRepository('equinor/fusion-app-template', true, 'main', logger);
@@ -27,7 +27,7 @@ export async function setupRepository(
   templateRepoName: string,
   clean: boolean,
   branch: string,
-  logger: ConsoleLogger
+  logger: ConsoleLogger,
 ): Promise<ProjectTemplateRepository> {
   const repoDir = resolve(tmpdir(), 'ffc', 'repo', templateRepoName);
   logger.debug(`Repo dir: ${repoDir}`);

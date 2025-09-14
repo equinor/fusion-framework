@@ -13,12 +13,15 @@ const SUPPORTED_PACKAGE_MANAGERS = ['npm', 'pnpm'];
  * @returns Promise resolving to the package manager name used
  */
 export async function installPackageDependencies(
-  targetDir: string, 
-  packageManager: string, 
-  logger?: ConsoleLogger
+  targetDir: string,
+  packageManager: string,
+  logger?: ConsoleLogger,
 ): Promise<string> {
   // Check which package manager is used
-  assert(SUPPORTED_PACKAGE_MANAGERS.includes(packageManager), 'Package manager must be npm or pnpm');
+  assert(
+    SUPPORTED_PACKAGE_MANAGERS.includes(packageManager),
+    'Package manager must be npm or pnpm',
+  );
 
   return new Promise((resolve, reject) => {
     logger?.start('Installing dependencies...');

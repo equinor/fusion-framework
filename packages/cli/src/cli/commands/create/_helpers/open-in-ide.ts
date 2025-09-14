@@ -17,7 +17,7 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
     `You can also open the project in your IDE later by typing e.g. \`code ${targetDir}\` in the terminal.`,
   );
   logger.info('If you do not want to open the project in an IDE, select no.');
-  
+
   const { openInIDE } = await inquirer.prompt([
     {
       type: 'select',

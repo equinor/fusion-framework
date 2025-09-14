@@ -5,18 +5,18 @@ import { assert } from '../../../../lib/utils/assert.js';
 
 /**
  * Selects a template from the available templates with intelligent fallback logic.
- * 
+ *
  * This function handles three scenarios:
  * 1. Pre-selected template: Returns the specified template if valid
  * 2. Single template: Automatically selects if only one template is available
  * 3. Multiple templates: Prompts user to choose from a list
- * 
+ *
  * @param templates - Array of available project templates
  * @param preSelectedTemplate - Optional pre-selected template name from CLI option
  * @param logger - Optional logger instance for debug output
  * @returns Promise resolving to the selected template
  * @throws {AssertionError} If templates array is empty or pre-selected template is invalid
- * 
+ *
  * @example
  * ```typescript
  * const templates = await repo.getAvailableTemplates();

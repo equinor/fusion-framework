@@ -11,8 +11,8 @@ import { installPackageDependencies } from '../../../../bin/helpers/install-pack
  * @returns Promise resolving to object with installed status and package manager
  */
 export async function installDependencies(
-  targetDir: string, 
-  logger: ConsoleLogger
+  targetDir: string,
+  logger: ConsoleLogger,
 ): Promise<{ installed: boolean; packageManager?: string }> {
   // Ask user if they want to install dependencies
   const { installDeps } = await inquirer.prompt([

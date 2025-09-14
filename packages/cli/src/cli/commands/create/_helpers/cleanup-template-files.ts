@@ -11,7 +11,7 @@ import type { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectT
  */
 export async function cleanupTemplateFiles(
   repo: ProjectTemplateRepository,
-  logger: ConsoleLogger
+  logger: ConsoleLogger,
 ): Promise<void> {
   const { cleanupTempFiles } = await inquirer.prompt([
     {

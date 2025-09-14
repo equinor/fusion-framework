@@ -4,7 +4,7 @@ import { isGitDir } from './is-git-dir.js';
 
 /**
  * Re-exports the core Node.js assert function and AssertionError class.
- * 
+ *
  * This provides consistent assertion handling throughout the codebase
  * with proper TypeScript type narrowing support.
  */
@@ -12,15 +12,15 @@ export { assert, AssertionError };
 
 /**
  * Asserts that the provided value is a valid number (not NaN).
- * 
+ *
  * This function checks that the value is not NaN, which is useful for
  * validating numeric inputs that might be strings or other types that
  * could convert to NaN.
- * 
+ *
  * @param value - The value to check for being a valid number
  * @param message - Optional custom error message for assertion failure
  * @throws {AssertionError} If value is NaN
- * 
+ *
  * @example
  * ```typescript
  * assertNumber(42); // ✅ Passes
@@ -43,14 +43,14 @@ export function assertNumber(value: unknown, message?: string): asserts value {
 
 /**
  * Asserts that a file exists at the given path.
- * 
+ *
  * This function uses the fileExists utility to check for file presence
  * and throws an AssertionError if the file is not found.
- * 
+ *
  * @param value - The file path to check
  * @param message - Optional custom error message for assertion failure
  * @throws {AssertionError} If the file does not exist
- * 
+ *
  * @example
  * ```typescript
  * assertFileExists('/path/to/file.txt'); // ✅ Passes if file exists
@@ -64,14 +64,14 @@ export const assertFileExists = (value: unknown, message?: string): asserts valu
 
 /**
  * Asserts that the provided value is an object.
- * 
+ *
  * This function checks that the value has type 'object'. Note that
  * typeof null is 'object' in JavaScript, so null values will pass this check.
- * 
+ *
  * @param value - The value to check for being an object
  * @param message - Optional custom error message or Error instance
  * @throws {AssertionError} If value is not an object
- * 
+ *
  * @example
  * ```typescript
  * assertObject({}); // ✅ Passes
@@ -137,18 +137,16 @@ export function assertObjectEntries<T extends object, P extends Array<keyof T>>(
   }
 }
 
-
-
 /**
  * Asserts that a directory exists and is a valid git repository.
- * 
+ *
  * This function checks if the specified directory contains a valid
  * git repository by looking for the .git directory or file.
- * 
+ *
  * @param dir - Directory path to check for git repository
  * @param message - Optional custom error message for assertion failure
  * @throws {AssertionError} If the directory is not a git repository
- * 
+ *
  * @example
  * ```typescript
  * assertGitRepository('/path/to/git/repo'); // ✅ Passes if .git exists
