@@ -9,6 +9,7 @@ import tagCommand from './tag.js';
 import devCommand from './dev.js';
 import manifestCommand from './manifest.js';
 import publishCommand from './publish.js';
+import createAppCommand from '../create/app.js';
 
 // @todo - remove in next major version v12
 import './alias.js';
@@ -29,6 +30,7 @@ export const command = createCommand('app')
       '  fusion app <subcommand> --help',
       '',
       'Typical usage:',
+      '  - Create new applications from templates with the create subcommand',
       '  - Run and test your app locally with the dev subcommand',
       '  - Build, bundle, and configure your app for deployment',
       '  - Upload, publish, and tag releases to the Fusion App Store',
@@ -45,6 +47,7 @@ export const command = createCommand('app')
   .addCommand(tagCommand)
   .addCommand(devCommand)
   .addCommand(manifestCommand)
-  .addCommand(publishCommand);
+  .addCommand(publishCommand)
+  .addCommand(createAppCommand('create'));
 
 export default command;

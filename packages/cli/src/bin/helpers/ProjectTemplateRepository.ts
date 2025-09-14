@@ -7,8 +7,32 @@ import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { ProjectTemplate } from './ProjectTemplate.js';
 import { parseTemplatesManifest } from './project-templates.schema.js';
 
+/**
+ * Git protocol options for repository operations.
+ * Supports both HTTPS and SSH authentication methods.
+ */
 export type GitClientProtocol = 'https' | 'ssh';
 
+/**
+ * Manages a Git repository containing project templates.
+ * 
+ * This class handles cloning, updating, and managing a template repository
+ * that contains project templates defined in a templates.json manifest.
+ * It provides methods for initializing the repository, fetching templates,
+ * and cleaning up temporary files.
+ * 
+ * @example
+ * ```typescript
+ * const repo = new ProjectTemplateRepository('equinor/fusion-app-template', {
+ *   baseDir: '/tmp/templates',
+ *   log: logger,
+ *   protocol: 'https',
+ *   branch: 'main'
+ * });
+ * await repo.initialize();
+ * const templates = await repo.getAvailableTemplates();
+ * ```
+ */
 export class ProjectTemplateRepository {
   #initialized = false;
   #git: SimpleGit;
@@ -17,19 +41,37 @@ export class ProjectTemplateRepository {
   #protocol: GitClientProtocol;
   #branch: string;
 
+  /**
+   * Gets the current Git protocol being used for repository operations.
+   * @returns The current protocol ('https' or 'ssh')
+   */
   public get protocol(): 'https' | 'ssh' {
     return this.#protocol;
   }
 
+  /**
+   * Sets the Git protocol for repository operations.
+   * @param protocol - The protocol to use ('https' or 'ssh')
+   * @throws {AssertionError} If protocol is not 'https' or 'ssh'
+   */
   public set protocol(protocol: GitClientProtocol) {
     assert(protocol === 'https' || protocol === 'ssh', 'Protocol must be either https or ssh');
     this.#protocol = protocol;
   }
 
+  /**
+   * Gets the current branch being used for repository operations.
+   * @returns The current branch name
+   */
   public get branch(): string {
     return this.#branch;
   }
 
+  /**
+   * Sets the branch for repository operations.
+   * If the repository is already initialized, it will checkout the new branch.
+   * @param branch - The branch name to use
+   */
   public set branch(branch: string) {
     this.#branch = branch;
     if (this.#initialized) {
@@ -37,6 +79,16 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Creates a new ProjectTemplateRepository instance.
+   * 
+   * @param repo - The repository name (e.g., 'equinor/fusion-app-template')
+   * @param options - Configuration options for the repository
+   * @param options.baseDir - Base directory for the repository (defaults to temp directory)
+   * @param options.log - Optional logger instance for output
+   * @param options.protocol - Git protocol to use (auto-detected if not specified)
+   * @param options.branch - Branch to checkout (defaults to 'main')
+   */
   constructor(
     public readonly repo: string,
     options: {
@@ -49,11 +101,23 @@ export class ProjectTemplateRepository {
     this.#baseDir = options.baseDir ?? join(tmpdir(), 'ffc', 'repo', repo);
     this.#git = simpleGit({ baseDir: this.#baseDir });
     this.#log = options.log;
+    // Auto-detect protocol based on SSH configuration
     this.#protocol =
       (options.protocol ?? !!this.#git.getConfig('core.sshCommand')) ? 'ssh' : 'https';
     this.#branch = options.branch ?? 'main';
   }
 
+  /**
+   * Initializes the repository by cloning or updating it.
+   * 
+   * This method handles the complete repository setup process:
+   * - Creates the base directory if it doesn't exist
+   * - Clones the repository if it's not already initialized
+   * - Updates the repository if it already exists
+   * - Checks out the specified branch
+   * 
+   * @throws {Error} If repository initialization fails
+   */
   async initialize(): Promise<void> {
     if (this.#initialized) {
       return;
@@ -88,12 +152,28 @@ export class ProjectTemplateRepository {
     }
   }
 
+  /**
+   * Retrieves all available project templates from the repository.
+   * 
+   * This method reads the templates.json manifest file from the repository
+   * and parses it to create ProjectTemplate instances. It combines global
+   * resources with template-specific resources to create complete templates.
+   * 
+   * @returns Promise resolving to an array of available project templates
+   * @throws {Error} If templates.json cannot be read or parsed
+   * 
+   * @example
+   * ```typescript
+   * const templates = await repo.getAvailableTemplates();
+   * console.log(`Found ${templates.length} templates`);
+   * ```
+   */
   async getAvailableTemplates(): Promise<ProjectTemplate[]> {
     let templatesRaw: string;
     try {
       const templatesJsonPath = join(this.#baseDir, 'templates.json');
-      // read the templates.json file from the root of the repository
-      this.#log?.debug('Reading temaplate manifest file...', templatesJsonPath);
+      // Read the templates.json manifest file from the repository root
+      this.#log?.debug('Reading template manifest file...', templatesJsonPath);
       templatesRaw = readFileSync(templatesJsonPath, 'utf8');
     } catch (cause) {
       throw new Error('Failed to read templates.json file from the root of the repository...', {
@@ -104,6 +184,8 @@ export class ProjectTemplateRepository {
       this.#log?.debug('Parsing and validating template content...');
       const manifest = parseTemplatesManifest(templatesRaw);
       this.#log?.debug('Parsed template content...', manifest);
+      
+      // Create ProjectTemplate instances, combining global and template-specific resources
       const templateItems = manifest.templates.map((template) => {
         const resources = [...(manifest.resources ?? []), ...template.resources];
         return new ProjectTemplate({ ...template, resources }, this.#baseDir, { logger: this.#log });

@@ -20,6 +20,6 @@ export const command = createCommand('create')
       '',
     ].join('\n'),
   )
-  .addCommand(createAppCommand);
+  .addCommand(createAppCommand('app'));
 
 export default command;
