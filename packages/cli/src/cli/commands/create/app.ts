@@ -30,17 +30,22 @@ interface CreateAppOptions {
 }
 
 /**
- * Action function for creating a new Fusion application from template.
+ * Creates a new Fusion application from template.
  *
- * This function provides an interactive workflow for:
+ * This function provides the core workflow for:
  * - Selecting from available project templates
  * - Setting up a local development environment
  * - Installing dependencies and starting development servers
  *
  * @param name - Name of the application to create
  * @param options - Command options including template, directory, debug, etc.
+ * @param logger - Logger instance for output and debugging
  */
-async function createAppAction(name: string, options: CreateAppOptions): Promise<void> {
+async function createApplication(
+  name: string,
+  options: CreateAppOptions,
+  logger: ConsoleLogger,
+): Promise<void> {
   // Step 1: Validate input arguments and options
   assert(!!name, 'App name is required');
   assert(
@@ -48,33 +53,28 @@ async function createAppAction(name: string, options: CreateAppOptions): Promise
     `Directory '${options.directory}' does not exist, use -d to specify a different directory`,
   );
 
-  // Step 2: Initialize logging system with debug support
-  const logger = new ConsoleLogger('', {
-    debug: options.debug,
-  });
-
-  // Step 3: Resolve the target directory path for the new application
+  // Step 2: Resolve the target directory path for the new application
   const targetDir = resolve(options.directory, name);
   logger.debug(`Target dir: ${targetDir}`);
 
-  // Step 4: Check if target directory exists and handle conflicts
+  // Step 3: Check if target directory exists and handle conflicts
   // This will prompt user if directory has content and --clean wasn't specified
   const shouldContinue = await checkTargetDirectory(targetDir, logger, options.clean);
   if (!shouldContinue) {
     process.exit(0); // Clean exit when user aborts
   }
 
-  // Step 5: Set up and initialize the template repository
+  // Step 4: Set up and initialize the template repository
   // This clones or updates the fusion-app-template repository
   const templateRepoName = 'equinor/fusion-app-template';
   const repo = await setupRepository(templateRepoName, options.clean, options.branch, logger);
 
-  // Step 6: Load available templates and handle template selection
+  // Step 5: Load available templates and handle template selection
   // User can pre-select with --template or choose interactively
   const templates = await repo.getAvailableTemplates();
   const selectedTemplate = await selectTemplate(templates, options.template, logger);
 
-  // Step 7: Copy template files and directories to target location
+  // Step 6: Copy template files and directories to target location
   // This creates the project structure based on the selected template
   try {
     await selectedTemplate.copyTo(targetDir);
@@ -87,22 +87,22 @@ async function createAppAction(name: string, options: CreateAppOptions): Promise
     process.exit(1);
   }
 
-  // Step 8: Clean up temporary template repository (optional)
+  // Step 7: Clean up temporary template repository (optional)
   // Asks user if they want to remove the cloned template repo
   await cleanupTemplateFiles(repo, logger);
 
-  // Step 9: Offer to open the project in the user's IDE
+  // Step 8: Offer to open the project in the user's IDE
   // Detects common IDEs and opens the project automatically
   await openInIDE(targetDir, logger);
 
-  // Step 10: Install project dependencies using detected package manager
+  // Step 9: Install project dependencies using detected package manager
   // Supports npm, pnpm, and yarn with automatic detection
   const { installed: dependenciesInstalled, packageManager } = await installDependencies(
     targetDir,
     logger,
   );
 
-  // Step 11: Start development server if dependencies were installed
+  // Step 10: Start development server if dependencies were installed
   // Only prompts if package installation was successful
   if (dependenciesInstalled && packageManager) {
     const devServerStarted = await startDevServer(targetDir, packageManager, logger);
@@ -111,6 +111,7 @@ async function createAppAction(name: string, options: CreateAppOptions): Promise
     }
   }
 }
+
 
 /**
  * CLI command for creating new Fusion Framework applications from templates.
@@ -145,16 +146,21 @@ export const createAppCommand = (name: string) =>
     .option('--clean', 'Clean the repo directory before cloning')
     .option('--debug', 'Enable debug mode for verbose logging')
     .action(async (name: string, options: CreateAppOptions) => {
+      // Initialize logging system with debug support
+      const logger = new ConsoleLogger('', {
+        debug: options.debug,
+      });
+      
       try {
-        await createAppAction(name, options);
+        await createApplication(name, options, logger);
       } catch (error) {
         // Handle any unexpected errors with clean exit
-        console.error(
+        logger.error(
           '❌ An unexpected error occurred:',
           error instanceof Error ? error.message : String(error),
         );
         if (options.debug) {
-          console.error(
+          logger.error(
             'Stack trace:',
             error instanceof Error ? error.stack : 'No stack trace available',
           );
