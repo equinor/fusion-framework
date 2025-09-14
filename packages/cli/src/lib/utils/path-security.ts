@@ -15,8 +15,8 @@ import isPathInside from 'is-path-inside';
  *
  * @example
  * ```typescript
- * // Validate a user-provided path
- * const safePath = validateSafePath(userInput, process.cwd());
+ * // Validate a user-provided path within a specific directory
+ * const safePath = validateSafePath(userInput, '/path/to/base/directory');
  *
  * // Validate a path without base directory constraint
  * const safePath = validateSafePath('/tmp/safe-directory');
@@ -36,7 +36,7 @@ export function validateSafePath(targetPath: string, baseDir?: string): string {
 
     if (!isPathInside(resolvedPath, resolvedBaseDir)) {
       throw new Error(
-        'The target path must be within the current working directory. Please specify a relative path or ensure the absolute path is within the current directory.',
+        'The target path must be within the specified base directory. Please specify a relative path or ensure the absolute path is within the base directory.',
       );
     }
   }

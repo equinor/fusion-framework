@@ -10,24 +10,26 @@ import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-securit
  * @param targetDir - Directory to check
  * @param logger - Logger instance for output
  * @param clean - If true, automatically clean the directory without prompting
+ * @param baseDir - Base directory for path validation (defaults to process.cwd())
  * @returns Promise resolving to true if should continue, false if should abort
  */
 export async function checkTargetDirectory(
   targetDir: string,
   logger: ConsoleLogger,
   clean = false,
+  baseDir = process.cwd(),
 ): Promise<boolean> {
   assert(typeof targetDir === 'string', 'Target directory must be a string');
 
   // Validate the target directory path for security
   let validatedTargetDir: string;
   try {
-    validatedTargetDir = validateSafePath(targetDir, process.cwd());
+    validatedTargetDir = validateSafePath(targetDir, baseDir);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`❌ Invalid target directory path: ${errorMessage}`);
     logger.info(
-      '💡 Try using a relative path like "my-app" or ensure the absolute path is within the current directory.',
+      '💡 Try using a relative path like "my-app" or ensure the absolute path is within the specified directory.',
     );
     return false; // Return false to abort the operation instead of throwing
   }
@@ -56,7 +58,7 @@ export async function checkTargetDirectory(
       // Clean flag is set, automatically clean the directory
       logger.info('Cleaning target directory (--clean flag)...');
       try {
-        safeRmSync(validatedTargetDir, { recursive: true, force: true }, process.cwd());
+        safeRmSync(validatedTargetDir, { recursive: true, force: true }, baseDir);
         logger.succeed('Target directory cleaned successfully!');
       } catch (error) {
         logger.error(`Failed to clean target directory: ${error}`);
@@ -101,7 +103,7 @@ export async function checkTargetDirectory(
       if (action === 'clean') {
         logger.info('Cleaning target directory...');
         try {
-          safeRmSync(validatedTargetDir, { recursive: true, force: true }, process.cwd());
+          safeRmSync(validatedTargetDir, { recursive: true, force: true }, baseDir);
           logger.succeed('Target directory cleaned successfully!');
         } catch (error) {
           logger.error(`Failed to clean target directory: ${error}`);

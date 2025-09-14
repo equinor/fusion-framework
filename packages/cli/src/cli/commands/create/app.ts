@@ -59,7 +59,12 @@ async function createApplication(
 
   // Step 3: Check if target directory exists and handle conflicts
   // This will prompt user if directory has content and --clean wasn't specified
-  const shouldContinue = await checkTargetDirectory(targetDir, logger, options.clean);
+  const shouldContinue = await checkTargetDirectory(
+    targetDir,
+    logger,
+    options.clean,
+    options.directory,
+  );
   if (!shouldContinue) {
     process.exit(0); // Clean exit when user aborts
   }

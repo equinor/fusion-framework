@@ -40,7 +40,9 @@ export async function installPackageDependencies(
       logger?.error(`${packageManager} install failed with exit code ${error.exitCode}`);
       throw new Error(`${packageManager} install failed with exit code ${error.exitCode}`);
     }
-    logger?.error(`Failed to run ${packageManager} install: ${error instanceof Error ? error.message : String(error)}`);
+    logger?.error(
+      `Failed to run ${packageManager} install: ${error instanceof Error ? error.message : String(error)}`,
+    );
     throw error;
   }
 }
