@@ -1,0 +1,51 @@
+---
+description: Vitest testing setup and conventions
+alwaysApply: false
+---
+# Vitest Testing Rules
+
+## Test Structure
+- Place tests in `src/__tests__/` directories
+- Use `.test.ts` or `.spec.ts` naming
+- Exclude from TypeScript compilation in `tsconfig.json`
+
+## Basic Config
+```typescript
+import { defineProject } from 'vitest/config';
+import { fileURLToPath } from 'node:url';
+import pkg from './package.json';
+
+export default defineProject({
+  test: {
+    environment: 'node',
+    include: ['src/__tests__/**/*.{test,spec}.ts'],
+    name: `${pkg.name}@${pkg.version}`,
+  },
+  resolve: {
+    alias: {
+      '@/': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+});
+```
+
+## Dependencies
+```json
+{
+  "devDependencies": {
+    "vitest": "^2.0.5",
+    "@vitest/coverage-v8": "^2.0.1"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  }
+}
+```
+
+## TypeScript Exclusion
+```json
+{
+  "exclude": ["src/__tests__/**/*"]
+}
+```
