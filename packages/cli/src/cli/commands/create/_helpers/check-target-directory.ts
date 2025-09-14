@@ -1,0 +1,101 @@
+import { existsSync, readdirSync, rmSync } from 'node:fs';
+import inquirer from 'inquirer';
+import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+import { assert } from '../../../../lib/utils/assert.js';
+
+/**
+ * Check if target directory exists and has content, then prompt user for action.
+ *
+ * @param targetDir - Directory to check
+ * @param logger - Logger instance for output
+ * @param clean - If true, automatically clean the directory without prompting
+ * @returns Promise resolving to true if should continue, false if should abort
+ */
+export async function checkTargetDirectory(
+  targetDir: string, 
+  logger: ConsoleLogger, 
+  clean = false
+): Promise<boolean> {
+  assert(typeof targetDir === 'string', 'Target directory must be a string');
+  if (!existsSync(targetDir)) {
+    logger.debug(`Target directory does not exist: ${targetDir}`);
+    return true;
+  }
+
+  try {
+    const contents = readdirSync(targetDir);
+    if (contents.length === 0) {
+      logger.debug(`Target directory is empty: ${targetDir}`);
+      return true;
+    }
+
+    logger.warn(
+      `Target directory '${targetDir}' is not empty and contains ${contents.length} item(s).`,
+    );
+    logger.info(
+      'Contents:',
+      contents.slice(0, 10).join(', ') + (contents.length > 10 ? '...' : ''),
+    );
+
+    if (clean) {
+      // Clean flag is set, automatically clean the directory
+      logger.info('Cleaning target directory (--clean flag)...');
+      try {
+        rmSync(targetDir, { recursive: true, force: true });
+        logger.succeed('Target directory cleaned successfully!');
+      } catch (error) {
+        logger.error(`Failed to clean target directory: ${error}`);
+        throw error;
+      }
+    } else {
+      // No clean flag, prompt user for action
+      const { action } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'action',
+          message: 'What would you like to do?',
+          choices: [
+            {
+              name: 'Continue - Add files to existing directory',
+              value: 'continue',
+            },
+            {
+              name: 'Clean - Remove all existing files and continue',
+              value: 'clean',
+            },
+            {
+              name: 'Abort - Cancel the operation',
+              value: 'abort',
+            },
+          ],
+          default: 'abort',
+        },
+      ]);
+
+      if (action === 'abort') {
+        logger.info('Operation cancelled by user.');
+        return false;
+      }
+
+      if (action === 'clean') {
+        logger.info('Cleaning target directory...');
+        try {
+          rmSync(targetDir, { recursive: true, force: true });
+          logger.succeed('Target directory cleaned successfully!');
+        } catch (error) {
+          logger.error(`Failed to clean target directory: ${error}`);
+          throw error;
+        }
+      } else {
+        logger.info('Continuing with existing directory...');
+      }
+    }
+
+    return true;
+  } catch (error) {
+    logger.error(`Failed to check target directory: ${error}`);
+    throw error;
+  }
+}
+
+export default checkTargetDirectory;

@@ -1,0 +1,91 @@
+import { createCommand } from 'commander';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+import { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+
+import { assert } from '../../../lib/utils/assert.js';
+import checkTargetDirectory from './_helpers/check-target-directory.js';
+import selectTemplate from './_helpers/select-template.js';
+import openInIDE from './_helpers/open-in-ide.js';
+import installDependencies from './_helpers/install-dependencies.js';
+import startDevServer from './_helpers/start-dev-server.js';
+import setupRepository from './_helpers/setup-repository.js';
+import cleanupTemplateFiles from './_helpers/cleanup-template-files.js';
+
+export const command = createCommand('app')
+  .description('Create a new Fusion application from template')
+  .argument('<name>', 'Name of the application to create')
+  .option(
+    '-t, --template <type>',
+    'Template type to use (will prompt if not specified or not found)',
+  )
+  .option('-d, --directory <path>', 'Directory to create the app in', '.')
+  .option('--branch <branch>', 'Branch to checkout', 'main')
+  .option('--clean', 'Clean the repo directory before cloning')
+  .option('--debug', 'Enable debug mode for verbose logging')
+  .action(
+    async (
+      name: string,
+      options: {
+        template?: string;
+        directory: string;
+        debug: boolean;
+        branch: string;
+        clean: boolean;
+      },
+    ) => {
+      // Validate arguments and options
+      assert(!!name, 'App name is required');
+      assert(
+        existsSync(options.directory),
+        `Directory '${options.directory}' does not exist, use -d to specify a different directory`,
+      );
+
+      // Create logger instance
+      const logger = new ConsoleLogger('', {
+        debug: options.debug,
+      });
+
+      // Resolve target directory
+      const targetDir = resolve(options.directory, name);
+      logger.debug(`Target dir: ${targetDir}`);
+
+      // Check if target directory has content and prompt user for action
+      const shouldContinue = await checkTargetDirectory(targetDir, logger, options.clean);
+      if (!shouldContinue) {
+        return;
+      }
+
+      // Set up and initialize the template repository
+      const templateRepoName = 'equinor/fusion-app-template';
+      const repo = await setupRepository(templateRepoName, options.clean, options.branch, logger);
+
+      // Get available templates and let user select one
+      const templates = await repo.getAvailableTemplates();
+      const selectedTemplate = await selectTemplate(templates, options.template, logger);
+
+      // Copy template resources to target directory
+      selectedTemplate.copyTo(targetDir);
+      logger.succeed('Template resources copied successfully!');
+
+      // Ask user if they want to clean up the temporary template files
+      await cleanupTemplateFiles(repo, logger);
+
+      // Ask user if they want to open the project in their IDE
+      await openInIDE(targetDir, logger);
+
+      // Install dependencies and get whether they were installed
+      const { installed: dependenciesInstalled, packageManager } = await installDependencies(targetDir, logger);
+
+      // Only ask about starting dev server if dependencies were installed
+      if (dependenciesInstalled && packageManager) {
+        const devServerStarted = await startDevServer(targetDir, packageManager, logger);
+        if (devServerStarted) {
+          logger.debug('Development server started successfully');
+        }
+      }
+    },
+  );
+
+export default command;
