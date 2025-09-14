@@ -91,8 +91,16 @@ export const createAppCommand = (name: string) =>
 
         // Step 7: Copy template files and directories to target location
         // This creates the project structure based on the selected template
-        selectedTemplate.copyTo(targetDir);
-        logger.succeed('Template resources copied successfully!');
+        try {
+          selectedTemplate.copyTo(targetDir);
+          logger.succeed('Template resources copied successfully!');
+        } catch (error) {
+          logger.error(
+            `Failed to copy template resources: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          logger.info('Please check the target directory permissions and try again');
+          process.exit(1);
+        }
 
         // Step 8: Clean up temporary template repository (optional)
         // Asks user if they want to remove the cloned template repo

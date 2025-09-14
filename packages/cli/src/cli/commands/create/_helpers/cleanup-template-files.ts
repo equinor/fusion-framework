@@ -3,16 +3,21 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import type { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectTemplateRepository.js';
 
 /**
- * Prompt user to clean up temporary template files and execute cleanup.
+ * Prompts the user to clean up temporary template files after project creation.
  *
- * @param repo - ProjectTemplateRepository instance to clean up
- * @param logger - Logger instance for output
- * @returns Promise resolving when cleanup is complete
+ * Offers the user the option to remove the cloned template repository and
+ * temporary files to free up disk space. If the user declines, the files
+ * remain available for future use.
+ *
+ * @param repo - ProjectTemplateRepository instance containing temporary files
+ * @param logger - Console logger for displaying prompts and cleanup status
+ * @returns Promise that resolves when the cleanup process is complete
  */
 export async function cleanupTemplateFiles(
   repo: ProjectTemplateRepository,
   logger: ConsoleLogger,
 ): Promise<void> {
+  // Prompt user to confirm cleanup of temporary template files
   const { cleanupTempFiles } = await inquirer.prompt([
     {
       type: 'confirm',
@@ -22,6 +27,7 @@ export async function cleanupTemplateFiles(
     },
   ]);
 
+  // Execute cleanup based on user's choice
   if (cleanupTempFiles) {
     await repo.cleanup();
   } else {

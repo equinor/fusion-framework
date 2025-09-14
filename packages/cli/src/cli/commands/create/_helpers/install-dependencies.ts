@@ -14,7 +14,7 @@ export async function installDependencies(
   targetDir: string,
   logger: ConsoleLogger,
 ): Promise<{ installed: boolean; packageManager?: string }> {
-  // Ask user if they want to install dependencies
+  // Prompt user to confirm dependency installation
   const { installDeps } = await inquirer.prompt([
     {
       type: 'confirm',
@@ -29,7 +29,7 @@ export async function installDependencies(
     return { installed: false };
   }
 
-  // Check which package manager is used
+  // Prompt user to select their preferred package manager
   const { packageManager } = await inquirer.prompt([
     {
       type: 'list',
@@ -40,6 +40,7 @@ export async function installDependencies(
     },
   ]);
 
+  // Execute dependency installation with selected package manager
   await installPackageDependencies(targetDir, packageManager, logger);
   return { installed: true, packageManager };
 }

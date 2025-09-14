@@ -37,8 +37,9 @@ export async function setupRepository(
     // Use rmSync for recursive directory removal (Node.js >= v14.14.0)
     try {
       rmSync(repoDir, { recursive: true, force: true });
-    } catch {
-      // ignore cleanup errors
+    } catch (error) {
+      // Log cleanup errors at debug level for troubleshooting
+      logger.debug('Cleanup failed:', error);
     }
   }
 
