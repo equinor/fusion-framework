@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import { rmSync } from 'node:fs';
 import isPathInside from 'is-path-inside';
 
 /**
@@ -59,8 +60,6 @@ export function safeRmSync(
   options: { recursive: boolean; force: boolean },
   baseDir?: string,
 ): void {
-  const { rmSync } = require('node:fs');
-
   // Validate the path before removal
   const safePath = validateSafePath(targetPath, baseDir);
 
