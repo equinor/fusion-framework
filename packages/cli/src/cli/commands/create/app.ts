@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 import { assert } from '../../../lib/utils/assert.js';
+import { updatePackageJson } from './_helpers/update-package-json.js';
 import checkTargetDirectory from './_helpers/check-target-directory.js';
 import selectTemplate from './_helpers/select-template.js';
 import openInIDE from './_helpers/open-in-ide.js';
@@ -14,32 +15,35 @@ import setupRepository from './_helpers/setup-repository.js';
 import cleanupTemplateFiles from './_helpers/cleanup-template-files.js';
 
 /**
- * Options for the create app command
+ * Configuration options for the create app command
  */
 interface CreateAppOptions {
   /** Template type to use (will prompt if not specified or not found) */
   template?: string;
-  /** Directory to create the app in */
+  /** Directory to create the app in (defaults to current directory) */
   directory: string;
-  /** Enable debug mode for verbose logging */
+  /** Enable debug mode for verbose logging and error details */
   debug: boolean;
-  /** Branch to checkout */
+  /** Git branch to checkout from the template repository */
   branch: string;
-  /** Clean the repo directory before cloning */
+  /** Clean the repo directory before cloning (removes existing content) */
   clean: boolean;
 }
 
 /**
- * Creates a new Fusion application from template.
+ * Creates a new Fusion application from template with complete setup workflow.
  *
- * This function provides the core workflow for:
- * - Selecting from available project templates
- * - Setting up a local development environment
- * - Installing dependencies and starting development servers
+ * This function orchestrates the entire application creation process including:
+ * - Input validation and directory conflict resolution
+ * - Template repository setup and template selection
+ * - File copying and package.json configuration
+ * - Workspace dependency resolution to npm versions
+ * - Development environment setup and server startup
  *
- * @param name - Name of the application to create
+ * @param name - Name of the application to create (used for package.json name)
  * @param options - Command options including template, directory, debug, etc.
- * @param logger - Logger instance for output and debugging
+ * @param logger - Logger instance for output, progress feedback, and debugging
+ * @throws {Error} If validation fails, template setup fails, or critical operations fail
  */
 async function createApplication(
   name: string,
@@ -66,7 +70,8 @@ async function createApplication(
     options.directory,
   );
   if (!shouldContinue) {
-    process.exit(0); // Clean exit when user aborts
+    // Clean exit when user aborts the operation
+    process.exit(0);
   }
 
   // Step 4: Set up and initialize the template repository
@@ -89,25 +94,47 @@ async function createApplication(
       `Failed to copy template resources: ${error instanceof Error ? error.message : String(error)}`,
     );
     logger.info('Please check the target directory permissions and try again');
+    // Exit with error code 1 to indicate failure
     process.exit(1);
   }
 
-  // Step 7: Clean up temporary template repository (optional)
+  // Step 7: Update package.json with the provided app name and resolve workspace dependencies
+  // This ensures the package name matches the application name and workspace deps are resolved to npm versions
+  try {
+    await updatePackageJson(
+      targetDir,
+      {
+        updates: { name },
+        resolveWorkspaceDependencies: true,
+      },
+      logger,
+    );
+    logger.succeed(`Updated package.json with app name: ${name}`);
+  } catch (error) {
+    logger.error(
+      `Failed to update package.json: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    logger.info('Please check the package.json file and try again');
+    // Exit with error code 1 to indicate failure
+    process.exit(1);
+  }
+
+  // Step 8: Clean up temporary template repository (optional)
   // Asks user if they want to remove the cloned template repo
   await cleanupTemplateFiles(repo, logger);
 
-  // Step 8: Offer to open the project in the user's IDE
+  // Step 9: Offer to open the project in the user's IDE
   // Detects common IDEs and opens the project automatically
   await openInIDE(targetDir, logger);
 
-  // Step 9: Install project dependencies using detected package manager
+  // Step 10: Install project dependencies using detected package manager
   // Supports npm, pnpm, and yarn with automatic detection
   const { installed: dependenciesInstalled, packageManager } = await installDependencies(
     targetDir,
     logger,
   );
 
-  // Step 10: Start development server if dependencies were installed
+  // Step 11: Start development server if dependencies were installed
   // Only prompts if package installation was successful
   if (dependenciesInstalled && packageManager) {
     const devServerStarted = await startDevServer(targetDir, packageManager, logger);
@@ -120,10 +147,13 @@ async function createApplication(
 /**
  * CLI command for creating new Fusion Framework applications from templates.
  *
- * This command provides an interactive workflow for:
- * - Selecting from available project templates
- * - Setting up a local development environment
+ * This command provides a comprehensive interactive workflow for:
+ * - Validating input and resolving directory conflicts
+ * - Selecting from available project templates (React, vanilla, etc.)
+ * - Setting up complete local development environment
+ * - Resolving workspace dependencies to npm versions
  * - Installing dependencies and starting development servers
+ * - Opening projects in the user's preferred IDE
  *
  * @example
  * ```bash
@@ -135,6 +165,9 @@ async function createApplication(
  *
  * # Create in a specific directory with debug logging
  * ffc create app my-app --directory ./projects --debug
+ *
+ * # Create with clean directory and specific branch
+ * ffc create app my-app --clean --branch develop
  * ```
  */
 export const createAppCommand = (name: string) =>
@@ -156,19 +189,22 @@ export const createAppCommand = (name: string) =>
       });
 
       try {
+        // Execute the main application creation workflow
         await createApplication(name, options, logger);
       } catch (error) {
-        // Handle any unexpected errors with clean exit
+        // Handle any unexpected errors with clean exit and detailed logging
         logger.error(
           '❌ An unexpected error occurred:',
           error instanceof Error ? error.message : String(error),
         );
         if (options.debug) {
+          // Include stack trace in debug mode for troubleshooting
           logger.error(
             'Stack trace:',
             error instanceof Error ? error.stack : 'No stack trace available',
           );
         }
+        // Exit with error code 1 to indicate failure
         process.exit(1);
       }
     });
