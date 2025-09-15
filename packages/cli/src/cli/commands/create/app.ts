@@ -137,7 +137,7 @@ async function createApplication(
   // Step 11: Start development server if dependencies were installed
   // Only prompts if package installation was successful
   if (dependenciesInstalled && packageManager) {
-    const devServerStarted = await startDevServer(targetDir, packageManager, logger);
+    const devServerStarted = await startDevServer(targetDir, packageManager, logger, true);
     if (devServerStarted) {
       logger.debug('Development server started successfully');
     }
