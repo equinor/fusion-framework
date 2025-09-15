@@ -73,7 +73,7 @@ export class ProjectTemplateRepository {
    * @returns The complete GitHub URL (HTTPS or SSH format)
    */
   private get repoUrl(): string {
-    return this.#protocol === 'ssh' 
+    return this.#protocol === 'ssh'
       ? `git@github.com:${this.repo}.git`
       : `https://github.com/${this.repo}.git`;
   }
@@ -259,7 +259,7 @@ export class ProjectTemplateRepository {
         branch: this.#branch,
         protocol: this.#protocol,
       });
-      
+
       await this.#git.clone(this.repoUrl, this.#baseDir, [
         '--single-branch',
         '--branch',
