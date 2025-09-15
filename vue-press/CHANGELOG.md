@@ -1,5 +1,19 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.6
+
+### Patch Changes
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive Creating Apps guide to documentation site.
+
+  - Added new "Creating Apps" section to CLI documentation
+  - Updated sidebar navigation to include creating-apps.md
+  - Added detailed guide covering app creation, templates, and best practices
+  - Included GitHub template integration links for alternative app creation methods
+  - Added troubleshooting, configuration, and workflow guidance
+
+  This provides users with complete documentation for the new create app functionality directly in the docs site.
+
 ## 0.4.5
 
 ### Patch Changes

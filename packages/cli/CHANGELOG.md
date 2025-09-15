@@ -1,5 +1,128 @@
 # Change Log
 
+## 11.3.0
+
+### Minor Changes
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive create app command for generating Fusion applications from templates.
+
+  **New Features**
+
+  - Added `ffc create app <name>` command with interactive template selection
+  - Supports both `ffc create app` and `ffc app create` command patterns for improved flexibility
+  - Includes template validation and interactive prompts using inquirer
+  - Added comprehensive template repository system with schema validation
+  - Implemented modular helper functions for each step of app creation
+
+  **Template Support**
+
+  - Supports both bare and basic application templates from fusion-app-template repository
+  - Includes template validation and interactive prompts using inquirer
+  - Added comprehensive template repository system with schema validation
+
+  **Developer Experience**
+
+  - Added IDE integration with automatic project opening
+  - Includes dependency management and dev server startup
+  - Added comprehensive documentation with examples and best practices
+  - Updated CLI README with new command documentation
+  - Added GitHub template integration links for alternative app creation methods
+
+  **Error Handling & Reliability**
+
+  - Enhanced error handling for spawn operations in IDE opening and dev server startup
+  - Migrated to execa for automatic process cleanup and better signal handling
+  - Fixed misleading success messages by wrapping template copy operations in try-catch blocks
+  - Improved error logging in repository cleanup operations for better debugging
+  - Added proper CLI exit codes for operation failures
+  - Enhanced TSDoc documentation and inline comments across helper functions
+
+  **Dependencies**
+
+  - Added new dependencies: `inquirer`, `@types/inquirer`, and `execa` for enhanced CLI experience
+  - Migrated process spawning from native child_process to execa for better process management
+
+  The new command provides an intuitive way for developers to bootstrap new Fusion applications using predefined templates from the ecosystem while maintaining backward compatibility and providing robust error handling.
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add workspace dependency resolution to create app command
+
+  - Added `updatePackageJson` helper for updating package.json with app name and resolving workspace dependencies
+  - Added `resolve-workspace-dependencies` helper to convert workspace:^ dependencies to npm versions
+  - Added `package-info` utility for fetching package metadata from npm registry
+  - Integrated workspace dependency resolution into create app workflow
+  - Improved error handling and logging throughout the create app process
+  - Added comprehensive TSDoc documentation for all new functions
+
+  This ensures that apps created from templates have proper npm versions instead of workspace references, making them deployable outside the monorepo.
+
+### Patch Changes
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI security with path validation and improved error handling for create command.
+
+  ## New Features
+
+  - **Path Security Validation**: Added `validateSafePath()` function to prevent path traversal attacks
+  - **Safe Directory Operations**: Added `safeRmSync()` function for secure directory removal
+  - **Enhanced Error Messages**: Improved user-friendly error messages with visual indicators
+
+  ## Security Improvements
+
+  - **Path Traversal Protection**: Prevents users from specifying paths outside the current working directory
+  - **Input Validation**: Validates target paths before performing file system operations
+  - **Safe Cleanup**: Directory removal operations now validate paths before execution
+
+  ## User Experience
+
+  - **Better Error Messages**: Clear, actionable error messages with ❌ and 💡 indicators
+  - **Helpful Guidance**: Users get specific suggestions when path validation fails
+  - **Clean Error Handling**: No more messy stack traces for path-related errors
+
+  ## Technical Details
+
+  - Uses `is-path-inside` library for robust path validation
+  - Integrates path security into `checkTargetDirectory` helper
+  - Maintains backward compatibility with existing functionality
+  - Added comprehensive JSDoc documentation for all new functions
+
+- [`7983d30`](https://github.com/equinor/fusion-framework/commit/7983d302f5269d70646c3c5231944b8081844e86) Thanks [@odinr](https://github.com/odinr)! - **Note:** This changeset documents changes that were already implemented and released in [PR #3341](https://github.com/equinor/fusion-framework/pull/3341) (merged 2025-09-05) and included in the [🤖 Bip Bop - Fusion Framework Release](https://github.com/equinor/fusion-framework/pull/3342) (merged 2025-09-08). This changeset serves as a historical record and comprehensive documentation of the CLI tag command improvements, ensuring the changelog contains detailed information about the breaking changes, migration path, and technical details that may be referenced by users upgrading or troubleshooting CLI issues.
+
+  Fixed `--version` flag conflict in CLI tag commands and improved API consistency.
+
+  - **Fixed:** Resolved conflict between custom `--version` option and Commander's built-in `--version` flag that displays CLI version
+  - **Refactored:** Replaced separate `--appKey`/`--version` options with unified `--package name@version` syntax for both `app tag` and `portal tag` commands
+  - **Improved:** Enhanced error handling with clear validation messages for package format
+  - **Updated:** Documentation and help text to reflect new `--package` option usage
+  - **Added:** Better user feedback with colored logging for successful operations
+
+  **Breaking Changes:**
+  This introduces a breaking change to the CLI API by removing the `--version` and `--appKey` options in favor of the `--package` option. However, we're releasing this as a patch since:
+
+  1. The `--version` flag never worked properly due to the conflict with Commander's built-in version flag
+  2. The old API was fundamentally broken and unusable
+  3. Limited adoption in production environments means minimal impact
+  4. The same functionality is accessible through:
+     - The `publish` command (recommended for standard releases)
+     - The Fusion App Admin UI (graphical interface for release management)
+
+  **Migration:**
+
+  - Old: `fusion-framework-cli app tag --appKey my-app --version 1.2.3 latest`
+  - New: `fusion-framework-cli app tag --package my-app@1.2.3 latest`
+
+  This resolves the issue where `--version` would show CLI version (11.1.2) instead of using it as a bundle version parameter. Now `--version` correctly displays CLI version, and `--package` specifies the bundle to tag.
+
+  **Credits:** Special thanks to [@estoksam](https://github.com/estoksam) for identifying and reporting this CLI flag conflict issue.
+
+  **Fixes:** https://github.com/equinor/fusion/issues/652
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add git repository validation utilities to CLI package.
+
+  - Added `isGitDir` utility function to check if a directory is a valid git repository
+  - Added `assertGitRepository` assertion function for git repository validation
+  - Enhanced assert utilities with git repository checking capabilities
+
+  These utilities support the create app command's repository validation and setup process.
+
 ## 11.2.0
 
 ### Minor Changes
