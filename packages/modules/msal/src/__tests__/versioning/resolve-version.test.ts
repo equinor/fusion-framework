@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { SemVer } from 'semver';
 import { resolveVersion } from '../../versioning/resolve-version';
 import { VersionError } from '../../versioning/VersionError';
@@ -16,21 +16,6 @@ vi.mock('../../static', () => ({
 import { MsalModuleVersion } from '../../static';
 
 describe('resolveVersion', () => {
-  // Store original console.warn to restore after tests
-  let originalConsoleWarn: typeof console.warn;
-
-  beforeEach(() => {
-    originalConsoleWarn = console.warn;
-    // Mock console.warn to capture warnings
-    console.warn = vi.fn();
-  });
-
-  afterEach(() => {
-    // Restore original console.warn
-    console.warn = originalConsoleWarn;
-    vi.clearAllMocks();
-  });
-
   describe('mock verification', () => {
     it('should use mocked version for consistent testing', () => {
       // Verify that our mock is working and we're using the fixed version
@@ -84,7 +69,7 @@ describe('resolveVersion', () => {
 
       expect(result.satisfiesLatest).toBe(true);
       expect(result.isLatest).toBe(false);
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(result.warnings).toBeUndefined();
     });
 
     it('should handle minor version differences with warnings', () => {
@@ -92,11 +77,9 @@ describe('resolveVersion', () => {
 
       expect(result.satisfiesLatest).toBe(true);
       expect(result.isLatest).toBe(false);
-      expect(console.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining('Minor version mismatch'),
-        }),
-      );
+      expect(result.warnings).toBeDefined();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings?.[0]).toContain('Minor version mismatch');
     });
 
     it('should find correct enum version for major version', () => {
@@ -108,8 +91,8 @@ describe('resolveVersion', () => {
   });
 
   describe('error handling', () => {
-    it('should throw TypeError for invalid version string', () => {
-      expect(() => resolveVersion('invalid-version')).toThrow(TypeError);
+    it('should throw VersionError for invalid version string', () => {
+      expect(() => resolveVersion('invalid-version')).toThrow(VersionError);
     });
 
     it('should not throw for malformed version (coerce handles it)', () => {
@@ -117,8 +100,8 @@ describe('resolveVersion', () => {
       expect(() => resolveVersion('2.')).not.toThrow();
     });
 
-    it('should throw TypeError for non-semver string', () => {
-      expect(() => resolveVersion('not-a-version')).toThrow(TypeError);
+    it('should throw VersionError for non-semver string', () => {
+      expect(() => resolveVersion('not-a-version')).toThrow(VersionError);
     });
 
     it('should throw VersionError for major version incompatibility', () => {
@@ -137,18 +120,18 @@ describe('resolveVersion', () => {
         expect(error).toBeInstanceOf(VersionError);
         const versionError = error as VersionError;
         expect(versionError.type).toBe('major-incompatibility');
-        expect(versionError.requestedVersion.version).toBe('5.0.0');
-        expect(versionError.latestVersion.version).toBe('4.0.9');
+        expect(versionError.requestedVersion).toBe('5.0.0');
+        expect(versionError.latestVersion).toBe('4.0.9');
       }
     });
 
     it('should include correct error type for invalid version', () => {
       try {
         resolveVersion('invalid');
-        expect.fail('Should have thrown TypeError');
+        expect.fail('Should have thrown VersionError');
       } catch (error) {
-        expect(error).toBeInstanceOf(TypeError);
-        expect((error as Error).message).toContain('Invalid Version: invalid');
+        expect(error).toBeInstanceOf(VersionError);
+        expect((error as VersionError).type).toBe('invalid-version');
       }
     });
   });
@@ -183,34 +166,32 @@ describe('resolveVersion', () => {
 
   describe('warning behavior', () => {
     it('should warn on minor version mismatch', () => {
-      resolveVersion('4.1.0');
+      const result = resolveVersion('4.1.0');
 
-      expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(console.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining('Minor version mismatch'),
-        }),
-      );
+      expect(result.warnings).toBeDefined();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings?.[0]).toContain('Minor version mismatch');
     });
 
     it('should not warn on patch version differences', () => {
-      resolveVersion('4.0.8');
+      const result = resolveVersion('4.0.8');
 
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(result.warnings).toBeUndefined();
     });
 
     it('should not warn on exact version match', () => {
-      resolveVersion('4.0.9');
+      const result = resolveVersion('4.0.9');
 
-      expect(console.warn).not.toHaveBeenCalled();
+      expect(result.warnings).toBeUndefined();
     });
 
     it('should warn with correct version information', () => {
-      resolveVersion('4.2.0');
+      const result = resolveVersion('4.2.0');
 
-      const warningCall = (console.warn as ReturnType<typeof vi.fn>).mock.calls[0][0];
-      expect(warningCall.message).toContain('4.2.0');
-      expect(warningCall.message).toContain('4.0.9');
+      expect(result.warnings).toBeDefined();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings?.[0]).toContain('4.2.0');
+      expect(result.warnings?.[0]).toContain('4.0.9');
     });
   });
 

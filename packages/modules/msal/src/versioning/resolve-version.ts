@@ -1,4 +1,4 @@
-import semver, { SemVer } from 'semver';
+import semver, { type SemVer } from 'semver';
 
 import { MsalModuleVersion } from '../static';
 
@@ -49,7 +49,7 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   const warnings: string[] = [];
 
   // Parse the requested version, defaulting to latest if not provided
-  const versionString = typeof version || MsalModuleVersion.Latest;
+  const versionString = version || MsalModuleVersion.Latest;
 
   // Parse versions using coerce for backward compatibility
   const wantedVersion = semver.coerce(versionString);
