@@ -3,6 +3,21 @@ import inquirer from 'inquirer';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 
 /**
+ * Allowlist of supported IDE commands for security validation
+ * Only these commands are permitted to be executed via execa
+ */
+const SUPPORTED_IDE_COMMANDS = ['code', 'cursor'] as const;
+
+/**
+ * Validates that the provided IDE command is in the allowlist
+ * @param command - The IDE command to validate
+ * @returns True if the command is supported, false otherwise
+ */
+function isValidIDECommand(command: string): command is (typeof SUPPORTED_IDE_COMMANDS)[number] {
+  return SUPPORTED_IDE_COMMANDS.includes(command as (typeof SUPPORTED_IDE_COMMANDS)[number]);
+}
+
+/**
  * Prompts the user to open the newly created project in their preferred IDE.
  *
  * Displays a selection menu with supported IDEs (VS Code, Cursor) and executes
@@ -49,6 +64,14 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
 
   // Execute the selected IDE command to open the project directory
   if (openInIDE) {
+    // Validate IDE command against allowlist for security
+    if (!isValidIDECommand(openInIDE)) {
+      logger.error(
+        `Invalid IDE command: ${openInIDE}. Only supported IDEs are: ${SUPPORTED_IDE_COMMANDS.join(', ')}`,
+      );
+      return;
+    }
+
     try {
       // Spawn detached process for IDE opening - IDE should run independently of CLI
       // NOTE: Using stdio: 'pipe' to avoid polluting CLI output with IDE messages
