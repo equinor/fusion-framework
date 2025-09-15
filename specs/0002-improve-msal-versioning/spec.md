@@ -1,6 +1,6 @@
 # Feature Specification: Improve MSAL module version checking to be more permissive
 
-**Feature Branch**: `001-title-improve-msal`  
+**Feature Branch**: `0002-improve-msal-versioning`  
 **Created**: 2025-01-15  
 **Status**: Draft  
 **Input**: User description: "Make MSAL module version checking more permissive for minor and patch versions"
