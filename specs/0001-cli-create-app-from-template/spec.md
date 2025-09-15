@@ -1,6 +1,6 @@
 ---
 title: "Add CLI command to create apps from templates"
-feature_branch: "001-cli-create-app-from-template"
+feature_branch: "0001-cli-create-app-from-template"
 created: "2025-01-27"
 status: "Draft"
 github_issue: "https://github.com/equinor/fusion-framework/issues/3372"

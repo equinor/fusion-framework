@@ -1,9 +1,9 @@
 ---
 title: "Implementation Plan: Add CLI command to create apps from templates"
-branch: "001-cli-create-app-from-template"
+branch: "0001-cli-create-app-from-template"
 date: "2025-01-27"
 spec: "spec.md"
-input: "/specs/001-cli-create-app-from-template/spec.md"
+input: "/specs/0001-cli-create-app-from-template/spec.md"
 status: "Implemented"
 ---
 
