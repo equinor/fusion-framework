@@ -40,6 +40,10 @@ export default sidebar({
       link: 'README.md',
       children: [
         {
+          text: 'Creating Apps',
+          link: 'docs/creating-apps.md',
+        },
+        {
           text: 'Authentication',
           link: 'docs/auth.md',
         },
