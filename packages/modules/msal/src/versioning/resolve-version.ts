@@ -1,4 +1,4 @@
-import semver, { type SemVer } from 'semver';
+import semver, { SemVer } from 'semver';
 
 import { MsalModuleVersion } from '../static';
 
@@ -45,15 +45,21 @@ import type { ResolvedVersion } from './types';
  * ```
  */
 export function resolveVersion(version?: string | SemVer): ResolvedVersion {
+  // Initialize warnings array to collect any version mismatches
+  const warnings: string[] = [];
+
   // Parse the requested version, defaulting to latest if not provided
-  const wantedVersion = semver.coerce(version || MsalModuleVersion.Latest);
+  const versionString = typeof version || MsalModuleVersion.Latest;
+
+  // Parse versions using coerce for backward compatibility
+  const wantedVersion = semver.coerce(versionString);
   const latestVersion = semver.coerce(MsalModuleVersion.Latest);
 
   // Validate that the requested version is a valid semver
   if (!wantedVersion) {
     throw VersionError.create(
       VersionError.Type.InvalidVersion,
-      version || '<unknown>',
+      versionString,
       MsalModuleVersion.Latest,
     );
   }
@@ -63,7 +69,7 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   if (!latestVersion) {
     throw VersionError.create(
       VersionError.Type.InvalidLatestVersion,
-      version || '<unknown>',
+      versionString,
       MsalModuleVersion.Latest,
     );
   }
@@ -78,15 +84,15 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
     );
   }
 
-  // Minor version mismatch - log warning but allow execution
+  // Minor version mismatch - add warning but don't throw
   // This helps developers stay aware of version differences without breaking functionality
   if (wantedVersion.major === latestVersion.major && wantedVersion.minor !== latestVersion.minor) {
-    const warning = VersionError.create(
+    const minorMismatchWarning = VersionError.create(
       VersionError.Type.MinorMismatch,
       String(wantedVersion),
       String(latestVersion),
     );
-    console.warn(warning);
+    warnings.push(minorMismatchWarning.message);
   }
 
   // Find the corresponding enum version for the requested major version
@@ -102,6 +108,7 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
     isLatest: wantedVersion.compare(latestVersion) === 0,
     satisfiesLatest: wantedVersion.major === latestVersion.major,
     enumVersion,
+    warnings: warnings.length > 0 ? warnings : undefined,
   } satisfies ResolvedVersion;
 }
 

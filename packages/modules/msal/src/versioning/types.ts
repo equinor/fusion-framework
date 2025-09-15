@@ -50,4 +50,11 @@ export type ResolvedVersion = {
    * Used for module configuration and feature detection.
    */
   enumVersion: MsalModuleVersion;
+
+  /**
+   * Optional array of warning messages for version mismatches.
+   * Present when there are minor version differences but major versions match.
+   * Consumers can check this field to log warnings or handle version differences.
+   */
+  warnings?: string[];
 };
