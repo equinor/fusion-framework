@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-ag-grid",
-  "version": "34.1.2",
+  "version": "34.2.0",
   "description": "Fusion module for using AG Grid",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -46,8 +46,8 @@
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-grid-community": "34.1.2",
-    "ag-grid-enterprise": "34.1.2",
+    "ag-grid-community": "34.2.0",
+    "ag-grid-enterprise": "34.2.0",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
