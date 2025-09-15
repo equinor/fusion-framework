@@ -69,6 +69,16 @@ export class ProjectTemplateRepository {
   }
 
   /**
+   * Gets the full GitHub URL for the repository based on the current protocol.
+   * @returns The complete GitHub URL (HTTPS or SSH format)
+   */
+  private get repoUrl(): string {
+    return this.#protocol === 'ssh' 
+      ? `git@github.com:${this.repo}.git`
+      : `https://github.com/${this.repo}.git`;
+  }
+
+  /**
    * Sets the branch for repository operations.
    * If the repository is already initialized, it will checkout the new branch.
    * @param branch - The branch name to use
@@ -100,12 +110,12 @@ export class ProjectTemplateRepository {
     },
   ) {
     this.#baseDir = options.baseDir ?? join(tmpdir(), 'ffc', 'repo', repo);
-    this.#git = simpleGit({ baseDir: this.#baseDir });
     this.#log = options.log;
-    // Auto-detect protocol based on SSH configuration
-    this.#protocol =
-      (options.protocol ?? !!this.#git.getConfig('core.sshCommand')) ? 'ssh' : 'https';
     this.#branch = options.branch ?? 'main';
+    // Initialize git instance lazily to avoid issues with non-existent directories
+    this.#git = simpleGit();
+    // Auto-detect protocol based on SSH configuration (will be set properly in initialize)
+    this.#protocol = options.protocol ?? 'https';
   }
 
   /**
@@ -124,8 +134,6 @@ export class ProjectTemplateRepository {
       return;
     }
 
-    this._setupOutputHandler();
-
     try {
       this.#log?.debug('Checking if repository directory exists...', this.#baseDir);
       if (!existsSync(this.#baseDir)) {
@@ -133,6 +141,22 @@ export class ProjectTemplateRepository {
         mkdirSync(this.#baseDir, { recursive: true });
         this.#log?.succeed('Repository directory created successfully!');
       }
+
+      // Initialize git instance with the correct base directory
+      this.#git = simpleGit({ baseDir: this.#baseDir });
+      this._setupOutputHandler();
+
+      // Auto-detect protocol based on SSH configuration now that git is properly initialized
+      if (!this.#protocol || this.#protocol === 'https') {
+        try {
+          const sshCommand = await this.#git.getConfig('core.sshCommand');
+          this.#protocol = sshCommand ? 'ssh' : 'https';
+        } catch {
+          // If we can't detect SSH config, default to https
+          this.#protocol = 'https';
+        }
+      }
+
       this.#log?.debug('Checking if repository is initialized...');
       const isRepo = await this.#git.checkIsRepo();
       if (!isRepo) {
@@ -230,10 +254,13 @@ export class ProjectTemplateRepository {
     try {
       this.#log?.debug('Cloning repo...', {
         repo: this.repo,
+        repoUrl: this.repoUrl,
         baseDir: this.#baseDir,
         branch: this.#branch,
+        protocol: this.#protocol,
       });
-      await this.#git.clone(this.repo, this.#baseDir, [
+      
+      await this.#git.clone(this.repoUrl, this.#baseDir, [
         '--single-branch',
         '--branch',
         this.#branch,
@@ -245,7 +272,7 @@ export class ProjectTemplateRepository {
 
   async _checkoutBranch(): Promise<void> {
     try {
-      this.#log?.debug('Fetching repo...', this.repo);
+      this.#log?.debug('Fetching repo...', { repo: this.repo, repoUrl: this.repoUrl });
       await this.#git.fetch();
       this.#log?.debug('Checking out branch...', this.#branch);
       const response = await this.#git.checkout(this.#branch);
