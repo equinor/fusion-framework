@@ -99,7 +99,17 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   // This is used for module configuration and feature detection
   const enumVersion = Object.values(MsalModuleVersion).find(
     (x) => semver.coerce(x)?.major === wantedVersion.major,
-  ) as MsalModuleVersion;
+  );
+
+  // If no matching enum version is found, this indicates a major version
+  // that doesn't have a corresponding enum value defined
+  if (!enumVersion) {
+    throw VersionError.create(
+      VersionError.Type.MajorIncompatibility,
+      String(wantedVersion),
+      String(latestVersion),
+    );
+  }
 
   // Return comprehensive version resolution result
   return {

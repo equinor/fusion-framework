@@ -88,6 +88,11 @@ describe('resolveVersion', () => {
       expect(result.enumVersion).toBe(MsalModuleVersion.V2);
       expect(result.satisfiesLatest).toBe(false); // 2.x is not compatible with 4.x
     });
+
+    it('should throw error when no matching major version exists in enum', () => {
+      // Version 3.0.0 should throw because there's no enum for major version 3
+      expect(() => resolveVersion('3.0.0')).toThrow(VersionError);
+    });
   });
 
   describe('error handling', () => {
@@ -156,11 +161,9 @@ describe('resolveVersion', () => {
       expect(() => resolveVersion('5.0.0')).toThrow();
     });
 
-    it('should handle older major versions as satisfying', () => {
-      const result = resolveVersion('3.0.0');
-      expect(result.satisfiesLatest).toBe(false);
-      expect(result.wantedVersion.major).toBe(3);
-      expect(result.latestVersion.major).toBe(4);
+    it('should throw error for major versions without enum values', () => {
+      // Version 3.0.0 should throw because there's no enum for major version 3
+      expect(() => resolveVersion('3.0.0')).toThrow(VersionError);
     });
   });
 
@@ -218,11 +221,9 @@ describe('resolveVersion', () => {
       expect(result.wantedVersion.version).toBe('4.0.9'); // coerce strips pre-release and build
     });
 
-    it('should handle zero versions', () => {
-      const result = resolveVersion('0.0.0');
-
-      expect(result.satisfiesLatest).toBe(false);
-      expect(result.wantedVersion.major).toBe(0);
+    it('should throw error for zero versions without enum values', () => {
+      // Version 0.0.0 should throw because there's no enum for major version 0
+      expect(() => resolveVersion('0.0.0')).toThrow(VersionError);
     });
   });
 
@@ -245,7 +246,7 @@ describe('resolveVersion', () => {
 
     it('should have consistent latest version across calls', () => {
       const result1 = resolveVersion('2.0.0');
-      const result2 = resolveVersion('3.0.0');
+      const result2 = resolveVersion('4.0.0');
 
       expect(result1.latestVersion.version).toBe(result2.latestVersion.version);
       expect(result1.latestVersion.version).toBe('4.0.9');
