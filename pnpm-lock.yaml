@@ -640,8 +640,8 @@ importers:
         specifier: ^9.0.9
         version: 9.0.9
       commander:
-        specifier: ^13.0.0
-        version: 13.1.0
+        specifier: ^14.0.1
+        version: 14.0.1
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -5516,10 +5516,6 @@ packages:
 
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
-
-  commander@13.1.0:
-    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
-    engines: {node: '>=18'}
 
   commander@14.0.1:
     resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
@@ -13589,8 +13585,6 @@ snapshots:
   colorjs.io@0.5.2: {}
 
   comma-separated-tokens@2.0.3: {}
-
-  commander@13.1.0: {}
 
   commander@14.0.1: {}
 
