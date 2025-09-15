@@ -38,7 +38,7 @@ export async function startDevServer(
     if (persistent) {
       logger.info('Running in persistent mode - server will run until manually stopped (Ctrl+C)');
     }
-    
+
     try {
       // Spawn dev server process - will run in foreground but can be stopped with Ctrl+C
       // NOTE: This intentionally blocks the CLI process to show dev server output.
@@ -52,7 +52,7 @@ export async function startDevServer(
       // In persistent mode, the server runs indefinitely until user manually stops it
       let timeout: NodeJS.Timeout | null = null;
       let timeoutReached = false;
-      
+
       if (!persistent) {
         // Set a timeout to prevent indefinite hanging (e.g., 60 seconds)
         // This helps catch cases where the dev server fails to start properly
