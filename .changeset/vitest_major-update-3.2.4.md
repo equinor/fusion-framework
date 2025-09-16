@@ -5,9 +5,9 @@
 "@equinor/fusion-framework-module-services": patch
 "@equinor/fusion-observable": patch
 "@equinor/fusion-query": patch
-"@equinor/fusion-utils-imports": patch
-"@equinor/fusion-utils-load-env": patch
-"@equinor/fusion-utils-log": patch
+"@equinor/fusion-imports": patch
+"@equinor/fusion-load-env": patch
+"@equinor/fusion-log": patch
 "@equinor/fusion-framework-vite-plugin-api-service": patch
 "@equinor/fusion-framework-vite-plugin-spa": patch
 ---
