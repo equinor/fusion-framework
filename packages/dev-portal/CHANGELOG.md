@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.0.3
+
+### Patch Changes
+
+- [#3381](https://github.com/equinor/fusion-framework/pull/3381) [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update rollup from 4.49.0 to 4.50.2
+
+  - Updated rollup dependency via vite transitive dependency
+  - Includes bug fixes for tree-shaking array destructuring patterns
+  - Performance improvements and platform support updates
+  - No breaking changes - backward compatible update
+
 ## 1.0.2
 
 ### Patch Changes

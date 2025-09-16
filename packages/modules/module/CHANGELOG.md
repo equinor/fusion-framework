@@ -1,5 +1,17 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+- [#3384](https://github.com/equinor/fusion-framework/pull/3384) [`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402) Thanks [@odinr](https://github.com/odinr)! - Fixed missing type definitions in compiled declaration files.
+
+  - Removed @internal JSDoc tags from ModulesObjectInstanceType and ModulesObjectConfigType
+  - These utility types are now properly included in the public API since they are referenced by public types
+  - Resolves TypeScript compilation errors when consuming the module
+
+  Fixes #3383
+
 ## 5.0.0
 
 ### Major Changes

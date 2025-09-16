@@ -1,5 +1,27 @@
 # Change Log
 
+## 34.2.1
+
+### Patch Changes
+
+- [#3357](https://github.com/equinor/fusion-framework/pull/3357) [`e24cd15`](https://github.com/equinor/fusion-framework/commit/e24cd15175a322cbdd4d40a5dfa9933a3f55d624) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated ag-grid dependencies to version 34.2.0
+
+  - Updated ag-grid-community from 34.1.2 to 34.2.0
+  - Updated ag-grid-enterprise from 34.1.2 to 34.2.0
+
+  This patch update includes bug fixes and improvements. See the [ag-grid changelog](https://www.ag-grid.com/changelog/?fixVersion=34.2.0) for detailed release notes.
+
+  **Key changes in 34.2.0:**
+
+  - RTI-3075: Ensure API stop/cancel succeed
+  - RTI-3073: Enter during batch shouldn't end batch
+  - RTI-3070: Only create strategies when editing
+  - RTI-3054: Ensure API call succeeds
+  - Various bug fixes and improvements
+
+- Updated dependencies [[`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402)]:
+  - @equinor/fusion-framework-module@5.0.1
+
 ## 34.1.2
 
 ### Patch Changes
