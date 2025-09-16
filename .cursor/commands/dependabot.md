@@ -6,7 +6,7 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 ## Workflow Steps
 
 ### 1. List and Select Dependabot PR
-- List all open PRs from dependabot[bot] using `gh pr list --author dependabot[bot]`
+- List all open PRs from dependabot[bot] using `gh pr list --author "dependabot[bot]"`
 - Display PRs in a simple list format grouped by update type:
 
 **🚨 MAJOR UPDATES** (Breaking changes, requires careful review)
