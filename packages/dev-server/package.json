@@ -42,7 +42,7 @@
   "devDependencies": {
     "typescript": "^5.8.2",
     "vite": "^6.3.5",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "vite": "^6.0.7"
