@@ -1,7 +1,7 @@
 # Dependabot PR Handler
 
 ## Overview
-Automated workflow for handling Dependabot pull requests with dependency updates, changeset generation, and automated processing.
+Automated workflow for handling Dependabot pull requests with dependency updates, changeset generation, and automated processing. Supports both interactive PR selection and direct PR input via number or URL.
 
 ## Prerequisites
 - **pnpm** must be available (not npm)
@@ -10,6 +10,44 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - **Current directory**: Must be in the fusion-framework repository root
 
 ## Workflow Steps
+
+### 0. Optional: Direct PR Input (Skip Step 1)
+**USAGE**: If you already know the PR number or URL, you can skip the listing step.
+
+**ACCEPTED INPUTS**:
+- PR number: `1234` or `#1234`
+- PR URL: `https://github.com/owner/repo/pull/1234`
+- Full PR URL: `https://github.com/equinor/fusion-framework/pull/1234`
+
+**VALIDATION**:
+1. Extract PR number from input
+2. Verify PR exists: `gh pr view [PR_NUMBER] --json number,title,author`
+3. Confirm it's a Dependabot PR: Check `author.login` equals `"dependabot[bot]"`
+4. Verify PR is open: Check `state` equals `"OPEN"`
+
+**IF VALID**: Proceed directly to step 2 (Handle Stale PRs)
+**IF INVALID**: Fall back to step 1 (List and Select)
+
+**USAGE EXAMPLES**:
+```bash
+# Using PR number
+/dependabot 1234
+
+# Using PR number with hash
+/dependabot #1234
+
+# Using full GitHub URL
+/dependabot https://github.com/equinor/fusion-framework/pull/1234
+
+# Using short GitHub URL
+/dependabot https://github.com/owner/repo/pull/1234
+```
+
+**ERROR HANDLING**:
+- **Invalid PR number**: "PR #1234 not found or not accessible"
+- **Not a Dependabot PR**: "PR #1234 is not authored by dependabot[bot]"
+- **PR is closed**: "PR #1234 is not open (state: CLOSED/MERGED)"
+- **Invalid URL format**: "Invalid PR URL format. Expected: https://github.com/owner/repo/pull/1234"
 
 ### 1. List and Select Dependabot PR
 **COMMAND**: `gh pr list --author "dependabot[bot]" --state open`
@@ -225,6 +263,14 @@ gh pr comment [PR_NUMBER] --body "## Update Complete ✅
 **IF PR STILL OPEN**: `gh pr close [PR_NUMBER] --comment "Changes have been incorporated into main"`
 
 ## Quick Reference
+
+### Direct PR Input
+```bash
+# Skip PR listing and go directly to processing
+dependabot 1234                                    # PR number
+dependabot #1234                                   # PR number with hash
+dependabot https://github.com/owner/repo/pull/1234 # Full URL
+```
 
 ### Dependency Analysis Commands
 ```bash
