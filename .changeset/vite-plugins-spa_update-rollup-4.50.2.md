@@ -1,5 +1,5 @@
 ---
-"fusion-framework-vite-plugin-spa": patch
+"@equinor/fusion-framework-vite-plugin-spa": patch
 ---
 
 Update rollup from 4.49.0 to 4.50.2
