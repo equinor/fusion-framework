@@ -8,8 +8,8 @@
 "@equinor/fusion-utils-imports": patch
 "@equinor/fusion-utils-load-env": patch
 "@equinor/fusion-utils-log": patch
-"fusion-framework-vite-plugin-api-service": patch
-"fusion-framework-vite-plugin-spa": patch
+"@equinor/fusion-framework-vite-plugin-api-service": patch
+"@equinor/fusion-framework-vite-plugin-spa": patch
 ---
 
 Updated vitest from 2.1.9 to 3.2.4 across all packages.
