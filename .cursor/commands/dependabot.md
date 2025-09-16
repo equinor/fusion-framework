@@ -34,6 +34,12 @@ Automated workflow for handling Dependabot pull requests with dependency updates
   - Check for security updates or performance improvements
 - Identify which packages will be affected by the update
 - Generate a short summary of the impact and implications
+- **Post research findings as PR comment:**
+  - Create detailed comment with research summary
+  - Include links to changelog/release notes
+  - Highlight breaking changes, new features, or security updates
+  - Mention affected packages and potential impact
+  - Use `gh pr comment [PR_NUMBER] --body "research findings"` command
 - **PAUSE**: Display research summary and ask user to confirm continuation
 
 ### 4. Rebase from Origin/Main
@@ -101,6 +107,13 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 ### 10. Admin Squash
 - Squash the PR as admin to clean up commit history
 - Ensure clean, single-commit merge
+- **Post completion summary as PR comment:**
+  - Document all changes made during the update process
+  - List packages that were updated and their new versions
+  - Mention any changesets created
+  - Note any fixes applied (linting, type issues, etc.)
+  - Include test results and build status
+  - Use `gh pr comment [PR_NUMBER] --body "completion summary"` command
 
 ### 11. Cleanup
 - Switch to main branch: `git switch main`
