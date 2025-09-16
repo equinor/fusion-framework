@@ -143,7 +143,7 @@
     "rxjs": "^7.8.1",
     "type-fest": "^5.0.0",
     "typescript": "^5.8.2",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.4"
   },
   "peerDependenciesMeta": {
     "typescript": {
