@@ -196,7 +196,7 @@ pnpm upgrade "vuepress-theme-hope@latest"
 
 ### 10. Admin Squash
 **PAUSE**: Display PR summary and ask user to confirm before squashing and merging
-**COMMAND**: `gh pr merge [PR_NUMBER] --squash --delete-branch`
+**COMMAND**: `gh pr merge [PR_NUMBER] --squash --delete-branch --admin`
 **SQUASH**: PR as admin to clean up commit history
 **POST COMPLETION COMMENT**:
 ```bash
