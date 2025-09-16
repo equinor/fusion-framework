@@ -7,21 +7,37 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 
 ### 1. List and Select Dependabot PR
 - List all open PRs from dependabot[bot] using `gh pr list --author dependabot[bot]`
-- Display basic PR info: title, number, status, and update type indicators:
-  - 🚨 **Major updates** - Breaking changes, requires careful review
-  - 🧩 **Minor updates** - New features, backward compatible
-  - 🐞 **Patch updates** - Bug fixes, safe to apply
-- **Do NOT fetch detailed information** - just show the list
+- Display PRs in a simple list format grouped by update type:
+
+**🚨 MAJOR UPDATES** (Breaking changes, requires careful review)
+- PR #XXXX: package-name from X.X.X to Y.Y.Y
+- PR #YYYY: package-name from X.X.X to Y.Y.Y
+
+**🧩 MINOR UPDATES** (New features, backward compatible)
+- PR #ZZZZ: package-name from X.X.X to Y.Y.Y
+- PR #AAAA: package-name from X.X.X to Y.Y.Y
+
+**🐞 PATCH UPDATES** (Bug fixes, safe to apply)
+- PR #BBBB: package-name from X.X.X to Y.Y.Y
+- PR #CCCC: package-name from X.X.X to Y.Y.Y
+
+- **Do NOT fetch detailed information** - just show the grouped list
 - Allow user to select which PR to process
 - Checkout the selected PR using `gh pr checkout [PR_NUMBER]`
 
-### 2. Update Stale PRs (if needed)
+### 2. Handle Stale PRs (if needed)
 - **Check if PR is stale**: Look for "Automatic rebases have been disabled" message
-- **If stale PR detected**: Update to latest version (but not zero day)
-  - Check current dependency version in PR
+- **If stale PR detected**: Start fresh from main
+  - Close the stale PR: `gh pr close [PR_NUMBER] --comment "Starting fresh from main due to staleness"`
+  - Switch to main: `git switch main`
+  - Pull latest changes: `git pull origin main`
+  - Create new branch: `git checkout -b dependabot/fresh-[package-name]-[version]`
+  - Check current dependency version in main
   - Find latest stable version (avoid pre-release/zero day versions)
   - Use `pnpm update -r "@SCOPE/PACKAGE@STABLE_VERSION"` to update outdated packages
-  - Commit the updated version
+  - Commit the updated version: `git add . && git commit -m "chore: bump [package-name] to [version]"`
+  - Push new branch: `git push origin dependabot/fresh-[package-name]-[version]`
+  - Create new PR: `gh pr create --title "chore: bump [package-name] from [old-version] to [new-version]" --body "Fresh update from main"`
 - **If PR is current**: Proceed with existing version
 
 ### 3. Research Update Impact
@@ -49,6 +65,16 @@ Automated workflow for handling Dependabot pull requests with dependency updates
   - Delete `pnpm-lock.yaml` and `node_modules/`
   - Run `pnpm install` to regenerate clean lock file
   - Continue rebase with regenerated lock file
+
+### 4.1. Check if Changes Already Merged
+- **After rebase, check if changes are already in main:**
+  - Run `git diff HEAD~1 --name-only` to see what changed
+  - If only lock file changes and they're already in main, proceed to close PR
+  - If changes are already incorporated, skip to PR closing step
+- **If changes already in main:**
+  - Post comment: "This dependency update has already been incorporated into main. Closing this PR as the changes are no longer needed."
+  - Close the PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
+  - Skip remaining steps and go directly to cleanup
 
 ### 5. Check Requested Updates
 - Analyze the PR to identify which packages are being updated
@@ -118,10 +144,9 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 ### 11. Cleanup
 - Switch to main branch: `git switch main`
 - Pull latest changes: `git pull origin main`
-- **Check if PR is fully merged**: `gh pr view [PR_NUMBER] --json state`
-- Delete local branch: `git branch -d [branch-name]`
-- **If warning appears**: The branch was deleted before remote merge completed (safe to ignore)
-- **Alternative approach**: Wait 30 seconds after squash merge before deleting local branch
+- **If PR is still open and changes are already in main:**
+  - Close the PR: `gh pr close [PR_NUMBER] --comment "Changes have been incorporated into main"`
+- **Force delete local branch**: `git branch -D [branch-name]`
 - Verify cleanup completed successfully
 
 ## Dependency Graph Analysis Methodology
@@ -169,6 +194,16 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - If changeset generation fails, report missing dependencies
 - If push fails, check permissions and retry
 - **Branch deletion warning**: If `git branch -d` shows "not yet merged to HEAD" warning, this is safe to ignore - the branch was deleted before remote merge completed
+
+## Handling Already-Merged PRs
+- **Detection**: After rebase, if `git diff HEAD~1 --name-only` shows only lock file changes
+- **Verification**: Check if the dependency version in the lock file matches what's already in main
+- **Action**: If changes are already incorporated:
+  - Post explanatory comment to PR
+  - Close the PR with appropriate message
+  - Skip all remaining processing steps
+  - Proceed directly to cleanup
+- **Benefits**: Prevents duplicate work and keeps PR list clean
 
 ## Success Criteria
 - [ ] PR successfully checked out
