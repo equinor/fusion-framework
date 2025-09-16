@@ -112,7 +112,7 @@
     "execa": "^9.6.0",
     "inquirer": "^12.9.6",
     "is-path-inside": "^4.0.0",
-    "ora": "^8.0.1",
+    "ora": "^9.0.0",
     "read-package-up": "^11.0.0",
     "simple-git": "^3.28.0",
     "vite": "^6.3.5",
