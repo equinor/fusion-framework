@@ -98,7 +98,7 @@ gh pr comment [PR_NUMBER] --body "## Research Findings
 2. `git rebase origin/main`
 
 **IF LOCK FILE CONFLICTS**:
-1. `rm pnpm-lock.yaml node_modules/ -rf`
+1. `pnpm clean && rm -f pnpm-lock.yaml`
 2. `pnpm install`
 3. `git add pnpm-lock.yaml`
 4. `git rebase --continue`
