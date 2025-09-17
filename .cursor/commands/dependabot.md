@@ -74,7 +74,25 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - ✅ **Wait for user to select** which PR to process
 - ✅ **Then checkout** using `gh pr checkout [PR_NUMBER]`
 
-### 2. Handle Stale PRs (if needed)
+### 2. Check Existing PR Status
+**COMMAND**: `gh pr view [PR_NUMBER] --json comments --jq '.comments[] | select(.author.login != "dependabot[bot]") | {author: .author.login, body: .body, createdAt: .createdAt}'`
+
+**ANALYZE COMMENTS**: Look for existing workflow comments to determine current status:
+- **Research Findings**: Check if research has already been completed
+- **Planned Work**: Check if work plan has been established
+- **Ready for Merge**: Check if PR is already processed and ready
+- **Process Log**: Check if work is already in progress
+
+**STATUS DETERMINATION**:
+- **No workflow comments**: Start from step 4 (Research Update Impact)
+- **Research only**: Start from step 5 (Rebase from Origin/Main)
+- **Planned work exists**: Check if work is in progress or completed
+- **Ready for merge**: Skip to step 11 (Pre-Merge Summary)
+- **Process log exists**: Determine current step and continue from there
+
+**IF WORK ALREADY COMPLETED**: Display status and ask user if they want to restart or continue
+
+### 3. Handle Stale PRs (if needed)
 **DETECTION**: Look for "Automatic rebases have been disabled" message in PR
 
 **VALIDATION**: Verify PR is actually a dependency update by checking if package.json files are modified
@@ -93,7 +111,7 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 
 **IF PR IS CURRENT**: Proceed with existing version
 
-### 3. Research Update Impact
+### 4. Research Update Impact
 **ANALYZE PR**: Use `gh pr view [PR_NUMBER] --json title,body` to get details
 
 **RESEARCH TASKS**:
@@ -108,29 +126,54 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 ```bash
 gh pr comment [PR_NUMBER] --body "## Research Findings
 
+### Affected Packages
+- [List packages that will be affected]
+
 ### Package Updates
 - [package-name]: [old-version] → [new-version]
 
+[Only include if applicable:]
 ### Breaking Changes
 - [List any breaking changes]
 
+[Only include if applicable:]
 ### New Features
 - [List new features]
 
+[Only include if applicable:]
 ### Security Updates
 - [List security updates]
-
-### Affected Packages
-- [List packages that will be affected]
 
 ### Links
 - [Changelog link]
 - [Release notes link]"
 ```
 
+**POST PLANNED WORK COMMENT**:
+```bash
+gh pr comment [PR_NUMBER] --body "## Planned Work
+
+Based on research findings, the following actions will be taken:
+
+### Update Process
+- [ ] Rebase from origin/main
+- [ ] Generate changesets for affected packages
+- [ ] Fix any linting/type errors
+- [ ] Run full test suite
+- [ ] Verify build success
+
+### Risk Assessment
+- [Risk level: Low/Medium/High]
+- [Mitigation strategy if applicable]
+
+### Expected Impact
+- [Brief description of expected changes]
+- [Any special considerations]"
+```
+
 **PAUSE**: Display research summary and ask user to confirm continuation
 
-### 4. Rebase from Origin/Main
+### 5. Rebase from Origin/Main
 **COMMANDS**:
 1. `git fetch origin`
 2. `git rebase origin/main`
@@ -141,7 +184,7 @@ gh pr comment [PR_NUMBER] --body "## Research Findings
 3. `git add pnpm-lock.yaml`
 4. `git rebase --continue`
 
-### 4.1. Check if Changes Already Merged
+### 5.1. Check if Changes Already Merged
 **CHECK**: `git diff HEAD~1 --name-only`
 
 **IF ONLY LOCK FILE CHANGES**:
@@ -149,7 +192,7 @@ gh pr comment [PR_NUMBER] --body "## Research Findings
 2. Close PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
 3. Skip to cleanup (step 11)
 
-### 5. Check Requested Updates
+### 6. Check Requested Updates
 **ANALYZE PR**: Identify which packages are being updated
 **CHECK**: If package.json files are altered
 
@@ -175,7 +218,7 @@ pnpm ls --depth=Infinity
 - @equinor/fusion-framework-vite-plugin-spa, 
 - @equinor/fusion-framework-dev-server
 
-### 6. Generate Changesets (if needed)
+### 7. Generate Changesets (if needed)
 **CREATE CHANGESETS FOR**:
 - Direct package.json changes
 - Compilation packages (cli, spa plugin, dev-server) if they depend on updated packages
@@ -199,7 +242,7 @@ Description of changes...
 - `minor`: New features, backward compatible  
 - `major`: Breaking changes, requires migration
 
-### 7. Fix and Build
+### 8. Fix and Build
 **FIX ISSUES**: `pnpm check:errors --fix` (will only lint code)
 
 **BUILD COMMANDS**:
@@ -222,39 +265,52 @@ pnpm upgrade "vuepress-theme-hope@latest"
 - `node_modules/` folders
 - Only modify source files, not generated output
 
-### 8. Run Tests
+### 9. Run Tests
 **COMMAND**: `pnpm vitest run`
 **REQUIREMENT**: All tests must pass before proceeding
 **IF FAILURES**: Fix issues before committing changes
 
-### 9. Commit and Push
+### 10. Commit and Push
 **PAUSE**: Display summary of all changes and ask user to confirm before committing
 **COMMIT**: All changes (dependency updates + changesets)
 **PUSH**: `git push --force-with-lease origin [branch-name]`
 
-### 10. Admin Squash
+### 11. Pre-Merge Summary
 **PAUSE**: Display PR summary and ask user to confirm before squashing and merging
-**COMMAND**: `gh pr merge [PR_NUMBER] --squash --delete-branch --admin`
-**SQUASH**: PR as admin to clean up commit history
-**POST COMPLETION COMMENT**:
+**POST PRE-MERGE COMMENT**:
 ```bash
-gh pr comment [PR_NUMBER] --body "## Update Complete ✅
+gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅
 
 ### Packages Updated
 - [package-name]: [old-version] → [new-version]
 
 ### Changesets Created
 - [changeset-filename].md
+  - [Permalink to changeset](https://github.com/equinor/fusion-framework/blob/[commit-sha]/.changeset/[changeset-filename].md)
 
 ### Fixes Applied
 - [linting/type issues fixed]
 
+### Process Log
+- ✅ [Actual step performed with context]
+- ✅ [Actual step performed with context]
+- ✅ [Actual step performed with context]
+
 ### Test Results
-- All tests passed ✅
-- Build successful ✅"
+- 👍🏻 All tests passed (Duration: [X]m [Y]s)
+- 👍🏻 Build successful (Duration: [X]m [Y]s)
+
+### Admin Merge Reason
+This dependency update will be merged by admin to expedite the routine update process. All automated checks have passed and no breaking changes were detected, making it safe to merge without additional review.
+
+🚀 Ready for squash."
 ```
 
-### 11. Cleanup
+### 12. Admin Squash
+**COMMAND**: `gh pr merge [PR_NUMBER] --squash --delete-branch --admin`
+**SQUASH**: PR as admin to clean up commit history
+
+### 13. Cleanup
 **COMMANDS**:
 1. `git switch main`
 2. `git pull origin main`
