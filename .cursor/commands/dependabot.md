@@ -9,7 +9,33 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - **Admin permissions** required for squashing PRs
 - **Current directory**: Must be in the fusion-framework repository root
 
-## Workflow Steps
+## Workflow Steps Overview
+
+| Step | Action | Purpose | Status |
+|------|--------|---------|--------|
+| [0](#0-optional-direct-pr-input-skip-step-1) | Direct PR Input | Skip listing, process specific PR | Optional |
+| [1](#1-list-and-select-dependabot-pr) | List & Select PR | Choose Dependabot PR to process | Required (if step 0 not used) |
+| [2](#2-check-existing-pr-status) | Check PR Status | Analyze existing workflow comments | Required |
+| [2.5](#25-handle-stale-prs-if-needed) | Handle Stale PRs | Create fresh PR if needed | Conditional |
+| [3](#3-check-if-changes-already-merged) | Check Merged Changes | Verify if changes already in main | Required |
+| [4](#4-rebase-from-originmain-mandatory) | Rebase from Main | Ensure latest codebase | **MANDATORY** |
+| [5](#5-research-update-impact) | Research Impact | Analyze dependency changes & test | Required |
+| [6](#6-plan-work) | Plan Work | Create detailed action plan | Required |
+| [7](#7-generate-changesets-if-needed) | Generate Changesets | Create version bump files | Conditional |
+| [8](#8-fix-and-build) | Fix & Build | Apply fixes and build packages | Required |
+| [9](#9-run-tests) | Run Tests | Execute full test suite | Required |
+| [10](#10-commit-and-push) | Commit & Push | Save all changes | Required |
+| [11](#11-pre-merge-summary) | Pre-Merge Summary | Final review before merge | Required |
+| [12](#12-admin-squash) | Admin Squash | Merge PR as admin | Required |
+| [13](#13-cleanup) | Cleanup | Clean up branches and PR | Required |
+
+**Key Decision Points:**
+- **Step 0 vs 1**: Use direct input if you know the PR number/URL
+- **Step 2.5**: Triggered by stale PR detection
+- **Step 7**: Only needed if packages require changesets
+- **Step 4**: Must complete before any research/build operations
+
+## Detailed Workflow Steps
 
 ### 0. Optional: Direct PR Input (Skip Step 1)
 **USAGE**: If you already know the PR number or URL, you can skip the listing step.
@@ -59,7 +85,7 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - PR #XXXX: package-name from X.X.X to Y.Y.Y
 - PR #YYYY: package-name from X.X.X to Y.Y.Y
 
-🧩 MINOR UPDATES (New features, backward compatible)  
+🧩 MINOR UPDATES (New features, backward compatible)
 - PR #ZZZZ: package-name from X.X.X to Y.Y.Y
 - PR #AAAA: package-name from X.X.X to Y.Y.Y
 
@@ -96,6 +122,11 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 **IF WORK ALREADY COMPLETED**: Display status and ask user if they want to restart or continue
 
 ### 2.5. Handle Stale PRs (if needed)
+**TRIGGER CONDITIONS**:
+- PR contains "Automatic rebases have been disabled" message
+- PR is significantly behind main branch
+- User explicitly requests fresh start
+
 **DETECTION**: Look for "Automatic rebases have been disabled" message in PR
 
 **VALIDATION**: Verify PR is actually a dependency update by checking if package.json files are modified
@@ -120,7 +151,7 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 **IF ONLY LOCK FILE CHANGES**:
 1. Post comment: "This dependency update has already been incorporated into main. Closing this PR as the changes are no longer needed."
 2. Close PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
-3. Skip to cleanup (step 15)
+3. Skip to cleanup (step 13)
 
 ### 4. Rebase from Origin/Main (MANDATORY)
 **⚠️ CRITICAL**: This step MUST be completed before any research, build, or test operations to ensure we're working with the latest codebase.
@@ -144,21 +175,6 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 3. `git add pnpm-lock.yaml`
 4. `git rebase --continue`
 5. `git push --force-with-lease origin [branch-name]`
-
-**POST REBASE COMMENT**:
-```bash
-gh pr comment [PR_NUMBER] --body "## Rebase Complete ✅ (PR #[PR_NUMBER])
-
-<!-- WORKFLOW_STATE: REBASE_COMPLETE -->
-
-### Rebase Status
-- ✅ Branch rebased onto latest main
-- ✅ All conflicts resolved
-- ✅ Ready for dependency analysis
-
-### Process Log
-- ✅ Step 4: Rebase from Origin/Main completed"
-```
 
 ### 5. Research Update Impact
 **ANALYZE PR**: Use `gh pr view [PR_NUMBER] --json title,body` to get details
@@ -193,9 +209,9 @@ gh pr comment [PR_NUMBER] --body "## Rebase Complete ✅ (PR #[PR_NUMBER])
      # Full dependency tree
      pnpm ls --depth=Infinity
      ```
-   - **IDENTIFY COMPILATION PACKAGES**: 
-     - @equinor/fusion-framework-cli, 
-     - @equinor/fusion-framework-vite-plugin-spa, 
+   - **IDENTIFY COMPILATION PACKAGES**:
+     - @equinor/fusion-framework-cli
+     - @equinor/fusion-framework-vite-plugin-spa
      - @equinor/fusion-framework-dev-server
 
 **POST RESEARCH COMMENT**:
@@ -284,11 +300,6 @@ Based on research findings, the following actions will be taken:
 - [Brief description of expected changes]
 - [Any special considerations]
 - [Known issues to address based on build/test analysis]
-
-### Process Log
-- ✅ Step 4: Rebase from Origin/Main completed
-- ✅ Step 5: Research Update Impact completed
-- ✅ Step 6: Work planning completed"
 ```
 
 **PAUSE**: Display planning summary and ask user to confirm continuation
@@ -380,16 +391,6 @@ gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅ (PR #[PR_NUMBER])
 ### Fixes Applied
 - [linting/type issues fixed]
 
-### Process Log
-- ✅ Step 4: Rebase from Origin/Main completed
-- ✅ Step 5: Research Update Impact completed
-- ✅ Step 6: Work planning completed
-- ✅ Step 7: Changesets generated
-- ✅ Step 8: Fixes applied and build successful
-- ✅ Step 9: All tests passed
-- ✅ Step 10: Changes committed and pushed
-- ✅ Step 11: Pre-merge summary completed
-
 ### Test Results
 - 👍🏻 All tests passed (Duration: [X]m [Y]s)
 - 👍🏻 Build successful (Duration: [X]m [Y]s)
@@ -423,14 +424,26 @@ The command uses HTML comments in PR comments to enable AI resumption:
 
 These markers help AI determine the current workflow state when resuming interrupted processes.
 
+## Timeout Considerations
+
+### Long-Running Operations
+- **Build commands**: Set reasonable timeouts (e.g., 10-15 minutes)
+- **Test suites**: Allow sufficient time for full test execution
+- **Install operations**: Monitor for network timeouts and retry if needed
+
+### Interrupted Workflows
+- **AI resumption**: Use workflow state markers to resume from last completed step
+- **Network issues**: Retry failed commands with exponential backoff
+- **Process cleanup**: Ensure proper cleanup if workflow is interrupted
+
 ## Quick Reference
 
 ### Direct PR Input
 ```bash
 # Skip PR listing and go directly to processing
-dependabot 1234                                    # PR number
-dependabot #1234                                   # PR number with hash
-dependabot https://github.com/owner/repo/pull/1234 # Full URL
+/dependabot 1234                                    # PR number
+/dependabot #1234                                   # PR number with hash
+/dependabot https://github.com/owner/repo/pull/1234 # Full URL
 ```
 
 ### Dependency Analysis Commands
