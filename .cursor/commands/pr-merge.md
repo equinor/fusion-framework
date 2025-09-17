@@ -234,12 +234,12 @@ Automated PR merging tool that handles the complete workflow from listing PRs to
 
 1. **Run linter**:
    ```bash
-   pnpm lint
+   pnpm check:errors
    ```
 
 2. **Check for linting errors**:
    ```bash
-   pnpm lint:check
+   pnpm check:errors:check
    ```
 
 **VALIDATION CRITERIA**:
@@ -420,13 +420,13 @@ Automated PR merging tool that handles the complete workflow from listing PRs to
 ### Validation Commands
 ```bash
 # Full validation sequence
-pnpm install && pnpm build && pnpm vitest run && pnpm lint
+pnpm install && pnpm build && pnpm vitest run && pnpm check:errors
 
 # Individual validation steps
 pnpm install    # Install dependencies
 pnpm build      # Build project
 pnpm vitest run # Run tests
-pnpm lint       # Run linter
+pnpm check:errors       # Run linter
 ```
 
 ### Git Commands
