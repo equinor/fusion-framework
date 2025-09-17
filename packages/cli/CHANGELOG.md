@@ -1,5 +1,86 @@
 # Change Log
 
+## 11.4.0
+
+### Minor Changes
+
+- [#3369](https://github.com/equinor/fusion-framework/pull/3369) [`bd8360e`](https://github.com/equinor/fusion-framework/commit/bd8360e6b93704b3f8ba4eb0d7fd142e27c01ef9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated commander from v13 to v14 with improved help system and Node.js v20+ requirement.
+
+  ### Breaking Changes
+
+  - Commander 14 requires Node.js v20 or higher (compatible with existing project requirements)
+
+  ### New Features
+
+  - Support for groups of options and commands in help
+  - Support for unescaped negative numbers as arguments
+  - Enhanced TypeScript support with parseArg property
+
+  ### Links
+
+  - [GitHub releases](https://github.com/tj/commander.js/releases/tag/v14.0.1)
+  - [Changelog](https://github.com/tj/commander.js/blob/master/CHANGELOG.md)
+
+- [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
+
+  Major version update of Vite build tool across all packages. This update includes:
+
+  - Enhanced build performance and caching
+  - Better error reporting with code frames
+  - Improved TypeScript integration
+  - Updated plugin ecosystem compatibility
+  - New development server features
+
+  ### Links
+
+  - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
+  - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
+
+### Patch Changes
+
+- [#3389](https://github.com/equinor/fusion-framework/pull/3389) [`db19291`](https://github.com/equinor/fusion-framework/commit/db192912ec35b41a10f0324ee70ecc85a686d4fa) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump ora from 8.2.0 to 9.0.0
+
+  ### Breaking Changes
+
+  - ora v9.0.0 now requires Node.js 20+ (previously supported older versions)
+
+  ### New Features
+
+  - Fix clearing in some cases
+  - Fix `frame()` not displaying dynamic `prefixText`/`suffixText` from functions
+  - Fix multiline text exceeding console height leaving garbage when scrolling
+
+  ### Links
+
+  - [GitHub releases](https://github.com/sindresorhus/ora/releases/tag/v9.0.0)
+  - [npm changelog](https://www.npmjs.com/package/ora?activeTab=versions)
+
+- [#3391](https://github.com/equinor/fusion-framework/pull/3391) [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @vitest/coverage-v8 from 2.0.1 to 3.2.4
+
+  Major version update of Vitest coverage package for CLI testing.
+
+  ### Breaking Changes
+
+  - Updated from @vitest/coverage-v8 v2 to v3
+  - Coverage reporting may have configuration changes
+
+  ### New Features
+
+  - Enhanced coverage reporting capabilities
+  - Improved test performance
+  - Better error handling and reporting
+
+  ### Links
+
+  - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+  - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
+  - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
+
+- Updated dependencies [[`6eeef2f`](https://github.com/equinor/fusion-framework/commit/6eeef2f2033dfacf7c972295c8c2cc2d4cd83976), [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6), [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605), [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5), [`2fff2ea`](https://github.com/equinor/fusion-framework/commit/2fff2ea1e4838627e297b7b401601f1186c95335), [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087)]:
+  - @equinor/fusion-framework-dev-portal@1.1.0
+  - @equinor/fusion-framework-dev-server@1.1.0
+  - @equinor/fusion-framework-module-msal-node@1.0.5
+
 ## 11.3.1
 
 ### Patch Changes

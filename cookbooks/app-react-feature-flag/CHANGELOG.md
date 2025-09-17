@@ -1,5 +1,62 @@
 # @equinor/fusion-framework-cookbook-app-react-feature-flag
 
+## 1.3.60
+
+### Patch Changes
+
+- [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
+
+  ### New Features
+
+  - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
+  - ✨ Tabs call onChange with provided value if present
+  - ✨ Add disabled prop to Tooltip
+  - ✨ Autocomplete allow option-label prop to be used without type of object
+  - ✨ Add support for adding new options in Autocomplete
+
+  ### Bug Fixes
+
+  - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
+  - 🐛 Table - Fix Firefox table header wrapping issue
+  - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
+  - 🐛 DatePicker Disable back button in year range based on year, not month
+  - 🐛 Tabs now allow 'null' value as child element 'Tabs.List' and 'Tabs.Panel'
+  - 🐛 Autocomplete prevent onAddNewOption from being called twice in Strict Mode
+  - 🐛 Table export table row with pascal case
+  - 🐛 Autocomplete: Improvements to placeholder text
+  - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
+  - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
+
+- [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
+
+  ### Changes
+
+  - Updated @equinor/eds-core-react dependency to latest version across all packages
+  - Fixed peerDependencies version mismatch in bookmark package
+  - Includes bug fixes for Autocomplete and Table components
+  - Adds new Autocomplete features for "add new option" functionality
+
+  ### Affected Packages
+
+  - packages/dev-portal
+  - packages/react/components/bookmark
+  - cookbooks/app-react-feature-flag
+  - cookbooks/app-react-people
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases)
+  - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
+
+- Updated dependencies [[`db19291`](https://github.com/equinor/fusion-framework/commit/db192912ec35b41a10f0324ee70ecc85a686d4fa), [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6), [`bd8360e`](https://github.com/equinor/fusion-framework/commit/bd8360e6b93704b3f8ba4eb0d7fd142e27c01ef9), [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3), [`7bb88c6`](https://github.com/equinor/fusion-framework/commit/7bb88c6247f3d93eccf363d610116c519f1ecff4), [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8), [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087)]:
+  - @equinor/fusion-framework-cli@11.4.0
+  - @equinor/fusion-framework-module-feature-flag@1.1.24
+  - @equinor/fusion-observable@8.5.3
+
 ## 1.3.59
 
 ### Patch Changes

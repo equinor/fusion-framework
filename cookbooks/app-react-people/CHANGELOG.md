@@ -1,5 +1,57 @@
 # Change Log
 
+## 4.5.15
+
+### Patch Changes
+
+- [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
+
+  ### New Features
+
+  - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
+  - ✨ Tabs call onChange with provided value if present
+  - ✨ Add disabled prop to Tooltip
+  - ✨ Autocomplete allow option-label prop to be used without type of object
+  - ✨ Add support for adding new options in Autocomplete
+
+  ### Bug Fixes
+
+  - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
+  - 🐛 Table - Fix Firefox table header wrapping issue
+  - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
+  - 🐛 DatePicker Disable back button in year range based on year, not month
+  - 🐛 Tabs now allow 'null' value as child element 'Tabs.List' and 'Tabs.Panel'
+  - 🐛 Autocomplete prevent onAddNewOption from being called twice in Strict Mode
+  - 🐛 Table export table row with pascal case
+  - 🐛 Autocomplete: Improvements to placeholder text
+  - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
+  - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
+
+- [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
+
+  ### Changes
+
+  - Updated @equinor/eds-core-react dependency to latest version across all packages
+  - Fixed peerDependencies version mismatch in bookmark package
+  - Includes bug fixes for Autocomplete and Table components
+  - Adds new Autocomplete features for "add new option" functionality
+
+  ### Affected Packages
+
+  - packages/dev-portal
+  - packages/react/components/bookmark
+  - cookbooks/app-react-feature-flag
+  - cookbooks/app-react-people
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases)
+  - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
+
 ## 4.5.14
 
 ### Patch Changes
