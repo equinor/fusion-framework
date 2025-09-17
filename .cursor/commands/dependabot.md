@@ -86,10 +86,11 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 
 **STATUS DETERMINATION**:
 - **No workflow comments**: Start from step 3 (Check if Changes Already Merged)
+- **Rebase only**: Start from step 5 (Research Update Impact)
 - **Research only**: Start from step 5 (Research Update Impact)
 - **Planning only**: Start from step 6 (Plan Work)
 - **Planned work exists**: Check if work is in progress or completed
-- **Ready for merge**: Skip to step 12 (Pre-Merge Summary)
+- **Ready for merge**: Skip to step 13 (Pre-Merge Summary)
 - **Process log exists**: Determine current step and continue from there
 
 **IF WORK ALREADY COMPLETED**: Display status and ask user if they want to restart or continue
@@ -119,9 +120,11 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 **IF ONLY LOCK FILE CHANGES**:
 1. Post comment: "This dependency update has already been incorporated into main. Closing this PR as the changes are no longer needed."
 2. Close PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
-3. Skip to cleanup (step 14)
+3. Skip to cleanup (step 15)
 
-### 4. Rebase from Origin/Main (if needed)
+### 4. Rebase from Origin/Main (MANDATORY)
+**⚠️ CRITICAL**: This step MUST be completed before any research, build, or test operations to ensure we're working with the latest codebase.
+
 **CHECK LINEAR HISTORY**:
 1. `git fetch origin`
 2. Check if branch is already linear with main: `git merge-base --is-ancestor origin/main HEAD`
@@ -142,6 +145,20 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 4. `git rebase --continue`
 5. `git push --force-with-lease origin [branch-name]`
 
+**POST REBASE COMMENT**:
+```bash
+gh pr comment [PR_NUMBER] --body "## Rebase Complete ✅ (PR #[PR_NUMBER])
+
+<!-- WORKFLOW_STATE: REBASE_COMPLETE -->
+
+### Rebase Status
+- ✅ Branch rebased onto latest main
+- ✅ All conflicts resolved
+- ✅ Ready for dependency analysis
+
+### Process Log
+- ✅ Step 4: Rebase from Origin/Main completed"
+```
 
 ### 5. Research Update Impact
 **ANALYZE PR**: Use `gh pr view [PR_NUMBER] --json title,body` to get details
@@ -213,6 +230,7 @@ gh pr comment [PR_NUMBER] --body "## Research Findings (PR #[PR_NUMBER])
 - **Compatibility Issues**: [List any compatibility problems discovered]
 
 ### Process Log
+- ✅ Step 4: Rebase from Origin/Main completed
 - ✅ Step 5: Research Update Impact completed
 
 ### Links
@@ -249,7 +267,7 @@ gh pr comment [PR_NUMBER] --body "## Planned Work (PR #[PR_NUMBER])
 Based on research findings, the following actions will be taken:
 
 ### Update Process
-- [ ] Rebase from origin/main
+- [x] Rebase from origin/main (completed)
 - [ ] Generate changesets for affected packages
 - [ ] Fix any linting/type errors
 - [ ] Fix any build errors discovered during research
@@ -268,6 +286,7 @@ Based on research findings, the following actions will be taken:
 - [Known issues to address based on build/test analysis]
 
 ### Process Log
+- ✅ Step 4: Rebase from Origin/Main completed
 - ✅ Step 5: Research Update Impact completed
 - ✅ Step 6: Work planning completed"
 ```
@@ -362,6 +381,7 @@ gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅ (PR #[PR_NUMBER])
 - [linting/type issues fixed]
 
 ### Process Log
+- ✅ Step 4: Rebase from Origin/Main completed
 - ✅ Step 5: Research Update Impact completed
 - ✅ Step 6: Work planning completed
 - ✅ Step 7: Changesets generated
@@ -396,6 +416,7 @@ This dependency update will be merged by admin to expedite the routine update pr
 
 The command uses HTML comments in PR comments to enable AI resumption:
 
+- `<!-- WORKFLOW_STATE: REBASE_COMPLETE -->` - Rebase phase completed
 - `<!-- WORKFLOW_STATE: RESEARCH_COMPLETE -->` - Research phase completed
 - `<!-- WORKFLOW_STATE: PLANNING_COMPLETE -->` - Work planning completed  
 - `<!-- WORKFLOW_STATE: READY_FOR_MERGE -->` - Ready for admin merge
@@ -444,7 +465,7 @@ cat tsconfig.json
 
 ### Success Criteria
 - [ ] PR checked out
-- [ ] Rebased onto latest main
+- [ ] Rebased onto latest main (MANDATORY before research)
 - [ ] Dependency updates verified
 - [ ] Changesets created
 - [ ] All checks pass (lint, type, build)
