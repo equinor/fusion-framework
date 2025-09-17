@@ -407,7 +407,11 @@ export class BookmarkProvider implements IBookmarkProvider {
      * Observable that emits the generated payload.
      */
     const result$ = from(this.#payloadGenerators).pipe(
-      mergeScan((acc, generator) => of(this._producePayload(acc, generator)), initial ?? {} as Partial<T>, 1),
+      mergeScan(
+        (acc, generator) => of(this._producePayload(acc, generator)),
+        initial ?? ({} as Partial<T>),
+        1,
+      ),
       tap((payload) => this._log?.debug(`generated payload`, { initial, payload })),
     ) as Observable<T | null | undefined>;
 
