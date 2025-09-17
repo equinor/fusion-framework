@@ -75,7 +75,7 @@ const ArgSchema = {
       filter: z.string().or(filterSchema_v2).optional(),
     })
     .optional(),
-};
+} as const;
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
@@ -131,8 +131,10 @@ const generateApiPath = <TVersion extends AvailableVersions>(
       args?.filter && params.append('$filter', args.filter);
       return `/persons/me/bookmarks/?${String(params)}`;
     }
+    default: {
+      throw new Error(`Unknown API version: ${version}`);
+    }
   }
-  throw Error(`Unknown API version: ${version}`);
 };
 
 /** executes the api call */
@@ -150,9 +152,9 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
     input: MethodArg<MethodVersion>,
     init?: ClientRequestInit<IHttpClient, TResponse>,
   ): TResult => {
-    const args = ArgSchema[apiVersion].parse(input);
-    const path = generateApiPath(apiVersion, args);
-    const params = generateRequestParameters(apiVersion, args, init);
+    const args = ArgSchema[apiVersion].parse(input) as z.infer<(typeof ArgSchema)[MethodVersion]>;
+    const path = generateApiPath(apiVersion as AvailableVersions, args);
+    const params = generateRequestParameters(apiVersion as AvailableVersions, args, init);
     return client[method](path, params) as TResult;
   };
 };
