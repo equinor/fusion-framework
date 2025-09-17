@@ -45,14 +45,18 @@ const ApiApplicationPersonSchema = z.object({
     .string({ message: 'The email address of the person, which can be null or undefined.' })
     .nullish(),
   upn: z
-    .string({ message: 'The User Principal Name (UPN) of the person, which can be null or undefined.' })
+    .string({
+      message: 'The User Principal Name (UPN) of the person, which can be null or undefined.',
+    })
     .nullish(),
   accountType: z.string({ message: 'The type of account the person has.' }),
   accountClassification: z
     .string({ message: 'The classification of the account, which can be null or undefined.' })
     .nullish(),
   isExpired: z
-    .boolean({ message: 'Indicates whether the account is expired, which can be null or undefined.' })
+    .boolean({
+      message: 'Indicates whether the account is expired, which can be null or undefined.',
+    })
     .nullish(),
 });
 

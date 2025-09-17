@@ -28,22 +28,15 @@ export const PortalManifestBuildSchema = z.object({
     .optional()
     .describe('GitHub repo URL or local git remote'),
   // Version from package.json (required)
-  version: z
-    .string({ message: 'version must be a string' })
-    .describe('Version from package.json'),
+  version: z.string({ message: 'version must be a string' }).describe('Version from package.json'),
   // Current build timestamp (ISO8601, required)
   timestamp: z
     .string({ message: 'timestamp must be a string' })
     .describe('Current build timestamp (ISO8601)'),
   // Current git commit SHA (required)
-  commitSha: z
-    .string({ message: 'commitSha must be a string' })
-    .describe('Current git commit SHA'),
+  commitSha: z.string({ message: 'commitSha must be a string' }).describe('Current git commit SHA'),
   // Optional build annotations (key-value pairs)
-  annotations: z
-    .record(z.string(), z.string())
-    .optional()
-    .describe('Optional build annotations'),
+  annotations: z.record(z.string(), z.string()).optional().describe('Optional build annotations'),
   // Optional project homepage
   projectPage: z
     .string({ message: 'projectPage must be a string' })
@@ -51,16 +44,12 @@ export const PortalManifestBuildSchema = z.object({
     .describe('Optional project homepage'),
   // List of allowed asset extensions (with leading dot, required)
   allowedExtensions: z
-    .array(
-      z.string({ message: 'Each allowed extension must be a string' }),
-      { message: 'allowedExtensions must be an array of strings' }
-    )
+    .array(z.string({ message: 'Each allowed extension must be a string' }), {
+      message: 'allowedExtensions must be an array of strings',
+    })
     .describe('List of allowed asset extensions (with leading dot)'),
   // Optional schema for the portal (record of unknown values)
-  schema: z
-    .record(z.string(), z.unknown())
-    .optional()
-    .describe('Optional schema for the portal'),
+  schema: z.record(z.string(), z.unknown()).optional().describe('Optional schema for the portal'),
   // Optional configuration for the portal (record of unknown values)
   config: z
     .record(z.string(), z.unknown())

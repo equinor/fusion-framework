@@ -8,7 +8,7 @@ import type { IBookmarkProvider } from './BookmarkProvider.interface';
 import type { IBookmarkClient } from './BookmarkClient.interface';
 
 import { bookmarkSourceSystemSchema } from './bookmark.schemas';
-import { BookmarkModuleConfig } from './types';
+import type { BookmarkModuleConfig } from './types';
 
 export const bookmarkConfigSchema = z.object({
   log: z.custom<ILogger>().optional(),

@@ -26,7 +26,6 @@ const initialBookmarkConfig = bookmarkConfigSchema
   .partial()
   .optional();
 
-
 const parseInitialBookmarkConfigConfig = (initial?: unknown): BookmarkModuleConfig => {
   return initialBookmarkConfig.parse(initial) as BookmarkModuleConfig;
 };
@@ -188,7 +187,10 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    * @param initial - An optional initial config to merge into the returned config.
    * @returns The config object.
    */
-  protected _createConfig(init: ConfigBuilderCallbackArgs, initial?: Partial<BookmarkModuleConfig>) {
+  protected _createConfig(
+    init: ConfigBuilderCallbackArgs,
+    initial?: Partial<BookmarkModuleConfig>,
+  ) {
     // check if parent is provided
     if (!this._has('parent')) {
       this.#log?.debug('No parent provided, using default parent');

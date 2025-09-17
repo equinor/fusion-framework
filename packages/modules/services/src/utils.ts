@@ -40,8 +40,6 @@ export const extractVersion = <
  * @returns A response selector function that parses the response body using the provided schema.
  */
 export const schemaSelector =
-  <Output>(
-    schema: z.ZodSchema<Output>,
-  ): ResponseSelector<Output> =>
+  <Output>(schema: z.ZodSchema<Output>): ResponseSelector<Output> =>
   async (response: FetchResponse<unknown>) =>
     schema.parse(await jsonSelector(response));

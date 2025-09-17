@@ -531,7 +531,19 @@ export class BookmarkProvider implements IBookmarkProvider {
         appKey: this.#config.filters?.application
           ? from(this._resolve.application()).pipe(map((x) => x?.appKey))
           : of(undefined),
-        contextId: this.#config.filters?.context ? from(this._resolve.context()).pipe(map((x) => x?.id)) : of(undefined), }).pipe( catchError((err) => { const error = new BookmarkProviderError( 'Could not fetch bookmarks, failed to resolve filter parameters', err, ); this._log?.error(error.message, error); throw error; }), );
+        contextId: this.#config.filters?.context
+          ? from(this._resolve.context()).pipe(map((x) => x?.id))
+          : of(undefined),
+      }).pipe(
+        catchError((err) => {
+          const error = new BookmarkProviderError(
+            'Could not fetch bookmarks, failed to resolve filter parameters',
+            err,
+          );
+          this._log?.error(error.message, error);
+          throw error;
+        }),
+      );
 
       // execute the fetch bookmarks action when the filter parameters are resolved
       observer.add(
@@ -560,7 +572,9 @@ export class BookmarkProvider implements IBookmarkProvider {
         filter(bookmarkActions.fetchBookmarks.success.match),
         map((a) => a.payload),
         tap((bookmarks) => {
-          this._log?.debug('fetched all bookmarks', bookmarks); }), raceWith(failure$),
+          this._log?.debug('fetched all bookmarks', bookmarks);
+        }),
+        raceWith(failure$),
         first(),
       );
 
@@ -662,17 +676,17 @@ export class BookmarkProvider implements IBookmarkProvider {
 
     // resolve the bookmark
     const bookmark$ = forkJoin({
-        appKey: newBookmarkData.appKey
-          ? of(newBookmarkData.appKey)
-          : from(this._resolve.application()).pipe(
-              map((app) => {
-                if (!app?.appKey) {
-                  throw new BookmarkProviderError('Failed to resolve application key');
-                }
-                return app.appKey;
-              }),
-            ),
-        contextId: from(this._resolve.context()).pipe(map((context) => context?.id)),
+      appKey: newBookmarkData.appKey
+        ? of(newBookmarkData.appKey)
+        : from(this._resolve.application()).pipe(
+            map((app) => {
+              if (!app?.appKey) {
+                throw new BookmarkProviderError('Failed to resolve application key');
+              }
+              return app.appKey;
+            }),
+          ),
+      contextId: from(this._resolve.context()).pipe(map((context) => context?.id)),
       payload: this.generatePayload<T>(newBookmarkData.payload),
       sourceSystem: of(this.sourceSystem),
     }).pipe(
@@ -761,7 +775,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the create subscription when the result observable is unsubscribed
       subscriber.add(() => createSubscription.unsubscribe());
-      
+
       // Emit the created bookmark
       request$.subscribe(subscriber);
     });
@@ -897,7 +911,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     return new Observable<Bookmark<T>>((subscriber) => {
       // Clean up the update subscription when the result observable is unsubscribed
       subscriber.add(() => updateSubscription.unsubscribe());
-      
+
       // Emit the updated bookmark
       request$.subscribe(subscriber);
     });
@@ -929,7 +943,7 @@ export class BookmarkProvider implements IBookmarkProvider {
               updatePayload: boolean;
             }
           ).updatePayload,
-        })
+        }),
       );
     }
     return lastValueFrom(
@@ -1019,7 +1033,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     return new Observable<void>((subscriber) => {
       // Clean up the delete subscription when the result observable is unsubscribed
       subscriber.add(() => deleteSubscription.unsubscribe());
-      
+
       // Emit the deletion result
       request$.subscribe(subscriber);
     });

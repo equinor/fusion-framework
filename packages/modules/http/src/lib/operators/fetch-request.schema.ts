@@ -6,16 +6,13 @@ import { z } from 'zod';
  * @link https://www.rfc-editor.org/rfc/rfc7231#section-4.1
  */
 export const requestMethodCasing = (): z.ZodType<string> => {
-  return z.string().refine(
-    (value) => value === value?.toUpperCase(),
-    {
-      message: [
-        'Provided HTTP method must be in uppercase.',
-        'See RFC 7231 Section 4.1 for more information',
-        'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
-      ].join(' '),
-    }
-  );
+  return z.string().refine((value) => value === value?.toUpperCase(), {
+    message: [
+      'Provided HTTP method must be in uppercase.',
+      'See RFC 7231 Section 4.1 for more information',
+      'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
+    ].join(' '),
+  });
 };
 
 /**
@@ -32,7 +29,8 @@ export const requestMethodCasing = (): z.ZodType<string> => {
  */
 export const requestMethodVerb = () => {
   return z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'CONNECT', 'TRACE'], {
-    message: 'Invalid request method. Expected one of: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD, CONNECT, TRACE. See RFC 2615 Section 9 for more information: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html'
+    message:
+      'Invalid request method. Expected one of: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD, CONNECT, TRACE. See RFC 2615 Section 9 for more information: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html',
   });
 };
 

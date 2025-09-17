@@ -48,6 +48,6 @@ export const bookmarkWithDataSchema = <
     payload: schema,
   });
 
-  export const parseBookmark = <T extends BookmarkData>(value: unknown): Bookmark<T> => {
-    return bookmarkWithDataSchema().parse(value) as Bookmark<T>;
-  };
+export const parseBookmark = <T extends BookmarkData>(value: unknown): Bookmark<T> => {
+  return bookmarkWithDataSchema().parse(value) as Bookmark<T>;
+};
