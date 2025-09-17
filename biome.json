@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["./turbo", "vue-press/src/.vuepress", "package.json", "pnpm-lock.yaml"]
+    "includes": ["**", "!turbo", "!**/vue-press/src/.vuepress", "!package.json", "!pnpm-lock.yaml"]
   },
   "formatter": {
     "enabled": true,
@@ -15,7 +15,7 @@
     "useEditorconfig": true,
     "indentStyle": "space"
   },
-  "assists": { "actions": { "source": { "organizeImports": "off" } } },
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -51,12 +51,13 @@
         "noImplicitAnyLet": "warn"
       }
     },
-    "ignore": [
-      "node_modules",
-      "**/dist/**",
-      "**/*.config.js",
-      "**/version.ts",
-      "vue-press/src/.vuepress"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist/**",
+      "!**/*.config.js",
+      "!**/version.ts",
+      "!**/vue-press/src/.vuepress"
     ]
   },
   "javascript": {
@@ -74,7 +75,7 @@
   },
   "overrides": [
     {
-      "include": ["packages/react/**"]
+      "includes": ["**/packages/react/**"]
     }
   ]
 }
