@@ -4,36 +4,16 @@
 
 feat: migrate to zod v4
 
-Updated the service-discovery module to be compatible with zod v4, including:
+Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the service discovery module to be compatible with zod v4's stricter type checking and updated API.
 
-**Dependency Updates**
-- Updated zod dependency from v3.25.76 to v4.1.8
-
-**API Response Validation**
-- Updated `ApiService` schema for zod v4 compatibility
-- Enhanced `ApiServices` schema validation for service discovery API responses
-- Improved service object validation with proper type definitions
+Key changes in source code:
+- Updated `ApiService` and `ApiServices` schemas for zod v4 compatibility
+- Enhanced service object validation with proper type definitions
 - Updated service response selector to use zod v4 parsing
+- Improved error handling for malformed API responses
 
-**Service Discovery Improvements**
-- Enhanced validation of service discovery API responses
-- Improved type safety for service objects (key, uri, scopes, tags)
-- Better error handling for malformed API responses
-- Updated data transformation logic for backward compatibility
+Breaking changes: Schema validation behavior may differ due to zod v4's stricter type checking. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
 
-**Type Safety Enhancements**
-- Improved type inference for service discovery responses
-- Enhanced validation of service configuration objects
-- Better type safety for service resolution and client creation
-
-**Breaking Changes**
-- Schema validation behavior may differ due to zod v4's stricter type checking
-- Function schema definitions now require explicit typing
-- Error message format has changed from zod v3 to v4 format
-
-**Migration Notes**
-This is a major version update that requires careful testing. All zod usage patterns have been updated for v4 compatibility, including API response validation and service object parsing.
-
-**Links**
+Links:
 - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
 - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
