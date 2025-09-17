@@ -441,10 +441,10 @@ export class BookmarkProvider implements IBookmarkProvider {
   ): Promise<T | null | undefined> {
     // Create a draft for async operations using createDraft/finishDraft pattern
     const draft = createDraft(value);
-    
+
     try {
       const generatorResult = await Promise.resolve(generator(draft as Partial<T>, initial));
-      
+
       // Handle the generator result
       if (generatorResult) {
         this._log?.warn(
@@ -464,10 +464,10 @@ export class BookmarkProvider implements IBookmarkProvider {
     } catch (error) {
       this._log?.error(`Failed to produce payload using generator ${generator.name}`, error);
     }
-    
+
     // Finish the draft to get the immutable result
     const result = finishDraft(draft);
-    
+
     return result as T | null | undefined;
   }
 
