@@ -1,5 +1,82 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
+
+  Major version update of Vite build tool across all packages. This update includes:
+
+  - Enhanced build performance and caching
+  - Better error reporting with code frames
+  - Improved TypeScript integration
+  - Updated plugin ecosystem compatibility
+  - New development server features
+
+  ### Links
+
+  - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
+  - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
+
+### Patch Changes
+
+- [#3365](https://github.com/equinor/fusion-framework/pull/3365) [`6eeef2f`](https://github.com/equinor/fusion-framework/commit/6eeef2f2033dfacf7c972295c8c2cc2d4cd83976) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @equinor/eds-tokens from 0.9.2 to 0.10.0
+
+  - Added support for CSS custom properties via variables-static.css and variables-dynamic.css
+  - Improved design token integration for better CSS compatibility
+  - Updated dependencies and internal tooling (pnpm v10, node v22)
+
+  This is a minor version update with new features and no breaking changes.
+
+- [#3400](https://github.com/equinor/fusion-framework/pull/3400) [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @equinor/eds-core-react from 0.45.1 to 0.49.0
+
+  ### New Features
+
+  - ✨ Always show "add new option" in Autocomplete when onAddNewOption is provided
+  - ✨ Tabs call onChange with provided value if present
+  - ✨ Add disabled prop to Tooltip
+  - ✨ Autocomplete allow option-label prop to be used without type of object
+  - ✨ Add support for adding new options in Autocomplete
+
+  ### Bug Fixes
+
+  - 🐛 Autocomplete - Don't call onOptionsChange when clicking "Add new"
+  - 🐛 Table - Fix Firefox table header wrapping issue
+  - 🐛 Tabs documentation type mismatch - update onChange parameter from number to number | string
+  - 🐛 DatePicker Disable back button in year range based on year, not month
+  - 🐛 Tabs now allow 'null' value as child element 'Tabs.List' and 'Tabs.Panel'
+  - 🐛 Autocomplete prevent onAddNewOption from being called twice in Strict Mode
+  - 🐛 Table export table row with pascal case
+  - 🐛 Autocomplete: Improvements to placeholder text
+  - 🐛 Menu: Ensure onClose is called when a MenuItem without onClick is clicked
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases/tag/eds-core-react%400.49.0)
+  - [npm changelog](https://www.npmjs.com/package/@equinor/eds-core-react?activeTab=versions)
+
+- [#3366](https://github.com/equinor/fusion-framework/pull/3366) [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @equinor/eds-core-react from 0.48.0 to 0.49.0
+
+  ### Changes
+
+  - Updated @equinor/eds-core-react dependency to latest version across all packages
+  - Fixed peerDependencies version mismatch in bookmark package
+  - Includes bug fixes for Autocomplete and Table components
+  - Adds new Autocomplete features for "add new option" functionality
+
+  ### Affected Packages
+
+  - packages/dev-portal
+  - packages/react/components/bookmark
+  - cookbooks/app-react-feature-flag
+  - cookbooks/app-react-people
+
+  ### Links
+
+  - [GitHub releases](https://github.com/equinor/design-system/releases)
+  - [Full Changelog](https://github.com/equinor/design-system/compare/eds-core-react@0.48.0...eds-core-react@0.49.0)
+
 ## 1.0.3
 
 ### Patch Changes

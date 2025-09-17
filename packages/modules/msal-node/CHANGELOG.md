@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.5
+
+### Patch Changes
+
+- [#3403](https://github.com/equinor/fusion-framework/pull/3403) [`2fff2ea`](https://github.com/equinor/fusion-framework/commit/2fff2ea1e4838627e297b7b401601f1186c95335) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @azure/msal-node from 3.7.3 to 3.7.4
+
+  ### Links
+
+  - [GitHub releases](https://github.com/AzureAD/microsoft-authentication-library-for-js/releases/tag/msal-node-v3.7.4)
+  - [npm changelog](https://www.npmjs.com/package/@azure/msal-node?activeTab=versions)
+
 ## 1.0.4
 
 ### Patch Changes

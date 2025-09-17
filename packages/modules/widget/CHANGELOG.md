@@ -1,5 +1,32 @@
 # Change Log
 
+## 11.0.1
+
+### Patch Changes
+
+- [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
+
+  ### Breaking Changes
+
+  - Immer 10.x introduces stricter TypeScript types for draft functions
+  - `ValidRecipeReturnType` type constraints have changed
+  - Promise return types in draft functions are no longer automatically handled
+
+  ### Fixes Applied
+
+  - Updated BookmarkProvider to handle new immer type constraints
+  - Fixed ObservableInput type assignments in mergeScan operations
+  - Removed async/await from immer draft functions to comply with new type requirements
+
+  ### Links
+
+  - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
+  - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
+
+- Updated dependencies [[`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3), [`7bb88c6`](https://github.com/equinor/fusion-framework/commit/7bb88c6247f3d93eccf363d610116c519f1ecff4), [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8)]:
+  - @equinor/fusion-query@5.2.13
+  - @equinor/fusion-observable@8.5.3
+
 ## 11.0.0
 
 ### Patch Changes

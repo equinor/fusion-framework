@@ -1,5 +1,26 @@
 # Change Log
 
+## 4.1.15
+
+### Patch Changes
+
+- [#3169](https://github.com/equinor/fusion-framework/pull/3169) [`1492d5d`](https://github.com/equinor/fusion-framework/commit/1492d5d8473e55672783a8a8adc18c9e73dd922c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @microsoft/applicationinsights-web from 3.3.8 to 3.3.9
+
+  ### Changes
+
+  - Fixed autoCaptureHandler issue that caused click events not to be auto-captured
+  - Updated SDK Loader to avoid CodeQL scanning issues
+  - Fixed HTML event capturing in Click Analytics
+  - Export ICorrelationConfig interface from dependencies extension
+
+  ### Links
+
+  - [GitHub releases](https://github.com/microsoft/ApplicationInsights-JS/releases/tag/3.3.9)
+  - [Changelog](https://github.com/microsoft/ApplicationInsights-JS/blob/main/RELEASES.md)
+
+- Updated dependencies [[`da373ad`](https://github.com/equinor/fusion-framework/commit/da373ade663898b2628e28529b6e3dea3b91ed43)]:
+  - @equinor/fusion-framework-module-msal@4.1.0
+
 ## 4.1.14
 
 ### Patch Changes

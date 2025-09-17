@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.0.2
+
+### Patch Changes
+
+- [#3393](https://github.com/equinor/fusion-framework/pull/3393) [`3ce5a18`](https://github.com/equinor/fusion-framework/commit/3ce5a1887c8fb90f24c3367f8926db69cc9a1914) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated odata-query dependency from 8.0.4 to 8.0.5
+
+  ### Changes
+
+  - Updated odata-query to fix transform operations order issue
+  - This is a patch update with no breaking changes
+
+  ### Links
+
+  - [GitHub releases](https://github.com/techniq/odata-query/releases/tag/v8.0.5)
+  - [Changelog](https://github.com/techniq/odata-query/blob/main/CHANGELOG.md#805)
+
 ## 7.0.1
 
 ### Patch Changes
