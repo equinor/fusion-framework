@@ -13,7 +13,7 @@ import type { ILogger, LogLevel } from '@equinor/fusion-log';
 
 import { BookmarkClient } from './BookmarkClient';
 import type { BookmarkModule } from './bookmark-module';
-import { bookmarkConfigSchema } from './bookmark-config.schema';
+import { bookmarkConfigSchema, parseBookmarkConfig } from './bookmark-config.schema';
 import type { BookmarkModuleConfig } from './types';
 import type { BookmarkProvider } from './BookmarkProvider';
 
@@ -26,7 +26,10 @@ const initialBookmarkConfig = bookmarkConfigSchema
   .partial()
   .optional();
 
-type InitialBookmarkConfig = z.infer<typeof initialBookmarkConfig>;
+
+const parseInitialBookmarkConfigConfig = (initial?: unknown): BookmarkModuleConfig => {
+  return initialBookmarkConfig.parse(initial) as BookmarkModuleConfig;
+};
 
 /**
  * Configurator for the bookmark module.
@@ -185,7 +188,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
    * @param initial - An optional initial config to merge into the returned config.
    * @returns The config object.
    */
-  protected _createConfig(init: ConfigBuilderCallbackArgs, initial?: InitialBookmarkConfig) {
+  protected _createConfig(init: ConfigBuilderCallbackArgs, initial?: Partial<BookmarkModuleConfig>) {
     // check if parent is provided
     if (!this._has('parent')) {
       this.#log?.debug('No parent provided, using default parent');
@@ -232,7 +235,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     }
 
     // call super to create config
-    return super._createConfig(init, initialBookmarkConfig.parse(initial));
+    return super._createConfig(init, parseInitialBookmarkConfigConfig(initial));
   }
 
   /**
@@ -359,7 +362,7 @@ export class BookmarkModuleConfigurator extends BaseConfigBuilder<BookmarkModule
     _init: ConfigBuilderCallbackArgs,
   ): Promise<BookmarkModuleConfig> {
     try {
-      return bookmarkConfigSchema.parse(config);
+      return parseBookmarkConfig(config);
     } catch (err) {
       this.#log?.error('Failed to parse config', config, (err as ZodError).issues ?? err);
       throw err;

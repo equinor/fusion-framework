@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import type { BookmarkData } from './types';
+import type { Bookmark, BookmarkData } from './types';
 
 export const bookmarkUserSchema = z.object({
   id: z.string(),
@@ -42,8 +42,12 @@ export const bookmarkWithDataSchema = <
   T extends BookmarkData = BookmarkData,
   S extends z.ZodSchema<T> = z.ZodSchema<T>,
 >(
-  schema: S = z.record(z.unknown()).or(z.string()).optional() as unknown as S,
+  schema: S = z.record(z.string(), z.unknown()).or(z.string()).optional() as unknown as S,
 ) =>
   bookmarkSchema.extend({
     payload: schema,
   });
+
+  export const parseBookmark = <T extends BookmarkData>(value: unknown): Bookmark<T> => {
+    return bookmarkWithDataSchema().parse(value) as Bookmark<T>;
+  };
