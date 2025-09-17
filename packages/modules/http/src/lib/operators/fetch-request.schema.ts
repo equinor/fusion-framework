@@ -6,18 +6,15 @@ import { z } from 'zod';
  * @link https://www.rfc-editor.org/rfc/rfc7231#section-4.1
  */
 export const requestMethodCasing = (): z.ZodType<string> => {
-  return z.custom<string>(
-    (value?: string) => value === value?.toUpperCase(),
-    (value: string) => ({
-      code: z.ZodIssueCode.custom,
-      validation: 'uppercase',
-      path: ['method'],
+  return z.string().refine(
+    (value) => value === value?.toUpperCase(),
+    {
       message: [
-        `Provided HTTP method '${value}' must be in uppercase.`,
+        'Provided HTTP method must be in uppercase.',
         'See RFC 7231 Section 4.1 for more information',
         'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
       ].join(' '),
-    }),
+    }
   );
 };
 
@@ -35,17 +32,7 @@ export const requestMethodCasing = (): z.ZodType<string> => {
  */
 export const requestMethodVerb = () => {
   return z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'CONNECT', 'TRACE'], {
-    errorMap: (error) => {
-      const { received, options } = error as z.ZodInvalidEnumValueIssue;
-      return {
-        message: [
-          'Invalid request method.',
-          `Expected '${options.join(' | ')}', but received '${received}'.`,
-          'See RFC 2615 Section 9 for more information',
-          'https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html',
-        ].join(' '),
-      };
-    },
+    message: 'Invalid request method. Expected one of: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD, CONNECT, TRACE. See RFC 2615 Section 9 for more information: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html'
   });
 };
 
