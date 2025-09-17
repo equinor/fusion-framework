@@ -82,17 +82,19 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - **Planned Work**: Check if work plan has been established
 - **Ready for Merge**: Check if PR is already processed and ready
 - **Process Log**: Check if work is already in progress
+- **Workflow State Markers**: Look for HTML comments like `<!-- WORKFLOW_STATE: RESEARCH_COMPLETE -->` for AI resumption
 
 **STATUS DETERMINATION**:
-- **No workflow comments**: Start from step 4 (Research Update Impact)
-- **Research only**: Start from step 5 (Rebase from Origin/Main)
+- **No workflow comments**: Start from step 3 (Check if Changes Already Merged)
+- **Research only**: Start from step 5 (Research Update Impact)
+- **Planning only**: Start from step 6 (Plan Work)
 - **Planned work exists**: Check if work is in progress or completed
-- **Ready for merge**: Skip to step 11 (Pre-Merge Summary)
+- **Ready for merge**: Skip to step 12 (Pre-Merge Summary)
 - **Process log exists**: Determine current step and continue from there
 
 **IF WORK ALREADY COMPLETED**: Display status and ask user if they want to restart or continue
 
-### 3. Handle Stale PRs (if needed)
+### 2.5. Handle Stale PRs (if needed)
 **DETECTION**: Look for "Automatic rebases have been disabled" message in PR
 
 **VALIDATION**: Verify PR is actually a dependency update by checking if package.json files are modified
@@ -111,7 +113,37 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 
 **IF PR IS CURRENT**: Proceed with existing version
 
-### 4. Research Update Impact
+### 3. Check if Changes Already Merged
+**CHECK**: `git diff HEAD~1 --name-only`
+
+**IF ONLY LOCK FILE CHANGES**:
+1. Post comment: "This dependency update has already been incorporated into main. Closing this PR as the changes are no longer needed."
+2. Close PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
+3. Skip to cleanup (step 14)
+
+### 4. Rebase from Origin/Main (if needed)
+**CHECK LINEAR HISTORY**:
+1. `git fetch origin`
+2. Check if branch is already linear with main: `git merge-base --is-ancestor origin/main HEAD`
+
+**IF LINEAR HISTORY EXISTS** (branch is already up-to-date):
+- Skip rebase, proceed to step 5 (Research Update Impact)
+
+**IF REBASE NEEDED** (branch is behind main):
+3. `git rebase origin/main`
+
+**IF REBASE MADE CHANGES** (check if HEAD moved):
+4. `git push --force-with-lease origin [branch-name]`
+
+**IF LOCK FILE CONFLICTS**:
+1. `pnpm clean && rm -f pnpm-lock.yaml`
+2. `pnpm install`
+3. `git add pnpm-lock.yaml`
+4. `git rebase --continue`
+5. `git push --force-with-lease origin [branch-name]`
+
+
+### 5. Research Update Impact
 **ANALYZE PR**: Use `gh pr view [PR_NUMBER] --json title,body` to get details
 
 **RESEARCH TASKS**:
@@ -121,10 +153,39 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 4. Identify breaking changes, new features, or bug fixes
 5. Check for security updates or performance improvements
 6. Identify which packages will be affected by the update
+7. **Install dependencies and run build/test to analyze potential errors**:
+   - `pnpm install` - Install the updated dependencies
+   - `pnpm build` - Check for compilation/build errors
+   - `pnpm test` - Check for test failures
+   - **ANALYZE ONLY** - Document any errors and determine if they're related to the dependency update
+   - **DO NOT FIX** - Only document breaking changes or compatibility issues discovered
+   - **FIXES WILL BE APPLIED IN STEP 9** - This is research phase only
+
+8. **Check Requested Updates**:
+   - **ANALYZE PR**: Identify which packages are being updated
+   - **CHECK**: If package.json files are altered
+   - **MAJOR VERSION GATE**: If any dependency has major version bump → **PAUSE** and require user confirmation
+   - **DEPENDENCY ANALYSIS**:
+     ```bash
+     # Check direct dependencies
+     pnpm list --depth=0
+     
+     # Trace dependency usage
+     pnpm why <package-name>
+     
+     # Full dependency tree
+     pnpm ls --depth=Infinity
+     ```
+   - **IDENTIFY COMPILATION PACKAGES**: 
+     - @equinor/fusion-framework-cli, 
+     - @equinor/fusion-framework-vite-plugin-spa, 
+     - @equinor/fusion-framework-dev-server
 
 **POST RESEARCH COMMENT**:
 ```bash
-gh pr comment [PR_NUMBER] --body "## Research Findings
+gh pr comment [PR_NUMBER] --body "## Research Findings (PR #[PR_NUMBER])
+
+<!-- WORKFLOW_STATE: RESEARCH_COMPLETE -->
 
 ### Affected Packages
 - [List packages that will be affected]
@@ -144,14 +205,46 @@ gh pr comment [PR_NUMBER] --body "## Research Findings
 ### Security Updates
 - [List security updates]
 
+### Build & Test Analysis
+- **Install Status**: [✅ Success / ❌ Failed with errors]
+- **Build Status**: [✅ Success / ❌ Failed with errors]
+- **Test Status**: [✅ All tests passed / ❌ Failed tests: X failed, Y passed]
+- **Error Analysis**: [Document any install/build/test errors and their relation to the dependency update]
+- **Compatibility Issues**: [List any compatibility problems discovered]
+
+### Process Log
+- ✅ Step 5: Research Update Impact completed
+
 ### Links
 - [Changelog link]
 - [Release notes link]"
 ```
 
+**ERROR HANDLING DURING RESEARCH**:
+- **Install failures**: Document specific errors and determine if they're related to the dependency update
+- **Build failures**: Document specific errors and determine if they're related to the dependency update
+- **Test failures**: Analyze which tests failed and why (API changes, breaking changes, etc.)
+- **If errors are unrelated to update**: Note them but proceed with caution
+- **If errors are related to update**: Include in risk assessment and planned work
+- **Critical errors**: Consider if the update should be postponed or if additional fixes are needed
+- **IMPORTANT**: This is ANALYSIS ONLY - do not attempt to fix any errors during research phase
+
+### 6. Plan Work
+**ANALYZE RESEARCH FINDINGS**: Review all research data to create comprehensive work plan
+
+**PLANNING TASKS**:
+1. Assess risk level based on research findings
+2. Determine mitigation strategies for identified issues
+3. Plan specific fixes for build/test errors discovered
+4. Identify which packages need changesets
+5. Estimate effort and potential blockers
+6. Create detailed action plan
+
 **POST PLANNED WORK COMMENT**:
 ```bash
-gh pr comment [PR_NUMBER] --body "## Planned Work
+gh pr comment [PR_NUMBER] --body "## Planned Work (PR #[PR_NUMBER])
+
+<!-- WORKFLOW_STATE: PLANNING_COMPLETE -->
 
 Based on research findings, the following actions will be taken:
 
@@ -159,74 +252,27 @@ Based on research findings, the following actions will be taken:
 - [ ] Rebase from origin/main
 - [ ] Generate changesets for affected packages
 - [ ] Fix any linting/type errors
+- [ ] Fix any build errors discovered during research
+- [ ] Fix any test failures discovered during research
 - [ ] Run full test suite
 - [ ] Verify build success
 
 ### Risk Assessment
 - [Risk level: Low/Medium/High]
 - [Mitigation strategy if applicable]
+- [Build/Test Error Risk: Low/Medium/High based on research findings]
 
 ### Expected Impact
 - [Brief description of expected changes]
-- [Any special considerations]"
+- [Any special considerations]
+- [Known issues to address based on build/test analysis]
+
+### Process Log
+- ✅ Step 5: Research Update Impact completed
+- ✅ Step 6: Work planning completed"
 ```
 
-**PAUSE**: Display research summary and ask user to confirm continuation
-
-### 5. Rebase from Origin/Main (if needed)
-**CHECK LINEAR HISTORY**:
-1. `git fetch origin`
-2. Check if branch is already linear with main: `git merge-base --is-ancestor origin/main HEAD`
-
-**IF LINEAR HISTORY EXISTS** (branch is already up-to-date):
-- Skip rebase, proceed to step 6
-
-**IF REBASE NEEDED** (branch is behind main):
-3. `git rebase origin/main`
-
-**IF REBASE MADE CHANGES** (check if HEAD moved):
-4. `git push --force-with-lease origin [branch-name]`
-
-**IF LOCK FILE CONFLICTS**:
-1. `pnpm clean && rm -f pnpm-lock.yaml`
-2. `pnpm install`
-3. `git add pnpm-lock.yaml`
-4. `git rebase --continue`
-5. `git push --force-with-lease origin [branch-name]`
-
-### 5.1. Check if Changes Already Merged
-**CHECK**: `git diff HEAD~1 --name-only`
-
-**IF ONLY LOCK FILE CHANGES**:
-1. Post comment: "This dependency update has already been incorporated into main. Closing this PR as the changes are no longer needed."
-2. Close PR: `gh pr close [PR_NUMBER] --comment "Changes already in main"`
-3. Skip to cleanup (step 11)
-
-### 6. Check Requested Updates
-**ANALYZE PR**: Identify which packages are being updated
-**CHECK**: If package.json files are altered
-
-**MAJOR VERSION GATE**:
-- If any dependency has major version bump → **PAUSE** and require user confirmation
-- Display packages with major updates and breaking changes
-- User must explicitly approve before proceeding
-
-**DEPENDENCY ANALYSIS**:
-```bash
-# Check direct dependencies
-pnpm list --depth=0
-
-# Trace dependency usage
-pnpm why <package-name>
-
-# Full dependency tree
-pnpm ls --depth=Infinity
-```
-
-**IDENTIFY COMPILATION PACKAGES**: 
-- @equinor/fusion-framework-cli, 
-- @equinor/fusion-framework-vite-plugin-spa, 
-- @equinor/fusion-framework-dev-server
+**PAUSE**: Display planning summary and ask user to confirm continuation
 
 ### 7. Generate Changesets (if needed)
 **CREATE CHANGESETS FOR**:
@@ -253,6 +299,8 @@ Description of changes...
 - `major`: Breaking changes, requires migration
 
 ### 8. Fix and Build
+**⚠️ THIS IS WHERE FIXES BEGIN** - All errors discovered during research phase will be addressed here
+
 **FIX ISSUES**: `pnpm check:errors --fix` (will only lint code)
 
 **BUILD COMMANDS**:
@@ -289,7 +337,19 @@ pnpm upgrade "vuepress-theme-hope@latest"
 **PAUSE**: Display PR summary and ask user to confirm before squashing and merging
 **POST PRE-MERGE COMMENT**:
 ```bash
-gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅
+gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅ (PR #[PR_NUMBER])
+
+<!-- WORKFLOW_STATE: READY_FOR_MERGE -->
+
+### Summary
+**Work Completed:**
+- [Specific findings from research - e.g., "Identified breaking change in API method signature"]
+- [Specific fixes applied - e.g., "Updated 3 test files to handle new async behavior"]
+- [Specific changesets created - e.g., "Generated changeset for cli package due to transitive dependency"]
+- [Specific issues resolved - e.g., "Fixed TypeScript errors in 2 modules after API changes"]
+- [Specific packages affected - e.g., "Updated 5 packages: framework, cli, dev-server, and 2 cookbooks"]
+
+**Update Details:** [X] package(s) updated from [old-version] to [new-version] ([patch/minor/major] changes)
 
 ### Packages Updated
 - [package-name]: [old-version] → [new-version]
@@ -302,9 +362,13 @@ gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅
 - [linting/type issues fixed]
 
 ### Process Log
-- ✅ [Actual step performed with context]
-- ✅ [Actual step performed with context]
-- ✅ [Actual step performed with context]
+- ✅ Step 5: Research Update Impact completed
+- ✅ Step 6: Work planning completed
+- ✅ Step 7: Changesets generated
+- ✅ Step 8: Fixes applied and build successful
+- ✅ Step 9: All tests passed
+- ✅ Step 10: Changes committed and pushed
+- ✅ Step 11: Pre-merge summary completed
 
 ### Test Results
 - 👍🏻 All tests passed (Duration: [X]m [Y]s)
@@ -327,6 +391,16 @@ This dependency update will be merged by admin to expedite the routine update pr
 3. `git branch -D [branch-name]`
 
 **IF PR STILL OPEN**: `gh pr close [PR_NUMBER] --comment "Changes have been incorporated into main"`
+
+## Workflow State Markers
+
+The command uses HTML comments in PR comments to enable AI resumption:
+
+- `<!-- WORKFLOW_STATE: RESEARCH_COMPLETE -->` - Research phase completed
+- `<!-- WORKFLOW_STATE: PLANNING_COMPLETE -->` - Work planning completed  
+- `<!-- WORKFLOW_STATE: READY_FOR_MERGE -->` - Ready for admin merge
+
+These markers help AI determine the current workflow state when resuming interrupted processes.
 
 ## Quick Reference
 
@@ -357,6 +431,9 @@ cat tsconfig.json
 
 ### Error Handling
 - **Major version updates**: Pause and require user approval
+- **Research phase install failures**: Document errors and determine if related to dependency update
+- **Research phase build failures**: Document errors and determine if related to dependency update
+- **Research phase test failures**: Analyze failures and include in risk assessment
 - **Rebase fails**: Abort and report conflict
 - **Build fails**: Report specific errors and stop
 - **Push fails**: Check permissions and retry
