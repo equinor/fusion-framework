@@ -108,7 +108,7 @@ export const loadPortalManifest = async <T extends Partial<PortalManifest> = Por
   const validation = PortalManifestSchema.safeParse(manifest);
   if (!validation.success) {
     throw new Error(
-      `Invalid portal manifest: ${validation.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ')}`,
+      `Invalid portal manifest: ${validation.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ')}`,
     );
   }
   return {
