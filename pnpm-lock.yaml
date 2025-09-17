@@ -1221,7 +1221,7 @@ importers:
     dependencies:
       '@azure/msal-node':
         specifier: ^3.7.3
-        version: 3.7.3
+        version: 3.7.4
       '@azure/msal-node-extensions':
         specifier: ^1.5.11
         version: 1.5.22
@@ -2138,8 +2138,8 @@ packages:
   '@azure/msal-node-runtime@0.19.4':
     resolution: {integrity: sha512-v90QdV/VKG6gvHx2bQp82yRCJ8IGG7OOk6gDQgbKvoHtOs7mSEz2CIqWydUpwCryJkUwgNfgMPAMoGhe/a4fOw==}
 
-  '@azure/msal-node@3.7.3':
-    resolution: {integrity: sha512-MoJxkKM/YpChfq4g2o36tElyzNUMG8mfD6u8NbuaPAsqfGpaw249khAcJYNoIOigUzRw45OjXCOrexE6ImdUxg==}
+  '@azure/msal-node@3.7.4':
+    resolution: {integrity: sha512-fjqvhrThwzzPvqhFOdkkGRJCHPQZTNijpceVy8QjcfQuH482tOVEjHyamZaioOhVtx+FK1u+eMpJA2Zz4U9LVg==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.27.1':
@@ -9139,7 +9139,7 @@ snapshots:
 
   '@azure/msal-node-runtime@0.19.4': {}
 
-  '@azure/msal-node@3.7.3':
+  '@azure/msal-node@3.7.4':
     dependencies:
       '@azure/msal-common': 15.12.0
       jsonwebtoken: 9.0.2
