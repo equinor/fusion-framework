@@ -173,16 +173,26 @@ Based on research findings, the following actions will be taken:
 
 **PAUSE**: Display research summary and ask user to confirm continuation
 
-### 5. Rebase from Origin/Main
-**COMMANDS**:
+### 5. Rebase from Origin/Main (if needed)
+**CHECK LINEAR HISTORY**:
 1. `git fetch origin`
-2. `git rebase origin/main`
+2. Check if branch is already linear with main: `git merge-base --is-ancestor origin/main HEAD`
+
+**IF LINEAR HISTORY EXISTS** (branch is already up-to-date):
+- Skip rebase, proceed to step 6
+
+**IF REBASE NEEDED** (branch is behind main):
+3. `git rebase origin/main`
+
+**IF REBASE MADE CHANGES** (check if HEAD moved):
+4. `git push --force-with-lease origin [branch-name]`
 
 **IF LOCK FILE CONFLICTS**:
 1. `pnpm clean && rm -f pnpm-lock.yaml`
 2. `pnpm install`
 3. `git add pnpm-lock.yaml`
 4. `git rebase --continue`
+5. `git push --force-with-lease origin [branch-name]`
 
 ### 5.1. Check if Changes Already Merged
 **CHECK**: `git diff HEAD~1 --name-only`
