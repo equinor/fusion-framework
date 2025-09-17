@@ -19,6 +19,7 @@
     "clean:build": "pnpm -r exec rimraf dist tmp .cache .turbo tsconfig.tsbuildinfo",
     "watch:packages": "turbo watch --filter './packages/**' build",
     "build": "turbo build --filter=!@equinor/fusion-framework-docs",
+    "build:all": "pnpm build && pnpm build:docs",
     "build:cli": "turbo build --filter @equinor/fusion-framework-cli... build",
     "build:packages": "turbo build --filter './packages/**' build",
     "build:cookbooks": "turbo build --filter './cookbooks/**' build",

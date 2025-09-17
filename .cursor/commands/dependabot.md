@@ -22,8 +22,8 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 | [5](#5-research-update-impact) | Research Impact | Analyze dependency changes & test | Required |
 | [6](#6-plan-work) | Plan Work | Create detailed action plan | Required |
 | [7](#7-generate-changesets-if-needed) | Generate Changesets | Create version bump files | Conditional |
-| [8](#8-fix-and-build) | Fix & Build | Apply fixes and build packages | Required |
-| [9](#9-run-tests) | Run Tests | Execute full test suite | Required |
+| [8](#8-fix-and-build) | Fix & Build | Apply fixes, build, test, and lint | **MANDATORY** |
+| [9](#9-final-verification) | Final Verification | Additional verification if needed | Required |
 | [10](#10-commit-and-push) | Commit & Push | Save all changes | Required |
 | [11](#11-pre-merge-summary) | Pre-Merge Summary | Final review before merge | Required |
 | [12](#12-admin-squash) | Admin Squash | Merge PR as admin | Required |
@@ -34,6 +34,7 @@ Automated workflow for handling Dependabot pull requests with dependency updates
 - **Step 2.5**: Triggered by stale PR detection
 - **Step 7**: Only needed if packages require changesets
 - **Step 4**: Must complete before any research/build operations
+- **Step 8**: **MANDATORY SEQUENCE** - install → build → test → lint (always required)
 
 ## Detailed Workflow Steps
 
@@ -331,12 +332,16 @@ Description of changes...
 ### 8. Fix and Build
 **⚠️ THIS IS WHERE FIXES BEGIN** - All errors discovered during research phase will be addressed here
 
-**FIX ISSUES**: `pnpm check:errors --fix` (will only lint code)
+**MANDATORY SEQUENCE** (must be run in this exact order):
+1. `pnpm install` - Install dependencies and regenerate lock file
+2. `pnpm build` - Build all packages
+3. `pnpm test` - Run test suite
+4. `pnpm check:errors --fix` - **ALWAYS REQUIRED** - Fix linting and type errors
 
 **BUILD COMMANDS**:
 - vue-press packages affected: `pnpm build:docs`
 - Other packages affected: `pnpm build`
-- Both affected: `pnpm build` (includes docs)
+- Both affected: `pnpm build:all` (includes docs)
 
 **SPECIAL VUE PACKAGES**:
 ```bash
@@ -345,18 +350,20 @@ pnpm upgrade "@vuepress/*@next"
 pnpm upgrade "vuepress-theme-hope@latest"
 ```
 
-**REQUIRED**: `pnpm install` (regenerate lock file)
-
 **⚠️ NEVER MODIFY**:
 - `PACKAGE_ROOT/dist/` folders
 - `PACKAGE_ROOT/bin` folders  
 - `node_modules/` folders
 - Only modify source files, not generated output
 
-### 9. Run Tests
-**COMMAND**: `pnpm vitest run`
-**REQUIREMENT**: All tests must pass before proceeding
-**IF FAILURES**: Fix issues before committing changes
+### 9. Final Verification
+**NOTE**: Tests are already run in step 8 as part of the mandatory sequence.
+
+**ADDITIONAL VERIFICATION** (if needed):
+- `pnpm build` - Re-run build if any issues were fixed in step 8
+- `pnpm vitest run` - Re-run tests if any issues were fixed in step 8
+- `pnpm check:errors` - Verify all linting and type errors are resolved
+**REQUIREMENT**: All tests must pass and no linting errors before proceeding
 
 ### 10. Commit and Push
 **PAUSE**: Display summary of all changes and ask user to confirm before committing
@@ -394,6 +401,7 @@ gh pr comment [PR_NUMBER] --body "## Ready for Merge ✅ (PR #[PR_NUMBER])
 ### Test Results
 - 👍🏻 All tests passed (Duration: [X]m [Y]s)
 - 👍🏻 Build successful (Duration: [X]m [Y]s)
+- 👍🏻 Linting and type errors fixed
 
 ### Admin Merge Reason
 This dependency update will be merged by admin to expedite the routine update process. All automated checks have passed and no breaking changes were detected, making it safe to merge without additional review.
@@ -481,6 +489,7 @@ cat tsconfig.json
 - [ ] Rebased onto latest main (MANDATORY before research)
 - [ ] Dependency updates verified
 - [ ] Changesets created
-- [ ] All checks pass (lint, type, build)
+- [ ] **MANDATORY SEQUENCE COMPLETED**: install → build → test → lint
+- [ ] All checks pass (lint, type, build, test)
 - [ ] Changes committed and pushed
 - [ ] PR ready for admin squash merge
