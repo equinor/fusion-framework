@@ -22,9 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     # Job-specific permissions for package publishing
     permissions:
-      contents: write  # Required for creating releases and pushing changes
-      packages: write  # Required for publishing to npm registry
-      id-token: write  # Required for OIDC token generation
+      contents: write      # Required for creating releases and pushing changes
+      packages: write      # Required for publishing to npm registry
+      id-token: write      # Required for OIDC token generation
+      pull-requests: write # Required for changesets action to create PRs
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
