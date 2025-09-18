@@ -156,7 +156,7 @@ pnpm fusion-framework-cli portal publish --tag preview --schema portal.schema.ts
 ```
 
 > [!IMPORTANT]
-> **Building Behavior**: Unlike the app publish command, the portal publish command always builds your portal template before uploading and tagging. There is no option to provide a pre-built bundle.
+> **Building Behavior**: Unlike the app publish command—which only builds your app if a pre-built bundle is not provided—the portal publish command always builds your portal template before uploading and tagging. There is no option to provide a pre-built bundle.
 > 
 > **Additional Notes**:
 > - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
