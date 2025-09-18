@@ -1,4 +1,6 @@
 name: cache
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
