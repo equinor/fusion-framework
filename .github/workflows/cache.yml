@@ -1,6 +1,7 @@
 name: cache
 permissions:
   contents: read
+  actions: write    # Required for gh actions-cache delete command
 
 on:
   workflow_dispatch:
