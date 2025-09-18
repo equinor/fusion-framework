@@ -410,7 +410,7 @@ export class BookmarkProvider implements IBookmarkProvider {
      */
     const result$ = from(this.#payloadGenerators).pipe(
       mergeScan(
-        (acc, generator) => from(this._producePayload(acc, generator)),
+        (acc, generator) => from(Promise.resolve(this._producePayload(acc, generator))),
         initial ?? ({} as Partial<T>),
         1,
       ),
