@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.3.19
+
+### Patch Changes
+
+- Updated dependencies [[`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295), [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295), [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295), [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295)]:
+  - @equinor/fusion-framework-module-http@7.0.0
+  - @equinor/fusion-framework-module-msal@5.0.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.0
+  - @equinor/fusion-framework-module-services@7.1.0
+
 ## 7.3.18
 
 ### Patch Changes
