@@ -8,6 +8,7 @@ import type { IBookmarkProvider } from './BookmarkProvider.interface';
 import type { IBookmarkClient } from './BookmarkClient.interface';
 
 import { bookmarkSourceSystemSchema } from './bookmark.schemas';
+import type { BookmarkModuleConfig } from './types';
 
 export const bookmarkConfigSchema = z.object({
   log: z.custom<ILogger>().optional(),
@@ -20,12 +21,8 @@ export const bookmarkConfigSchema = z.object({
   client: z.custom<IBookmarkClient>().describe('API client for interacting with bookmarks'),
   resolve: z
     .object({
-      context: z.function().returns(z.promise(z.object({ id: z.string() }).optional())),
-      application: z
-        .function()
-        .returns(
-          z.promise(z.object({ appKey: z.string(), name: z.string().optional() }).optional()),
-        ),
+      context: z.function(),
+      application: z.function(),
     })
     .describe('Functions for resolving context and application'),
   filters: z
@@ -37,3 +34,7 @@ export const bookmarkConfigSchema = z.object({
     .optional()
     .default({ context: false, application: false }),
 });
+
+export const parseBookmarkConfig = (config: unknown): BookmarkModuleConfig => {
+  return bookmarkConfigSchema.parse(config) as BookmarkModuleConfig;
+};

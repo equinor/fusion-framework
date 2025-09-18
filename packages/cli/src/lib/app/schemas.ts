@@ -9,7 +9,7 @@ import { z } from 'zod';
 export const ApiAppConfigSchema = z
   .object({
     environment: z
-      .record(z.any())
+      .record(z.string(), z.any())
       .describe(
         'Key-value map of environment-specific variables for the application. Defaults to an empty object if not provided.',
       )
@@ -17,8 +17,9 @@ export const ApiAppConfigSchema = z
       .default({}), // Arbitrary environment variables, default empty
     endpoints: z
       .record(
+        z.string(),
         z.object({
-          url: z.string().describe('The endpoint URL. This field is required.'),
+          url: z.string({ message: 'The endpoint URL. This field is required.' }),
           scopes: z
             .array(z.string())
             .optional()

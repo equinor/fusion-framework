@@ -1,4 +1,4 @@
-import { Observable, Subscription, forkJoin, from, lastValueFrom, of } from 'rxjs';
+import { Observable, Subscription, forkJoin, from, lastValueFrom, of, defer } from 'rxjs';
 
 import {
   filter,
@@ -12,7 +12,7 @@ import {
   catchError,
 } from 'rxjs/operators';
 
-import { produce, castDraft } from 'immer';
+import { castDraft, createDraft, finishDraft } from 'immer';
 
 import { v4 as generateGUID } from 'uuid';
 
@@ -61,7 +61,8 @@ import type {
   IBookmarkProvider,
 } from './BookmarkProvider.interface';
 
-const defaultTimeout = 2 * 60 * 1000; // 2 minutes
+// Default timeout for bookmark operations (2 minutes)
+const defaultTimeout = 2 * 60 * 1000;
 
 /**
  * The `BookmarkProvider` class is responsible for managing bookmarks in the application.
@@ -356,9 +357,11 @@ export class BookmarkProvider implements IBookmarkProvider {
   ): VoidFunction {
     if (!this._event) {
       this._log?.warn('Failed to register event listener, event provider not configured');
-      return () => {};
+      return () => {
+        // No-op function when event provider is not configured
+      };
     }
-    return this._event?.addEventListener(eventName, (event) => {
+    return this._event.addEventListener(eventName, (event) => {
       if (event.source === this) {
         callback(event);
       }
@@ -398,21 +401,21 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @returns An observable that emits the generated payload.
    * @template T - The type of the generated payload.
    */
-  public generatePayload<T extends BookmarkData>(
+  public generatePayload<T extends BookmarkData = BookmarkData>(
     initial?: Partial<T> | null,
   ): Observable<T | null | undefined> {
-    this._log?.debug(`generating payload`, initial);
+    this._log?.debug('generating payload', initial);
 
     /**
      * Observable that emits the generated payload.
      */
     const result$ = from(this.#payloadGenerators).pipe(
       mergeScan(
-        (acc, generator) => of(this._producePayload(acc, generator)),
+        (acc, generator) => from(Promise.resolve(this._producePayload(acc, generator))),
         initial ?? ({} as Partial<T>),
         1,
       ),
-      tap((payload) => this._log?.debug(`generated payload`, { initial, payload })),
+      tap((payload) => this._log?.debug('generated payload', { initial, payload })),
     ) as Observable<T | null | undefined>;
 
     return result$;
@@ -432,35 +435,41 @@ export class BookmarkProvider implements IBookmarkProvider {
    * If the generator returns a value, a warning will be logged.
    * If the generator returns null, an info message will be logged indicating that the bookmark data should be cleared.
    */
-  protected _producePayload<T extends BookmarkData>(
+  protected async _producePayload<T extends BookmarkData = BookmarkData>(
     value: Partial<T>,
     generator: BookmarkPayloadGenerator<T>,
     initial?: Partial<T> | null,
-  ) {
-    // produce payload from generator
-    return produce(value, (draft) => {
-      try {
-        const result = generator(draft as Partial<T>, initial);
-        // cast the result to a draft object
-        if (result) {
-          this._log?.warn(
-            `bookmark data generator ${generator.name} returned a value, but it should not do this, since the data is an immer draft object`,
-          );
-          // Dirty fix since some developers are returning the reference object, which will freeze the object
-          return castDraft(JSON.parse(JSON.stringify(result)));
-        }
+  ): Promise<T | null | undefined> {
+    // Create a draft for async operations using createDraft/finishDraft pattern
+    const draft = createDraft(value);
 
-        // clear the bookmark data if the generator returns null
-        if (result === null) {
-          this._log?.info(
-            `bookmark data generator ${generator.name} wish to clear the bookmark data`,
-          );
-          return undefined;
-        }
-      } catch (error) {
-        this._log?.error(`Failed to produce payload using generator ${generator.name}`, error);
+    try {
+      const generatorResult = await Promise.resolve(generator(draft as Partial<T>, initial));
+
+      // Handle the generator result
+      if (generatorResult) {
+        this._log?.warn(
+          `bookmark data generator ${generator.name} returned a value, but it should not do this, since the data is an immer draft object`,
+        );
+        // Dirty fix since some developers are returning the reference object, which will freeze the object
+        return castDraft(generatorResult) as T | null | undefined;
       }
-    });
+
+      // clear the bookmark data if the generator returns null
+      if (generatorResult === null) {
+        this._log?.info(
+          `bookmark data generator ${generator.name} wish to clear the bookmark data`,
+        );
+        return undefined;
+      }
+    } catch (error) {
+      this._log?.error(`Failed to produce payload using generator ${generator.name}`, error);
+    }
+
+    // Finish the draft to get the immutable result
+    const result = finishDraft(draft);
+
+    return result as T | null | undefined;
   }
 
   /**
@@ -470,10 +479,10 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param options An optional object that allows excluding the bookmark payload from the result.
    * @returns An observable that emits the combined result of fetching the bookmark and bookmark data.
    */
-  public getBookmark<T extends BookmarkData>(
+  public getBookmark<T extends BookmarkData = BookmarkData>(
     bookmarkId: string,
     options?: { excludePayload?: boolean },
-  ) {
+  ): Observable<Bookmark<T>> {
     this._log?.debug(`fetching bookmark: ${bookmarkId}`, options);
 
     // fetch the bookmark and bookmark data
@@ -501,7 +510,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param options.excludePayload - Specifies whether to exclude the payload from the bookmark.
    * @returns A promise that resolves to the retrieved bookmark, or null if the bookmark is not found.
    */
-  public getBookmarkAsync<T extends BookmarkData>(
+  public getBookmarkAsync<T extends BookmarkData = BookmarkData>(
     id: string,
     options?: { excludePayload?: boolean },
   ): Promise<Bookmark<T> | null> {
@@ -509,24 +518,59 @@ export class BookmarkProvider implements IBookmarkProvider {
   }
 
   /**
-   * Asynchronously retrieves all bookmarks from the store.
+   * Retrieves all bookmarks from the store as an Observable stream.
    *
-   * @returns A Promise that resolves to the Bookmarks object containing all bookmarks.
+   * This method implements a complex flow that:
+   * 1. Resolves filter parameters (sourceSystem, appKey, contextId) based on configuration
+   * 2. Dispatches a fetch action to the store with resolved filters
+   * 3. Monitors store actions for success/failure responses
+   * 4. Returns the bookmarks data or throws appropriate errors
+   *
+   * @remarks
+   * The method uses a reactive pattern where filter resolution and store actions are
+   * handled asynchronously. If filtering is enabled, it will resolve the current
+   * application and context to filter bookmarks accordingly.
+   *
+   * @example
+   * ```ts
+   * // Basic usage
+   * bookmarkProvider.getAllBookmarks().subscribe({
+   *   next: (bookmarks) => console.log('Retrieved bookmarks:', bookmarks),
+   *   error: (err) => console.error('Failed to fetch bookmarks:', err)
+   * });
+   *
+   * // With filtering enabled in config
+   * const config = {
+   *   filters: { context: true, application: true }
+   * };
+   * // Will automatically filter by current context and application
+   * ```
+   *
+   * @returns An Observable that emits the array of bookmarks when successfully retrieved
+   * @throws {BookmarkProviderError} When filter resolution fails or store operations fail
+   * @throws {BookmarkProviderError} When a timeout occurs during the fetch operation
    */
   public getAllBookmarks(): Observable<Bookmarks> {
     return new Observable<Bookmarks>((observer) => {
-      this._log?.debug(`fetching all bookmarks`);
+      this._log?.debug('fetching all bookmarks');
 
-      // generate the filter parameters
+      // Step 1: Generate filter parameters based on configuration
+      // This creates a stream that resolves all necessary filter values
       const filter$ = forkJoin({
+        // Always include the source system for the current provider
         sourceSystem: of(this.sourceSystem),
+
+        // Resolve application key if filtering by application is enabled
         appKey: this.#config.filters?.application
-          ? from(this._resolve.application()).pipe(map((x) => x?.appKey))
+          ? defer(() => this._resolve.application()).pipe(map((x) => x?.appKey))
           : of(undefined),
+
+        // Resolve context ID if filtering by context is enabled
         contextId: this.#config.filters?.context
-          ? from(this._resolve.context()).pipe(map((x) => x?.id))
+          ? defer(() => this._resolve.context()).pipe(map((x) => x?.id))
           : of(undefined),
       }).pipe(
+        // Handle any errors during filter parameter resolution
         catchError((err) => {
           const error = new BookmarkProviderError(
             'Could not fetch bookmarks, failed to resolve filter parameters',
@@ -537,20 +581,25 @@ export class BookmarkProvider implements IBookmarkProvider {
         }),
       );
 
-      // execute the fetch bookmarks action when the filter parameters are resolved
+      // Step 2: Dispatch fetch action to store when filter parameters are ready
+      // This triggers the actual API call through the store's action system
+      // The store will handle the async operation and emit success/failure actions
+      // Using observer.add() ensures proper cleanup when the Observable is unsubscribed
       observer.add(
         filter$.subscribe((filter) => {
           this.#store.next(bookmarkActions.fetchBookmarks(filter));
         }),
       );
 
-      // monitor the failure case when fetching bookmarks
+      // Step 3: Monitor for failure responses from the store
+      // This stream will emit and throw an error if the fetch operation fails
       const failure$ = this.#store.action$.pipe(
         filter(bookmarkActions.fetchBookmarks.failure.match),
         map((action) => {
           this._log?.error('Failed to fetch bookmarks', action.payload);
           throw new BookmarkProviderError('Failed to fetch bookmarks', action.payload);
         }),
+        // Add timeout protection to prevent hanging requests
         timeout({
           each: defaultTimeout,
           with: () => {
@@ -559,17 +608,22 @@ export class BookmarkProvider implements IBookmarkProvider {
         }),
       );
 
-      // monitor the success case when fetching bookmarks
+      // Step 4: Monitor for success responses from the store
+      // This stream will emit the bookmarks data when successfully retrieved
       const request$ = this.#store.action$.pipe(
         filter(bookmarkActions.fetchBookmarks.success.match),
         map((a) => a.payload),
         tap((bookmarks) => {
-          this._log?.debug(`fetched all bookmarks`, bookmarks);
+          this._log?.debug('fetched all bookmarks', bookmarks);
         }),
+        // Race against failure stream - whichever completes first wins
+        // This ensures we either get the bookmarks data or an error, not both
         raceWith(failure$),
+        // Only take the first emission (success or failure) to complete the stream
         first(),
       );
 
+      // Step 5: Subscribe to the request stream and forward results to observer
       request$.subscribe(observer);
     });
   }
@@ -594,7 +648,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @returns An observable that emits the next bookmark or null.
    * @template T - The type of the bookmark data.
    */
-  public setCurrentBookmark<T extends BookmarkData>(
+  public setCurrentBookmark<T extends BookmarkData = BookmarkData>(
     bookmark_or_id: Bookmark<T> | string | null,
   ): Observable<Bookmark<T> | null> {
     this._log?.debug('setting current bookmark', bookmark_or_id);
@@ -646,7 +700,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param bookmarkId - The ID of the bookmark to set as the current bookmark.
    * @returns A subscription to the operation that sets the current bookmark.
    */
-  public setCurrentBookmarkAsync<T extends BookmarkData>(
+  public setCurrentBookmarkAsync<T extends BookmarkData = BookmarkData>(
     bookmark_or_id: Bookmark<T> | string | null,
   ): Promise<Bookmark<T> | null> {
     return lastValueFrom(this.setCurrentBookmark<T>(bookmark_or_id));
@@ -654,116 +708,121 @@ export class BookmarkProvider implements IBookmarkProvider {
 
   /**
    * Creates a new bookmark with the provided bookmark data.
+   * The creation executes immediately when this method is called.
    * @template T - The type of bookmark data.
    * @param {BookmarkCreateArgs<T>} newBookmarkData - The data for creating the bookmark.
    * @returns {Observable<Bookmark<T>>} - An observable that emits the created bookmark.
    */
-  public createBookmark<T extends BookmarkData>(
+  public createBookmark<T extends BookmarkData = BookmarkData>(
     newBookmarkData: BookmarkCreateArgs<T>,
   ): Observable<Bookmark<T>> {
-    return new Observable<Bookmark<T>>((subscriber) => {
-      const { ref, action$ } = this._useScopedActions();
+    const { ref, action$ } = this._useScopedActions();
 
-      this._log?.debug(`creating new bookmark, ref: ${ref}`, newBookmarkData);
+    this._log?.debug(`creating new bookmark, ref: ${ref}`, newBookmarkData);
 
-      // resolve the bookmark
-      const bookmark$ = forkJoin({
-        appKey: newBookmarkData.appKey
-          ? of(newBookmarkData.appKey)
-          : from(this._resolve.application()).pipe(
-              map((app) => {
-                if (!app?.appKey) {
-                  throw new BookmarkProviderError('Failed to resolve application key');
-                }
-                return app.appKey;
-              }),
-            ),
-        contextId: this._resolve.context().then((context) => context?.id),
-        payload: this.generatePayload<T>(newBookmarkData.payload),
-        sourceSystem: of(this.sourceSystem),
-      }).pipe(
-        catchError((err) => {
+    // resolve the bookmark
+    const bookmark$ = forkJoin({
+      appKey: newBookmarkData.appKey
+        ? of(newBookmarkData.appKey)
+        : defer(() => this._resolve.application()).pipe(
+            map((app) => {
+              if (!app?.appKey) {
+                throw new BookmarkProviderError('Failed to resolve application key');
+              }
+              return app.appKey;
+            }),
+          ),
+      contextId: defer(() => this._resolve.context()).pipe(map((context) => context?.id)),
+      payload: this.generatePayload<T>(newBookmarkData.payload),
+      sourceSystem: of(this.sourceSystem),
+    }).pipe(
+      catchError((err) => {
+        const error = new BookmarkProviderError(
+          'Could not create new bookmark, failed to resolve bookmark data',
+          err,
+        );
+        this._log?.error(error.message, error);
+        throw error;
+      }),
+      // merge the resolved data with the new bookmark data
+      map(
+        (resolvedData) =>
+          ({
+            ...newBookmarkData,
+            ...resolvedData,
+          }) as BookmarkNew<T>,
+      ),
+    );
+
+    // notify listeners that a bookmark is about to be created
+    const dispatch$ = bookmark$.pipe(
+      switchMap(async (bookmark) => {
+        // notify listeners that a bookmark is about to be created
+        const { canceled, type } = await this._dispatchEvent('onBookmarkCreate', {
+          detail: bookmark,
+          cancelable: true,
+        });
+
+        // throw an error if the event is canceled
+        if (canceled) {
           const error = new BookmarkProviderError(
-            'Could not create new bookmark, failed to resolve bookmark data',
-            err,
+            `event: ${type} was canceled by listener for creating bookmark: ${ref}`,
           );
-          this._log?.error(error.message, error);
+          this._log?.info(error.message);
           throw error;
-        }),
-        // merge the resolved data with the new bookmark data
-        map(
-          (resolvedData) =>
-            ({
-              ...newBookmarkData,
-              ...resolvedData,
-            }) as BookmarkNew<T>,
-        ),
-      );
+        }
 
-      // notify listeners that a bookmark is about to be created
-      const dispatch$ = bookmark$.pipe(
-        switchMap(async (bookmark) => {
-          // notify listeners that a bookmark is about to be created
-          const { canceled, type } = await this._dispatchEvent('onBookmarkCreate', {
-            detail: bookmark,
-            cancelable: true,
-          });
+        return bookmark;
+      }),
+    );
 
-          // throw an error if the event is canceled
-          if (canceled) {
-            const error = new BookmarkProviderError(
-              `event: ${type} was canceled by listener for creating bookmark: ${ref}`,
-            );
-            this._log?.info(error.message);
-            throw error;
-          }
+    // Start the creation process immediately
+    const createSubscription = dispatch$.subscribe({
+      error: (error) => {
+        this._log?.error(`Failed to prepare bookmark creation: ${ref}`, error);
+      },
+      next: (newBookmark) => {
+        // request the store to create the bookmark
+        this.#store.next(bookmarkActions.createBookmark(newBookmark, { ref }));
+      },
+    });
 
-          return bookmark;
-        }),
-      );
+    // monitor the failure case when creating a bookmark
+    const failure$ = action$.pipe(
+      filter(bookmarkActions.createBookmark.failure.match),
+      map(({ payload: cause }) => {
+        const error = new BookmarkProviderError(`Failed to create bookmark: ${ref}`, {
+          cause,
+        });
+        this._log?.warn(error.message);
+        throw error;
+      }),
+      timeout({
+        each: defaultTimeout,
+        with: () => {
+          throw new BookmarkProviderError(`Timeout while creating bookmark: ${ref}`);
+        },
+      }),
+    );
 
-      // execute the create bookmark action when the bookmark is resolved and not canceled
-      subscriber.add(
-        dispatch$.subscribe({
-          error: (error) => subscriber.error(error),
-          next: (newBookmark) => {
-            // request the store to create the bookmark
-            this.#store.next(bookmarkActions.createBookmark(newBookmark, { ref }));
-          },
-        }),
-      );
+    // monitor the success case when creating a bookmark
+    const request$ = action$.pipe(
+      filter(bookmarkActions.createBookmark.success.match),
+      map(({ payload }) => payload as Bookmark<T>),
+      tap((bookmark) => {
+        this._log?.info(`Bookmark created: ${bookmark.id}, ref: ${ref}`);
+        this._dispatchEvent('onBookmarkCreated', { detail: bookmark });
+      }),
+      raceWith(failure$),
+      first(),
+    );
 
-      // monitor the failure case when creating a bookmark
-      const failure$ = action$.pipe(
-        filter(bookmarkActions.createBookmark.failure.match),
-        map(({ payload: cause }) => {
-          const error = new BookmarkProviderError(`Failed to create bookmark: ${ref}`, {
-            cause,
-          });
-          this._log?.warn(error.message);
-          throw error;
-        }),
-        timeout({
-          each: defaultTimeout,
-          with: () => {
-            throw new BookmarkProviderError(`Timeout while creating bookmark: ${ref}`);
-          },
-        }),
-      );
+    // Return the observable that will emit the result
+    return new Observable<Bookmark<T>>((subscriber) => {
+      // Clean up the create subscription when the result observable is unsubscribed
+      subscriber.add(() => createSubscription.unsubscribe());
 
-      // monitor the success case when creating a bookmark
-      const request$ = action$.pipe(
-        filter(bookmarkActions.createBookmark.success.match),
-        map(({ payload }) => payload as Bookmark<T>),
-        tap((bookmark) => {
-          this._log?.info(`Bookmark created: ${bookmark.id}, ref: ${ref}`);
-          this._dispatchEvent('onBookmarkCreated', { detail: bookmark });
-        }),
-        raceWith(failure$),
-        first(),
-      );
-
-      // emit the created bookmark
+      // Emit the created bookmark
       request$.subscribe(subscriber);
     });
   }
@@ -774,7 +833,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param bookmark - The new bookmark to create.
    * @returns A promise that resolves to the created bookmark with its associated data.
    */
-  public createBookmarkAsync<T extends BookmarkData>(
+  public createBookmarkAsync<T extends BookmarkData = BookmarkData>(
     args: BookmarkCreateArgs<T>,
   ): Promise<Bookmark<T>> {
     return lastValueFrom(this.createBookmark<T>(args));
@@ -782,14 +841,15 @@ export class BookmarkProvider implements IBookmarkProvider {
 
   /**
    * Updates a bookmark with the specified bookmarkId and bookmarkUpdates.
+   * The update executes immediately when this method is called.
    *
    * @template T - The type of the bookmark data.
    * @param {string} bookmarkId - The identifier of the bookmark to update.
    * @param {BookmarkUpdate<T>} [bookmarkUpdates] - The updates to apply to the bookmark.
    * @param {BookmarkUpdateOptions} [options] - The options for updating the bookmark.
-   * @returns {Promise<Bookmark<T>>} - A promise that resolves to the updated bookmark.
+   * @returns {Observable<Bookmark<T>>} - An observable that emits the updated bookmark.
    */
-  public updateBookmark<T extends BookmarkData>(
+  public updateBookmark<T extends BookmarkData = BookmarkData>(
     bookmarkId: string,
     bookmarkUpdates?: BookmarkUpdate<T>,
     options?: BookmarkUpdateOptions,
@@ -800,101 +860,105 @@ export class BookmarkProvider implements IBookmarkProvider {
       );
     }
 
-    return new Observable<Bookmark<T>>((subscriber) => {
-      const { ref, action$ } = this._useScopedActions();
+    const { ref, action$ } = this._useScopedActions();
 
-      this._log?.debug(`Updating bookmark: ${bookmarkId}, ref: ${ref}`);
+    this._log?.debug(`Updating bookmark: ${bookmarkId}, ref: ${ref}`);
 
-      /**
-       * Generate updates with payload
-       * @remarks
-       * If `excludePayloadGeneration` is `true`, it emits the `bookmarkUpdates` directly.
-       * If `excludePayloadGeneration` is `false`, it generates the payload using the `generatePayload` method and emits the updated `bookmarkUpdates` with the generated payload.
-       */
-      const updates$ = options?.excludePayloadGeneration
-        ? of(bookmarkUpdates as BookmarkUpdate<T>)
-        : this.generatePayload<T>(bookmarkUpdates?.payload).pipe(
-            map(
-              (payload) =>
-                ({
-                  ...bookmarkUpdates,
-                  payload,
-                }) as BookmarkUpdate<T>,
-            ),
+    /**
+     * Generate updates with payload
+     * @remarks
+     * If `excludePayloadGeneration` is `true`, it emits the `bookmarkUpdates` directly.
+     * If `excludePayloadGeneration` is `false`, it generates the payload using the `generatePayload` method and emits the updated `bookmarkUpdates` with the generated payload.
+     */
+    const updates$ = options?.excludePayloadGeneration
+      ? of(bookmarkUpdates as BookmarkUpdate<T>)
+      : this.generatePayload<T>(bookmarkUpdates?.payload).pipe(
+          map(
+            (payload) =>
+              ({
+                ...bookmarkUpdates,
+                payload,
+              }) as BookmarkUpdate<T>,
+          ),
+        );
+
+    // notify listeners that a bookmark is about to be updated
+    const dispatch$ = updates$.pipe(
+      switchMap(async (updates) => {
+        const { canceled, type } = await this._dispatchEvent('onBookmarkUpdate', {
+          detail: {
+            current: bookmarkSelector(this.#store.value, bookmarkId),
+            updates,
+          },
+          cancelable: true,
+        });
+
+        if (canceled) {
+          const error = new BookmarkProviderError(
+            `event: ${type} was canceled by listener for updating bookmark: ${bookmarkId}, ref: ${ref}`,
           );
-
-      // notify listeners that a bookmark is about to be updated
-      const dispatch$ = updates$.pipe(
-        switchMap(async (updates) => {
-          const { canceled, type } = await this._dispatchEvent('onBookmarkUpdate', {
-            detail: {
-              current: bookmarkSelector(this.#store.value, bookmarkId),
-              updates,
-            },
-            cancelable: true,
-          });
-
-          if (canceled) {
-            const error = new BookmarkProviderError(
-              `event: ${type} was canceled by listener for updating bookmark: ${bookmarkId}, ref: ${ref}`,
-            );
-            this._log?.warn(error.message, updates);
-            throw error;
-          }
-
-          return updates;
-        }),
-      );
-
-      // execute the update bookmark action when the updates are resolved and not canceled
-      subscriber.add(
-        dispatch$.subscribe({
-          error: (error) => subscriber.error(error),
-          next: (updates) => {
-            // trigger the store to update the bookmark
-            this.#store.next(bookmarkActions.updateBookmark({ bookmarkId, updates }, { ref }));
-          },
-        }),
-      );
-
-      // monitor the failure case when updating a bookmark
-      const failure$ = action$.pipe(
-        filter(bookmarkActions.updateBookmark.failure.match),
-        map(({ payload: cause }) => {
-          const error = new BookmarkProviderError(`Failed to update bookmark: ${bookmarkId}`, {
-            cause,
-          });
-          this._log?.info(error.message);
+          this._log?.warn(error.message, updates);
           throw error;
-        }),
-        timeout({
-          each: defaultTimeout,
-          with: () => {
-            throw new BookmarkProviderError(`Timeout while updating bookmark: ${bookmarkId}`);
-          },
-        }),
-      );
+        }
 
-      // monitor the success case when updating a bookmark
-      const request$ = action$.pipe(
-        filter(bookmarkActions.updateBookmark.success.match),
-        map(
-          // TODO: add payload if current bookmark is the same as the updated bookmark
-          ({ payload }): Bookmark<T> =>
-            ({
-              ...bookmarkSelector(this.#store.value, payload.id),
-              payload: payload.payload,
-            }) as Bookmark<T>,
-        ),
-        tap((bookmark) => {
-          this._log?.info(`Bookmark updated: ${bookmark.id}, ref: ${ref}`);
-          this._dispatchEvent('onBookmarkUpdated', { detail: bookmark });
-        }),
-        raceWith(failure$),
-        first(),
-      );
+        return updates;
+      }),
+    );
 
-      // emit the updated bookmark
+    // Start the update process immediately
+    const updateSubscription = dispatch$.subscribe({
+      error: (error) => {
+        this._log?.error(`Failed to prepare bookmark update: ${bookmarkId}`, error);
+      },
+      next: (updates) => {
+        // trigger the store to update the bookmark
+        this.#store.next(bookmarkActions.updateBookmark({ bookmarkId, updates }, { ref }));
+      },
+    });
+
+    // monitor the failure case when updating a bookmark
+    const failure$ = action$.pipe(
+      filter(bookmarkActions.updateBookmark.failure.match),
+      map(({ payload: cause }) => {
+        const error = new BookmarkProviderError(`Failed to update bookmark: ${bookmarkId}`, {
+          cause,
+        });
+        this._log?.info(error.message);
+        throw error;
+      }),
+      timeout({
+        each: defaultTimeout,
+        with: () => {
+          throw new BookmarkProviderError(`Timeout while updating bookmark: ${bookmarkId}`);
+        },
+      }),
+    );
+
+    // monitor the success case when updating a bookmark
+    const request$ = action$.pipe(
+      filter(bookmarkActions.updateBookmark.success.match),
+      map(
+        // TODO: add payload if current bookmark is the same as the updated bookmark
+        ({ payload }): Bookmark<T> =>
+          ({
+            ...bookmarkSelector(this.#store.value, payload.id),
+            payload: payload.payload,
+          }) as Bookmark<T>,
+      ),
+      tap((bookmark) => {
+        this._log?.info(`Bookmark updated: ${bookmark.id}, ref: ${ref}`);
+        this._dispatchEvent('onBookmarkUpdated', { detail: bookmark });
+      }),
+      raceWith(failure$),
+      first(),
+    );
+
+    // Return the observable that will emit the result
+    return new Observable<Bookmark<T>>((subscriber) => {
+      // Clean up the update subscription when the result observable is unsubscribed
+      subscriber.add(() => updateSubscription.unsubscribe());
+
+      // Emit the updated bookmark
       request$.subscribe(subscriber);
     });
   }
@@ -907,7 +971,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    * @param bookmark - The bookmark to update.
    * @returns A promise that resolves to the updated bookmark with its associated data.
    */
-  public updateBookmarkAsync<T extends BookmarkData>(
+  public updateBookmarkAsync<T extends BookmarkData = BookmarkData>(
     id_or_bookmark: string | Bookmark<T>,
     updates_or_options?: BookmarkUpdate<T> | BookmarkUpdateOptions,
     options?: BookmarkUpdateOptions,
@@ -925,10 +989,7 @@ export class BookmarkProvider implements IBookmarkProvider {
               updatePayload: boolean;
             }
           ).updatePayload,
-        }).pipe(
-          // this is totally wrong, but we need to keep the API for now
-          map((bookmark) => bookmark.payload as Bookmark<T>),
-        ),
+        }),
       );
     }
     return lastValueFrom(
@@ -938,83 +999,88 @@ export class BookmarkProvider implements IBookmarkProvider {
 
   /**
    * Deletes a bookmark with the specified bookmarkId.
+   * The deletion executes immediately when this method is called.
    *
    * @param bookmarkId - The unique identifier of the bookmark to be deleted.
-   * @returns A Promise that resolves when the bookmark is successfully deleted.
+   * @returns An Observable that emits when the bookmark is successfully deleted.
    * @throws {BookmarkProviderError} If there is an error deleting the bookmark.
    */
   public deleteBookmark(bookmarkId: string): Observable<void> {
-    return new Observable<void>((subscriber) => {
-      const { ref, action$ } = this._useScopedActions();
+    const { ref, action$ } = this._useScopedActions();
 
-      this._log?.debug(`Removing bookmark: ${bookmarkId}, ref: ${ref}`);
+    this._log?.debug(`Removing bookmark: ${bookmarkId}, ref: ${ref}`);
 
-      // bookmark to delete
-      const bookmark = bookmarkSelector(this.#store.value, bookmarkId) ?? {
-        id: bookmarkId,
-      };
+    // bookmark to delete
+    const bookmark = bookmarkSelector(this.#store.value, bookmarkId) ?? {
+      id: bookmarkId,
+    };
 
-      // observable that dispatches the 'onBookmarkDelete' event and maps the result
-      const dispatch$ = from(
-        this._dispatchEvent('onBookmarkDelete', {
-          detail: bookmark,
-          cancelable: true,
-        }),
-      ).pipe(
-        map(({ canceled, type, detail }) => {
-          if (canceled) {
-            const error = new BookmarkProviderError(
-              `event: ${type} was canceled by listener for removing bookmark: ${bookmarkId}, ref: ${ref}`,
-            );
-            this._log?.warn(error.message);
-            throw error;
-          }
-          return detail;
-        }),
-      );
-
-      // execute the delete bookmark action when the event is not canceled
-      subscriber.add(
-        dispatch$.subscribe({
-          error: (error) => subscriber.error(error),
-          next: (bookmark) => {
-            // request the store to delete the bookmark
-            this.#store.next(bookmarkActions.deleteBookmark(bookmark.id, { ref }));
-          },
-        }),
-      );
-
-      // monitor the failure case when deleting a bookmark
-      const failure$ = action$.pipe(
-        filter(bookmarkActions.deleteBookmark.failure.match),
-        map(({ payload: cause }) => {
-          const error = new BookmarkProviderError(`Failed to update bookmark: ${bookmarkId}`, {
-            cause,
-          });
+    // observable that dispatches the 'onBookmarkDelete' event and maps the result
+    const dispatch$ = from(
+      this._dispatchEvent('onBookmarkDelete', {
+        detail: bookmark,
+        cancelable: true,
+      }),
+    ).pipe(
+      map(({ canceled, type, detail }) => {
+        if (canceled) {
+          const error = new BookmarkProviderError(
+            `event: ${type} was canceled by listener for removing bookmark: ${bookmarkId}, ref: ${ref}`,
+          );
           this._log?.warn(error.message);
           throw error;
-        }),
-        timeout({
-          each: defaultTimeout,
-          with: () => {
-            throw new BookmarkProviderError(`Timeout while updating bookmark: ${bookmarkId}`);
-          },
-        }),
-      );
+        }
+        return detail;
+      }),
+    );
 
-      // monitor the success case when deleting a bookmark
-      const request$ = action$.pipe(
-        filter(bookmarkActions.deleteBookmark.success.match),
-        map(() => undefined),
-        tap(() => {
-          this._log?.info(`Removed bookmark: ${bookmark.id}, ref: ${ref}`);
-          this._dispatchEvent('onBookmarkDeleted', { detail: bookmark });
-        }),
-        raceWith(failure$),
-        first(),
-      );
+    // Start the deletion process immediately
+    const deleteSubscription = dispatch$.subscribe({
+      error: (error) => {
+        this._log?.error(`Failed to prepare bookmark deletion: ${bookmarkId}`, error);
+      },
+      next: (bookmark) => {
+        // request the store to delete the bookmark
+        this.#store.next(bookmarkActions.deleteBookmark(bookmark.id, { ref }));
+      },
+    });
 
-      // emit the deleted bookmark
+    // monitor the failure case when deleting a bookmark
+    const failure$ = action$.pipe(
+      filter(bookmarkActions.deleteBookmark.failure.match),
+      map(({ payload: cause }) => {
+        const error = new BookmarkProviderError(`Failed to delete bookmark: ${bookmarkId}`, {
+          cause,
+        });
+        this._log?.warn(error.message);
+        throw error;
+      }),
+      timeout({
+        each: defaultTimeout,
+        with: () => {
+          throw new BookmarkProviderError(`Timeout while deleting bookmark: ${bookmarkId}`);
+        },
+      }),
+    );
+
+    // monitor the success case when deleting a bookmark
+    const request$ = action$.pipe(
+      filter(bookmarkActions.deleteBookmark.success.match),
+      map(() => undefined),
+      tap(() => {
+        this._log?.info(`Removed bookmark: ${bookmark.id}, ref: ${ref}`);
+        this._dispatchEvent('onBookmarkDeleted', { detail: bookmark });
+      }),
+      raceWith(failure$),
+      first(),
+    );
+
+    // Return the observable that will emit the result
+    return new Observable<void>((subscriber) => {
+      // Clean up the delete subscription when the result observable is unsubscribed
+      subscriber.add(() => deleteSubscription.unsubscribe());
+
+      // Emit the deletion result
       request$.subscribe(subscriber);
     });
   }
@@ -1202,7 +1268,7 @@ export class BookmarkProvider implements IBookmarkProvider {
           this._log?.info(`Removed bookmark: ${bookmarkId} from favourites, ref: ${ref}`);
           this._dispatchEvent('onBookmarkFavouriteRemoved', { detail: bookmark });
         }),
-        map(() => {}),
+        map(() => undefined),
         raceWith(failure$),
         first(),
       );
@@ -1294,7 +1360,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     return success$.pipe(raceWith(failure$));
   }
 
-  protected _getBookmarkData<T extends BookmarkData>(
+  protected _getBookmarkData<T extends BookmarkData = BookmarkData>(
     bookmarkId: string,
     options?: { timeout?: number },
   ): Observable<T | null> {
@@ -1368,16 +1434,16 @@ export class BookmarkProvider implements IBookmarkProvider {
     /**
      * Generates a unique identifier for the operation
      */
-    ref ??= generateGUID();
+    const operationRef = ref ?? generateGUID();
 
     /**
      * Observable stream of actions filtered by a specific reference.
      */
     const action$ = this.#store.action$.pipe(
-      filter((action): action is TAction => 'meta' in action && action.meta?.ref === ref),
+      filter((action): action is TAction => 'meta' in action && action.meta?.ref === operationRef),
     );
 
-    return { ref, action$ };
+    return { ref: operationRef, action$ };
   }
 
   /**

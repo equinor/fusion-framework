@@ -179,7 +179,7 @@ export class BookmarksApiClient<
     init?: ClientRequestInit<TClient, TResponse>,
   ): GetBookmarksResult<TVersion, TMethod, TResponse> {
     const fn = getBookmarks(version, this._client, this._method);
-    return fn(args, init);
+    return fn(args as Parameters<typeof fn>[0], init);
   }
 
   /**

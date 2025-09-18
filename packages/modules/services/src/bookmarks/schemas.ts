@@ -64,7 +64,7 @@ export const ApiBookmarkSchema = {
 export const ApiBookmarkPayload = {
   get [ApiVersion.v1]() {
     return z
-      .record(z.unknown())
+      .record(z.string(), z.unknown())
       .or(z.string())
       .optional()
       .default('')

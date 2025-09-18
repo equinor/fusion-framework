@@ -27,7 +27,7 @@ const ArgSchema = {
   [ApiVersion.v2]: z.object({
     bookmarkId: z.string(),
   }),
-};
+} as const;
 
 /** Schema for the response from the API. */
 const ApiResponseSchema = {
@@ -101,7 +101,7 @@ const executeApiCall = <TVersion extends AllowedVersions, TMethod extends keyof 
     input: MethodArg<MethodVersion>,
     init?: ClientRequestInit<IHttpClient, TResponse>,
   ): TResult => {
-    const args = ArgSchema[apiVersion].parse(input);
+    const args = ArgSchema[apiVersion].parse(input) as z.infer<(typeof ArgSchema)[MethodVersion]>;
     return client[method](
       generateApiPath(apiVersion, args),
       generateRequestParameters(apiVersion, args, init),

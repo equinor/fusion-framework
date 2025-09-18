@@ -12,9 +12,10 @@ import { z } from 'zod';
  *   - `scopes` (optional): An array of strings representing the scopes. Defaults to an empty array.
  */
 export const ApiAppConfigSchema = z.object({
-  environment: z.record(z.any()).optional().default({}),
+  environment: z.record(z.string(), z.any()).optional().default({}),
   endpoints: z
     .record(
+      z.string(),
       z.object({
         url: z.string(),
         scopes: z.array(z.string()).optional().default([]),
@@ -38,27 +39,23 @@ export type ApiAppConfig = z.infer<typeof ApiAppConfigSchema>;
  * - `isExpired` (boolean | nullish): Indicates whether the account is expired, which can be null or undefined.
  */
 const ApiApplicationPersonSchema = z.object({
-  azureUniqueId: z.string({ description: 'The unique identifier for the person in Azure.' }),
-  displayName: z.string({ description: 'The display name of the person.' }),
+  azureUniqueId: z.string({ message: 'The unique identifier for the person in Azure.' }),
+  displayName: z.string({ message: 'The display name of the person.' }),
   mail: z
-    .string({ description: 'The email address of the person, which can be null or undefined.' })
+    .string({ message: 'The email address of the person, which can be null or undefined.' })
     .nullish(),
   upn: z
     .string({
-      description: 'The User Principal Name (UPN) of the person, which can be null or undefined.',
+      message: 'The User Principal Name (UPN) of the person, which can be null or undefined.',
     })
     .nullish(),
-  accountType: z.string({
-    description: 'The type of account the person has.',
-  }),
+  accountType: z.string({ message: 'The type of account the person has.' }),
   accountClassification: z
-    .string({
-      description: 'The classification of the account, which can be null or undefined.',
-    })
+    .string({ message: 'The classification of the account, which can be null or undefined.' })
     .nullish(),
   isExpired: z
     .boolean({
-      description: 'Indicates whether the account is expired, which can be null or undefined.',
+      message: 'Indicates whether the account is expired, which can be null or undefined.',
     })
     .nullish(),
 });

@@ -28,7 +28,7 @@ const ArgSchema = {
       description: z.string().nullish(),
       isShared: z.boolean().nullish(),
       payload: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .or(z.string())
         .nullish()
         .transform((x) => (typeof x === 'object' ? JSON.stringify(x) : x)),

@@ -11,91 +11,48 @@ import { z } from 'zod';
 export const PortalManifestBuildSchema = z.object({
   // Main entry point for the portal (required)
   templateEntry: z
-    .string({
-      required_error: 'templateEntry is required in build section',
-      invalid_type_error: 'templateEntry must be a string',
-    })
+    .string({ message: 'templateEntry must be a string' })
     .describe('Main entry point for the portal'),
   // Schema file for portal validation (required)
   schemaEntry: z
-    .string({
-      required_error: 'schemaEntry is required in build section',
-      invalid_type_error: 'schemaEntry must be a string',
-    })
+    .string({ message: 'schemaEntry must be a string' })
     .describe('Schema file for portal validation'),
   // Asset path for dev/preview builds (optional)
   assetPath: z
-    .string({
-      invalid_type_error: 'assetPath must be a string',
-    })
+    .string({ message: 'assetPath must be a string' })
     .optional()
     .describe('Asset path for dev/preview builds'),
   // GitHub repo URL or local git remote (optional)
   githubRepo: z
-    .string({
-      invalid_type_error: 'githubRepo must be a string',
-    })
+    .string({ message: 'githubRepo must be a string' })
     .optional()
     .describe('GitHub repo URL or local git remote'),
   // Version from package.json (required)
-  version: z
-    .string({
-      required_error: 'version is required in build section',
-      invalid_type_error: 'version must be a string',
-    })
-    .describe('Version from package.json'),
+  version: z.string({ message: 'version must be a string' }).describe('Version from package.json'),
   // Current build timestamp (ISO8601, required)
   timestamp: z
-    .string({
-      required_error: 'timestamp is required in build section',
-      invalid_type_error: 'timestamp must be a string',
-    })
+    .string({ message: 'timestamp must be a string' })
     .describe('Current build timestamp (ISO8601)'),
   // Current git commit SHA (required)
-  commitSha: z
-    .string({
-      required_error: 'commitSha is required in build section',
-      invalid_type_error: 'commitSha must be a string',
-    })
-    .describe('Current git commit SHA'),
+  commitSha: z.string({ message: 'commitSha must be a string' }).describe('Current git commit SHA'),
   // Optional build annotations (key-value pairs)
-  annotations: z
-    .record(z.string(), {
-      invalid_type_error: 'annotations must be a record of string values',
-    })
-    .optional()
-    .describe('Optional build annotations'),
+  annotations: z.record(z.string(), z.string()).optional().describe('Optional build annotations'),
   // Optional project homepage
   projectPage: z
-    .string({
-      invalid_type_error: 'projectPage must be a string',
-    })
+    .string({ message: 'projectPage must be a string' })
     .optional()
     .describe('Optional project homepage'),
   // List of allowed asset extensions (with leading dot, required)
   allowedExtensions: z
-    .array(
-      z.string({
-        invalid_type_error: 'Each allowed extension must be a string',
-      }),
-      {
-        required_error: 'allowedExtensions is required in build section',
-        invalid_type_error: 'allowedExtensions must be an array of strings',
-      },
-    )
+    .array(z.string({ message: 'Each allowed extension must be a string' }), {
+      message: 'allowedExtensions must be an array of strings',
+    })
     .describe('List of allowed asset extensions (with leading dot)'),
   // Optional schema for the portal (record of unknown values)
-  schema: z
-    .record(z.unknown(), {
-      invalid_type_error: 'schema must be a record of unknown values',
-    })
-    .optional()
-    .describe('Optional schema for the portal'),
+  schema: z.record(z.string(), z.unknown()).optional().describe('Optional schema for the portal'),
   // Optional configuration for the portal (record of unknown values)
   config: z
-    .record(z.unknown(), {
-      invalid_type_error: 'config must be a record of unknown values',
-    })
+    .record(z.string(), z.unknown())
     .optional()
     .describe('Optional configuration for the portal'),
 });
@@ -113,23 +70,16 @@ export const PortalManifestBuildSchema = z.object({
 export const PortalManifestSchema = z.object({
   // Short app key (unscoped, derived from package name, required)
   name: z
-    .string({
-      required_error: 'name is required in portal manifest',
-      invalid_type_error: 'name must be a string',
-    })
+    .string({ message: 'name must be a string' })
     .describe('Short app key (unscoped, derived from package name)'),
   // Full package name, may include scope (optional)
   displayName: z
-    .string({
-      invalid_type_error: 'displayName must be a string',
-    })
+    .string({ message: 'displayName must be a string' })
     .optional()
     .describe('Full package name, may include scope'),
   // Description of the portal (optional)
   description: z
-    .string({
-      invalid_type_error: 'description must be a string',
-    })
+    .string({ message: 'description must be a string' })
     .optional()
     .describe('Description of the portal'),
   // Build section (required, validated by PortalManifestBuildSchema)

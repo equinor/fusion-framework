@@ -24,7 +24,7 @@ const ArgSchema = {
   [ApiVersion.v1]: z.object({
     name: z.string(),
     appKey: z.string(),
-    payload: z.record(z.unknown()).or(z.string()).optional(),
+    payload: z.record(z.string(), z.unknown()).or(z.string()).optional(),
     description: z.string().nullish(),
     isShared: z.boolean().nullish(),
     contextId: z.string().nullish(),

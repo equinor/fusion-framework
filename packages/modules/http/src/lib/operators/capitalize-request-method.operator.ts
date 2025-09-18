@@ -15,7 +15,7 @@ export const capitalizeRequestMethodOperator =
     request.method = success ? data : request.method?.toUpperCase();
 
     if (error && !options?.silent) {
-      for (const e of error.errors) {
+      for (const e of error.issues) {
         console.warn(e.message);
       }
     }
