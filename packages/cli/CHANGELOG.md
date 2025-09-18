@@ -1,5 +1,45 @@
 # Change Log
 
+## 12.0.0
+
+### Major Changes
+
+- [#3394](https://github.com/equinor/fusion-framework/pull/3394) [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295) Thanks [@odinr](https://github.com/odinr)! - feat: migrate to zod v4
+
+  Updated source code to migrate from zod v3 to v4. Updated zod dependency from v3.25.76 to v4.1.8 and modified schema definitions in the CLI package to use explicit key and value types for records, updated error message format, and changed ZodError `.errors` property to `.issues` for zod v4 compatibility.
+
+  Key changes in source code:
+
+  - Fixed record schema definitions to use explicit key and value types (`z.record(z.string(), z.any())`)
+  - Updated portal manifest schemas to use `message` instead of `description` for error messages
+  - Simplified error message options format (removed `required_error`, `invalid_type_error` from options object)
+  - Updated ZodError `.errors` property to `.issues` for zod v4 compatibility
+  - Enhanced `ApiAppConfigSchema` with proper record type definitions
+
+  Breaking changes: Record schemas must specify both key and value types explicitly. Error message format has changed from zod v3 to v4 format. Function schema definitions now require explicit typing.
+
+  Links:
+
+  - [Zod v4 Migration Guide](https://github.com/colinhacks/zod/releases/tag/v4.0.0)
+  - [Zod v4.1.8 Release Notes](https://github.com/colinhacks/zod/releases/tag/v4.1.8)
+
+### Patch Changes
+
+- [#3418](https://github.com/equinor/fusion-framework/pull/3418) [`6426d40`](https://github.com/equinor/fusion-framework/commit/6426d4051d153a01f2bc37ba7e7f4d0e85a82753) Thanks [@odinr](https://github.com/odinr)! - Improve publish command documentation clarity
+
+  - Update app publish command description to clearly explain conditional building behavior
+  - Add prominent note explaining when building occurs vs when it doesn't
+  - Add complete portal publish command documentation (was missing)
+  - Clarify differences between app and portal publish commands
+  - Update command overview to include portal publish command
+  - Fix CLI source code documentation to match actual behavior
+  - Remove incorrect bundle parameter from portal publish examples
+
+  Resolves #656
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-dev-portal@1.1.0
+
 ## 11.4.0
 
 ### Minor Changes

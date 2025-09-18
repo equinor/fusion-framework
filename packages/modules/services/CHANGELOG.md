@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.1.0
+
+### Minor Changes
+
+- [#3394](https://github.com/equinor/fusion-framework/pull/3394) [`c222c67`](https://github.com/equinor/fusion-framework/commit/c222c673bc7cdefff6eb0cd9436bfa3d1f185295) Thanks [@odinr](https://github.com/odinr)! - Updated Zod dependency from v3 to v4 with necessary schema adjustments.
+
+  - Updated `zod` dependency from `^3.25.76` to `^4.1.8`
+  - Fixed `z.record()` usage to explicitly specify key type as `z.string()`
+  - Simplified `schemaSelector` function type parameters to align with Zod v4 API
+  - Updated response type handling in schema selector utilities
+
+  This update ensures compatibility with the latest Zod version while maintaining existing API contracts.
+
 ## 7.0.2
 
 ### Patch Changes
