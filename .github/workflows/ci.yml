@@ -46,6 +46,8 @@ jobs:
 
   documentation:
     name: Update documentation
+    permissions:
+      contents: read
     needs: release-pkg
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
