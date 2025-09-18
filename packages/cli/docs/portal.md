@@ -49,6 +49,7 @@ The Fusion Framework CLI provides a suite of commands to support the full portal
 - [Dev](#dev) — Start the portal development server for local development and testing.
 - [Build](#build) — Build your portal template using Vite.
 - [Pack](#pack) — Bundle your portal into a distributable archive for deployment.
+- [Publish](#publish) — Build, upload, and tag your portal template for deployment.
 - [Upload](#upload) — Upload your portal bundle to the Fusion portal registry.
 - [Tag](#tag) — Tag a published portal template version in the Fusion portal registry.
 - [Manifest](#manifest) — Resolve and print the portal manifest for inspection or debugging.
@@ -122,6 +123,45 @@ pnpm fusion-framework-cli portal pack [options]
 pnpm fusion-framework-cli portal pack
 pnpm fusion-framework-cli portal pack --archive my-portal.zip --schema ./portal.schema.ts
 ```
+
+---
+
+### Publish
+
+Build, upload, and tag your portal template for deployment to the Fusion portal registry.
+
+This command builds your portal template, uploads it to the Fusion portal registry, and applies a tag for versioning in a single step.
+
+| Option/Argument    | Description                                                                                         | Default / Example |
+| ------------------ | --------------------------------------------------------------------------------------------------- | ----------------- |
+| `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
+| `-m`, `--manifest` | Manifest file to use for bundling (e.g., `portal.manifest.ts`) (optional).                         | `portal.manifest.ts` |
+| `-s`, `--schema`   | Schema file to use for bundling (e.g., `portal.schema.ts`) (optional).                             | `portal.schema.ts` |
+| `-t`, `--tag`      | Tag to apply to the published portal (`latest` \| `preview`).                                       | `latest`          |
+| `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
+| `--token`          | Authentication token for Fusion.                                                                    |                   |
+| `--tenantId`       | Azure tenant ID for authentication.                                                                 |                   |
+| `--clientId`       | Azure client ID for authentication.                                                                 |                   |
+
+**Usage:**
+```sh
+pnpm fusion-framework-cli portal publish [options]
+```
+
+**Examples:**
+```sh
+pnpm fusion-framework-cli portal publish
+pnpm fusion-framework-cli portal publish --env prod --manifest portal.manifest.prod.ts
+pnpm fusion-framework-cli portal publish --tag preview --schema portal.schema.ts
+```
+
+> [!IMPORTANT]
+> **Building Behavior**: Unlike the app publish command—which only builds your app if a pre-built bundle is not provided—the portal publish command always builds your portal template before uploading and tagging. There is no option to provide a pre-built bundle.
+> 
+> **Additional Notes**:
+> - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
+> - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
+> - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.
 
 ---
 

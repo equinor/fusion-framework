@@ -17,10 +17,11 @@ import { createEnvOption } from '../../options/env.js';
 /**
  * CLI command: `publish`
  *
- * Builds, uploads, and tags a Fusion application for deployment to the Fusion portal.
+ * Uploads and tags a Fusion application for deployment to the Fusion portal.
  *
  * Features:
- * - Bundles the app, uploads it to the Fusion app store, and applies a tag for versioning.
+ * - Uploads the app bundle to the Fusion app store and applies a tag for versioning.
+ * - Builds the app first if no bundle is provided.
  * - Supports specifying environment, manifest file, and tag.
  * - Debug mode and authentication options are supported.
  *
@@ -45,7 +46,9 @@ import { createEnvOption } from '../../options/env.js';
  */
 export const command = withAuthOptions(
   createCommand('publish')
-    .description('Deployment: Build, upload, and tag your Fusion application.')
+    .description(
+      'Deployment: Upload and tag your Fusion application (builds if no bundle provided).',
+    )
     .addHelpText(
       'after',
       [
