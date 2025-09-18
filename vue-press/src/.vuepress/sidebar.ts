@@ -40,6 +40,10 @@ export default sidebar({
       link: 'README.md',
       children: [
         {
+          text: 'Creating Apps',
+          link: 'docs/creating-apps.md',
+        },
+        {
           text: 'Authentication',
           link: 'docs/auth.md',
         },
@@ -50,6 +54,10 @@ export default sidebar({
         {
           text: 'Portal',
           link: 'docs/portal.md',
+        },
+        {
+          text: 'Dev Server',
+          link: 'docs/dev-server.md',
         },
         {
           text: 'Migration',

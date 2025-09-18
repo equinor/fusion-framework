@@ -1,4 +1,6 @@
 name: pr cleanup
+permissions:
+  contents: read
 on:
   pull_request: 
     types: 

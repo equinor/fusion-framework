@@ -1,5 +1,36 @@
 # Change Log
 
+## 7.3.18
+
+### Patch Changes
+
+- [#3391](https://github.com/equinor/fusion-framework/pull/3391) [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vitest and @vitest/coverage-v8 from 2.0.1 to 3.2.4
+
+  Major version update of Vitest testing framework and coverage package.
+
+  ### Breaking Changes
+
+  - Updated from Vitest v2 to v3
+  - Coverage reporting may have configuration changes
+  - Test runner behavior improvements
+
+  ### New Features
+
+  - Enhanced coverage reporting capabilities
+  - Improved test performance
+  - Better error handling and reporting
+  - Updated Vite integration (v6.3.5)
+
+  ### Links
+
+  - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+  - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
+  - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
+
+- Updated dependencies [[`da373ad`](https://github.com/equinor/fusion-framework/commit/da373ade663898b2628e28529b6e3dea3b91ed43), [`3ce5a18`](https://github.com/equinor/fusion-framework/commit/3ce5a1887c8fb90f24c3367f8926db69cc9a1914)]:
+  - @equinor/fusion-framework-module-msal@4.1.0
+  - @equinor/fusion-framework-module-services@7.0.2
+
 ## 7.3.17
 
 ### Patch Changes

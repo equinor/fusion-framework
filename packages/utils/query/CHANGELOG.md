@@ -1,5 +1,99 @@
 # Change Log
 
+## 5.2.13
+
+### Patch Changes
+
+- [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
+
+  ### Breaking Changes
+
+  - Immer 10.x introduces stricter TypeScript types for draft functions
+  - `ValidRecipeReturnType` type constraints have changed
+  - Promise return types in draft functions are no longer automatically handled
+
+  ### Fixes Applied
+
+  - Updated BookmarkProvider to handle new immer type constraints
+  - Fixed ObservableInput type assignments in mergeScan operations
+  - Removed async/await from immer draft functions to comply with new type requirements
+
+  ### Links
+
+  - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
+  - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
+
+- [#3402](https://github.com/equinor/fusion-framework/pull/3402) [`7bb88c6`](https://github.com/equinor/fusion-framework/commit/7bb88c6247f3d93eccf363d610116c519f1ecff4) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @types/uuid from 9.0.8/10.0.0 to 11.0.0
+
+  Updated TypeScript type definitions for UUID operations across multiple packages. This major version update provides improved type safety and compatibility with the latest UUID library features.
+
+  ### Affected Packages
+
+  - @equinor/fusion-framework-module-bookmark: @types/uuid ^9.0.8 → ^11.0.0
+  - @equinor/fusion-framework-module-feature-flag: @types/uuid ^10.0.0 → ^11.0.0
+  - @equinor/fusion-observable: @types/uuid ^10.0.0 → ^11.0.0
+  - @equinor/fusion-query: @types/uuid ^10.0.0 → ^11.0.0
+
+  ### Links
+
+  - [@types/uuid on npm](https://www.npmjs.com/package/@types/uuid)
+  - [DefinitelyTyped @types/uuid](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/uuid)
+
+- [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
+
+  ### Breaking Changes
+
+  - v13.0.0: Make browser exports the default
+  - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
+
+  ### New Features
+
+  - Improved v4() performance
+  - Added Node 24 to CI matrix
+  - Restored node: prefix support
+
+  ### Links
+
+  - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
+  - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
+
+- Updated dependencies [[`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3), [`7bb88c6`](https://github.com/equinor/fusion-framework/commit/7bb88c6247f3d93eccf363d610116c519f1ecff4), [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8)]:
+  - @equinor/fusion-observable@8.5.3
+
+## 5.2.12
+
+### Patch Changes
+
+- [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
+
+  ## Breaking Changes
+
+  - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
+  - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
+  - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
+  - **Coverage API**: New coverage methods `enableCoverage()` and `disableCoverage()`
+  - **TypeScript Support**: Enhanced TypeScript integration and type definitions
+
+  ## Security Updates
+
+  - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
+  - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
+
+  ## Migration Notes
+
+  - Test snapshots may need regeneration due to quote format changes
+  - Some test configurations might need updates for new TypeScript support
+  - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
+
+  ## Links
+
+  - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
+  - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+
+- Updated dependencies [[`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d)]:
+  - @equinor/fusion-observable@8.5.2
+  - @equinor/fusion-log@1.1.7
+
 ## 5.2.11
 
 ### Patch Changes

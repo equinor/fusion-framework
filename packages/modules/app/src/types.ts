@@ -28,7 +28,13 @@ export interface AppSettings {
 }
 
 // TODO: remove `report` and `launcher` when legacy apps are removed
-export type AppType = 'standalone' | 'report' | 'launcher' | 'template';
+export type AppType =
+  | 'standalone'
+  | 'report'
+  | 'launcher'
+  | 'template'
+  | 'template-app'
+  | 'landing-page';
 
 export type CurrentApp<
   TModules extends Array<AnyModule> = [],

@@ -1,5 +1,68 @@
 # Change Log
 
+## 6.1.19
+
+### Patch Changes
+
+- [#3367](https://github.com/equinor/fusion-framework/pull/3367) [`e7de2b7`](https://github.com/equinor/fusion-framework/commit/e7de2b7c1114094da445625a761fc9a3be6bdf87) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add `landing-page` to union of `AppType`
+
+- [#3395](https://github.com/equinor/fusion-framework/pull/3395) [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3) Thanks [@odinr](https://github.com/odinr)! - Updated immer from 9.0.16 to 10.1.3 across all packages.
+
+  ### Breaking Changes
+
+  - Immer 10.x introduces stricter TypeScript types for draft functions
+  - `ValidRecipeReturnType` type constraints have changed
+  - Promise return types in draft functions are no longer automatically handled
+
+  ### Fixes Applied
+
+  - Updated BookmarkProvider to handle new immer type constraints
+  - Fixed ObservableInput type assignments in mergeScan operations
+  - Removed async/await from immer draft functions to comply with new type requirements
+
+  ### Links
+
+  - [Immer 10.0.0 Release Notes](https://github.com/immerjs/immer/releases/tag/v10.0.0)
+  - [Immer Migration Guide](https://github.com/immerjs/immer/blob/main/MIGRATION.md)
+
+- [#3386](https://github.com/equinor/fusion-framework/pull/3386) [`d740b78`](https://github.com/equinor/fusion-framework/commit/d740b7829694efb73edcd32006ec1f26e0075e9a) Thanks [@eikeland](https://github.com/eikeland)! - Added 'template-app' as a new app type to the AppType union.
+
+  This change extends the available app types that consumers can use when configuring applications, providing support for template-based apps.
+
+- [#3347](https://github.com/equinor/fusion-framework/pull/3347) [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump uuid from 11.0.3 to 13.0.0
+
+  ### Breaking Changes
+
+  - v13.0.0: Make browser exports the default
+  - v12.0.0: Update to TypeScript 5.2, remove CommonJS support, drop Node 16 support
+
+  ### New Features
+
+  - Improved v4() performance
+  - Added Node 24 to CI matrix
+  - Restored node: prefix support
+
+  ### Links
+
+  - [GitHub releases](https://github.com/uuidjs/uuid/releases/tag/v13.0.0)
+  - [npm changelog](https://www.npmjs.com/package/uuid?activeTab=versions)
+
+- Updated dependencies [[`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3), [`7bb88c6`](https://github.com/equinor/fusion-framework/commit/7bb88c6247f3d93eccf363d610116c519f1ecff4), [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8)]:
+  - @equinor/fusion-query@5.2.13
+  - @equinor/fusion-observable@8.5.3
+
+## 6.1.18
+
+### Patch Changes
+
+- [#3315](https://github.com/equinor/fusion-framework/pull/3315) [`2ea9fb6`](https://github.com/equinor/fusion-framework/commit/2ea9fb63bdf967e0d010ddae2af9f6fb32077240) Thanks [@Noggling](https://github.com/Noggling)! - Improve error handling in AppClient
+
+  - Add support for HTTP 410 (Gone) status code handling across all error types
+  - Import and use `HttpJsonResponseError` for more specific error handling in `getAppManifest`
+  - Add 'deleted' error type to handle when application resources have been deleted
+  - Update error handling logic to properly handle different error types in the catch blocks
+  - Ensure proper error propagation and type checking for manifest, config, and settings errors
+
 ## 6.1.17
 
 ### Patch Changes

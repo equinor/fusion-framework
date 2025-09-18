@@ -7,6 +7,7 @@ Fusion Framework CLI is a command-line tool for developing, building, and publis
 - **Portal Templates**: Customizable portal configurations for different business contexts
 
 **Key capabilities:**
+- **Template-based app creation**: Generate new Fusion applications from predefined templates
 - Development server with hot reload and service discovery
 - Application manifest and configuration management
 - Automated building, bundling, and deployment
@@ -38,6 +39,21 @@ Fusion Framework CLI is a command-line tool for developing, building, and publis
 
 ```sh
 pnpm add -D @equinor/fusion-framework-cli
+```
+
+**Create a new Fusion application from template**
+
+Generate a new Fusion application using predefined templates:
+
+```sh
+# Create a new app with interactive template selection
+pnpm fusion-framework-cli app create my-new-app
+
+# Create with a specific template
+pnpm fusion-framework-cli app create my-app --template react-app
+
+# Create in a specific directory with debug logging
+pnpm fusion-framework-cli app create my-app --directory ./projects --debug
 ```
 
 **Initialize or update your app's manifest and config files**
@@ -79,6 +95,7 @@ pnpm fusion-framework-cli app config --publish --env <environment>
 
 | Command                                | Description                          |
 | -------------------------------------- | ------------------------------------ |
+| `pnpm fusion-framework-cli app create` | Create new Fusion applications from templates |
 | `pnpm fusion-framework-cli auth ...` | Authenticate with Fusion             |
 | `pnpm fusion-framework-cli app ...`    | Working with Fusion applications     |
 | `pnpm fusion-framework-cli portal ...` | Working with Fusion portal templates |
@@ -122,6 +139,7 @@ A minimal example for a Fusion Framework app:
 **Getting Started**
 - [Developing Apps](docs/application.md): Complete guide to building, configuring, and deploying Fusion applications
 - [Developing Portals](docs/portal.md): Guide to building, configuring, and publishing portal templates
+- [Dev Server](docs/dev-server.md): Understanding how the development server works, including architecture and configuration
 
 **Setup & Configuration**
 - [Authentication](docs/auth.md): Setting up authentication for local development and CI/CD environments

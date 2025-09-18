@@ -1,5 +1,54 @@
 # Change Log
 
+## 7.0.2
+
+### Patch Changes
+
+- [#3393](https://github.com/equinor/fusion-framework/pull/3393) [`3ce5a18`](https://github.com/equinor/fusion-framework/commit/3ce5a1887c8fb90f24c3367f8926db69cc9a1914) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated odata-query dependency from 8.0.4 to 8.0.5
+
+  ### Changes
+
+  - Updated odata-query to fix transform operations order issue
+  - This is a patch update with no breaking changes
+
+  ### Links
+
+  - [GitHub releases](https://github.com/techniq/odata-query/releases/tag/v8.0.5)
+  - [Changelog](https://github.com/techniq/odata-query/blob/main/CHANGELOG.md#805)
+
+## 7.0.1
+
+### Patch Changes
+
+- [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
+
+  ## Breaking Changes
+
+  - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
+  - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
+  - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
+  - **Coverage API**: New coverage methods `enableCoverage()` and `disableCoverage()`
+  - **TypeScript Support**: Enhanced TypeScript integration and type definitions
+
+  ## Security Updates
+
+  - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
+  - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
+
+  ## Migration Notes
+
+  - Test snapshots may need regeneration due to quote format changes
+  - Some test configurations might need updates for new TypeScript support
+  - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
+
+  ## Links
+
+  - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
+  - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+
+- Updated dependencies [[`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402)]:
+  - @equinor/fusion-framework-module@5.0.1
+
 ## 7.0.0
 
 ### Patch Changes

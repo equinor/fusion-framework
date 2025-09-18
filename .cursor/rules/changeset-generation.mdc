@@ -57,6 +57,40 @@ git diff --name-only
 git branch -vv
 ```
 
+## Feature/Fix Branch Changeset Rules
+
+When working on content within a feature/fix branch:
+
+### Check Existing Changesets First
+**BEFORE creating any changeset, check for existing changesets in the `.changeset/` directory.** Look for changesets that might already cover your changes to avoid duplicates.
+
+### No Changesets for Internal Refactors
+**DO NOT create changesets for internal refactors that don't affect consumers** since they're not in main yet. Only create changesets for changes that actually require version bumps or affect package consumers.
+
+### What NOT to Create Changesets For (Internal Changes):
+- Internal refactoring without API changes
+- Code comments and documentation improvements  
+- Process management improvements
+- Error message enhancements
+- Internal helper function changes
+- Code cleanup that doesn't change public APIs
+- Debug logging improvements
+- Type definition improvements (internal only)
+
+### What SHOULD Create Changesets (Consumer-Affecting Changes):
+- New public API methods or exports
+- Breaking changes to existing APIs
+- Bug fixes that affect consumer behavior
+- New features that consumers will use
+- Changes to public interfaces or types
+- Configuration changes that affect consumers
+
+### Decision Tree for AI:
+1. **Are you on a feature/fix branch?** → Check existing changesets first
+2. **Does the change affect public APIs or consumers?** → Create changeset
+3. **Is it only internal refactoring/improvements?** → Skip changeset
+4. **Are you unsure?** → Ask: "Would a consumer notice this change?" If no → Skip changeset
+
 ## Best Practices
 
 ### Single Package Per Changeset
@@ -105,6 +139,8 @@ Enhanced Vite configuration with improved TypeScript path resolution.
 ## Common Mistakes to Avoid
 
 - ❌ Creating changesets in wrong directory (should be `.changeset/`, not `.changesets/`)
+- ❌ Creating changesets for internal refactors that don't affect consumers
+- ❌ Not checking existing changesets before creating new ones on feature branches
 - ❌ Grouping unrelated changes in single changeset
 - ❌ Using vague or unclear descriptions
 - ❌ Forgetting to include all affected packages

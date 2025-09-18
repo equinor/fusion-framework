@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-module-services",
-  "version": "7.0.0",
+  "version": "7.0.2",
   "description": "",
   "sideEffects": false,
   "main": "dist/esm/index.js",
@@ -137,7 +137,7 @@
     "@faker-js/faker": "^9.5.1",
     "msw": "^2.7.3",
     "typescript": "^5.8.2",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

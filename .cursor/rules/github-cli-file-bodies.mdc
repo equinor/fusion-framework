@@ -1,0 +1,153 @@
+---
+description: Rules for GitHub CLI commands that require file-based bodies
+---
+
+# GitHub CLI File-Based Bodies Rule
+
+## When to Use File-Based Bodies
+Always create a local markdown file for GitHub CLI commands that require bodies when:
+- Creating pull request descriptions
+- Adding issue or PR comments
+- Writing review bodies
+- Including code blocks or complex formatting
+- Using markdown formatting extensively
+- Dealing with multi-line content
+- Using special characters that need escaping
+- Any command that accepts `-b`/`--body` or `-F`/`--body-file` flags
+
+## File Creation Pattern
+1. Create a temporary markdown file in the project root
+2. Use descriptive naming: `gh-{command}-{purpose}.md`
+3. Write the full body content in the file
+4. Reference the file in the GitHub CLI command
+5. Clean up the temporary file after use
+
+## Common Commands That Need This
+- `gh pr create -F` / `gh pr create --body-file`
+- `gh issue comment -F` / `gh issue comment --body-file`
+- `gh pr review -F` / `gh pr review --body-file`
+- `gh issue create -F` / `gh issue create --body-file`
+- `gh pr edit -F` / `gh pr edit --body-file`
+- `gh api` with body content
+- Any command with `-b`/`--body` that has complex content
+
+## General Workflow for All Commands
+When using GitHub CLI commands that require body content:
+
+```bash
+# 1. Generate body content based on the specific command and context
+cat > gh-{command}-{purpose}.md << 'EOF'
+[Write the complete body content here]
+EOF
+
+# 2. Show the generated content for review
+echo "Generated body content:"
+cat gh-{command}-{purpose}.md
+
+# 3. Use the file in GitHub CLI with -F flag
+gh {command} -F gh-{command}-{purpose}.md [other-options]
+
+# 4. Clean up
+rm gh-{command}-{purpose}.md
+```
+
+## Flag Usage Guidelines
+- **Always use `-F` or `--body-file`** instead of `-b` or `--body` for complex content
+- **Use `-b`/`--body`** only for simple, single-line content
+- **Use `-F`/`--body-file`** for:
+  - Multi-line content
+  - Markdown formatting
+  - Code blocks
+  - Special characters
+  - Any content that needs review before submission
+
+## PR Body Generation Workflow
+When creating pull requests, always generate a complete PR body file with actual content:
+
+```bash
+# 1. Generate PR body with actual content based on changes
+cat > gh-pr-body.md << 'EOF'
+## Why
+**What kind of change does this PR introduce?**
+[Describe the type of change: feature, bug fix, refactor, etc.]
+
+**What is the current behavior?**
+[Describe the existing behavior before this change]
+
+**What is the new behavior?**
+[Describe what will change after this PR is merged]
+
+**Does this PR introduce a breaking change?**
+[Yes/No - explain any breaking changes and migration steps]
+
+**Other information?**
+[Any additional context, links to issues, or related PRs]
+
+closes: #[issue-number]
+
+### Check off the following:
+- [ ] Confirm that I checked changes to branch which I am merging into.
+  - _I have validated included files_
+  - _My code does not generate new linting warnings_
+  - _My PR is not a duplicate, [check existing pr`s](https://github.com/equinor/fusion-framework/pulls)_
+- [ ] Confirm that the I have completed the [self-review checklist](https://github.com/equinor/fusion-framework/blob/main/contributing/self-review.md).
+- [ ] Confirm that my changes meet our [code of conduct](https://github.com/equinor/fusion-framework/blob/main/CODE_OF_CONDUCT.md).
+EOF
+
+# 2. Show the generated content for review
+echo "Generated PR body:"
+cat gh-pr-body.md
+
+# 3. Use the file in GitHub CLI
+gh pr create --title "feat: update schemas" -F gh-pr-body.md
+
+# 4. Clean up
+rm gh-pr-body.md
+```
+
+## Content Generation Guidelines
+- **Always fill in actual content** - Never use empty templates
+- **Analyze the changes** - Look at commits, changesets, and modified files
+- **Include specific details** - Mention what packages changed, what APIs changed
+- **Reference breaking changes** - List specific breaking changes and migration steps
+- **Link to issues** - Include relevant issue numbers
+- **Be descriptive** - Explain the "why" not just the "what"
+
+## Benefits
+- Preserves special characters and formatting
+- Handles code blocks correctly
+- Avoids shell escaping issues
+- Maintains markdown structure
+- Easier to edit and review before submission
+
+## File Naming Convention
+- `gh-pr-{description}.md` - For pull request bodies
+- `gh-comment-{purpose}.md` - For comments
+- `gh-review-{type}.md` - For review bodies
+- `gh-issue-{action}.md` - For issue-related content
+- `gh-{command}-{purpose}.md` - General pattern for any command
+
+## Examples by Command Type
+
+### Pull Requests
+```bash
+gh pr create -F gh-pr-feature-description.md
+gh pr edit -F gh-pr-update-description.md
+```
+
+### Issues
+```bash
+gh issue create -F gh-issue-bug-report.md
+gh issue comment -F gh-comment-solution.md
+```
+
+### Reviews
+```bash
+gh pr review -F gh-review-approval.md
+gh pr review -F gh-review-changes-requested.md
+```
+
+### API Calls
+```bash
+gh api repos/:owner/:repo/issues -F gh-api-issue-body.md
+```

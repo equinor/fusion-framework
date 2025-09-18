@@ -1,5 +1,63 @@
 # poc-portal
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
+
+  Major version update of Vite build tool across all packages. This update includes:
+
+  - Enhanced build performance and caching
+  - Better error reporting with code frames
+  - Improved TypeScript integration
+  - Updated plugin ecosystem compatibility
+  - New development server features
+
+  ### Links
+
+  - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
+  - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
+
+### Patch Changes
+
+- Updated dependencies [[`db19291`](https://github.com/equinor/fusion-framework/commit/db192912ec35b41a10f0324ee70ecc85a686d4fa), [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6), [`bd8360e`](https://github.com/equinor/fusion-framework/commit/bd8360e6b93704b3f8ba4eb0d7fd142e27c01ef9), [`e7de2b7`](https://github.com/equinor/fusion-framework/commit/e7de2b7c1114094da445625a761fc9a3be6bdf87), [`29f6710`](https://github.com/equinor/fusion-framework/commit/29f6710238baf9b29f42394b30cb8b97f25462c3), [`d740b78`](https://github.com/equinor/fusion-framework/commit/d740b7829694efb73edcd32006ec1f26e0075e9a), [`da373ad`](https://github.com/equinor/fusion-framework/commit/da373ade663898b2628e28529b6e3dea3b91ed43), [`11143fa`](https://github.com/equinor/fusion-framework/commit/11143fa3002fb8a6c095052a04c7e596c56bafa8), [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087), [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6)]:
+  - @equinor/fusion-framework-cli@11.4.0
+  - @equinor/fusion-framework-module-app@6.1.19
+  - @equinor/fusion-framework-module-msal@4.1.0
+  - @equinor/fusion-framework@7.3.18
+
+## 1.0.69
+
+### Patch Changes
+
+- Updated dependencies [[`96d319c`](https://github.com/equinor/fusion-framework/commit/96d319c64e2ccb0ad080d633b74b76cbc4f48083), [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8), [`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402), [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d)]:
+  - @equinor/fusion-framework-cli@11.3.1
+  - @equinor/fusion-framework-module@5.0.1
+  - @equinor/fusion-framework-module-http@6.3.5
+
+## 1.0.68
+
+### Patch Changes
+
+- Updated dependencies [[`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12), [`7983d30`](https://github.com/equinor/fusion-framework/commit/7983d302f5269d70646c3c5231944b8081844e86), [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12), [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12), [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12)]:
+  - @equinor/fusion-framework-cli@11.3.0
+
+## 1.0.67
+
+### Patch Changes
+
+- Updated dependencies [[`6151ff4`](https://github.com/equinor/fusion-framework/commit/6151ff429fc5dc221a4cb43f11362cf39c2a3136), [`0b53fa8`](https://github.com/equinor/fusion-framework/commit/0b53fa8dcd31b0b333a172bfcc15b342c5548bf9)]:
+  - @equinor/fusion-framework-cli@11.2.0
+
+## 1.0.66
+
+### Patch Changes
+
+- Updated dependencies [[`2e47652`](https://github.com/equinor/fusion-framework/commit/2e47652aba8ab14dea62307953666d8f136d7ca0), [`2ea9fb6`](https://github.com/equinor/fusion-framework/commit/2ea9fb63bdf967e0d010ddae2af9f6fb32077240)]:
+  - @equinor/fusion-framework-cli@11.1.4
+  - @equinor/fusion-framework-module-app@6.1.18
+
 ## 1.0.65
 
 ### Patch Changes

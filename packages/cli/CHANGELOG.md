@@ -1,5 +1,301 @@
 # Change Log
 
+## 11.4.0
+
+### Minor Changes
+
+- [#3369](https://github.com/equinor/fusion-framework/pull/3369) [`bd8360e`](https://github.com/equinor/fusion-framework/commit/bd8360e6b93704b3f8ba4eb0d7fd142e27c01ef9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated commander from v13 to v14 with improved help system and Node.js v20+ requirement.
+
+  ### Breaking Changes
+
+  - Commander 14 requires Node.js v20 or higher (compatible with existing project requirements)
+
+  ### New Features
+
+  - Support for groups of options and commands in help
+  - Support for unescaped negative numbers as arguments
+  - Enhanced TypeScript support with parseArg property
+
+  ### Links
+
+  - [GitHub releases](https://github.com/tj/commander.js/releases/tag/v14.0.1)
+  - [Changelog](https://github.com/tj/commander.js/blob/master/CHANGELOG.md)
+
+- [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
+
+  Major version update of Vite build tool across all packages. This update includes:
+
+  - Enhanced build performance and caching
+  - Better error reporting with code frames
+  - Improved TypeScript integration
+  - Updated plugin ecosystem compatibility
+  - New development server features
+
+  ### Links
+
+  - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
+  - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
+
+### Patch Changes
+
+- [#3389](https://github.com/equinor/fusion-framework/pull/3389) [`db19291`](https://github.com/equinor/fusion-framework/commit/db192912ec35b41a10f0324ee70ecc85a686d4fa) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump ora from 8.2.0 to 9.0.0
+
+  ### Breaking Changes
+
+  - ora v9.0.0 now requires Node.js 20+ (previously supported older versions)
+
+  ### New Features
+
+  - Fix clearing in some cases
+  - Fix `frame()` not displaying dynamic `prefixText`/`suffixText` from functions
+  - Fix multiline text exceeding console height leaving garbage when scrolling
+
+  ### Links
+
+  - [GitHub releases](https://github.com/sindresorhus/ora/releases/tag/v9.0.0)
+  - [npm changelog](https://www.npmjs.com/package/ora?activeTab=versions)
+
+- [#3391](https://github.com/equinor/fusion-framework/pull/3391) [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @vitest/coverage-v8 from 2.0.1 to 3.2.4
+
+  Major version update of Vitest coverage package for CLI testing.
+
+  ### Breaking Changes
+
+  - Updated from @vitest/coverage-v8 v2 to v3
+  - Coverage reporting may have configuration changes
+
+  ### New Features
+
+  - Enhanced coverage reporting capabilities
+  - Improved test performance
+  - Better error handling and reporting
+
+  ### Links
+
+  - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+  - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
+  - [Coverage v8 Documentation](https://vitest.dev/guide/coverage.html)
+
+- Updated dependencies [[`6eeef2f`](https://github.com/equinor/fusion-framework/commit/6eeef2f2033dfacf7c972295c8c2cc2d4cd83976), [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6), [`aed6c53`](https://github.com/equinor/fusion-framework/commit/aed6c5385df496a86d06dc0af9dacafc255ea605), [`daa362e`](https://github.com/equinor/fusion-framework/commit/daa362e7d92ad362e46d666c434d0f09687abad5), [`2fff2ea`](https://github.com/equinor/fusion-framework/commit/2fff2ea1e4838627e297b7b401601f1186c95335), [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087)]:
+  - @equinor/fusion-framework-dev-portal@1.1.0
+  - @equinor/fusion-framework-dev-server@1.1.0
+  - @equinor/fusion-framework-module-msal-node@1.0.5
+
+## 11.3.1
+
+### Patch Changes
+
+- [#3379](https://github.com/equinor/fusion-framework/pull/3379) [`96d319c`](https://github.com/equinor/fusion-framework/commit/96d319c64e2ccb0ad080d633b74b76cbc4f48083) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated inquirer dependency from 12.9.4 to 12.9.6
+
+  - Updated inquirer to latest patch version 12.9.6
+  - Includes bug fixes and performance improvements
+  - No breaking changes in this patch update
+
+- [#3381](https://github.com/equinor/fusion-framework/pull/3381) [`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update rollup from 4.46.3 to 4.50.2
+
+  - Updated rollup dependency to latest patch version
+  - Includes bug fixes for tree-shaking array destructuring patterns
+  - Performance improvements and platform support updates
+  - No breaking changes - backward compatible update
+
+- [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
+
+  ## Breaking Changes
+
+  - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
+  - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
+  - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
+  - **Coverage API**: New coverage methods `enableCoverage()` and `disableCoverage()`
+  - **TypeScript Support**: Enhanced TypeScript integration and type definitions
+
+  ## Security Updates
+
+  - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
+  - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
+
+  ## Migration Notes
+
+  - Test snapshots may need regeneration due to quote format changes
+  - Some test configurations might need updates for new TypeScript support
+  - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
+
+  ## Links
+
+  - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
+  - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+
+- Updated dependencies [[`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8), [`4215d80`](https://github.com/equinor/fusion-framework/commit/4215d80799d156a248feb0f195af370907332a33), [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d)]:
+  - @equinor/fusion-framework-dev-portal@1.0.3
+  - @equinor/fusion-framework-module-msal-node@1.0.4
+  - @equinor/fusion-framework-dev-server@1.0.3
+  - @equinor/fusion-imports@1.1.3
+
+## 11.3.0
+
+### Minor Changes
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive create app command for generating Fusion applications from templates.
+
+  **New Features**
+
+  - Added `ffc create app <name>` command with interactive template selection
+  - Supports both `ffc create app` and `ffc app create` command patterns for improved flexibility
+  - Includes template validation and interactive prompts using inquirer
+  - Added comprehensive template repository system with schema validation
+  - Implemented modular helper functions for each step of app creation
+
+  **Template Support**
+
+  - Supports both bare and basic application templates from fusion-app-template repository
+  - Includes template validation and interactive prompts using inquirer
+  - Added comprehensive template repository system with schema validation
+
+  **Developer Experience**
+
+  - Added IDE integration with automatic project opening
+  - Includes dependency management and dev server startup
+  - Added comprehensive documentation with examples and best practices
+  - Updated CLI README with new command documentation
+  - Added GitHub template integration links for alternative app creation methods
+
+  **Error Handling & Reliability**
+
+  - Enhanced error handling for spawn operations in IDE opening and dev server startup
+  - Migrated to execa for automatic process cleanup and better signal handling
+  - Fixed misleading success messages by wrapping template copy operations in try-catch blocks
+  - Improved error logging in repository cleanup operations for better debugging
+  - Added proper CLI exit codes for operation failures
+  - Enhanced TSDoc documentation and inline comments across helper functions
+
+  **Dependencies**
+
+  - Added new dependencies: `inquirer`, `@types/inquirer`, and `execa` for enhanced CLI experience
+  - Migrated process spawning from native child_process to execa for better process management
+
+  The new command provides an intuitive way for developers to bootstrap new Fusion applications using predefined templates from the ecosystem while maintaining backward compatibility and providing robust error handling.
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add workspace dependency resolution to create app command
+
+  - Added `updatePackageJson` helper for updating package.json with app name and resolving workspace dependencies
+  - Added `resolve-workspace-dependencies` helper to convert workspace:^ dependencies to npm versions
+  - Added `package-info` utility for fetching package metadata from npm registry
+  - Integrated workspace dependency resolution into create app workflow
+  - Improved error handling and logging throughout the create app process
+  - Added comprehensive TSDoc documentation for all new functions
+
+  This ensures that apps created from templates have proper npm versions instead of workspace references, making them deployable outside the monorepo.
+
+### Patch Changes
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI security with path validation and improved error handling for create command.
+
+  ## New Features
+
+  - **Path Security Validation**: Added `validateSafePath()` function to prevent path traversal attacks
+  - **Safe Directory Operations**: Added `safeRmSync()` function for secure directory removal
+  - **Enhanced Error Messages**: Improved user-friendly error messages with visual indicators
+
+  ## Security Improvements
+
+  - **Path Traversal Protection**: Prevents users from specifying paths outside the current working directory
+  - **Input Validation**: Validates target paths before performing file system operations
+  - **Safe Cleanup**: Directory removal operations now validate paths before execution
+
+  ## User Experience
+
+  - **Better Error Messages**: Clear, actionable error messages with ❌ and 💡 indicators
+  - **Helpful Guidance**: Users get specific suggestions when path validation fails
+  - **Clean Error Handling**: No more messy stack traces for path-related errors
+
+  ## Technical Details
+
+  - Uses `is-path-inside` library for robust path validation
+  - Integrates path security into `checkTargetDirectory` helper
+  - Maintains backward compatibility with existing functionality
+  - Added comprehensive JSDoc documentation for all new functions
+
+- [`7983d30`](https://github.com/equinor/fusion-framework/commit/7983d302f5269d70646c3c5231944b8081844e86) Thanks [@odinr](https://github.com/odinr)! - **Note:** This changeset documents changes that were already implemented and released in [PR #3341](https://github.com/equinor/fusion-framework/pull/3341) (merged 2025-09-05) and included in the [🤖 Bip Bop - Fusion Framework Release](https://github.com/equinor/fusion-framework/pull/3342) (merged 2025-09-08). This changeset serves as a historical record and comprehensive documentation of the CLI tag command improvements, ensuring the changelog contains detailed information about the breaking changes, migration path, and technical details that may be referenced by users upgrading or troubleshooting CLI issues.
+
+  Fixed `--version` flag conflict in CLI tag commands and improved API consistency.
+
+  - **Fixed:** Resolved conflict between custom `--version` option and Commander's built-in `--version` flag that displays CLI version
+  - **Refactored:** Replaced separate `--appKey`/`--version` options with unified `--package name@version` syntax for both `app tag` and `portal tag` commands
+  - **Improved:** Enhanced error handling with clear validation messages for package format
+  - **Updated:** Documentation and help text to reflect new `--package` option usage
+  - **Added:** Better user feedback with colored logging for successful operations
+
+  **Breaking Changes:**
+  This introduces a breaking change to the CLI API by removing the `--version` and `--appKey` options in favor of the `--package` option. However, we're releasing this as a patch since:
+
+  1. The `--version` flag never worked properly due to the conflict with Commander's built-in version flag
+  2. The old API was fundamentally broken and unusable
+  3. Limited adoption in production environments means minimal impact
+  4. The same functionality is accessible through:
+     - The `publish` command (recommended for standard releases)
+     - The Fusion App Admin UI (graphical interface for release management)
+
+  **Migration:**
+
+  - Old: `fusion-framework-cli app tag --appKey my-app --version 1.2.3 latest`
+  - New: `fusion-framework-cli app tag --package my-app@1.2.3 latest`
+
+  This resolves the issue where `--version` would show CLI version (11.1.2) instead of using it as a bundle version parameter. Now `--version` correctly displays CLI version, and `--package` specifies the bundle to tag.
+
+  **Credits:** Special thanks to [@estoksam](https://github.com/estoksam) for identifying and reporting this CLI flag conflict issue.
+
+  **Fixes:** https://github.com/equinor/fusion/issues/652
+
+- [#3377](https://github.com/equinor/fusion-framework/pull/3377) [`70638da`](https://github.com/equinor/fusion-framework/commit/70638da56c0dad3f349a2d063e8d8bcea3b71b12) Thanks [@odinr](https://github.com/odinr)! - Add git repository validation utilities to CLI package.
+
+  - Added `isGitDir` utility function to check if a directory is a valid git repository
+  - Added `assertGitRepository` assertion function for git repository validation
+  - Enhanced assert utilities with git repository checking capabilities
+
+  These utilities support the create app command's repository validation and setup process.
+
+## 11.2.0
+
+### Minor Changes
+
+- [#3362](https://github.com/equinor/fusion-framework/pull/3362) [`6151ff4`](https://github.com/equinor/fusion-framework/commit/6151ff429fc5dc221a4cb43f11362cf39c2a3136) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive dev-server documentation with architecture overview and configuration guide.
+
+  - Added new `docs/dev-server.md` with complete dev-server documentation
+  - Updated README.md to include dev-server documentation link
+  - Covers dev-server features, architecture, configuration, and troubleshooting
+
+### Patch Changes
+
+- [#3345](https://github.com/equinor/fusion-framework/pull/3345) [`0b53fa8`](https://github.com/equinor/fusion-framework/commit/0b53fa8dcd31b0b333a172bfcc15b342c5548bf9) Thanks [@odinr](https://github.com/odinr)! - Documented missing breaking change for Vite configuration file naming in CLI v11 migration guide and changelog.
+
+  - Added detailed explanation of `app.vite.config.ts` → `vite.config.ts` file naming change
+  - Emphasized that `vite.config.ts` should be a last resort for custom setups
+  - Recommended using `dev-server.config.js` instead to avoid unexpected behavior
+  - Updated migration checklist to include the file rename requirement
+  - Enhanced v11.0.0 changelog with the breaking change documentation
+
+  This addresses the undocumented breaking change that could cause time-consuming debugging for developers upgrading from v10 to v11.
+
+- Updated dependencies [[`1f629b5`](https://github.com/equinor/fusion-framework/commit/1f629b556c4e26170b1eb6ad8823c082cb2ac59d)]:
+  - @equinor/fusion-framework-module-msal-node@1.0.3
+
+## 11.1.4
+
+### Patch Changes
+
+- [#3356](https://github.com/equinor/fusion-framework/pull/3356) [`2e47652`](https://github.com/equinor/fusion-framework/commit/2e47652aba8ab14dea62307953666d8f136d7ca0) Thanks [@odinr](https://github.com/odinr)! - Fix SemVer 2.0 compliance issue where build metadata was stripped from package versions.
+
+  - Disabled built-in normalization in `read-package-up` to preserve version build metadata
+  - Added manual package data normalization using `normalize-package-data` library
+  - Preserves original version with build metadata (e.g., `11.8.0+commit`) in app manifests
+  - Maintains backward compatibility with existing version formats
+  - Resolves issue where `+` build metadata was being stripped from versions in `app-manifest.json`
+
+  This fix enables proper SemVer 2.0 compliant versioning for applications built with the CLI.
+
+  Fixes https://github.com/equinor/fusion/issues/657
+
+  Thanks to [@v3gard](https://github.com/v3gard) for identifying and reporting this SemVer compliance issue.
+
 ## 11.1.3
 
 ### Patch Changes
@@ -195,6 +491,7 @@
   - **Dev Portal Modularization:** The dev portal has been moved to a separate package `@equinor/fusion-framework-dev-server`, enabling modular architecture and independent updates. The dev portal can be configured via `dev-server.config.js` and supports live preview and API mocking.
   - **Command Structure:** CLI is now divided into three main groups: `bin` (executable functions), `commands` (CLI commands), and `lib` (for consumers, config, and utilities). This improves organization and modularity.
   - **BREAKING:** The `--service` flag has been removed. The CLI now uses service discovery via Fusion environment variables. All `app -build-???` commands are deprecated and will be removed in the next major version.
+  - **BREAKING:** Vite configuration file naming has changed to follow Vite's standard convention. Rename `app.vite.config.ts` to `vite.config.ts` to ensure your Vite configurations are applied correctly. Note: Using `vite.config.ts` should be a last resort for custom setups - prefer dev-server configuration to avoid unexpected behavior.
 
   - **Dev Server Abstraction:** Vite configuration and dev server functionality has been abstracted into the `@equinor/fusion-framework-dev-server` package. The CLI now provides a higher-level API that handles Vite configuration internally, eliminating the need for users to manage Vite configuration directly while still allowing for customization through configuration options.
 

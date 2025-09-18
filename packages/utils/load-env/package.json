@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-load-env",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Package loading environment variables from .env files",
   "keywords": [
     "env",
@@ -48,6 +48,6 @@
   },
   "devDependencies": {
     "typescript": "^5.8.2",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.4"
   }
 }

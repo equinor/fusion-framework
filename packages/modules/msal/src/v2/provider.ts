@@ -5,7 +5,7 @@ import { MsalModuleVersion } from '../static';
 import type { AuthClientConfig } from './configurator';
 import type { AccountInfo, AuthenticationResult } from './types';
 import type { IProxyProvider } from '../types';
-import resolveVersion from '../resolve-version';
+import { resolveVersion } from '../versioning/resolve-version';
 import { SemanticVersion } from '@equinor/fusion-framework-module';
 
 export interface IAuthProvider {

@@ -1,5 +1,38 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.5
+
+### Patch Changes
+
+- [#3403](https://github.com/equinor/fusion-framework/pull/3403) [`2fff2ea`](https://github.com/equinor/fusion-framework/commit/2fff2ea1e4838627e297b7b401601f1186c95335) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @azure/msal-node from 3.7.3 to 3.7.4
+
+  ### Links
+
+  - [GitHub releases](https://github.com/AzureAD/microsoft-authentication-library-for-js/releases/tag/msal-node-v3.7.4)
+  - [npm changelog](https://www.npmjs.com/package/@azure/msal-node?activeTab=versions)
+
+## 1.0.4
+
+### Patch Changes
+
+- [#3209](https://github.com/equinor/fusion-framework/pull/3209) [`4215d80`](https://github.com/equinor/fusion-framework/commit/4215d80799d156a248feb0f195af370907332a33) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated open dependency from 10.1.2 to 10.2.0
+
+  - Internal refactoring: replaced `is-wsl` dependency with `wsl-utils`
+  - No breaking changes to public API
+  - Improved WSL detection and compatibility
+  - No functional changes for consumers
+
+  **Release Notes**: [open v10.2.0](https://github.com/sindresorhus/open/releases/tag/v10.2.0)
+
+- Updated dependencies [[`3049232`](https://github.com/equinor/fusion-framework/commit/30492326336bea0d1af683b89e62a18eceec4402)]:
+  - @equinor/fusion-framework-module@5.0.1
+
+## 1.0.3
+
+### Patch Changes
+
+- [#3361](https://github.com/equinor/fusion-framework/pull/3361) [`1f629b5`](https://github.com/equinor/fusion-framework/commit/1f629b556c4e26170b1eb6ad8823c082cb2ac59d) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Add caution message about Linux support.
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,85 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.0
+
+### Minor Changes
+
+- [#3349](https://github.com/equinor/fusion-framework/pull/3349) [`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 6.x to 7.1.5
+
+  Major version update of Vite build tool across all packages. This update includes:
+
+  - Enhanced build performance and caching
+  - Better error reporting with code frames
+  - Improved TypeScript integration
+  - Updated plugin ecosystem compatibility
+  - New development server features
+
+  ### Links
+
+  - [Vite 7.1.5 Release Notes](https://github.com/vitejs/vite/releases/tag/v7.1.5)
+  - [Vite 7.x Migration Guide](https://vitejs.dev/guide/migration)
+
+### Patch Changes
+
+- [#3391](https://github.com/equinor/fusion-framework/pull/3391) [`7792659`](https://github.com/equinor/fusion-framework/commit/7792659bf2ade10dba5e54c610d5abff522324b6) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vitest from 2.0.1 to 3.2.4
+
+  Major version update of Vitest testing framework for dev-server package.
+
+  ### Breaking Changes
+
+  - Updated from Vitest v2 to v3
+  - Test runner behavior improvements
+
+  ### New Features
+
+  - Enhanced test performance
+  - Better error handling and reporting
+  - Updated Vite integration (v6.3.5)
+
+  ### Links
+
+  - [Vitest v3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+  - [Vitest v3 Migration Guide](https://vitest.dev/guide/migration.html)
+
+- Updated dependencies [[`c511123`](https://github.com/equinor/fusion-framework/commit/c511123c835e24e9ddefcc4c47c2455f5df12087)]:
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.0
+  - @equinor/fusion-framework-vite-plugin-spa@1.1.0
+
+## 1.0.3
+
+### Patch Changes
+
+- [#2910](https://github.com/equinor/fusion-framework/pull/2910) [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vitest from 2.1.9 to 3.2.4 across all packages.
+
+  ## Breaking Changes
+
+  - **Node.js Requirements**: Requires Node.js 18+ (already satisfied)
+  - **Vite Compatibility**: Updated to work with Vite 7.x (already using Vite 7.1.5)
+  - **Snapshot Format**: Snapshots now use backtick quotes (\`) instead of single quotes
+  - **Coverage API**: New coverage methods `enableCoverage()` and `disableCoverage()`
+  - **TypeScript Support**: Enhanced TypeScript integration and type definitions
+
+  ## Security Updates
+
+  - CVE-2025-24963: Browser mode serves arbitrary files (fixed in 2.1.9)
+  - CVE-2025-24964: Remote Code Execution vulnerability (fixed in 2.1.9)
+
+  ## Migration Notes
+
+  - Test snapshots may need regeneration due to quote format changes
+  - Some test configurations might need updates for new TypeScript support
+  - Peer dependency warnings for @vitest/coverage-v8 are expected and safe to ignore
+
+  ## Links
+
+  - [Vitest 3.0 Migration Guide](https://vitest.dev/guide/migration)
+  - [Vitest 3.2.4 Release Notes](https://github.com/vitest-dev/vitest/releases/tag/v3.2.4)
+
+- Updated dependencies [[`bae9c95`](https://github.com/equinor/fusion-framework/commit/bae9c9554f335d0384b864436874bded47d00ed8), [`07cc985`](https://github.com/equinor/fusion-framework/commit/07cc9857e1427b574e011cc319518e701dba784d)]:
+  - @equinor/fusion-framework-vite-plugin-spa@1.0.1
+  - @equinor/fusion-log@1.1.7
+  - @equinor/fusion-framework-vite-plugin-api-service@1.1.1
+
 ## 1.0.2
 
 ### Patch Changes

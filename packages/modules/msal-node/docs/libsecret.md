@@ -1,9 +1,9 @@
 This CLI enables secure authentication and persistent token caching by storing credentials in your system's keychain. It uses [`@azure/msal-node`](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-node) for authentication, which relies on the [`keytar`](https://github.com/atom/node-keytar) module for secure credential storage.
 
-> **What is `libsecret`?**  
+> **What is `libsecret`?**
 > [`libsecret`](https://wiki.gnome.org/Projects/Libsecret) is a library for storing and retrieving passwords and secrets. On Linux, `keytar` depends on `libsecret` to access the system keyring.
 
-> **Common Issue: `Cannot find module '../build/Release/keytar.node'`**  
+> **Common Issue: `Cannot find module '../build/Release/keytar.node'`**
 > This error occurs when the `keytar` native module isn't properly built or installed. It can happen on any platform (Windows, macOS, Linux) and usually indicates missing build tools or failed native compilation.
 
 ## Platform Requirements
@@ -14,6 +14,10 @@ This CLI enables secure authentication and persistent token caching by storing c
   brew install libsecret
   ```
 - **Linux:** You must install `libsecret` for secure credential storage. See below for instructions.
+
+> [!CAUTION]
+> "Linux is supported for cache persistence, but not yet for native brokering."
+> https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/8035
 
 ## Windows Installation
 

@@ -56,11 +56,32 @@ jobs:
 
       - uses: reviewdog/action-setup@v1
 
-      - name: Delete outdated ReviewDog comments
-        uses: Ardiannn08/resolve-outdated-comment@v1.3
+      - name: Delete GitHub Actions comments
+        uses: actions/github-script@v7
         with:
-          token: ${{ github.token }}
-          filter-user: "reviewdog"
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            // Delete all GitHub Actions bot comments (they will be regenerated)
+            const githubActionsComments = comments.filter(comment => 
+              comment.user && comment.user.login === 'github-actions[bot]'
+            );
+            
+            console.log(`Found ${githubActionsComments.length} GitHub Actions comments to delete`);
+            
+            await Promise.all(
+              githubActionsComments.map(comment =>
+                github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id,
+                })
+              )
+            );
 
       - name: Lint source files
         uses: mongolyy/reviewdog-action-biome@v1

@@ -407,7 +407,11 @@ export class BookmarkProvider implements IBookmarkProvider {
      * Observable that emits the generated payload.
      */
     const result$ = from(this.#payloadGenerators).pipe(
-      mergeScan((acc, generator) => this._producePayload(acc, generator), initial ?? {}, 1),
+      mergeScan(
+        (acc, generator) => of(this._producePayload(acc, generator)),
+        initial ?? ({} as Partial<T>),
+        1,
+      ),
       tap((payload) => this._log?.debug(`generated payload`, { initial, payload })),
     ) as Observable<T | null | undefined>;
 
@@ -434,9 +438,9 @@ export class BookmarkProvider implements IBookmarkProvider {
     initial?: Partial<T> | null,
   ) {
     // produce payload from generator
-    return produce(value, async (draft) => {
+    return produce(value, (draft) => {
       try {
-        const result = await Promise.resolve(generator(draft as Partial<T>, initial));
+        const result = generator(draft as Partial<T>, initial);
         // cast the result to a draft object
         if (result) {
           this._log?.warn(

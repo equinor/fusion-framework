@@ -299,11 +299,9 @@ export interface IModulesConfig<M extends Array<AnyModule> | Record<string, AnyM
 export type ModulesConfig<M extends Array<AnyModule> | Record<string, AnyModule>> =
   ModulesConfigType<M> & IModulesConfig<M>;
 
-/** === Internal helpers === */
+/** === Utility types === */
 
 /**
- * @internal
- *
  * Maps the keys of a given modules object to their corresponding module instance types.
  *
  * @template TModule - An object type where each property is a module.
@@ -322,8 +320,6 @@ export type ModulesObjectInstanceType<TModule extends Record<string, AnyModule>>
 };
 
 /**
- * @internal
- *
  * Maps an object of modules to their corresponding configuration types.
  *
  * @template M - An object type where each property is a module extending `AnyModule`.
