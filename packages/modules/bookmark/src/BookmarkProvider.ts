@@ -519,7 +519,7 @@ export class BookmarkProvider implements IBookmarkProvider {
 
   /**
    * Retrieves all bookmarks from the store as an Observable stream.
-   * 
+   *
    * This method implements a complex flow that:
    * 1. Resolves filter parameters (sourceSystem, appKey, contextId) based on configuration
    * 2. Dispatches a fetch action to the store with resolved filters
@@ -538,7 +538,7 @@ export class BookmarkProvider implements IBookmarkProvider {
    *   next: (bookmarks) => console.log('Retrieved bookmarks:', bookmarks),
    *   error: (err) => console.error('Failed to fetch bookmarks:', err)
    * });
-   * 
+   *
    * // With filtering enabled in config
    * const config = {
    *   filters: { context: true, application: true }
@@ -559,13 +559,13 @@ export class BookmarkProvider implements IBookmarkProvider {
       const filter$ = forkJoin({
         // Always include the source system for the current provider
         sourceSystem: of(this.sourceSystem),
-        
+
         // Resolve application key if filtering by application is enabled
         appKey: this.#config.filters?.application
           ? defer(() => this._resolve.application()).pipe(map((x) => x?.appKey))
           : of(undefined),
-        
-        // Resolve context ID if filtering by context is enabled  
+
+        // Resolve context ID if filtering by context is enabled
         contextId: this.#config.filters?.context
           ? defer(() => this._resolve.context()).pipe(map((x) => x?.id))
           : of(undefined),
