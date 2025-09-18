@@ -1,6 +1,17 @@
 name: pr cleanup
+
+# This workflow cleans up cache entries when a pull request is closed
+# It runs the clear-cache action to remove cached build artifacts and dependencies
+# for the specific PR branch to free up storage space and prevent cache bloat
+#
+# Why these permissions are needed:
+# - contents: read - Required to checkout the repository
+# - actions: write - Required for gh actions-cache delete command in clear-cache action
+
 permissions:
   contents: read
+  # Required for gh actions-cache delete command in clear-cache action
+  actions: write    
 on:
   pull_request: 
     types: 
