@@ -35,7 +35,7 @@
   - Fix CLI source code documentation to match actual behavior
   - Remove incorrect bundle parameter from portal publish examples
 
-  Resolves #656
+  Resolves: [Misleading description of the Fusion CLI publish action](https://github.com/equinor/fusion/issues/656)
 
 - Updated dependencies []:
   - @equinor/fusion-framework-dev-portal@1.1.0
