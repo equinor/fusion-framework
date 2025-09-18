@@ -25,7 +25,7 @@ import {
  * - Debug mode and authentication options are supported.
  *
  * Usage:
- *   $ ffc portal publish [options]
+ *   $ ffc portal publish [options] - Build, upload, and tag portal template
  *
  * Options:
  *   -d, --debug          Enable debug mode for verbose logging
