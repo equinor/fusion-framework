@@ -1,4 +1,4 @@
-import { Observable, Subscription, forkJoin, from, lastValueFrom, of } from 'rxjs';
+import { Observable, Subscription, forkJoin, from, lastValueFrom, of, defer } from 'rxjs';
 
 import {
   filter,
@@ -61,7 +61,8 @@ import type {
   IBookmarkProvider,
 } from './BookmarkProvider.interface';
 
-const defaultTimeout = 2 * 60 * 1000; // 2 minutes
+// Default timeout for bookmark operations (2 minutes)
+const defaultTimeout = 2 * 60 * 1000;
 
 /**
  * The `BookmarkProvider` class is responsible for managing bookmarks in the application.
@@ -517,24 +518,59 @@ export class BookmarkProvider implements IBookmarkProvider {
   }
 
   /**
-   * Asynchronously retrieves all bookmarks from the store.
+   * Retrieves all bookmarks from the store as an Observable stream.
+   * 
+   * This method implements a complex flow that:
+   * 1. Resolves filter parameters (sourceSystem, appKey, contextId) based on configuration
+   * 2. Dispatches a fetch action to the store with resolved filters
+   * 3. Monitors store actions for success/failure responses
+   * 4. Returns the bookmarks data or throws appropriate errors
    *
-   * @returns A Promise that resolves to the Bookmarks object containing all bookmarks.
+   * @remarks
+   * The method uses a reactive pattern where filter resolution and store actions are
+   * handled asynchronously. If filtering is enabled, it will resolve the current
+   * application and context to filter bookmarks accordingly.
+   *
+   * @example
+   * ```ts
+   * // Basic usage
+   * bookmarkProvider.getAllBookmarks().subscribe({
+   *   next: (bookmarks) => console.log('Retrieved bookmarks:', bookmarks),
+   *   error: (err) => console.error('Failed to fetch bookmarks:', err)
+   * });
+   * 
+   * // With filtering enabled in config
+   * const config = {
+   *   filters: { context: true, application: true }
+   * };
+   * // Will automatically filter by current context and application
+   * ```
+   *
+   * @returns An Observable that emits the array of bookmarks when successfully retrieved
+   * @throws {BookmarkProviderError} When filter resolution fails or store operations fail
+   * @throws {BookmarkProviderError} When a timeout occurs during the fetch operation
    */
   public getAllBookmarks(): Observable<Bookmarks> {
     return new Observable<Bookmarks>((observer) => {
       this._log?.debug('fetching all bookmarks');
 
-      // generate the filter parameters
+      // Step 1: Generate filter parameters based on configuration
+      // This creates a stream that resolves all necessary filter values
       const filter$ = forkJoin({
+        // Always include the source system for the current provider
         sourceSystem: of(this.sourceSystem),
+        
+        // Resolve application key if filtering by application is enabled
         appKey: this.#config.filters?.application
-          ? from(this._resolve.application()).pipe(map((x) => x?.appKey))
+          ? defer(() => this._resolve.application()).pipe(map((x) => x?.appKey))
           : of(undefined),
+        
+        // Resolve context ID if filtering by context is enabled  
         contextId: this.#config.filters?.context
-          ? from(this._resolve.context()).pipe(map((x) => x?.id))
+          ? defer(() => this._resolve.context()).pipe(map((x) => x?.id))
           : of(undefined),
       }).pipe(
+        // Handle any errors during filter parameter resolution
         catchError((err) => {
           const error = new BookmarkProviderError(
             'Could not fetch bookmarks, failed to resolve filter parameters',
@@ -545,20 +581,25 @@ export class BookmarkProvider implements IBookmarkProvider {
         }),
       );
 
-      // execute the fetch bookmarks action when the filter parameters are resolved
+      // Step 2: Dispatch fetch action to store when filter parameters are ready
+      // This triggers the actual API call through the store's action system
+      // The store will handle the async operation and emit success/failure actions
+      // Using observer.add() ensures proper cleanup when the Observable is unsubscribed
       observer.add(
         filter$.subscribe((filter) => {
           this.#store.next(bookmarkActions.fetchBookmarks(filter));
         }),
       );
 
-      // monitor the failure case when fetching bookmarks
+      // Step 3: Monitor for failure responses from the store
+      // This stream will emit and throw an error if the fetch operation fails
       const failure$ = this.#store.action$.pipe(
         filter(bookmarkActions.fetchBookmarks.failure.match),
         map((action) => {
           this._log?.error('Failed to fetch bookmarks', action.payload);
           throw new BookmarkProviderError('Failed to fetch bookmarks', action.payload);
         }),
+        // Add timeout protection to prevent hanging requests
         timeout({
           each: defaultTimeout,
           with: () => {
@@ -567,17 +608,22 @@ export class BookmarkProvider implements IBookmarkProvider {
         }),
       );
 
-      // monitor the success case when fetching bookmarks
+      // Step 4: Monitor for success responses from the store
+      // This stream will emit the bookmarks data when successfully retrieved
       const request$ = this.#store.action$.pipe(
         filter(bookmarkActions.fetchBookmarks.success.match),
         map((a) => a.payload),
         tap((bookmarks) => {
           this._log?.debug('fetched all bookmarks', bookmarks);
         }),
+        // Race against failure stream - whichever completes first wins
+        // This ensures we either get the bookmarks data or an error, not both
         raceWith(failure$),
+        // Only take the first emission (success or failure) to complete the stream
         first(),
       );
 
+      // Step 5: Subscribe to the request stream and forward results to observer
       request$.subscribe(observer);
     });
   }
@@ -678,7 +724,7 @@ export class BookmarkProvider implements IBookmarkProvider {
     const bookmark$ = forkJoin({
       appKey: newBookmarkData.appKey
         ? of(newBookmarkData.appKey)
-        : from(this._resolve.application()).pipe(
+        : defer(() => this._resolve.application()).pipe(
             map((app) => {
               if (!app?.appKey) {
                 throw new BookmarkProviderError('Failed to resolve application key');
@@ -686,7 +732,7 @@ export class BookmarkProvider implements IBookmarkProvider {
               return app.appKey;
             }),
           ),
-      contextId: from(this._resolve.context()).pipe(map((context) => context?.id)),
+      contextId: defer(() => this._resolve.context()).pipe(map((context) => context?.id)),
       payload: this.generatePayload<T>(newBookmarkData.payload),
       sourceSystem: of(this.sourceSystem),
     }).pipe(
