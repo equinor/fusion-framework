@@ -46,7 +46,9 @@ import { createEnvOption } from '../../options/env.js';
  */
 export const command = withAuthOptions(
   createCommand('publish')
-    .description('Deployment: Upload and tag your Fusion application (builds if no bundle provided).')
+    .description(
+      'Deployment: Upload and tag your Fusion application (builds if no bundle provided).',
+    )
     .addHelpText(
       'after',
       [
