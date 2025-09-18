@@ -1,7 +1,18 @@
 name: pre release
 
+# This workflow creates pre-release snapshots of all packages
+# It generates changeset files, updates package versions with snapshot tags,
+# and publishes packages to npm with the specified tag (e.g., 'beta')
+# Used for testing releases before final publication
+#
+# WARNING: Pre-release packages are experimental and may contain breaking changes
+# WARNING: Only execute this workflow if you understand the implications of publishing pre-release packages
+
 permissions:
-  contents: read
+  # Required for creating changeset files and modifying package.json files
+  contents: write    
+  # Required for generating GITHUB_TOKEN used by changeset operations
+  id-token: write    
 
 on: 
   workflow_dispatch:
