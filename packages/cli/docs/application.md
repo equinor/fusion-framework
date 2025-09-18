@@ -338,7 +338,7 @@ pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.
 
 Publish your application to the Fusion app store (registry) for deployment.
 
-Publish your application to the Fusion app store (registry) for deployment. This command will build (if needed), upload, and tag your app in a single step.
+This command uploads and tags your app for deployment. If no bundle is provided, it will build your app first before uploading and tagging.
 
 | Option/Argument    | Description                                                                                         | Default / Example |
 | ------------------ | --------------------------------------------------------------------------------------------------- | ----------------- |
@@ -363,8 +363,12 @@ pnpm fusion-framework-cli publish --env prod --manifest app.manifest.prod.ts
 pnpm fusion-framework-cli publish --tag latest app-bundle.zip
 ```
 
-> [!NOTE]
-> - If you provide a bundle file, it will be uploaded directly. If not, the CLI will build and bundle your app before uploading.
+> [!IMPORTANT]
+> **Building Behavior**: The publish command behaves differently based on whether you provide a bundle:
+> - **With bundle**: Uploads and tags the provided bundle (no building)
+> - **Without bundle**: Builds, uploads, and tags your app
+> 
+> **Additional Notes**:
 > - The `--tag` option lets you mark the published version (e.g., as `latest` or `preview`) for easier deployment targeting.
 > - Authentication options (`--token`, `--tenantId`, `--clientId`) can be set via CLI flags or environment variables.
 > - If any step fails (build, upload, or tagging), an error will be logged and the process will exit with a non-zero code.

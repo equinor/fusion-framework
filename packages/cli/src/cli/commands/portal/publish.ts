@@ -25,10 +25,7 @@ import {
  * - Debug mode and authentication options are supported.
  *
  * Usage:
- *   $ ffc portal publish [bundle] [options]
- *
- * Arguments:
- *   [bundle]             Path to the portal bundle to upload
+ *   $ ffc portal publish [options]
  *
  * Options:
  *   -d, --debug          Enable debug mode for verbose logging
@@ -39,7 +36,7 @@ import {
  * Example:
  *   $ ffc portal publish
  *   $ ffc portal publish --env prod --manifest portal.manifest.prod.ts
- *   $ ffc portal publish --tag latest app.bundle.zip
+ *   $ ffc portal publish --tag preview
  *
  * @see uploadPortalBundle, tagPortal for implementation details
  */
@@ -58,7 +55,7 @@ export const command = withAuthOptions(
         'Examples:',
         '  $ ffc portal publish',
         '  $ ffc portal publish --env prod --manifest portal.manifest.prod.ts',
-        '  $ ffc portal publish --tag latest portal.bundle.zip',
+        '  $ ffc portal publish --tag preview',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
