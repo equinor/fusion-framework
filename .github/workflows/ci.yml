@@ -7,24 +7,43 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+# Security: Apply principle of least privilege
+# This workflow handles package publishing and documentation generation
+# - release-pkg: Needs write access to create releases and publish packages
+# - documentation: Uses dispatched workflow with minimal required permissions
+permissions:
+  contents: write  # Required for creating releases and publishing packages
+  packages: write  # Required for publishing to npm
+  id-token: write  # Required for OIDC token generation
+
 jobs:
   release-pkg:
     name: Version or publish packages
     runs-on: ubuntu-latest
+    # Job-specific permissions for package publishing
+    permissions:
+      contents: write  # Required for creating releases and pushing changes
+      packages: write  # Required for publishing to npm registry
+      id-token: write  # Required for OIDC token generation
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
     steps:
+      # Checkout repository with full history for changeset processing
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      # Configure git user for commits made by the workflow
       - name: Configure git user (trigger actor) 
         uses: ./.github/workflows/actions/config-git-user
       
+      # Install dependencies and setup Node.js environment
       - name: Setup node and install deps
         uses: ./.github/workflows/actions/node-setup
 
+      # Process changesets: create version PR or publish packages to npm
+      # This step requires write permissions to create releases and publish packages
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -38,18 +57,21 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: convert Changeset PR to draf
+      # Convert changeset PR to draft to prevent accidental merging
+      - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
 
+  # Update documentation only when packages are published
+  # Uses dispatched workflow with minimal required permissions
   documentation:
     name: Update documentation
     permissions:
-      contents: read
-      pages: write
-      id-token: write
+      contents: read   # Required to read repository contents
+      pages: write     # Required to deploy to GitHub Pages
+      id-token: write  # Required for OIDC token generation
     needs: release-pkg
     if: needs.release-pkg.outputs.published == 'true'
     uses: ./.github/workflows/generate-docs.yml
