@@ -1,6 +1,7 @@
 name: ci completed
 permissions:
   contents: read
+  actions: write    # Required for cache deletion operations in cache.yml workflow
 
 on:
   workflow_run:
