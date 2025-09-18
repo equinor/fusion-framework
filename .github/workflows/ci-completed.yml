@@ -1,4 +1,6 @@
 name: ci completed
+permissions:
+  contents: read
 
 on:
   workflow_run:
