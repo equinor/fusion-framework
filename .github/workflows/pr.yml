@@ -57,7 +57,7 @@ jobs:
       - uses: reviewdog/action-setup@v1
 
       - name: Delete GitHub Actions comments
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { data: comments } = await github.rest.issues.listComments({
