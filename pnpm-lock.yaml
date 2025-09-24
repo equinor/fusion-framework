@@ -218,8 +218,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.2
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.2
@@ -262,7 +262,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       react-router-dom:
         specifier: ^7.6.0
-        version: 7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.2
@@ -479,8 +479,8 @@ importers:
         specifier: ^1.8.0
         version: 1.23.0
       react-router-dom:
-        specifier: ^6.16.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.2
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
         specifier: ^6.0.7
         version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -540,8 +540,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.2
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.2
@@ -888,8 +888,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.2
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1621,7 +1621,7 @@ importers:
         version: 3.4.17(tslib@2.8.1)
       '@equinor/fusion-components':
         specifier: ^2.10.5
-        version: 2.15.4(@equinor/fusion@3.4.17(tslib@2.8.1))(@types/react@18.3.24)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.23.1)(react-dom@18.3.1(react@18.3.1))(react-router-dom@5.3.4(react@18.3.1))(react@18.3.1)
+        version: 2.15.4(@equinor/fusion@3.4.17(tslib@2.8.1))(@types/react@18.3.24)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.23.1)(react-dom@18.3.1(react@18.3.1))(react-router-dom@7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@equinor/fusion-framework':
         specifier: workspace:^
         version: link:../../framework
@@ -1668,8 +1668,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^5
-        version: 5.3.4(react@18.3.1)
+        specifier: ^7
+        version: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -7711,15 +7711,8 @@ packages:
     peerDependencies:
       react: '>=15'
 
-  react-router-dom@6.30.1:
-    resolution: {integrity: sha512-llKsgOkZdbPU1Eg3zK8lCn+sjD9wMRZZPuzmdWWX5SUs8OFkN5HnFVC0u5KMeMaC9aoancFI/KoLuKPqN+hxHw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
-  react-router-dom@7.9.1:
-    resolution: {integrity: sha512-U9WBQssBE9B1vmRjo9qTM7YRzfZ3lUxESIZnsf4VjR/lXYz9MHjvOxHzr/aUm4efpktbVOrF09rL/y4VHa8RMw==}
+  react-router-dom@7.9.2:
+    resolution: {integrity: sha512-pagqpVJnjZOfb+vIM23eTp7Sp/AAJjOgaowhP1f1TWOdk5/W8Uk8d/M/0wfleqx7SgjitjNPPsKeCZE1hTSp3w==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -7730,14 +7723,8 @@ packages:
     peerDependencies:
       react: '>=15'
 
-  react-router@6.30.1:
-    resolution: {integrity: sha512-X1m21aEmxGXqENEPG3T6u0Th7g0aS4ZmoNynhbs+Cn+q+QGTLt+d5IQ2bHAXKzKcxGJjxACpVbnYQSCRcfxHlQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
-
-  react-router@7.9.1:
-    resolution: {integrity: sha512-pfAByjcTpX55mqSDGwGnY9vDCpxqBLASg0BMNAuMmpSGESo/TaOUG6BllhAtAkCGx8Rnohik/XtaqiYUJtgW2g==}
+  react-router@7.9.2:
+    resolution: {integrity: sha512-i2TPp4dgaqrOqiRGLZmqh2WXmbdFknUyiCRmSKs0hf6fWXkTKg5h56b+9F22NbGRAMxjYfqQnpi63egzD2SuZA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -9506,7 +9493,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       styled-components: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@equinor/fusion-components@2.15.4(@equinor/fusion@3.4.17(tslib@2.8.1))(@types/react@18.3.24)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.23.1)(react-dom@18.3.1(react@18.3.1))(react-router-dom@5.3.4(react@18.3.1))(react@18.3.1)':
+  '@equinor/fusion-components@2.15.4(@equinor/fusion@3.4.17(tslib@2.8.1))(@types/react@18.3.24)(history@4.10.1)(pixi.js-legacy@5.3.12)(powerbi-client@2.23.1)(react-dom@18.3.1(react@18.3.1))(react-router-dom@7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@equinor/fusion': 3.4.17(tslib@2.8.1)
       '@equinor/fusion-observable': 8.5.2(@types/react@18.3.24)(react@18.3.1)
@@ -9536,7 +9523,7 @@ snapshots:
       prosemirror-state: 1.4.3
       prosemirror-view: 1.41.0
       react: 18.3.1
-      react-router-dom: 5.3.4(react@18.3.1)
+      react-router-dom: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-textarea-autosize: 8.5.9(@types/react@18.3.24)(react@18.3.1)
       rxjs: 7.8.2
     optionalDependencies:
@@ -15018,7 +15005,8 @@ snapshots:
     dependencies:
       is-inside-container: 1.0.0
 
-  isarray@0.0.1: {}
+  isarray@0.0.1:
+    optional: true
 
   isexe@2.0.0: {}
 
@@ -15813,6 +15801,7 @@ snapshots:
   path-to-regexp@1.9.0:
     dependencies:
       isarray: 0.0.1
+    optional: true
 
   path-to-regexp@6.3.0: {}
 
@@ -16185,29 +16174,11 @@ snapshots:
       tiny-warning: 1.0.3
     optional: true
 
-  react-router-dom@5.3.4(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.28.4
-      history: 4.10.1
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-router: 5.3.4(react@18.3.1)
-      tiny-invariant: 1.3.3
-      tiny-warning: 1.0.3
-
-  react-router-dom@6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@remix-run/router': 1.23.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-router: 6.30.1(react@18.3.1)
-
-  react-router-dom@7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-router-dom@7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-router: 7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router: 7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   react-router@5.3.4(react@17.0.2):
     dependencies:
@@ -16223,25 +16194,7 @@ snapshots:
       tiny-warning: 1.0.3
     optional: true
 
-  react-router@5.3.4(react@18.3.1):
-    dependencies:
-      '@babel/runtime': 7.28.4
-      history: 4.10.1
-      hoist-non-react-statics: 3.3.2
-      loose-envify: 1.4.0
-      path-to-regexp: 1.9.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-is: 16.13.1
-      tiny-invariant: 1.3.3
-      tiny-warning: 1.0.3
-
-  react-router@6.30.1(react@18.3.1):
-    dependencies:
-      '@remix-run/router': 1.23.0
-      react: 18.3.1
-
-  react-router@7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-router@7.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       cookie: 1.0.2
       react: 18.3.1
