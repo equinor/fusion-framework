@@ -1,5 +1,15 @@
 # @equinor/fusion-imports
 
+## 1.1.4
+
+### Patch Changes
+
+- [#3437](https://github.com/equinor/fusion-framework/pull/3437) [`ff3ab8f`](https://github.com/equinor/fusion-framework/commit/ff3ab8fd64cacd9b0a691a696bb2a7c5187e2cf3) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated memfs from 4.42.0 to 4.46.0.
+
+  - Patch update with internal improvements
+  - No breaking changes to public API
+  - All tests pass, build successful
+
 ## 1.1.3
 
 ### Patch Changes

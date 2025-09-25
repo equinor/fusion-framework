@@ -1,5 +1,21 @@
 # Change Log
 
+## 9.0.1
+
+### Patch Changes
+
+- [#3428](https://github.com/equinor/fusion-framework/pull/3428) [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.9 to 4.1.11
+
+  - **v4.1.10**: Fixed shape caching issue (#5263) improving validation performance for complex schemas
+  - **v4.1.11**: Maintenance release with general improvements
+
+  This patch update enhances schema validation performance without changing any APIs.
+
+- Updated dependencies [[`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6), [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63)]:
+  - @equinor/fusion-framework-module@5.0.2
+  - @equinor/fusion-query@5.2.14
+  - @equinor/fusion-framework-module-http@7.0.1
+
 ## 9.0.0
 
 ### Major Changes

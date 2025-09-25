@@ -1,5 +1,14 @@
 # Change Log
 
+## 5.2.14
+
+### Patch Changes
+
+- [#3442](https://github.com/equinor/fusion-framework/pull/3442) [`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update biome to latest version
+
+- Updated dependencies [[`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6)]:
+  - @equinor/fusion-observable@8.5.4
+
 ## 5.2.13
 
 ### Patch Changes
