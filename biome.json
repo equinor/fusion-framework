@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["./turbo", "vue-press/src/.vuepress", "package.json", "pnpm-lock.yaml"]
+    "includes": ["**", "!turbo", "!**/vue-press/src/.vuepress", "!package.json", "!pnpm-lock.yaml"]
   },
   "formatter": {
     "enabled": true,
@@ -15,20 +15,22 @@
     "useEditorconfig": true,
     "indentStyle": "space"
   },
-  "organizeImports": {
-    "enabled": false
-  },
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
+      "correctness": {
+        "useUniqueElementIds": "off"
+      },
       "complexity": {
         "noBannedTypes": "warn",
         "useLiteralKeys": "error",
-        "useOptionalChain": "error"
+        "useOptionalChain": "error",
+        "noCommaOperator": "warn"
       },
       "performance": {
-        "noAccumulatingSpread": "error"
+        "noAccumulatingSpread": "warn"
       },
       "style": {
         "noParameterAssign": "warn",
@@ -38,7 +40,6 @@
         "useLiteralEnumMembers": "warn",
         "noNonNullAssertion": "warn",
         "noUnusedTemplateLiteral": "warn",
-        "noCommaOperator": "warn",
         "useNodejsImportProtocol": "warn",
         "useTemplate": "warn",
         "noInferrableTypes": "warn"
@@ -53,12 +54,13 @@
         "noImplicitAnyLet": "warn"
       }
     },
-    "ignore": [
-      "node_modules",
-      "**/dist/**",
-      "**/*.config.js",
-      "**/version.ts",
-      "vue-press/src/.vuepress"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist/**",
+      "!**/*.config.js",
+      "!**/version.ts",
+      "!**/vue-press/src/.vuepress"
     ]
   },
   "javascript": {
@@ -76,7 +78,7 @@
   },
   "overrides": [
     {
-      "include": ["packages/react/**"]
+      "includes": ["**/packages/react/**"]
     }
   ]
 }

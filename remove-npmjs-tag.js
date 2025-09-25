@@ -15,7 +15,7 @@ function getWorkspacePackages() {
         try {
           return JSON.parse(pkg);
         } catch (e) {
-          console.warn('Skipping invalid JSON:', pkg);
+          console.warn('Skipping invalid JSON:', pkg, e);
           return null;
         }
       })
