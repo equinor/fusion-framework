@@ -15,7 +15,7 @@ configurator.logger.level = process.env.NODE_ENV === 'development' ? 4 : 1;
 
 configurator.addConfig(
   configureHttpClient('service_discovery', {
-    baseUri: `https://discovery.fusion.equinor.com`,
+    baseUri: 'https://discovery.fusion.equinor.com',
     defaultScopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
   }),
 );

@@ -41,6 +41,7 @@ const transformOdataFilter = (filter: Record<string, unknown>) => {
           .map(([subKey, subValue]) => `${key}.${subKey} eq '${subValue}'`)
           .join(' and ');
       }
+      return undefined;
     })
     .filter((x) => !!x)
     .join(' and ');

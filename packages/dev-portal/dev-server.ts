@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { createDevServer, processServices } from '@equinor/fusion-framework-dev-server';
 
-import { name } from './package.json' assert { type: 'json' };
+import { name } from './package.json' with { type: 'json' };
 
 dotenv.config();
 

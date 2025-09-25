@@ -191,7 +191,7 @@ type QueueOperatorType = 'switch' | 'merge' | 'concat';
  *
  * @returns A function that takes a query request and returns an Observable representing the queued request.
  */
-const useQueueOperator = <TDataType, TQueryArguments>(
+const getQueueOperator = <TDataType, TQueryArguments>(
   type: QueueOperatorType | QueryQueueFn<TDataType, TQueryArguments> = 'switch',
 ): QueryQueueFn<TDataType, TQueryArguments> => {
   if (typeof type === 'function') {
@@ -395,7 +395,7 @@ export class Query<TDataType, TQueryArguments = any> {
     // It is derived from the useQueueOperator utility function, which takes the provided queueOperatorType or custom function
     // from the QueryCtorOptions and returns the corresponding queue function.
     // The queue function is then used in the observable pipeline to manage the execution of query requests according to the chosen strategy.
-    const queueOperator = useQueueOperator(options.queueOperator);
+    const queueOperator = getQueueOperator(options.queueOperator);
 
     // shutdown the queue when the query is completed
     this.#subscription.add(() => this.#queue$.complete());
