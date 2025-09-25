@@ -129,3 +129,5 @@ yalc.lock
 app-bundle.zip
 
 packages/cli/bin/build
+
+.assistant
