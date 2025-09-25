@@ -34,6 +34,7 @@ const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server'
  * - The `api.processServices` defaults to `defaultProcessServices` if not provided.
  * - The server is configured to run on port 3000.
  * - Includes plugins for API service handling and SPA template environment generation.
+ * - CORS is disabled to allow backend services to handle OPTIONS requests with proper headers.
  *
  * @example
  * ```typescript
@@ -72,6 +73,11 @@ export const createDevServerConfig = <TEnv extends Partial<TemplateEnv>>(
       'process.env': JSON.stringify({
         FUSION_LOG_LEVEL: String(logger.level),
       }),
+    },
+    server: {
+      // Disable Vite's internal CORS handling to allow backend to handle OPTIONS requests properly
+      // This ensures that OPTIONS requests are forwarded to the backend with proper headers
+      cors: false,
     },
     plugins: [
       reactPlugin(),
