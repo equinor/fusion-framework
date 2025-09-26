@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.7
+
+### Patch Changes
+
+- [#3448](https://github.com/equinor/fusion-framework/pull/3448) [`d812d12`](https://github.com/equinor/fusion-framework/commit/d812d12f537a49006602362918613427e618e97e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @azure/msal-node from 3.7.4 to 3.8.0, including enhanced security features and data boundary claim instrumentation.
+
 ## 1.0.6
 
 ### Patch Changes

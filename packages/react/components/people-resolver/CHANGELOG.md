@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-react-components-people-provider
 
+## 1.5.23
+
+### Patch Changes
+
+- [#3446](https://github.com/equinor/fusion-framework/pull/3446) [`706c8a3`](https://github.com/equinor/fusion-framework/commit/706c8a3eebd7a4cb86cf457f50252a4a61520c15) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @equinor/fusion-wc-person from 3.2.0 to 3.2.1.
+
 ## 1.5.22
 
 ### Patch Changes
