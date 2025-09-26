@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.1.2
+
+### Patch Changes
+
+- [#3432](https://github.com/equinor/fusion-framework/pull/3432) [`528d72c`](https://github.com/equinor/fusion-framework/commit/528d72c04066f93fca1fa6469f33ec8d5383dcdc) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated vite from 7.1.5 to 7.1.7, including bug fixes for HMR, build system, and glob imports.
+
 ## 1.1.1
 
 ### Patch Changes
