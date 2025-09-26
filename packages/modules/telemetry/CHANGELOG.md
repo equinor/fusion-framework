@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.17
+
+### Patch Changes
+
+- [#3439](https://github.com/equinor/fusion-framework/pull/3439) [`c84d9eb`](https://github.com/equinor/fusion-framework/commit/c84d9ebce4faa01e63e8270ca1c1d573be7eddfe) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @microsoft/applicationinsights-web from 3.3.9 to 3.3.10
+
 ## 4.1.16
 
 ### Patch Changes

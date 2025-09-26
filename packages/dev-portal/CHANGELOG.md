@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.1.3
+
+### Patch Changes
+
+- [#3446](https://github.com/equinor/fusion-framework/pull/3446) [`706c8a3`](https://github.com/equinor/fusion-framework/commit/706c8a3eebd7a4cb86cf457f50252a4a61520c15) Thanks [@dependabot](https://github.com/apps/dependabot)! - Updated @equinor/fusion-wc-person from 3.2.0 to 3.2.1.
+
 ## 1.1.2
 
 ### Patch Changes
