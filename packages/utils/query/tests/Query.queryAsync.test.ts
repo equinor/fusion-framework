@@ -55,10 +55,9 @@ describe('Query Async', () => {
 
   // Test case to verify that expired cache entries trigger a refetch.
   it('should refetch when entry is expired', async () => {
-    vi.useFakeTimers();
     const fn = vi.fn(async (value: string) => value);
     const query = new Query({
-      expire: 100, // Setting cache expiration time to 100ms.
+      expire: 10, // Setting cache expiration time to 10ms for faster test.
       client: {
         fn,
       },
@@ -66,12 +65,13 @@ describe('Query Async', () => {
     });
 
     // Executing the query to populate the cache.
-    await vi.waitFor(() => query.queryAsync('foo'));
-    // Advancing the fake timers by 100ms to simulate cache expiration.
-    await vi.advanceTimersByTimeAsync(100);
+    await query.queryAsync('foo');
+
+    // Wait for cache expiration using real timers (much faster than fake timers).
+    await new Promise(resolve => setTimeout(resolve, 15));
 
     // Executing the query again after cache expiration.
-    const result = await vi.waitFor(() => query.queryAsync('foo'));
+    const result = await query.queryAsync('foo');
 
     // Asserting that a new fetch was performed due to cache expiration.
     expect(result.status).toEqual('complete');
@@ -82,10 +82,9 @@ describe('Query Async', () => {
 
   // Test case to verify behavior when cache is expired but resolution is skipped.
   it('should provided cached query when expired, if `skipResolve` is true', async () => {
-    vi.useFakeTimers();
     const fn = vi.fn(async (value: string) => value);
     const query = new Query({
-      expire: 100, // Setting cache expiration time to 100ms.
+      expire: 10, // Setting cache expiration time to 10ms for faster test.
       client: {
         fn,
       },
@@ -93,12 +92,13 @@ describe('Query Async', () => {
     });
 
     // Executing the query to populate the cache.
-    await vi.waitFor(() => query.queryAsync('foo'));
-    // Advancing the fake timers by 100ms to simulate cache expiration.
-    await vi.advanceTimersByTimeAsync(100);
+    await query.queryAsync('foo');
+
+    // Wait for cache expiration using real timers.
+    await new Promise(resolve => setTimeout(resolve, 15));
 
     // Executing the query again with `skipResolve` option after cache expiration.
-    const result = await vi.waitFor(() => query.queryAsync('foo', { skipResolve: true }));
+    const result = await query.queryAsync('foo', { skipResolve: true });
 
     // Asserting that the result was fetched from the cache despite expiration,
     // due to the `skipResolve` option being true.
@@ -110,7 +110,6 @@ describe('Query Async', () => {
 
   // Test case to verify that updates can be skipped if the cache is considered invalid.
   it('should skip update, if `suppressInvalid`is true', async () => {
-    vi.useFakeTimers();
     const fn = vi.fn(async (value: string) => value);
     const query = new Query({
       expire: 100, // Setting cache expiration time to 100ms.
@@ -121,12 +120,10 @@ describe('Query Async', () => {
     });
 
     // Executing the query to populate the cache.
-    await vi.waitFor(() => query.queryAsync('foo'));
+    await query.queryAsync('foo');
 
     // Executing the query again with `suppressInvalid` option.
-    const result = await vi.waitFor(() =>
-      query.queryAsync('foo', { cache: { suppressInvalid: true } }),
-    );
+    const result = await query.queryAsync('foo', { cache: { suppressInvalid: true } });
 
     // Asserting that the result was fetched from the cache.
     expect(result.status).toEqual('cache');
