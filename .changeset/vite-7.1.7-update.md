@@ -1,3 +1,4 @@
+---
 "@equinor/fusion-framework-dev-server": patch
 "@equinor/fusion-framework-dev-portal": patch
 "@equinor/fusion-framework-cli": patch
