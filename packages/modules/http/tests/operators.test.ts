@@ -30,7 +30,7 @@ describe('capitalizeRequestMethodOperator', () => {
 
     const result = executeOperator(operator, { method: 'get' });
 
-    expect(result).resolves.toMatchObject({ method: 'GET' });
+    await expect(result).resolves.toMatchObject({ method: 'GET' });
     expect(consoleWarn).toHaveBeenCalled();
   });
 });
@@ -50,7 +50,7 @@ describe('requestValidationOperator', () => {
 
     const result = executeOperator(operator, mockRequest);
 
-    expect(result).resolves.toBeUndefined();
+    await expect(result).resolves.toBeUndefined();
   });
 
   it('should parse valid request parameters', async () => {
@@ -58,7 +58,7 @@ describe('requestValidationOperator', () => {
 
     const result = executeOperator(operator, mockRequest);
 
-    expect(result).resolves.toStrictEqual(mockRequest);
+    await expect(result).resolves.toStrictEqual(mockRequest);
   });
 
   it('should allow additional properties when strict validation is disabled', async () => {
@@ -70,8 +70,8 @@ describe('requestValidationOperator', () => {
       additionalProperty: 'some-value',
     });
 
-    expect(result).resolves.toMatchObject(mockRequest);
-    expect(result).resolves.toHaveProperty('additionalProperty', 'some-value');
+    await expect(result).resolves.toMatchObject(mockRequest);
+    await expect(result).resolves.toHaveProperty('additionalProperty', 'some-value');
   });
 
   it('should remove additional properties when strict validation is enabled', async () => {
@@ -84,8 +84,8 @@ describe('requestValidationOperator', () => {
       method: 'GET',
     });
 
-    expect(result).resolves.toStrictEqual(mockRequest);
-    expect(result).resolves.not.toHaveProperty('additionalProperty');
+    await expect(result).resolves.toStrictEqual(mockRequest);
+    await expect(result).resolves.not.toHaveProperty('additionalProperty');
   });
 
   it('should throw an error for invalid request parameters', async () => {
@@ -96,6 +96,6 @@ describe('requestValidationOperator', () => {
       method: 'GETS', // invalid method
     });
 
-    expect(result).rejects.toThrowError('RFC 2615');
+    await expect(result).rejects.toThrowError('RFC 2615');
   });
 });
