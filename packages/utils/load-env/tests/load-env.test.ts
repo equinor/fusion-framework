@@ -1,15 +1,34 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { describe, it, beforeEach, vi, expect, type Mocked } from 'vitest';
+import { describe, it, beforeEach, afterEach, vi, expect, type Mocked } from 'vitest';
 import { loadEnv, DEFAULT_ENV_PREFIX } from '../src';
 
 vi.mock('node:fs');
 
 describe('loadEnv', () => {
   const mockFs = fs as Mocked<typeof fs>;
+  const originalEnv = { ...process.env };
 
   beforeEach(() => {
     vi.resetAllMocks();
+    // Clear process.env of any variables starting with DEFAULT_ENV_PREFIX to ensure test isolation
+    for (const key in process.env) {
+      if (key.startsWith(DEFAULT_ENV_PREFIX)) {
+        delete process.env[key];
+      }
+    }
+  });
+
+  afterEach(() => {
+    // Restore original process.env after each test
+    for (const key in process.env) {
+      if (!(key in originalEnv)) {
+        delete process.env[key];
+      }
+    }
+    for (const key in originalEnv) {
+      process.env[key] = originalEnv[key];
+    }
   });
 
   it('loads environment variables from .env files with default prefix', () => {
