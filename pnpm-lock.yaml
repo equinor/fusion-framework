@@ -474,7 +474,7 @@ importers:
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
         specifier: ^0.10.3
-        version: 0.10.6(react@18.3.1)
+        version: 0.10.7(react@18.3.1)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.23.0
@@ -2450,8 +2450,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-person@0.10.6':
-    resolution: {integrity: sha512-uA0xxNZeQNzLDWDEyOkwNa+Eui1+DD72aaNhnyswKIfiTLs4LlwjfPJ89MFYHW2dgJzBvk7+UAPipze1uFgX2Q==}
+  '@equinor/fusion-react-person@0.10.7':
+    resolution: {integrity: sha512-QHkGmPA6wL5rNfS9LsZa8BukAfKecJ6s/epOrOmLmG18aGFpX5E5y6QorCn0JjNPcXWu1fsgJJrmK+Vwu82TMA==}
 
   '@equinor/fusion-react-progress-indicator@0.3.0':
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
@@ -2540,9 +2540,6 @@ packages:
 
   '@equinor/fusion-wc-list@1.1.4':
     resolution: {integrity: sha512-IZyG+Jyv7vJzQyYJg8RsIlars0q8Ix2LT+Vh1E26p70rBdZZzmU2q1KATOyyEr8vWJSX9HlFMuYTg+N26Mxtdg==}
-
-  '@equinor/fusion-wc-person@3.2.0':
-    resolution: {integrity: sha512-5h82tZ5kvqC+7jeaoe24Yu6Ul0ijdokp22MT4SoY7hZN+mDeWEeo0inSjs5vvRm9nFPhI44eYsJz3jTV0BNJlg==}
 
   '@equinor/fusion-wc-person@3.2.1':
     resolution: {integrity: sha512-FVdpSsda7ZL4RzsauWgo2N8H2eq6i0BGB+6UinOILk9irdfVJrYxH21k/hrJnbxDT0AYZhyLnABtYZi04D2IGg==}
@@ -9437,10 +9434,10 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
-  '@equinor/fusion-react-person@0.10.6(react@18.3.1)':
+  '@equinor/fusion-react-person@0.10.7(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
-      '@equinor/fusion-wc-person': 3.2.0
+      '@equinor/fusion-wc-person': 3.2.1
     transitivePeerDependencies:
       - react
 
@@ -9578,22 +9575,6 @@ snapshots:
       '@equinor/fusion-wc-radio': 1.1.2
       '@equinor/fusion-web-theme': 0.1.10
       '@material/mwc-list': 0.27.0
-      lit: 3.3.0
-
-  '@equinor/fusion-wc-person@3.2.0':
-    dependencies:
-      '@equinor/fusion-wc-avatar': 3.2.3
-      '@equinor/fusion-wc-badge': 1.3.2
-      '@equinor/fusion-wc-button': 2.4.2
-      '@equinor/fusion-wc-core': 2.0.0
-      '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-list': 1.1.4
-      '@equinor/fusion-wc-skeleton': 2.1.2
-      '@equinor/fusion-wc-textinput': 1.1.4
-      '@equinor/fusion-web-theme': 0.1.10
-      '@floating-ui/dom': 1.7.4
-      '@lit-labs/observers': 2.0.6
-      '@lit-labs/task': 3.1.0
       lit: 3.3.0
 
   '@equinor/fusion-wc-person@3.2.1':
