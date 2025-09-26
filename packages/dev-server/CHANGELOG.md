@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.1
+
+### Patch Changes
+
+- [#3443](https://github.com/equinor/fusion-framework/pull/3443) [`2291483`](https://github.com/equinor/fusion-framework/commit/2291483b10ea288102155839dc47dcfe2addc22c) Thanks [@eikeland](https://github.com/eikeland)! - Fix OPTIONS requests missing Allow header after Vite 7 update
+
+  - Disabled Vite's internal CORS handling by setting `server.cors: false`
+  - This allows backend services to properly handle OPTIONS requests with correct headers
+  - Resolves issue where OPTIONS requests were not forwarded to backend after Vite 7 upgrade
+  - Backend services can now include Allow, Access-Control-Allow-Methods, and other CORS headers
+
+  closes: #3436
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # Change Log
 
+## 26.0.1
+
+### Patch Changes
+
+- [#3442](https://github.com/equinor/fusion-framework/pull/3442) [`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update biome to latest version
+
+- Updated dependencies [[`3b614f8`](https://github.com/equinor/fusion-framework/commit/3b614f87138f5a52f8ccc50ca8c6598ef3db37d6), [`1700ca8`](https://github.com/equinor/fusion-framework/commit/1700ca8851fa108e55e9729fd24f595272766e63)]:
+  - @equinor/fusion-observable@8.5.4
+  - @equinor/fusion-framework-module-msal@5.0.1
+  - @equinor/fusion-framework-module-service-discovery@9.0.1
+  - @equinor/fusion-framework-module-http@7.0.1
+  - @equinor/fusion-framework-module-app@7.0.1
+
 ## 26.0.0
 
 ### Patch Changes
