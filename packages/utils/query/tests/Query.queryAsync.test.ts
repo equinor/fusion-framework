@@ -68,7 +68,7 @@ describe('Query Async', () => {
     await query.queryAsync('foo');
 
     // Wait for cache expiration using real timers (much faster than fake timers).
-    await new Promise(resolve => setTimeout(resolve, 15));
+    await new Promise((resolve) => setTimeout(resolve, 15));
 
     // Executing the query again after cache expiration.
     const result = await query.queryAsync('foo');
@@ -95,7 +95,7 @@ describe('Query Async', () => {
     await query.queryAsync('foo');
 
     // Wait for cache expiration using real timers.
-    await new Promise(resolve => setTimeout(resolve, 15));
+    await new Promise((resolve) => setTimeout(resolve, 15));
 
     // Executing the query again with `skipResolve` option after cache expiration.
     const result = await query.queryAsync('foo', { skipResolve: true });
