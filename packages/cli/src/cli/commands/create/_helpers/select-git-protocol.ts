@@ -38,8 +38,8 @@ export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClie
       // Check for SSH keys using Node.js fs APIs for better cross-platform compatibility
       const sshDir = join(homedir(), '.ssh');
       const sshFiles = readdirSync(sshDir);
-      const hasPrivateKeys = sshFiles.some(file =>
-        file.startsWith('id_') && !file.endsWith('.pub')
+      const hasPrivateKeys = sshFiles.some(
+        (file) => file.startsWith('id_') && !file.endsWith('.pub'),
       );
 
       if (hasPrivateKeys) {
