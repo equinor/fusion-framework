@@ -1,16 +1,16 @@
-import { rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectTemplateRepository.js';
 import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
+import selectGitProtocol from './select-git-protocol.js';
 
 /**
  * Sets up and initializes a project template repository for template access.
  *
  * This function creates a ProjectTemplateRepository instance and handles
  * the complete initialization process, including optional cleanup of existing
- * repository directories.
+ * repository directories and user protocol selection.
  *
  * @param templateRepoName - Name of the template repository (e.g., 'equinor/fusion-app-template')
  * @param clean - Whether to clean the repo directory before cloning (removes existing directory)
@@ -46,10 +46,14 @@ export async function setupRepository(
     }
   }
 
+  // Prompt user to select their preferred Git protocol
+  const protocol = await selectGitProtocol(logger);
+
   const repo = new ProjectTemplateRepository(templateRepoName, {
     baseDir: repoDir,
     log: logger,
     branch: branch,
+    protocol: protocol,
   });
 
   await repo.initialize();
