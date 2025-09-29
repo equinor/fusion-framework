@@ -7,6 +7,46 @@ import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import type { GitClientProtocol } from '../../../../bin/helpers/ProjectTemplateRepository.js';
 
 /**
+ * Checks if Git has SSH configuration via core.sshCommand
+ * @param logger - Optional logger for debug output
+ * @returns true if SSH command is configured, false otherwise
+ */
+function checkGitSSHConfig(logger?: ConsoleLogger): boolean {
+  try {
+    execSync('git config core.sshCommand', { stdio: 'ignore' });
+    logger?.debug('SSH configuration detected via git config');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Checks if SSH private keys exist in the user's .ssh directory
+ * @param logger - Optional logger for debug output
+ * @returns true if private SSH keys are found, false otherwise
+ */
+function checkSSHKeys(logger?: ConsoleLogger): boolean {
+  try {
+    const sshDir = join(homedir(), '.ssh');
+    if (!existsSync(sshDir)) {
+      return false;
+    }
+
+    // Use withFileTypes for better performance and stop on first match
+    for (const dirent of readdirSync(sshDir, { withFileTypes: true })) {
+      if (dirent.isFile() && dirent.name.startsWith('id_') && !dirent.name.endsWith('.pub')) {
+        logger?.debug('SSH private key detected');
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Prompts the user to select their preferred Git protocol for repository cloning.
  *
  * This function presents a choice between HTTPS and SSH protocols, with
@@ -24,32 +64,8 @@ import type { GitClientProtocol } from '../../../../bin/helpers/ProjectTemplateR
 export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClientProtocol> {
   logger?.debug('Detecting SSH configuration...');
 
-  // Try to detect if SSH is configured
-  let hasSSHConfig = false;
-  try {
-    // Check if git config has core.sshCommand
-    execSync('git config core.sshCommand', { stdio: 'ignore' });
-    hasSSHConfig = true;
-    logger?.debug('SSH configuration detected');
-  } catch {
-    try {
-      // Check for SSH keys using Node.js fs APIs for better cross-platform compatibility
-      const sshDir = join(homedir(), '.ssh');
-      if (existsSync(sshDir)) {
-        const sshFiles = readdirSync(sshDir);
-        const hasPrivateKeys = sshFiles.some(
-          (file) => file.startsWith('id_') && !file.endsWith('.pub'),
-        );
-
-        if (hasPrivateKeys) {
-          hasSSHConfig = true;
-          logger?.debug('SSH keys detected');
-        }
-      }
-    } catch {
-      logger?.debug('No SSH configuration detected');
-    }
-  }
+  // Check for SSH configuration in order of preference
+  const hasSSHConfig = checkGitSSHConfig(logger) || checkSSHKeys(logger);
 
   // Prepare SSH option with explicit disabled state
   const sshDisabledMessage = hasSSHConfig
