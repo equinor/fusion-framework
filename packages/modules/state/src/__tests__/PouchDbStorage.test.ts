@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PouchDbStorage } from '../storage/PouchDbStorage.js';
-import { StateOperationEvent, StateChangeEvent, type StateEvent } from '../events/index.js';
+import { StateOperationEvent, StateChangeEvent, type StateEventType } from '../events/index.js';
 
 describe('PouchDbStorage', () => {
   let db: PouchDB.Database;
@@ -40,7 +40,7 @@ describe('PouchDbStorage', () => {
       // Give the changes feed time to set up
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      const events: StateEvent[] = [];
+      const events: StateEventType[] = [];
 
       // Subscribe to events before initialization
       const subscription = storage.events$.subscribe((event) => {
@@ -49,24 +49,24 @@ describe('PouchDbStorage', () => {
 
       // Add some data after initialization
       await storage.putItem({ key: 'test-item-1', value: 'value1' });
-      await storage.putItem({ key: 'test-item-2', value: 'value2' });
+      await storage.putItem({ key: 'test-item-1', value: 'value2' });
 
-      await vi.waitFor(() => expect(events.length).toBe(4));
+      await vi.waitFor(() => expect(events.length).toBe(4), { timeout: 100 });
 
       subscription.unsubscribe();
 
-      expect(events[0].type).toBe(StateOperationEvent.Type.Success);
-      expect(events[1].type).toBe(StateChangeEvent.Type.Created);
+      expect(events[0].type).toBe(StateOperationEvent.Success.Type);
+      expect(events[1].type).toBe(StateChangeEvent.Created.Type);
       if ('item' in events[1].detail && events[1].detail.item) {
         expect(events[1].detail.item.key).toBe('test-item-1');
         expect(events[1].detail.item.value).toBe('value1');
       } else {
         throw new Error('Expected item in events[1].detail');
       }
-      expect(events[2].type).toBe(StateOperationEvent.Type.Success);
-      expect(events[3].type).toBe(StateChangeEvent.Type.Created);
+      expect(events[2].type).toBe(StateOperationEvent.Success.Type);
+      expect(events[3].type).toBe(StateChangeEvent.Updated.Type);
       if ('item' in events[3].detail && events[3].detail.item) {
-        expect(events[3].detail.item.key).toBe('test-item-2');
+        expect(events[3].detail.item.key).toBe('test-item-1');
       } else {
         throw new Error('Expected item in events[3].detail');
       }

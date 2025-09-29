@@ -1,12 +1,9 @@
 import PouchDB from 'pouchdb';
-import { type Observable, Subject } from 'rxjs';
+import { type Observable, Subject, type SubscriptionLike } from 'rxjs';
 
 import type { AllowedValue } from '@equinor/fusion-framework-module-state';
 
-import type {
-  StorageItem,
-  StorageResult,
-} from './types.js';
+import type { StorageItem, StorageResult } from './types.js';
 
 import type {
   RetrievedItemsResponse,
@@ -16,7 +13,8 @@ import type {
 
 import { StorageError } from './StorageError.js';
 
-import { StateChangeEvent, StateErrorEvent, type StateEvent, StateOperationEvent } from '../events/index.js';
+import { StateOperationEvent, type StateEventType } from '../events/index.js';
+import { observePouchDbChange } from './observe-pouchdb-change.js';
 
 const STORAGE_KEY_SEPARATOR = '::';
 
@@ -78,7 +76,7 @@ export class PouchDbStorage implements IStorage, Disposable {
   #key_prefix?: string;
 
   // Unified event stream for all storage operations and state changes
-  #events: Subject<StateEvent> = new Subject();
+  #events: Subject<StateEventType> = new Subject();
 
   // Array of cleanup functions to call when the instance is disposed
   // Ensures proper resource cleanup and prevents memory leaks
@@ -93,6 +91,10 @@ export class PouchDbStorage implements IStorage, Disposable {
     options?: PouchDB.Configuration.DatabaseConfiguration,
   ): PouchDB.Database {
     return new PouchDB(name, options);
+  }
+
+  protected get _db(): PouchDB.Database {
+    return this.#db;
   }
 
   /**
@@ -115,8 +117,20 @@ export class PouchDbStorage implements IStorage, Disposable {
    * - Includes operation metrics and error details
    * - Memory usage scales with event frequency
    */
-  public get events$(): Observable<StateEvent> {
+  public get events$(): Observable<StateEventType> {
     return this.#events.asObservable();
+  }
+
+  protected _addTeardown(fn: VoidFunction | SubscriptionLike): VoidFunction {
+    const teardown = () => {
+      typeof fn === 'function' ? fn() : fn.unsubscribe();
+    };
+    this.#teardown.push(teardown);
+    return () => this.#teardown.splice(this.#teardown.indexOf(teardown), 1);
+  }
+
+  protected _emitEvent(event: StateEventType): void {
+    this.#events.next(event);
   }
 
   /**
@@ -188,10 +202,10 @@ export class PouchDbStorage implements IStorage, Disposable {
     // Store the key prefix for namespacing (undefined if not provided)
     this.#key_prefix = key_prefix;
 
+    // todo: events should be ReplaySubject, option for retention count.
+
     // Create new PouchDB instance if a string is provided, otherwise use existing instance
     if (typeof name_or_instance === 'string') {
-      // Create new PouchDB instance with auto-compaction enabled for performance
-      // Auto-compaction removes obsolete document revisions automatically
       this.#db = new PouchDB(name_or_instance, {
         auto_compaction: true, // Critical for performance - prevents DB bloat
         ...db_options, // Apply any additional PouchDB configuration
@@ -209,7 +223,7 @@ export class PouchDbStorage implements IStorage, Disposable {
    * and enables event emission for subsequent operations.
    *
    * @throws {StorageError} On initialization failure
-   *
+   * @sealed
    * @remarks
    * - Idempotent - safe to call multiple times
    * - Only tracks changes after initialization
@@ -217,28 +231,12 @@ export class PouchDbStorage implements IStorage, Disposable {
    */
   public async initialize(): Promise<void> {
     try {
-      const start = performance.now();
-
-      // Set up live change tracking - this establishes a persistent connection
-      // to PouchDB's changes feed that will emit events for any future changes
-      this._subscribeToDb();
-
-      // Emit success event with performance metrics
-      // This lets subscribers know initialization completed successfully
-      this.#events.next(
-        StateOperationEvent.Success({
-          source: this,
-          detail: {
-            fn: 'initialize',
-            metric: performance.now() - start,
-          },
-        }),
-      );
+      this._initialize();
     } catch (error) {
       // Emit failure event if initialization fails
       // This allows subscribers to handle initialization errors gracefully
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: {
             fn: 'initialize',
@@ -249,19 +247,10 @@ export class PouchDbStorage implements IStorage, Disposable {
     }
   }
 
-  /**
-   * Establishes live change feed subscription and event emission.
-   *
-   * Filters changes by key prefix, emits storage events for create/update/delete operations,
-   * and handles feed lifecycle management.
-   *
-   * @internal
-   * @protected
-   */
-  protected _subscribeToDb(): void {
+  protected _initialize(): void {
     // Subscribe to live changes in the PouchDB database
     // This creates a persistent connection that will emit events for any future changes
-    const changes = this.#db.changes({
+    const changes = this.#db.changes<{ value: AllowedValue }>({
       since: 'now', // Start from current state (not historical changes)
       live: true, // Keep connection alive for real-time updates
       include_docs: true, // Include full document data in change events
@@ -275,98 +264,18 @@ export class PouchDbStorage implements IStorage, Disposable {
       },
     });
 
-    // Handle document changes - this is the core of the real-time event system
-    changes.on('change', (change: PouchDB.Core.ChangesResponseChange<Record<string, unknown>>) => {
-      // Defensive check - PouchDB should always provide a document, but be safe
-      if (!change.doc) {
-        this.#events.next(
-          StateErrorEvent.Error({
-            source: this,
-            detail: {
-              error: new StorageError('Unexpected error, changeset is missing document'),
-            },
-          }),
-        );
-        return;
-      }
+    const event$ = observePouchDbChange(changes, (doc) => ({
+      _id: doc._id,
+      key: this._extractKey(doc._id),
+      value: doc.value,
+    }));
 
-      // Extract document metadata and data
-      const { _id, _rev, value } = change.doc;
-      const key = this._extractKey(_id); // Remove prefix if present
-
-      // Skip changes for documents that don't match our key pattern
-      // This can happen with malformed prefixed keys or other edge cases
-      if (!key) {
-        return;
-      }
-
-      // Determine change type and emit appropriate event
-      if (change.deleted) {
-        // Document was deleted - emit deletion event
-        // Note: We include the last known value for reference
-        this.#events.next(
-          StateChangeEvent.EntryDeleted({
-            source: this,
-            detail: {
-              _id, // Internal PouchDB ID
-              key, // User-facing key (prefix removed)
-              item: {
-                key,
-                value: value as AllowedValue, // Last known value before deletion
-              },
-            },
-          }),
-        );
-      } else if (_rev.startsWith('1-')) {
-        // Revision starts with '1-' indicating this is the first revision (document creation)
-        // PouchDB revision format: "{revision_number}-{hash}"
-        this.#events.next(
-          StateChangeEvent.EntryCreated({
-            source: this,
-            detail: {
-              _id,
-              key,
-              item: {
-                key,
-                value: value as AllowedValue,
-              },
-            },
-          }),
-        );
-      } else {
-        // Revision indicates update (revision number > 1)
-        this.#events.next(
-          StateChangeEvent.EntryUpdated({
-            source: this,
-            detail: {
-              _id,
-              key,
-              item: {
-                key,
-                value: value as AllowedValue,
-              },
-            },
-          }),
-        );
-      }
+    const subscription = event$.subscribe({
+      next: (event) => this.#events.next(event as StateEventType),
     });
+    subscription.add(() => changes.cancel());
 
-    // Handle errors from the changes feed
-    // This can happen due to network issues, database corruption, or permission problems
-    changes.on('error', (error: Error) => {
-      this.#events.next(
-        StateErrorEvent.Error({
-          source: this,
-          detail: {
-            error: new StorageError('Database error', { cause: error }),
-          },
-        }),
-      );
-    });
-
-    // Register cleanup function to prevent memory leaks
-    // When this storage instance is disposed, the changes feed will be cancelled
-    this.#teardown.push(() => changes.cancel());
+    this.#teardown.push(() => subscription.unsubscribe());
   }
 
   /**
@@ -400,7 +309,7 @@ export class PouchDbStorage implements IStorage, Disposable {
     const allDocs = await this._allItems({ ignore_scope: args.clear_all }).catch((e) => {
       const error = new StorageError('Failed to retrieve all items', { cause: e });
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'clear', args: [args], error },
         }),
@@ -411,7 +320,7 @@ export class PouchDbStorage implements IStorage, Disposable {
     // Early return if no documents found - saves unnecessary bulk operation
     if (!allDocs.rows.length) {
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: 'clear',
@@ -439,7 +348,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError('Failed to clear items', { cause: e });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'clear', args: [args], error },
         }),
@@ -449,7 +358,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
     // Emit success event with operation details
     this.#events.next(
-      StateOperationEvent.Success({
+      new StateOperationEvent.Success({
         source: this,
         detail: {
           fn: 'clear',
@@ -492,7 +401,7 @@ export class PouchDbStorage implements IStorage, Disposable {
         value: entry.value,
       };
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: 'item',
@@ -507,14 +416,13 @@ export class PouchDbStorage implements IStorage, Disposable {
       if ((e as PouchDB.Core.Error).status === 404) {
         const result = null;
         this.#events.next(
-          StateOperationEvent.Success({
+          new StateOperationEvent.Failure({
             source: this,
             detail: {
               fn: 'item',
               args: [key],
-              result,
-              message: 'Item not found',
               metric: performance.now() - start,
+              error: new StorageError('Item not found'),
             },
           }),
         );
@@ -522,7 +430,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       }
       const error = new StorageError(`Failed to get item ${key}`, { cause: e });
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'item', args: [key], error },
         }),
@@ -566,7 +474,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       );
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'allItems', args: [options], error },
         }),
@@ -595,7 +503,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       };
       // Emit success event with operation details
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'allItems', args: [options], result, metric: performance.now() - start },
         }),
@@ -606,7 +514,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError('Failed to retrieve all items', { cause });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'allItems', args: [options], error },
         }),
@@ -670,7 +578,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit success event with operation details and performance metrics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'putItem', args: [item], result, metric: performance.now() - start },
         }),
@@ -682,7 +590,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit failure event so subscribers can handle the error
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'putItem', args: [item], error },
         }),
@@ -729,7 +637,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       );
       // Emit success event with operation statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'putItems', args: [items], result, metric: performance.now() - start },
         }),
@@ -740,7 +648,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError('Failed to put items', { cause });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'putItems', args: [items], error },
         }),
@@ -796,7 +704,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit success event with operation statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'removeItem', args: [item], result, metric: performance.now() - start },
         }),
@@ -807,7 +715,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError(`Failed to remove item ${item.key}`, { cause: e });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'removeItem', args: [item], error },
         }),
@@ -847,7 +755,7 @@ export class PouchDbStorage implements IStorage, Disposable {
     if (!items.length) {
       const result: StorageResult[] = [];
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: 'removeItems',
@@ -871,7 +779,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       );
       // Emit success event with operation statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'removeItems', args: [items], result, metric: performance.now() - start },
         }),
@@ -882,7 +790,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError('Failed to remove items', { cause });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'removeItems', args: [items], error },
         }),
@@ -930,7 +838,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       });
       // Emit success event with operation statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: { fn: 'allItems', args: [args], result, metric: performance.now() - start },
         }),
@@ -942,7 +850,7 @@ export class PouchDbStorage implements IStorage, Disposable {
       const error = new StorageError('Failed to retrieve all items', { cause });
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'allItems', args: [args], error },
         }),
@@ -994,7 +902,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit success event with operation statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: '_executeBulk',
@@ -1012,7 +920,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: '_executeBulk', args, error: storageError },
         }),
@@ -1067,7 +975,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit success event with backup statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: 'createBackup',
@@ -1085,7 +993,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit failure event for monitoring
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'createBackup', error: storageError },
         }),
@@ -1174,7 +1082,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit success event with detailed restoration statistics
       this.#events.next(
-        StateOperationEvent.Success({
+        new StateOperationEvent.Success({
           source: this,
           detail: {
             fn: 'restoreBackup',
@@ -1193,7 +1101,7 @@ export class PouchDbStorage implements IStorage, Disposable {
 
       // Emit failure event for monitoring and debugging
       this.#events.next(
-        StateOperationEvent.Failure({
+        new StateOperationEvent.Failure({
           source: this,
           detail: { fn: 'restoreBackup', args: [backupData, options], error: storageError },
         }),

@@ -9,7 +9,7 @@ We're excited to bring you a complete state management solution that makes shari
 **What's new?** The powerful `useAppState` hook works just like React's `useState` but with superpowers:
 
 🔄 **Persistent by default** - Your state survives page refreshes using browser storage
-🔗 **Automatically synchronized** - Share state between any components in real-time  
+🔗 **Automatically synchronized** - Share state between any components in real-time
 ⚡ **Optimistically updated** - Lightning-fast UI with automatic error recovery
 🛡️ **Fully type-safe** - Complete TypeScript support with type inference
 🎯 **Dead simple API** - If you know `useState`, you already know `useAppState`

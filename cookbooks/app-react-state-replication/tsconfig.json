@@ -4,7 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "jsx": "react-jsx",
-    "baseUrl": "./src",
+    "baseUrl": "./src"
   },
   "references": [{ "path": "../../packages/modules/state" }],
   "include": ["src/**/*"],

@@ -9,7 +9,7 @@ import type {
   RetrieveItemsOptions,
 } from '../storage/index.js';
 
-import { StateChangeEvent, type StateEvent } from '../events/index.js';
+import { StateChangeEvent, type StateEventType } from '../events/index.js';
 
 /**
  * Mock implementation of IStorage for testing purposes.
@@ -25,7 +25,7 @@ import { StateChangeEvent, type StateEvent } from '../events/index.js';
  */
 export class MockStorage implements IStorage {
   // Internal event stream for state change notifications
-  #events: Subject<StateEvent> = new Subject();
+  #events: Subject<StateEventType> = new Subject();
   // In-memory storage of items, keyed by item key
   items: Record<string, StorageItem> = {};
 
@@ -45,7 +45,7 @@ export class MockStorage implements IStorage {
     );
   }
 
-  get events$(): Observable<StateEvent> {
+  get events$(): Observable<StateEventType> {
     return this.#events.asObservable();
   }
 
@@ -65,9 +65,9 @@ export class MockStorage implements IStorage {
     this.items[item.key] = item;
     // Emit appropriate state change event
     if (existing) {
-      this.#events.next(StateChangeEvent.EntryUpdated({ detail: { key: item.key, item } }));
+      this.#events.next(new StateChangeEvent.Updated({ detail: { key: item.key, item } }));
     } else {
-      this.#events.next(StateChangeEvent.EntryCreated({ detail: { key: item.key, item } }));
+      this.#events.next(new StateChangeEvent.Created({ detail: { key: item.key, item } }));
     }
     return Promise.resolve({ status: 'success', key: item.key });
   }
@@ -78,7 +78,7 @@ export class MockStorage implements IStorage {
     this.items = rest;
     // Emit deletion event with the removed item (if it existed)
     this.#events.next(
-      StateChangeEvent.EntryDeleted({ detail: { key: removed.key, item: removed } }),
+      new StateChangeEvent.Deleted({ detail: { key: removed.key, item: removed } }),
     );
     return Promise.resolve({ status: 'success', key: removed.key });
   }

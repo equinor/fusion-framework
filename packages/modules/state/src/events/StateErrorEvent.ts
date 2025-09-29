@@ -7,9 +7,11 @@ import type { StorageError } from '../storage/StorageError.js';
  *
  * @template T - The type of the storage error
  */
-type StateErrorEventInit<T extends StorageError = StorageError> = FrameworkEventInit<
-  { _id?: string; key?: string; error: T }
->;
+type StateErrorEventInit<T extends StorageError = StorageError> = FrameworkEventInit<{
+  _id?: string;
+  key?: string;
+  error: T;
+}>;
 
 /**
  * Event class for state operation errors.
@@ -28,14 +30,19 @@ export class StateErrorEvent<T extends StorageError = StorageError> extends Fram
     Error: 'onState.error',
   } as const;
 
-  /**
-   * Creates a storage error event.
-   *
-   * @param args - The event initialization parameters including error details
-   * @returns A new StorageErrorEvent instance for error events
-   */
-  static Error(args: StateErrorEventInit) {
-    return new StateErrorEvent(StateErrorEvent.Type.Error, args);
+  static is(event: unknown): event is StateErrorEvent {
+    if (event instanceof StateErrorEvent) {
+      return true;
+    }
+    if (typeof event === 'object' && event !== null) {
+      const eventObj = event as Record<PropertyKey, unknown>;
+      return eventObj.type === StateErrorEvent.Type.Error && 'detail' in eventObj;
+    }
+    return false;
+  }
+
+  constructor(args: StateErrorEventInit<T>) {
+    super(StateErrorEvent.Type.Error, args);
   }
 }
 

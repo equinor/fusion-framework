@@ -10,6 +10,10 @@
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
     },
+    "./events": {
+      "import": "./dist/esm/events/index.js",
+      "types": "./dist/types/storeventsage/index.d.ts"
+    },
     "./storage": {
       "import": "./dist/esm/storage/index.js",
       "types": "./dist/types/storage/index.d.ts"

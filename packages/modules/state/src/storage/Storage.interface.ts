@@ -1,8 +1,6 @@
 import type { Observable } from 'rxjs';
 
-import type { AllowedValue } from '@equinor/fusion-framework-module-state';
-
-import type { StateEvent } from '../events/index.js';
+import type { AllowedValue, StateEventType } from '@equinor/fusion-framework-module-state';
 
 import type { StorageItem, StorageResult } from './types.js';
 
@@ -30,7 +28,7 @@ export interface IStorage extends Disposable {
    *
    * @returns RxJS Observable emitting StorageEvent instances
    */
-  readonly events$: Observable<StateEvent>;
+  readonly events$: Observable<StateEventType>;
 
   /**
    * Initialize storage adapter and establish connections.
