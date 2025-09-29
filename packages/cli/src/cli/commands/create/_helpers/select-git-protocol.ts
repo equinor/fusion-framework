@@ -1,4 +1,7 @@
 import inquirer from 'inquirer';
+import { readdirSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import type { GitClientProtocol } from '../../../../bin/helpers/ProjectTemplateRepository.js';
 
@@ -20,25 +23,38 @@ import type { GitClientProtocol } from '../../../../bin/helpers/ProjectTemplateR
 export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClientProtocol> {
   logger?.debug('Detecting SSH configuration...');
 
+  // Import execSync once for use in both try blocks
+  const { execSync } = await import('node:child_process');
+
   // Try to detect if SSH is configured
   let hasSSHConfig = false;
   try {
-    const { execSync } = await import('node:child_process');
     // Check if git config has core.sshCommand or if SSH keys exist
     execSync('git config core.sshCommand', { stdio: 'ignore' });
     hasSSHConfig = true;
     logger?.debug('SSH configuration detected');
   } catch {
     try {
-      const { execSync } = await import('node:child_process');
-      // Check for SSH keys as fallback
-      execSync('ls -la ~/.ssh/id_* 2>/dev/null | grep -v ".pub$" | head -1', { stdio: 'ignore' });
-      hasSSHConfig = true;
-      logger?.debug('SSH keys detected');
+      // Check for SSH keys using Node.js fs APIs for better cross-platform compatibility
+      const sshDir = join(homedir(), '.ssh');
+      const sshFiles = readdirSync(sshDir);
+      const hasPrivateKeys = sshFiles.some(file =>
+        file.startsWith('id_') && !file.endsWith('.pub')
+      );
+
+      if (hasPrivateKeys) {
+        hasSSHConfig = true;
+        logger?.debug('SSH keys detected');
+      }
     } catch {
       logger?.debug('No SSH configuration detected');
     }
   }
+
+  // Prepare SSH option with explicit disabled state
+  const sshDisabledMessage = hasSSHConfig
+    ? undefined
+    : 'SSH not configured (no SSH keys or git config found)';
 
   const { selectedProtocol } = await inquirer.prompt([
     {
@@ -55,7 +71,7 @@ export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClie
           name: 'SSH - Faster and more secure, but requires SSH key setup',
           value: 'ssh',
           short: 'SSH',
-          disabled: !hasSSHConfig ? 'SSH not configured (no SSH keys or git config found)' : false,
+          disabled: sshDisabledMessage,
         },
       ],
       default: hasSSHConfig ? 'ssh' : 'https',
