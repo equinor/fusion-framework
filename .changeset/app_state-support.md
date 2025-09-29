@@ -6,7 +6,7 @@ Add state management module support to @equinor/fusion-framework-app
 
 This change introduces comprehensive state management capabilities to the app package, allowing developers to easily enable persistent state storage in their Fusion applications.
 
-### New Features
+**Features**
 
 - **State Module Enabler**: Added `enableState` function that configures the state module with PouchDB storage
 - **Package Exports**: Added new export path `./enable-state` for the state enabler function
@@ -14,7 +14,7 @@ This change introduces comprehensive state management capabilities to the app pa
 - **Peer Dependencies**: Added `@equinor/fusion-framework-module-state` as an optional peer dependency
 - **Storage Configuration**: Automatic app-scoped storage with key prefixing to prevent state collisions
 
-### Usage
+**Usage**
 
 Applications can now enable state management by:
 

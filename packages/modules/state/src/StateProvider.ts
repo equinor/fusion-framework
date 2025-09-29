@@ -19,7 +19,7 @@ import type {
 
 import type { StorageItem } from './storage/index.js';
 
-import { type StateEvent, StateChangeEvent } from './events/index.js';
+import { StateChangeEvent, type StateEventType } from './events/index.js';
 
 import type { IStateProvider } from './StateProvider.interface.js';
 import type { AllowedValue, StateItem } from './types.js';
@@ -29,6 +29,8 @@ import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { version } from './version.js';
 
 import isEqual from 'fast-deep-equal';
+import type { ModulesInstance, ModuleType } from '@equinor/fusion-framework-module';
+import type { EventModule } from '@equinor/fusion-framework-module-event';
 
 /**
  * Provides a state management interface backed by a storage implementation.
@@ -54,16 +56,19 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
   /** Internal storage implementation for persisting state items */
   #storage: IStorage;
 
+  #event?: ModuleType<EventModule>;
+
   /**
    * Creates a new StateProvider instance.
    *
    * @param config - Configuration object containing the storage implementation
    */
-  constructor(config: StateModuleConfig) {
+  constructor(config: StateModuleConfig, modules?: ModulesInstance<[EventModule]>) {
     // Initialize base module provider with config and version
     super({ config, version });
     // Store reference to the underlying storage implementation
     this.#storage = config.storage;
+    this.#event = modules?.event;
   }
 
   /**
@@ -75,6 +80,12 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @returns Promise that resolves when initialization is complete
    */
   async initialize(): Promise<void> {
+    // subscribe to storage events and dispatch them to the event module
+    if (this.#event) {
+      this.#storage.events$.subscribe((event) => {
+        this.#event?.dispatchEvent(event as StateEventType);
+      });
+    }
     // Initialize the underlying storage implementation if it has an initialize method
     // This allows storage adapters to perform setup like establishing connections
     await this.#storage.initialize?.();
@@ -135,7 +146,9 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
    * @param items - Array of item keys (as strings or objects with key property)
    * @returns Promise that resolves with an array of storage operation results
    */
-  public async removeItems(items: Array<Pick<StateItem, 'key'> | string>): Promise<StorageResult[]> {
+  public async removeItems(
+    items: Array<Pick<StateItem, 'key'> | string>,
+  ): Promise<StorageResult[]> {
     // Normalize all items to objects with key property for consistent storage interface
     const keys = items.map((item) => (typeof item === 'string' ? { key: item } : item));
     // Check if the storage implementation supports bulk remove operations
@@ -206,12 +219,12 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
     // Create observable for real-time changes to this specific item
     const changes$ = this.#storage.events$.pipe(
       // Filter to only state change events (ignore operation events)
-      filter(StateChangeEvent.isStateChangeEvent),
+      filter(StateChangeEvent.is),
       // Filter to only events affecting the requested key
       filter((e) => e.detail.key === key),
       // Transform the event into the item state (null for deletions, item for others)
       map((e) => {
-        if (e.type === StateChangeEvent.Type.Deleted) {
+        if (StateChangeEvent.Deleted.is(e)) {
           return null; // Item was deleted
         }
         return e.detail.item; // Item was created or updated
@@ -247,7 +260,9 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
 
     // Combine initial collection with real-time changes to any items
     // applyStateChangeEvents handles creating, updating, and deleting items in the collection
-    return initial$.pipe(mergeMap(applyStateChangeEvents(this.#storage.events$)));
+    return initial$.pipe(
+      mergeMap(applyStateChangeEvents<T>(this.#storage.events$ as Observable<StateEventType<T>>)),
+    );
   }
 
   /**
@@ -309,11 +324,13 @@ export class StateProvider<TType extends AllowedValue = AllowedValue>
  * );
  * ```
  */
-function applyStateChangeEvents(source$: Observable<StateEvent>) {
+function applyStateChangeEvents<T extends AllowedValue = AllowedValue>(
+  source$: Observable<StateEventType<T>>,
+): (initial: StateItem<T>[]) => Observable<StateItem<T>[]> {
   return <T extends AllowedValue = AllowedValue>(initial: StateItem<T>[] = []) =>
     source$.pipe(
       // Filter to only state change events (ignore operation events)
-      filter(StateChangeEvent.isStateChangeEvent),
+      filter(StateChangeEvent.is),
       // Accumulate changes using scan operator, starting with the initial array
       scan((acc, event) => {
         const {
@@ -321,7 +338,7 @@ function applyStateChangeEvents(source$: Observable<StateEvent>) {
           detail: { key, item },
         } = event;
 
-        if (type === StateChangeEvent.Type.Deleted) {
+        if (StateChangeEvent.Deleted.is(event)) {
           // Remove the item with the deleted key from the array
           return acc.filter((i) => i.key !== key);
         }

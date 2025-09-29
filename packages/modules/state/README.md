@@ -29,9 +29,16 @@ const modules = await configurator.initialize();
 
 // Use the state provider
 const stateProvider = modules.state;
+
+// Store and retrieve data
 await stateProvider.storeItem({ key: 'example', value: 'Hello, World!' });
 const item = await stateProvider.getItem('example');
 console.log(item?.value); // "Hello, World!"
+
+// Observe changes reactively
+stateProvider.observeItem('example').subscribe(item => {
+  console.log('Item updated:', item?.value);
+});
 ```
 
 ## Module Setup
@@ -304,16 +311,16 @@ import { PouchDbStorage } from '@equinor/fusion-framework-module-state/storage';
 
 enableStateModule(configurator, async (builder) => {
   // Create local PouchDB storage
-  const localStorage = PouchDbStorage.CreateDb('my-app-state');
-  const remoteStorage = PouchDbStorage.CreateDb('http://localhost:5984/my-app-state');
+  const localDb = PouchDbStorage.CreateDb('my-app-state');
+  const remoteDb = PouchDbStorage.CreateDb('http://localhost:5984/my-app-state');
 
   // Set up two-way sync with remote CouchDB
-  localStorage.sync(remoteStorage, {
+  localDb.sync(remoteDb, {
     live: true,
     retry: true
   });
 
-  builder.setStorage(new PouchDbStorage(localStorage));
+  builder.setStorage(new PouchDbStorage(localDb));
 });
 ```
 
@@ -322,6 +329,25 @@ enableStateModule(configurator, async (builder) => {
 - **`retry: true`**: Automatically retries replication on connection failures
 - **`filter`**: Apply custom filters to replicate only specific documents
 - **`since`**: Start replication from a specific sequence number
+
+### Monitoring Sync Progress
+
+The state module provides comprehensive sync event monitoring through RxJS observables:
+
+```typescript
+import { enableStateModule } from '@equinor/fusion-framework-module-state';
+import { StateSyncEvent } from '@equinor/fusion-framework-module-state/events';
+
+enableStateModule(configurator, async (builder) => {
+  const localDb = PouchDbStorage.CreateDb('my-app-state');
+  const remoteDb = PouchDbStorage.CreateDb('http://localhost:5984/my-app-state');
+
+  // Start sync
+  const sync = localDb.sync(remoteDb, { live: true, retry: true });
+
+  builder.setStorage(new PouchDbStorage(localDb));
+});
+
 ### Custom Storage Implementation
 
 If you need to use a different storage backend, you can create your own by implementing the `IStorage` interface. This allows you to integrate with any storage system (e.g., custom APIs, browser storage, or other databases).
@@ -535,6 +561,123 @@ Response object for bulk item retrieval operations.
 - **`offset?: number`**
   - Current offset in the result set.
 
+## Testing
+
+The state module includes comprehensive test utilities and examples:
+
+```typescript
+import { StateProvider } from '@equinor/fusion-framework-module-state';
+import { createMockStorage } from '@equinor/fusion-framework-module-state/__tests__/storage.mock';
+
+// Create a mock storage for testing
+const mockStorage = createMockStorage();
+const stateProvider = new StateProvider({ storage: mockStorage });
+
+// Test your state operations
+describe('State Management', () => {
+  it('should store and retrieve items', async () => {
+    await stateProvider.storeItem({ key: 'test', value: 'data' });
+    const item = await stateProvider.getItem('test');
+    expect(item?.value).toBe('data');
+  });
+});
+```
+
+## Migration Guide
+
+### Upgrading from v1.x to v2.x
+
+**Breaking Changes:**
+- Event system has been refactored - see [events documentation](#monitoring-sync-progress)
+- Storage interface methods are now async by default
+- `observeItems` now returns `StateItem<T>[]` instead of `StateItem[]`
+
+**Migration Steps:**
+1. Update event subscriptions to use new event types
+2. Add `await` to storage operations if using custom storage
+3. Update type annotations for `observeItems` return values
+
+### From Other State Libraries
+
+**Redux Migration:**
+```typescript
+// Before (Redux)
+const store = createStore(reducer);
+store.dispatch({ type: 'SET_DATA', payload: data });
+
+// After (Fusion State)
+await stateProvider.storeItem({ key: 'data', value: data });
+```
+
+**Zustand Migration:**
+```typescript
+// Before (Zustand)
+const useStore = create((set) => ({ data, setData }));
+useStore.getState().setData(newData);
+
+// After (Fusion State)
+await stateProvider.storeItem({ key: 'data', value: newData });
+```
+
+## Performance Considerations
+
+### Optimization Tips
+
+1. **Use prefix filtering** for large datasets:
+   ```typescript
+   // Good: Filter by prefix for better performance
+   const userPrefs = await stateProvider.getAllItems({ prefix: 'user.' });
+
+   // Avoid: Loading all items when you only need a subset
+   const allItems = await stateProvider.getAllItems();
+   const userPrefs = allItems.items.filter(item => item.key.startsWith('user.'));
+   ```
+
+2. **Batch operations** for multiple changes:
+   ```typescript
+   // Good: Single bulk operation
+   await stateProvider.storeItems([
+     { key: 'user.name', value: 'John' },
+     { key: 'user.email', value: 'john@example.com' }
+   ]);
+
+   // Avoid: Multiple individual operations
+   await stateProvider.storeItem({ key: 'user.name', value: 'John' });
+   await stateProvider.storeItem({ key: 'user.email', value: 'john@example.com' });
+   ```
+
+3. **Unsubscribe from observables** when components unmount:
+   ```typescript
+   // Good: Proper cleanup
+   useEffect(() => {
+     const subscription = stateProvider.observeItem('data').subscribe(setData);
+     return () => subscription.unsubscribe();
+   }, []);
+
+   // Avoid: Memory leaks
+   stateProvider.observeItem('data').subscribe(setData); // Never unsubscribed
+   ```
+
+### Memory Management
+
+- **PouchDB Storage**: Uses IndexedDB in browsers, which has storage limits
+- **Memory Storage**: All data kept in memory - lost on page refresh
+- **Custom Storage**: Depends on your implementation
+
+### Sync Performance
+
+- **Live sync**: Provides real-time updates but increases network usage
+- **Batch sync**: Reduces network calls but may show stale data
+- **Filtered sync**: Only sync relevant data to improve performance
+
 ## Development
 
 This package is part of the [Fusion Framework monorepo](https://github.com/equinor/fusion-framework).
+
+### Contributing
+
+We welcome contributions! Please see our [contributing guidelines](../../CONTRIBUTING.md) for details on:
+- Code style and formatting
+- Testing requirements
+- Pull request process
+- Release process
