@@ -42,3 +42,39 @@ export type StorageItem<T extends AllowedValue = AllowedValue> = {
   key: string;
   value: T;
 };
+
+/**
+ * Represents the result of a replication operation for a single batch of changes.
+ *
+ * @template T - The type of content being replicated
+ */
+export interface SyncReplicationResult<T extends AllowedValue = AllowedValue> {
+  /** Array of items involved in the replication */
+  items: Array<StorageItem<T> & { _id?: string }>;
+  /** Number of documents successfully written */
+  item_written: number;
+  /** Number of documents read during replication */
+  item_read: number;
+  /** Number of document write failures during replication */
+  items_write_failures?: number;
+  /** Time when replication started */
+  start_time: Date;
+  /** Whether the replication operation was successful */
+  ok: boolean;
+  /** Array of errors encountered during replication */
+  errors: unknown[];
+}
+
+/**
+ * Represents the result of a sync operation in a specific direction.
+ *
+ * @template T - The type of content being synced
+ */
+export interface SyncResult<T extends AllowedValue = AllowedValue> {
+  /** Direction of the sync operation */
+  direction: 'push' | 'pull';
+  /** Details about the replication operation */
+  change: SyncReplicationResult<T>;
+}
+
+export type StateSyncStatus = 'active' | 'paused' | 'unknown';
