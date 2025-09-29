@@ -6,19 +6,55 @@ import { execSync } from 'node:child_process';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
 import type { GitClientProtocol } from '../../../../bin/helpers/ProjectTemplateRepository.js';
 
+// Common SSH private key file extensions
+const PRIVATE_KEY_EXTENSIONS = ['.rsa', '.ed25519', '.ecdsa', '.dsa'] as const;
+const PRIVATE_KEY_PATTERN = /(_rsa|_ed25519|_ecdsa|_dsa)$/;
+
+// Known non-private-key files in .ssh directory
+const NON_KEY_FILES = new Set([
+  'known_hosts',
+  'config',
+  'authorized_keys',
+  'authorized_keys2',
+  'ssh_config',
+  'ssh_known_hosts',
+]);
+
 /**
  * Checks if Git has SSH configuration via core.sshCommand
- * @param logger - Optional logger for debug output
  * @returns true if SSH command is configured, false otherwise
  */
-function checkGitSSHConfig(logger?: ConsoleLogger): boolean {
+function checkGitSSHConfig(): boolean {
   try {
     execSync('git config core.sshCommand', { stdio: 'ignore' });
-    logger?.debug('SSH configuration detected via git config');
     return true;
   } catch {
     return false;
   }
+}
+
+/**
+ * Checks if a filename represents an SSH private key file
+ * @param filename - The filename to check
+ * @returns true if the file appears to be an SSH private key, false otherwise
+ */
+function isSSHPrivateKey(filename: string): boolean {
+  // Skip public key files
+  if (filename.endsWith('.pub')) {
+    return false;
+  }
+
+  // Skip known non-key files
+  if (NON_KEY_FILES.has(filename)) {
+    return false;
+  }
+
+  // Check for standard naming patterns
+  const isStandardName = filename.startsWith('id_');
+  const hasPrivateKeyExtension = PRIVATE_KEY_EXTENSIONS.some((ext) => filename.endsWith(ext));
+  const hasServiceKeySuffix = PRIVATE_KEY_PATTERN.test(filename);
+
+  return isStandardName || hasPrivateKeyExtension || hasServiceKeySuffix;
 }
 
 /**
@@ -35,8 +71,8 @@ function checkSSHKeys(logger?: ConsoleLogger): boolean {
 
     // Use withFileTypes for better performance and stop on first match
     for (const dirent of readdirSync(sshDir, { withFileTypes: true })) {
-      if (dirent.isFile() && dirent.name.startsWith('id_') && !dirent.name.endsWith('.pub')) {
-        logger?.debug('SSH private key detected');
+      if (dirent.isFile() && isSSHPrivateKey(dirent.name)) {
+        logger?.debug(`SSH private key detected: ${dirent.name}`);
         return true;
       }
     }
@@ -65,7 +101,11 @@ export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClie
   logger?.debug('Detecting SSH configuration...');
 
   // Check for SSH configuration in order of preference
-  const hasSSHConfig = checkGitSSHConfig(logger) || checkSSHKeys(logger);
+  const hasSSHConfig = checkGitSSHConfig() || checkSSHKeys(logger);
+
+  if (hasSSHConfig) {
+    logger?.debug('SSH configuration detected');
+  }
 
   // Prepare SSH option with explicit disabled state
   const sshDisabledMessage = hasSSHConfig
