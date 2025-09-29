@@ -1,5 +1,13 @@
 # Change Log
 
+## 12.1.1
+
+### Patch Changes
+
+- [#3463](https://github.com/equinor/fusion-framework/pull/3463) [`5ab3d2d`](https://github.com/equinor/fusion-framework/commit/5ab3d2d7e28b4266a0e65b0834889b6269881d23) Thanks [@odinr](https://github.com/odinr)! - Fix Git protocol selection to respect user's explicit HTTPS choice instead of auto-detecting SSH when available.
+
+  Fixes: https://github.com/equinor/fusion-framework/issues/3462
+
 ## 12.1.0
 
 ### Minor Changes
