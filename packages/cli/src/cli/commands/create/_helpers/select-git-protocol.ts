@@ -72,7 +72,7 @@ function checkSSHKeys(logger?: ConsoleLogger): boolean {
     // Use withFileTypes for better performance and stop on first match
     for (const dirent of readdirSync(sshDir, { withFileTypes: true })) {
       if (dirent.isFile() && isSSHPrivateKey(dirent.name)) {
-        logger?.debug(`SSH private key detected: ${dirent.name}`);
+        logger?.debug('SSH private key detected in .ssh directory');
         return true;
       }
     }
