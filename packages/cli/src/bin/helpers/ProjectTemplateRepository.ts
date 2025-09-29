@@ -147,7 +147,7 @@ export class ProjectTemplateRepository {
       this._setupOutputHandler();
 
       // Auto-detect protocol based on SSH configuration now that git is properly initialized
-      if (!this.#protocol || this.#protocol === 'https') {
+      if (!this.#protocol) {
         try {
           const sshCommand = await this.#git.getConfig('core.sshCommand');
           this.#protocol = sshCommand ? 'ssh' : 'https';
