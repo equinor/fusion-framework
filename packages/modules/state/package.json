@@ -1,0 +1,74 @@
+{
+  "name": "@equinor/fusion-framework-module-state",
+  "version": "0.0.0",
+  "description": "A reactive state management module for the Fusion Framework with type-safe storage and observation capabilities",
+  "type": "module",
+  "main": "dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./events": {
+      "import": "./dist/esm/events/index.js",
+      "types": "./dist/types/storeventsage/index.d.ts"
+    },
+    "./storage": {
+      "import": "./dist/esm/storage/index.js",
+      "types": "./dist/types/storage/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./README.md": "./README.md"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "storage": [
+        "dist/types/storage/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest run --reporter=verbose",
+    "test:watch": "vitest --reporter=verbose --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/state"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^",
+    "events": "^3.3.0",
+    "fast-deep-equal": "^3.1.3",
+    "immer": "^9.0.16",
+    "pouchdb": "^9.0.0",
+    "rxjs": "^7.8.1",
+    "uuid": "^11.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@types/pouchdb": "^6.4.2",
+    "@types/uuid": "^10.0.0",
+    "fake-indexeddb": "^6.2.0",
+    "happy-dom": "^18.0.1",
+    "pouchdb-adapter-idb": "^9.0.0",
+    "typescript": "^5.8.2",
+    "vitest": "^2.0.5"
+  }
+}
