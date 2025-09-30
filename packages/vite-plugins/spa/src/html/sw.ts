@@ -176,10 +176,17 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
 });
 
 // Handle configuration from main thread
-self.addEventListener('message', (event: ExtendableMessageEvent) => {
+self.addEventListener('message', async (event: ExtendableMessageEvent) => {
   const { type, config } = event.data;
   if (type === 'INIT_CONFIG') {
     resourceConfigurations = config as ResourceConfiguration[];
+
+    // CRITICAL: Force skipWaiting() and claim clients to ensure this service worker takes control
+    // This handles both waiting and already-active service workers during hard refresh
+    // - skipWaiting() forces activation if the service worker is in waiting state
+    // - clients.claim() takes control of all clients immediately
+    await self.skipWaiting();
+    await self.clients.claim();
   }
 });
 
