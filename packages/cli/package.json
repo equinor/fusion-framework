@@ -102,10 +102,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@equinor/fusion-framework-dev-portal": "workspace:^",
-    "@equinor/fusion-framework-dev-server": "workspace:^",
-    "@equinor/fusion-framework-module-msal-node": "workspace:^",
-    "@equinor/fusion-imports": "workspace:^",
+    "@equinor/fusion-framework-dev-portal": "workspace:*",
+    "@equinor/fusion-framework-dev-server": "workspace:*",
+    "@equinor/fusion-framework-module-msal-node": "workspace:*",
+    "@equinor/fusion-imports": "workspace:*",
     "@types/inquirer": "^9.0.9",
     "commander": "^14.0.1",
     "deepmerge": "^4.3.1",
@@ -120,10 +120,10 @@
     "zod": "^4.1.8"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-app": "workspace:^",
-    "@equinor/fusion-framework-module-http": "workspace:^",
-    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-app": "workspace:*",
+    "@equinor/fusion-framework-module-http": "workspace:*",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:*",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
