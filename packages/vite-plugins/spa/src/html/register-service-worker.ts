@@ -106,7 +106,6 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
           navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
           resolve();
         };
-        
         // If controllerchange fires, the service worker has taken control
         navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
 
