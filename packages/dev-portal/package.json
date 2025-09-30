@@ -35,6 +35,7 @@
     "@equinor/fusion-framework-module-feature-flag": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-framework-react": "workspace:^",
     "@equinor/fusion-framework-react-components-bookmark": "workspace:^",
     "@equinor/fusion-framework-react-components-people-provider": "workspace:^",

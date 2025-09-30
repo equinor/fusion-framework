@@ -1,6 +1,6 @@
 import { enableAppModule } from '@equinor/fusion-framework-module-app';
 import { enableBookmark } from '@equinor/fusion-framework-react-module-bookmark';
-import type { FrameworkConfigurator, Fusion } from '@equinor/fusion-framework';
+import type { FrameworkConfigurator } from '@equinor/fusion-framework';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableServices } from '@equinor/fusion-framework-module-services';
 import { enableFeatureFlagging } from '@equinor/fusion-framework-module-feature-flag';
@@ -9,7 +9,27 @@ import {
   createUrlPlugin,
 } from '@equinor/fusion-framework-module-feature-flag/plugins';
 
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { version } from './version';
+
 export const configure = async (config: FrameworkConfigurator) => {
+  enableTelemetry(config, {
+    attachConfiguratorEvents: true,
+    configure: (builder, ref) => {
+      builder.setMetadata(() => ({
+        fusion: {
+          type: 'portal-telemetry',
+          portal: {
+            version,
+            name: 'Fusion Dev Portal',
+          },
+        },
+      }));
+      builder.setDefaultScope(['portal']);
+      builder.setParent(ref.telemetry);
+    },
+  });
+
   enableAppModule(config);
 
   enableNavigation(config);
@@ -43,13 +63,9 @@ export const configure = async (config: FrameworkConfigurator) => {
     builder.addPlugin(createUrlPlugin(['fusionDebug']));
   });
 
-  config.onConfigured(() => {
-    console.log('framework config done');
-  });
-
   config.onInitialized(async (modules) => {
-    console.debug('📒 subscribing to all events');
-    window.Fusion = { modules } as Fusion; // expose Fusion instance
+    // @ts-ignore
+    window.Fusion = { modules };
   });
 };
 
