@@ -2,7 +2,11 @@ import { useCallback } from 'react';
 
 import { useCurrentAppModules } from '@equinor/fusion-framework-react/app';
 
-import type { ContextItem, ContextModule } from '@equinor/fusion-framework-module-context';
+import type {
+  ContextItem,
+  ContextModule,
+  IContextProvider,
+} from '@equinor/fusion-framework-module-context';
 import { extractContextIdFromPath } from '@equinor/fusion-framework-module-context/utils';
 
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
@@ -12,6 +16,48 @@ import { EMPTY } from 'rxjs';
 import { useFrameworkModule } from '@equinor/fusion-framework-react';
 
 type CurrentAppModules = [ContextModule, NavigationModule];
+
+/**
+ * Generates a pathname for navigation based on the current pathname,
+ * context item, and optional context provider. If a `pathContextId` is provided,
+ * it replaces the existing context ID in the pathname. Otherwise, it constructs
+ * a new pathname using the context item's ID.
+ *
+ * @param currentPathname - The current URL pathname.
+ * @param item - The context item containing the ID to be used in the pathname.
+ * @param context - An optional context provider with a method to generate a pathname from the context item.
+ * @param pathContextId - An optional context ID present in the current URL to be replaced.
+ * @returns The generated pathname for navigation.
+ */
+const generatePathname = (
+  currentPathname: string,
+  item: ContextItem,
+  context?: IContextProvider,
+  pathContextId?: string,
+) => {
+  if (pathContextId) {
+    // context id exists in the url, replace it with the new context id
+    const pathname =
+      context?.generatePathFromContext?.(item, currentPathname) ??
+      currentPathname.replace(pathContextId, item.id);
+
+    console.debug(
+      `🌍 Portal: context changed, navigating to app's context url:`,
+      `found context id [${pathContextId}] in url, replacing with [${pathname}]`,
+    );
+
+    return pathname;
+  }
+  // could not find context id in the url, set the path to the new context id
+  const pathname = context?.generatePathFromContext?.(item, currentPathname) ?? `/${item?.id}`;
+
+  console.debug(
+    `🌍 Portal: context changed, navigating to app's context url:`,
+    `could not find context id in url, navigating to path [${pathname}]`,
+  );
+
+  return pathname;
+};
 
 /**
  * when current application changes, this hook will observe the application module instances.
@@ -63,25 +109,12 @@ export const useAppContextNavigation = () => {
           return;
         }
 
-        // extract the context id from the current path
-        const pathContextId = extractContextIdFromPath(currentPathname);
-
-        // generate path to the selected context
-        const pathname = pathContextId
-          ? item
-            ? // context id exists in the url, replace it with the new context id
-              currentPathname.replace(pathContextId, item.id)
-            : // context was cleared, set the path to the root
-              '/'
-          : // could not find context id in the url, set the path to the new context id
-            `/${item?.id}`;
-
-        console.debug(
-          '🌍 Portal:',
-          "context changed, navigating to app's context url:",
-          pathContextId
-            ? `found context id [${pathContextId}] in url, ${item ? `replacing with [${item.id}]` : 'context was cleared, navigating to root'}`
-            : `could not find context id in url, navigating to context id [${item ? item.id : 'root'}]`,
+        const pathname = generatePathname(
+          currentPathname,
+          item,
+          context,
+          context?.extractContextIdFromPath?.(currentPathname) ??
+            extractContextIdFromPath(currentPathname),
         );
 
         // if app has its own navigation, use it to navigate
@@ -98,6 +131,7 @@ export const useAppContextNavigation = () => {
         navigation,
         // application navigation instance, may change when the application changes
         appNavigation,
+        context,
       ],
     ),
   );
