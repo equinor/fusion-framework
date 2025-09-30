@@ -21,3 +21,8 @@ Fixed service worker not intercepting requests during hard refresh in developmen
 2. **register-service-worker.ts**: Wait for controller with polling and timeout fallback; disable service worker HTTP caching
 
 This ensures service workers always activate and take control during hard refresh, properly intercepting and authenticating requests in development mode.
+
+reporter: [v3gard](https://github.com/v3gard)
+
+resolves: [Force refresh (CTRL+Shift+R) causes app to throw #679
+](https://github.com/equinor/fusion/issues/679)
