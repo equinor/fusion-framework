@@ -1,4 +1,4 @@
-import { from, lastValueFrom, type ObservableInput } from 'rxjs';
+import { EMPTY, from, lastValueFrom, type ObservableInput } from 'rxjs';
 
 import {
   BaseConfigBuilder,
@@ -9,10 +9,12 @@ import {
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
 
 import { type IServiceDiscoveryClient, ServiceDiscoveryClient } from './client';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 
 export interface ServiceDiscoveryConfig {
   /** Service Discovery client */
   discoveryClient: IServiceDiscoveryClient;
+  telemetry?: ITelemetryProvider;
 }
 
 export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDiscoveryConfig> {
@@ -22,6 +24,11 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
   ): Promise<ServiceDiscoveryConfig> {
     if (!init.hasModule('http')) {
       throw new Error('http module is required');
+    }
+
+    if (!this._has('telemetry') && init.hasModule('telemetry')) {
+      const telemetryProvider = await init.requireInstance('telemetry');
+      this.setTelemetryProvider(telemetryProvider);
     }
 
     // if discoveryClient is not configured, check if http module has a client with key 'service_discovery'
@@ -69,6 +76,15 @@ export class ServiceDiscoveryConfigurator extends BaseConfigBuilder<ServiceDisco
       'discoveryClient',
       typeof discoveryClient === 'function' ? discoveryClient : async () => discoveryClient,
     );
+  }
+
+  /**
+   * Sets the telemetry provider.
+   *
+   * @param telemetry - An instance of `ITelemetryProvider` to be set for telemetry tracking.
+   */
+  setTelemetryProvider(telemetry: ITelemetryProvider): void {
+    this._set('telemetry', telemetry);
   }
 
   /**
