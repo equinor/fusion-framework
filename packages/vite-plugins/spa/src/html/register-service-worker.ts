@@ -116,7 +116,7 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
             navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
             resolve();
           }
-        }, 50);
+        }, 200);
 
         setTimeout(() => {
           clearInterval(checkInterval);
