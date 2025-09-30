@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework",
-  "version": "7.3.19",
+  "version": "7.3.16-next.0",
   "description": "",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
@@ -14,11 +14,7 @@
     "build": "tsc -b",
     "prepack": "pnpm build"
   },
-  "keywords": [
-    "fusion",
-    "fusion-framework",
-    "utility"
-  ],
+  "keywords": ["fusion", "fusion-framework", "utility"],
   "homepage": "https://equinor.github.io/fusion-framework/",
   "author": {
     "name": "Odin thomas Rochmann",
@@ -42,6 +38,7 @@
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {

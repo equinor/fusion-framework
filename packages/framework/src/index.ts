@@ -1,5 +1,5 @@
 import type { FrameworkEvent, FrameworkEventInit } from '@equinor/fusion-framework-module-event';
-import type { Fusion } from './types';
+import type { Fusion } from './types.js';
 
 declare module '@equinor/fusion-framework-module-event' {
   interface FrameworkEventMap {
@@ -21,6 +21,6 @@ export {
   FrameworkConfigurator as FusionConfigurator,
 } from './FrameworkConfigurator';
 
-export type { FusionModules, FusionModulesInstance, Fusion, FusionRenderFn } from './types';
+export * from './types.js';
 
 export { default, init } from './init';
