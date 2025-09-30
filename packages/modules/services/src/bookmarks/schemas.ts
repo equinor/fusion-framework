@@ -13,7 +13,7 @@ export const ApiPersonSchema = {
     name: z.string(),
     mail: z.string().optional(),
     phoneNumber: z.string().optional(),
-    jobTitle: z.string().optional(),
+    jobTitle: z.string().nullish(),
     accountType: z.enum(['Employee', 'Consultant', 'External', 'Application', 'Local']).optional(),
     accountClassification: z.enum(['Unclassified', 'Internal', 'External']).nullish(),
   }),
