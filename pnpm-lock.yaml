@@ -668,16 +668,16 @@ importers:
   packages/cli:
     dependencies:
       '@equinor/fusion-framework-dev-portal':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../dev-portal
       '@equinor/fusion-framework-dev-server':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../dev-server
       '@equinor/fusion-framework-module-msal-node':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/msal-node
       '@equinor/fusion-imports':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../utils/imports
       '@types/inquirer':
         specifier: ^9.0.9
@@ -717,16 +717,16 @@ importers:
         version: 4.1.11
     devDependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/module
       '@equinor/fusion-framework-module-app':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/app
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/http
       '@equinor/fusion-framework-module-service-discovery':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../modules/service-discovery
       '@rollup/plugin-commonjs':
         specifier: ^28.0.3
@@ -909,13 +909,13 @@ importers:
   packages/dev-server:
     dependencies:
       '@equinor/fusion-framework-vite-plugin-api-service':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../vite-plugins/api-service
       '@equinor/fusion-framework-vite-plugin-spa':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../vite-plugins/spa
       '@equinor/fusion-log':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../utils/log
       '@vitejs/plugin-react':
         specifier: ^5.0.2
@@ -2001,16 +2001,16 @@ importers:
         version: 4.6.2
     devDependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/module
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/http
       '@equinor/fusion-framework-module-msal':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/msal
       '@equinor/fusion-framework-module-service-discovery':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../modules/service-discovery
       '@rollup/plugin-commonjs':
         specifier: ^28.0.3
