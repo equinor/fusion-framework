@@ -101,28 +101,25 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
     // This ensures the service worker can intercept fetch requests
     if (!navigator.serviceWorker.controller) {
       await new Promise<void>((resolve) => {
-        const onControllerChange = () => {
+        let checkInterval: NodeJS.Timeout;
+
+        const finish = () => {
           clearInterval(checkInterval);
           navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
           resolve();
         };
+
+        const onControllerChange = () => finish();
+
         // If controllerchange fires, the service worker has taken control
         navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
 
         // Polling fallback and timeout to prevent infinite waiting
-        const checkInterval = setInterval(() => {
-          if (navigator.serviceWorker.controller) {
-            clearInterval(checkInterval);
-            navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-            resolve();
-          }
+        checkInterval = setInterval(() => {
+          if (navigator.serviceWorker.controller) finish();
         }, 200);
 
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-          resolve();
-        }, 5000);
+        setTimeout(finish, 5000);
       });
     }
 
