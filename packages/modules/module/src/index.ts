@@ -5,6 +5,8 @@ export type {
   IModulesConfig,
   Module,
   ModuleConfigType,
+  ModuleEvent,
+  ModuleEventLevel,
   ModuleInitializerArgs,
   ModuleInstance,
   ModuleKey,
