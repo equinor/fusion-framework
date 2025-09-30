@@ -54,7 +54,9 @@
     "@equinor/fusion-framework-module-app": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
-    "@equinor/fusion-framework-module-msal": "workspace:^"
+    "@equinor/fusion-framework-module-msal": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
