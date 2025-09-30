@@ -1,5 +1,18 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.3
+
+### Patch Changes
+
+- [`56c27ec`](https://github.com/equinor/fusion-framework/commit/56c27ec9de03e07e725eecfdf2c028a1e29b6ece) Thanks [@odinr](https://github.com/odinr)! - Updated workspace dependencies to use exact version specifiers for consistent release behavior.
+
+  - Changed workspace dependencies from `workspace:^` to `workspace:*` across CLI, dev-server, and SPA vite plugin packages
+  - Ensures exact version resolution within the monorepo for predictable builds and releases
+  - Affects both dependencies and devDependencies where applicable
+
+- Updated dependencies [[`56c27ec`](https://github.com/equinor/fusion-framework/commit/56c27ec9de03e07e725eecfdf2c028a1e29b6ece)]:
+  - @equinor/fusion-framework-vite-plugin-spa@1.1.3
+
 ## 1.1.2
 
 ### Patch Changes
