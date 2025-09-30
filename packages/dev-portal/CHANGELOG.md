@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.1.4
+
+### Patch Changes
+
+- [#3471](https://github.com/equinor/fusion-framework/pull/3471) [`1db21e2`](https://github.com/equinor/fusion-framework/commit/1db21e21410f37bd9a8c1d31ab4f68452578a51e) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Re-add support for custom context path extraction and generation
+
 ## 1.1.3
 
 ### Patch Changes

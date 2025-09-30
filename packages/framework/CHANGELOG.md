@@ -1,5 +1,16 @@
 # Change Log
 
+## 7.3.20
+
+### Patch Changes
+
+- [#3465](https://github.com/equinor/fusion-framework/pull/3465) [`df88854`](https://github.com/equinor/fusion-framework/commit/df888548eb50dd2d130e6651596ab4f7fac41f2c) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump rollup from 4.52.2 to 4.52.3
+
+  This updates the rollup build tool to the latest patch version, which includes bug fixes for native loader environments that don't support reports.
+
+- Updated dependencies [[`5b2b300`](https://github.com/equinor/fusion-framework/commit/5b2b300492ff7f3e2bf9aa10d6697178486028ec)]:
+  - @equinor/fusion-framework-module-services@7.1.2
+
 ## 7.3.19
 
 ### Patch Changes

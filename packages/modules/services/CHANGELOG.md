@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.1.2
+
+### Patch Changes
+
+- [#3477](https://github.com/equinor/fusion-framework/pull/3477) [`5b2b300`](https://github.com/equinor/fusion-framework/commit/5b2b300492ff7f3e2bf9aa10d6697178486028ec) Thanks [@Noggling](https://github.com/Noggling)! - Made the `jobTitle` field in `ApiPersonSchema` nullable to ensure external users can access bookmarks even when the `jobTitle` field is not set.
+
+  ref:[668](https://github.com/equinor/fusion/issues/668)
+  reporter: [EdwardBrunton](https://github.com/EdwardBrunton)
+
 ## 7.1.1
 
 ### Patch Changes
