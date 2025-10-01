@@ -24,7 +24,6 @@
         "useUniqueElementIds": "off"
       },
       "complexity": {
-        "noBannedTypes": "warn",
         "useLiteralKeys": "error",
         "useOptionalChain": "error",
         "noCommaOperator": "warn"
