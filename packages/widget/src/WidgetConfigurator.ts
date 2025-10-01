@@ -81,7 +81,6 @@ export class WidgetConfigurator<
 {
   constructor() {
     super([event, http, auth]);
-    this.logger = new ModuleConsoleLogger('AppConfigurator');
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {

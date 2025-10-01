@@ -76,7 +76,6 @@ export class AppConfigurator<
 {
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
-    this.logger = new ModuleConsoleLogger('AppConfigurator');
   }
 
   public configureHttp(...args: Parameters<typeof configureHttp>) {
