@@ -158,7 +158,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     return version;
   }
 
-  #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>();
+  // Buffer up to 100 events to prevent memory leaks while ensuring telemetry can capture
+  // module events during configuration. Telemetry attaches via mapConfiguratorEvents and
+  // needs to replay events that occurred before it was ready.
+  // Memory usage: ~24KB for 100 events at ~240 bytes each.
+  #event$: ReplaySubject<ModuleEvent> = new ReplaySubject<ModuleEvent>(100);
   public get event$(): IModulesConfigurator<TModules, TRef>['event$'] {
     return this.#event$.asObservable();
   }
