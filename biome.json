@@ -25,8 +25,7 @@
       },
       "complexity": {
         "useLiteralKeys": "error",
-        "useOptionalChain": "error",
-        "noCommaOperator": "warn"
+        "useOptionalChain": "error"
       },
       "performance": {
         "noAccumulatingSpread": "warn"
