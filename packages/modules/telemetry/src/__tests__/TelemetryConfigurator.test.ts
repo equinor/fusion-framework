@@ -3,19 +3,17 @@ import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
 import type { TelemetryAdapter } from '../types.js';
 import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
+import { resolveMetadata } from '../utils/resolve-metadata.js';
 import { lastValueFrom } from 'rxjs';
-import { applyMetadata } from '../utils/resolve-metadata.js';
-import { TelemetryLevel, TelemetryType } from '../static.js';
 
 function createAdapter(id: string): TelemetryAdapter {
   return {
     identifier: id,
-    processItem: vi.fn(),
+    track: vi.fn() as TelemetryAdapter['track'],
   };
 }
 
 const createConfigCallbackArgs = (): ConfigBuilderCallbackArgs => ({
-  config: {},
   hasModule: vi.fn(),
   requireInstance: vi.fn(),
 });
@@ -37,7 +35,7 @@ describe('TelemetryConfigurator', () => {
     const result = configurator.setAdapter(adapterA).setAdapter(adapterB);
     expect(result).toBe(configurator);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
 
     const adapters = config.adapters;
     expect(adapters).toContain(adapterA);
@@ -50,7 +48,7 @@ describe('TelemetryConfigurator', () => {
     const adapterA2 = createAdapter('a');
     configurator.setAdapter(adapterA1).setAdapter(adapterA2);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
 
     const adapters = config.adapters;
     expect(adapters).toContain(adapterA2);
@@ -58,37 +56,29 @@ describe('TelemetryConfigurator', () => {
     expect(adapters?.length).toBe(1);
   });
 
-  it('setMetadata should set metadata', async () => {
-    const expected = { foo: 'bar' };
-    configurator.setMetadata(expected);
+  it('setMetadata should set metadata and allow chaining', async () => {
+    const metadata = { foo: 'bar' };
+    configurator.setMetadata(metadata);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
-    const result = await lastValueFrom(
-      applyMetadata(config.metadata, {
-        item: { name: 'test', level: TelemetryLevel.Debug, type: TelemetryType.Custom, scope: [] },
-      }),
-    );
-    expect(result.metadata).toMatchObject(expected);
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
+    const result = await lastValueFrom(resolveMetadata(config.metadata));
+    expect(result).toMatchObject(metadata);
   });
 
   it('setMetadata should accept a callback', async () => {
     const expected = { foo: 'bar' };
     configurator.setMetadata(async () => expected);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
-    const result = await lastValueFrom(
-      applyMetadata(config.metadata, {
-        item: { name: 'test', level: TelemetryLevel.Debug, type: TelemetryType.Custom, scope: [] },
-      }),
-    );
-    expect(result.metadata).toMatchObject(expected);
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
+    const result = await lastValueFrom(resolveMetadata(config.metadata));
+    expect(result).toMatchObject(expected);
   });
 
   it('setDefaultScope should set defaultScope and allow chaining', async () => {
     const scope = ['user', 'session'];
     configurator.setDefaultScope(scope);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
     expect(config?.defaultScope).toBe(scope);
   });
 
@@ -97,14 +87,14 @@ describe('TelemetryConfigurator', () => {
     const result = configurator.setParent(parent);
     expect(result).toBe(configurator);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
     expect(config?.parent).toBe(parent);
   });
 
   it('setParent should accept undefined to remove parent', async () => {
     configurator.setParent(undefined);
 
-    const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
+    const config = await configurator.createConfigAsync(createConfigCallbackArgs());
     expect(config?.parent).toBe(undefined);
   });
 });
