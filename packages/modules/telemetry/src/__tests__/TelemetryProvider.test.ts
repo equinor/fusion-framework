@@ -126,7 +126,6 @@ describe('TelemetryProvider', () => {
   });
 });
 
-
 describe('Measurement', () => {
   let provider: TelemetryProvider;
   let adapter: TelemetryAdapter;
