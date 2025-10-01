@@ -1,38 +1,3 @@
-# Fusion Framework Telemetry Module
-
-- [Fusion Framework Telemetry Module](#fusion-framework-telemetry-module)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-  - [Usage](#usage)
-    - [Tracking Events and Data](#tracking-events-and-data)
-    - [Telemetry Types](#telemetry-types)
-    - [Telemetry Levels](#telemetry-levels)
-  - [Measurements](#measurements)
-    - [Basic Measurement](#basic-measurement)
-    - [Resolving Measurements](#resolving-measurements)
-    - [Executing Measurements](#executing-measurements)
-    - [Cloning Measurements](#cloning-measurements)
-    - [Using Statement](#using-statement)
-  - [Adapters](#adapters)
-    - [Application Insights Adapter](#application-insights-adapter)
-      - [Installation](#installation-1)
-      - [Configuration](#configuration-1)
-      - [Example](#example)
-    - [Console Adapter](#console-adapter)
-      - [Installation](#installation-2)
-      - [Configuration](#configuration-2)
-      - [Example](#example-1)
-  - [Advanced Features](#advanced-features)
-    - [Metadata Extractors](#metadata-extractors)
-    - [Filter Functions](#filter-functions)
-    - [Environment Variable Configuration](#environment-variable-configuration)
-  - [Architecture](#architecture)
-  - [Performance Considerations](#performance-considerations)
-  - [Troubleshooting](#troubleshooting)
-
-## Introduction
-
 The Fusion Framework Telemetry Module provides a unified way to track events, metrics, exceptions, and custom telemetry data in your application. It offers a consistent API for logging telemetry data while supporting multiple adapters for different telemetry backends.
 
 Telemetry helps you:
@@ -40,12 +5,6 @@ Telemetry helps you:
 - Track user interactions and behavior
 - Identify errors and exceptions in production
 - Measure performance metrics across your application
-
-## Installation
-
-```bash
-pnpm add @equinor/fusion-framework-module-telemetry
-```
 
 ## Configuration
 
