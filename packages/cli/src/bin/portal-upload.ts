@@ -77,7 +77,9 @@ function processUploadError(response: Response, name: string) {
  * @throws If bundle reading or upload fails, or if the portal service returns an error status.
  * @public
  */
-export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
+export const uploadPortalBundle = async (
+  opt: UploadPortalOptions,
+): Promise<{ name: string; version: string }> => {
   const { log, framework } = opt;
 
   // Load the bundle from file or use the provided AdmZip instance
@@ -100,15 +102,15 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
 
   try {
     // Create a client for the 'portal-config' service
-    const appClient = await framework.serviceDiscovery.createClient('portal-config');
+    const portalClient = await framework.serviceDiscovery.createClient('portal-config');
     // Subscribe to outgoing requests for logging and debugging
-    appClient.request$.subscribe((request: FetchRequest) => {
+    portalClient.request$.subscribe((request: FetchRequest) => {
       log?.info('🌎', 'Executing request to:', request.uri);
       log?.debug('Request:', request);
     });
 
     // Upload the bundle as a zip file to the portal service
-    const response = await appClient.fetch(`/bundles/templates/${name}`, {
+    const response = await portalClient.fetch(`/bundles/templates/${name}`, {
       method: 'POST',
       body: new Blob([content as Uint8Array<ArrayBuffer>], {
         type: 'application/zip',
@@ -141,6 +143,18 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
     // Log and return the successful response
     log?.succeed('Successfully uploaded portal bundle');
     log?.debug('Response:', response);
+
+    try {
+      const result = await (response.json() as Promise<{ version: string }>);
+      return {
+        name,
+        version: result.version,
+      };
+    } catch (error) {
+      throw new Error(
+        `Failed to parse response from portal service: ${error instanceof Error ? error.message : error}`,
+      );
+    }
   } catch (error) {
     // Log and exit on any error during upload
     log?.fail('🙅‍♂️', 'Failed to upload portal bundle');
