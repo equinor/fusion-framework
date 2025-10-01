@@ -164,11 +164,6 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
   }
 
   /**
-   * Logger instance for the configurator.
-   */
-  // public logger: ModuleConsoleLogger = new ModuleConsoleLogger('ModulesConfigurator');
-
-  /**
    * Array of configuration callbacks.
    * @protected
    * @sealed
