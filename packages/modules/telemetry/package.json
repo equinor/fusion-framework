@@ -56,7 +56,7 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "deepmerge": "^4.3.1",
     "rxjs": "^7.8.1",
-    "zod": "^3.25.75"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@equinor/fusion-observable": "workspace:^",
