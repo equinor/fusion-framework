@@ -954,6 +954,9 @@ importers:
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../modules/services
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../modules/telemetry
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -961,6 +964,9 @@ importers:
       typescript:
         specifier: ^5.8.2
         version: 5.9.2
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.1)(happy-dom@18.0.1)(msw@2.11.3(@types/node@24.5.1)(typescript@5.9.2))(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)
 
   packages/modules/ag-grid:
     dependencies:
