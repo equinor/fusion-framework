@@ -8,3 +8,5 @@ Add event system to module configurator for lifecycle tracking.
 - Enhance module configurator with event emission capabilities
 - Support event levels: Error, Warning, Information, Debug
 - Include contextual data, error information, and performance metrics in events
+
+resolves: [#3489](https://github.com/equinor/fusion-framework/issues/3489)
