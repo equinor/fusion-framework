@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TelemetryProvider } from '../TelemetryProvider';
-import { TelemetryType } from '../static';
-import { TelemetryEvent, TelemetryErrorEvent } from '../events';
-import type { TelemetryConfig } from '../TelemetryConfigurator.interface';
-import type { TelemetryAdapter } from '../types';
+import { TelemetryProvider } from '../TelemetryProvider.js';
+import { TelemetryType } from '../static.js';
+import { TelemetryEvent, TelemetryErrorEvent } from '../events.js';
+import type { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
+import type { TelemetryAdapter } from '../types.js';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 vi.stubGlobal('performance', {
@@ -125,6 +125,7 @@ describe('TelemetryProvider', () => {
     });
   });
 });
+
 
 describe('Measurement', () => {
   let provider: TelemetryProvider;
