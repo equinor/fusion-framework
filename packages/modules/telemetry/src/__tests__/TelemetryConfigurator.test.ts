@@ -1,16 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
-import type { TelemetryAdapter } from '../types.js';
+import type { ITelemetryAdapter } from '../TelemetryAdapter.js';
 import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
 import { lastValueFrom } from 'rxjs';
 import { applyMetadata } from '../utils/resolve-metadata.js';
 import { TelemetryLevel, TelemetryType } from '../static.js';
 
-function createAdapter(id: string): TelemetryAdapter {
+function createAdapter(id: string): ITelemetryAdapter {
   return {
     identifier: id,
     processItem: vi.fn(),
+    initialize: vi.fn(),
   };
 }
 

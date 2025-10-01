@@ -1,6 +1,7 @@
-import type { MetadataExtractor, TelemetryAdapter, TelemetryItem } from './types.js';
-import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ObservableInput } from 'rxjs';
+import type { MetadataExtractor, TelemetryItem } from './types.js';
+import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
+import type { ITelemetryAdapter } from './TelemetryAdapter.js';
 
 /**
  * Configuration options for setting up telemetry within the application.
@@ -12,7 +13,7 @@ import type { ObservableInput } from 'rxjs';
  * @property items$ - Optional observable input stream of telemetry items to be processed.
  */
 export type TelemetryConfig = {
-  adapters?: TelemetryAdapter[];
+  adapters?: ITelemetryAdapter[];
   parent?: ITelemetryProvider;
   metadata?: MetadataExtractor;
   defaultScope?: string[];
@@ -41,7 +42,7 @@ export interface ITelemetryConfigurator {
    * @param adapter - The telemetry adapter instance to register.
    * @returns The configurator instance for method chaining.
    */
-  setAdapter(adapter: TelemetryAdapter): this;
+  setAdapter(adapter: ITelemetryAdapter): this;
 
   /**
    * Sets the metadata to be associated with telemetry events.

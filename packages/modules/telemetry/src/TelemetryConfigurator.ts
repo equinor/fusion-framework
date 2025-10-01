@@ -1,13 +1,13 @@
 import { from } from 'rxjs';
-import { concatMap, last, scan } from 'rxjs/operators';
+import { concatMap, last, scan, shareReplay } from 'rxjs/operators';
 
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
-import type { TelemetryAdapter } from './types.js';
 import type { ITelemetryConfigurator, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { toObservable } from '@equinor/fusion-observable';
 import { mergeMetadata } from './utils/merge-telemetry-item.js';
+import type { ITelemetryAdapter } from './TelemetryAdapter.js';
 
 /**
  * Configures telemetry settings for the application.
@@ -37,7 +37,7 @@ export class TelemetryConfigurator
   extends BaseConfigBuilder<TelemetryConfig>
   implements ITelemetryConfigurator
 {
-  #adapters: Record<string, TelemetryAdapter> = {};
+  #adapters: Record<string, ITelemetryAdapter> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
@@ -50,6 +50,7 @@ export class TelemetryConfigurator
           concatMap((metadata) => toObservable(metadata, ...args)),
           scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
           last(),
+          shareReplay(1),
         );
     });
   }
@@ -60,7 +61,7 @@ export class TelemetryConfigurator
    * @param adapter - The telemetry adapter to be added. The adapter's identifier is used as the key.
    * @returns The current instance of the configurator for method chaining.
    */
-  public setAdapter(adapter: TelemetryAdapter): this {
+  public setAdapter(adapter: ITelemetryAdapter): this {
     this.#adapters[String(adapter.identifier)] = adapter;
     return this;
   }

@@ -2,6 +2,8 @@ import type { Module } from '@equinor/fusion-framework-module';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
+import { from } from 'rxjs';
+
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
 import { TelemetryConfigurator } from './TelemetryConfigurator.js';
@@ -48,7 +50,12 @@ export const module = {
   initialize: async (args): Promise<ITelemetryProvider> => {
     const config = await (args.config as TelemetryConfigurator).createConfigAsync(args);
     const event = args.hasModule('event') ? await args.requireInstance('event') : undefined;
-    return new TelemetryProvider(config, { event });
+    const provider = new TelemetryProvider(config, { event });
+    await provider.initialize({
+      parent: config.parent,
+      initialItems: config.items$,
+    });
+    return provider;
   },
 } satisfies TelemetryModule;
 

@@ -6,11 +6,12 @@ import {
 
 import {
   TelemetryType,
-  BaseTelemetryAdapter,
   type TelemetryItem,
   type TelemetryException,
   type TelemetryMetric,
 } from '@equinor/fusion-framework-module-telemetry';
+
+import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/adapter';
 
 /**
  * Configuration options for the Application Insights client.
@@ -58,10 +59,37 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
   constructor(args: ApplicationInsightsClientConfig) {
     super(args.identifier ?? ApplicationInsightsAdapter.Identifier, args.filter);
     this.#client = new ApplicationInsights(args.snippet);
-    this.#client.loadAppInsights();
     this.#preFix = args.prefix;
     for (const plugin of args.plugins ?? []) {
-      this.#client.addPlugin(plugin);
+      try {
+        this.#client.addPlugin(plugin);
+      } catch (error) {
+        // Log plugin addition failure but don't fail initialization
+        console.warn(
+          `Failed to add Application Insights plugin: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Initializes the Application Insights client asynchronously.
+   *
+   * @returns A promise that resolves when the client is fully initialized.
+   * @throws Error if the client initialization fails.
+   * @protected
+   */
+  protected async _initialize(): Promise<void> {
+    try {
+      this.#client.loadAppInsights();
+    } catch (error) {
+      throw new Error(
+        `Failed to initialize Application Insights client: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     }
   }
 

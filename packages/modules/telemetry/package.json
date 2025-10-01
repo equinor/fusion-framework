@@ -17,6 +17,10 @@
       "import": "./dist/esm/utils/index.js",
       "types": "./dist/types/utils/index.d.ts"
     },
+    "./adapter": {
+      "import": "./dist/esm/adapters/index.js",
+      "types": "./dist/types/adapters/index.d.ts"
+    },
     "./application-insights-adapter": {
       "import": "./dist/esm/adapters/application-insights/index.js",
       "types": "./dist/types/adapters/application-insights/index.d.ts"

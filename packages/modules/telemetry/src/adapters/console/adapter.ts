@@ -1,11 +1,12 @@
 import {
-  BaseTelemetryAdapter,
   TelemetryType,
   TelemetryLevel,
   type TelemetryItem,
   type TelemetryException,
   type TelemetryMetric,
 } from '@equinor/fusion-framework-module-telemetry';
+
+import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/adapter';
 
 /**
  * Configuration options for the ConsoleAdapter
