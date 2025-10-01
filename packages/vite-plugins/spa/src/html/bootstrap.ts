@@ -23,8 +23,6 @@ const importWithoutVite = <T>(path: string): Promise<T> => import(/* @vite-ignor
 // Create Fusion Framework configurator
 const configurator = new ModulesConfigurator();
 
-configurator.logger.level = import.meta.env.FUSION_SPA_LOG_LEVEL ?? 1;
-
 const serviceDiscoveryUrl = new URL(
   import.meta.env.FUSION_SPA_SERVICE_DISCOVERY_URL,
   import.meta.env.FUSION_SPA_SERVICE_DISCOVERY_URL.startsWith('http')
