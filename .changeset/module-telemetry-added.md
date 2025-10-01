@@ -10,3 +10,5 @@ Add new telemetry module for collecting and sending telemetry data.
 - Provide `TelemetryProvider` and `TelemetryConfigurator` for module integration
 - Include comprehensive test coverage for all components
 - Support custom metadata resolution and telemetry item merging
+
+Resolves #3483
