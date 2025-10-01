@@ -1,10 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
-import type { MetadataExtractor, TelemetryAdapter } from '../types.js';
+import type { TelemetryAdapter } from '../types.js';
 import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
-import { from, lastValueFrom } from 'rxjs';
-import { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
+import { lastValueFrom } from 'rxjs';
 import { applyMetadata } from '../utils/resolve-metadata.js';
 import { TelemetryLevel, TelemetryType } from '../static.js';
 

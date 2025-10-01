@@ -124,7 +124,6 @@ describe('TelemetryProvider', () => {
       expect(eventProvider.dispatchEvent).toHaveBeenCalledWith(expect.any(TelemetryErrorEvent));
     });
   });
-
 });
 
 describe('Measurement', () => {
