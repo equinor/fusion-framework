@@ -1,7 +1,7 @@
 import type z from 'zod';
 import { describe, it, expect } from 'vitest';
-import { TelemetryLevel, TelemetryType } from '../src/static.js';
-import { parseTelemetryItem, TelemetryCustomEventSchema } from '../src/schemas.js';
+import { TelemetryLevel, TelemetryType } from '../static.js';
+import { parseTelemetryItem, TelemetryCustomEventSchema } from '../schemas.js';
 
 describe('parseTelemetryItem', () => {
   it('parses a valid event telemetry item', () => {

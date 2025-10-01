@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TelemetryProvider } from '../src/TelemetryProvider';
-import { TelemetryType } from '../src/static';
-import { TelemetryEvent, TelemetryErrorEvent } from '../src/events';
-import type { TelemetryConfig } from '../src/TelemetryConfigurator.interface';
-import type { TelemetryAdapter } from '../src/types';
+import { TelemetryProvider } from '../TelemetryProvider';
+import { TelemetryType } from '../static';
+import { TelemetryEvent, TelemetryErrorEvent } from '../events';
+import type { TelemetryConfig } from '../TelemetryConfigurator.interface';
+import type { TelemetryAdapter } from '../types';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 vi.stubGlobal('performance', {

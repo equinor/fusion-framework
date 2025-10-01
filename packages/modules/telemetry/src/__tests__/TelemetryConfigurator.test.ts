@@ -1,16 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TelemetryConfigurator } from '../src/TelemetryConfigurator.js';
-import type { TelemetryAdapter } from '../src/types.js';
-import type { ITelemetryProvider } from '../src/TelemetryProvider.interface.js';
+import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
+import type { TelemetryAdapter } from '../types.js';
+import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
-import { resolveMetadata } from '../dist/esm/utils/resolve-metadata.js';
+import { resolveMetadata } from '../utils/resolve-metadata.js';
 import { lastValueFrom } from 'rxjs';
 
 function createAdapter(id: string): TelemetryAdapter {
   return {
     identifier: id,
-    // @ts-expect-error - minimal mock
-    track: vi.fn(),
+    track: vi.fn() as TelemetryAdapter['track'],
   };
 }
 

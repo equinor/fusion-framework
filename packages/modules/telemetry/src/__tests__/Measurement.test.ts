@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Measurement } from '../src/Measurement.js';
-import type { ITelemetryProvider } from '../src/TelemetryProvider.interface.js';
-import type { MeasurementData } from '../src/Measurement.interface.js';
+import { Measurement } from '../Measurement.js';
+import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
+import type { MeasurementData } from '../Measurement.interface.js';
 
 // Mock performance.now
 let now = 1000;

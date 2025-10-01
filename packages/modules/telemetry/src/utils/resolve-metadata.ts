@@ -1,11 +1,7 @@
 import { toObservable } from '@equinor/fusion-observable';
 
-import {
-  TelemetryType,
-  type MetadataExtractor,
-  type MetadataExtractorArgs,
-  type TelemetryItem,
-} from '@equinor/fusion-framework-module-telemetry';
+import { TelemetryType } from '../static.js';
+import type { MetadataExtractor, MetadataExtractorArgs, TelemetryItem } from '../types.js';
 
 import { merge, of, type Observable } from 'rxjs';
 import { catchError, defaultIfEmpty, first, map } from 'rxjs/operators';
