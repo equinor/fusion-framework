@@ -349,3 +349,46 @@ export type ModulesObjectConfigType<M extends Record<string, AnyModule>> = {
  * @see ModulesInstanceType
  */
 export type ModuleInstance = ModulesInstanceType<Modules>;
+
+/**
+ * Defines the severity levels for module events.
+ * Used to categorize events by their importance and impact.
+ */
+export enum ModuleEventLevel {
+  /** No event level specified (default/unknown) */
+  NONE = 0,
+  /** Error events that indicate failures or critical issues */
+  Error = 1,
+  /** Warning events that indicate potential issues but don't prevent operation */
+  Warning = 2,
+  /** Information events that provide general operational details */
+  Information = 3,
+  /** Debug events that provide detailed internal information for troubleshooting */
+  Debug = 4,
+}
+
+/**
+ * Represents an event emitted during module configuration and initialization.
+ * Provides structured information about the module lifecycle, performance metrics,
+ * and any errors that occur during the process.
+ */
+export type ModuleEvent = {
+  /** The severity level of the event */
+  level: ModuleEventLevel;
+
+  /** A unique identifier for the event type (e.g., 'initialize', 'moduleConfigAdded') */
+  name: string;
+
+  /** A human-readable description of what occurred */
+  message: string;
+
+  /** Additional contextual data related to the event */
+  // biome-ignore lint/suspicious/noExplicitAny: any is used here to allow flexibility in the properties
+  properties?: Record<string, any>;
+
+  /** Error object if the event is related to a failure */
+  error?: unknown;
+
+  /** Performance metric value (e.g., timing in milliseconds) */
+  metric?: number;
+};
