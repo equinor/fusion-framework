@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TelemetryProvider } from '../TelemetryProvider';
-import { TelemetryType } from '../static';
-import { TelemetryEvent, TelemetryErrorEvent } from '../events';
-import type { TelemetryConfig } from '../TelemetryConfigurator.interface';
-import type { TelemetryAdapter } from '../types';
+import { TelemetryProvider } from '../TelemetryProvider.js';
+import { TelemetryType } from '../static.js';
+import { TelemetryEvent, TelemetryErrorEvent } from '../events.js';
+import type { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
+import type { TelemetryAdapter } from '../types.js';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 vi.stubGlobal('performance', {
@@ -125,10 +125,53 @@ describe('TelemetryProvider', () => {
     });
   });
 
-  it('should support measure() and call endMetric with merged data', async () => {
+});
+
+describe('Measurement', () => {
+  let provider: TelemetryProvider;
+  let adapter: TelemetryAdapter;
+  let eventProvider: IEventModuleProvider;
+  let config: TelemetryConfig;
+
+  beforeEach(() => {
+    adapter = {
+      identifier: 'test-adapter',
+      processItem: vi.fn(),
+    };
+    eventProvider = {
+      dispatchEvent: vi.fn(),
+    } as unknown as IEventModuleProvider;
+    config = {
+      adapters: [adapter],
+      defaultScope: ['default'],
+    } as unknown as TelemetryConfig;
+    provider = new TelemetryProvider(config, { event: eventProvider });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should support measure() and call trackMetric with elapsed time', async () => {
+    const spy = vi.spyOn(provider, 'trackMetric');
+    const measurement = provider.measure({ name: 'measure1' });
+    await new Promise((resolve) => setTimeout(resolve, 1)); // Simulate async operation
+    measurement.measure();
+
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'measure1',
+          value: expect.any(Number),
+        }),
+      );
+    });
+  });
+
+  it('should support measure() with additional data merged', async () => {
     const spy = vi.spyOn(provider, 'trackMetric');
     const measurement = provider.measure({ name: 'measure1', metadata: { a: 1 }, scope: ['foo'] });
-    await new Promise((resolve) => setTimeout(resolve, 1)); // Simulate async operation
+    await new Promise((resolve) => setTimeout(resolve, 1));
     measurement.measure({ metadata: { b: 2 }, scope: ['bar'] });
 
     await vi.waitFor(() => {
@@ -138,6 +181,97 @@ describe('TelemetryProvider', () => {
           metadata: { a: 1, b: 2 },
           value: expect.any(Number),
           scope: ['foo', 'bar'],
+        }),
+      );
+    });
+  });
+
+  it('should support measurement reset with preserveStartTime option', async () => {
+    const spy = vi.spyOn(provider, 'trackMetric');
+    const measurement = provider.measure({ name: 'measure1' });
+
+    // First measurement
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    measurement.measure();
+
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'measure1',
+          value: expect.any(Number),
+        }),
+      );
+    });
+
+    // Reset and measure again
+    spy.mockClear();
+    measurement.reset({ preserveStartTime: false });
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    measurement.measure();
+
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'measure1',
+          value: expect.any(Number),
+        }),
+      );
+    });
+  });
+
+  it('should resolve promises and measure with data function', async () => {
+    const spy = vi.spyOn(provider, 'trackMetric');
+    const measurement = provider.measure({ name: 'promise_measure' });
+
+    const promise = Promise.resolve('success');
+    const dataFn = vi.fn((result) => ({ properties: { result } }));
+
+    await measurement.resolve(promise, { data: dataFn });
+
+    expect(dataFn).toHaveBeenCalledWith('success');
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'promise_measure',
+          properties: { result: 'success' },
+          value: expect.any(Number),
+        }),
+      );
+    });
+  });
+
+  it('should execute sync functions and measure', async () => {
+    const spy = vi.spyOn(provider, 'trackMetric');
+    const measurement = provider.measure({ name: 'sync_exec' });
+
+    const result = await measurement.exec(() => 'sync_result');
+
+    expect(result).toBe('sync_result');
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'sync_exec',
+          value: expect.any(Number),
+        }),
+      );
+    });
+  });
+
+  it('should execute async functions and measure', async () => {
+    const spy = vi.spyOn(provider, 'trackMetric');
+    const measurement = provider.measure({ name: 'async_exec' });
+
+    const result = await measurement.exec(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      return 'async_result';
+    });
+
+    expect(result).toBe('async_result');
+    await vi.waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'async_exec',
+          value: expect.any(Number),
         }),
       );
     });
