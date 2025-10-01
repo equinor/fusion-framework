@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TelemetryConfigurator } from '../TelemetryConfigurator.js';
-import type { TelemetryAdapter } from '../types.js';
+import type { MetadataExtractor, TelemetryAdapter } from '../types.js';
 import type { ITelemetryProvider } from '../TelemetryProvider.interface.js';
 import type { ConfigBuilderCallbackArgs } from '@equinor/fusion-framework-module';
-import { resolveMetadata } from '../utils/resolve-metadata.js';
-import { lastValueFrom } from 'rxjs';
+import { from, lastValueFrom } from 'rxjs';
+import { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
+import { applyMetadata } from '../utils/resolve-metadata.js';
+import { TelemetryLevel, TelemetryType } from '../static.js';
 
 function createAdapter(id: string): TelemetryAdapter {
   return {
@@ -57,13 +59,17 @@ describe('TelemetryConfigurator', () => {
     expect(adapters?.length).toBe(1);
   });
 
-  it('setMetadata should set metadata and allow chaining', async () => {
-    const metadata = { foo: 'bar' };
-    configurator.setMetadata(metadata);
+  it('setMetadata should set metadata', async () => {
+    const expected = { foo: 'bar' };
+    configurator.setMetadata(expected);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
-    const result = await lastValueFrom(resolveMetadata(config.metadata));
-    expect(result).toMatchObject(metadata);
+    const result = await lastValueFrom(
+      applyMetadata(config.metadata, {
+        item: { name: 'test', level: TelemetryLevel.Debug, type: TelemetryType.Custom, scope: [] },
+      }),
+    );
+    expect(result.metadata).toMatchObject(expected);
   });
 
   it('setMetadata should accept a callback', async () => {
@@ -71,8 +77,12 @@ describe('TelemetryConfigurator', () => {
     configurator.setMetadata(async () => expected);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
-    const result = await lastValueFrom(resolveMetadata(config.metadata));
-    expect(result).toMatchObject(expected);
+    const result = await lastValueFrom(
+      applyMetadata(config.metadata, {
+        item: { name: 'test', level: TelemetryLevel.Debug, type: TelemetryType.Custom, scope: [] },
+      }),
+    );
+    expect(result.metadata).toMatchObject(expected);
   });
 
   it('setDefaultScope should set defaultScope and allow chaining', async () => {
