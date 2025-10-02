@@ -387,8 +387,12 @@ export class ContextProvider implements IContextProvider {
     this.#event = event;
 
     // set the resolve and validate context functions
-    config.resolveContext && (this.resolveContext = config.resolveContext?.bind(this));
-    config.validateContext && (this.validateContext = config.validateContext?.bind(this));
+    if (config.resolveContext) {
+      this.resolveContext = config.resolveContext?.bind(this);
+    }
+    if (config.validateContext) {
+      this.validateContext = config.validateContext?.bind(this);
+    }
 
     if (config.extractContextIdFromPath) {
       // @ts-ignore
