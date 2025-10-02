@@ -353,13 +353,12 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
    */
   protected _registerEvent(event: ModuleEvent): void {
     // Split event name by '::' to handle already-namespaced events
-    // Use the second part if present (after existing namespace), otherwise use the whole name
     const nameParts = event.name.split('::');
-    const eventName = `${this.constructor.name}::${nameParts[1] ?? nameParts[0]}`;
 
     this.#event$.next({
       ...event,
-      name: eventName,
+      // Prefix the event name with the configurator class name
+      name: `${this.constructor.name}::${nameParts[nameParts.length - 1]}`,
     });
   }
 
