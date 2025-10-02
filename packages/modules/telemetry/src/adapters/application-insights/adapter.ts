@@ -64,7 +64,11 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
       try {
         this.#client.addPlugin(plugin);
       } catch (error) {
-        // Log plugin addition failure but don't fail initialization
+        // EXCEPTION: Using console.warn instead of telemetry mechanism due to chicken-and-egg problem.
+        // At construction time, the adapter is not yet initialized, so it cannot use its own telemetry
+        // system to report errors. The TelemetryProvider initializes adapters after construction,
+        // but plugin errors occur during construction. This is a rare exception to the framework's
+        // telemetry error handling pattern, justified by the initialization timing constraint.
         console.warn(
           `Failed to add Application Insights plugin: ${
             error instanceof Error ? error.message : String(error)

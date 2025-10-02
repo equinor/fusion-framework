@@ -93,6 +93,10 @@ export abstract class BaseTelemetryAdapter implements ITelemetryAdapter {
    * without performing any initialization. It calls the protected `_initialize` method which
    * subclasses can override to provide custom initialization logic.
    *
+   * TODO: Consider changing return type from Promise<void> to Promise<TelemetryItem[]>
+   * to allow adapters to return telemetry items (errors/warnings) that occurred during
+   * initialization, eliminating the chicken-and-egg problem with reporting init errors.
+   *
    * @returns A promise that resolves when initialization is complete.
    * @sealed
    */
