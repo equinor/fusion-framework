@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!turbo", "!**/vue-press/src/.vuepress", "!package.json", "!pnpm-lock.yaml"]
+    "includes": [
+      "**", 
+      "!turbo", 
+      "!**/vue-press/src/.vuepress", 
+      "!package.json", 
+      "!pnpm-lock.yaml"
+    ]
   },
   "formatter": {
     "enabled": true,
