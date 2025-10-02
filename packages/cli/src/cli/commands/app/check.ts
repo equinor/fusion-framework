@@ -52,7 +52,6 @@ export const command = withAuthOptions(
     .addOption(createEnvOption({ allowDev: false }))
     .action(async (options) => {
       const log = new ConsoleLogger('app:check', { debug: !!options.debug });
-      
       await checkApp({
         log,
         environment: options.env,
