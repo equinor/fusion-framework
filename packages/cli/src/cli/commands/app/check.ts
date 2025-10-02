@@ -57,7 +57,6 @@ export const command = withAuthOptions(
         environment: options.env,
         auth: 'token' in options ? { token: options.token } : options,
       });
-      
       return;
     }),
 );
