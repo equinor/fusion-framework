@@ -1,5 +1,32 @@
 # Change Log
 
+## 7.4.0
+
+### Minor Changes
+
+- [#3492](https://github.com/equinor/fusion-framework/pull/3492) [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126) Thanks [@odinr](https://github.com/odinr)! - Integrate telemetry module into framework core.
+
+  - Add TelemetryModule to FusionModules type definition
+  - Enable telemetry in FrameworkConfigurator with default configuration
+  - Add event$ observable with framework-specific event prefixing
+  - Include framework metadata in telemetry collection
+
+  resolves: [#3491](https://github.com/equinor/fusion-framework/issues/3491)
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
+
+  - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
+  - Logger functionality will be handled through telemetry module with console logging adapter
+
+  This prepares the configurators to use telemetry for logging instead of direct console logger initialization.
+
+- Updated dependencies [[`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`4e78565`](https://github.com/equinor/fusion-framework/commit/4e7856590f73fee840b065a0e4d89962e167ed9e), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1)]:
+  - @equinor/fusion-framework-module-context@7.0.1
+  - @equinor/fusion-framework-module@5.0.3
+  - @equinor/fusion-framework-module-telemetry@4.2.0
+
 ## 7.3.20
 
 ### Patch Changes

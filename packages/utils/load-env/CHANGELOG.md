@@ -1,5 +1,11 @@
 # @equinor/fusion-load-env
 
+## 1.0.3
+
+### Patch Changes
+
+- [#3479](https://github.com/equinor/fusion-framework/pull/3479) [`11b5a00`](https://github.com/equinor/fusion-framework/commit/11b5a00047171f9969cabbcbbb53dd188ed8421e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from 17.2.2 to 17.2.3 (TypeScript definition fix)
+
 ## 1.0.2
 
 ### Patch Changes

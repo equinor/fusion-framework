@@ -1,5 +1,29 @@
 # Change Log
 
+## 12.2.0
+
+### Minor Changes
+
+- [#3512](https://github.com/equinor/fusion-framework/pull/3512) [`6f17817`](https://github.com/equinor/fusion-framework/commit/6f17817d3e1290d0befca8bb528728128612f8f1) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced app management commands with pre-flight registration checks.
+
+  - Modified `checkApp` function to return boolean values instead of log results for better programmatic usage
+  - Added handling for HTTP 410 status (deleted apps) in app registration checks
+  - Added pre-flight app registration validation to `publish` and `upload` commands
+  - Commands now exit early if the app is not registered or has been deleted from the app store
+  - Improved error handling and user feedback for app registration status
+
+  This prevents publishing/uploading apps that are not registered in the app store, improving reliability and user experience.
+
+  Thanks to @odinr for reporting this issue.
+
+  Closes #3397
+
+### Patch Changes
+
+- Updated dependencies [[`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275), [`11b5a00`](https://github.com/equinor/fusion-framework/commit/11b5a00047171f9969cabbcbbb53dd188ed8421e)]:
+  - @equinor/fusion-framework-dev-portal@1.1.5
+  - @equinor/fusion-framework-dev-server@1.1.4
+
 ## 12.1.3
 
 ### Patch Changes
