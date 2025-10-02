@@ -20,9 +20,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "correctness": {
-        "useUniqueElementIds": "off"
-      },
       "complexity": {
         "useLiteralKeys": "error",
         "useOptionalChain": "error"
