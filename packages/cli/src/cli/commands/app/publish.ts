@@ -99,7 +99,6 @@ export const command = withAuthOptions(
         log.error('😢 App is not registered / deleted in app store');
         process.exit(1);
       }
-      
       let archive: string | AdmZip;
       if (bundle) {
         log.info(`📦 Using provided bundle: ${bundle}`);
