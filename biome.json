@@ -28,7 +28,6 @@
         "useOptionalChain": "error"
       },
       "suspicious": {
-        "noGlobalIsNan": "warn",
         "noDoubleEquals": "warn",
         "noAssignInExpressions": "warn",
         "noImplicitAnyLet": "warn"
