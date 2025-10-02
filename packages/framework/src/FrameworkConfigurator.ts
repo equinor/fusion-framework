@@ -37,7 +37,6 @@ export class FrameworkConfigurator<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
-
   constructor() {
     super([event, auth, http, disco, services, context, telemetry]);
 

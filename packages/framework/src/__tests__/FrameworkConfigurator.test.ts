@@ -32,5 +32,4 @@ describe('FrameworkConfigurator', () => {
       expect(event.name).toMatch(/^FrameworkConfigurator::/);
     });
   });
-
 });
