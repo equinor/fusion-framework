@@ -14,3 +14,21 @@ The following information will help us triage your report more quickly:
 - Impact of the issue, including how an attacker might exploit the issue
 
 We prefer all communications to be in English.
+
+## Known Security Issues and Mitigations
+
+### min-document Prototype Pollution Vulnerability
+
+**Issue**: The `min-document` package (used by development dependencies) contains a prototype pollution vulnerability in its `removeAttributeNS`, `setAttributeNS`, `getAttributeNS`, and `hasAttributeNS` methods. This vulnerability allows attackers to manipulate JavaScript object prototype chains by passing `__proto__` or `constructor` as namespace parameters.
+
+**Impact**: Low - This vulnerability only affects development environments since `min-document` is used by Storybook (via EDS Core React dev dependencies). Production builds are not affected.
+
+**Status**: Mitigated locally with a security patch.
+
+**Mitigation Applied**: A local patch has been applied to `min-document@2.19.0` that prevents access to dangerous prototype properties. The patch adds validation to reject operations on `__proto__`, `constructor`, and `prototype` namespace values.
+
+**Files**:
+- `patches/min-document@2.19.0.patch` - The security patch
+- Applied to `node_modules/.pnpm/min-document@2.19.0/node_modules/min-document/dom-element.js`
+
+**Recommendation**: Monitor for updates to `min-document` or consider replacing it with a maintained alternative if the dependency chain allows.

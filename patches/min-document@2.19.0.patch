@@ -1,0 +1,50 @@
+diff --git a/dom-element.js b/dom-element.js
+index 7bd282e..patched 100644
+--- a/dom-element.js
++++ b/dom-element.js
+@@ -7,6 +7,11 @@ var serializeNode = require("./serialize.js")
+
+ var htmlns = "http://www.w3.org/1999/xhtml"
+
++// Security fix: Prevent prototype pollution
++function isSafeProperty(prop) {
++    return prop !== '__proto__' && prop !== 'constructor' && prop !== 'prototype';
++}
++
+ module.exports = DOMElement
+
+ function DOMElement(tagName, owner, namespace) {
+@@ -98,7 +103,9 @@ DOMElement.prototype.setAttributeNS =
+     function _Element_setAttributeNS(namespace, name, value) {
+         if (!isSafeProperty(namespace)) return; // Security fix
+         var prefix = null
+         var localName = name
+         var colonPosition = name.indexOf(":")
+
+         if (colonPosition > -1) {
+             prefix = name.substr(0, colonPosition)
+             localName = name.substr(colonPosition + 1)
+@@ -116,6 +123,7 @@ DOMElement.prototype.getAttributeNS =
+ DOMElement.prototype.getAttributeNS =
+     function _Element_getAttributeNS(namespace, name) {
+         if (!isSafeProperty(namespace)) return null; // Security fix
+         var attributes = this._attributes[namespace];
+         var value = attributes && attributes[name] && attributes[name].value
+         if (this.tagName === 'INPUT' && name === 'type') {
+           return this.type;
+@@ -129,6 +137,7 @@ DOMElement.prototype.removeAttributeNS =
+ DOMElement.prototype.removeAttributeNS =
+     function _Element_removeAttributeNS(namespace, name) {
+         if (!isSafeProperty(namespace)) return; // Security fix
+         var attributes = this._attributes[namespace];
+         if (attributes) {
+             delete attributes[name]
+         }
+@@ -137,6 +146,7 @@ DOMElement.prototype.hasAttributeNS =
+ DOMElement.prototype.hasAttributeNS =
+     function _Element_hasAttributeNS(namespace, name) {
+         if (!isSafeProperty(namespace)) return false; // Security fix
+         var attributes = this._attributes[namespace]
+         return !!attributes && name in attributes;
+     }
+
