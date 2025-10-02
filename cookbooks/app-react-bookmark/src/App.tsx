@@ -1,5 +1,5 @@
 import { useCurrentBookmark } from '@equinor/fusion-framework-react-app/bookmark';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useId, useLayoutEffect, useRef, useState } from 'react';
 
 export interface MyPayload {
   title: string;
@@ -7,6 +7,8 @@ export interface MyPayload {
 }
 
 export const App = () => {
+  const titleId = useId();
+  const dataId = useId();
   const [payload, setPayload] = useState({
     title: '',
     data: '',
@@ -44,9 +46,9 @@ export const App = () => {
       >
         <h1>🚀 Fusion Bookmark😎</h1>
         <form style={{ display: 'flex', gap: '1rem' }}>
-          <label htmlFor="value">Title</label>
+          <label htmlFor={titleId}>Title</label>
           <input
-            id="value"
+            id={titleId}
             type="text"
             onChange={(e) => {
               setPayload((x) => ({
@@ -56,9 +58,9 @@ export const App = () => {
             }}
             value={payload.title}
           />
-          <label htmlFor="value">Bookmark data:</label>
+          <label htmlFor={dataId}>Bookmark data:</label>
           <input
-            id="value"
+            id={dataId}
             type="text"
             onChange={(e) => {
               setPayload((x) => ({

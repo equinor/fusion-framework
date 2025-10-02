@@ -282,7 +282,9 @@ export class LegacyAppContainer extends EventEmitter<AppContainerEvents> {
         }),
     );
 
-    this.on('fetch', (fetching) => (this.#isUpdating = fetching));
+    this.on('fetch', (fetching) => {
+      this.#isUpdating = fetching;
+    });
   }
 
   async setCurrentAppAsync(appKey: string | null): Promise<void> {

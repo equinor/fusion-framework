@@ -19,40 +19,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "correctness": {
-        "useUniqueElementIds": "off"
-      },
-      "complexity": {
-        "noBannedTypes": "warn",
-        "useLiteralKeys": "error",
-        "useOptionalChain": "error",
-        "noCommaOperator": "warn"
-      },
-      "performance": {
-        "noAccumulatingSpread": "warn"
-      },
-      "style": {
-        "noParameterAssign": "warn",
-        "useShorthandFunctionType": "warn",
-        "noUselessElse": "warn",
-        "useExportType": "warn",
-        "useLiteralEnumMembers": "warn",
-        "noNonNullAssertion": "warn",
-        "noUnusedTemplateLiteral": "warn",
-        "useNodejsImportProtocol": "warn",
-        "useTemplate": "warn",
-        "noInferrableTypes": "warn"
-      },
-      "suspicious": {
-        "noConfusingVoidType": "info",
-        "noExplicitAny": "warn",
-        "noEmptyBlockStatements": "warn",
-        "noGlobalIsNan": "warn",
-        "noDoubleEquals": "warn",
-        "noAssignInExpressions": "warn",
-        "noImplicitAnyLet": "warn"
-      }
+      "recommended": true
     },
     "includes": [
       "**",
@@ -65,15 +32,9 @@
   },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "all",
       "semicolons": "always",
-      "arrowParentheses": "always",
       "bracketSameLine": false,
-      "quoteStyle": "single",
-      "attributePosition": "auto",
-      "bracketSpacing": true
+      "quoteStyle": "single"
     }
   },
   "overrides": [

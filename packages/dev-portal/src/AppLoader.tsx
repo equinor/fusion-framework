@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { Subscription } from 'rxjs';
 import { last } from 'rxjs/operators';
@@ -26,6 +26,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
 
   /** reference of application section/container */
   const ref = useRef<HTMLElement>(null);
+  const applicationContentId = useId();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>();
@@ -112,7 +113,7 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   }
 
   return (
-    <section id="application-content" ref={ref} style={{ display: 'contents' }}>
+    <section id={applicationContentId} ref={ref} style={{ display: 'contents' }}>
       {loading && <EquinorLoader text="Loading Application" />}
     </section>
   );

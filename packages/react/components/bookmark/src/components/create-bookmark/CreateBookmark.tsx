@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useId, useState } from 'react';
 
 import type { BookmarkCreateArgs } from '@equinor/fusion-framework-module-bookmark';
 import { useBookmarkComponentContext } from '../BookmarkProvider';
@@ -28,6 +28,9 @@ export const CreateBookmarkModal = ({
     description: '',
     isShared: false,
   });
+
+  const nameId = useId();
+  const descriptionId = useId();
 
   useEffect(() => {
     setState((s) => ({ ...s, appKey: currentApp?.appKey || '' }));
@@ -63,9 +66,9 @@ export const CreateBookmarkModal = ({
       <Dialog.Header>Create bookmark</Dialog.Header>
       <StyledContent>
         <div>
-          <Label htmlFor="name" label="Name" />
+          <Label htmlFor={nameId} label="Name" />
           <Input
-            id="name"
+            id={nameId}
             autoComplete="off"
             value={state?.name}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +78,7 @@ export const CreateBookmarkModal = ({
         </div>
         <div>
           <TextField
-            id="storybook-multiline-three"
+            id={descriptionId}
             label="Description"
             multiline
             rows={3}
