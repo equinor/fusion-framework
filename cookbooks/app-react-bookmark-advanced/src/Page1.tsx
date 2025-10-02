@@ -1,6 +1,8 @@
+import { useId } from 'react';
 import { useBookmarkContext } from './Provider';
 
 export function Page1() {
+  const dataId = useId();
   const { updateState, payload } = useBookmarkContext();
 
   return (
@@ -30,9 +32,9 @@ export function Page1() {
               gap: '1rem',
             }}
           >
-            <label htmlFor="value">Bookmark data:</label>
+            <label htmlFor={dataId}>Bookmark data:</label>
             <input
-              id="value"
+              id={dataId}
               type="text"
               onChange={(e) => {
                 updateState((s) => ({

@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { useBookmarkContext } from './Provider';
 
 export function Page2() {
+  const titleId = useId();
   const { updateState, payload } = useBookmarkContext();
 
   useEffect(() => {
@@ -37,9 +38,9 @@ export function Page2() {
               gap: '1rem',
             }}
           >
-            <label htmlFor="value">Title</label>
+            <label htmlFor={titleId}>Title</label>
             <input
-              id="value"
+              id={titleId}
               type="text"
               onChange={(e) => {
                 updateState((state) => ({

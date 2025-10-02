@@ -1,7 +1,12 @@
+import { useId } from 'react';
 import { useBookmark } from '@equinor/fusion-framework-react-app/bookmark';
 import { init, useBookmarkContext } from './Provider';
 
 export const Create = () => {
+  const nameId = useId();
+  const descriptionId = useId();
+  const titleId = useId();
+  const dataId = useId();
   const { updateState, ...state } = useBookmarkContext();
 
   const { bookmarks, updateBookmark, deleteBookmarkById, createBookmark, setCurrentBookmark } =
@@ -39,9 +44,9 @@ export const Create = () => {
               gap: '1rem',
             }}
           >
-            <label htmlFor="name">Name:</label>
+            <label htmlFor={nameId}>Name:</label>
             <input
-              id="name"
+              id={nameId}
               type="text"
               onChange={(e) => {
                 updateState(() => ({ name: e.target.value }));
@@ -49,19 +54,19 @@ export const Create = () => {
               value={state.name}
             />
 
-            <label htmlFor="description">Description</label>
+            <label htmlFor={descriptionId}>Description</label>
             <textarea
               rows={2}
-              id="description"
+              id={descriptionId}
               onChange={(e) => {
                 updateState(() => ({ description: e.target.value }));
               }}
               value={state.description}
             />
 
-            <label htmlFor="value">Title</label>
+            <label htmlFor={titleId}>Title</label>
             <input
-              id="value"
+              id={titleId}
               type="text"
               onChange={(e) => {
                 updateState((s) => ({
@@ -73,9 +78,9 @@ export const Create = () => {
               }}
               value={state.payload.title}
             />
-            <label htmlFor="value">Bookmark data:</label>
+            <label htmlFor={dataId}>Bookmark data:</label>
             <input
-              id="value"
+              id={dataId}
               type="text"
               onChange={(e) => {
                 updateState((s) => ({
