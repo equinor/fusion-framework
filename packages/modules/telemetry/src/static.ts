@@ -49,3 +49,11 @@ export enum TelemetryScope {
   Framework = 'framework',
   Application = 'application',
 }
+
+/**
+ * Standard telemetry item names for common error types.
+ */
+export const TelemetryItemNames = {
+  /** Error name used when metadata extraction fails */
+  MetadataError: 'TelemetryMetadataError',
+} as const;

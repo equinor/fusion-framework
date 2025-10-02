@@ -1,6 +1,6 @@
 import { toObservable } from '@equinor/fusion-observable';
 
-import { TelemetryType } from '../static.js';
+import { TelemetryType, TelemetryItemNames } from '../static.js';
 import type { MetadataExtractor, MetadataExtractorArgs, TelemetryItem } from '../types.js';
 
 import { merge, of, type Observable } from 'rxjs';
@@ -45,7 +45,7 @@ export const applyMetadata = (
     catchError((error) => {
       const errorItem = TelemetryExceptionSchema.parse({
         type: TelemetryType.Exception,
-        name: 'TelemetryMetadataError',
+        name: TelemetryItemNames.MetadataError,
         exception: error,
         properties: {
           sourceMetricName: args.item.name,

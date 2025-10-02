@@ -20,6 +20,26 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
 };
 ```
 
+## Initialization
+
+The telemetry module supports asynchronous initialization of adapters. The provider exposes an `initialize()` method that should be called to set up all configured adapters:
+
+```typescript
+// Get the telemetry provider from modules
+const provider = modules.telemetry;
+
+// Initialize adapters (required before use)
+await provider.initialize();
+
+// Check if provider is initialized
+if (provider.initialized) {
+  // Provider is ready for use
+}
+```
+
+> [!NOTE]
+> The telemetry module will automatically initialize when used within the Fusion Framework module system. Manual initialization is only required when accessing the provider directly.
+
 ## Usage
 
 ### Tracking Events and Data
@@ -182,11 +202,11 @@ const job = async() => {
 
 ## Adapters
 
-Adapters are responsible for processing and sending telemetry data to their respective destinations.
+Adapters are responsible for processing and sending telemetry data to their respective destinations. All adapters support asynchronous initialization and will be automatically initialized when the telemetry provider initializes.
 
 ### Application Insights Adapter
 
-The Application Insights adapter allows you to send telemetry data to Microsoft Application Insights.
+The Application Insights adapter allows you to send telemetry data to Microsoft Application Insights. It supports asynchronous initialization for setting up the Application Insights client and plugins.
 
 #### Installation
 
@@ -318,6 +338,52 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     });
     
     builder.addAdapter(consoleAdapter);
+  });
+};
+```
+
+### Creating Custom Adapters
+
+You can create custom telemetry adapters by extending the `BaseTelemetryAdapter` class. Adapters can optionally implement asynchronous initialization:
+
+```typescript
+import type { TelemetryItem } from '@equinor/fusion-framework-module-telemetry';
+import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/adapter';
+
+class CustomAdapter extends BaseTelemetryAdapter {
+  constructor() {
+    super('custom-adapter');
+  }
+
+  protected async _initialize(): Promise<void> {
+    // Perform async setup here (e.g., establish connections, load configurations)
+    await this.setupConnection();
+  }
+
+  protected _processItem(item: TelemetryItem): void {
+    // Process and send telemetry items
+    this.sendToCustomBackend(item);
+  }
+
+  private async setupConnection(): Promise<void> {
+    // Implementation for setting up the connection
+  }
+
+  private sendToCustomBackend(item: TelemetryItem): void {
+    // Implementation for sending data to your backend
+  }
+}
+```
+
+To use your custom adapter:
+
+```typescript
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, (builder) => {
+    const customAdapter = new CustomAdapter();
+    builder.addAdapter(customAdapter);
   });
 };
 ```

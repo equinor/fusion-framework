@@ -6,11 +6,12 @@ import {
 
 import {
   TelemetryType,
-  BaseTelemetryAdapter,
   type TelemetryItem,
   type TelemetryException,
   type TelemetryMetric,
 } from '@equinor/fusion-framework-module-telemetry';
+
+import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry/adapter';
 
 /**
  * Configuration options for the Application Insights client.
@@ -58,10 +59,41 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
   constructor(args: ApplicationInsightsClientConfig) {
     super(args.identifier ?? ApplicationInsightsAdapter.Identifier, args.filter);
     this.#client = new ApplicationInsights(args.snippet);
-    this.#client.loadAppInsights();
     this.#preFix = args.prefix;
     for (const plugin of args.plugins ?? []) {
-      this.#client.addPlugin(plugin);
+      try {
+        this.#client.addPlugin(plugin);
+      } catch (error) {
+        // EXCEPTION: Using console.warn instead of telemetry mechanism due to chicken-and-egg problem.
+        // At construction time, the adapter is not yet initialized, so it cannot use its own telemetry
+        // system to report errors. The TelemetryProvider initializes adapters after construction,
+        // but plugin errors occur during construction. This is a rare exception to the framework's
+        // telemetry error handling pattern, justified by the initialization timing constraint.
+        console.warn(
+          `Failed to add Application Insights plugin: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+    }
+  }
+
+  /**
+   * Initializes the Application Insights client asynchronously.
+   *
+   * @returns A promise that resolves when the client is fully initialized.
+   * @throws Error if the client initialization fails.
+   * @protected
+   */
+  protected async _initialize(): Promise<void> {
+    try {
+      this.#client.loadAppInsights();
+    } catch (error) {
+      throw new Error(
+        `Failed to initialize Application Insights client: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     }
   }
 

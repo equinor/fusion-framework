@@ -3,7 +3,7 @@ import { TelemetryProvider } from '../TelemetryProvider.js';
 import { TelemetryType } from '../static.js';
 import { TelemetryEvent, TelemetryErrorEvent } from '../events.js';
 import type { TelemetryConfig } from '../TelemetryConfigurator.interface.js';
-import type { TelemetryAdapter } from '../types.js';
+import type { ITelemetryAdapter } from '../TelemetryAdapter.js';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 vi.stubGlobal('performance', {
@@ -12,14 +12,15 @@ vi.stubGlobal('performance', {
 
 describe('TelemetryProvider', () => {
   let provider: TelemetryProvider;
-  let adapter: TelemetryAdapter;
+  let adapter: ITelemetryAdapter;
   let eventProvider: IEventModuleProvider;
   let config: TelemetryConfig;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     adapter = {
       identifier: 'test-adapter',
       processItem: vi.fn(),
+      initialize: vi.fn(),
     };
     eventProvider = {
       dispatchEvent: vi.fn(),
@@ -29,6 +30,7 @@ describe('TelemetryProvider', () => {
       defaultScope: ['default'],
     } as unknown as TelemetryConfig;
     provider = new TelemetryProvider(config, { event: eventProvider });
+    await provider.initialize();
   });
 
   afterEach(() => {
@@ -118,6 +120,7 @@ describe('TelemetryProvider', () => {
       throw new Error('fail');
     });
     provider = new TelemetryProvider({ ...config, adapters: [adapter] }, { event: eventProvider });
+    await provider.initialize();
     provider.trackEvent({ name: 'fail_event' });
 
     await vi.waitFor(() => {
@@ -128,7 +131,7 @@ describe('TelemetryProvider', () => {
 
 describe('Measurement', () => {
   let provider: TelemetryProvider;
-  let adapter: TelemetryAdapter;
+  let adapter: ITelemetryAdapter;
   let eventProvider: IEventModuleProvider;
   let config: TelemetryConfig;
 
@@ -136,6 +139,7 @@ describe('Measurement', () => {
     adapter = {
       identifier: 'test-adapter',
       processItem: vi.fn(),
+      initialize: vi.fn(),
     };
     eventProvider = {
       dispatchEvent: vi.fn(),
@@ -280,7 +284,8 @@ describe('Measurement', () => {
     const parent = {
       track: vi.fn(),
     } as unknown as TelemetryProvider;
-    provider = new TelemetryProvider({ ...config, parent }, { event: eventProvider });
+    provider = new TelemetryProvider(config, { event: eventProvider });
+    await provider.initialize({ parent });
     provider.trackEvent({ name: 'relay' });
     // Wait for async relay
     await vi.waitFor(() => {

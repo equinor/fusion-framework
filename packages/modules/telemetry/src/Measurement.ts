@@ -145,7 +145,12 @@ export class Measurement implements IMeasurement {
    */
   [Symbol.dispose]() {
     if (!this.#measured) {
-      this.measure();
+      try {
+        this.measure();
+      } catch {
+        // Silently handle errors during disposal to ensure cleanup always completes
+        // The measurement failure should not prevent proper resource disposal
+      }
     }
   }
 }
