@@ -27,9 +27,6 @@
         "useLiteralKeys": "error",
         "useOptionalChain": "error"
       },
-      "performance": {
-        "noAccumulatingSpread": "warn"
-      },
       "suspicious": {
         "noConfusingVoidType": "info",
         "noExplicitAny": "warn",
