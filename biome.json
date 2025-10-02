@@ -28,7 +28,6 @@
         "useOptionalChain": "error"
       },
       "suspicious": {
-        "noExplicitAny": "warn",
         "noEmptyBlockStatements": "warn",
         "noGlobalIsNan": "warn",
         "noDoubleEquals": "warn",
