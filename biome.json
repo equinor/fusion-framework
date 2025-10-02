@@ -19,11 +19,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "complexity": {
-        "useLiteralKeys": "error",
-        "useOptionalChain": "error"
-      }
+      "recommended": true
     },
     "includes": [
       "**",
