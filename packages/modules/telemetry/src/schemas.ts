@@ -20,10 +20,13 @@ export const TelemetryItemSchema = z.object({
     .default(TelemetryLevel.Information)
     .describe('The severity level of the telemetry item. Defaults to Information.'),
   properties: z
-    .record(z.unknown())
+    .record(z.string(), z.unknown())
     .optional()
     .describe('Optional additional properties for the telemetry item.'),
-  metadata: z.record(z.unknown()).optional().describe('Optional metadata for the telemetry item.'),
+  metadata: z
+    .record(z.string(), z.unknown())
+    .optional()
+    .describe('Optional metadata for the telemetry item.'),
   scope: z
     .array(z.string())
     .optional()

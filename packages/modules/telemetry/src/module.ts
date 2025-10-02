@@ -2,8 +2,6 @@ import type { Module } from '@equinor/fusion-framework-module';
 
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
-import { from } from 'rxjs';
-
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryConfigurator } from './TelemetryConfigurator.interface.js';
 import { TelemetryConfigurator } from './TelemetryConfigurator.js';
