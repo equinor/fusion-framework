@@ -30,18 +30,6 @@
       "performance": {
         "noAccumulatingSpread": "warn"
       },
-      "style": {
-        "noParameterAssign": "warn",
-        "useShorthandFunctionType": "warn",
-        "noUselessElse": "warn",
-        "useExportType": "warn",
-        "useLiteralEnumMembers": "warn",
-        "noNonNullAssertion": "warn",
-        "noUnusedTemplateLiteral": "warn",
-        "useNodejsImportProtocol": "warn",
-        "useTemplate": "warn",
-        "noInferrableTypes": "warn"
-      },
       "suspicious": {
         "noConfusingVoidType": "info",
         "noExplicitAny": "warn",
