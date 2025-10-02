@@ -1,7 +1,7 @@
 import type { AnyModule } from '@equinor/fusion-framework-module';
 
-import type { FrameworkConfigurator } from './FrameworkConfigurator';
-import type { Fusion, FusionModules } from './types';
+import type { FrameworkConfigurator } from './FrameworkConfigurator.js';
+import type { Fusion, FusionModules } from './types.js';
 
 /**
  *

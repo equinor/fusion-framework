@@ -111,11 +111,14 @@ export interface IModuleConfigurator<TModule extends AnyModule = AnyModule, TRef
 }
 
 /**
- * Error thrown when a required module times out.
+ * Error thrown when a required module fails to initialize within the specified timeout period.
+ *
+ * This error indicates that a module dependency was not available when expected,
+ * typically due to initialization delays or circular dependencies.
  */
 class RequiredModuleTimeoutError extends Error {
   constructor() {
-    super('It was too slow');
+    super('Module initialization timed out');
     this.name = 'RequiredModuleTimeoutError';
   }
 }
@@ -191,9 +194,10 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
   /**
    * Constructs a new ModulesConfigurator instance.
-   * @param modules - Array of modules.
+   * @param modules - Optional array of modules to initialize with.
    */
   constructor(modules?: Array<AnyModule>) {
+    // Use Set for efficient lookups and automatic deduplication of modules
     this._modules = new Set(modules);
   }
 
@@ -337,8 +341,25 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     );
   }
 
+  /**
+   * Registers a module event by namespacing it with the configurator class name.
+   *
+   * Event names are prefixed with the constructor name to create unique, namespaced
+   * event identifiers that prevent conflicts between different configurator instances.
+   * For example, "moduleConfigAdded" becomes "ModulesConfigurator::moduleConfigAdded".
+   *
+   * @param event - The module event to register
+   * @protected
+   */
   protected _registerEvent(event: ModuleEvent): void {
-    this.#event$.next(event);
+    // Split event name by '::' to handle already-namespaced events
+    const nameParts = event.name.split('::');
+
+    this.#event$.next({
+      ...event,
+      // Prefix the event name with the configurator class name
+      name: `${this.constructor.name}::${nameParts[nameParts.length - 1]}`,
+    });
   }
 
   /**
@@ -365,7 +386,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
   ): Promise<ModulesConfig<CombinedModules<T, TModules>>> {
     const { modules, _afterConfiguration, _afterInit } = this;
     const config$ = from(modules).pipe(
-      // TODO - handle config creation errors
+      // TODO: Add proper error handling for individual module config creation failures
       mergeMap(async (module) => {
         const configStart = performance.now();
         try {
@@ -611,8 +632,10 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
       );
     };
 
+    // Create observable stream to initialize modules concurrently
+    // Each module goes through: validation -> initialization -> result mapping
     const init$ = from(this.modules).pipe(
-      /** assign module to modules object */
+      /** Process each module individually through initialization pipeline */
       mergeMap((module) => {
         const key = module.name;
         if (!module.initialize) {
@@ -643,7 +666,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
 
         const moduleInitStart = performance.now();
         return from(
-          // @todo - convert to toObservable
+          // TODO: Replace Promise.resolve + from() with toObservable() for better RxJS patterns
           Promise.resolve(
             module.initialize({
               ref,
@@ -700,9 +723,11 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     );
 
     const initStart = performance.now();
+    // Subscribe to module initialization stream and accumulate results
+    // Each successful initialization updates the shared instance object
     init$.subscribe({
       next: ([name, module]) => {
-        /** push instance */
+        // Accumulate initialized modules into the shared instance object
         instance$.next(Object.assign(instance$.value, { [name]: module }));
       },
       error: (err) => {

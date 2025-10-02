@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest --run"
   },
   "keywords": [
     "fusion",
@@ -42,9 +43,11 @@
     "@equinor/fusion-framework-module-msal": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
     "@equinor/fusion-framework-module-services": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
   }
 }
