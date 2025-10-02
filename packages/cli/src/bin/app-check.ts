@@ -71,18 +71,25 @@ export const checkApp = async (options: AppCheckOptions) => {
 
   try {
     // Start the check for app registration in the app store
-    log?.start(`Checking if ${manifest.appKey} is registered in app store`);
+    log?.info('Checking if', manifest.appKey, 'is registered in app store');
     // Send a HEAD request to check if the app is registered
     const response = await appClient.fetch(`/apps/${manifest.appKey}`, {
       method: 'HEAD',
     });
     // If the response is OK, the app is registered
     if (response.ok) {
-      return log?.succeed('😃', `Application ${manifest.appKey} is registered in app store`);
+      log?.succeed('😃', `Application ${manifest.appKey} is registered in app store`);
+      return true;
     }
     // If the response is 404, the app is not registered
     if (response.status === 404) {
-      return log?.fail('😞', `Application ${manifest.appKey} is not registered in app store`);
+      log?.fail('😞', `Application ${manifest.appKey} is not registered in app store`);
+      return false;
+    }
+    // If the response is 410 the app is deleted
+    if (response.status === 410) {
+      log?.fail('😞', `Application ${manifest.appKey} is deleted from app store`);
+      return false;
     }
     // Any other status is unexpected and should be handled as an error
     throw new Error(`Unexpected response status: ${response.status}`);
@@ -90,6 +97,7 @@ export const checkApp = async (options: AppCheckOptions) => {
     // Log and handle errors during the registration check
     log?.fail('🙅‍♂️', 'Error checking application registration');
     log?.error('Error checking application registration:', err);
+    return false;
   }
 };
 

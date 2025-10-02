@@ -9,6 +9,7 @@ import {
   uploadApplication,
   tagApplication,
   AllowedAppTags,
+  checkApp,
 } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
@@ -88,6 +89,17 @@ export const command = withAuthOptions(
         debug: options.debug,
       });
 
+      // Check if the app is registered in the app store
+      const appExists = await checkApp({
+          log,
+          environment: options.env,
+          auth: 'token' in options ? { token: options.token } : options,
+        });
+      if (!appExists) {
+        log.error('😢 App is not registered / deleted in app store');
+        process.exit(1);
+      }
+      
       let archive: string | AdmZip;
       if (bundle) {
         log.info(`📦 Using provided bundle: ${bundle}`);
