@@ -1,4 +1,4 @@
-import { from, ObservableInput, Subject, type Observable, type Subscription } from 'rxjs';
+import { from, type ObservableInput, Subject, type Observable, type Subscription } from 'rxjs';
 import type { z } from 'zod';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
