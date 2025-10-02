@@ -91,10 +91,10 @@ export const command = withAuthOptions(
 
       // Check if the app is registered in the app store
       const appExists = await checkApp({
-          log,
-          environment: options.env,
-          auth: 'token' in options ? { token: options.token } : options,
-        });
+        log,
+        environment: options.env,
+        auth: 'token' in options ? { token: options.token } : options,
+      });
       if (!appExists) {
         log.error('😢 App is not registered / deleted in app store');
         process.exit(1);
