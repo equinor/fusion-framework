@@ -26,9 +26,6 @@
       "complexity": {
         "useLiteralKeys": "error",
         "useOptionalChain": "error"
-      },
-      "suspicious": {
-        "noImplicitAnyLet": "warn"
       }
     },
     "includes": [
