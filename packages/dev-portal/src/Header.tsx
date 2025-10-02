@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { ContextSelector } from './ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
@@ -35,6 +35,7 @@ const Styled = {
 
 export const Header = () => {
   const currentUser = useCurrentUser();
+  const topBarId = useId();
   const [isPersonSheetOpen, setIsPersonSheetOpen] = useState(false);
 
   const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
@@ -58,7 +59,7 @@ export const Header = () => {
         currentUser ? { id: currentUser.localAccountId, name: currentUser.name } : undefined
       }
     >
-      <TopBar id="cli-top-bar" sticky={false} style={{ padding: '0 1em', height: 48 }}>
+      <TopBar id={topBarId} sticky={false} style={{ padding: '0 1em', height: 48 }}>
         <TopBar.Header>
           <Styled.Title>
             <FusionLogo />

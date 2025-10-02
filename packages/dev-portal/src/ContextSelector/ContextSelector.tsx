@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useId, useMemo } from 'react';
 import {
   ContextProvider,
   ContextSearch,
@@ -14,6 +14,7 @@ import { useContextResolver } from './useContextResolver';
  * @returns JSX element
  */
 export const ContextSelector = (props: ContextSearchProps): JSX.Element | null => {
+  const contextSelectorId = useId();
   const {
     resolver,
     provider,
@@ -53,7 +54,7 @@ export const ContextSelector = (props: ContextSearchProps): JSX.Element | null =
     <div style={{ flex: 1, maxWidth: '480px' }}>
       <ContextProvider resolver={resolver}>
         <ContextSearch
-          id="context-selector-cli-header"
+          id={contextSelectorId}
           placeholder={props.placeholder ?? 'Search for context'}
           initialText={props.initialText ?? 'Start typing to search'}
           dropdownHeight={props.dropdownHeight ?? '300px'}

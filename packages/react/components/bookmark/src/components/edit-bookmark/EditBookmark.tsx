@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { EMPTY, from, of } from 'rxjs';
 
@@ -48,6 +48,9 @@ export const EditBookmarkModal = ({
     description: '',
     isShared: false,
   });
+
+  const nameId = useId();
+  const descriptionId = useId();
 
   const [updatePayload, setUpdatePayload] = useState(false);
 
@@ -111,9 +114,9 @@ export const EditBookmarkModal = ({
       <Dialog.Header>Edit bookmark</Dialog.Header>
       <Styled.DialogContent>
         <div>
-          <Label htmlFor="name" label="Name" />
+          <Label htmlFor={nameId} label="Name" />
           <Input
-            id="name"
+            id={nameId}
             autoComplete="off"
             value={state?.name}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +126,7 @@ export const EditBookmarkModal = ({
         </div>
         <div>
           <TextField
-            id="storybook-multiline-three"
+            id={descriptionId}
             label="Description"
             value={state?.description}
             multiline
