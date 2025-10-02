@@ -6,6 +6,7 @@ import {
   initializeFramework,
   ConsoleLogger,
   uploadApplication,
+  checkApp,
 } from '@equinor/fusion-framework-cli/bin';
 
 import { withAuthOptions } from '../../options/auth.js';
@@ -49,6 +50,7 @@ export const command = withAuthOptions(
         '',
         'Examples:',
         '  $ ffc app upload',
+        '  $ ffc app upload --env ci',
         '  $ ffc app upload my-app-bundle.zip --appKey my-app',
         '  $ ffc app upload --debug',
       ].join('\n'),
@@ -64,6 +66,18 @@ export const command = withAuthOptions(
       const log = new ConsoleLogger('portal:upload', {
         debug: options.debug,
       });
+
+      // Check if the app is registered in the app store
+      const appExists = await checkApp({
+        log,
+        environment: options.env,
+        auth: 'token' in options ? { token: options.token } : options,
+      });
+      if (!appExists) {
+        log.error('😢 App is not registered / deleted in app store');
+        process.exit(1);
+      }
+
       log?.start('💾 Initializing Fusion Framework...');
       const framework = await initializeFramework({
         env: options.env,

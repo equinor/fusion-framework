@@ -50,13 +50,14 @@ export const command = withAuthOptions(
     )
     .option('-d, --debug', 'debug mode', false)
     .addOption(createEnvOption({ allowDev: false }))
-    .action((options) => {
+    .action(async (options) => {
       const log = new ConsoleLogger('app:check', { debug: !!options.debug });
-      return checkApp({
+      await checkApp({
         log,
         environment: options.env,
         auth: 'token' in options ? { token: options.token } : options,
       });
+      return;
     }),
 );
 
