@@ -3,7 +3,6 @@ import type { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
   type AnyModule,
   type IModulesConfigurator,
-  ModuleConsoleLogger,
   ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
 
@@ -18,6 +17,7 @@ import http, {
 import auth from '@equinor/fusion-framework-module-msal';
 
 import type { AppEnv, AppModules } from './types';
+import { map } from 'rxjs/operators';
 
 /**
  * Configurator for configuring application modules
