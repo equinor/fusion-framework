@@ -827,6 +827,9 @@ importers:
       '@equinor/fusion-framework-module-services':
         specifier: workspace:^
         version: link:../modules/services
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../modules/telemetry
       '@equinor/fusion-framework-react':
         specifier: workspace:^
         version: link:../react/framework
