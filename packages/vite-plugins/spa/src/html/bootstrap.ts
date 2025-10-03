@@ -67,7 +67,18 @@ enableMSAL(configurator, (builder) => {
 enableTelemetry(configurator, {
   attachConfiguratorEvents: true,
   configure: (builder) => {
-    builder.setAdapter(new ConsoleAdapter());
+    const consoleLevel = Number(import.meta.env.FUSION_SPA_TELEMETRY_CONSOLE_LEVEL ?? TelemetryLevel.Information);
+
+    if (!isNaN(consoleLevel)) {
+      builder.setAdapter(
+        new ConsoleAdapter({
+          filter: (item) => item.level >= consoleLevel,
+        }),
+      );
+    } else {
+      // If environment variable is set but invalid, log all telemetry
+      builder.setAdapter(new ConsoleAdapter());
+    }
     builder.setMetadata(({ modules }) => {
       const metadata = {
         fusion: {
