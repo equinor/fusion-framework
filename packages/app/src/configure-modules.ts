@@ -44,7 +44,6 @@ export const configureModules =
    */
   async (args: { fusion: TRef; env: TEnv }): Promise<AppModulesInstance<TModules>> => {
     const { fusion } = args;
-    // args.fusion.modules.telemetry.
     const configurator = new AppConfigurator<TModules, TRef['modules'], TEnv>(args.env);
 
     const metadataExtractor: MetadataExtractor = () => {
