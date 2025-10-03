@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.1.4
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove logger level configuration from bootstrap template.
+
+  - Removed `configurator.logger.level` assignment from `bootstrap.ts`
+  - Logger level configuration should be handled elsewhere or is no longer needed
+
+  This cleans up the bootstrap template by removing unused logger configuration.
+
 ## 1.1.3
 
 ### Patch Changes
