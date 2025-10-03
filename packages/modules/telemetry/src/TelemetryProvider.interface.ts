@@ -23,7 +23,7 @@ import type { IMeasurement } from './Measurement.interface.js';
  * - `TelemetryType.Custom` - for custom telemetry types
  *
  * The `level` property (if supported by the item) should reference the {@link TelemetryLevel} enum to indicate severity:
- * - `TelemetryLevel.Verbose` - Detailed information, typically for debugging
+ * - `TelemetryLevel.Debug` - Debugging information useful during development
  * - `TelemetryLevel.Information` - General information about the system's operation
  * - `TelemetryLevel.Warning` - Indicates a potential issue that is not critical
  * - `TelemetryLevel.Error` - Represents an error that has occurred, but the system can continue running

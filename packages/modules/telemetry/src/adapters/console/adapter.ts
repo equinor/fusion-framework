@@ -46,6 +46,8 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    */
   protected _generateTitleBackground(lvl: TelemetryLevel): string {
     switch (lvl) {
+      case TelemetryLevel.Critical:
+        return 'rgb(255, 0, 0)';
       case TelemetryLevel.Error:
         // Light red/pink background
         return 'rgb(250, 138, 161)';
@@ -149,8 +151,9 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    */
   protected _log(lvl: TelemetryLevel, title: string, ...msg: unknown[]): void {
     switch (lvl) {
+      case TelemetryLevel.Critical:
       case TelemetryLevel.Error:
-        // Use console.error for errors
+        // Use console.error for errors and critical issues
         console.error(...this._generateTitle(title, lvl), ...msg);
         break;
       case TelemetryLevel.Warning:
@@ -162,7 +165,7 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
         console.info(...this._generateTitle(title, lvl), ...msg);
         break;
       case TelemetryLevel.Debug:
-        // Use console.debug for debug messages
+        // Use console.debug for debug and verbose messages
         console.debug(...this._generateTitle(title, lvl), ...msg);
         break;
       default:

@@ -6,18 +6,18 @@
  * It helps in filtering and prioritizing telemetry data for monitoring and analysis.
  *
  * @enum
- * @property {TelemetryLevel.Verbose} Verbose - Detailed information, typically for debugging.
+ * @property {TelemetryLevel.Debug} Debug - Debugging information useful during development.
  * @property {TelemetryLevel.Information} Information - General information about the system's operation.
  * @property {TelemetryLevel.Warning} Warning - Indicates a potential issue that is not critical.
  * @property {TelemetryLevel.Error} Error - Represents an error that has occurred, but the system can continue running.
  * @property {TelemetryLevel.Critical} Critical - A severe error that may cause the system to stop functioning.
  */
 export enum TelemetryLevel {
-  NONE = 0,
-  Error = 1,
+  Debug = 0,
+  Information = 1,
   Warning = 2,
-  Information = 3,
-  Debug = 4,
+  Error = 3,
+  Critical = 4,
 }
 
 /**
