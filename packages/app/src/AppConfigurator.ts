@@ -3,7 +3,6 @@ import type { FusionModulesInstance } from '@equinor/fusion-framework';
 import {
   type AnyModule,
   type IModulesConfigurator,
-  ModuleConsoleLogger,
   ModulesConfigurator,
 } from '@equinor/fusion-framework-module';
 
