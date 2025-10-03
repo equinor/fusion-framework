@@ -1,16 +1,30 @@
 import type { ModulesInstance } from '@equinor/fusion-framework-module';
 import type { MsalModule } from '@equinor/fusion-framework-module-msal';
+import { TelemetryLevel, type TelemetryModule } from '@equinor/fusion-framework-module-telemetry';
 
-export async function registerServiceWorker(framework: ModulesInstance<[MsalModule]>) {
+export async function registerServiceWorker(
+  framework: ModulesInstance<[MsalModule, TelemetryModule]>,
+) {
+  const telemetry = framework.telemetry;
   if ('serviceWorker' in navigator === false) {
-    console.warn('Service workers are not supported in this browser.');
-    return;
+    const exception = new Error('Service workers are not supported in this browser.');
+    exception.name = 'ServiceWorkerNotSupported';
+    telemetry.trackException({
+      name: `registerServiceWorker.${exception.name}`,
+      exception,
+    });
+    throw exception;
   }
 
   const resourceConfigs = import.meta.env.FUSION_SPA_SERVICE_WORKER_RESOURCES;
   if (!resourceConfigs) {
-    console.warn('Service worker config is not defined.');
-    return;
+    const exception = new Error('Service worker config is not defined.');
+    exception.name = 'ServiceWorkerConfigNotDefined';
+    telemetry.trackException({
+      name: `registerServiceWorker.${exception.name}`,
+      exception,
+    });
+    throw exception;
   }
 
   /**
@@ -34,14 +48,19 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
           // extract scopes from the event data
           const scopes = event.data.scopes as string[];
           if (!scopes || !Array.isArray(scopes)) {
-            throw new Error('Invalid scopes provided');
+            const error = new Error('Invalid scopes provided');
+            error.name = 'InvalidScopesProvided';
+            throw error;
           }
 
           // request a token from the MSAL module
           const token = await framework.auth.acquireToken({ scopes });
 
           if (!token) {
-            throw new Error('Failed to acquire token');
+            const error = new Error('Failed to acquire token');
+            error.name = 'FailedToAcquireToken';
+
+            throw error;
           }
 
           // send the token back to the service worker
@@ -50,6 +69,11 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
             expiresOn: token.expiresOn?.getTime(),
           });
         } catch (error) {
+          const exception = error as Error;
+          telemetry.trackException({
+            name: `serviceWorker.onMessage.${exception.name}`,
+            exception,
+          });
           event.ports[0].postMessage({
             error: (error as Error).message,
           });
@@ -57,14 +81,26 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
       }
     });
 
-    // register the service worker
+    // register the service worker with telemetry
     // updateViaCache: 'none' ensures the service worker script is always fetched fresh
     // This is important during development to pick up code changes
-    const registration = await navigator.serviceWorker.register('/@fusion-spa-sw.js', {
-      type: 'module',
-      scope: '/',
-      updateViaCache: 'none',
+    using measurement = telemetry.measure({
+      name: 'registerServiceWorker',
+      level: TelemetryLevel.Information,
     });
+    const registration = await measurement.clone().resolve(
+      navigator.serviceWorker.register('/@fusion-spa-sw.js', {
+        type: 'module',
+        scope: '/',
+        updateViaCache: 'none',
+      }),
+      {
+        data: {
+          name: 'registerServiceWorker.register',
+          level: TelemetryLevel.Debug,
+        },
+      },
+    );
 
     // Handle service worker updates/installations
     // If there's a service worker waiting or installing, send config when it activates
@@ -88,7 +124,12 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
     });
 
     // wait for the service worker to be ready
-    const readyRegistration = await navigator.serviceWorker.ready;
+    const readyRegistration = await measurement.clone().resolve(navigator.serviceWorker.ready, {
+      data: {
+        name: 'registerServiceWorker.ready',
+        level: TelemetryLevel.Debug,
+      },
+    });
 
     // ensure we have an active service worker before sending config
     const activeWorker = readyRegistration.active;
@@ -100,27 +141,35 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
     // CRITICAL: Wait for the service worker to become the controller
     // This ensures the service worker can intercept fetch requests
     if (!navigator.serviceWorker.controller) {
-      await new Promise<void>((resolve) => {
-        let checkInterval: NodeJS.Timeout;
+      await measurement.clone().resolve(
+        new Promise<void>((resolve) => {
+          let checkInterval: NodeJS.Timeout;
 
-        const finish = () => {
-          clearInterval(checkInterval);
-          navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-          resolve();
-        };
+          const finish = () => {
+            clearInterval(checkInterval);
+            navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+            resolve();
+          };
 
-        const onControllerChange = () => finish();
+          const onControllerChange = () => finish();
 
-        // If controllerchange fires, the service worker has taken control
-        navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
+          // If controllerchange fires, the service worker has taken control
+          navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
 
-        // Polling fallback and timeout to prevent infinite waiting
-        checkInterval = setInterval(() => {
-          if (navigator.serviceWorker.controller) finish();
-        }, 200);
+          // Polling fallback and timeout to prevent infinite waiting
+          checkInterval = setInterval(() => {
+            if (navigator.serviceWorker.controller) finish();
+          }, 200);
 
-        setTimeout(finish, 5000);
-      });
+          setTimeout(finish, 5000);
+        }),
+        {
+          data: {
+            name: 'registerServiceWorker.controllerWait',
+            level: TelemetryLevel.Debug,
+          },
+        },
+      );
     }
 
     // send the config to the active service worker
@@ -131,6 +180,9 @@ export async function registerServiceWorker(framework: ModulesInstance<[MsalModu
       sendConfigToServiceWorker(navigator.serviceWorker.controller);
     }
   } catch (error) {
-    console.error('Service Worker registration failed:', error);
+    telemetry.trackException({
+      name: `registerServiceWorker.${(error as Error).name}`,
+      exception: error as Error,
+    });
   }
 }
