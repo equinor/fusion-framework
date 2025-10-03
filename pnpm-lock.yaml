@@ -1873,7 +1873,7 @@ importers:
         version: 1.1.0
       memfs:
         specifier: ^4.17.0
-        version: 4.48.0
+        version: 4.48.1
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -7118,8 +7118,8 @@ packages:
   mdurl@2.0.0:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
 
-  memfs@4.48.0:
-    resolution: {integrity: sha512-i/MFEXZgfGreGz5uByOLSfJ0G35aHS8LPfC1kg3j6CWK7j7yK2Ez+eVCunv/P+T7QeleIEVZds4X5hXyHKoUTA==}
+  memfs@4.48.1:
+    resolution: {integrity: sha512-vWO+1ROkhOALF1UnT9aNOOflq5oFDlqwTXaPg6duo07fBLxSH0+bcF0TY1lbA1zTNKyGgDxgaDdKx5MaewLX5A==}
 
   memoizerific@1.11.3:
     resolution: {integrity: sha512-/EuHYwAPdLtXwAwSZkh/Gutery6pD2KYd44oQLhAvQp/50mpyduZh8Q7PYHXTCJ+wuXxt7oij2LXyIJOOYFPog==}
@@ -16030,7 +16030,7 @@ snapshots:
 
   mdurl@2.0.0: {}
 
-  memfs@4.48.0:
+  memfs@4.48.1:
     dependencies:
       '@jsonjoy.com/json-pack': 1.14.0(tslib@2.8.1)
       '@jsonjoy.com/util': 1.9.0(tslib@2.8.1)
