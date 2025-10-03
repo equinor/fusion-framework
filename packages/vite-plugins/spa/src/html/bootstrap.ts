@@ -104,7 +104,7 @@ enableTelemetry(configurator, {
     level: TelemetryLevel.Information,
   });
 
-  measurement.clone().resolve(registerServiceWorker(ref), {
+  await measurement.clone().resolve(registerServiceWorker(ref), {
     data: {
       level: TelemetryLevel.Debug,
       name: 'bootstrap::registerServiceWorker',
