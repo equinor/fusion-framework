@@ -46,11 +46,11 @@
     "lodash.mergewith": "^4.6.2"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@equinor/fusion-framework-module-http": "workspace:^",
-    "@equinor/fusion-framework-module-msal": "workspace:^",
-    "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-http": "workspace:*",
+    "@equinor/fusion-framework-module-msal": "workspace:*",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:*",
+    "@equinor/fusion-framework-module-telemetry": "workspace:*",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
