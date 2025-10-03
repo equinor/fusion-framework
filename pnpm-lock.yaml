@@ -2022,17 +2022,20 @@ importers:
         version: 4.6.2
     devDependencies:
       '@equinor/fusion-framework-module':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../modules/module
       '@equinor/fusion-framework-module-http':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../modules/http
       '@equinor/fusion-framework-module-msal':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../modules/msal
       '@equinor/fusion-framework-module-service-discovery':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../modules/service-discovery
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../../modules/telemetry
       '@rollup/plugin-commonjs':
         specifier: ^28.0.3
         version: 28.0.6(rollup@4.52.3)
