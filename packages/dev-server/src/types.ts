@@ -20,7 +20,7 @@ export { UserConfig as DevServerOverrides } from 'vite';
  *
  * @template TEnv - The type of the environment variables, extending Partial<FusionTemplateEnv>.
  *
- * @property spa - Single Page Application (SPA) specific options.
+ * @property spa - Optional Single Page Application (SPA) specific options.
  * @property spa.templateEnv - The template environment configuration or a function returning it.
  *
  * @property api - API proxy configuration options.

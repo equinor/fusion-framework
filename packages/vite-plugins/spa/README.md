@@ -40,36 +40,6 @@ A powerful Vite plugin for building Single Page Applications (SPAs) with the Fus
 >
 > The plugin is written in a modular fashion, allowing for easy customization and extension __IF__ the developer has a deep understanding of the Fusion Framework and its internals.
 
-## Table of Contents
-
-- [Fusion Framework Vite SPA Plugin](#fusion-framework-vite-spa-plugin)
-  - [Table of Contents](#table-of-contents)
-  - [What It Does](#what-it-does)
-  - [How the Plugin Works](#how-the-plugin-works)
-  - [Getting Started](#getting-started)
-  - [Configuration Options](#configuration-options)
-    - [Basic Configuration](#basic-configuration)
-    - [Service Discovery](#service-discovery)
-    - [MSAL](#msal)
-    - [Service Worker](#service-worker)
-  - [Configuring through `.env` File](#configuring-through-env-file)
-    - [How Environment Variables Work](#how-environment-variables-work)
-    - [Naming Convention](#naming-convention)
-    - [Example Conversion](#example-conversion)
-    - [Complete `.env` Example](#complete-env-example)
-  - [Advanced Customization](#advanced-customization)
-    - [Providing a Custom Template](#providing-a-custom-template)
-    - [Providing Custom Bootstrap](#providing-custom-bootstrap)
-  - [Examples](#examples)
-    - [Basic SPA Configuration](#basic-spa-configuration)
-    - [Using with API Service Plugin](#using-with-api-service-plugin)
-  - [Troubleshooting \& FAQ](#troubleshooting--faq)
-    - [Common Issues](#common-issues)
-    - [Known Issues](#known-issues)
-    - [Best Practices \& FAQ](#best-practices--faq)
-  - [Contributing](#contributing)
-
-
 ## What It Does
 
 The plugin:
@@ -280,7 +250,41 @@ When the above `fetch` request is made, the following happens:
 > The `url` path doesn't need to correspond to an actual endpoint—it's simply a pattern used for matching requests. This allows you to emulate proxy services in production environments without changing your application code.
 
 > [!TIP]
-> For enhanced development capabilities, consider using the `@equinor/fusion-framework-vite-plugin-api-service` plugin. This plugin creates a dynamic proxy service that can handle requests to the `/@fusion-api/app` path by intercepting them in the dev-server and routing them based on service discovery configuration.  
+> For enhanced development capabilities, consider using the `@equinor/fusion-framework-vite-plugin-api-service` plugin. This plugin creates a dynamic proxy service that can handle requests to the `/@fusion-api/app` path by intercepting them in the dev-server and routing them based on service discovery configuration.
+
+## Telemetry
+
+The Fusion Framework SPA plugin includes built-in telemetry configuration that automatically sets up console logging for development and debugging purposes. The plugin uses the `@equinor/fusion-framework-module-telemetry` module to provide structured logging with different severity levels.
+
+### Telemetry Levels
+
+The telemetry system supports the following severity levels (ordered from lowest to highest):
+
+- **Debug** (0): Debugging information useful during development
+- **Information** (1): General information about the system's operation
+- **Warning** (2): Indicates a potential issue that is not critical
+- **Error** (3): Represents an error that has occurred, but the system can continue running
+- **Critical** (4): A severe error that may cause the system to stop functioning
+
+### Console Logging
+
+By default, the plugin enables console logging for all telemetry events. You can control the minimum log level displayed in the console using the `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL` environment variable.
+
+```typescript
+// Environment variable configuration
+FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  // Only show Warning, Error, and Critical events
+```
+
+When set to a valid number, only telemetry items with a level **greater than or equal to** the specified value will be logged to the console. For example:
+- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=0` → Shows all telemetry events (Debug, Information, Warning, Error, Critical)
+- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=1` → Shows Information, Warning, Error, and Critical events
+- `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2` → Shows Warning, Error, and Critical events
+
+If the environment variable is not set, the default is `FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=1` (Information level and above). If the environment variable contains an invalid value, all telemetry events will be logged to the console.
+
+### Custom Telemetry Configuration
+
+For advanced telemetry setup (such as Application Insights integration), you can customize the telemetry configuration by providing a custom bootstrap file. See the [Providing Custom Bootstrap](#providing-custom-bootstrap) section for details.
 
 ## Configuring through `.env` File
 
@@ -336,6 +340,9 @@ FUSION_SPA_MSAL_TENANT_ID=my-tenant-id
 FUSION_SPA_MSAL_CLIENT_ID=my-client-id
 FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
+
+# Telemetry configuration
+FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Only log Verbose, Debug, and Information events to console
 
 # Service Worker configuration (as JSON string)
 FUSION_SPA_SERVICE_WORKER_RESOURCES=[{"url":"/app-proxy","rewrite":"/@fusion-api/app","scopes":["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/.default"]}]
@@ -465,6 +472,9 @@ export default defineConfig({
           clientId: process.env.CLIENT_ID,
           redirectUri: 'http://localhost:3000/auth-callback',
           requiresAuth: 'true',
+        },
+        telemetry: {
+          consoleLevel: 2, // Show Warning, Error, and Critical events
         },
       }),
     }),

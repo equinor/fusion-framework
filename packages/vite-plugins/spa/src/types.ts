@@ -17,6 +17,10 @@ export type FusionTemplateEnv = {
   /** Template bootstrap file path */
   bootstrap: string;
 
+  telemetry?: {
+    consoleLevel?: number;
+  };
+
   /** Id of the portal to load */
   portal: {
     id: string;
