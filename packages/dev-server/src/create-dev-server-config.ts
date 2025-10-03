@@ -24,7 +24,7 @@ const createDefaultLogger = (lvl: LogLevel = LogLevel.Info, title = 'dev-server'
  *
  * @template TEnv - A type extending `Partial<TemplateEnv>` that represents the environment variables for the template.
  * @param options - The options for configuring the development server.
- * @param options.spa - Configuration for the Single Page Application (SPA), including template environment settings.
+ * @param options.spa - Optional configuration for the Single Page Application (SPA), including template environment settings.
  * @param options.api - Configuration for the API, including service discovery URL, routes, and service processing logic.
  *
  * @returns A `UserConfig` object that defines the Vite development server configuration.
