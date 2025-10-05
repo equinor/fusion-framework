@@ -725,35 +725,40 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     const initStart = performance.now();
     // Subscribe to module initialization stream and accumulate results
     // Each successful initialization updates the shared instance object
-    init$.subscribe({
-      next: ([name, module]) => {
-        // Accumulate initialized modules into the shared instance object
-        instance$.next(Object.assign(instance$.value, { [name]: module }));
-      },
-      error: (err) => {
-        this._registerEvent({
-          level: ModuleEventLevel.Error,
-          name: '_initialize.moduleInitializationError',
-          message: `Failed to initialize module ${err.name || 'unknown'}`,
-          error: err,
-        });
-        instance$.error(err);
-      },
-      complete: () => {
-        const loadTime = Math.round(performance.now() - initStart);
-        this._registerEvent({
-          level: ModuleEventLevel.Debug,
-          name: '_initialize.moduleInitializationComplete',
-          message: `All modules initialized in ${loadTime}ms`,
-          properties: {
-            modules: Object.keys(instance$.value).join(', '),
-            loadTime,
-          },
-          metric: loadTime,
-        });
-        return instance$.complete();
-      },
-    });
+    init$
+      .pipe(
+        /** ensure that the stream is completed even if there are no modules to initialize */
+        defaultIfEmpty([]),
+      )
+      .subscribe({
+        next: ([name, module]) => {
+          // Accumulate initialized modules into the shared instance object
+          instance$.next(Object.assign(instance$.value, { [name]: module }));
+        },
+        error: (err) => {
+          this._registerEvent({
+            level: ModuleEventLevel.Error,
+            name: '_initialize.moduleInitializationError',
+            message: `Failed to initialize module ${err.name || 'unknown'}`,
+            error: err,
+          });
+          instance$.error(err);
+        },
+        complete: () => {
+          const loadTime = Math.round(performance.now() - initStart);
+          this._registerEvent({
+            level: ModuleEventLevel.Debug,
+            name: '_initialize.moduleInitializationComplete',
+            message: `All modules initialized in ${loadTime}ms`,
+            properties: {
+              modules: Object.keys(instance$.value).join(', '),
+              loadTime,
+            },
+            metric: loadTime,
+          });
+          return instance$.complete();
+        },
+      });
 
     /** await creation of all instances */
     const initStartTime = performance.now();
@@ -839,6 +844,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
           }),
         );
       }),
+      defaultIfEmpty(null),
     );
 
     this._registerEvent({
