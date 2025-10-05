@@ -67,7 +67,9 @@ enableMSAL(configurator, (builder) => {
 enableTelemetry(configurator, {
   attachConfiguratorEvents: true,
   configure: (builder) => {
-    const consoleLevel = Number(import.meta.env.FUSION_SPA_TELEMETRY_CONSOLE_LEVEL ?? TelemetryLevel.Information);
+    const consoleLevel = Number(
+      import.meta.env.FUSION_SPA_TELEMETRY_CONSOLE_LEVEL ?? TelemetryLevel.Information,
+    );
 
     if (!isNaN(consoleLevel)) {
       builder.setAdapter(
