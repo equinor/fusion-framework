@@ -874,7 +874,6 @@ export class Query<TDataType, TQueryArguments = any> {
           args,
           options,
         });
-        this.#queue$.next(key);
       } else {
         this._registerEvent('query_connected', key, { isExistingTask: true });
       }
@@ -882,6 +881,11 @@ export class Query<TDataType, TQueryArguments = any> {
 
       // Connect the subscriber to the task to receive updates on the query's execution and results.
       subscriber.add(task.subscribe(subscriber));
+
+      // If this is a new task, add it to the query queue to be processed.
+      if (!isExistingTask) {
+        this.#queue$.next(key);
+      }
     });
   }
 }
