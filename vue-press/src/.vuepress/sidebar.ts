@@ -57,7 +57,17 @@ export default sidebar({
         },
         {
           text: 'Dev Server',
-          link: 'docs/dev-server.md',
+          prefix: 'docs/',
+          children: [
+            {
+              text: 'Overview',
+              link: 'dev-server.md',
+            },
+            {
+              text: 'Configuration',
+              link: 'dev-server-config.md',
+            },
+          ],
         },
         {
           text: 'Migration',
