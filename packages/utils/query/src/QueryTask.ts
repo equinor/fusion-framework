@@ -3,7 +3,6 @@ import { finalize, map } from 'rxjs/operators';
 import type { QueryOptions, QueryTaskCompleted } from './types';
 import type { QueryClientJob } from './client/QueryClientJob';
 import { v4 as generateGUID } from 'uuid';
-import type { ILogger } from '@equinor/fusion-log';
 
 /**
  * The `QueryTask` class is designed to manage and execute query operations efficiently. It extends the RxJS `Subject` to
@@ -82,7 +81,7 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
    * @param logger Optional. A logger for logging the completion of the job.
    * @returns A subscription to the job's result.
    */
-  processJob(job: QueryClientJob<TType, TArgs>, logger?: ILogger): Subscription {
+  processJob(job: QueryClientJob<TType, TArgs>): Subscription {
     return job
       .pipe(
         map((result) => {
@@ -98,11 +97,6 @@ export class QueryTask<TType, TArgs> extends Subject<QueryTaskCompleted<TType>> 
           } satisfies QueryTaskCompleted<TType>;
         }),
         finalize(() => {
-          logger?.debug('QueryTask complete', {
-            uuid: this.uuid,
-            key: this.key,
-            job: { status: job.status, transaction: job.transaction },
-          });
           job.complete();
         }),
       )
