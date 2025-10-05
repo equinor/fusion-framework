@@ -1,3 +1,5 @@
+import type { QueryClientOptions } from './client/QueryClient';
+
 export interface IQueryEvent<TData = unknown> {
   type: keyof QueryEventMap;
   data?: TData;
@@ -19,7 +21,7 @@ export class QueryEvent<TData = undefined> implements IQueryEvent<TData> {
  */
 export interface QueryEvents<TData = unknown, TArgs = unknown> {
   // new query created
-  query_created: QueryEvent<{ args: TArgs; options?: any }>;
+  query_created: QueryEvent<{ args: TArgs; options?: Partial<QueryClientOptions> }>;
   // query completed
   query_completed: QueryEvent<{ data: TData; hasValidCache: boolean }>;
   // query connected to existing task
@@ -35,32 +37,44 @@ export interface QueryEvents<TData = unknown, TArgs = unknown> {
   // query cache added
   query_cache_added: QueryEvent<{ data: TData; taskId: string; args: TArgs; transaction?: string }>;
   // query job created
-  query_job_created: QueryEvent<{ taskId: string; args: TArgs; options?: any }>;
+  query_job_created: QueryEvent<{
+    taskId: string;
+    args: TArgs;
+    options?: Partial<QueryClientOptions>;
+  }>;
   // query job selected
-  query_job_selected: QueryEvent<{ taskId: string; args: TArgs; options?: any }>;
+  query_job_selected: QueryEvent<{
+    taskId: string;
+    args: TArgs;
+    options?: Partial<QueryClientOptions>;
+  }>;
   // query job started
   query_job_started: QueryEvent<{
     taskId: string;
     transaction?: string;
     args: TArgs;
-    options?: any;
+    options?: Partial<QueryClientOptions>;
   }>;
   // query job closed
   query_job_closed: QueryEvent<{
     taskId: string;
     transaction?: string;
     args: TArgs;
-    options?: any;
+    options?: Partial<QueryClientOptions>;
   }>;
   // query job completed
   query_job_completed: QueryEvent<{
     taskId: string;
     transaction?: string;
     args: TArgs;
-    options?: any;
+    options?: Partial<QueryClientOptions>;
   }>;
   // query job skipped
-  query_job_skipped: QueryEvent<{ taskId: string; args: TArgs; options?: any }>;
+  query_job_skipped: QueryEvent<{
+    taskId: string;
+    args: TArgs;
+    options?: Partial<QueryClientOptions>;
+  }>;
 }
 
 export interface QueryEventMap extends QueryEvents {
