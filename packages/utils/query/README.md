@@ -48,9 +48,9 @@ When setting up a `Query`, you can typically configure it with several options t
         - **`merge`**: Allows multiple requests to run in parallel.
         - **`concat`**: Queues requests and executes them sequentially.
 
-5. **Logging / Debugging:**
+5. **Event System:**
 
-    - Integrations or options for logging queries, responses, and errors for debugging purposes. This might include specifying a logger instance or configuring log levels.
+    - Observable event stream (`event$`) that emits lifecycle events for monitoring query execution, caching behavior, and debugging. Events include query creation, cache hits/misses, job execution stages, and completion states.
 
 6. **Request Transformation:**
 
@@ -187,21 +187,101 @@ subscription.unsubscribe();
 query.complete();
 ```
 
-## Setup
+## Event System
 
-When compiling code the `FUSION_LOG_LEVEL` must be set (depending on build util, example shown for Vite)
+The Query package provides a comprehensive event system that aggregates events from three sources: the Query instance itself, the QueryClient (handling data fetching), and the QueryCache (managing cached data). All events are emitted through the `event$` observable stream, allowing you to monitor and debug the entire query lifecycle in real-time.
 
-`Uncaught ReferenceError: process is not defined`
+### Query Events
 
-```ts
-defineConfig({
-    plugins: [
-        tsconfigPaths(),
-        viteEnv({
-            FUSION_LOG_LEVEL: process.env.FUSION_LOG_LEVEL ?? process.env.NODE_ENV === 'development' ? '3' : '1'
-        }),
-    ]
-})
+Events emitted by the Query instance itself:
+
+- **`query_created`**: Fired when a new query is created
+- **`query_completed`**: Fired when a query completes successfully
+- **`query_connected`**: Fired when connecting to an existing task
+- **`query_queued`**: Fired when a query is queued for execution
+- **`query_aborted`**: Fired when a query is aborted
+- **`query_cache_hit`**: Fired when cached data is used
+- **`query_cache_miss`**: Fired when no valid cache is found
+- **`query_cache_added`**: Fired when data is added to cache
+- **`query_job_created`**: Fired when a new job is created
+- **`query_job_selected`**: Fired when a job is selected for execution
+- **`query_job_started`**: Fired when job execution begins
+- **`query_job_closed`**: Fired when a job is closed
+- **`query_job_completed`**: Fired when a job completes
+- **`query_job_skipped`**: Fired when a job is skipped
+
+### QueryClient Events
+
+Events emitted by the QueryClient during data fetching operations:
+
+- **`query_client_job_requested`**: Fired when a job is requested with arguments and options
+- **`query_client_job_executing`**: Fired when query execution begins
+- **`query_client_job_completed`**: Fired when a query completes successfully with result payload
+- **`query_client_job_failed`**: Fired when query execution fails with an error
+- **`query_client_job_canceled`**: Fired when a query is canceled with a reason
+- **`query_client_job_error`**: Fired when a general error occurs during query processing
+
+### QueryCache Events
+
+Events emitted by the QueryCache during cache operations:
+
+- **`query_cache_entry_set`**: Fired when a cache entry is set with a complete record
+- **`query_cache_entry_inserted`**: Fired when a cache entry is inserted with new data
+- **`query_cache_entry_removed`**: Fired when a cache entry is removed
+- **`query_cache_entry_invalidated`**: Fired when a cache entry is invalidated
+- **`query_cache_entry_mutated`**: Fired when a cache entry is mutated/updated
+- **`query_cache_trimmed`**: Fired when the cache is trimmed based on criteria
+- **`query_cache_reset`**: Fired when the cache is reset to its initial state
+
+### Subscribing to Events
+
+```typescript
+import { filter } from 'rxjs';
+
+const query = new Query({
+  client: { fn: myFetchFunction },
+  key: (args) => JSON.stringify(args),
+});
+
+// Subscribe to all events
+query.event$.subscribe({
+  next: (event) => {
+    console.log(`Event: ${event.type}`, event);
+  },
+  error: (error) => console.error('Event error:', error),
+});
+
+// Subscribe to specific event types
+query.event$.pipe(
+  filter(event => event.type === 'query_cache_hit')
+).subscribe(event => {
+  console.log('Cache hit!', event.data);
+});
+
+// Filter events by source using instanceof
+import { QueryEvent } from '@equinor/fusion-query';
+import { QueryClientEvent } from '@equinor/fusion-query/client';
+import { QueryCacheEvent } from '@equinor/fusion-query/cache';
+
+const cacheEvents$ = query.event$.pipe(
+  filter(event => event instanceof QueryCacheEvent)
+);
+
+const clientEvents$ = query.event$.pipe(
+  filter(event => event instanceof QueryClientEvent)
+);
+
+const queryEvents$ = query.event$.pipe(
+  filter(event => event instanceof QueryEvent)
+);
+```
+
+### Event Data
+
+Each event includes:
+- **`type`**: The event type identifier
+- **`key`**: The cache key for the query
+- **`data`**: Type-safe event-specific data (varies by event type)
 
 ## Advanced Usage
 
