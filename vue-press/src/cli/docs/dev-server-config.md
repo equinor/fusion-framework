@@ -1,6 +1,6 @@
 ---
 title: Framework CLI - Dev Server Config
-description: 
+description: Configuration options and usage details for the Framework CLI development server.
 category: CLI
 ---
 
