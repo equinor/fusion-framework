@@ -42,7 +42,7 @@ const createActions = <TType, TArgs>() => ({
       meta: { transaction: result.transaction, created: Date.now() },
     }),
     (error: Error, transaction: string) => ({
-      payload: error,
+      payload: { error },
       meta: { transaction, created: Date.now() },
     }),
   ),

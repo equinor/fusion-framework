@@ -67,9 +67,9 @@ export const createReducer = <TArgs = unknown>(initial: QueryClientState<TArgs> 
       // Locates the query entry in the state using the transaction ID provided in `action.meta`.
       const entry = state[action.meta.transaction];
       if (entry) {
-        // If the entry is found, the error information from `action.payload` is added to the `errors` array of the entry.
+        // If the entry is found, the error information from `action.payload.error` is added to the `errors` array of the entry.
         // This allows tracking of all errors that have occurred during the execution of the query.
-        entry.errors.push(action.payload);
+        entry.errors.push(action.payload.error);
         // The status of the entry is updated to 'failed' to indicate that the query execution has encountered an error.
         entry.status = 'failed';
       }

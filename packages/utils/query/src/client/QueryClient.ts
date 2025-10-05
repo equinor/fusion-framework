@@ -216,7 +216,8 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
 
     // Emit event when query execution fails
     this.#state.addEffect(actions.execute.failure.type, ({ payload, meta: { transaction } }) => {
-      const error = payload instanceof Error ? payload : new Error(String(payload));
+      const error =
+        payload.error instanceof Error ? payload.error : new Error(String(payload.error));
       this._registerEvent('query_client_job_failed', transaction, { error });
     });
 
