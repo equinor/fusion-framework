@@ -342,7 +342,7 @@ FUSION_SPA_MSAL_REDIRECT_URI=https://my-app.com/auth-callback
 FUSION_SPA_MSAL_REQUIRES_AUTH=true
 
 # Telemetry configuration
-FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Only log Verbose, Debug, and Information events to console
+FUSION_SPA_TELEMETRY_CONSOLE_LEVEL=2  # Only log Warning, Error, and Critical events to console
 
 # Service Worker configuration (as JSON string)
 FUSION_SPA_SERVICE_WORKER_RESOURCES=[{"url":"/app-proxy","rewrite":"/@fusion-api/app","scopes":["xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/.default"]}]
