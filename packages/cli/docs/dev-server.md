@@ -24,6 +24,10 @@ ffc portal dev
 
 The dev-server automatically detects your project type, loads configuration files, and starts a development server with all Fusion Framework features ready to use. No complex setup required - just run the command and start building.
 
+## Configuration
+
+For detailed information about configuring the dev-server, see [Dev Server Configuration](dev-server-config.md).
+
 ## Key Features
 
 - **Service Discovery Integration** - Automatically connects to Fusion service discovery and enables local API mocking
