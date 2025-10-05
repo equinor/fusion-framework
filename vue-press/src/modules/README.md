@@ -19,6 +19,7 @@ When initializing sub modules (app) the framework is provided as an reference.
   - [module-http](http/)
   - [module-msal](msal/)
   - [module-service-discovery](service-discovery/)
+  - [module-telemetry](telemetry/)
 
 ### App
 

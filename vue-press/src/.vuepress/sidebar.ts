@@ -57,7 +57,17 @@ export default sidebar({
         },
         {
           text: 'Dev Server',
-          link: 'docs/dev-server.md',
+          prefix: 'docs/',
+          children: [
+            {
+              text: 'Overview',
+              link: 'dev-server.md',
+            },
+            {
+              text: 'Configuration',
+              link: 'dev-server-config.md',
+            },
+          ],
         },
         {
           text: 'Migration',
@@ -133,6 +143,10 @@ export default sidebar({
     {
       text: 'Service Discovery',
       link: 'service-discovery/',
+    },
+    {
+      text: 'Telemetry',
+      link: 'telemetry/',
     },
     {
       text: 'Services',

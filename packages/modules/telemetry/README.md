@@ -443,37 +443,6 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
 };
 ```
 
-### Environment Variable Configuration
-
-You can use environment variables to control telemetry behavior. For example, you can use the `FUSION_TELEMETRY_LEVEL` environment variable to control the minimum level of telemetry that should be processed:
-
-```typescript
-import { enableTelemetry, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
-
-// Map string level names to numeric levels
-const levelMap = {
-  'verbose': TelemetryLevel.Verbose,
-  'debug': TelemetryLevel.Debug,
-  'information': TelemetryLevel.Information,
-  'warning': TelemetryLevel.Warning,
-  'error': TelemetryLevel.Error,
-  'critical': TelemetryLevel.Critical,
-};
-
-// Get the level from the environment variable, defaulting to Information
-const envLevel = process.env.FUSION_TELEMETRY_LEVEL?.toLowerCase();
-const minLevel = envLevel && levelMap[envLevel] !== undefined 
-  ? levelMap[envLevel] 
-  : TelemetryLevel.Information;
-
-const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, (builder) => {
-    // Only process events at or above the minimum level
-    builder.setFilter((item) => item.level >= minLevel);
-  });
-};
-```
-
 ## Architecture
 
 The telemetry module follows a hierarchical architecture that allows for flexible configuration and data flow. The diagram below shows how different components interact:
