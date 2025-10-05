@@ -9,7 +9,7 @@ import createReducer from './create-reducer';
 
 import type { QueryCacheMutation, QueryCacheRecord, QueryCacheStateData } from './types';
 import type { ActionMap, Actions } from './actions';
-import { QueryCacheEvent, QueryCacheEventData, type QueryCacheEvents } from './events';
+import { QueryCacheEvent, type QueryCacheEventData, type QueryCacheEvents } from './events';
 
 /**
  * Defines the options used for trimming the query cache.

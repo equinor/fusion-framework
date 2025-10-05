@@ -18,7 +18,7 @@ import type {
   QueryClientRequest,
 } from './types';
 import { QueryClientJob } from './QueryClientJob';
-import { QueryClientEvent, QueryClientEventData, type QueryClientEvents } from './events';
+import { QueryClientEvent, type QueryClientEventData, type QueryClientEvents } from './events';
 
 /**
  * Options for configuring the behavior of the `QueryClient`.
