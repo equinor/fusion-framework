@@ -76,7 +76,7 @@ enableTelemetry(configurator, {
         }),
       );
     } else {
-      // If environment variable is set but invalid, log all telemetry
+      // If environment variable is invalid, use default console logging behavior
       builder.setAdapter(new ConsoleAdapter());
     }
     builder.setMetadata(({ modules }) => {
