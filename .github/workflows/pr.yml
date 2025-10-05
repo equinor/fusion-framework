@@ -106,7 +106,7 @@ jobs:
           path: tsc-build.log
           
       - name: Review build log
-        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-on-error
+        run: cat tsc-build.log | reviewdog -name=tsc -f=tsc -reporter=${{ steps.reporter.outputs.value }} -fail-level=error
 
       - name: Check if build failed
         if: steps.build.outcome == 'failure'
