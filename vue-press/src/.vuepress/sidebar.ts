@@ -145,6 +145,10 @@ export default sidebar({
       link: 'service-discovery/',
     },
     {
+      text: 'Telemetry',
+      link: 'telemetry/',
+    },
+    {
       text: 'Services',
       prefix: 'services/',
       link: 'services/',
