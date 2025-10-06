@@ -1,5 +1,17 @@
 # poc-portal
 
+## 1.1.8
+
+### Patch Changes
+
+- Updated dependencies [[`6f17817`](https://github.com/equinor/fusion-framework/commit/6f17817d3e1290d0befca8bb528728128612f8f1), [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`a66d70a`](https://github.com/equinor/fusion-framework/commit/a66d70a9fa40ab14f2534be4f22b6d1f602097a0), [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db)]:
+  - @equinor/fusion-framework-cli@12.2.0
+  - @equinor/fusion-framework@7.4.0
+  - @equinor/fusion-framework-module-http@7.0.2
+  - @equinor/fusion-framework-module@5.0.3
+  - @equinor/fusion-framework-module-app@7.0.2
+  - @equinor/fusion-framework-module-service-discovery@9.0.2
+
 ## 1.1.7
 
 ### Patch Changes

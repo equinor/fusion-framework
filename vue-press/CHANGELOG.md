@@ -1,5 +1,24 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.7
+
+### Patch Changes
+
+- [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Updated documentation site navigation and added dev-server configuration guide.
+
+  - Enhanced sidebar navigation with nested Dev Server section including Overview and Configuration
+  - Added dev-server-config.md to the documentation site
+
+  ref: [#3523](https://github.com/equinor/fusion-framework/issues/3523)
+
+- [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Added telemetry module documentation to the vue-press documentation site.
+
+  - Created dedicated telemetry module documentation under modules section
+  - Updated sidebar navigation to include telemetry module in alphabetical order
+  - Includes comprehensive documentation for telemetry configuration, usage, adapters, and measurements
+
+  resolves: [#3523](https://github.com/equinor/fusion-framework/issues/3523)
+
 ## 0.4.6
 
 ### Patch Changes

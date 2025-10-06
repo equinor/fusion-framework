@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.1.45
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
+
+  - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
+  - Logger functionality will be handled through telemetry module with console logging adapter
+
+  This prepares the configurators to use telemetry for logging instead of direct console logger initialization.
+
+- Updated dependencies [[`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`a66d70a`](https://github.com/equinor/fusion-framework/commit/a66d70a9fa40ab14f2534be4f22b6d1f602097a0), [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1)]:
+  - @equinor/fusion-framework@7.4.0
+  - @equinor/fusion-framework-module-http@7.0.2
+  - @equinor/fusion-framework-module@5.0.3
+  - @equinor/fusion-framework-module-widget@12.0.1
+
 ## 1.1.44
 
 ### Patch Changes

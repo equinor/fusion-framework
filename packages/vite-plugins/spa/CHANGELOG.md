@@ -1,5 +1,39 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.1.4
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove logger level configuration from bootstrap template.
+
+  - Removed `configurator.logger.level` assignment from `bootstrap.ts`
+  - Logger level configuration should be handled elsewhere or is no longer needed
+
+  This cleans up the bootstrap template by removing unused logger configuration.
+
+- [#3532](https://github.com/equinor/fusion-framework/pull/3532) [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump vite from 7.1.8 to 7.1.9 across development tools and plugins.
+
+  This patch update fixes bugs and improves stability in the vite dependency.
+
+- [#3521](https://github.com/equinor/fusion-framework/pull/3521) [`d1098f7`](https://github.com/equinor/fusion-framework/commit/d1098f7eeff04380c9e05e4a7a7d6b16e1d95884) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive telemetry integration to SPA bootstrap and service worker.
+
+  - Enable telemetry in SPA bootstrap with ConsoleAdapter
+  - Add configurable console logging levels via FUSION_SPA_TELEMETRY_CONSOLE_LEVEL environment variable
+  - Track bootstrap performance for portal loading operations
+  - Monitor service worker registration and token acquisition
+  - Include user metadata and portal configuration in telemetry
+  - Track exceptions and errors throughout SPA lifecycle
+  - Fix console level filtering logic to properly respect environment variable settings
+
+  **Implementation Notes:**
+
+  - Console level filtering defaults to `TelemetryLevel.Information` (1) when env var not set
+  - Invalid env var values fallback to logging all telemetry (robust error handling)
+  - Backward compatible: existing behavior unchanged when no FUSION_SPA_TELEMETRY_CONSOLE_LEVEL specified
+  - Telemetry level mapping: 0=Debug, 1=Information, 2=Warning, 3=Error, 4=Critical
+
+  resolves: [#3487](https://github.com/equinor/fusion-framework/issues/3487)
+
 ## 1.1.3
 
 ### Patch Changes

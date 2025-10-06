@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.2.2
+
+### Patch Changes
+
+- [#3532](https://github.com/equinor/fusion-framework/pull/3532) [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump vite from 7.1.8 to 7.1.9 across development tools and plugins.
+
+  This patch update fixes bugs and improves stability in the vite dependency.
+
 ## 1.2.1
 
 ### Patch Changes

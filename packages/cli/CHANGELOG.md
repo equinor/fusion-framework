@@ -1,5 +1,41 @@
 # Change Log
 
+## 12.2.0
+
+### Minor Changes
+
+- [#3512](https://github.com/equinor/fusion-framework/pull/3512) [`6f17817`](https://github.com/equinor/fusion-framework/commit/6f17817d3e1290d0befca8bb528728128612f8f1) Thanks [@eikeland](https://github.com/eikeland)! - Enhanced app management commands with pre-flight registration checks.
+
+  - Modified `checkApp` function to return boolean values instead of log results for better programmatic usage
+  - Added handling for HTTP 410 status (deleted apps) in app registration checks
+  - Added pre-flight app registration validation to `publish` and `upload` commands
+  - Commands now exit early if the app is not registered or has been deleted from the app store
+  - Improved error handling and user feedback for app registration status
+
+  This prevents publishing/uploading apps that are not registered in the app store, improving reliability and user experience.
+
+  Thanks to @odinr for reporting this issue.
+
+  Closes #3397
+
+### Patch Changes
+
+- [#3534](https://github.com/equinor/fusion-framework/pull/3534) [`8049b43`](https://github.com/equinor/fusion-framework/commit/8049b43847370c73814939f258a86723329b6b3c) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev-server documentation with comprehensive configuration guide.
+
+  - Added detailed `dev-server-config.md` documentation covering configuration options, API mocking, service discovery customization, and template environment overrides
+  - Updated main `dev-server.md` documentation with improved architecture overview and configuration reference
+  - Provided practical examples and troubleshooting guidance for dev-server configuration
+
+  ref: [#3523](https://github.com/equinor/fusion-framework/issues/3523)
+
+- [#3532](https://github.com/equinor/fusion-framework/pull/3532) [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump vite from 7.1.8 to 7.1.9 across development tools and plugins.
+
+  This patch update fixes bugs and improves stability in the vite dependency.
+
+- Updated dependencies [[`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275), [`11b5a00`](https://github.com/equinor/fusion-framework/commit/11b5a00047171f9969cabbcbbb53dd188ed8421e), [`63ac6a1`](https://github.com/equinor/fusion-framework/commit/63ac6a1178fc6f6b0702f51a9c36a67db76b92cd), [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db)]:
+  - @equinor/fusion-framework-dev-portal@1.2.0
+  - @equinor/fusion-framework-dev-server@1.1.4
+
 ## 12.1.3
 
 ### Patch Changes
