@@ -33,6 +33,14 @@ describe('capitalizeRequestMethodOperator', () => {
     await expect(result).resolves.toMatchObject({ method: 'GET' });
     expect(consoleWarn).toHaveBeenCalled();
   });
+
+  it('should handle undefined request method', async () => {
+    const operator = capitalizeRequestMethodOperator();
+
+    const result = executeOperator(operator, { method: undefined });
+
+    await expect(result).resolves.toMatchObject({ method: undefined });
+  });
 });
 
 describe('requestValidationOperator', () => {
