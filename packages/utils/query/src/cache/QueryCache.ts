@@ -1,4 +1,5 @@
 import type { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { FlowSubject } from '@equinor/fusion-observable';
 
@@ -8,6 +9,7 @@ import createReducer from './create-reducer';
 
 import type { QueryCacheMutation, QueryCacheRecord, QueryCacheStateData } from './types';
 import type { ActionMap, Actions } from './actions';
+import { QueryCacheEvent, type QueryCacheEventData, type QueryCacheEvents } from './events';
 
 /**
  * Defines the options used for trimming the query cache.
@@ -45,6 +47,14 @@ export class QueryCache<TType, TArgs> {
   #state: FlowSubject<QueryCacheStateData<TType, TArgs>, Actions<TType, TArgs>>;
 
   /**
+   * Events subject for emitting QueryCache lifecycle events.
+   *
+   * This subject broadcasts events that track cache operations,
+   * allowing external observers to monitor cache changes and mutations.
+   */
+  #events: Subject<QueryCacheEvent>;
+
+  /**
    * Retrieves the current state of the query cache as a record.
    * @returns {Record<string, QueryCacheRecord<TType, TArgs>>} The current state.
    */
@@ -69,6 +79,38 @@ export class QueryCache<TType, TArgs> {
   }
 
   /**
+   * Protected method to emit QueryCache lifecycle events.
+   *
+   * This method creates and emits events that track the various operations performed
+   * on the cache, allowing external observers to monitor cache changes and mutations.
+   *
+   * @template TType - The specific event type from QueryCacheEvents
+   * @param type - The event type identifier
+   * @param key - The cache key associated with this event
+   * @param data - Optional event-specific data payload (type-safe based on event type)
+   * @protected
+   */
+  protected _registerEvent<TType extends keyof QueryCacheEvents>(
+    type: TType,
+    args?: { key?: string; data?: QueryCacheEventData<TType> },
+  ): void {
+    this.#events.next(new QueryCacheEvent(type, args?.key, args?.data));
+  }
+
+  /**
+   * An Observable stream of QueryCache lifecycle events.
+   *
+   * This stream emits events that track the various operations performed on the cache,
+   * including entry set, inserted, removed, invalidated, mutated, and trimmed events.
+   * Subscribers can monitor cache changes and handle different lifecycle events.
+   *
+   * @returns An Observable stream of QueryCache events
+   */
+  public get event$(): Observable<QueryCacheEvent> {
+    return this.#events.asObservable();
+  }
+
+  /**
    * Creates a new instance of QueryCache.
    * @param {QueryCacheCtorArgs<TType, TArgs>} args - The constructor arguments.
    */
@@ -79,6 +121,9 @@ export class QueryCache<TType, TArgs> {
     if (trimming) {
       this.#state.addEffect('cache/set', () => this.#state.next(actions.trim(trimming)));
     }
+
+    // Initialize events subject for broadcasting lifecycle events
+    this.#events = new Subject<QueryCacheEvent>();
   }
 
   /**
@@ -101,6 +146,7 @@ export class QueryCache<TType, TArgs> {
   ): void {
     const { args, transaction, value } = record;
     this.#state.next(actions.insert(key, { args, transaction, value }));
+    this._registerEvent('query_cache_entry_inserted', { key, data: { value, args, transaction } });
   }
 
   /**
@@ -118,6 +164,7 @@ export class QueryCache<TType, TArgs> {
    */
   public removeItem(key: string) {
     this.#state.next(actions.remove(key));
+    this._registerEvent('query_cache_entry_removed', { key });
   }
 
   /**
@@ -127,6 +174,13 @@ export class QueryCache<TType, TArgs> {
   public invalidate(key?: string) {
     const item = key ? this.#state.value[key] : undefined;
     this.#state.next(actions.invalidate(key, item));
+
+    if (key) {
+      this._registerEvent('query_cache_entry_invalidated', {
+        key,
+        data: { previousValue: item?.value },
+      });
+    }
   }
 
   /**
@@ -145,6 +199,16 @@ export class QueryCache<TType, TArgs> {
     }
     const next = typeof changes === 'function' ? changes(current?.value) : changes;
     this.#state.next(actions.mutate(key, next, current));
+
+    this._registerEvent('query_cache_entry_mutated', {
+      key,
+      data: {
+        previousValue: current.value,
+        newValue: next,
+        mutation: next,
+      },
+    });
+
     return () => this.#state.next(actions.set(key, current));
   }
 
@@ -153,7 +217,18 @@ export class QueryCache<TType, TArgs> {
    * @param {TrimOptions<TType, TArgs>} options - The options for trimming the cache.
    */
   public trim(options: TrimOptions<TType, TArgs>) {
+    const beforeKeys = new Set(Object.keys(this.#state.value));
     this.#state.next(actions.trim(options));
+    const afterKeys = new Set(Object.keys(this.#state.value));
+
+    const removedKeys = Array.from(beforeKeys).filter((key) => !afterKeys.has(key));
+
+    this._registerEvent('query_cache_trimmed', {
+      data: {
+        removedKeys,
+        criteria: options,
+      },
+    });
   }
 
   /**
@@ -161,6 +236,7 @@ export class QueryCache<TType, TArgs> {
    */
   public reset() {
     this.#state.reset();
+    this._registerEvent('query_cache_reset');
   }
 
   /**
@@ -168,6 +244,7 @@ export class QueryCache<TType, TArgs> {
    */
   public complete() {
     this.#state.complete();
+    this.#events.complete();
   }
 }
 

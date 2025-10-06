@@ -1,7 +1,7 @@
 {
   "name": "@equinor/fusion-query",
   "version": "5.2.14",
-  "description": "WIP",
+  "description": "Reactive data fetching and caching library with observable streams and comprehensive event system",
   "keywords": [
     "observable",
     "react",

@@ -13,6 +13,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  merge,
   takeWhile,
   tap,
   throwIfEmpty,
@@ -37,8 +38,8 @@ import type { QueryCacheCtorArgs } from './cache/QueryCache';
 import { concatQueue, mergeQueue, queryValue, switchQueue } from './operators';
 
 import { filterAction } from '@equinor/fusion-observable/operators';
-import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { QueryTask } from './QueryTask';
+import { QueryEvent, type IQueryEvent, type QueryEvents } from './events';
 
 /**
  * Defines the constructor options for a QueryClient object.
@@ -121,12 +122,6 @@ export type QueryCtorOptions<TDataType, TQueryArguments> = {
    *   execution is important and each request must be completed before the next begins.
    */
   queueOperator?: QueueOperatorType | QueryQueueFn<TDataType, TQueryArguments>;
-
-  /**
-   * An optional logger instance for logging events and operations within the Query class.
-   * If not provided, a ConsoleLogger will be used with default settings.
-   */
-  logger?: ILogger;
 };
 
 /**
@@ -323,10 +318,10 @@ export class Query<TDataType, TQueryArguments = any> {
   #namespace = generateGUID();
 
   /**
-   * A private logger instance used for logging events and operations within the Query class.
-   * If a logger is not provided in the constructor options, a default ConsoleLogger is used.
+   * An optional observer for emitting query events.
+   * If provided, events will be emitted instead of or in addition to logging.
    */
-  #logger: ILogger;
+  #event$: Subject<IQueryEvent>;
 
   /**
    * A public getter for the client instance.
@@ -336,6 +331,19 @@ export class Query<TDataType, TQueryArguments = any> {
   public get client(): QueryClient<TDataType, TQueryArguments> {
     // TODO: Proxy
     return this.#client;
+  }
+
+  /**
+   * Protected helper method to register events if an event observer is configured.
+   * @param type - The event type
+   * @param data - The event data
+   */
+  protected _registerEvent<TKey extends keyof QueryEvents>(
+    type: TKey,
+    key: string,
+    data?: QueryEvents[TKey] extends QueryEvent<infer T> ? T : undefined,
+  ): void {
+    this.#event$.next(new QueryEvent(type, key, data));
   }
 
   /**
@@ -349,6 +357,16 @@ export class Query<TDataType, TQueryArguments = any> {
   }
 
   /**
+   * An Observable stream of Query events. It allows subscribers to react to
+   * query lifecycle events such as query creation, cache hits, task execution, etc.
+   * Also includes QueryClient events for complete observability.
+   * @returns {Observable<CombinedQueryEvent<TDataType, TQueryArguments>>} An Observable stream of events.
+   */
+  public get event$(): Observable<IQueryEvent> {
+    return this.#event$.asObservable();
+  }
+
+  /**
    * The constructor for the Query class.
    * It initializes the query client, cache, and sets up the query request queue.
    * The constructor takes an options object which can include a custom client, cache, key generation function,
@@ -357,7 +375,7 @@ export class Query<TDataType, TQueryArguments = any> {
    * @param options - The constructor options for the Query instance.
    */
   constructor(options: QueryCtorOptions<TDataType, TQueryArguments>) {
-    this.#logger = options.logger ?? new ConsoleLogger('Query', this.#namespace);
+    this.#event$ = new Subject<IQueryEvent>();
 
     this.#generateCacheKey = (args: TQueryArguments) => {
       // Use the provided key generation function from options and namespace to ensure unique cache keys across instances
@@ -372,14 +390,18 @@ export class Query<TDataType, TQueryArguments = any> {
       this.#client = options.client;
     } else {
       this.#client = new QueryClient(options.client.fn, {
-        // Create a sub-logger for the client for more granular logging
-        logger: this.#logger.createSubLogger('Client'),
         // Spread any additional options provided for the client
         ...options.client.options,
       });
       // Ensure client resources are cleaned up when the query instance is disposed
       this.#subscription.add(() => this.#client.complete());
     }
+
+    this.#subscription.add(
+      this.#client.event$.subscribe({
+        next: (event) => this.#event$.next(event),
+      }),
+    );
 
     // Initialize the query cache. Use the provided cache instance or create a new one with provided constructor arguments
     if (options.cache instanceof QueryCache) {
@@ -390,6 +412,12 @@ export class Query<TDataType, TQueryArguments = any> {
       // Ensure cache resources are cleaned up when the query instance is disposed
       this.#subscription.add(() => this.#cache.complete());
     }
+
+    this.#subscription.add(
+      this.#cache.event$.subscribe({
+        next: (event) => this.#event$.next(event),
+      }),
+    );
 
     // The queueOperator is a function that determines how query requests are handled when multiple requests are made concurrently.
     // It is derived from the useQueueOperator utility function, which takes the provided queueOperatorType or custom function
@@ -403,25 +431,20 @@ export class Query<TDataType, TQueryArguments = any> {
     this.#subscription.add(
       this.#queue$
         .pipe(
-          tap((key) => this.#logger.debug('Task added to queue', { key })),
+          tap((key) => {
+            this._registerEvent('query_queued', key);
+          }),
           // skip tasks that are not in the ongoing tasks record
           filter((key) => !!(key in this.#tasks)),
           // Apply the queue operator to the query requests, which controls the execution order
           queueOperator((key) => {
             const task = this.#tasks[key];
             const { args, options, uuid } = task;
-            this.#logger.debug('Task selected from queue', {
-              key,
-              task: task.uuid,
-              args,
-              options,
-            });
+            this._registerEvent('query_job_selected', key, { taskId: uuid, args, options });
 
             // Check if the task is still observed, if not, skip it
             if (!task?.observed) {
-              this.#logger.debug('Task skipped', {
-                task: uuid,
-              });
+              this._registerEvent('query_job_skipped', key, { taskId: uuid, args, options });
               delete this.#tasks[key];
               return EMPTY;
             }
@@ -435,18 +458,21 @@ export class Query<TDataType, TQueryArguments = any> {
 
             return new Observable((subscriber) => {
               const { transaction } = job;
-              this.#logger.info('Task stated', {
-                task: uuid,
+              this._registerEvent('query_job_started', key, {
+                taskId: uuid,
                 transaction,
+                args,
+                options,
               });
 
               // Add a cleanup function to the subscriber that will be called when the subscription is closed.
               // This function logs the task closure, cancels the job to prevent further processing, and removes the task from the ongoing tasks record.
               subscriber.add(() => {
-                this.#logger.debug('Task closed', {
-                  task: uuid,
+                this._registerEvent('query_job_closed', key, {
+                  taskId: uuid,
                   transaction,
-                  jobStatus: job.status,
+                  args,
+                  options,
                 });
                 job.complete('task closed');
                 delete this.#tasks[key];
@@ -465,7 +491,16 @@ export class Query<TDataType, TQueryArguments = any> {
 
               // Process the job using the task's custom logic, which includes handling of the query response and any errors.
               // This processing is specific to the task and may involve updating the cache, logging, or other side effects.
-              subscriber.add(task.processJob(job, this.#logger));
+              subscriber.add(
+                task.processJob(job).add(() => {
+                  this._registerEvent('query_job_completed', key, {
+                    taskId: uuid,
+                    transaction,
+                    args,
+                    options,
+                  });
+                }),
+              );
 
               // Map the job Observable to a QueryQueueResult object, which includes the result and request details.
               // This mapping allows the subscriber to receive a structured response including the task details and the query result.
@@ -492,13 +527,13 @@ export class Query<TDataType, TQueryArguments = any> {
           const { value, transaction } = task.result;
           const { args, key, uuid } = task.task;
 
-          this.#logger.debug('Task output added to cache', {
-            uuid,
+          this._registerEvent('query_cache_added', key, {
+            data: value,
+            taskId: uuid,
             args,
-            key,
             transaction,
-            value,
           });
+          this._registerEvent('query_completed', key, { data: value, hasValidCache: true });
 
           // Update the cache item with the new value, arguments, and transaction
           this.#cache.setItem(key, {
@@ -669,6 +704,7 @@ export class Query<TDataType, TQueryArguments = any> {
    */
   public complete() {
     this.#subscription.unsubscribe();
+    this.#event$?.complete();
   }
 
   //#region Event Handlers
@@ -728,7 +764,7 @@ export class Query<TDataType, TQueryArguments = any> {
     const key = this.#generateCacheKey(args);
     const task = this._createTask(key, args, options);
 
-    this.#logger.debug('New query created', { key, args, options });
+    this._registerEvent('query_created', key, { args, options });
 
     return task;
   }
@@ -777,12 +813,12 @@ export class Query<TDataType, TQueryArguments = any> {
     return new Observable((subscriber) => {
       if (options?.signal) {
         if (options?.signal.aborted) {
-          this.#logger.debug('Abort signal already triggered by caller', { key });
+          this._registerEvent('query_aborted', key);
           return subscriber.complete();
         }
         subscriber.add(
           fromEvent(options?.signal, 'abort').subscribe(() => {
-            this.#logger.debug('Abort signal triggered by caller', { key });
+            this._registerEvent('query_aborted', key);
             subscriber.complete();
           }),
         );
@@ -793,10 +829,7 @@ export class Query<TDataType, TQueryArguments = any> {
 
       // If a cache entry exists and is valid, emit it as the next value to the subscriber.
       if (cacheEntry) {
-        this.#logger.debug('Query has cache', {
-          key,
-          cacheEntry,
-        });
+        this._registerEvent('query_cache_hit', key, { cacheEntry });
 
         const suppressInvalid = options?.cache?.suppressInvalid ?? false;
 
@@ -813,12 +846,6 @@ export class Query<TDataType, TQueryArguments = any> {
           hasValidCache,
         } satisfies QueryTaskCached<TDataType>;
 
-        this.#logger.info('Query cache valid, completing', {
-          hasValidCache,
-          suppressInvalid,
-          record,
-        });
-
         // Emit the cache entry as the next value to the subscriber. This step is crucial as it allows
         // the subscriber to receive the cached data immediately, without waiting for a new fetch operation.
         // The emitted record contains the cache entry data, along with metadata such as the cache key,
@@ -827,6 +854,7 @@ export class Query<TDataType, TQueryArguments = any> {
         subscriber.next(record);
 
         if (hasValidCache || suppressInvalid) {
+          this._registerEvent('query_completed', key, { data: cacheEntry.value, hasValidCache });
           // If the cache is valid, or if invalid cache entries should be suppressed (not re-fetched),
           // complete the subscription to prevent further actions.
           // This ensures that if the cache data is sufficient or if the strategy is to avoid using invalid cache without refetching,
@@ -834,25 +862,25 @@ export class Query<TDataType, TQueryArguments = any> {
           return subscriber.complete();
         }
         // This will fetch new data and update the cache entry with the latest result.
-        this.#logger.debug('Query cache entry is invalid, proceeding to fetch new data', {
-          key,
-        });
+        this._registerEvent('query_cache_miss', key);
       }
 
       // If the cache entry does not exist or is invalid, proceed to queue a new query request.
       const isExistingTask = key in this.#tasks;
-      this.#tasks[key] ??= new QueryTask<TDataType, TQueryArguments>(key, args, options);
+      if (!isExistingTask) {
+        this.#tasks[key] = new QueryTask<TDataType, TQueryArguments>(key, args, options);
+        this._registerEvent('query_job_created', key, {
+          taskId: this.#tasks[key].uuid,
+          args,
+          options,
+        });
+      } else {
+        this._registerEvent('query_connected', key, { isExistingTask: true });
+      }
       const task = this.#tasks[key];
 
       // Connect the subscriber to the task to receive updates on the query's execution and results.
       subscriber.add(task.subscribe(subscriber));
-
-      this.#logger.info(
-        isExistingTask ? 'Query connected to existing task' : 'Query started new task',
-        {
-          key,
-        },
-      );
 
       // If this is a new task, add it to the query queue to be processed.
       if (!isExistingTask) {

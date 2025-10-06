@@ -1,4 +1,4 @@
-import { firstValueFrom, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { firstValueFrom, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { filter, map, share, withLatestFrom } from 'rxjs/operators';
 
 import { FlowSubject } from '@equinor/fusion-observable';
@@ -17,8 +17,8 @@ import type {
   QueryClientResult,
   QueryClientRequest,
 } from './types';
-import { ConsoleLogger, type ILogger } from '@equinor/fusion-log';
 import { QueryClientJob } from './QueryClientJob';
+import { QueryClientEvent, type QueryClientEventData, type QueryClientEvents } from './events';
 
 /**
  * Options for configuring the behavior of the `QueryClient`.
@@ -38,8 +38,6 @@ export type QueryClientOptions = {
 export type QueryClientCtorOptions = {
   /** Configuration for retry behavior, including number of retries and delay strategy. */
   retry?: Partial<RetryOptions>;
-  /** Optional logger instance for logging messages. */
-  logger?: ILogger;
 };
 
 /**
@@ -63,8 +61,33 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
   /** Subscription to manage cleanup of resources on completion. */
   #subscription: Subscription;
 
-  /** Logger instance for outputting debug and error information. */
-  #logger: ILogger;
+  /**
+   * Events subject for emitting QueryClient lifecycle events.
+   *
+   * This subject broadcasts events that track query execution stages,
+   * allowing external observers to monitor query progress, success, and failures.
+   */
+  #events: Subject<QueryClientEvent>;
+
+  /**
+   * Protected method to emit QueryClient lifecycle events.
+   *
+   * This method creates and emits events that track the various stages of query execution,
+   * allowing external observers to monitor query progress, success, failure, and cancellation.
+   *
+   * @template TType - The specific event type from QueryClientEvents
+   * @param type - The event type identifier
+   * @param transaction - Unique transaction identifier for the query operation
+   * @param data - Optional event-specific data payload (type-safe based on event type)
+   * @protected
+   */
+  protected _registerEvent<TType extends keyof QueryClientEvents>(
+    type: TType,
+    transaction: string,
+    data?: QueryClientEventData<TType>,
+  ): void {
+    this.#events.next(new QueryClientEvent(type, transaction, data));
+  }
 
   /**
    * Indicates whether the QueryClient has been closed and is no longer accepting new actions.
@@ -90,6 +113,19 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
    */
   public get action$(): Observable<Actions<TType, TArgs>> {
     return this.#state.action$;
+  }
+
+  /**
+   * An Observable stream of QueryClient lifecycle events.
+   *
+   * This stream emits events that track the various stages of query execution,
+   * including job requested, executing, completed, failed, canceled, and error events.
+   * Subscribers can monitor query progress and handle different lifecycle events.
+   *
+   * @returns An Observable stream of QueryClient events
+   */
+  public get event$(): Observable<QueryClientEvent> {
+    return this.#events.asObservable();
   }
 
   /**
@@ -140,7 +176,14 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
 
     this.#state = new FlowSubject(createReducer({}));
 
-    this.#subscription = new Subscription(() => this.#state.complete());
+    // Set up subscription for cleanup, ensuring both state and events subjects are completed
+    this.#subscription = new Subscription(() => {
+      this.#state.complete();
+      this.#events.complete();
+    });
+
+    // Initialize events subject for broadcasting lifecycle events
+    this.#events = new Subject<QueryClientEvent>();
 
     // Add flows to handle different aspects of the query lifecycle.
     this.#subscription.add(this.#state.addFlow(handleRequests));
@@ -149,32 +192,47 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
       this.#state.addFlow(handleFailure(Object.assign({ count: 0, delay: 0 }, options?.retry))),
     );
 
-    // Initialize the logger or use the provided one.
-    this.#logger = options?.logger ?? new ConsoleLogger('QueryClient');
+    /**
+     * Register effects to emit lifecycle events for different query actions.
+     *
+     * These effects monitor the internal state changes and emit corresponding events
+     * that external observers can subscribe to for tracking query progress.
+     */
 
-    // Register effects to log different actions.
+    // Emit event when a query request is initiated
     this.#state.addEffect(actions.request.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job requested', { transaction, payload });
+      this._registerEvent('query_client_job_requested', transaction, payload);
     });
 
-    this.#state.addEffect(actions.execute.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job executing', { transaction, payload });
+    // Emit event when query execution begins
+    this.#state.addEffect(actions.execute.type, ({ meta: { transaction } }) => {
+      this._registerEvent('query_client_job_executing', transaction);
     });
 
-    this.#state.addEffect(actions.execute.success.type, ({ payload }) => {
-      this.#logger.info('Job complete', { ...payload });
+    // Emit event when query execution completes successfully
+    this.#state.addEffect(actions.execute.success.type, ({ payload, meta: { transaction } }) => {
+      this._registerEvent('query_client_job_completed', transaction, { payload });
     });
 
+    // Emit event when query execution fails
     this.#state.addEffect(actions.execute.failure.type, ({ payload, meta: { transaction } }) => {
-      this.#logger.debug('Job failed', { transaction, payload });
+      const error =
+        payload.error instanceof Error ? payload.error : new Error(String(payload.error));
+      this._registerEvent('query_client_job_failed', transaction, { error });
     });
 
+    // Emit event when a query is canceled
     this.#state.addEffect(actions.cancel.type, ({ payload: { reason }, meta: { transaction } }) => {
-      this.#logger.debug('Job canceled', { transaction, reason });
+      this._registerEvent('query_client_job_canceled', transaction, {
+        reason: reason || 'no reason provided',
+      });
     });
 
-    this.#state.addEffect(actions.error.type, ({ payload: { transaction, error } }) => {
-      this.#logger.error('Job error', { transaction, error });
+    // Emit event when a general error occurs during query processing
+    this.#state.addEffect(actions.error.type, ({ payload, meta: { transaction } }) => {
+      const error =
+        payload.error instanceof Error ? payload.error : new Error(String(payload.error));
+      this._registerEvent('query_client_job_error', transaction, { error });
     });
   }
 
@@ -266,13 +324,6 @@ export class QueryClient<TType, TArgs> extends Observable<QueryClientState<TArgs
       // dispatch a cancellation action with an optional reason or a default message.
       reason ??= `cancelation requested for job: ${transaction}`;
       this.#state.next(actions.cancel(transaction, reason));
-    } else {
-      // If a specific transaction is provided but it does not exist in the state,
-      // log a warning indicating that there is nothing to cancel.
-      this.#logger.warn('Task not registered, nothing to cancel', {
-        transaction,
-        reason,
-      });
     }
   }
 
