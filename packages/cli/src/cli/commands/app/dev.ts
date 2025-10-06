@@ -11,6 +11,7 @@ import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/
  * - Launches the development server for your application.
  * - Supports custom manifest/config files, runtime environment, and port selection.
  * - Debug mode available for verbose logging.
+ * - Automatic loading of dev-server.config.ts for API mocking and customization.
  *
  * Usage:
  *   $ ffc app dev [options]
@@ -22,12 +23,17 @@ import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/
  *   --env <environment>  Runtime environment for the dev server (default: local)
  *   --port <port>        Port for the development server (default: 3000)
  *
+ * Configuration:
+ *   dev-server.config.ts  Optional configuration file for API mocking, service discovery,
+ *                         and development environment customization
+ *
  * Example:
  *   $ ffc app dev
  *   $ ffc app dev --port 4000
  *   $ ffc app dev --manifest ./app.manifest.local.ts --config ./app.config.ts
  *
  * @see startAppDevServer for implementation details
+ * @see dev-server-config.md for configuration options
  */
 export const command = createCommand('dev')
   .description('Start the application in development mode.')
@@ -35,10 +41,16 @@ export const command = createCommand('dev')
     'after',
     [
       '',
+      'Configuration:',
+      '  dev-server.config.ts  Optional configuration file for API mocking, service discovery,',
+      '                         and development environment customization',
+      '',
       'Examples:',
       '  $ ffc app dev',
       '  $ ffc app dev --port 4000',
       '  $ ffc app dev --manifest ./app.manifest.local.ts --config ./app.config.ts',
+      '',
+      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
     ].join('\n'),
   )
   .option('--debug', 'Enable debug mode')

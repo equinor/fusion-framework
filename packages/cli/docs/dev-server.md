@@ -12,6 +12,8 @@ The Fusion Framework dev-server is your complete local development solution for 
 
 🛠️ **Flexible Configuration** - Easy setup for both applications and portals with environment-specific overrides
 
+📝 **Configurable Development** - Optional `dev-server.config.ts` file for API mocking, service discovery customization, and environment variable overrides
+
 ## Quick Start
 
 ```bash
@@ -27,6 +29,8 @@ The dev-server automatically detects your project type, loads configuration file
 ## Configuration
 
 For detailed information about configuring the dev-server, see [Dev Server Configuration](dev-server-config.md).
+
+The dev-server automatically loads configuration from a `dev-server.config.ts` file in your project root, allowing you to customize API mocking, service discovery, and development environment settings without modifying your application code.
 
 ## Key Features
 
