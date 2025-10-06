@@ -1,5 +1,38 @@
 # Change Log
 
+## 10.1.0
+
+### Minor Changes
+
+- [#3493](https://github.com/equinor/fusion-framework/pull/3493) [`9f5de98`](https://github.com/equinor/fusion-framework/commit/9f5de9844181b8bc2d770032ff3b1709e87c7c21) Thanks [@odinr](https://github.com/odinr)! - Add telemetry integration to app configurator.
+
+  - Add telemetry module dependency to enable telemetry collection
+  - Configure telemetry in app module configurator with metadata extraction from app manifest
+  - Add event mapping to prefix configurator events with `AppConfigurator::` namespace
+  - Set default telemetry scope to `['app']` for app-specific telemetry
+  - Remove unused ModuleConsoleLogger import in favor of telemetry logging
+
+  This enables applications to collect telemetry data from module configuration events and app lifecycle.
+
+  resolves: [#3486](https://github.com/equinor/fusion-framework/issues/3486)
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Remove explicit logger initialization from configurator constructors in favor of telemetry.
+
+  - Removed `this.logger = new ModuleConsoleLogger(...)` from FrameworkConfigurator, AppConfigurator, and WidgetConfigurator constructors
+  - Logger functionality will be handled through telemetry module with console logging adapter
+
+  This prepares the configurators to use telemetry for logging instead of direct console logger initialization.
+
+- Updated dependencies [[`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`a66d70a`](https://github.com/equinor/fusion-framework/commit/a66d70a9fa40ab14f2534be4f22b6d1f602097a0), [`7ba4713`](https://github.com/equinor/fusion-framework/commit/7ba47139a8d7cfbb757bd4626425c611e22c2126), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1), [`4e78565`](https://github.com/equinor/fusion-framework/commit/4e7856590f73fee840b065a0e4d89962e167ed9e), [`0bad642`](https://github.com/equinor/fusion-framework/commit/0bad642205a7f780dcb6685243102b65b3755fa2), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1)]:
+  - @equinor/fusion-framework@7.4.0
+  - @equinor/fusion-framework-module-http@7.0.2
+  - @equinor/fusion-framework-module@5.0.3
+  - @equinor/fusion-framework-module-telemetry@4.2.0
+  - @equinor/fusion-framework-module-app@7.0.2
+  - @equinor/fusion-framework-module-bookmark@3.0.2
+
 ## 10.0.0
 
 ### Patch Changes

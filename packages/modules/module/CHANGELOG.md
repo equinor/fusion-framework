@@ -1,5 +1,18 @@
 # Change Log
 
+## 5.0.3
+
+### Patch Changes
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Add event system to module configurator for lifecycle tracking.
+
+  - Add `ModuleEvent` and `ModuleEventLevel` types for structured event emission
+  - Enhance module configurator with event emission capabilities
+  - Support event levels: Error, Warning, Information, Debug
+  - Include contextual data, error information, and performance metrics in events
+
+  resolves: [#3489](https://github.com/equinor/fusion-framework/issues/3489)
+
 ## 5.0.2
 
 ### Patch Changes

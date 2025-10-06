@@ -1,5 +1,26 @@
 # Change Log
 
+## 6.0.0
+
+### Major Changes
+
+- [#3537](https://github.com/equinor/fusion-framework/pull/3537) [`d3bcafe`](https://github.com/equinor/fusion-framework/commit/d3bcafed8b8c5a02ebe68693588cb376ed5e1b0e) Thanks [@odinr](https://github.com/odinr)! - Added comprehensive event system for enhanced observability and telemetry integration.
+
+  - Introduced base event interfaces and types for query lifecycle tracking
+  - Added QueryCache events for monitoring cache operations (insertions, mutations, invalidations, etc.)
+  - Added QueryClient events for tracking job execution stages
+  - Integrated event emission throughout Query class for complete lifecycle observability
+  - Exported new event types and interfaces from package index
+
+  This enhancement enables proper telemetry logging without flooding console output, addressing the need for structured event monitoring in Fusion Framework applications. Developers can now subscribe to specific event streams for debugging, analytics, and performance monitoring instead of relying on verbose console logging.
+
+  Related to: https://github.com/equinor/fusion-framework/issues/3482
+
+### Patch Changes
+
+- Updated dependencies [[`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275)]:
+  - @equinor/fusion-observable@8.5.5
+
 ## 5.2.14
 
 ### Patch Changes

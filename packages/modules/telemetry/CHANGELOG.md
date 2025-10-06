@@ -1,5 +1,40 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+- [#3488](https://github.com/equinor/fusion-framework/pull/3488) [`4e78565`](https://github.com/equinor/fusion-framework/commit/4e7856590f73fee840b065a0e4d89962e167ed9e) Thanks [@odinr](https://github.com/odinr)! - Add new telemetry module for collecting and sending telemetry data.
+
+  - Add `TelemetryModule` with configurable adapters
+  - Implement Application Insights and Console adapters
+  - Add `Measurement` class for telemetry data collection
+  - Provide `TelemetryProvider` and `TelemetryConfigurator` for module integration
+  - Include comprehensive test coverage for all components
+  - Support custom metadata resolution and telemetry item merging
+  - async initialization support with `initialize()` method on providers and adapters
+  - Enhanced error handling in measurement disposal and metadata resolution
+
+  Resolves #3483
+
+### Patch Changes
+
+- [#3500](https://github.com/equinor/fusion-framework/pull/3500) [`0bad642`](https://github.com/equinor/fusion-framework/commit/0bad642205a7f780dcb6685243102b65b3755fa2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod dependency from ^3.25.75 to ^4.1.11 and fix compatibility issues with zod v4's stricter record type requirements.
+
+- [#3490](https://github.com/equinor/fusion-framework/pull/3490) [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1) Thanks [@odinr](https://github.com/odinr)! - Add utility for mapping module configurator events to telemetry items.
+
+  - Add `mapConfiguratorEvents` utility function to convert `ModuleEvent` to `TelemetryItem`
+  - Map `ModuleEventLevel` to `TelemetryLevel` appropriately (Error=1, Warning=2, Information=3, Debug=4)
+  - Include event metadata (timing, errors, properties) in telemetry data
+  - Update `enableTelemetry` function to support `attachConfiguratorEvents` option
+  - Export `mapConfiguratorEvents` from utils index
+
+  This enables telemetry modules to capture core framework events from module configurators.
+
+- Updated dependencies [[`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275), [`45954e5`](https://github.com/equinor/fusion-framework/commit/45954e5db471a2faa24e88e41fc6d6c18817d6d1)]:
+  - @equinor/fusion-observable@8.5.5
+  - @equinor/fusion-framework-module@5.0.3
+
 ## 4.1.17
 
 ### Patch Changes

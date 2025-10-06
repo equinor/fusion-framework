@@ -1,5 +1,62 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.0
+
+### Minor Changes
+
+- [#3522](https://github.com/equinor/fusion-framework/pull/3522) [`63ac6a1`](https://github.com/equinor/fusion-framework/commit/63ac6a1178fc6f6b0702f51a9c36a67db76b92cd) Thanks [@odinr](https://github.com/odinr)! - Add comprehensive telemetry integration to the Fusion Dev Portal.
+
+  **New Features:**
+
+  - Enable telemetry tracking for portal usage analytics and monitoring
+  - Configure portal-specific metadata including version and name identification
+  - Set up telemetry event scoping for portal-specific tracking
+  - Attach framework configurator events for comprehensive telemetry coverage
+
+  **Technical Implementation:**
+
+  - Integrate `@equinor/fusion-framework-module-telemetry` module
+  - Configure telemetry with portal metadata (`type: 'portal-telemetry'`)
+  - Set default scope to `['portal']` for event categorization
+  - Establish parent-child telemetry relationship for consistent tracking
+  - Add TypeScript path references for telemetry module
+
+  **Configuration Updates:**
+
+  - Enhanced `config.ts` with detailed telemetry setup and documentation
+  - Updated dependency versions to use `workspace:*` for better monorepo compatibility
+  - Improved code documentation and developer experience features
+
+  resolves: [#3485](https://github.com/equinor/fusion-framework/issues/3485)
+
+### Patch Changes
+
+- [#3515](https://github.com/equinor/fusion-framework/pull/3515) [`6cb288b`](https://github.com/equinor/fusion-framework/commit/6cb288b9e1ec4fae68ae6899735c176837bb4275) Thanks [@odinr](https://github.com/odinr)! - ## Global Biome Configuration Modernization
+
+  **Workspace-wide changes:**
+
+  - Remove 19 rule overrides from `biome.json` to use Biome's strict "error" defaults
+  - Enable `correctness/useUniqueElementIds` accessibility rule globally
+  - Reduce configuration size by 40% (60+ → ~35 lines)
+  - Eliminate all custom linting rule customizations
+
+  **Package-specific changes:**
+
+  - Replace static IDs with React `useId()` hooks in bookmark and dev-portal components
+  - Fix `suspicious/noAssignInExpressions` violations in context, legacy-interopt, and observable packages
+  - Update 11 React components for accessibility compliance
+
+  **Impact:** All packages now use consistent, strict code quality enforcement with zero custom rule overrides.
+
+  resolves: [#3494](https://github.com/equinor/fusion-framework/issues/3494)
+  resolves: [#3495](https://github.com/equinor/fusion-framework/issues/3495)
+
+- [#3479](https://github.com/equinor/fusion-framework/pull/3479) [`11b5a00`](https://github.com/equinor/fusion-framework/commit/11b5a00047171f9969cabbcbbb53dd188ed8421e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from 17.2.2 to 17.2.3 (TypeScript definition fix)
+
+- [#3532](https://github.com/equinor/fusion-framework/pull/3532) [`63ecde5`](https://github.com/equinor/fusion-framework/commit/63ecde5c29e775b341c3fac0c1eeb7123db5e2db) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump vite from 7.1.8 to 7.1.9 across development tools and plugins.
+
+  This patch update fixes bugs and improves stability in the vite dependency.
+
 ## 1.1.4
 
 ### Patch Changes
