@@ -5,14 +5,17 @@ import { z } from 'zod';
  *
  * @link https://www.rfc-editor.org/rfc/rfc7231#section-4.1
  */
-export const requestMethodCasing = (): z.ZodType<string> => {
-  return z.string().refine((value) => value === value?.toUpperCase(), {
-    message: [
-      'Provided HTTP method must be in uppercase.',
-      'See RFC 7231 Section 4.1 for more information',
-      'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
-    ].join(' '),
-  });
+export const requestMethodCasing = (): z.ZodType<string | undefined> => {
+  return z
+    .string()
+    .optional()
+    .refine((value) => value === undefined || value === value?.toUpperCase(), {
+      message: [
+        'Provided HTTP method must be in uppercase.',
+        'See RFC 7231 Section 4.1 for more information',
+        'https://www.rfc-editor.org/rfc/rfc7231#section-4.1',
+      ].join(' '),
+    });
 };
 
 /**
@@ -34,7 +37,7 @@ export const requestMethodVerb = () => {
   });
 };
 
-export const requestMethod = () => requestMethodCasing().pipe(requestMethodVerb());
+export const requestMethod = () => requestMethodVerb().optional();
 
 /**
  * Schema for validating the initialization options of a request.
