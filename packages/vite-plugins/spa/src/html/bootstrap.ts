@@ -130,6 +130,7 @@ enableTelemetry(configurator, {
   // fetch the portal manifest - this is used to load the portal template
   const portalId = import.meta.env.FUSION_SPA_PORTAL_ID;
   const portalTag = import.meta.env.FUSION_SPA_PORTAL_TAG ?? 'latest';
+  const portalProxy = import.meta.env.FUSION_SPA_PORTAL_PROXY ?? false;
   const portal_manifest = await measurement
     .clone()
     .resolve(portalClient.json<PortalManifest>(`/portals/${portalId}@${portalTag}`), {
@@ -164,7 +165,11 @@ enableTelemetry(configurator, {
   document.body.innerHTML = '';
   document.body.appendChild(el);
 
-  const portalEntryPoint = [portal_manifest.build.assetPath, portal_manifest.build.templateEntry]
+  const portalEntryPoint = [
+    portalProxy ? '/portal-proxy' : '',
+    portal_manifest.build.assetPath,
+    portal_manifest.build.templateEntry,
+  ]
     .filter(Boolean)
     .join('/');
 

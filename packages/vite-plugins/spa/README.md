@@ -116,6 +116,7 @@ fusionSpaPlugin({
       //   2. An ID from the Fusion Portal Service
       //   3. Any other configured portal ID
       tag: 'latest', // (Optional) Version tag (defaults to 'latest')
+      proxy: false, // (Optional) Whether to proxy portal requests through /portal-proxy (defaults to false)
     },
 
     // Service Discovery configuration
@@ -145,6 +146,36 @@ fusionSpaPlugin({
   })
 });
 ```
+
+### Portal Proxy
+
+The portal proxy feature allows you to route portal entry point requests through a `/portal-proxy` path prefix. When enabled, the plugin will attempt to load portal code from URLs prefixed with `/portal-proxy/`, which can be useful when working with proxy servers or development environments that need to intercept and route portal requests.
+
+**Behavior:**
+
+- `proxy: true` → Portal loads from `/portal-proxy/{assetPath}/{templateEntry}` (allows proxy interception)
+- `proxy: false` → Portal loads from `{assetPath}/{templateEntry}` (direct loading)
+
+**Configuration Options:**
+
+- `proxy`: When set to `true`, portal entry points will be prefixed with `/portal-proxy`
+
+**When to Use Portal Proxy:**
+
+- Development environments where portal assets need to be served through a proxy
+- Deployment scenarios requiring portal routing through specific paths
+- When working with the API Service Plugin for advanced portal loading
+
+**Example:**
+
+```ts
+portal: {
+  id: 'my-portal',
+  tag: 'latest',
+  proxy: true, // Portal will be loaded from /portal-proxy/{assetPath}/{templateEntry}
+}
+```
+
 See [@equinor/fusion-framework-vite-plugin-api-service](https://github.com/equinor/fusion-framework/tree/main/packages/vite-plugins/api-service) for advanced API proxying.
 
 ### Service Discovery
@@ -330,6 +361,8 @@ import.meta.env.FUSION_SPA_SERVICE_WORKER_RESOURCES
 # Application basics
 FUSION_SPA_TITLE=My App
 FUSION_SPA_PORTAL_ID=my-portal  # Can be a package name, Fusion Portal Service ID, or any configured portal ID
+FUSION_SPA_PORTAL_TAG=latest    # (Optional) Version tag (defaults to 'latest')
+FUSION_SPA_PORTAL_PROXY=false   # (Optional) Whether to proxy portal requests through /portal-proxy (defaults to false)
 
 # Service Discovery configuration
 FUSION_SPA_SERVICE_DISCOVERY_URL=https://my-server.com/service-discovery
