@@ -1,8 +1,7 @@
 ---
 "@equinor/fusion-dev-portal": patch
 "app-react-people": patch
-"@equinor/fusion-react-people-resolver": patch
-"@equinor/fusion-framework-cli": patch
+"@equinor/fusion-framework-react-components-people-provider": patch
 ---
 
 Updated person component dependencies for improved functionality and bug fixes.
