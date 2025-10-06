@@ -1,6 +1,6 @@
 ---
-"@equinor/fusion-dev-portal": patch
-"app-react-people": patch
+"@equinor/fusion-framework-dev-portal": patch
+"@equinor/fusion-framework-cookbook-app-react-people": patch
 "@equinor/fusion-framework-react-components-people-provider": patch
 ---
 
