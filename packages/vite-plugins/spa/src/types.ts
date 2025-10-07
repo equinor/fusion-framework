@@ -25,6 +25,7 @@ export type FusionTemplateEnv = {
   portal: {
     id: string;
     tag?: string;
+    proxy?: boolean;
   };
 
   /** Service discovery configuration */

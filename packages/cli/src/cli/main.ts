@@ -54,7 +54,7 @@ program.description(
     '',
     '• Run fusion <command> --help for details on any command.',
     '• For documentation, issues, and source code, visit:',
-    `  ${pkg.packageJson.homepage}`,
+    '  https://equinor.github.io/fusion-framework/cli/',
   ].join('\n'),
 );
 program.version(pkg.packageJson.version, '-V, --version', 'CLI version');

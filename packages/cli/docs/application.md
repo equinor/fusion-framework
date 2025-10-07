@@ -107,7 +107,7 @@ pnpm fusion-framework-cli publish --env <environment>
 pnpm fusion-framework-cli app config --publish --env <environment>
 ```
 
-> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](./docs/auth.md) for details.
+> **Tip:** For CI/CD and automation, set the `FUSION_TOKEN` environment variable. See [Authentication](auth.md) for details.
 
 ---
 
@@ -131,7 +131,7 @@ pnpm fusion-framework-cli app config --publish --env <environment>
 - **Missing manifest/config:** Ensure `app.manifest.ts` and `app.config.ts` exist in your project root.
 - **Environment variables:** Use `.env` files or your CI/CD system to inject secrets and config values.
 - **Command help:** Run any command with `--help` for detailed usage and options.
-- **Still stuck?** See [Troubleshooting](#troubleshooting--faq) or [Authentication](./docs/auth.md).
+- **Still stuck?** See [Troubleshooting](#troubleshooting--faq) or [Authentication](auth.md).
 
 ---
 
@@ -295,6 +295,7 @@ export default defineAppConfig((env, args) => {
 
 The Fusion Framework CLI provides a suite of commands to support the full application lifecycle, from development to deployment. Below is an overview of all available commands with quick links to their detailed usage:
 
+- [Create](#create) — Create new Fusion applications from templates.
 - [Dev](#dev) — Start the development server with hot reloading.
 - [Publish](#publish) — Build, upload, and tag your app for deployment.
 - [Config](#config) — Generate or upload your app configuration.
@@ -304,9 +305,60 @@ The Fusion Framework CLI provides a suite of commands to support the full applic
 - [Tag](#tag) — Tag a published app version for release management.
 - [Manifest](#manifest) — Generate your app manifest file.
 - [Check](#check) — Verify your app's registration status.
+- [Disco](#disco) — Service discovery operations.
 - [Aliases](#aliases) — Deprecated commands and their replacements.
 
 Refer to each section below for detailed options, usage, and examples.
+
+### Create
+
+Create new Fusion applications from predefined templates. This command provides an interactive way to scaffold new projects with proper structure and configuration.
+
+```sh
+# Create a new app with interactive template selection
+pnpm fusion-framework-cli create app my-app
+
+# Create with a specific template
+pnpm fusion-framework-cli create app my-app --template react-app
+
+# Create in a specific directory
+pnpm fusion-framework-cli create app my-app --directory ./projects
+```
+
+**Options:**
+- `-t, --template <type>` - Template type to use (will prompt if not specified)
+- `-d, --directory <path>` - Directory to create the app in (default: current directory)
+
+For detailed information about creating applications, see [Creating Apps](creating-apps.md).
+
+### Disco
+
+Service discovery operations for resolving and inspecting Fusion services.
+
+#### Resolve
+
+Resolve and display information about a service registered in Fusion service discovery.
+
+```sh
+# Resolve a service in the current environment
+pnpm fusion-framework-cli disco resolve my-service
+
+# Resolve in a specific environment
+pnpm fusion-framework-cli disco resolve my-service --env prod
+
+# Silent mode for scripting
+pnpm fusion-framework-cli disco resolve my-service --silent
+```
+
+**Options:**
+- `--env <environment>` - Environment to use (prod, test, etc.)
+- `--silent` - Silent mode, outputs only JSON for scripting
+- Authentication options: `--token`, `--tenantId`, `--clientId`
+
+**Useful for:**
+- Finding service endpoints for API calls
+- Debugging service connectivity issues
+- Getting service metadata and configuration
 
 ### Dev
 
@@ -609,7 +661,7 @@ pnpm fusion-framework-cli app check --env prod --debug
 > - This change aligns with industry standards and prepares for future CLI enhancements.
 > - Deprecated commands will be removed in future versions—update your scripts and workflows now to avoid breaking changes.
 > 
-> For a full migration guide, see [Migration v10 to v11](./migration-v10-to-v11.md).
+> For a full migration guide, see [Migration v10 to v11](migration-v10-to-v11.md).
 
 The CLI will warn you and redirect to the new command when you use a deprecated alias, applying any necessary options automatically. See the table below for mappings:
 
