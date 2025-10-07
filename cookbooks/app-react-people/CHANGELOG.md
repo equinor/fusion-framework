@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.5.16
+
+### Patch Changes
+
+- [#3542](https://github.com/equinor/fusion-framework/pull/3542) [`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc) Thanks [@eikeland](https://github.com/eikeland)! - Updated person component dependencies for improved functionality and bug fixes.
+
+  - Updated `@equinor/fusion-react-person` from `^0.10.3` to `^0.10.10` in app-react-people cookbook
+  - Updated `@equinor/fusion-wc-person` from `^3.1.8` to `^3.2.4` in dev-portal and people-resolver packages
+
 ## 4.5.15
 
 ### Patch Changes

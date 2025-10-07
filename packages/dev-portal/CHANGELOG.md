@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.1
+
+### Patch Changes
+
+- [#3542](https://github.com/equinor/fusion-framework/pull/3542) [`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc) Thanks [@eikeland](https://github.com/eikeland)! - Updated person component dependencies for improved functionality and bug fixes.
+
+  - Updated `@equinor/fusion-react-person` from `^0.10.3` to `^0.10.10` in app-react-people cookbook
+  - Updated `@equinor/fusion-wc-person` from `^3.1.8` to `^3.2.4` in dev-portal and people-resolver packages
+
+- [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced dev-portal with portal proxy service worker configuration ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
+
+  - Added `/portal-proxy` service worker resource configuration in dev-server.ts
+  - Routes portal proxy requests to Fusion portal service API (`/@fusion-api/portals`)
+  - Enables portal proxy functionality for testing against real portal environments
+
+  This change supports the portal proxy feature by configuring the service worker to properly route portal requests through the dev-server proxy system.
+
 ## 1.2.0
 
 ### Minor Changes
