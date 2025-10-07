@@ -1,5 +1,60 @@
 # Change Log
 
+## 12.3.0
+
+### Minor Changes
+
+- [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI with portal proxy support for testing apps in real portal environments ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
+
+  - Added `/portal-proxy` service worker resource configuration to CLI dev server
+  - Routes portal proxy requests to Fusion portal service API (`/@fusion-api/portal-config`)
+  - Enhanced dev server creation with improved logging and error handling
+  - Exported `defineDevServerConfig` helper for type-safe portal configuration
+  - Updated `ffc app dev` command with better logging support
+
+  This enables developers to run `ffc app dev` to test against real portals, supporting configuration of portal ID and version tags for targeted testing scenarios.
+
+### Patch Changes
+
+- [`4717aab`](https://github.com/equinor/fusion-framework/commit/4717aab6b50d0a795255f7615bb334eae8dc9d3f) Thanks [@Noggling](https://github.com/Noggling)! - Enhanced dev server host configuration to respect Vite config settings.
+
+  - Modified `startAppDevServer` function in `app-dev.ts` to use host configuration from local Vite config
+  - Changed hardcoded 'localhost' host to respect `localViteConfig.server?.host` with 'localhost' as fallback
+  - Improved configuration loading by storing `localViteConfig` in a variable to avoid duplicate loading
+  - This allows developers to configure custom host settings (like '0.0.0.0' for network access) through their Vite config
+
+  **How this affects consumers**
+
+  Developers can now configure the dev server host through their local `vite.config.ts` file:
+
+  ```ts
+  // vite.config.ts
+  export default defineConfig({
+    server: {
+      host: "0.0.0.0", // Allow network access
+      // or host: 'localhost' for local-only access
+    },
+  });
+  ```
+
+  Previously, the host was always hardcoded to 'localhost', preventing network access to the dev server.
+
+  ref: [3548](https://github.com/equinor/fusion-framework/issues/3548)
+
+- [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced CLI documentation with comprehensive portal proxy configuration guide.
+
+  - Added detailed portal proxy configuration section in dev-server-config.md
+  - Documented portal proxy behavior, use cases, and benefits
+  - Provided complete code examples for portal proxy setup
+  - Fixed broken relative links in application.md
+  - Improved documentation navigation and consistency
+
+  These documentation updates provide developers with complete guidance for configuring and using portal proxy functionality in development environments.
+
+- Updated dependencies [[`2d4fd18`](https://github.com/equinor/fusion-framework/commit/2d4fd18394e8545b4616140a93a369d5ae77ccbc), [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc)]:
+  - @equinor/fusion-framework-dev-portal@1.2.1
+  - @equinor/fusion-framework-dev-server@1.1.5
+
 ## 12.2.0
 
 ### Minor Changes

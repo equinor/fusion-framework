@@ -1,5 +1,31 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.2.0
+
+### Minor Changes
+
+- [#3547](https://github.com/equinor/fusion-framework/pull/3547) [`99a3c26`](https://github.com/equinor/fusion-framework/commit/99a3c26275c2089c3708124f5819ce383d8dc3dc) Thanks [@odinr](https://github.com/odinr)! - Enhanced SPA plugin with portal proxy support for testing apps in real portal environments ([Issue #3546](https://github.com/equinor/fusion-framework/issues/3546)).
+
+  - Added `proxy` option to portal configuration to enable `/portal-proxy` routing
+  - Added `FUSION_SPA_PORTAL_PROXY` environment variable support
+  - Updated TypeScript types to include portal proxy configuration
+  - Updated documentation with portal proxy usage examples
+
+  This feature enables developers to load real portal implementations instead of the default developer portal, supporting configuration of portal ID and version tags for targeted testing scenarios.
+
+  **Migration:**
+  No migration required - the `proxy` option defaults to `false`, maintaining existing behavior.
+
+  **Example usage:**
+
+  ```ts
+  portal: {
+    id: 'my-portal',
+    tag: 'latest',
+    proxy: true, // Routes through /portal-proxy/
+  }
+  ```
+
 ## 1.1.4
 
 ### Patch Changes
