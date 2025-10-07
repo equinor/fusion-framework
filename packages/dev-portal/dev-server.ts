@@ -53,6 +53,11 @@ if (serviceScopes.length === 0) {
               rewrite: '/@fusion-api/help',
               scopes: serviceScopes,
             },
+            {
+              url: '/portal-proxy',
+              rewrite: '/@fusion-api/portals',
+              scopes: serviceScopes,
+            },
           ],
         },
       },

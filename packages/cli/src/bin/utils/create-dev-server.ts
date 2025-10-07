@@ -11,6 +11,26 @@ import {
   type FusionTemplateEnv,
 } from '@equinor/fusion-framework-dev-server';
 
+import type { ConsoleLogger } from './ConsoleLogger.js';
+
+/**
+ * Normalizes dev server configuration details for consistent logging.
+ * Extracts relevant configuration fields into a standardized object format.
+ *
+ * @param config - The dev server configuration to normalize
+ * @returns Normalized configuration object for logging
+ */
+const normalizeDevServerConfig = (config: DevServerOptions) => ({
+  portal: typeof config.spa?.templateEnv === 'object' ? config.spa.templateEnv.portal : undefined,
+  msal: typeof config.spa?.templateEnv === 'object' ? config.spa.templateEnv.msal : undefined,
+  proxy:
+    typeof config.spa?.templateEnv === 'object'
+      ? config.spa.templateEnv.serviceWorker?.resources
+      : undefined,
+  serviceDiscoveryUrl: config.api.serviceDiscoveryUrl,
+  routes: config.api.routes,
+});
+
 /**
  * PortalManifest describes the minimal structure required for a portal manifest.
  * Used for dev server portal routing and config.
@@ -84,6 +104,11 @@ const createDevServerTemplate = (
       {
         url: '/help-proxy',
         rewrite: '/@fusion-api/help',
+        scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
+      },
+      {
+        url: '/portal-proxy',
+        rewrite: '/@fusion-api/portal-config',
         scopes: ['5a842df8-3238-415d-b168-9f16a6a6031b/.default'],
       },
     ],
@@ -238,11 +263,25 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
 export const createDevServer = async (
   env: RuntimeEnv,
   options: CreateDevServerOptions,
-  overrides?: UserConfig,
+  args?: {
+    overrides?: UserConfig;
+    log?: ConsoleLogger | null;
+  },
 ) => {
+  const { overrides, log } = args ?? {};
   const baseConfig = createDevServerConfig(options);
-  const config = await loadDevServerConfig(env, baseConfig).catch(() => {
-    return { config: baseConfig };
-  });
-  return createDevServerFn(config.config, overrides);
+  log?.debug('\nBase dev server config:', normalizeDevServerConfig(baseConfig));
+  log?.debug('\nCreating dev server with overrides:', overrides);
+  try {
+    const { path, config } = await loadDevServerConfig(env, baseConfig);
+    log?.debug(`\nLoaded dev server config from ${path}`);
+    log?.debug('\nLoaded dev server config:', normalizeDevServerConfig(config));
+    return createDevServerFn(config, overrides);
+  } catch (error) {
+    log?.warn(
+      '\nFailed to load dev server config:',
+      error instanceof Error ? error.message : String(error),
+    );
+    return createDevServerFn(baseConfig, overrides);
+  }
 };

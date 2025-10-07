@@ -11,6 +11,7 @@ import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-c
  * - Launches the development server for your portal.
  * - Supports custom runtime environment and port selection.
  * - Debug mode available for verbose logging.
+ * - Automatic loading of dev-server.config.ts for API mocking and customization.
  *
  * Usage:
  *   $ ffc portal dev [options]
@@ -20,12 +21,17 @@ import { ConsoleLogger, startPortalDevServer } from '@equinor/fusion-framework-c
  *   --env <environment>  Runtime environment for the dev server (default: local)
  *   --port <port>        Port for the development server (default: 3000)
  *
+ * Configuration:
+ *   dev-server.config.ts  Optional configuration file for API mocking, service discovery,
+ *                         and development environment customization
+ *
  * Example:
  *   $ ffc portal dev
  *   $ ffc portal dev --port 4000
  *   $ ffc portal dev --debug
  *
  * @see startPortalDevServer for implementation details
+ * @see dev-server-config.md for configuration options
  */
 export const command = createCommand('dev')
   .description('Start a local development server for the Fusion portal.')
@@ -33,10 +39,16 @@ export const command = createCommand('dev')
     'after',
     [
       '',
+      'Configuration:',
+      '  dev-server.config.ts  Optional configuration file for API mocking, service discovery,',
+      '                         and development environment customization',
+      '',
       'Examples:',
       '  $ ffc portal dev',
       '  $ ffc portal dev --port 4000',
       '  $ ffc portal dev --debug',
+      '',
+      'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
     ].join('\n'),
   )
   .option('--debug', 'Enable debug mode')

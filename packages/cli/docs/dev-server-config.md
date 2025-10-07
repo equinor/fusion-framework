@@ -259,7 +259,6 @@ export default defineDevServerConfig(() => ({
       // Override portal configuration
       portal: {
         id: 'my-custom-portal',
-        tag: 'development'
       },
 
       // Modify service discovery
@@ -293,6 +292,32 @@ export default defineDevServerConfig(() => ({
 - `2`: Warning (shows warnings, errors, critical - default)
 - `3`: Error (shows only errors and critical messages)
 - `4`: Critical (shows only critical messages - least verbose)
+
+### Portal Proxy Configuration
+
+**When you need it**: You want to control how portal assets are loaded during development - either from the Fusion portal service or from locally installed portal packages.
+
+**How it works**:
+- **`proxy: true`**: Routes portal assets through the dev-server's `/portal-proxy` endpoint, which fetches content from the Fusion portal service
+- **`proxy: false`** (default): Loads portal assets directly from `node_modules` (typically `@equinor/fusion-dev-server` or another portal package installed locally)
+
+```typescript
+export default defineDevServerConfig(() => ({
+  spa: {
+    templateEnv: {
+      portal: {
+        id: 'fusion',
+        tag: 'latest',
+        proxy: true // Load portal from Fusion portal service via /portal-proxy
+      }
+    }
+  }
+}));
+```
+
+**Benefits**:
+- **`proxy: true`**: Access production portal templates or custom portal deployments via the Fusion portal service
+- **`proxy: false`**: Use locally installed portal packages for offline development or custom portal development
 
 ### CLI Logging
 
