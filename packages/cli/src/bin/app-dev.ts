@@ -104,14 +104,16 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
     log?.info(`Portal ${portalId} is external, skipping entry point resolution`);
   }
 
+  const localViteConfig = await loadViteConfig(env, pkg);
+
   const allowFs = templateFilePath ? [pkg.root, templateFilePath] : [pkg.root];
 
   log?.debug(`File system access allowed for: \n${allowFs.join('\n')}\n`);
 
-  const viteConfig = mergeConfigVite(await loadViteConfig(env, pkg), {
+  const viteConfig = mergeConfigVite(localViteConfig, {
     server: {
       port: options?.port || 3000,
-      host: 'localhost',
+      host: localViteConfig.server?.host || 'localhost',
       fs: {
         allow: allowFs,
       },
