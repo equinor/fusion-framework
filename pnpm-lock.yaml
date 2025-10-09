@@ -1431,6 +1431,9 @@ importers:
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:*
         version: link:../../modules/ag-grid
+      ag-charts-enterprise:
+        specifier: 12.2.0
+        version: 12.2.0
       ag-grid-community:
         specifier: 34.2.0
         version: 34.2.0
@@ -14737,21 +14740,17 @@ snapshots:
       ag-charts-core: 12.2.0
       ag-charts-locale: 12.2.0
       ag-charts-types: 12.2.0
-    optional: true
 
   ag-charts-core@12.2.0:
     dependencies:
       ag-charts-types: 12.2.0
-    optional: true
 
   ag-charts-enterprise@12.2.0:
     dependencies:
       ag-charts-community: 12.2.0
       ag-charts-core: 12.2.0
-    optional: true
 
-  ag-charts-locale@12.2.0:
-    optional: true
+  ag-charts-locale@12.2.0: {}
 
   ag-charts-types@12.2.0: {}
 
