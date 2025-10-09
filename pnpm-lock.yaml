@@ -861,8 +861,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react@18.3.1)
       '@equinor/fusion-react-side-sheet':
-        specifier: 1.3.11
-        version: 1.3.11(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.0)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 1.3.12
+        version: 1.3.12(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.0)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-react-styles':
         specifier: ^0.6.4
         version: 0.6.5(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2493,8 +2493,8 @@ packages:
   '@equinor/fusion-react-searchable-dropdown@1.0.6':
     resolution: {integrity: sha512-sZCNWtfy/BwRLblNnyruCMA8ORc/OfwYi00KLjdlKjyO9wYgfaKWLHulNSCwgQFFyTXudRRr5JdvRCtAATTE8A==}
 
-  '@equinor/fusion-react-side-sheet@1.3.11':
-    resolution: {integrity: sha512-HF0BZzrv4r/+CXkyp3ywCyLfmBPssFK/2g+UwG/9u3mbn+QM7KG7RvbSr01IucCsvF3TAPaH+KtyuYi8bFOfOg==}
+  '@equinor/fusion-react-side-sheet@1.3.12':
+    resolution: {integrity: sha512-QjJOj+n4p1roVvBu/rn5SzMB3n16QqS3Qt3eVahTOBfrMXq4zlMoDpIw9YXycMxJnrQxZo+0cI8d/KcOLtUj9w==}
     peerDependencies:
       '@equinor/eds-core-react': ^0.45.0
       '@equinor/eds-icons': ~0.22.0
@@ -9671,7 +9671,7 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-side-sheet@1.3.11(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.0)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@equinor/fusion-react-side-sheet@1.3.12(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.0)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@equinor/eds-core-react': 0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/eds-icons': 0.22.0
