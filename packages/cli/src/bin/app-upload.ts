@@ -6,7 +6,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
-import type { ConsoleLogger } from './utils/index.js';
+import { type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
 /**
  * Handles HTTP response errors during the upload process by throwing descriptive errors
@@ -129,6 +129,7 @@ export const uploadApplication = async (
         type: 'application/zip',
       }),
       headers: {
+        ...defaultHeaders,
         'Content-Type': 'application/zip',
       },
     });

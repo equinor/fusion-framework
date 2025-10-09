@@ -3,7 +3,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 
-import { chalk, formatPath, type ConsoleLogger } from './utils/index.js';
+import { chalk, formatPath, type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
 /**
  * Allowed tags for portal versions in the portal service.
@@ -67,6 +67,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
     log?.fail('🤪', 'Portal name is required.');
     process.exit(1);
   }
+
   // Validate version
   if (!version) {
     log?.fail('🤪', 'Version is required.');
@@ -90,6 +91,7 @@ export const tagPortal = async (options: TagPortalOptions) => {
     const response = await client.json(`/templates/${name}/tags/${tag}`, {
       method: 'PUT',
       body: { version },
+      headers: defaultHeaders,
     });
     log?.debug('Response:', response);
     log?.succeed('Tagged portal template successfully');

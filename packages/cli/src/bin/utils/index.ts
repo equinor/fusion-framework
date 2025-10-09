@@ -6,3 +6,4 @@ export {
   createDevServer,
   type CreateDevServerOptions,
 } from './create-dev-server.js';
+export { defaultHeaders } from './defaultHeaders.js';

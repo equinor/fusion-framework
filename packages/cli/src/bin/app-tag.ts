@@ -3,7 +3,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from '@equinor/fusion-framework-cli/bin';
 
-import { type ConsoleLogger, formatPath, chalk } from './utils/index.js';
+import { type ConsoleLogger, formatPath, chalk, defaultHeaders } from './utils/index.js';
 
 /**
  * Allowed tags for application versions in the app service.
@@ -87,6 +87,7 @@ export const tagApplication = async (options: TagApplicationOptions) => {
     const result = await appClient.json(`/apps/${appKey}/tags/${tag}`, {
       method: 'PUT',
       body: { version },
+      headers: defaultHeaders,
     });
     log?.debug('Response:', result);
     log?.succeed(

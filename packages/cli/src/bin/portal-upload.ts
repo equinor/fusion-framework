@@ -3,7 +3,7 @@ import type { FetchRequest } from '@equinor/fusion-framework-module-http/client'
 
 import type { FusionFramework } from './framework.node.js';
 import type { ConsoleLogger } from './utils/ConsoleLogger.js';
-import { chalk } from './utils/index.js';
+import { chalk, defaultHeaders } from './utils/index.js';
 import { loadMetadata } from './helpers/load-bundle-metadata.js';
 
 /**
@@ -114,6 +114,7 @@ export const uploadPortalBundle = async (opt: UploadPortalOptions) => {
         type: 'application/zip',
       }),
       headers: {
+        ...defaultHeaders,
         'Content-Type': 'application/zip',
       },
     });
