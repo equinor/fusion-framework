@@ -56,6 +56,6 @@
     "ag-grid-enterprise": ">=33.0.3"
   },
   "dependencies": {
-    "@equinor/eds-tokens": "^0.10.0"
+    "@equinor/eds-tokens": "^1.0.0"
   }
 }
