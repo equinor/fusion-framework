@@ -94,7 +94,7 @@ export const startPortalDevServer = async (options?: {
   log?.start('Starting app development server...');
 
   // Create the dev server configuration, including portal and server settings
-  const devServer = await createDevServer(env, devServerConfig, viteConfig);
+  const devServer = await createDevServer(env, devServerConfig, { overrides: viteConfig, log });
 
   await devServer.listen();
 
