@@ -7,7 +7,7 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger } from './utils/index.js';
+import { formatPath, chalk, type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
 import { generatePortalConfig } from './portal-config.js';
 
@@ -67,6 +67,7 @@ export const publishPortalConfig = async (options: PortalConfigPublishOptions) =
     const response = await portalClient.json(`/portals/${portal.name}@${portal.version}/config`, {
       method: 'PUT',
       body: portalConfig,
+      headers: defaultHeaders,
     });
     log?.debug('Response:', response);
     log?.succeed('Published portal config');
