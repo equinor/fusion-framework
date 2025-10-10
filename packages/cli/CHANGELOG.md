@@ -1,5 +1,39 @@
 # Change Log
 
+## 12.3.1
+
+### Patch Changes
+
+- [#3559](https://github.com/equinor/fusion-framework/pull/3559) [`6667a4e`](https://github.com/equinor/fusion-framework/commit/6667a4ee24a5374a02ec76952f440d495d62dbc3) Thanks [@eikeland](https://github.com/eikeland)! - Added default headers to CLI REST API requests for better identification and tracking.
+
+  - Created new `defaultHeaders` utility that includes CLI name, version, and user-agent
+  - Updated app upload/tag operations to include default headers
+  - Updated portal upload/tag operations to include default headers
+
+  All HTTP requests from the CLI now include:
+
+  - `X-Fusion-CLI-Name`: Identifies the CLI tool name
+  - `X-Fusion-CLI-Version`: Specifies the CLI version making the request
+  - `User-Agent`: Standard user agent header with CLI name and version
+
+  This enhancement improves observability and helps service owners track and debug CLI interactions with backend services.
+
+  Closes: #3539
+
+- [#3552](https://github.com/equinor/fusion-framework/pull/3552) [`8694e5b`](https://github.com/equinor/fusion-framework/commit/8694e5bb9bb1249dc52853dc6a5048f81ed9ab9c) Thanks [@eikeland](https://github.com/eikeland)! - Fixed release annotations to always include CLI version and required metadata.
+
+  - Added `cliVersion` property to `ReleaseAnnotations` type
+  - Ensured annotations are always returned (removed undefined return type)
+  - Added fallback annotations for local builds with default values
+  - Improved type safety by making annotations consistently available
+
+  Thanks to @odinr for reporting in issue #3540.
+
+- [#3567](https://github.com/equinor/fusion-framework/pull/3567) [`f343b89`](https://github.com/equinor/fusion-framework/commit/f343b89a5716cc76ed5c8c0b714612c97100cf7a) Thanks [@Noggling](https://github.com/Noggling)! - Fix CLI for portal development by ensuring correct placement of viteConfig overrides.
+
+- Updated dependencies [[`8c6f679`](https://github.com/equinor/fusion-framework/commit/8c6f6790c69cca01bde55d622418040da1c5c9fc)]:
+  - @equinor/fusion-framework-dev-portal@1.2.2
+
 ## 12.3.0
 
 ### Minor Changes
