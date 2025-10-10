@@ -1,0 +1,25 @@
+{
+  "name": "portal",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ffc portal dev",
+    "build": "ffc portal build",
+    "schema": "ffc portal schema",
+    "pack:portals": "ffc portal pack",
+    "publish:portals": "ffc portal publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:*",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
+  }
+}
