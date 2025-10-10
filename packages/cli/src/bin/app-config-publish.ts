@@ -7,7 +7,7 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import { formatPath, chalk, type ConsoleLogger } from './utils/index.js';
+import { formatPath, chalk, type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
 import { generateApplicationConfig } from './app-config.js';
 import { loadAppManifest } from './app-manifest.js';
@@ -85,6 +85,7 @@ export const publishAppConfig = async (options: AppConfigPublishOptions) => {
       {
         method: 'PUT',
         body: appConfig,
+        headers: defaultHeaders,
       },
     );
     log?.debug('Response:', response);

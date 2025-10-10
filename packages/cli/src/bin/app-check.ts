@@ -6,7 +6,7 @@ import {
   type FusionFrameworkSettings,
 } from './framework.node.js';
 
-import type { ConsoleLogger } from './utils/index.js';
+import { defaultHeaders, type ConsoleLogger } from './utils/index.js';
 
 import { resolveProjectPackage } from './helpers/resolve-project-package.js';
 import { resolveAppManifest } from './helpers/resolve-app-manifest.js';
@@ -75,6 +75,7 @@ export const checkApp = async (options: AppCheckOptions) => {
     // Send a HEAD request to check if the app is registered
     const response = await appClient.fetch(`/apps/${manifest.appKey}`, {
       method: 'HEAD',
+      headers: defaultHeaders,
     });
     // If the response is OK, the app is registered
     if (response.ok) {
