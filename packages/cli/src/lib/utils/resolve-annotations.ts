@@ -1,9 +1,11 @@
 import { resolveGithubAnnotations } from './resolve-github-annotations.js';
 import { resolveDevopsAnnotations } from './resolve-devops-annotations.js';
+import { version } from '../../version.js';
 
 /**
  * Represents metadata annotations related to a release process.
  *
+ * @property cliVersion - The version of the CLI that triggered the release.
  * @property source - The origin or system that triggered the release.
  * @property reason - The reason or context for the release.
  * @property [repository] - The repository associated with the release, if applicable.
@@ -17,6 +19,7 @@ import { resolveDevopsAnnotations } from './resolve-devops-annotations.js';
  * @property [tag] - The tag name associated with the release.
  */
 export type ReleaseAnnotations = {
+  cliVersion: string;
   source: string;
   reason: string;
   actor?: string;
@@ -46,12 +49,20 @@ export type ReleaseAnnotations = {
  * @returns {Record<string, string>} An object containing annotation variables for the detected environment.
  * If no known environment is detected, returns an empty object.
  */
-export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
+export const resolveAnnotations = (): ReleaseAnnotations => {
+  // Required annotations for manifest
+  const requiredAnnotations = {
+    cliVersion: version,
+    source: 'local',
+    reason: 'manual',
+  };
+
   // Check if running in GitHub Actions environment
   // If so, delegate to the GitHub-specific annotation resolver
   if (process.env.GITHUB_ACTIONS) {
     const annotation = resolveGithubAnnotations();
     const baseAnnotations = {
+      ...requiredAnnotations,
       source: 'github',
       reason: annotation.eventName,
       workflow: annotation.workflow,
@@ -93,6 +104,7 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
   if (process.env.SYSTEM_TEAMPROJECT) {
     const annotations = resolveDevopsAnnotations();
     return {
+      ...requiredAnnotations,
       source: 'azure_devops',
       reason: annotations.reason,
       repository: annotations.repository,
@@ -104,7 +116,8 @@ export const resolveAnnotations = (): ReleaseAnnotations | undefined => {
       workflow: annotations.pipelineName,
     } satisfies ReleaseAnnotations;
   }
+
   // Fallback: No known CI/CD environment detected
-  // Return an empty object to indicate no annotations are available
-  return undefined;
+  // Return required annotations indicating local build
+  return requiredAnnotations;
 };
