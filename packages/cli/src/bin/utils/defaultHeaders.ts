@@ -10,9 +10,9 @@ const CLINAME = 'fusion-framework-cli';
  * @property {string} 'user-agent' - The user agent for the Fusion Framework CLI and its current version.
  */
 export const defaultHeaders = {
-  'x-fusion-cli-name': CLINAME,
-  'x-fusion-cli-version': version,
-  'user-agent': `${CLINAME}/${version}`,
+  'X-Fusion-CLI-Name': CLINAME,
+  'X-Fusion-CLI-Version': version,
+  'User-Agent': `${CLINAME}/${version}`,
 };
 
 export default defaultHeaders;
