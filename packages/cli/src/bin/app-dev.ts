@@ -48,6 +48,11 @@ export interface StartAppDevServerOptions {
    * Port for the development server (optional, defaults to 3000).
    */
   port?: number;
+
+  /**
+   * Host for the development server (optional, defaults to 'localhost').
+   */
+  host?: string;
 }
 
 /**
@@ -113,7 +118,7 @@ export const startAppDevServer = async (options?: StartAppDevServerOptions) => {
   const viteConfig = mergeConfigVite(localViteConfig, {
     server: {
       port: options?.port || 3000,
-      host: localViteConfig.server?.host || 'localhost',
+      host: options?.host || localViteConfig.server?.host || 'localhost',
       fs: {
         allow: allowFs,
       },

@@ -22,6 +22,7 @@ import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/
  *   --config <path>      Path to the app config file (app.config[.env]?.[ts,js,json])
  *   --env <environment>  Runtime environment for the dev server (default: local)
  *   --port <port>        Port for the development server (default: 3000)
+ *   --host <host>        Host for the development server (default: localhost)
  *
  * Configuration:
  *   dev-server.config.ts  Optional configuration file for API mocking, service discovery,
@@ -31,6 +32,7 @@ import { startAppDevServer, ConsoleLogger } from '@equinor/fusion-framework-cli/
  *   $ ffc app dev
  *   $ ffc app dev --port 4000
  *   $ ffc app dev --manifest ./app.manifest.local.ts --config ./app.config.ts
+ *   $ ffc app dev --host 0.0.0.0
  *
  * @see startAppDevServer for implementation details
  * @see dev-server-config.md for configuration options
@@ -49,6 +51,7 @@ export const command = createCommand('dev')
       '  $ ffc app dev',
       '  $ ffc app dev --port 4000',
       '  $ ffc app dev --manifest ./app.manifest.local.ts --config ./app.config.ts',
+      '  $ ffc app dev --host 0.0.0.0',
       '',
       'See https://equinor.github.io/fusion-framework/cli/docs/dev-server-config.html for configuration options.',
     ].join('\n'),
@@ -58,6 +61,7 @@ export const command = createCommand('dev')
   .option('--config <path>', 'Path to the app config file (app.config[.env]?.[ts,js,json])')
   .option('--env <environment>', 'Runtime environment for the dev server', 'local')
   .option('--port <port>', 'Port for the development server', '3000')
+  .option('--host <host>', 'Host for the development server')
   .action(async (options) => {
     const log = new ConsoleLogger('app:dev', { debug: options.debug });
 
@@ -68,6 +72,7 @@ export const command = createCommand('dev')
       config: options.config,
       env: options.env,
       port: options.port,
+      host: options.host,
     });
     log.succeed('Development server started successfully.');
   });
