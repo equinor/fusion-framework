@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.2
+
+### Patch Changes
+
+- [#3557](https://github.com/equinor/fusion-framework/pull/3557) [`8c6f679`](https://github.com/equinor/fusion-framework/commit/8c6f6790c69cca01bde55d622418040da1c5c9fc) Thanks [@asbjornhaland](https://github.com/asbjornhaland)! - Update deps of `@equinor/fusion-react-context-selector@1.0.6`
+
 ## 1.2.1
 
 ### Patch Changes
