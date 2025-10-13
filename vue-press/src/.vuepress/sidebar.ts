@@ -81,6 +81,65 @@ export default sidebar({
       ],
     },
   ],
+  '/contributing/': [
+    {
+      text: 'Contributing',
+      link: 'README.md',
+      children: [
+        {
+          text: 'Development',
+          children: [
+            {
+              text: 'Getting Started',
+              link: 'development.md',
+            },
+            {
+              text: 'Code Standards',
+              link: 'code-standards.md',
+            },
+            {
+              text: 'Git Workflow',
+              link: 'git-workflow.md',
+            },
+          ],
+        },
+        {
+          text: 'Code Quality',
+          children: [
+            {
+              text: 'Conventional Commits',
+              link: 'conventional-commits.md',
+            },
+            {
+              text: 'Changesets',
+              link: 'changeset.md',
+            },
+            {
+              text: 'Self Review',
+              link: 'self-review.md',
+            },
+          ],
+        },
+        {
+          text: 'Process',
+          children: [
+            {
+              text: 'Code Review',
+              link: 'reviewing.md',
+            },
+            {
+              text: 'Cookbooks',
+              link: 'cookbooks.md',
+            },
+            {
+              text: 'Documentation',
+              link: 'documentation.md',
+            },
+          ],
+        },
+      ],
+    },
+  ],
   '/modules/': [
     '',
     {
