@@ -1,5 +1,33 @@
 # Change Log
 
+## 5.1.0
+
+### Minor Changes
+
+- [#3573](https://github.com/equinor/fusion-framework/pull/3573) [`b42b116`](https://github.com/equinor/fusion-framework/commit/b42b11616487c534e8e01f2df126e2ad05ce6a8f) Thanks [@odinr](https://github.com/odinr)! - Refactored AuthProvider to use a cleaner `client` property instead of deprecated `defaultClient`.
+
+  - Added `client` property to IAuthProvider interface
+  - Replaced deprecated `defaultClient` getter with `client` getter
+  - Updated internal references to use private `#client` field
+  - Maintained backward compatibility through proxy provider with deprecation warning
+
+- [#3572](https://github.com/equinor/fusion-framework/pull/3572) [`2d90f8b`](https://github.com/equinor/fusion-framework/commit/2d90f8b3806aa3deec5ca60142d38118748b1d3e) Thanks [@odinr](https://github.com/odinr)! - Refactored MSAL versioning module to use warnings instead of errors for version incompatibilities.
+
+  **Changes:**
+
+  - Removed `create-version-message.ts` and `static.ts` utility files
+  - Modified `resolveVersion()` to collect warnings for version mismatches instead of throwing errors
+  - Simplified `VersionError` class by removing factory methods and type enum references
+  - Updated tests to reflect new warning-based behavior
+
+  **Breaking Changes:**
+
+  - Version resolution now returns warnings for incompatible versions instead of throwing errors
+  - This change is backward compatible as existing code will continue to work, but error handling behavior has changed
+
+  **Migration:**
+  If your code previously caught `VersionError` exceptions for version incompatibilities, you should now check the `warnings` array in the resolution result instead.
+
 ## 5.0.1
 
 ### Patch Changes
