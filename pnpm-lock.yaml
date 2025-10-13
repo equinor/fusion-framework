@@ -228,10 +228,10 @@ importers:
     dependencies:
       chart.js:
         specifier: ^4.4.9
-        version: 4.5.0
+        version: 4.5.1
       react-chartjs-2:
         specifier: ^5.3.0
-        version: 5.3.0(chart.js@4.5.0)(react@18.3.1)
+        version: 5.3.0(chart.js@4.5.1)(react@18.3.1)
     devDependencies:
       '@equinor/eds-core-react':
         specifier: ^0.49.0
@@ -2148,7 +2148,7 @@ importers:
         version: 2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))
       vuepress-theme-hope:
         specifier: 2.0.0-rc.94
-        version: 2.0.0-rc.94(chart.js@4.5.0)(katex@0.16.23)(markdown-it@14.1.0)(mermaid@11.12.0)(sass-embedded@1.93.2)(sass@1.93.2)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
+        version: 2.0.0-rc.94(chart.js@4.5.1)(katex@0.16.23)(markdown-it@14.1.0)(mermaid@11.12.0)(sass-embedded@1.93.2)(sass@1.93.2)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
 
 packages:
 
@@ -5671,8 +5671,8 @@ packages:
   chardet@2.1.0:
     resolution: {integrity: sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA==}
 
-  chart.js@4.5.0:
-    resolution: {integrity: sha512-aYeC/jDgSEx8SHWZvANYMioYMZ2KX02W6f6uVfyteuCGcadDLcYVHdfdygsTQkQ4TKn5lghoojAsPj5pu0SnvQ==}
+  chart.js@4.5.1:
+    resolution: {integrity: sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==}
     engines: {pnpm: '>=8'}
 
   check-error@2.1.1:
@@ -13963,7 +13963,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@vuepress/plugin-markdown-chart@2.0.0-rc.112(chart.js@4.5.0)(markdown-it@14.1.0)(mermaid@11.12.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))':
+  '@vuepress/plugin-markdown-chart@2.0.0-rc.112(chart.js@4.5.1)(markdown-it@14.1.0)(mermaid@11.12.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))':
     dependencies:
       '@mdit/plugin-container': 0.22.1(markdown-it@14.1.0)
       '@mdit/plugin-plantuml': 0.22.2(markdown-it@14.1.0)
@@ -13972,7 +13972,7 @@ snapshots:
       vue: 3.5.21(typescript@5.9.3)
       vuepress: 2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))
     optionalDependencies:
-      chart.js: 4.5.0
+      chart.js: 4.5.1
       mermaid: 11.12.0
     transitivePeerDependencies:
       - markdown-it
@@ -14450,7 +14450,7 @@ snapshots:
 
   chardet@2.1.0: {}
 
-  chart.js@4.5.0:
+  chart.js@4.5.1:
     dependencies:
       '@kurkle/color': 0.3.4
 
@@ -16825,9 +16825,9 @@ snapshots:
       react: 18.3.1
       react-dom: 19.2.0(react@18.3.1)
 
-  react-chartjs-2@5.3.0(chart.js@4.5.0)(react@18.3.1):
+  react-chartjs-2@5.3.0(chart.js@4.5.1)(react@18.3.1):
     dependencies:
-      chart.js: 4.5.0
+      chart.js: 4.5.1
       react: 18.3.1
 
   react-dom@18.3.1(react@18.3.1):
@@ -18119,7 +18119,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  vuepress-theme-hope@2.0.0-rc.94(chart.js@4.5.0)(katex@0.16.23)(markdown-it@14.1.0)(mermaid@11.12.0)(sass-embedded@1.93.2)(sass@1.93.2)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))):
+  vuepress-theme-hope@2.0.0-rc.94(chart.js@4.5.1)(katex@0.16.23)(markdown-it@14.1.0)(mermaid@11.12.0)(sass-embedded@1.93.2)(sass@1.93.2)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))):
     dependencies:
       '@vuepress/helper': 2.0.0-rc.112(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-active-header-links': 2.0.0-rc.112(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
@@ -18132,7 +18132,7 @@ snapshots:
       '@vuepress/plugin-git': 2.0.0-rc.112(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-icon': 2.0.0-rc.112(markdown-it@14.1.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-links-check': 2.0.0-rc.112(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
-      '@vuepress/plugin-markdown-chart': 2.0.0-rc.112(chart.js@4.5.0)(markdown-it@14.1.0)(mermaid@11.12.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
+      '@vuepress/plugin-markdown-chart': 2.0.0-rc.112(chart.js@4.5.1)(markdown-it@14.1.0)(mermaid@11.12.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-markdown-ext': 2.0.0-rc.112(markdown-it@14.1.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-markdown-hint': 2.0.0-rc.112(markdown-it@14.1.0)(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vuepress/plugin-markdown-image': 2.0.0-rc.112(markdown-it@14.1.0)(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.7.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
