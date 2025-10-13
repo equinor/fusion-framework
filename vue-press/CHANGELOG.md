@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.8
+
+### Patch Changes
+
+- [#3587](https://github.com/equinor/fusion-framework/pull/3587) [`8927882`](https://github.com/equinor/fusion-framework/commit/89278821d92b1d7a0847229f7892cc2c89e07d1a) Thanks [@odinr](https://github.com/odinr)! - Improved contributing documentation navigation by adding a dedicated "Contributing" section to the main navigation and reorganizing contributing guides into a structured sidebar with categories for Development, Code Quality, Process, and Documentation.
+
+  - Added "Contributing" link to main navbar
+  - Created organized sidebar structure for contributing guides
+  - Grouped guides into logical categories: Development, Code Quality, Process, and Documentation
+  - Made contributing guides more discoverable and accessible to users
+
 ## 0.4.7
 
 ### Patch Changes
