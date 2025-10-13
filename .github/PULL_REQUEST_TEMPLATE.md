@@ -1,18 +1,37 @@
+<!--
+Please replace or remove the HTML comment sections below with your actual content.
+These comments are just guidance - do not include them in your final PR description.
+-->
+
 ## Why
-<!-- What kind of change does this PR introduce? -->
-<!-- What is the current behavior? -->
-<!-- What is the new behavior? -->
-<!-- Does this PR introduce a breaking change? -->
-<!-- Other information? -->
-closes:
 
+<!-- Describe the type and scope of this change -->
 
-### Check off the following:
-- [ ] Confirm that I checked changes to branch which I am merging into.
-  - _I have validated included files_
-  - _My code does not generate new linting warnings_
-  - _My PR is not a duplicate, [check existing pr`s](https://github.com/equinor/fusion-framework/pulls)_
-- [ ] Confirm that the I have completed the [self-review checklist](https://github.com/equinor/fusion-framework/blob/main/contributing/self-review.md).
+**Why is this change needed?**
+<!-- Explain the problem this solves or the reason for this change -->
 
-- [ ] Confirm that my changes meet our [code of conduct](https://github.com/equinor/fusion-framework/blob/main/CODE_OF_CONDUCT.md).
+**What is the current behavior?**
+<!-- Describe how things work currently, including any issues -->
+
+**What is the new behavior?**
+<!-- Describe what will change after this PR is merged -->
+
+**Does this PR introduce a breaking change?** 
+<!-- describe what breaks and how to migrate -->
+
+**Additional context**
+<!-- Any other information, rationale, or testing notes -->
+
+**Related issues**
+closes: <!-- Link to issues this PR closes, e.g., #123 -->
+ref: <!-- Link to related issues/PRs this PR references, e.g., #456 -->
+
+### Checklist
+
+- [ ] Confirm completion of the [self-review checklist](https://github.com/equinor/fusion-framework/blob/main/contributing/self-review.md)
+- [ ] Confirm changes to target branch validation
+  - _Included files validated_
+  - _No new linting warnings_
+  - _Not a duplicate PR ([check existing](https://github.com/equinor/fusion-framework/pulls))_
+- [ ] Confirm adherence to [code of conduct](https://github.com/equinor/fusion-framework/blob/main/CODE_OF_CONDUCT.md)
 
