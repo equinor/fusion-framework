@@ -3,22 +3,23 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
+  "private": true,
   "scripts": {
-    "dev": "ffc portal dev",
-    "build": "ffc portal build",
-    "schema": "ffc portal schema",
-    "pack:portals": "ffc portal pack",
-    "publish:portals": "ffc portal publish"
+    "dev": "fusion-framework-cli portal dev",
+    "build": "fusion-framework-cli portal build",
+    "schema": "fusion-framework-cli portal schema",
+    "pack:portals": "fusion-framework-cli portal pack",
+    "publish:portals": "fusion-framework-cli portal publish"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@equinor/fusion-framework-cli": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@equinor/fusion-framework-cli": "workspace:*",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0"
   }
