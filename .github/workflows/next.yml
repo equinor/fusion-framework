@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       
       - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets

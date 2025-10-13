@@ -44,13 +44,13 @@ jobs:
           fetch-depth: 0
 
       - name: Configure git user (trigger actor) 
-        uses: ./.github/workflows/actions/config-git-user
+        uses: ./.github/actions/config-git-user
         
       - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
 
       - name: Create snapshot
-        uses: ./.github/workflows/actions/changeset-snapshot
+        uses: ./.github/actions/changeset-snapshot
         with:
           tag: ${{ inputs.tag }}
           npm-token: ${{ secrets.NPM_AUTH_TOKEN }}

@@ -37,7 +37,7 @@ jobs:
 
       - name: Generate docs
         id: build
-        uses: ./.github/workflows/actions/build-docs
+        uses: ./.github/actions/build-docs
         with:
           upload-artifact: false
 

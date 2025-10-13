@@ -37,11 +37,11 @@ jobs:
 
       # Configure git user for commits made by the workflow
       - name: Configure git user (trigger actor) 
-        uses: ./.github/workflows/actions/config-git-user
+        uses: ./.github/actions/config-git-user
       
       # Install dependencies and setup Node.js environment
       - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
 
       # Process changesets: create version PR or publish packages to npm
       # This step requires write permissions to create releases and publish packages

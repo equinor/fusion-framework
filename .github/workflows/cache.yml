@@ -38,10 +38,10 @@ jobs:
       - name: Setup node and install deps
         id: install
         if: ${{ inputs.rebuild == 'true' || inputs.rebuild == true }}
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
 
       - name: Clear cache
-        uses: ./.github/workflows/actions/clear-cache
+        uses: ./.github/actions/clear-cache
         continue-on-error: true
         with:
           branch: ${{ inputs.branch }}
@@ -49,4 +49,4 @@ jobs:
 
       - name: Generate cache for source code
         if: ${{ steps.install.outcome == 'success' }}
-        uses: ./.github/workflows/actions/build-packages
+        uses: ./.github/actions/build-packages

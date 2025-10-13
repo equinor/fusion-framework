@@ -50,7 +50,7 @@ jobs:
           fetch-depth: ${{ steps.fetch-depth.outputs.value }}
       
       - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
         with:
           turbo-cache: true
 
@@ -93,7 +93,7 @@ jobs:
       - name: Build affected packages
         id: build
         continue-on-error: true
-        uses: ./.github/workflows/actions/build-packages
+        uses: ./.github/actions/build-packages
         with: 
           only-affected: false
 

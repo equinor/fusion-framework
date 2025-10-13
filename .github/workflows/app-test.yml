@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Setup node and install deps
-        uses: ./.github/workflows/actions/node-setup
+        uses: ./.github/actions/node-setup
         with:
           turbo-cache: true
           
