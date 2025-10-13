@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: ./.github/workflows/actions/build-docs
+      - uses: ./.github/actions/build-docs
 
   deploy:
     environment:

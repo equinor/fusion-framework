@@ -23,6 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: clear pull request cache
-        uses: ./.github/workflows/actions/clear-cache
+        uses: ./.github/actions/clear-cache
         with:
           branch: refs/pull/${{ github.event.pull_request.number }}/merge
