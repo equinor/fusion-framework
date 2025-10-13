@@ -17,6 +17,8 @@ export interface IAuthProvider {
   readonly defaultConfig: any | undefined;
   readonly defaultAccount: AccountInfo | undefined;
 
+  readonly client: AuthClient;
+
   /**
    * Acquire token from default auth client
    * @param req Auth request options
@@ -52,13 +54,8 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
     return new SemanticVersion(MsalModuleVersion.Latest);
   }
 
-  /** @deprecated */
-  get defaultClient(): AuthClient {
-    return this.getClient();
-  }
-
   get defaultAccount(): AccountInfo | undefined {
-    return this.defaultClient.account;
+    return this.client.account;
   }
 
   /** @deprecated */
@@ -70,8 +67,7 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
     this.#client = this.createClient();
   }
 
-  /** @deprecated */
-  getClient(): AuthClient {
+  get client(): AuthClient {
     return this.#client;
   }
 
@@ -91,11 +87,10 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
   async handleRedirect() {
     const { redirectUri } = this.defaultConfig || {};
     if (window.location.pathname === redirectUri) {
-      const client = this.defaultClient;
-      const logger = client.getLogger();
-      const { requestOrigin } = client;
+      const logger = this.client.getLogger();
+      const { requestOrigin } = this.client;
 
-      await client.handleRedirectPromise();
+      await this.client.handleRedirectPromise();
       if (requestOrigin === redirectUri) {
         logger.warning(`detected callback loop from url ${redirectUri}, redirecting to root`);
         window.location.replace('/');
@@ -107,7 +102,7 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
   }
 
   acquireToken(req: AuthRequest): ReturnType<IAuthProvider['acquireToken']> {
-    return this.defaultClient.acquireToken(req);
+    return this.client.acquireToken(req);
   }
 
   async acquireAccessToken(req: AuthRequest) {
@@ -117,15 +112,15 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
 
   async login(options?: { onlyIfRequired?: boolean }) {
     // skip login if already logged in and has valid claims
-    if (options?.onlyIfRequired && this.defaultClient.hasValidClaims) {
+    if (options?.onlyIfRequired && this.client.hasValidClaims) {
       return;
     }
-    await this.defaultClient.login();
+    await this.client.login();
   }
 
   async logout(options?: { redirectUri?: string }): Promise<void> {
     // TODO - might have an option for popup or redirect
-    await this.defaultClient.logoutRedirect({
+    await this.client.logoutRedirect({
       postLogoutRedirectUri: options?.redirectUri,
       account: this.defaultAccount,
     });
@@ -145,10 +140,16 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
 
   _createProxyProvider_v2(): IAuthProvider {
     return new Proxy(this, {
-      get: (target: AuthProvider, prop) => {
+      get: (target: AuthProvider, prop: keyof AuthProvider) => {
         switch (prop) {
           case 'version':
             return target.version;
+          case 'client':
+            return target.client;
+          // @ts-expect-error - this is deprecated since version 5.0.1
+          case 'defaultClient':
+            console.warn('defaultClient is deprecated, use client instead');
+            return target.client;
           case 'defaultAccount':
             return target.defaultAccount;
           case 'defaultConfig':
