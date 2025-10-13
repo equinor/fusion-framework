@@ -1,4 +1,4 @@
-import type { Plugin } from 'vite';
+import { normalizePath, type Plugin } from 'vite';
 
 import { fileURLToPath } from 'node:url';
 
@@ -88,7 +88,9 @@ export const plugin = <TEnv extends TemplateEnv = TemplateEnv>(
       config.server.fs ??= {};
       config.server.fs.allow ??= [];
       // allow access to the html directory
-      config.server.fs.allow.push(new URL('../html', import.meta.url).pathname);
+
+      const htmlDir = fileURLToPath(new URL('../html', import.meta.url));
+      config.server.fs.allow.push(normalizePath(htmlDir));
 
       log?.info(`plugin configured for ${env.FUSION_SPA_PORTAL_ID}`);
     },
