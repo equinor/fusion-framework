@@ -1,32 +1,5 @@
-import { VersionMessageType } from './static';
-import { createVersionMessage } from './create-version-message';
 import type { SemVer } from 'semver';
 
-/**
- * Creates a VersionError instance with a formatted message.
- *
- * This is a helper function that creates a VersionError with a human-readable
- * message based on the error type and version information.
- *
- * @param type - The type of version error
- * @param requestedVersion - The version that was requested
- * @param latestVersion - The latest available version
- * @param options - Additional error options including the error type
- * @returns A new VersionError instance with formatted message
- */
-const createVersionError = (
-  type: VersionMessageType,
-  requestedVersion: string | SemVer,
-  latestVersion: string | SemVer,
-  options?: ErrorOptions & { type?: VersionMessageType },
-): VersionError => {
-  return new VersionError(
-    createVersionMessage(type, requestedVersion, latestVersion),
-    requestedVersion,
-    latestVersion,
-    { ...options, type },
-  );
-};
 
 /**
  * Error class for version-related issues in the MSAL module.
@@ -65,17 +38,8 @@ export class VersionError extends Error {
   /** The latest available version in the system */
   public readonly latestVersion: string;
 
-  /** The specific type of version error that occurred */
-  public readonly type?: VersionMessageType;
-
   /** The error name for instanceof checks */
   static Name = 'VersionError';
-
-  /** Reference to the VersionMessageType enum for convenience */
-  static Type = VersionMessageType;
-
-  /** Factory method for creating VersionError instances with formatted messages */
-  static create: typeof createVersionError = createVersionError;
 
   /**
    * Creates a new VersionError instance.
@@ -89,7 +53,7 @@ export class VersionError extends Error {
     message: string,
     requestedVersion: string | SemVer,
     latestVersion: string | SemVer,
-    options?: ErrorOptions & { type?: VersionMessageType },
+    options?: ErrorOptions 
   ) {
     super(message, options);
     this.name = VersionError.Name;
@@ -97,7 +61,5 @@ export class VersionError extends Error {
     // Store versions as strings
     this.requestedVersion = String(requestedVersion);
     this.latestVersion = String(latestVersion);
-
-    this.type = options?.type;
   }
 }
