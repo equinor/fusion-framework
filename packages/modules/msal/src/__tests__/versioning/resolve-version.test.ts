@@ -79,13 +79,17 @@ describe('resolveVersion', () => {
       expect(minorResult.isLatest).toBe(false);
       expect(minorResult.satisfiesLatest).toBe(true);
       expect(minorResult.warnings).toBeDefined();
-      expect(minorResult.warnings?.[0]).toContain('Requested minor version 1 is different from the latest minor version 0');
+      expect(minorResult.warnings?.[0]).toContain(
+        'Requested minor version 1 is different from the latest minor version 0',
+      );
 
       // Major difference (doesn't satisfy with warning)
       const majorResult = resolveVersion('5.0.0');
       expect(majorResult.satisfiesLatest).toBe(false);
       expect(majorResult.warnings).toBeDefined();
-      expect(majorResult.warnings?.[0]).toContain('Requested major version 5 is greater than the latest major version 4');
+      expect(majorResult.warnings?.[0]).toContain(
+        'Requested major version 5 is greater than the latest major version 4',
+      );
     });
 
     it('should handle versions without matching enum with warnings', () => {
@@ -93,13 +97,17 @@ describe('resolveVersion', () => {
       const lowerResult = resolveVersion('3.0.0');
       expect(lowerResult.enumVersion).toBe('4.0.9'); // Falls back to latest
       expect(lowerResult.warnings).toBeDefined();
-      expect(lowerResult.warnings?.[0]).toContain('Requested major version 3 is behind the latest major version 4');
+      expect(lowerResult.warnings?.[0]).toContain(
+        'Requested major version 3 is behind the latest major version 4',
+      );
 
       // Zero version
       const zeroResult = resolveVersion('0.0.0');
       expect(zeroResult.enumVersion).toBe('4.0.9'); // Falls back to latest
       expect(zeroResult.warnings).toBeDefined();
-      expect(zeroResult.warnings?.[0]).toContain('Requested major version 0 is behind the latest major version 4');
+      expect(zeroResult.warnings?.[0]).toContain(
+        'Requested major version 0 is behind the latest major version 4',
+      );
     });
   });
 
@@ -107,11 +115,13 @@ describe('resolveVersion', () => {
     it('should handle invalid version strings gracefully', () => {
       const invalidVersions = ['invalid-version', 'not-a-version', 'invalid', 'bad.version'];
 
-      invalidVersions.forEach(invalidVersion => {
+      invalidVersions.forEach((invalidVersion) => {
         const result = resolveVersion(invalidVersion);
         expect(result.warnings).toBeDefined();
         expect(result.warnings).toHaveLength(1);
-        expect(result.warnings?.[0]).toContain(`Failed to parse requested version "${invalidVersion}"`);
+        expect(result.warnings?.[0]).toContain(
+          `Failed to parse requested version "${invalidVersion}"`,
+        );
         // Should fall back to latest version
         expect(result.wantedVersion.version).toBe('4.0.9');
       });

@@ -1,6 +1,5 @@
 import type { SemVer } from 'semver';
 
-
 /**
  * Error class for version-related issues in the MSAL module.
  *
@@ -53,7 +52,7 @@ export class VersionError extends Error {
     message: string,
     requestedVersion: string | SemVer,
     latestVersion: string | SemVer,
-    options?: ErrorOptions 
+    options?: ErrorOptions,
   ) {
     super(message, options);
     this.name = VersionError.Name;
