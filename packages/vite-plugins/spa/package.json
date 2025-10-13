@@ -58,5 +58,12 @@
     "rollup": "^4.39.0",
     "typescript": "^5.8.2",
     "vite": "^7.1.9"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-http": "workspace:*",
+    "@equinor/fusion-framework-module-msal": "workspace:*",
+    "@equinor/fusion-framework-module-service-discovery": "workspace:*",
+    "@equinor/fusion-framework-module-telemetry": "workspace:*"
   }
 }
