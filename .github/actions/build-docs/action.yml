@@ -8,7 +8,7 @@ runs:
   using: composite
   steps:
     - name: Setup node and install deps
-      uses: ./.github/workflows/actions/node-setup
+      uses: ./.github/actions/node-setup
 
     - name: Generate version
       shell: bash
