@@ -639,6 +639,9 @@ importers:
 
   cookbooks/portal:
     dependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -646,9 +649,6 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
-      '@equinor/fusion-framework-cli':
-        specifier: workspace:*
-        version: link:../../packages/cli
       '@types/react':
         specifier: ^18.2.0
         version: 18.3.24
