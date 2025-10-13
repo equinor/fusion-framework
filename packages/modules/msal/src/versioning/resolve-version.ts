@@ -52,63 +52,69 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   const versionString = version || MsalModuleVersion.Latest;
 
   // Parse versions using coerce for backward compatibility
-  const wantedVersion = semver.coerce(versionString);
   const latestVersion = semver.coerce(MsalModuleVersion.Latest);
-
-  // Validate that the requested version is a valid semver
-  if (!wantedVersion) {
-    throw VersionError.create(
-      VersionError.Type.InvalidVersion,
-      versionString,
-      MsalModuleVersion.Latest,
-    );
-  }
 
   // This should never happen! Indicates version.ts was not generated correctly
   // This is a critical build-time issue that needs immediate attention
   if (!latestVersion) {
-    throw VersionError.create(
-      VersionError.Type.InvalidLatestVersion,
+    throw new VersionError(
+      `Failed to parse latest version "${MsalModuleVersion.Latest}" - this indicates the version.ts file was not generated correctly. Check for import errors in the build process.`,
       versionString,
       MsalModuleVersion.Latest,
     );
   }
 
-  // Major version incompatibility check - this is a hard error
-  // Users cannot request a major version that doesn't exist yet
-  if (wantedVersion.major > latestVersion.major) {
-    throw VersionError.create(
-      VersionError.Type.MajorIncompatibility,
-      String(wantedVersion),
-      String(latestVersion),
+  let wantedVersion: SemVer | null = semver.coerce(versionString);
+  // Validate that the requested version is a valid semver
+  if (!wantedVersion) {
+    const missingVersionWarning = new VersionError(
+      `Failed to parse requested version "${versionString}"`,
+      versionString,
+      MsalModuleVersion.Latest,
     );
+    warnings.push(missingVersionWarning.message);
+    wantedVersion = latestVersion;
+  }
+
+  if (wantedVersion.major < latestVersion.major) {
+    const majorBehindVersionWarning = new VersionError(
+      `Requested major version ${wantedVersion.major} is behind the latest major version ${latestVersion.major}`,
+      wantedVersion,
+      latestVersion,
+    );
+    warnings.push(majorBehindVersionWarning.message);
   }
 
   // Minor version mismatch - add warning but don't throw
   // This helps developers stay aware of version differences without breaking functionality
   if (wantedVersion.major === latestVersion.major && wantedVersion.minor !== latestVersion.minor) {
-    const minorMismatchWarning = VersionError.create(
-      VersionError.Type.MinorMismatch,
-      String(wantedVersion),
-      String(latestVersion),
+    const minorMismatchWarning = new VersionError(
+      `Requested minor version ${wantedVersion.minor} is different from the latest minor version ${latestVersion.minor}`,
+      wantedVersion,
+      latestVersion,
     );
     warnings.push(minorMismatchWarning.message);
   }
 
   // Find the corresponding enum version for the requested major version
   // This is used for module configuration and feature detection
-  const enumVersion = Object.values(MsalModuleVersion).find(
+  let enumVersion = Object.values(MsalModuleVersion).find(
     (x) => semver.coerce(x)?.major === wantedVersion.major,
   );
 
-  // If no matching enum version is found, this indicates a major version
-  // that doesn't have a corresponding enum value defined
+  // If no matching enum version is found, fall back to the latest available
+  // This allows forward compatibility with future versions
   if (!enumVersion) {
-    throw VersionError.create(
-      VersionError.Type.MajorIncompatibility,
-      String(wantedVersion),
-      String(latestVersion),
-    );
+    enumVersion = MsalModuleVersion.Latest;
+    // Only warn if this is a future version (higher than latest)
+    if (wantedVersion.major > latestVersion.major) {
+      const fallbackWarning = new VersionError(
+        `Requested major version ${wantedVersion.major} is greater than the latest major version ${latestVersion.major}. Falling back to latest version.`,
+        wantedVersion,
+        latestVersion,
+      );
+      warnings.push(fallbackWarning.message);
+    }
   }
 
   // Return comprehensive version resolution result
