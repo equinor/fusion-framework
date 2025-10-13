@@ -1,5 +1,21 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 1.2.1
+
+### Patch Changes
+
+- [#3579](https://github.com/equinor/fusion-framework/pull/3579) [`b6a64d9`](https://github.com/equinor/fusion-framework/commit/b6a64d94bad7248c06b3aa7d65d7d698052437c7) Thanks [@Noggling](https://github.com/Noggling)! - Add peer dependencies to SPA Vite plugin
+
+  Added peer dependencies to ensure proper dependency resolution for the SPA Vite plugin. This change declares the Fusion Framework modules that the plugin expects to be available in the consuming application:
+
+  - `@equinor/fusion-framework-module`
+  - `@equinor/fusion-framework-module-http`
+  - `@equinor/fusion-framework-module-msal`
+  - `@equinor/fusion-framework-module-service-discovery`
+  - `@equinor/fusion-framework-module-telemetry`
+
+  This ensures that consumers are aware of the required dependencies and helps prevent runtime errors due to missing modules.
+
 ## 1.2.0
 
 ### Minor Changes
