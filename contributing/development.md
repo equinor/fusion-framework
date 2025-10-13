@@ -41,6 +41,8 @@ Once you've installed Node.js and pnpm, open Terminal and run the following:
   - 🗂️ Utils - _collection of utilities_
 
 ## READMEs:
+- [code-standards](./code-standards.md)
 - [self-review](./self-review.md)
 - [cookbooks](./cookbooks.md)
 - [changeset](./changeset.md)
+- [git-workflow](./git-workflow.md)
