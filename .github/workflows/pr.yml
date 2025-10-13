@@ -88,7 +88,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
           reporter: ${{ steps.reporter.outputs.value }}
-          level: error
+          fail_level: error
           
       - name: Build affected packages
         id: build
