@@ -1,91 +1,228 @@
-# Changeset
+## Changesets
 
-this repo uses [changeset](https://github.com/changesets/changesets) for versioning and keeping change logs up to date.
+This repository uses [Changesets](https://github.com/changesets/changesets) to version packages and keep changelogs up to date.
 
-## Benefits of the Changeset Approach
-The changeset approach in Changesets brings several benefits to your versioning and release management workflow:
+> **Important**<br/>
+> Changeset content becomes the release notes presented to consumers. Write summaries as if they will be read by end users of your packages.
 
-- Granular Control: By defining changes at the package level, Changesets allows for granular control over versioning. Different packages can have different versions based on their respective changes, providing flexibility and precision.
-- Clear Documentation: Changesets encourage developers to provide summaries of their changes, helping document modifications effectively. This documentation serves as a valuable resource for the project and facilitates collaboration within teams.
-- Consistent Versioning: Changesets follow semantic versioning principles, ensuring that version numbers convey the significance of the changes made. This consistency improves communication, compatibility, and the overall stability of your packages.
-- Automated Release Process: Changesets automates the versioning and release process, reducing manual effort and the likelihood of human error. With a few simple commands, you can calculate new versions and publish the updated packages seamlessly.
-- Easy Collaboration: By providing a standardized approach to managing changes, Changesets facilitates collaboration among team members. Everyone can easily understand and work with the changesets, ensuring a shared understanding of the project’s evolution.
+### TL;DR
+- **Create a changeset for consumer-affecting changes:** New APIs, bug fixes, breaking changes → `patch`/`minor`/`major`
+- **Skip for internal-only work:** Refactors, tests, tooling → no changeset unless repo-wide impact
+- **ALL markdown changes need changesets:** Any changes to `.md` files → create changeset for `@equinor/fusion-framework-docs` (docs are linked/referenced)
+- **One package per changeset preferred:** Group only identical changes across packages
+- **Directory:** `.changeset/` (singular) with package-prefixed filename
+- **Use `pnpm changeset`** for guided creation; bot validates on PRs
+- **Summary:** What changed, why it matters, migration notes if breaking
 
-The changeset-centered workflow in Changesets brings clarity, efficiency, and reliability to your versioning and release management process.
+### When to create a changeset
 
-## Best Practices
+**Decision Tree:**
+1. **Are you on a feature/fix branch?** → Check `.changeset/` for existing changesets first
+2. **Is this a workspace root change?** (monorepo config, tooling, CI) → Skip changeset entirely
+3. **Are you changing any `.md` files?** → Create changeset for `@equinor/fusion-framework-docs`
+4. **All other package changes** → Create changeset (`patch`/`minor`/`major`)
+   - Even internal refactoring requires a changeset for proper versioning
+   - Internal changes use `patch` with clear "internal only" notes
 
-- **Prefer a single package per changeset:** Each changeset should ideally affect only one package. This keeps versioning and changelogs clear and makes releases easier to manage.
-- **Scope committed files and changesets:** Try to keep your commits and changesets focused. It's better to have multiple small commits and changesets than a single large one. This improves traceability and makes reviewing and releasing changes safer and more predictable.
-- **Write clear, concise, and descriptive summaries:** Each changeset should include a summary that accurately describes the change and its impact.
-- **Use semantic versioning thoughtfully:** Choose patch, minor, or major version bumps based on the actual impact of the change, following semver guidelines.
-- **Avoid mixing unrelated changes:** Do not group unrelated changes in a single changeset. Separate them for clarity and easier tracking.
-- **Review changesets for accuracy and completeness:** Before merging, ensure the changeset correctly reflects the changes and includes all necessary details.
-- **Keep changesets up to date:** If your PR evolves during review, update the changeset to match the final set of changes.
+**Version bump guidance:**
+- `patch`: Backward-compatible bug fixes, internal changes, or minimal updates
+- `minor`: Backward-compatible new features or enhancements
+- `major`: Breaking changes requiring consumer updates
 
-## How to write a changeset
+**Special cases:**
+- **Workspace root only** (cannot be released): Skip changeset entirely
+- **Multi-package identical changes** (e.g., same dependency bump): Group in one changeset
 
-All PR should have a changeset if it changes code in any of the Fusion Framework packages. Changeset can be done from the PR UI or manually.
+### Directory and file naming
+- **Directory:** `.changeset/` (singular, not `.changesets/`)
+- **Naming convention:** `{package-name}_{short-description}.md`
+  - Prefix with package name (exclude `@equinor/` scope)
+  - Use kebab-case for multi-word descriptions
+  - Keep total filename under 50 characters
+  - Examples:
+    - `framework_add-invalidate-flag.md`
+    - `react-module_http-client-fix.md`
+    - `query_cache-improvements.md`
 
-1. Create a new file in the `.changesets` folder with the name of the package you want to change (use random human readable names by default for these files to avoid collisions when generating them. e.g., `happy-sock-monster.md`).
-2. Add all affected packages to markdown metadata (front matter) using the format "PACKAGE_NAME": VERSION_TAG (e.g., `"@equinor/fusion-query": patch`).
-3. Write a brief description of the change(s).
-4. Add sections for each package that was changed _(if multiple packages were changed)_.
-5. Explain in detailed why and what changes made to the package.
-6. _(optional)_ Explain in detail how a consumer should update their code
-7. _(optional)_ Include code blocks with examples of how to use new features or migrate breaking changes.
-8. _(optional)_ Include mermaid diagrams to illustrate the flow of the change.
-
-> as a reviewer it is important to make __SURE__ these changelogs are in place before approving the PR!
-
-**When deciding on a version tag, consider:**
-
-* `major` version when making incompatible library changes
-* `minor` version when adding functionality in a backward compatible manner
-* `patch` version when making backward compatible bug fixes
-
-### Creating changeset from scratch
-
-### Example
+### Frontmatter format
+Each file must start with YAML frontmatter listing affected packages and the bump type:
 
 ```md
-  ---
-  "@equinor/fusion-query": patch
-  ---
+---
+"@equinor/fusion-framework": patch
+---
 
-  **@equinor/fusion-query:**
-
-  Changed functionality of `Query.query` to accept a new argument `invalidate`.
-
-  - Updated `Query.query` to accept an optional `invalidate` argument that allows developers to specify whether the query should be invalidated before executing.
-  - Added support for `invalidate` in the `Query.query` method to enable more granular control over query execution.
-  - Enhanced the `Query.query` method to accept a boolean value for `invalidate`, with `false` as the default value.
-  - Updated the `Query.query` method to invalidate the query before executing if the `invalidate` argument is set to `true`.
-
-  ```ts
-  /** Example of using the new `invalidate` argument in `Query.query` */
-  import { Query } from '@equinor/fusion-query';
-
-  const query = new Query();
-  query.query({ invalidate: true });
-  ```
-
-  ```tsx
-  /** Example of using the new `useQuery` hook */
-  import { useQuery } from '@equinor/fusion-query';
-
-  const myHook = () => {
-    const { data, error, isLoading } = useQuery({ invalidate: true });
-  };
-  ```
+Short, clear summary of the change and its impact.
 ```
 
-### Creating from shell
+Multi-package changes are allowed. **Prefer one package per changeset**, unless the change and the message are identical across packages (e.g., bumping the same dependency version in several packages). In that case, **group them in one changeset** by listing all packages in the frontmatter.
 
-```sh
+### Choosing the version type
+- `major`: breaking API or behavior changes
+- `minor`: new, backward-compatible functionality
+- `patch`: backward-compatible bug fixes or internal-only changes
+
+### Writing effective summaries
+
+Changeset summaries become the release notes that consumers read. Structure each summary to answer:
+
+1. **What changed** - Brief description of the modification
+2. **Why it changed** - Rationale and benefits
+3. **How to migrate** (if applicable) - For breaking changes or major updates
+
+**Guidelines:**
+- Be specific and consumer-focused - write as if consumers will read this directly
+- Keep under 3-4 lines for readability
+- Include code examples only for complex new features
+- Reference issues: `Fixes https://github.com/equinor/fusion-framework/issues/123`, `Closes https://github.com/equinor/fusion-framework/issues/123`
+- Credit contributors: `Thanks @username for the report`
+
+**Migration notes for breaking changes:**
+- One-line migration instruction
+- Include before/after code snippets if complex
+- Link to migration guide if extensive
+
+### Best Practices
+- **Single package per changeset:** Keep changes focused and releases manageable
+- **Scope narrowly:** Multiple small changesets > one large changeset for better traceability
+- **Update during review:** Modify changesets if PR scope changes
+- **Check existing files:** Always scan `.changeset/` on feature branches first
+- **Group identical changes:** Only combine packages with identical changes/messages
+
+### Quality Assurance Checklist
+
+Before committing a changeset:
+- [ ] Correct directory (`.changeset/`) and naming convention followed
+- [ ] Version bump type appropriate (patch/minor/major)
+- [ ] Summary clear, concise, and consumer-focused
+- [ ] Only affected packages listed in frontmatter
+- [ ] Breaking changes include migration notes
+- [ ] Internal changes clearly marked (or skipped entirely)
+- [ ] Multi-package grouping justified (identical changes only)
+- [ ] Related issues referenced and contributors credited
+
+### Examples
+
+**New feature (minor):**
+````md
+---
+"@equinor/fusion-query": minor
+---
+
+Add optional `invalidate` argument to `Query.query` for pre-execution cache invalidation.
+
+```typescript
+// Before
+await query('data');
+
+// After
+await query('data', { invalidate: true });
+```
+
+Fixes: https://github.com/equinor/fusion-framework/issues/123 — thanks @username for the suggestion
+````
+
+**Bug fix (patch):**
+```md
+---
+"@equinor/fusion-framework-react": patch
+---
+
+Fix useFramework hook memory leak when component unmounts during async operations.
+
+Prevents stale closure access in cleanup functions.
+```
+
+**Breaking change (major):**
+```md
+---
+"@equinor/fusion-framework": major
+---
+
+Remove deprecated `createApp` function in favor of `initializeFramework`.
+
+**Migration:** Replace `createApp(config)` with `initializeFramework(config)`.
+```
+
+**Multi-package dependency bump:**
+```md
+---
+"@equinor/fusion-framework": patch
+"@equinor/fusion-framework-react": patch
+"@equinor/fusion-framework-module-http": patch
+---
+
+Bump `axios` to 1.6.0 across packages to address security advisory; no public API changes.
+```
+
+**Internal refactor (patch):**
+```md
+---
+"@equinor/fusion-framework": patch
+---
+
+Internal: refactor module loading to simplify dependency graph; no public API changes.
+```
+
+### Git context for changeset generation
+
+**Priority order for determining changes:**
+1. **Staged changes** - Analyze only staged files if present
+2. **Unstaged changes** - Analyze unstaged files if no staged changes
+3. **Branch comparison** - Compare against `origin/${BRANCH}` if remote tracking exists
+4. **Fallback** - Compare against `origin/main` if no remote branch found
+
+**Useful commands:**
+```bash
+# Check for staged changes
+git diff --cached --name-only
+
+# Check for unstaged changes
+git diff --name-only
+
+# Check current branch and remote tracking
+git branch -vv
+
+# Compare against remote branch
+git diff --name-only origin/${BRANCH}...HEAD
+```
+
+### CLI workflow
+Use the guided changeset creation:
+```bash
 pnpm changeset
 ```
 
-### From Bot
+The Changesets bot validates on PRs and can help create changesets from the GitHub UI.
 
-when creating a PR to our repo, a [changeset bot](https://github.com/apps/changeset-bot) will run on the PR. Changesets can be created directly from the UI
+### AI Agent Guidelines
+When automating changeset creation:
+- Analyze git state in priority order: staged → unstaged → branch diff
+- Create changesets for ALL package changes (internal refactoring still needs versioning)
+- Prefer single package per changeset unless changes are identical
+- Use package name (without scope) as filename prefix
+- Follow the decision tree: workspace root → skip, package changes → create
+- Mark internal changes clearly with "Internal:" prefix in summary
+- Include migration notes for breaking changes
+
+### Reviewer checklist
+- [ ] Correct directory (`.changeset/`) and naming convention followed
+- [ ] Appropriate version type (patch/minor/major) based on impact
+- [ ] Summary clear, concise, and consumer-focused
+- [ ] Only affected packages listed in frontmatter
+- [ ] Breaking changes include migration notes
+- [ ] Internal changes clearly marked with "Internal:" prefix
+- [ ] Multi-package grouping justified (identical changes only)
+- [ ] Related issues referenced and contributors credited
+
+### Common mistakes to avoid
+- ❌ Using `.changesets/` instead of `.changeset/`
+- ❌ Grouping unrelated changes in one changeset
+- ❌ Missing affected packages in frontmatter
+- ❌ Vague summaries or incorrect version bump types
+- ❌ Skipping changesets for package changes (even internal ones)
+- ❌ Skipping changesets for consumer-impacting changes
+- ❌ Grouping packages with different changes/messages
+- ❌ Omitting migration notes for breaking changes
+- ❌ Not checking existing changesets on feature branches
+- ❌ Incorrect filename prefixes or overly long names

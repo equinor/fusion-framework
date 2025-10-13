@@ -2,22 +2,25 @@
 title: reviewing
 ---
 
-checklist:
+# Code Review Checklist
 
-- [ ] The creator has created well-formed description
-  - The creator has checked all required checks
-  - Referenced associated issue(s)
-- [ ] All required checks passes
-- [ ] Check that the code contains [changeset](./changeset.md)
-- [ ] Make sure that the code is in the scope of the issue
+As a **reviewer**, you must ensure these requirements are met before approving any PR.
 
-Code Quality:
+## Critical Checks (Blockers)
+- [ ] **Changeset**: Present for any consumer-affecting changes
+- [ ] **CI Status**: All checks pass (build, test, lint, type-check)
+- [ ] **Issue Scope**: Changes align with referenced issue(s)
+- [ ] **Breaking Changes**: Properly documented and versioned
 
-- [ ] All exported functionality has documentation
-- [ ] Does code follow best practices
-  - Keep it simple
-  - Complex implementations are documented
-  - Are all dependencies required?
-  - Potential breaking changes?
-  - Does the code potentially introduce bugs
+## Quality Review
+- [ ] **Tests**: New functionality has adequate test coverage
+- [ ] **Documentation**: Public APIs have TSDoc comments
+- [ ] **Code Quality**: Readable, follows established patterns
+- [ ] **Security**: No obvious vulnerabilities
+
+## Tips
+- Start with changeset and CI status
+- Check tests to understand expected behavior
+- Focus on logic first, style second
+- Be specific in feedback
   

@@ -14,6 +14,10 @@ const navbar: NavbarOptions = [
   {
     text: 'CLI',
     link: '/cli/',
+  },
+  {
+    text: 'Contributing',
+    link: '/contributing/',
   }
 ];
 
