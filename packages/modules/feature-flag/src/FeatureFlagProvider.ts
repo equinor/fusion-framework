@@ -1,21 +1,14 @@
-import {
-  type Observable,
-  Subscription,
-  filter,
-  finalize,
-  from,
-  map,
-  pairwise,
-  reduce,
-  switchMap,
-} from 'rxjs';
+import { type Observable, filter, from, last, map, pairwise, reduce, switchMap } from 'rxjs';
 
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type {
   EventModule,
   FrameworkEvent,
   FrameworkEventInit,
 } from '@equinor/fusion-framework-module-event';
+
+import { version } from './version.js';
 
 import { createState } from './FeatureFlagProvider.state';
 import { actions } from './FeatureFlagProvider.actions';
@@ -88,8 +81,10 @@ export interface IFeatureFlagProvider {
   hasFeature(key: string): boolean;
 }
 
-export class FeatureFlagProvider implements IFeatureFlagProvider {
-  #subscription = new Subscription();
+export class FeatureFlagProvider
+  extends BaseModuleProvider<FeatureFlagConfig>
+  implements IFeatureFlagProvider
+{
   #state: ReturnType<typeof createState>;
   #event?: ModuleType<EventModule>;
 
@@ -104,6 +99,8 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
   constructor(args: { config: FeatureFlagConfig; event?: ModuleType<EventModule> }) {
     const { config, event } = args;
 
+    super({ version, config });
+
     this.#event = event;
     this.#state = createState({
       features: normalizeFlags(config.initial),
@@ -112,13 +109,15 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
     /** connect all plugins */
     for (const plugin of Object.values(config.plugins)) {
       if (plugin.connect) {
-        this.#subscription.add(plugin.connect({ provider: this }));
+        this._addTeardown(plugin.connect({ provider: this }));
       }
     }
 
     if (event) {
-      this.onFeatureToggle(({ features }) =>
-        event.dispatchEvent('onFeatureFlagsToggled', { detail: { features } }),
+      this._addTeardown(
+        this.onFeatureToggle(({ features }) =>
+          event.dispatchEvent('onFeatureFlagsToggled', { detail: { features } }),
+        ),
       );
     }
   }
@@ -145,8 +144,7 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
         map((features) => ({ features })),
       )
       .subscribe(cb);
-    this.#subscription.add(subscription);
-    return () => this.#subscription.remove(subscription);
+    return this._addTeardown(subscription);
   }
 
   public async toggleFeature(value: { key: string; enabled: boolean }): Promise<void> {
@@ -154,43 +152,51 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
   }
 
   public async toggleFeatures(values: Array<{ key: string; enabled: boolean }>): Promise<void> {
+    // get current features from the state
     const { features } = this.#state.value;
-    const onToggle = from(values)
-      .pipe(
-        switchMap(async (value) => {
-          const feature = features[value.key];
-          if (!feature) {
-            console.warn(`toggling flag [${value.key}] which is not registered`);
-            return;
-          } else if (feature.readonly) {
-            console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
-            return;
-          }
-          const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
-            source: this,
-            detail: {
-              feature,
-              enable: value.enabled,
-            },
-            cancelable: true,
-          });
-          if (!event?.canceled) {
-            return value;
-          } else {
-            console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
-          }
-        }),
-        filter((x): x is { key: string; enabled: boolean } => !!x),
-        reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
-        finalize(() => {
-          this.#subscription.remove(onToggle);
-        }),
-      )
-      .subscribe((toggleValues) => {
-        this.#state.next(actions.toggleFeatures(toggleValues));
-      });
 
-    this.#subscription.add(onToggle);
+    // create an observable from the provided values
+    const onToggle = from(values).pipe(
+      //  notify event observers that a feature is about to be toggled - parallel execution
+      switchMap(async (value) => {
+        const feature = features[value.key];
+        if (!feature) {
+          console.warn(`toggling flag [${value.key}] which is not registered`);
+          return;
+        } else if (feature.readonly) {
+          console.warn(`skipped toggling flag [${feature.key}], since readonly!`);
+          return;
+        }
+        // notify event observers that a feature is about to be toggled - can be canceled
+        const event = await this.#event?.dispatchEvent('onFeatureFlagToggle', {
+          source: this,
+          detail: {
+            feature,
+            enable: value.enabled,
+          },
+          cancelable: true,
+        });
+        if (!event?.canceled) {
+          return value;
+        } else {
+          console.debug(`skipped toggling flag [${feature.key}], since aborted!`);
+        }
+      }),
+      // filter out undefined values
+      filter((x): x is { key: string; enabled: boolean } => !!x),
+      // reduce the toggle values to an array of toggle values
+      reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
+      // take the last value
+      last(),
+    );
+
+    // subscribe to the onToggle observable
+    const subscription = onToggle.subscribe((toggleValues) => {
+      // dispatch the toggle values to the state
+      this.#state.next(actions.toggleFeatures(toggleValues));
+    });
+    // remove the subscription when the provider is disposed
+    subscription.add(this._addTeardown(subscription));
   }
 
   public getFeature<T = unknown>(key: string): IFeatureFlag<T> | undefined {
@@ -199,10 +205,6 @@ export class FeatureFlagProvider implements IFeatureFlagProvider {
 
   public getFeatures(selector: FeatureSelectorFn): Array<IFeatureFlag> {
     return Object.values(this.features).filter(selector);
-  }
-
-  dispose() {
-    this.#subscription.unsubscribe();
   }
 }
 
