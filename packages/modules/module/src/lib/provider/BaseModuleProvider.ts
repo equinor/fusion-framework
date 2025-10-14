@@ -30,8 +30,8 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
     const hasStructure =
       instance !== null &&
       typeof instance === 'object' &&
-      'version' in instance &&
-      'dispose' in instance;
+      Object.hasOwn(instance, 'version') &&
+      Object.hasOwn(instance, 'dispose');
     if (hasStructure) {
       const version = coerce(String(instance.version));
       return !!version && typeof instance.dispose === 'function';
