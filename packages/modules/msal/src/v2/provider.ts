@@ -6,7 +6,7 @@ import type { AuthClientConfig } from './configurator';
 import type { AccountInfo, AuthenticationResult } from './types';
 import type { IProxyProvider } from '../types';
 import { resolveVersion } from '../versioning/resolve-version';
-import { SemanticVersion } from '@equinor/fusion-framework-module';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 export interface IAuthProvider {
   // readonly defaultClient: AuthClient;
@@ -47,12 +47,11 @@ export interface IAuthProvider {
   handleRedirect(): Promise<void | null>;
 }
 
-export class AuthProvider implements IAuthProvider, IProxyProvider {
+export class AuthProvider
+  extends BaseModuleProvider<AuthClientConfig>
+  implements IAuthProvider, IProxyProvider
+{
   #client: AuthClient;
-
-  get version(): SemanticVersion {
-    return new SemanticVersion(MsalModuleVersion.Latest);
-  }
 
   get defaultAccount(): AccountInfo | undefined {
     return this.client.account;
@@ -64,6 +63,10 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
   }
 
   constructor(protected _config: AuthClientConfig) {
+    super({
+      version: MsalModuleVersion.Latest,
+      config: _config,
+    });
     this.#client = this.createClient();
   }
 
@@ -146,7 +149,7 @@ export class AuthProvider implements IAuthProvider, IProxyProvider {
             return target.version;
           case 'client':
             return target.client;
-          // @ts-expect-error - this is deprecated since version 5.0.1
+          // @ts-expect-error this is deprecated since version 5.0.1
           case 'defaultClient':
             console.warn('defaultClient is deprecated, use client instead');
             return target.client;
