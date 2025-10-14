@@ -38,6 +38,12 @@ export class FrameworkConfigurator<
   TRef = any,
 > extends ModulesConfigurator<FusionModules<TModules>, TRef> {
   /**
+   * The class name used for event naming. This static property ensures
+   * the name is preserved through compilation and minification.
+   */
+  static readonly className: string = 'FrameworkConfigurator';
+
+  /**
    * Creates a new FrameworkConfigurator instance with default telemetry configuration.
    *
    * Initializes the framework with core modules (event, auth, http, service discovery,

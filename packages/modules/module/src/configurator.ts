@@ -157,6 +157,12 @@ export type ModulesConfiguratorConfigCallback<TRef> = (
 export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyModule>, TRef = any>
   implements IModulesConfigurator<TModules, TRef>
 {
+  /**
+   * The class name used for event naming. This static property ensures
+   * the name is preserved through compilation and minification.
+   */
+  static readonly className: string = 'ModulesConfigurator';
+
   get version(): string {
     return version;
   }
@@ -358,7 +364,7 @@ export class ModulesConfigurator<TModules extends Array<AnyModule> = Array<AnyMo
     this.#event$.next({
       ...event,
       // Prefix the event name with the configurator class name
-      name: `${this.constructor.name}::${nameParts[nameParts.length - 1]}`,
+      name: `${(this.constructor as typeof ModulesConfigurator).className}::${nameParts[nameParts.length - 1]}`,
     });
   }
 
