@@ -92,9 +92,9 @@ if(!event.defaultPrevent){
 ### Subscribe to all events
 > note that when subscribing to events, it does not allow side-effects, like `preventDefault` and `stopPropagation`
 ```ts
-const subscription = modules.event.subscribe(console.log);
+const subscription = modules.event.event$.subscribe(console.log);
 subscription.add(
-  modules.event.subscribe({
+  modules.event.event$.subscribe({
     next: (event) => console.log(event),
     error: (err) => console.error(err),
     complete: () => 'event provider disposed'
