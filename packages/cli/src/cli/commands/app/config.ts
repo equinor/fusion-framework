@@ -95,7 +95,7 @@ export const command = withAuthOptions(
           process.exit(1);
         }
         return publishAppConfig({
-          config: options.config,
+          config,
           manifest: options.manifest,
           environment: options.env,
           auth: 'token' in options ? { token: options.token } : options,
