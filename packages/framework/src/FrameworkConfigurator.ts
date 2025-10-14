@@ -41,7 +41,7 @@ export class FrameworkConfigurator<
    * The class name used for event naming. This static property ensures
    * the name is preserved through compilation and minification.
    */
-  static readonly className = 'FrameworkConfigurator';
+  static readonly className: string = 'FrameworkConfigurator';
 
   /**
    * Creates a new FrameworkConfigurator instance with default telemetry configuration.

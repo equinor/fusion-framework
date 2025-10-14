@@ -77,7 +77,7 @@ export class AppConfigurator<
    * The class name used for event naming. This static property ensures
    * the name is preserved through compilation and minification.
    */
-  static readonly className = 'AppConfigurator';
+  static readonly className: string = 'AppConfigurator';
 
   constructor(public readonly env: TEnv) {
     super([event, http, auth]);
