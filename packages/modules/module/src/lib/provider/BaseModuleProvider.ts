@@ -34,8 +34,9 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
       'version' in instance &&
       'dispose' in instance;
     if (hasStructure) {
-      const version = coerce(String((instance as BaseModuleProvider).version));
-      const dispose = (instance as BaseModuleProvider).dispose;
+      const obj = instance as Record<string, unknown>;
+      const version = coerce(String(obj.version));
+      const dispose = obj.dispose;
       return !!version && typeof dispose === 'function';
     }
     return false;
