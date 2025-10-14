@@ -90,8 +90,8 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
 
   constructor(protected config: IHttpClientConfigurator<TClient>) {
     super({
-      version: version,
-      config: config,
+      version,
+      config,
     });
   }
 
