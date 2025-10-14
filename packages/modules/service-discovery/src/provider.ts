@@ -1,4 +1,5 @@
 import { configureHttpClient } from '@equinor/fusion-framework-module-http';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
 import type { ModulesConfigurator, ModuleType } from '@equinor/fusion-framework-module';
 import type {
@@ -6,6 +7,8 @@ import type {
   HttpModule,
   IHttpClient,
 } from '@equinor/fusion-framework-module-http';
+
+import { version } from './version';
 
 import type { Service } from './types';
 import type { ServiceDiscoveryConfig } from './configurator';
@@ -69,11 +72,19 @@ export interface IServiceDiscoveryProvider {
   readonly config: ServiceDiscoveryConfig;
 }
 
-export class ServiceDiscoveryProvider implements IServiceDiscoveryProvider {
+export class ServiceDiscoveryProvider
+  extends BaseModuleProvider<ServiceDiscoveryConfig>
+  implements IServiceDiscoveryProvider
+{
   constructor(
     public readonly config: ServiceDiscoveryConfig,
     protected readonly _http: ModuleType<HttpModule>,
-  ) {}
+  ) {
+    super({
+      version,
+      config,
+    });
+  }
 
   public resolveServices(): Promise<Service[]> {
     return this.config.discoveryClient.resolveServices();
