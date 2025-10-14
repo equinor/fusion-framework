@@ -1,10 +1,9 @@
-import { Subscription, type TeardownLogic } from 'rxjs';
 import { coerce } from 'semver';
+import { Subscription, type TeardownLogic } from 'rxjs';
 
 import SemanticVersion from '../semantic-version.js';
 
 import type { IModuleProvider } from './IModuleProvider.js';
-
 
 export type BaseModuleProviderCtorArgs<TConfig = unknown> = {
   version: string | SemanticVersion;
@@ -30,11 +29,14 @@ export abstract class BaseModuleProvider<TConfig = unknown> implements IModulePr
     const hasStructure =
       instance !== null &&
       typeof instance === 'object' &&
-      Object.hasOwn(instance, 'version') &&
-      Object.hasOwn(instance, 'dispose');
+      // Use 'in' operator to check prototype chain, allowing for duck-typing
+      // where inherited properties are acceptable for instanceof checks
+      'version' in instance &&
+      'dispose' in instance;
     if (hasStructure) {
-      const version = coerce(String(instance.version));
-      return !!version && typeof instance.dispose === 'function';
+      const version = coerce(String((instance as BaseModuleProvider).version));
+      const dispose = (instance as BaseModuleProvider).dispose;
+      return !!version && typeof dispose === 'function';
     }
     return false;
   }
