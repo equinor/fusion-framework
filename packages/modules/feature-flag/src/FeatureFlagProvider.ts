@@ -1,4 +1,4 @@
-import { type Observable, filter, from, last, map, pairwise, reduce, switchMap } from 'rxjs';
+import { type Observable, filter, from, last, lastValueFrom, map, pairwise, reduce, switchMap } from 'rxjs';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ModuleType } from '@equinor/fusion-framework-module';
@@ -186,17 +186,13 @@ export class FeatureFlagProvider
       filter((x): x is { key: string; enabled: boolean } => !!x),
       // reduce the toggle values to an array of toggle values
       reduce((acc, value) => acc.concat([value]), [] as Array<{ key: string; enabled: boolean }>),
-      // take the last value
-      last(),
     );
 
-    // subscribe to the onToggle observable
-    const subscription = onToggle.subscribe((toggleValues) => {
-      // dispatch the toggle values to the state
-      this.#state.next(actions.toggleFeatures(toggleValues));
-    });
-    // remove the subscription when the provider is disposed
-    subscription.add(this._addTeardown(subscription));
+    // wait for the onToggle observable to complete and get the toggled features
+    const toggledFeatures = await lastValueFrom(onToggle);
+    
+    // dispatch the toggle values to the state
+    this.#state.next(actions.toggleFeatures(toggledFeatures));
   }
 
   public getFeature<T = unknown>(key: string): IFeatureFlag<T> | undefined {
