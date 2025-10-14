@@ -24,9 +24,28 @@ The PR template includes these required sections that must be filled:
 
 ### Checkboxes Section
 All checkboxes in the template must be addressed:
+- [ ] Confirm completion of the [self-review checklist](mdc:contributing/self-review.md)
 - [ ] Confirm changes to target branch validation
-- [ ] Confirm completion of self-review checklist
-- [ ] Confirm adherence to code of conduct
+  - _Included files validated_
+  - _No new linting warnings_
+  - _Not a duplicate PR ([check existing](https://github.com/equinor/fusion-framework/pulls))_
+- [ ] Confirm adherence to [code of conduct](mdc:CODE_OF_CONDUCT.md)
+
+## Self-Review Checklist Requirements
+
+Before requesting review, contributors must complete the [self-review checklist](mdc:contributing/self-review.md):
+
+### Before Requesting Review
+- [ ] **Local Checks**: Run `pnpm test && pnpm build && pnpm -w check`
+- [ ] **Changeset**: Create if this affects consumers ([how-to](mdc:contributing/changeset.md))
+- [ ] **Manual Testing**: Verify the change works as expected
+- [ ] **PR Quality**: Add description and link related issues
+
+### Code Quality Check
+- [ ] **Readability**: Code is clear and understandable
+- [ ] **Documentation**: Public APIs have TSDoc comments
+- [ ] **Tests**: New functionality is tested
+- [ ] **Breaking Changes**: Documented if present
 
 ## PR Title Format
 Follow conventional commit format for PR titles when possible:

@@ -1,153 +1,224 @@
 ---
 description: Changeset generation guidelines and best practices
 alwaysApply: true
-requireFile: ./contributing/changeset.md
 ---
 
 # Changeset Generation Rules
 
-## Always Output to Correct Directory
+This repository uses [Changesets](https://github.com/changesets/changesets) to version packages and keep changelogs up to date.
 
-When generating changesets, **always** create them in the `.changeset` directory (not `.changesets`). Changesets must follow the exact path structure:
-```
-.changesets/[filename].md
-```
+> **Important**<br/>
+> Changeset content becomes the release notes presented to consumers. Write summaries as if they will be read by end users of your packages.
 
-## Changeset Format Requirements
+## TL;DR
+- **Create a changeset for consumer-affecting changes:** New APIs, bug fixes, breaking changes → `patch`/`minor`/`major`
+- **Skip for internal-only work:** Refactors, tests, tooling → no changeset unless repo-wide impact
+- **ALL markdown changes need changesets:** Any changes to `.md` files → create changeset for `@equinor/fusion-framework-docs` (docs are linked/referenced)
+- **One package per changeset preferred:** Group only identical changes across packages
+- **Directory:** `.changeset/` (singular) with package-prefixed filename
+- **Use `pnpm changeset`** for guided creation; bot validates on PRs
+- **Summary:** What changed, why it matters, migration notes if breaking
 
-### Frontmatter Structure
-Each changeset must include proper YAML frontmatter:
+## When to Create a Changeset
+
+**Decision Tree:**
+1. **Are you on a feature/fix branch?** → Check `.changeset/` for existing changesets first
+2. **Is this a workspace root change?** (monorepo config, tooling, CI) → Skip changeset entirely
+3. **Are you changing any `.md` files?** → Create changeset for `@equinor/fusion-framework-docs`
+4. **All other package changes** → Create changeset (`patch`/`minor`/`major`)
+   - Even internal refactoring requires a changeset for proper versioning
+   - Internal changes use `patch` with clear "internal only" notes
+
+**Version bump guidance:**
+- `patch`: Backward-compatible bug fixes, internal changes, or minimal updates
+- `minor`: Backward-compatible new features or enhancements
+- `major`: Breaking changes requiring consumer updates
+
+**Special cases:**
+- **Workspace root only** (cannot be released): Skip changeset entirely
+- **Multi-package identical changes** (e.g., same dependency bump): Group in one changeset
+
+## Directory and File Naming
+- **Directory:** `.changeset/` (singular, not `.changesets/`)
+- **Naming convention:** `{package-name}_{short-description}.md`
+  - Prefix with package name (exclude `@equinor/` scope)
+  - Use kebab-case for multi-word descriptions
+  - Keep total filename under 50 characters
+  - Examples:
+    - `framework_add-invalidate-flag.md`
+    - `react-module_http-client-fix.md`
+    - `query_cache-improvements.md`
+
+## Frontmatter Format
+Each file must start with YAML frontmatter listing affected packages and the bump type:
+
 ```md
 ---
-"@equinor/fusion-package-name": patch
+"@equinor/fusion-framework": patch
 ---
 
-Description of changes...
+Short, clear summary of the change and its impact.
 ```
 
-### Version Types
-Use semantic versioning appropriately:
-- `patch`: Backward compatible bug fixes
-- `minor`: Backward compatible new features
-- `major`: Breaking changes
+Multi-package changes are allowed. **Prefer one package per changeset**, unless the change and the message are identical across packages (e.g., bumping the same dependency version in several packages). In that case, **group them in one changeset** by listing all packages in the frontmatter.
 
-## Context for Changeset Generation
+## Choosing the Version Type
+- `major`: breaking API or behavior changes
+- `minor`: new, backward-compatible functionality
+- `patch`: backward-compatible bug fixes or internal-only changes
 
-When generating changesets, determine what changes to include based on the current git state:
+## Writing Effective Summaries
 
-### Git State Priority (in order):
-1. **Staged changes** - If there are staged changes, analyze only the staged content
-2. **Unstaged changes** - If no staged changes but unstaged changes exist, analyze unstaged content
-3. **No changes** - If no local changes, analyze the entire branch
+Changeset summaries become the release notes that consumers read. Structure each summary to answer:
 
-### Comparison Target:
-- **With remote branch**: Compare against `origin/${BRANCH}` (if branch has remote tracking)
-- **Without remote branch**: Compare against `origin/main`
-- **Fallback**: Compare against `origin/main` if remote branch not found
+1. **What changed** - Brief description of the modification
+2. **Why it changed** - Rationale and benefits
+3. **How to migrate** (if applicable) - For breaking changes or major updates
 
-### How to Determine Context:
+**Guidelines:**
+- Be specific and consumer-focused - write as if consumers will read this directly
+- Keep under 3-4 lines for readability
+- Include code examples only for complex new features
+- Reference issues: `Fixes https://github.com/equinor/fusion-framework/issues/123`, `Closes https://github.com/equinor/fusion-framework/issues/123`
+- Credit contributors: `Thanks @username for the report`
+
+**Migration notes for breaking changes:**
+- One-line migration instruction
+- Include before/after code snippets if complex
+- Link to migration guide if extensive
+
+## Best Practices
+- **Single package per changeset:** Keep changes focused and releases manageable
+- **Scope narrowly:** Multiple small changesets > one large changeset for better traceability
+- **Update during review:** Modify changesets if PR scope changes
+- **Check existing files:** Always scan `.changeset/` on feature branches first
+- **Group identical changes:** Only combine packages with identical changes/messages
+
+## Git Context for Changeset Generation
+
+**Priority order for determining changes:**
+1. **Staged changes** - Analyze only staged files if present
+2. **Unstaged changes** - Analyze unstaged files if no staged changes
+3. **Branch comparison** - Compare against `origin/${BRANCH}` if remote tracking exists
+4. **Fallback** - Compare against `origin/main` if no remote branch found
+
+**Useful commands:**
 ```bash
 # Check for staged changes
 git diff --cached --name-only
 
-# Check for unstaged changes  
+# Check for unstaged changes
 git diff --name-only
 
-# Check current branch and remote
+# Check current branch and remote tracking
 git branch -vv
+
+# Compare against remote branch
+git diff --name-only origin/${BRANCH}...HEAD
 ```
 
-## Feature/Fix Branch Changeset Rules
+## CLI Workflow
+Use the guided changeset creation:
+```bash
+pnpm changeset
+```
 
-When working on content within a feature/fix branch:
+The Changesets bot validates on PRs and can help create changesets from the GitHub UI.
 
-### Check Existing Changesets First
-**BEFORE creating any changeset, check for existing changesets in the `.changeset/` directory.** Look for changesets that might already cover your changes to avoid duplicates.
+## AI Agent Guidelines
+When automating changeset creation:
+- Analyze git state in priority order: staged → unstaged → branch diff
+- Create changesets for ALL package changes (internal refactoring still needs versioning)
+- Prefer single package per changeset unless changes are identical
+- Use package name (without scope) as filename prefix
+- Follow the decision tree: workspace root → skip, package changes → create
+- Mark internal changes clearly with "Internal:" prefix in summary
+- Include migration notes for breaking changes
 
-### No Changesets for Internal Refactors
-**DO NOT create changesets for internal refactors that don't affect consumers** since they're not in main yet. Only create changesets for changes that actually require version bumps or affect package consumers.
+## Quality Assurance Checklist
 
-### What NOT to Create Changesets For (Internal Changes):
-- Internal refactoring without API changes
-- Code comments and documentation improvements  
-- Process management improvements
-- Error message enhancements
-- Internal helper function changes
-- Code cleanup that doesn't change public APIs
-- Debug logging improvements
-- Type definition improvements (internal only)
+Before committing a changeset:
+- [ ] Correct directory (`.changeset/`) and naming convention followed
+- [ ] Version bump type appropriate (patch/minor/major)
+- [ ] Summary clear, concise, and consumer-focused
+- [ ] Only affected packages listed in frontmatter
+- [ ] Breaking changes include migration notes
+- [ ] Internal changes clearly marked (or skipped entirely)
+- [ ] Multi-package grouping justified (identical changes only)
+- [ ] Related issues referenced and contributors credited
 
-### What SHOULD Create Changesets (Consumer-Affecting Changes):
-- New public API methods or exports
-- Breaking changes to existing APIs
-- Bug fixes that affect consumer behavior
-- New features that consumers will use
-- Changes to public interfaces or types
-- Configuration changes that affect consumers
+## Examples
 
-### Decision Tree for AI:
-1. **Are you on a feature/fix branch?** → Check existing changesets first
-2. **Does the change affect public APIs or consumers?** → Create changeset
-3. **Is it only internal refactoring/improvements?** → Skip changeset
-4. **Are you unsure?** → Ask: "Would a consumer notice this change?" If no → Skip changeset
-
-## Best Practices
-
-### Single Package Per Changeset
-**Prefer a single package per changeset:** Each changeset should ideally affect only one package. If multiple packages affected, write one for each. This keeps versioning and changelogs clear and makes releases easier to manage.
-
-### Clear and Descriptive Summaries
-- Write clear, concise, and descriptive summaries
-- Explain the impact of the change
-- Use present tense (e.g., "Add feature" not "Added feature")
-
-### Detailed Explanations
-For each package changed, provide:
-1. **What changed** - Brief description
-2. **Why it changed** - Rationale and benefits
-3. **How to migrate** (if applicable) - Consumer-facing changes
-4. **Code examples** (optional) - Usage examples for new features
-
-### File Naming
-- prefix with package name (exclude scope, example '@equinor')
-- generate a short name based on change.
-- Examples: `cli_added-feature-x.md`, `module-http_fixed-http-headers.md`
-
-## Quality Assurance
-
-Before finalizing:
-- [ ] Changeset correctly reflects the changes made
-- [ ] Version bump type is appropriate (patch/minor/major)
-- [ ] Description is clear and actionable
-- [ ] All affected packages are included
-- [ ] Follows the format from [contributing/changeset.md](mdc:contributing/changeset.md)
-
-## Example Format
-
+**New feature (minor):**
 ```md
 ---
-"@equinor/fusion-framework-cli": patch
+"@equinor/fusion-query": minor
 ---
 
-Enhanced Vite configuration with improved TypeScript path resolution.
+Add optional `invalidate` argument to `Query.query` for pre-execution cache invalidation.
 
-- Removed deprecated `vite-plugin-tsconfig-paths` dependency
-- Updated `load-vite-config.ts` to remove plugin usage
-- Improved build performance and reduced bundle size
+```typescript
+// Before
+await query('data');
+
+// After
+await query('data', { invalidate: true });
+```
+
+Fixes: https://github.com/equinor/fusion-framework/issues/123 — thanks @username for the suggestion
+```
+
+**Bug fix (patch):**
+```md
+---
+"@equinor/fusion-framework-react": patch
+---
+
+Fix useFramework hook memory leak when component unmounts during async operations.
+
+Prevents stale closure access in cleanup functions.
+```
+
+**Breaking change (major):**
+```md
+---
+"@equinor/fusion-framework": major
+---
+
+Remove deprecated `createApp` function in favor of `initializeFramework`.
+
+**Migration:** Replace `createApp(config)` with `initializeFramework(config)`.
+```
+
+**Multi-package dependency bump:**
+```md
+---
+"@equinor/fusion-framework": patch
+"@equinor/fusion-framework-react": patch
+"@equinor/fusion-framework-module-http": patch
+---
+
+Bump `axios` to 1.6.0 across packages to address security advisory; no public API changes.
+```
+
+**Internal refactor (patch):**
+```md
+---
+"@equinor/fusion-framework": patch
+---
+
+Internal: refactor module loading to simplify dependency graph; no public API changes.
 ```
 
 ## Common Mistakes to Avoid
 
-- ❌ Creating changesets in wrong directory (should be `.changeset/`, not `.changesets/`)
-- ❌ Creating changesets for internal refactors that don't affect consumers
-- ❌ Not checking existing changesets before creating new ones on feature branches
-- ❌ Grouping unrelated changes in single changeset
-- ❌ Using vague or unclear descriptions
-- ❌ Forgetting to include all affected packages
-- ❌ Incorrect version bump types
-- ❌ Using package-specific file names that cause merge conflicts
-- ❌ Analyzing wrong git state (unstaged when staged changes exist)
-
-## Creation Methods
-
-manually add file to `./changeset` 
+- ❌ Using `.changesets/` instead of `.changeset/`
+- ❌ Grouping unrelated changes in one changeset
+- ❌ Missing affected packages in frontmatter
+- ❌ Vague summaries or incorrect version bump types
+- ❌ Skipping changesets for package changes (even internal ones)
+- ❌ Skipping changesets for consumer-impacting changes
+- ❌ Grouping packages with different changes/messages
+- ❌ Omitting migration notes for breaking changes
+- ❌ Not checking existing changesets on feature branches
+- ❌ Incorrect filename prefixes or overly long names 
