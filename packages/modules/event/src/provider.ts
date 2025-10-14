@@ -77,7 +77,7 @@ export class EventModuleProvider
       onDispatch: config.onDispatch,
       onBubble: config.onBubble,
     });
-    // complete the event$ subject when the provider is disposed 
+    // complete the event$ subject when the provider is disposed
     // and clear the listeners
     this._addTeardown(() => {
       this.__listeners = [];
