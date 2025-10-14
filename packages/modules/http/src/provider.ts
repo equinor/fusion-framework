@@ -7,6 +7,8 @@ import type {
 
 import type { IHttpRequestHandler } from './lib/operators';
 import type { IHttpClient } from './lib/client';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import { version } from './version';
 
 /**
  * Exception thrown when a client cannot be found.
@@ -75,6 +77,7 @@ const isURL = (url: string) => {
  * It provides methods to check if a client is configured, create new client instances, and create custom client instances.
  */
 export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
+  extends BaseModuleProvider<IHttpClientConfigurator<TClient>>
   implements IHttpClientProvider<TClient>
 {
   /**
@@ -85,7 +88,12 @@ export class HttpClientProvider<TClient extends IHttpClient = IHttpClient>
     return this.config.defaultHttpRequestHandler;
   }
 
-  constructor(protected config: IHttpClientConfigurator<TClient>) {}
+  constructor(protected config: IHttpClientConfigurator<TClient>) {
+    super({
+      version: version,
+      config: config,
+    });
+  }
 
   /**
    * Checks if a client with the given key is configured in the `HttpClientProvider`.
