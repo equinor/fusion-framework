@@ -1,4 +1,7 @@
-import { Observable, type Observer, Subject, type Subscription } from 'rxjs';
+import { type Observable, Subject } from 'rxjs';
+
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import { version } from './version.js';
 
 import type { IEventModuleConfigurator } from './configurator';
 import { FrameworkEventDispatcher, type FrameworkEventHandler } from './dispatcher';
@@ -12,15 +15,16 @@ import {
 } from './event';
 
 export interface IEventModuleProvider {
+  /** Observable stream of all dispatched events for subscription */
   readonly event$: Observable<IFrameworkEvent>;
 
-  /** subscribe to a known mapped event @see {@link FrameworkEventMap} */
+  /** listen to a known mapped event @see {@link FrameworkEventMap} */
   addEventListener<TKey extends keyof FrameworkEventMap>(
     type: TKey,
     handler: FrameworkEventHandler<FrameworkEventMap[TKey]>,
   ): VoidFunction;
 
-  /** subscribe to generic type */
+  /** listen to generic type events */
   addEventListener<TType extends FrameworkEvent = FrameworkEvent>(
     type: string,
     handler: FrameworkEventHandler<TType>,
@@ -43,23 +47,11 @@ export interface IEventModuleProvider {
     event: TType,
   ): Promise<FrameworkEvent>;
 
-  /**
-   * subscribe to events
-   * __note__: does not allow side effects
-   */
-  subscribe(observer?: Partial<Observer<IFrameworkEvent>>): Subscription;
-
-  /**
-   * subscribe to events
-   * __note__: does not allow side effects
-   */
-  subscribe(next: (value: IFrameworkEvent) => void): Subscription;
-
   dispose: VoidFunction;
 }
 
 export class EventModuleProvider
-  extends Observable<IFrameworkEvent>
+  extends BaseModuleProvider<IEventModuleConfigurator>
   implements IEventModuleProvider
 {
   private __listeners: Array<{
@@ -80,12 +72,16 @@ export class EventModuleProvider
   }
 
   constructor(config: IEventModuleConfigurator) {
-    super((subscriber) => {
-      this.__event$.subscribe(subscriber);
-    });
+    super({ version, config });
     this.__dispatcher = new FrameworkEventDispatcher({
       onDispatch: config.onDispatch,
       onBubble: config.onBubble,
+    });
+    // complete the event$ subject when the provider is disposed 
+    // and clear the listeners
+    this._addTeardown(() => {
+      this.__listeners = [];
+      this.__event$.complete();
     });
   }
 
@@ -131,10 +127,5 @@ export class EventModuleProvider
       throw err as Error;
     }
     return event;
-  }
-
-  public dispose() {
-    this.__listeners = [];
-    this.__event$.complete();
   }
 }
