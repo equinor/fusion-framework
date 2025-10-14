@@ -22,6 +22,7 @@ These comments are just guidance - do not include them in your final PR descript
 **Additional context**
 <!-- Any other information, rationale, or testing notes -->
 
+<!-- Remove this "Related issues" section if there are no related issues for this PR -->
 **Related issues**
 closes: <!-- Link to issues this PR closes, e.g., #123 -->
 ref: <!-- Link to related issues/PRs this PR references, e.g., #456 -->
