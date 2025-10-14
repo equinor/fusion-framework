@@ -142,11 +142,13 @@ export class AuthProvider
   }
 
   _createProxyProvider_v2(): IAuthProvider {
-    return new Proxy(this, {
+    const proxy = new Proxy(this, {
       get: (target: AuthProvider, prop: keyof AuthProvider) => {
         switch (prop) {
           case 'version':
             return target.version;
+          case 'dispose':
+            return target.dispose.bind(target);
           case 'client':
             return target.client;
           // @ts-expect-error this is deprecated since version 5.0.1
@@ -170,5 +172,7 @@ export class AuthProvider
         }
       },
     });
+
+    return proxy;
   }
 }
