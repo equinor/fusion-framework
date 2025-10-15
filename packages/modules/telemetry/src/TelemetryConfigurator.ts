@@ -1,7 +1,7 @@
 import { from } from 'rxjs';
 import { concatMap, last, scan, shareReplay } from 'rxjs/operators';
 
-import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
+import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 
 import type { ITelemetryConfigurator, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
@@ -38,6 +38,7 @@ export class TelemetryConfigurator
   implements ITelemetryConfigurator
 {
   #adapters: Record<string, ITelemetryAdapter> = {};
+  #adaptersCallbacks: Array<ConfigBuilderCallback<ITelemetryAdapter>> = [];
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
@@ -62,7 +63,18 @@ export class TelemetryConfigurator
    * @returns The current instance of the configurator for method chaining.
    */
   public setAdapter(adapter: ITelemetryAdapter): this {
-    this.#adapters[String(adapter.identifier)] = adapter;
+    this.#adaptersCallbacks.push(async () => adapter);
+    return this;
+  }
+
+  /**
+   * Configures a telemetry adapter with the configurator.
+   *
+   * @param adapter
+   * @returns
+   */
+  public configureAdapter(adapter: ConfigBuilderCallback<ITelemetryAdapter>): this {
+    this.#adaptersCallbacks.push(adapter);
     return this;
   }
 
@@ -86,7 +98,7 @@ export class TelemetryConfigurator
    * @param scope - An array of strings representing the default scope to be used.
    * @returns The current instance for method chaining.
    */
-  public setDefaultScope(scope: string[]): this {
+  public setDefaultScope(scope: string[] | ConfigBuilderCallback<string[]>): this {
     this._set('defaultScope', scope);
     return this;
   }

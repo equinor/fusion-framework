@@ -2,6 +2,7 @@ import type { ObservableInput } from 'rxjs';
 import type { MetadataExtractor, TelemetryItem } from './types.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 
 /**
  * Configuration options for setting up telemetry within the application.
@@ -35,6 +36,14 @@ export interface ITelemetryConfigurator {
    * @returns The configurator instance for method chaining.
    */
   setParent(parent: ITelemetryProvider | undefined): this;
+
+  /**
+   * Configures a telemetry adapter with the configurator.
+   *
+   * @param adapter - The telemetry adapter instance to register.
+   * @returns The configurator instance for method chaining.
+   */
+  configureAdapter(adapter: ConfigBuilderCallback<ITelemetryAdapter>): this;
 
   /**
    * Registers a telemetry adapter to be used for event reporting.

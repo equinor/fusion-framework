@@ -14,8 +14,12 @@ To configure the telemetry module, you need to provide a configuration object th
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, (builder) => {
-    // configure the telemetry module here
+  enableTelemetry(configurator, {
+    // Attach configurator events to telemetry for automatic tracking
+    attachConfiguratorEvents: true|false, 
+    configure: (builder) => {
+      // configure the telemetry module here
+    }
   });
 };
 ```
@@ -204,6 +208,55 @@ const job = async() => {
 
 Adapters are responsible for processing and sending telemetry data to their respective destinations. All adapters support asynchronous initialization and will be automatically initialized when the telemetry provider initializes.
 
+### Using setAdapter and configureAdapter
+
+The `TelemetryConfigurator` provides two methods for adding adapters: `setAdapter` for pre-instantiated adapters and `configureAdapter` for dynamic creation using initialization arguments.
+
+#### Simple setAdapter Example
+
+```typescript
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: (builder) => {
+      const consoleAdapter = new ConsoleAdapter({ title: 'MyApp' });
+      builder.setAdapter(consoleAdapter);
+    }
+  });
+};
+```
+
+#### configureAdapter with requireInstance Example
+
+```typescript
+import { enableTelemetry, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-telemetry/application-insights-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: async (builder, ref) => {
+      builder.configureAdapter(async ({ requireInstance }) => {
+        const auth = await requireInstance('auth');
+        const adapter = new ApplicationInsightsAdapter({
+          snippet: {
+            config: {
+              instrumentationKey: 'app-instrumentation-key'
+            }
+          },
+          filter: (item) => item.level >= TelemetryLevel.Information,
+        });
+        if (auth.account?.localAccountId) {
+          adapter.setAuthenticatedUserContext(auth.account.localAccountId);
+        }
+        return adapter;
+      });
+    }
+  });
+};
+```
+
 ### Application Insights Adapter
 
 The Application Insights adapter allows you to send telemetry data to Microsoft Application Insights. It supports asynchronous initialization for setting up the Application Insights client and plugins.
@@ -234,27 +287,34 @@ import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-tel
 
 // bootstrap - initialization on server which loads the portal
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
-    const adapter = new ApplicationInsightsAdapter({
-      snippet: {
-        instrumentationKey: 'portal-instrumentation-key'
-      },
-      // filter log level by FUSION_TELEMETRY_LEVEL environment variable
-      filter: (item) => item.level <= process.env.FUSION_TELEMETRY_LEVEL || TelemetryLevel.Information,
-    });
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true, // Track module configurator events
+    configure: async (builder, ref) => {
+      const adapter = new ApplicationInsightsAdapter({
+        snippet: {
+          config: {
+            instrumentationKey: 'portal-instrumentation-key'
+          }
+        },
+        // filter log level by FUSION_TELEMETRY_LEVEL environment variable
+        filter: (item) => item.level <= (process.env.FUSION_TELEMETRY_LEVEL ? parseInt(process.env.FUSION_TELEMETRY_LEVEL) : TelemetryLevel.Information),
+      });
 
-    args.config.addAdapter(adapter);
-    args.requireInstance('auth').then((auth) => {
-      if (auth.account?.localAccountId) {
-        adapter.setAuthenticatedUserContext(auth.account.localAccountId);
-      }
-    });
+      builder.addAdapter(adapter);
+      ref.requireInstance('auth').then((auth) => {
+        if (auth.account?.localAccountId) {
+          adapter.setAuthenticatedUserContext(auth.account.localAccountId);
+        }
+      });
+    }
   });
 };
 
 // portal - framework
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true,
+    configure: async (args) => {
     // reuse the Application Insights adapter from bootstrap
     const aiAdapter = args.ref.modules.telemetry.getAdapter(ApplicationInsightsAdapter.Identifier);
     if (aiAdapter) {
@@ -268,12 +328,15 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     });
     args.config.setDefaultScope(['portal']);
     args.config.setFilter((item) => item.scope.includes('portal'));
+    }
   });
 };
 
 // app - application
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true, // Apps typically don't need configurator event tracking
+    configure: async (args) => {
     args.config.setMetadata({
       app: {
         name: 'My App',
@@ -284,12 +347,15 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     args.config.setParent(args.ref.modules.telemetry);
     const appAppInsightsAdapter = new ApplicationInsightsAdapter({
       snippet: {
-        instrumentationKey: 'app-instrumentation-key'
+        config: {
+          instrumentationKey: 'app-instrumentation-key'
+        }
       },
       // only log events with a specific scope
       filter: (item) => item.scope.includes('custom-event'),
     });
     args.config.addAdapter(appAppInsightsAdapter);
+    }
   });
 };
 
