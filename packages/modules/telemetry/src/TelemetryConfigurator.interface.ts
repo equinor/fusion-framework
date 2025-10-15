@@ -2,7 +2,7 @@ import type { ObservableInput } from 'rxjs';
 import type { MetadataExtractor, TelemetryItem } from './types.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
-import { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 
 /**
  * Configuration options for setting up telemetry within the application.

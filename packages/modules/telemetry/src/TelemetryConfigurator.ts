@@ -1,7 +1,11 @@
-import { from } from 'rxjs';
-import { concatMap, last, scan, shareReplay } from 'rxjs/operators';
+import { from, type ObservableInput } from 'rxjs';
+import { concatMap, filter, last, scan, shareReplay, toArray } from 'rxjs/operators';
 
-import { BaseConfigBuilder, type ConfigBuilderCallback } from '@equinor/fusion-framework-module';
+import {
+  BaseConfigBuilder,
+  type ConfigBuilderCallbackArgs,
+  type ConfigBuilderCallback,
+} from '@equinor/fusion-framework-module';
 
 import type { ITelemetryConfigurator, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
@@ -37,13 +41,28 @@ export class TelemetryConfigurator
   extends BaseConfigBuilder<TelemetryConfig>
   implements ITelemetryConfigurator
 {
-  #adapters: Record<string, ITelemetryAdapter> = {};
   #adaptersCallbacks: Array<ConfigBuilderCallback<ITelemetryAdapter>> = [];
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
     super();
-    this._set('adapters', async () => Object.values(this.#adapters));
+    this._set(
+      'adapters',
+      (args: ConfigBuilderCallbackArgs): ObservableInput<ITelemetryAdapter[]> => {
+        return from(this.#adaptersCallbacks).pipe(
+          concatMap((adapterFn) =>
+            from(adapterFn(args)).pipe(
+              filter(
+                (adapter): adapter is ITelemetryAdapter =>
+                  adapter !== undefined && adapter !== null,
+              ),
+            ),
+          ),
+          toArray(),
+          shareReplay(1),
+        );
+      },
+    );
     this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
       const metadataItems = this.#metadata;
       return (...args) =>
