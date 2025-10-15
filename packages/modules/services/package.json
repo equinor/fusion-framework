@@ -134,7 +134,7 @@
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-service-discovery": "workspace:^",
-    "@faker-js/faker": "^9.5.1",
+    "@faker-js/faker": "^10.1.0",
     "msw": "^2.7.3",
     "typescript": "^5.8.2",
     "vitest": "^3.2.4"
