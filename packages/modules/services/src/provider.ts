@@ -1,7 +1,10 @@
 import type { IHttpClient } from '@equinor/fusion-framework-module-http';
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ClientMethod } from './types';
+import type { IApiConfigurator } from './configurator';
 
 import type { ApiClientFactory } from './types';
+import { version } from './version.js';
 import { ContextApiClient } from './context';
 import BookmarksApiClient from './bookmarks/client';
 import { NotificationApiClient } from './notification';
@@ -76,12 +79,18 @@ const validateResponse = async (response: Response) => {
   }
 };
 
+type ApiProviderConfig<TClient extends IHttpClient = IHttpClient> = {
+  createClient: ApiClientFactory<TClient>;
+};
+
 export class ApiProvider<TClient extends IHttpClient = IHttpClient>
+  extends BaseModuleProvider<ApiProviderConfig<TClient>>
   implements IApiProvider<TClient>
 {
   protected _createClientFn: ApiClientFactory<TClient>;
-  constructor({ createClient }: ApiProviderCtorArgs<TClient>) {
-    this._createClientFn = createClient;
+  constructor(config: ApiProviderConfig<TClient>) {
+    super({ version, config });
+    this._createClientFn = config.createClient;
   }
 
   public async createNotificationClient<TMethod extends keyof ClientMethod>(
