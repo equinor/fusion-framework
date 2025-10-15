@@ -67,9 +67,15 @@ export class TelemetryConfigurator
               map((adapter) => [identifier, adapter] as const),
             ),
           ),
-          scan((acc, [identifier, adapter]) => ({ ...acc, [identifier]: adapter }), {} as Record<string, ITelemetryAdapter>),
+          scan(
+            (acc, [identifier, adapter]) => {
+              acc[identifier] = adapter;
+              return acc;
+            },
+            {} as Record<string, ITelemetryAdapter>,
+          ),
           defaultIfEmpty({}),
-          shareReplay(1),
+          shareReplay({ bufferSize: 1, refCount: true }),
         );
       },
     );
@@ -82,7 +88,7 @@ export class TelemetryConfigurator
           concatMap((metadata) => toObservable(metadata, ...args)),
           scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
           last(),
-          shareReplay(1),
+          shareReplay({ bufferSize: 1, refCount: true }),
         );
     });
   }

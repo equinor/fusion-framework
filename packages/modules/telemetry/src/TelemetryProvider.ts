@@ -156,7 +156,9 @@ export class TelemetryProvider
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
-    const initializationPromises = adapterEntries.map(([identifier, adapter]) => adapter.initialize());
+    const initializationPromises = adapterEntries.map(([identifier, adapter]) =>
+      adapter.initialize(),
+    );
 
     // Wait for all adapters to settle (either resolve or reject)
     const results = await Promise.allSettled(initializationPromises);
@@ -371,19 +373,26 @@ export class TelemetryProvider
    * @param identifier - The identifier of the telemetry adapter to retrieve.
    * @returns The telemetry adapter corresponding to the given identifier, or `undefined` if not found.
    */
-  public getAdapter(
-    identifier: string,
-  ): ITelemetryAdapter | undefined {
+  public getAdapter(identifier: string): ITelemetryAdapter | undefined {
     const adapter = this.#adapters[identifier];
-    if(!adapter) {
+    if (!adapter) {
       this.trackException({
         name: 'TelemetryAdapterNotFound',
         exception: new Error(`Telemetry adapter "${identifier}" not found`),
         metadata: {
           identifier,
         },
-      })
+      });
     }
     return adapter;
+  }
+
+  /**
+   * Check if a telemetry adapter exists by its identifier.
+   * @param identifier - The unique identifier of the telemetry adapter to check.
+   * @returns True if the adapter exists, false otherwise.
+   */
+  public hasAdapter(identifier: string): boolean {
+    return identifier in this.#adapters;
   }
 }

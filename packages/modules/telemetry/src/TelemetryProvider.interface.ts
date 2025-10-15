@@ -141,4 +141,11 @@ export interface ITelemetryProvider {
    * @returns The telemetry adapter instance if found, or undefined if not found.
    */
   getAdapter(identifier: string): ITelemetryAdapter | undefined;
+
+  /**
+   * Check if a telemetry adapter exists by its identifier.
+   * @param identifier - The unique identifier of the telemetry adapter to check.
+   * @returns True if the adapter exists, false otherwise.
+   */
+  hasAdapter(identifier: string): boolean;
 }

@@ -41,6 +41,11 @@ describe('TelemetryProvider', () => {
     expect(provider.getAdapter('test-adapter')).toBe(adapter);
   });
 
+  it('should check if adapter exists with hasAdapter', () => {
+    expect(provider.hasAdapter('test-adapter')).toBe(true);
+    expect(provider.hasAdapter('non-existent-adapter')).toBe(false);
+  });
+
   it('should track event', async () => {
     provider.trackEvent({ name: 'test_event' });
     await vi.waitFor(() => {
@@ -118,7 +123,10 @@ describe('TelemetryProvider', () => {
     adapter.processItem = vi.fn(() => {
       throw new Error('fail');
     });
-    provider = new TelemetryProvider({ ...config, adapters: { 'failing-adapter': adapter } }, { event: eventProvider });
+    provider = new TelemetryProvider(
+      { ...config, adapters: { 'failing-adapter': adapter } },
+      { event: eventProvider },
+    );
     await provider.initialize();
     provider.trackEvent({ name: 'fail_event' });
 

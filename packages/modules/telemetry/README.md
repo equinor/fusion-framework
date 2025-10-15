@@ -243,7 +243,8 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
       // Standard console logger for general information
       const standardConsole = new ConsoleAdapter({
         title: 'Standard',
-        filter: (item) => item.level >= TelemetryLevel.Information && item.level < TelemetryLevel.Error
+        filter: (item) =>
+          item.level >= TelemetryLevel.Information && item.level < TelemetryLevel.Error
       });
       builder.setAdapter('console-standard', standardConsole);
 
@@ -343,10 +344,13 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
           }
         },
         // filter log level by FUSION_TELEMETRY_LEVEL environment variable
-        filter: (item) => item.level <= (process.env.FUSION_TELEMETRY_LEVEL ? parseInt(process.env.FUSION_TELEMETRY_LEVEL) : TelemetryLevel.Information),
+        filter: (item) =>
+          item.level >= (process.env.FUSION_TELEMETRY_LEVEL
+            ? parseInt(process.env.FUSION_TELEMETRY_LEVEL)
+            : TelemetryLevel.Information),
       });
 
-      builder.addAdapter(adapter);
+      builder.setAdapter('application-insights', adapter);
       ref.requireInstance('auth').then((auth) => {
         if (auth.account?.localAccountId) {
           adapter.setAuthenticatedUserContext(auth.account.localAccountId);
@@ -364,7 +368,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     // reuse the Application Insights adapter from bootstrap
     const aiAdapter = args.ref.modules.telemetry.getAdapter(ApplicationInsightsAdapter.Identifier);
     if (aiAdapter) {
-      args.config.addAdapter(aiAdapter);
+      args.config.setAdapter('application-insights', aiAdapter);
     }
     args.config.setMetadata({
       portal: {
@@ -400,7 +404,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
       // only log events with a specific scope
       filter: (item) => item.scope.includes('custom-event'),
     });
-    args.config.addAdapter(appAppInsightsAdapter);
+    args.config.setAdapter('application-insights-app', appAppInsightsAdapter);
     }
   });
 };
@@ -449,7 +453,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
       filter: (item) => item.level >= TelemetryLevel.Information
     });
     
-    builder.addAdapter(consoleAdapter);
+    builder.setAdapter('console', consoleAdapter);
   });
 };
 ```
@@ -495,7 +499,7 @@ import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, (builder) => {
     const customAdapter = new CustomAdapter();
-    builder.addAdapter(customAdapter);
+    builder.setAdapter('custom', customAdapter);
   });
 };
 ```
@@ -550,7 +554,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
         : true
     });
     
-    builder.addAdapter(appInsightsAdapter);
+    builder.setAdapter('application-insights', appInsightsAdapter);
   });
 };
 ```
