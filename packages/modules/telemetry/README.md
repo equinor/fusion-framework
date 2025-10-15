@@ -222,11 +222,57 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, {
     configure: (builder) => {
       const consoleAdapter = new ConsoleAdapter({ title: 'MyApp' });
-      builder.setAdapter(consoleAdapter);
+      builder.setAdapter('console', consoleAdapter);
     }
   });
 };
 ```
+
+#### Multiple Adapters with Different Identifiers
+
+You can configure multiple adapters with different identifiers to handle different types of telemetry data. This allows for flexible routing and filtering of telemetry items.
+
+```typescript
+import { enableTelemetry, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
+import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-telemetry/application-insights-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: (builder) => {
+      // Standard console logger for general information
+      const standardConsole = new ConsoleAdapter({
+        title: 'Standard',
+        filter: (item) => item.level >= TelemetryLevel.Information && item.level < TelemetryLevel.Error
+      });
+      builder.setAdapter('console-standard', standardConsole);
+
+      // Error console logger for errors and critical issues
+      const errorConsole = new ConsoleAdapter({
+        title: 'Errors',
+        filter: (item) => item.level >= TelemetryLevel.Error
+      });
+      builder.setAdapter('console-error', errorConsole);
+
+      // Application Insights for production telemetry
+      const appInsights = new ApplicationInsightsAdapter({
+        snippet: {
+          config: {
+            instrumentationKey: 'production-instrumentation-key'
+          }
+        },
+        filter: (item) => item.level >= TelemetryLevel.Warning
+      });
+      builder.setAdapter('app-insights-prod', appInsights);
+    }
+  });
+};
+```
+
+This setup allows you to:
+- Route general information to the standard console logger
+- Send errors to a dedicated error console logger
+- Forward warnings and above to Application Insights for production monitoring
 
 #### configureAdapter with requireInstance Example
 
@@ -237,7 +283,7 @@ import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-tel
 const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, {
     configure: async (builder, ref) => {
-      builder.configureAdapter(async ({ requireInstance }) => {
+      builder.configureAdapter('application-insights', async ({ requireInstance }) => {
         const auth = await requireInstance('auth');
         const adapter = new ApplicationInsightsAdapter({
           snippet: {

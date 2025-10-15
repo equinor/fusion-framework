@@ -18,7 +18,6 @@ describe('TelemetryProvider', () => {
 
   beforeEach(async () => {
     adapter = {
-      identifier: 'test-adapter',
       processItem: vi.fn(),
       initialize: vi.fn(),
     };
@@ -26,9 +25,9 @@ describe('TelemetryProvider', () => {
       dispatchEvent: vi.fn(),
     } as unknown as IEventModuleProvider;
     config = {
-      adapters: [adapter],
+      adapters: { 'test-adapter': adapter },
       defaultScope: ['default'],
-    } as unknown as TelemetryConfig;
+    };
     provider = new TelemetryProvider(config, { event: eventProvider });
     await provider.initialize();
   });
@@ -119,7 +118,7 @@ describe('TelemetryProvider', () => {
     adapter.processItem = vi.fn(() => {
       throw new Error('fail');
     });
-    provider = new TelemetryProvider({ ...config, adapters: [adapter] }, { event: eventProvider });
+    provider = new TelemetryProvider({ ...config, adapters: { 'failing-adapter': adapter } }, { event: eventProvider });
     await provider.initialize();
     provider.trackEvent({ name: 'fail_event' });
 
@@ -137,7 +136,6 @@ describe('Measurement', () => {
 
   beforeEach(() => {
     adapter = {
-      identifier: 'test-adapter',
       processItem: vi.fn(),
       initialize: vi.fn(),
     };
@@ -145,9 +143,9 @@ describe('Measurement', () => {
       dispatchEvent: vi.fn(),
     } as unknown as IEventModuleProvider;
     config = {
-      adapters: [adapter],
+      adapters: { 'test-adapter': adapter },
       defaultScope: ['default'],
-    } as unknown as TelemetryConfig;
+    };
     provider = new TelemetryProvider(config, { event: eventProvider });
   });
 

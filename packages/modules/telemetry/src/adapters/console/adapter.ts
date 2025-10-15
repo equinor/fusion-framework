@@ -12,8 +12,6 @@ import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry
  * Configuration options for the ConsoleAdapter
  */
 export type ConsoleAdapterConfig = {
-  /** Optional identifier for the adapter instance */
-  identifier?: string;
   /** Optional filter function to control which telemetry items are processed */
   filter?: (item: TelemetryItem) => boolean;
   /** Optional title to display in console output (defaults to 'Fusion') */
@@ -35,7 +33,7 @@ export class ConsoleAdapter extends BaseTelemetryAdapter {
    * @param config - Optional configuration for the adapter
    */
   constructor(config?: ConsoleAdapterConfig) {
-    super(config?.identifier ?? ConsoleAdapter.Identifier, config?.filter);
+    super(config?.filter);
     this.#title = config?.title ?? 'Fusion';
   }
 

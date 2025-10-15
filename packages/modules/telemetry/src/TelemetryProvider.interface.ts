@@ -1,10 +1,11 @@
 import type { z } from 'zod';
 
-import type { TelemetryAdapters, TelemetryItem } from './types.js';
+import type { TelemetryItem } from './types.js';
 import type { TelemetryExceptionSchema, TelemetryMetricSchema } from './schemas.js';
 import type { TelemetryType, TelemetryLevel, TelemetryScope } from './static.js';
 import type { Observable } from 'rxjs';
 import type { IMeasurement } from './Measurement.interface.js';
+import type { ITelemetryAdapter } from './TelemetryAdapter.js';
 
 /**
  * Interface for telemetry providers used to track and measure telemetry events.
@@ -139,5 +140,5 @@ export interface ITelemetryProvider {
    * @param identifier - The unique identifier of the telemetry adapter to retrieve.
    * @returns The telemetry adapter instance if found, or undefined if not found.
    */
-  getAdapter<T extends keyof TelemetryAdapters>(identifier: T): TelemetryAdapters[T] | undefined;
+  getAdapter(identifier: string): ITelemetryAdapter | undefined;
 }

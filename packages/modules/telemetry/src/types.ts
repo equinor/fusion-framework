@@ -103,25 +103,3 @@ export interface TelemetryAdapter {
   readonly identifier: string;
   processItem(item: TelemetryItem): void;
 }
-
-/**
- * A mapping of adapter identifiers to their corresponding `TelemetryAdapter` instances.
- *
- * Each key in the object represents a unique identifier for a telemetry adapter,
- * and the value is the adapter instance itself.
- *
- * @remarks
- * This interface allows for dynamic registration and retrieval of multiple telemetry adapters
- * by their string identifiers.
- *
- * @example
- * ```typescript
- * const adapters: TelemetryAdapters = {
- *   'console': new ConsoleTelemetryAdapter(),
- *   'remote': new RemoteTelemetryAdapter(),
- * };
- * ```
- */
-export interface TelemetryAdapters {
-  [identifier: string]: TelemetryAdapter;
-}

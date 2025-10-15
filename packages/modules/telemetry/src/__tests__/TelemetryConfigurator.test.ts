@@ -9,7 +9,6 @@ import { TelemetryLevel, TelemetryType } from '../static.js';
 
 function createAdapter(id: string): ITelemetryAdapter {
   return {
-    identifier: id,
     processItem: vi.fn(),
     initialize: vi.fn(),
   };
@@ -35,28 +34,28 @@ describe('TelemetryConfigurator', () => {
   it('setAdapter should add adapter and allow chaining', async () => {
     const adapterA = createAdapter('a');
     const adapterB = createAdapter('b');
-    const result = configurator.setAdapter(adapterA).setAdapter(adapterB);
+    const result = configurator.setAdapter('a', adapterA).setAdapter('b', adapterB);
     expect(result).toBe(configurator);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
 
     const adapters = config.adapters;
-    expect(adapters).toContain(adapterA);
-    expect(adapters).toContain(adapterB);
-    expect(adapters?.length).toBe(2);
+    expect(adapters?.a).toBe(adapterA);
+    expect(adapters?.b).toBe(adapterB);
+    expect(Object.keys(adapters ?? {}).length).toBe(2);
   });
 
   it('setAdapter should overwrite adapter with same identifier', async () => {
     const adapterA1 = createAdapter('a');
     const adapterA2 = createAdapter('a');
-    configurator.setAdapter(adapterA1).setAdapter(adapterA2);
+    configurator.setAdapter('a', adapterA1).setAdapter('a', adapterA2);
 
     const config = await configurator.createConfigAsync(createConfigCallbackArgs(), {});
 
     const adapters = config.adapters;
-    expect(adapters).toContain(adapterA2);
-    expect(adapters).not.toContain(adapterA1);
-    expect(adapters?.length).toBe(1);
+    expect(adapters?.a).toBe(adapterA2);
+    expect(adapters?.a).not.toBe(adapterA1);
+    expect(Object.keys(adapters ?? {}).length).toBe(1);
   });
 
   it('setMetadata should set metadata', async () => {

@@ -1,5 +1,14 @@
 import { from, type ObservableInput } from 'rxjs';
-import { concatMap, filter, last, scan, shareReplay, toArray } from 'rxjs/operators';
+import {
+  concatMap,
+  defaultIfEmpty,
+  filter,
+  last,
+  map,
+  mergeMap,
+  scan,
+  shareReplay,
+} from 'rxjs/operators';
 
 import {
   BaseConfigBuilder,
@@ -41,28 +50,31 @@ export class TelemetryConfigurator
   extends BaseConfigBuilder<TelemetryConfig>
   implements ITelemetryConfigurator
 {
-  #adaptersCallbacks: Array<ConfigBuilderCallback<ITelemetryAdapter>> = [];
+  #adaptersCallbacks: Record<string, ConfigBuilderCallback<ITelemetryAdapter>> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
     super();
+
+    // Configure async adapter resolution using mergeMap to handle Promise/Observable adapter factories
     this._set(
       'adapters',
-      (args: ConfigBuilderCallbackArgs): ObservableInput<ITelemetryAdapter[]> => {
-        return from(this.#adaptersCallbacks).pipe(
-          concatMap((adapterFn) =>
+      (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, ITelemetryAdapter>> => {
+        return from(Object.entries(this.#adaptersCallbacks)).pipe(
+          mergeMap(([identifier, adapterFn]) =>
             from(adapterFn(args)).pipe(
-              filter(
-                (adapter): adapter is ITelemetryAdapter =>
-                  adapter !== undefined && adapter !== null,
-              ),
+              filter((adapter): adapter is ITelemetryAdapter => !!adapter),
+              map((adapter) => [identifier, adapter] as const),
             ),
           ),
-          toArray(),
+          scan((acc, [identifier, adapter]) => ({ ...acc, [identifier]: adapter }), {} as Record<string, ITelemetryAdapter>),
+          defaultIfEmpty({}),
           shareReplay(1),
         );
       },
     );
+
+    // Configure metadata merging - handles multiple sync/async metadata sources
     this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
       const metadataItems = this.#metadata;
       return (...args) =>
@@ -81,9 +93,8 @@ export class TelemetryConfigurator
    * @param adapter - The telemetry adapter to be added. The adapter's identifier is used as the key.
    * @returns The current instance of the configurator for method chaining.
    */
-  public setAdapter(adapter: ITelemetryAdapter): this {
-    this.#adaptersCallbacks.push(async () => adapter);
-    return this;
+  public setAdapter(identifier: string, adapter: ITelemetryAdapter): this {
+    return this.configureAdapter(identifier, async () => adapter);
   }
 
   /**
@@ -92,8 +103,11 @@ export class TelemetryConfigurator
    * @param adapter - A callback function that returns a telemetry adapter instance
    * @returns The current instance for method chaining
    */
-  public configureAdapter(adapter: ConfigBuilderCallback<ITelemetryAdapter>): this {
-    this.#adaptersCallbacks.push(adapter);
+  public configureAdapter(
+    identifier: string,
+    adapterFn: ConfigBuilderCallback<ITelemetryAdapter>,
+  ): this {
+    this.#adaptersCallbacks[identifier] = adapterFn;
     return this;
   }
 

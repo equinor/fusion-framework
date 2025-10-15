@@ -7,14 +7,14 @@ import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
 /**
  * Configuration options for setting up telemetry within the application.
  *
- * @property adapters - Optional array of telemetry adapters to be used for sending telemetry data.
+ * @property adapters - Optional record of telemetry adapters keyed by identifier to be used for sending telemetry data.
  * @property parent - Optional parent telemetry provider for hierarchical telemetry configuration.
  * @property metadata - Optional function or extractor to provide additional metadata for telemetry items.
  * @property defaultScope - Optional array of strings defining the default scope for telemetry events.
  * @property items$ - Optional observable input stream of telemetry items to be processed.
  */
 export type TelemetryConfig = {
-  adapters?: ITelemetryAdapter[];
+  adapters?: Record<string, ITelemetryAdapter>;
   parent?: ITelemetryProvider;
   metadata?: MetadataExtractor;
   defaultScope?: string[];
@@ -40,18 +40,20 @@ export interface ITelemetryConfigurator {
   /**
    * Configures a telemetry adapter with the configurator.
    *
-   * @param adapter - The telemetry adapter instance to register.
+   * @param identifier - The identifier for the adapter (should match the adapter's identifier).
+   * @param adapter - A callback function that returns the telemetry adapter instance.
    * @returns The configurator instance for method chaining.
    */
-  configureAdapter(adapter: ConfigBuilderCallback<ITelemetryAdapter>): this;
+  configureAdapter(identifier: string, adapter: ConfigBuilderCallback<ITelemetryAdapter>): this;
 
   /**
    * Registers a telemetry adapter to be used for event reporting.
    *
+   * @param identifier - The identifier for the adapter.
    * @param adapter - The telemetry adapter instance to register.
    * @returns The configurator instance for method chaining.
    */
-  setAdapter(adapter: ITelemetryAdapter): this;
+  setAdapter(identifier: string, adapter: ITelemetryAdapter): this;
 
   /**
    * Sets the metadata to be associated with telemetry events.

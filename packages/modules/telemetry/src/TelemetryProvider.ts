@@ -8,7 +8,7 @@ import type { TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import { version } from './version.js';
 import { TelemetryType, TelemetryItemNames } from './static.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
-import type { MetadataExtractor, TelemetryAdapters, TelemetryItem } from './types.js';
+import type { MetadataExtractor, TelemetryItem } from './types.js';
 import {
   TelemetryExceptionSchema,
   TelemetryCustomEventSchema,
@@ -59,7 +59,7 @@ export class TelemetryProvider
 
   #initialized = false;
 
-  #adapters: ITelemetryAdapter[] = [];
+  #adapters: Record<string, ITelemetryAdapter> = {};
 
   #defaultScope: string[];
 
@@ -86,7 +86,7 @@ export class TelemetryProvider
   constructor(config: TelemetryConfig, deps?: { event?: IEventModuleProvider }) {
     super({ version, config });
 
-    this.#adapters = config?.adapters ?? [];
+    this.#adapters = config?.adapters ?? {};
     this.#metadata = config?.metadata;
     this.#defaultScope = config?.defaultScope ?? [];
     this.#eventProvider = deps?.event;
@@ -155,7 +155,8 @@ export class TelemetryProvider
    */
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
-    const initializationPromises = this.#adapters.map((adapter) => adapter.initialize());
+    const adapterEntries = Object.entries(this.#adapters);
+    const initializationPromises = adapterEntries.map(([identifier, adapter]) => adapter.initialize());
 
     // Wait for all adapters to settle (either resolve or reject)
     const results = await Promise.allSettled(initializationPromises);
@@ -163,9 +164,9 @@ export class TelemetryProvider
     // Check each result and dispatch errors for failed initializations
     for (const [index, result] of results.entries()) {
       if (result.status === 'rejected') {
-        const adapter = this.#adapters[index];
+        const [identifier] = adapterEntries[index];
         this._dispatchError(
-          new Error(`Failed to initialize telemetry adapter "${adapter.identifier}"`, {
+          new Error(`Failed to initialize telemetry adapter "${identifier}"`, {
             cause: result.reason,
           }),
         );
@@ -187,14 +188,14 @@ export class TelemetryProvider
     }
     return this.#items.subscribe((item) => {
       // Iterate through all registered adapters
-      for (const adapter of this.#adapters) {
+      for (const [identifier, adapter] of Object.entries(this.#adapters)) {
         try {
           // Let the adapter process the telemetry item
           Promise.resolve(adapter.processItem(item));
         } catch (error) {
           // If processing fails, dispatch an error event
           this._dispatchError(
-            new Error(`Failed to process telemetry item with adapter "${adapter.identifier}"`, {
+            new Error(`Failed to process telemetry item with adapter "${identifier}"`, {
               cause: error,
             }),
           );
@@ -370,11 +371,19 @@ export class TelemetryProvider
    * @param identifier - The identifier of the telemetry adapter to retrieve.
    * @returns The telemetry adapter corresponding to the given identifier, or `undefined` if not found.
    */
-  public getAdapter<T extends keyof TelemetryAdapters>(
-    identifier: T,
-  ): TelemetryAdapters[T] | undefined {
-    return this.#adapters.find((adapter) => adapter.identifier === identifier) as
-      | TelemetryAdapters[T]
-      | undefined;
+  public getAdapter(
+    identifier: string,
+  ): ITelemetryAdapter | undefined {
+    const adapter = this.#adapters[identifier];
+    if(!adapter) {
+      this.trackException({
+        name: 'TelemetryAdapterNotFound',
+        exception: new Error(`Telemetry adapter "${identifier}" not found`),
+        metadata: {
+          identifier,
+        },
+      })
+    }
+    return adapter;
   }
 }
