@@ -16,7 +16,7 @@ import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, {
     // Attach configurator events to telemetry for automatic tracking
-    attachConfiguratorEvents: true|false, 
+    attachConfiguratorEvents: true | false, 
     configure: (builder) => {
       // configure the telemetry module here
     }
@@ -335,7 +335,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
 // app - application
 const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, {
-    attachConfiguratorEvents: true, // Apps typically don't need configurator event tracking
+    attachConfiguratorEvents: true,
     configure: async (args) => {
     args.config.setMetadata({
       app: {

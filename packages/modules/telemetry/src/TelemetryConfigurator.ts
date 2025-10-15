@@ -89,8 +89,8 @@ export class TelemetryConfigurator
   /**
    * Configures a telemetry adapter with the configurator.
    *
-   * @param adapter
-   * @returns
+   * @param adapter - A callback function that returns a telemetry adapter instance
+   * @returns The current instance for method chaining
    */
   public configureAdapter(adapter: ConfigBuilderCallback<ITelemetryAdapter>): this {
     this.#adaptersCallbacks.push(adapter);
