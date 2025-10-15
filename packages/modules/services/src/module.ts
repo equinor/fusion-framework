@@ -61,7 +61,7 @@ export const module: ServicesModule = {
     if (!config.createClient) {
       throw Error('missing configuration for creating API client');
     }
-    return new ApiProvider(config as Required<IApiConfigurator>);
+    return new ApiProvider({ createClient: config.createClient });
   },
 };
 
