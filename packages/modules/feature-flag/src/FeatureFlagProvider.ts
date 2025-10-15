@@ -1,4 +1,13 @@
-import { type Observable, filter, from, last, lastValueFrom, map, pairwise, reduce, switchMap } from 'rxjs';
+import {
+  type Observable,
+  filter,
+  from,
+  lastValueFrom,
+  map,
+  pairwise,
+  reduce,
+  switchMap,
+} from 'rxjs';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import type { ModuleType } from '@equinor/fusion-framework-module';
@@ -190,7 +199,7 @@ export class FeatureFlagProvider
 
     // wait for the onToggle observable to complete and get the toggled features
     const toggledFeatures = await lastValueFrom(onToggle);
-    
+
     // dispatch the toggle values to the state
     this.#state.next(actions.toggleFeatures(toggledFeatures));
   }
