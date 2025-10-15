@@ -12,6 +12,9 @@ import {
 
 import type { ContextModuleConfig } from './configurator';
 
+import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+import { version } from './version.js';
+
 import { ContextClient } from './client/ContextClient';
 import type { ContextItem, QueryContextParameters, RelatedContextParameters } from './types';
 import type { ModuleType } from '@equinor/fusion-framework-module';
@@ -325,7 +328,10 @@ export interface IContextProvider {
  * provider.setCurrentContextById('context-id').subscribe(...);
  * ```
  */
-export class ContextProvider implements IContextProvider {
+export class ContextProvider
+  extends BaseModuleProvider<ContextModuleConfig>
+  implements IContextProvider
+{
   #contextClient: ContextClient;
   #contextQuery: Query<Array<ContextItem>, QueryContextParameters>;
   #contextRelated?: Query<Array<ContextItem>, RelatedContextParameters>;
@@ -376,6 +382,8 @@ export class ContextProvider implements IContextProvider {
     parentContext?: IContextProvider;
   }) {
     const { config, event } = args;
+
+    super({ version, config });
 
     if (args.parentContext) {
       console.warn(
