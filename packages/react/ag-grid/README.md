@@ -54,14 +54,14 @@ Community features are available from the namespace `@equinor/fusion-framework-r
 
 ### AG Charts Enterprise Module
 
-The `AgChartsEnterpriseModule` is available from the enterprise namespace for advanced charting capabilities:
+The `AgChartsEnterpriseModule` is available from the enterprise namespace for advanced charting features:
 
 ```ts
-import { AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { AgChartsEnterpriseModule, AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
 
-// Use in your AG Grid configuration
+// Use in AG Grid configuration
 enableAgGrid(configurator, (builder) => {
-    builder.addModule(AgChartsEnterpriseModule);
+    builder.addModule(IntegratedChartsModule.with(AgChartsEnterpriseModule));
 });
 ```
 
