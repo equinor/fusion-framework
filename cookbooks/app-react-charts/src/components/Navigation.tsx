@@ -50,7 +50,7 @@ export const Navigation = () => {
       onClick: () => navigate('ag-chart/area'),
       active: currentPath.startsWith('/ag-chart/area'),
     },
-  ]
+  ];
 
   return (
     <SideBar open>
@@ -68,15 +68,15 @@ export const Navigation = () => {
           </div>
         ))}
         <SideBar.Accordion label="AG Charts" icon={pie_chart} isExpanded={true}>
-        {agChartItems.map((item) => (
-          <div key={item.label}>
-            <SideBar.AccordionItem
-              label={item.label}
-              onClick={item.onClick}
-              active={item.active}
-            />
-          </div>
-        ))}
+          {agChartItems.map((item) => (
+            <div key={item.label}>
+              <SideBar.AccordionItem
+                label={item.label}
+                onClick={item.onClick}
+                active={item.active}
+              />
+            </div>
+          ))}
         </SideBar.Accordion>
       </SideBar.Content>
     </SideBar>
