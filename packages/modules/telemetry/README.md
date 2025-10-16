@@ -14,8 +14,12 @@ To configure the telemetry module, you need to provide a configuration object th
 import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, (builder) => {
-    // configure the telemetry module here
+  enableTelemetry(configurator, {
+    // Attach configurator events to telemetry for automatic tracking
+    attachConfiguratorEvents: true | false, 
+    configure: (builder) => {
+      // configure the telemetry module here
+    }
   });
 };
 ```
@@ -204,6 +208,102 @@ const job = async() => {
 
 Adapters are responsible for processing and sending telemetry data to their respective destinations. All adapters support asynchronous initialization and will be automatically initialized when the telemetry provider initializes.
 
+### Using setAdapter and configureAdapter
+
+The `TelemetryConfigurator` provides two methods for adding adapters: `setAdapter` for pre-instantiated adapters and `configureAdapter` for dynamic creation using initialization arguments.
+
+#### Simple setAdapter Example
+
+```typescript
+import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
+import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: (builder) => {
+      const consoleAdapter = new ConsoleAdapter({ title: 'MyApp' });
+      builder.setAdapter('console', consoleAdapter);
+    }
+  });
+};
+```
+
+#### Multiple Adapters with Different Identifiers
+
+You can configure multiple adapters with different identifiers to handle different types of telemetry data. This allows for flexible routing and filtering of telemetry items.
+
+```typescript
+import { enableTelemetry, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { ConsoleAdapter } from '@equinor/fusion-framework-module-telemetry/console-adapter';
+import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-telemetry/application-insights-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: (builder) => {
+      // Standard console logger for general information
+      const standardConsole = new ConsoleAdapter({
+        title: 'Standard',
+        filter: (item) =>
+          item.level >= TelemetryLevel.Information && item.level < TelemetryLevel.Error
+      });
+      builder.setAdapter('console-standard', standardConsole);
+
+      // Error console logger for errors and critical issues
+      const errorConsole = new ConsoleAdapter({
+        title: 'Errors',
+        filter: (item) => item.level >= TelemetryLevel.Error
+      });
+      builder.setAdapter('console-error', errorConsole);
+
+      // Application Insights for production telemetry
+      const appInsights = new ApplicationInsightsAdapter({
+        snippet: {
+          config: {
+            instrumentationKey: 'production-instrumentation-key'
+          }
+        },
+        filter: (item) => item.level >= TelemetryLevel.Warning
+      });
+      builder.setAdapter('app-insights-prod', appInsights);
+    }
+  });
+};
+```
+
+This setup allows you to:
+- Route general information to the standard console logger
+- Send errors to a dedicated error console logger
+- Forward warnings and above to Application Insights for production monitoring
+
+#### configureAdapter with requireInstance Example
+
+```typescript
+import { enableTelemetry, TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
+import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-telemetry/application-insights-adapter';
+
+const configure = (configurator: IModulesConfigurator<any, any>) => {
+  enableTelemetry(configurator, {
+    configure: async (builder, ref) => {
+      builder.configureAdapter('application-insights', async ({ requireInstance }) => {
+        const auth = await requireInstance('auth');
+        const adapter = new ApplicationInsightsAdapter({
+          snippet: {
+            config: {
+              instrumentationKey: 'app-instrumentation-key'
+            }
+          },
+          filter: (item) => item.level >= TelemetryLevel.Information,
+        });
+        if (auth.account?.localAccountId) {
+          adapter.setAuthenticatedUserContext(auth.account.localAccountId);
+        }
+        return adapter;
+      });
+    }
+  });
+};
+```
+
 ### Application Insights Adapter
 
 The Application Insights adapter allows you to send telemetry data to Microsoft Application Insights. It supports asynchronous initialization for setting up the Application Insights client and plugins.
@@ -234,31 +334,41 @@ import { ApplicationInsightsAdapter } from '@equinor/fusion-framework-module-tel
 
 // bootstrap - initialization on server which loads the portal
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
-    const adapter = new ApplicationInsightsAdapter({
-      snippet: {
-        instrumentationKey: 'portal-instrumentation-key'
-      },
-      // filter log level by FUSION_TELEMETRY_LEVEL environment variable
-      filter: (item) => item.level <= process.env.FUSION_TELEMETRY_LEVEL || TelemetryLevel.Information,
-    });
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true, // Track module configurator events
+    configure: async (builder, ref) => {
+      const adapter = new ApplicationInsightsAdapter({
+        snippet: {
+          config: {
+            instrumentationKey: 'portal-instrumentation-key'
+          }
+        },
+        // filter log level by FUSION_TELEMETRY_LEVEL environment variable
+        filter: (item) =>
+          item.level >= (process.env.FUSION_TELEMETRY_LEVEL
+            ? parseInt(process.env.FUSION_TELEMETRY_LEVEL)
+            : TelemetryLevel.Information),
+      });
 
-    args.config.addAdapter(adapter);
-    args.requireInstance('auth').then((auth) => {
-      if (auth.account?.localAccountId) {
-        adapter.setAuthenticatedUserContext(auth.account.localAccountId);
-      }
-    });
+      builder.setAdapter('application-insights', adapter);
+      ref.requireInstance('auth').then((auth) => {
+        if (auth.account?.localAccountId) {
+          adapter.setAuthenticatedUserContext(auth.account.localAccountId);
+        }
+      });
+    }
   });
 };
 
 // portal - framework
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true,
+    configure: async (args) => {
     // reuse the Application Insights adapter from bootstrap
     const aiAdapter = args.ref.modules.telemetry.getAdapter(ApplicationInsightsAdapter.Identifier);
     if (aiAdapter) {
-      args.config.addAdapter(aiAdapter);
+      args.config.setAdapter('application-insights', aiAdapter);
     }
     args.config.setMetadata({
       portal: {
@@ -268,12 +378,15 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     });
     args.config.setDefaultScope(['portal']);
     args.config.setFilter((item) => item.scope.includes('portal'));
+    }
   });
 };
 
 // app - application
 const configure = (configurator: IModulesConfigurator<any, any>) => {
-  enableTelemetry(configurator, async (args) => {
+  enableTelemetry(configurator, {
+    attachConfiguratorEvents: true,
+    configure: async (args) => {
     args.config.setMetadata({
       app: {
         name: 'My App',
@@ -284,12 +397,15 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
     args.config.setParent(args.ref.modules.telemetry);
     const appAppInsightsAdapter = new ApplicationInsightsAdapter({
       snippet: {
-        instrumentationKey: 'app-instrumentation-key'
+        config: {
+          instrumentationKey: 'app-instrumentation-key'
+        }
       },
       // only log events with a specific scope
       filter: (item) => item.scope.includes('custom-event'),
     });
-    args.config.addAdapter(appAppInsightsAdapter);
+    args.config.setAdapter('application-insights-app', appAppInsightsAdapter);
+    }
   });
 };
 
@@ -337,7 +453,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
       filter: (item) => item.level >= TelemetryLevel.Information
     });
     
-    builder.addAdapter(consoleAdapter);
+    builder.setAdapter('console', consoleAdapter);
   });
 };
 ```
@@ -383,7 +499,7 @@ import { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 const configure = (configurator: IModulesConfigurator<any, any>) => {
   enableTelemetry(configurator, (builder) => {
     const customAdapter = new CustomAdapter();
-    builder.addAdapter(customAdapter);
+    builder.setAdapter('custom', customAdapter);
   });
 };
 ```
@@ -438,7 +554,7 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
         : true
     });
     
-    builder.addAdapter(appInsightsAdapter);
+    builder.setAdapter('application-insights', appInsightsAdapter);
   });
 };
 ```

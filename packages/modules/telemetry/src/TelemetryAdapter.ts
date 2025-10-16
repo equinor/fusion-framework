@@ -3,17 +3,15 @@ import type { TelemetryItem } from './types.js';
 /**
  * Represents an adapter for processing telemetry items.
  *
- * Implementations of this interface are responsible for handling telemetry data
- * and are identified by a unique string identifier.
+ * Implementations of this interface are responsible for handling telemetry data.
+ * Adapters are identified by their key in the Record<string, ITelemetryAdapter> structure.
  *
- * @property identifier - A unique string that identifies the telemetry adapter.
  * @method processItem - Processes a given telemetry item.
  * @param item - The telemetry item to be processed.
  * @method initialize - Optional asynchronous initialization method for adapters that require setup.
  * @returns A promise that resolves when initialization is complete.
  */
 export interface ITelemetryAdapter {
-  readonly identifier: string;
   processItem(item: TelemetryItem): void;
   initialize(): Promise<void>;
 }
@@ -28,7 +26,6 @@ export interface ITelemetryAdapter {
  * @implements {ITelemetryAdapter}
  *
  * @remarks
- * - The adapter can be identified by a unique `identifier`.
  * - An optional filter function can be provided to determine which telemetry items should be processed.
  *
  * @example
@@ -39,27 +36,15 @@ export interface ITelemetryAdapter {
  * }
  */
 export abstract class BaseTelemetryAdapter implements ITelemetryAdapter {
-  #identifier: string;
   #filter?: (item: TelemetryItem) => boolean;
   #initialized = false;
 
   /**
-   * Gets the unique identifier for this telemetry adapter instance.
-   *
-   * @returns The identifier as a string.
-   */
-  public get identifier(): string {
-    return this.#identifier;
-  }
-
-  /**
    * Creates a new instance of the TelemetryAdapter.
    *
-   * @param identifier - A unique string identifier for this adapter instance.
    * @param filter - An optional function to filter telemetry items. If provided, only items for which the function returns true will be processed.
    */
-  constructor(identifier: string, filter?: (item: TelemetryItem) => boolean) {
-    this.#identifier = identifier;
+  constructor(filter?: (item: TelemetryItem) => boolean) {
     this.#filter = filter;
   }
 

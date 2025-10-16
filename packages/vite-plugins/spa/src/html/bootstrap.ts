@@ -71,16 +71,12 @@ enableTelemetry(configurator, {
       import.meta.env.FUSION_SPA_TELEMETRY_CONSOLE_LEVEL ?? TelemetryLevel.Information,
     );
 
-    if (Number.isNaN(consoleLevel)) {
-      // If environment variable is set but invalid, log all telemetry
-      builder.setAdapter(new ConsoleAdapter());
-    } else {
-      builder.setAdapter(
-        new ConsoleAdapter({
-          filter: (item) => item.level >= consoleLevel,
-        }),
-      );
-    }
+    const consoleAdapter = new ConsoleAdapter({
+      filter: Number.isNaN(consoleLevel) ? undefined : (item) => item.level >= consoleLevel,
+    });
+
+    builder.setAdapter('console', consoleAdapter);
+
     builder.setMetadata(({ modules }) => {
       const metadata = {
         fusion: {

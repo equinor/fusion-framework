@@ -18,14 +18,12 @@ import { BaseTelemetryAdapter } from '@equinor/fusion-framework-module-telemetry
  *
  * @property snippet - The Application Insights snippet configuration.
  * @property plugins - Optional array of plugins to extend Application Insights functionality.
- * @property identifier - Optional unique identifier for the client instance, defaults to 'application-insights'.
  * @property filter - Optional filter function to determine if a telemetry item should be processed.
  * @property prefix - Optional prefix to prepend to telemetry item names.
  */
 export type ApplicationInsightsClientConfig = {
   snippet: Snippet;
   plugins?: IPlugin[];
-  identifier?: string;
   /** filter function to determine if item should be processed */
   filter?: (item: TelemetryItem) => boolean;
   prefix?: string;
@@ -57,7 +55,7 @@ export class ApplicationInsightsAdapter extends BaseTelemetryAdapter {
   readonly #preFix?: string;
 
   constructor(args: ApplicationInsightsClientConfig) {
-    super(args.identifier ?? ApplicationInsightsAdapter.Identifier, args.filter);
+    super(args.filter);
     this.#client = new ApplicationInsights(args.snippet);
     this.#preFix = args.prefix;
     for (const plugin of args.plugins ?? []) {

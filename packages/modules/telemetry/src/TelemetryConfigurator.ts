@@ -1,7 +1,20 @@
-import { from } from 'rxjs';
-import { concatMap, last, scan, shareReplay } from 'rxjs/operators';
+import { from, type ObservableInput } from 'rxjs';
+import {
+  concatMap,
+  defaultIfEmpty,
+  filter,
+  last,
+  map,
+  mergeMap,
+  scan,
+  shareReplay,
+} from 'rxjs/operators';
 
-import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
+import {
+  BaseConfigBuilder,
+  type ConfigBuilderCallbackArgs,
+  type ConfigBuilderCallback,
+} from '@equinor/fusion-framework-module';
 
 import type { ITelemetryConfigurator, TelemetryConfig } from './TelemetryConfigurator.interface.js';
 import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
@@ -37,12 +50,37 @@ export class TelemetryConfigurator
   extends BaseConfigBuilder<TelemetryConfig>
   implements ITelemetryConfigurator
 {
-  #adapters: Record<string, ITelemetryAdapter> = {};
+  #adaptersCallbacks: Record<string, ConfigBuilderCallback<ITelemetryAdapter>> = {};
   #metadata: Array<TelemetryConfig['metadata']> = [];
 
   constructor() {
     super();
-    this._set('adapters', async () => Object.values(this.#adapters));
+
+    // Configure async adapter resolution using mergeMap to handle Promise/Observable adapter factories
+    this._set(
+      'adapters',
+      (args: ConfigBuilderCallbackArgs): ObservableInput<Record<string, ITelemetryAdapter>> => {
+        return from(Object.entries(this.#adaptersCallbacks)).pipe(
+          mergeMap(([identifier, adapterFn]) =>
+            from(adapterFn(args)).pipe(
+              filter((adapter): adapter is ITelemetryAdapter => !!adapter),
+              map((adapter) => [identifier, adapter] as const),
+            ),
+          ),
+          scan(
+            (acc, [identifier, adapter]) => {
+              acc[identifier] = adapter;
+              return acc;
+            },
+            {} as Record<string, ITelemetryAdapter>,
+          ),
+          defaultIfEmpty({}),
+          shareReplay({ bufferSize: 1, refCount: true }),
+        );
+      },
+    );
+
+    // Configure metadata merging - handles multiple sync/async metadata sources
     this._set('metadata', async (): Promise<TelemetryConfig['metadata']> => {
       const metadataItems = this.#metadata;
       return (...args) =>
@@ -50,7 +88,7 @@ export class TelemetryConfigurator
           concatMap((metadata) => toObservable(metadata, ...args)),
           scan((acc, current) => mergeMetadata(acc, current) ?? {}, {}),
           last(),
-          shareReplay(1),
+          shareReplay({ bufferSize: 1, refCount: true }),
         );
     });
   }
@@ -61,8 +99,21 @@ export class TelemetryConfigurator
    * @param adapter - The telemetry adapter to be added. The adapter's identifier is used as the key.
    * @returns The current instance of the configurator for method chaining.
    */
-  public setAdapter(adapter: ITelemetryAdapter): this {
-    this.#adapters[String(adapter.identifier)] = adapter;
+  public setAdapter(identifier: string, adapter: ITelemetryAdapter): this {
+    return this.configureAdapter(identifier, async () => adapter);
+  }
+
+  /**
+   * Configures a telemetry adapter with the configurator.
+   *
+   * @param adapter - A callback function that returns a telemetry adapter instance
+   * @returns The current instance for method chaining
+   */
+  public configureAdapter(
+    identifier: string,
+    adapterFn: ConfigBuilderCallback<ITelemetryAdapter>,
+  ): this {
+    this.#adaptersCallbacks[identifier] = adapterFn;
     return this;
   }
 
@@ -86,7 +137,7 @@ export class TelemetryConfigurator
    * @param scope - An array of strings representing the default scope to be used.
    * @returns The current instance for method chaining.
    */
-  public setDefaultScope(scope: string[]): this {
+  public setDefaultScope(scope: string[] | ConfigBuilderCallback<string[]>): this {
     this._set('defaultScope', scope);
     return this;
   }
