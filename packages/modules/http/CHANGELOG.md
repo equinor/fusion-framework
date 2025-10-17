@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.3
+
+### Patch Changes
+
+- [#3594](https://github.com/equinor/fusion-framework/pull/3594) [`6900d98`](https://github.com/equinor/fusion-framework/commit/6900d98142c84f4703095f8d03b09af57a1d7d2e) Thanks [@odinr](https://github.com/odinr)! - Fix HttpClientProvider to extend BaseModuleProvider, ensuring proper module interface implementation and preventing configuration errors.
+
+- Updated dependencies [[`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module@5.0.4
+  - @equinor/fusion-framework-module-msal@5.1.1
+
 ## 7.0.2
 
 ### Patch Changes

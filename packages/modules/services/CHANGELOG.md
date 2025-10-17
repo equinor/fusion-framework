@@ -1,5 +1,23 @@
 # Change Log
 
+## 7.1.3
+
+### Patch Changes
+
+- [#3607](https://github.com/equinor/fusion-framework/pull/3607) [`6dfb29e`](https://github.com/equinor/fusion-framework/commit/6dfb29eef67548228c05668b44ad02a34c83b050) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @faker-js/faker from 9.9.0 to 10.1.0
+
+  - Updated devDependency @faker-js/faker to v10.1.0
+  - ESM-only distribution aligns with project architecture
+  - All existing faker APIs remain stable and compatible
+  - No breaking changes to public module API
+
+- [#3602](https://github.com/equinor/fusion-framework/pull/3602) [`88e0e58`](https://github.com/equinor/fusion-framework/commit/88e0e58fcdcfa069be2c652ac46a4bb11e91abb1) Thanks [@odinr](https://github.com/odinr)! - Fix ApiProvider to extend BaseModuleProvider, ensuring proper framework integration and consistent provider lifecycle management.
+
+  Provider now correctly implements IModuleProvider interface through BaseModuleProvider inheritance.
+
+- Updated dependencies [[`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module@5.0.4
+
 ## 7.1.2
 
 ### Patch Changes

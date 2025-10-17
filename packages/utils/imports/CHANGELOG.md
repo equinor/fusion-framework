@@ -1,5 +1,15 @@
 # @equinor/fusion-imports
 
+## 1.1.5
+
+### Patch Changes
+
+- [#3606](https://github.com/equinor/fusion-framework/pull/3606) [`fa12d3a`](https://github.com/equinor/fusion-framework/commit/fa12d3a2466a590a943d85c873f02bc45e8fba52) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump esbuild from 0.25.10 to 0.25.11
+
+  - Add support for `with { type: 'bytes' }` imports (TC39 stage 2.7)
+  - Lower CSS media query range syntax for older browsers
+  - Update platform-specific binaries for better performance
+
 ## 1.1.4
 
 ### Patch Changes

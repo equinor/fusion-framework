@@ -1,5 +1,43 @@
 # Change Log
 
+## 12.3.5
+
+### Patch Changes
+
+- [#3593](https://github.com/equinor/fusion-framework/pull/3593) [`c5a952c`](https://github.com/equinor/fusion-framework/commit/c5a952cb223ca2c6e723186b1a5a477dbec6c95d) Thanks [@Noggling](https://github.com/Noggling)! - ## Fix app config publish parameter
+
+  Fixed a bug in the `app config` command where the `config` parameter was incorrectly referenced as `options.config` when calling `publishAppConfig`. This was causing the publish functionality to fail when a custom config file path was provided.
+
+  ### What Changed
+
+  - Corrected parameter passing in `packages/cli/src/cli/commands/app/config.ts`
+  - Changed `config: options.config` to `config` in the `publishAppConfig` call
+
+  ### Impact
+
+  - The `ffc app config --publish` command now correctly uses the provided config file argument
+  - Fixes the issue where custom config files were not being passed to the publish function
+  - No breaking changes to the CLI interface
+
+  ### Example
+
+  ```bash
+  # This now works correctly with custom config files
+  ffc app config my-custom.config.ts --publish --manifest app.manifest.ts --env prod
+  ```
+
+- [#3584](https://github.com/equinor/fusion-framework/pull/3584) [`0dd31cd`](https://github.com/equinor/fusion-framework/commit/0dd31cd1078b383ddab4a8cf1bb03d502e214715) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @rollup/plugin-node-resolve from 16.0.1 to 16.0.3
+
+  Bug fixes:
+
+  - fix: resolve bare targets of package "imports" using export maps; avoid fileURLToPath(null)
+  - fix: error thrown with empty entry
+
+- Updated dependencies [[`fa12d3a`](https://github.com/equinor/fusion-framework/commit/fa12d3a2466a590a943d85c873f02bc45e8fba52)]:
+  - @equinor/fusion-imports@1.1.5
+  - @equinor/fusion-framework-dev-portal@1.2.2
+  - @equinor/fusion-framework-dev-server@1.1.8
+
 ## 12.3.4
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.4.1
+
+### Patch Changes
+
+- [#3590](https://github.com/equinor/fusion-framework/pull/3590) [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be) Thanks [@odinr](https://github.com/odinr)! - Internal: Add static className properties to configurator classes (ModulesConfigurator, FrameworkConfigurator, AppConfigurator) to prevent constructor name mangling during compilation and ensure proper event naming.
+
+- Updated dependencies [[`d08ee58`](https://github.com/equinor/fusion-framework/commit/d08ee5850acf5bbbf63ac93c8da81647e3ca55b5), [`dcdec9f`](https://github.com/equinor/fusion-framework/commit/dcdec9f87d591781d11db34c24e6bf85de3a3f48), [`6dfb29e`](https://github.com/equinor/fusion-framework/commit/6dfb29eef67548228c05668b44ad02a34c83b050), [`6900d98`](https://github.com/equinor/fusion-framework/commit/6900d98142c84f4703095f8d03b09af57a1d7d2e), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`88e0e58`](https://github.com/equinor/fusion-framework/commit/88e0e58fcdcfa069be2c652ac46a4bb11e91abb1), [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be), [`a13de68`](https://github.com/equinor/fusion-framework/commit/a13de68b2f196a779ea850af055d8db7926941ce)]:
+  - @equinor/fusion-framework-module-context@7.0.2
+  - @equinor/fusion-framework-module-event@4.4.0
+  - @equinor/fusion-framework-module-services@7.1.3
+  - @equinor/fusion-framework-module-http@7.0.3
+  - @equinor/fusion-framework-module@5.0.4
+  - @equinor/fusion-framework-module-msal@5.1.1
+  - @equinor/fusion-framework-module-telemetry@4.3.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.3
+
 ## 7.4.0
 
 ### Minor Changes

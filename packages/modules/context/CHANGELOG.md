@@ -1,5 +1,16 @@
 # Change Log
 
+## 7.0.2
+
+### Patch Changes
+
+- [#3603](https://github.com/equinor/fusion-framework/pull/3603) [`d08ee58`](https://github.com/equinor/fusion-framework/commit/d08ee5850acf5bbbf63ac93c8da81647e3ca55b5) Thanks [@odinr](https://github.com/odinr)! - Fix ContextProvider to extend BaseModuleProvider, ensuring proper framework integration and consistent provider lifecycle management.
+
+  Provider now correctly implements IModuleProvider interface through BaseModuleProvider inheritance.
+
+- Updated dependencies [[`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module@5.0.4
+
 ## 7.0.1
 
 ### Patch Changes
