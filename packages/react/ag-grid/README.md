@@ -46,6 +46,25 @@ enableAgGrid(configurator, (builder) => {
 > [!TIP]
 > AG Grid has a [theme builder](https://www.ag-grid.com/theme-builder/) that can be used to preview and generate a custom theme.
 
+## Enterprise and Community Features
+
+Enterprise features are available from the namespace `@equinor/fusion-framework-react-ag-grid/enterprise`.
+
+Community features are available from the namespace `@equinor/fusion-framework-react-ag-grid/community`.
+
+### AG Charts Enterprise Module
+
+The `AgChartsEnterpriseModule` is available from the enterprise namespace for advanced charting features:
+
+```ts
+import { AgChartsEnterpriseModule, AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+
+// Use in AG Grid configuration
+enableAgGrid(configurator, (builder) => {
+    builder.addModule(IntegratedChartsModule.with(AgChartsEnterpriseModule));
+});
+```
+
 ### Customizing a grid instance
 
 The module provides a hook to customize a grid instance.
