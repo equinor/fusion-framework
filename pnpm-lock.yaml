@@ -473,8 +473,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/modules/navigation
       '@equinor/fusion-react-person':
-        specifier: ^0.10.10
-        version: 0.10.10(react@18.3.1)
+        specifier: ^1.0.0
+        version: 1.0.0(react@18.3.1)
       '@remix-run/router':
         specifier: ^1.8.0
         version: 1.23.0
@@ -2499,8 +2499,10 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
 
-  '@equinor/fusion-react-person@0.10.10':
-    resolution: {integrity: sha512-TauYPO7G3b35qtI0xJWEYaxmacANJ3eYMOaiJmoj8TQgPwZqXygn50zmjNURJuKcswZGSbOU4TfBH9etLRCSJw==}
+  '@equinor/fusion-react-person@1.0.0':
+    resolution: {integrity: sha512-bcoEiLdcOuZEdK1Snbcv1zcOxmzrOxwvlFiHw32NfIaWMKgtFSdxXIyTmXo5dJ8zT2z099/327aGijiDMxJ3vA==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@equinor/fusion-react-progress-indicator@0.3.0':
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
@@ -2553,6 +2555,11 @@ packages:
     resolution: {integrity: sha512-dZ6EhF0f03v3bz1fBz7eR0zb1FeclpxrRH3LAZqf2GeNMBpIohvYhQtKMd2+S4C6x19pwgn7Z19A9jHwrvq84w==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
+
+  '@equinor/fusion-react-utils@3.0.0':
+    resolution: {integrity: sha512-d2FTiaMKqHA5Yxvo8TIpVQ5pPY9XpVyrr+SjpO7eUUavwB39Q8nyg+9eKbRIQYtXkh9ETm60KKKIKK1imR4gaw==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@equinor/fusion-wc-avatar@3.2.3':
     resolution: {integrity: sha512-R4QrPz+lzIdYnc1s/6RixQb6MQ/sn1t1h+/P9MictC1bpxXaBKNA7XonxOXQyP9ivZHXLIZK8lNW6vtxiZXurQ==}
@@ -9816,12 +9823,11 @@ snapshots:
       '@equinor/fusion-wc-icon': 2.3.1
       react: 18.3.1
 
-  '@equinor/fusion-react-person@0.10.10(react@18.3.1)':
+  '@equinor/fusion-react-person@1.0.0(react@18.3.1)':
     dependencies:
-      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
+      '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
       '@equinor/fusion-wc-person': 3.2.4
-    transitivePeerDependencies:
-      - react
+      react: 18.3.1
 
   '@equinor/fusion-react-progress-indicator@0.3.0(react@18.3.1)':
     dependencies:
@@ -9876,6 +9882,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@equinor/fusion-react-utils@2.2.3(react@18.3.1)':
+    dependencies:
+      date-fns: 4.1.0
+      react: 18.3.1
+
+  '@equinor/fusion-react-utils@3.0.0(react@18.3.1)':
     dependencies:
       date-fns: 4.1.0
       react: 18.3.1
