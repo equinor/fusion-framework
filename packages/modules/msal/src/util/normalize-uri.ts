@@ -12,13 +12,3 @@ export const normalizeUri = (uri: string, home: string = window.location.origin)
   const { origin, pathname } = new URL(uri);
   return origin + pathname.replace(/([^:]\/)\/+/g, '$1');
 };
-
-/**
- * Compares normalized version of urls
- *
- * @internal
- */
-export const compareOrigin = (a: string, b: string): boolean => {
-  const url = { a: normalizeUri(a), b: normalizeUri(b) };
-  return url.a === url.b;
-};

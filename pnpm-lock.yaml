@@ -1235,8 +1235,8 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^2.21.0
-        version: 2.39.0
+        specifier: ^4.25.0
+        version: 4.25.0
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2174,12 +2174,8 @@ packages:
   '@antfu/utils@9.2.1':
     resolution: {integrity: sha512-TMilPqXyii1AsiEii6l6ubRzbo76p6oshUSYPaKsmXDavyMLqjzVDkcp3pHp5ELMUNJHATcEOGxKTTsX9yYhGg==}
 
-  '@azure/msal-browser@2.39.0':
-    resolution: {integrity: sha512-kks/n2AJzKUk+DBqZhiD+7zeQGBl+WpSOQYzWy6hff3bU0ZrYFqr4keFLlzB5VKuKZog0X59/FGHb1RPBDZLVg==}
-    engines: {node: '>=0.8.0'}
-
-  '@azure/msal-common@13.3.3':
-    resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
+  '@azure/msal-browser@4.25.0':
+    resolution: {integrity: sha512-kbL+Ae7/UC62wSzxirZddYeVnHvvkvAnSZkBqL55X+jaSXTAXfngnNsDM5acEWU0Q/SAv3gEQfxO1igWOn87Pg==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@15.13.0':
@@ -9309,11 +9305,9 @@ snapshots:
 
   '@antfu/utils@9.2.1': {}
 
-  '@azure/msal-browser@2.39.0':
+  '@azure/msal-browser@4.25.0':
     dependencies:
-      '@azure/msal-common': 13.3.3
-
-  '@azure/msal-common@13.3.3': {}
+      '@azure/msal-common': 15.13.0
 
   '@azure/msal-common@15.13.0': {}
 
