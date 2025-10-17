@@ -88,7 +88,7 @@ export const useHelpCenter = (): HelpCenter => {
         page: 'home',
       },
     });
-  }, [eventModule.dispatchEvent]);
+  }, [eventModule]);
 
   const openArticle = useCallback(
     (articleId: string): void => {
@@ -99,7 +99,7 @@ export const useHelpCenter = (): HelpCenter => {
         },
       });
     },
-    [eventModule.dispatchEvent],
+    [eventModule],
   );
 
   const openFaqs = useCallback((): void => {
@@ -108,7 +108,7 @@ export const useHelpCenter = (): HelpCenter => {
         page: 'faqs',
       },
     });
-  }, [eventModule.dispatchEvent]);
+  }, [eventModule]);
 
   const openSearch = useCallback(
     (search: string): void => {
@@ -119,7 +119,7 @@ export const useHelpCenter = (): HelpCenter => {
         },
       });
     },
-    [eventModule.dispatchEvent],
+    [eventModule],
   );
 
   const openGovernance = useCallback((): void => {
@@ -128,7 +128,7 @@ export const useHelpCenter = (): HelpCenter => {
         page: 'governance',
       },
     });
-  }, [eventModule.dispatchEvent]);
+  }, [eventModule]);
 
   const openReleaseNotes = useCallback((): void => {
     eventModule.dispatchEvent(EVENT_NAME, {
@@ -136,7 +136,7 @@ export const useHelpCenter = (): HelpCenter => {
         page: 'release-notes',
       },
     });
-  }, [eventModule.dispatchEvent]);
+  }, [eventModule]);
 
   return {
     openHelp,
