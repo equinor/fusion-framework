@@ -1,5 +1,22 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- [#3596](https://github.com/equinor/fusion-framework/pull/3596) [`dcdec9f`](https://github.com/equinor/fusion-framework/commit/dcdec9f87d591781d11db34c24e6bf85de3a3f48) Thanks [@odinr](https://github.com/odinr)! - Fix EventModuleProvider to extend BaseModuleProvider as required by the module system. This resolves telemetry errors indicating the provider was not properly extending the base class.
+
+  Also removed the subscribe method from the IEventModuleProvider interface and implementation, as consumers can use the event$ Observable property for subscription instead.
+
+  **Migration:** Replace `modules.event.subscribe(...)` with `modules.event.event$.subscribe(...)`. The `event$` property provides full Observable functionality including `pipe`, `map`, `filter`, and other RxJS operators.
+
+  _Note: Using minor version bump since the framework internally does not use subscribe or pipe on the event module._
+
+### Patch Changes
+
+- Updated dependencies [[`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module@5.0.4
+
 ## 4.3.7
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.4
+
+### Patch Changes
+
+- [#3597](https://github.com/equinor/fusion-framework/pull/3597) [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b) Thanks [@odinr](https://github.com/odinr)! - Improve Symbol.hasInstance validation in BaseModuleProvider to ensure version is a valid semver and dispose is a function.
+
+- [#3590](https://github.com/equinor/fusion-framework/pull/3590) [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be) Thanks [@odinr](https://github.com/odinr)! - Internal: Add static className properties to configurator classes (ModulesConfigurator, FrameworkConfigurator, AppConfigurator) to prevent constructor name mangling during compilation and ensure proper event naming.
+
 ## 5.0.3
 
 ### Patch Changes
