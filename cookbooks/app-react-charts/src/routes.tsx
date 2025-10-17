@@ -3,6 +3,7 @@ import Navigation from './components/Navigation';
 import { BarChart } from './pages/BarChart';
 import { LineChart } from './pages/LineChart';
 import HomePage from './pages/HomePage';
+import { AgArea, AgBar, AgLine, AgPie } from './pages/ag-charts';
 
 const Root = () => {
   return (
@@ -31,6 +32,27 @@ export const routes: RouteObject[] = [
       {
         path: 'line-chart/*',
         Component: LineChart,
+      },
+      {
+        path: 'ag-chart',
+        children: [
+          {
+            path: 'bar',
+            Component: AgBar,
+          },
+          {
+            path: 'pie',
+            Component: AgPie,
+          },
+          {
+            path: 'line',
+            Component: AgLine,
+          },
+          {
+            path: 'area',
+            Component: AgArea,
+          },
+        ],
       },
     ],
   },
