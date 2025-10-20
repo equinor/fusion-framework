@@ -8,17 +8,18 @@ import type { MsalModuleVersion } from '../static';
 /**
  * Creates a proxy provider for MSAL v2 compatibility.
  *
- * This function creates a proxy that wraps the MSAL v4 provider
- * and provides v2-compatible method signatures and return types.
- * while using the latest MSAL v4 implementation under the hood.
+ * This function creates a Proxy that wraps the MSAL v4 provider and provides
+ * v2-compatible method signatures and return types while using the latest
+ * MSAL v4 implementation under the hood. The proxy handles type conversions
+ * and method adaptations to maintain backward compatibility.
  *
- * @param provider - The base MSAL provider instance
- * @returns A proxy provider with v2-compatible interface
+ * @param provider - The base MSAL v4 provider instance to wrap
+ * @returns A proxy provider implementing the v2-compatible interface
  *
  * @example
  * ```typescript
  * const baseProvider = new MsalProvider(config);
- * const v2Proxy = createProxyProvider_v2(baseProvider);
+ * const v2Proxy = createProxyProvider(baseProvider);
  *
  * // Use v2-compatible API
  * await v2Proxy.login();
@@ -29,86 +30,122 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
   // Create a v2-compatible client wrapper using the new client proxy
   const v2Client = createProxyClient(provider.client);
 
+  // Use Proxy to intercept property access and provide v2-compatible implementations
   const proxy = new Proxy(provider, {
     get: (target: IMsalProvider, prop: keyof IMsalProvider_v2) => {
       switch (prop) {
         case 'client': {
-          return v2Client;
+          // Return the v2-compatible client wrapper
+          return v2Client as unknown as IMsalProvider_v2['client'];
         }
         case 'defaultClient': {
+          // Deprecated property - redirect to client with warning
           console.warn('defaultClient is deprecated, use client instead');
-          return v2Client;
+          return v2Client as unknown as IMsalProvider_v2['defaultClient'];
         }
         case 'defaultAccount': {
-          // Map activeAccount to defaultAccount for v2 compatibility
+          // Map v4 account to v2 format for backward compatibility
           const account = target.account;
-          if (!account) {
-            return undefined;
-          }
-          return mapAccountInfo(account);
+          const defaultAccount: IMsalProvider_v2['defaultAccount'] = account
+            ? mapAccountInfo(account)
+            : undefined;
+          return defaultAccount;
         }
         case 'defaultConfig': {
+          // Deprecated property - not available in v4
           console.warn('defaultConfig is deprecated and not available in v4');
           return undefined;
         }
         case 'createClient': {
+          // Deprecated method - return function that returns v2 client
           console.warn('createClient is deprecated in MSAL v4');
-          return () => v2Client;
+          const createClient: IMsalProvider_v2['createClient'] = () => v2Client;
+          return createClient;
         }
         case 'acquireToken': {
-          return async (req: { scopes: string[]; account?: AccountInfo }) => {
+          // Adapt v4 acquireToken to v2 signature with proper type mapping
+          const acquireToken: IMsalProvider_v2['acquireToken'] = async (req: {
+            scopes: string[];
+            account?: AccountInfo;
+          }) => {
             const result = await target.acquireToken({
               request: { scopes: req.scopes },
+              // Map v2 AccountInfo to v4 format for underlying call
               account: req.account ? mapAccountInfo(req.account) : undefined,
             });
 
-            return result || undefined; // Convert null to undefined for v2 compatibility
+            // Convert null to undefined for v2 compatibility
+            return result || undefined;
           };
+          return acquireToken;
         }
         case 'acquireAccessToken': {
-          return async (req: { scopes: string[]; account?: AccountInfo }) => {
+          // Adapt v4 acquireAccessToken to v2 signature
+          const acquireAccessToken: IMsalProvider_v2['acquireAccessToken'] = async (req: {
+            scopes: string[];
+            account?: AccountInfo;
+          }) => {
             return await target.acquireAccessToken({
               request: { scopes: req.scopes },
+              // Map v2 AccountInfo to v4 format for underlying call
               account: req.account ? mapAccountInfo(req.account) : undefined,
             });
           };
+          return acquireAccessToken;
         }
         case 'login': {
-          // Adapt v4 login to v2 signature
-          return async (options?: { onlyIfRequired?: boolean }) => {
+          // Adapt v4 login to v2 signature with optional parameters
+          const login: IMsalProvider_v2['login'] = async (options?: {
+            onlyIfRequired?: boolean;
+          }) => {
+            // Skip login if already authenticated and onlyIfRequired is true
             if (options?.onlyIfRequired && target.account) {
-              return; // Skip login if already logged in
+              return;
             }
+            // Call v4 login with empty scopes (v2 behavior)
             await target.login({ request: { scopes: [] } });
           };
+          return login;
         }
         case 'logout': {
-          return async (options?: { redirectUri?: string }) => {
+          // Adapt v4 logout to v2 signature
+          const logout: IMsalProvider_v2['logout'] = async (options?: { redirectUri?: string }) => {
             await target.logout({ redirectUri: options?.redirectUri });
           };
+          return logout;
         }
         case 'handleRedirect': {
-          return async () => {
+          // Adapt v4 handleRedirect to v2 signature
+          const handleRedirect: IMsalProvider_v2['handleRedirect'] = async () => {
             await target.handleRedirect();
-            return null; // v2 expects null after redirect
+            // v2 expects null after redirect handling
+            return null;
           };
+          return handleRedirect;
         }
         case 'createProxyProvider': {
-          return (version: MsalModuleVersion) => target.createProxyProvider(version);
+          // Generic method to create proxy providers for different versions
+          const createProxyProvider: IMsalProvider_v2['createProxyProvider'] = <T = IMsalProvider>(
+            version: string,
+          ) => target.createProxyProvider(version as MsalModuleVersion) as T;
+          return createProxyProvider;
         }
         case 'dispose': {
+          // No-op dispose method for v2 compatibility
           return () => {
             /** noop */
           };
         }
         default: {
+          // Exhaustive check to ensure all v2 properties are handled
           const exhaustiveCheck: never = prop;
-          // For any other properties, return the original value
+          // Fallback: return original property from target for any unhandled cases
           return (target as unknown as IMsalProvider)[exhaustiveCheck];
         }
       }
     },
   });
 
+  // Return the proxy cast to v2 interface for type safety
   return proxy as unknown as IMsalProvider_v2;
 }

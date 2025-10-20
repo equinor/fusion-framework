@@ -18,7 +18,7 @@ export interface IMsalProvider {
    * The current authenticated account (v2 compatibility)
    * @deprecated Use activeAccount instead
    */
-  readonly defaultAccount: AccountInfo | null;
+  readonly defaultAccount: AccountInfo | undefined;
 
   /**
    * The client configuration used to initialize this provider
@@ -51,7 +51,7 @@ export interface IMsalProvider {
   acquireToken(req: {
     scopes: string[];
     account?: AccountInfo;
-  }): Promise<AuthenticationResult | null>;
+  }): Promise<AuthenticationResult | undefined>;
 
   /**
    * Login user interactively
