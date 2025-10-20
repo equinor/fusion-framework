@@ -47,7 +47,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         case 'loginPopup': {
           return async (request?: { scopes?: string[] }) => {
             const result = await target.loginPopup({
-              scopes: request?.scopes || ['openid', 'profile', 'User.Read'],
+              scopes: request?.scopes || [],
             });
 
             return mapAuthenticationResult(result);

@@ -35,6 +35,9 @@ export function createProxyProvider<T = IMsalProvider>(
       return new Proxy(provider, {
         get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
           switch (prop) {
+            case 'version': {
+              return target.client;
+            }
             case 'client': {
               return target.client;
             }
@@ -60,7 +63,9 @@ export function createProxyProvider<T = IMsalProvider>(
               return target.createProxyProvider.bind(target);
             }
             default: {
-              return (target as any)[prop];
+              // guard that we have handled all kyes of IMsalProvider
+              const exhausted: never = prop;
+              return (target as IMsalProvider)[exhausted];
             }
           }
         },

@@ -1,5 +1,3 @@
-import type { SemanticVersion } from '@equinor/fusion-framework-module';
-
 import type {
   AcquireTokenOptions,
   AcquireTokenResult,
