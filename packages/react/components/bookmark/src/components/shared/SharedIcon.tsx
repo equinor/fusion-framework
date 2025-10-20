@@ -25,7 +25,7 @@ type SharedIconProps = {
 };
 
 export const SharedIcon = ({ createdBy, createdById }: SharedIconProps) => {
-  const myId = useFramework().modules.auth.defaultAccount?.localAccountId;
+  const myId = useFramework().modules.auth.account?.localAccountId;
 
   const isMe = createdById === myId;
 
