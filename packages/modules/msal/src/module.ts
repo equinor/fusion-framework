@@ -6,15 +6,16 @@ import {
 
 import { MsalModuleVersion } from './static';
 
-import { AuthConfigurator, AuthProvider, type AuthClientConfig, type IAuthProvider } from './v2';
+import { MsalConfigurator } from './MsalConfigurator';
+import { MsalProvider, type IMsalProvider } from './MsalProvider';
+import type { MsalClientConfig } from './MsalClient';
 
-export type MsalModule = Module<'auth', IAuthProvider, AuthConfigurator, [MsalModule]>;
-export type { AuthConfigurator, IAuthProvider };
+export type MsalModule = Module<'auth', IMsalProvider, MsalConfigurator, [MsalModule]>;
 
 export const module: MsalModule = {
   name: 'auth',
   version: new SemanticVersion(MsalModuleVersion.Latest),
-  configure: () => new AuthConfigurator(),
+  configure: () => new MsalConfigurator(),
   initialize: async (init) => {
     const config = await init.config.createConfigAsync(init);
 
@@ -24,13 +25,16 @@ export const module: MsalModule = {
     }
 
     // check if the provider is defined in the parent module
-    const hostProvider = init.ref?.auth as AuthProvider;
+    const hostProvider = init.ref?.auth;
     if (hostProvider) {
       try {
-        return hostProvider.createProxyProvider(config.version);
+        return hostProvider.createProxyProvider(
+          config.version as MsalModuleVersion,
+        ) as IMsalProvider;
       } catch (error) {
         console.error('MsalModule::Failed to create proxy provider', error);
         // just to make sure during migration that the provider is not set
+        // TODO - this is scaring, we should throw an error instead
         return hostProvider;
       }
     }
@@ -41,25 +45,27 @@ export const module: MsalModule = {
       );
     }
 
+    await config.client.initialize();
+
     // create a new provider
-    const authProvider = new AuthProvider(config.client);
+    const provider = new MsalProvider(config) as IMsalProvider;
 
     if (config.requiresAuth) {
-      await authProvider.handleRedirect();
-      await authProvider.login({ onlyIfRequired: true });
+      await provider.handleRedirect();
+      await provider.login({ request: { scopes: [] } });
     }
 
-    return authProvider;
+    return provider;
   },
 };
 
 export type AuthConfigFn = (builder: {
-  setClientConfig: (config: AuthClientConfig) => void;
+  setClientConfig: (config: MsalClientConfig) => void;
   setRequiresAuth: (requiresAuth: boolean) => void;
 }) => void;
 
 export const enableMSAL = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // @biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
   configure?: AuthConfigFn,
 ): void => {
