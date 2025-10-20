@@ -1,4 +1,6 @@
 import type { EndSessionRequest } from '@azure/msal-browser';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import { TelemetryLevel, TelemetryType } from '@equinor/fusion-framework-module-telemetry';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 import { MsalModuleVersion } from './static';
@@ -15,6 +17,7 @@ import type {
 } from './MsalClient.interface';
 
 import type { AccountInfo } from './types';
+import { resolveVersion } from './versioning/resolve-version';
 
 export type { IMsalProvider };
 
@@ -45,6 +48,9 @@ export type { IMsalProvider };
 export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsalProvider {
   #client: IMsalClient;
   #redirectUri: string;
+  #telemetry?: ITelemetryProvider;
+  #telemetryMetadata: Record<string, unknown>;
+  #telemetryScope: string[] = ['framework', 'authentication'];
 
   get client(): IMsalClient {
     return this.#client;
@@ -64,21 +70,52 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     }
     this.#client = config.client;
     this.#redirectUri = config.redirectUri || '';
+    this.#telemetry = config.telemetry;
+    this.#telemetryMetadata = {
+      version: MsalModuleVersion.Latest,
+      clientId: config.client.clientId,
+      tenantId: config.client.tenantId,
+      ...(config.telemetryMetadata ?? {}),
+    };
   }
 
   /**
    * Acquire an access token for the specified scopes
    */
   async acquireAccessToken(options: AcquireTokenOptions): Promise<string | undefined> {
-    const result = await this.#client.acquireToken(options);
-    return result?.accessToken ?? undefined;
+    const { accessToken } = (await this.acquireToken(options)) ?? {};
+    return accessToken;
   }
 
   /**
    * Acquire full authentication result
    */
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
-    return await this.#client.acquireToken(options);
+    try {
+      const measurement = this.#telemetry?.measure({
+        name: 'msal.acquireToken',
+        level: TelemetryLevel.Information,
+        scope: this.#telemetryScope,
+        properties: {
+          behavior: options.behavior,
+          silent: options.silent,
+          scopes: options.scopes,
+        },
+        metadata: this.#telemetryMetadata,
+      });
+      const result = await this.#client.acquireToken(options);
+      measurement?.measure();
+      return result;
+    } catch (error) {
+      this.#telemetry?.trackException({
+        name: 'msal.acquireAccessToken.error',
+        exception: error as Error,
+        level: TelemetryLevel.Error,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+      });
+      throw error;
+    }
   }
 
   /**
@@ -142,22 +179,77 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     // if no scopes are provided, use an empty array
     if (!request.scopes) {
-      console.warn('No scopes provided, using []');
       request.scopes = [];
+      this.#telemetry?.trackEvent({
+        name: 'msal.login.missing_scope',
+        level: TelemetryLevel.Warning,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+        properties: {
+          behavior: behavior,
+          silent: silent,
+        },
+      });
     }
+
+    this.#telemetry?.trackEvent({
+      name: 'msal.login',
+      level: TelemetryLevel.Information,
+      scope: this.#telemetryScope,
+      metadata: this.#telemetryMetadata,
+      properties: {
+        behavior: behavior,
+        silent: silent,
+        scopes: request.scopes,
+      },
+    });
 
     // if silent is true and a login hint is provided, try to login silently
     if (silent && request.loginHint) {
       try {
-        return await this.#client.ssoSilent(request);
+        const measurement = this.#telemetry?.measure({
+          name: 'msal.login.silent',
+          level: TelemetryLevel.Debug,
+          scope: this.#telemetryScope,
+          metadata: this.#telemetryMetadata,
+          properties: {
+            loginHint: request.loginHint,
+            scopes: request.scopes,
+          },
+        });
+        const result = await this.#client.ssoSilent(request);
+        measurement?.measure();
+        return result;
       } catch (error) {
         console.warn('Silent login failed, falling back to interactive:', error);
+        this.#telemetry?.trackException({
+          name: 'msal.login.silent.error',
+          exception: error as Error,
+          level: TelemetryLevel.Warning,
+          metadata: this.#telemetryMetadata,
+          properties: {
+            loginHint: request.loginHint,
+            scopes: request.scopes,
+          },
+        });
       }
     }
 
     // if behavior is popup, login via popup
     if (behavior === 'popup') {
-      return await this.#client.loginPopup(request);
+      const measurement = this.#telemetry?.measure({
+        name: 'msal.login.popup',
+        level: TelemetryLevel.Debug,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+        properties: {
+          loginHint: request.loginHint,
+          scopes: request.scopes,
+        },
+      });
+      const result = await this.#client.loginPopup(request);
+      measurement?.measure();
+      return result;
     } else {
       // if behavior is redirect, login via redirect
       await this.#client.loginRedirect(request);
@@ -171,7 +263,12 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     const account = options?.account || this.account;
 
     if (!account) {
-      console.warn('No account available for logout');
+      this.#telemetry?.trackEvent({
+        name: 'msal.logout.no_account',
+        level: TelemetryLevel.Warning,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+      });
       return;
     }
 
@@ -179,6 +276,17 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       account: account,
       postLogoutRedirectUri: options?.redirectUri,
     };
+
+    this.#telemetry?.trackEvent({
+      name: 'msal.logout',
+      level: TelemetryLevel.Information,
+      scope: this.#telemetryScope,
+      metadata: this.#telemetryMetadata,
+      properties: {
+        account: account.username,
+        redirectUri: options?.redirectUri,
+      },
+    });
 
     await this.#client.logoutRedirect(logoutRequest);
   }
@@ -188,13 +296,34 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    */
   async handleRedirect(): Promise<void> {
     if (window.location.pathname === this.#redirectUri) {
-      const logger = this.client.getLogger();
       const redirectUri = this.#redirectUri;
       const requestOrigin = this.#client.requestOrigin;
 
+      this.#telemetry?.trackEvent({
+        name: 'msal.handleRedirect',
+        level: TelemetryLevel.Information,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+        properties: {
+          redirectUri,
+          requestOrigin,
+        },
+      });
+
       await this.client.handleRedirectPromise();
       if (requestOrigin === redirectUri) {
-        logger.warning(`detected callback loop from url ${this.#redirectUri}, redirecting to root`);
+        this.#telemetry?.trackException({
+          name: 'msal.handleRedirect.loopDetected',
+          exception: new Error(
+            `detected callback loop from url ${this.#redirectUri}, redirecting to root`,
+          ),
+          level: TelemetryLevel.Warning,
+          scope: this.#telemetryScope,
+          metadata: this.#telemetryMetadata,
+          properties: {
+            redirectUri,
+          },
+        });
         window.location.replace('/');
       } else {
         window.location.replace(requestOrigin || '/');
@@ -206,6 +335,23 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * Create a proxy provider for version compatibility
    */
   createProxyProvider<T = IMsalProvider>(version: string): T {
+    const resolvedVersion = resolveVersion(version);
+    this.#telemetry?.trackEvent({
+      name: 'msal.createProxyProvider.version_resolved',
+      level: TelemetryLevel.Information,
+      scope: this.#telemetryScope,
+      metadata: this.#telemetryMetadata,
+      properties: resolvedVersion,
+    });
+    if (!resolvedVersion.satisfiesLatest) {
+      this.#telemetry?.trackEvent({
+        name: 'msal.createProxyProvider.version_not_satisfies_latest',
+        level: TelemetryLevel.Warning,
+        scope: this.#telemetryScope,
+        metadata: this.#telemetryMetadata,
+        properties: resolvedVersion,
+      });
+    }
     return createProxyProvider(this, version);
   }
 }

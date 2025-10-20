@@ -3,6 +3,7 @@ import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 import { MsalModuleVersion } from './static';
 import semver from 'semver';
 import type { IMsalProvider } from './MsalProvider.interface';
+import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
 import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
 
 const MsalConfigSchema = z.object({
@@ -11,6 +12,8 @@ const MsalConfigSchema = z.object({
   requiresAuth: z.boolean().optional(),
   redirectUri: z.string().optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
+  telemetry: z.custom<ITelemetryProvider>().optional(),
+  telemetryMetadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type MsalConfig = z.infer<typeof MsalConfigSchema>;
@@ -36,6 +39,13 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   constructor() {
     super();
     this._set('version', async () => this.version);
+    this._set('telemetry', async (args) => {
+      if (args.hasModule('telemetry')) {
+        const telemetry = await args.requireInstance('telemetry');
+        return telemetry;
+      }
+      return undefined;
+    });
   }
 
   /**
@@ -73,6 +83,22 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    */
   setClient(client: IMsalClient): this {
     this._set('client', async () => client);
+    return this;
+  }
+
+  /**
+   * Sets an optional telemetry provider used for emitting authentication measurements and events.
+   */
+  setTelemetry(telemetry: ITelemetryProvider | undefined): this {
+    this._set('telemetry', async () => telemetry);
+    return this;
+  }
+
+  /**
+   * Sets optional metadata to be included on all MSAL telemetry events.
+   */
+  setTelemetryMetadata(metadata: Record<string, unknown> | undefined): this {
+    this._set('telemetryMetadata', async () => metadata);
     return this;
   }
 
