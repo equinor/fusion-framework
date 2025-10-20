@@ -1,6 +1,6 @@
 import type { IMsalProvider } from '../MsalProvider.interface';
 import type { IMsalProvider as IMsalProvider_v2 } from './MsalProvider.interface';
-import type { AccountInfo } from './types';
+import type { AccountInfo as AccountInfo_v2 } from './types';
 import { createProxyClient } from './create-proxy-client';
 import { mapAccountInfo } from './map-account-info';
 import type { MsalModuleVersion } from '../static';
@@ -66,12 +66,11 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
           // Adapt v4 acquireToken to v2 signature with proper type mapping
           const acquireToken: IMsalProvider_v2['acquireToken'] = async (req: {
             scopes: string[];
-            account?: AccountInfo;
+            account?: AccountInfo_v2;
           }) => {
             const result = await target.acquireToken({
               request: { scopes: req.scopes },
-              // Map v2 AccountInfo to v4 format for underlying call
-              account: req.account ? mapAccountInfo(req.account) : undefined,
+              account: req.account,
             });
 
             // Convert null to undefined for v2 compatibility
@@ -83,12 +82,11 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
           // Adapt v4 acquireAccessToken to v2 signature
           const acquireAccessToken: IMsalProvider_v2['acquireAccessToken'] = async (req: {
             scopes: string[];
-            account?: AccountInfo;
+            account?: AccountInfo_v2;
           }) => {
             return await target.acquireAccessToken({
               request: { scopes: req.scopes },
-              // Map v2 AccountInfo to v4 format for underlying call
-              account: req.account ? mapAccountInfo(req.account) : undefined,
+              account: req.account,
             });
           };
           return acquireAccessToken;
@@ -140,7 +138,7 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
           // Exhaustive check to ensure all v2 properties are handled
           const exhaustiveCheck: never = prop;
           // Fallback: return original property from target for any unhandled cases
-          return (target as unknown as IMsalProvider)[exhaustiveCheck];
+          return (target as IMsalProvider)[exhaustiveCheck];
         }
       }
     },
