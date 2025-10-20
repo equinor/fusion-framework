@@ -2,6 +2,8 @@ import {
   PublicClientApplication,
   type Configuration,
   type EndSessionRequest,
+  type PopupRequest,
+  type RedirectRequest,
 } from '@azure/msal-browser';
 
 import type {
@@ -103,17 +105,25 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
   }
 
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
-    const {
-      request,
-      account = this.getActiveAccount(),
-      behavior = 'popup',
-      silent = true,
-    } = options;
+    const { account = this.getActiveAccount(), behavior = 'popup', silent = true } = options;
+
+    // Handle discriminated union: determine if it's legacy or modern approach
+    let tokenRequest: PopupRequest | RedirectRequest;
+
+    if ('scopes' in options && options.scopes) {
+      // Legacy approach: convert scopes to request
+      tokenRequest = { scopes: options.scopes };
+    } else if ('request' in options && options.request) {
+      // Modern approach: use provided request
+      tokenRequest = options.request;
+    } else {
+      throw new Error('Either scopes or request must be provided');
+    }
 
     if (silent && account) {
       try {
         return await this.acquireTokenSilent({
-          ...request,
+          ...tokenRequest,
           account: account,
         });
       } catch (error) {
@@ -123,9 +133,9 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
 
     switch (behavior) {
       case 'popup':
-        return await this.acquireTokenPopup(request);
+        return await this.acquireTokenPopup(tokenRequest);
       case 'redirect':
-        await this.acquireTokenRedirect(request);
+        await this.acquireTokenRedirect(tokenRequest);
     }
   }
 }

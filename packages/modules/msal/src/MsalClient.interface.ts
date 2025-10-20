@@ -8,12 +8,27 @@ import type {
 
 export type AuthBehavior = 'popup' | 'redirect';
 
-export type AcquireTokenOptions = {
-  request: PopupRequest | RedirectRequest;
+// Base interface for common properties
+interface BaseAcquireTokenOptions {
   account?: AccountInfo;
   behavior?: AuthBehavior;
   silent?: boolean;
-};
+}
+
+// Legacy interface using direct scopes property
+export interface LegacyAcquireTokenOptions extends BaseAcquireTokenOptions {
+  scopes: string[];
+  request?: never; // Prevent mixing with request-based approach
+}
+
+// Modern interface using MSAL v4 request structure
+export interface ModernAcquireTokenOptions extends BaseAcquireTokenOptions {
+  request: PopupRequest | RedirectRequest;
+  scopes?: never; // Prevent mixing with legacy scopes approach
+}
+
+// Union type that ensures either legacy OR modern approach is used
+export type AcquireTokenOptions = LegacyAcquireTokenOptions | ModernAcquireTokenOptions;
 
 export type AcquireTokenResult = AuthenticationResult | null | undefined;
 

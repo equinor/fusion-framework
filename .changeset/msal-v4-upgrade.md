@@ -25,15 +25,25 @@ Upgraded from MSAL v2 to MSAL v4 with full backward compatibility, addressing th
 
 **Current code works unchanged:**
 ```typescript
-// This still works exactly the same
-const result = await client.acquireTokenSilent({ scopes: ['User.Read'], account });
+// Framework configuration still works exactly the same
+const framework = await createFramework({
+  modules: [enableMSAL()]
+});
+
+// Provider usage remains unchanged
+const token = await framework.modules.auth.acquireToken({ scopes: ['User.Read'] });
 ```
 
 **New v4 features available:**
 ```typescript
-// Enhanced login with behavior control
-await client.login({ 
-  request: { scopes: ['User.Read'] }, 
+// Enhanced configuration with new options
+const framework = await createFramework({
+  modules: [enableMSAL()]
+});
+
+// Improved token acquisition with MSAL v4 request structure
+const token = await framework.modules.auth.acquireToken({ 
+  request: { scopes: ['User.Read'] },
   behavior: 'popup',
   silent: true 
 });

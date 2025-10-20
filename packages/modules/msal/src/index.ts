@@ -3,6 +3,7 @@ export {
   configureMsal,
   enableMSAL,
   type MsalModule,
+  type AuthConfigFn,
 } from './module';
 
 export type { IMsalProvider } from './MsalProvider.interface';
