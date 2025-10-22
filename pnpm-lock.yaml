@@ -1009,11 +1009,11 @@ importers:
         specifier: workspace:^
         version: link:../module
       ag-grid-community:
-        specifier: 34.2.0
-        version: 34.2.0
+        specifier: 34.3.0
+        version: 34.3.0
       ag-grid-enterprise:
-        specifier: 34.2.0
-        version: 34.2.0
+        specifier: 34.3.0
+        version: 34.3.0
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -1432,14 +1432,14 @@ importers:
         specifier: workspace:*
         version: link:../../modules/ag-grid
       ag-grid-community:
-        specifier: 34.2.0
-        version: 34.2.0
+        specifier: 34.3.0
+        version: 34.3.0
       ag-grid-enterprise:
-        specifier: 34.2.0
-        version: 34.2.0
+        specifier: 34.3.0
+        version: 34.3.0
       ag-grid-react:
-        specifier: 34.2.0
-        version: 34.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: 34.3.0
+        version: 34.3.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     devDependencies:
       '@equinor/fusion-framework-react-module':
         specifier: workspace:^
@@ -5616,29 +5616,29 @@ packages:
     resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
     engines: {node: '>=12.0'}
 
-  ag-charts-community@12.2.0:
-    resolution: {integrity: sha512-j5IYDtePqOde5LdnmpcKGSkgqhWRCke4W3uJvIFRFDQrFmI+hrnIRFgoea6+QBmtsKcho2vv5N8FqHOwN/udOw==}
+  ag-charts-community@12.3.0:
+    resolution: {integrity: sha512-D+2Dfp7fZHLcvlH7oPUiA0hVeBD1tmnBJQNIo61wN9feJsKQtV16Hx0xiYxV0g7xJ+iUp+0vi2a6bXx4uKsGbQ==}
 
-  ag-charts-core@12.2.0:
-    resolution: {integrity: sha512-3hTpW9MGJCyvonfHHOrIeN3VPW7Crses9Os2W/TFJzRqFD0O4Zf0lzIYTQFfPCQRhCLM8Ch211XvoCkX/Goo5g==}
+  ag-charts-core@12.3.0:
+    resolution: {integrity: sha512-13WfzbGxknSEp4Q8YriOPGcP+3w4fl81VaUuSJMITJK6o1BPIKZFUBNkfT8Ep5ZH93cfSCteY+Z2acBvdhIamA==}
 
-  ag-charts-enterprise@12.2.0:
-    resolution: {integrity: sha512-GKboOSRIj14vBY68ueOBJJgSe/s76Ui8P0S0vU5xmfdi3xfnAC8xVIIEeMmJyZ2Z4NHsP/HxJlj1gXF/t4ZDWw==}
+  ag-charts-enterprise@12.3.0:
+    resolution: {integrity: sha512-54XdbLCkC/j5nE/MrnGEp2h67q46ud4JS/CwoeB1xWIuBeCZKSn+uhDxiWG5YlcjvsoDGUSwRq5rVXKePU8MuQ==}
 
-  ag-charts-locale@12.2.0:
-    resolution: {integrity: sha512-xwMTzoNi/SAV6EwApRuBXOc3K+Thi/ijsKIkIhaGPmc3VPkCVCWW/TcAontiZ3dXUgxsL3jXBNyarH7f+XzWkQ==}
+  ag-charts-locale@12.3.0:
+    resolution: {integrity: sha512-4ifdXX8Q6sjBAf85Jc2RKcl4A1lrk60jPrZwi9ACY+luFkKfxCujga66okP1JFERN31SigJRTraoXW91HFikIg==}
 
-  ag-charts-types@12.2.0:
-    resolution: {integrity: sha512-d2qQrQirt9wP36YW5HPuOvXsiajyiFnr1CTsoCbs02bavPDz7Lk2jHp64+waM4YKgXb3GN7gafbBI9Qgk33BmQ==}
+  ag-charts-types@12.3.0:
+    resolution: {integrity: sha512-wvlhAgQNkXrmSSJJqeEMP4a8WJviAgphuMtNt7073sBOI0LVdcgAV7kyyJOYjbYB8S1SqKyPP0jdbwROOmQBCQ==}
 
-  ag-grid-community@34.2.0:
-    resolution: {integrity: sha512-peS7THEMYwpIrwLQHmkRxw/TlOnddD/F5A88RqlBxf8j+WqVYRWMOOhU5TqymGcha7z2oZ8IoL9ROl3gvtdEjg==}
+  ag-grid-community@34.3.0:
+    resolution: {integrity: sha512-Y1N4C5aNrY3e/ORFBcanD8eT4BcA5IrnGMB7iIet3rd749dKZ8KX3Cg7+sdKnRev3IGw0L2JbX7AYNgdNxsbpA==}
 
-  ag-grid-enterprise@34.2.0:
-    resolution: {integrity: sha512-ldQl5mB8dyzad3/z0fmtQRBP8+dGw8+8Po/WmkJOPDqtAQuMpRmp5+ICWGTlql0pMLKocll2jccQKJVbHDXfoA==}
+  ag-grid-enterprise@34.3.0:
+    resolution: {integrity: sha512-z/wBJiLF52HLhdSZBF15TcmqSAywsXXXGCCZ3ikkpLpK6xj7AmlMLr9Y13x524rb08Gsr3d/NumieNRdH7+uBg==}
 
-  ag-grid-react@34.2.0:
-    resolution: {integrity: sha512-dLKFw6hz75S0HLuZvtcwjm+gyiI4gXVzHEu7lWNafWAX0mb8DhogEOP5wbzAlsN6iCfi7bK/cgZImZFjenlqwg==}
+  ag-grid-react@34.3.0:
+    resolution: {integrity: sha512-PU4KLTDC7ay8zWziIAsAx5yuG13Hah6towh8unf90dg0TyCds0fSavgXo1/K5YinIe2TscHYSBKpM//FJiaycg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -8341,6 +8341,7 @@ packages:
   sitemap@8.0.0:
     resolution: {integrity: sha512-+AbdxhM9kJsHtruUF39bwS/B0Fytw6Fr1o4ZAIAEqA6cke2xcoO2GleBw9Zw7nRzILVEgz7zBM5GiTJjie1G9A==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    deprecated: 'SECURITY: Multiple vulnerabilities fixed in 8.0.1 (XML injection, path traversal, command injection, protocol injection). Upgrade immediately: npm install sitemap@8.0.1'
     hasBin: true
 
   slash@3.0.0:
@@ -14488,43 +14489,43 @@ snapshots:
 
   adm-zip@0.5.16: {}
 
-  ag-charts-community@12.2.0:
+  ag-charts-community@12.3.0:
     dependencies:
-      ag-charts-core: 12.2.0
-      ag-charts-locale: 12.2.0
-      ag-charts-types: 12.2.0
+      ag-charts-core: 12.3.0
+      ag-charts-locale: 12.3.0
+      ag-charts-types: 12.3.0
     optional: true
 
-  ag-charts-core@12.2.0:
+  ag-charts-core@12.3.0:
     dependencies:
-      ag-charts-types: 12.2.0
+      ag-charts-types: 12.3.0
     optional: true
 
-  ag-charts-enterprise@12.2.0:
+  ag-charts-enterprise@12.3.0:
     dependencies:
-      ag-charts-community: 12.2.0
-      ag-charts-core: 12.2.0
+      ag-charts-community: 12.3.0
+      ag-charts-core: 12.3.0
     optional: true
 
-  ag-charts-locale@12.2.0:
+  ag-charts-locale@12.3.0:
     optional: true
 
-  ag-charts-types@12.2.0: {}
+  ag-charts-types@12.3.0: {}
 
-  ag-grid-community@34.2.0:
+  ag-grid-community@34.3.0:
     dependencies:
-      ag-charts-types: 12.2.0
+      ag-charts-types: 12.3.0
 
-  ag-grid-enterprise@34.2.0:
+  ag-grid-enterprise@34.3.0:
     dependencies:
-      ag-grid-community: 34.2.0
+      ag-grid-community: 34.3.0
     optionalDependencies:
-      ag-charts-community: 12.2.0
-      ag-charts-enterprise: 12.2.0
+      ag-charts-community: 12.3.0
+      ag-charts-enterprise: 12.3.0
 
-  ag-grid-react@34.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  ag-grid-react@34.3.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
-      ag-grid-community: 34.2.0
+      ag-grid-community: 34.3.0
       prop-types: 15.8.1
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
