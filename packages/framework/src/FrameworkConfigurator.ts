@@ -1,7 +1,6 @@
 import {
   type AnyModule,
   ModulesConfigurator,
-  type ModuleEvent,
 } from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
@@ -24,8 +23,6 @@ import telemetry, { enableTelemetry } from '@equinor/fusion-framework-module-tel
 import type { FusionModules } from './types.js';
 import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
-import { map } from 'rxjs/operators';
-import type { Observable } from 'rxjs';
 
 /**
  * Module configurator for Framework modules
