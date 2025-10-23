@@ -54,7 +54,7 @@ export async function registerServiceWorker(
           }
 
           // request a token from the MSAL module
-          const token = await framework.auth.acquireToken({ scopes });
+          const token = await framework.auth.acquireToken({ request: { scopes } });
 
           if (!token) {
             const error = new Error('Failed to acquire token');
