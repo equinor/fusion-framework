@@ -49,5 +49,8 @@ export interface IAuthProvider {
    * @remarks
    * This is the primary method for obtaining tokens for API calls or resource access.
    */
-  acquireAccessToken(options: { request: { scopes: string[] }; interactive?: boolean }): Promise<string>;
+  acquireAccessToken(options: {
+    request: { scopes: string[] };
+    interactive?: boolean;
+  }): Promise<string>;
 }

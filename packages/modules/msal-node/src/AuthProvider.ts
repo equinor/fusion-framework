@@ -94,7 +94,9 @@ export class AuthProvider implements IAuthProvider {
    * @throws {@link NoAccountsError} If no accounts are found in the cache and interactive login is not allowed.
    * @throws {@link SilentTokenAcquisitionError} If an error occurs during silent token acquisition.
    */
-  public async acquireToken(options: { request: { scopes: string[] } }): Promise<AuthenticationResult> {
+  public async acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<AuthenticationResult> {
     const account = await this.getAccount();
     if (!account) {
       throw new NoAccountsError('No accounts found in cache');

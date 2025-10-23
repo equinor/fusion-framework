@@ -1,7 +1,4 @@
-import {
-  type AnyModule,
-  ModulesConfigurator,
-} from '@equinor/fusion-framework-module';
+import { type AnyModule, ModulesConfigurator } from '@equinor/fusion-framework-module';
 
 import event from '@equinor/fusion-framework-module-event';
 
