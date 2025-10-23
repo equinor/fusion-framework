@@ -33,7 +33,7 @@ export class LegacyAuthContainer extends AuthContainer {
   }
 
   get account(): AccountInfo | undefined {
-    return this.#auth.defaultAccount;
+    return this.#auth.account || undefined;
   }
 
   public async requiresAuth(): Promise<void> {
@@ -43,14 +43,13 @@ export class LegacyAuthContainer extends AuthContainer {
     const valid = account && (account.idTokenClaims as { exp: number })?.exp > Date.now() / 1000;
     if (!valid) {
       try {
-        await this.#auth.login();
+        await this.#auth.login({ request: { scopes: [] } });
       } catch (e) {
         const { errorCode } = e as BrowserAuthError;
         if (errorCode === 'interaction_in_progress') {
-          if (!(await this.#auth.handleRedirect())) {
-            window.sessionStorage.clear();
-            window.location.reload();
-          }
+          await this.#auth.handleRedirect();
+          window.sessionStorage.clear();
+          window.location.reload();
         }
       }
     }
@@ -59,7 +58,8 @@ export class LegacyAuthContainer extends AuthContainer {
   async loginAsync(clientId: string): Promise<void> {
     await this.#auth.handleRedirect();
     if (this._registeredApps[clientId]) {
-      return this.#auth.login();
+      await this.#auth.login({ request: { scopes: [] } });
+      return;
     }
     console.trace(`FusionAuthContainer::loginAsync for client id [${clientId}]`);
     return super.loginAsync(clientId);
