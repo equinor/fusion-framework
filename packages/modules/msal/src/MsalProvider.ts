@@ -74,6 +74,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
+    
+    // Validate required client configuration
     if (!config.client) {
       const error = new Error(
         'Client is required, please provide a valid client in the configuration',
@@ -89,10 +91,13 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async initialize(): Promise<void> {
     const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
     await this.#client.initialize();
+    
+    // Only attempt authentication if this provider requires it
     if (this.#requiresAuth) {
-      // if this is a auth request callback, handle the redirect and set the active account
+      // First, check if we're returning from an authentication redirect
       const handleRedirectResult = await this.handleRedirect();
       if (handleRedirectResult?.account) {
+        // Successfully authenticated via redirect - set as active account
         this.#client.setActiveAccount(handleRedirectResult.account);
         this._trackEvent('initialize.active-account-set-by-callback', TelemetryLevel.Information, {
           properties: {
@@ -100,7 +105,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           },
         });
       } else if (!this.#client.hasValidClaims) {
-        // we might need to set another scope here, but we don't know which one
+        // No valid session found - attempt automatic login
+        // Note: Using empty scopes here as we don't know what scopes the app needs yet
         const loginResult = await this.login({ request: { scopes: [] } });
         if (loginResult?.account) {
           this.#client.setActiveAccount(loginResult.account);
@@ -116,7 +122,21 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   }
 
   /**
-   * Acquire an access token for the specified scopes
+   * Acquire an access token string for the specified scopes
+   * 
+   * @param options - Token acquisition options (same as acquireToken)
+   * @returns Promise resolving to access token string, or undefined if acquisition fails
+   * 
+   * @example
+   * ```typescript
+   * const token = await msalProvider.acquireAccessToken({
+   *   request: { scopes: ['api.read'] }
+   * });
+   * if (token) {
+   *   // Use token for API calls
+   *   fetch('/api/data', { headers: { Authorization: `Bearer ${token}` } });
+   * }
+   * ```
    */
   async acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined> {
     const { accessToken } = (await this.acquireToken(options)) ?? {};
@@ -124,28 +144,58 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   }
 
   /**
-   * Acquire full authentication result
+   * Acquire full authentication result for the specified scopes
+   * 
+   * @param options - Token acquisition options including scopes, behavior, and silent mode
+   * @param options.request.scopes - Array of OAuth scopes to request access for
+   * @param options.scopes - Legacy scopes format (deprecated, use request.scopes)
+   * @param options.behavior - Authentication behavior ('redirect' or 'popup')
+   * @param options.silent - Whether to attempt silent token acquisition first
+   * @returns Promise resolving to authentication result containing access token and account info
+   * 
+   * @remark Empty scopes are currently tracked as telemetry exceptions but execution continues for monitoring purposes. 
+   * This behavior will be changed to throw exceptions once sufficient metrics are collected.
+   * 
+   * @example
+   * ```typescript
+   * // Modern API format
+   * const result = await msalProvider.acquireToken({
+   *   request: { scopes: ['user.read', 'api.write'] },
+   *   behavior: 'redirect',
+   *   silent: true
+   * });
+   * 
+   * // Legacy format (deprecated)
+   * const result = await msalProvider.acquireToken({
+   *   scopes: ['user.read'],
+   *   silent: false
+   * });
+   * ```
    */
   async acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult> {
     const { behavior = 'redirect', silent = true } = options;
     const account = this.account ?? undefined;
+    // Extract scopes from either new format (request.scopes) or legacy format (scopes)
     const scopes = options.request?.scopes ?? options?.scopes ?? [];
 
     const telemetryProperties = { behavior, silent, scopes };
 
+    // Track usage of deprecated legacy scopes format for migration monitoring
     if (options.scopes) {
       this._trackEvent('acquireToken.legacy-scopes-provided', TelemetryLevel.Warning, {
         properties: telemetryProperties,
       });
     }
 
+    // Handle empty scopes - currently monitoring for telemetry, will throw in future
     if (scopes.length === 0) {
       const exception = new Error('Empty scopes provided, not allowed');
       this._trackException('acquireToken.missing-scope', TelemetryLevel.Warning, {
         exception,
         properties: telemetryProperties,
       });
-      throw exception;
+      // TODO: throw exception when sufficient metrics are collected
+      // This allows us to monitor how often empty scopes are provided before enforcing validation
     }
 
     try {
@@ -237,15 +287,18 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       properties: telemetryProperties,
     });
 
-    // if silent is true and a login hint is provided, try to login silently
+    // Attempt silent authentication first if conditions are met
+    // This provides better UX by avoiding unnecessary popups/redirects
     if (canLoginSilently) {
       try {
         return await this.#client.ssoSilent(request);
       } catch (error) {
+        // Silent login failed - track for monitoring but continue to interactive flow
         this._trackException('login.silent-failed', TelemetryLevel.Warning, {
           exception: error as Error,
           properties: telemetryProperties,
         });
+        // Fall through to interactive authentication
       }
     }
 
@@ -273,22 +326,26 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
 
     try {
+      // Logout the specific account (or current account if none specified)
       await this.#client.logout({ account: this.account ?? undefined, ...options });
-      return true;
+      return true; // Success
     } catch (error) {
+      // Logout failed - track error but don't throw to avoid breaking app flow
       this._trackException('logout.failed', TelemetryLevel.Error, {
         exception: error as Error,
       });
     }
-    return false;
+    return false; // Failed
   }
 
   /**
    * Handle authentication redirect
    */
   async handleRedirect(): Promise<AuthenticationResult | null> {
+    // Process any pending redirect from authentication flow
     const result = await this.client.handleRedirectPromise();
     if (result) {
+      // Track successful redirect completion for monitoring
       this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
         properties: {
           username: result.account?.username,
@@ -302,20 +359,21 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * Create a proxy provider for version compatibility
    */
   createProxyProvider<T = IMsalProvider>(version: string): T {
+    // Track proxy provider creation for compatibility monitoring
     this._trackEvent('createProxyProvider', TelemetryLevel.Debug, {
       properties: {
         version: version,
       },
     });
 
-    // resolve the required version
+    // Parse and validate the requested version string
     const resolvedVersion = resolveVersion(version);
 
     this._trackEvent('createProxyProvider.version-resolved', TelemetryLevel.Information, {
       properties: resolvedVersion,
     });
 
-    // if the version is not the latest, track a warning
+    // Warn if using outdated version - helps track migration progress
     if (!resolvedVersion.satisfiesLatest) {
       this._trackEvent('createProxyProvider.outdated-version', TelemetryLevel.Warning, {
         properties: resolvedVersion,
