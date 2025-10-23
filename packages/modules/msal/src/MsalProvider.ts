@@ -74,7 +74,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     });
     this.#requiresAuth = config.requiresAuth;
     this.#telemetry = config.telemetry;
-    
+
     // Validate required client configuration
     if (!config.client) {
       const error = new Error(
@@ -91,7 +91,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async initialize(): Promise<void> {
     const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
     await this.#client.initialize();
-    
+
     // Only attempt authentication if this provider requires it
     if (this.#requiresAuth) {
       // First, check if we're returning from an authentication redirect
@@ -123,10 +123,10 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
   /**
    * Acquire an access token string for the specified scopes
-   * 
+   *
    * @param options - Token acquisition options (same as acquireToken)
    * @returns Promise resolving to access token string, or undefined if acquisition fails
-   * 
+   *
    * @example
    * ```typescript
    * const token = await msalProvider.acquireAccessToken({
@@ -145,17 +145,17 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
   /**
    * Acquire full authentication result for the specified scopes
-   * 
+   *
    * @param options - Token acquisition options including scopes, behavior, and silent mode
    * @param options.request.scopes - Array of OAuth scopes to request access for
    * @param options.scopes - Legacy scopes format (deprecated, use request.scopes)
    * @param options.behavior - Authentication behavior ('redirect' or 'popup')
    * @param options.silent - Whether to attempt silent token acquisition first
    * @returns Promise resolving to authentication result containing access token and account info
-   * 
-   * @remark Empty scopes are currently tracked as telemetry exceptions but execution continues for monitoring purposes. 
+   *
+   * @remark Empty scopes are currently tracked as telemetry exceptions but execution continues for monitoring purposes.
    * This behavior will be changed to throw exceptions once sufficient metrics are collected.
-   * 
+   *
    * @example
    * ```typescript
    * // Modern API format
@@ -164,7 +164,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    *   behavior: 'redirect',
    *   silent: true
    * });
-   * 
+   *
    * // Legacy format (deprecated)
    * const result = await msalProvider.acquireToken({
    *   scopes: ['user.read'],
