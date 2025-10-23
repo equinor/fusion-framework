@@ -22,7 +22,7 @@ import services from '@equinor/fusion-framework-module-services';
 import telemetry, { enableTelemetry } from '@equinor/fusion-framework-module-telemetry';
 
 import type { FusionModules } from './types.js';
-import type { AuthClientConfig } from '@equinor/fusion-framework-module-msal/v2';
+import type { MsalClientConfig } from '@equinor/fusion-framework-module-msal';
 import { version } from './version.js';
 import { map } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
@@ -161,7 +161,7 @@ export class FrameworkConfigurator<
    * configurator.configureMsal(config, false);
    * ```
    */
-  public configureMsal(cb_or_config: AuthConfigFn | AuthClientConfig, requiresAuth = true) {
+  public configureMsal(cb_or_config: AuthConfigFn | MsalClientConfig, requiresAuth = true) {
     this.addConfig({
       module: auth,
       configure: (builder) => {

@@ -3,5 +3,5 @@ import { useFramework } from '../useFramework';
 
 export const useCurrentUser = (): AccountInfo | undefined => {
   const framework = useFramework();
-  return framework.modules.auth.defaultAccount;
+  return framework.modules.auth.account || undefined;
 };
