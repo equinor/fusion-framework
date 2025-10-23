@@ -1,5 +1,6 @@
 import {
   PublicClientApplication,
+  type SilentRequest,
   type Configuration,
   type EndSessionRequest,
   type PopupRequest,
@@ -8,11 +9,11 @@ import {
 
 import type {
   IMsalClient,
-  AcquireTokenOptions,
   AcquireTokenResult,
   LoginOptions,
   LogoutOptions,
   LoginResult,
+  AcquireTokenOptions,
 } from './MsalClient.interface';
 
 export type { IMsalClient };
@@ -33,12 +34,6 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     this.#clientId = config.auth?.clientId;
   }
 
-  get requestOrigin(): string | null {
-    // biome-ignore lint/suspicious/noTsIgnore: suppressing, since this exists
-    // @ts-ignore - base class ClientApplication is not exported from @azure/msal-browser
-    return this.browserStorage.getTemporaryCache('request.origin', true) as string | null;
-  }
-
   get tenantId(): string | undefined {
     return this.#tenantId;
   }
@@ -52,52 +47,44 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
     return Number(idTokenClaims?.exp) > Number(Math.ceil(Date.now() / 1000));
   }
 
-  async login(options: LoginOptions): Promise<LoginResult> {
-    const {
-      request,
-      // by default, use popup behavior
-      behavior = 'popup',
-      // by default, try to login silently
-      silent = true,
-    } = options;
-
-    // if no login hint is provided, use the active account's username
-    request.loginHint ??= this.getActiveAccount()?.username;
-
-    // if no scopes are provided, use an empty array
-    if (!request.scopes) {
-      console.warn('No scopes provided, using []');
-      request.scopes = [];
-    }
-
+  async login(options: Required<LoginOptions>): Promise<LoginResult> {
     // if silent is true and a login hint is provided, try to login silently
-    if (silent && request.loginHint) {
+    if (options.silent) {
+      if (!options.request.account && !options.request.loginHint) {
+        this.getLogger().warning(
+          'No account or login hint provided, please provide an account or login hint in the request',
+        );
+      }
       try {
-        return await this.ssoSilent(request);
-      } catch (error) {
-        console.warn('Silent login failed, falling back to interactive:', error);
+        return await this.ssoSilent(options.request as SilentRequest);
+      } catch {
+        this.getLogger().warning('Silent login failed, falling back to interactive');
       }
     }
 
     // if behavior is popup, login via popup
-    if (behavior === 'popup') {
-      return await this.loginPopup(request);
-    } else {
-      // if behavior is redirect, login via redirect
-      await this.loginRedirect(request);
+    switch (options.behavior) {
+      case 'popup':
+        return await this.loginPopup(options.request as PopupRequest);
+      case 'redirect':
+        await this.loginRedirect(options.request as RedirectRequest);
+        break;
+      default:
+        throw new Error(
+          `Invalid behavior provided: ${options.behavior}, please provide a valid behavior, see options.behavior for more information.`,
+        );
     }
   }
 
   async logout(options?: LogoutOptions): Promise<void> {
-    const account = options?.account || this.getActiveAccount();
-
-    if (!account) {
-      console.warn('No account available for logout');
-      return;
+    if (!options?.account) {
+      this.getLogger().warning(
+        'No account available for logout, please provide an account in the options',
+      );
     }
 
     const logoutRequest: EndSessionRequest = {
-      account: account,
+      account: options?.account,
       postLogoutRedirectUri: options?.redirectUri,
     };
 
@@ -105,37 +92,43 @@ export class MsalClient extends PublicClientApplication implements IMsalClient {
   }
 
   async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
-    const { account = this.getActiveAccount(), behavior = 'popup', silent = true } = options;
+    const { behavior = 'redirect', silent = !!options.request?.account, request } = options;
 
-    // Handle discriminated union: determine if it's legacy or modern approach
-    let tokenRequest: PopupRequest | RedirectRequest;
-
-    if ('scopes' in options && options.scopes) {
-      // Legacy approach: convert scopes to request
-      tokenRequest = { scopes: options.scopes };
-    } else if ('request' in options && options.request) {
-      // Modern approach: use provided request
-      tokenRequest = options.request;
-    } else {
-      throw new Error('Either scopes or request must be provided');
+    if (!request) {
+      throw new Error('No request provided, please provide a request in the options');
     }
 
-    if (silent && account) {
-      try {
-        return await this.acquireTokenSilent({
-          ...tokenRequest,
-          account: account,
-        });
-      } catch (error) {
-        console.warn('Silent token acquisition failed, falling back to interactive:', error);
+    if (request.scopes.length === 0) {
+      this.getLogger().warning(
+        'No scopes provided, please provide scopes in the request option, see options.request for more information.',
+      );
+    }
+
+    if (silent) {
+      if (request.account) {
+        try {
+          this.getLogger().verbose('Attempting to acquire token silently');
+          return await this.acquireTokenSilent(request as SilentRequest);
+        } catch {
+          this.getLogger().warning('Silent token acquisition failed, falling back to interactive');
+        }
+      } else {
+        this.getLogger().warning(
+          'Cannot acquire token silently, no account provided, falling back to interactive.',
+        );
       }
     }
 
     switch (behavior) {
       case 'popup':
-        return await this.acquireTokenPopup(tokenRequest);
+        return await this.acquireTokenPopup(request);
       case 'redirect':
-        await this.acquireTokenRedirect(tokenRequest);
+        await this.acquireTokenRedirect(request);
+        break;
+      default:
+        throw new Error(
+          `Invalid behavior provided: ${behavior}, please provide a valid behavior, see options.behavior for more information.`,
+        );
     }
   }
 }

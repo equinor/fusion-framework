@@ -3,8 +3,24 @@ import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 import { MsalModuleVersion } from './static';
 import semver from 'semver';
 import type { IMsalProvider } from './MsalProvider.interface';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
+import {
+  TelemetryLevel,
+  type ITelemetryProvider,
+} from '@equinor/fusion-framework-module-telemetry';
 import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
+import { createClientLogCallback } from './create-client-log-callback';
+import { LogLevel } from '@azure/msal-browser';
+
+const TelemetryConfigSchema = z.object({
+  provider: z.custom<ITelemetryProvider>().optional(),
+  metadata: z.record(z.string(), z.unknown()).optional().default({
+    module: 'msal',
+    version: MsalModuleVersion.Latest,
+  }),
+  scope: z.array(z.string()).optional().default(['framework', 'authentication']),
+});
+
+export type TelemetryConfig = z.infer<typeof TelemetryConfigSchema>;
 
 const MsalConfigSchema = z.object({
   client: z.custom<IMsalClient>(),
@@ -12,8 +28,7 @@ const MsalConfigSchema = z.object({
   requiresAuth: z.boolean().optional(),
   redirectUri: z.string().optional(),
   version: z.string().transform((x: string) => String(semver.coerce(x))),
-  telemetry: z.custom<ITelemetryProvider>().optional(),
-  telemetryMetadata: z.record(z.string(), z.unknown()).optional(),
+  telemetry: TelemetryConfigSchema,
 });
 
 export type MsalConfig = z.infer<typeof MsalConfigSchema>;
@@ -39,12 +54,11 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   constructor() {
     super();
     this._set('version', async () => this.version);
-    this._set('telemetry', async (args) => {
+    this._set('telemetry.provider', async (args) => {
       if (args.hasModule('telemetry')) {
         const telemetry = await args.requireInstance('telemetry');
         return telemetry;
       }
-      return undefined;
     });
   }
 
@@ -87,18 +101,24 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   }
 
   /**
-   * Sets an optional telemetry provider used for emitting authentication measurements and events.
+   * Sets telemetry configuration for MSAL authentication.
    */
   setTelemetry(telemetry: ITelemetryProvider | undefined): this {
-    this._set('telemetry', async () => telemetry);
+    this._set('telemetry.provider', async () => telemetry);
     return this;
   }
 
   /**
    * Sets optional metadata to be included on all MSAL telemetry events.
+   * @deprecated Use setTelemetry({ metadata }) instead
    */
   setTelemetryMetadata(metadata: Record<string, unknown> | undefined): this {
-    this._set('telemetryMetadata', async () => metadata);
+    this._set('telemetry.metadata', async () => metadata);
+    return this;
+  }
+
+  setTelemetryScope(scope: string[]): this {
+    this._set('telemetry.scope', async () => scope);
     return this;
   }
 
@@ -108,17 +128,58 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * @param config - Raw configuration object
    * @returns Processed and validated configuration
    */
-  async _processConfig(config: MsalConfig): Promise<MsalConfig> {
+  async _processConfig(rawConfig: MsalConfig): Promise<MsalConfig> {
+    const config = await MsalConfigSchema.parseAsync(rawConfig);
+
+    // if no client is provided, but a client config is provided, create a new client
     if (!config.client && !!this.#msalConfig) {
       const clientConfig = this.#msalConfig;
+
+      config.telemetry.provider?.trackEvent({
+        name: 'module-msal.configurator._processConfig.creating-client',
+        level: TelemetryLevel.Debug,
+        scope: config.telemetry.scope,
+        metadata: { ...config.telemetry.metadata, clientConfig },
+      });
+
+      // if the authority is not explicitly set, use the tenant ID to create a default authority
       if (!clientConfig.auth.authority && clientConfig.auth.tenantId) {
         clientConfig.auth.authority = `https://login.microsoftonline.com/${clientConfig.auth.tenantId}`;
       }
+
+      // if the cache options are not explicitly set, use the default cache location
       if (!clientConfig.cache) {
         clientConfig.cache = { cacheLocation: 'localStorage' };
       }
+
+      // if the logger options are not explicitly set, use the telemetry provider to create a logger callback
+      if (!clientConfig.system?.loggerOptions && config.telemetry?.provider) {
+        const { provider, metadata, scope } = config.telemetry;
+
+        provider.trackEvent({
+          name: 'module-msal.configurator._processConfig.client-telemetry-connected',
+          level: TelemetryLevel.Debug,
+          scope,
+          metadata,
+        });
+
+        clientConfig.system = {
+          ...clientConfig.system,
+          loggerOptions: {
+            // by default, log PII in development
+            piiLoggingEnabled: process.env.NODE_ENV === 'development',
+            // by default, use the createClientLogCallback function to create a logger callback
+            loggerCallback: createClientLogCallback(provider, metadata, [...scope, '3rd-party']),
+            logLevel: LogLevel.Warning,
+            // merge the existing logger options
+            ...clientConfig.system?.loggerOptions,
+          },
+        };
+      }
+      // create a new MSAL client instance
       config.client = new MsalClient(clientConfig);
     }
-    return MsalConfigSchema.parseAsync(config);
+
+    return config;
   }
 }

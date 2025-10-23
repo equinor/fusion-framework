@@ -1,14 +1,19 @@
-import type { EndSessionRequest } from '@azure/msal-browser';
-import type { ITelemetryProvider } from '@equinor/fusion-framework-module-telemetry';
-import { TelemetryLevel, TelemetryType } from '@equinor/fusion-framework-module-telemetry';
+import type {
+  ITelemetryProvider,
+  TelemetryItem,
+  TelemetryException,
+  IMeasurement,
+} from '@equinor/fusion-framework-module-telemetry';
+
+import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
+
 import { MsalModuleVersion } from './static';
 import type { MsalConfig } from './MsalConfigurator';
-import type { IMsalProvider } from './MsalProvider.interface';
+import type { AcquireTokenOptionsLegacy, IMsalProvider } from './MsalProvider.interface';
 import { createProxyProvider } from './create-proxy-provider';
 import type {
-  AcquireTokenOptions,
   AcquireTokenResult,
   IMsalClient,
   LoginOptions,
@@ -16,7 +21,7 @@ import type {
   LogoutOptions,
 } from './MsalClient.interface';
 
-import type { AccountInfo } from './types';
+import type { AccountInfo, AuthenticationResult } from './types';
 import { resolveVersion } from './versioning/resolve-version';
 
 export type { IMsalProvider };
@@ -47,10 +52,12 @@ export type { IMsalProvider };
  */
 export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsalProvider {
   #client: IMsalClient;
-  #redirectUri: string;
-  #telemetry?: ITelemetryProvider;
-  #telemetryMetadata: Record<string, unknown>;
-  #telemetryScope: string[] = ['framework', 'authentication'];
+  #telemetry: {
+    provider?: ITelemetryProvider;
+    metadata: Record<string, unknown>;
+    scope: string[];
+  };
+  #requiresAuth?: boolean;
 
   get client(): IMsalClient {
     return this.#client;
@@ -65,24 +72,53 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       version: MsalModuleVersion.Latest,
       config,
     });
+    this.#requiresAuth = config.requiresAuth;
+    this.#telemetry = config.telemetry;
     if (!config.client) {
-      throw new Error('Client is required');
+      const error = new Error(
+        'Client is required, please provide a valid client in the configuration',
+      );
+      this._tractException('constructor.client-required', TelemetryLevel.Error, {
+        exception: error,
+      });
+      throw error;
     }
     this.#client = config.client;
-    this.#redirectUri = config.redirectUri || '';
-    this.#telemetry = config.telemetry;
-    this.#telemetryMetadata = {
-      version: MsalModuleVersion.Latest,
-      clientId: config.client.clientId,
-      tenantId: config.client.tenantId,
-      ...(config.telemetryMetadata ?? {}),
-    };
+  }
+
+  async initialize(): Promise<void> {
+    const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
+    await this.#client.initialize();
+    if (this.#requiresAuth) {
+      // if this is a auth request callback, handle the redirect and set the active account
+      const handleRedirectResult = await this.handleRedirect();
+      if (handleRedirectResult?.account) {
+        this.#client.setActiveAccount(handleRedirectResult.account);
+        this._trackEvent('initialize.active-account-set-by-callback', TelemetryLevel.Information, {
+          properties: {
+            username: handleRedirectResult.account.username,
+          },
+        });
+      } else if (!this.#client.hasValidClaims) {
+        // we might need to set another scope here, but we don't know which one
+        const loginResult = await this.login({ request: { scopes: [] } });
+        if (loginResult?.account) {
+          this.#client.setActiveAccount(loginResult.account);
+          this._trackEvent('initialize.active-account-set-by-login', TelemetryLevel.Information, {
+            properties: {
+              username: loginResult.account.username,
+            },
+          });
+        }
+      }
+    }
+    measurement.measure();
   }
 
   /**
    * Acquire an access token for the specified scopes
    */
-  async acquireAccessToken(options: AcquireTokenOptions): Promise<string | undefined> {
+  async acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined> {
     const { accessToken } = (await this.acquireToken(options)) ?? {};
     return accessToken;
   }
@@ -90,29 +126,42 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   /**
    * Acquire full authentication result
    */
-  async acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult> {
-    try {
-      const measurement = this.#telemetry?.measure({
-        name: 'msal.acquireToken',
-        level: TelemetryLevel.Information,
-        scope: this.#telemetryScope,
-        properties: {
-          behavior: options.behavior,
-          silent: options.silent,
-          scopes: options.scopes,
-        },
-        metadata: this.#telemetryMetadata,
+  async acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult> {
+    const { behavior = 'redirect', silent = true } = options;
+    const account = this.account ?? undefined;
+    const scopes = options.request?.scopes ?? options?.scopes ?? [];
+
+    const telemetryProperties = { behavior, silent, scopes };
+
+    if (options.scopes) {
+      this._trackEvent('acquireToken.legacy-scopes-provided', TelemetryLevel.Warning, {
+        properties: telemetryProperties,
       });
-      const result = await this.#client.acquireToken(options);
+    }
+
+    if (scopes.length === 0) {
+      const exception = new Error('Empty scopes provided, not allowed');
+      this._tractException('acquireToken.missing-scope', TelemetryLevel.Warning, {
+        exception,
+        properties: telemetryProperties,
+      });
+    }
+
+    try {
+      const measurement = this._trackMeasurement('acquireToken', TelemetryLevel.Information, {
+        properties: telemetryProperties,
+      });
+      const result = await this.#client.acquireToken({
+        behavior,
+        silent,
+        request: { account, ...options.request, scopes },
+      });
       measurement?.measure();
       return result;
     } catch (error) {
-      this.#telemetry?.trackException({
-        name: 'msal.acquireAccessToken.error',
+      this._tractException('acquireToken-failed', TelemetryLevel.Error, {
         exception: error as Error,
-        level: TelemetryLevel.Error,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
+        properties: telemetryProperties,
       });
       throw error;
     }
@@ -166,192 +215,203 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async login(options: LoginOptions): Promise<LoginResult> {
-    const {
-      request,
-      // by default, use popup behavior
-      behavior = 'popup',
-      // by default, try to login silently
-      silent = true,
-    } = options;
+    const { behavior = 'redirect', silent = true, request } = options;
+
+    const canLoginSilently = silent && (request.account || request.loginHint);
+
+    const telemetryProperties = { behavior, silent, canLoginSilently, scopes: request.scopes };
 
     // if no login hint is provided, use the active account's username
-    request.loginHint ??= this.account?.username;
+    request.account ??= this.account ?? undefined;
 
     // if no scopes are provided, use an empty array
     if (!request.scopes) {
       request.scopes = [];
-      this.#telemetry?.trackEvent({
-        name: 'msal.login.missing_scope',
-        level: TelemetryLevel.Warning,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
-        properties: {
-          behavior: behavior,
-          silent: silent,
-        },
+      this._trackEvent('login.missing-scope', TelemetryLevel.Warning, {
+        properties: telemetryProperties,
       });
     }
 
-    this.#telemetry?.trackEvent({
-      name: 'msal.login',
-      level: TelemetryLevel.Information,
-      scope: this.#telemetryScope,
-      metadata: this.#telemetryMetadata,
-      properties: {
-        behavior: behavior,
-        silent: silent,
-        scopes: request.scopes,
-      },
+    this._trackEvent('login', TelemetryLevel.Information, {
+      properties: telemetryProperties,
     });
 
     // if silent is true and a login hint is provided, try to login silently
-    if (silent && request.loginHint) {
+    if (canLoginSilently) {
       try {
-        const measurement = this.#telemetry?.measure({
-          name: 'msal.login.silent',
-          level: TelemetryLevel.Debug,
-          scope: this.#telemetryScope,
-          metadata: this.#telemetryMetadata,
-          properties: {
-            loginHint: request.loginHint,
-            scopes: request.scopes,
-          },
-        });
-        const result = await this.#client.ssoSilent(request);
-        measurement?.measure();
-        return result;
+        return await this.#client.ssoSilent(request);
       } catch (error) {
-        console.warn('Silent login failed, falling back to interactive:', error);
-        this.#telemetry?.trackException({
-          name: 'msal.login.silent.error',
+        this._tractException('login.silent-failed', TelemetryLevel.Warning, {
           exception: error as Error,
-          level: TelemetryLevel.Warning,
-          metadata: this.#telemetryMetadata,
-          properties: {
-            loginHint: request.loginHint,
-            scopes: request.scopes,
-          },
+          properties: telemetryProperties,
         });
       }
     }
 
-    // if behavior is popup, login via popup
-    if (behavior === 'popup') {
-      const measurement = this.#telemetry?.measure({
-        name: 'msal.login.popup',
-        level: TelemetryLevel.Debug,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
-        properties: {
-          loginHint: request.loginHint,
-          scopes: request.scopes,
-        },
-      });
-      const result = await this.#client.loginPopup(request);
-      measurement?.measure();
-      return result;
-    } else {
-      // if behavior is redirect, login via redirect
-      await this.#client.loginRedirect(request);
+    switch (behavior) {
+      case 'popup':
+        return await this.#client.loginPopup(request);
+      case 'redirect':
+        await this.#client.loginRedirect(request);
+        break;
+      default:
+        throw new Error(
+          `Invalid behavior provided: ${behavior}, please provide a valid behavior, see options.behavior for more information.`,
+        );
     }
   }
 
   /**
    * Logout user
    */
-  async logout(options?: LogoutOptions): Promise<void> {
-    const account = options?.account || this.account;
-
-    if (!account) {
-      this.#telemetry?.trackEvent({
-        name: 'msal.logout.no_account',
-        level: TelemetryLevel.Warning,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
-      });
-      return;
-    }
-
-    const logoutRequest: EndSessionRequest = {
-      account: account,
-      postLogoutRedirectUri: options?.redirectUri,
-    };
-
-    this.#telemetry?.trackEvent({
-      name: 'msal.logout',
-      level: TelemetryLevel.Information,
-      scope: this.#telemetryScope,
-      metadata: this.#telemetryMetadata,
+  async logout(options?: LogoutOptions): Promise<boolean> {
+    this._trackEvent('logout', TelemetryLevel.Information, {
       properties: {
-        account: account.username,
         redirectUri: options?.redirectUri,
       },
     });
 
-    await this.#client.logoutRedirect(logoutRequest);
+    try {
+      await this.#client.logout({ account: this.account ?? undefined, ...options });
+      return true;
+    } catch (error) {
+      this._tractException('logout.failed', TelemetryLevel.Error, {
+        exception: error as Error,
+      });
+    }
+    return false;
   }
 
   /**
    * Handle authentication redirect
    */
-  async handleRedirect(): Promise<void> {
-    if (window.location.pathname === this.#redirectUri) {
-      const redirectUri = this.#redirectUri;
-      const requestOrigin = this.#client.requestOrigin;
-
-      this.#telemetry?.trackEvent({
-        name: 'msal.handleRedirect',
-        level: TelemetryLevel.Information,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
+  async handleRedirect(): Promise<AuthenticationResult | null> {
+    const result = await this.client.handleRedirectPromise();
+    if (result) {
+      this._trackEvent('handleRedirect.success', TelemetryLevel.Information, {
         properties: {
-          redirectUri,
-          requestOrigin,
+          username: result.account?.username,
         },
       });
-
-      await this.client.handleRedirectPromise();
-      if (requestOrigin === redirectUri) {
-        this.#telemetry?.trackException({
-          name: 'msal.handleRedirect.loopDetected',
-          exception: new Error(
-            `detected callback loop from url ${this.#redirectUri}, redirecting to root`,
-          ),
-          level: TelemetryLevel.Warning,
-          scope: this.#telemetryScope,
-          metadata: this.#telemetryMetadata,
-          properties: {
-            redirectUri,
-          },
-        });
-        window.location.replace('/');
-      } else {
-        window.location.replace(requestOrigin || '/');
-      }
     }
+    return result;
   }
 
   /**
    * Create a proxy provider for version compatibility
    */
   createProxyProvider<T = IMsalProvider>(version: string): T {
+    this._trackEvent('createProxyProvider', TelemetryLevel.Debug, {
+      properties: {
+        version: version,
+      },
+    });
+
+    // resolve the required version
     const resolvedVersion = resolveVersion(version);
-    this.#telemetry?.trackEvent({
-      name: 'msal.createProxyProvider.version_resolved',
-      level: TelemetryLevel.Information,
-      scope: this.#telemetryScope,
-      metadata: this.#telemetryMetadata,
+
+    this._trackEvent('createProxyProvider.version-resolved', TelemetryLevel.Information, {
       properties: resolvedVersion,
     });
+
+    // if the version is not the latest, track a warning
     if (!resolvedVersion.satisfiesLatest) {
-      this.#telemetry?.trackEvent({
-        name: 'msal.createProxyProvider.version_not_satisfies_latest',
-        level: TelemetryLevel.Warning,
-        scope: this.#telemetryScope,
-        metadata: this.#telemetryMetadata,
+      this._trackEvent('createProxyProvider.outdated-version', TelemetryLevel.Warning, {
         properties: resolvedVersion,
       });
     }
-    return createProxyProvider(this, version);
+
+    try {
+      // create the proxy provider
+      return createProxyProvider(this, version);
+    } catch (error) {
+      this._tractException('createProxyProvider.failed', TelemetryLevel.Error, {
+        exception: error as Error,
+        properties: resolvedVersion,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Tracks a telemetry event with MSAL module-specific naming and metadata.
+   *
+   * This protected method provides a standardized way to track events within the MSAL module.
+   * It automatically prefixes the event name with 'module-msal.' and includes the module's
+   * configured scope and metadata.
+   *
+   * @param name - The event name (will be prefixed with 'module-msal.')
+   * @param level - The telemetry level for the event
+   * @param options - Additional telemetry options (excluding type, name, level, scope, metadata)
+   */
+  protected _trackEvent(
+    name: string,
+    level: TelemetryLevel,
+    options?: Omit<TelemetryItem, 'type' | 'name' | 'level' | 'scope' | 'metadata'>,
+  ): void {
+    this.#telemetry.provider?.trackEvent({
+      name: `module-msal.${name}`,
+      level,
+      scope: this.#telemetry.scope,
+      metadata: this.#telemetry.metadata,
+      ...options,
+    });
+  }
+
+  /**
+   * Starts a telemetry measurement with MSAL module-specific naming and metadata.
+   *
+   * This protected method provides a standardized way to measure performance within the MSAL module.
+   * It automatically prefixes the measurement name with 'module-msal.' and includes the module's
+   * configured scope and metadata. Returns a measurement object with a measure function.
+   *
+   * If no telemetry provider is available, returns a no-op measurement that returns -1.
+   *
+   * @param name - The measurement name (will be prefixed with 'module-msal.')
+   * @param level - The telemetry level for the measurement
+   * @param options - Additional telemetry options (excluding type, name, level, scope, metadata)
+   * @returns A measurement object with a measure function, or a no-op measurement if no provider
+   */
+  protected _trackMeasurement(
+    name: string,
+    level: TelemetryLevel,
+    options?: Omit<TelemetryItem, 'type' | 'name' | 'level' | 'scope' | 'metadata'>,
+  ): Pick<IMeasurement, 'measure'> {
+    return (
+      this.#telemetry.provider?.measure({
+        name: `module-msal.${name}`,
+        level,
+        scope: this.#telemetry.scope,
+        metadata: this.#telemetry.metadata,
+        ...options,
+      }) ?? {
+        measure: () => -1,
+      }
+    );
+  }
+
+  /**
+   * Tracks a telemetry exception with MSAL module-specific naming and metadata.
+   *
+   * This protected method provides a standardized way to track exceptions within the MSAL module.
+   * It automatically prefixes the exception name with 'module-msal.' and includes the module's
+   * configured scope and metadata.
+   *
+   * @param name - The exception name (will be prefixed with 'module-msal.')
+   * @param level - The telemetry level for the exception
+   * @param options - Additional telemetry options (excluding type, name, level, scope, metadata)
+   */
+  protected _tractException(
+    name: string,
+    level: TelemetryLevel,
+    options: Omit<TelemetryException, 'type' | 'name' | 'level' | 'scope' | 'metadata'>,
+  ): void {
+    this.#telemetry.provider?.trackException({
+      name: `module-msal.${name}`,
+      level,
+      scope: this.#telemetry.scope,
+      metadata: this.#telemetry.metadata,
+      ...options,
+    });
   }
 }
