@@ -69,7 +69,7 @@ export const command = createCommand('login')
 
     try {
       log.start('Logging in...');
-      const authToken = await framework.auth.login({ scopes });
+      const authToken = await framework.auth.login({ request: { scopes } });
       log.info('username:', chalk.green(authToken.account?.username));
       log.info('tenant:  ', chalk.yellow(authToken.tenantId));
       log.info('audience:', chalk.yellow(authToken.account?.idTokenClaims?.aud));

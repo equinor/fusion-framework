@@ -45,15 +45,11 @@ export const module: MsalModule = {
       );
     }
 
-    await config.client.initialize();
-
     // create a new provider
-    const provider = new MsalProvider(config) as IMsalProvider;
+    const provider = new MsalProvider(config);
 
-    if (config.requiresAuth) {
-      await provider.handleRedirect();
-      await provider.login({ request: { scopes: [] } });
-    }
+    // initialize the provider
+    await provider.initialize();
 
     return provider;
   },

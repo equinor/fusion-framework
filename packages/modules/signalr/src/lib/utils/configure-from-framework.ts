@@ -20,7 +20,7 @@ export const configureFromFramework = async (
           );
         }
         const token = await authProvider.acquireAccessToken({
-          scopes: service.scopes ?? service.defaultScopes,
+          request: { scopes: service.scopes ?? service.defaultScopes },
         });
         if (!token) {
           throw Error('failed to acquire access token');

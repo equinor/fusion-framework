@@ -104,7 +104,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         }
 
         case 'requestOrigin': {
-          return target.requestOrigin;
+          return target.getConfiguration().auth.redirectUri;
         }
 
         case 'login': {

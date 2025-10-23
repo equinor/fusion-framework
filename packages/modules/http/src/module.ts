@@ -80,7 +80,7 @@ export const module: HttpMsalModule = {
         if (scopes.length) {
           /** TODO should be try catch, check caller for handling */
           const accessToken = await authProvider.acquireAccessToken({
-            scopes,
+            request: { scopes },
           });
           if (accessToken) {
             const headers = new Headers(request.headers);

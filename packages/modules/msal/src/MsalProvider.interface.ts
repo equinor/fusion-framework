@@ -9,7 +9,9 @@ import type {
 
 import type { IProxyProvider } from './MsalProxyProvider.interface';
 
-import type { AccountInfo } from './types';
+import type { AccountInfo, AuthenticationResult } from './types';
+
+export type AcquireTokenOptionsLegacy = AcquireTokenOptions & { scopes?: string[] };
 
 /**
  * Interface for MSAL v4 authentication provider.
@@ -43,16 +45,21 @@ export interface IMsalProvider extends IProxyProvider {
   readonly account: AccountInfo | null;
 
   /**
+   * Initialize the MSAL provider
+   */
+  initialize(): Promise<void>;
+
+  /**
    * Acquire an access token for the specified scopes
    * @param options - Token acquisition options
    */
-  acquireAccessToken(options: AcquireTokenOptions): Promise<string | undefined>;
+  acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined>;
 
   /**
    * Acquire full authentication result
    * @param options - Token acquisition options
    */
-  acquireToken(options: AcquireTokenOptions): Promise<AcquireTokenResult>;
+  acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult>;
 
   /**
    * Login user interactively
@@ -64,10 +71,10 @@ export interface IMsalProvider extends IProxyProvider {
    * Logout user
    * @param options - Logout options
    */
-  logout(options?: LogoutOptions): Promise<void>;
+  logout(options?: LogoutOptions): Promise<boolean>;
 
   /**
    * Handle authentication redirect
    */
-  handleRedirect(): Promise<void>;
+  handleRedirect(): Promise<AuthenticationResult | null>;
 }

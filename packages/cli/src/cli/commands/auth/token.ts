@@ -78,7 +78,7 @@ export const command = createCommand('token')
 
     try {
       log?.start('Getting access token...');
-      const accessToken = await framework.auth.acquireAccessToken({ scopes });
+      const accessToken = await framework.auth.acquireAccessToken({ request: { scopes } });
       log?.succeed('Successfully acquired access token');
       if (options.silent) {
         console.log(accessToken);
