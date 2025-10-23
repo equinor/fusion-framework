@@ -42,12 +42,17 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^4.25.0",
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@types/semver": "^7.5.0",
     "semver": "^7.5.4",
     "zod": "^4.1.8"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:*",
+    "@types/semver": "^7.5.0",
     "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^"
   }
 }

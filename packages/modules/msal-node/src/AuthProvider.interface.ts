@@ -26,7 +26,7 @@ export interface IAuthProvider {
    * @remarks
    * This method is not supported and should not be used to initiate login unless interactive mode is enabled.
    */
-  login(options: { scopes: string[] }): Promise<AuthenticationResult>;
+  login(options: { request: { scopes: string[] } }): Promise<AuthenticationResult>;
 
   /**
    * This method is present for compatibility but will never trigger a user logout flow unless interactive mode is configured.
@@ -42,12 +42,15 @@ export interface IAuthProvider {
    * Acquires an access token for the specified scopes.
    *
    * @param options - An object specifying the required scopes and an optional `interactive` flag.
-   *   - `scopes`: The scopes for which the token is requested.
+   *   - `request.scopes`: The scopes for which the token is requested.
    *   - `interactive`: If true, may trigger an interactive login if silent acquisition fails (not supported unless interactive mode is enabled).
    * @returns A Promise that resolves to a string representing the acquired access token.
    *
    * @remarks
    * This is the primary method for obtaining tokens for API calls or resource access.
    */
-  acquireAccessToken(options: { scopes: string[]; interactive?: boolean }): Promise<string>;
+  acquireAccessToken(options: {
+    request: { scopes: string[] };
+    interactive?: boolean;
+  }): Promise<string>;
 }

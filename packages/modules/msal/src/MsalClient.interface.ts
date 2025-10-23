@@ -8,27 +8,12 @@ import type {
 
 export type AuthBehavior = 'popup' | 'redirect';
 
-// Base interface for common properties
-interface BaseAcquireTokenOptions {
-  account?: AccountInfo;
+// Union type that ensures either legacy OR modern approach is used
+export type AcquireTokenOptions = {
+  request: PopupRequest | RedirectRequest;
   behavior?: AuthBehavior;
   silent?: boolean;
-}
-
-// Legacy interface using direct scopes property
-export interface LegacyAcquireTokenOptions extends BaseAcquireTokenOptions {
-  scopes: string[];
-  request?: never; // Prevent mixing with request-based approach
-}
-
-// Modern interface using MSAL v4 request structure
-export interface ModernAcquireTokenOptions extends BaseAcquireTokenOptions {
-  request: PopupRequest | RedirectRequest;
-  scopes?: never; // Prevent mixing with legacy scopes approach
-}
-
-// Union type that ensures either legacy OR modern approach is used
-export type AcquireTokenOptions = LegacyAcquireTokenOptions | ModernAcquireTokenOptions;
+};
 
 export type AcquireTokenResult = AuthenticationResult | null | undefined;
 
@@ -64,9 +49,6 @@ export type LoginResult = AuthenticationResult | undefined;
  * ```
  */
 export interface IMsalClient extends IPublicClientApplication {
-  /** Request origin from browser storage */
-  requestOrigin: string | null;
-
   /** Configured client ID */
   clientId: string | undefined;
 
@@ -82,6 +64,13 @@ export interface IMsalClient extends IPublicClientApplication {
    * @returns Promise resolving to authentication result or undefined
    */
   login(options: LoginOptions): Promise<LoginResult>;
+
+  /**
+   * Logout user with enhanced options
+   * @param options - Logout configuration options
+   * @returns Promise resolving to void
+   */
+  logout(options: LogoutOptions): Promise<void>;
 
   /**
    * Acquire access token with enhanced options

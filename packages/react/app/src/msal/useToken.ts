@@ -20,7 +20,7 @@ export const useToken = (req: {
     setPending(true);
     setToken(undefined);
     msalProvider
-      .acquireToken(req)
+      .acquireToken({ request: req })
       .then((result) => {
         if (result) {
           setToken(result);
