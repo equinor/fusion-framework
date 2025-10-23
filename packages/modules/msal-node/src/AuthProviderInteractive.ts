@@ -61,8 +61,8 @@ export class AuthProviderInteractive extends AuthProvider {
    * @throws Will throw an error if the PKCE code generation, browser opening, or
    *         authentication server setup fails.
    */
-  public async login(options: { scopes: string[] }): Promise<AuthenticationResult> {
-    const { scopes } = options;
+  public async login(options: { request: { scopes: string[] } }): Promise<AuthenticationResult> {
+    const { scopes } = options.request;
     const { port, onOpen } = this.#options.server;
 
     // Generate a new PKCE code verifier and challenge
@@ -105,10 +105,12 @@ export class AuthProviderInteractive extends AuthProvider {
    * @throws {@link NoAccountsError} If no accounts are found in the cache and interactive login is not allowed.
    * @throws {@link SilentTokenAcquisitionError} If an error occurs during silent token acquisition.
    */
-  public async acquireToken(options: { scopes: string[] }): Promise<AuthenticationResult> {
-    const { scopes } = options ?? { scopes: [] };
+  public async acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<AuthenticationResult> {
+    const { scopes } = options.request ?? { scopes: [] };
     if ((await this.getAccount()) === null) {
-      return this.login({ scopes });
+      return this.login({ request: { scopes } });
     }
     return super.acquireToken(options);
   }

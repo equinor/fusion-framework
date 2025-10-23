@@ -62,6 +62,11 @@ export function createProxyProvider<T = IMsalProvider>(
             case 'createProxyProvider': {
               return target.createProxyProvider.bind(target);
             }
+            case 'initialize': {
+              return () => {
+                // noop - initialize is handled by the provider
+              };
+            }
             default: {
               // guard that we have handled all kyes of IMsalProvider
               const exhausted: never = prop;

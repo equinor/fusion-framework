@@ -72,9 +72,13 @@ export class LegacyAuthContainer extends AuthContainer {
     console.trace(`FusionAuthContainer::logoutAsync for client id [${clientId}]`);
     // TODO
     if (!clientId || this._registeredApps[clientId]) {
-      return this.#auth.logout({
+      const logoutSuccess = await this.#auth.logout({
         redirectUri: '/sign-out',
       });
+      // Log logout result for debugging - MSAL logout now returns boolean
+      if (!logoutSuccess) {
+        console.warn('MSAL logout failed but continuing with legacy logout flow');
+      }
     }
     await super.logoutAsync(clientId);
     window.location.href = '/sign-out';
@@ -106,7 +110,7 @@ export class LegacyAuthContainer extends AuthContainer {
 
   protected async __acquireTokenAsync(app: AuthApp): Promise<string | null> {
     const defaultScope = app.clientId + '/.default';
-    const res = await this.#auth.acquireToken({ scopes: [defaultScope] });
+    const res = await this.#auth.acquireToken({ request: { scopes: [defaultScope] } });
     if (res?.accessToken) {
       return res.accessToken;
     }
