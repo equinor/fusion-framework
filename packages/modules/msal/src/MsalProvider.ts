@@ -78,7 +78,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const error = new Error(
         'Client is required, please provide a valid client in the configuration',
       );
-      this._tractException('constructor.client-required', TelemetryLevel.Error, {
+      this._trackException('constructor.client-required', TelemetryLevel.Error, {
         exception: error,
       });
       throw error;
@@ -141,10 +141,11 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
 
     if (scopes.length === 0) {
       const exception = new Error('Empty scopes provided, not allowed');
-      this._tractException('acquireToken.missing-scope', TelemetryLevel.Warning, {
+      this._trackException('acquireToken.missing-scope', TelemetryLevel.Warning, {
         exception,
         properties: telemetryProperties,
       });
+      throw exception;
     }
 
     try {
@@ -159,7 +160,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       measurement?.measure();
       return result;
     } catch (error) {
-      this._tractException('acquireToken-failed', TelemetryLevel.Error, {
+      this._trackException('acquireToken-failed', TelemetryLevel.Error, {
         exception: error as Error,
         properties: telemetryProperties,
       });
@@ -241,7 +242,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       try {
         return await this.#client.ssoSilent(request);
       } catch (error) {
-        this._tractException('login.silent-failed', TelemetryLevel.Warning, {
+        this._trackException('login.silent-failed', TelemetryLevel.Warning, {
           exception: error as Error,
           properties: telemetryProperties,
         });
@@ -275,7 +276,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       await this.#client.logout({ account: this.account ?? undefined, ...options });
       return true;
     } catch (error) {
-      this._tractException('logout.failed', TelemetryLevel.Error, {
+      this._trackException('logout.failed', TelemetryLevel.Error, {
         exception: error as Error,
       });
     }
@@ -325,7 +326,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       // create the proxy provider
       return createProxyProvider(this, version);
     } catch (error) {
-      this._tractException('createProxyProvider.failed', TelemetryLevel.Error, {
+      this._trackException('createProxyProvider.failed', TelemetryLevel.Error, {
         exception: error as Error,
         properties: resolvedVersion,
       });
@@ -401,7 +402,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * @param level - The telemetry level for the exception
    * @param options - Additional telemetry options (excluding type, name, level, scope, metadata)
    */
-  protected _tractException(
+  protected _trackException(
     name: string,
     level: TelemetryLevel,
     options: Omit<TelemetryException, 'type' | 'name' | 'level' | 'scope' | 'metadata'>,
