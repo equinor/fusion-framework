@@ -37,11 +37,11 @@ export class AuthProvider implements IAuthProvider {
    * Acquires an access token for the specified scopes.
    *
    * @param options - An object containing the options for acquiring the token.
-   * @param options.scopes - An array of strings representing the scopes for which the access token is requested.
+   * @param options.request.scopes - An array of strings representing the scopes for which the access token is requested.
    * @returns A promise that resolves to the acquired access token as a string.
    * @throws An error if the token acquisition process fails.
    */
-  public async acquireAccessToken(options: { scopes: string[] }): Promise<string> {
+  public async acquireAccessToken(options: { request: { scopes: string[] } }): Promise<string> {
     const { accessToken } = await this.acquireToken(options);
     return accessToken;
   }
@@ -56,7 +56,7 @@ export class AuthProvider implements IAuthProvider {
    * @remarks
    * This method is not supported and is intended to be overridden by `AuthProviderInteractive`.
    */
-  public async login(_options: { scopes: string[] }): Promise<AuthenticationResult> {
+  public async login(_options: { request: { scopes: string[] } }): Promise<AuthenticationResult> {
     throw new AuthServerError('Login not supported, use AuthProviderInteractive instead');
   }
 
@@ -94,7 +94,9 @@ export class AuthProvider implements IAuthProvider {
    * @throws {@link NoAccountsError} If no accounts are found in the cache and interactive login is not allowed.
    * @throws {@link SilentTokenAcquisitionError} If an error occurs during silent token acquisition.
    */
-  public async acquireToken(options: { scopes: string[] }): Promise<AuthenticationResult> {
+  public async acquireToken(options: {
+    request: { scopes: string[] };
+  }): Promise<AuthenticationResult> {
     const account = await this.getAccount();
     if (!account) {
       throw new NoAccountsError('No accounts found in cache');
@@ -102,7 +104,7 @@ export class AuthProvider implements IAuthProvider {
 
     try {
       const tokenResponse = await this._client.acquireTokenSilent({
-        scopes: options.scopes,
+        scopes: options.request.scopes,
         account,
       });
       return tokenResponse;
