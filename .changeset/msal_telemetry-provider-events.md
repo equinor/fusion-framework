@@ -1,15 +1,35 @@
 ---
-"@equinor/fusion-framework-module-msal": minor
+"@equinor/fusion-framework-module-msal": major
 ---
 
-Add optional provider-level telemetry for MSAL flows (login, token acquisition, redirect handling).
+Add optional provider-level telemetry for MSAL flows and update interface methods.
 
-- Emits telemetry events and measurements via an injected telemetry provider when available
+**BREAKING CHANGES:**
+- `acquireAccessToken(options: AcquireTokenOptions)` → `acquireAccessToken(options: AcquireTokenOptionsLegacy)`
+- `acquireToken(options: AcquireTokenOptions)` → `acquireToken(options: AcquireTokenOptionsLegacy)`
+- `logout(options?: LogoutOptions): Promise<void>` → `logout(options?: LogoutOptions): Promise<boolean>`
+- `handleRedirect(): Promise<void>` → `handleRedirect(): Promise<AuthenticationResult | null>`
+- Added `initialize(): Promise<void>` method
+
+**New Features:**
+- Optional provider-level telemetry for MSAL flows (login, token acquisition, redirect handling)
+- Emits telemetry events and measurements via injected telemetry provider when available
 - Includes basic metadata (framework module version, clientId, tenantId) and authentication context
-- Does not introduce a hard dependency on telemetry; works unchanged without telemetry
 - Integrates MSAL client logging with framework telemetry system
 
-Why: Improves observability of authentication behavior and failures without breaking existing apps. Related to `Add Telemetry Integration to MSAL Module` [#3634](https://github.com/equinor/fusion-framework/issues/3634).
+**Migration:**
+```typescript
+// Before
+await msalProvider.acquireAccessToken({ scopes: ['user.read'] });
+await msalProvider.logout();
+const result = await msalProvider.handleRedirect();
 
-Migration: No action required. Telemetry is optional. To enable, ensure a telemetry provider is configured in your framework setup.
+// After
+await msalProvider.acquireAccessToken({ request: { scopes: ['user.read'] } });
+const logoutResult = await msalProvider.logout(); // Now returns boolean
+const result = await msalProvider.handleRedirect(); // Now returns AuthenticationResult | null
+await msalProvider.initialize(); // New required method
+```
+
+Related to `Add Telemetry Integration to MSAL Module` [#3634](https://github.com/equinor/fusion-framework/issues/3634).
 
