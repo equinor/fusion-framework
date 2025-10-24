@@ -1,0 +1,11 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.137.0
+    network_mode: host
+    user: "${CURRENT_UID:-1000:1000}"  # Use current user's UID:GID
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+      - ./otel-logs:/var/log
+    ports:
+      - "4318:4318"   # OTLP HTTP receiver

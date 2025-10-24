@@ -1,0 +1,38 @@
+{
+  "resourceMetrics": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": { "stringValue": "test-service" }
+          }
+        ]
+      },
+      "scopeMetrics": [
+        {
+          "scope": { "name": "test" },
+          "metrics": [
+            {
+              "name": "requests_total",
+              "description": "Total requests",
+              "unit": "{request}",
+              "sum": {
+                "dataPoints": [
+                  {
+                    "startTimeUnixNano": "1703123456789000000",
+                    "timeUnixNano": "1703123456890123456",
+                    "value": "100",
+                    "attributes": []
+                  }
+                ],
+                "isMonotonic": true,
+                "aggregationTemporality": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

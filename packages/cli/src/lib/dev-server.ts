@@ -1,3 +1,4 @@
+export { processServices } from '@equinor/fusion-framework-dev-server';
 export {
   loadDevServerConfig,
   defineDevServerConfig,

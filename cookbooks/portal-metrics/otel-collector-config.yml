@@ -1,0 +1,25 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:3000"  # Allow requests from this origin
+
+processors:
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+  file:
+    path: /var/log/otel-collector-logs.json
+    format: json
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, file]

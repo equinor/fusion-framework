@@ -1,0 +1,65 @@
+{
+  "name": "@equinor/fusion-framework-module-metrics",
+  "version": "0.0.0",
+  "description": "Fusion module for collecting and exporting application metrics using OpenTelemetry standards",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./schemas": {
+      "import": "./dist/esm/schemas/index.js",
+      "types": "./dist/types/schemas/index.d.ts"
+    },
+    "./adapters": {
+      "import": "./dist/esm/adapters/index.js",
+      "types": "./dist/types/adapters/index.d.ts"
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "metric",
+    "fusion",
+    "utility"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/metrics"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@opentelemetry/api-logs": "^0.207.0",
+    "@opentelemetry/exporter-logs-otlp-http": "^0.207.0",
+    "@opentelemetry/otlp-exporter-base": "^0.207.0",
+    "@opentelemetry/resources": "^2.2.0",
+    "@opentelemetry/sdk-logs": "^0.207.0",
+    "@opentelemetry/semantic-conventions": "^1.37.0",
+    "deepmerge": "^4.3.1",
+    "rxjs": "^7.8.1",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@equinor/fusion-observable": "workspace:^",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-event": "workspace:^",
+    "@equinor/fusion-observable": "workspace:^"
+  }
+}
