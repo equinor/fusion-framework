@@ -1,5 +1,27 @@
 import type { Observable } from 'rxjs';
 import type { ChatMessageFieldsWithRole } from '@langchain/core/messages';
+import type { Document } from '@langchain/core/documents';
+
+export type VectorStoreDocumentMetadata<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> = {
+  source: string;
+  embedding?: number[];
+  attributes?: T;
+  rootPath?: string;
+};
+
+export type VectorStoreDocument<
+  T extends VectorStoreDocumentMetadata = VectorStoreDocumentMetadata<Record<string, unknown>>,
+> = Document & {
+  id: string;
+  pageContent: string;
+  metadata: T;
+};
+
+export type SearchFilterType = {
+  filterExpression?: string;
+};
 
 /**
  * Tool call information
@@ -39,6 +61,13 @@ export interface ChatResponse {
  */
 export type ChatMessage = Pick<ChatMessageFieldsWithRole, 'role' | 'content'>;
 
+export type AddDocumentsOptions = {
+  /** Embeddings for the documents */
+  embeddings?: number[][];
+  /** IDs for the documents */
+  ids?: string[];
+};
+
 /**
  * Base interface for all LLM service implementations
  * Provides both synchronous and streaming invoke methods
@@ -70,7 +99,13 @@ export interface IEmbed extends IService<string[], number[][]> {
 /**
  * Interface for vector store implementations
  */
-export interface IVectorStore extends IService<string, unknown[]> {}
+export interface IVectorStore extends IService<string, unknown[]> {
+  addDocuments(documents: VectorStoreDocument[]): Promise<string[]>;
+  deleteDocuments(options: {
+    ids?: string | string[];
+    filter?: { filterExpression?: string };
+  }): Promise<void>;
+}
 
 /**
  * Interface for model client implementations

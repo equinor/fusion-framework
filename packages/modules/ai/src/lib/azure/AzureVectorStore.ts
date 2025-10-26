@@ -1,13 +1,25 @@
-import { concatMap, from, map, type Observable } from 'rxjs';
+import { concatMap, filter, from, map, type Observable } from 'rxjs';
 import {
   AzureAISearchVectorStore,
+  type AzureAISearchDocumentMetadata,
   type AzureAISearchConfig,
 } from '@langchain/community/vectorstores/azure_aisearch';
 
-import type { IEmbed, IVectorStore } from '../types.js';
+import type {
+  AddDocumentsOptions,
+  IEmbed,
+  IVectorStore,
+  SearchFilterType,
+  VectorStoreDocument,
+} from '../types.js';
 import { BaseService } from '../BaseService.js';
 import { AIError } from '../../AIError.js';
+import type { Document } from '@langchain/core/documents';
+import { convertObjectToAttributes } from '../convert-object-to-attributes.js';
 
+export type AzureDocument = Document & {
+  metadata: AzureAISearchDocumentMetadata;
+};
 /**
  * Azure AI Search vector store implementation using LangChain
  */
@@ -28,6 +40,29 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
         'INITIALIZATION_ERROR',
       );
     }
+  }
+
+  public addDocuments(documents: VectorStoreDocument[]): Promise<string[]> {
+    const options: AddDocumentsOptions = {
+      ids: documents.map((document) => document.id ?? ''),
+    };
+    const processedDocuments = documents.map((document) => {
+      const attributes = document.metadata.attributes
+        ? convertObjectToAttributes(document.metadata.attributes)
+        : undefined;
+      return {
+        ...document,
+        metadata: {
+          ...document.metadata,
+          attributes,
+        },
+      };
+    });
+    return this.vectorStore.addDocuments(processedDocuments, options);
+  }
+
+  deleteDocuments(options: { ids?: string | string[]; filter?: SearchFilterType }): Promise<void> {
+    return this.vectorStore.delete(options);
   }
 
   /**

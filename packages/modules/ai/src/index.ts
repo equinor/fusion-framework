@@ -7,5 +7,4 @@ export { module, enableAI } from './module.js';
 export type { ValueOrCallback, AIModuleConfig, IAIConfigurator } from './AIConfigurator.interface.js';
 export type { IAIProvider, AIServiceType } from './AIProvider.js';
 export type { AIModule, AIModuleKey } from './module.js';
-export type { ChatMessage, ChatResponse } from './lib/types.js';
 export { AIError } from './AIError.js';

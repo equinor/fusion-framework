@@ -1,6 +1,6 @@
 import { from, type Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { OpenAIEmbeddings } from '@langchain/openai';
+import { AzureOpenAIEmbeddings } from '@langchain/openai';
 
 import { BaseService } from '../BaseService.js';
 import { ServiceError } from '../ServiceError.js';
@@ -24,7 +24,7 @@ export type AzureOpenAiEmbedConfig = EmbedOpenAiConfig & {
  * Azure OpenAI embedding client implementation using LangChain
  */
 export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implements IEmbed {
-  private client: OpenAIEmbeddings;
+  private client: AzureOpenAIEmbeddings;
 
   /**
    * Create a new Azure OpenAI embedding client
@@ -32,7 +32,7 @@ export class AzureOpenAiEmbed extends BaseService<string[], number[][]> implemen
    */
   constructor(config: AzureOpenAiEmbedConfig) {
     super();
-    this.client = new OpenAIEmbeddings(config);
+    this.client = new AzureOpenAIEmbeddings(config);
   }
 
   public embedQuery(document: string): Promise<number[]> {

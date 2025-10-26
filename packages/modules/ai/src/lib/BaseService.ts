@@ -1,5 +1,5 @@
-import { from, lastValueFrom } from 'rxjs';
-import type { IService } from './types';
+import { lastValueFrom } from 'rxjs';
+import type { IService } from './types.js';
 
 export abstract class BaseService<TInput, TOutput> implements IService<TInput, TOutput> {
   public invoke(

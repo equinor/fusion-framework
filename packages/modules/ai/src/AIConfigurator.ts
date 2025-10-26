@@ -8,7 +8,7 @@ import { from, type ObservableInput, of } from 'rxjs';
 import { defaultIfEmpty, filter, map, mergeMap, scan, shareReplay } from 'rxjs/operators';
 
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
-import type { ValueOrCallback, AIModuleConfig, IAIConfigurator } from './AIConfigurator.interface.js';
+import type { ValueOrCallback, AIModuleConfig, IAIConfigurator, ConfiguredService } from './AIConfigurator.interface.js';
 
 /**
  * Creates a resolver function that processes configuration records supporting both direct values and factory functions.
@@ -201,5 +201,25 @@ export class AIConfigurator extends BaseConfigBuilder<AIModuleConfig> implements
   ): this {
     this.#vectorStores[identifier] = vectorStoreOrFactory;
     return this;
+  }
+
+  public getService<T extends keyof AIModuleConfig>(
+    type: T,
+    identifier: string,
+  ): ConfiguredService<T> {
+    switch (type) {
+      case 'models': {
+        return this.#models[identifier] as ConfiguredService<T>;
+      }
+      case 'embeddings': {
+        return this.#embeddings[identifier] as ConfiguredService<T>;
+      }
+      case 'vectorStores': {
+        return this.#vectorStores[identifier] as ConfiguredService<T>;
+      }
+      default: {
+        throw new Error(`Unknown service type: ${type}`);
+      }
+    }
   }
 }
