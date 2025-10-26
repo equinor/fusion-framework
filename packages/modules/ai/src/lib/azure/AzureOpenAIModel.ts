@@ -37,7 +37,6 @@ export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> i
    */
   constructor(config: AzureOpenAIModelConfig) {
     super();
-    console.log(config);
     this.client = new AzureChatOpenAI(config);
   }
 
