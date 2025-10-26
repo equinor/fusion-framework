@@ -28,6 +28,9 @@
       "path": "../modules/app"
     },
     {
+      "path": "../modules/ai"
+    },
+    {
       "path": "../app"
     },
     {
