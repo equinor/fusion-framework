@@ -2,6 +2,7 @@ import { concatMap, from, map, type Observable, type ObservableInput } from 'rxj
 import { AzureChatOpenAI } from '@langchain/openai';
 import { type AIMessageChunk, ChatMessage as LangChainChatMessage } from '@langchain/core/messages';
 import type { ToolCall as LangChainToolCall } from '@langchain/core/messages/tool';
+import { RunnableLambda } from '@langchain/core/runnables';
 
 import type { IModel, ChatMessage, ChatResponse } from '../types.js';
 import { AIError } from '../../AIError.js';
@@ -29,7 +30,7 @@ export type AzureOpenAIModelConfig = ModelOpenAiConfig & {
  * OpenAI model client implementation using LangChain
  */
 export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> implements IModel {
-  private client: AzureChatOpenAI;
+  #client: AzureChatOpenAI;
 
   /**
    * Create a new OpenAI model client
@@ -37,7 +38,7 @@ export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> i
    */
   constructor(config: AzureOpenAIModelConfig) {
     super();
-    this.client = new AzureChatOpenAI(config);
+    this.#client = new AzureChatOpenAI(config);
   }
 
   /**
@@ -49,7 +50,7 @@ export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> i
   async invoke(messages: ChatMessage[]): Promise<ChatResponse> {
     try {
       const langchainMessages = this._prepareMessages(messages);
-      const response = await this.client.invoke(langchainMessages);
+      const response = await this.#client.invoke(langchainMessages);
 
       return {
         content: response.content,
@@ -82,7 +83,7 @@ export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> i
    */
   invoke$(messages: ChatMessage[]): Observable<ChatResponse> {
     const langchainMessages = this._prepareMessages(messages);
-    return from(this.client.stream(langchainMessages)).pipe(
+    return from(this.#client.stream(langchainMessages)).pipe(
       concatMap((stream: ObservableInput<AIMessageChunk>) => from(stream)),
       map((chunk) => {
         return {
