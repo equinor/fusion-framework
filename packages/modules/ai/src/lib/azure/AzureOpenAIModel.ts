@@ -1,5 +1,5 @@
 import { concatMap, from, map, type Observable, type ObservableInput } from 'rxjs';
-import { ChatOpenAI } from '@langchain/openai';
+import { AzureChatOpenAI } from '@langchain/openai';
 import { type AIMessageChunk, ChatMessage as LangChainChatMessage } from '@langchain/core/messages';
 import type { ToolCall as LangChainToolCall } from '@langchain/core/messages/tool';
 
@@ -17,6 +17,7 @@ type ModelOpenAiConfig = {
 };
 
 export type AzureOpenAIModelConfig = ModelOpenAiConfig & {
+  azureOpenAIApiEndpoint?: string;
   azureOpenAIApiDeploymentName?: string;
   azureOpenAIApiInstanceName?: string;
   azureOpenAIApiKey?: string;
@@ -28,7 +29,7 @@ export type AzureOpenAIModelConfig = ModelOpenAiConfig & {
  * OpenAI model client implementation using LangChain
  */
 export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> implements IModel {
-  private client: ChatOpenAI;
+  private client: AzureChatOpenAI;
 
   /**
    * Create a new OpenAI model client
@@ -36,7 +37,8 @@ export class AzureOpenAIModel extends BaseService<ChatMessage[], ChatResponse> i
    */
   constructor(config: AzureOpenAIModelConfig) {
     super();
-    this.client = new ChatOpenAI(config);
+    console.log(config);
+    this.client = new AzureChatOpenAI(config);
   }
 
   /**

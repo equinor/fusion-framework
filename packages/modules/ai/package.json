@@ -3,17 +3,32 @@
   "version": "1.0.0",
   "description": "AI module for Fusion Framework providing AI/LLM integration capabilities",
   "main": "dist/esm/index.js",
+  "type": "module",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./lib": {
+      "import": "./dist/esm/lib/index.js",
+      "types": "./dist/types/lib/index.d.ts"
+    },
+    "./azure": {
+      "import": "./dist/esm/lib/azure/index.js",
+      "types": "./dist/types/lib/azure/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {
       ".": [
         "dist/types/index.d.ts"
+      ],
+      "lib": [
+        "dist/types/lib/index.d.ts"
+      ],
+      "azure": [
+        "dist/types/lib/azure/index.d.ts"
       ]
     }
   },

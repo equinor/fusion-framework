@@ -18,6 +18,14 @@ export type AIModuleConfig = {
   vectorStores?: Record<string, IVectorStore>;
 };
 
+export type ConfiguredService<T extends keyof AIModuleConfig> = T extends 'models'
+  ? IModel
+  : T extends 'embeddings'
+    ? IEmbed
+    : T extends 'vectorStores'
+      ? IVectorStore
+      : never;
+
 /**
  * Interface for AI service configuration.
  *
@@ -40,4 +48,9 @@ export interface IAIConfigurator {
    * Registers a vector store configuration.
    */
   setVectorStore(identifier: string, vectorStoreOrFactory: ValueOrCallback<IVectorStore>): this;
+
+  getService<T extends keyof AIModuleConfig>(
+    type: T,
+    identifier: string,
+  ): ConfiguredService<T>;
 }

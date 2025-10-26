@@ -36,7 +36,7 @@ export const module: AIModule = {
  * @param configure - Callback for configuring the AI module
  */
 export const enableAI = (
-  config: IModulesConfigurator<[], unknown>,
+  config: IModulesConfigurator<any, any>,
   configure: (configurator: IAIConfigurator) => void,
 ): void => {
   config.addConfig({ module, configure });
