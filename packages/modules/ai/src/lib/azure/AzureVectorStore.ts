@@ -1,9 +1,10 @@
-import { concatMap, filter, from, map, type Observable } from 'rxjs';
+import { concatMap, from, map, type Observable } from 'rxjs';
 import {
   AzureAISearchVectorStore,
   type AzureAISearchDocumentMetadata,
   type AzureAISearchConfig,
 } from '@langchain/community/vectorstores/azure_aisearch';
+import type { BaseRetriever } from '@langchain/core/retrievers';
 
 import type {
   AddDocumentsOptions,
@@ -96,5 +97,21 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
       concatMap((results: unknown[]) => from(results)),
       map((result) => [result]),
     );
+  }
+
+  /**
+   * Get a LangChain retriever from this vector store
+   * This is the proper way to use vector stores in LangChain for RAG applications
+   * @param options - Optional retriever configuration
+   * @returns LangChain BaseRetriever instance
+   */
+  asRetriever(options?: {
+    k?: number;
+    filter?: Record<string, unknown>;
+    searchType?: 'similarity' | 'mmr';
+    fetchK?: number;
+    lambdaMult?: number;
+  }): BaseRetriever {
+    return this.vectorStore.asRetriever(options);
   }
 }

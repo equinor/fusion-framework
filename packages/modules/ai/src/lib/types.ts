@@ -1,6 +1,8 @@
 import type { Observable } from 'rxjs';
 import type { ChatMessageFieldsWithRole } from '@langchain/core/messages';
 import type { Document } from '@langchain/core/documents';
+import type { BaseRetriever } from '@langchain/core/retrievers';
+import type { Runnable } from '@langchain/core/runnables';
 
 export type VectorStoreDocumentMetadata<
   T extends Record<string, unknown> = Record<string, unknown>,
@@ -72,7 +74,7 @@ export type AddDocumentsOptions = {
  * Base interface for all LLM service implementations
  * Provides both synchronous and streaming invoke methods
  */
-export interface IService<TInput, TOutput> {
+export interface IService<TInput, TOutput> extends Runnable<TInput, TOutput> {
   /**
    * Invoke the service with input and return a single result
    * @param input - Input data for the service
@@ -105,10 +107,24 @@ export interface IVectorStore extends IService<string, unknown[]> {
     ids?: string | string[];
     filter?: { filterExpression?: string };
   }): Promise<void>;
+  /**
+   * Get a LangChain retriever from this vector store
+   * This is the proper way to use vector stores in LangChain for RAG applications
+   * @param options - Optional retriever configuration
+   * @returns LangChain BaseRetriever instance
+   */
+  asRetriever(options?: {
+    k?: number;
+    filter?: Record<string, unknown>;
+    searchType?: 'similarity' | 'mmr';
+    fetchK?: number;
+    lambdaMult?: number;
+  }): BaseRetriever;
 }
 
 /**
  * Interface for model client implementations
  * This is the main interface that concrete model clients should implement
  */
-export interface IModel extends IService<ChatMessage[], ChatResponse> {}
+export interface IModel extends IService<ChatMessage[], ChatResponse> {
+}
