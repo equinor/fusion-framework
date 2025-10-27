@@ -1,5 +1,34 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 2.0.0
+
+### Patch Changes
+
+- [#3584](https://github.com/equinor/fusion-framework/pull/3584) [`0dd31cd`](https://github.com/equinor/fusion-framework/commit/0dd31cd1078b383ddab4a8cf1bb03d502e214715) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump @rollup/plugin-node-resolve from 16.0.1 to 16.0.3
+
+  Bug fixes:
+
+  - fix: resolve bare targets of package "imports" using export maps; avoid fileURLToPath(null)
+  - fix: error thrown with empty entry
+
+- [#3604](https://github.com/equinor/fusion-framework/pull/3604) [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7) Thanks [@odinr](https://github.com/odinr)! - Update SPA bootstrap telemetry configuration to use proper adapter identifiers.
+
+  **Changes:**
+
+  - Refactor console adapter setup for cleaner conditional logic
+  - Update setAdapter calls to include required identifier parameter
+
+  **Migration:**
+
+  - No breaking changes for SPA consumers - internal implementation update only
+
+- Updated dependencies [[`6900d98`](https://github.com/equinor/fusion-framework/commit/6900d98142c84f4703095f8d03b09af57a1d7d2e), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be), [`a13de68`](https://github.com/equinor/fusion-framework/commit/a13de68b2f196a779ea850af055d8db7926941ce)]:
+  - @equinor/fusion-framework-module-http@7.0.3
+  - @equinor/fusion-framework-module@5.0.4
+  - @equinor/fusion-framework-module-msal@5.1.1
+  - @equinor/fusion-framework-module-telemetry@4.3.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.3
+
 ## 1.2.2
 
 ### Patch Changes

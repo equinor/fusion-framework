@@ -1,5 +1,42 @@
 # Change Log
 
+## 4.3.0
+
+### Minor Changes
+
+- [#3604](https://github.com/equinor/fusion-framework/pull/3604) [`31e2581`](https://github.com/equinor/fusion-framework/commit/31e2581fca2765dc7caf54f74db3db51020b53b7) Thanks [@odinr](https://github.com/odinr)! - Added `configureAdapter` method to `TelemetryConfigurator` for dynamic adapter configuration with dependency injection support.
+
+  The new method allows adapters to be configured using callback functions that can access module instances through `requireInstance`, enabling more flexible and powerful adapter setup patterns.
+
+  **Breaking Changes:**
+
+  - `setAdapter()` method now requires an explicit identifier parameter: `builder.setAdapter('adapter-name', adapter)`
+
+  **Note:** While this introduces breaking changes to the configurator API, we're treating this as a minor version bump since the telemetry module is still in active development and not yet widely adopted by consumers.
+
+  **Changes:**
+
+  - Fix RxJS observable chain in TelemetryConfigurator to properly resolve async adapters
+  - Optimize adapter accumulation using mutable accumulator pattern for better performance with many adapters
+  - Fix potential memory leaks by using proper shareReplay configuration with refCount: true
+  - Add `hasAdapter` method to check adapter existence without logging exceptions
+  - Update documentation level filter logic to use >= instead of <= for correct filtering behavior
+  - Update documentation to use setAdapter instead of non-existent addAdapter method
+  - Update `setAdapter` method to require explicit identifier parameter for consistency
+  - Add comprehensive documentation examples for multiple adapters with different identifiers
+  - Fix test cases to use correct adapter configuration format
+  - Update SPA bootstrap and related code to use proper adapter identifiers
+
+  **Migration:**
+
+  Update `setAdapter()` calls to include identifier parameter: `builder.setAdapter('adapter-name', adapter)`
+
+### Patch Changes
+
+- Updated dependencies [[`dcdec9f`](https://github.com/equinor/fusion-framework/commit/dcdec9f87d591781d11db34c24e6bf85de3a3f48), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module-event@4.4.0
+  - @equinor/fusion-framework-module@5.0.4
+
 ## 4.2.0
 
 ### Minor Changes

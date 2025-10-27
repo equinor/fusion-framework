@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.0.1
+
+### Patch Changes
+
+- [#3625](https://github.com/equinor/fusion-framework/pull/3625) [`b55c08b`](https://github.com/equinor/fusion-framework/commit/b55c08b59635fca51ba643f9081321514d306911) Thanks [@odinr](https://github.com/odinr)! - Fix React hooks dependency arrays in useHelpCenter to prevent exhaustive dependencies linting errors.
+
+  Changed dependency arrays from `[eventModule.dispatchEvent]` to `[eventModule]` in all useCallback hooks to properly track all dependencies used within the callbacks.
+
+- Updated dependencies [[`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`e1a94c5`](https://github.com/equinor/fusion-framework/commit/e1a94c5a1df4ac2ec92ed25b75648397a3dbfa7b), [`0bc6b38`](https://github.com/equinor/fusion-framework/commit/0bc6b38e61c98a2f9dea7b55fa9983f268f860be)]:
+  - @equinor/fusion-framework-module@5.0.4
+  - @equinor/fusion-framework-module-msal@5.1.1
+  - @equinor/fusion-framework-app@10.1.1
+
 ## 7.0.0
 
 ### Patch Changes
