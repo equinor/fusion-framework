@@ -1,6 +1,6 @@
 ---
 "@equinor/fusion-framework-react-ag-grid": patch
-"@equinor/fusion-framework-cookbook-app-react-ag-grid": patch
+"@equinor/fusion-framework-cookbook-app-react-ag-grid": major
 ---
 
 Add React 19 support and AgChartsEnterpriseModule demonstration
