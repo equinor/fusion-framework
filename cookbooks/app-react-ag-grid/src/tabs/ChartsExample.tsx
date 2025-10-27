@@ -30,8 +30,7 @@ const Styled = {
 export const ChartsExample = (): ReactElement => {
   const gridRef = useRef<AgGridReact>(null);
 
-  // Sample sales data with unique regions
-  const [rowData] = useState<SalesData[]>(chartsData);
+  const rowData = useMemo<SalesData[]>(() => chartsData, []);
 
   const columnDefs = useMemo<ColDef[]>(
     () => [
