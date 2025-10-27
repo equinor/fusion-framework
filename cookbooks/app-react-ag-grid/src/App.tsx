@@ -1,91 +1,48 @@
-// Import necessary hooks and components from React and Ag-Grid
-import { useCallback, useMemo, useState } from 'react';
-import { AgGridReact } from '@equinor/fusion-framework-react-ag-grid';
-import { createTheme, type ColDef } from '@equinor/fusion-framework-react-ag-grid/community';
+import { type ReactElement, useState } from 'react';
+import { BasicExample, ChartsExample } from './tabs';
+import { Tabs, Typography } from '@equinor/eds-core-react';
+import styled from 'styled-components';
 
-// Import custom table configuration
-import { defaultColDef, sideBar } from './table';
-
-// Define the type for the row data
-export type RowDataType = {
-  make: string;
-  model: string;
-  price: number;
+const Styled = {
+  Container: styled.div`
+    padding: 3rem 2rem;
+  `,
+  Tabs: styled(Tabs.List)`
+    margin: 2rem 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
 };
 
-export const App = (): JSX.Element => {
-  // Use custom styles for the grid
-  // Define the grid style
-  const gridStyle = useMemo(() => ({ height: '400px', width: '100%' }), []);
+export const App = (): ReactElement => {
+  // Tab state for switching between examples
+  const [activeTab, setActiveTab] = useState<number | string>(0);
 
-  // Initialize state for the row data
-  const [rowData, setRowData] = useState<RowDataType[]>([]);
-
-  // Define column definitions with useMemo
-  const columnDefs = useMemo<ColDef[]>(() => {
-    return [
-      {
-        field: 'make',
-        headerCheckboxSelection: true,
-        checkboxSelection: true,
-        showDisabledCheckboxes: true,
-      },
-      { field: 'model' },
-      { field: 'price' },
-    ];
-  }, []);
-
-  // Define a function to add a new row
-  const addRow = useCallback(() => {
-    setRowData([
-      ...rowData,
-      {
-        make: 'Lada',
-        model: `Turbo x ${rowData.length}`,
-        price: 53200 + rowData.length,
-      },
-    ]);
-  }, [rowData]);
-
-  // Define a function to set initial grid data when the grid is ready
-  const onGridReady = useCallback(() => {
-    setRowData([
-      { make: 'Toyota', model: 'Celica', price: 35000 },
-      { make: 'Ford', model: 'Mondeo', price: 32000 },
-      { make: 'Porsche', model: 'Boxster', price: 72000 },
-    ]);
-  }, []);
-
-  const _customTheme = useMemo(
-    () =>
-      createTheme().withParams({
-        textColor: '#39a',
-      }),
-    [],
-  );
+  const handleChange = (index: number | string) => {
+    setActiveTab(index);
+  };
 
   return (
-    <>
-      <div>
-        <h4>Hello Fusion-framework Ag-Grid</h4>
-        <button type="button" onClick={addRow}>
-          Add Row
-        </button>
-      </div>
-      <div style={gridStyle}>
-        <AgGridReact
-          rowData={rowData}
-          // theme={_customTheme}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          sideBar={sideBar}
-          rowSelection={'multiple'}
-          copyHeadersToClipboard={true}
-          allowContextMenuWithControlKey={true}
-          onGridReady={onGridReady}
-        />
-      </div>
-    </>
+    <Styled.Container>
+      <Typography group="heading" variant="h2">
+        Fusion Framework AG Grid Cookbook
+      </Typography>
+      <Tabs activeTab={activeTab} onChange={handleChange}>
+        <Styled.Tabs>
+          <Tabs.Tab>Basic Example</Tabs.Tab>
+          <Tabs.Tab>Charts Example</Tabs.Tab>
+        </Styled.Tabs>
+        <Tabs.Panels conditionalRender>
+          <Tabs.Panel>
+            <BasicExample />
+          </Tabs.Panel>
+          <Tabs.Panel>
+            <ChartsExample />
+          </Tabs.Panel>
+        </Tabs.Panels>
+      </Tabs>
+    </Styled.Container>
   );
 };
 
