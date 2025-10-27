@@ -1,4 +1,4 @@
-import { type ReactElement, useCallback, useMemo, useRef, useState } from 'react';
+import { type ReactElement, useCallback, useMemo, useRef } from 'react';
 import { AgGridReact } from '@equinor/fusion-framework-react-ag-grid';
 import type { ColDef } from '@equinor/fusion-framework-react-ag-grid/community';
 import { Button, Divider, List, Typography } from '@equinor/eds-core-react';
