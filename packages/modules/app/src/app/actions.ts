@@ -25,7 +25,7 @@ const createActions = () => ({
 
   fetchManifest: createAsyncAction(
     'fetch_manifest',
-    (key: string, update?: boolean) => ({ payload: key, meta: { update } }),
+    (key: string, tag?: string, update?: boolean) => ({ payload: { key, tag }, meta: { update } }),
     (manifest: AppManifest) => ({ payload: manifest }),
     (error: unknown) => ({ payload: error }),
   ),

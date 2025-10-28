@@ -20,6 +20,14 @@ export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = 
   props?: TProps;
 };
 
+/**
+ * Reference to an app, used to fetch app manifest from app service
+ */
+export type AppReference = {
+  appKey: string;
+  tag?: string; // defaults to 'latest'
+};
+
 // TODO: change to module-services when new app service is created
 export type ModuleDeps = [HttpModule, ServiceDiscoveryModule, EventModule];
 
