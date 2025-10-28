@@ -7,31 +7,54 @@ export default sidebar({
       prefix: '/guide/',
       children: [
         'app/',
-        'app/getting-started',
         {
-          text: 'Cookbooks',
-          link: 'app/cookbooks.md',
-          prefix: 'app',
-          children: [
-            {
-              text: 'AG-Grid',
-              link: 'ag-grid.md',
-            },
-          ],
+          text: 'Authentication',
+          link: 'app/docs/msal.md',
         },
-        'app/settings',
-        'app/feature-flag',
-        'app/people',
-        'app/authentication',
-        'app/legacy',
-        'app/tips_and_tricks',
-        'app/widget',
+        // 'app/getting-started',
+        // {
+        //   text: 'Cookbooks',
+        //   link: 'app/cookbooks.md',
+        //   prefix: 'app',
+        //   children: [
+        //     {
+        //       text: 'AG-Grid',
+        //       link: 'ag-grid.md',
+        //     },
+        //   ],
+        // },
+        // 'app/settings',
+        // 'app/feature-flag',
+        // 'app/people',
+        // 'app/legacy',
+        // 'app/tips_and_tricks',
+        // 'app/widget',
       ],
     },
     {
       text: 'Portal',
       prefix: '/guide/portal',
       children: ['widget/'],
+    },
+    {
+      text: 'Dev Server',
+      link: '/cli/docs/dev-server.md',
+    },
+    {
+      text: 'Cookbooks',
+      link: '/cookbooks/index.md',
+    }
+  ],
+  '/cookbooks/': [
+    {
+      text: 'Cookbooks',
+      link: 'index.md',
+      children: [
+        {
+          text: 'React App MSAL',
+          link: 'react-app-msal.md',
+        },
+      ],
     },
   ],
   '/cli/': [
