@@ -24,12 +24,12 @@ export const handleFetchManifest =
       // when request is received, abort any ongoing request and start new
       switchMap((action) => {
         const {
-          payload: appKey,
+          payload: { key, tag },
           meta: { update },
         } = action;
 
         // fetch manifest from provider
-        const subject = from(provider.getAppManifest(appKey)).pipe(
+        const subject = from(provider.getAppManifest(key, tag)).pipe(
           // filter out null values
           filter((x) => !!x),
           // allow multiple subscriptions

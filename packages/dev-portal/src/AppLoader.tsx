@@ -14,6 +14,15 @@ import type { AppModule } from '@equinor/fusion-framework-module-app';
 import EquinorLoader from './EquinorLoader';
 
 /**
+ * Gets the app tag/version from the current URL search parameters
+ * @returns The app tag/version if present in URL, otherwise null
+ */
+export const getAppTagFromUrl = (): string | null => {
+  const url = new URL(window.location.href);
+  return url.searchParams.get('aTag');
+};
+
+/**
  * React Functional Component for handling current application
  *
  * this component will set the current app by provided appKey.
@@ -38,6 +47,12 @@ export const AppLoader = (props: { readonly appKey: string }) => {
   );
 
   useEffect(() => {
+    const tag = getAppTagFromUrl();
+
+    if (tag) {
+      fusion.modules.app.setCurrentApp({ appKey, tag });
+      return;
+    }
     /** when appKey property change, assign it to current */
     fusion.modules.app.setCurrentApp(appKey);
   }, [appKey, fusion]);

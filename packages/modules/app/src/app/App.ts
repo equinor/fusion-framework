@@ -311,6 +311,9 @@ export class App<
   get appKey(): string {
     return this.#state.value.appKey;
   }
+  get tag(): string | undefined {
+    return this.#state.value.tag;
+  }
 
   get manifest(): Readonly<AppManifest> | undefined {
     return this.state.manifest;
@@ -564,7 +567,8 @@ export class App<
             }),
           error: (err) => {
             // emit error and complete the stream
-            subscriber.error(err), this.#state.next(actions.initialize.failure(err));
+            subscriber.error(err);
+            this.#state.next(actions.initialize.failure(err));
           },
           complete: () => {
             // dispatch initialize success action to indicate that the application has been initialized
@@ -586,7 +590,7 @@ export class App<
   }
 
   public loadManifest(update?: boolean) {
-    this.#state.next(actions.fetchManifest(this.appKey, update));
+    this.#state.next(actions.fetchManifest(this.appKey, this.tag, update));
   }
 
   public updateManifest(manifest: AppManifest, replace?: false) {
