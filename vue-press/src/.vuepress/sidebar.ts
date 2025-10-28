@@ -51,8 +51,86 @@ export default sidebar({
       link: 'index.md',
       children: [
         {
-          text: 'React App MSAL',
-          link: 'react-app-msal.md',
+          text: 'React Applications',
+          children: [
+            {
+              text: 'Basic React App',
+              link: 'react-app-basic.md',
+            },
+            {
+              text: 'MSAL Authentication',
+              link: 'react-app-msal.md',
+            },
+            {
+              text: 'AG Grid',
+              link: 'react-app-ag-grid.md',
+            },
+            {
+              text: 'App Loader',
+              link: 'react-app-apploader.md',
+            },
+            {
+              text: 'Assets',
+              link: 'react-app-assets.md',
+            },
+            {
+              text: 'Bookmarks',
+              link: 'react-app-bookmark.md',
+            },
+            {
+              text: 'Advanced Bookmarks',
+              link: 'react-app-bookmark-advanced.md',
+            },
+            {
+              text: 'Charts',
+              link: 'react-app-charts.md',
+            },
+            {
+              text: 'Context',
+              link: 'react-app-context.md',
+            },
+            {
+              text: 'Custom Error Handling',
+              link: 'react-app-context-custom-error.md',
+            },
+            {
+              text: 'Environment Variables',
+              link: 'react-app-environment-variables.md',
+            },
+            {
+              text: 'Feature Flags',
+              link: 'react-app-feature-flag.md',
+            },
+            {
+              text: 'Custom Modules',
+              link: 'react-app-module.md',
+            },
+            {
+              text: 'People Service',
+              link: 'react-app-people.md',
+            },
+            {
+              text: 'Router',
+              link: 'react-app-router.md',
+            },
+            {
+              text: 'Settings',
+              link: 'react-app-settings.md',
+            },
+          ],
+        },
+        {
+          text: 'Other Examples',
+          children: [
+            {
+              text: 'Vanilla JavaScript',
+              link: 'app-vanilla.md',
+            },
+            {
+              text: 'Portal',
+              link: 'app-portal.md',
+            },
+          ],
         },
       ],
     },

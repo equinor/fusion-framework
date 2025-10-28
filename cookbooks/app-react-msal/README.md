@@ -1,62 +1,45 @@
 # MSAL Authentication Cookbook
 
-This cookbook demonstrates how to implement Microsoft authentication using the MSAL module in a React application with the Fusion Framework.
+This cookbook demonstrates how to use Microsoft authentication (MSAL v4) in your Fusion Framework application.
 
-## Overview
+## What This Shows
 
-This example showcases:
-- **MSAL v4** authentication with Azure AD
-- React hooks for authentication state management
-- Token acquisition and management
-- Integration with Fusion Framework's module system
-- Displaying current user account information
+This cookbook illustrates how to:
+- Get the current authenticated user account
+- Acquire access tokens for API calls
+- Use service discovery to get default scopes
+- Display authentication state in your UI
 
-## Features
+## Key Concepts
 
-- ✅ **User Authentication**: Login/logout functionality with Azure AD
-- ✅ **Token Management**: Automatic token acquisition and refresh
-- ✅ **Account Information**: Display current user account details
-- ✅ **React Hooks**: Simple hooks for accessing authentication state
-- ✅ **Service Discovery**: Integration with framework service discovery
+The MSAL module provides React hooks that make authentication simple:
+- `useCurrentAccount()` - Get the logged-in user's information
+- `useAccessToken()` - Get just the token string
+- `useToken()` - Get the full authentication result
 
-## Getting Started
+## Code Example
 
-### Prerequisites
+### Getting User Account
 
-- Node.js 18+ and pnpm
-- Azure AD app registration with proper redirect URIs
-- Required environment variables configured
+```typescript
+import { useCurrentAccount } from '@equinor/fusion-framework-react-app/msal';
 
-### Environment Variables
-
-Configure the following environment variables:
-
-```bash
-# Azure AD Configuration
-AZURE_TENANT_ID=your-tenant-id
-AZURE_CLIENT_ID=your-client-id
-AZURE_REDIRECT_URI=http://localhost:3000/callback
-
-# Optional: Azure AD B2C support
-AZURE_B2C_TENANT_ID=your-b2c-tenant-id
-AZURE_B2C_CLIENT_ID=your-b2c-client-id
+export const App = () => {
+  // Get the current user account
+  const user = useCurrentAccount();
+  
+  return (
+    <div>
+      <h1>😎 Current user:</h1>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+    </div>
+  );
+};
 ```
 
-### Installation
+### Acquiring Access Tokens
 
-```bash
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-```
-
-## Code Examples
-
-### Using React Hooks
-
-The cookbook uses React hooks from `@equinor/fusion-framework-react-app/msal`:
+The cookbook shows how to use service discovery to get default scopes:
 
 ```typescript
 import { useFramework } from '@equinor/fusion-framework-react-app/framework';
@@ -65,172 +48,105 @@ import {
   useToken,
   useCurrentAccount,
 } from '@equinor/fusion-framework-react-app/msal';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export const App = () => {
-  // Get current user account
   const user = useCurrentAccount();
-  
-  // Get framework instance
   const framework = useFramework();
-  
-  // Manage scopes state
   const [scopes, setScopes] = useState<string[]>([]);
-
-  // Get access token (string)
-  const { token: accessToken } = useAccessToken(useMemo(() => ({ scopes }), [scopes]));
   
-  // Get full token response
-  const { token } = useToken(useMemo(() => ({ scopes }), [scopes]));
+  // Get default scopes from the framework's service discovery module
+  useEffect(() => {
+    framework.modules.serviceDiscovery
+      .resolveService('portal') // Resolve the portal service
+      .then((x) => x.defaultScopes) // Get its default scopes
+      .then(setScopes);
+  }, [framework]);
 
   return (
     <div>
-      <h1>Current user:</h1>
+      <h1>😎 Current user:</h1>
       <pre>{JSON.stringify(user, null, 2)}</pre>
       
-      <div>
-        <h2>Access Token:</h2>
-        <code>{accessToken}</code>
-      </div>
+      {/* Show tokens if we have scopes */}
+      {scopes.length && <AccessToken scopes={scopes} />}
     </div>
   );
 };
 ```
 
-### Using Framework Directly
-
-You can also access the MSAL provider directly from the framework:
+### The AccessToken Component
 
 ```typescript
-const framework = useFramework();
+import {
+  useAccessToken,
+  useToken,
+} from '@equinor/fusion-framework-react-app/msal';
+import { useMemo } from 'react';
 
-// Get current account
-const account = framework.modules.auth.account;
-
-// Acquire access token (MSAL v4 format)
-const token = await framework.modules.auth.acquireAccessToken({
-  request: { scopes: ['User.Read'] }
-});
-
-// Login
-await framework.modules.auth.login({
-  request: { scopes: ['User.Read'] }
-});
-
-// Logout
-const success = await framework.modules.auth.logout();
-```
-
-### MSAL v4 Format
-
-The cookbook uses MSAL v4 compatible token acquisition:
-
-```typescript
-// Recommended: MSAL v4 format
-const { token } = useAccessToken(
-  useMemo(() => ({ 
-    request: { scopes: ['User.Read', 'api.read'] } 
-  }), [])
-);
-
-// Legacy format (still supported via proxy layer)
-const { token: legacyToken } = useAccessToken(
-  useMemo(() => ({ scopes: ['User.Read'] }), [])
-);
-```
-
-## Available Hooks
-
-### `useCurrentAccount()`
-
-Returns the current authenticated account information.
-
-```typescript
-const account = useCurrentAccount();
-// Returns: AccountInfo | null
-```
-
-### `useAccessToken(options)`
-
-Returns just the access token string.
-
-```typescript
-const { token, error, loading } = useAccessToken({ 
-  request: { scopes: ['User.Read'] } 
-});
-```
-
-### `useToken(options)`
-
-Returns the full authentication result object.
-
-```typescript
-const { token, error, loading } = useToken({ 
-  request: { scopes: ['User.Read'] } 
-});
-// token: AuthenticationResult with full token response
-```
-
-## Configuration
-
-The MSAL module is automatically configured via the app's module system. The configuration happens through environment variables and the framework's configuration system.
-
-### Basic Configuration
-
-```typescript
-import { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
-
-export const configure: AppModuleInitiator = (configurator, env) => {
-  console.log('Configuring application', env);
+/**
+ * Component for displaying access tokens
+ */
+const AccessToken = ({ scopes }: { scopes: string[] }) => {
+  // Get just the token string
+  const { token: accessToken } = useAccessToken(useMemo(() => ({ scopes }), [scopes]));
   
-  // Callbacks for lifecycle events
-  configurator.onConfigured((config) => {
-    console.log('Application configured', config);
-  });
+  // Get the full authentication result (includes expiry, scopes, etc.)
+  const { token } = useToken(useMemo(() => ({ scopes }), [scopes]));
   
-  configurator.onInitialized((instance) => {
-    console.log('Application initialized', instance);
-  });
+  return (
+    <div>
+      <h2>🧩 Token:</h2>
+      <b>Access token (string):</b>
+      <code>{accessToken}</code>
+      
+      <b>Full token response:</b>
+      <pre>{JSON.stringify(token, null, 4)}</pre>
+    </div>
+  );
 };
 ```
 
-## MSAL v4 Migration Notes
+## Understanding the Pattern
 
-This cookbook has been updated to use **MSAL Browser v4**. Key changes:
+### Service Discovery for Scopes
 
-1. **Nested Request Objects**: All token operations now use nested `request` objects
-2. **Return Value Changes**: `logout()` returns `boolean`, `handleRedirect()` returns `AuthenticationResult | null`
-3. **New Properties**: Use `account` instead of `defaultAccount`
-4. **Backward Compatible**: Legacy format still works via proxy layer
+The framework's service discovery module helps you get the right scopes for different services:
 
-For detailed migration information, see the [MSAL Module README](../../packages/modules/msal/README.md).
+```typescript
+framework.modules.serviceDiscovery
+  .resolveService('portal')
+  .then((service) => service.defaultScopes)
+```
 
-## Troubleshooting
+This ensures you're requesting the correct permissions for the service you want to access.
 
-### Common Issues
+### Memoizing Scope Objects
 
-**Authentication Loop**
-- Check redirect URIs match your application's routing
-- Verify redirect URI is registered in Azure AD
+When passing options to hooks, wrap them in `useMemo` to avoid unnecessary re-renders:
 
-**Token Acquisition Fails**
-- Verify scopes are properly configured
-- Check user has necessary permissions
+```typescript
+const { token } = useAccessToken(useMemo(() => ({ scopes }), [scopes]));
+```
 
-**Account Not Found**
-- Ensure user is logged in
-- Check `useCurrentAccount()` returns non-null value
-- Verify MSAL initialization completed successfully
+### AccessToken vs Token
 
-## Additional Resources
+- `useAccessToken()` returns just the token string - useful for API calls
+- `useToken()` returns the full response - includes expiry, scopes, account info, etc.
 
-- [MSAL Module Documentation](../../packages/modules/msal/README.md)
-- [Microsoft MSAL Browser Documentation](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser)
-- [Azure AD App Registration Guide](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
+## Authentication Flow
 
-## Related Cookbooks
+1. User logs in through Azure AD
+2. MSAL module stores the authentication state
+3. Hooks provide access to account and tokens
+4. Tokens are automatically refreshed when needed
 
-- [app-react](../app-react/README.md) - Basic React app setup
-- [app-react-router](../app-react-router/README.md) - React Router integration
-- [app-react-people](../app-react-people/README.md) - People service integration
+## When to Use This
 
+Use MSAL authentication when:
+- You need to verify the user's identity
+- You need to make authenticated API calls
+- You want to display user information
+- You're building an enterprise application with Azure AD
+
+The MSAL module handles all the complexity of token acquisition, refresh, and storage automatically.

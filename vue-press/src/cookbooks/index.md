@@ -25,28 +25,27 @@ Cookbooks follow the [KISS principle](https://en.wikipedia.org/wiki/KISS_princip
 
 Our React cookbooks demonstrate how to build applications using the Fusion Framework with React:
 
+- **[Basic React App](react-app-basic.md)** - Foundation for React applications
 - **[MSAL Authentication](react-app-msal.md)** - Microsoft Authentication Library (MSAL v4) integration with Azure AD
-- **Basic React App** - Foundation for React applications
-- **AG Grid** - Data tables and grids integration
-- **App Loader** - Application loading patterns and strategies
-- **Assets** - Static asset management and loading
-- **Bookmarks** - Bookmark functionality with persistence
-- **Advanced Bookmarks** - Multi-page bookmark features with routing
-- **Charts** - Data visualization and chart components
-- **Context** - Shared context usage patterns
-- **Custom Error Handling** - Error boundaries and custom error contexts
-- **Environment Variables** - Configuration management with environment variables
-- **Feature Flags** - Feature toggle implementation
-- **Custom Modules** - Creating and integrating custom modules
-- **People Service** - People search and person component integration
-- **Router** - Client-side routing and navigation
-- **Settings** - Application settings management
+- **[AG Grid](react-app-ag-grid.md)** - Data tables and grids integration
+- **[App Loader](react-app-apploader.md)** - Application loading patterns and strategies
+- **[Assets](react-app-assets.md)** - Static asset management and loading
+- **[Bookmarks](react-app-bookmark.md)** - Bookmark functionality with persistence
+- **[Advanced Bookmarks](react-app-bookmark-advanced.md)** - Multi-page bookmark features with routing
+- **[Charts](react-app-charts.md)** - Data visualization and chart components
+- **[Context](react-app-context.md)** - Shared context usage patterns
+- **[Custom Error Handling](react-app-context-custom-error.md)** - Error boundaries and custom error contexts
+- **[Environment Variables](react-app-environment-variables.md)** - Configuration management with environment variables
+- **[Feature Flags](react-app-feature-flag.md)** - Feature toggle implementation
+- **[Custom Modules](react-app-module.md)** - Creating and integrating custom modules
+- **[People Service](react-app-people.md)** - People search and person component integration
+- **[Router](react-app-router.md)** - Client-side routing and navigation
+- **[Settings](react-app-settings.md)** - Application settings management
 
 ### Other Examples
 
-- **Vanilla JavaScript** - Framework usage without React
-- **Portal** - Portal framework demonstration
-- **POC Portal** - Proof of concept portal application
+- **[Vanilla JavaScript](app-vanilla.md)** - Framework usage without React
+- **[Portal](app-portal.md)** - Portal framework demonstration
 
 ## Getting Started
 
