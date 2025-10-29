@@ -2,24 +2,6 @@
 
 Package for developing applications that uses the `@equinor/fusion-framework`.
 
-[API documentation](https://equinor.github.io/fusion-framework/modules/_equinor_fusion_framework_react_app.html)
-
-__Dependencies__
-
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fframework%2Fpackage.json&label=framework&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/framework)
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule%2Fpackage.json&label=module&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module)
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule-http%2Fpackage.json&label=module-http&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module-http)
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Fmodule-msal%2Fpackage.json&label=module-msal&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/module-msal)
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Freact-module%2Fpackage.json&label=react-module&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/react-module)
-
-[<img src="https://img.shields.io/github/package-json/v/equinor/fusion-framework?filename=packages%2Freact-module-app-config%2Fpackage.json&label=react-module-app-config&style=for-the-badge" />](https://github.com/equinor/fusion-framework/tree/main/packages/react-module-app-config)
-
-
 ## Configure
 ```tsx
 // config.ts
@@ -63,6 +45,38 @@ const ShowToken = () => {
   return <span>{token ?? 'fetching token'}</span>
 }
 ```
+
+## MSAL Authentication
+
+> [!IMPORTANT]
+> `@equinor/fusion-framework-module-msal` must be installed to make MSAL hooks available
+
+> [!CAUTION]
+> **Applications should NOT configure the MSAL module themselves.** The MSAL module must be configured by the host/portal application for proper module hoisting. Apps should only use the hooks to access the already-configured MSAL module.
+
+This package includes React hooks for Microsoft authentication using MSAL v4.
+
+```tsx
+import { useCurrentAccount, useAccessToken, useToken } from '@equinor/fusion-framework-react-app/msal';
+
+const scopes = ['User.Read', 'api.read'];
+
+function MyComponent() {
+  // Get current logged-in user
+  const user = useCurrentAccount();
+  
+  // Get access token for API calls
+  const { token: accessToken } = useAccessToken( { scopes } );
+  
+  // Get full token details
+  const { token } = useToken( { scopes } );
+  
+  if (!user) return <div>Please log in</div>;
+  return <div>Welcome, {user.name}!</div>;
+}
+```
+
+📖 **[See MSAL Authentication Documentation](docs/msal.md) for complete API reference, examples, and migration guide.**
 
 ## Http
 
@@ -122,4 +136,4 @@ export const configure: ModuleInitiator = (appConfigurator, args) => {
 }
 ```
 
-[see module](../modules/feature-flag/README.md) for more technical information;
+[see module](https://equinor.github.io/fusion-framework/modules/feature-flag/module.html) for more technical information;
