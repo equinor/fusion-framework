@@ -11,4 +11,6 @@ Our vision is to provide an framework which is the foundation for all applicatio
 :::
 
 Our philosophy is to create small stand-alone modules which the developers can use in portals and application. [read more about modules](../../modules/)
+
+<!-- @include: ../../../../packages/react/app/README.md -->
  

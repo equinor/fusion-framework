@@ -59,14 +59,32 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   };
   #requiresAuth?: boolean;
 
+  /**
+   * The MSAL client instance.
+   *
+   * Provides access to the underlying MSAL PublicClientApplication for advanced use cases.
+   * Prefer using provider methods for standard authentication operations.
+   */
   get client(): IMsalClient {
     return this.#client;
   }
 
+  /**
+   * The currently authenticated account.
+   *
+   * Returns the active account if a user is authenticated, or null if no user is logged in.
+   * This is a shorthand for `client.getActiveAccount()`.
+   */
   get account(): AccountInfo | null {
     return this.#client.getActiveAccount();
   }
 
+  /**
+   * Creates a new MSAL provider instance.
+   *
+   * @param config - Complete MSAL configuration including client, telemetry, and auth requirements
+   * @throws {Error} If client is not provided in configuration
+   */
   constructor(config: MsalConfig) {
     super({
       version: MsalModuleVersion.Latest,
@@ -88,16 +106,33 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
     this.#client = config.client;
   }
 
+  /**
+   * Initializes the MSAL provider and sets up authentication state.
+   *
+   * This method must be called before using any authentication operations. It performs:
+   * - Client initialization
+   * - Redirect result handling (if returning from auth flow)
+   * - Automatic login attempt if requiresAuth is enabled and no valid session exists
+   *
+   * @returns Promise that resolves when initialization is complete
+   *
+   * @remarks
+   * The provider will attempt automatic login with empty scopes if requiresAuth is true.
+   * Apps should call acquireToken with actual scopes after initialization completes.
+   */
   async initialize(): Promise<void> {
     const measurement = this._trackMeasurement('initialize', TelemetryLevel.Debug);
+    // Initialize the underlying MSAL client first
     await this.#client.initialize();
 
     // Only attempt authentication if this provider requires it
     if (this.#requiresAuth) {
-      // First, check if we're returning from an authentication redirect
+      // Priority 1: Check if returning from redirect-based authentication
+      // This handles cases where user just completed a login/acquireToken via redirect
       const handleRedirectResult = await this.handleRedirect();
       if (handleRedirectResult?.account) {
         // Successfully authenticated via redirect - set as active account
+        // This means the user was redirected to Microsoft and came back authenticated
         this.#client.setActiveAccount(handleRedirectResult.account);
         this._trackEvent('initialize.active-account-set-by-callback', TelemetryLevel.Information, {
           properties: {
@@ -105,10 +140,13 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           },
         });
       } else if (!this.#client.hasValidClaims) {
-        // No valid session found - attempt automatic login
+        // Priority 2: No valid session found - attempt automatic login
+        // This handles first-time app load when no authentication state exists
         // Note: Using empty scopes here as we don't know what scopes the app needs yet
+        // App should call acquireToken with actual scopes after initialization
         const loginResult = await this.login({ request: { scopes: [] } });
         if (loginResult?.account) {
+          // Automatic login successful - set as active account
           this.#client.setActiveAccount(loginResult.account);
           this._trackEvent('initialize.active-account-set-by-login', TelemetryLevel.Information, {
             properties: {
@@ -117,6 +155,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
           });
         }
       }
+      // Priority 3: If hasValidClaims is true, user is already authenticated - no action needed
     }
     measurement.measure();
   }
@@ -202,6 +241,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const measurement = this._trackMeasurement('acquireToken', TelemetryLevel.Information, {
         properties: telemetryProperties,
       });
+      // Merge account, original request options, and resolved scopes
+      // Account ensures context awareness, request preserves custom options, scopes uses resolved value
       const result = await this.#client.acquireToken({
         behavior,
         silent,
@@ -268,14 +309,18 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   async login(options: LoginOptions): Promise<LoginResult> {
     const { behavior = 'redirect', silent = true, request } = options;
 
+    // Determine if silent login is possible based on available account/hint information
+    // Silent login requires either an account object or a loginHint to work
     const canLoginSilently = silent && (request.account || request.loginHint);
 
     const telemetryProperties = { behavior, silent, canLoginSilently, scopes: request.scopes };
 
-    // if no login hint is provided, use the active account's username
+    // Default to active account if no account/hint provided in request
+    // This allows silent login to work automatically with existing authentication state
     request.account ??= this.account ?? undefined;
 
-    // if no scopes are provided, use an empty array
+    // Default to empty scopes if none provided
+    // Empty scopes are tracked for monitoring but allowed for compatibility
     if (!request.scopes) {
       request.scopes = [];
       this._trackEvent('login.missing-scope', TelemetryLevel.Warning, {
@@ -316,7 +361,30 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   }
 
   /**
-   * Logout user
+   * Logs out the current user and clears authentication state.
+   *
+   * This method initiates a logout flow using redirect, which navigates to Microsoft's
+   * logout endpoint to clear session cookies and tokens. The method returns true on
+   * successful logout initiation, or false if logout fails.
+   *
+   * @param options - Optional logout configuration
+   * @param options.account - Account to log out (defaults to active account)
+   * @param options.redirectUri - URI to redirect to after logout completes
+   * @returns Promise resolving to true on success, false on failure
+   *
+   * @remarks
+   * - Logout always uses redirect flow (more reliable than popup)
+   * - Returns false on error instead of throwing to prevent breaking app flow
+   * - Browser will navigate away during logout process
+   *
+   * @example
+   * ```typescript
+   * // Basic logout
+   * const success = await provider.logout();
+   *
+   * // Logout with custom redirect
+   * await provider.logout({ redirectUri: 'https://app.com/logout' });
+   * ```
    */
   async logout(options?: LogoutOptions): Promise<boolean> {
     this._trackEvent('logout', TelemetryLevel.Information, {
@@ -339,7 +407,27 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   }
 
   /**
-   * Handle authentication redirect
+   * Processes any pending authentication redirect after browser navigation.
+   *
+   * This method must be called on app initialization to handle tokens and account information
+   * returned by Microsoft's identity provider after redirect-based authentication flows.
+   *
+   * @returns Promise resolving to authentication result or null if no redirect pending
+   *
+   * @remarks
+   * - Should be called once on app startup before other authentication operations
+   * - Only returns a result if user just completed redirect-based login/acquireToken
+   * - Safe to call even when no redirect is pending (returns null)
+   *
+   * @example
+   * ```typescript
+   * // Call on app startup
+   * const result = await provider.handleRedirect();
+   * if (result?.account) {
+   *   console.log(`Authenticated as: ${result.account.username}`);
+   *   provider.client.setActiveAccount(result.account);
+   * }
+   * ```
    */
   async handleRedirect(): Promise<AuthenticationResult | null> {
     // Process any pending redirect from authentication flow
@@ -356,7 +444,26 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   }
 
   /**
-   * Create a proxy provider for version compatibility
+   * Creates a proxy provider for version compatibility.
+   *
+   * This method creates a version-specific proxy wrapper around this provider to maintain
+   * backward compatibility with different MSAL versions while using the latest v4 implementation.
+   *
+   * @param version - Target version string (e.g., '2.0.0', '4.0.0', 'v2', 'v4')
+   * @returns Proxy provider covariant with the specified version
+   *
+   * @remarks
+   * - Proxies adapt the v4 API to match older version signatures
+   * - Useful for gradual migration scenarios
+   * - Version compatibility is tracked via telemetry
+   * - Throws error if unsupported version is requested
+   *
+   * @example
+   * ```typescript
+   * // Create v2-compatible proxy
+   * const v2Proxy = provider.createProxyProvider('2.0.0');
+   * await v2Proxy.login(); // Uses v2-compatible signature
+   * ```
    */
   createProxyProvider<T = IMsalProvider>(version: string): T {
     // Track proxy provider creation for compatibility monitoring

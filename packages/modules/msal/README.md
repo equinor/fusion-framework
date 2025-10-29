@@ -1,6 +1,8 @@
 
 `@equinor/fusion-framework-module-msal` provides secure Azure AD authentication for browser applications using Microsoft's MSAL (Microsoft Authentication Library). Perfect for web applications, SPAs, and React apps that need to authenticate with Microsoft services.
 
+> **Version**: This package now uses **MSAL Browser v4**, providing the latest security improvements and features from Microsoft.
+
 ## Features
 
 - **Single Sign-On (SSO)** support for Microsoft Azure AD and Azure AD B2C
@@ -9,6 +11,7 @@
 - **Silent Authentication** for seamless user experience
 - **Popup & Redirect Flows** for different authentication scenarios
 - **Zero Configuration** with sensible defaults and optional customization
+- **MSAL v4 Compatibility** with v2 proxy layer for backward compatibility
 
 ## Quick Start
 
@@ -17,24 +20,59 @@ pnpm add @equinor/fusion-framework-module-msal
 ```
 
 ```typescript
-import { enableMSAL } from '@equinor/fusion-framework-module-msal';
+import { enableMSAL, initialize, type IMsalProvider } from '@equinor/fusion-framework-module-msal';
 import { ModulesConfigurator } from '@equinor/fusion-framework-module';
 
+// 1. Configure the module
 const configurator = new ModulesConfigurator();
 
 enableMSAL(configurator, (builder) => {
   builder.setClientConfig({
-    tenantId: 'your-tenant-id',
-    clientId: 'your-client-id',
-    redirectUri: 'https://your-app.com/callback'
+    auth: {
+      clientId: 'your-client-id',
+      tenantId: 'your-tenant-id',
+      redirectUri: 'https://your-app.com/callback'
+    }
   });
+  // With requiresAuth=true, the module will attempt automatic login during initialization
+  // and await a valid authenticated account before initialization completes
   builder.setRequiresAuth(true);
 });
 
-const framework = await initialize();
-const token = await framework.auth.acquireAccessToken({ 
-  scopes: ['https://graph.microsoft.com/.default'] 
+// 2. Initialize the framework (auto-initializes auth provider)
+const framework = await initialize(configurator);
+const auth: IMsalProvider = framework.auth;
+
+// 3. Optional: Handle authentication redirect manually (auto-called during initialization)
+const redirectResult = await auth.handleRedirect();
+if (redirectResult?.account) {
+  console.log('Authenticated:', redirectResult.account.username);
+}
+
+// 4. Use authentication
+// Option A: Token acquisition (v4 format - recommended)
+const token = await auth.acquireAccessToken({ 
+  request: { scopes: ['api://your-app-id/.default'] } 
 });
+
+// Option B: Legacy format (still supported via v2 proxy)
+const legacyToken = await auth.acquireAccessToken({ 
+  scopes: ['api://your-app-id/.default'] 
+});
+
+// Option C: Silent authentication with fallback
+try {
+  const result = await auth.login({ 
+    request: { scopes: ['api://your-app-id/.default'] },
+    silent: true  // Attempts SSO first
+  });
+} catch {
+  // Fallback to interactive if silent fails
+  await auth.login({ 
+    request: { scopes: ['api://your-app-id/.default'] },
+    behavior: 'popup'
+  });
+}
 ```
 
 > [!IMPORTANT]
@@ -47,9 +85,9 @@ const token = await framework.auth.acquireAccessToken({
 
 | Setting | Description | Required |
 |---------|-------------|----------|
-| `clientId` | Azure AD application client ID | ✅ |
-| `tenantId` | Azure AD tenant ID | ✅ |
-| `redirectUri` | Authentication callback URL | Optional |
+| `auth.clientId` | Azure AD application client ID | ✅ |
+| `auth.tenantId` | Azure AD tenant ID | ✅ |
+| `auth.redirectUri` | Authentication callback URL | Optional |
 
 ### Optional Settings
 
@@ -71,38 +109,88 @@ AZURE_REDIRECT_URI=https://your-app.com/callback
 
 ## API Reference
 
-### `enableMSAL(configurator, configure)`
+### `enableMSAL(configurator, configure?)`
 
 Enables the MSAL module in your Fusion Framework application.
 
 **Parameters:**
-- `configurator`: `ModulesConfigurator` - The modules configurator instance
-- `configure`: `(builder: IAuthConfigurator) => void` - Configuration function
+- `configurator`: `IModulesConfigurator` - The modules configurator instance
+- `configure?`: `(builder: { setClientConfig, setRequiresAuth }) => void` - Optional configuration function
 
-### `IAuthProvider`
+**Returns:** `void`
+
+**Example:**
+```typescript
+enableMSAL(configurator, (builder) => {
+  builder.setClientConfig({ auth: { clientId: '...', tenantId: '...' } });
+  builder.setRequiresAuth(true);
+});
+```
+
+### Type Definitions
+
+#### `LoginOptions`
+
+```typescript
+type LoginOptions = {
+  request: PopupRequest | RedirectRequest;  // MSAL request object
+  behavior?: 'popup' | 'redirect';          // Auth method (default: 'redirect')
+  silent?: boolean;                         // Attempt silent auth first (default: true)
+};
+```
+
+#### `LogoutOptions`
+
+```typescript
+type LogoutOptions = {
+  redirectUri?: string;                     // Redirect after logout
+  account?: AccountInfo;                    // Account to logout (defaults to active)
+};
+```
+
+#### `AcquireTokenOptions`
+
+```typescript
+type AcquireTokenOptions = {
+  request: PopupRequest | RedirectRequest;  // MSAL request with scopes
+  behavior?: 'popup' | 'redirect';          // Auth method (default: 'redirect')
+  silent?: boolean;                         // Attempt silent first (default: true if account available)
+};
+```
+
+### `IMsalProvider`
 
 The authentication provider interface available at `framework.auth`:
 
 ```typescript
-interface IAuthProvider {
+interface IMsalProvider {
+  // The MSAL PublicClientApplication instance
+  readonly client: IMsalClient;
+  
   // Current user account information
-  readonly defaultAccount: AccountInfo | undefined;
+  readonly account: AccountInfo | null;
+  
+  // Initialize the MSAL provider
+  initialize(): Promise<void>;
   
   // Acquire an access token for the specified scopes
-  acquireAccessToken(options: { scopes: string[] }): Promise<string | undefined>;
+  acquireAccessToken(options: AcquireTokenOptionsLegacy): Promise<string | undefined>;
   
   // Acquire full authentication result
-  acquireToken(options: { scopes: string[] }): Promise<AuthenticationResult | void>;
+  acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult>;
   
-  // Login user
-  login(): Promise<void>;
+  // Login user interactively
+  login(options: LoginOptions): Promise<LoginResult>;
   
-  // Logout user
-  logout(options?: { redirectUri?: string }): Promise<void>;
+  // Logout user (returns boolean)
+  logout(options?: LogoutOptions): Promise<boolean>;
   
-  // Handle authentication redirect
-  handleRedirect(): Promise<void | null>;
+  // Handle authentication redirect (returns AuthenticationResult | null)
+  handleRedirect(): Promise<AuthenticationResult | null>;
 }
+
+// Note: defaultAccount and other deprecated v2 properties are available only
+//       when using a v2-compatible proxy via createProxyProvider()
 ```
 
 
@@ -115,24 +203,119 @@ The module implements a hoisting pattern where the authentication provider is cr
 
 ## Migration Guide
 
-### Version 4 Breaking Changes
+### MSAL v2 to v4 Migration
 
-**Module Hoisting**: The module now uses module hoisting, meaning sub-module instances proxy the parent module instance. This creates a shared authentication state across all module instances.
+This package has been upgraded from MSAL Browser v2 to v4, providing the latest security improvements and features from Microsoft.
 
-**Removed Multi-Client Support**: This version no longer supports multiple MSAL clients (multi-tenant, multi-authority) in the same scoped instance due to how `@azure/msal-browser` uses a shared cache.
+#### What Changed in v4
 
-**Benefits of V4**:
-- Shared authentication state across application scopes
-- Improved performance and memory usage
-- Simplified configuration management
-- Better integration with Fusion Framework architecture
+**New MSAL Browser v4 Features:**
+- Enhanced security with improved token management
+- Better performance and memory usage
+- New authentication API structure with nested request objects
+- Improved error handling and retry mechanisms
+
+**Architecture Changes:**
+- **Module Hoisting**: The module uses module hoisting, meaning sub-module instances proxy the parent module instance
+- **Shared Authentication State**: Authentication state is shared across all module instances
+- **Async Initialization**: New `initialize()` method must be called before using the provider
+
+#### Breaking Changes
+
+1. **Auto-initialization via Framework**
+   ```typescript
+   // The provider initializes automatically when framework loads
+   const framework = await initialize(configurator);
+   const auth = framework.auth; // Already initialized
+   
+   // Manual initialization is only needed for standalone usage
+   const provider = new MsalProvider(config);
+   await provider.initialize();
+   ```
+
+2. **API Method Signature Updates**
+   - `logout()` now returns `Promise<boolean>` instead of `Promise<void>`
+   - `handleRedirect()` now returns `Promise<AuthenticationResult | null>` instead of `Promise<void>`
+   - Methods now expect nested request objects (v4 format)
+
+3. **Account Property Changes**
+   - Use `account` property (returns `AccountInfo | null`) - v4 native
+   - `defaultAccount` is deprecated and only available via v2 proxy layer
+   - Migration: Replace `defaultAccount` with `account` throughout your code
 
 #### Migration Steps
 
-1. **Update Configuration**: Ensure only the root module configures MSAL
-2. **Remove Duplicate Configurations**: Remove MSAL configuration from child modules
-3. **Update Authentication Logic**: Rely on shared authentication state
-4. **Test Multi-Scope Applications**: Verify authentication works across different application scopes
+1. **Update Token Acquisition** (Recommended)
+   ```typescript
+   // Before (v2 format - still works via proxy)
+   const token = await framework.auth.acquireAccessToken({ 
+     scopes: ['api.read'] 
+   });
+   
+   // After (v4 format - recommended)
+   const token = await framework.auth.acquireAccessToken({ 
+     request: { scopes: ['api.read'] } 
+   });
+   ```
+
+2. **Update Logout Handling**
+   ```typescript
+   // Before
+   await framework.auth.logout();
+   
+   // After (check return value)
+   const success = await framework.auth.logout();
+   if (success) {
+     // Handle successful logout
+   }
+   ```
+
+3. **Update Redirect Handling**
+   ```typescript
+   // Before
+   await framework.auth.handleRedirect();
+   
+   // After (handle result)
+   const result = await framework.auth.handleRedirect();
+   if (result?.account) {
+     // User authenticated successfully
+     console.log('Logged in as:', result.account.username);
+   }
+   ```
+
+4. **Update Configuration** (if needed)
+   ```typescript
+   // Ensure only the root module configures MSAL
+   enableMSAL(configurator, (builder) => {
+     builder.setClientConfig({
+       auth: {
+         clientId: 'your-client-id',
+         tenantId: 'your-tenant-id',
+         redirectUri: 'https://your-app.com/callback'
+       }
+     });
+     builder.setRequiresAuth(true);
+   });
+   ```
+
+5. **Remove Duplicate Configurations**: Remove MSAL configuration from child modules
+
+#### Backward Compatibility
+
+The module includes a **v2 proxy layer** that automatically converts v2 API calls to v4 format. This means:
+- ✅ Existing code continues to work without changes
+- ✅ Legacy format `{ scopes: [] }` is still supported
+- ✅ Deprecated v2 properties like `defaultAccount` are available via v2 proxy (with deprecation warnings)
+- ⚠️ New v4 features require using v4 format
+
+#### Benefits of Migration
+
+- **Better Security**: Latest MSAL v4 security improvements and token handling
+- **Improved Performance**: Faster token acquisition, better caching, reduced memory usage
+- **Enhanced Error Handling**: More robust error recovery and retry mechanisms
+- **Future-Proof**: Access to latest Microsoft authentication features and updates
+- **Shared State**: Improved authentication state management across app scopes via module hoisting
+- **Better Developer Experience**: Cleaner API, better TypeScript support, comprehensive documentation
 
 ## Troubleshooting
 
@@ -144,6 +327,8 @@ The module implements a hoisting pattern where the authentication provider is cr
 | **Token Acquisition Fails** | Check that required scopes are properly configured |
 | **Module Not Found** | Ensure the module is properly configured and framework is initialized |
 | **Multiple MSAL Instances** | Remove duplicate configurations from child modules |
+| **Redirect Returns Void** | For redirect flows, use `handleRedirect()` after navigation completes |
+| **Token Empty/Undefined** | Verify user is authenticated and scopes are correct |
 
 ### Getting Help
 
@@ -220,10 +405,22 @@ try {
 
 ## Additional Resources
 
-- [Microsoft Graph API Documentation](https://docs.microsoft.com/en-us/graph/)
-- [Azure AD App Registration Guide](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
-- [MSAL Browser Documentation](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser)
-- [Fusion Framework Documentation](https://github.com/equinor/fusion-framework)
+### Official Documentation
+- 🔐 [Azure AD App Registration Guide](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
+- 📚 [MSAL Browser Documentation](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/lib/msal-browser)
+- 🏗️ [Fusion Framework Documentation](https://github.com/equinor/fusion-framework)
+- 🌐 [Microsoft Identity Platform Overview](https://docs.microsoft.com/en-us/azure/active-directory/develop/)
+
+### Learning Resources
+- 📖 [MSAL Cookbook Examples](https://github.com/equinor/fusion-framework/tree/main/cookbooks/app-react-msal)
+- 🎯 [OAuth 2.0 Scopes Explained](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent)
+- 🛠️ [MSAL Troubleshooting Guide](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md)
+- 📖 [Azure AD API Permissions Guide](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-protected-web-api-app-registration)
+
+### Support
+- 💬 For questions: [Fusion Framework Discussions](https://github.com/equinor/fusion-framework/discussions)
+- 🐛 Report bugs: [Fusion Framework Issues](https://github.com/equinor/fusion-framework/issues)
+- 📧 Contact: Equinor Fusion Framework Team
 
 
 
