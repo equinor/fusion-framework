@@ -13,7 +13,7 @@ Add AgChartsEnterpriseModule support for charting
 Users can now import and use the AgChartsEnterpriseModule for advanced charting features:
 
 ```ts
-import { AgChartsEnterpriseModule, AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
+import { IntegratedChartsModule, AgChartsEnterpriseModule } from '@equinor/fusion-framework-react-ag-grid/enterprise';
 
 // Use in AG Grid configuration
 enableAgGrid(configurator, (builder) => {
