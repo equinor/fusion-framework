@@ -57,7 +57,7 @@
     "@types/lodash.mergewith": "^4.6.2",
     "rollup": "^4.39.0",
     "typescript": "^5.8.2",
-    "vite": "^7.1.9"
+    "vite": "^7.1.12"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:*",

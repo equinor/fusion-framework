@@ -61,6 +61,6 @@
     "styled-components": "^6.0.7",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "vite": "^7.1.9"
+    "vite": "^7.1.12"
   }
 }
