@@ -1,5 +1,12 @@
 # portal
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`8d50adc`](https://github.com/equinor/fusion-framework/commit/8d50adc17e81fc46da81795125832af8add5f678)]:
+  - @equinor/fusion-framework-cli@12.3.6
+
 ## 0.1.4
 
 ### Patch Changes
