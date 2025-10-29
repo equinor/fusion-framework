@@ -184,7 +184,7 @@ const App = () => {
           {token && (
             <div>
               <p>Token acquired successfully</p>
-              <pre>{token.substring(0, 50)}...</code>
+              <pre>{token.substring(0, 50)}...</pre>
             </div>
           )}
         </>
