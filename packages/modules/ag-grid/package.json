@@ -58,6 +58,6 @@
     "ag-charts-enterprise": ">=12.0.0"
   },
   "dependencies": {
-    "@equinor/eds-tokens": "^0.10.0"
+    "@equinor/eds-tokens": "^1.1.3"
   }
 }
