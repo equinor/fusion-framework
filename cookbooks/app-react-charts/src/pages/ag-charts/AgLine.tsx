@@ -1,10 +1,19 @@
 import type { AgChartOptions } from 'ag-charts-community';
 import { temperatureData } from './Data';
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
 import { AgCharts } from 'ag-charts-react';
 
-export const AgLine = (): JSX.Element => {
+/**
+ * AgLine Component - Line Chart Visualization
+ *
+ * Displays a multi-series line chart showing temperature trends including average,
+ * minimum, and maximum values across months. This component demonstrates how to create
+ * a professional line chart with multiple series, custom markers, and styled axes.
+ *
+ * @returns {ReactElement} A rendered line chart showing temperature trends
+ */
+export const AgLine = (): ReactElement => {
   // Line Chart Configuration
   const lineChartOptions = useMemo<AgChartOptions>(
     () => ({

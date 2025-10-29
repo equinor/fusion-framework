@@ -1,10 +1,19 @@
 import type { AgChartOptions } from 'ag-charts-community';
 import { salesData } from './Data';
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
 import { AgCharts } from 'ag-charts-react';
 
-export const AgArea = (): JSX.Element => {
+/**
+ * AgArea Component - Stacked Area Chart Visualization
+ *
+ * Displays a stacked area chart showing revenue composition over time, with separate
+ * areas for expenses and profit. This component demonstrates how to create a stacked
+ * area chart with custom fills, strokes, and formatted axes using AG Charts.
+ *
+ * @returns {ReactElement} A rendered stacked area chart showing revenue composition
+ */
+export const AgArea = (): ReactElement => {
   // Area Chart Configuration
   const areaChartOptions = useMemo<AgChartOptions>(
     () => ({

@@ -1,10 +1,19 @@
 import type { AgChartOptions } from 'ag-charts-community';
 import { marketShareData } from './Data';
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
 import { AgCharts } from 'ag-charts-react';
 
-export const AgPie = (): JSX.Element => {
+/**
+ * AgPie Component - Pie Chart Visualization
+ *
+ * Displays a pie chart showing market share distribution across different platforms.
+ * This component demonstrates how to create a pie chart with custom colors and proper
+ * styling using AG Charts.
+ *
+ * @returns {ReactElement} A rendered pie chart showing market share distribution
+ */
+export const AgPie = (): ReactElement => {
   // Pie Chart Configuration
   const pieChartOptions = useMemo<AgChartOptions>(
     () => ({

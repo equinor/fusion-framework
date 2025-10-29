@@ -1,10 +1,19 @@
 import type { AgChartOptions } from 'ag-charts-community';
 import { salesData } from './Data';
-import { useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
 import { AgCharts } from 'ag-charts-react';
 
-export const AgBar = (): JSX.Element => {
+/**
+ * AgBar Component - Bar Chart Visualization
+ *
+ * Displays a grouped bar chart comparing quarterly revenue and profit over time.
+ * This component demonstrates how to create a multi-series bar chart using AG Charts
+ * with formatted axes and proper styling.
+ *
+ * @returns {ReactElement} A rendered bar chart showing financial performance metrics
+ */
+export const AgBar = (): ReactElement => {
   // Bar Chart Configuration
   const barChartOptions = useMemo<AgChartOptions>(
     () => ({
