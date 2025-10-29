@@ -24,14 +24,17 @@ export function createProxyProvider<T = IMsalProvider>(
   provider: IMsalProvider,
   version: string,
 ): T {
-  // Resolve the version to get the enum version
+  // Resolve the requested version to determine which proxy to create
   const { enumVersion } = resolveVersion(version);
 
   switch (enumVersion) {
     case MsalModuleVersion.V2:
+      // Create v2-compatible proxy with legacy API adapters
       return createProxyProvider_v2(provider) as T;
     case MsalModuleVersion.V4:
     case MsalModuleVersion.Latest:
+      // Create transparent proxy for v4 - passes through to original provider
+      // This allows v4 code to be used where any version is expected
       return new Proxy(provider, {
         get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
           switch (prop) {
@@ -64,11 +67,11 @@ export function createProxyProvider<T = IMsalProvider>(
             }
             case 'initialize': {
               return () => {
-                // noop - initialize is handled by the provider
+                // noop - initialize is handled by the provider, not the proxy
               };
             }
             default: {
-              // guard that we have handled all kyes of IMsalProvider
+              // Exhaustive check: TypeScript-only guard to ensure all IMsalProvider keys are handled
               const exhausted: never = prop;
               return (target as IMsalProvider)[exhausted];
             }
