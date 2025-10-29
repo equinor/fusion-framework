@@ -9,7 +9,6 @@ import { TelemetryLevel } from '@equinor/fusion-framework-module-telemetry';
 
 import { BaseModuleProvider } from '@equinor/fusion-framework-module/provider';
 
-import { MsalModuleVersion } from './static';
 import type { MsalConfig } from './MsalConfigurator';
 import type { AcquireTokenOptionsLegacy, IMsalProvider } from './MsalProvider.interface';
 import { createProxyProvider } from './create-proxy-provider';
@@ -23,6 +22,8 @@ import type {
 
 import type { AccountInfo, AuthenticationResult } from './types';
 import { resolveVersion } from './versioning/resolve-version';
+import { version } from './version';
+import type { MsalModuleVersion } from './static';
 
 export type { IMsalProvider };
 
@@ -60,6 +61,19 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
   #requiresAuth?: boolean;
 
   /**
+   * The MSAL module version enum value indicating the API compatibility level.
+   *
+   * This getter resolves the current version string to its corresponding enum value,
+   * determining which MSAL version's API surface this provider implements. This is used
+   * for version-specific behavior and proxy provider creation.
+   *
+   * @returns The MSAL module version enum (V2, V4, etc.)
+   */
+  get msalVersion(): MsalModuleVersion {
+    return resolveVersion(version).enumVersion;
+  }
+
+  /**
    * The MSAL client instance.
    *
    * Provides access to the underlying MSAL PublicClientApplication for advanced use cases.
@@ -87,7 +101,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    */
   constructor(config: MsalConfig) {
     super({
-      version: MsalModuleVersion.Latest,
+      version,
       config,
     });
     this.#requiresAuth = config.requiresAuth;
@@ -212,8 +226,8 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult> {
-    const { behavior = 'redirect', silent = true } = options;
-    const account = this.account ?? undefined;
+    const { behavior = 'redirect', silent = true, request } = options;
+    const account = request.account ?? this.account ?? undefined;
     // Extract scopes from either new format (request.scopes) or legacy format (scopes)
     const scopes = options.request?.scopes ?? options?.scopes ?? [];
 
@@ -246,7 +260,7 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
       const result = await this.#client.acquireToken({
         behavior,
         silent,
-        request: { account, ...options.request, scopes },
+        request: { ...options.request, account, scopes },
       });
       measurement?.measure();
       return result;

@@ -3,7 +3,7 @@ import type { IMsalProvider as IMsalProvider_v2 } from './MsalProvider.interface
 import type { AccountInfo as AccountInfo_v2 } from './types';
 import { createProxyClient } from './create-proxy-client';
 import { mapAccountInfo } from './map-account-info';
-import type { MsalModuleVersion } from '../static';
+import { MsalModuleVersion } from '../static';
 
 /**
  * Creates a proxy provider for MSAL v2 compatibility.
@@ -34,6 +34,12 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
   const proxy = new Proxy(provider, {
     get: (target: IMsalProvider, prop: keyof IMsalProvider_v2) => {
       switch (prop) {
+        case 'version': {
+          return provider.version;
+        }
+        case 'msalVersion': {
+          return MsalModuleVersion.V2;
+        }
         case 'client': {
           // Return the v2-compatible client wrapper
           return v2Client as unknown as IMsalProvider_v2['client'];
@@ -133,6 +139,9 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
           };
         }
         default: {
+          if (prop === 'then') {
+            return undefined;
+          }
           // Exhaustive check to ensure all v2 properties are handled
           const exhaustiveCheck: never = prop;
           // Fallback: return original property from target for any unhandled cases

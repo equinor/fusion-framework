@@ -133,6 +133,7 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
             return await target.acquireToken({
               request: {
                 scopes: options?.scopes || [],
+                account: target.getActiveAccount() ?? undefined,
                 loginHint: options?.loginHint,
               },
               behavior: behavior,
