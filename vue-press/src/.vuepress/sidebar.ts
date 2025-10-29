@@ -7,31 +7,132 @@ export default sidebar({
       prefix: '/guide/',
       children: [
         'app/',
-        'app/getting-started',
         {
-          text: 'Cookbooks',
-          link: 'app/cookbooks.md',
-          prefix: 'app',
-          children: [
-            {
-              text: 'AG-Grid',
-              link: 'ag-grid.md',
-            },
-          ],
+          text: 'Authentication',
+          link: 'app/docs/msal.md',
         },
-        'app/settings',
-        'app/feature-flag',
-        'app/people',
-        'app/authentication',
-        'app/legacy',
-        'app/tips_and_tricks',
-        'app/widget',
+        // 'app/getting-started',
+        // {
+        //   text: 'Cookbooks',
+        //   link: 'app/cookbooks.md',
+        //   prefix: 'app',
+        //   children: [
+        //     {
+        //       text: 'AG-Grid',
+        //       link: 'ag-grid.md',
+        //     },
+        //   ],
+        // },
+        // 'app/settings',
+        // 'app/feature-flag',
+        // 'app/people',
+        // 'app/legacy',
+        // 'app/tips_and_tricks',
+        // 'app/widget',
       ],
     },
     {
       text: 'Portal',
       prefix: '/guide/portal',
       children: ['widget/'],
+    },
+    {
+      text: 'Dev Server',
+      link: '/cli/docs/dev-server.md',
+    },
+    {
+      text: 'Cookbooks',
+      link: '/cookbooks/index.md',
+    }
+  ],
+  '/cookbooks/': [
+    {
+      text: 'Cookbooks',
+      link: 'index.md',
+      children: [
+        {
+          text: 'React Applications',
+          children: [
+            {
+              text: 'Basic React App',
+              link: 'react-app-basic.md',
+            },
+            {
+              text: 'MSAL Authentication',
+              link: 'react-app-msal.md',
+            },
+            {
+              text: 'AG Grid',
+              link: 'react-app-ag-grid.md',
+            },
+            {
+              text: 'App Loader',
+              link: 'react-app-apploader.md',
+            },
+            {
+              text: 'Assets',
+              link: 'react-app-assets.md',
+            },
+            {
+              text: 'Bookmarks',
+              link: 'react-app-bookmark.md',
+            },
+            {
+              text: 'Advanced Bookmarks',
+              link: 'react-app-bookmark-advanced.md',
+            },
+            {
+              text: 'Charts',
+              link: 'react-app-charts.md',
+            },
+            {
+              text: 'Context',
+              link: 'react-app-context.md',
+            },
+            {
+              text: 'Custom Error Handling',
+              link: 'react-app-context-custom-error.md',
+            },
+            {
+              text: 'Environment Variables',
+              link: 'react-app-environment-variables.md',
+            },
+            {
+              text: 'Feature Flags',
+              link: 'react-app-feature-flag.md',
+            },
+            {
+              text: 'Custom Modules',
+              link: 'react-app-module.md',
+            },
+            {
+              text: 'People Service',
+              link: 'react-app-people.md',
+            },
+            {
+              text: 'Router',
+              link: 'react-app-router.md',
+            },
+            {
+              text: 'Settings',
+              link: 'react-app-settings.md',
+            },
+          ],
+        },
+        {
+          text: 'Other Examples',
+          children: [
+            {
+              text: 'Vanilla JavaScript',
+              link: 'app-vanilla.md',
+            },
+            {
+              text: 'Portal',
+              link: 'app-portal.md',
+            },
+          ],
+        },
+      ],
     },
   ],
   '/cli/': [

@@ -11,6 +11,11 @@ import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClien
 import { createClientLogCallback } from './create-client-log-callback';
 import { LogLevel } from '@azure/msal-browser';
 
+/**
+ * Zod schema for telemetry configuration validation.
+ *
+ * @internal
+ */
 const TelemetryConfigSchema = z.object({
   provider: z.custom<ITelemetryProvider>().optional(),
   metadata: z.record(z.string(), z.unknown()).optional().default({
@@ -20,8 +25,19 @@ const TelemetryConfigSchema = z.object({
   scope: z.array(z.string()).optional().default(['framework', 'authentication']),
 });
 
+/**
+ * Telemetry configuration for MSAL module.
+ *
+ * This configuration controls how authentication events are tracked and logged
+ * through the framework's telemetry system.
+ */
 export type TelemetryConfig = z.infer<typeof TelemetryConfigSchema>;
 
+/**
+ * Zod schema for MSAL module configuration validation.
+ *
+ * @internal
+ */
 const MsalConfigSchema = z.object({
   client: z.custom<IMsalClient>(),
   provider: z.custom<IMsalProvider>().optional(),
@@ -31,6 +47,12 @@ const MsalConfigSchema = z.object({
   telemetry: TelemetryConfigSchema,
 });
 
+/**
+ * Complete configuration object for MSAL authentication module.
+ *
+ * This type represents the full configuration including client setup, authentication
+ * requirements, telemetry, and version information.
+ */
 export type MsalConfig = z.infer<typeof MsalConfigSchema>;
 
 /**
@@ -49,11 +71,23 @@ export type MsalConfig = z.infer<typeof MsalConfigSchema>;
 export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   #msalConfig?: MsalClientConfig;
 
+  /**
+   * The MSAL module version being configured.
+   *
+   * @default Latest
+   */
   public version = MsalModuleVersion.Latest as const;
 
+  /**
+   * Creates a new MSAL configurator instance.
+   *
+   * Sets up default configuration including version and telemetry provider integration.
+   */
   constructor() {
     super();
+    // Set default version
     this._set('version', async () => this.version);
+    // Auto-detect and integrate telemetry module if available
     this._set('telemetry.provider', async (args) => {
       if (args.hasModule('telemetry')) {
         const telemetry = await args.requireInstance('telemetry');
@@ -65,7 +99,22 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   /**
    * Sets the MSAL client configuration for authentication.
    *
-   * @param config - Client configuration object with MSAL settings
+   * This method stores the configuration which will be used to create an MSAL client
+   * instance during module initialization. The client will be auto-created if not provided
+   * via `setClient`.
+   *
+   * @param config - Client configuration object with MSAL settings (client ID, tenant ID, etc.)
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * configurator.setClientConfig({
+   *   auth: {
+   *     clientId: 'your-client-id',
+   *     tenantId: 'your-tenant-id'
+   *   }
+   * });
+   * ```
    */
   setClientConfig(config?: MsalClientConfig): this {
     this.#msalConfig = config;
@@ -75,7 +124,21 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   /**
    * Sets whether authentication is required for the application.
    *
-   * @param requiresAuth - Whether authentication is mandatory
+   * When set to true, the application will attempt automatic login during initialization
+   * if no valid authentication session exists. When false, authentication is optional
+   * and must be triggered manually.
+   *
+   * @param requiresAuth - Whether authentication is mandatory for the application
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * // Require authentication on app load
+   * configurator.setRequiresAuth(true);
+   *
+   * // Make authentication optional
+   * configurator.setRequiresAuth(false);
+   * ```
    */
   setRequiresAuth(requiresAuth: boolean): this {
     this._set('requiresAuth', async () => requiresAuth);
@@ -93,7 +156,18 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   /**
    * Sets a pre-configured MSAL client instance.
    *
-   * @param client - Pre-configured PublicClientApplication instance
+   * This method allows you to provide an already-instantiated MSAL client rather than
+   * letting the configurator create one from configuration. Useful when you need
+   * custom client configuration outside the standard configurator options.
+   *
+   * @param client - Pre-configured MSAL client instance
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * const customClient = new MsalClient(customConfig);
+   * configurator.setClient(customClient);
+   * ```
    */
   setClient(client: IMsalClient): this {
     this._set('client', async () => client);
@@ -101,7 +175,14 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
   }
 
   /**
-   * Sets telemetry configuration for MSAL authentication.
+   * Sets telemetry provider for MSAL authentication events.
+   *
+   * This allows MSAL authentication events to be tracked through the framework's
+   * telemetry system. If not provided, telemetry module will be auto-detected if
+   * available in the framework configuration.
+   *
+   * @param telemetry - Telemetry provider instance or undefined to disable telemetry
+   * @returns The configurator instance for method chaining
    */
   setTelemetry(telemetry: ITelemetryProvider | undefined): this {
     this._set('telemetry.provider', async () => telemetry);
@@ -117,6 +198,20 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
     return this;
   }
 
+  /**
+   * Sets the telemetry scope for MSAL authentication events.
+   *
+   * The scope is used to categorize and filter telemetry events in the telemetry system.
+   * Default scope is ['framework', 'authentication'].
+   *
+   * @param scope - Array of scope identifiers for telemetry categorization
+   * @returns The configurator instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * configurator.setTelemetryScope(['custom', 'auth', 'msal']);
+   * ```
+   */
   setTelemetryScope(scope: string[]): this {
     this._set('telemetry.scope', async () => scope);
     return this;
@@ -129,9 +224,11 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    * @returns Processed and validated configuration
    */
   async _processConfig(rawConfig: MsalConfig): Promise<MsalConfig> {
+    // Validate and coerce configuration using Zod schema
     const config = await MsalConfigSchema.parseAsync(rawConfig);
 
-    // if no client is provided, but a client config is provided, create a new client
+    // Auto-create client if config provided but no client instance
+    // This allows users to provide configuration without manually instantiating the client
     if (!config.client && !!this.#msalConfig) {
       const clientConfig = this.#msalConfig;
 
@@ -142,17 +239,20 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
         metadata: { ...config.telemetry.metadata, clientConfig },
       });
 
-      // if the authority is not explicitly set, use the tenant ID to create a default authority
+      // Auto-generate authority URL from tenant ID if not explicitly provided
+      // This simplifies configuration for most common cases
       if (!clientConfig.auth.authority && clientConfig.auth.tenantId) {
         clientConfig.auth.authority = `https://login.microsoftonline.com/${clientConfig.auth.tenantId}`;
       }
 
-      // if the cache options are not explicitly set, use the default cache location
+      // Set default cache location to localStorage for browser environments
+      // MSAL supports sessionStorage as well, but localStorage is the standard for persistent auth
       if (!clientConfig.cache) {
         clientConfig.cache = { cacheLocation: 'localStorage' };
       }
 
-      // if the logger options are not explicitly set, use the telemetry provider to create a logger callback
+      // Integrate framework telemetry with MSAL logging system
+      // This allows MSAL events to flow through the framework's telemetry pipeline
       if (!clientConfig.system?.loggerOptions && config.telemetry?.provider) {
         const { provider, metadata, scope } = config.telemetry;
 
@@ -166,17 +266,18 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
         clientConfig.system = {
           ...clientConfig.system,
           loggerOptions: {
-            // by default, log PII in development
+            // Only log PII in development to protect user privacy in production
             piiLoggingEnabled: process.env.NODE_ENV === 'development',
-            // by default, use the createClientLogCallback function to create a logger callback
+            // Bridge MSAL log events to framework telemetry system
             loggerCallback: createClientLogCallback(provider, metadata, [...scope, '3rd-party']),
+            // Use Warning level by default - captures errors and warnings without being verbose
             logLevel: LogLevel.Warning,
-            // merge the existing logger options
+            // Preserve any user-provided logger options (allows customization)
             ...clientConfig.system?.loggerOptions,
           },
         };
       }
-      // create a new MSAL client instance
+      // Instantiate MSAL client with fully configured options
       config.client = new MsalClient(clientConfig);
     }
 

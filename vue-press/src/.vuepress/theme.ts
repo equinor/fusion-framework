@@ -8,6 +8,10 @@ const navbar: NavbarOptions = [
     link: '/guide/app/',
   },
   {
+    text: 'Cookbooks',
+    link: '/cookbooks/',
+  },
+  {
     text: 'Modules',
     link: '/modules/',
   },
