@@ -59,7 +59,7 @@ cd cookbooks/app-react-msal
 pnpm install
 
 # Start the development server
-pn high dev
+pnpm dev
 ```
 
 Most cookbooks run on `http://localhost:3000` by default. Check the terminal output for the exact URL.
