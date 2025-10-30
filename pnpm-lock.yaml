@@ -748,7 +748,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@24.9.2)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6))
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:*
@@ -1049,7 +1049,7 @@ importers:
         version: 13.0.0
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1120,7 +1120,7 @@ importers:
         version: 5.9.3
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
 
   packages/modules/context:
     dependencies:
@@ -1216,7 +1216,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1257,7 +1257,7 @@ importers:
         version: 7.7.2
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1314,7 +1314,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       typescript:
         specifier: ^5.8.2
@@ -1327,7 +1327,7 @@ importers:
         version: 8.0.5
       zod:
         specifier: ^4.1.8
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
@@ -1389,7 +1389,7 @@ importers:
         version: 7.8.2
       zod:
         specifier: ^4.1.11
-        version: 4.1.11
+        version: 4.1.12
     devDependencies:
       '@equinor/fusion-observable':
         specifier: workspace:^
@@ -9377,8 +9377,8 @@ packages:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
 
-  zod@4.1.11:
-    resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -19920,6 +19920,6 @@ snapshots:
 
   yoctocolors@2.1.2: {}
 
-  zod@4.1.11: {}
+  zod@4.1.12: {}
 
   zwitch@2.0.4: {}
