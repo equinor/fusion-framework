@@ -48,25 +48,27 @@ export interface ITelemetryProvider {
    *   name: 'user_login',
    *   properties: { userId: '123' },
    *   level: TelemetryLevel.Information,
-   *   scope: TelemetryScope.Application
+   *   scope: [TelemetryScope.Application]
    * });
    *
    * // Track an exception
    * provider.track({
    *   type: TelemetryType.Exception,
    *   name: 'api_error',
-   *   properties: { message: 'Request failed', code: 500 },
+   *   exception: new Error('Request failed'),
+   *   properties: { code: 500 },
    *   level: TelemetryLevel.Error,
-   *   scope: TelemetryScope.Application
+   *   scope: [TelemetryScope.Application]
    * });
    *
    * // Track a metric
    * provider.track({
    *   type: TelemetryType.Metric,
    *   name: 'load_time',
-   *   properties: { duration: 1234 },
+   *   value: 1234,
+   *   properties: { page: 'home' },
    *   level: TelemetryLevel.Information,
-   *   scope: TelemetryScope.Application
+   *   scope: [TelemetryScope.Application]
    * });
    *
    * // Track a custom telemetry item
@@ -74,8 +76,8 @@ export interface ITelemetryProvider {
    *   type: TelemetryType.Custom,
    *   name: 'custom_event',
    *   properties: { foo: 'bar' },
-   *   level: TelemetryLevel.Verbose,
-   *   scope: TelemetryScope.Application
+   *   level: TelemetryLevel.Debug,
+   *   scope: [TelemetryScope.Application]
    * });
    */
   track<T extends TelemetryItem>(item: T): void;
@@ -89,6 +91,8 @@ export interface ITelemetryProvider {
    * provider.trackEvent({
    *   name: 'user_signup',
    *   properties: { userId: '456' },
+   *   level: TelemetryLevel.Information,
+   *   scope: [TelemetryScope.Application]
    * });
    */
   trackEvent(item: Omit<TelemetryItem, 'type'> & { type?: TelemetryType.Event }): void;
@@ -101,7 +105,8 @@ export interface ITelemetryProvider {
    * @example
    * provider.trackException({
    *   name: 'api_error',
-   *   properties: { message: 'Request failed', code: 500 },
+   *   exception: new Error('Request failed'),
+   *   properties: { code: 500 },
    * });
    */
   trackException(data: Omit<z.input<typeof TelemetryExceptionSchema>, 'type'>): void;
