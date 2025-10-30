@@ -232,6 +232,12 @@ importers:
 
   cookbooks/app-react-charts:
     dependencies:
+      ag-charts-community:
+        specifier: ^12.2.0
+        version: 12.2.0
+      ag-charts-react:
+        specifier: ^12.2.0
+        version: 12.2.0(react@18.3.1)
       chart.js:
         specifier: ^4.4.9
         version: 4.5.1
@@ -269,6 +275,9 @@ importers:
       react-router-dom:
         specifier: ^7.6.0
         version: 7.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      styled-components:
+        specifier: ^6.1.19
+        version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -5672,6 +5681,11 @@ packages:
 
   ag-charts-locale@12.2.0:
     resolution: {integrity: sha512-xwMTzoNi/SAV6EwApRuBXOc3K+Thi/ijsKIkIhaGPmc3VPkCVCWW/TcAontiZ3dXUgxsL3jXBNyarH7f+XzWkQ==}
+
+  ag-charts-react@12.2.0:
+    resolution: {integrity: sha512-uc6XE2tLbQ5LZugCdQyyrw5+I2EUDQMqOwMS3j0NzRJAXfj0DrZEg9zTkgwDrn24t28al7rdeWtVespXP+EmpA==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
 
   ag-charts-types@12.2.0:
     resolution: {integrity: sha512-d2qQrQirt9wP36YW5HPuOvXsiajyiFnr1CTsoCbs02bavPDz7Lk2jHp64+waM4YKgXb3GN7gafbBI9Qgk33BmQ==}
@@ -15613,6 +15627,11 @@ snapshots:
       ag-charts-core: 12.2.0
 
   ag-charts-locale@12.2.0: {}
+
+  ag-charts-react@12.2.0(react@18.3.1):
+    dependencies:
+      ag-charts-community: 12.2.0
+      react: 18.3.1
 
   ag-charts-types@12.2.0: {}
 
