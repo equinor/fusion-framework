@@ -1,5 +1,3 @@
-import { version } from './version';
-
 /**
  * Module identifier for the MSAL authentication module.
  *
@@ -36,6 +34,4 @@ export enum MsalModuleVersion {
   V2 = 'v2',
   /** MSAL v4 (current major version) */
   V4 = 'v4',
-  /** Latest module version (automatically set from package.json) */
-  Latest = version,
 }

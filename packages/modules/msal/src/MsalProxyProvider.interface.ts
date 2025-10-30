@@ -15,7 +15,6 @@ import type { IMsalProvider as IMsalProvider_v2 } from './v2/MsalProvider.interf
 type ProxyProviderMap = {
   [MsalModuleVersion.V2]: IMsalProvider_v2;
   [MsalModuleVersion.V4]: IMsalProvider;
-  [MsalModuleVersion.Latest]: IMsalProvider;
 };
 
 /**
@@ -29,7 +28,8 @@ type ProxyProviderMap = {
  * This interface should ideally be defined in the @equinor/fusion-framework-module package
  * for broader framework compatibility.
  *
- * @property version - The current version of the provider
+ * @property version - The semantic version of the provider
+ * @property msalVersion - The MSAL module version enum value
  * @property createProxyProvider - Method to create a version-specific proxy provider
  *
  * @example
@@ -42,8 +42,21 @@ type ProxyProviderMap = {
  * ```
  */
 export interface IProxyProvider {
-  /** Current version of the provider (MSAL module version) */
-  version: string | SemVer;
+  /**
+   * The semantic version of the provider.
+   *
+   * This represents the actual version number of the MSAL implementation,
+   * following semantic versioning (semver) standards.
+   */
+  readonly version: string | SemVer;
+
+  /**
+   * The MSAL module version enum value indicating the API compatibility level.
+   *
+   * This property specifies which MSAL version's API surface this provider implements,
+   * allowing for version-specific behavior and proxy provider creation.
+   */
+  msalVersion: MsalModuleVersion;
 
   /**
    * Creates a proxy provider compatible with the specified MSAL version.

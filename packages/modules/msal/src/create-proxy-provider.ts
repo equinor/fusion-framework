@@ -32,14 +32,16 @@ export function createProxyProvider<T = IMsalProvider>(
       // Create v2-compatible proxy with legacy API adapters
       return createProxyProvider_v2(provider) as T;
     case MsalModuleVersion.V4:
-    case MsalModuleVersion.Latest:
       // Create transparent proxy for v4 - passes through to original provider
       // This allows v4 code to be used where any version is expected
       return new Proxy(provider, {
         get: (target: IMsalProvider, prop: keyof IMsalProvider) => {
           switch (prop) {
             case 'version': {
-              return target.client;
+              return target.version;
+            }
+            case 'msalVersion': {
+              return enumVersion;
             }
             case 'client': {
               return target.client;
@@ -71,6 +73,9 @@ export function createProxyProvider<T = IMsalProvider>(
               };
             }
             default: {
+              // backstop to prevent then from being called - this is not an async operation
+              if (prop === 'then') return undefined;
+
               // Exhaustive check: TypeScript-only guard to ensure all IMsalProvider keys are handled
               const exhausted: never = prop;
               return (target as IMsalProvider)[exhausted];
