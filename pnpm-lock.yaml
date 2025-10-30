@@ -892,8 +892,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(react-dom@18.3.1(react@18.3.1))(react-is@19.2.0)(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-react-styles':
-        specifier: ^0.6.4
-        version: 0.6.5(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
         version: 1.2.2
@@ -2584,6 +2584,11 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  '@equinor/fusion-react-styles@1.0.0':
+    resolution: {integrity: sha512-jOXn7f6J9HjczRi+op4CoiDohajBD+b9HLUjnCNZfsFQi6byzy9abH5T41jumdZKqQ8BH00EdqhgvmGwFes9cg==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@equinor/fusion-react-utils@2.2.3':
     resolution: {integrity: sha512-dZ6EhF0f03v3bz1fBz7eR0zb1FeclpxrRH3LAZqf2GeNMBpIohvYhQtKMd2+S4C6x19pwgn7Z19A9jHwrvq84w==}
@@ -10088,6 +10093,17 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.24
       react-dom: 18.3.1(react@18.3.1)
+
+  '@equinor/fusion-react-styles@1.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@equinor/fusion-wc-theme': 1.1.2
+      '@equinor/fusion-web-theme': 0.1.10
+      '@material-ui/styles': 4.11.5(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      clsx: 2.1.1
+      react: 18.3.1
+    transitivePeerDependencies:
+      - '@types/react'
+      - react-dom
 
   '@equinor/fusion-react-utils@2.2.3(react@18.3.1)':
     dependencies:
