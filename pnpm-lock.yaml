@@ -715,7 +715,7 @@ importers:
         version: 9.0.9
       commander:
         specifier: ^14.0.1
-        version: 14.0.1
+        version: 14.0.2
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -6091,8 +6091,8 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  commander@14.0.1:
-    resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
 
   commander@2.20.3:
@@ -15662,7 +15662,7 @@ snapshots:
     dependencies:
       '@vuepress/helper': 2.0.0-rc.112(typescript@5.9.3)(vuepress@2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.9.2)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3)))
       '@vueuse/core': 13.9.0(vue@3.5.21(typescript@5.9.3))
-      commander: 14.0.1
+      commander: 14.0.2
       vue: 3.5.21(typescript@5.9.3)
       vuepress: 2.0.0-rc.24(@vuepress/bundler-vite@2.0.0-rc.24(@types/node@24.9.2)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3))(typescript@5.9.3)(vue@3.5.21(typescript@5.9.3))
     transitivePeerDependencies:
@@ -16095,7 +16095,7 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@14.0.1: {}
+  commander@14.0.2: {}
 
   commander@2.20.3: {}
 
