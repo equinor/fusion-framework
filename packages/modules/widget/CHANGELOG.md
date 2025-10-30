@@ -1,5 +1,18 @@
 # Change Log
 
+## 12.0.2
+
+### Patch Changes
+
+- [#3654](https://github.com/equinor/fusion-framework/pull/3654) [`67bcfa2`](https://github.com/equinor/fusion-framework/commit/67bcfa20f01cb8f209806905874ab594cb43538e) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update immer from 10.1.3 to 10.2.0 for performance improvements, including optimized caching and iteration logic.
+
+- Updated dependencies [[`67bcfa2`](https://github.com/equinor/fusion-framework/commit/67bcfa20f01cb8f209806905874ab594cb43538e), [`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59), [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74)]:
+  - @equinor/fusion-observable@8.5.6
+  - @equinor/fusion-query@6.0.1
+  - @equinor/fusion-framework-module@5.0.5
+  - @equinor/fusion-framework-module-http@7.0.4
+  - @equinor/fusion-framework-module-service-discovery@9.0.4
+
 ## 12.0.1
 
 ### Patch Changes

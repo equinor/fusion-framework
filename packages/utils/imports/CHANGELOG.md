@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 1.1.6
+
+### Patch Changes
+
+- [`d8802e5`](https://github.com/equinor/fusion-framework/commit/d8802e5cd221e302529ea7d14e3c7c13734ad2eb) Thanks [@odinr](https://github.com/odinr)! - Internal: bump memfs from 4.48.1 to 4.50.0 to optimize buffer allocation and prevent O(n^2) overhead; no public API changes.
+
 ## 1.1.5
 
 ### Patch Changes

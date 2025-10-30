@@ -1,5 +1,23 @@
 # Change Log
 
+## 4.3.1
+
+### Patch Changes
+
+- [#3680](https://github.com/equinor/fusion-framework/pull/3680) [`7ef76e3`](https://github.com/equinor/fusion-framework/commit/7ef76e36a854f01d1cd7bc1c40b1ca0172a01fc3) Thanks [@odinr](https://github.com/odinr)! - Fix incorrect TSDoc examples in telemetry module documentation.
+
+  - Remove non-existent `setFilter` method references from TelemetryConfigurator documentation
+  - Fix exception examples to include required `exception` property
+  - Correct metric examples to have `value` at top level instead of in properties
+  - Update scope properties to use array format instead of single strings
+  - Improve formatting of trackException example for better readability
+
+- [#3544](https://github.com/equinor/fusion-framework/pull/3544) [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.11 to 4.1.12, which includes a critical bug fix for ZodError.flatten() preventing crashes on 'toString' key and improved error handling throughout the framework.
+
+- Updated dependencies [[`67bcfa2`](https://github.com/equinor/fusion-framework/commit/67bcfa20f01cb8f209806905874ab594cb43538e), [`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59)]:
+  - @equinor/fusion-observable@8.5.6
+  - @equinor/fusion-framework-module@5.0.5
+
 ## 4.3.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.4
+
+### Patch Changes
+
+- [#3637](https://github.com/equinor/fusion-framework/pull/3637) [`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump rollup from 4.52.4 to 4.52.5 to fix sourcemap debugId generation; no public API changes.
+
+- [#3629](https://github.com/equinor/fusion-framework/pull/3629) [`3a21f9a`](https://github.com/equinor/fusion-framework/commit/3a21f9a8b36aaa7c80209c0989627b1dcc48a6cf) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump @equinor/fusion-react-side-sheet from 1.3.11 to 2.0.0 for React 19 compatibility fixes; no breaking changes to dev-portal functionality.
+
 ## 1.2.3
 
 ### Patch Changes

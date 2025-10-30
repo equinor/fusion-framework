@@ -1,5 +1,23 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.0.8
+
+### Patch Changes
+
+- [#3674](https://github.com/equinor/fusion-framework/pull/3674) [`fe667d5`](https://github.com/equinor/fusion-framework/commit/fe667d54a8b9cb030ed7c2f2a6465c80b1b6b4f2) Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @azure/msal-node from 3.8.0 to 3.8.1
+
+  ## Changes
+
+  - Update AccountEntity.getAccountInfo method
+  - Fixed minor type error in BaseManagedIdentitySource.ts
+  - Improved Managed Identity JSDocs
+  - Bump @azure/msal-common to v15.13.1
+
+  This patch release includes bug fixes and documentation improvements for enhanced reliability and developer experience.
+
+- Updated dependencies [[`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59)]:
+  - @equinor/fusion-framework-module@5.0.5
+
 ## 1.0.7
 
 ### Patch Changes

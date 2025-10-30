@@ -1,5 +1,13 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.9
+
+### Patch Changes
+
+- [#3637](https://github.com/equinor/fusion-framework/pull/3637) [`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump rollup from 4.52.4 to 4.52.5 to fix sourcemap debugId generation; no public API changes.
+
+- [#3653](https://github.com/equinor/fusion-framework/pull/3653) [`693ec94`](https://github.com/equinor/fusion-framework/commit/693ec945b78cc2e55eaf1deef97c6e34e1e283e0) Thanks [@dependabot](https://github.com/apps/dependabot)! - Security: Update mermaid from 11.12.0 to 11.12.1 to fix high-severity vulnerability GHSA-cc8p-78qf-8p7q in dagre-d3-es dependency. Includes additional security updates for dompurify, marked, and katex.
+
 ## 0.4.8
 
 ### Patch Changes
