@@ -377,7 +377,6 @@ const configure = (configurator: IModulesConfigurator<any, any>) => {
       }
     });
     args.config.setDefaultScope(['portal']);
-    args.config.setFilter((item) => item.scope.includes('portal'));
     }
   });
 };

@@ -26,7 +26,7 @@ import type { ITelemetryAdapter } from './TelemetryAdapter.js';
  * Configures telemetry settings for the application.
  *
  * The `TelemetryConfigurator` class extends `BaseConfigBuilder` to provide a fluent API for
- * setting up telemetry adapters, metadata, default scopes, parent providers, and filters.
+ * setting up telemetry adapters, metadata, default scopes, and parent providers.
  *
  * @example
  * ```typescript
@@ -34,13 +34,13 @@ import type { ITelemetryAdapter } from './TelemetryAdapter.js';
  *   .setAdapter(myAdapter)
  *   .setMetadata({ app: 'my-app' })
  *   .setDefaultScope(['user', 'session'])
- *   .setParent(parentProvider)
- *   .setFilter(myFilter);
+ *   .setParent(parentProvider);
  * ```
  *
  * @remarks
  * - Adapters are managed internally and can be set using `setAdapter`.
- * - Metadata, default scope, parent provider, and filter can be configured via their respective methods.
+ * - Metadata, default scope, and parent provider can be configured via their respective methods.
+ * - Filters should be applied directly to individual adapters when they are created.
  * - All setter methods return `this` for method chaining.
  *
  * @see BaseConfigBuilder

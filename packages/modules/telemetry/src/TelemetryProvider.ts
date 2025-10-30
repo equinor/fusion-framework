@@ -338,7 +338,11 @@ export class TelemetryProvider
    *
    * @param data - The exception data (without type)
    * @example
-   * provider.trackException({ name: 'api_error', metadata: { code: 500 } });
+   * provider.trackException({
+   *   name: 'api_error',
+   *   exception: new Error('API failed'),
+   *   metadata: { code: 500 }
+   * });
    */
   public trackException(data: Omit<z.input<typeof TelemetryExceptionSchema>, 'type'>): void {
     this._track(TelemetryExceptionSchema.parse({ ...data, type: TelemetryType.Exception }));
