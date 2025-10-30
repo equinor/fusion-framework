@@ -1,5 +1,29 @@
 # Change Log
 
+## 12.3.7
+
+### Patch Changes
+
+- [`e48c54b`](https://github.com/equinor/fusion-framework/commit/e48c54bdbbca0068859b843f00e753974a33dd13) Thanks [@odinr](https://github.com/odinr)! - Internal: bump commander from 14.0.1 to 14.0.2 to improve negative number auto-detection test; no public API changes.
+
+- [`86d081b`](https://github.com/equinor/fusion-framework/commit/86d081bcaf17b7713fd352ea838d605ef12b9a09) Thanks [@odinr](https://github.com/odinr)! - Internal: bump @rollup/plugin-replace from 6.0.2 to 6.0.3 to fix delimiter handling for valid JS identifiers; no public API changes.
+
+- [#3637](https://github.com/equinor/fusion-framework/pull/3637) [`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump rollup from 4.52.4 to 4.52.5 to fix sourcemap debugId generation; no public API changes.
+
+- [#3679](https://github.com/equinor/fusion-framework/pull/3679) [`1706e4c`](https://github.com/equinor/fusion-framework/commit/1706e4c503d8ef4db46a9572392d23e9c081c82c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @rollup/plugin-commonjs from 28.0.6 to 29.0.0, which reverts previous Node.js builtins handling changes and adds requireNodeBuiltins option.
+
+- [#3681](https://github.com/equinor/fusion-framework/pull/3681) [`fb6ee63`](https://github.com/equinor/fusion-framework/commit/fb6ee637a1fbf90831a0a3b901520a76a440d4c9) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update simple-git from 3.28.0 to 3.29.0 for improved Windows path handling and branch API enhancements.
+
+- [#3583](https://github.com/equinor/fusion-framework/pull/3583) [`af2cad4`](https://github.com/equinor/fusion-framework/commit/af2cad4417e7ba403bf7300a49c688b9b5ef3f1b) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update type-fest from 5.0.1 to 5.1.0, adding new utility types (TupleOf, Xor, etc.) and fixing various type issues in development utilities.
+
+- [#3544](https://github.com/equinor/fusion-framework/pull/3544) [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.11 to 4.1.12, which includes a critical bug fix for ZodError.flatten() preventing crashes on 'toString' key and improved error handling throughout the framework.
+
+- Updated dependencies [[`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628), [`3a21f9a`](https://github.com/equinor/fusion-framework/commit/3a21f9a8b36aaa7c80209c0989627b1dcc48a6cf), [`fe667d5`](https://github.com/equinor/fusion-framework/commit/fe667d54a8b9cb030ed7c2f2a6465c80b1b6b4f2), [`d8802e5`](https://github.com/equinor/fusion-framework/commit/d8802e5cd221e302529ea7d14e3c7c13734ad2eb)]:
+  - @equinor/fusion-framework-dev-portal@1.2.4
+  - @equinor/fusion-framework-dev-server@1.1.10
+  - @equinor/fusion-framework-module-msal-node@1.0.8
+  - @equinor/fusion-imports@1.1.6
+
 ## 12.3.6
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # Change Log
 
+## 7.1.4
+
+### Patch Changes
+
+- [#3544](https://github.com/equinor/fusion-framework/pull/3544) [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.11 to 4.1.12, which includes a critical bug fix for ZodError.flatten() preventing crashes on 'toString' key and improved error handling throughout the framework.
+
+- Updated dependencies [[`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59)]:
+  - @equinor/fusion-framework-module@5.0.5
+
 ## 7.1.3
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.10
+
+### Patch Changes
+
+- [#3637](https://github.com/equinor/fusion-framework/pull/3637) [`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump rollup from 4.52.4 to 4.52.5 to fix sourcemap debugId generation; no public API changes.
+
+- Updated dependencies [[`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628), [`1706e4c`](https://github.com/equinor/fusion-framework/commit/1706e4c503d8ef4db46a9572392d23e9c081c82c), [`581306b`](https://github.com/equinor/fusion-framework/commit/581306bb7ace1646548865ea1711255065e90570)]:
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.4
+  - @equinor/fusion-framework-vite-plugin-spa@2.0.2
+
 ## 1.1.9
 
 ### Patch Changes

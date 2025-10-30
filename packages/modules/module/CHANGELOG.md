@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.5
+
+### Patch Changes
+
+- [#3555](https://github.com/equinor/fusion-framework/pull/3555) [`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update semver from 7.7.2 to 7.7.3, including performance improvements for version comparison and x-range build metadata support used throughout the framework for authentication and module versioning.
+
 ## 5.0.4
 
 ### Patch Changes

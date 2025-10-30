@@ -1,5 +1,38 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- [#3613](https://github.com/equinor/fusion-framework/pull/3613) [`ea7db15`](https://github.com/equinor/fusion-framework/commit/ea7db15e9b84380c2a440ede414c5862475e1c99) Thanks [@AndrejNikolicEq](https://github.com/AndrejNikolicEq)! - Added AG Charts to React Charts cookbook
+
+  This update introduces AG Charts (ag-charts-community and ag-charts-react) as an alternative charting library alongside the existing Chart.js implementation. The cookbook now demonstrates both charting solutions with examples.
+
+  ## New Features
+
+  - **AG Charts Integration**: Added ag-charts-community and ag-charts-react dependencies
+  - **Chart Components**: Four new AG Charts examples:
+    - `AgBar` - Bar chart implementation
+    - `AgPie` - Pie chart implementation
+    - `AgLine` - Line chart implementation
+    - `AgArea` - Area chart implementation
+  - **Navigation Updates**: Enhanced navigation to include AG Charts examples
+  - **Styling**: Added styled-components for improved component styling
+
+  ## Dependencies Added
+
+  - `ag-charts-community: ^12.2.0` - Core AG Charts library
+  - `ag-charts-react: ^12.2.0` - React bindings for AG Charts
+  - `styled-components: ^6.1.19` - CSS-in-JS styling solution
+
+  ## Usage
+
+  The cookbook now provides side-by-side examples of both Chart.js and AG Charts implementations, allowing developers to compare and choose the best charting solution for their Fusion applications. All examples include sample data and demonstrate common chart types used in enterprise applications.
+
+### Patch Changes
+
+- [#3657](https://github.com/equinor/fusion-framework/pull/3657) [`0864ebf`](https://github.com/equinor/fusion-framework/commit/0864ebfad1cb8693c55e7fb3a38e059e4378a0bf) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump react-chartjs-2 from 5.3.0 to 5.3.1 to update React monorepo compatibility and use jsx-runtime; no public API changes.
+
 ## 1.1.0
 
 ### Minor Changes

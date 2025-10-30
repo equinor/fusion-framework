@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 2.0.2
+
+### Patch Changes
+
+- [#3637](https://github.com/equinor/fusion-framework/pull/3637) [`f5b88e7`](https://github.com/equinor/fusion-framework/commit/f5b88e7ff8e896624de67bdf29091ba44bf8a628) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: bump rollup from 4.52.4 to 4.52.5 to fix sourcemap debugId generation; no public API changes.
+
+- [#3679](https://github.com/equinor/fusion-framework/pull/3679) [`1706e4c`](https://github.com/equinor/fusion-framework/commit/1706e4c503d8ef4db46a9572392d23e9c081c82c) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @rollup/plugin-commonjs from 28.0.6 to 29.0.0, which reverts previous Node.js builtins handling changes and adds requireNodeBuiltins option.
+
+- [#3646](https://github.com/equinor/fusion-framework/pull/3646) [`581306b`](https://github.com/equinor/fusion-framework/commit/581306bb7ace1646548865ea1711255065e90570) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update @rollup/plugin-typescript from 12.1.4 to 12.3.0 for improved TypeScript processing in watch mode and allowJs support.
+
+- Updated dependencies [[`7ef76e3`](https://github.com/equinor/fusion-framework/commit/7ef76e36a854f01d1cd7bc1c40b1ca0172a01fc3), [`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59), [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74)]:
+  - @equinor/fusion-framework-module-telemetry@4.3.1
+  - @equinor/fusion-framework-module@5.0.5
+  - @equinor/fusion-framework-module-msal@5.1.2
+  - @equinor/fusion-framework-module-http@7.0.4
+  - @equinor/fusion-framework-module-service-discovery@9.0.4
+
 ## 2.0.1
 
 ### Patch Changes

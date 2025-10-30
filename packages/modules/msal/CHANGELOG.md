@@ -1,5 +1,16 @@
 # Change Log
 
+## 5.1.2
+
+### Patch Changes
+
+- [#3555](https://github.com/equinor/fusion-framework/pull/3555) [`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update semver from 7.7.2 to 7.7.3, including performance improvements for version comparison and x-range build metadata support used throughout the framework for authentication and module versioning.
+
+- [#3544](https://github.com/equinor/fusion-framework/pull/3544) [`443414f`](https://github.com/equinor/fusion-framework/commit/443414fe0351b529cecf0a667383640567d05e74) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update zod from 4.1.11 to 4.1.12, which includes a critical bug fix for ZodError.flatten() preventing crashes on 'toString' key and improved error handling throughout the framework.
+
+- Updated dependencies [[`cd06a8a`](https://github.com/equinor/fusion-framework/commit/cd06a8a8de86a44edf349103fb9da6c8615a1d59)]:
+  - @equinor/fusion-framework-module@5.0.5
+
 ## 5.1.1
 
 ### Patch Changes
