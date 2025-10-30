@@ -1,3 +1,5 @@
+import type { SemVer } from 'semver';
+import type { MsalModuleVersion } from '../static';
 import type { IPublicClientApplication } from './IPublicClientApplication.interface';
 import type { AccountInfo, AuthenticationResult } from './types';
 
@@ -9,6 +11,12 @@ import type { AccountInfo, AuthenticationResult } from './types';
  * under the hood. This is useful for gradual migration scenarios.
  */
 export interface IMsalProvider {
+  /** Current version of the provider (MSAL module version) */
+  version: string | SemVer;
+
+  /** Current MSAL module version */
+  msalVersion: MsalModuleVersion;
+
   /**
    * The MSAL PublicClientApplication instance (v2 compatible)
    */

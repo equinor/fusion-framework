@@ -10,6 +10,7 @@ import {
 import { MsalClient, type MsalClientConfig, type IMsalClient } from './MsalClient';
 import { createClientLogCallback } from './create-client-log-callback';
 import { LogLevel } from '@azure/msal-browser';
+import { version } from './version';
 
 /**
  * Zod schema for telemetry configuration validation.
@@ -20,7 +21,7 @@ const TelemetryConfigSchema = z.object({
   provider: z.custom<ITelemetryProvider>().optional(),
   metadata: z.record(z.string(), z.unknown()).optional().default({
     module: 'msal',
-    version: MsalModuleVersion.Latest,
+    version,
   }),
   scope: z.array(z.string()).optional().default(['framework', 'authentication']),
 });
@@ -76,7 +77,9 @@ export class MsalConfigurator extends BaseConfigBuilder<MsalConfig> {
    *
    * @default Latest
    */
-  public version = MsalModuleVersion.Latest as const;
+  public get version(): string {
+    return version;
+  }
 
   /**
    * Creates a new MSAL configurator instance.

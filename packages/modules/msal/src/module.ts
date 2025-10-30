@@ -4,11 +4,11 @@ import {
   SemanticVersion,
 } from '@equinor/fusion-framework-module';
 
-import { MsalModuleVersion } from './static';
-
 import { MsalConfigurator } from './MsalConfigurator';
 import { MsalProvider, type IMsalProvider } from './MsalProvider';
 import type { MsalClientConfig } from './MsalClient';
+
+import { version } from './version';
 
 /**
  * MSAL authentication module configuration.
@@ -32,7 +32,7 @@ export type MsalModule = Module<'auth', IMsalProvider, MsalConfigurator, [MsalMo
  */
 export const module: MsalModule = {
   name: 'auth',
-  version: new SemanticVersion(MsalModuleVersion.Latest),
+  version: new SemanticVersion(version),
   configure: () => new MsalConfigurator(),
   initialize: async (init) => {
     const config = await init.config.createConfigAsync(init);
@@ -47,9 +47,8 @@ export const module: MsalModule = {
     const hostProvider = init.ref?.auth;
     if (hostProvider) {
       try {
-        return hostProvider.createProxyProvider(
-          config.version as MsalModuleVersion,
-        ) as IMsalProvider;
+        const proxyProvider = hostProvider.createProxyProvider(config.version);
+        return proxyProvider;
       } catch (error) {
         console.error('MsalModule::Failed to create proxy provider', error);
         // Fallback to host provider to prevent app breakage during migration
