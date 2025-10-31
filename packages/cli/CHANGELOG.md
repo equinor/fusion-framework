@@ -1,5 +1,13 @@
 # Change Log
 
+## 12.3.8
+
+### Patch Changes
+
+- Updated dependencies [[`d6465bc`](https://github.com/equinor/fusion-framework/commit/d6465bc2787a37465e22964803501e44f6b19517)]:
+  - @equinor/fusion-framework-dev-server@1.1.11
+  - @equinor/fusion-framework-dev-portal@1.2.4
+
 ## 12.3.7
 
 ### Patch Changes

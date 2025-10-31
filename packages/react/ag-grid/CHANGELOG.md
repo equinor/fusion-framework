@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-react-ag-grid
 
+## 34.2.3
+
+### Patch Changes
+
+- [#3686](https://github.com/equinor/fusion-framework/pull/3686) [`d6465bc`](https://github.com/equinor/fusion-framework/commit/d6465bc2787a37465e22964803501e44f6b19517) Thanks [@odinr](https://github.com/odinr)! - Fix repository directory path and reorganize AG Grid dependencies. Move AG Grid packages from peerDependencies to direct dependencies for better compatibility. Add themes export for enhanced theme customization support.
+
+- Updated dependencies [[`d6465bc`](https://github.com/equinor/fusion-framework/commit/d6465bc2787a37465e22964803501e44f6b19517)]:
+  - @equinor/fusion-framework-module-ag-grid@34.2.2
+
 ## 34.2.2
 
 ### Patch Changes
