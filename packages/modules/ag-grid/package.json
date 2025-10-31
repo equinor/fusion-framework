@@ -45,6 +45,7 @@
     "directory": "packages/modules/ag-grid"
   },
   "devDependencies": {
+    "@equinor/eds-tokens": "^0.10.0",
     "@equinor/fusion-framework-module": "workspace:^",
     "ag-grid-community": "34.2.0",
     "ag-grid-enterprise": "34.2.0",
@@ -57,7 +58,24 @@
     "ag-grid-enterprise": ">=33.0.3",
     "ag-charts-enterprise": ">=12.0.0"
   },
-  "dependencies": {
-    "@equinor/eds-tokens": "^0.10.0"
+  "peerDependenciesMeta": {
+    "ag-grid-community": {
+      "optional": false
+    },
+    "ag-grid-enterprise": {
+      "optional": false
+    },
+    "ag-grid-react": {
+      "optional": false
+    },
+    "@equinor/fusion-framework-module": {
+      "optional": false
+    },
+    "@equinor/eds-tokens": {
+      "optional": false
+    },
+    "ag-charts-enterprise": {
+      "optional": true
+    }
   }
 }
