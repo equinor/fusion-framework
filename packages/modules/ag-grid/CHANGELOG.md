@@ -1,5 +1,11 @@
 # Change Log
 
+## 34.2.2
+
+### Patch Changes
+
+- [#3686](https://github.com/equinor/fusion-framework/pull/3686) [`d6465bc`](https://github.com/equinor/fusion-framework/commit/d6465bc2787a37465e22964803501e44f6b19517) Thanks [@odinr](https://github.com/odinr)! - Internal: reorganize dependencies by moving @equinor/eds-tokens to devDependencies and add peerDependenciesMeta configuration for better dependency management.
+
 ## 34.2.1
 
 ### Patch Changes

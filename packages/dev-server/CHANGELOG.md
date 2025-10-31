@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.11
+
+### Patch Changes
+
+- [#3686](https://github.com/equinor/fusion-framework/pull/3686) [`d6465bc`](https://github.com/equinor/fusion-framework/commit/d6465bc2787a37465e22964803501e44f6b19517) Thanks [@odinr](https://github.com/odinr)! - Update vite peerDependency version constraint from ^6.0.7 to ^7.0.0 to support the latest vite features and improvements.
+
 ## 1.1.10
 
 ### Patch Changes
