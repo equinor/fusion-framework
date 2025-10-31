@@ -7,7 +7,7 @@ export type RenderTeardown = VoidFunction;
 
 /**
  * Renders a React component into a DOM element using React 18's createRoot API.
- * 
+ *
  * @param el - The DOM element to render into
  * @param Component - The React component to render
  * @returns A teardown function that unmounts the component
@@ -29,7 +29,7 @@ const render = (el: Element, Component: FunctionComponent): RenderTeardown => {
 /**
  * Creates a render function for a component renderer.
  * Uses React 18's createRoot API instead of the deprecated ReactDOM.render.
- * 
+ *
  * @param renderer - A function that creates a component from fusion and env
  * @returns A function that renders the component into a DOM element
  */
@@ -41,4 +41,3 @@ export const renderComponent = (renderer: ComponentRenderer) => {
 };
 
 export default renderComponent;
-

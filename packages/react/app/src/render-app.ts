@@ -6,7 +6,7 @@ import type { ComponentRenderArgs } from './create-component';
 /**
  * Creates a render function for an app component.
  * Uses React 18's createRoot API via renderComponent.
- * 
+ *
  * @param componentArgs - Arguments to pass to createComponent
  * @returns A function that renders the app into a DOM element
  */
@@ -18,4 +18,3 @@ export const renderApp = (...componentArgs: Parameters<typeof createComponent>) 
 };
 
 export default renderApp;
-

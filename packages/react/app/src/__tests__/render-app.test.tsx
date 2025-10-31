@@ -32,9 +32,8 @@ describe('renderApp', () => {
     mockTeardown = vi.fn();
 
     // Create a mock component renderer
-    mockComponentRenderer = vi.fn(() => Promise.resolve({ default: () => null })) as unknown as ReturnType<
-      typeof createComponent
-    >;
+    // createComponent returns a ComponentRenderer function: (fusion, env) => React.LazyExoticComponent
+    mockComponentRenderer = vi.fn() as unknown as ReturnType<typeof createComponent>;
 
     // Create a mock render function
     mockRenderFunction = vi.fn(() => mockTeardown) as unknown as ReturnType<typeof renderComponent>;
@@ -112,4 +111,3 @@ describe('renderApp', () => {
     expect(mockRenderFunction).toHaveBeenCalledWith(mockElement, args);
   });
 });
-
