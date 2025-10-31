@@ -17,9 +17,9 @@
   "devDependencies": {
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@types/react": "^18.2.50",
+    "@types/react": "^19.2.2",
     "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
+    "react": "^19.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2"
   }
