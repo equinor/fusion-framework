@@ -53,9 +53,9 @@
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",
-    "ag-grid-community": ">=33.0.3",
-    "ag-grid-enterprise": ">=33.0.3",
-    "ag-charts-enterprise": ">=12.0.0"
+    "ag-grid-community": "^34",
+    "ag-grid-enterprise": "^34",
+    "ag-charts-enterprise": "^12"
   },
   "dependencies": {
     "@equinor/eds-tokens": "^0.10.0"
