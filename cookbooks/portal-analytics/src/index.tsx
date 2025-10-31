@@ -8,7 +8,7 @@ import {
   frameworkConfig,
   type PortalModuleInitiator,
 } from './framworkConfig';
-import { Portal } from './Portal';
+import { Router } from './Router';
 
 const createPortal = <TRef extends Fusion = Fusion>(
   config: PortalModuleInitiator<TRef>,
@@ -36,12 +36,12 @@ const Wrapper = ({ Component }: { Component: React.ComponentType }) => {
 };
 
 export const render = (el: HTMLElement, args: ComponentRenderArgs) => {
-  const portal = createPortal(frameworkConfig, args, Portal);
+  const router = createPortal(frameworkConfig, args, Router);
 
-  const portalComponent = createElement(Wrapper, { Component: portal });
+  const routerComponent = createElement(Wrapper, { Component: router });
   const root = createRoot(el);
 
-  root.render(portalComponent);
+  root.render(routerComponent);
 
   return () => root.unmount();
 };

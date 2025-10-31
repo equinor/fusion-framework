@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { LogEntry } from './types';
-import { LogEntrySchema } from './schema';
+import type { LogEntry } from '../types';
+import { LogEntrySchema } from '../schema';
 import { v4 as uuid } from 'uuid';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { Button, Icon } from '@equinor/eds-core-react';
@@ -47,7 +47,8 @@ export const LogReader = () => {
             <th>Version</th>
             <th>Scope</th>
             <th>Event</th>
-            <th>Body</th>
+            <th>Value</th>
+            <th>Attributes</th>
             <th>Timestamp</th>
             <th>Info</th>
           </tr>
@@ -73,6 +74,7 @@ export const LogReader = () => {
                 <td>{scopeLog.scope.name}</td>
                 <td>{logRecord.eventName}</td>
                 <td>{JSON.stringify(logRecord.body)}</td>
+                <td>{JSON.stringify(logRecord.attributes)}</td>
                 <td>
                   <DateRange
                     to={new Date(parseInt(logRecord.timeUnixNano) / 1_000_000)}

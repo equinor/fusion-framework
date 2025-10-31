@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { ContextSelector } from './ContextSelector';
+import { ContextSelector } from '../ContextSelector/ContextSelector';
 import { FusionLogo } from './FusionLogo';
 
 import styled from 'styled-components';
