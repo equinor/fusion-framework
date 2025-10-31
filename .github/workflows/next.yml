@@ -1,9 +1,9 @@
-name: Fusion Framework Next Release
+name: Fusion Framework Pre-Release
 
 on:
   push:
-    branches:
-      - next
+    branches-ignore:
+      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
@@ -21,9 +21,22 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      
+  
+      - name: Validate pre-release configuration
+        id: tag
+        run: |
+          if [ ! -f ".changeset/pre.json" ]; then
+            echo "Error: .changeset/pre.json is required for pre-release workflow"
+            exit 1
+          fi
+          TAG=$(node -p "require('./.changeset/pre.json').tag")
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Using tag from pre.json: $TAG"
+
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
+        with:
+          turbo-cache: false
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -31,12 +44,12 @@ jobs:
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
           version: pnpm changeset:version
-          publish: pnpm changeset:publish:next
+          publish: pnpm changeset:publish:pre-release --tag ${{ steps.tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: convert Changeset PR to draf
+      - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
