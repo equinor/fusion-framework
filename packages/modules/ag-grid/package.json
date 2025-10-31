@@ -60,18 +60,6 @@
     "ag-charts-enterprise": ">=12.0.0"
   },
   "peerDependenciesMeta": {
-    "ag-grid-community": {
-      "optional": false
-    },
-    "ag-grid-enterprise": {
-      "optional": false
-    },
-    "@equinor/fusion-framework-module": {
-      "optional": false
-    },
-    "@equinor/eds-tokens": {
-      "optional": false
-    },
     "ag-charts-enterprise": {
       "optional": true
     }
