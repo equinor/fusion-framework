@@ -1,5 +1,13 @@
 # Change Log
 
+## 5.0.2-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66)]:
+  - @equinor/fusion-framework-react@7.4.19-next.0
+  - @equinor/fusion-framework-module-bookmark@3.0.3
+
 ## 5.0.1
 
 ### Patch Changes

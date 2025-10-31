@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-apploader",
-  "version": "0.1.0",
+  "version": "0.1.1-next.0",
   "description": "App for loading other apps",
   "private": true,
   "type": "module",
