@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.0.2
+
+### Patch Changes
+
+- [`7fadb5e`](https://github.com/equinor/fusion-framework/commit/7fadb5ec87b6b6099eb6051078c6bddd7bebd8a0) Thanks [@odinr](https://github.com/odinr)! - Downgrade dependencies to supported versions: React 18 and EDS v0.49.0.
+
+  - Downgraded React from ^19.2.0 to ^18.2.0
+  - Downgraded React DOM from ^19.2.0 to ^18.2.0
+  - Downgraded @types/react from ^19.2.2 to ^18.2.50
+  - Downgraded @types/react-dom from ^19.2.2 to ^18.2.7
+  - Downgraded EDS core react from ^1.0.2 to ^0.49.0
+
+  These changes ensure compatibility with supported dependency versions across the monorepo.
+
 ## 1.0.1
 
 ### Patch Changes
