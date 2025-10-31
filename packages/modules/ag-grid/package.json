@@ -53,6 +53,7 @@
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
+    "@equinor/eds-tokens": "^0.10.0",
     "@equinor/fusion-framework-module": "workspace:^",
     "ag-grid-community": ">=33.0.3",
     "ag-grid-enterprise": ">=33.0.3",
@@ -63,9 +64,6 @@
       "optional": false
     },
     "ag-grid-enterprise": {
-      "optional": false
-    },
-    "ag-grid-react": {
       "optional": false
     },
     "@equinor/fusion-framework-module": {
