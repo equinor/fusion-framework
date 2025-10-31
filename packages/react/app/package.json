@@ -96,7 +96,8 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build",
+    "test": "vitest --run"
   },
   "keywords": [],
   "author": "",
@@ -126,12 +127,16 @@
     "@equinor/fusion-framework-react-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
+    "happy-dom": "^20.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "@equinor/fusion-framework-module-msal": "workspace:^",
