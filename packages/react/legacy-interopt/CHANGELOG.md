@@ -1,5 +1,33 @@
 # Change Log
 
+## 27.0.0-next.0
+
+### Patch Changes
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66) Thanks [@github-actions](https://github.com/apps/github-actions)! - Fix MSAL v4 compatibility issues in legacy interopt LegacyAuthContainer.
+
+  - Replace deprecated defaultAccount with account property
+  - Update login calls to use MSAL v4 request structure
+  - Fix handleRedirect usage to match MSAL v4 API
+  - Ensure proper async/await patterns for authentication flows
+
+  These changes ensure legacy interopt works correctly with MSAL v4 while maintaining backward compatibility for legacy applications.
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48) Thanks [@github-actions](https://github.com/apps/github-actions)! - Update legacy auth container to use new MSAL Node API format.
+
+  Internal implementation change to adapt to MSAL Node interface updates. Legacy interop continues to provide the same interface for consumers.
+
+  Why: Ensures compatibility with updated MSAL Node module API.
+
+- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66), [`d81294a`](https://github.com/equinor/fusion-framework/commit/d81294a4d74f7c7bebd8c7c3734c32c34fcb6b1e), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
+  - @equinor/fusion-framework-module-http@7.0.5-next.0
+  - @equinor/fusion-framework@7.4.2-next.0
+  - @equinor/fusion-framework-module-msal@6.0.0-next.0
+  - @equinor/fusion-framework-react-app@8.0.0-next.0
+  - @equinor/fusion-framework-app@10.1.2-next.0
+  - @equinor/fusion-framework-module-app@7.0.3
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.0
+
 ## 26.0.3
 
 ### Patch Changes

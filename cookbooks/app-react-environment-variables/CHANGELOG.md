@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 1.0.6-next.0
+
+### Patch Changes
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`995dc50`](https://github.com/equinor/fusion-framework/commit/995dc5059fc8fa5121630b3d10a0d7ea833947e2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Improved all cookbook README documentation for better developer experience.
+
+  All cookbook README files now feature:
+
+  - Code examples matching actual implementations
+  - Inline comments explaining patterns and concepts
+  - Developer-friendly language for those new to Fusion Framework
+  - Focus on what each cookbook demonstrates rather than generic setup
+  - Proper TSDoc comments in code blocks
+  - Removed installation sections in favor of teaching patterns
+
+  This improves the learning experience for developers exploring framework features through the 18 available cookbooks.
+
 ## 1.0.5
 
 ## 1.0.5-next.1

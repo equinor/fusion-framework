@@ -1,5 +1,13 @@
 # Change Log
 
+## 12.0.3-next.0
+
+### Patch Changes
+
+- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
+  - @equinor/fusion-framework-module-http@7.0.5-next.0
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.0
+
 ## 12.0.2
 
 ### Patch Changes

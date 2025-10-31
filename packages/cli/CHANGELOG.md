@@ -1,5 +1,20 @@
 # Change Log
 
+## 12.3.9-next.0
+
+### Patch Changes
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48) Thanks [@github-actions](https://github.com/apps/github-actions)! - Update CLI auth commands to use new MSAL Node API format.
+
+  Internal implementation change to adapt to MSAL Node interface updates. CLI commands continue to work the same way for end users.
+
+  Why: Ensures compatibility with updated MSAL Node module API.
+
+- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
+  - @equinor/fusion-framework-module-msal-node@1.1.0-next.0
+  - @equinor/fusion-framework-dev-portal@1.2.4
+  - @equinor/fusion-framework-dev-server@1.1.12-next.0
+
 ## 12.3.8
 
 ### Patch Changes
