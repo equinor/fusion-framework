@@ -1,5 +1,17 @@
 # Change Log
 
+## 12.3.9-preview.2
+
+### Patch Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52), [`f3eca17`](https://github.com/equinor/fusion-framework/commit/f3eca173116ac25c6076d19ade79b1389bd12c03)]:
+  - @equinor/fusion-framework-module-msal-node@1.1.0-preview.2
+  - @equinor/fusion-framework-dev-server@1.1.12-preview.2
+  - @equinor/fusion-framework-dev-portal@1.2.5-preview.1
+  - @equinor/fusion-imports@1.1.7-preview.1
+
 ## 12.3.9-next.1
 
 ### Patch Changes

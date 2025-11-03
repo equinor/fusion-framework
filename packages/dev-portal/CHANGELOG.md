@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.5-preview.1
+
+### Patch Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- [#3704](https://github.com/equinor/fusion-framework/pull/3704) [`f3eca17`](https://github.com/equinor/fusion-framework/commit/f3eca173116ac25c6076d19ade79b1389bd12c03) Thanks [@odinr](https://github.com/odinr)! - Upgrade to React 19 compatible versions of fusion-react components
+
+  Updated the following dependencies to their React 19 compatible versions:
+
+  - `@equinor/fusion-react-styles`: `^0.6.4` → `2.0.0` - Material-UI dependency removed
+  - `@equinor/fusion-react-context-selector`: `^1.0.6` → `2.0.1`
+
+  The `@equinor/fusion-react-styles` upgrade removes the deprecated `@material-ui/styles@^4.11.5` dependency which was incompatible with React 19.
+
+  This resolves the React 19 blocker identified in issue https://github.com/equinor/fusion-framework/issues/3698
+
 ## 1.2.5-next.0
 
 ### Patch Changes

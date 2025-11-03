@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.0.3-preview.1
+
+### Patch Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52)]:
+  - @equinor/fusion-framework-module@5.0.6-preview.1
+  - @equinor/fusion-query@6.0.2-preview.1
+
 ## 7.0.3-next.0
 
 ### Patch Changes
