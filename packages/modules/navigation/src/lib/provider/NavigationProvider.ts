@@ -1,4 +1,5 @@
-import { type AgnosticRouteObject, createRouter, type Path, type To } from '@remix-run/router';
+import { type AgnosticRouteObject, createRouter, type Path, type To, type Action } from '@remix-run/router';
+import type { Observable } from 'rxjs';
 
 import { filter, map } from 'rxjs/operators';
 
@@ -41,6 +42,7 @@ export class NavigationProvider
 {
   #navigator: INavigator;
   #basePathname?: string;
+  #state$: Observable<{ action: Action; location: Path }>;
 
   /**
    * Observable stream of navigation state updates.
@@ -53,21 +55,11 @@ export class NavigationProvider
    * 1. Filters events to only include paths within the basename scope
    * 2. Maps paths to localized versions (basename removed)
    * 3. Emits { action, location } where location.pathname is relative to basename
+   *
+   * This observable is memoized in the constructor for efficiency.
    */
-  public get state$() {
-    return this.#navigator.pipe(
-      // Only emit navigation events for paths that start with the basename
-      // This ensures we only process navigation within our application scope
-      filter((event) =>
-        this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true,
-      ),
-      // Transform paths to localized versions (remove basename prefix)
-      // Consumers receive clean paths like "/users" instead of "/app/users"
-      map(({ action, location }) => ({
-        action,
-        location: this._localizePath(location),
-      })),
-    );
+  public get state$(): Observable<{ action: Action; location: Path }> {
+    return this.#state$;
   }
 
   /**
@@ -113,6 +105,22 @@ export class NavigationProvider
       basename,
       history,
     });
+
+    // Create memoized observable stream for navigation state
+    // This is created once and reused, avoiding pipeline recreation on every access
+    this.#state$ = this.#navigator.pipe(
+      // Only emit navigation events for paths that start with the basename
+      // This ensures we only process navigation within our application scope
+      filter((event) =>
+        this.#basePathname ? event.location.pathname.startsWith(this.#basePathname) : true,
+      ),
+      // Transform paths to localized versions (remove basename prefix)
+      // Consumers receive clean paths like "/users" instead of "/app/users"
+      map(({ action, location }) => ({
+        action,
+        location: this._localizePath(location),
+      })),
+    );
 
     // Ensure proper cleanup when the provider is disposed
     this._addTeardown(() => this.#navigator.dispose());
