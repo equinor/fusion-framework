@@ -609,6 +609,36 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
 
+  cookbooks/app-react-styling:
+    devDependencies:
+      '@equinor/fusion-framework-cli':
+        specifier: workspace:^
+        version: link:../../packages/cli
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:^
+        version: link:../../packages/react/app
+      '@equinor/fusion-react-styles':
+        specifier: 2.0.0
+        version: 2.0.0(react@18.3.1)
+      '@types/react':
+        specifier: ^18.2.50
+        version: 18.3.27
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.27)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      styled-components:
+        specifier: ^6.0.7
+        version: 6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
   cookbooks/app-vanilla:
     devDependencies:
       '@equinor/fusion-framework-app':
@@ -1192,8 +1222,8 @@ importers:
         specifier: workspace:*
         version: link:../utils/query
       '@equinor/fusion-react-context-selector':
-        specifier: ^1.0.6
-        version: 1.0.6(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.0.1
+        version: 2.0.1(react@18.3.1)
       '@equinor/fusion-react-progress-indicator':
         specifier: ^0.3.0
         version: 0.3.0(react@18.3.1)
@@ -1201,8 +1231,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0(@equinor/eds-core-react@0.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@equinor/eds-icons@0.22.0)(@equinor/eds-tokens@0.10.0)(react-dom@18.3.1(react@18.3.1))(react-is@18.2.0)(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@equinor/fusion-react-styles':
-        specifier: ^0.6.4
-        version: 0.6.5(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.0.0
+        version: 2.0.0(react@18.3.1)
       '@equinor/fusion-wc-chip':
         specifier: ^1.2.2
         version: 1.2.2
@@ -2805,9 +2835,6 @@ packages:
       react-dom: '>=16.8'
       styled-components: '>=5.1'
 
-  '@equinor/fusion-react-context-selector@1.0.6':
-    resolution: {integrity: sha512-j+cgxQYslrUaZlJyBtyJTqk7Box6RkWXRSV3TqJ/eGKXAbCws86XVt05dheuEaBin5jGT/7prQideDr6IcVM8Q==}
-
   '@equinor/fusion-react-context-selector@2.0.1':
     resolution: {integrity: sha512-5HhOPHBsywnn2plBMFqrqz1H3IzaiFVwaDvuO7Gf51sRFQ8a2oLhRDLbgDE9rtZJlmSgoeMXhZLnUMTStuvkKg==}
     peerDependencies:
@@ -2827,9 +2854,6 @@ packages:
     resolution: {integrity: sha512-NNVkTq0gRJYqobHEBPpWG7bFw3JhLlRhsd8AmCFfvQwdRCRnrf5cStql2bb+apetmRalJvH0U1+1swtT3vhFVg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@equinor/fusion-react-searchable-dropdown@1.0.6':
-    resolution: {integrity: sha512-sZCNWtfy/BwRLblNnyruCMA8ORc/OfwYi00KLjdlKjyO9wYgfaKWLHulNSCwgQFFyTXudRRr5JdvRCtAATTE8A==}
-
   '@equinor/fusion-react-searchable-dropdown@2.0.0':
     resolution: {integrity: sha512-72WMuN2jBv9jCSapf5Ev+DQFT55zqCvOHiG+LJqSxDC7vuzjO3uA9lVDJ4qF8uFaeycbB7m5OaWqU4S6YL92LA==}
     peerDependencies:
@@ -2844,18 +2868,6 @@ packages:
       react: ^18 || ^19
       react-dom: ^18 || ^19
       styled-components: ^6.1.0
-
-  '@equinor/fusion-react-styles@0.6.5':
-    resolution: {integrity: sha512-d/sQ+0oARxCmUgu3ZkS0HYWeZCGWSHzB0JSTqF8PmOMORIEANliOqxSh1dK+peBqeXy6bP5z0UI2xb2kSzleEQ==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^17.0.0 || ^18.0.0
-      react-dom: ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react-dom:
-        optional: true
 
   '@equinor/fusion-react-styles@2.0.0':
     resolution: {integrity: sha512-/5iG2fkLDFpvJoOCw+tQyO5bwW7nFScJKngLYZaz51ZL8/Wj2MiH+UG0kruOavWKfgYKeJSZWhcEg1o/B1MoWw==}
@@ -10541,18 +10553,6 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       styled-components: 6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@equinor/fusion-react-context-selector@1.0.6(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@equinor/fusion-react-searchable-dropdown': 1.0.6(react@18.3.1)
-      '@equinor/fusion-react-styles': 0.6.5(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
-      '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-searchable-dropdown': 4.0.5
-    transitivePeerDependencies:
-      - '@types/react'
-      - react
-      - react-dom
-
   '@equinor/fusion-react-context-selector@2.0.1(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-searchable-dropdown': 2.0.0(react@18.3.1)
@@ -10581,14 +10581,6 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  '@equinor/fusion-react-searchable-dropdown@1.0.6(react@18.3.1)':
-    dependencies:
-      '@equinor/fusion-react-utils': 2.2.3(react@18.3.1)
-      '@equinor/fusion-wc-icon': 2.3.1
-      '@equinor/fusion-wc-searchable-dropdown': 4.0.5
-    transitivePeerDependencies:
-      - react
-
   '@equinor/fusion-react-searchable-dropdown@2.0.0(react@18.3.1)':
     dependencies:
       '@equinor/fusion-react-utils': 3.0.0(react@18.3.1)
@@ -10608,17 +10600,6 @@ snapshots:
       styled-components: 6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - react-is
-
-  '@equinor/fusion-react-styles@0.6.5(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@equinor/fusion-wc-theme': 1.1.2
-      '@equinor/fusion-web-theme': 0.1.10
-      '@material-ui/styles': 4.11.5(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      clsx: 2.1.1
-      react: 18.3.1
-    optionalDependencies:
-      '@types/react': 18.3.27
-      react-dom: 18.3.1(react@18.3.1)
 
   '@equinor/fusion-react-styles@2.0.0(react@18.3.1)':
     dependencies:
