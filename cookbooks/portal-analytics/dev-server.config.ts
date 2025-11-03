@@ -1,5 +1,5 @@
 import { defineDevServerConfig, processServices } from '@equinor/fusion-framework-cli/dev-server';
-import { appendFileContents, readBody, readFileContents } from './middleware/logs';
+import { appendFileContents, readBody, readFileContents, clearFileContents } from './middleware/logs';
 
 const LOG_FILE = './otel-logs/log.txt';
 
@@ -29,6 +29,13 @@ export default defineDevServerConfig(() => {
                 res.end(err);
               }
               res.end(JSON.stringify({ partialSuccess: {} }));
+            },
+          },
+          {
+            match: '/api/clearlogs',
+            middleware: async (_req, res) => {
+              await clearFileContents(LOG_FILE);
+              res.end();
             },
           },
         );

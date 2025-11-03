@@ -6,7 +6,11 @@ import {
   ConsoleAnalyticsAdapter,
   FusionAnalyticsAdapter,
 } from '@equinor/fusion-framework-module-analytics/adapters';
-import { ContextSelectedCollector } from '@equinor/fusion-framework-module-analytics/collectors';
+import {
+  AppLoadedCollector,
+  AppSelectedCollector,
+  ContextSelectedCollector,
+} from '@equinor/fusion-framework-module-analytics/collectors';
 import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
 import { enableContext } from '@equinor/fusion-framework-react/context';
 import { Subject } from 'rxjs';
@@ -53,6 +57,16 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
     builder.setCollector('context-selected', async (args) => {
       const contextProvider = await args.requireInstance('context');
       return new ContextSelectedCollector(contextProvider);
+    });
+
+    builder.setCollector('app-selected', async (args) => {
+      const appProvider = await args.requireInstance('app');
+      return new AppSelectedCollector(appProvider);
+    });
+
+    builder.setCollector('app-loaded', async (args) => {
+      const eventProvider = await args.requireInstance('event');
+      return new AppLoadedCollector(eventProvider);
     });
 
     builder.setCollector('click-test', async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { LogEntry } from '../types';
 import { LogEntrySchema } from '../schema';
 import { v4 as uuid } from 'uuid';
@@ -12,7 +12,7 @@ export const LogReader = () => {
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       const response = await fetch('/@fusion-api/logs');
       const text = await response.text();
@@ -27,7 +27,12 @@ export const LogReader = () => {
     } catch (err) {
       setError(`Failed to fetch logs. ${err}`);
     }
-  };
+  }, []);
+
+  const clearLogs = useCallback(async () => {
+    await fetch('/@fusion-api/api/clearlogs');
+    fetchLogs();
+  }, [fetchLogs]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only run on mount
   useEffect(() => {
@@ -39,6 +44,10 @@ export const LogReader = () => {
       <div>{error}</div>
       <button type="button" onClick={fetchLogs}>
         Refresh
+      </button>
+
+      <button type="button" onClick={clearLogs}>
+        Clear
       </button>
       <table border={1}>
         <thead>

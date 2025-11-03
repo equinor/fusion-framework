@@ -1,4 +1,4 @@
-import { readFile, appendFile } from 'node:fs/promises';
+import { readFile, appendFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { IncomingMessage } from 'node:http';
@@ -41,6 +41,22 @@ export const appendFileContents = async (filePath: string, content: string): Pro
       throw new Error(`File does not exist: ${absolutePath}`);
     }
     await appendFile(absolutePath, `${content}\n`, 'utf8');
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to write to file: ${error.message}`);
+    }
+    throw new Error('Unknown error occurred');
+  }
+};
+
+export const clearFileContents = async (filePath: string): Promise<void> => {
+  const absolutePath = resolve(filePath);
+
+  try {
+    if (!existsSync(absolutePath)) {
+      throw new Error(`File does not exist: ${absolutePath}`);
+    }
+    await writeFile(absolutePath, '', { encoding: 'utf8' });
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to write to file: ${error.message}`);

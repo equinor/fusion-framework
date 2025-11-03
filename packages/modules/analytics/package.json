@@ -40,9 +40,11 @@
     "directory": "packages/modules/analytics"
   },
   "dependencies": {
+    "@equinor/fusion-framework-react": "workspace:^",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-context": "workspace:^",
+    "@equinor/fusion-framework-module-app": "workspace:^",
     "@opentelemetry/api-logs": "^0.207.0",
     "@opentelemetry/exporter-logs-otlp-http": "^0.207.0",
     "@opentelemetry/otlp-exporter-base": "^0.207.0",

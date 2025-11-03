@@ -153,8 +153,7 @@ export const useContextResolver = (): {
   const instance$ = useMemo(() => currentApp?.instance$ || EMPTY, [currentApp]);
 
   /* context provider state */
-  // const [provider, setProvider] = useState<IContextProvider | null>(null); // @TODO
-  const [provider, setProvider] = useState<IContextProvider | null>(framework.modules.context);
+  const [provider, setProvider] = useState<IContextProvider | null>(null);
 
   /* Current context observable */
   const { value: currentContext } = useObservableState(
@@ -172,13 +171,13 @@ export const useContextResolver = (): {
     if (contextProvider) {
       setProvider(contextProvider);
     } else {
-      setProvider(framework.modules.context); // @TODO
+      setProvider(null);
     }
   }, []);
 
   /** clear the app provider */
   const clearContextProvider = useCallback(() => {
-    setProvider(framework.modules.context); // @TODO
+    setProvider(null);
   }, []);
 
   /** observe changes to app modules and  clear / set the context provider on change */
