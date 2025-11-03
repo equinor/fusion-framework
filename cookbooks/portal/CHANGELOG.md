@@ -1,5 +1,14 @@
 # portal
 
+## 0.1.8-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
+  - @equinor/fusion-framework-cli@12.3.9-next.2
+
 ## 0.1.8-next.1
 
 ### Patch Changes

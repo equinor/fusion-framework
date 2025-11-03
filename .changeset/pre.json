@@ -65,6 +65,7 @@
     "@equinor/fusion-framework-docs": "0.4.9"
   },
   "changesets": [
+    "_next",
     "bookmark-component-msal-v4",
     "cli_msal-api-compatibility",
     "docs_cookbook-readme-improvements",

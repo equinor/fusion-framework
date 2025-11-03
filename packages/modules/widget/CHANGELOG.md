@@ -1,5 +1,19 @@
 # Change Log
 
+## 12.0.3-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.2
+  - @equinor/fusion-framework-module-http@7.0.5-next.2
+  - @equinor/fusion-framework-module-event@4.4.1-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-observable@8.5.7-next.1
+  - @equinor/fusion-query@6.0.2-next.1
+
 ## 12.0.3-next.1
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # Change Log
 
+## 7.4.19-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
+  - @equinor/fusion-framework-react-module-signalr@3.0.35-next.2
+  - @equinor/fusion-framework-react-module-http@10.0.1-next.2
+  - @equinor/fusion-framework@7.4.2-next.2
+  - @equinor/fusion-framework-module-feature-flag@1.1.27-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-react-module@3.1.14-next.1
+  - @equinor/fusion-observable@8.5.7-next.1
+
 ## 7.4.19-next.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.10-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
 ## 0.4.10-next.1
 
 ### Patch Changes

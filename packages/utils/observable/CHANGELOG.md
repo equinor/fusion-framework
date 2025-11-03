@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.5.7-next.1
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
 ## 8.5.7-next.0
 
 ### Patch Changes

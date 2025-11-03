@@ -99,10 +99,14 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    */
   get defaultAccount(): AccountInfo | undefined {
     this._trackException('MsalPrvider.defaultAccount.deprecated', TelemetryLevel.Warning, {
-      exception: new Error('defaultAccount is deprecated, use account instead. This will be removed in the next major version.'),
+      exception: new Error(
+        'defaultAccount is deprecated, use account instead. This will be removed in the next major version.',
+      ),
       properties: {
-        message: 'defaultAccount is deprecated, use account instead. This will be removed in the next major version.',
-        reason: 'This is most likely due to accessing the framework directly from application code, instead of using the application hooks.',
+        message:
+          'defaultAccount is deprecated, use account instead. This will be removed in the next major version.',
+        reason:
+          'This is most likely due to accessing the framework directly from application code, instead of using the application hooks.',
       },
     });
     return this.account ?? undefined;

@@ -1,5 +1,21 @@
 # Change Log
 
+## 8.0.0-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
+  - @equinor/fusion-framework-react-module-http@10.0.1-next.2
+  - @equinor/fusion-framework-react@7.4.19-next.2
+  - @equinor/fusion-framework-module-msal@6.0.0-next.2
+  - @equinor/fusion-framework-app@10.1.2-next.2
+  - @equinor/fusion-framework-module-app@7.0.4-next.1
+  - @equinor/fusion-framework-module@5.0.6-next.1
+  - @equinor/fusion-framework-module-navigation@6.0.1-next.1
+  - @equinor/fusion-framework-react-module@3.1.14-next.1
+
 ## 8.0.0-next.1
 
 ### Patch Changes
