@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.1.2-next.1
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
+  - @equinor/fusion-framework-react-module-bookmark@5.0.2-next.1
+  - @equinor/fusion-framework-react@7.4.19-next.1
+  - @equinor/fusion-observable@8.5.7-next.0
+
 ## 1.1.2-next.0
 
 ### Patch Changes

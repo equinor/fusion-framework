@@ -1,5 +1,21 @@
 # Change Log
 
+## 10.1.2-next.1
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
+  - @equinor/fusion-framework-module-telemetry@4.4.0-next.1
+  - @equinor/fusion-framework-module-http@7.0.5-next.1
+  - @equinor/fusion-framework-module-msal@6.0.0-next.1
+  - @equinor/fusion-framework@7.4.2-next.1
+  - @equinor/fusion-framework-module-app@7.0.4-next.0
+  - @equinor/fusion-framework-module-bookmark@3.0.4-next.0
+  - @equinor/fusion-framework-module-event@4.4.1-next.0
+  - @equinor/fusion-framework-module@5.0.6-next.0
+
 ## 10.1.2-next.0
 
 ### Patch Changes

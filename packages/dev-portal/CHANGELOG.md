@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.5-next.0
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
 ## 1.2.4
 
 ### Patch Changes
