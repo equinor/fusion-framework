@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-cookbook-app-react-environment-variables
 
+## 1.0.6-next.1
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
 ## 1.0.6-next.0
 
 ### Patch Changes

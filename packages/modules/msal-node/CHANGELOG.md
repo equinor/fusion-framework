@@ -1,5 +1,14 @@
 # @equinor/fusion-framework-module-msal-node
 
+## 1.1.0-next.1
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
+  - @equinor/fusion-framework-module@5.0.6-next.0
+
 ## 1.1.0-next.0
 
 ### Minor Changes
