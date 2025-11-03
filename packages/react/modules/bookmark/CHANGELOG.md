@@ -1,5 +1,26 @@
 # Change Log
 
+## 6.0.0-preview.2
+
+### Major Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152) Thanks [@github-actions](https://github.com/apps/github-actions)! - Require React 18+ as peer dependency. React 17 is no longer supported.
+
+  **Migration:** Update your application to React 18+ to continue using these packages.
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Patch Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152)]:
+  - @equinor/fusion-framework-react@8.0.0-preview.2
+  - @equinor/fusion-framework-module-bookmark@3.0.4-preview.1
+  - @equinor/fusion-framework-module@5.0.6-preview.1
+  - @equinor/fusion-framework-react-module@4.0.0-preview.1
+  - @equinor/fusion-observable@9.0.0-preview.1
+
 ## 5.0.2-next.1
 
 ### Patch Changes
