@@ -7,7 +7,6 @@
 "@equinor/fusion-framework-react-components-bookmark": patch
 "@equinor/fusion-framework-cookbook-app-react-feature-flag": patch
 "@equinor/fusion-framework-react-module-bookmark": patch
-"@equinor/fusion-framework-legacy-interopt": patch
 "@equinor/fusion-framework-react-module-signalr": patch
 "@equinor/fusion-framework-cookbook-app-react-apploader": patch
 "@equinor/fusion-framework-cookbook-app-react-bookmark": patch
