@@ -17,7 +17,7 @@ const AppContent = () => {
 
       <Card>
         <Text>
-          <strong>Testing @equinor/fusion-react-styles@2.0.0-preview.1</strong>
+          <strong>Testing @equinor/fusion-react-styles</strong>
         </Text>
         <Text>
           This cookbook tests the React 19 compatible version of fusion-react-styles with
