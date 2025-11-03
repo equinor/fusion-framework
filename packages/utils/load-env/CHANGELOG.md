@@ -1,5 +1,11 @@
 # @equinor/fusion-load-env
 
+## 1.0.4-preview.1
+
+### Patch Changes
+
+- [#3702](https://github.com/equinor/fusion-framework/pull/3702) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
 ## 1.0.4-next.0
 
 ### Patch Changes

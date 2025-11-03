@@ -62,25 +62,29 @@
     "@equinor/fusion-framework-vite-plugin-api-service": "1.2.4",
     "@equinor/fusion-framework-vite-plugin-spa": "2.0.2",
     "@equinor/fusion-framework-widget": "1.1.45",
-    "@equinor/fusion-framework-docs": "0.4.9"
+    "@equinor/fusion-framework-docs": "0.4.9",
+    "@equinor/fusion-framework-cookbook-app-react-styling": "0.0.0"
   },
   "changesets": [
+    "_preview",
     "bookmark-component-msal-v4",
     "cli_msal-api-compatibility",
+    "cookbook-app-react-styling_add-new-cookbook",
+    "dev-portal_react-19-preview-deps",
     "docs_cookbook-readme-improvements",
     "docs_msal-v4-documentation-reorganization",
     "framework-module-http_msal-api-compatibility",
     "framework-msal-config-update",
     "fusion-framework-module-telemetry_add-measurement-exports",
-    "legacy-interopt-msal-v4-fixes",
-    "legacy-interopt_msal-api-compatibility",
     "msal-node_api-breaking-change",
     "msal-v4-upgrade",
     "msal_telemetry-provider-events",
-    "open-comics-like",
     "react-app-msal-v4-hooks",
+    "react-app_add-tests",
+    "react-app_deprecate-react-17",
     "react-app_msal-api-compatibility",
     "react-framework-msal-v4-hook",
+    "react-packages_require-react-18",
     "signalr_msal-api-compatibility",
     "spa-plugin-msal-v4-fixes"
   ]
