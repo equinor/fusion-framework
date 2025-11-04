@@ -13,13 +13,15 @@ import { ErrorViewer } from './ErrorViewer';
 import type { AppModule } from '@equinor/fusion-framework-module-app';
 import EquinorLoader from './EquinorLoader';
 
+export const TAG = '$tag';
+
 /**
  * Gets the app tag/version from the current URL search parameters
  * @returns The app tag/version if present in URL, otherwise null
  */
 export const getAppTagFromUrl = (): string | null => {
   const url = new URL(window.location.href);
-  return url.searchParams.get('aTag');
+  return url.searchParams.get(TAG);
 };
 
 /**

@@ -42,8 +42,10 @@ This changeset introduces comprehensive support for loading specific app version
 
 ### Loading specific app version by tag
 ```typescript
-// Set current app with specific tag
-app.setCurrentApp({ appKey: 'my-app', tag: 'v1.2.3' });
+// Set current app with specific tag or version
+app.setCurrentApp({ appKey: 'my-app', tag: '1.2.3' });
+
+app.setCurrentApp({ appKey: 'my-app', tag: 'preview' });
 
 // Extract tag from URL and load app
 const tag = getAppTagFromUrl();
@@ -68,7 +70,7 @@ const buildManifest = await appClient.getAppBuild({
 - Optionally use new tag-based loading for version-specific deployments
 
 ### For App Developers
-- Consider adding `aTag` URL parameter support for testing different versions
+- Consider adding `&tag` URL parameter support for testing different versions
 - Use new `AppReference` type when programmatically setting current apps with tags
 
 ## Technical Details
