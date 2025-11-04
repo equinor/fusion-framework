@@ -17,9 +17,7 @@ export const navigationConfigSchema = z.object({
   /** Optional base pathname for the application (e.g., "/app") */
   basename: z.string().optional().describe('Base pathname for the application'),
   /** Optional custom history instance (browser, hash, or memory). If not provided, defaults to browser history. */
-  history: z
-    .custom<History>()
-    .describe('Custom history instance of History interface'),
+  history: z.custom<History>().describe('Custom history instance of History interface'),
 });
 
 /**
@@ -66,7 +64,6 @@ export const parseNavigationConfig = (config: unknown): INavigationConfigurator 
  * ```
  */
 export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigurator> {
-
   constructor() {
     super();
     this.setHistory(async () => createHistory());
@@ -80,8 +77,8 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
    *
    * @deprecated Use `setBasename()` method instead
    */
-  public set basename(value: string|undefined) {
-    if(process.env.NODE_ENV === 'development') {
+  public set basename(value: string | undefined) {
+    if (process.env.NODE_ENV === 'development') {
       console.warn('NavigationConfigurator.basename', 'use setBasename() method instead');
     }
     this.setBasename(value);
@@ -95,7 +92,7 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
    *
    * @deprecated Use `setHistory()` method instead
    */
-  public set history(value: History|undefined) {
+  public set history(value: History | undefined) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('NavigationConfigurator.history', 'use setHistory() method instead');
     }
@@ -119,8 +116,7 @@ export class NavigationConfigurator extends BaseConfigBuilder<INavigationConfigu
    * ```
    */
   public setBasename(basenameOrCallback?: string | ConfigBuilderCallback<string>): this {
-
-    console.log(11111,'NavigationConfigurator::setBasename', basenameOrCallback);
+    console.log(11111, 'NavigationConfigurator::setBasename', basenameOrCallback);
     const fn =
       typeof basenameOrCallback === 'function'
         ? basenameOrCallback

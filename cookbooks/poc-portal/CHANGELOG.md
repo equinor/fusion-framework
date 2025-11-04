@@ -1,5 +1,22 @@
 # poc-portal
 
+## 1.1.18-preview.2
+
+### Patch Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152)]:
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-preview.2
+  - @equinor/fusion-framework-react@8.0.0-preview.2
+  - @equinor/fusion-framework-module-http@7.0.5-preview.2
+  - @equinor/fusion-framework-module-msal@6.0.0-preview.2
+  - @equinor/fusion-framework@7.4.2-preview.2
+  - @equinor/fusion-framework-react-app@8.0.0-preview.2
+  - @equinor/fusion-framework-cli@12.3.9-preview.2
+  - @equinor/fusion-framework-module-app@7.0.4-preview.1
+  - @equinor/fusion-framework-module@5.0.6-preview.1
+
 ## 1.1.18-next.1
 
 ### Patch Changes

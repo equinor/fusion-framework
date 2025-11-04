@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-vite-plugin-api-service
 
+## 1.2.5-preview.1
+
+### Patch Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
 ## 1.2.5-next.0
 
 ### Patch Changes

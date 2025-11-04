@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.1.81-preview.2
+
+### Patch Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52), [`86dbc51`](https://github.com/equinor/fusion-framework/commit/86dbc51d5fe923abb8a1794897cb936402b31ff3), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152)]:
+  - @equinor/fusion-framework-react-app@8.0.0-preview.2
+  - @equinor/fusion-framework-cli@12.3.9-preview.2
+  - @equinor/fusion-framework-module-navigation@6.0.1-preview.1
+  - @equinor/fusion-framework-react-module-context@7.0.0-preview.1
+  - @equinor/fusion-observable@9.0.0-preview.1
+
 ## 4.1.81-next.1
 
 ### Patch Changes

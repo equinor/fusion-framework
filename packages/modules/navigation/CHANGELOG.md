@@ -1,5 +1,18 @@
 # Change Log
 
+## 6.0.1-preview.1
+
+### Patch Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- [`86dbc51`](https://github.com/equinor/fusion-framework/commit/86dbc51d5fe923abb8a1794897cb936402b31ff3) Thanks [@odinr](https://github.com/odinr)! - Upgrade `@remix-run/router` from v1.8.0 to v1.23.0 for React Router v7 compatibility.
+
+  This upgrade ensures compatibility with React Router 7 (v7.9.5) when used with the navigation module. The `createRouter` API remains unchanged and backward compatible.
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52)]:
+  - @equinor/fusion-framework-module@5.0.6-preview.1
+
 ## 6.0.1-next.0
 
 ### Patch Changes

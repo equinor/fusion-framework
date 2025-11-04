@@ -1,5 +1,33 @@
 # Change Log
 
+## 8.0.0-preview.2
+
+### Major Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152) Thanks [@github-actions](https://github.com/apps/github-actions)! - Require React 18+ and modernize `renderComponent` and `renderApp` functions to use React 18's `createRoot` API. These functions are no longer deprecated.
+
+  **Migration:** Update to React 18+. If you use `renderComponent` or `renderApp`, these functions now use the `createRoot` API internally. No immediate migration is required unless you are using features specific to React 17.
+
+  Closes https://github.com/equinor/fusion-framework/issues/3504
+
+### Patch Changes
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52) Thanks [@github-actions](https://github.com/apps/github-actions)! - relase next of all packages
+
+- [#3703](https://github.com/equinor/fusion-framework/pull/3703) [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152) Thanks [@github-actions](https://github.com/apps/github-actions)! - Add test suite for `renderApp` function using Vitest and React Testing Library.
+
+  Includes test coverage for component rendering, teardown functionality, and React 18 createRoot integration.
+
+- Updated dependencies [[`999d81d`](https://github.com/equinor/fusion-framework/commit/999d81d9151505009d75457cf252e3c74cf64e52), [`86dbc51`](https://github.com/equinor/fusion-framework/commit/86dbc51d5fe923abb8a1794897cb936402b31ff3), [`2cf2481`](https://github.com/equinor/fusion-framework/commit/2cf24813cca524b41920550a46f8da2e067ee152)]:
+  - @equinor/fusion-framework-react-module-http@11.0.0-preview.2
+  - @equinor/fusion-framework-react@8.0.0-preview.2
+  - @equinor/fusion-framework-module-msal@6.0.0-preview.2
+  - @equinor/fusion-framework-app@10.1.2-preview.2
+  - @equinor/fusion-framework-module-app@7.0.4-preview.1
+  - @equinor/fusion-framework-module@5.0.6-preview.1
+  - @equinor/fusion-framework-module-navigation@6.0.1-preview.1
+  - @equinor/fusion-framework-react-module@4.0.0-preview.1
+
 ## 8.0.0-next.1
 
 ### Patch Changes
