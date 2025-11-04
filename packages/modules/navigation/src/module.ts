@@ -1,13 +1,11 @@
 import {
-  type IModuleConfigurator,
   type IModulesConfigurator,
   type Module,
   type ModuleConfigType,
   type ModuleInstance,
   SemanticVersion,
 } from '@equinor/fusion-framework-module';
-import { type INavigationConfigurator, NavigationConfigurator } from './configurator';
-import { createHistory } from './createHistory';
+import { NavigationConfigurator } from './configurator';
 import { type INavigationProvider, NavigationProvider } from './lib';
 
 import { version } from './version';
@@ -24,7 +22,7 @@ export const moduleKey = 'navigation';
 export type NavigationModule = Module<
   typeof moduleKey,
   INavigationProvider,
-  INavigationConfigurator
+  NavigationConfigurator
 >;
 
 /**
@@ -32,40 +30,43 @@ export type NavigationModule = Module<
  * Provides routing and navigation capabilities using React Router 7.
  *
  * @remarks
- * This module:
- * - Manages browser history (browser, hash, or memory)
- * - Handles route navigation and state
- * - Provides localized paths based on basename
- * - Integrates with React Router 7 for route management
+ * - Uses BaseConfigBuilder pattern with Zod validation
+ * - Basename must match the URL path prefix where your app is served
+ * - React Router 7 requires URL pathname to start with the basename
  */
 export const module: NavigationModule = {
   version: new SemanticVersion(version),
   name: moduleKey,
   /**
    * Configures the navigation module.
-   * If a reference navigation module exists, reuses its navigator history.
+   * Optionally reuses history from a reference module for composition.
    *
-   * @param ref - Optional module instance reference (for module composition)
+   * @param ref - Optional module instance reference
    * @returns A new NavigationConfigurator instance
    */
   configure: (ref?: ModuleInstance) => {
     const configurator = new NavigationConfigurator();
     // Reuse history from reference if available (for module composition)
+    // Use setHistory method to configure via BaseConfigBuilder pattern
+    // INavigator extends History, so it's compatible
     if (ref?.navigation) {
-      configurator.history = ref.navigation.navigator;
+      // Navigator extends History, so we can use it directly as History
+      // Return the navigator as History (Navigator extends History interface)
+      // Wrap in of() to satisfy ObservableInput type requirement
+      // Explicitly cast to History from @remix-run/router to avoid type conflict
+      configurator.setHistory(ref.navigation.navigator);
     }
     return configurator;
   },
   /**
-   * Initializes the navigation module with the provided configuration.
-   * Creates a default browser history if none is provided.
+   * Initializes the navigation module with validated configuration.
    *
-   * @param config - Module configuration containing history and basename
-   * @returns A new NavigationProvider instance
+   * @param init - Module initialization arguments
+   * @returns A Promise that resolves to a new NavigationProvider instance
    */
-  initialize: ({ config }) => {
-    // Default to browser history if not provided
-    config.history ??= createHistory();
+  initialize: async (init) => {
+    // Create and validate configuration using BaseConfigBuilder pattern
+    const config = await init.config.createConfigAsync(init);
     return new NavigationProvider({ version, config });
   },
   /**
@@ -80,22 +81,26 @@ export const module: NavigationModule = {
 };
 
 /**
- * Helper function to enable the navigation module with a basename or custom configuration.
+ * Helper function to enable the navigation module.
  *
  * @param configurator - The modules configurator to add navigation to
- * @param basenameOrOptions - Either a basename string or full configuration options
+ * @param basenameOrOptions - Basename string or configuration object with `configure` callback
  * @typeParam TRef - Reference type for module composition
+ *
+ * @remarks
+ * Basename must match the URL path prefix where your app is served.
+ * React Router 7 requires the URL pathname to start with the basename.
  *
  * @example
  * ```ts
- * // Simple usage with basename
- * enableNavigation(configurator, '/app');
+ * // Simple usage
+ * enableNavigation(configurator, '/apps/my-app');
  *
- * // Advanced usage with full configuration
+ * // Advanced usage
  * enableNavigation(configurator, {
  *   configure: (config) => {
- *     config.basename = '/app';
- *     config.history = createMemoryHistory();
+ *     config.setBasename('/apps/my-app');
+ *     config.setHistory(createMemoryHistory());
  *   }
  * });
  * ```
@@ -103,18 +108,22 @@ export const module: NavigationModule = {
 export const enableNavigation = <TRef = unknown>(
   // biome-ignore lint/suspicious/noExplicitAny: must be any to support all module types
   configurator: IModulesConfigurator<any, any>,
-  basenameOrOptions?: string | Omit<IModuleConfigurator<NavigationModule, TRef>, 'module'>,
+  basenameOrOptions?:
+    | string
+    | {
+        configure: (config: ModuleConfigType<NavigationModule>, ref: TRef) => void;
+      },
 ): void => {
-  // Normalize options: convert string basename to config function, or use provided options
-  const options =
-    typeof basenameOrOptions === 'string'
-      ? {
-          configure: (config: ModuleConfigType<NavigationModule>) => {
-            config.basename = basenameOrOptions;
-          },
-        }
-      : basenameOrOptions;
-  configurator.addConfig({ module, ...options });
+  configurator.addConfig({
+    module,
+    configure(config, ref) {
+      if (typeof basenameOrOptions === 'string') {
+        config.setBasename(basenameOrOptions);
+      } else if (typeof basenameOrOptions === 'object' && 'configure' in basenameOrOptions) {
+        basenameOrOptions.configure(config, ref);
+      }
+    },
+  });
 };
 
 export default module;

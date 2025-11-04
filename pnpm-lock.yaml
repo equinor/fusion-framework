@@ -1325,6 +1325,9 @@ importers:
       '@remix-run/router':
         specifier: ^1.23.0
         version: 1.23.0
+      zod:
+        specifier: ^4.1.11
+        version: 4.1.12
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^

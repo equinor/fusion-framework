@@ -27,7 +27,8 @@
     "directory": "packages/modules/navigation"
   },
   "dependencies": {
-    "@remix-run/router": "^1.23.0"
+    "@remix-run/router": "^1.23.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:^",

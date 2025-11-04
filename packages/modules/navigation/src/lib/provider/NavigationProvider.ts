@@ -1,5 +1,6 @@
-import { type AgnosticRouteObject, createRouter, type Path, type To, type Action } from '@remix-run/router';
+import { type AgnosticRouteObject, createRouter, type Router } from '@remix-run/router';
 import type { Observable } from 'rxjs';
+import type { Action, Path, To } from '../../types';
 
 import { filter, map } from 'rxjs/operators';
 
@@ -145,7 +146,7 @@ export class NavigationProvider
     console.debug('NavigationProvider::createRouter', routes);
     const router = createRouter({
       basename: history.basename,
-      history,
+      history: history as unknown as import('@remix-run/router').History,
       routes,
       // Enable Router 7's basename prepending behavior
       // This ensures basename is properly handled in route matching and navigation

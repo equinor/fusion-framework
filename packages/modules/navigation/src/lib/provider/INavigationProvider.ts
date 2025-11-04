@@ -1,6 +1,7 @@
-import type { Action, AgnosticRouteObject, Path, Router, To } from '@remix-run/router';
+import type { AgnosticRouteObject, Router } from '@remix-run/router';
 
 import type { INavigator } from '../../navigator';
+import type { Action, Path, To } from '../../types';
 
 import type { Observable } from 'rxjs';
 import type { IModuleProvider } from '@equinor/fusion-framework-module';

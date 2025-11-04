@@ -1,7 +1,6 @@
-import type { History, To, Path, Location } from '@remix-run/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import type { NavigationUpdate, NavigationListener } from './types';
+import type { History, To, Path, Location, NavigationUpdate, NavigationListener } from './types';
 
 /**
  * Interface representing a navigator that extends both an observable of navigation updates and the History interface.
@@ -111,7 +110,7 @@ export class Navigator<T extends NavigationUpdate = NavigationUpdate>
       action: this.#history.action,
       location: this.#history.location,
       delta: null,
-    } as T);
+    } as unknown as T);
 
     // Subscribe to history changes and forward them to our observable state
     // This keeps Navigator in sync with the underlying history instance

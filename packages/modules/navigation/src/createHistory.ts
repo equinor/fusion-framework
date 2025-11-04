@@ -1,5 +1,5 @@
 import { createBrowserHistory, createHashHistory, createMemoryHistory } from '@remix-run/router';
-import type { History } from '@remix-run/router';
+import type { History } from './types';
 
 /**
  * Supported history types for navigation.
