@@ -27,7 +27,7 @@ jobs:
         run: |
           if [ ! -f ".changeset/pre.json" ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
-            echo "Skipping pre-release: .changeset/pre.json not found"
+            echo "::notice::Pre-release skipped: .changeset/pre.json not found. This is expected for non-pre-release branches."
             exit 0
           fi
           TAG=$(node -p "require('./.changeset/pre.json').tag")
@@ -62,6 +62,13 @@ jobs:
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Workflow skipped
+        if: steps.tag.outputs.skip == 'true'
+        run: |
+          echo "::notice::Pre-release workflow was skipped because .changeset/pre.json was not found."
+          echo "::notice::This is expected behavior for branches that are not in pre-release mode."
+          echo "✅ No pre-release was performed - workflow skipped successfully"
 
 
 
