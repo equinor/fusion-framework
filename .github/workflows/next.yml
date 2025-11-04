@@ -26,19 +26,27 @@ jobs:
         id: tag
         run: |
           if [ ! -f ".changeset/pre.json" ]; then
-            echo "Error: .changeset/pre.json is required for pre-release workflow"
-            exit 1
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping pre-release: .changeset/pre.json not found"
+            exit 0
           fi
           TAG=$(node -p "require('./.changeset/pre.json').tag")
+          if [ "$TAG" = "latest" ]; then
+            echo "Error: Pre-release workflow cannot use 'latest' tag. 'latest' is reserved for stable releases."
+            exit 1
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
           echo "Using tag from pre.json: $TAG"
 
       - name: Setup node and install deps
+        if: steps.tag.outputs.skip != 'true'
         uses: ./.github/actions/node-setup
         with:
           turbo-cache: false
 
       - name: Create Release Pull Request or Publish to npm
+        if: steps.tag.outputs.skip != 'true'
         id: changesets
         uses: changesets/action@v1
         with:
@@ -50,7 +58,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: convert Changeset PR to draft
-        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
+        if: steps.tag.outputs.skip != 'true' && steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
