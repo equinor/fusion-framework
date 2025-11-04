@@ -192,7 +192,7 @@ export class AppModuleProvider {
    * @deprecated
    */
   public createApp(value: AppBundleStateInitial): App {
-    console.warn("AppModuleProvider.createApp is deprecated and should not be used.");
+    console.warn('AppModuleProvider.createApp is deprecated and should not be used.');
     return new App(value, { provider: this, event: this.#event });
   }
 
