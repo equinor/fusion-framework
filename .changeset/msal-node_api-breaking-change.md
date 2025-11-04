@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-module-msal-node": minor
+"@equinor/fusion-framework-module-msal-node": major
 ---
 
 Update AuthProvider interfaces to match MSAL v4 API format.
