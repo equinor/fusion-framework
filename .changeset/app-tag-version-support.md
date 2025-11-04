@@ -79,3 +79,6 @@ const buildManifest = await appClient.getAppBuild({
 - **Caching**: Tag-based manifests and builds are cached separately
 - **Error Handling**: Enhanced error handling for build and manifest loading failures
 - **Type Safety**: Full TypeScript support for all new features
+
+closes: AB#65777
+related to: AB#65452
