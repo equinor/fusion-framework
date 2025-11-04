@@ -1,4 +1,4 @@
-import semver, { SemVer } from 'semver';
+import semver, { type SemVer } from 'semver';
 
 import { MsalModuleVersion } from '../static';
 
@@ -92,8 +92,8 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   // Validate that the requested version is a valid semver
   if (!wantedVersion) {
     const missingVersionWarning = new VersionError(
-      `Failed to parse requested version "${version || '<unknown version>'}"`,
-      wantedVersion || '<unknown version>',
+      `Failed to parse requested version "${version ?? '<unknown version>'}"`,
+      version ?? '<unknown version>',
       latestVersion,
     );
     warnings.push(missingVersionWarning.message);

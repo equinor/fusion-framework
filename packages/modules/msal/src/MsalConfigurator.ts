@@ -1,6 +1,5 @@
 import z from 'zod';
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
-import { MsalModuleVersion } from './static';
 import semver from 'semver';
 import type { IMsalProvider } from './MsalProvider.interface';
 import {

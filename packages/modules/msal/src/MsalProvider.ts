@@ -43,11 +43,11 @@ export type { IMsalProvider };
  * });
  *
  * // Login user
- * await provider.login({ scopes: ['User.Read'] });
+ * await provider.login({ request: { scopes: ['User.Read'] } });
  *
  * // Acquire token
  * const token = await provider.acquireAccessToken({
- *   scopes: ['https://graph.microsoft.com/.default']
+ *   request: { scopes: ['https://graph.microsoft.com/.default'] }
  * });
  * ```
  */
