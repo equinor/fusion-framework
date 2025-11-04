@@ -11,22 +11,20 @@ permissions:
   pull-requests: write
 
 jobs:
-  release-pkg:
-    name: Version or publish pre-release of packages
+  check-pre-release:
+    name: Check pre-release configuration
     runs-on: ubuntu-latest
     outputs:
-      published: ${{ steps.changesets.outputs.published }}
-      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
+      should-run: ${{ steps.check.outputs.should-run }}
+      tag: ${{ steps.check.outputs.tag }}
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-  
-      - name: Validate pre-release configuration
-        id: tag
+
+      - name: Check for pre-release configuration
+        id: check
         run: |
           if [ ! -f ".changeset/pre.json" ]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "should-run=false" >> $GITHUB_OUTPUT
             echo "::notice::Pre-release skipped: .changeset/pre.json not found. This is expected for non-pre-release branches."
             exit 0
           fi
@@ -35,40 +33,44 @@ jobs:
             echo "Error: Pre-release workflow cannot use 'latest' tag. 'latest' is reserved for stable releases."
             exit 1
           fi
+          echo "should-run=true" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "skip=false" >> $GITHUB_OUTPUT
           echo "Using tag from pre.json: $TAG"
 
+  release-pkg:
+    name: Version or publish pre-release of packages
+    needs: check-pre-release
+    if: needs.check-pre-release.outputs.should-run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
       - name: Setup node and install deps
-        if: steps.tag.outputs.skip != 'true'
         uses: ./.github/actions/node-setup
         with:
           turbo-cache: false
 
       - name: Create Release Pull Request or Publish to npm
-        if: steps.tag.outputs.skip != 'true'
         id: changesets
         uses: changesets/action@v1
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
           version: pnpm changeset:version
-          publish: pnpm changeset:publish:pre-release --tag ${{ steps.tag.outputs.tag }}
+          publish: pnpm changeset:publish:pre-release --tag ${{ needs.check-pre-release.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: convert Changeset PR to draft
-        if: steps.tag.outputs.skip != 'true' && steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:
           GH_TOKEN: ${{ github.token }}
-
-      - name: Workflow skipped
-        if: steps.tag.outputs.skip == 'true'
-        run: |
-          echo "::notice::Pre-release workflow was skipped because .changeset/pre.json was not found."
-          echo "::notice::This is expected behavior for branches that are not in pre-release mode."
-          echo "✅ No pre-release was performed - workflow skipped successfully"
 
 
 
