@@ -1,7 +1,7 @@
 import type { SemVer } from 'semver';
 import type { MsalModuleVersion } from '../static';
-import type { IPublicClientApplication } from './IPublicClientApplication.interface';
 import type { AccountInfo, AuthenticationResult } from './types';
+import type { IAuthClient } from './IAuthClient.interface';
 
 /**
  * Interface for MSAL v2 compatible authentication provider.
@@ -20,7 +20,7 @@ export interface IMsalProvider {
   /**
    * The MSAL PublicClientApplication instance (v2 compatible)
    */
-  readonly client: IPublicClientApplication;
+  readonly client: IAuthClient;
 
   /**
    * The current authenticated account (v2 compatibility)
@@ -38,13 +38,13 @@ export interface IMsalProvider {
    * The MSAL client instance (v2 compatibility)
    * @deprecated Use client instead
    */
-  readonly defaultClient: IPublicClientApplication;
+  readonly defaultClient: IAuthClient;
 
   /**
    * Create a new MSAL client instance
    * @deprecated This method is deprecated in MSAL v4
    */
-  createClient(): IPublicClientApplication;
+  createClient(): IAuthClient;
 
   /**
    * Acquire an access token for the specified scopes

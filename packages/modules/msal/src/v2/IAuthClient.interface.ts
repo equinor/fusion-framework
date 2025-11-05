@@ -1,8 +1,8 @@
 import type {
-  AuthenticationResult,
   AccountInfo as AccountInfoBase,
+  AuthenticationResult,
   IPublicClientApplication,
-} from '@azure/msal-browser';
+} from './types';
 
 export type IdTokenClaims = {
   aud: string;

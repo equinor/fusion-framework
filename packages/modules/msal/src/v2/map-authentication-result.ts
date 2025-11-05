@@ -20,5 +20,5 @@ export function mapAuthenticationResult(result: AuthenticationResult): Authentic
     accessToken: result.accessToken,
     expiresOn: result.expiresOn,
     tokenType: result.tokenType,
-  };
+  } as AuthenticationResult_v2;
 }

@@ -167,7 +167,6 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         case 'initializeWrapperLibrary':
         case 'setNavigationClient':
         case 'hydrateCache':
-        case 'getAccount':
         case 'clearCache': {
           return target[prop];
         }
