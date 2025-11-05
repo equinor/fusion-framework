@@ -1,5 +1,29 @@
 # Change Log
 
+## 8.0.0
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in React app hooks.
+
+  - Update useCurrentAccount to use account property instead of deprecated defaultAccount
+  - Fix useToken hook to properly handle AcquireTokenResult type
+  - Ensure proper null/undefined handling for account information
+
+  These changes ensure React app hooks work correctly with MSAL v4 while maintaining backward compatibility.
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update React App useToken hook to use new MSAL token acquisition API format.
+
+  Internal implementation change to adapt to MSAL interface updates. React App hooks continue to work the same way for consumers.
+
+  Why: Ensures compatibility with updated MSAL module API.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-msal@6.0.0
+  - @equinor/fusion-framework-react@7.4.19
+  - @equinor/fusion-framework-app@10.1.2
+  - @equinor/fusion-framework-module-app@7.1.0
+
 ## 7.0.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Export `Measurement` class and `IMeasurement` interface from telemetry module.
+
+  These classes were previously internal-only but are now needed by other modules for telemetry integration. No breaking changes to existing functionality.
+
+  Migration: No action required. These are new exports that can be imported when needed.
+
 ## 4.3.1
 
 ### Patch Changes

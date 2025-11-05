@@ -1,5 +1,22 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
+## 3.0.0
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in SPA plugin.
+
+  - Update MSAL client configuration to use nested auth object structure
+  - Replace deprecated defaultAccount with account property
+  - Update acquireToken calls to use MSAL v4 request structure
+
+  These changes ensure the SPA plugin works correctly with MSAL v4 while maintaining backward compatibility.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework-module-telemetry@4.4.0
+  - @equinor/fusion-framework-module-msal@6.0.0
+
 ## 2.0.2
 
 ### Patch Changes

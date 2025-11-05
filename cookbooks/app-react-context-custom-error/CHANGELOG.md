@@ -1,5 +1,26 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.81
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Improved all cookbook README documentation for better developer experience.
+
+  All cookbook README files now feature:
+
+  - Code examples matching actual implementations
+  - Inline comments explaining patterns and concepts
+  - Developer-friendly language for those new to Fusion Framework
+  - Focus on what each cookbook demonstrates rather than generic setup
+  - Proper TSDoc comments in code blocks
+  - Removed installation sections in favor of teaching patterns
+
+  This improves the learning experience for developers exploring framework features through the 18 available cookbooks.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-cli@12.3.10
+  - @equinor/fusion-framework-react-app@8.0.0
+
 ## 4.1.80
 
 ### Patch Changes

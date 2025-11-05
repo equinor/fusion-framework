@@ -1,5 +1,103 @@
 # Change Log
 
+## 6.0.0
+
+### Major Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - # MSAL v4 Upgrade
+
+  ## What Changed
+
+  Upgraded from MSAL v2 to MSAL v4 with full backward compatibility, addressing the requirements outlined in [issue #3621](https://github.com/equinor/fusion-framework/issues/3621).
+
+  ## Impact on Your Code
+
+  **✅ No breaking changes for existing code** - All current MSAL v2 API calls continue to work exactly as before.
+
+  **🚀 Enhanced features available** - New v4 APIs provide better performance, security, and error handling.
+
+  ## What You Get
+
+  - **Better Security**: Latest MSAL v4 security improvements and vulnerability fixes
+  - **Improved Performance**: Faster token acquisition and caching
+  - **Enhanced Error Handling**: More robust error recovery and retry mechanisms
+  - **Future-Proof**: Access to latest Microsoft authentication features
+
+  ## Migration (Optional)
+
+  **Current code works unchanged:**
+
+  ```typescript
+  // Framework configuration still works exactly the same
+  const framework = await createFramework({
+    modules: [enableMSAL()],
+  });
+
+  // Provider usage remains unchanged
+  const token = await framework.modules.auth.acquireToken({
+    scopes: ["User.Read"],
+  });
+  ```
+
+  **New v4 features available:**
+
+  ```typescript
+  // Enhanced configuration with new options
+  const framework = await createFramework({
+    modules: [enableMSAL()],
+  });
+
+  // Improved token acquisition with MSAL v4 request structure
+  const token = await framework.modules.auth.acquireToken({
+    request: { scopes: ["User.Read"] },
+    behavior: "popup",
+    silent: true,
+  });
+  ```
+
+  ## Breaking Changes
+
+  None for existing consumers. This is marked as major due to internal architecture changes, but the public API remains fully compatible.
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Add optional provider-level telemetry for MSAL flows and update interface methods.
+
+  **BREAKING CHANGES:**
+
+  - `acquireAccessToken(options: AcquireTokenOptions)` → `acquireAccessToken(options: AcquireTokenOptionsLegacy)`
+  - `acquireToken(options: AcquireTokenOptions)` → `acquireToken(options: AcquireTokenOptionsLegacy)`
+  - `logout(options?: LogoutOptions): Promise<void>` → `logout(options?: LogoutOptions): Promise<boolean>`
+  - `handleRedirect(): Promise<void>` → `handleRedirect(): Promise<AuthenticationResult | null>`
+  - Added `initialize(): Promise<void>` method
+
+  **New Features:**
+
+  - Optional provider-level telemetry for MSAL flows (login, token acquisition, redirect handling)
+  - Emits telemetry events and measurements via injected telemetry provider when available
+  - Includes basic metadata (framework module version, clientId, tenantId) and authentication context
+  - Integrates MSAL client logging with framework telemetry system
+
+  **Migration:**
+
+  ```typescript
+  // Before
+  await msalProvider.acquireAccessToken({ scopes: ["user.read"] });
+  await msalProvider.logout();
+  const result = await msalProvider.handleRedirect();
+
+  // After
+  await msalProvider.acquireAccessToken({ request: { scopes: ["user.read"] } });
+  const logoutResult = await msalProvider.logout(); // Now returns boolean
+  const result = await msalProvider.handleRedirect(); // Now returns AuthenticationResult | null
+  await msalProvider.initialize(); // New required method
+  ```
+
+  Related to `Add Telemetry Integration to MSAL Module` [#3634](https://github.com/equinor/fusion-framework/issues/3634).
+
+### Patch Changes
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-telemetry@4.4.0
+
 ## 5.1.2
 
 ### Patch Changes

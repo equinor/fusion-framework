@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.0.5
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update HTTP module to use new MSAL token acquisition API format.
+
+  Changes `acquireAccessToken` call from `{ scopes }` to `{ request: { scopes } }` to maintain compatibility with MSAL v4 API changes.
+
+  Migration: No action required. This is an internal API compatibility fix.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-msal@6.0.0
+
 ## 7.0.4
 
 ### Patch Changes
