@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.1.7-next.1
+
+### Patch Changes
+
+- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
 ## 4.1.7-next.0
 
 ### Patch Changes
