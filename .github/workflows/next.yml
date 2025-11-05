@@ -20,9 +20,20 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Check for pre-release configuration
+      - name: Check if branch targets main and pre-release configuration
         id: check
         run: |
+          # Check if branch has a PR targeting main
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          PR_COUNT=$(gh pr list --base main --head "$BRANCH_NAME" --state open --json number --jq 'length')
+          if [ "$PR_COUNT" -eq 0 ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "::notice::Pre-release skipped: No open pull request targeting main found for branch '$BRANCH_NAME'."
+            exit 0
+          fi
+          echo "Found PR targeting main for branch '$BRANCH_NAME'"
+          
+          # Check for pre-release configuration
           if [ ! -f ".changeset/pre.json" ]; then
             echo "should-run=false" >> $GITHUB_OUTPUT
             echo "::notice::Pre-release skipped: .changeset/pre.json not found. This is expected for non-pre-release branches."
@@ -36,6 +47,8 @@ jobs:
           echo "should-run=true" >> $GITHUB_OUTPUT
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Using tag from pre.json: $TAG"
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   release-pkg:
     name: Version or publish pre-release of packages
