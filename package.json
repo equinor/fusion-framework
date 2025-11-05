@@ -38,7 +38,7 @@
     "test:build": "docker build -f alpine.Dockerfile -t fusion_framework:test .",
     "changeset:version": "pnpm changeset version && pnpm install --lockfile-only && pnpm biome format --fix",
     "changeset:publish": "pnpm changeset tag && pnpm publish -r",
-    "changeset:publish:pre-release": "pnpm publish -r --no-git-checks --report-summary"
+    "changeset:publish:next": "pnpm publish -r --tag next --no-git-checks --report-summary"
   },
   "repository": "git+https://github.com/equinor/fusion-framework.git",
   "keywords": [
