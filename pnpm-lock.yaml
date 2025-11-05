@@ -1254,22 +1254,25 @@ importers:
       '@azure/msal-browser':
         specifier: ^2.21.0
         version: 2.39.0
+    devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
+      '@equinor/fusion-framework-module-telemetry':
+        specifier: workspace:^
+        version: link:../telemetry
       '@types/semver':
         specifier: ^7.5.0
         version: 7.7.1
       semver:
         specifier: ^7.5.4
         version: 7.7.3
-      zod:
-        specifier: ^4.1.8
-        version: 4.1.12
-    devDependencies:
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
+      zod:
+        specifier: ^4.1.8
+        version: 4.1.12
 
   packages/modules/msal-node:
     dependencies:
