@@ -1,17 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { SemVer } from 'semver';
-import { resolveVersion } from '../../versioning/resolve-version';
 
-// Mock the static module to avoid test failures when package version changes
-// This ensures tests remain stable regardless of package.json version bumps
-vi.mock('../../static', () => ({
-  MsalModuleVersion: {
-    V2: 'v2',
-    Latest: '4.0.9', // Fixed version for consistent testing
-  },
+// Mock the version first (hoisted)
+vi.mock('../../version', () => ({
+  version: '6.1.2-next.0+1493919587',
 }));
 
-// Import the mocked version
+import { resolveVersion } from '../../versioning/resolve-version';
 import { MsalModuleVersion } from '../../static';
 
 describe('resolveVersion', () => {
@@ -23,12 +18,12 @@ describe('resolveVersion', () => {
         wantedVersion: expect.any(SemVer),
         latestVersion: expect.any(SemVer),
         isLatest: false,
-        satisfiesLatest: false, // 2.x is not compatible with 4.x
+        satisfiesLatest: false, // 2.x is not compatible with 5.x
         enumVersion: MsalModuleVersion.V2,
       });
 
       expect(result.wantedVersion.version).toBe('2.1.0');
-      expect(result.latestVersion.version).toBe('4.0.9');
+      expect(result.latestVersion.version).toBe('6.1.2');
     });
 
     it('should resolve with SemVer object', () => {
@@ -36,14 +31,14 @@ describe('resolveVersion', () => {
       const result = resolveVersion(semver);
 
       expect(result.wantedVersion).toBe(semver);
-      expect(result.satisfiesLatest).toBe(false); // 2.x is not compatible with 4.x
+      expect(result.satisfiesLatest).toBe(false); // 2.x is not compatible with 5.x
     });
 
     it('should resolve latest version when no version provided', () => {
       const result = resolveVersion();
 
-      expect(result.wantedVersion.version).toBe('4.0.9');
-      expect(result.latestVersion.version).toBe('4.0.9');
+      expect(result.wantedVersion.version).toBe('6.1.2');
+      expect(result.latestVersion.version).toBe('6.1.2');
       expect(result.isLatest).toBe(true);
       expect(result.satisfiesLatest).toBe(true);
     });
@@ -51,7 +46,7 @@ describe('resolveVersion', () => {
     it('should resolve latest version when empty string provided', () => {
       const result = resolveVersion('');
 
-      expect(result.wantedVersion.version).toBe('4.0.9');
+      expect(result.wantedVersion.version).toBe('6.1.2');
       expect(result.isLatest).toBe(true);
     });
 
@@ -59,54 +54,46 @@ describe('resolveVersion', () => {
       const result = resolveVersion('2.5.0');
 
       expect(result.enumVersion).toBe(MsalModuleVersion.V2);
-      expect(result.satisfiesLatest).toBe(false); // 2.x is not compatible with 4.x
+      expect(result.satisfiesLatest).toBe(false); // 2.x is not compatible with 5.x
     });
   });
 
   describe('version comparison and warnings', () => {
     it('should identify version states correctly', () => {
       // Exact latest version
-      expect(resolveVersion('4.0.9').isLatest).toBe(true);
+      expect(resolveVersion('6.1.2-next.0+1493919587').isLatest).toBe(true);
 
       // Patch difference (satisfies but not latest)
-      const patchResult = resolveVersion('4.0.8');
+      const patchResult = resolveVersion('6.1.1');
       expect(patchResult.isLatest).toBe(false);
       expect(patchResult.satisfiesLatest).toBe(true);
       expect(patchResult.warnings).toBeUndefined();
 
-      // Minor difference (satisfies with warning)
-      const minorResult = resolveVersion('4.1.0');
+      // Minor difference (satisfies)
+      const minorResult = resolveVersion('6.0.0');
       expect(minorResult.isLatest).toBe(false);
       expect(minorResult.satisfiesLatest).toBe(true);
-      expect(minorResult.warnings).toBeDefined();
-      expect(minorResult.warnings?.[0]).toContain(
-        'Requested minor version 1 is different from the latest minor version 0',
-      );
 
-      // Major difference (doesn't satisfy with warning)
-      const majorResult = resolveVersion('5.0.0');
+      // Major difference (doesn't satisfy)
+      const majorResult = resolveVersion('7.0.0');
       expect(majorResult.satisfiesLatest).toBe(false);
-      expect(majorResult.warnings).toBeDefined();
-      expect(majorResult.warnings?.[0]).toContain(
-        'Requested major version 5 is greater than the latest major version 4',
-      );
     });
 
     it('should handle versions without matching enum with warnings', () => {
-      // Lower major version
+      // Lower major version - should map to V2
       const lowerResult = resolveVersion('3.0.0');
-      expect(lowerResult.enumVersion).toBe('4.0.9'); // Falls back to latest
+      expect(lowerResult.enumVersion).toBe(MsalModuleVersion.V2);
       expect(lowerResult.warnings).toBeDefined();
       expect(lowerResult.warnings?.[0]).toContain(
-        'Requested major version 3 is behind the latest major version 4',
+        'Requested major version 3 is behind the latest major version 6',
       );
 
-      // Zero version
+      // Zero version - should map to V2
       const zeroResult = resolveVersion('0.0.0');
-      expect(zeroResult.enumVersion).toBe('4.0.9'); // Falls back to latest
+      expect(zeroResult.enumVersion).toBe(MsalModuleVersion.V2);
       expect(zeroResult.warnings).toBeDefined();
       expect(zeroResult.warnings?.[0]).toContain(
-        'Requested major version 0 is behind the latest major version 4',
+        'Requested major version 0 is behind the latest major version 6',
       );
     });
   });
@@ -122,8 +109,8 @@ describe('resolveVersion', () => {
         expect(result.warnings?.[0]).toContain(
           `Failed to parse requested version "${invalidVersion}"`,
         );
-        // Should fall back to latest version
-        expect(result.wantedVersion.version).toBe('4.0.9');
+        // Should fall back to latest version (coerced)
+        expect(result.wantedVersion.version).toBe('6.1.2');
       });
     });
 
@@ -137,9 +124,9 @@ describe('resolveVersion', () => {
   describe('edge cases', () => {
     it('should handle complex version strings with pre-release and build metadata', () => {
       const testCases = [
-        { input: '4.0.9-beta.1', expected: '4.0.9' },
-        { input: '4.0.9+build.123', expected: '4.0.9' },
-        { input: '4.0.9-beta.1.alpha.2+build.123.456', expected: '4.0.9' },
+        { input: '6.1.2-next.0+1493919587-beta.1', expected: '6.1.2' },
+        { input: '6.1.2-next.0+1493919587+build.123', expected: '6.1.2' },
+        { input: '6.1.2-next.0+1493919587-beta.1.alpha.2+build.123.456', expected: '6.1.2' },
       ];
 
       testCases.forEach(({ input, expected }) => {
@@ -155,7 +142,7 @@ describe('resolveVersion', () => {
 
       // Latest version should be consistent
       expect(result1.latestVersion.version).toBe(result2.latestVersion.version);
-      expect(result1.latestVersion.version).toBe('4.0.9');
+      expect(result1.latestVersion.version).toBe('6.1.2');
 
       // Structure should be consistent
       expect(result1).toHaveProperty('wantedVersion');

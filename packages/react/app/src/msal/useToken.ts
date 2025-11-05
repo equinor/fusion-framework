@@ -20,9 +20,12 @@ export const useToken = (req: {
     setPending(true);
     setToken(undefined);
     msalProvider
-      .acquireToken(req)
-      // biome-ignore lint/suspicious/noConfusingVoidType: this method returns a void type when no token is acquired
-      .then((token: AuthenticationResult | void) => token && setToken(token))
+      .acquireToken({ request: req })
+      .then((result) => {
+        if (result) {
+          setToken(result);
+        }
+      })
       .catch(setError)
       .finally(() => setPending(false));
   }, [msalProvider, req]);

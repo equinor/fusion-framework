@@ -26,7 +26,7 @@ export class AuthTokenProvider implements IAuthProvider {
    *
    * @throws Error Always throws to indicate login is not supported.
    */
-  login(): Promise<AuthenticationResult> {
+  login(_options: { request: { scopes: string[] } }): Promise<AuthenticationResult> {
     throw new Error('Method not supported in token mode');
   }
 
@@ -46,9 +46,10 @@ export class AuthTokenProvider implements IAuthProvider {
    *
    * This is the only supported operation for this provider. No token refresh or acquisition logic is performed.
    *
+   * @param _options - Options parameter (ignored in token-only mode)
    * @returns The static access token as a string.
    */
-  async acquireAccessToken(): Promise<string> {
+  async acquireAccessToken(_options: { request: { scopes: string[] } }): Promise<string> {
     return this.#accessToken;
   }
 }

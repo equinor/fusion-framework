@@ -1,9 +1,9 @@
-name: Fusion Framework Next Release
+name: Fusion Framework Pre-Release
 
 on:
   push:
-    branches:
-      - next
+    branches-ignore:
+      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
@@ -11,8 +11,49 @@ permissions:
   pull-requests: write
 
 jobs:
+  check-pre-release:
+    name: Check pre-release configuration
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+      tag: ${{ steps.check.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check if branch targets main and pre-release configuration
+        id: check
+        run: |
+          # Check if branch has a PR targeting main
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          PR_COUNT=$(gh pr list --base main --head "$BRANCH_NAME" --state open --json number --jq 'length')
+          if [ "$PR_COUNT" -eq 0 ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "::notice::Pre-release skipped: No open pull request targeting main found for branch '$BRANCH_NAME'."
+            exit 0
+          fi
+          echo "Found PR targeting main for branch '$BRANCH_NAME'"
+          
+          # Check for pre-release configuration
+          if [ ! -f ".changeset/pre.json" ]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "::notice::Pre-release skipped: .changeset/pre.json not found. This is expected for non-pre-release branches."
+            exit 0
+          fi
+          TAG=$(node -p "require('./.changeset/pre.json').tag")
+          if [ "$TAG" = "latest" ]; then
+            echo "Error: Pre-release workflow cannot use 'latest' tag. 'latest' is reserved for stable releases."
+            exit 1
+          fi
+          echo "should-run=true" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Using tag from pre.json: $TAG"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   release-pkg:
     name: Version or publish pre-release of packages
+    needs: check-pre-release
+    if: needs.check-pre-release.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.changesets.outputs.published }}
@@ -21,9 +62,11 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      
+
       - name: Setup node and install deps
         uses: ./.github/actions/node-setup
+        with:
+          turbo-cache: false
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -31,12 +74,12 @@ jobs:
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
           version: pnpm changeset:version
-          publish: pnpm changeset:publish:next
+          publish: pnpm changeset:publish:pre-release --tag ${{ needs.check-pre-release.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: convert Changeset PR to draf
+      - name: convert Changeset PR to draft
         if: steps.changesets.outputs.published == 'false' && steps.changesets.outputs.pullRequestNumber
         run: gh pr ready ${{ steps.changesets.outputs.pullRequestNumber }} --undo
         env:

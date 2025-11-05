@@ -56,9 +56,11 @@ enableServiceDiscovery(configurator, async (builder) => {
 // setup authentication
 enableMSAL(configurator, (builder) => {
   builder.setClientConfig({
-    tenantId: import.meta.env.FUSION_SPA_MSAL_TENANT_ID,
-    clientId: import.meta.env.FUSION_SPA_MSAL_CLIENT_ID,
-    redirectUri: import.meta.env.FUSION_SPA_MSAL_REDIRECT_URI,
+    auth: {
+      clientId: import.meta.env.FUSION_SPA_MSAL_CLIENT_ID,
+      tenantId: import.meta.env.FUSION_SPA_MSAL_TENANT_ID,
+      redirectUri: import.meta.env.FUSION_SPA_MSAL_REDIRECT_URI,
+    },
   });
 
   builder.setRequiresAuth(Boolean(import.meta.env.FUSION_SPA_MSAL_REQUIRES_AUTH));
@@ -88,9 +90,9 @@ enableTelemetry(configurator, {
       } as Record<string, any>;
       if (modules?.auth) {
         metadata.fusion.user = {
-          id: modules.auth.defaultAccount?.homeAccountId,
-          name: modules.auth.defaultAccount?.name,
-          email: modules.auth.defaultAccount?.username,
+          id: modules.auth.account?.homeAccountId,
+          name: modules.auth.account?.name,
+          email: modules.auth.account?.username,
         };
       }
       return metadata;

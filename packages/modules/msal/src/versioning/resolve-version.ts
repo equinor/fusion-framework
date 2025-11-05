@@ -5,6 +5,31 @@ import { MsalModuleVersion } from '../static';
 import { VersionError } from './VersionError';
 import type { ResolvedVersion } from './types';
 
+import { version as latestVersionString } from '../version';
+
+/**
+ * Maps a version string or object to the corresponding MSAL module enum version.
+ *
+ * @param version - The version string or SemVer object to map
+ * @returns The corresponding MsalModuleVersion enum value
+ *
+ * @example
+ * ```typescript
+ * mapVersionToEnumVersion('2.1.0') // returns MsalModuleVersion.V2
+ * mapVersionToEnumVersion('7.0.0') // returns MsalModuleVersion.V4
+ * ```
+ */
+function mapVersionToEnumVersion(version: string | SemVer): MsalModuleVersion {
+  const coercedVersion = semver.coerce(version);
+  if (!coercedVersion) {
+    throw new Error(`Invalid version: ${version}`);
+  }
+  if (semver.satisfies(coercedVersion, '<6.0.0')) {
+    return MsalModuleVersion.V2;
+  }
+  return MsalModuleVersion.V4;
+}
+
 /**
  * Resolves and validates a version string against the latest available MSAL version.
  *
@@ -49,28 +74,27 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
   const warnings: string[] = [];
 
   // Parse the requested version, defaulting to latest if not provided
-  const versionString = version || MsalModuleVersion.Latest;
+  let wantedVersion = version ? semver.coerce(version) : semver.coerce(latestVersionString);
 
   // Parse versions using coerce for backward compatibility
-  const latestVersion = semver.coerce(MsalModuleVersion.Latest);
+  const latestVersion = semver.coerce(latestVersionString);
 
   // This should never happen! Indicates version.ts was not generated correctly
   // This is a critical build-time issue that needs immediate attention
   if (!latestVersion) {
     throw new VersionError(
-      `Failed to parse latest version "${MsalModuleVersion.Latest}" - this indicates the version.ts file was not generated correctly. Check for import errors in the build process.`,
-      versionString,
-      MsalModuleVersion.Latest,
+      `Failed to parse latest version "${latestVersionString}" - this indicates the version.ts file was not generated correctly. Check for import errors in the build process.`,
+      wantedVersion || '<unknown version>',
+      latestVersionString,
     );
   }
 
-  let wantedVersion: SemVer | null = semver.coerce(versionString);
   // Validate that the requested version is a valid semver
   if (!wantedVersion) {
     const missingVersionWarning = new VersionError(
-      `Failed to parse requested version "${versionString}"`,
-      versionString,
-      MsalModuleVersion.Latest,
+      `Failed to parse requested version "${version ?? '<unknown version>'}"`,
+      version ?? '<unknown version>',
+      latestVersion,
     );
     warnings.push(missingVersionWarning.message);
     wantedVersion = latestVersion;
@@ -98,24 +122,7 @@ export function resolveVersion(version?: string | SemVer): ResolvedVersion {
 
   // Find the corresponding enum version for the requested major version
   // This is used for module configuration and feature detection
-  let enumVersion = Object.values(MsalModuleVersion).find(
-    (x) => semver.coerce(x)?.major === wantedVersion.major,
-  );
-
-  // If no matching enum version is found, fall back to the latest available
-  // This allows forward compatibility with future versions
-  if (!enumVersion) {
-    enumVersion = MsalModuleVersion.Latest;
-    // Only warn if this is a future version (higher than latest)
-    if (wantedVersion.major > latestVersion.major) {
-      const fallbackWarning = new VersionError(
-        `Requested major version ${wantedVersion.major} is greater than the latest major version ${latestVersion.major}. Falling back to latest version.`,
-        wantedVersion,
-        latestVersion,
-      );
-      warnings.push(fallbackWarning.message);
-    }
-  }
+  const enumVersion = mapVersionToEnumVersion(wantedVersion);
 
   // Return comprehensive version resolution result
   return {

@@ -7,5 +7,5 @@ import useAppModule from '../useAppModule';
  */
 export const useCurrentAccount = (): AccountInfo | undefined => {
   const msalProvider = useAppModule('auth');
-  return msalProvider.defaultAccount;
+  return msalProvider.account || undefined;
 };

@@ -41,13 +41,30 @@
     "directory": "packages/modules/msal"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.21.0",
-    "@equinor/fusion-framework-module": "workspace:^",
-    "@types/semver": "^7.5.0",
-    "semver": "^7.5.4",
-    "zod": "^4.1.8"
+    "@azure/msal-browser": "^2.21.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@types/semver": "^7.5.0",
+    "semver": "^7.5.4",
+    "typescript": "^5.8.2",
+    "zod": "^4.1.8"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-telemetry": "workspace:^",
+    "@types/semver": "^7.5.0",
+    "semver": "^7.5.4",
+    "typescript": "^5.8.2",
+    "zod": "^4.1.8"
+  },
+  "peerDependenciesMeta": {
+    "@equinor/fusion-framework-module-telemetry": {
+      "optional": true
+    },
+    "@types/semver": {
+      "optional": true
+    }
   }
 }
