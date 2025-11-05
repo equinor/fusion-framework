@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-react-module-context",
-  "version": "6.2.34-next.1",
+  "version": "6.2.34",
   "description": "",
   "main": "dist/esm/index.js",
   "exports": {
