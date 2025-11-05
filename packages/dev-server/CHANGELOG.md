@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.12-next.2
+
+### Patch Changes
+
+- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
+
+- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
+  - @equinor/fusion-framework-vite-plugin-spa@3.0.0-next.2
+  - @equinor/fusion-log@1.1.8-next.1
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.5-next.1
+
 ## 1.1.12-next.1
 
 ### Patch Changes
