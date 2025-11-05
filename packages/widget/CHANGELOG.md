@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.1.46
+
+### Patch Changes
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework@7.4.2
+  - @equinor/fusion-framework-module-msal@6.0.0
+
 ## 1.1.45
 
 ### Patch Changes

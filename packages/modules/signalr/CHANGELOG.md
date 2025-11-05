@@ -1,5 +1,18 @@
 # Change Log
 
+## 9.0.0
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update SignalR module to use new MSAL token acquisition API format.
+
+  Internal implementation change to adapt to MSAL interface updates. SignalR module continues to work the same way for consumers.
+
+  Why: Ensures compatibility with updated MSAL module API.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-msal@6.0.0
+
 ## 8.0.0
 
 ### Patch Changes

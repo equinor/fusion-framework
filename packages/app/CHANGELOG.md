@@ -1,5 +1,16 @@
 # Change Log
 
+## 10.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework@7.4.2
+  - @equinor/fusion-framework-module-telemetry@4.4.0
+  - @equinor/fusion-framework-module-msal@6.0.0
+  - @equinor/fusion-framework-module-app@7.1.0
+
 ## 10.1.1
 
 ### Patch Changes

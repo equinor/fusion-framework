@@ -1,5 +1,32 @@
 # Change Log
 
+## 27.0.0
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility issues in legacy interopt LegacyAuthContainer.
+
+  - Replace deprecated defaultAccount with account property
+  - Update login calls to use MSAL v4 request structure
+  - Fix handleRedirect usage to match MSAL v4 API
+  - Ensure proper async/await patterns for authentication flows
+
+  These changes ensure legacy interopt works correctly with MSAL v4 while maintaining backward compatibility for legacy applications.
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update legacy auth container to use new MSAL Node API format.
+
+  Internal implementation change to adapt to MSAL Node interface updates. Legacy interop continues to provide the same interface for consumers.
+
+  Why: Ensures compatibility with updated MSAL Node module API.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework@7.4.2
+  - @equinor/fusion-framework-module-msal@6.0.0
+  - @equinor/fusion-framework-react-app@8.0.0
+  - @equinor/fusion-framework-app@10.1.2
+  - @equinor/fusion-framework-module-app@7.1.0
+
 ## 26.0.3
 
 ### Patch Changes

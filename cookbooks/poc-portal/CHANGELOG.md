@@ -1,5 +1,18 @@
 # poc-portal
 
+## 1.1.19
+
+### Patch Changes
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-cli@12.3.10
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework@7.4.2
+  - @equinor/fusion-framework-module-msal@6.0.0
+  - @equinor/fusion-framework-react-app@8.0.0
+  - @equinor/fusion-framework-react@7.4.19
+  - @equinor/fusion-framework-module-app@7.1.0
+
 ## 1.1.18
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # Change Log
 
+## 7.4.19
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Fix MSAL v4 compatibility in React framework useCurrentUser hook.
+
+  - Replace deprecated defaultAccount with account property
+  - Ensure proper null/undefined handling for account information
+  - Maintain type safety for AccountInfo return type
+
+  This change ensures the React framework hook works correctly with MSAL v4 while maintaining backward compatibility.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework@7.4.2
+  - @equinor/fusion-framework-react-module-signalr@3.0.35
+
 ## 7.4.18
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # Change Log
 
+## 7.4.2
+
+### Patch Changes
+
+- [#3714](https://github.com/equinor/fusion-framework/pull/3714) [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8) Thanks [@odinr](https://github.com/odinr)! - Update FrameworkConfigurator.configureMsal to use MsalClientConfig instead of AuthClientConfig.
+
+  This change aligns the framework configurator with the updated MSAL module types while maintaining backward compatibility through type aliases.
+
+- Updated dependencies [[`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8), [`11fe961`](https://github.com/equinor/fusion-framework/commit/11fe961794e4960ccb987bc320268cc9b263f1f8)]:
+  - @equinor/fusion-framework-module-http@7.0.5
+  - @equinor/fusion-framework-module-telemetry@4.4.0
+  - @equinor/fusion-framework-module-msal@6.0.0
+
 ## 7.4.1
 
 ### Patch Changes
