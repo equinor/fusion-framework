@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.1.2-next.0
+
+### Patch Changes
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66) Thanks [@github-actions](https://github.com/apps/github-actions)! - Fix MSAL v4 compatibility in bookmark SharedIcon component.
+
+  - Replace deprecated defaultAccount with account property
+  - Ensure proper account information access for bookmark sharing logic
+
+  This change ensures the bookmark component works correctly with MSAL v4 while maintaining backward compatibility.
+
+- Updated dependencies [[`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66)]:
+  - @equinor/fusion-framework-react@7.4.19-next.0
+  - @equinor/fusion-framework-react-module-bookmark@5.0.2-next.0
+
 ## 1.1.1
 
 ### Patch Changes

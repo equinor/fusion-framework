@@ -64,5 +64,23 @@
     "@equinor/fusion-framework-widget": "1.1.45",
     "@equinor/fusion-framework-docs": "0.4.9"
   },
-  "changesets": []
+  "changesets": [
+    "bookmark-component-msal-v4",
+    "cli_msal-api-compatibility",
+    "docs_cookbook-readme-improvements",
+    "docs_msal-v4-documentation-reorganization",
+    "framework-module-http_msal-api-compatibility",
+    "framework-msal-config-update",
+    "fusion-framework-module-telemetry_add-measurement-exports",
+    "legacy-interopt-msal-v4-fixes",
+    "legacy-interopt_msal-api-compatibility",
+    "msal-node_api-breaking-change",
+    "msal-v4-upgrade",
+    "msal_telemetry-provider-events",
+    "react-app-msal-v4-hooks",
+    "react-app_msal-api-compatibility",
+    "react-framework-msal-v4-hook",
+    "signalr_msal-api-compatibility",
+    "spa-plugin-msal-v4-fixes"
+  ]
 }

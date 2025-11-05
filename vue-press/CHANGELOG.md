@@ -1,5 +1,33 @@
 # @equinor/fusion-framework-docs
 
+## 0.4.10-next.0
+
+### Patch Changes
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`995dc50`](https://github.com/equinor/fusion-framework/commit/995dc5059fc8fa5121630b3d10a0d7ea833947e2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Improved all cookbook README documentation for better developer experience.
+
+  All cookbook README files now feature:
+
+  - Code examples matching actual implementations
+  - Inline comments explaining patterns and concepts
+  - Developer-friendly language for those new to Fusion Framework
+  - Focus on what each cookbook demonstrates rather than generic setup
+  - Proper TSDoc comments in code blocks
+  - Removed installation sections in favor of teaching patterns
+
+  This improves the learning experience for developers exploring framework features through the 18 available cookbooks.
+
+- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`995dc50`](https://github.com/equinor/fusion-framework/commit/995dc5059fc8fa5121630b3d10a0d7ea833947e2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Reorganize MSAL v4 authentication documentation structure and add cookbook examples.
+
+  **Changes:**
+
+  - Moved authentication guide to `/guide/app/docs/msal.md` with direct link to module docs
+  - Added new cookbooks section with MSAL authentication example
+  - Updated navigation sidebar to reflect new documentation structure
+  - Improved discoverability of MSAL authentication features
+
+  This reorganization provides better navigation and examples for developers implementing MSAL v4 authentication.
+
 ## 0.4.9
 
 ### Patch Changes

@@ -1,0 +1,27 @@
+Hi team,
+
+We discovered an issue with npm package tags where 12 packages had their "next" versions incorrectly tagged as "latest" on npm. This happened at some point when a next release (x.x.x-next.y) was tagged as latest instead of staying on the next tag.
+
+I've fixed this by:
+1. Checking all 41 packages in the repository against npm
+2. Identifying packages where latest pointed to a next version
+3. Tagging the highest stable (non-next) semver version as latest for each affected package
+
+Fixed packages:
+- @equinor/fusion-framework-dev-server: 1.1.12-next.0 → 1.1.11
+- @equinor/fusion-framework-react-module-signalr: 3.0.35-next.0 → 3.0.34
+- @equinor/fusion-framework: 7.4.2-next.0 → 7.4.1
+- @equinor/fusion-framework-app: 10.1.2-next.0 → 10.1.1
+- @equinor/fusion-framework-react: 7.4.19-next.0 → 7.4.18
+- @equinor/fusion-framework-widget: 1.1.46-next.0 → 1.1.45
+- @equinor/fusion-framework-react-components-people-provider: 1.5.26-next.0 → 1.5.25
+- @equinor/fusion-framework-react-module-bookmark: 5.0.2-next.0 → 5.0.1
+- @equinor/fusion-framework-react-app: 8.0.0-next.0 → 7.0.1
+- @equinor/fusion-framework-react-components-bookmark: 1.1.2-next.0 → 1.1.1
+- @equinor/fusion-framework-legacy-interopt: 27.0.0-next.0 → 26.0.3
+- @equinor/fusion-framework-cli: 12.3.9-next.0 → 12.3.8
+
+All tags have been corrected. The latest tag now points to the highest stable version for all packages.
+
+Sorry for the confusion this may have caused.
+
