@@ -168,7 +168,9 @@ export function createProxyClient(client: IMsalClient): IAuthClient {
         case 'setNavigationClient':
         case 'hydrateCache':
         case 'clearCache': {
-          return target[prop];
+          // Cast through unknown to access properties that may exist on MSAL v4 but aren't in the type definition
+          // or to handle v2-specific methods like clearCache that exist at runtime
+          return (target as unknown as Record<string, unknown>)[prop];
         }
 
         default: {
