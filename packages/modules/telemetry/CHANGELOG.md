@@ -1,37 +1,5 @@
 # Change Log
 
-## 4.4.0-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
-  - @equinor/fusion-framework-module-event@4.4.1-next.1
-  - @equinor/fusion-framework-module@5.0.6-next.1
-  - @equinor/fusion-observable@8.5.7-next.1
-
-## 4.4.0-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
-  - @equinor/fusion-framework-module-event@4.4.1-next.0
-  - @equinor/fusion-framework-module@5.0.6-next.0
-  - @equinor/fusion-observable@8.5.7-next.0
-
-## 4.4.0-next.0
-
-### Minor Changes
-
-- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48) Thanks [@github-actions](https://github.com/apps/github-actions)! - Export `Measurement` class and `IMeasurement` interface from telemetry module.
-
-  These classes were previously internal-only but are now needed by other modules for telemetry integration. No breaking changes to existing functionality.
-
-  Migration: No action required. These are new exports that can be imported when needed.
-
 ## 4.3.1
 
 ### Patch Changes

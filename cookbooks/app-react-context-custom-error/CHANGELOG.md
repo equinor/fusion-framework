@@ -1,50 +1,5 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
-## 4.1.81-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
-  - @equinor/fusion-framework-react-app@8.0.0-next.2
-  - @equinor/fusion-framework-cli@12.3.9-next.2
-  - @equinor/fusion-framework-react-module-context@6.2.34-next.1
-  - @equinor/fusion-observable@8.5.7-next.1
-
-## 4.1.81-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
-  - @equinor/fusion-framework-react-app@8.0.0-next.1
-  - @equinor/fusion-framework-cli@12.3.9-next.1
-  - @equinor/fusion-framework-react-module-context@6.2.34-next.0
-  - @equinor/fusion-observable@8.5.7-next.0
-
-## 4.1.81-next.0
-
-### Patch Changes
-
-- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`995dc50`](https://github.com/equinor/fusion-framework/commit/995dc5059fc8fa5121630b3d10a0d7ea833947e2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Improved all cookbook README documentation for better developer experience.
-
-  All cookbook README files now feature:
-
-  - Code examples matching actual implementations
-  - Inline comments explaining patterns and concepts
-  - Developer-friendly language for those new to Fusion Framework
-  - Focus on what each cookbook demonstrates rather than generic setup
-  - Proper TSDoc comments in code blocks
-  - Removed installation sections in favor of teaching patterns
-
-  This improves the learning experience for developers exploring framework features through the 18 available cookbooks.
-
-- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
-  - @equinor/fusion-framework-cli@12.3.9-next.0
-  - @equinor/fusion-framework-react-app@8.0.0-next.0
-
 ## 4.1.80
 
 ### Patch Changes

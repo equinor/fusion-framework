@@ -1,34 +1,5 @@
 # Change Log
 
-## 0.1.1-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-## 0.1.1-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-## 0.1.1-next.0
-
-### Patch Changes
-
-- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`995dc50`](https://github.com/equinor/fusion-framework/commit/995dc5059fc8fa5121630b3d10a0d7ea833947e2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Improved all cookbook README documentation for better developer experience.
-
-  All cookbook README files now feature:
-
-  - Code examples matching actual implementations
-  - Inline comments explaining patterns and concepts
-  - Developer-friendly language for those new to Fusion Framework
-  - Focus on what each cookbook demonstrates rather than generic setup
-  - Proper TSDoc comments in code blocks
-  - Removed installation sections in favor of teaching patterns
-
-  This improves the learning experience for developers exploring framework features through the 18 available cookbooks.
-
 ## 0.1.0
 
 ### Minor Changes

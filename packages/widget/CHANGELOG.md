@@ -1,43 +1,5 @@
 # Change Log
 
-## 1.1.46-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
-  - @equinor/fusion-framework-module-widget@12.0.3-next.2
-  - @equinor/fusion-framework-module-http@7.0.5-next.2
-  - @equinor/fusion-framework-module-msal@6.0.0-next.2
-  - @equinor/fusion-framework@7.4.2-next.2
-  - @equinor/fusion-framework-module-event@4.4.1-next.1
-  - @equinor/fusion-framework-module@5.0.6-next.1
-
-## 1.1.46-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
-  - @equinor/fusion-framework-module-widget@12.0.3-next.1
-  - @equinor/fusion-framework-module-http@7.0.5-next.1
-  - @equinor/fusion-framework-module-msal@6.0.0-next.1
-  - @equinor/fusion-framework@7.4.2-next.1
-  - @equinor/fusion-framework-module-event@4.4.1-next.0
-  - @equinor/fusion-framework-module@5.0.6-next.0
-
-## 1.1.46-next.0
-
-### Patch Changes
-
-- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66), [`d81294a`](https://github.com/equinor/fusion-framework/commit/d81294a4d74f7c7bebd8c7c3734c32c34fcb6b1e), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
-  - @equinor/fusion-framework-module-http@7.0.5-next.0
-  - @equinor/fusion-framework@7.4.2-next.0
-  - @equinor/fusion-framework-module-msal@6.0.0-next.0
-  - @equinor/fusion-framework-module-widget@12.0.3-next.0
-
 ## 1.1.45
 
 ### Patch Changes

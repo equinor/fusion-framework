@@ -1,49 +1,5 @@
 # @equinor/fusion-framework-vite-plugin-spa
 
-## 3.0.0-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
-  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.2
-  - @equinor/fusion-framework-module-telemetry@4.4.0-next.2
-  - @equinor/fusion-framework-module-http@7.0.5-next.2
-  - @equinor/fusion-framework-module-msal@6.0.0-next.2
-  - @equinor/fusion-framework-module@5.0.6-next.1
-
-## 3.0.0-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
-  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.1
-  - @equinor/fusion-framework-module-telemetry@4.4.0-next.1
-  - @equinor/fusion-framework-module-http@7.0.5-next.1
-  - @equinor/fusion-framework-module-msal@6.0.0-next.1
-  - @equinor/fusion-framework-module@5.0.6-next.0
-
-## 3.0.0-next.0
-
-### Patch Changes
-
-- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66) Thanks [@github-actions](https://github.com/apps/github-actions)! - Fix MSAL v4 compatibility issues in SPA plugin.
-
-  - Update MSAL client configuration to use nested auth object structure
-  - Replace deprecated defaultAccount with account property
-  - Update acquireToken calls to use MSAL v4 request structure
-
-  These changes ensure the SPA plugin works correctly with MSAL v4 while maintaining backward compatibility.
-
-- Updated dependencies [[`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48), [`d81294a`](https://github.com/equinor/fusion-framework/commit/d81294a4d74f7c7bebd8c7c3734c32c34fcb6b1e), [`dd26dd3`](https://github.com/equinor/fusion-framework/commit/dd26dd3e652eb07a77bcdc878f8493c6db4fed48)]:
-  - @equinor/fusion-framework-module-http@7.0.5-next.0
-  - @equinor/fusion-framework-module-telemetry@4.4.0-next.0
-  - @equinor/fusion-framework-module-msal@6.0.0-next.0
-  - @equinor/fusion-framework-module-service-discovery@9.0.5-next.0
-
 ## 2.0.2
 
 ### Patch Changes

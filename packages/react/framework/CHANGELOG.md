@@ -1,53 +1,5 @@
 # Change Log
 
-## 7.4.19-next.2
-
-### Patch Changes
-
-- [`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`2022136`](https://github.com/equinor/fusion-framework/commit/2022136108a49cf2ccd8109e7e720aa2fbc135f1)]:
-  - @equinor/fusion-framework-react-module-signalr@3.0.35-next.2
-  - @equinor/fusion-framework-react-module-http@10.0.1-next.2
-  - @equinor/fusion-framework@7.4.2-next.2
-  - @equinor/fusion-framework-module-feature-flag@1.1.27-next.1
-  - @equinor/fusion-framework-module@5.0.6-next.1
-  - @equinor/fusion-framework-react-module@3.1.14-next.1
-  - @equinor/fusion-observable@8.5.7-next.1
-
-## 7.4.19-next.1
-
-### Patch Changes
-
-- [`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded) Thanks [@odinr](https://github.com/odinr)! - relase next of all packages
-
-- Updated dependencies [[`895a49a`](https://github.com/equinor/fusion-framework/commit/895a49aaa815a6cd317e60f40875b1763bd6bded)]:
-  - @equinor/fusion-framework-react-module-signalr@3.0.35-next.1
-  - @equinor/fusion-framework-react-module-http@10.0.1-next.1
-  - @equinor/fusion-framework@7.4.2-next.1
-  - @equinor/fusion-framework-module-feature-flag@1.1.27-next.0
-  - @equinor/fusion-framework-module@5.0.6-next.0
-  - @equinor/fusion-framework-react-module@3.1.14-next.0
-  - @equinor/fusion-observable@8.5.7-next.0
-
-## 7.4.19-next.0
-
-### Patch Changes
-
-- [#3693](https://github.com/equinor/fusion-framework/pull/3693) [`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66) Thanks [@github-actions](https://github.com/apps/github-actions)! - Fix MSAL v4 compatibility in React framework useCurrentUser hook.
-
-  - Replace deprecated defaultAccount with account property
-  - Ensure proper null/undefined handling for account information
-  - Maintain type safety for AccountInfo return type
-
-  This change ensures the React framework hook works correctly with MSAL v4 while maintaining backward compatibility.
-
-- Updated dependencies [[`d6be2c4`](https://github.com/equinor/fusion-framework/commit/d6be2c4f2e01bab008b4d1f78f9adecb06647e66)]:
-  - @equinor/fusion-framework@7.4.2-next.0
-  - @equinor/fusion-framework-module-feature-flag@1.1.26
-  - @equinor/fusion-framework-react-module-http@10.0.1-next.0
-  - @equinor/fusion-framework-react-module-signalr@3.0.35-next.0
-
 ## 7.4.18
 
 ### Patch Changes
