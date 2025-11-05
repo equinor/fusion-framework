@@ -12,7 +12,14 @@ import {
 import type { ModuleType } from '@equinor/fusion-framework-module';
 import type { EventModule } from '@equinor/fusion-framework-module-event';
 
-import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment, CurrentApp } from './types';
+import type {
+  AppConfig,
+  AppManifest,
+  AppReference,
+  AppSettings,
+  ConfigEnvironment,
+  CurrentApp,
+} from './types';
 
 import { App, filterEmpty, type IApp } from './app/App';
 import type { AppModuleConfig } from './AppConfigurator';
@@ -103,9 +110,10 @@ export class AppModuleProvider {
   /**
    * fetch an application by key
    * @param appKey - application key
+   * @param tag - application tag (optional)
    */
-  public getAppManifest(appKey: string): Observable<AppManifest> {
-    return from(this.#appClient.getAppManifest({ appKey }));
+  public getAppManifest(appKey: string, tag?: string): Observable<AppManifest> {
+    return from(this.#appClient.getAppManifest({ appKey, tag }));
   }
 
   public getAppManifests(filter?: { filterByCurrentUser: boolean }): Observable<AppManifest[]> {
@@ -152,10 +160,23 @@ export class AppModuleProvider {
    * set the current application, will internally resolve manifest
    * @param appKey - application key
    */
-  public setCurrentApp(appKeyOrApp: string | IApp): void {
-    const app =
-      typeof appKeyOrApp === 'string' ? this.createApp({ appKey: appKeyOrApp }) : appKeyOrApp;
-    this.#current$.next(app as CurrentApp);
+  public setCurrentApp(appKeyOrApp: string | IApp | AppReference): void {
+    if (typeof appKeyOrApp === 'string') {
+      const newApp = new App({ appKey: appKeyOrApp }, { provider: this, event: this.#event });
+      this.#current$.next(newApp as CurrentApp);
+      return;
+    }
+
+    if (appKeyOrApp.appKey && 'tag' in appKeyOrApp) {
+      const newApp = new App(
+        { appKey: appKeyOrApp.appKey, tag: appKeyOrApp.tag },
+        { provider: this, event: this.#event },
+      );
+      this.#current$.next(newApp as CurrentApp);
+      return;
+    }
+
+    this.#current$.next(appKeyOrApp as CurrentApp);
   }
 
   public clearCurrentApp(): void {
@@ -171,7 +192,7 @@ export class AppModuleProvider {
    * @deprecated
    */
   public createApp(value: AppBundleStateInitial): App {
-    console.warn();
+    console.warn('AppModuleProvider.createApp is deprecated and should not be used.');
     return new App(value, { provider: this, event: this.#event });
   }
 

@@ -10,17 +10,28 @@ import {
 } from '@equinor/fusion-framework-module-http';
 import { jsonSelector } from '@equinor/fusion-framework-module-http/selectors';
 
-import { ApiApplicationSchema } from './schemas';
+import { ApiApplicationBuildSchema, ApiApplicationSchema } from './schemas';
 
-import type { AppConfig, AppManifest, AppSettings, ConfigEnvironment } from './types';
-import { AppConfigError, AppManifestError, AppSettingsError } from './errors';
+import type {
+  AppBuildManifest,
+  AppConfig,
+  AppManifest,
+  AppSettings,
+  ConfigEnvironment,
+} from './types';
+import { AppBuildError, AppConfigError, AppManifestError, AppSettingsError } from './errors';
 import { AppConfigSelector } from './AppClient.Selectors';
 
 export interface IAppClient extends Disposable {
   /**
-   * Fetch app manifest by appKey
+   * Fetch app manifest by appKey and tag
    */
-  getAppManifest: (args: { appKey: string }) => ObservableInput<AppManifest>;
+  getAppManifest: (args: { appKey: string; tag?: string }) => ObservableInput<AppManifest>;
+
+  /**
+   * Fetch app build manifest by appKey and tag
+   */
+  getAppBuild: (args: { appKey: string; tag?: string }) => ObservableInput<AppBuildManifest>;
 
   /**
    * Fetch all app manifests
@@ -81,6 +92,7 @@ export class AppClient implements IAppClient {
   #manifest: Query<AppManifest, { appKey: string }>;
   #manifests: Query<AppManifest[], { filterByCurrentUser?: boolean } | undefined>;
   #config: Query<AppConfig, { appKey: string; tag?: string }>;
+  #build: Query<AppBuildManifest, { appKey: string; tag?: string }>;
   #settings: Query<AppSettings, { appKey: string; settings?: AppSettings }>;
   #client: IHttpClient;
 
@@ -88,10 +100,28 @@ export class AppClient implements IAppClient {
     this.#client = client;
 
     const expire = 1 * 60 * 1000;
-    this.#manifest = new Query<AppManifest, { appKey: string }>({
+
+    this.#build = new Query<AppBuildManifest, { appKey: string; tag?: string }>({
       client: {
-        fn: ({ appKey }) => {
-          return client.json(`/persons/me/apps/${appKey}`, {
+        fn: ({ appKey, tag }) => {
+          return client.json(`/apps/${appKey}/builds/${tag}`, {
+            headers: {
+              'Api-Version': '1.0',
+            },
+            selector: async (res: Response) =>
+              ApiApplicationBuildSchema.parse(await jsonSelector(res)) as AppBuildManifest,
+          });
+        },
+      },
+      queueOperator: 'merge',
+      key: ({ appKey, tag }) => `${appKey}@${tag}`,
+      expire,
+    });
+
+    this.#manifest = new Query<AppManifest, { appKey: string; tag?: string }>({
+      client: {
+        fn: ({ appKey, tag }) => {
+          return client.json$(tag ? `/apps/${appKey}@${tag}` : `/persons/me/apps/${appKey}`, {
             headers: {
               'Api-Version': '1.0',
             },
@@ -156,7 +186,24 @@ export class AppClient implements IAppClient {
     });
   }
 
-  getAppManifest(args: { appKey: string }): Observable<AppManifest> {
+  getAppBuild(args: { appKey: string; tag?: string }): Observable<AppBuildManifest> {
+    return this.#build.query(args).pipe(
+      map((res) => res.value as AppBuildManifest),
+      catchError((err) => {
+        const cause = err?.cause || err;
+
+        if (cause instanceof AppBuildError) {
+          throw cause;
+        }
+        if (cause instanceof HttpJsonResponseError || cause instanceof HttpResponseError) {
+          throw AppBuildError.fromHttpResponse(cause.response, { cause });
+        }
+        throw new AppBuildError('unknown', 'failed to load build', { cause });
+      }),
+    );
+  }
+
+  getAppManifest(args: { appKey: string; tag?: string }): Observable<AppManifest> {
     return this.#manifest.query(args).pipe(
       queryValue,
       catchError((err) => {
@@ -251,6 +298,7 @@ export class AppClient implements IAppClient {
     this.#manifests.complete();
     this.#config.complete();
     this.#settings.complete();
+    this.#build.complete();
   }
 }
 

@@ -29,6 +29,7 @@ export type AppBundleState<
   TModules = any,
 > = {
   appKey: string;
+  tag?: string;
   status: Set<ActionBaseType<Actions>>;
   manifest?: AppManifest;
   config?: AppConfig<TConfig>;
