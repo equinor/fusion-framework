@@ -65,7 +65,7 @@ export interface ContextModuleConfig {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ref?: AnyModuleInstance | any;
     modules: ModuleInstance;
-  }) => ObservableInput<ContextItem | void>;
+  }) => ObservableInput<ContextItem | null>;
 }
 
 export interface IContextModuleConfigurator {
