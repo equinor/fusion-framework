@@ -10,6 +10,9 @@
     },
     {
       "path": "../../packages/modules/analytics"
+    },
+    {
+      "path": "../../packages/react/app"
     }
   ],
   "include": ["src/**/*"],

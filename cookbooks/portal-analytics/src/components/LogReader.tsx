@@ -6,13 +6,20 @@ import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { Button, Icon } from '@equinor/eds-core-react';
 import { info_circle } from '@equinor/eds-icons';
 import { DateRange } from '@equinor/fusion-react-date';
+import { useAnalytics } from '@equinor/fusion-framework-react-app/analytics';
 
 export const LogReader = () => {
   const [activeLogEntry, setActiveLogEntry] = useState<LogEntry | null>(null);
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const analytics = useAnalytics();
 
   const fetchLogs = useCallback(async () => {
+    analytics?.trackAnalytic({
+      name: 'cookbook:portal-analytics:logs:fetch',
+      value: undefined,
+    });
+
     try {
       const response = await fetch('/@fusion-api/logs');
       const text = await response.text();
@@ -27,12 +34,16 @@ export const LogReader = () => {
     } catch (err) {
       setError(`Failed to fetch logs. ${err}`);
     }
-  }, []);
+  }, [analytics]);
 
   const clearLogs = useCallback(async () => {
+    analytics?.trackAnalytic({
+      name: 'cookbook:portal-analytics:logs:clear',
+      value: undefined,
+    });
     await fetch('/@fusion-api/api/clearlogs');
     fetchLogs();
-  }, [fetchLogs]);
+  }, [fetchLogs, analytics]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only run on mount
   useEffect(() => {

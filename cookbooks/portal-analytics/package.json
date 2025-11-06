@@ -25,6 +25,7 @@
     "@equinor/fusion-framework-module-context": "workspace:*",
     "@equinor/fusion-framework-module-navigation": "workspace:*",
     "@equinor/fusion-framework-react": "workspace:*",
+    "@equinor/fusion-framework-react-app": "workspace:*",
     "@equinor/fusion-framework-react-module-context": "workspace:^",
     "@equinor/fusion-observable": "workspace:*",
     "@equinor/fusion-query": "^6.0.0",

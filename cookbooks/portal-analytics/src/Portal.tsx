@@ -34,9 +34,10 @@ export const Portal = () => {
           <Link to={'apps/meetings'}>Meetings</Link>
         </li>
         <li>
-          <Link to={'apps/reviews/94dd5f4d-17f1-4312-bf75-ad75f4d9572c/landingpage/dashboard'}>Reviews with Castberg context</Link>
+          <Link to={'apps/reviews/94dd5f4d-17f1-4312-bf75-ad75f4d9572c/landingpage/dashboard'}>
+            Reviews with Castberg context
+          </Link>
         </li>
-
       </ul>
 
       <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0' }}>

@@ -1,5 +1,10 @@
 import { defineDevServerConfig, processServices } from '@equinor/fusion-framework-cli/dev-server';
-import { appendFileContents, readBody, readFileContents, clearFileContents } from './middleware/logs';
+import {
+  appendFileContents,
+  readBody,
+  readFileContents,
+  clearFileContents,
+} from './middleware/logs';
 
 const LOG_FILE = './otel-logs/log.txt';
 

@@ -694,6 +694,9 @@ importers:
       '@equinor/fusion-framework-react':
         specifier: workspace:*
         version: link:../../packages/react/framework
+      '@equinor/fusion-framework-react-app':
+        specifier: workspace:*
+        version: link:../../packages/react/app
       '@equinor/fusion-framework-react-module-context':
         specifier: workspace:^
         version: link:../../packages/react/modules/context
@@ -1627,6 +1630,9 @@ importers:
       '@equinor/fusion-framework-module-ag-grid':
         specifier: workspace:^
         version: link:../../modules/ag-grid
+      '@equinor/fusion-framework-module-analytics':
+        specifier: workspace:^
+        version: link:../../modules/analytics
       '@equinor/fusion-framework-module-event':
         specifier: workspace:^
         version: link:../../modules/event
