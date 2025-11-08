@@ -48,7 +48,15 @@ export const configure = async (config: FrameworkConfigurator) => {
 
   enableAppModule(config);
 
-  enableNavigation(config);
+  enableNavigation(config, {
+    configure: (config) => {
+      config.setTelemetry(async (args) => {
+        if(args.hasModule('telemetry')) {
+          return await args.requireInstance('telemetry');
+        }
+      });
+    },
+  });
 
   enableServices(config);
 
