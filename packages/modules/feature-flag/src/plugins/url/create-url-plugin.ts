@@ -1,14 +1,14 @@
 import { Subject, Subscription } from 'rxjs';
-import { map, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 
-import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider, Path } from '@equinor/fusion-framework-module-navigation';
 
 import type { IFeatureFlagProvider } from '../../FeatureFlagProvider';
 
 import { assertFeatureFlag } from './assert-feature-flag';
 
 import type { FeatureFlagPlugin, FeatureFlagPluginConfigCallback, IFeatureFlag } from '../../types';
-import type { AssertFeatureFlag, Path } from './types';
+import type { AssertFeatureFlag } from './types';
 
 export const createUrlPlugin = (
   features: Array<IFeatureFlag | string>,
@@ -45,7 +45,7 @@ export const createUrlPlugin = (
         const teardown$ = new Subject();
 
         /** stream of path changes */
-        const path$ = new Subject<Path>();
+        const path$ = new Subject<Path|undefined>();
 
         /** only include features defined in creation */
         const feature$ = provider.features$.pipe(
@@ -55,6 +55,7 @@ export const createUrlPlugin = (
 
         /** Observes path changes of the navigator and toggles feature flags */
         const change$ = path$.pipe(
+          filter((path) => path !== undefined),
           withLatestFrom(feature$),
           map(([path, flags]): Array<{ key: string; enabled: boolean }> => {
             const search = new URLSearchParams(path.search);
