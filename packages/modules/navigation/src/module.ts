@@ -1,7 +1,4 @@
-import {
-  type Module,
-  SemanticVersion,
-} from '@equinor/fusion-framework-module';
+import { type Module, SemanticVersion } from '@equinor/fusion-framework-module';
 import { NavigationConfigurator } from './NavigationConfigurator';
 import type { INavigationProvider } from './NavigationProvider.interface';
 import { NavigationProvider } from './NavigationProvider';
@@ -15,16 +12,16 @@ export const moduleKey = 'navigation';
 
 /**
  * Type definition for the navigation module.
- * 
+ *
  * This is the main type definition for the navigation module. It represents the complete
  * module structure with its key identifier, provider interface, and configurator class.
- * 
+ *
  * The navigation module provides routing and navigation capabilities compatible with
  * industry-standard routers (Remix/React Router), with support for browser history,
  * hash routing, and memory history. It integrates with the Fusion Framework module
  * system and provides a {@link INavigationProvider} instance that can be used to
  * access navigation functionality.
- * 
+ *
  * @see {@link INavigationProvider} - The provider interface for accessing navigation
  * @see {@link NavigationConfigurator} - The configurator class for setting up navigation
  * @see {@link enableNavigation} - Helper function to enable the navigation module

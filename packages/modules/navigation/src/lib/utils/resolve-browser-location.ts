@@ -2,10 +2,12 @@ import type { Location } from '../types';
 import { resolvePath } from './resolve-path';
 
 const resolveState = (target?: { state: unknown }): { state: unknown; key: string } => {
-  const { value, key = 'unknown' } = (target ?? window.history).state ?? ({} as {
-    value: unknown;
-    key?: string;
-  });
+  const { value, key = 'unknown' } =
+    (target ?? window.history).state ??
+    ({} as {
+      value: unknown;
+      key?: string;
+    });
   return { state: value, key };
 };
 

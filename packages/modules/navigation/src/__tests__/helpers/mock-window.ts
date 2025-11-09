@@ -44,13 +44,13 @@ export function createMockWindow(options: MockWindowOptions = {}): Window {
     },
     history: {
       state: null,
-      pushState: spyHistory ? vi.fn() : (() => {}),
-      replaceState: spyHistory ? vi.fn() : (() => {}),
-      go: spyHistory ? vi.fn() : (() => {}),
+      pushState: spyHistory ? vi.fn() : () => {},
+      replaceState: spyHistory ? vi.fn() : () => {},
+      go: spyHistory ? vi.fn() : () => {},
       length: 1,
     },
-    addEventListener: spyEventListeners ? vi.fn() : (() => {}),
-    removeEventListener: spyEventListeners ? vi.fn() : (() => {}),
+    addEventListener: spyEventListeners ? vi.fn() : () => {},
+    removeEventListener: spyEventListeners ? vi.fn() : () => {},
     ...(includeDefaultView && {
       defaultView: null as Window | null,
       document: {
@@ -78,4 +78,3 @@ export function createMockHashWindow(options: Omit<MockWindowOptions, 'hash'> = 
     ...options,
   });
 }
-

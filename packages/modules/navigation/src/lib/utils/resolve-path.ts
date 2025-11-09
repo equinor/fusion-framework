@@ -24,4 +24,3 @@ export const resolvePath = (to: To): Path => {
     hash: url.hash,
   };
 };
-

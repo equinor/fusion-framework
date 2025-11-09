@@ -24,7 +24,7 @@ export type MemoryHistoryOptions = {
 
 /**
  * Memory history implementation using in-memory storage.
- * 
+ *
  * Useful for:
  * - Testing: Control navigation state in tests without browser APIs
  * - SSR: Server-side rendering where window is not available

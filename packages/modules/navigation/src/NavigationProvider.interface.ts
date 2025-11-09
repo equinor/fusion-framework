@@ -70,4 +70,3 @@ export interface INavigationProvider extends IModuleProvider {
    */
   replace(to: To, state?: unknown): void;
 }
-

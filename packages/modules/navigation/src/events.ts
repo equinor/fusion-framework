@@ -20,10 +20,7 @@ export interface NavigateEventDetail {
 export class NavigateEvent extends FrameworkEvent<
   FrameworkEventInit<NavigateEventDetail, INavigationProvider>
 > {
-  constructor(
-    detail: NavigateEventDetail,
-    source: INavigationProvider,
-  ) {
+  constructor(detail: NavigateEventDetail, source: INavigationProvider) {
     super('onNavigate', {
       detail,
       source,
@@ -50,10 +47,7 @@ export interface NavigatedEventDetail {
 export class NavigatedEvent extends FrameworkEvent<
   FrameworkEventInit<NavigatedEventDetail, INavigationProvider>
 > {
-  constructor(
-    detail: NavigatedEventDetail,
-    source: INavigationProvider,
-  ) {
+  constructor(detail: NavigatedEventDetail, source: INavigationProvider) {
     super('onNavigated', { detail, source });
   }
 }
@@ -69,4 +63,3 @@ declare module '@equinor/fusion-framework-module-event' {
     onNavigated: NavigatedEvent;
   }
 }
-

@@ -31,4 +31,3 @@ export const pathToUrl = (path: To, origin?: string): URL => {
     ? new URL(pathString)
     : new URL(pathString, origin ?? 'http://localhost');
 };
-

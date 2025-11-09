@@ -3,7 +3,7 @@ import { pathToString, resolvePath } from './utils';
 
 /**
  * Memory-based history stack implementation.
- * 
+ *
  * Stores navigation state in memory instead of using browser APIs.
  * Unlike BrowserHistoryStack, push/replace only update the current location
  * (history entries are managed by the reducer, not the stack).
@@ -44,7 +44,7 @@ export class MemoryHistoryStack implements HistoryStack {
 
   /**
    * Pushes a new entry onto the history stack.
-   * 
+   *
    * Only updates the current location. History entries are managed by the reducer.
    */
   push(location: Location): void {
@@ -53,7 +53,7 @@ export class MemoryHistoryStack implements HistoryStack {
 
   /**
    * Replaces the current entry in the history stack.
-   * 
+   *
    * Only updates the current location. History entries are managed by the reducer.
    */
   replace(location: Location): void {
@@ -62,7 +62,7 @@ export class MemoryHistoryStack implements HistoryStack {
 
   /**
    * Navigates backward or forward in the history stack.
-   * 
+   *
    * Uses the history state to find the target location by index.
    * Clamps to valid range (first or last entry if out of bounds).
    *
@@ -74,7 +74,7 @@ export class MemoryHistoryStack implements HistoryStack {
     const currentLocation = current.location ?? this.#current;
     // Find current location in history by key
     const currentIndex = history.findIndex((entry) => entry.location.key === currentLocation.key);
-    
+
     // If current location not found, use last entry
     if (currentIndex === -1) {
       if (history.length > 0) {
@@ -82,7 +82,7 @@ export class MemoryHistoryStack implements HistoryStack {
       }
       return;
     }
-    
+
     // Calculate target index and clamp to valid range
     const newIndex = currentIndex + delta;
     if (newIndex < 0) {
@@ -96,7 +96,7 @@ export class MemoryHistoryStack implements HistoryStack {
 
   /**
    * Creates a URL object for a given path.
-   * 
+   *
    * All URLs use the 'memory://' origin since this is in-memory storage.
    */
   createURL(to: To): URL {

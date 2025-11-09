@@ -3,11 +3,11 @@ import type { HistoryStack, Location, To } from './types';
 
 /**
  * Browser history stack implementation using native browser APIs.
- * 
+ *
  * Manages navigation state using the browser's History API (pushState/replaceState).
  * Stores location state in history.state and uses relative paths for navigation.
  * This is the base implementation for regular (non-hash) routing.
- * 
+ *
  * @example
  * ```ts
  * const stack = new BrowserHistoryStack(window);

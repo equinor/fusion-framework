@@ -18,7 +18,7 @@ export type HistoryFlowCreator = (stack: HistoryStack) => HistoryFlow;
 
 /**
  * Flow creator for handling navigate actions.
- * 
+ *
  * Execution flow:
  * 1. Filters for navigate actions
  * 2. Resolves the target path and generates a unique key
@@ -59,7 +59,7 @@ export const navigate: HistoryFlowCreator =
 
 /**
  * Flow creator for handling go (back/forward) actions.
- * 
+ *
  * Execution flow:
  * 1. Filters for go actions
  * 2. Combines with current state to get history entries
@@ -86,7 +86,7 @@ export const go: HistoryFlowCreator =
 
 /**
  * Flow creator for handling pop (browser back/forward) actions.
- * 
+ *
  * Execution flow:
  * 1. Filters for pop actions
  * 2. Uses the location from the action payload or falls back to stack.current
@@ -119,7 +119,7 @@ export const pop: HistoryFlowCreator =
 
 /**
  * Flow creator for checking navigation blockers before processing actions.
- * 
+ *
  * Execution flow:
  * 1. Filters for navigation actions (navigate, go, pop, validateLocation)
  * 2. Determines the action type (PUSH/REPLACE for navigate, POP for others)
@@ -182,7 +182,7 @@ export const checkBlockers: HistoryFlowCreator =
 
 /**
  * Flow creator for validating the current location against history state.
- * 
+ *
  * Execution flow:
  * 1. Filters for validateLocation actions
  * 2. Combines with current state to access history entries
@@ -219,7 +219,7 @@ export const validateCurrentLocation: HistoryFlowCreator =
 
 /**
  * Creates a combined history flow from multiple flow creators.
- * 
+ *
  * Execution flow:
  * 1. Creates a preprocessing step that applies blocker checking (unless skipped)
  * 2. Initializes each flow creator with the stack to create individual flows

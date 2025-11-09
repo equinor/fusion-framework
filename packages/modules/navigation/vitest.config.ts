@@ -12,4 +12,3 @@ export default defineProject({
     testTimeout: 1000,
   },
 });
-

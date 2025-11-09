@@ -16,4 +16,3 @@ export interface INavigationConfigurator {
   /** Optional event provider for dispatching navigation events */
   eventProvider?: IEventModuleProvider;
 }
-

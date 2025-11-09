@@ -25,4 +25,3 @@ export const pathToString = (to: Partial<Path>): string => {
   const hash = stripTrailingWhitespace(to.hash?.replace(/^#/, '') ?? '');
   return `${pathname}${search ? `?${search}` : ''}${hash ? `#${hash}` : ''}`;
 };
-

@@ -10,8 +10,12 @@ const Root = () => {
     <div>
       <section style={{ display: 'inline-flex', gap: 10, alignItems: 'center' }}>
         <Link to={''}>Home</Link>
-        <Link to={'page1'} state={{ test: 'test1' }}>Page 1</Link>
-        <Link to={'page2'} state={{ test: 'test2' }}>Page 2</Link>
+        <Link to={'page1'} state={{ test: 'test1' }}>
+          Page 1
+        </Link>
+        <Link to={'page2'} state={{ test: 'test2' }}>
+          Page 2
+        </Link>
       </section>
       <h3>React Router Location</h3>
       <pre>{JSON.stringify(currentLocation, null, 4)}</pre>

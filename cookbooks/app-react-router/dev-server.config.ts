@@ -1,9 +1,9 @@
-import { defineDevServerConfig } from  '@equinor/fusion-framework-cli/dev-server'
+import { defineDevServerConfig } from '@equinor/fusion-framework-cli/dev-server';
 
 export default defineDevServerConfig(() => ({
   spa: {
     templateEnv: {
-      telemetry: { consoleLevel: 0 }
-    }
-  }
+      telemetry: { consoleLevel: 0 },
+    },
+  },
 }));

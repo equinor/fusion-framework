@@ -193,7 +193,7 @@ importers:
   cookbooks/app-react-bookmark-advanced:
     dependencies:
       '@remix-run/router':
-        specifier: ^1.8.0
+        specifier: ^1.23.0
         version: 1.23.0
     devDependencies:
       '@equinor/fusion-framework-cli':
@@ -224,8 +224,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -273,7 +273,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^7.6.0
+        specifier: ^7.9.5
         version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
         specifier: ^6.1.19
@@ -491,11 +491,11 @@ importers:
         specifier: ^0.10.10
         version: 0.10.10(react@18.3.1)
       '@remix-run/router':
-        specifier: ^1.8.0
+        specifier: ^1.23.0
         version: 1.23.0
       react-router-dom:
-        specifier: ^6.16.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
         specifier: ^6.0.7
         version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -533,6 +533,9 @@ importers:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
         version: link:../../packages/cli
+      '@equinor/fusion-framework-module-event':
+        specifier: workspace:^
+        version: link:../../packages/modules/event
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../packages/modules/navigation
@@ -540,7 +543,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/react/app
       '@remix-run/router':
-        specifier: ^1.8.0
+        specifier: ^1.23.0
         version: 1.23.0
       '@types/react':
         specifier: ^18.2.50
@@ -555,8 +558,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
@@ -961,8 +964,8 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-router-dom:
-        specifier: ^6.15.0
-        version: 6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1279,27 +1282,27 @@ importers:
   packages/modules/msal:
     dependencies:
       '@azure/msal-browser':
-        specifier: ^4.25.0
-        version: 4.25.0
-      semver:
-        specifier: ^7.5.4
-        version: 7.7.3
-      zod:
-        specifier: ^4.1.8
-        version: 4.1.12
+        specifier: ^2.21.0
+        version: 2.39.0
     devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
       '@equinor/fusion-framework-module-telemetry':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../telemetry
       '@types/semver':
         specifier: ^7.5.0
         version: 7.7.1
+      semver:
+        specifier: ^7.5.4
+        version: 7.7.3
       typescript:
         specifier: ^5.8.2
         version: 5.9.3
+      zod:
+        specifier: ^4.1.8
+        version: 4.1.12
 
   packages/modules/msal-node:
     dependencies:
@@ -2193,8 +2196,12 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@azure/msal-browser@4.25.0':
-    resolution: {integrity: sha512-kbL+Ae7/UC62wSzxirZddYeVnHvvkvAnSZkBqL55X+jaSXTAXfngnNsDM5acEWU0Q/SAv3gEQfxO1igWOn87Pg==}
+  '@azure/msal-browser@2.39.0':
+    resolution: {integrity: sha512-kks/n2AJzKUk+DBqZhiD+7zeQGBl+WpSOQYzWy6hff3bU0ZrYFqr4keFLlzB5VKuKZog0X59/FGHb1RPBDZLVg==}
+    engines: {node: '>=0.8.0'}
+
+  '@azure/msal-common@13.3.3':
+    resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@15.13.0':
@@ -7121,25 +7128,12 @@ packages:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
 
-  react-router-dom@6.30.1:
-    resolution: {integrity: sha512-llKsgOkZdbPU1Eg3zK8lCn+sjD9wMRZZPuzmdWWX5SUs8OFkN5HnFVC0u5KMeMaC9aoancFI/KoLuKPqN+hxHw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
-
   react-router-dom@7.9.5:
     resolution: {integrity: sha512-mkEmq/K8tKN63Ae2M7Xgz3c9l9YNbY+NHH6NNeUmLA3kDkhKXRsNb/ZpxaEunvGo2/3YXdk5EJU3Hxp3ocaBPw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
-
-  react-router@6.30.1:
-    resolution: {integrity: sha512-X1m21aEmxGXqENEPG3T6u0Th7g0aS4ZmoNynhbs+Cn+q+QGTLt+d5IQ2bHAXKzKcxGJjxACpVbnYQSCRcfxHlQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: '>=16.8'
 
   react-router@7.9.5:
     resolution: {integrity: sha512-JmxqrnBZ6E9hWmf02jzNn9Jm3UqyeimyiwzD69NjxGySG6lIz/1LVPsoTCwN7NBX2XjCEa1LIX5EMz1j2b6u6A==}
@@ -8582,9 +8576,11 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@azure/msal-browser@4.25.0':
+  '@azure/msal-browser@2.39.0':
     dependencies:
-      '@azure/msal-common': 15.13.0
+      '@azure/msal-common': 13.3.3
+
+  '@azure/msal-common@13.3.3': {}
 
   '@azure/msal-common@15.13.0': {}
 
@@ -15478,23 +15474,11 @@ snapshots:
 
   react-refresh@0.18.0: {}
 
-  react-router-dom@6.30.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
-    dependencies:
-      '@remix-run/router': 1.23.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-router: 6.30.1(react@18.3.1)
-
   react-router-dom@7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-router: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-
-  react-router@6.30.1(react@18.3.1):
-    dependencies:
-      '@remix-run/router': 1.23.0
-      react: 18.3.1
 
   react-router@7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

@@ -4,10 +4,10 @@ import { resolveHashLocation, resolvePath, pathToString } from './utils';
 
 /**
  * Browser history hash stack implementation using hash-based routing.
- * 
+ *
  * Uses URL hash fragment (#) instead of pathname. The hash is not sent to the server,
  * allowing routing without server configuration.
- * 
+ *
  * @example
  * ```ts
  * // Regular routing: https://example.com/users
@@ -25,19 +25,19 @@ export class BrowserHistoryHashStack extends BrowserHistoryStack {
 
   /**
    * Creates a URL object for a given path with hash-based routing.
-   * 
+   *
    * Uses the current window location as the base and only modifies the hash fragment.
    * The path is normalized to ensure it starts with '#' if not already present.
    *
    * @param to - The target path (string, Path object, or Location object)
    * @returns A URL object with the path in the hash fragment
-   * 
+   *
    * @example
    * ```ts
    * // If current URL is 'https://example.com/app'
    * createURL('/users?id=1')
    * // URL { href: 'https://example.com/app#/users?id=1', ... }
-   * 
+   *
    * createURL({ pathname: '/dashboard', search: '?tab=settings' })
    * // URL { href: 'https://example.com/app#/dashboard?tab=settings', ... }
    * ```

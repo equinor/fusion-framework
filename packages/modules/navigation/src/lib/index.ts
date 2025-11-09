@@ -20,4 +20,3 @@ export type {
   Path,
   To,
 } from './types';
-

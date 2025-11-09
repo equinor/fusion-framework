@@ -45,7 +45,7 @@ export const createUrlPlugin = (
         const teardown$ = new Subject();
 
         /** stream of path changes */
-        const path$ = new Subject<Path|undefined>();
+        const path$ = new Subject<Path | undefined>();
 
         /** only include features defined in creation */
         const feature$ = provider.features$.pipe(

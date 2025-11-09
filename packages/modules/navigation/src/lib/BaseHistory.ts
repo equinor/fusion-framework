@@ -123,11 +123,11 @@ export abstract class BaseHistory implements History {
 
   /**
    * Sets up a listener for navigation changes.
-   * 
- * Only listens for POP actions (browser back/forward navigation). PUSH/REPLACE
- * actions are programmatic and synchronous - the caller already knows about them.
- * POP actions come from browser events and are asynchronous, so we need to listen.
- * This matches industry-standard router behavior (Remix/React Router).
+   *
+   * Only listens for POP actions (browser back/forward navigation). PUSH/REPLACE
+   * actions are programmatic and synchronous - the caller already knows about them.
+   * POP actions come from browser events and are asynchronous, so we need to listen.
+   * This matches industry-standard router behavior (Remix/React Router).
    *
    * @param listener - Function to call on navigation changes
    * @returns Function to unsubscribe the listener
@@ -174,7 +174,7 @@ export abstract class BaseHistory implements History {
 
   /**
    * Dispatches an action to trigger state updates.
-   * 
+   *
    * Use this to dispatch actions when external events occur (e.g., browser popstate).
    * The action will be processed by flows and update the history state.
    *
@@ -186,7 +186,7 @@ export abstract class BaseHistory implements History {
 
   /**
    * Registers a cleanup function or subscription for automatic disposal.
-   * 
+   *
    * All teardowns are automatically cleaned up when the history instance is disposed.
    * Use `executeOnRemove: true` if the teardown should run when manually removed.
    *
@@ -210,7 +210,7 @@ export abstract class BaseHistory implements History {
 
   /**
    * Removes a teardown from the cleanup collection.
-   * 
+   *
    * Typically called automatically by the function returned from `_addTeardown`.
    * Only call directly if you need to remove a teardown without executing it.
    *

@@ -127,7 +127,7 @@ export class NavigationProvider
 
   /**
    * Sets up navigation subscriptions for events and telemetry.
-   * 
+   *
    * Configures subscriptions for:
    * - NavigatedEvent dispatching when navigation changes
    * - Telemetry tracking for navigation actions and events

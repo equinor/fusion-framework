@@ -24,20 +24,30 @@ const navigationConfigSchema = z
     basename: z
       .string()
       .optional()
-      .describe('Base pathname for the application (e.g., "/app"). Must match the URL path prefix where your app is served. The router requires the pathname to start with this basename.'),
+      .describe(
+        'Base pathname for the application (e.g., "/app"). Must match the URL path prefix where your app is served. The router requires the pathname to start with this basename.',
+      ),
     history: z
       .custom<History>()
-      .describe('Custom history instance implementing the History interface. Defaults to browser history if not provided. Use createHistory("browser"|"hash"|"memory") to create instances.'),
+      .describe(
+        'Custom history instance implementing the History interface. Defaults to browser history if not provided. Use createHistory("browser"|"hash"|"memory") to create instances.',
+      ),
     telemetry: z
       .custom<ITelemetryProvider>()
       .optional()
-      .describe('Telemetry provider for tracking navigation events. Used to log navigation actions, location changes, and errors for monitoring and debugging.'),
+      .describe(
+        'Telemetry provider for tracking navigation events. Used to log navigation actions, location changes, and errors for monitoring and debugging.',
+      ),
     eventProvider: z
       .custom<IEventModuleProvider>()
       .optional()
-      .describe('Event provider for dispatching navigation events (NavigateEvent, NavigatedEvent). Allows other modules to listen for navigation changes and block navigation attempts.'),
+      .describe(
+        'Event provider for dispatching navigation events (NavigateEvent, NavigatedEvent). Allows other modules to listen for navigation changes and block navigation attempts.',
+      ),
   })
-  .describe('Validates navigation module configuration settings for routing and navigation capabilities.');
+  .describe(
+    'Validates navigation module configuration settings for routing and navigation capabilities.',
+  );
 
 /**
  * Parses and validates a navigation configuration object.

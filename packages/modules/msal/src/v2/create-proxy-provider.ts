@@ -5,7 +5,6 @@ import { createProxyClient } from './create-proxy-client';
 import { mapAccountInfo } from './map-account-info';
 import { MsalModuleVersion } from '../static';
 
-
 /**
  * Creates a proxy provider for MSAL v2 compatibility.
  *
