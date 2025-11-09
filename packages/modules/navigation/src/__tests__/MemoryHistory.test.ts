@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { firstValueFrom, skip } from 'rxjs';
 import { MemoryHistory } from '../lib/MemoryHistory';
-import type { History } from '../lib/types';
 
 describe('MemoryHistory', () => {
   let history: MemoryHistory;
@@ -24,7 +23,13 @@ describe('MemoryHistory', () => {
       const customHistory = new MemoryHistory({
         initialLocation: {
           action: 'POP',
-          location: { pathname: '/custom', search: '', hash: '', key: 'custom-key', state: { test: 'value' } },
+          location: {
+            pathname: '/custom',
+            search: '',
+            hash: '',
+            key: 'custom-key',
+            state: { test: 'value' },
+          },
         },
       });
 
