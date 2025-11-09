@@ -578,6 +578,8 @@ const router = createBrowserRouter(routes); // Don't do this!
 
 The `history.block()` method is available for intercepting navigation attempts. It uses a callback-based approach where the blocker receives a transition object with a `retry()` method.
 
+**Important:** You must unblock before retrying. The block must be removed before the navigation can proceed.
+
 **Example:**
 ```ts
 const framework = useFramework();
@@ -587,9 +589,11 @@ const unblock = history.block((transition) => {
   if (shouldPreventNavigation(transition)) {
     // Show confirmation dialog
     showConfirmationDialog(() => {
-      transition.retry(); // Allow navigation to proceed
+      unblock(); // Remove the block first
+      transition.retry(); // Then allow navigation to proceed
     });
   } else {
+    unblock(); // Remove the block
     transition.retry(); // Allow navigation immediately
   }
 });
