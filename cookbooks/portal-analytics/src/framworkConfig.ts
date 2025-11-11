@@ -45,6 +45,7 @@ export const frameworkConfig: PortalModuleInitiator = (configurator) => {
 
     builder.setAdapter('fusion', async () => {
       return new FusionAnalyticsAdapter({
+        portalId: 'cookbook-portal-analytics',
         logExporterArgs: {
           url: '/@fusion-api/api/logs',
           headers: {

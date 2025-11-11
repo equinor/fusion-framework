@@ -63,9 +63,9 @@ export const LogReader = () => {
       <table border={1}>
         <thead>
           <tr>
-            <th>Service</th>
-            <th>Version</th>
-            <th>Scope</th>
+            <th>M.version</th>
+            <th>SessionId</th>
+            <th>PortalId</th>
             <th>Event</th>
             <th>Value</th>
             <th>Attributes</th>
@@ -83,12 +83,17 @@ export const LogReader = () => {
               <tr key={uuid()}>
                 <td>
                   {resourceLog.resource.attributes
-                    .filter((attr) => attr.key === 'service.name')
+                    .filter((attr) => attr.key === 'module.version')
                     .map((attr) => attr.value.stringValue)}
                 </td>
                 <td>
                   {resourceLog.resource.attributes
-                    .filter((attr) => attr.key === 'service.version')
+                    .filter((attr) => attr.key === 'session.id')
+                    .map((attr) => attr.value.stringValue)}
+                </td>
+                <td>
+                  {resourceLog.resource.attributes
+                    .filter((attr) => attr.key === 'portal.id')
                     .map((attr) => attr.value.stringValue)}
                 </td>
                 <td>{scopeLog.scope.name}</td>

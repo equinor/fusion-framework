@@ -1144,15 +1144,15 @@ importers:
       '@opentelemetry/sdk-logs':
         specifier: ^0.207.0
         version: 0.207.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions':
-        specifier: ^1.37.0
-        version: 1.37.0
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
       zod:
         specifier: ^4.1.11
         version: 4.1.12

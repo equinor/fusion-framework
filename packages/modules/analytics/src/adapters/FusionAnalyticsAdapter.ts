@@ -11,8 +11,8 @@ import {
   type LogRecord,
 } from '@opentelemetry/api-logs';
 import { resourceFromAttributes } from '@opentelemetry/resources';
-import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
 import { version } from '../version.js';
+import { v7 as uuid } from 'uuid';
 
 export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
   implements IAnalyticsAdapter
@@ -21,13 +21,14 @@ export class FusionAnalyticsAdapter<T extends AnalyticsEvent = AnalyticsEvent>
   #loggerProvider: LoggerProvider;
   #logger: Logger;
 
-  constructor(args?: { logExporterArgs?: OTLPExporterConfigBase }) {
+  constructor(args?: { portalId: string; logExporterArgs?: OTLPExporterConfigBase }) {
     this.#logExporter = new OTLPLogExporter(args?.logExporterArgs);
     this.#loggerProvider = new LoggerProvider({
       processors: [new SimpleLogRecordProcessor(this.#logExporter)],
       resource: resourceFromAttributes({
-        [ATTR_SERVICE_NAME]: 'Fusion',
-        [ATTR_SERVICE_VERSION]: version,
+        'module.version': version,
+        'session.id': uuid(),
+        'portal.id': args?.portalId,
       }),
     });
     this.#logger = this.#loggerProvider.getLogger('fusion');
