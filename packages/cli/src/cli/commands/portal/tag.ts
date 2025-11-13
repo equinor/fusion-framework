@@ -62,7 +62,7 @@ async function parsePortalInfo(
  *   $ ffc portal tag <tag> [options]
  *
  * Arguments:
- *   <tag>                  Tag to apply (e.g., latest, preview)
+ *   <tag>                  Tag to apply (e.g., latest, preview, next, or any string value)
  *
  * Options:
  *   -m, --manifest <file>  Manifest file to use (optional, defaults to portal.manifest.ts)
@@ -90,6 +90,8 @@ export const command = withAuthOptions(
         '  $ ffc portal tag latest',
         '  $ ffc portal tag latest --package my-portal@1.2.3 --env prod',
         '  $ ffc portal tag preview --manifest ./portal.manifest.ts',
+        '  $ ffc portal tag next --package my-portal@2.0.0-alpha',
+        '  $ ffc portal tag stable --package my-portal@1.5.0',
       ].join('\n'),
     )
     .addOption(createEnvOption({ allowDev: false }))
@@ -103,7 +105,7 @@ export const command = withAuthOptions(
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging')
     .option('--silent', 'Silent mode, suppresses output except errors')
-    .argument('<tag>', 'Tag to apply (latest | preview)')
+    .argument('<tag>', 'Tag to apply (e.g., latest, preview, next, or any string value)')
     .action(async (tag, options) => {
       const log = options.silent ? null : new ConsoleLogger('app:tag', { debug: options.debug });
 

@@ -6,28 +6,13 @@ import type { FusionFramework } from './framework.node.js';
 import { chalk, formatPath, type ConsoleLogger, defaultHeaders } from './utils/index.js';
 
 /**
- * Allowed tags for portal versions in the portal service.
- *
- * - `latest`: Marks the most recent stable version of the portal template.
- * - `preview`: Marks a pre-release or preview version for testing or review.
- *
- * Used by {@link tagPortal} to validate and apply version tags.
- *
- * @public
- */
-export enum AllowedTags {
-  Latest = 'latest',
-  Preview = 'preview',
-}
-
-/**
  * Options for tagging a portal template version in the portal service.
  *
  * This type defines the required and optional parameters for the
  * {@link tagPortal} function, including the tag type, portal name,
  * version, framework instance, and logger.
  *
- * @property tag - The tag to apply to the portal version (e.g., 'latest' or 'preview').
+ * @property tag - The tag to apply to the portal version (any string value).
  * @property name - The unique name identifying the portal template.
  * @property version - The version of the portal template to tag.
  * @property framework - The FusionFramework instance used for service discovery and requests.
@@ -36,7 +21,7 @@ export enum AllowedTags {
  * @public
  */
 export type TagPortalOptions = {
-  tag: AllowedTags;
+  tag: string;
   name: string;
   version: string;
   framework: FusionFramework;
@@ -44,7 +29,7 @@ export type TagPortalOptions = {
 };
 
 /**
- * Tags a portal template version in the portal service with a specified tag (e.g., 'latest' or 'preview').
+ * Tags a portal template version in the portal service with a specified tag.
  *
  * This function validates input, creates a client for the portal service, and sends a tag request.
  * It provides detailed logging and error handling for common failure scenarios.
@@ -57,9 +42,9 @@ export type TagPortalOptions = {
 export const tagPortal = async (options: TagPortalOptions) => {
   const { tag, name, version, framework, log } = options;
 
-  // Validate tag value
-  if (!['latest', 'preview'].includes(tag)) {
-    log?.fail('🤪', 'Invalid tag. Use "latest" or "preview".');
+  // Validate tag value - ensure it's a non-empty string
+  if (!tag || typeof tag !== 'string' || tag.trim().length === 0) {
+    log?.fail('🤪', 'Tag must be a non-empty string.');
     process.exit(1);
   }
   // Validate portal name
