@@ -15,7 +15,7 @@ export { loadPortalManifest } from './portal-manifest.js';
 export { generatePortalConfig } from './portal-config.js';
 export { publishPortalConfig } from './portal-config-publish.js';
 export { uploadPortalBundle, type UploadPortalOptions } from './portal-upload.js';
-export { tagPortal, AllowedTags as AllowedPortalTags } from './portal-tag.js';
+export { tagPortal } from './portal-tag.js';
 
 export { pack } from './pack.js';
 

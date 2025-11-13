@@ -11,7 +11,6 @@ import {
   bundlePortal,
   uploadPortalBundle,
   tagPortal,
-  AllowedPortalTags,
 } from '@equinor/fusion-framework-cli/bin';
 
 /**
@@ -31,7 +30,7 @@ import {
  *   -d, --debug          Enable debug mode for verbose logging
  *   -e, --env <env>      Target environment
  *   -m, --manifest       Manifest file to use for bundling
- *   -t, --tag            Tag to apply to the published portal
+ *   -t, --tag            Tag to apply to the published portal (any string value)
  *
  * Example:
  *   $ ffc portal publish
@@ -56,6 +55,7 @@ export const command = withAuthOptions(
         '  $ ffc portal publish',
         '  $ ffc portal publish --env prod --manifest portal.manifest.prod.ts',
         '  $ ffc portal publish --tag preview',
+        '  $ ffc portal publish --tag next',
       ].join('\n'),
     )
     .option('-d, --debug', 'Enable debug mode for verbose logging', false)
@@ -67,8 +67,8 @@ export const command = withAuthOptions(
     .option('--schema [string]', 'Schema file to use for validation')
     .option(
       '-t, --tag [string]',
-      `Tag to apply to the published portal (${Object.values(AllowedPortalTags).join(' | ')})`,
-      AllowedPortalTags.Latest,
+      'Tag to apply to the published portal (e.g., latest, preview, next, or any string value)',
+      'latest',
     )
     .action(async (options) => {
       const log = new ConsoleLogger('portal:publish', {

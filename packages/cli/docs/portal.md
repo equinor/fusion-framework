@@ -137,7 +137,7 @@ This command builds your portal template, uploads it to the Fusion portal regist
 | `-e`, `--env`      | Target environment for deployment (e.g., `ci`, `fqa`, `fprd`).                                      |                   |
 | `-m`, `--manifest` | Manifest file to use for bundling (e.g., `portal.manifest.ts`) (optional).                         | `portal.manifest.ts` |
 | `-s`, `--schema`   | Schema file to use for bundling (e.g., `portal.schema.ts`) (optional).                             | `portal.schema.ts` |
-| `-t`, `--tag`      | Tag to apply to the published portal (`latest` \| `preview`).                                       | `latest`          |
+| `-t`, `--tag`      | Tag to apply to the published portal (e.g., `latest`, `preview`, `next`, or any string value).     | `latest`          |
 | `-d`, `--debug`    | Enable debug mode for verbose logging.                                                              | `false`           |
 | `--token`          | Authentication token for Fusion.                                                                    |                   |
 | `--tenantId`       | Azure tenant ID for authentication.                                                                 |                   |
@@ -194,10 +194,10 @@ pnpm fusion-framework-cli portal upload my-portal.zip --name my-portal
 
 Tag a published portal template version in the Fusion portal registry.
 
-| Option/Argument   | Description                           | Default / Example |
-| ----------------- | ------------------------------------- | ----------------- |
-| `<tag>`           | Tag to apply (`latest` \| `preview`). |                   |
-| `-p, --package`   | Package to tag in format name@version. |                   |
+| Option/Argument   | Description                                     | Default / Example |
+| ----------------- | ----------------------------------------------- | ----------------- |
+| `<tag>`           | Tag to apply (e.g., `latest`, `preview`, `next`, or any string value). |                   |
+| `-p, --package`   | Package to tag in format name@version.         |                   |
 | `-m, --manifest`  | Manifest file to use.                 | `portal.manifest.ts` |
 | `--token`         | Authentication token for Fusion.      |                   |
 | `--tenantId`      | Azure tenant ID for authentication.   |                   |
@@ -212,6 +212,8 @@ pnpm fusion-framework-cli portal tag <tag> [options]
 ```sh
 pnpm fusion-framework-cli portal tag latest --package my-portal@1.0.0
 pnpm fusion-framework-cli portal tag preview --package my-portal@1.1.0-beta
+pnpm fusion-framework-cli portal tag next --package my-portal@2.0.0-alpha
+pnpm fusion-framework-cli portal tag stable --package my-portal@1.2.0
 ```
 
 ---
