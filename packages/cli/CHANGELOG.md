@@ -1,5 +1,13 @@
 # Change Log
 
+## 13.0.0-cli-search-index.1
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`ccc6745`](https://github.com/equinor/fusion-framework/commit/ccc6745995c36771933b50461ea27e9b07c56a17) Thanks [@odinr](https://github.com/odinr)! - Add new `lib/ai` export path exposing `configureFusionAI` and `FusionAIConfig` for programmatic AI configuration.
+
+  This provides a public API for configuring Fusion AI settings including metadata processing, embedding chunking, and pattern matching.
+
 ## 13.0.0-cli-search-index.0
 
 ### Major Changes

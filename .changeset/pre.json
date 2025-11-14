@@ -67,6 +67,7 @@
   },
   "changesets": [
     "cli_ai-commands",
+    "cli_ai-config-export",
     "flexible-portal-tags",
     "fuzzy-years-shine",
     "module-ai_new-package"
