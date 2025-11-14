@@ -154,7 +154,7 @@ A minimal example for a Fusion Framework app:
 - [Troubleshooting Guide](docs/application.md#troubleshooting-faq): Common issues and solutions
 
 **Internal Tools** (Fusion Core Team Only)
-- [AI Commands](../../docs/ai-commands.md): ⚠️ **Internal use only** - AI-powered chat, embeddings, and search commands for codebase understanding (not supported for third-party users ...yet)
+- [AI Commands](docs/ai-commands.md): ⚠️ **Internal use only** - AI-powered chat, embeddings, and search commands for codebase understanding (not supported for third-party users ...yet)
 
   ## Troubleshooting
 
