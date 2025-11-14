@@ -1,3 +1,4 @@
+import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 /**
  * Configuration interface for Fusion AI operations
  */
@@ -6,7 +7,7 @@ export interface FusionAIConfig {
   /** Metadata processing configuration */
   metadata?: {
     /** Custom metadata processors to transform metadata before embedding */
-    attributeProcessor?: (metadata: Record<string, any>) => Record<string, any>;
+    attributeProcessor?: (metadata: Record<string, any>, document: VectorStoreDocument) => Record<string, any>;
   };
 
   /** Embedding generation configuration */

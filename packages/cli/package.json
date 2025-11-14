@@ -59,6 +59,10 @@
       "types": "./dist/types/lib/utils/index.d.ts",
       "import": "./dist/esm/lib/utils/index.js"
     },
+    "./ai": {
+      "types": "./dist/types/lib/ai/index.d.ts",
+      "import": "./dist/esm/lib/ai/index.js"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md",
     "./CHANGELOG.md": "./CHANGELOG.md"
@@ -85,6 +89,9 @@
       ],
       "utils": [
         "dist/types/lib/utils/index.d.ts"
+      ],
+      "ai": [
+        "dist/types/lib/ai/index.d.ts"
       ]
     }
   },
@@ -107,7 +114,7 @@
     "@equinor/fusion-framework-dev-server": "workspace:*",
     "@equinor/fusion-framework-module-msal-node": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
-    "@langchain/core": "^0.3.0",
+    "@langchain/core": "^1.0.1",
     "@langchain/textsplitters": "^1.0.0",
     "@types/find-up": "^4.0.2",
     "@types/inquirer": "^9.0.9",

@@ -1,11 +1,11 @@
 import { createCommand, createOption } from 'commander';
-import type { ChatMessage } from '@equinor/fusion-framework-module-ai/lib';
+import type { ChatMessage, IModel } from '@equinor/fusion-framework-module-ai/lib';
 import { from } from 'rxjs';
 import { withAiOptions, type AiOptions } from '../../options/ai.js';
 import { createInterface } from 'readline';
 
 import { setupFramework } from './utils/setup-framework.js';
-import { RunnablePassthrough, RunnableSequence } from '@langchain/core/runnables';
+import { RunnablePassthrough, RunnableSequence, RunnableInterface } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 
 /**
@@ -170,7 +170,8 @@ const _command = createCommand('chat')
     // Create the chatbot chain using the model directly (BaseService now extends Runnable)
     const chain = RunnableSequence.from([
       formatPromptAsMessages,
-      chatService,
+      // todo - fix this later, dunno why but IModel extends RunnableInterface
+      chatService as unknown as RunnableInterface,
       new StringOutputParser(),
     ]);
 

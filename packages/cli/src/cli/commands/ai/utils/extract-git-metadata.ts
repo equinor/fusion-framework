@@ -29,7 +29,7 @@ export const resolveProjectRoot = (filePath: string): string | undefined => {
   if (existsSync(join(filePath, '.git'))) {
     return filePath;
   }
-  const gitRepoPath = findUpSync('.git', { cwd: dirname(filePath) });
+  const gitRepoPath = findUpSync('.git', { cwd: dirname(filePath), type: 'both' });
   const projectRoot = gitRepoPath?.replace(/\.git$/, '');
   return projectRoot;
 };

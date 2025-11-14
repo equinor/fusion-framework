@@ -196,8 +196,8 @@ const _command = createCommand('embeddings')
           }),
           map((document) => {
             const attributeProcessor =
-              config.metadata?.attributeProcessor || ((attributes) => attributes);
-            const attributes = attributeProcessor(document.metadata.attributes ?? {});
+              config.metadata?.attributeProcessor || ((attributes, _document) => attributes);
+            const attributes = attributeProcessor(document.metadata.attributes ?? {}, document);
             return {
               ...document,
               metadata: {
