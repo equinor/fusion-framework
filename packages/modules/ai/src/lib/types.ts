@@ -1,8 +1,10 @@
 import type { Observable } from 'rxjs';
-import type { ChatMessageFieldsWithRole } from '@langchain/core/messages';
+import type { AIMessageChunk, MessageFieldWithRole } from '@langchain/core/messages';
 import type { Document } from '@langchain/core/documents';
 import type { BaseRetriever } from '@langchain/core/retrievers';
-import type { Runnable } from '@langchain/core/runnables';
+import type { RunnableInterface, RunnableConfig } from '@langchain/core/runnables';
+import type { Tool, ToolInterface } from '@langchain/core/tools';
+import type { BaseLanguageModelInput, BaseLanguageModelInterface } from '@langchain/core/language_models/base';
 
 export type VectorStoreDocumentMetadata<
   T extends Record<string, unknown> = Record<string, unknown>,
@@ -61,7 +63,11 @@ export interface ChatResponse {
 /**
  * A message in an LLM conversation
  */
-export type ChatMessage = Pick<ChatMessageFieldsWithRole, 'role' | 'content'>;
+export type ChatMessage = Pick<MessageFieldWithRole, 'role' | 'content'>;
+
+export type ModelInput = BaseLanguageModelInput;
+export type ModelOutput = AIMessageChunk;
+export type ModelTool = Tool | ToolInterface;
 
 export type AddDocumentsOptions = {
   /** Embeddings for the documents */
@@ -74,20 +80,22 @@ export type AddDocumentsOptions = {
  * Base interface for all LLM service implementations
  * Provides both synchronous and streaming invoke methods
  */
-export interface IService<TInput, TOutput> extends Runnable<TInput, TOutput> {
+export interface IService<TInput, TOutput, TOptions extends RunnableConfig = RunnableConfig>
+  extends RunnableInterface<TInput, TOutput, TOptions> {
+  // extends RunnableInterface<TInput, TOutput, TOptions> {
   /**
    * Invoke the service with input and return a single result
    * @param input - Input data for the service
    * @returns Promise resolving to the result
    */
-  invoke(input: TInput): Promise<TOutput>;
+  invoke(input: TInput, options?: TOptions): Promise<TOutput>;
 
   /**
    * Invoke the service with input and return a streaming result
    * @param input - Input data for the service
    * @returns Observable stream of results
    */
-  invoke$(input: TInput): Observable<TOutput>;
+  invoke$(input: TInput, options?: TOptions): Observable<TOutput>;
 }
 
 /**
@@ -126,5 +134,11 @@ export interface IVectorStore extends IService<string, unknown[]> {
  * Interface for model client implementations
  * This is the main interface that concrete model clients should implement
  */
-export interface IModel extends IService<ChatMessage[], ChatResponse> {
+export interface IModel<CallOptions extends RunnableConfig = RunnableConfig>
+  extends IService<ModelInput, ModelOutput, RunnableConfig> {
+  readonly llm: BaseLanguageModelInterface;
+  bindTools(
+    tools: ModelTool[],
+    options?: CallOptions,
+  ): RunnableInterface<ModelInput, ModelOutput, CallOptions>;
 }

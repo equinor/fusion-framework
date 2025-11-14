@@ -2,6 +2,9 @@
  * Azure-specific AI service implementations
  */
 
+export { SearchClient as AzureSearchClient } from '@azure/search-documents';
+
+
 export { AzureOpenAIModel } from './AzureOpenAIModel.js';
 export { AzureOpenAiEmbed } from './AzureOpenAiEmbed.js';
 export { AzureVectorStore, type AzureDocument } from './AzureVectorStore.js';

@@ -53,26 +53,25 @@
     "url": "git+https://github.com/equinor/fusion-framework.git",
     "directory": "packages/modules/ai"
   },
+  "dependencies": {
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^1.0.1",
+    "langchain": "^1.0.1"
+  },
   "devDependencies": {
     "@azure/search-documents": "^12.2.0",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
-    "@langchain/community": "^0.3.57",
-    "@langchain/core": "^0.3.0",
     "@langchain/openai": "^1.0.0",
-    "langchain": "^1.0.1",
+    "rxjs": "^7.8.1",
     "typescript": "^5.8.2",
-    "vitest": "^3.2.4",
-    "rxjs": "^7.8.1"
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@azure/search-documents": "^12.2.0",
+    "@azure/search-documents": "^12.x",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-http": "workspace:^",
-    "@langchain/community": "^0.3.57",
-    "@langchain/core": "^0.3.0",
-    "@langchain/openai": "^1.0.0",
-    "langchain": "^1.0.1",
+    "@langchain/openai": "^1.x",
     "rxjs": "^7.8.1"
   },
   "peerDependenciesMeta": {

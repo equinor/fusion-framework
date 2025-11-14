@@ -21,6 +21,7 @@ import { convertObjectToAttributes } from '../convert-object-to-attributes.js';
 export type AzureDocument = Document & {
   metadata: AzureAISearchDocumentMetadata;
 };
+
 /**
  * Azure AI Search vector store implementation using LangChain
  */
@@ -73,12 +74,12 @@ export class AzureVectorStore extends BaseService<string, unknown[]> implements 
    */
   async invoke(query: string): Promise<unknown[]> {
     try {
-      const results = await this.vectorStore.similaritySearch(query, 10);
-      return results.map((doc) => ({
-        content: doc.pageContent,
-        metadata: doc.metadata,
-        score: doc.metadata?.score,
-      }));
+      return await this.vectorStore.similaritySearch(query, 10);
+      // return results.map((doc) => ({
+      //   content: doc.pageContent,
+      //   metadata: doc.metadata,
+      //   score: doc.metadata?.score,
+      // }));
     } catch (error) {
       throw new AIError(
         `Azure Vector Store search failed: ${error instanceof Error ? error.message : String(error)}`,
