@@ -1,5 +1,25 @@
 # Change Log
 
+## 13.0.0-cli-search-index.3
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`551765f`](https://github.com/equinor/fusion-framework/commit/551765fc100332dd5d9e7ef2b14dfb51269bf888) Thanks [@odinr](https://github.com/odinr)! - Add `--clean` option to `ai embeddings` command to delete all existing documents from the vector store before processing.
+
+  Enhanced file status tracking to handle new, modified, and removed files. Removed files are automatically deleted from the vector store during processing.
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`d09f820`](https://github.com/equinor/fusion-framework/commit/d09f8205cc091aa6af8d8527e3ed74d92ab9dc30) Thanks [@odinr](https://github.com/odinr)! - Add `ai search` command to search the vector store and validate embeddings.
+
+  The new command enables semantic search using vector embeddings with support for:
+
+  - Configurable result limits
+  - OData filter expressions for metadata-based filtering
+  - JSON output option for programmatic use
+  - Raw metadata output option
+  - Verbose output mode
+
+  Usage: `ffc ai search <query> [options]`
+
 ## 13.0.0-cli-search-index.2
 
 ### Patch Changes
