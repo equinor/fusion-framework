@@ -59,6 +59,10 @@
       "types": "./dist/types/lib/utils/index.d.ts",
       "import": "./dist/esm/lib/utils/index.js"
     },
+    "./ai": {
+      "types": "./dist/types/lib/ai/index.d.ts",
+      "import": "./dist/esm/lib/ai/index.js"
+    },
     "./package.json": "./package.json",
     "./README.md": "./README.md",
     "./CHANGELOG.md": "./CHANGELOG.md"
@@ -85,6 +89,9 @@
       ],
       "utils": [
         "dist/types/lib/utils/index.d.ts"
+      ],
+      "ai": [
+        "dist/types/lib/ai/index.d.ts"
       ]
     }
   },
@@ -95,6 +102,7 @@
   },
   "scripts": {
     "prebuild": "tsc -b",
+    "dev:cli": "tsx src/cli/main.ts",
     "build": "rollup -c rollup.config.js",
     "build:clean": "rm -rf dist && rm -rf bin/build && rm -f tsconfig.tsbuildinfo && pnpm build",
     "prepack": "pnpm build",
@@ -106,22 +114,37 @@
     "@equinor/fusion-framework-dev-server": "workspace:*",
     "@equinor/fusion-framework-module-msal-node": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
+    "@langchain/core": "^1.0.1",
+    "@langchain/textsplitters": "^1.0.0",
+    "@types/find-up": "^4.0.2",
     "@types/inquirer": "^9.0.9",
     "commander": "^14.0.1",
     "deepmerge": "^4.3.1",
+    "dotenv": "^17.2.2",
     "execa": "^9.6.0",
+    "find-up": "^8.0.0",
+    "findup": "^0.1.5",
+    "globby": "^15.0.0",
+    "gray-matter": "^4.0.3",
     "inquirer": "^12.9.6",
     "is-mergeable-object": "^1.1.1",
     "is-path-inside": "^4.0.0",
+    "multimatch": "^7.0.0",
     "ora": "^9.0.0",
+    "package-up": "^5.0.0",
     "read-package-up": "^11.0.0",
     "simple-git": "^3.28.0",
     "vite": "^7.1.12",
+    "tree-sitter": "^0.25.0",
+    "tree-sitter-typescript": "^0.23.2",
+    "ts-morph": "^27.0.2",
+    "tsx": "^4.19.3",
     "vite-tsconfig-paths": "^5.1.4",
     "zod": "^4.1.8"
   },
   "devDependencies": {
     "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
     "@equinor/fusion-framework-module-http": "workspace:*",
     "@equinor/fusion-framework-module-service-discovery": "workspace:*",
@@ -141,7 +164,7 @@
     "pretty-bytes": "^7.0.0",
     "rollup": "^4.50.2",
     "rollup-plugin-terser": "^7.0.2",
-    "rxjs": "^7.8.1",
+    "rxjs": "^7.8.2",
     "type-fest": "^5.0.0",
     "typescript": "^5.8.2",
     "vitest": "^3.2.4"

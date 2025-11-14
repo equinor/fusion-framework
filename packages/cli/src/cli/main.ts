@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { config as loadDotEnv } from 'dotenv';
 
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -8,6 +9,9 @@ import { dirname, resolve } from 'node:path';
 import { readPackageUpSync } from 'read-package-up';
 
 import registerCommands from './commands/index.js';
+
+loadDotEnv();
+
 
 // Check Node.js version and recommend LTS (22.x)
 const MINIMUM_NODE_VERSION = process.env.MINIMUM_NODE_VERSION || '20';

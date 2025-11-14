@@ -23,6 +23,7 @@ export { ConsoleLogger } from './utils/ConsoleLogger.js';
 
 export {
   initializeFramework,
+  configureFramework,
   resolveDefaultEnv,
   type FusionFramework,
   type FusionFrameworkSettings,
