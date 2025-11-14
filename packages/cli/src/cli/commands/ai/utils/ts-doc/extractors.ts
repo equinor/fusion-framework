@@ -1,4 +1,3 @@
-
 import {
   type SourceFile as ProjectSourceFile,
   SyntaxKind,

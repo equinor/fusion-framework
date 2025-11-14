@@ -69,6 +69,8 @@
     "cli_ai-commands",
     "cli_ai-config-export",
     "cli_ai-setup-refactor",
+    "cli_embeddings-clean-option",
+    "cli_search-command",
     "flexible-portal-tags",
     "fuzzy-years-shine",
     "module-ai_new-package"

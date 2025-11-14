@@ -1,5 +1,12 @@
 # poc-portal
 
+## 1.1.20-cli-search-index.3
+
+### Patch Changes
+
+- Updated dependencies [[`551765f`](https://github.com/equinor/fusion-framework/commit/551765fc100332dd5d9e7ef2b14dfb51269bf888), [`d09f820`](https://github.com/equinor/fusion-framework/commit/d09f8205cc091aa6af8d8527e3ed74d92ab9dc30)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.3
+
 ## 1.1.20-cli-search-index.2
 
 ### Patch Changes
