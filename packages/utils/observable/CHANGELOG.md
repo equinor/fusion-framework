@@ -1,5 +1,11 @@
 # Change Log
 
+## 8.5.7-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
 ## 8.5.6
 
 ### Patch Changes

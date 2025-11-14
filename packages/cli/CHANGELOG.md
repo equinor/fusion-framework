@@ -1,5 +1,91 @@
 # Change Log
 
+## 13.0.0-cli-search-index.0
+
+### Major Changes
+
+- [`393f163`](https://github.com/equinor/fusion-framework/commit/393f1637ed33b84a6330b5eb122ab549805416bd) Thanks [@Noggling](https://github.com/Noggling)! - **Portal Tags Now Support Any String Value**
+
+  Portal tagging functionality has been enhanced to accept any string value for tags instead of being restricted to predefined enum values.
+
+  **Breaking Changes**
+
+  - **Removed `AllowedPortalTags` enum**: The enum that previously restricted portal tags to only `'latest'` and `'preview'` has been removed.
+  - **No longer exported**: `AllowedPortalTags` is no longer exported from `@equinor/fusion-framework-cli/bin`.
+
+  **Migration**
+
+  If you were importing and using `AllowedPortalTags`:
+
+  ```typescript
+  // Before
+  import { AllowedPortalTags } from '@equinor/fusion-framework-cli/bin';
+  await tagPortal({ tag: AllowedPortalTags.Latest, ... });
+
+  // After
+  await tagPortal({ tag: 'latest', ... });
+  ```
+
+  **New Flexibility**
+
+  You can now use any string value for portal tags:
+
+  ```bash
+  # Common tags still work
+  ffc portal publish --tag latest
+  ffc portal publish --tag preview
+
+  # New flexibility with custom tags
+  ffc portal publish --tag next
+  ffc portal publish --tag stable
+  ffc portal publish --tag v2.0.0-beta
+  ffc portal publish --tag release-candidate
+  ffc portal tag custom-environment --package my-portal@1.0.0
+  ```
+
+  **Enhanced Documentation**
+
+  - Updated CLI help text with practical examples
+  - Added common tag examples (`latest`, `preview`, `next`, `stable`) in documentation
+  - Maintained guidance while showing flexibility
+
+  **Validation**
+
+  - Tags must be non-empty strings
+  - No other restrictions on tag format or content
+  - Backward compatibility maintained for existing tag values
+
+  This change provides much greater flexibility for deployment workflows while maintaining the same API structure and functionality.
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - Add new `ai` command with `chat` and `embeddings` subcommands for LLM integration and document processing.
+
+  The CLI now supports interactive AI chat and document embedding utilities for processing codebase documentation and generating vector embeddings for search indexing.
+
+  **New Commands:**
+
+  - `ffc ai chat` - Interactive chat with AI models
+  - `ffc ai embeddings` - Document embedding utilities for AI processing
+
+  **Features:**
+
+  - Interactive chat interface with conversation history
+  - Document chunking and embedding generation
+  - Support for markdown and TypeScript documentation parsing
+  - Git metadata extraction for context-aware embeddings
+  - Vector store integration for search indexing
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-framework-dev-portal@1.2.6-cli-search-index.0
+  - @equinor/fusion-framework-dev-server@1.1.13-cli-search-index.0
+  - @equinor/fusion-framework-module-msal-node@2.0.1-cli-search-index.0
+  - @equinor/fusion-imports@1.1.7-cli-search-index.0
+
 ## 12.3.10
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.2.16-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-framework-module-event@4.4.1-cli-search-index.0
+  - @equinor/fusion-framework-react-module@3.1.14-cli-search-index.0
+
 ## 3.2.15
 
 ### Patch Changes
