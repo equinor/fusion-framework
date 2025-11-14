@@ -2,7 +2,18 @@ import path, { relative } from 'node:path';
 
 import { globbyStream } from 'globby';
 import multimatch from 'multimatch';
-import { from, filter, map, Subject, share, merge, toArray, concatMap, mergeMap, EMPTY } from 'rxjs';
+import {
+  from,
+  filter,
+  map,
+  Subject,
+  share,
+  merge,
+  toArray,
+  concatMap,
+  mergeMap,
+  EMPTY,
+} from 'rxjs';
 import { createCommand, createOption } from 'commander';
 
 import { importConfig } from '@equinor/fusion-imports';
@@ -228,7 +239,7 @@ const _command = createCommand('embeddings')
     const updateVectorStore$ = applyEmbedding$.pipe(
       mergeMap(async (documents) => {
         const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName!);
-        if(documents.length === 0) {
+        if (documents.length === 0) {
           return [];
         }
         if (documents.length > 1) {

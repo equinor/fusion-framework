@@ -8,7 +8,12 @@ import { from, type ObservableInput, of } from 'rxjs';
 import { defaultIfEmpty, filter, map, mergeMap, scan, shareReplay } from 'rxjs/operators';
 
 import type { IModel, IEmbed, IVectorStore } from './lib/types.js';
-import type { ValueOrCallback, AIModuleConfig, IAIConfigurator, ConfiguredService } from './AIConfigurator.interface.js';
+import type {
+  ValueOrCallback,
+  AIModuleConfig,
+  IAIConfigurator,
+  ConfiguredService,
+} from './AIConfigurator.interface.js';
 
 /**
  * Creates a resolver function that processes configuration records supporting both direct values and factory functions.
@@ -26,32 +31,33 @@ import type { ValueOrCallback, AIModuleConfig, IAIConfigurator, ConfiguredServic
 function resolveConfigRecord<T>(
   items: Record<string, ValueOrCallback<T>>,
 ): (args: ConfigBuilderCallbackArgs) => ObservableInput<Record<string, T>> {
-  return (args: ConfigBuilderCallbackArgs) => from(Object.entries(items)).pipe(
-    // Process each configuration entry (identifier -> valueOrCallback)
-    mergeMap(([identifier, valueOrCallback]): ObservableInput<[string, T]> => {
-      if (typeof valueOrCallback === 'function') {
-        // For factory functions: call them with config args, filter out null/undefined results
-        return from((valueOrCallback as ConfigBuilderCallback<T>)(args)).pipe(
-          filter((adapter): adapter is T => !!adapter), // Remove falsy values
-          map((adapter) => [identifier, adapter] as const), // Pair with identifier
-        );
-      }
-      // For direct values: emit immediately
-      return of([identifier, valueOrCallback as T]);
-    }),
-    // Accumulate all resolved services into a single record
-    scan(
-      (acc, [identifier, adapter]) => {
-        acc[identifier] = adapter;
-        return acc;
-      },
-      {} as Record<string, T>,
-    ),
-    // Ensure we always emit at least an empty object if no entries exist
-    defaultIfEmpty({}),
-    // Cache the result and share it among multiple subscribers
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
+  return (args: ConfigBuilderCallbackArgs) =>
+    from(Object.entries(items)).pipe(
+      // Process each configuration entry (identifier -> valueOrCallback)
+      mergeMap(([identifier, valueOrCallback]): ObservableInput<[string, T]> => {
+        if (typeof valueOrCallback === 'function') {
+          // For factory functions: call them with config args, filter out null/undefined results
+          return from((valueOrCallback as ConfigBuilderCallback<T>)(args)).pipe(
+            filter((adapter): adapter is T => !!adapter), // Remove falsy values
+            map((adapter) => [identifier, adapter] as const), // Pair with identifier
+          );
+        }
+        // For direct values: emit immediately
+        return of([identifier, valueOrCallback as T]);
+      }),
+      // Accumulate all resolved services into a single record
+      scan(
+        (acc, [identifier, adapter]) => {
+          acc[identifier] = adapter;
+          return acc;
+        },
+        {} as Record<string, T>,
+      ),
+      // Ensure we always emit at least an empty object if no entries exist
+      defaultIfEmpty({}),
+      // Cache the result and share it among multiple subscribers
+      shareReplay({ bufferSize: 1, refCount: true }),
+    );
 }
 
 /**

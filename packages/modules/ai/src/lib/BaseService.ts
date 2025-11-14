@@ -24,18 +24,21 @@ export abstract class BaseService<TInput, TOutput, TOptions extends RunnableConf
    * @param input - Input data for the service
    * @returns Observable stream of results
    */
-  abstract invoke$(input: TInput, options?: TOptions): ReturnType<IService<TInput, TOutput>['invoke$']>;
+  abstract invoke$(
+    input: TInput,
+    options?: TOptions,
+  ): ReturnType<IService<TInput, TOutput>['invoke$']>;
 
   /**
    * Default streaming implementation using invoke$
-   * @param input - Input data for the service  
+   * @param input - Input data for the service
    * @param options - Optional configuration
    * @returns AsyncGenerator for streaming responses
    */
   async *_streamIterator(input: TInput, options?: TOptions): AsyncGenerator<TOutput> {
     yield* toAsyncIterable(this.invoke$(input, options));
   }
-  
+
   asRunnable(): RunnableInterface<TInput, TOutput, TOptions> {
     return this;
   }

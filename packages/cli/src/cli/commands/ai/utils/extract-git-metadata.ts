@@ -108,8 +108,8 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<string[]
     // Get changes since baseRef
     try {
       const diffResult = await git.diff([`${baseRef}`, '--name-only']);
-      const changedFiles = diffResult.split('\n').filter(file => file.trim() !== '');
-      return changedFiles.map(file => `${projectRoot}/${file}`);
+      const changedFiles = diffResult.split('\n').filter((file) => file.trim() !== '');
+      return changedFiles.map((file) => `${projectRoot}/${file}`);
     } catch {
       // Handle case where baseRef doesn't exist (e.g., first commit)
       console.warn(`⚠️  Warning: Git reference '${baseRef}' not found. Processing all files.`);
@@ -130,7 +130,7 @@ export const isFileChanged = (filePath: string, changedFiles: string[]): boolean
   if (changedFiles.length === 0) {
     return true; // If no diff filtering, process all files
   }
-  
+
   return changedFiles.includes(filePath);
 };
 
@@ -139,7 +139,9 @@ export const isFileChanged = (filePath: string, changedFiles: string[]): boolean
  * @param cwd - Working directory
  * @returns Git status information
  */
-export const getGitStatus = async (cwd: string = process.cwd()): Promise<{
+export const getGitStatus = async (
+  cwd: string = process.cwd(),
+): Promise<{
   branch: string;
   commit: string;
   hasChanges: boolean;
@@ -159,19 +161,22 @@ export const getGitStatus = async (cwd: string = process.cwd()): Promise<{
   try {
     const branch = await git.revparse(['--abbrev-ref', 'HEAD']);
     const commit = await git.revparse(['--short', 'HEAD']);
-    
+
     const statusResult = await git.status();
     const stagedFiles = statusResult.staged.length;
-    const unstagedFiles = statusResult.modified.length + statusResult.deleted.length + statusResult.not_added.length;
-    
+    const unstagedFiles =
+      statusResult.modified.length + statusResult.deleted.length + statusResult.not_added.length;
+
     return {
       branch: branch.trim(),
       commit: commit.trim(),
       hasChanges: stagedFiles > 0 || unstagedFiles > 0,
       stagedFiles,
-      unstagedFiles
+      unstagedFiles,
     };
   } catch (error) {
-    throw new Error(`Failed to get git status: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to get git status: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 };

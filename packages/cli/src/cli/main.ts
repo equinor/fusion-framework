@@ -12,7 +12,6 @@ import registerCommands from './commands/index.js';
 
 loadDotEnv();
 
-
 // Check Node.js version and recommend LTS (22.x)
 const MINIMUM_NODE_VERSION = process.env.MINIMUM_NODE_VERSION || '20';
 const [major] = process.versions.node.split('.').map(Number);

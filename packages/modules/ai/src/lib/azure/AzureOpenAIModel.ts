@@ -40,7 +40,10 @@ export class AzureOpenAIModel<
     return this.#client;
   }
 
-  bindTools(tools: ModelTool[], options?: TOptions): RunnableInterface<ModelInput, ModelOutput, TOptions> {
+  bindTools(
+    tools: ModelTool[],
+    options?: TOptions,
+  ): RunnableInterface<ModelInput, ModelOutput, TOptions> {
     return this.#client.bindTools(tools, options);
   }
 

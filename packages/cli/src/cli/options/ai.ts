@@ -167,7 +167,11 @@ export const withAiOptions = (
     const options = thisCommand.opts();
 
     // Validate API key
-    if (!options.openaiApiKey || typeof options.openaiApiKey !== 'string' || options.openaiApiKey.trim() === '') {
+    if (
+      !options.openaiApiKey ||
+      typeof options.openaiApiKey !== 'string' ||
+      options.openaiApiKey.trim() === ''
+    ) {
       throw new InvalidOptionArgumentError('API key is required and must be a non-empty string.');
     }
 

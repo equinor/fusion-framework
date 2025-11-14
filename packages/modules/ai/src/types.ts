@@ -2,9 +2,6 @@
  * Core types and interfaces for the LLM module
  */
 
-
-
-
 /**
  * Base configuration for AI clients
  */

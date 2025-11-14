@@ -49,8 +49,5 @@ export interface IAIConfigurator {
    */
   setVectorStore(identifier: string, vectorStoreOrFactory: ValueOrCallback<IVectorStore>): this;
 
-  getService<T extends keyof AIModuleConfig>(
-    type: T,
-    identifier: string,
-  ): ConfiguredService<T>;
+  getService<T extends keyof AIModuleConfig>(type: T, identifier: string): ConfiguredService<T>;
 }

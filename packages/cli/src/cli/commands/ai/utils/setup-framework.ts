@@ -60,7 +60,7 @@ export const setupFramework = async (
       if (!options.openaiEmbeddingDeployment) {
         throw new Error('Embedding deployment is required to configure the vector store');
       }
-      
+
       // Create the embedding service first so we can use it in the vector store
       const embeddingService = aiConfig.getService('embeddings', options.openaiEmbeddingDeployment);
 

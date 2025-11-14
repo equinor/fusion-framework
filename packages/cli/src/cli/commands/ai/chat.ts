@@ -5,7 +5,11 @@ import { withAiOptions, type AiOptions } from '../../options/ai.js';
 import { createInterface } from 'readline';
 
 import { setupFramework } from './utils/setup-framework.js';
-import { RunnablePassthrough, RunnableSequence, RunnableInterface } from '@langchain/core/runnables';
+import {
+  RunnablePassthrough,
+  RunnableSequence,
+  RunnableInterface,
+} from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 
 /**
@@ -78,7 +82,10 @@ const _command = createCommand('chat')
       .argParser(parseInt),
   )
   .addOption(
-    createOption('--history-limit <number>', 'Maximum number of messages to keep in conversation history')
+    createOption(
+      '--history-limit <number>',
+      'Maximum number of messages to keep in conversation history',
+    )
       .default(20)
       .argParser(parseInt),
   )
@@ -119,13 +126,13 @@ const _command = createCommand('chat')
     if (options.verbose) {
       console.log('🔧 Configuring retriever with options:', {
         k: options.contextLimit || 5,
-        searchType: 'similarity'
+        searchType: 'similarity',
       });
     }
 
     const retriever = vectorStoreService.asRetriever({
       k: options.contextLimit || 5,
-      searchType: 'similarity' // Use similarity search instead of MMR to avoid potential issues
+      searchType: 'similarity', // Use similarity search instead of MMR to avoid potential issues
     });
 
     const retriveContext = async (input: string) => {
@@ -151,21 +158,23 @@ const _command = createCommand('chat')
     };
 
     // Create a custom runnable that formats the prompt as ChatMessage[]
-    const formatPromptAsMessages = new RunnablePassthrough().pipe(async (input: { userMessage: string; messageHistory: ChatMessage[] }) => {
-      const context = await retriveContext(input.userMessage);
-      const systemMessage = `You are a helpful assistant. Use the following context to provide accurate and relevant responses. If the context doesn't contain relevant information, say so clearly.
+    const formatPromptAsMessages = new RunnablePassthrough().pipe(
+      async (input: { userMessage: string; messageHistory: ChatMessage[] }) => {
+        const context = await retriveContext(input.userMessage);
+        const systemMessage = `You are a helpful assistant. Use the following context to provide accurate and relevant responses. If the context doesn't contain relevant information, say so clearly.
          
          Context:\n${context}`;
 
-      // Build the complete message array with system message, history, and current user message
-      const messages: ChatMessage[] = [
-        { role: 'system', content: systemMessage },
-        ...input.messageHistory,
-        { role: 'user', content: input.userMessage }
-      ];
+        // Build the complete message array with system message, history, and current user message
+        const messages: ChatMessage[] = [
+          { role: 'system', content: systemMessage },
+          ...input.messageHistory,
+          { role: 'user', content: input.userMessage },
+        ];
 
-      return messages;
-    });
+        return messages;
+      },
+    );
 
     // Create the chatbot chain using the model directly (BaseService now extends Runnable)
     const chain = RunnableSequence.from([
@@ -183,10 +192,8 @@ const _command = createCommand('chat')
      * @returns Promise resolving to a summary message
      */
     const summarizeOldMessages = async (messages: ChatMessage[]): Promise<ChatMessage> => {
-      const conversationText = messages
-        .map(msg => `${msg.role}: ${msg.content}`)
-        .join('\n');
-      
+      const conversationText = messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n');
+
       const summaryPrompt = `Please provide a concise summary of the following conversation history. Focus on key topics, decisions, and important context that should be remembered for the ongoing conversation:
 
 ${conversationText}
@@ -194,14 +201,19 @@ ${conversationText}
 Summary:`;
 
       try {
-        const summaryResponse = await chatService.invoke([{ role: 'user', content: summaryPrompt }]);
-        return { role: 'assistant', content: `[Previous conversation summary: ${summaryResponse}]` };
+        const summaryResponse = await chatService.invoke([
+          { role: 'user', content: summaryPrompt },
+        ]);
+        return {
+          role: 'assistant',
+          content: `[Previous conversation summary: ${summaryResponse}]`,
+        };
       } catch (error) {
         console.error('❌ Error summarizing conversation:', error);
         // Fallback to a simple summary if AI summarization fails
-        return { 
-          role: 'assistant', 
-          content: `[Previous conversation summary: ${messages.length} messages about various topics]` 
+        return {
+          role: 'assistant',
+          content: `[Previous conversation summary: ${messages.length} messages about various topics]`,
         };
       }
     };
@@ -213,26 +225,32 @@ Summary:`;
      * @param limit - Maximum number of messages to keep
      * @returns Updated message history
      */
-    const addMessageToHistory = async (history: ChatMessage[], newMessage: ChatMessage, limit: number): Promise<ChatMessage[]> => {
+    const addMessageToHistory = async (
+      history: ChatMessage[],
+      newMessage: ChatMessage,
+      limit: number,
+    ): Promise<ChatMessage[]> => {
       history.push(newMessage);
-      
+
       // When we reach 10 messages, summarize the oldest 5 and replace them with the summary
       if (history.length >= 10) {
         if (options.verbose) {
           console.log('🔄 Compressing conversation history with AI summarization...');
         }
-        
+
         const oldestMessages = history.splice(0, 5); // Remove oldest 5 messages
         const summary = await summarizeOldMessages(oldestMessages);
-        
+
         // Insert the summary at the beginning
         history.unshift(summary);
-        
+
         if (options.verbose) {
-          console.log(`📝 Compressed 5 messages into 1 summary. History now has ${history.length} messages.`);
+          console.log(
+            `📝 Compressed 5 messages into 1 summary. History now has ${history.length} messages.`,
+          );
         }
       }
-      
+
       // If we still exceed the limit after summarization, remove oldest messages
       if (history.length > limit) {
         const messagesToRemove = history.length - limit;
@@ -240,7 +258,7 @@ Summary:`;
         const actualRemoval = Math.min(messagesToRemove, Math.max(0, history.length - 2));
         history.splice(0, actualRemoval);
       }
-      
+
       return history;
     };
 
@@ -282,7 +300,11 @@ Summary:`;
           continue;
         }
 
-        await addMessageToHistory(messageHistory, { role: 'user', content: userMessage }, options.historyLimit || 20);
+        await addMessageToHistory(
+          messageHistory,
+          { role: 'user', content: userMessage },
+          options.historyLimit || 20,
+        );
 
         // Show typing indicator
         console.log('\n🤖 AI Response:');
@@ -310,7 +332,11 @@ Summary:`;
               },
             });
           });
-          await addMessageToHistory(messageHistory, { role: 'assistant', content: fullResponse }, options.historyLimit || 20);
+          await addMessageToHistory(
+            messageHistory,
+            { role: 'assistant', content: fullResponse },
+            options.historyLimit || 20,
+          );
         } catch (error) {
           console.error('\n❌ Chain error:', error);
           console.log('Falling back to basic chat...');

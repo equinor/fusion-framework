@@ -7,7 +7,7 @@ export function toAsyncIterable<T>(observable: Observable<T>): AsyncIterable<T> 
       const queue: IteratorResult<T>[] = [];
       let done = false;
       let resolveNext: ((value: IteratorResult<T>) => void) | null = null;
-      let rejectNext: (((error: unknown) => void) | null) = null;
+      let rejectNext: ((error: unknown) => void) | null = null;
 
       // Subscribe to the Observable
       const subscription = observable.subscribe({

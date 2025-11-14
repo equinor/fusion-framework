@@ -4,7 +4,10 @@ import type { Document } from '@langchain/core/documents';
 import type { BaseRetriever } from '@langchain/core/retrievers';
 import type { RunnableInterface, RunnableConfig } from '@langchain/core/runnables';
 import type { Tool, ToolInterface } from '@langchain/core/tools';
-import type { BaseLanguageModelInput, BaseLanguageModelInterface } from '@langchain/core/language_models/base';
+import type {
+  BaseLanguageModelInput,
+  BaseLanguageModelInterface,
+} from '@langchain/core/language_models/base';
 
 export type VectorStoreDocumentMetadata<
   T extends Record<string, unknown> = Record<string, unknown>,

@@ -60,7 +60,9 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   );
 };
 
-export const parseMarkdownFile = async <T extends Record<string, unknown> = Record<string, unknown>>(
+export const parseMarkdownFile = async <
+  T extends Record<string, unknown> = Record<string, unknown>,
+>(
   file: SourceFile,
 ): Promise<MarkdownDocument<T>[]> => {
   assert(isMarkdownFile(file.path), `File ${file.path} is not a markdown file`);
@@ -69,9 +71,8 @@ export const parseMarkdownFile = async <T extends Record<string, unknown> = Reco
   return result.map((document) => ({
     ...document,
     metadata: {
-        ...document.metadata,
-        rootPath: file.projectRoot,
-      },
-    }),
-  );
+      ...document.metadata,
+      rootPath: file.projectRoot,
+    },
+  }));
 };
