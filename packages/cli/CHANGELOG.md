@@ -1,5 +1,11 @@
 # Change Log
 
+## 13.0.0-cli-search-index.2
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`acb5554`](https://github.com/equinor/fusion-framework/commit/acb55542ea92c7d559ca15d6397321379c2f234a) Thanks [@odinr](https://github.com/odinr)! - Internal: refactor AI framework setup to use ModulesConfigurator directly instead of configureFramework, removing need for dummy auth configuration and improving type safety. Also removes logging of sensitive API key information.
+
 ## 13.0.0-cli-search-index.1
 
 ### Minor Changes

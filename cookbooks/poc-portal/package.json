@@ -1,6 +1,6 @@
 {
   "name": "poc-portal",
-  "version": "1.1.20-cli-search-index.1",
+  "version": "1.1.20-cli-search-index.2",
   "description": "",
   "main": "src/index.tsx",
   "private": true,

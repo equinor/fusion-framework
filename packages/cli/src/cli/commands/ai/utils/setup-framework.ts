@@ -1,8 +1,4 @@
-import {
-  enableAI,
-  type IAIConfigurator,
-  AIModule,
-} from '@equinor/fusion-framework-module-ai';
+import { enableAI, type IAIConfigurator, AIModule } from '@equinor/fusion-framework-module-ai';
 
 import {
   AzureOpenAiEmbed,
@@ -13,9 +9,7 @@ import {
 import type { AiOptions } from '../../../options/ai.js';
 import { ModulesConfigurator, ModulesInstance } from '@equinor/fusion-framework-module';
 
-export const setupFramework = async (
-  options: AiOptions,
-): Promise<ModulesInstance<[AIModule]>> => {
+export const setupFramework = async (options: AiOptions): Promise<ModulesInstance<[AIModule]>> => {
   // Configure the framework with AI module
   // Create a new module configurator for the framework
   const configurator = new ModulesConfigurator<[AIModule]>();
@@ -70,5 +64,5 @@ export const setupFramework = async (
     }
   });
   const framework = await configurator.initialize();
-  return framework
+  return framework;
 };
