@@ -65,5 +65,10 @@
     "@equinor/fusion-framework-widget": "1.1.46",
     "@equinor/fusion-framework-docs": "0.4.10"
   },
-  "changesets": []
+  "changesets": [
+    "cli_ai-commands",
+    "flexible-portal-tags",
+    "fuzzy-years-shine",
+    "module-ai_new-package"
+  ]
 }
