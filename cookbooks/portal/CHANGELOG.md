@@ -1,5 +1,12 @@
 # portal
 
+## 0.1.10-cli-search-index.4
+
+### Patch Changes
+
+- Updated dependencies [[`91fbb14`](https://github.com/equinor/fusion-framework/commit/91fbb14c3618d4d494e0468fdef691a8cb48253d)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.4
+
 ## 0.1.10-cli-search-index.3
 
 ### Patch Changes

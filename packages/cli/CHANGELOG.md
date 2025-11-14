@@ -1,5 +1,19 @@
 # Change Log
 
+## 13.0.0-cli-search-index.4
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`91fbb14`](https://github.com/equinor/fusion-framework/commit/91fbb14c3618d4d494e0468fdef691a8cb48253d) Thanks [@odinr](https://github.com/odinr)! - Refactor `ai embeddings` command pipeline to improve performance and maintainability.
+
+  - Optimize file deletion with batch operations instead of one-by-one processing
+  - Improve RxJS stream handling with better separation of removed vs new/modified files
+  - Enhance result tracking to report deleted files and added document IDs
+  - Add clearer logging and comments throughout the pipeline
+  - Ensure deletions happen before additions using concat operator
+
+  No public API changes; internal improvements only.
+
 ## 13.0.0-cli-search-index.3
 
 ### Minor Changes
