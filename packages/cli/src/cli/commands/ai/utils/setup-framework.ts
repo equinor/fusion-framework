@@ -1,7 +1,7 @@
 import {
   enableAI,
-  type IAIProvider,
   type IAIConfigurator,
+  AIModule,
 } from '@equinor/fusion-framework-module-ai';
 
 import {
@@ -10,19 +10,15 @@ import {
   AzureVectorStore,
 } from '@equinor/fusion-framework-module-ai/azure';
 
-import { configureFramework, type FusionFramework } from '../../../../bin/framework.node.js';
 import type { AiOptions } from '../../../options/ai.js';
+import { ModulesConfigurator, ModulesInstance } from '@equinor/fusion-framework-module';
 
 export const setupFramework = async (
   options: AiOptions,
-): Promise<FusionFramework & { ai: IAIProvider }> => {
+): Promise<ModulesInstance<[AIModule]>> => {
   // Configure the framework with AI module
-  const configurator = configureFramework({
-    auth: {
-      clientId: 'dummy', // Not needed for AI module
-      tenantId: 'dummy', // Not needed for AI module
-    },
-  });
+  // Create a new module configurator for the framework
+  const configurator = new ModulesConfigurator<[AIModule]>();
   // Add AI module configuration
   enableAI(configurator, (aiConfig: IAIConfigurator) => {
     if (options.openaiChatDeployment) {
@@ -39,7 +35,6 @@ export const setupFramework = async (
     if (options.openaiEmbeddingDeployment) {
       console.log(
         'Setting embedding deployment',
-        `\nazureOpenAIApiKey: ${options.openaiApiKey}`,
         `\nazureOpenAIApiDeploymentName: ${options.openaiEmbeddingDeployment}`,
         `\nazureOpenAIApiInstanceName: ${options.openaiInstance}`,
         `\nazureOpenAIApiVersion: ${options.openaiApiVersion}`,
@@ -75,5 +70,5 @@ export const setupFramework = async (
     }
   });
   const framework = await configurator.initialize();
-  return framework as FusionFramework & { ai: IAIProvider };
+  return framework
 };
