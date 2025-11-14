@@ -1,0 +1,85 @@
+{
+  "name": "@equinor/fusion-framework-module-ai",
+  "version": "1.0.0",
+  "description": "AI module for Fusion Framework providing AI/LLM integration capabilities",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./lib": {
+      "import": "./dist/esm/lib/index.js",
+      "types": "./dist/types/lib/index.d.ts"
+    },
+    "./azure": {
+      "import": "./dist/esm/lib/azure/index.js",
+      "types": "./dist/types/lib/azure/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ],
+      "lib": [
+        "dist/types/lib/index.d.ts"
+      ],
+      "azure": [
+        "dist/types/lib/azure/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "llm",
+    "ai",
+    "module"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/modules/ai"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^1.0.1",
+    "langchain": "^1.0.1"
+  },
+  "devDependencies": {
+    "@azure/search-documents": "^12.2.0",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@langchain/openai": "^1.0.0",
+    "rxjs": "^7.8.1",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@azure/search-documents": "^12.x",
+    "@equinor/fusion-framework-module": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
+    "@langchain/openai": "^1.x",
+    "rxjs": "^7.8.1"
+  },
+  "peerDependenciesMeta": {
+    "@azure/search-documents": {
+      "optional": true
+    },
+    "@langchain/openai": {
+      "optional": true
+    }
+  }
+}
