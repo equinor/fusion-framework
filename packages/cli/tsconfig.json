@@ -37,6 +37,6 @@
       "path": "../dev-server"
     }
   ],
-  "include": ["src/**/*", "types/*"],
+  "include": ["src/**/*", "types/*", "src/lib/ai/fusion-ai.ts"],
   "exclude": ["node_modules"]
 }

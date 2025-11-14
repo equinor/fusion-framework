@@ -12,7 +12,7 @@ import { type AiOptions, withAiOptions } from '../../options/ai.js';
 
 import { setupFramework } from './utils/setup-framework.js';
 import { isMarkdownFile, parseMarkdownFile } from './utils/markdown/index.js';
-import { isTypescriptFile, parseTsDocFromFileSync } from './utils/parse-ts-doc.js';
+import { isTypescriptFile, parseTsDocFromFileSync } from './utils/ts-doc/index.js';
 import {
   extractGitMetadata,
   resolveProjectRoot,
@@ -22,7 +22,7 @@ import {
   type ChangedFile,
 } from './utils/git/index.js';
 
-import type { FusionAIConfig } from '../../../lib/fusion-ai.js';
+import type { FusionAIConfig } from '../../../lib/ai/fusion-ai.js';
 
 type CommandOptions = AiOptions & {
   dryRun: boolean;
@@ -205,6 +205,7 @@ const _command = createCommand('embeddings')
         const matches = multimatch(file.relativePath, allowedFilePatterns);
         return matches.length > 0;
       }),
+      tap((file) => console.log('processing file', file.relativePath)),
       shareReplay({ refCount: true }),
     );
 

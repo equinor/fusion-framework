@@ -1,5 +1,4 @@
 import { assert } from 'node:console';
-import { readFileSync } from 'node:fs';
 import {
   Project,
   type SourceFile as ProjectSourceFile,
@@ -11,83 +10,10 @@ import {
   type PropertyDeclaration,
 } from 'ts-morph';
 
-import type {
-  VectorStoreDocument,
-  VectorStoreDocumentMetadata,
-} from '@equinor/fusion-framework-module-ai/lib';
-
-import type { SourceFile } from './types.js';
-import { generateChunkId } from './generate-cunk-id.js';
-
-// Type for metadata specific to TypeScript documents
-export type TypescriptMetadata = VectorStoreDocumentMetadata<{
-  type: 'tsdoc';
-  ts_kind: string;
-  ts_name: string;
-}>;
-
-// Type for TypeScript documents with TSDoc metadata
-export type TypescriptDocument = VectorStoreDocument<TypescriptMetadata>;
-
-// Options for parsing TypeScript documents
-export interface ParseTsDocOptions {
-  /** The project root path for generating relative paths */
-  projectRoot?: string;
-}
-
-// Supported TSDoc node kinds for top-level processing
-const nodeKinds = [
-  SyntaxKind.FunctionDeclaration,
-  SyntaxKind.ClassDeclaration,
-  SyntaxKind.InterfaceDeclaration,
-  SyntaxKind.TypeAliasDeclaration,
-  SyntaxKind.VariableStatement,
-  SyntaxKind.EnumDeclaration,
-];
-
-/**
- * Checks if a file is a TypeScript or TSX file based on its extension.
- * @param filePath - The path to the file.
- * @returns True if the file ends with .ts or .tsx, false otherwise.
- */
-export const isTypescriptFile = (filePath: string): boolean => {
-  return filePath.endsWith('.ts') || filePath.endsWith('.tsx');
-};
-
-/**
- * Parses TSDoc from a string of TypeScript code.
- * @param content - The TypeScript code content.
- * @param options - Optional parsing configuration.
- * @returns An array of TypeScript documents with TSDoc metadata.
- */
-export const parseTsDocSync = (
-  content: string,
-  options?: ParseTsDocOptions,
-): TypescriptDocument[] => {
-  const project = new Project({ useInMemoryFileSystem: true });
-  const sourceFile = project.createSourceFile('temp.ts', content);
-  return processSourceFile(sourceFile, options);
-};
-
-/**
- * Parses TSDoc from a TypeScript file by path.
- * @param file - The source file object.
- * @param options - Optional parsing configuration.
- * @returns An array of TypeScript documents with TSDoc metadata.
- * @throws If the file is not a TypeScript file.
- */
-export const parseTsDocFromFileSync = (
-  file: SourceFile,
-  options?: ParseTsDocOptions,
-): TypescriptDocument[] => {
-  assert(isTypescriptFile(file.path), `File ${file.path} is not a TypeScript file`);
-  const project = new Project({ useInMemoryFileSystem: true });
-  const sourceFile = project.createSourceFile(
-    file.relativePath ?? file.path,
-    readFileSync(file.path, 'utf8'),
-  );
-  return processSourceFile(sourceFile, options);
-};
+import type { SourceFile } from '../types.js';
+import { generateChunkId } from '../generate-cunk-id.js';
+import type { TypescriptDocument, ParseTsDocOptions } from './types.js';
+import { nodeKinds } from './constants.js';
 
 /**
  * Extracts a TSDoc document from a class node, including TSDoc, constructor, and public member signatures.
@@ -96,7 +22,7 @@ export const parseTsDocFromFileSync = (
  * @param options - Optional parsing configuration.
  * @returns A TypeScript document with TSDoc and class interface, or null if no TSDoc is found.
  */
-const extractDocumentFromClassNode = (
+export const extractDocumentFromClassNode = (
   classNode: ClassDeclaration,
   sourceFile: ProjectSourceFile,
   options?: ParseTsDocOptions,
@@ -185,7 +111,7 @@ const extractDocumentFromClassNode = (
  * @param nodeOptions - Optional node-specific configuration (e.g., skipKindCheck for VariableStatement).
  * @returns A TypeScript document with TSDoc metadata, or null if no TSDoc is found.
  */
-const extractDocumentFromNode = (
+export const extractDocumentFromNode = (
   node: Node,
   sourceFile: ProjectSourceFile,
   options?: ParseTsDocOptions,
@@ -299,7 +225,7 @@ const extractDocumentFromNode = (
  * @param options - Optional parsing configuration.
  * @returns An array of TypeScript documents with TSDoc metadata.
  */
-const processSourceFile = (
+export const processSourceFile = (
   sourceFile: ProjectSourceFile,
   options?: ParseTsDocOptions,
 ): TypescriptDocument[] => {
@@ -314,3 +240,4 @@ const processSourceFile = (
 
   return documents;
 };
+
