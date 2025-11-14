@@ -5,6 +5,7 @@ import type { ConsoleLogger } from '@equinor/fusion-log';
 export type FusionService = {
   key: string;
   uri: string;
+  proxyTarget?: string;
   name: string;
 };
 

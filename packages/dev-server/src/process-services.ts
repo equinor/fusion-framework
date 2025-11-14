@@ -29,8 +29,8 @@ import type { FusionService } from './types.js';
  * // Expected output:
  * // result.data:
  * // [
- * //   { key: 'service1', uri: 'http://localhost:3000/proxy/service1', name: 'Service 1' },
- * //   { key: 'service2', uri: 'http://localhost:3000/proxy/service2', name: 'Service 2' },
+ * //   { key: 'service1', uri: 'http://localhost:3000/proxy/service1', proxyTarget: 'http://example.com/api', name: 'Service 1' },
+ * //   { key: 'service2', uri: 'http://localhost:3000/proxy/service2', proxyTarget: 'http://example.org/api', name: 'Service 2' },
  * // ]
  *
  * console.log(result.routes); // Generated proxy routes
@@ -69,7 +69,7 @@ export const processServices: ApiDataProcessor<FusionService[]> = (data, args) =
     // append host, port and protocol to the service uri
     // and replace the path with the local proxy path
     const serviceUrl = new URL(`${route}/${service.key}`, request.headers.referer);
-    apiServices.push({ ...service, uri: String(serviceUrl) });
+    apiServices.push({ ...service, proxyTarget: service.uri, uri: String(serviceUrl) });
 
     // add the proxy route
     const url = new URL(service.uri);
