@@ -70,6 +70,7 @@
     "cli_ai-config-export",
     "cli_ai-setup-refactor",
     "cli_embeddings-clean-option",
+    "cli_embeddings-pipeline-refactor",
     "cli_search-command",
     "flexible-portal-tags",
     "fuzzy-years-shine",
