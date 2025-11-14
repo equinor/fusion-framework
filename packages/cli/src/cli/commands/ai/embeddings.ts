@@ -2,18 +2,7 @@ import path, { relative } from 'node:path';
 
 import { globbyStream } from 'globby';
 import multimatch from 'multimatch';
-import {
-  from,
-  filter,
-  map,
-  Subject,
-  share,
-  merge,
-  toArray,
-  concatMap,
-  mergeMap,
-  EMPTY,
-} from 'rxjs';
+import { from, filter, map, shareReplay, merge, toArray, concatMap, mergeMap, tap } from 'rxjs';
 import { createCommand, createOption } from 'commander';
 
 import { importConfig } from '@equinor/fusion-imports';
@@ -29,9 +18,10 @@ import {
   resolveProjectRoot,
   getChangedFiles,
   getGitStatus,
+  getFileStatus,
+  type ChangedFile,
 } from './utils/extract-git-metadata.js';
 
-import type { SourceFile } from './utils/types.js';
 import type { FusionAIConfig } from '../../../lib/fusion-ai.js';
 
 type CommandOptions = AiOptions & {
@@ -40,6 +30,7 @@ type CommandOptions = AiOptions & {
   recursive: boolean;
   diff: boolean;
   baseRef?: string;
+  clean: boolean;
 };
 
 /**
@@ -63,18 +54,17 @@ type CommandOptions = AiOptions & {
  *   --recursive            Process directories recursively
  *   --diff                 Process only changed files (workflow mode)
  *   --base-ref <ref>       Git reference to compare against (default: HEAD~1)
+ *   --clean                Delete all existing documents from the vector store before processing
  *   --pattern <glob>       Glob pattern to match files
- *   --chunk-size <size>    Size of text chunks (default: 2000)
- *   --chunk-overlap <size> Overlap between chunks (default: 200)
  *   --model <model>        Embedding model to use (default: text-embedding-ada-002)
  *   --batch-size <size>    Batch size for processing (default: 10)
  *
  * Examples:
  *   $ ffc ai embeddings --dry-run ./src
  *   $ ffc ai embeddings --recursive --pattern
- *   $ ffc ai embeddings --chunk-size 1000 --model text-embedding-3-small ./packages
  *   $ ffc ai embeddings --diff ./src
  *   $ ffc ai embeddings --diff --base-ref origin/main ./src
+ *   $ ffc ai embeddings --clean ./src
  */
 const _command = createCommand('embeddings')
   .description('Document embedding utilities for Large Language Model processing')
@@ -88,19 +78,21 @@ const _command = createCommand('embeddings')
   )
   .addOption(createOption('--diff', 'Process only changed files (workflow mode)').default(false))
   .addOption(createOption('--base-ref <ref>', 'Git reference to compare against').default('HEAD~1'))
+  .addOption(
+    createOption(
+      '--clean',
+      'Delete all existing documents from the vector store before processing',
+    ).default(false),
+  )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
   .action(async (patterns: string[], options: CommandOptions) => {
     const config = await importConfig<() => FusionAIConfig>(options.config, {
       baseDir: process.cwd(),
     }).then((config) => config.config());
 
-    const filePatterns = patterns.length ? patterns : (config.patterns ?? ['**/*.ts', '**/*.md']);
+    const allowedFilePatterns = config.patterns ?? ['**/*.ts', '**/*.md'];
 
-    // Validate that patterns are provided when not using --diff
-    if (!options.diff && !filePatterns) {
-      console.error('❌ Error: Glob patterns are required when not using --diff');
-      process.exit(1);
-    }
+    const filePatterns = patterns.length ? patterns : allowedFilePatterns;
 
     const framework = await setupFramework(options);
     const embeddingService = framework.ai.getService(
@@ -108,8 +100,22 @@ const _command = createCommand('embeddings')
       options.openaiEmbeddingDeployment!,
     );
 
+    // Clean existing vector store if requested
+    if (options.clean) {
+      const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName!);
+      if (!options.dryRun) {
+        console.log('🧹 Cleaning vector store: deleting all existing documents...');
+        // Delete all documents by using a filter that matches all documents
+        // Using a filter that matches any document with a source (which should be all of them)
+        await vectorStoreService.deleteDocuments({
+          filter: { filterExpression: "metadata/source ne ''" },
+        });
+        console.log('✅ Vector store cleaned successfully');
+      }
+    }
+
     // Handle diff-based processing
-    const changedFiles: string[] = [];
+    let changedFiles: ChangedFile[] = [];
     if (options.diff) {
       try {
         const gitStatus = await getGitStatus();
@@ -118,20 +124,16 @@ const _command = createCommand('embeddings')
           `📊 Changes: ${gitStatus.stagedFiles} staged, ${gitStatus.unstagedFiles} unstaged`,
         );
 
+        changedFiles = await getChangedFiles({
+          diff: options.diff,
+          baseRef: options.baseRef,
+        });
         await getChangedFiles({
           diff: options.diff,
           baseRef: options.baseRef,
-        })
-          .then((files) => {
-            if (patterns && patterns.length > 0) {
-              console.log(`🎯 Filtering with patterns: ${patterns.join(', ')}`);
-              return multimatch(files, patterns);
-            }
-            return files;
-          })
-          .then((files) => {
-            changedFiles.push(...files);
-          });
+        }).then((files) => {
+          changedFiles.push(...files);
+        });
 
         if (changedFiles.length === 0) {
           console.log('✅ No changed files match the provided patterns. Nothing to process.');
@@ -142,7 +144,7 @@ const _command = createCommand('embeddings')
         if (options.dryRun) {
           console.log(
             'Changed files:',
-            changedFiles.map((f) => f.replace(process.cwd(), '.')).join('\n  '),
+            changedFiles.map((f) => f.filepath.replace(process.cwd(), '.')).join('\n  '),
           );
         }
       } catch (error) {
@@ -161,33 +163,70 @@ const _command = createCommand('embeddings')
             gitignore: true,
             absolute: true,
           }),
+        ).pipe(
+          mergeMap((path) => getFileStatus(path)),
+          concatMap((files) => from(files)),
+          shareReplay({ refCount: true }),
         );
 
+    files$.pipe(filter((file) => file.status === 'removed')).subscribe({
+      next: (file) => {
+        if (options.dryRun) {
+          console.log('removed file', file.filepath);
+        } else {
+          const vectorStoreService = framework.ai.getService(
+            'search',
+            options.azureSearchIndexName!,
+          );
+          vectorStoreService.deleteDocuments({
+            filter: { filterExpression: `metadata/source eq '${file.filepath}'` },
+          });
+        }
+      },
+      error: (error) => {
+        console.error(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        process.exit(1);
+      },
+    });
+
     const processedFiles$ = files$.pipe(
-      map((path) => {
-        const projectRoot = resolveProjectRoot(path);
+      filter((file) => file.status !== 'removed'),
+      map((file) => {
+        const { filepath, status } = file;
+        const projectRoot = resolveProjectRoot(filepath);
         return {
-          path,
+          path: filepath,
+          status,
           projectRoot,
-          relativePath: projectRoot ? relative(projectRoot, path) : path,
+          relativePath: projectRoot ? relative(projectRoot, filepath) : filepath,
         };
       }),
-      share({ connector: () => new Subject<SourceFile>() }),
+      filter((file) => {
+        const matches = multimatch(file.relativePath, allowedFilePatterns);
+        return matches.length > 0;
+      }),
+      shareReplay({ refCount: true }),
     );
 
     const markdown$ = processedFiles$.pipe(
       filter((file) => isMarkdownFile(file.path)),
-      mergeMap(async (file) => await parseMarkdownFile(file)),
+      mergeMap(async (file) => {
+        const documents = await parseMarkdownFile(file);
+        return { status: file.status, documents };
+      }),
     );
 
     const typescript$ = processedFiles$.pipe(
       filter((file) => isTypescriptFile(file.path)),
-      map((file) => parseTsDocFromFileSync(file)),
+      map((file) => {
+        const documents = parseTsDocFromFileSync(file);
+        return { status: file.status, documents };
+      }),
     );
 
     const applyMetadata$ = merge(markdown$, typescript$).pipe(
-      mergeMap((documents) => {
-        return from(documents).pipe(
+      mergeMap((entry) => {
+        return from(entry.documents).pipe(
           mergeMap(async (document): Promise<VectorStoreDocument> => {
             const gitMetadata = document.metadata.source
               ? await extractGitMetadata(
