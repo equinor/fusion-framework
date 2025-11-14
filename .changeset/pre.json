@@ -68,6 +68,7 @@
   "changesets": [
     "cli_ai-commands",
     "cli_ai-config-export",
+    "cli_ai-setup-refactor",
     "flexible-portal-tags",
     "fuzzy-years-shine",
     "module-ai_new-package"
