@@ -27,12 +27,6 @@ export const setupFramework = async (options: AiOptions): Promise<ModulesInstanc
       );
     }
     if (options.openaiEmbeddingDeployment) {
-      console.log(
-        'Setting embedding deployment',
-        `\nazureOpenAIApiDeploymentName: ${options.openaiEmbeddingDeployment}`,
-        `\nazureOpenAIApiInstanceName: ${options.openaiInstance}`,
-        `\nazureOpenAIApiVersion: ${options.openaiApiVersion}`,
-      );
       aiConfig.setEmbedding(
         options.openaiEmbeddingDeployment,
         new AzureOpenAiEmbed({
