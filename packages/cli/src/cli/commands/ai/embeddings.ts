@@ -20,7 +20,7 @@ import {
   getGitStatus,
   getFileStatus,
   type ChangedFile,
-} from './utils/extract-git-metadata.js';
+} from './utils/git/index.js';
 
 import type { FusionAIConfig } from '../../../lib/fusion-ai.js';
 
