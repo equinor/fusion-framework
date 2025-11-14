@@ -5,22 +5,9 @@ import { default as grayMatter } from 'gray-matter';
 
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
-import type {
-  VectorStoreDocument,
-  VectorStoreDocumentMetadata,
-} from '@equinor/fusion-framework-module-ai/lib';
-import type { SourceFile } from './types.js';
-import { generateChunkId } from './generate-cunk-id.js';
-
-export type MarkdownMetadata<T extends Record<string, unknown> = Record<string, unknown>> =
-  VectorStoreDocumentMetadata<
-    T & {
-      type: 'markdown';
-    }
-  >;
-
-export type MarkdownDocument<T extends Record<string, unknown> = Record<string, unknown>> =
-  VectorStoreDocument<MarkdownMetadata<T>>;
+import type { SourceFile } from '../types.js';
+import { generateChunkId } from '../generate-cunk-id.js';
+import type { MarkdownDocument, MarkdownMetadata } from './types.js';
 
 const markdownConfig = {
   chunkSize: 2000,
@@ -28,10 +15,21 @@ const markdownConfig = {
   separators: ['\n# ', '\n## ', '\n```'],
 };
 
+/**
+ * Check if a file is a markdown file
+ * @param filePath - File path to check
+ * @returns True if file has .md extension
+ */
 export const isMarkdownFile = (filePath: string): boolean => {
   return filePath.endsWith('.md');
 };
 
+/**
+ * Parse markdown content into document chunks
+ * @param content - Markdown content string
+ * @param source - Source file path
+ * @returns Array of markdown documents
+ */
 export const parseMarkdown = async <T extends Record<string, unknown> = Record<string, unknown>>(
   content: string,
   source: string,
@@ -60,6 +58,11 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   );
 };
 
+/**
+ * Parse a markdown file into document chunks
+ * @param file - Source file object
+ * @returns Array of markdown documents with root path metadata
+ */
 export const parseMarkdownFile = async <
   T extends Record<string, unknown> = Record<string, unknown>,
 >(
@@ -76,3 +79,4 @@ export const parseMarkdownFile = async <
     },
   }));
 };
+

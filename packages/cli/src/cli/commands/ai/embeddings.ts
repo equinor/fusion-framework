@@ -11,7 +11,7 @@ import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/li
 import { type AiOptions, withAiOptions } from '../../options/ai.js';
 
 import { setupFramework } from './utils/setup-framework.js';
-import { isMarkdownFile, parseMarkdownFile } from './utils/parse-markdown.js';
+import { isMarkdownFile, parseMarkdownFile } from './utils/markdown/index.js';
 import { isTypescriptFile, parseTsDocFromFileSync } from './utils/parse-ts-doc.js';
 import {
   extractGitMetadata,
