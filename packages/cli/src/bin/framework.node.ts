@@ -89,19 +89,19 @@ export type FusionFrameworkSettings = {
 };
 
 /**
- * Initializes the Fusion Framework with the provided settings.
+ * Configures the Fusion Framework with the provided settings and returns a configurator.
  *
- * This function configures HTTP, service discovery, and authentication modules
- * based on the supplied configuration. It supports multiple authentication modes
- * and allows customization of service discovery endpoints and scopes.
+ * This function creates and configures a module configurator with HTTP, service discovery,
+ * and authentication modules based on the supplied configuration. The returned configurator
+ * can be further customized before initialization.
  *
- * @param config - The settings for framework initialization.
- * @returns A promise resolving to the initialized Fusion Framework instance.
+ * @param config - The settings for framework configuration.
+ * @returns A configured module configurator ready for initialization.
  * @throws Will throw if required authentication parameters are missing.
  */
-export const initializeFramework = async (
+export const configureFramework = (
   config: FusionFrameworkSettings,
-): Promise<FusionFramework> => {
+): ModulesConfigurator<Modules> => {
   // Create a new module configurator for the framework
   const configurator = new ModulesConfigurator<Modules>();
   // Determine the environment to use, defaulting to CI if not specified
@@ -167,6 +167,26 @@ export const initializeFramework = async (
       builder.setServerOnOpen(server.onOpen);
     }
   });
+
+  return configurator;
+};
+
+/**
+ * Initializes the Fusion Framework with the provided settings.
+ *
+ * This function configures HTTP, service discovery, and authentication modules
+ * based on the supplied configuration. It supports multiple authentication modes
+ * and allows customization of service discovery endpoints and scopes.
+ *
+ * @param config - The settings for framework initialization.
+ * @returns A promise resolving to the initialized Fusion Framework instance.
+ * @throws Will throw if required authentication parameters are missing.
+ */
+export const initializeFramework = async (
+  config: FusionFrameworkSettings,
+): Promise<FusionFramework> => {
+  // Get the configured framework
+  const configurator = configureFramework(config);
 
   // Initialize all configured modules and return the framework instance
   const instance = await configurator.initialize();

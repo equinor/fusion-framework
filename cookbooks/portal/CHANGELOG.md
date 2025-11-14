@@ -1,5 +1,42 @@
 # portal
 
+## 0.1.10-cli-search-index.4
+
+### Patch Changes
+
+- Updated dependencies [[`91fbb14`](https://github.com/equinor/fusion-framework/commit/91fbb14c3618d4d494e0468fdef691a8cb48253d)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.4
+
+## 0.1.10-cli-search-index.3
+
+### Patch Changes
+
+- Updated dependencies [[`551765f`](https://github.com/equinor/fusion-framework/commit/551765fc100332dd5d9e7ef2b14dfb51269bf888), [`d09f820`](https://github.com/equinor/fusion-framework/commit/d09f8205cc091aa6af8d8527e3ed74d92ab9dc30)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.3
+
+## 0.1.10-cli-search-index.2
+
+### Patch Changes
+
+- Updated dependencies [[`acb5554`](https://github.com/equinor/fusion-framework/commit/acb55542ea92c7d559ca15d6397321379c2f234a)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.2
+
+## 0.1.10-cli-search-index.1
+
+### Patch Changes
+
+- Updated dependencies [[`ccc6745`](https://github.com/equinor/fusion-framework/commit/ccc6745995c36771933b50461ea27e9b07c56a17)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.1
+
+## 0.1.10-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc), [`393f163`](https://github.com/equinor/fusion-framework/commit/393f1637ed33b84a6330b5eb122ab549805416bd), [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.0
+
 ## 0.1.9
 
 ### Patch Changes

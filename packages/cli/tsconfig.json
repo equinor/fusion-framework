@@ -28,12 +28,15 @@
       "path": "../modules/app"
     },
     {
+      "path": "../modules/ai"
+    },
+    {
       "path": "../app"
     },
     {
       "path": "../dev-server"
     }
   ],
-  "include": ["src/**/*", "types/*"],
+  "include": ["src/**/*", "types/*", "src/lib/ai/fusion-ai.ts"],
   "exclude": ["node_modules"]
 }

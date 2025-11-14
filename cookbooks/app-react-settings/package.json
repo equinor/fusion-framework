@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-cookbook-app-react-settings",
-  "version": "1.0.5",
+  "version": "1.0.6-cli-search-index.0",
   "description": "",
   "private": true,
   "type": "module",

@@ -1,5 +1,139 @@
 # Change Log
 
+## 13.0.0-cli-search-index.4
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`91fbb14`](https://github.com/equinor/fusion-framework/commit/91fbb14c3618d4d494e0468fdef691a8cb48253d) Thanks [@odinr](https://github.com/odinr)! - Refactor `ai embeddings` command pipeline to improve performance and maintainability.
+
+  - Optimize file deletion with batch operations instead of one-by-one processing
+  - Improve RxJS stream handling with better separation of removed vs new/modified files
+  - Enhance result tracking to report deleted files and added document IDs
+  - Add clearer logging and comments throughout the pipeline
+  - Ensure deletions happen before additions using concat operator
+
+  No public API changes; internal improvements only.
+
+## 13.0.0-cli-search-index.3
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`551765f`](https://github.com/equinor/fusion-framework/commit/551765fc100332dd5d9e7ef2b14dfb51269bf888) Thanks [@odinr](https://github.com/odinr)! - Add `--clean` option to `ai embeddings` command to delete all existing documents from the vector store before processing.
+
+  Enhanced file status tracking to handle new, modified, and removed files. Removed files are automatically deleted from the vector store during processing.
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`d09f820`](https://github.com/equinor/fusion-framework/commit/d09f8205cc091aa6af8d8527e3ed74d92ab9dc30) Thanks [@odinr](https://github.com/odinr)! - Add `ai search` command to search the vector store and validate embeddings.
+
+  The new command enables semantic search using vector embeddings with support for:
+
+  - Configurable result limits
+  - OData filter expressions for metadata-based filtering
+  - JSON output option for programmatic use
+  - Raw metadata output option
+  - Verbose output mode
+
+  Usage: `ffc ai search <query> [options]`
+
+## 13.0.0-cli-search-index.2
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`acb5554`](https://github.com/equinor/fusion-framework/commit/acb55542ea92c7d559ca15d6397321379c2f234a) Thanks [@odinr](https://github.com/odinr)! - Internal: refactor AI framework setup to use ModulesConfigurator directly instead of configureFramework, removing need for dummy auth configuration and improving type safety. Also removes logging of sensitive API key information.
+
+## 13.0.0-cli-search-index.1
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`ccc6745`](https://github.com/equinor/fusion-framework/commit/ccc6745995c36771933b50461ea27e9b07c56a17) Thanks [@odinr](https://github.com/odinr)! - Add new `lib/ai` export path exposing `configureFusionAI` and `FusionAIConfig` for programmatic AI configuration.
+
+  This provides a public API for configuring Fusion AI settings including metadata processing, embedding chunking, and pattern matching.
+
+## 13.0.0-cli-search-index.0
+
+### Major Changes
+
+- [`393f163`](https://github.com/equinor/fusion-framework/commit/393f1637ed33b84a6330b5eb122ab549805416bd) Thanks [@Noggling](https://github.com/Noggling)! - **Portal Tags Now Support Any String Value**
+
+  Portal tagging functionality has been enhanced to accept any string value for tags instead of being restricted to predefined enum values.
+
+  **Breaking Changes**
+
+  - **Removed `AllowedPortalTags` enum**: The enum that previously restricted portal tags to only `'latest'` and `'preview'` has been removed.
+  - **No longer exported**: `AllowedPortalTags` is no longer exported from `@equinor/fusion-framework-cli/bin`.
+
+  **Migration**
+
+  If you were importing and using `AllowedPortalTags`:
+
+  ```typescript
+  // Before
+  import { AllowedPortalTags } from '@equinor/fusion-framework-cli/bin';
+  await tagPortal({ tag: AllowedPortalTags.Latest, ... });
+
+  // After
+  await tagPortal({ tag: 'latest', ... });
+  ```
+
+  **New Flexibility**
+
+  You can now use any string value for portal tags:
+
+  ```bash
+  # Common tags still work
+  ffc portal publish --tag latest
+  ffc portal publish --tag preview
+
+  # New flexibility with custom tags
+  ffc portal publish --tag next
+  ffc portal publish --tag stable
+  ffc portal publish --tag v2.0.0-beta
+  ffc portal publish --tag release-candidate
+  ffc portal tag custom-environment --package my-portal@1.0.0
+  ```
+
+  **Enhanced Documentation**
+
+  - Updated CLI help text with practical examples
+  - Added common tag examples (`latest`, `preview`, `next`, `stable`) in documentation
+  - Maintained guidance while showing flexibility
+
+  **Validation**
+
+  - Tags must be non-empty strings
+  - No other restrictions on tag format or content
+  - Backward compatibility maintained for existing tag values
+
+  This change provides much greater flexibility for deployment workflows while maintaining the same API structure and functionality.
+
+### Minor Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - Add new `ai` command with `chat` and `embeddings` subcommands for LLM integration and document processing.
+
+  The CLI now supports interactive AI chat and document embedding utilities for processing codebase documentation and generating vector embeddings for search indexing.
+
+  **New Commands:**
+
+  - `ffc ai chat` - Interactive chat with AI models
+  - `ffc ai embeddings` - Document embedding utilities for AI processing
+
+  **Features:**
+
+  - Interactive chat interface with conversation history
+  - Document chunking and embedding generation
+  - Support for markdown and TypeScript documentation parsing
+  - Git metadata extraction for context-aware embeddings
+  - Vector store integration for search indexing
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-framework-dev-portal@1.2.6-cli-search-index.0
+  - @equinor/fusion-framework-dev-server@1.1.13-cli-search-index.0
+  - @equinor/fusion-framework-module-msal-node@2.0.1-cli-search-index.0
+  - @equinor/fusion-imports@1.1.7-cli-search-index.0
+
 ## 12.3.10
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.13-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-log@1.1.8-cli-search-index.0
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.5-cli-search-index.0
+  - @equinor/fusion-framework-vite-plugin-spa@3.0.1-cli-search-index.0
+
 ## 1.1.12
 
 ### Patch Changes

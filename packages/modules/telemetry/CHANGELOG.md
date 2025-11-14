@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.4.1-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
+- Updated dependencies [[`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc)]:
+  - @equinor/fusion-framework-module-event@4.4.1-cli-search-index.0
+  - @equinor/fusion-framework-module@5.0.6-cli-search-index.0
+  - @equinor/fusion-observable@8.5.7-cli-search-index.0
+
 ## 4.4.0
 
 ### Minor Changes

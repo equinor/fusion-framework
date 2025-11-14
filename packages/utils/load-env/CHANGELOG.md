@@ -1,5 +1,11 @@
 # @equinor/fusion-load-env
 
+## 1.0.4-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`db880d1`](https://github.com/equinor/fusion-framework/commit/db880d1fbdb62ba4667f11229d1e6c3a4cea06fc) Thanks [@odinr](https://github.com/odinr)! - preview release
+
 ## 1.0.3
 
 ### Patch Changes
