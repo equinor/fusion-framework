@@ -74,7 +74,7 @@ jobs:
         with:
           title: '🤖 Bip Bop - Fusion Framework Pre-Release'
           version: pnpm changeset:version
-          publish: pnpm changeset:publish:pre-release --tag ${{ needs.check-pre-release.outputs.tag }}
+          publish: pnpm publish -r --no-git-checks --report-summary --tag ${{ needs.check-pre-release.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
