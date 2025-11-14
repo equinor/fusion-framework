@@ -24,15 +24,6 @@ import {
 
 import type { FusionAIConfig } from '../../../lib/ai/fusion-ai.js';
 
-type CommandOptions = AiOptions & {
-  dryRun: boolean;
-  config: string;
-  recursive: boolean;
-  diff: boolean;
-  baseRef?: string;
-  clean: boolean;
-};
-
 /**
  * CLI command: `ai embeddings`
  *
@@ -66,6 +57,24 @@ type CommandOptions = AiOptions & {
  *   $ ffc ai embeddings --diff --base-ref origin/main ./src
  *   $ ffc ai embeddings --clean ./src
  */
+/**
+ * Command options for the embeddings command
+ */
+type CommandOptions = AiOptions & {
+  /** Show what would be processed without actually doing it */
+  dryRun: boolean;
+  /** Path to a config file */
+  config: string;
+  /** Process directories recursively */
+  recursive: boolean;
+  /** Process only changed files (workflow mode) */
+  diff: boolean;
+  /** Git reference to compare against */
+  baseRef?: string;
+  /** Delete all existing documents from the vector store before processing */
+  clean: boolean;
+};
+
 const _command = createCommand('embeddings')
   .description('Document embedding utilities for Large Language Model processing')
   .addOption(
@@ -86,14 +95,18 @@ const _command = createCommand('embeddings')
   )
   .argument('[glob-patterns...]', 'Glob patterns to match files (optional when using --diff)')
   .action(async (patterns: string[], options: CommandOptions) => {
+    // Load configuration from fusion-ai.config.ts (or custom config path)
     const config = await importConfig<() => FusionAIConfig>(options.config, {
       baseDir: process.cwd(),
     }).then((config) => config.config());
 
+    // Use patterns from config or default to TypeScript and Markdown files
     const allowedFilePatterns = config.patterns ?? ['**/*.ts', '**/*.md'];
 
+    // Use provided patterns or fall back to config patterns
     const filePatterns = patterns.length ? patterns : allowedFilePatterns;
 
+    // Initialize framework and get embedding service
     const framework = await setupFramework(options);
     const embeddingService = framework.ai.getService(
       'embeddings',
@@ -101,12 +114,13 @@ const _command = createCommand('embeddings')
     );
 
     // Clean existing vector store if requested
+    // This removes all documents before processing new ones (useful for full re-indexing)
     if (options.clean) {
       const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName!);
       if (!options.dryRun) {
         console.log('🧹 Cleaning vector store: deleting all existing documents...');
-        // Delete all documents by using a filter that matches all documents
-        // Using a filter that matches any document with a source (which should be all of them)
+        // Delete all documents using an OData filter that matches any document with a source
+        // This effectively deletes all documents since all indexed documents have a source
         await vectorStoreService.deleteDocuments({
           filter: { filterExpression: "metadata/source ne ''" },
         });
@@ -114,25 +128,22 @@ const _command = createCommand('embeddings')
       }
     }
 
-    // Handle diff-based processing
+    // Handle diff-based processing (workflow mode)
+    // This mode processes only files that have changed, useful for CI/CD pipelines
     let changedFiles: ChangedFile[] = [];
     if (options.diff) {
       try {
+        // Get current git status for informational output
         const gitStatus = await getGitStatus();
         console.log(`🔍 Git status: ${gitStatus.branch}@${gitStatus.commit}`);
         console.log(
           `📊 Changes: ${gitStatus.stagedFiles} staged, ${gitStatus.unstagedFiles} unstaged`,
         );
 
+        // Get changed files compared to base reference (default: HEAD~1)
         changedFiles = await getChangedFiles({
           diff: options.diff,
           baseRef: options.baseRef,
-        });
-        await getChangedFiles({
-          diff: options.diff,
-          baseRef: options.baseRef,
-        }).then((files) => {
-          changedFiles.push(...files);
         });
 
         if (changedFiles.length === 0) {
@@ -155,6 +166,9 @@ const _command = createCommand('embeddings')
       }
     }
 
+    // Create observable stream of files to process
+    // In diff mode: use changed files from git
+    // In normal mode: use globby to find files matching patterns
     const files$ = options.diff
       ? from(changedFiles)
       : from(
@@ -164,16 +178,22 @@ const _command = createCommand('embeddings')
             absolute: true,
           }),
         ).pipe(
+          // Get git status for each file (new, modified, removed)
           mergeMap((path) => getFileStatus(path)),
+          // Flatten array of file statuses into individual emissions
           concatMap((files) => from(files)),
+          // Share the stream so multiple subscribers can use it
           shareReplay({ refCount: true }),
         );
 
+    // Handle removed files: delete their documents from vector store
+    // This keeps the index in sync with the codebase
     files$.pipe(filter((file) => file.status === 'removed')).subscribe({
       next: (file) => {
         if (options.dryRun) {
           console.log('removed file', file.filepath);
         } else {
+          // Delete all documents with matching source path from vector store
           const vectorStoreService = framework.ai.getService(
             'search',
             options.azureSearchIndexName!,
@@ -189,8 +209,11 @@ const _command = createCommand('embeddings')
       },
     });
 
+    // Process files: filter out removed files, resolve project roots, and match patterns
     const processedFiles$ = files$.pipe(
+      // Skip removed files (already handled above)
       filter((file) => file.status !== 'removed'),
+      // Enrich file info with project root and relative path
       map((file) => {
         const { filepath, status } = file;
         const projectRoot = resolveProjectRoot(filepath);
@@ -201,33 +224,42 @@ const _command = createCommand('embeddings')
           relativePath: projectRoot ? relative(projectRoot, filepath) : filepath,
         };
       }),
+      // Filter files to only those matching allowed patterns from config
       filter((file) => {
         const matches = multimatch(file.relativePath, allowedFilePatterns);
         return matches.length > 0;
       }),
+      // Log each file being processed
       tap((file) => console.log('processing file', file.relativePath)),
+      // Share stream for multiple subscribers (markdown and typescript processing)
       shareReplay({ refCount: true }),
     );
 
+    // Process Markdown files: parse and chunk into documents
     const markdown$ = processedFiles$.pipe(
       filter((file) => isMarkdownFile(file.path)),
       mergeMap(async (file) => {
+        // Parse markdown file and extract chunks with frontmatter
         const documents = await parseMarkdownFile(file);
         return { status: file.status, documents };
       }),
     );
 
+    // Process TypeScript files: extract TSDoc comments and chunk into documents
     const typescript$ = processedFiles$.pipe(
       filter((file) => isTypescriptFile(file.path)),
       map((file) => {
+        // Parse TypeScript file synchronously and extract TSDoc comments
         const documents = parseTsDocFromFileSync(file);
         return { status: file.status, documents };
       }),
     );
 
+    // Merge markdown and typescript streams, then enrich documents with metadata
     const applyMetadata$ = merge(markdown$, typescript$).pipe(
       mergeMap((entry) => {
         return from(entry.documents).pipe(
+          // Extract git metadata (commit hash, author, etc.) for each document
           mergeMap(async (document): Promise<VectorStoreDocument> => {
             const gitMetadata = document.metadata.source
               ? await extractGitMetadata(
@@ -245,6 +277,8 @@ const _command = createCommand('embeddings')
               },
             };
           }),
+          // Apply custom attribute processor from config (if provided)
+          // This allows users to transform or filter metadata attributes
           map((document) => {
             const attributeProcessor =
               config.metadata?.attributeProcessor || ((attributes, _document) => attributes);
@@ -257,61 +291,79 @@ const _command = createCommand('embeddings')
               },
             };
           }),
+          // Collect all documents from this file into an array
           toArray(),
         );
       }),
     );
 
+    // Generate embeddings for each document's content
+    // Embeddings are vector representations used for semantic search
     const applyEmbedding$ = applyMetadata$.pipe(
       mergeMap((documents) =>
         from(documents).pipe(
           mergeMap(async (document) => {
             console.log('embedding document', document.metadata.source);
+            // Generate embedding vector for document content
             const embeddings = await embeddingService.embedQuery(document.pageContent);
+            // Store embedding in metadata (some vector stores require this)
             const metadata = { ...document.metadata, embedding: embeddings };
             return { ...document, metadata };
           }),
+          // Collect all embedded documents from this batch
           toArray(),
         ),
       ),
     );
 
+    // Update vector store with embedded documents
+    // This is the final step: add documents to the search index
     const updateVectorStore$ = applyEmbedding$.pipe(
       mergeMap(async (documents) => {
         const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName!);
         if (documents.length === 0) {
           return [];
         }
+
+        // For multiple documents, delete existing documents from the same sources first
+        // This ensures we don't have duplicate or stale documents in the index
+        // Note: This creates a brief window where documents are missing from search
+        // A more robust solution would use upsert operations if available
         if (documents.length > 1) {
-          // make a distinct list of sources
+          // Collect unique source paths from all documents
           const sources = documents
             .map((document) => document.metadata.source)
             .reduce((acc, source) => acc.add(source), new Set());
 
-          // create a filter expression for the sources
+          // Build OData filter expression to match all documents from these sources
           const filterExpression = Array.from(sources)
             .map((source) => `metadata/source eq '${source}'`)
             .join(' or ');
 
-          // will leave the index without the documents with the specified sources
-          // so search will be missing these documents until we have re-added them
-          // this is a cheap way to ensure the index is up to date
-          // but it's not a perfect solution, might need to add a more robust solution later
+          // Delete existing documents before adding new ones
+          // This is a simple approach but creates a brief gap in search availability
+          // TODO: Consider implementing upsert or atomic replace operations
           vectorStoreService.deleteDocuments({ filter: { filterExpression } });
         }
+
         console.log('Adding documents to vector store', documents.length);
         for (const document of documents) {
           console.log('source:', document?.metadata?.source);
         }
+
+        // Add all documents to the vector store
         return await vectorStoreService.addDocuments(documents);
       }),
     );
 
+    // Execute the pipeline based on mode
     if (options.dryRun) {
+      // Dry run mode: show what would be processed without actually doing it
       let documentCount = 0;
       console.log('Dry run mode enabled');
       applyMetadata$.subscribe({
         next: (documents) => {
+          // Display document preview for each document that would be processed
           documents.forEach((document) => {
             console.log('\n--------------------------------');
             console.log('id', document.id);
@@ -332,8 +384,10 @@ const _command = createCommand('embeddings')
         },
       });
     } else {
+      // Production mode: actually process and index documents
       updateVectorStore$.subscribe({
         next: (results) => {
+          // Log results from vector store operations
           console.log(results);
         },
         error: (error) => {

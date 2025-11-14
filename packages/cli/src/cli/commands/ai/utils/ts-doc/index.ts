@@ -3,4 +3,3 @@ export type { TypescriptMetadata, TypescriptDocument, ParseTsDocOptions } from '
 
 // Re-export parser functions
 export { isTypescriptFile, parseTsDocSync, parseTsDocFromFileSync } from './parser.js';
-

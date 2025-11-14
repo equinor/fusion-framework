@@ -1,6 +1,5 @@
-import { assert } from 'node:console';
+
 import {
-  Project,
   type SourceFile as ProjectSourceFile,
   SyntaxKind,
   Node,
@@ -10,7 +9,6 @@ import {
   type PropertyDeclaration,
 } from 'ts-morph';
 
-import type { SourceFile } from '../types.js';
 import { generateChunkId } from '../generate-cunk-id.js';
 import type { TypescriptDocument, ParseTsDocOptions } from './types.js';
 import { nodeKinds } from './constants.js';
@@ -25,7 +23,7 @@ import { nodeKinds } from './constants.js';
 export const extractDocumentFromClassNode = (
   classNode: ClassDeclaration,
   sourceFile: ProjectSourceFile,
-  options?: ParseTsDocOptions,
+  _options?: ParseTsDocOptions,
 ): TypescriptDocument | null => {
   // Find TSDoc comment (/** ... */)
   const docCommentRange = classNode
@@ -240,4 +238,3 @@ export const processSourceFile = (
 
   return documents;
 };
-

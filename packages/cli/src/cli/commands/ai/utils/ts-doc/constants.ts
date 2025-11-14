@@ -11,4 +11,3 @@ export const nodeKinds = [
   SyntaxKind.VariableStatement,
   SyntaxKind.EnumDeclaration,
 ];
-

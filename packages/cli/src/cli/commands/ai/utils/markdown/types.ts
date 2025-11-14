@@ -18,4 +18,3 @@ export type MarkdownMetadata<T extends Record<string, unknown> = Record<string, 
  */
 export type MarkdownDocument<T extends Record<string, unknown> = Record<string, unknown>> =
   VectorStoreDocument<MarkdownMetadata<T>>;
-

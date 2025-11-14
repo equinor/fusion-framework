@@ -6,8 +6,8 @@ import { default as grayMatter } from 'gray-matter';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
 import type { SourceFile } from '../types.js';
-import { generateChunkId } from '../generate-cunk-id.js';
 import type { MarkdownDocument, MarkdownMetadata } from './types.js';
+import { generateChunkId } from '../generate-cunk-id.js';
 
 const markdownConfig = {
   chunkSize: 2000,
@@ -47,8 +47,8 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
   const textSplitter = new RecursiveCharacterTextSplitter(markdownConfig);
   const chunks = await textSplitter.splitText(markdownContent);
   return chunks.map(
-    (chunk, index): MarkdownDocument<T> => ({
-      id: generateChunkId(source, index),
+    (chunk, _index): MarkdownDocument<T> => ({
+      id: generateChunkId(source, _index),
       pageContent: chunk,
       metadata: {
         source,
@@ -79,4 +79,3 @@ export const parseMarkdownFile = async <
     },
   }));
 };
-

@@ -24,4 +24,3 @@ export interface ParseTsDocOptions {
   /** The project root path for generating relative paths */
   projectRoot?: string;
 }
-

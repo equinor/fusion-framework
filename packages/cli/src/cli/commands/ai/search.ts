@@ -5,28 +5,38 @@ import { withAiOptions, type AiOptions } from '../../options/ai.js';
 import { setupFramework } from './utils/setup-framework.js';
 import { inspect } from 'node:util';
 
+/**
+ * Command options for the search command
+ */
 type CommandOptions = AiOptions & {
+  /** Maximum number of search results to return */
   limit: number;
+  /** Enable verbose output for debugging */
   verbose: boolean;
+  /** OData filter expression for metadata-based filtering */
   filter?: string;
+  /** Output results as JSON for programmatic use */
   json: boolean;
+  /** Output raw metadata without normalization */
   raw: boolean;
 };
 
 /**
- * Normalize metadata attributes from Azure Search format to a flat object
- * Converts array of {key, value} pairs to a simple object
+ * Normalizes metadata attributes from Azure Search format to a flat object
+ * Azure Search returns metadata attributes as an array of {key, value} pairs,
+ * which this function converts to a simple key-value object for easier access
  * @param metadata - Raw metadata object that may contain attributes array
  * @returns Normalized metadata with attributes flattened into the root object
  */
 const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, unknown> => {
   const normalized = { ...metadata };
 
-  // Check if attributes exist and is an array
+  // Azure Search returns attributes as an array of {key, value} pairs
+  // Convert this to a flat object structure for easier access
   if (Array.isArray(normalized.attributes)) {
-    // Convert array of {key, value} pairs to object
     const attributesObj: Record<string, unknown> = {};
     for (const attr of normalized.attributes) {
+      // Validate attribute structure before processing
       if (
         typeof attr === 'object' &&
         attr !== null &&
@@ -34,16 +44,18 @@ const normalizeMetadata = (metadata: Record<string, unknown>): Record<string, un
         'value' in attr &&
         typeof attr.key === 'string'
       ) {
+        // Try to parse JSON values (Azure Search stores complex values as JSON strings)
+        // Fall back to raw value if parsing fails (for string values)
         try {
-            attributesObj[attr.key] = JSON.parse(attr.value as string);
+          attributesObj[attr.key] = JSON.parse(attr.value as string);
         } catch {
-            attributesObj[attr.key] = attr.value;
+          attributesObj[attr.key] = attr.value;
         }
       }
     }
-    // Merge attributes into the root metadata object
+    // Merge flattened attributes into the root metadata object
     Object.assign(normalized, attributesObj);
-    // Remove the original attributes array
+    // Remove the original attributes array to avoid duplication
     delete normalized.attributes;
   }
 
@@ -135,8 +147,8 @@ export const command = withAiOptions(
       const vectorStoreService = framework.ai.getService('search', options.azureSearchIndexName);
 
       try {
-        // Use the retriever for more control over search options
-        // Note: Filter support may vary by vector store implementation
+        // Configure retriever options for semantic search
+        // The retriever provides more control over search parameters than direct vector store queries
         const retrieverOptions: {
           k: number;
           filter?: Record<string, unknown>;
@@ -144,24 +156,27 @@ export const command = withAiOptions(
           k: options.limit,
         };
 
-        // Add filter if provided (format depends on vector store implementation)
+        // Add OData filter expression if provided
+        // Azure Search uses OData filter syntax for metadata-based filtering
+        // Example: "metadata/source eq 'src/index.ts'"
         if (options.filter) {
-          // For Azure Search, filters are typically OData expressions
-          // The retriever filter format may need to be adapted based on implementation
           retrieverOptions.filter = {
             filterExpression: options.filter,
           } as Record<string, unknown>;
         }
 
+        // Create retriever and execute search query
         const retriever = vectorStoreService.asRetriever(retrieverOptions);
         const results = await retriever.invoke(query);
 
         if (options.json) {
-          // Output as JSON for programmatic use
+          // Output as JSON for programmatic use (e.g., piping to other tools)
           for (const doc of results) {
-            if(options.raw) {
+            if (options.raw) {
+              // Output raw document structure with full depth inspection
               console.log(inspect(doc, { depth: null, colors: true }));
             } else {
+              // Output normalized metadata for cleaner JSON structure
               const metadata = normalizeMetadata(doc.metadata as Record<string, unknown>);
               console.log({
                 content: doc.pageContent,
@@ -181,6 +196,7 @@ export const command = withAiOptions(
 
           results.forEach((doc: Document, index: number) => {
             // Normalize metadata to flatten attributes array unless --raw flag is set
+            // Raw mode preserves Azure Search's original metadata structure
             const processedMetadata = options.raw
               ? (doc.metadata as Record<string, unknown>)
               : normalizeMetadata(doc.metadata as Record<string, unknown>);
@@ -192,12 +208,15 @@ export const command = withAiOptions(
             const score = metadata.score;
             const source = metadata.source || 'Unknown source';
 
+            // Display result header with score if available
             console.log(`${'─'.repeat(80)}`);
             console.log(
               `Result ${index + 1}${score !== undefined ? ` (Score: ${score.toFixed(4)})` : ''}`,
             );
             console.log(`Source: ${source}`);
+
             // Display additional metadata fields if verbose mode is enabled
+            // Exclude source and score from additional metadata to avoid duplication
             if (options.verbose) {
               const { source: _, score: __, ...otherMetadata } = metadata;
               if (Object.keys(otherMetadata).length > 0) {
@@ -205,7 +224,9 @@ export const command = withAiOptions(
               }
             }
             console.log('');
-            // Truncate content if too long
+
+            // Truncate content if too long to keep output readable
+            // Full content is still available in JSON mode
             const content = doc.pageContent;
             const maxLength = 500;
             if (content.length > maxLength) {

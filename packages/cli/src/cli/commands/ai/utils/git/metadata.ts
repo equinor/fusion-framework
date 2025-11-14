@@ -44,4 +44,3 @@ export const extractGitMetadata = async (filePath: string): Promise<GitMetadata 
     git_commit_date: latest?.date,
   };
 };
-

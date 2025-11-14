@@ -17,4 +17,3 @@ export { getChangedFiles, getFileStatus, isFileChanged } from './file-changes.js
 
 // Re-export status functions
 export { getGitStatus } from './status.js';
-

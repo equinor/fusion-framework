@@ -49,4 +49,3 @@ export const parseTsDocFromFileSync = (
   );
   return processSourceFile(sourceFile, options);
 };
-

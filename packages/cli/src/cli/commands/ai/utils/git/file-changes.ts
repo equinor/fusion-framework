@@ -100,7 +100,12 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
     // File is not tracked - quickly check if it's explicitly untracked
     // This is much faster than checking full status or history
     try {
-      const fileStatusOutput = await git.raw(['status', '--porcelain', '--', normalizedGitFilePath]);
+      const fileStatusOutput = await git.raw([
+        'status',
+        '--porcelain',
+        '--',
+        normalizedGitFilePath,
+      ]);
       const trimmed = fileStatusOutput.trim();
 
       if (trimmed.length > 0) {
@@ -157,7 +162,16 @@ export const getFileStatus = async (filePath: string): Promise<ChangedFile[]> =>
     // Use --follow to track renames, limit to 1 commit for performance
     try {
       const hasHistory = await git
-        .raw(['log', '--all', '--full-history', '--follow', '--oneline', '-1', '--', normalizedGitFilePath])
+        .raw([
+          'log',
+          '--all',
+          '--full-history',
+          '--follow',
+          '--oneline',
+          '-1',
+          '--',
+          normalizedGitFilePath,
+        ])
         .then((output) => output.trim().length > 0)
         .catch(() => false);
 
@@ -188,4 +202,3 @@ export const isFileChanged = (filePath: string, changedFiles: ChangedFile[]): bo
 
   return changedFiles.some((file) => file.filepath === filePath);
 };
-

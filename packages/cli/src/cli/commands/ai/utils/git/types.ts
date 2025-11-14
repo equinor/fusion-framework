@@ -34,4 +34,3 @@ export interface ChangedFile {
   /** Change status: new, modified, or removed */
   status: FileChangeStatus;
 }
-

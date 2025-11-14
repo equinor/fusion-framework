@@ -1,14 +1,14 @@
 import { createCommand, createOption } from 'commander';
-import type { ChatMessage, IModel } from '@equinor/fusion-framework-module-ai/lib';
+import type { ChatMessage } from '@equinor/fusion-framework-module-ai/lib';
 import { from } from 'rxjs';
 import { withAiOptions, type AiOptions } from '../../options/ai.js';
-import { createInterface } from 'readline';
+import { createInterface } from 'node:readline';
 
 import { setupFramework } from './utils/setup-framework.js';
 import {
   RunnablePassthrough,
   RunnableSequence,
-  RunnableInterface,
+  type RunnableInterface,
 } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 
@@ -67,9 +67,15 @@ import { StringOutputParser } from '@langchain/core/output_parsers';
  *   $ ffc ai chat --history-limit 100
  *   $ ffc ai chat --verbose --azure-search-endpoint https://my-search.search.windows.net
  */
+/**
+ * Command options for the chat command
+ */
 type CommandOptions = AiOptions & {
+  /** Enable verbose output for debugging */
   verbose?: boolean;
+  /** Maximum number of context documents to retrieve from vector store */
   contextLimit?: number;
+  /** Maximum number of messages to keep in conversation history */
   historyLimit?: number;
 };
 
@@ -130,12 +136,19 @@ const _command = createCommand('chat')
       });
     }
 
+    // Configure retriever with similarity search (not MMR) for more predictable results
+    // MMR (Maximum Marginal Relevance) can sometimes cause issues with Azure Search
     const retriever = vectorStoreService.asRetriever({
       k: options.contextLimit || 5,
-      searchType: 'similarity', // Use similarity search instead of MMR to avoid potential issues
+      searchType: 'similarity',
     });
 
-    const retriveContext = async (input: string) => {
+    /**
+     * Retrieves relevant context documents from the vector store for a given query
+     * @param input - The user's query string
+     * @returns Promise resolving to formatted context string or error message
+     */
+    const retrieveContext = async (input: string) => {
       try {
         if (options.verbose) {
           console.log('🔍 Retrieving context for query:', input);
@@ -158,14 +171,18 @@ const _command = createCommand('chat')
     };
 
     // Create a custom runnable that formats the prompt as ChatMessage[]
+    // This chain step retrieves context and formats it into a proper message array
     const formatPromptAsMessages = new RunnablePassthrough().pipe(
       async (input: { userMessage: string; messageHistory: ChatMessage[] }) => {
-        const context = await retriveContext(input.userMessage);
+        // Retrieve relevant context from vector store based on user's message
+        const context = await retrieveContext(input.userMessage);
+        // Build system message with retrieved context for RAG (Retrieval-Augmented Generation)
         const systemMessage = `You are a helpful assistant. Use the following context to provide accurate and relevant responses. If the context doesn't contain relevant information, say so clearly.
          
          Context:\n${context}`;
 
         // Build the complete message array with system message, history, and current user message
+        // Order: system message (with context) -> conversation history -> current user message
         const messages: ChatMessage[] = [
           { role: 'system', content: systemMessage },
           ...input.messageHistory,
@@ -176,10 +193,12 @@ const _command = createCommand('chat')
       },
     );
 
-    // Create the chatbot chain using the model directly (BaseService now extends Runnable)
+    // Create the chatbot chain using LangChain's RunnableSequence
+    // Chain flow: format messages -> invoke chat model -> parse string output
+    // Note: Type assertion needed because IModel extends RunnableInterface but TypeScript
+    // doesn't recognize the compatibility without explicit casting
     const chain = RunnableSequence.from([
       formatPromptAsMessages,
-      // todo - fix this later, dunno why but IModel extends RunnableInterface
       chatService as unknown as RunnableInterface,
       new StringOutputParser(),
     ]);
@@ -187,11 +206,13 @@ const _command = createCommand('chat')
     const messageHistory: ChatMessage[] = [];
 
     /**
-     * Summarizes the oldest messages in the conversation history
+     * Summarizes the oldest messages in the conversation history using AI
+     * This helps compress long conversation histories while preserving important context
      * @param messages - Array of messages to summarize
-     * @returns Promise resolving to a summary message
+     * @returns Promise resolving to a summary message that can replace the original messages
      */
     const summarizeOldMessages = async (messages: ChatMessage[]): Promise<ChatMessage> => {
+      // Convert messages to a text format for summarization
       const conversationText = messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n');
 
       const summaryPrompt = `Please provide a concise summary of the following conversation history. Focus on key topics, decisions, and important context that should be remembered for the ongoing conversation:
@@ -201,6 +222,7 @@ ${conversationText}
 Summary:`;
 
       try {
+        // Use the chat service to generate a summary of the conversation
         const summaryResponse = await chatService.invoke([
           { role: 'user', content: summaryPrompt },
         ]);
@@ -211,6 +233,7 @@ Summary:`;
       } catch (error) {
         console.error('❌ Error summarizing conversation:', error);
         // Fallback to a simple summary if AI summarization fails
+        // This ensures the conversation can continue even if summarization fails
         return {
           role: 'assistant',
           content: `[Previous conversation summary: ${messages.length} messages about various topics]`,
@@ -220,10 +243,13 @@ Summary:`;
 
     /**
      * Manages message history with intelligent compression using AI summarization
-     * @param history - Current message history array
-     * @param newMessage - New message to add
-     * @param limit - Maximum number of messages to keep
-     * @returns Updated message history
+     * Implements a two-stage compression strategy:
+     * 1. When history reaches 10 messages, summarize oldest 5 messages using AI
+     * 2. If history still exceeds limit, remove oldest messages (keeping at least 2 for context)
+     * @param history - Current message history array (will be mutated)
+     * @param newMessage - New message to add to history
+     * @param limit - Maximum number of messages to keep in history
+     * @returns Updated message history with compression applied
      */
     const addMessageToHistory = async (
       history: ChatMessage[],
@@ -232,16 +258,19 @@ Summary:`;
     ): Promise<ChatMessage[]> => {
       history.push(newMessage);
 
-      // When we reach 10 messages, summarize the oldest 5 and replace them with the summary
+      // Stage 1: AI-based compression when history reaches 10 messages
+      // Summarize the oldest 5 messages and replace them with a single summary message
+      // This preserves important context while reducing token usage
       if (history.length >= 10) {
         if (options.verbose) {
           console.log('🔄 Compressing conversation history with AI summarization...');
         }
 
-        const oldestMessages = history.splice(0, 5); // Remove oldest 5 messages
+        // Remove oldest 5 messages and summarize them
+        const oldestMessages = history.splice(0, 5);
         const summary = await summarizeOldMessages(oldestMessages);
 
-        // Insert the summary at the beginning
+        // Insert the summary at the beginning to maintain chronological order
         history.unshift(summary);
 
         if (options.verbose) {
@@ -251,10 +280,12 @@ Summary:`;
         }
       }
 
-      // If we still exceed the limit after summarization, remove oldest messages
+      // Stage 2: Hard limit enforcement if history still exceeds limit after compression
+      // Always keep at least 2 messages (typically the summary + most recent message)
+      // to maintain basic conversation context
       if (history.length > limit) {
         const messagesToRemove = history.length - limit;
-        // Remove oldest messages, but ensure we keep at least 2 for context
+        // Calculate safe removal count: don't remove more than (history.length - 2)
         const actualRemoval = Math.min(messagesToRemove, Math.max(0, history.length - 2));
         history.splice(0, actualRemoval);
       }
@@ -266,12 +297,13 @@ Summary:`;
     console.log('💡 Press Ctrl+C to exit at any time\n');
 
     // Create readline interface for better Ctrl+C handling
+    // This provides better control over input/output and signal handling
     const rl = createInterface({
       input: process.stdin,
       output: process.stdout,
     });
 
-    // Handle Ctrl+C gracefully
+    // Handle Ctrl+C gracefully to prevent abrupt termination
     const handleExit = () => {
       console.log('\n\n👋 Goodbye!');
       rl.close();
@@ -281,25 +313,30 @@ Summary:`;
     process.on('SIGINT', handleExit);
     process.on('SIGTERM', handleExit);
 
-    // Interactive chat loop
+    // Interactive chat loop - continues until user exits
     while (true) {
       try {
+        // Prompt user for input using readline
         const userMessage = await new Promise<string>((resolve) => {
           rl.question('You: ', (answer) => {
             resolve(answer.trim());
           });
         });
 
+        // Skip empty messages
         if (!userMessage) {
           console.log('Please enter a message\n');
           continue;
         }
+
+        // Handle special commands
         if (userMessage.toLowerCase() === 'clear') {
           messageHistory.length = 0;
           console.log('\n🧹 Conversation history cleared!\n');
           continue;
         }
 
+        // Add user message to history (with automatic compression if needed)
         await addMessageToHistory(
           messageHistory,
           { role: 'user', content: userMessage },
@@ -309,18 +346,23 @@ Summary:`;
         // Show typing indicator
         console.log('\n🤖 AI Response:');
 
-        // Use LangChain runnable chain for RAG
+        // Use LangChain runnable chain for RAG (Retrieval-Augmented Generation)
         try {
           if (options.verbose) {
             console.log('🔍 Using LangChain chain with context retrieval...');
             console.log(`📝 Message history contains ${messageHistory.length} messages`);
           }
 
+          // Stream the response from the chain for real-time output
           const responseStream = await chain.stream({ userMessage, messageHistory });
+
+          // Collect the full response while streaming chunks to stdout
+          // This allows users to see the response as it's generated
           const fullResponse = await new Promise<string>((resolve, reject) => {
             let fullResponse = '';
             from(responseStream).subscribe({
               next: (chunk) => {
+                // Write each chunk immediately for streaming effect
                 process.stdout.write(String(chunk));
                 fullResponse += chunk;
               },
@@ -332,6 +374,8 @@ Summary:`;
               },
             });
           });
+
+          // Add AI response to history for context in future messages
           await addMessageToHistory(
             messageHistory,
             { role: 'assistant', content: fullResponse },
