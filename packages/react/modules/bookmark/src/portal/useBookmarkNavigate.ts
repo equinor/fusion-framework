@@ -19,16 +19,14 @@ type AppPathResolver = (appKey: string) => string;
  * default configuration is /apps/:appKey
  */
 export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): void => {
-  const {
-    event,
-    context,
-    navigation: { navigator },
-  } = useFramework<[BookmarkModule, NavigationModule]>().modules;
+  const { event, context, navigation } = useFramework<[BookmarkModule, NavigationModule]>().modules;
 
   useLayoutEffect(() => {
+    const history = navigation.history;
     const sub = event.addEventListener(
       'onCurrentBookmarkChanged',
       (e: BookmarkProviderEvents['onCurrentBookmarkChanged']) => {
+        const location = history.location;
         const appKey = e.detail?.appKey;
         const bookmarkContext = e.detail?.context;
 
@@ -42,15 +40,10 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
 
         const pathname = args.resolveAppPath(appKey);
 
-        if (navigator.location.pathname !== pathname) {
-          const { hash, search } = navigator.location;
-
-          const to = {
-            pathname,
-            search: removeBookmarkIdFromURL(search),
-            hash,
-          };
-          navigator.push(to);
+        if (location.pathname !== pathname) {
+          const hash = location.hash;
+          const search = location.search ? removeBookmarkIdFromURL(location.search) : undefined;
+          history.navigate({ pathname, search, hash }, { action: 'PUSH' });
         }
 
         if (bookmarkContext) {
@@ -60,7 +53,7 @@ export const useBookmarkNavigate = (args: { resolveAppPath: AppPathResolver }): 
       },
     );
     return sub;
-  }, [args, context, event, navigator]);
+  }, [args, context, event, navigation]);
 };
 
 function removeBookmarkIdFromURL(searchParams: string): string {

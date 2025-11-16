@@ -22,10 +22,10 @@
     "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^7.9.5",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@remix-run/router": "^1.8.0"
+    "@remix-run/router": "^1.23.0"
   }
 }
