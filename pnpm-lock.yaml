@@ -192,9 +192,9 @@ importers:
 
   cookbooks/app-react-bookmark-advanced:
     dependencies:
-      '@remix-run/router':
-        specifier: ^1.23.0
-        version: 1.23.0
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../../packages/react/router
     devDependencies:
       '@equinor/fusion-framework-cli':
         specifier: workspace:^
@@ -232,6 +232,9 @@ importers:
 
   cookbooks/app-react-charts:
     dependencies:
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../../packages/react/router
       ag-charts-community:
         specifier: ^12.2.0
         version: 12.2.0
@@ -487,12 +490,12 @@ importers:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../packages/modules/navigation
+      '@equinor/fusion-framework-react-router':
+        specifier: workspace:^
+        version: link:../../packages/react/router
       '@equinor/fusion-react-person':
         specifier: ^0.10.10
         version: 0.10.10(react@18.3.1)
-      '@remix-run/router':
-        specifier: ^1.23.0
-        version: 1.23.0
       react-router-dom:
         specifier: ^7.9.5
         version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13057,14 +13060,14 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.4(msw@2.11.6(@types/node@24.10.0)(typescript@5.9.3))(vite@7.1.12(@types/node@24.9.2)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
+  '@vitest/mocker@3.2.4(msw@2.11.6(@types/node@24.10.0)(typescript@5.9.3))(vite@7.1.12(@types/node@24.10.0)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.11.6(@types/node@24.10.0)(typescript@5.9.3)
-      vite: 7.1.12(@types/node@24.9.2)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+      vite: 7.1.12(@types/node@24.10.0)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   '@vitest/mocker@3.2.4(msw@2.11.6(@types/node@24.9.2)(typescript@5.9.3))(vite@7.1.12(@types/node@24.9.2)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
     dependencies:
@@ -17214,7 +17217,7 @@ snapshots:
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(msw@2.11.6(@types/node@24.10.0)(typescript@5.9.3))(vite@7.1.12(@types/node@24.9.2)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
+      '@vitest/mocker': 3.2.4(msw@2.11.6(@types/node@24.10.0)(typescript@5.9.3))(vite@7.1.12(@types/node@24.10.0)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
       '@vitest/pretty-format': 3.2.4
       '@vitest/runner': 3.2.4
       '@vitest/snapshot': 3.2.4
