@@ -26,6 +26,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@remix-run/router": "^1.23.0"
+    "@equinor/fusion-framework-react-router": "workspace:^"
   }
 }
