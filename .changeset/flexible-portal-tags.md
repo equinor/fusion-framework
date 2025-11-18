@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-cli": major
+"@equinor/fusion-framework-cli": minor
 ---
 
 **Portal Tags Now Support Any String Value**
