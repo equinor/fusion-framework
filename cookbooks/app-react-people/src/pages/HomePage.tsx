@@ -4,7 +4,7 @@ import { Typography } from '@equinor/eds-core-react';
  *
  * @returns A React element representing the HomePage component.
  */
-export const HomePage = () => {
+const HomePage = () => {
   return (
     <div>
       <Typography variant="body_short_bold" style={{ marginBottom: '1rem' }} as={'div'}>
@@ -44,3 +44,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage;
