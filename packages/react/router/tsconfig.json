@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.react.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+  },
+  "references": [
+    {
+      "path": "../../modules/navigation"
+    },
+    {
+      "path": "../modules/module"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
+}
+
