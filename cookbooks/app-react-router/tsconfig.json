@@ -14,8 +14,11 @@
     },
     {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/react/router"
     }
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/types/**/*"],
   "exclude": ["node_modules", "lib"]
 }
