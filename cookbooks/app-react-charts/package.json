@@ -32,6 +32,7 @@
     "styled-components": "^6.1.19"
   },
   "dependencies": {
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "ag-charts-community": "^12.2.0",
     "ag-charts-react": "^12.2.0",
     "chart.js": "^4.4.9",
