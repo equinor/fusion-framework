@@ -66,6 +66,17 @@ export type AppAdmin = AppPerson;
 
 export type AppOwner = AppPerson;
 
+/**
+ * Schema entry format for route documentation in app manifests.
+ * Each entry represents a route with its path, description, and optional parameter/search schemas.
+ */
+export type RouteSchemaEntry = [
+  path: string,
+  description: string,
+  params?: Record<string, string>,
+  search?: Record<string, string>,
+];
+
 export type AppBuildManifest = {
   version: string;
   entryPoint: string;
@@ -110,6 +121,8 @@ export interface AppManifest {
   admins?: Nullable<AppAdmin[]>;
   owners?: Nullable<AppOwner[]>;
   build?: Nullable<AppBuildManifest>;
+  /** Route schema entries for documentation and API schema generation */
+  routes?: Nullable<RouteSchemaEntry[]>;
 }
 
 /**

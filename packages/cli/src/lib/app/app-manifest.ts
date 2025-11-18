@@ -1,6 +1,7 @@
-import type { AppManifest } from '@equinor/fusion-framework-module-app';
+import type { AppManifest, RouteSchemaEntry } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
+import type { RecursivePartial } from '../utils/types.js';
 
 /**
  * Type representing the application manifest structure used by the Fusion Framework.
@@ -9,23 +10,35 @@ import type { RuntimeEnv } from '@equinor/fusion-framework-cli/lib';
 export type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 /**
+ * Extended manifest type that allows routes to be RouteNode objects (for TypeScript definitions)
+ * or RouteSchemaEntry arrays (for JSON serialization).
+ * 
+ * This type is used in manifest definition files where RouteNode objects can be passed directly.
+ * The CLI will serialize RouteNode objects to RouteSchemaEntry arrays when generating the final manifest.
+ */
+export type AppManifestWithRoutes = Omit<AppManifest, 'routes'> & {
+  routes?: RouteSchemaEntry[] | unknown; // unknown allows RouteNode | RouteNode[] from router package
+};
+
+/**
  * Function type for loading or modifying an application manifest.
  *
- * @template T - A type extending Partial<AppManifest>, defaults to Partial<AppManifest>.
+ * @template T - A type extending AppManifest or AppManifestWithRoutes, defaults to AppManifestWithRoutes.
  * @param env - The runtime environment (see '../types').
  * @param args - Object containing the base manifest (`base`) of type T.
- * @returns The modified manifest of type T, a promise resolving to T, or void if no changes are made.
+ * @returns A partial manifest that will be merged with the base, void if no changes, or a promise resolving to either.
  *
  * Usage: Implement this type to create functions that dynamically adjust the manifest based on environment or other factors.
  *
  * Inline notes:
- * - This type is generic to allow for partial or full manifest overrides.
+ * - This type accepts partial manifests that will be merged with the base manifest.
  * - Returning void allows for side-effect-only functions, but returning the manifest is preferred for clarity.
+ * - Routes can be RouteNode | RouteNode[] (from router package) or RouteSchemaEntry[] (serialized format).
  */
-export type AppManifestFn<T extends AppManifest = AppManifest> = (
+export type AppManifestFn<T extends AppManifest | AppManifestWithRoutes = AppManifestWithRoutes> = (
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
-) => T | void | Promise<T | void>; // Supports both sync and async manifest generation.
+) => RecursivePartial<T> | void | Promise<RecursivePartial<T> | void>; // Supports both sync and async manifest generation.
 
 /**
  * Utility to define an application manifest in a type-safe and organized manner.

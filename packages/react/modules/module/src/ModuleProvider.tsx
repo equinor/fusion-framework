@@ -14,7 +14,7 @@ import {
   type AnyModule,
 } from '@equinor/fusion-framework-module';
 
-import moduleContext from './context';
+import moduleContext from './context.js';
 
 type ModuleProviderCreator = <
   TModules extends Array<AnyModule> = Array<AnyModule>,

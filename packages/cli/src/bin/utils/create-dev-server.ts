@@ -1,3 +1,5 @@
+import type { Plugin } from 'vite';
+
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 import type { ApiAppConfig } from '@equinor/fusion-framework-module-app/schemas.js';
 
@@ -260,6 +262,33 @@ export const createDevServerConfig = (options: CreateDevServerOptions) => {
   return config;
 };
 
+/**
+ * Creates a Vite plugin that watches the dev-server.config.ts file and restarts the server when it changes.
+ */
+const createDevServerConfigWatcherPlugin = (
+  configFilePath: string,
+  log?: ConsoleLogger | null,
+): Plugin => {
+  return {
+    name: 'fusion:dev-server-config-watcher',
+    configureServer(server) {
+      // Watch the dev-server.config.ts file
+      server.watcher.add(configFilePath);
+
+      // Handle file changes
+      server.watcher.on('change', (file) => {
+        if (file === configFilePath) {
+          log?.info(`\n${configFilePath} changed, restarting dev server...`);
+          // Restart the server to reload the config
+          server.restart();
+        }
+      });
+
+      log?.debug(`Watching dev-server.config.ts at: ${configFilePath}`);
+    },
+  };
+};
+
 export const createDevServer = async (
   env: RuntimeEnv,
   options: CreateDevServerOptions,
@@ -276,7 +305,15 @@ export const createDevServer = async (
     const { path, config } = await loadDevServerConfig(env, baseConfig);
     log?.debug(`\nLoaded dev server config from ${path}`);
     log?.debug('\nLoaded dev server config:', normalizeDevServerConfig(config));
-    return createDevServerFn(config, overrides);
+    
+    // Add plugin to watch the config file and restart on changes
+    const configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
+    const mergedOverrides = {
+      ...overrides,
+      plugins: [...(overrides?.plugins ?? []), configWatcherPlugin],
+    };
+    
+    return createDevServerFn(config, mergedOverrides);
   } catch (error) {
     log?.warn(
       '\nFailed to load dev server config:',
