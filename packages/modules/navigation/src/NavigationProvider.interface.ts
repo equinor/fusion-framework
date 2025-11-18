@@ -1,3 +1,4 @@
+// TODO: Remove @remix-run/router dependency once all apps have migrated to @equinor/fusion-framework-react-router
 import type { AgnosticRouteObject, Router } from '@remix-run/router';
 
 import type { History, NavigateOptions } from './lib/types';

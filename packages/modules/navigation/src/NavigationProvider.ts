@@ -1,3 +1,4 @@
+// TODO: Remove @remix-run/router dependency once all apps have migrated to @equinor/fusion-framework-react-router
 import { type AgnosticRouteObject, createRouter } from '@remix-run/router';
 import type { Observable } from 'rxjs';
 import { filter, pairwise, shareReplay } from 'rxjs/operators';
@@ -18,7 +19,7 @@ import {
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 import { NavigatedEvent } from './events';
 import { pathToString } from './lib/utils';
-import { BaseHistory } from './lib';
+import type { BaseHistory } from './lib';
 
 /**
  * Normalizes a pathname by collapsing multiple consecutive slashes into a single slash.
@@ -194,11 +195,18 @@ export class NavigationProvider
 
   /**
    * Creates a router instance from route configuration.
+   * 
+   * @deprecated Use `@equinor/fusion-framework-react-router` instead
    *
    * @param routes - Route configuration objects compatible with industry-standard routers (Remix/React Router)
    * @returns A configured and initialized router instance
    */
   public createRouter(routes: AgnosticRouteObject[]) {
+    this.#telemetry?.trackEvent({
+      name: 'Navigation::createRouter',
+      level: TelemetryLevel.Warning,
+      scope: ['navigation', 'deprecated', TelemetryScope.Application],
+    });
     const router = createRouter({
       basename: this.#basename,
       history: this.#history as unknown as import('@remix-run/router').History,
