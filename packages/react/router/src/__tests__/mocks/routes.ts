@@ -184,17 +184,14 @@ export const mockProductRouteCompleteOverride = route(
 /**
  * Layout route with handle override
  */
-export const mockLayoutRouteWithOverride = layout(
-  resolvePath('./pages/MainLayout.tsx'),
-  [
-    index(resolvePath('./pages/HomePage.tsx'), {
-      description: 'Custom home in layout',
-    }),
-    route('about', resolvePath('./pages/AboutPage.tsx'), [], {
-      description: 'Custom about in layout',
-    }),
-  ],
-);
+export const mockLayoutRouteWithOverride = layout(resolvePath('./pages/MainLayout.tsx'), [
+  index(resolvePath('./pages/HomePage.tsx'), {
+    description: 'Custom home in layout',
+  }),
+  route('about', resolvePath('./pages/AboutPage.tsx'), [], {
+    description: 'Custom about in layout',
+  }),
+]);
 
 /**
  * Prefix route with children having handle overrides
@@ -245,15 +242,19 @@ export const mockAboutRouteWithMethodChaining = route(
 /**
  * Index route with method chaining override
  */
-export const mockIndexRouteWithMethodChaining = index(resolvePath('./pages/HomePage.tsx')).description(
-  'Method chaining index description',
-);
+export const mockIndexRouteWithMethodChaining = index(
+  resolvePath('./pages/HomePage.tsx'),
+).description('Method chaining index description');
 
 /**
  * Route with method chaining in nested structure
- */ 
-export const mockNestedRouteWithMethodChaining = route('products', resolvePath('./pages/ProductsPage.tsx'), [
-  route(':id', resolvePath('./pages/ProductPage.tsx')).description('Method chaining nested route description'),
-]);
-
-
+ */
+export const mockNestedRouteWithMethodChaining = route(
+  'products',
+  resolvePath('./pages/ProductsPage.tsx'),
+  [
+    route(':id', resolvePath('./pages/ProductPage.tsx')).description(
+      'Method chaining nested route description',
+    ),
+  ],
+);

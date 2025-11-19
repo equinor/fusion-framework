@@ -10,4 +10,3 @@ export default defineProject({
     environment: 'happy-dom',
   },
 });
-

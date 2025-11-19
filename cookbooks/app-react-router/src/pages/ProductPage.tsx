@@ -1,6 +1,10 @@
 import { Link, useSearchParams, useParams } from 'react-router-dom';
 import { Button } from '@equinor/eds-core-react';
-import type { LoaderFunctionArgs, RouteComponentProps, RouterHandle } from '@equinor/fusion-framework-react-router';
+import type {
+  LoaderFunctionArgs,
+  RouteComponentProps,
+  RouterHandle,
+} from '@equinor/fusion-framework-react-router';
 import { styles } from './ProductPage.styles';
 import type { Product } from '../api/ProductApi';
 
@@ -96,10 +100,7 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
         >
           Details
         </Button>
-        <Button
-          variant={view === 'specs' ? 'contained' : 'ghost'}
-          onClick={() => setView('specs')}
-        >
+        <Button variant={view === 'specs' ? 'contained' : 'ghost'} onClick={() => setView('specs')}>
           Specifications
         </Button>
         <Button
@@ -129,9 +130,12 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
             <div style={styles.info}>
               <div style={styles.infoTitle}>Specifications</div>
               <div style={styles.infoContent}>
-                Product ID: {product.id}<br />
-                Category: {product.category}<br />
-                Price: ${product.price}<br />
+                Product ID: {product.id}
+                <br />
+                Category: {product.category}
+                <br />
+                Price: ${product.price}
+                <br />
                 Availability: {product.inStock ? 'In Stock' : 'Out of Stock'}
               </div>
             </div>
@@ -141,10 +145,7 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
         {view === 'reviews' && (
           <div>
             <div style={styles.tabs}>
-              <Button
-                variant={tab === 'all' ? 'contained' : 'ghost'}
-                onClick={() => setTab('all')}
-              >
+              <Button variant={tab === 'all' ? 'contained' : 'ghost'} onClick={() => setTab('all')}>
                 All Reviews
               </Button>
               <Button
@@ -187,4 +188,3 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
     </>
   );
 }
-

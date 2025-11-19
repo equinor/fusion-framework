@@ -17,7 +17,7 @@ export type Params<Key extends string = string> = {
 /**
  * Base context interface for router context.
  * Consumers can extend this interface via module augmentation to add custom context properties.
- * 
+ *
  * @example
  * ```typescript
  * declare module '@equinor/fusion-framework-react-router' {
@@ -33,7 +33,7 @@ export interface RouterContext {}
 
 /**
  * Context object that provides Fusion Framework modules and custom context to route loaders, actions, and components.
- * 
+ *
  * @template TContext - The type of custom context (extends RouterContext)
  * @template TModules - The type of Fusion Framework modules
  */
@@ -49,7 +49,7 @@ export interface FusionRouterContext<
 
 /**
  * Arguments passed to data loading functions (loaders and actions).
- * 
+ *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
  */
@@ -87,7 +87,7 @@ export type DataFunctionValue = unknown;
 /**
  * Arguments passed to route loader functions.
  * Loaders run before rendering route components to fetch data.
- * 
+ *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
  */
@@ -99,7 +99,7 @@ export interface LoaderFunctionArgs<
 /**
  * Function type for route loaders.
  * Loaders are executed before rendering route components to fetch data.
- * 
+ *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
  */
@@ -111,7 +111,7 @@ export type LoaderFunction<
 /**
  * Arguments passed to route action functions.
  * Actions handle form submissions and mutations.
- * 
+ *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
  */
@@ -123,7 +123,7 @@ export interface ActionFunctionArgs<
 /**
  * Function type for route actions.
  * Actions handle form submissions and mutations.
- * 
+ *
  * @template TParams - The type of route parameters
  * @template TContext - The type of Fusion router context
  */
@@ -134,7 +134,7 @@ export type ActionFunction<
 
 /**
  * Props passed to route component functions.
- * 
+ *
  * @template TData - The type of data returned from the loader
  * @template TActionData - The type of data returned from the action
  * @template TContext - The type of Fusion router context
@@ -155,7 +155,7 @@ export interface RouteComponentProps<
 /**
  * Component type for route components.
  * Route components receive loader data, action data, and Fusion context as props.
- * 
+ *
  * @template TData - The type of data returned from the loader
  * @template TContext - The type of Fusion router context
  */
@@ -166,7 +166,7 @@ export type RouterComponent<
 
 /**
  * Props passed to error boundary components.
- * 
+ *
  * @template TError - The type of error that occurred
  * @template TContext - The type of Fusion router context
  */
@@ -183,7 +183,7 @@ export interface ErrorElementProps<
 /**
  * Component type for error boundary components.
  * Error boundaries catch and display errors that occur during route rendering or data loading.
- * 
+ *
  * @template TError - The type of error that occurred
  * @template TContext - The type of Fusion router context
  */
@@ -225,7 +225,7 @@ export interface RouterSchema {
 /**
  * Handle object for route metadata.
  * Consumers can extend this interface via module augmentation to add custom properties.
- * 
+ *
  * @example
  * ```typescript
  * declare module '@equinor/fusion-framework-react-router' {

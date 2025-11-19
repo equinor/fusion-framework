@@ -12,18 +12,18 @@ export enum Action {
    *
    * Note: This is the default action for newly created history objects.
    */
-  Pop = "POP",
+  Pop = 'POP',
   /**
    * A PUSH indicates a new entry being added to the history stack, such as when
    * a link is clicked and a new page loads. When this happens, all subsequent
    * entries in the stack are lost.
    */
-  Push = "PUSH",
+  Push = 'PUSH',
   /**
    * A REPLACE indicates the entry at the current index in the history stack
    * being replaced by a new one.
    */
-  Replace = "REPLACE"
+  Replace = 'REPLACE',
 }
 
 /**
@@ -46,7 +46,7 @@ export type Path = {
  * Extends Path with state and a unique key.
  */
 // biome-ignore lint/suspicious/noExplicitAny: necessary
-export  type Location<T = any> = Path & {
+export type Location<T = any> = Path & {
   state: T;
   key: string;
 };

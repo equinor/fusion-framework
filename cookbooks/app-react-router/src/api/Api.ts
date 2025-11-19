@@ -7,11 +7,13 @@ import { UserApi } from './UserApi';
  * HTTP provider interface for creating HTTP clients
  */
 interface IHttpProvider {
-  createClient(key: string): {
-    json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
-  } | Promise<{
-    json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
-  }>;
+  createClient(key: string):
+    | {
+        json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
+      }
+    | Promise<{
+        json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
+      }>;
 }
 
 /**
@@ -29,4 +31,3 @@ export class Api {
     this.user = new UserApi(queryClient, httpProvider);
   }
 }
-

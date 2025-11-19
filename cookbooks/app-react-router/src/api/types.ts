@@ -26,4 +26,3 @@ export type PersonDetails = {
   mobilePhone: string;
   accountType: string;
 };
-

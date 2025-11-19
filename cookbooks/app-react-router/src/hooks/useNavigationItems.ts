@@ -66,9 +66,7 @@ async function extractNavigationItems(
       }
     } else if (node instanceof PrefixRoute) {
       // For prefix routes, update the current path and process children
-      const newPath = currentPath
-        ? `${currentPath}/${node.path}`
-        : `/${node.path}`;
+      const newPath = currentPath ? `${currentPath}/${node.path}` : `/${node.path}`;
       const childItems = await extractNavigationItems(node.children, newPath);
       items.push(...childItems);
     }
@@ -108,4 +106,3 @@ export function useNavigationItems(pages: RouteNode[]): NavigationItem[] {
 
   return items;
 }
-

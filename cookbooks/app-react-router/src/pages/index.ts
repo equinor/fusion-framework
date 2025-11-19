@@ -1,4 +1,4 @@
-import { index, route, prefix } from "@equinor/fusion-framework-react-router/routes";
+import { index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 
 export const pages = [
   index(import.meta.resolve('./HomePage.tsx')),

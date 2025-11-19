@@ -49,11 +49,10 @@ export abstract class BaseFileRoute extends BaseRoute implements RouteFileNode {
           ...initialHandle?.route,
         },
         // Preserve any other properties from initial handle (excluding route which we merged above)
-        ...(initialHandle && Object.fromEntries(
-          Object.entries(initialHandle).filter(([key]) => key !== 'route')
-        )),
+        ...(initialHandle &&
+          Object.fromEntries(Object.entries(initialHandle).filter(([key]) => key !== 'route'))),
       },
-    }
+    };
     return createLazyLoader(this.file, {
       ...options,
       initial,

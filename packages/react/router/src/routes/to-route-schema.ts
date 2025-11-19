@@ -270,7 +270,7 @@ async function processNodes(
 /**
  * Type guard to check if the input is an array of RouteObjects (legacy format).
  * RouteObjects don't have a 'kind' property, which distinguishes them from RouteNodes.
- * 
+ *
  * @param nodes - The value to check
  * @returns True if nodes is an array of RouteObjects, false otherwise
  */

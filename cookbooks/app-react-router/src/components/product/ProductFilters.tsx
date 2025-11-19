@@ -84,4 +84,3 @@ export function ProductFilters({ categories, filter, sort, inStock }: ProductFil
     </Form>
   );
 }
-

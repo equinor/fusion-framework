@@ -5,7 +5,7 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist/esm",
     "rootDir": "src",
-    "declarationDir": "./dist/types",
+    "declarationDir": "./dist/types"
   },
   "references": [
     {
@@ -18,4 +18,3 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "lib", "src/__tests__/**/*"]
 }
-

@@ -20,4 +20,3 @@ declare module '@equinor/fusion-framework-react-router' {
     };
   }
 }
-

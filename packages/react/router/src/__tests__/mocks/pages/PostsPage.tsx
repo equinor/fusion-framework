@@ -7,4 +7,3 @@ export const handle = {
 export default function PostsPage() {
   return <div>Posts Page</div>;
 }
-

@@ -12,7 +12,7 @@ export type { AppManifest } from '@equinor/fusion-framework-module-app';
 /**
  * Extended manifest type that allows routes to be RouteNode objects (for TypeScript definitions)
  * or RouteSchemaEntry arrays (for JSON serialization).
- * 
+ *
  * This type is used in manifest definition files where RouteNode objects can be passed directly.
  * The CLI will serialize RouteNode objects to RouteSchemaEntry arrays when generating the final manifest.
  */

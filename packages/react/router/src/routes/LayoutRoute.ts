@@ -22,7 +22,10 @@ export class LayoutRoute extends BaseFileRoute {
     this.children.push(child);
   }
 
-  toRouteObject(options?: { loader?: React.ReactElement; context?: FusionRouterContext }): NonIndexRouteObject {
+  toRouteObject(options?: {
+    loader?: React.ReactElement;
+    context?: FusionRouterContext;
+  }): NonIndexRouteObject {
     const childRouteObjects = this.children.flatMap((child) => {
       const result = child.toRouteObject(options);
       return Array.isArray(result) ? result : [result];
@@ -38,11 +41,11 @@ export class LayoutRoute extends BaseFileRoute {
 /**
  * Creates a layout route that wraps child routes with a shared component structure.
  * Layout routes render their component with an `<Outlet />` where child routes are rendered.
- * 
+ *
  * @param file - Path to the layout component file
  * @param children - Array of child route nodes to render within the layout
  * @returns A new LayoutRoute instance
- * 
+ *
  * @example
  * ```typescript
  * // pages/main.layout.tsx
@@ -56,10 +59,10 @@ export class LayoutRoute extends BaseFileRoute {
  *     </div>
  *   );
  * }
- * 
+ *
  * // routes.ts
  * import { layout, index, route } from '@equinor/fusion-framework-react-router';
- * 
+ *
  * export const routes = [
  *   layout('./pages/main.layout.tsx', [
  *     index('./pages/home.tsx'),
@@ -68,7 +71,6 @@ export class LayoutRoute extends BaseFileRoute {
  * ];
  * ```
  */
-export const layout = (file: string, children: RouteNode[]) =>
-  new LayoutRoute(file, children);
+export const layout = (file: string, children: RouteNode[]) => new LayoutRoute(file, children);
 
 export default layout;

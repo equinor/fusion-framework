@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
-import type { LoaderFunctionArgs, RouteComponentProps, RouterHandle } from '@equinor/fusion-framework-react-router';
+import type {
+  LoaderFunctionArgs,
+  RouteComponentProps,
+  RouterHandle,
+} from '@equinor/fusion-framework-react-router';
 import { styles } from './UserPage.styles';
 import { UserDetail } from '../components/user/UserDetail';
 import type { User } from '../api/UserApi';
@@ -17,7 +21,10 @@ type UserPageLoaderData = {
   user: User;
 };
 
-export const clientLoader = async ({ params, fusion }: LoaderFunctionArgs<{ id: string }>): Promise<UserPageLoaderData> => {
+export const clientLoader = async ({
+  params,
+  fusion,
+}: LoaderFunctionArgs<{ id: string }>): Promise<UserPageLoaderData> => {
   if (!params.id) {
     throw new Response('User ID is required', { status: 400 });
   }
@@ -50,4 +57,3 @@ export default function UserPage(props: RouteComponentProps<UserPageLoaderData>)
     </>
   );
 }
-

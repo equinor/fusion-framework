@@ -52,7 +52,6 @@ const getDepartmentChipVariant = (department: string): 'active' | 'error' | unde
  * @param user - User object to display
  */
 export function UserDetail({ user }: UserDetailProps) {
-
   return (
     <>
       <div style={styles.header}>
@@ -102,4 +101,3 @@ export function UserDetail({ user }: UserDetailProps) {
     </>
   );
 }
-

@@ -305,14 +305,14 @@ export const createDevServer = async (
     const { path, config } = await loadDevServerConfig(env, baseConfig);
     log?.debug(`\nLoaded dev server config from ${path}`);
     log?.debug('\nLoaded dev server config:', normalizeDevServerConfig(config));
-    
+
     // Add plugin to watch the config file and restart on changes
     const configWatcherPlugin = createDevServerConfigWatcherPlugin(path, log);
     const mergedOverrides = {
       ...overrides,
       plugins: [...(overrides?.plugins ?? []), configWatcherPlugin],
     };
-    
+
     return createDevServerFn(config, mergedOverrides);
   } catch (error) {
     log?.warn(

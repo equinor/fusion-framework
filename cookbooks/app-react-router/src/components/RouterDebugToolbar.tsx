@@ -46,12 +46,7 @@ export const RouterDebugToolbar = () => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => setIsOpen(!isOpen)}
-        icon={code}
-      >
+      <Button variant="contained" color="secondary" onClick={() => setIsOpen(!isOpen)} icon={code}>
         {isOpen ? 'Hide Debug' : 'Show Debug'}
       </Button>
 
@@ -65,9 +60,7 @@ export const RouterDebugToolbar = () => {
 
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Current Match</h3>
-            <pre style={styles.pre}>
-              {JSON.stringify(matches[1], null, 2)}
-            </pre>
+            <pre style={styles.pre}>{JSON.stringify(matches[1], null, 2)}</pre>
           </div>
 
           <div style={styles.section}>
@@ -92,7 +85,7 @@ export const RouterDebugToolbar = () => {
                     : null,
                 },
                 null,
-                2
+                2,
               )}
             </pre>
           </div>
@@ -106,7 +99,7 @@ export const RouterDebugToolbar = () => {
                   basename: navigation.basename,
                 },
                 null,
-                2
+                2,
               )}
             </pre>
           </div>
@@ -117,4 +110,3 @@ export const RouterDebugToolbar = () => {
 };
 
 export default RouterDebugToolbar;
-

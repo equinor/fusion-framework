@@ -1,7 +1,11 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Chip } from '@equinor/eds-core-react';
 import { work_outline } from '@equinor/eds-icons';
-import type { LoaderFunctionArgs, RouteComponentProps, RouterHandle } from '@equinor/fusion-framework-react-router';
+import type {
+  LoaderFunctionArgs,
+  RouteComponentProps,
+  RouterHandle,
+} from '@equinor/fusion-framework-react-router';
 import type { User } from '../api/UserApi';
 
 type UsersPageLoaderData = {
@@ -255,25 +259,16 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
       </ul>
 
       <div style={styles.pagination}>
-        <Button
-          variant="outlined"
-          onClick={() => goToPage(page - 1)}
-          disabled={!hasPrev}
-        >
+        <Button variant="outlined" onClick={() => goToPage(page - 1)} disabled={!hasPrev}>
           Previous
         </Button>
         <span style={styles.paginationInfo}>
           Page {page} of {totalPages}
         </span>
-        <Button
-          variant="outlined"
-          onClick={() => goToPage(page + 1)}
-          disabled={!hasNext}
-        >
+        <Button variant="outlined" onClick={() => goToPage(page + 1)} disabled={!hasNext}>
           Next
         </Button>
       </div>
     </div>
   );
 }
-

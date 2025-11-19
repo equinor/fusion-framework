@@ -189,7 +189,7 @@ const styles = {
 };
 
 export default function PeoplePage(
-  props: RouteComponentProps<PeoplePageLoaderData, { error: string }>
+  props: RouteComponentProps<PeoplePageLoaderData, { error: string }>,
 ) {
   const { loaderData, actionData } = props;
   const [searchParams, setSearchParams] = useSearchParams();
@@ -222,9 +222,7 @@ export default function PeoplePage(
         </Button>
       </Form>
 
-      {actionData?.error && (
-        <div style={styles.errorMessage}>{actionData.error}</div>
-      )}
+      {actionData?.error && <div style={styles.errorMessage}>{actionData.error}</div>}
 
       {searchTerm && (
         <div style={styles.resultsInfo}>
@@ -256,19 +254,11 @@ export default function PeoplePage(
           {persons.map((person) => (
             <li key={person.azureUniqueId || person.mail} style={styles.personItem}>
               <div style={styles.personName}>{person.name || 'Unknown'}</div>
-              {person.mail && (
-                <div style={styles.personEmail}>{person.mail}</div>
-              )}
+              {person.mail && <div style={styles.personEmail}>{person.mail}</div>}
               <div style={styles.personDetails}>
-                {person.jobTitle && (
-                  <Chip variant="active">{person.jobTitle}</Chip>
-                )}
-                {person.department && (
-                  <Chip>{person.department}</Chip>
-                )}
-                {person.accountType && (
-                  <Chip variant="error">{person.accountType}</Chip>
-                )}
+                {person.jobTitle && <Chip variant="active">{person.jobTitle}</Chip>}
+                {person.department && <Chip>{person.department}</Chip>}
+                {person.accountType && <Chip variant="error">{person.accountType}</Chip>}
               </div>
               {(person.mobilePhone || person.officeLocation) && (
                 <div style={styles.personDetail}>

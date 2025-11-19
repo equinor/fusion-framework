@@ -46,4 +46,3 @@ export const styles = {
     fontWeight: 'bold',
   },
 };
-

@@ -25,7 +25,6 @@ const abortNavigateAction = createAction('navigation/navigate::abort', (reason?:
   payload: { reason },
 }));
 
-
 /**
  * Action for navigating backward or forward in history.
  */

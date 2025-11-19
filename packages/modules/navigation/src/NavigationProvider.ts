@@ -195,7 +195,7 @@ export class NavigationProvider
 
   /**
    * Creates a router instance from route configuration.
-   * 
+   *
    * @deprecated Use `@equinor/fusion-framework-react-router` instead
    *
    * @param routes - Route configuration objects compatible with industry-standard routers (Remix/React Router)
@@ -267,7 +267,7 @@ export class NavigationProvider
     const { replace = false, state } = options ?? {};
     this.#history.navigate(this._createToPath(to ?? this.path), { replace, state });
     // we need to pop the history to update the notify history listeners
-    // Frameworks as react router have their internal state management, 
+    // Frameworks as react router have their internal state management,
     // so we need to force a pop to notify the framework that the history has changed
     (this.#history as BaseHistory).pop();
   }

@@ -120,18 +120,13 @@ export default function ErrorTestPage() {
     <div style={styles.container}>
       <h1 style={styles.title}>Error Test Page</h1>
       <p style={styles.description}>
-        This page is designed to test error handling in the router. The loader function intentionally throws an error
-        to demonstrate how error boundaries work.
+        This page is designed to test error handling in the router. The loader function
+        intentionally throws an error to demonstrate how error boundaries work.
       </p>
       <div style={styles.note}>
-        <strong>Note:</strong> If you see this content, the error boundary is working correctly. The error should be
-        caught and displayed by the ErrorElement component.
+        <strong>Note:</strong> If you see this content, the error boundary is working correctly. The
+        error should be caught and displayed by the ErrorElement component.
       </div>
     </div>
   );
 }
-
-
-
-
-

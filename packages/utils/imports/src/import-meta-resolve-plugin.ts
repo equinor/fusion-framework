@@ -88,8 +88,8 @@ async function collectOutputFiles(
         const absolutePath = path.isAbsolute(outputPath)
           ? outputPath
           : path.resolve(process.cwd(), outputPath);
-        
-        const text = await readFileSafe(absolutePath) ?? await readFileSafe(outputPath);
+
+        const text = (await readFileSafe(absolutePath)) ?? (await readFileSafe(outputPath));
         if (text) {
           files.push({ path: absolutePath, text });
         }
@@ -169,4 +169,3 @@ export const createImportMetaResolvePlugin = (): Plugin => {
     },
   };
 };
-

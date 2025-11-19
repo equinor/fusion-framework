@@ -55,4 +55,3 @@ export function ProductList(props: ProductListProps) {
     </div>
   );
 }
-

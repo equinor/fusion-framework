@@ -87,4 +87,3 @@ export const styles = {
     color: '#333',
   },
 };
-

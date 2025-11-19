@@ -5,11 +5,13 @@ import type { PersonSearchResult, PersonDetails } from './types';
  * HTTP provider interface for creating HTTP clients
  */
 interface IHttpProvider {
-  createClient(key: string): {
-    json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
-  } | Promise<{
-    json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
-  }>;
+  createClient(key: string):
+    | {
+        json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
+      }
+    | Promise<{
+        json<T>(url: string, options?: { headers?: Record<string, string> }): Promise<T>;
+      }>;
 }
 
 /**
@@ -54,7 +56,7 @@ export class PeopleApi {
             headers: {
               'api-version': '2',
             },
-          }
+          },
         );
       },
       staleTime: 1000 * 60 * 5, // Cache for 5 minutes
@@ -109,4 +111,3 @@ export class PeopleApi {
     }
   }
 }
-

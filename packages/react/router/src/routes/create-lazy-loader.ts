@@ -41,7 +41,7 @@ export type LazyLoaderOptions = {
 /**
  * Creates a component that renders the HydrateFallback from the module once it loads.
  * Falls back to a default loading element if the module doesn't export HydrateFallback.
- * 
+ *
  * @param HydrateFallbackResolver - Promise resolving to the HydrateFallback component or null
  * @param options - Options containing optional loader element
  * @returns React element that displays the fallback component
@@ -68,14 +68,14 @@ const createHydrateFallbackComponent = (
 
 /**
  * Creates a lazy-loaded route object from a file path.
- * 
+ *
  * This function creates a React Router RouteObject that:
  * - Lazy loads the route module for code splitting
  * - Injects Fusion Framework context into loaders, actions, and components
  * - Extracts and wraps exported functions (clientLoader, action, default component, ErrorElement, HydrateFallback)
  * - Merges route schema/handle from the module with any route-level overrides
  * - Provides a hydrate fallback element for React Router v7 SSR support
- * 
+ *
  * The module file can export:
  * - `default` - The route component (receives loaderData, actionData, and fusion as props)
  * - `clientLoader` - Loader function (receives fusion context)
@@ -83,11 +83,11 @@ const createHydrateFallbackComponent = (
  * - `ErrorElement` - Error boundary component (receives error and fusion as props)
  * - `HydrateFallback` - Component to show during SSR hydration
  * - `handle` - Route metadata (RouterHandle or RouterSchema format)
- * 
+ *
  * @param filePath - Path to the route module file (can be file:// URL or regular path)
  * @param options - Options for lazy loading including loader element, initial properties, and Fusion context
  * @returns RouteObject with lazy loading configured
- * 
+ *
  * @example
  * ```typescript
  * // pages/product.tsx
@@ -95,11 +95,11 @@ const createHydrateFallbackComponent = (
  *   const client = fusion.modules.http.createHttpClient('products');
  *   return client.json(`/products/${params.productId}`);
  * }
- * 
+ *
  * export default function Product({ loaderData, fusion }) {
  *   return <div>{loaderData.name}</div>;
  * }
- * 
+ *
  * // routes.ts
  * const route = createLazyLoader('./pages/product.tsx', {
  *   context: fusionRouterContext,
@@ -171,13 +171,13 @@ export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions):
     }
     // Initialize handle if it doesn't exist
     result.handle ??= { route: {} };
-    
+
     // Ensure handle.route exists
     if (!result.handle.route) {
       result.handle.route = {};
     }
-    
-    if(module.handle && typeof module.handle === 'object') {
+
+    if (module.handle && typeof module.handle === 'object') {
       // Module can export handle as RouterHandle (with route property) or RouterSchema
       if ('route' in module.handle && typeof module.handle.route === 'object') {
         // Module exports handle as RouterHandle - merge route property
@@ -194,7 +194,7 @@ export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions):
           },
         };
         // Preserve any other properties from module handle (excluding route)
-        Object.keys(moduleHandle).forEach(key => {
+        Object.keys(moduleHandle).forEach((key) => {
           if (key !== 'route') {
             result.handle[key] = moduleHandle[key];
           }
