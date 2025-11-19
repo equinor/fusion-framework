@@ -12,6 +12,8 @@ import type { ConfigBuilderCallback } from '@equinor/fusion-framework-module';
  * @property metadata - Optional function or extractor to provide additional metadata for telemetry items.
  * @property defaultScope - Optional array of strings defining the default scope for telemetry events.
  * @property items$ - Optional observable input stream of telemetry items to be processed.
+ * @property adapterFilter - Optional filter function to determine which telemetry items should be passed to adapters.
+ * @property relayFilter - Optional filter function to determine which telemetry items should be relayed to parent providers.
  */
 export type TelemetryConfig = {
   adapters?: Record<string, ITelemetryAdapter>;
@@ -19,6 +21,8 @@ export type TelemetryConfig = {
   metadata?: MetadataExtractor;
   defaultScope?: string[];
   items$?: ObservableInput<TelemetryItem>;
+  adapterFilter?: (item: TelemetryItem) => boolean;
+  relayFilter?: (item: TelemetryItem) => boolean;
 };
 
 /**
@@ -78,4 +82,22 @@ export interface ITelemetryConfigurator {
    * @returns The configurator instance for method chaining.
    */
   attachItems(item$: ObservableInput<TelemetryItem>): this;
+
+  /**
+   * Sets a filter function to determine which telemetry items should be passed to adapters.
+   * Only items for which the filter returns `true` will be sent to adapters.
+   *
+   * @param filter - Function that receives a telemetry item and returns true if it should be sent to adapters
+   * @returns The configurator instance for method chaining
+   */
+  setAdapterFilter(filter: (item: TelemetryItem) => boolean): this;
+
+  /**
+   * Sets a filter function to determine which telemetry items should be relayed to the parent provider.
+   * Only items for which the filter returns `true` will be relayed to the parent.
+   *
+   * @param filter - Function that receives a telemetry item and returns true if it should be relayed
+   * @returns The configurator instance for method chaining
+   */
+  setRelayFilter(filter: (item: TelemetryItem) => boolean): this;
 }

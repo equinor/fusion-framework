@@ -21,6 +21,7 @@ import type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 import { toObservable } from '@equinor/fusion-observable';
 import { mergeMetadata } from './utils/merge-telemetry-item.js';
 import type { ITelemetryAdapter } from './TelemetryAdapter.js';
+import type { TelemetryItem } from './types.js';
 
 /**
  * Configures telemetry settings for the application.
@@ -155,6 +156,30 @@ export class TelemetryConfigurator
 
   public attachItems(item$: TelemetryConfig['items$']): this {
     this._set('items$', item$);
+    return this;
+  }
+
+  /**
+   * Sets a filter function to determine which telemetry items should be passed to adapters.
+   * Only items for which the filter returns `true` will be sent to adapters.
+   *
+   * @param filter - Function that receives a telemetry item and returns true if it should be sent to adapters
+   * @returns The configurator instance for method chaining
+   */
+  public setAdapterFilter(filter: (item: TelemetryItem) => boolean): this {
+    this._set('adapterFilter', filter);
+    return this;
+  }
+
+  /**
+   * Sets a filter function to determine which telemetry items should be relayed to the parent provider.
+   * Only items for which the filter returns `true` will be relayed to the parent.
+   *
+   * @param filter - Function that receives a telemetry item and returns true if it should be relayed
+   * @returns The configurator instance for method chaining
+   */
+  public setRelayFilter(filter: (item: TelemetryItem) => boolean): this {
+    this._set('relayFilter', filter);
     return this;
   }
 }
