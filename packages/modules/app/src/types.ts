@@ -74,8 +74,10 @@ export type AppOwner = AppPerson;
 export type RouteSchemaEntry = [
   path: string,
   description: string,
-  params?: Record<string, string>,
-  search?: Record<string, string>,
+  options?: {
+    params?: Record<string, string>;
+    search?: Record<string, string>;
+  },
 ];
 
 export type AppBuildManifest = {

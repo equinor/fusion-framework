@@ -60,7 +60,7 @@ export function createRouteMatcher<T extends RequestParams>(route: ApiRoute): Ma
     // create a path-to-regexp matcher for each pattern
     return (path: string): MatchResult<T> => {
       for (const pattern of match) {
-        console.log('[DEBUG] Matching pattern:', pattern, 'to path:', path);
+
         const result = pathToRegexp.match<T>(pattern)(path);
         if (result) {
           return result;
