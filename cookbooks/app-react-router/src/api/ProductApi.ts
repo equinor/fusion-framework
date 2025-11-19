@@ -112,7 +112,6 @@ export class ProductApi {
           return b.price - a.price;
         case 'name-desc':
           return b.name.localeCompare(a.name);
-        case 'name-asc':
         default:
           return a.name.localeCompare(b.name);
       }

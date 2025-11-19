@@ -38,7 +38,7 @@ export type AppManifestWithRoutes = Omit<AppManifest, 'routes'> & {
 export type AppManifestFn<T extends AppManifest | AppManifestWithRoutes = AppManifestWithRoutes> = (
   env: RuntimeEnv, // The runtime environment, e.g., 'development', 'production', etc.
   args: { base: T }, // The base manifest to be extended or modified.
-) => RecursivePartial<T> | void | Promise<RecursivePartial<T> | void>; // Supports both sync and async manifest generation.
+) => RecursivePartial<T> | undefined | Promise<RecursivePartial<T> | undefined>; // Supports both sync and async manifest generation.
 
 /**
  * Utility to define an application manifest in a type-safe and organized manner.

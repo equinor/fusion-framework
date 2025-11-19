@@ -38,19 +38,13 @@ export const clientLoader = async (props: LoaderFunctionArgs) => {
   // Use the unified API from context
   const { api } = fusion.context;
 
-  try {
-    // Use the API class method which handles caching via React Query
-    const results = await api.people.searchPeople(searchTerm);
+  // Use the API class method which handles caching via React Query
+  const results = await api.people.searchPeople(searchTerm);
 
-    return {
-      persons: results || [],
-      searchTerm,
-    };
-  } catch (error) {
-    // If error, return empty results with search term
-    // Error will be handled by ErrorElement
-    throw error;
-  }
+  return {
+    persons: results || [],
+    searchTerm,
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

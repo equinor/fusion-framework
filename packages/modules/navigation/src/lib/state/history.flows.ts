@@ -1,10 +1,10 @@
 import { Observable, of, merge } from 'rxjs';
-import { concatMap, distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
+import { concatMap, map, withLatestFrom } from 'rxjs/operators';
 import type { Flow } from '@equinor/fusion-observable';
 import { filterAction } from '@equinor/fusion-observable/operators';
 import { actions, type Actions } from './history.actions';
-import { pathToString, resolvePath } from '../utils';
-import { Location, LocationState, HistoryStack, Action } from '../types';
+import { resolvePath } from '../utils';
+import { type Location, type LocationState, type HistoryStack, Action } from '../types';
 
 /**
  * History flow for processing navigation actions.

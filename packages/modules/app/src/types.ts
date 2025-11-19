@@ -11,6 +11,7 @@ export type { AppConfig } from './AppConfig';
 
 // TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: TODO - needs proper type definition
 type Fusion = any;
 
 export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {

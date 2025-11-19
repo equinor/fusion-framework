@@ -95,7 +95,7 @@ export const configure = async (config: FrameworkConfigurator) => {
   config.onInitialized(async (modules) => {
     // NOTE: TypeScript ignore needed due to window object extension
     // This provides developer access to all initialized modules via window.Fusion
-    // @ts-ignore
+    // @ts-expect-error
     window.Fusion = { modules };
   });
 };
