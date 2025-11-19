@@ -13,6 +13,10 @@
     "./routes": {
       "import": "./dist/esm/routes/index.js",
       "types": "./dist/types/routes/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/esm/routes/to-route-schema.js",
+      "types": "./dist/types/routes/to-route-schema.d.ts"
     }
   },
   "scripts": {

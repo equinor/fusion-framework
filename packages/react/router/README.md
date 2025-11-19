@@ -462,7 +462,7 @@ This pattern is intentionally close to React Router’s own data APIs, but adds:
 Route handles can be turned into a simple schema array using `toRouteSchema`. This is useful when you need to provide route metadata to app manifests or external systems.
 
 ```ts
-import { toRouteSchema } from '@equinor/fusion-framework-react-router';
+import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
 import { pages } from './pages';
 
 const routes = pages; // or layout(...), prefix(...), etc.
