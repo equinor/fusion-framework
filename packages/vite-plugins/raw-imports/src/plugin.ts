@@ -9,7 +9,7 @@ export interface RawImportsPluginOptions {
   /**
    * File extensions to handle with this plugin.
    * Files with other extensions will be handled by Vite's built-in `?raw` support.
-   * 
+   *
    * @default ['md']
    */
   extensions?: string[];
@@ -33,13 +33,13 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
   // Default extensions: only markdown files by default
   const defaultExtensions = ['.md'];
   const extensions = options?.extensions ?? defaultExtensions;
-  
+
   /**
    * Checks if a file path matches one of the configured extensions.
    * Uses path.extname() to properly extract the extension.
    */
   const matchesExtension = (filePath: string): boolean => {
-    return extensions.some(ext => path.extname(filePath) === ext.toLowerCase());
+    return extensions.some((ext) => path.extname(filePath) === ext.toLowerCase());
   };
   return {
     name: 'fusion-framework-vite-plugin-raw-imports',
@@ -49,7 +49,7 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
       if (id.endsWith('?raw')) {
         // Remove the ?raw suffix to get the actual file path
         const filePath = id.replace(/\?raw$/, '');
-        
+
         // Only handle files with configured extensions - let Vite handle others
         if (!matchesExtension(filePath)) {
           return null; // Let Vite's built-in handler process this
@@ -69,10 +69,10 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
           // Fallback to current working directory
           resolvedPath = path.resolve(process.cwd(), filePath);
         }
-        
+
         // Ensure the path is normalized and absolute
         resolvedPath = path.normalize(resolvedPath);
-        
+
         // Return a virtual module ID with the resolved path
         return `\0raw:${resolvedPath}`;
       }
@@ -83,10 +83,10 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
       if (id.startsWith('\0raw:')) {
         // Extract the resolved file path
         let resolvedPath = id.slice(6); // Remove '\0raw:' prefix
-        
+
         // Ensure the path is normalized
         resolvedPath = path.normalize(resolvedPath);
-        
+
         // Ensure the path is absolute (handle case where leading slash might be missing)
         if (!path.isAbsolute(resolvedPath)) {
           // On Unix systems, prepend '/' if missing
@@ -97,11 +97,11 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
             resolvedPath = path.resolve(process.cwd(), resolvedPath);
           }
         }
-        
+
         try {
           // Read the file content
           const content = readFileSync(resolvedPath, 'utf-8');
-          
+
           // Return the content as a JavaScript module with default export
           return `export default ${JSON.stringify(content)};`;
         } catch (error) {
@@ -116,4 +116,3 @@ export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
 };
 
 export default rawImportsPlugin;
-

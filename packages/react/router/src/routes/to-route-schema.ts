@@ -173,7 +173,8 @@ function createSchemaEntry(path: string, schema: RouterSchema): RouteSchemaEntry
  * @returns Promise resolving to the route schema entry
  */
 async function processFileRoute(node: BaseFileRoute, path: string): Promise<RouteSchemaEntry> {
-  const moduleSchema = typeof node.file === 'string' ? await loadSchemaFromFile(node.file) : undefined;
+  const moduleSchema =
+    typeof node.file === 'string' ? await loadSchemaFromFile(node.file) : undefined;
   const routeSchema = node.handle?.route ?? {};
   const mergedSchema = mergeSchemas(routeSchema, moduleSchema);
   return createSchemaEntry(path, mergedSchema);

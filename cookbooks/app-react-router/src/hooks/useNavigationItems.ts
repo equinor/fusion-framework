@@ -30,10 +30,7 @@ function joinPaths(prefix: string, path: string | undefined): string {
  * Only includes routes that have navigation metadata in their handle.
  * Works with RouteObject format (transformed by Vite plugin).
  */
-function extractNavigationItems(
-  routes: RouteObject[],
-  currentPath: string = '',
-): NavigationItem[] {
+function extractNavigationItems(routes: RouteObject[], currentPath: string = ''): NavigationItem[] {
   const items: NavigationItem[] = [];
 
   for (const route of routes) {

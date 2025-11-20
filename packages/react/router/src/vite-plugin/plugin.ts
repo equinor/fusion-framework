@@ -156,11 +156,7 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
 /**
  * Checks what exports exist in a file
  */
-function getAvailableExports(
-  filePath: string,
-  currentFileId: string,
-  debug: boolean,
-): Set<string> {
+function getAvailableExports(filePath: string, currentFileId: string, debug: boolean): Set<string> {
   const availableExports = new Set<string>();
 
   try {
@@ -281,9 +277,7 @@ function generateImportStatements(
     }
 
     if (importParts.length > 0) {
-      importStatements.push(
-        `import {\n    ${importParts.join(',\n    ')}\n} from '${filePath}';`,
-      );
+      importStatements.push(`import {\n    ${importParts.join(',\n    ')}\n} from '${filePath}';`);
     }
   });
 
@@ -410,7 +404,7 @@ function wrapSingleRouteExports(code: string): string {
             // Wrap in array
             const before = result.slice(0, valueStart);
             const after = result.slice(braceEnd + 1);
-            result = before + '[' + objectContent + ']' + after;
+            result = `${before}[${objectContent}]${after}`;
             // Restart search
             EXPORT_PATTERN.lastIndex = 0;
             match = EXPORT_PATTERN.exec(result);
@@ -469,8 +463,7 @@ function transformPrefix(code: string): string {
       // Replace this prefix call
       const before = result.slice(0, startIndex);
       const after = result.slice(callEnd + 1);
-      result =
-        `${before}{\n        path: ${pathArg},\n        children: [${childrenContent}]\n    }${after}`;
+      result = `${before}{\n        path: ${pathArg},\n        children: [${childrenContent}]\n    }${after}`;
       changed = true;
       break; // Restart from beginning
     }
@@ -610,12 +603,15 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         );
 
         // Transform route() calls
-        transformedCode = transformedCode.replace(ROUTE_WITH_PATH_PATTERN, (match, pathArg, filePath) => {
-          const imports = fileToImports.get(filePath);
-          if (!imports) return match;
-          const properties = buildRouteProperties(imports);
-          return `{\n        path: ${pathArg},\n        ${properties}\n    }`;
-        });
+        transformedCode = transformedCode.replace(
+          ROUTE_WITH_PATH_PATTERN,
+          (match, pathArg, filePath) => {
+            const imports = fileToImports.get(filePath);
+            if (!imports) return match;
+            const properties = buildRouteProperties(imports);
+            return `{\n        path: ${pathArg},\n        ${properties}\n    }`;
+          },
+        );
 
         // Transform prefix() calls - prefix doesn't use file paths, just path strings
         transformedCode = transformPrefix(transformedCode);

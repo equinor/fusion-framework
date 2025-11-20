@@ -7,7 +7,13 @@ import {
 } from '@equinor/fusion-framework-react-module';
 import type { NavigationModule } from '@equinor/fusion-framework-module-navigation';
 
-import { RouterContextProvider, UNSAFE_createRouter, useActionData, useLoaderData, useRouteError } from 'react-router';
+import {
+  RouterContextProvider,
+  UNSAFE_createRouter,
+  useActionData,
+  useLoaderData,
+  useRouteError,
+} from 'react-router';
 import type { FusionRouterContext, RouteNode, RouteObject, RouterContext } from './types.js';
 import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
 import React from 'react';
@@ -57,7 +63,7 @@ type RouterProps = {
  * }
  * ```
  */
-export function Router({ routes, loader, context }: RouterProps) {
+export function Router({ routes, loader: _loader, context }: RouterProps) {
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {
@@ -83,9 +89,9 @@ export function Router({ routes, loader, context }: RouterProps) {
       getContext: () => {
         return contextProvider;
       },
-      // @ts-ignore
+      // @ts-expect-error
       mapRouteProperties: (route: RouteObject) => {
-        if(route.loader) {
+        if (route.loader) {
           const originalLoader = route.loader;
           route.loader = function __FusionRouterLoader(args) {
             const fusion = args.context.get(routerContext);
@@ -93,7 +99,7 @@ export function Router({ routes, loader, context }: RouterProps) {
             return originalLoader({ ...args, fusion });
           };
         }
-        if(route.action) {
+        if (route.action) {
           const originalAction = route.action;
           route.action = function __FusionRouterAction(args) {
             const fusion = args.context.get(routerContext);
@@ -101,7 +107,7 @@ export function Router({ routes, loader, context }: RouterProps) {
             return originalAction({ ...args, fusion });
           };
         }
-        if(route.errorElement) {
+        if (route.errorElement) {
           const originalErrorElement = route.errorElement;
           // Wrap errorElement component to inject error and fusion context as props
           // errorElement must be a React element, not a function
@@ -115,7 +121,7 @@ export function Router({ routes, loader, context }: RouterProps) {
           });
           route.hasErrorBoundary = true;
         }
-        if(route.Component) {
+        if (route.Component) {
           const originalComponent = route.Component;
           route.Component = function __FusionRouterComponent() {
             // biome-ignore lint/correctness/useHookAtTopLevel: hooks are used inside component function

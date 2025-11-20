@@ -21,12 +21,12 @@ export const createMarkdownRawPlugin = (): Plugin => {
       build.onResolve({ filter: /\?raw$/ }, (args) => {
         // Remove the ?raw suffix to get the actual file path
         const filePath = args.path.replace(/\?raw$/, '');
-        
+
         // Determine the resolve directory: use importer's directory if available, otherwise use resolveDir
         const resolveDir = args.importer
           ? path.dirname(args.importer)
           : args.resolveDir || process.cwd();
-        
+
         const resolvedPath = path.isAbsolute(filePath)
           ? filePath
           : path.resolve(resolveDir, filePath);
@@ -60,4 +60,3 @@ export const createMarkdownRawPlugin = (): Plugin => {
     },
   };
 };
-

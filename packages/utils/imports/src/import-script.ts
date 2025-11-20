@@ -80,10 +80,8 @@ export const importScript = async <M extends EsmModule>(
     const hasImportMetaResolvePlugin = existingPlugins.some(
       (plugin) => plugin.name === 'import-meta-resolve',
     );
-    const hasMarkdownRawPlugin = existingPlugins.some(
-      (plugin) => plugin.name === 'markdown-raw',
-    );
-    
+    const hasMarkdownRawPlugin = existingPlugins.some((plugin) => plugin.name === 'markdown-raw');
+
     const defaultPlugins = [];
     if (!hasImportMetaResolvePlugin) {
       defaultPlugins.push(createImportMetaResolvePlugin());
@@ -91,7 +89,7 @@ export const importScript = async <M extends EsmModule>(
     if (!hasMarkdownRawPlugin) {
       defaultPlugins.push(createMarkdownRawPlugin());
     }
-    
+
     const plugins = [...defaultPlugins, ...existingPlugins];
 
     const buildOptions = Object.assign(

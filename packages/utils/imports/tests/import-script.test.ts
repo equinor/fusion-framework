@@ -73,7 +73,10 @@ describe('import-script', () => {
     vol.writeFileSync('README.md', markdownContent);
     vol.writeFileSync(
       'test.ts',
-      generateFileContent("import readmeContent from './README.md?raw';", 'export default readmeContent;'),
+      generateFileContent(
+        "import readmeContent from './README.md?raw';",
+        'export default readmeContent;',
+      ),
     );
     const result = await importScript('test.ts');
     expect(result.default).toBe(markdownContent);
@@ -85,7 +88,10 @@ describe('import-script', () => {
     vol.mkdirSync('subdir/nested', { recursive: true });
     vol.writeFileSync(
       'subdir/nested/test.ts',
-      generateFileContent("import readmeContent from '../../README.md?raw';", 'export default readmeContent;'),
+      generateFileContent(
+        "import readmeContent from '../../README.md?raw';",
+        'export default readmeContent;',
+      ),
     );
     const result = await importScript('subdir/nested/test.ts');
     expect(result.default).toBe(markdownContent);
