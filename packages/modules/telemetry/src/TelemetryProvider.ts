@@ -60,6 +60,9 @@ export class TelemetryProvider
   #initialized = false;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
+  #adapterFilter?: (item: TelemetryItem) => boolean;
+
+  #relayFilter?: (item: TelemetryItem) => boolean;
 
   #defaultScope: string[];
 
@@ -90,6 +93,8 @@ export class TelemetryProvider
     this.#metadata = config?.metadata;
     this.#defaultScope = config?.defaultScope ?? [];
     this.#eventProvider = deps?.event;
+    this.#adapterFilter = config?.adapterFilter;
+    this.#relayFilter = config?.relayFilter;
   }
 
   /**
@@ -156,7 +161,7 @@ export class TelemetryProvider
   protected async _initializeAdapters(): Promise<void> {
     // Initialize all adapters, do it in parallel
     const adapterEntries = Object.entries(this.#adapters);
-    const initializationPromises = adapterEntries.map(([identifier, adapter]) =>
+    const initializationPromises = adapterEntries.map(([_identifier, adapter]) =>
       adapter.initialize(),
     );
 
@@ -179,6 +184,7 @@ export class TelemetryProvider
   /**
    * Subscribes all adapters to the telemetry item stream.
    * Each adapter processes every telemetry item as it is emitted.
+   * If an adapter filter is configured, only items that pass the filter will be sent to adapters.
    * If an adapter throws, the error is dispatched as a telemetry error event.
    *
    * @returns Subscription to the telemetry item stream
@@ -189,6 +195,11 @@ export class TelemetryProvider
       throw new Error('TelemetryProvider is not initialized');
     }
     return this.#items.subscribe((item) => {
+      // Apply adapter filter if configured - skip item if filter returns false
+      if (this.#adapterFilter && !this.#adapterFilter(item)) {
+        return;
+      }
+
       // Iterate through all registered adapters
       for (const [identifier, adapter] of Object.entries(this.#adapters)) {
         try {
@@ -211,13 +222,20 @@ export class TelemetryProvider
    *
    * Subscribes to the internal telemetry item stream and forwards each processed item
    * to the specified target provider by invoking its `track` method.
+   * If a relay filter is configured, only items that pass the filter will be relayed.
    *
    * @param target - The telemetry provider to which telemetry data should be relayed.
    * @returns A Subscription object that can be used to unsubscribe from the relay.
    */
   protected _relayTelemetryData(target: ITelemetryProvider): Subscription {
     // Subscribe to the processed stream and forward each item to the parent provider
-    return this.#items.subscribe((item) => target.track(item));
+    return this.#items.subscribe((item) => {
+      // Apply relay filter if configured - skip item if filter returns false
+      if (this.#relayFilter && !this.#relayFilter(item)) {
+        return;
+      }
+      target.track(item);
+    });
   }
 
   /**
