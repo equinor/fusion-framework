@@ -783,6 +783,9 @@ importers:
       '@equinor/fusion-framework-module-msal-node':
         specifier: workspace:*
         version: link:../modules/msal-node
+      '@equinor/fusion-framework-vite-plugin-raw-imports':
+        specifier: workspace:*
+        version: link:../vite-plugins/raw-imports
       '@equinor/fusion-imports':
         specifier: workspace:*
         version: link:../utils/imports
@@ -1021,9 +1024,6 @@ importers:
 
   packages/dev-server:
     dependencies:
-      '@equinor/fusion-framework-react-router':
-        specifier: workspace:*
-        version: link:../react/router
       '@equinor/fusion-framework-vite-plugin-api-service':
         specifier: workspace:*
         version: link:../vite-plugins/api-service
@@ -2132,6 +2132,18 @@ importers:
       nock:
         specifier: ^14.0.1
         version: 14.0.10
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.12
+        version: 7.1.12(@types/node@24.10.0)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@20.0.10)(jsdom@27.1.0)(msw@2.11.6(@types/node@24.10.0)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+
+  packages/vite-plugins/raw-imports:
+    devDependencies:
       typescript:
         specifier: ^5.8.2
         version: 5.9.3

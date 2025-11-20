@@ -67,4 +67,27 @@ describe('import-script', () => {
       },
     });
   });
+
+  it('should load a markdown file with ?raw query parameter', async () => {
+    const markdownContent = '# Test Markdown\n\nThis is a test file.';
+    vol.writeFileSync('README.md', markdownContent);
+    vol.writeFileSync(
+      'test.ts',
+      generateFileContent("import readmeContent from './README.md?raw';", 'export default readmeContent;'),
+    );
+    const result = await importScript('test.ts');
+    expect(result.default).toBe(markdownContent);
+  });
+
+  it('should load a markdown file with ?raw query parameter using relative path with ../', async () => {
+    const markdownContent = '# Parent README\n\nThis is a parent README file.';
+    vol.writeFileSync('README.md', markdownContent);
+    vol.mkdirSync('subdir/nested', { recursive: true });
+    vol.writeFileSync(
+      'subdir/nested/test.ts',
+      generateFileContent("import readmeContent from '../../README.md?raw';", 'export default readmeContent;'),
+    );
+    const result = await importScript('subdir/nested/test.ts');
+    expect(result.default).toBe(markdownContent);
+  });
 });

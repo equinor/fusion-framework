@@ -6,6 +6,7 @@ import { processAccessError } from './error.js';
 
 import { readPackageUp } from 'read-package-up';
 import { createImportMetaResolvePlugin } from './import-meta-resolve-plugin.js';
+import { createMarkdownRawPlugin } from './markdown-plugin.js';
 
 /**
  * Represents a Node.js module with an optional default export.
@@ -74,14 +75,24 @@ export const importScript = async <M extends EsmModule>(
     );
 
   try {
-    // Merge plugins: add import-meta-resolve plugin if not already present
+    // Merge plugins: add default plugins if not already present
     const existingPlugins = options?.plugins ?? [];
     const hasImportMetaResolvePlugin = existingPlugins.some(
       (plugin) => plugin.name === 'import-meta-resolve',
     );
-    const plugins = hasImportMetaResolvePlugin
-      ? existingPlugins
-      : [createImportMetaResolvePlugin(), ...existingPlugins];
+    const hasMarkdownRawPlugin = existingPlugins.some(
+      (plugin) => plugin.name === 'markdown-raw',
+    );
+    
+    const defaultPlugins = [];
+    if (!hasImportMetaResolvePlugin) {
+      defaultPlugins.push(createImportMetaResolvePlugin());
+    }
+    if (!hasMarkdownRawPlugin) {
+      defaultPlugins.push(createMarkdownRawPlugin());
+    }
+    
+    const plugins = [...defaultPlugins, ...existingPlugins];
 
     const buildOptions = Object.assign(
       {

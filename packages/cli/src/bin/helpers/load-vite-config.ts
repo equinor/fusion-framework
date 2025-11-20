@@ -9,6 +9,7 @@ import {
   type ResolvedPackage,
 } from '@equinor/fusion-framework-cli/lib';
 import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+import { rawImportsPlugin } from '@equinor/fusion-framework-vite-plugin-raw-imports';
 
 /**
  * Loads and merges the Vite configuration for a given package and environment.
@@ -53,7 +54,11 @@ export const loadViteConfig = async (env: RuntimeEnv, pkg: ResolvedPackage) => {
   return mergeConfig(
     {
       root,
-      plugins: [tsConfigPaths(), reactRouterPlugin({ debug: true })],
+      plugins: [
+        tsConfigPaths(),
+        reactRouterPlugin({ debug: true }),
+        rawImportsPlugin({ extensions: ['.md'] }),
+      ],
       define: {
         // Set environment variables for the build
         'process.env.NODE_ENV': JSON.stringify(env.mode),
