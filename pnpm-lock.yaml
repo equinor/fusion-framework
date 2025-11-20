@@ -2071,10 +2071,6 @@ importers:
 
   packages/vite-plugins/spa:
     dependencies:
-      lodash.mergewith:
-        specifier: ^4.6.2
-        version: 4.6.2
-    devDependencies:
       '@equinor/fusion-framework-module':
         specifier: workspace:*
         version: link:../../modules/module
@@ -2090,6 +2086,10 @@ importers:
       '@equinor/fusion-framework-module-telemetry':
         specifier: workspace:*
         version: link:../../modules/telemetry
+      lodash.mergewith:
+        specifier: ^4.6.2
+        version: 4.6.2
+    devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
         version: 29.0.0(rollup@4.52.5)

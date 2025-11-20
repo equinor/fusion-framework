@@ -1,0 +1,67 @@
+{
+  "changesets": [
+    {
+      "releases": [
+        {
+          "name": "@equinor/fusion-framework-module-telemetry",
+          "type": "minor"
+        }
+      ],
+      "summary": "Add filtering options for telemetry messages passed from provider to adapters and parent providers.\n\n**New Features**\n\n- **`setAdapterFilter`**: Filter which telemetry items are passed to adapters\n- **`setRelayFilter`**: Filter which telemetry items are relayed to parent providers\n\n**Usage**\n\n```typescript\nenableTelemetry(configurator, {\n  configure: (builder) => {\n    // Only send exceptions to adapters\n    builder.setAdapterFilter((item) => item.type === TelemetryType.Exception);\n    \n    // Only relay important events to parent provider\n    builder.setRelayFilter((item) => \n      item.type === TelemetryType.Exception || \n      item.scope?.includes('critical')\n    );\n  }\n});\n```\n\n**Hierarchical Filtering**\n\nThis feature enables filtering at each level of hierarchical telemetry setups (bootstrap → portal → apps), allowing:\n- Portal instances to filter which events reach bootstrap adapters\n- App instances to filter which events reach portal providers\n- Performance optimization by filtering unnecessary telemetry before processing\n- Privacy control by preventing sensitive telemetry from flowing up the hierarchy\n\n**Backward Compatibility**\n\nExisting code continues to work without filters - all items pass through by default when no filters are configured.\n\nCloses: https://github.com/equinor/fusion-framework/issues/3774",
+      "id": "module-telemetry_add-filtering"
+    }
+  ],
+  "releases": [
+    {
+      "name": "@equinor/fusion-framework-module-telemetry",
+      "type": "minor",
+      "oldVersion": "4.4.0",
+      "changesets": [
+        "module-telemetry_add-filtering"
+      ],
+      "newVersion": "4.5.0"
+    },
+    {
+      "name": "@equinor/fusion-framework-dev-portal",
+      "type": "none",
+      "oldVersion": "1.2.5",
+      "changesets": [],
+      "newVersion": "1.2.5"
+    },
+    {
+      "name": "@equinor/fusion-framework-vite-plugin-spa",
+      "type": "major",
+      "oldVersion": "3.0.0",
+      "changesets": [],
+      "newVersion": "4.0.0"
+    },
+    {
+      "name": "@equinor/fusion-framework-dev-server",
+      "type": "patch",
+      "oldVersion": "1.1.12",
+      "changesets": [],
+      "newVersion": "1.1.13"
+    },
+    {
+      "name": "@equinor/fusion-framework-cli",
+      "type": "patch",
+      "oldVersion": "12.4.0",
+      "changesets": [],
+      "newVersion": "12.4.1"
+    },
+    {
+      "name": "poc-portal",
+      "type": "patch",
+      "oldVersion": "1.1.20",
+      "changesets": [],
+      "newVersion": "1.1.21"
+    },
+    {
+      "name": "portal",
+      "type": "patch",
+      "oldVersion": "0.1.10",
+      "changesets": [],
+      "newVersion": "0.1.11"
+    }
+  ]
+}
