@@ -1,5 +1,12 @@
 # poc-portal
 
+## 1.1.22
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @equinor/fusion-framework-cli@12.4.2
+
 ## 1.1.21
 
 ### Patch Changes
