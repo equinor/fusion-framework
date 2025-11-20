@@ -49,8 +49,8 @@
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/eds-tokens": "^0.10.0",
     "@equinor/eds-utils": "^0.9.0",
-    "@types/react": "^17.0.0 || ^18.0.0",
-    "react": "^17.0.0 || ^18.0.0",
+    "@types/react": "^18.0.0",
+    "react": "^18.0.0",
     "styled-components": "^6.0.7"
   },
   "peerDependenciesMeta": {

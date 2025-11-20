@@ -1,9 +1,14 @@
-import type { AppModuleInitiator } from '@equinor/fusion-framework-app';
-import { enableNavigation } from '@equinor/fusion-framework-module-navigation';
+import type { AppModuleInitiator } from '@equinor/fusion-framework-react-app';
+import { createHistory, enableNavigation } from '@equinor/fusion-framework-module-navigation';
 
 export const configure: AppModuleInitiator = (configurator, args) => {
   const { basename } = args.env;
-  enableNavigation(configurator, basename);
+  enableNavigation(configurator, {
+    configure: (config) => {
+      config.setBasename(basename);
+      config.setHistory(createHistory('hash'));
+    },
+  });
 };
 
 export default configure;
