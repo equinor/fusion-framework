@@ -21,8 +21,10 @@ export type TelemetryConfig = {
   metadata?: MetadataExtractor;
   defaultScope?: string[];
   items$?: ObservableInput<TelemetryItem>;
-  adapterFilter?: (item: TelemetryItem) => boolean;
-  relayFilter?: (item: TelemetryItem) => boolean;
+  filter?: {
+    adapter?: (item: TelemetryItem) => boolean;
+    relay?: (item: TelemetryItem) => boolean;
+  };
 };
 
 /**
@@ -84,20 +86,14 @@ export interface ITelemetryConfigurator {
   attachItems(item$: ObservableInput<TelemetryItem>): this;
 
   /**
-   * Sets a filter function to determine which telemetry items should be passed to adapters.
-   * Only items for which the filter returns `true` will be sent to adapters.
+   * Sets the filter configuration for telemetry items.
    *
-   * @param filter - Function that receives a telemetry item and returns true if it should be sent to adapters
-   * @returns The configurator instance for method chaining
-   */
-  setAdapterFilter(filter: (item: TelemetryItem) => boolean): this;
-
-  /**
-   * Sets a filter function to determine which telemetry items should be relayed to the parent provider.
-   * Only items for which the filter returns `true` will be relayed to the parent.
+   * The filter determines which telemetry items should be passed to adapters and/or relayed to parent providers.
    *
-   * @param filter - Function that receives a telemetry item and returns true if it should be relayed
-   * @returns The configurator instance for method chaining
+   * @param filter - Either a filter object with `adapter` and `relay` functions, or a callback that returns such a filter object.
+   * @returns The configurator instance for method chaining.
    */
-  setRelayFilter(filter: (item: TelemetryItem) => boolean): this;
+  setFilter(
+    filter: ConfigBuilderCallback<TelemetryConfig['filter']> | TelemetryConfig['filter'],
+  ): this;
 }

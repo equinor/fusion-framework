@@ -60,9 +60,10 @@ export class TelemetryProvider
   #initialized = false;
 
   #adapters: Record<string, ITelemetryAdapter> = {};
-  #adapterFilter?: (item: TelemetryItem) => boolean;
-
-  #relayFilter?: (item: TelemetryItem) => boolean;
+  #filters?: {
+    adapter?: (item: TelemetryItem) => boolean;
+    relay?: (item: TelemetryItem) => boolean;
+  };
 
   #defaultScope: string[];
 
@@ -93,8 +94,7 @@ export class TelemetryProvider
     this.#metadata = config?.metadata;
     this.#defaultScope = config?.defaultScope ?? [];
     this.#eventProvider = deps?.event;
-    this.#adapterFilter = config?.adapterFilter;
-    this.#relayFilter = config?.relayFilter;
+    this.#filters = config?.filter;
   }
 
   /**
@@ -195,8 +195,9 @@ export class TelemetryProvider
       throw new Error('TelemetryProvider is not initialized');
     }
     return this.#items.subscribe((item) => {
+      const { adapter: adapterFilter } = this.#filters ?? {};
       // Apply adapter filter if configured - skip item if filter returns false
-      if (this.#adapterFilter && !this.#adapterFilter(item)) {
+      if (adapterFilter && !adapterFilter(item)) {
         return;
       }
 
@@ -230,8 +231,9 @@ export class TelemetryProvider
   protected _relayTelemetryData(target: ITelemetryProvider): Subscription {
     // Subscribe to the processed stream and forward each item to the parent provider
     return this.#items.subscribe((item) => {
+      const { relay: relayFilter } = this.#filters ?? {};
       // Apply relay filter if configured - skip item if filter returns false
-      if (this.#relayFilter && !this.#relayFilter(item)) {
+      if (relayFilter && !relayFilter(item)) {
         return;
       }
       target.track(item);
