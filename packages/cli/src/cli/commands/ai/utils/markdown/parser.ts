@@ -16,17 +16,17 @@ const markdownConfig = {
 };
 
 /**
- * Check if a file is a markdown file
+ * Check if a file is a markdown or MDX file
  * @param filePath - File path to check
- * @returns True if file has .md extension
+ * @returns True if file has .md or .mdx extension
  */
 export const isMarkdownFile = (filePath: string): boolean => {
-  return filePath.endsWith('.md');
+  return filePath.endsWith('.md') || filePath.endsWith('.mdx');
 };
 
 /**
- * Parse markdown content into document chunks
- * @param content - Markdown content string
+ * Parse markdown or MDX content into document chunks
+ * @param content - Markdown or MDX content string
  * @param source - Source file path
  * @returns Array of markdown documents
  */
@@ -59,7 +59,7 @@ export const parseMarkdown = async <T extends Record<string, unknown> = Record<s
 };
 
 /**
- * Parse a markdown file into document chunks
+ * Parse a markdown or MDX file into document chunks
  * @param file - Source file object
  * @returns Array of markdown documents with root path metadata
  */
@@ -68,7 +68,7 @@ export const parseMarkdownFile = async <
 >(
   file: SourceFile,
 ): Promise<MarkdownDocument<T>[]> => {
-  assert(isMarkdownFile(file.path), `File ${file.path} is not a markdown file`);
+  assert(isMarkdownFile(file.path), `File ${file.path} is not a markdown or MDX file`);
   const content = readFileSync(file.path, 'utf8');
   const result = await parseMarkdown<T>(content, file.relativePath ?? file.path);
   return result.map((document) => ({

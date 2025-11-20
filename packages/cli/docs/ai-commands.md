@@ -228,7 +228,7 @@ ffc ai embeddings --diff --base-ref origin/main ./src
 ffc ai embeddings --clean ./src
 
 # Process specific file patterns
-ffc ai embeddings "packages/**/*.ts" "docs/**/*.md"
+ffc ai embeddings "packages/**/*.ts" "docs/**/*.md" "docs/**/*.mdx"
 
 # Use custom config file
 ffc ai embeddings --config ./custom-ai.config.ts ./src
@@ -242,7 +242,7 @@ The `--diff` flag is particularly useful for CI/CD pipelines. See the [CI/CD Int
 
 The command processes two types of files:
 
-1. **Markdown Files** (`.md`):
+1. **Markdown/MDX Files** (`.md`, `.mdx`):
    - Extracts frontmatter metadata
    - Chunks content based on headers and structure
    - Preserves document hierarchy

@@ -45,7 +45,7 @@ type DeleteRemovedFilesResult = { status: 'deleted'; files: { relativePath: stri
  * Document embedding utilities for Large Language Model processing.
  *
  * Features:
- * - Markdown document chunking with frontmatter extraction
+ * - Markdown/MDX document chunking with frontmatter extraction
  * - TypeScript/TSX TSDoc extraction and chunking
  * - Glob pattern support for file collection
  * - Git diff-based processing for workflow integration
@@ -77,7 +77,7 @@ type DeleteRemovedFilesResult = { status: 'deleted'; files: { relativePath: stri
  *
  * Examples:
  *   $ ffc ai embeddings --dry-run ./src
- *   $ ffc ai embeddings "*.ts" "*.md"
+ *   $ ffc ai embeddings "*.ts" "*.md" "*.mdx"
  *   $ ffc ai embeddings --diff
  *   $ ffc ai embeddings --diff --base-ref origin/main
  *   $ ffc ai embeddings --clean "*.ts"
@@ -125,7 +125,7 @@ const _command = createCommand('embeddings')
     }).then((config) => config.config());
 
     // CLI args take precedence over config patterns
-    const allowedFilePatterns = config.patterns ?? ['**/*.ts', '**/*.md'];
+    const allowedFilePatterns = config.patterns ?? ['**/*.ts', '**/*.md', '**/*.mdx'];
     const filePatterns = patterns.length ? patterns : allowedFilePatterns;
 
     // Initialize framework and get embedding service
