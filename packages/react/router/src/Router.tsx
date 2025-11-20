@@ -9,22 +9,13 @@ import type { NavigationModule } from '@equinor/fusion-framework-module-navigati
 
 import { RouterContextProvider, UNSAFE_createRouter, useActionData, useLoaderData, useRouteError } from 'react-router';
 import type { FusionRouterContext, RouteNode, RouteObject, RouterContext } from './types.js';
-import { createRoutes } from './routes/create-routes.js';
 import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';
-import route from './routes/Route.js';
 import React from 'react';
 
 type RouterProps = {
   routes: RouteNode | RouteNode[] | RouteObject | RouteObject[];
   loader?: React.ReactElement;
   context?: RouterContext;
-};
-
-// Check if routes are already RouteObjects (transformed by plugin) or RouteNodes (DSL)
-const isRouteObject = (route: unknown): boolean => {
-  if (route == null || typeof route !== 'object') return false;
-  // RouteNodes have a toRouteObject method, RouteObjects don't
-  return !('toRouteObject' in route) && ('path' in route || 'lazy' in route || 'element' in route || 'children' in route);
 };
 
 /**
@@ -76,8 +67,6 @@ export function Router({ routes, loader, context }: RouterProps) {
     } as FusionRouterContext;
   }, [context, modules]);
 
-  console.log(9999, 'fusionRouterContext', routes);
-
   const router = useMemo(() => {
     const { navigation } = modules as unknown as ModulesInstanceType<{
       navigation: NavigationModule;
@@ -111,22 +100,6 @@ export function Router({ routes, loader, context }: RouterProps) {
             // @ts-expect-error
             return originalAction({ ...args, fusion });
           };
-        }
-        // Process handle - ensure it has the correct RouterHandle structure
-        if (route.handle && typeof route.handle === 'object') {
-          // Ensure handle.route exists, but preserve all other properties
-          // Create a new object to avoid mutation issues
-          const existingHandle = route.handle;
-          route.handle = {
-            ...existingHandle,
-            route: existingHandle.route || {},
-            elg: 'bert'
-          };
-          console.log(999, 'route.handle AFTER processing', route.handle);
-        } else {
-          console.log(666, 'Should not happen', route);
-          // Initialize handle if it doesn't exist
-          route.handle = { route: {} };
         }
         if(route.errorElement) {
           const originalErrorElement = route.errorElement;

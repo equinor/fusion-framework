@@ -1,5 +1,4 @@
-import type { RouteKind, RouteNode, RouterSchema, RouteObject } from '../types.js';
-import type { LazyLoaderOptions } from './create-lazy-loader.js';
+import type { RouteKind, RouteNode, RouterSchema } from '../types.js';
 
 /**
  * Base abstract class for all route nodes.
@@ -8,5 +7,4 @@ import type { LazyLoaderOptions } from './create-lazy-loader.js';
 export abstract class BaseRoute implements RouteNode {
   public readonly schema: RouterSchema = {};
   constructor(public readonly kind: RouteKind) {}
-  abstract toRouteObject(options?: LazyLoaderOptions): RouteObject | RouteObject[];
 }

@@ -1,5 +1,4 @@
 import type { RouteObject as ReactRouterRouteObject } from 'react-router';
-import type { LazyLoaderOptions, StaticImportFunction } from './routes/create-lazy-loader.js';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
 
 /**
@@ -264,12 +263,6 @@ export type RouteKind = 'route' | 'index' | 'layout' | 'prefix';
 export interface RouteNode {
   /** The kind of route node */
   kind: RouteKind;
-  /**
-   * Converts this route node to React Router RouteObject(s).
-   * @param options - Options for lazy loading and context injection
-   * @returns One or more RouteObjects for React Router
-   */
-  toRouteObject(options?: LazyLoaderOptions): RouteObject | RouteObject[];
 }
 
 /**
@@ -278,7 +271,7 @@ export interface RouteNode {
  */
 export interface RouteFileNode extends RouteNode {
   /** File path or import function for the route component module */
-  file: string | StaticImportFunction;
+  file: string;
 }
 
 /**

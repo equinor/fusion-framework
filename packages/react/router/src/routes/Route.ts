@@ -1,5 +1,4 @@
-import type { NonIndexRouteObject, RouteObject as ReactRouterRouteObject } from 'react-router';
-import type { RouterSchema, RouteNode, FusionRouterContext } from '../types.js';
+import type { RouterSchema, RouteNode } from '../types.js';
 import { BaseFileRoute } from './BaseFileRoute.js';
 
 /**
@@ -14,30 +13,6 @@ export class Route extends BaseFileRoute {
     schema?: RouterSchema,
   ) {
     super('route', file, schema ? { route: schema } : { route: {} });
-  }
-
-  /**
-   * Adds a child route to this route.
-   * @param child - The child route node to add
-   */
-  addChild(child: RouteNode) {
-    this.children.push(child);
-  }
-
-  toRouteObject(options?: {
-    loader?: React.ReactElement;
-    context?: FusionRouterContext;
-  }): NonIndexRouteObject {
-    const childRouteObjects = this.children.flatMap((child) => {
-      const result = child.toRouteObject(options);
-      return Array.isArray(result) ? result : [result];
-    });
-    return {
-      ...super.toRouteObject(options),
-      index: false,
-      path: this.path,
-      children: childRouteObjects as ReactRouterRouteObject[],
-    };
   }
 }
 

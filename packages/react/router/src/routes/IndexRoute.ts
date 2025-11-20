@@ -1,6 +1,4 @@
-import type { IndexRouteObject } from 'react-router';
 import type { RouterSchema } from '../types.js';
-import type { LazyLoaderOptions } from './create-lazy-loader.js';
 import { BaseFileRoute } from './BaseFileRoute.js';
 
 /**
@@ -10,14 +8,6 @@ import { BaseFileRoute } from './BaseFileRoute.js';
 export class IndexRoute extends BaseFileRoute {
   constructor(file: string, schema?: RouterSchema) {
     super('index', file, schema ? { route: schema } : { route: {} });
-  }
-
-  toRouteObject(options?: LazyLoaderOptions): IndexRouteObject {
-    return {
-      ...super.toRouteObject(options),
-      index: true,
-      children: undefined,
-    };
   }
 }
 
