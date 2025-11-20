@@ -38,7 +38,8 @@ export const handle = {
   },
 } satisfies RouterHandle;
 
-export const clientLoader = async ({ request, fusion }: LoaderFunctionArgs) => {
+export const clientLoader = async (args: LoaderFunctionArgs) => {
+  const { request, fusion } = args;
   const url = new URL(request.url);
   const filter = url.searchParams.get('filter') ?? null;
   const sort = url.searchParams.get('sort') || 'name-asc';

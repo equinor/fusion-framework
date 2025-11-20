@@ -7,36 +7,36 @@ import type {
   SearchSchema,
 } from '../types.js';
 import { BaseRoute } from './BaseRoute.js';
-import { createLazyLoader, type LazyLoaderOptions } from './create-lazy-loader.js';
-
-/**
- * Base abstract class for file-based routes.
- * Handles lazy loading of route components from file paths.
- */
-export abstract class BaseFileRoute extends BaseRoute implements RouteFileNode {
-  static isFileRoute(node: unknown): node is BaseFileRoute {
-    if (node instanceof BaseFileRoute) {
-      return true;
-    }
-    const alias = node as RouteFileNode;
-    return 'file' in alias && typeof alias.file === 'string' && alias.file.length > 0;
-  }
+import { createLazyLoader, type LazyLoaderOptions, type StaticImportFunction } from './create-lazy-loader.js';
 
   /**
-   * Creates a component that will render the HydrateFallback from the module once it loads.
-   * Falls back to a default loading message if the module doesn't export HydrateFallback.
+   * Base abstract class for file-based routes.
+   * Handles lazy loading of route components from file paths or import functions.
    */
-  constructor(
-    kind: RouteKind,
-    public readonly file: string,
-    public readonly handle: RouterHandle = { route: {} },
-  ) {
-    super(kind);
-    // Ensure handle.route exists
-    if (!this.handle.route) {
-      this.handle.route = {};
+  export abstract class BaseFileRoute extends BaseRoute implements RouteFileNode {
+    static isFileRoute(node: unknown): node is BaseFileRoute {
+      if (node instanceof BaseFileRoute) {
+        return true;
+      }
+      const alias = node as RouteFileNode;
+      return 'file' in alias && (typeof alias.file === 'string' || typeof alias.file === 'function') && (typeof alias.file === 'string' ? alias.file.length > 0 : true);
     }
-  }
+
+    /**
+     * Creates a component that will render the HydrateFallback from the module once it loads.
+     * Falls back to a default loading message if the module doesn't export HydrateFallback.
+     */
+    constructor(
+      kind: RouteKind,
+      public readonly file: string | StaticImportFunction,
+      public readonly handle: RouterHandle = { route: {} },
+    ) {
+      super(kind);
+      // Ensure handle.route exists
+      if (!this.handle.route) {
+        this.handle.route = {};
+      }
+    }
 
   toRouteObject(options?: LazyLoaderOptions): RouteObject {
     const initialHandle = options?.initial?.handle;

@@ -60,7 +60,7 @@ export const RouterDebugToolbar = () => {
 
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Current Match</h3>
-            <pre style={styles.pre}>{JSON.stringify(matches[1], null, 2)}</pre>
+            <pre style={styles.pre}>{JSON.stringify(matches[matches.length - 1], null, 2)}</pre>
           </div>
 
           <div style={styles.section}>

@@ -9,6 +9,7 @@ import type {
   RouteObject,
   RouterSchema,
 } from '../types.js';
+import { routerContext, useRouterContext } from '../context.js';
 
 type UnsupportedLazyRouteObjectKey =
   | 'lazy'
@@ -39,6 +40,12 @@ export type LazyLoaderOptions = {
 };
 
 /**
+ * Static import function for route modules.
+ * Used by the Vite plugin to generate static imports instead of dynamic ones.
+ */
+export type StaticImportFunction = () => Promise<unknown>;
+
+/**
  * Creates a component that renders the HydrateFallback from the module once it loads.
  * Falls back to a default loading element if the module doesn't export HydrateFallback.
  *
@@ -67,7 +74,7 @@ const createHydrateFallbackComponent = (
 };
 
 /**
- * Creates a lazy-loaded route object from a file path.
+ * Creates a lazy-loaded route object from a file path or static import function.
  *
  * This function creates a React Router RouteObject that:
  * - Lazy loads the route module for code splitting
@@ -84,7 +91,7 @@ const createHydrateFallbackComponent = (
  * - `HydrateFallback` - Component to show during SSR hydration
  * - `handle` - Route metadata (RouterHandle or RouterSchema format)
  *
- * @param filePath - Path to the route module file (can be file:// URL or regular path)
+ * @param filePathOrImport - Path to the route module file or static import function
  * @param options - Options for lazy loading including loader element, initial properties, and Fusion context
  * @returns RouteObject with lazy loading configured
  *
@@ -100,17 +107,28 @@ const createHydrateFallbackComponent = (
  *   return <div>{loaderData.name}</div>;
  * }
  *
- * // routes.ts
+ * // routes.ts - with file path (runtime dynamic import)
  * const route = createLazyLoader('./pages/product.tsx', {
+ *   context: fusionRouterContext,
+ *   loader: <LoadingSpinner />
+ * });
+ *
+ * // routes.ts - with static import (build-time static import)
+ * const route = createLazyLoader(() => import('./pages/product.tsx'), {
  *   context: fusionRouterContext,
  *   loader: <LoadingSpinner />
  * });
  * ```
  */
-export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions): RouteObject => {
+export const createLazyLoader = (
+  filePathOrImport: string | StaticImportFunction,
+  options?: LazyLoaderOptions
+): RouteObject => {
   // Pre-load the module to extract HydrateFallback synchronously if possible
   // This allows React Router v7 to have access to HydrateFallback during initial hydration
-  const modulePromise = import(/* @vite-ignore */ filePath);
+  const modulePromise = typeof filePathOrImport === 'function'
+    ? filePathOrImport()
+    : import(/* @vite-ignore */ filePathOrImport);
 
   const hydrateFallbackElement: RouteObject['hydrateFallbackElement'] =
     createHydrateFallbackComponent(
@@ -127,6 +145,7 @@ export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions):
     if (hasLoader) {
       const originalLoader = module.clientLoader as LoaderFunction;
       result.loader = (args) => {
+        const fusion = args.context.get(routerContext);
         const props = Object.assign({}, args, { fusion }) as unknown as LoaderFunctionArgs;
         return originalLoader(props);
       };
@@ -137,6 +156,7 @@ export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions):
     if (hasAction) {
       const originalAction = module.action as ActionFunction;
       result.action = function FusionRouterAction(args) {
+        const fusion = args.context.get(routerContext);
         const props = Object.assign({}, args, { fusion }) as unknown as ActionFunctionArgs;
         return originalAction(props);
       };
@@ -147,6 +167,7 @@ export const createLazyLoader = (filePath: string, options?: LazyLoaderOptions):
       result.Component = function FusionRouterComponent(args) {
         const loaderData = useLoaderData();
         const actionData = useActionData();
+        const fusion = useRouterContext();
         const props = Object.assign({}, args, { fusion, loaderData, actionData });
         return React.createElement(OriginalComponent, props);
       } as React.ComponentType;

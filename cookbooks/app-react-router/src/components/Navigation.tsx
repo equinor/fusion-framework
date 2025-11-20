@@ -1,12 +1,12 @@
 import { SideBar, type SidebarLinkProps } from '@equinor/eds-core-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, type RouteObject } from 'react-router-dom';
 import { useNavigationItems } from '../hooks/useNavigationItems';
 import { pages } from '../pages';
 
 export const Navigation = () => {
   const navigate = useNavigate();
   const currentLocation = useLocation();
-  const navigationItems = useNavigationItems(pages);
+  const navigationItems = useNavigationItems(pages as RouteObject[]);
 
   const currentPath = currentLocation.pathname;
 

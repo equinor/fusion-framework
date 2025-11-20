@@ -1,5 +1,5 @@
 import type { RouteObject as ReactRouterRouteObject } from 'react-router';
-import type { LazyLoaderOptions } from './routes/create-lazy-loader.js';
+import type { LazyLoaderOptions, StaticImportFunction } from './routes/create-lazy-loader.js';
 import type { Modules, ModulesInstanceType } from '@equinor/fusion-framework-react-module';
 
 /**
@@ -277,8 +277,8 @@ export interface RouteNode {
  * File-based routes support lazy loading and automatic code splitting.
  */
 export interface RouteFileNode extends RouteNode {
-  /** File path to the route component module */
-  file: string;
+  /** File path or import function for the route component module */
+  file: string | StaticImportFunction;
 }
 
 /**

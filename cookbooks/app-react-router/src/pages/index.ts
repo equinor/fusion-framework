@@ -1,17 +1,17 @@
 import { index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 
 export const pages = [
-  index(import.meta.resolve('./HomePage.tsx')),
+  index('./HomePage.tsx'),
   prefix('products', [
-    index(import.meta.resolve('./ProductsPage.tsx')),
-    route(':id', import.meta.resolve('./ProductPage.tsx')),
+    index('./ProductsPage.tsx'),
+    route(':id', './ProductPage.tsx'),
   ]),
   prefix('users', [
-    index(import.meta.resolve('./UsersPage.tsx')),
-    route(':id', import.meta.resolve('./UserPage.tsx')),
+    index('./UsersPage.tsx'),
+    route(':id', './UserPage.tsx'),
   ]),
   prefix('pages', [
-    route('people', import.meta.resolve('./PeoplePage.tsx')),
-    route('error-test', import.meta.resolve('./ErrorTestPage.tsx')),
+    route('people', './PeoplePage.tsx'),
+    route('error-test', './ErrorTestPage.tsx'),
   ]),
 ];

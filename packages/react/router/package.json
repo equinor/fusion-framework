@@ -17,6 +17,14 @@
     "./schema": {
       "import": "./dist/esm/routes/to-route-schema.js",
       "types": "./dist/types/routes/to-route-schema.d.ts"
+    },
+    "./vite-plugin": {
+      "import": "./dist/esm/vite-plugin/index.js",
+      "types": "./dist/types/vite-plugin/index.d.ts"
+    },
+    "./context": {
+      "import": "./dist/esm/context.js",
+      "types": "./dist/types/context.d.ts"
     }
   },
   "scripts": {
@@ -55,6 +63,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2",
+    "vite": "^7.1.12",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
