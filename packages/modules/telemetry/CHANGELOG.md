@@ -1,5 +1,26 @@
 # Change Log
 
+## 4.6.0
+
+### Minor Changes
+
+- [#3777](https://github.com/equinor/fusion-framework/pull/3777) [`78f3679`](https://github.com/equinor/fusion-framework/commit/78f3679b09716f69b3093edcff9f06ad605092c3) Thanks [@odinr](https://github.com/odinr)! - Refactor telemetry filtering API to use a unified `setFilter` method instead of separate `setAdapterFilter` and `setRelayFilter` methods.
+
+  **Changes**
+
+  - Added unified `setFilter()` method that accepts a filter object
+  - Config changed from `adapterFilter`/`relayFilter` to a single `filter` object
+  - The new API provides a cleaner, more cohesive interface for configuring both adapter and relay filters together
+
+  **Usage**
+
+  ```typescript
+  builder.setFilter({
+    adapter: (item) => item.type === TelemetryType.Exception,
+    relay: (item) => item.scope?.includes("critical"),
+  });
+  ```
+
 ## 4.5.0
 
 ### Minor Changes
