@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Button } from '@equinor/eds-core-react';
 import { FlexGrid } from '../Styled';
 
-export const Navigation = () => {
+const Navigation = () => {
   const navigate = useNavigate();
   return (
     <>
@@ -20,3 +20,5 @@ export const Navigation = () => {
     </>
   );
 };
+
+export default Navigation;

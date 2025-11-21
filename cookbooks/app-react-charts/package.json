@@ -27,11 +27,12 @@
     "@types/react-dom": "^18.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.6.0",
+    "react-router-dom": "^7.9.5",
     "typescript": "^5.8.2",
     "styled-components": "^6.1.19"
   },
   "dependencies": {
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "ag-charts-community": "^12.2.0",
     "ag-charts-react": "^12.2.0",
     "chart.js": "^4.4.9",

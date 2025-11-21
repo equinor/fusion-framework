@@ -105,6 +105,7 @@
     "@equinor/fusion-framework-dev-portal": "workspace:*",
     "@equinor/fusion-framework-dev-server": "workspace:*",
     "@equinor/fusion-framework-module-msal-node": "workspace:*",
+    "@equinor/fusion-framework-vite-plugin-raw-imports": "workspace:*",
     "@equinor/fusion-imports": "workspace:*",
     "@types/inquirer": "^9.0.9",
     "commander": "^14.0.1",
@@ -121,6 +122,7 @@
     "zod": "^4.1.8"
   },
   "devDependencies": {
+    "@equinor/fusion-framework-react-router": "workspace:*",
     "@equinor/fusion-framework-module": "workspace:*",
     "@equinor/fusion-framework-module-app": "workspace:*",
     "@equinor/fusion-framework-module-http": "workspace:*",
