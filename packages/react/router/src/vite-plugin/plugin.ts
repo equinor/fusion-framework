@@ -251,7 +251,7 @@ function generateImportStatements(
   if (hasRoutes) {
     importStatements.push(
       `import React from 'react';`,
-      `import { useLoaderData, useActionData, useRouteError } from 'react-router';`,
+      `import { useLoaderData, useActionData, useRouteError } from 'react-router-dom';`,
       `import { useRouterContext, routerContext } from '@equinor/fusion-framework-react-router';`,
     );
   }
