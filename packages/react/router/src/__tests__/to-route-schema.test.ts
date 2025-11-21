@@ -14,7 +14,6 @@ import {
   mockLayoutRoute,
   mockLayoutWithPrefix,
   mockProductRouteCompleteOverride,
-  mockProductRouteWithMethodChaining,
 } from './mocks/routes';
 
 describe('toRouteSchema', () => {
@@ -200,23 +199,6 @@ describe('toRouteSchema', () => {
           {
             params: { id: 'Complete override param description' },
             search: { view: 'Complete override search param' },
-          },
-        ],
-      ]);
-    });
-  });
-
-  describe('method chaining overrides', () => {
-    it('should override schema using method chaining', async () => {
-      const schema = await toRouteSchema(mockProductRouteWithMethodChaining);
-
-      expect(schema).toEqual([
-        [
-          'product/:id',
-          'Method chaining product description',
-          {
-            params: { id: 'Method chaining param description' },
-            search: { view: 'Method chaining search param' },
           },
         ],
       ]);

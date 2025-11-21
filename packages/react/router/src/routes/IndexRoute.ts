@@ -30,8 +30,9 @@ export class IndexRoute extends BaseFileRoute {
  * import { index } from '@equinor/fusion-framework-react-router';
  *
  * export const routes = [
- *   index('./pages/home.tsx')
- *     .description('Home page')
+ *   index('./pages/home.tsx', {
+ *     description: 'Home page'
+ *   })
  * ];
  * ```
  */

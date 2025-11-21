@@ -37,9 +37,10 @@ export class Route extends BaseFileRoute {
  * import { route } from '@equinor/fusion-framework-react-router';
  *
  * export const routes = [
- *   route(':id', './pages/product.tsx')
- *     .description('Product details page')
- *     .params({ id: 'Product identifier' })
+ *   route(':id', './pages/product.tsx', [], {
+ *     description: 'Product details page',
+ *     params: { id: 'Product identifier' }
+ *   })
  * ];
  * ```
  */

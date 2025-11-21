@@ -299,12 +299,13 @@ function isRouteObjectArray(nodes: unknown): nodes is RouteObject[] {
  * ```typescript
  * // New format (RouteNode)
  * const routes = [
- *   index('./home.tsx').description('Home page'),
+ *   index('./home.tsx', { description: 'Home page' }),
  *   prefix('products', [
- *     route(':id', './product.tsx')
- *       .description('Product details')
- *       .params({ id: 'Product identifier' })
- *       .search({ sort: 'Sort order' })
+ *     route(':id', './product.tsx', [], {
+ *       description: 'Product details',
+ *       params: { id: 'Product identifier' },
+ *       search: { sort: 'Sort order' }
+ *     })
  *   ])
  * ];
  *
