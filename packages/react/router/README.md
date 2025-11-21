@@ -1,25 +1,58 @@
 ## Fusion React Router
 
-Fusion React Router (`@equinor/fusion-framework-react-router`) is a thin layer on top of **React Router v7** that:
+Fusion React Router (`@equinor/fusion-framework-react-router`) is a **thin integration layer on top of [React Router v7](https://reactrouter.com/)**.
 
-- **Integrates with Fusion Framework** – navigation, modules, and app context are wired in for you.
-- **Uses a small DSL** (`layout`, `index`, `route`, `prefix`) to define routes in a file-based style.
-- **Injects Fusion context** into loaders, actions, and components via a `fusion` object.
-- **Supports lazy loading** and **route schemas** for documentation and manifests.
+It keeps all the power of React Router, but adds Fusion‑specific behaviour:
+
+- **Fusion integration** – uses the **Fusion navigation module** for `history` and `basename`.
+- **File‑style route DSL** – `layout`, `index`, `route`, `prefix` helpers instead of hand‑built `RouteObject` trees.
+- **`fusion` context everywhere** – loaders, actions, components, and error elements receive Fusion modules and your custom context.
+- **Route schema support** – `handle.route` metadata can be turned into a schema for manifests and documentation.
 
 Use this package when you build Fusion apps that should:
 
-- Use the Fusion navigation module and history.
-- Share services (e.g. `QueryClient`, APIs) across routes via a single router context.
-- Describe routes with schemas that can be reused in manifests or docs.
+- Use the Fusion navigation module for controlled navigation and history.
+- Share services (APIs, `QueryClient`, app‑level `Api` object) across routes via a single router context.
+- Reuse route metadata (`handle.route`) in **manifests, documentation, and navigation UIs**.
+
+> [!IMPORTANT]
+> **Key capabilities this package adds on top of React Router**  
+> - **RouterContext injection**: Every loader, action, component, and error element receives a strongly‑typed `fusion` object. This bundles Fusion modules (`fusion.modules`) *and* your own app context (`fusion.context`), so features like HTTP clients, an `Api` façade, or a shared `QueryClient` are available everywhere without threading props or React contexts.  
+> - **Manifest‑ready route schema**: The DSL + `handle.route` metadata can be turned into a compact schema that tools can read *without executing your app*. Portals, widgets, or chatbots can use this to resolve URL slugs and search parameters up front (e.g. “show me open positions for contract DK‑1 on project offshore wind” → deep link to `/projects/3c6d8f4b-1a2b-4c5d-9e7f-8a9b0c1d2e3f/contracts/8d7f2e7b-4c9a-4e32-bb0f-2f1b8d9f3e21/open-positions?status=open`) before they ever mount the React tree.
 
 For a complete, end‑to‑end example, see the `cookbooks/app-react-router` cookbook.
 
+### Why this package exists
+
+You could wire React Router directly into a Fusion app, but you would have to:
+
+- Manually connect React Router to the Fusion navigation module.
+- Thread modules, HTTP clients, and app services through React contexts or props.
+- Keep route metadata for manifests/docs in a separate structure.
+
+Fusion React Router solves this by:
+
+- Owning the **single integration point** between React Router and Fusion (`<Router />`).
+- Injecting a **typed `fusion` object** into loaders, actions, components, and error elements.
+- Providing a **small DSL** and **schema tools** so routes, docs, and manifests stay in sync.
+
+### When should you use it?
+
+Use `@equinor/fusion-framework-react-router` when:
+
+- You are building a **Fusion app** that already uses `@equinor/fusion-framework-module-navigation`.
+- You want to define routes with a **file‑based DSL** and keep route metadata in one place.
+- You plan to integrate with **Fusion app manifests**, portals, or documentation tooling.
+
+If you only need plain React Router in a non‑Fusion app, use React Router directly instead.
+
 ---
 
-## Installation & prerequisites
+## Getting started
 
 Fusion React Router is designed to run **inside a Fusion app** that already uses Fusion modules.
+
+### Installation
 
 - **Runtime requirements**
   - React 18+ and React DOM 18+
@@ -28,13 +61,40 @@ Fusion React Router is designed to run **inside a Fusion app** that already uses
   - `@equinor/fusion-framework-react-module`
   - `@equinor/fusion-framework-module-navigation`
 
-In most Fusion app templates these are already configured. If you add the router yourself, install it alongside React Router:
+Install the router alongside React Router:
 
 ```bash
 pnpm add @equinor/fusion-framework-react-router react-router-dom
 ```
 
+> [!IMPORTANT]
 > The router reads `history` and `basename` from the Fusion navigation module, so make sure your app configuration includes `@equinor/fusion-framework-module-navigation`.
+
+> [!TIP]
+> Future versions of Fusion will configure the navigation module for you, but for now the router assumes apps are still self‑configuring. This keeps the rollout incremental and avoids breaking existing implementations.
+
+### Recommended project structure
+
+A small, conventional structure looks like this:
+
+```text
+src/
+  pages/
+    MainLayout.tsx
+    HomePage.tsx
+    ProductsPage.tsx
+    ProductPage.tsx
+    index.ts          # route DSL definition (pages array)
+  routes.ts           # top-level route tree
+  Router.tsx          # mounts <Router />
+```
+
+- **Page modules** live in `src/pages`, one file per route.
+- The **route DSL** (`layout`, `index`, `route`, `prefix`) lives in `src/pages/index.ts`.
+- The app has a single `Router` component in `src/Router.tsx` that wires everything to Fusion.
+
+> [!TIP]
+> Using `routes.ts` at the app root as the single exported route tree makes it a natural future hook for the framework to auto‑wire the router and generate route manifest data without extra configuration.
 
 ---
 
@@ -156,16 +216,16 @@ Instead of building nested `RouteObject` trees by hand, you compose a **small ar
 // src/pages/index.ts
 import { index, route, prefix, layout } from '@equinor/fusion-framework-react-router/routes';
 
-export const pages = layout(import.meta.resolve('./MainLayout.tsx'), [
+export const pages = layout('./MainLayout.tsx', [
   // Root index: '/'
-  index(import.meta.resolve('./HomePage.tsx')),
+  index('./HomePage.tsx'),
 
   // Group everything under '/products'
   prefix('products', [
     // '/products'
-    index(import.meta.resolve('./ProductsPage.tsx')),
+    index('./ProductsPage.tsx'),
     // '/products/:id'
-    route(':id', import.meta.resolve('./ProductPage.tsx')),
+    route(':id', './ProductPage.tsx'),
   ]),
 ]);
 ```
@@ -175,114 +235,66 @@ export const pages = layout(import.meta.resolve('./MainLayout.tsx'), [
 ```tsx
 // src/Router.tsx
 import { Router } from '@equinor/fusion-framework-react-router';
-import { pages } from './pages';
+import { routes } from './routes';
 
 export default function AppRouter() {
   // The Router creates a React Router instance wired to Fusion navigation
-  return <Router routes={pages} />;
+  return <Router routes={routes} />;
 }
 ```
 
-> **Note**  
+> [!IMPORTANT]
 > Route components receive **reserved props**: `loaderData`, `actionData`, and `fusion`.  
 > Avoid declaring props with those names yourself – use `RouteComponentProps` types instead.
 
 ---
 
-## Router component
-The `Router` component is the **integration point** between React Router and Fusion Framework. You give it your route tree and, optionally, a loading element and a context object – it does the rest.
+## Best practices
 
-- **`routes`**: A single `RouteNode` or array built with `layout`, `index`, `route`, `prefix`.
-- **`loader`**: Optional React element shown while lazy routes are loading.
-- **`context`**: Custom object exposed as `fusion.context` in loaders, actions, and components.
+- **Use one `Router` per app**  
+  Keep `@equinor/fusion-framework-react-router` as the *only* place that wires React Router to Fusion. Do not create your own `RouterProvider` instances in parallel.
 
-The router uses the Fusion navigation module under the hood:
+- **Keep page modules co‑located with route definitions**  
+  Put route components, loaders, actions, and `handle` definitions in the same `src/pages/*.tsx` files. Keep the DSL tree in a small `src/pages/index.ts` module.
 
-- It reads `navigation.history` and `navigation.basename`.
-- It injects Fusion modules and `context` into all route loaders (`clientLoader`), actions, and components.
+- **Use `fusion.context` for shared services**  
+  Put long‑lived services (e.g. `QueryClient`, HTTP API wrapper, `Api` class) on `fusion.context` so they are available in loaders, actions, and components without extra React contexts.
 
-### Sharing app services via `context`
+- **Use `handle.route` consistently**  
+  Always describe routes via `handle.route` – even for simple pages – so manifests and docs can rely on a complete route schema.
 
-The `context` prop is the simplest way to share **application‑level services** (API wrappers, `QueryClient`, configuration) with all your pages. Anything you put there will be available as `fusion.context` inside loaders, actions, and components without extra React context plumbing.
+- **Avoid reserved props on components**  
+  Do not declare your own props named `loaderData`, `actionData`, or `fusion`. Use `RouteComponentProps` for typing instead:
 
-```tsx
-// src/Router.tsx
-import { Router } from '@equinor/fusion-framework-react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { pages } from './pages';
+  ```tsx
+  import type { RouteComponentProps } from '@equinor/fusion-framework-react-router';
 
-export default function AppRouter() {
-  // Single QueryClient instance for the whole app
-  const queryClient = new QueryClient();
-
-  return (
-    // Provide QueryClient via React context
-    <QueryClientProvider client={queryClient}>
-      {/* Make QueryClient available to all loaders via fusion.context */}
-      <Router routes={pages} context={{ queryClient }} />
-    </QueryClientProvider>
-  );
-}
-```
-
-```tsx
-// src/pages/SomePage.tsx
-import type { LoaderFunctionArgs } from '@equinor/fusion-framework-react-router';
-
-export async function clientLoader({ fusion }: LoaderFunctionArgs) {
-  // HTTP client from Fusion HTTP module
-  const httpClient = fusion.modules.http.createHttpClient('api');
-  // Shared QueryClient from Router context
-  const { queryClient } = fusion.context;
-
-  return queryClient.fetchQuery({
-    queryKey: ['stuff'],
-    queryFn: () => httpClient.json('/my-api/endpoint'),
-  });
-}
-```
-
-If you prefer a richer API surface, you can create your own `Api` class that holds `queryClient` and HTTP clients and pass it in `context`. This pattern is demonstrated in `cookbooks/app-react-router`.
-
----
-
-## TypeScript: typing `fusion.context` and `handle`
-
-The router’s `fusion` object and `handle` metadata are fully type‑safe and can be **extended via module augmentation**.
-
-- **Typing `fusion.context`**
-
-  ```ts
-  // router-context.d.ts
-  import type { QueryClient } from '@tanstack/react-query';
-  import type { Api } from './api';
-
-  declare module '@equinor/fusion-framework-react-router' {
-    interface RouterContext {
-      api: Api;
-      queryClient: QueryClient;
-    }
+  export default function MyPage({
+    loaderData,
+    actionData,
+    fusion,
+  }: RouteComponentProps<MyLoaderData, MyActionData>) {
+    // ...
   }
   ```
 
-  With this in place, `fusion.context.api` and `fusion.context.queryClient` are strongly typed in loaders, actions, and components.
+- **Start with data routes, adopt the DSL later**  
+  For most “regular” app development, define a normal React Router **data route tree** (`RouteObject[]` with loaders/actions) and pass it straight to `Router`. The DSL + Vite plugin are powerful but still experimental; they’re best suited for teams that need file‑based routing and manifest generation, and are comfortable helping us iron out edge cases and chunking behaviour.
 
-- **Typing `handle` metadata**
-
-  ```ts
-  // router-handle.d.ts
-  declare module '@equinor/fusion-framework-react-router' {
-    interface RouterHandle {
-      permissions?: string[];
-    }
-  }
-  ```
-
-  `RouterHandle` is the type of the `handle` export used by the router – it always includes a `route` schema (used by `toRouteSchema`) and can be extended with your own fields. You can annotate handles as `const handle: RouterHandle = { ... }` or, as in the quick‑start example, write `const handle = { ... } satisfies RouterHandle` to keep type‑checking strict while still allowing extra metadata.
+- **Prefer the Vite plugin for larger apps**  
+  In bigger apps, use the bundled Vite plugin (`@equinor/fusion-framework-react-router/vite-plugin`) to statically transform the DSL into optimized route objects.
 
 ---
 
-## Route DSL
+## How it works
+
+At runtime, Fusion React Router does three main things:
+
+1. **Turns the DSL into React Router routes.**
+2. **Connects React Router to the Fusion navigation module.**
+3. **Injects a typed `fusion` object and reserved props into your route modules.**
+
+### 1. Route DSL → React Router
 
 All helpers are exported from `@equinor/fusion-framework-react-router/routes`:
 
@@ -290,47 +302,136 @@ All helpers are exported from `@equinor/fusion-framework-react-router/routes`:
 import { layout, index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 ```
 
-### `index(file, schema?)`
+- Each call returns a `RouteNode` (`layout`, `index`, `route`, or `prefix`).
+- The router (or Vite plugin) turns these nodes into React Router `RouteObject`s.
+- File paths in the DSL point to page modules that export `default`, `clientLoader`, `action`, `ErrorElement`, and `handle` as needed.
 
-Creates an **index route** – the default route for a segment (typically your `/` or `/section` landing page).
+The Vite plugin (`@equinor/fusion-framework-react-router/vite-plugin`) can **statically analyze** your DSL usage and emit optimized `RouteObject` code, while keeping the ergonomics of `layout/index/route/prefix` in your source.
+
+> [!WARNING]
+> **DSL + Vite plugin are experimental**  
+> The route DSL (`layout`, `index`, `route`, `prefix`) and its Vite transform are still evolving. We are actively ironing out quirks in the transformation, especially around chunking and how large route trees are split into bundles. If you want the most stable path today, prefer building **plain React Router data routes** (`RouteObject[]` with loaders/actions) and pass them directly to `Router`; when you do opt into the DSL, remember that the plugin always lowers it back down to a standard `RouteObject` data‑route tree under the hood.
+
+### 2. Router + Fusion navigation
+
+The `Router` component is the **integration point** between React Router and Fusion Framework. You give it your route tree and, optionally, a loading element and a context object – it does the rest.
+
+- **`routes`**: A single `RouteNode` or array built with `layout`, `index`, `route`, `prefix`, or plain `RouteObject`s.
+- **`loader`**: Optional React element shown while lazy routes are loading.
+- **`context`**: Custom object exposed as `fusion.context` in loaders, actions, and components.
+
+Under the hood, the router:
+
+- Reads `navigation.history` and `navigation.basename` from the Fusion navigation module.
+- Creates a React Router instance using those values.
+- Wraps loaders, actions, components, and error elements to inject the `fusion` object and reserved props.
+
+### 3. `fusion` in loaders, actions, components, and errors
+
+Every route module can export:
+
+- `clientLoader(args: LoaderFunctionArgs)` – runs before the component renders.
+- `action(args: ActionFunctionArgs)` – handles form submissions and mutations.
+- `ErrorElement(props: ErrorElementProps)` – route‑scoped error boundary.
+- `default(props: RouteComponentProps)` – the route component.
+
+For all of them, Fusion React Router ensures:
+
+- `args.fusion` contains **Fusion modules** (`fusion.modules`) and your **custom context** (`fusion.context`).
+- Route components receive `loaderData`, `actionData`, and `fusion` as props.
+- Error elements receive `error` and `fusion` as props.
+
+> [!TIP]
+> Your route modules stay close to React Router’s data APIs, but they never have to manually look up Fusion modules or contexts – the `fusion` object is injected for you.
+
+### 4. `handle` and route schema
+
+Each route can export a `handle` object conforming to `RouterHandle`:
+
+- `handle.route` is the **canonical place** to describe the route (description, params, search).
+- You can extend `RouterHandle` via module augmentation to attach extra metadata (permissions, navigation config, etc.).
+
+These handles can be turned into a simple array schema using `toRouteSchema`:
 
 ```ts
-index(import.meta.resolve('./HomePage.tsx'))
-// → '/'
+import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
+import { pages } from './pages';
+
+const routes = pages; // or layout(...), prefix(...), etc.
+
+// Produce a flat, tool‑friendly representation of all routes
+const schema = await toRouteSchema(routes);
+// schema: RouteSchemaEntry[] = [ [path, description, { params?, search? }], ... ]
 ```
 
-### `route(path, file, children?, schema?)`
+This schema can then be used in app manifests, portal integrations, or external documentation tooling.
 
-Creates a **standard route** with a path. The path can include dynamic segments like `:id` or `:id?` and can have nested child routes.
+---
+
+## TypeScript: typing `fusion.context` and `handle`
+
+The router’s `fusion` object and `handle` metadata are fully type‑safe and can be **extended via module augmentation**.
+
+### Typing `fusion.context`
 
 ```ts
-route(':id', import.meta.resolve('./ProductPage.tsx'))
-// when nested under prefix('products') → '/products/:id'
+// router-context.d.ts
+import type { QueryClient } from '@tanstack/react-query';
+import type { Api } from './api';
+
+declare module '@equinor/fusion-framework-react-router' {
+  interface RouterContext {
+    api: Api;
+    queryClient: QueryClient;
+  }
+}
 ```
 
-### `prefix(path, children)`
+With this in place, `fusion.context.api` and `fusion.context.queryClient` are strongly typed in loaders, actions, and components.
 
-Creates a **virtual group** of routes under a common path prefix, without introducing a layout component. This is useful when you want clean URLs and grouping, but do not need shared UI.
+```tsx
+// src/Router.tsx
+import { Router } from '@equinor/fusion-framework-react-router';
+import { QueryClient } from '@tanstack/react-query';
+
+import { Api } from './api';
+import { routes } from './routes';
+
+export default function AppRouter() {
+  const queryClient = new QueryClient();
+  const api = new Api(queryClient);
+
+  return <Router routes={routes} context={{ api, queryClient }} />;
+}
+```
 
 ```ts
-prefix('products', [
-  index(import.meta.resolve('./ProductsPage.tsx')),       // '/products'
-  route(':id', import.meta.resolve('./ProductPage.tsx')), // '/products/:id'
-]);
+// src/pages/SomePage.tsx
+import type { LoaderFunctionArgs } from '@equinor/fusion-framework-react-router';
+
+export async function clientLoader({ fusion }: LoaderFunctionArgs) {
+  // Typed access to your custom context
+  const { api, queryClient } = fusion.context;
+
+  return queryClient.fetchQuery({
+    queryKey: ['current-user'],
+    queryFn: () => api.getCurrentUser(),
+  });
+}
 ```
 
-### `layout(file, children)`
-
-Wraps a set of routes in a **layout component** that renders an `<Outlet />`. Use this when you want shared UI (navigation, header, shell) around a group of routes.
+### Typing `handle` metadata
 
 ```ts
-layout(import.meta.resolve('./MainLayout.tsx'), [
-  index(import.meta.resolve('./HomePage.tsx')), // '/'
-  prefix('products', [/* product routes */]),   // '/products/...'
-]);
+// router-handle.d.ts
+declare module '@equinor/fusion-framework-react-router' {
+  interface RouterHandle {
+    permissions?: string[];
+  }
+}
 ```
 
-Internally, these helpers create `RouteNode`s which are converted to React Router `RouteObject`s using `createRoutes`. You normally do not call `createRoutes` yourself – `Router` handles it – which keeps your route definitions close to the file structure you already have.
+`RouterHandle` is the type of the `handle` export used by the router – it always includes a `route` schema (used by `toRouteSchema`) and can be extended with your own fields. You can annotate handles as `const handle: RouterHandle = { ... }` or, as in the quick‑start example, write `const handle = { ... } satisfies RouterHandle` to keep type‑checking strict while still allowing extra metadata.
 
 ---
 
@@ -385,7 +486,6 @@ A page module can export:
 - `clientLoader` – client-side loader for data fetching.
 - `action` – handles form submissions and mutations.
 - `ErrorElement` – error boundary for this route.
-- `HydrateFallback` – element used during SSR hydration.
 - `handle` – route metadata (`RouterHandle` or `RouterSchema`).
 
 ```tsx
@@ -444,7 +544,7 @@ export function ErrorElement({ error }: ErrorElementProps) {
 }
 ```
 
-> **Reserved values**  
+> [!NOTE]
 > - `loaderData` – return value from `clientLoader`.  
 > - `actionData` – return value from `action`.  
 > - `fusion` – Fusion router context with `modules` and `context`.  
@@ -462,25 +562,13 @@ This pattern is intentionally close to React Router’s own data APIs, but adds:
 Route handles can be turned into a simple schema array using `toRouteSchema`. This is useful when you need to provide route metadata to app manifests or external systems.
 
 ```ts
-import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
-import { pages } from './pages';
-
-const routes = pages; // or layout(...), prefix(...), etc.
-
-// Produce a flat, tool‑friendly representation of all routes
-const schema = await toRouteSchema(routes);
-// schema: RouteSchemaEntry[] = [ [path, description, { params?, search? }], ... ]
-```
-
-Example of how this schema can be used in an app manifest:
-
-```ts
 import { defineAppManifest } from '@equinor/fusion-framework-cli/app';
+import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
 import { routes } from './routes';
 
-export const manifest = defineAppManifest(() => ({
+export const manifest = defineAppManifest(async () => ({
   appKey: 'my-app',
-  routes,
+  routes: await toRouteSchema(routes),
 }));
 ```
 
@@ -513,27 +601,146 @@ In most applications you do not have to touch `toRouteSchema` directly – it be
 
 ---
 
+### Resolving URLs before loading the app
+
+Because the schema is just data, a host (portal, widget shell, chatbot, etc.) can inspect it to resolve **URL slugs and search parameters** *before* mounting your app.
+
+For example, a chatbot could look up a “user details” route and construct a deep link with validated search parameters:
+
+```ts
+// Pseudo-code in a host system (e.g. chatbot widget)
+import { toRouteSchema } from '@equinor/fusion-framework-react-router/schema';
+import { routes } from './routes';
+
+const schema = await toRouteSchema(routes);
+
+// Find the route we want to deep-link to
+const userDetails = schema.find(([path, description]) =>
+  description === 'User detail page',
+);
+
+if (userDetails) {
+  const [path, , meta] = userDetails;
+
+  // meta.search now documents available search params (e.g. userId)
+  const url = `${baseUrl}/${path}?userId=${encodeURIComponent(userId)}`;
+
+  // Use this URL in a widget, chatbot response, or portal link
+}
+```
+
+This makes the DSL and `handle.route` not just a router configuration, but a **contract** for external systems that need to reason about your app’s URLs without running its code.
+
+---
+
+## Using the Vite plugin without Fusion Framework CLI
+
+You can use the DSL + Vite transform even in apps that **do not use the Fusion Framework CLI**. The Vite plugin scans for `layout/index/route/prefix` imports and rewrites them into standard React Router `RouteObject` data routes.
+
+### 1. Enable the plugin in `vite.config.ts`
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { reactRouterPlugin } from '@equinor/fusion-framework-react-router/vite-plugin';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    reactRouterPlugin({
+      // Optional: turn on debug logging while you integrate
+      debug: true,
+    }),
+  ],
+});
+```
+
+### 2. Use the DSL in any module
+
+With the plugin enabled, you can use the DSL anywhere in your app – the plugin will:
+
+- Find imports of `layout`, `index`, `route`, `prefix` from `@equinor/fusion-framework-react-router/routes`.
+- Inspect the referenced files to see which exports exist (`default`, `clientLoader`, `action`, `handle`, `ErrorElement`).
+- Generate the corresponding **data route objects** with `Component`, `loader`, `action`, `handle`, `errorElement`, and injected `fusion` context.
+
+```ts
+// src/pages/index.ts
+import { layout, index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
+
+export const pages = layout('./Root.tsx', [
+  index('./HomePage.tsx'),
+  prefix('products', [
+    index('./ProductsPage.tsx'),
+    route(':id', './ProductPage.tsx'),
+  ]),
+]);
+```
+
+At build time, the plugin rewrites this to a plain `RouteObject[]` tree. At runtime, `Router` only ever sees **standard data routes**; the DSL is a source‑level convenience.
+
+> [!NOTE]
+> The plugin is intentionally conservative: it only transforms files that both import the DSL helpers and actually call them. If you remove the DSL from a file, the plugin becomes a no‑op for that file.
+
+---
+
 ## Migration from plain React Router
 
 If you currently have a React Router route tree like this:
 
 ```tsx
 // routes.ts
+import Root from './pages/Root';
+import Home from './pages/HomePage';
+import Products from './pages/ProductsPage';
+import Product from './pages/ProductPage';
+
 export const routes = [
   {
     // Layout/root route
     element: <Root />,
     path: '/',
     errorElement: <RouterError />,
+    handle: {
+      route: {
+        description: 'Root layout',
+      },
+    },
     children: [
-      // '/'
-      { index: true, element: <Home /> },
+      {
+        // '/'
+        index: true,
+        element: <Home />,
+        handle: {
+          route: {
+            description: 'Home page of application',
+          },
+        },
+      },
       {
         // '/products'
         path: 'products',
         element: <Products />,
-        // '/products/:id'
-        children: [{ path: ':id', element: <Product /> }],
+        handle: {
+          route: {
+            description: 'Product list page',
+          },
+        },
+        children: [
+          {
+            // '/products/:id'
+            path: ':id',
+            element: <Product />,
+            handle: {
+              route: {
+                description: 'Details of a product',
+                params: {
+                  id: 'Identifier of the product',
+                },
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -550,15 +757,15 @@ You can migrate to Fusion React Router by:
 // src/pages/index.ts
 import { layout, index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 
-export const pages = layout(import.meta.resolve('./Root.tsx'), [
+export const pages = layout('./Root.tsx', [
   // '/'
-  index(import.meta.resolve('./HomePage.tsx')),
+  index('./HomePage.tsx'),
   // '/products/...'
   prefix('products', [
     // '/products'
-    index(import.meta.resolve('./ProductsPage.tsx')),
+    index('./ProductsPage.tsx'),
     // '/products/:id'
-    route(':id', import.meta.resolve('./ProductPage.tsx')),
+    route(':id', './ProductPage.tsx'),
   ]),
 ]);
 ```
@@ -576,3 +783,33 @@ export default function App() {
 ```
 
 From here you can start using Fusion modules in loaders and actions, and generate route schemas with `toRouteSchema`. For more advanced patterns (debug toolbar, React Query integration, richer APIs), see `cookbooks/app-react-router`.
+
+---
+
+## Common pitfalls & troubleshooting
+
+- **`fusion.modules.navigation` is `undefined` or navigation does not work**
+  - Make sure your Fusion app is configured with `@equinor/fusion-framework-module-navigation`.
+  - Do not create your own `RouterProvider`; always use `@equinor/fusion-framework-react-router`’s `Router` component.
+
+- **Loaders/actions do not receive `fusion`**
+  - Verify that `clientLoader` and `action` are exported from the **page module** that your DSL points to.
+  - Ensure imports come from `@equinor/fusion-framework-react-router` and not from React Router types directly.
+
+- **Components complain about unknown props (`fusion`, `loaderData`, `actionData`)**
+  - Route components automatically receive these props; type them using `RouteComponentProps` instead of declaring your own prop types.
+  - Do not forward these props to child components unless you intend to.
+
+- **`handle.route.params` / `search` do not match actual routes**
+  - Keep `handle.route.params` in sync with your route paths (e.g. `path: 'users/:id'` ↔ `params: { id: 'User id' }`).
+  - Make sure query parameters in `search` (e.g. `filter`, `sort`) match how your loaders/actions read them.
+
+- **Schemas or manifests look wrong**
+  - Check that every route you care about has a `handle.route` description.
+  - Confirm you are passing the same route tree to both `Router` and `toRouteSchema`.
+
+- **Vite plugin does not pick up routes**
+  - Ensure you import the DSL helpers from `@equinor/fusion-framework-react-router/routes`.
+  - Use relative paths like `'./MyPage.tsx'` in DSL calls; the plugin resolves these and wires up the correct imports.
+
+If you run into an issue that is not covered here, look at the `cookbooks/app-react-router` example, which shows the router integrated in a full Fusion app including navigation, manifests, and a sidebar driven by `handle` metadata.
