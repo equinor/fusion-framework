@@ -223,6 +223,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-router:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.9.5
         version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -275,6 +278,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-router:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.9.5
         version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -496,6 +502,9 @@ importers:
       '@equinor/fusion-react-person':
         specifier: ^0.10.10
         version: 0.10.10(react@18.3.1)
+      react-router:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.9.5
         version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1942,13 +1951,6 @@ importers:
 
   packages/react/router:
     dependencies:
-      react-router:
-        specifier: ^7.9.5
-        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-router-dom:
-        specifier: ^7.9.5
-        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    devDependencies:
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../modules/navigation
@@ -1958,6 +1960,13 @@ importers:
       '@equinor/fusion-imports':
         specifier: workspace:^
         version: link:../../utils/imports
+      react-router:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router-dom:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
       '@react-router/dev':
         specifier: ^7.9.5
         version: 7.9.5(@types/node@24.10.0)(react-router@7.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3)(vite@7.1.12(@types/node@24.10.0)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))

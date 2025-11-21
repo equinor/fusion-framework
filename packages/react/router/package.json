@@ -50,12 +50,12 @@
     "directory": "packages/react/router"
   },
   "dependencies": {
-    "react-router": "^7.9.5"
-  },
-  "devDependencies": {
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
     "@equinor/fusion-imports": "workspace:^",
+    "react-router": "^7.9.5"
+  },
+  "devDependencies": {
     "@react-router/dev": "^7.9.5",
     "@types/react": "^18.2.50",
     "@types/react-dom": "^18.2.7",
@@ -67,9 +67,6 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@equinor/fusion-framework-module-navigation": "workspace:^",
-    "@equinor/fusion-framework-react-module": "workspace:^",
-    "@equinor/fusion-imports": "workspace:^",
     "@types/react": "^18.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
