@@ -8,6 +8,8 @@
   "scripts": {
     "build": "fusion-framework-cli app build",
     "dev": "fusion-framework-cli app dev",
+    "preserve": "fusion-framework-cli app build",
+    "serve": "fusion-framework-cli app serve",
     "docker": "cd .. && sh docker-script.sh app-react",
     "manifest": "fusion-framework-cli app manifest"
   },

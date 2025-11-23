@@ -13,11 +13,12 @@ export const configure = (
   });
 
   configurator.useFrameworkServiceClient('people');
+  // Use current origin (includes protocol, host, and port) instead of hardcoded port
   configurator.configureHttpClient('products', {
-    baseUri: 'http://localhost:3000',
+    baseUri: window.location.origin
   });
   configurator.configureHttpClient('users', {
-    baseUri: 'http://localhost:3000',
+    baseUri: window.location.origin
   });
 };
 

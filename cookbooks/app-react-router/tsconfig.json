@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
 
-    "jsx": "react-jsxdev"
+    "jsx": "react-jsx"
   },
   "references": [
     {
