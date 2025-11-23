@@ -83,9 +83,7 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
   log?.succeed('Vite config loaded');
 
   // Determine the directory to serve (relative to root)
-  const outDirRelative = customDir
-    ? customDir
-    : viteConfig.build?.outDir || 'dist';
+  const outDirRelative = customDir ? customDir : viteConfig.build?.outDir || 'dist';
   const outDirAbsolute = resolve(pkg.root, outDirRelative);
 
   // Setup the runtime environment for the serve server
@@ -135,7 +133,9 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
 
   const localViteConfig = await loadViteConfig(env, pkg);
 
-  const allowFs = templateFilePath ? [pkg.root, templateFilePath, outDirAbsolute] : [pkg.root, outDirAbsolute];
+  const allowFs = templateFilePath
+    ? [pkg.root, templateFilePath, outDirAbsolute]
+    : [pkg.root, outDirAbsolute];
 
   log?.debug(`File system access allowed for: \n${allowFs.join('\n')}\n`);
 
@@ -198,9 +198,7 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
 
     // Print app URL if manifest has appKey
     if (appManifest.appKey) {
-      log?.info(
-        `App URL: ${protocol}://${serverHost}:${serverPort}/apps/${appManifest.appKey}`,
-      );
+      log?.info(`App URL: ${protocol}://${serverHost}:${serverPort}/apps/${appManifest.appKey}`);
     }
 
     return devServer;
@@ -212,4 +210,3 @@ export const serveApplication = async (options?: ServeApplicationOptions) => {
 
 // Export as default for compatibility with import patterns
 export default serveApplication;
-

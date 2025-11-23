@@ -15,10 +15,10 @@ export const configure = (
   configurator.useFrameworkServiceClient('people');
   // Use current origin (includes protocol, host, and port) instead of hardcoded port
   configurator.configureHttpClient('products', {
-    baseUri: window.location.origin
+    baseUri: window.location.origin,
   });
   configurator.configureHttpClient('users', {
-    baseUri: window.location.origin
+    baseUri: window.location.origin,
   });
 };
 

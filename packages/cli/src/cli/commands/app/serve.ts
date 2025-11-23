@@ -82,4 +82,3 @@ export const command = createCommand('serve')
   });
 
 export default command;
-
