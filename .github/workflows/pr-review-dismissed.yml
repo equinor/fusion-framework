@@ -11,7 +11,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set pull request to draft
         if: ${{ github.event.review.state == 'changes_requested' }}
         run: gh pr ready ${{ github.event.pull_request.number }} --undo
