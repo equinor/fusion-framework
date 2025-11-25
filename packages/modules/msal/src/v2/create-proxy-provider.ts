@@ -19,11 +19,7 @@ function isRequestV4(
     return false;
   }
   const requestV4 = req as AcquireTokenOptions;
-  return (
-    typeof requestV4.request === 'object' &&
-    requestV4.request !== null &&
-    'request' in requestV4
-  );
+  return 'request' in requestV4;
 }
 
 /**
