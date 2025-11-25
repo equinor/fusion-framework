@@ -1,89 +1,17 @@
 ---
-description: Package management guidelines - always use pnpm
+description: Package management guidelines - always use pnpm (delegated to GitHub instructions)
 alwaysApply: true
 requireFile: ./package.json
 ---
 
-# Package Manager Rules
+# Package Manager Rules (Cursor delegation)
 
-## Always Use pnpm Instead of npm
+This rule intentionally delegates to the **GitHub-based instructions** to avoid duplication.
 
-This project **requires pnpm** as the package manager. Never use npm or yarn directly.
+For package manager and workspace command usage, follow:
 
-### Why pnpm?
-- **Workspace Support**: Efficient monorepo management
-- **Disk Efficiency**: Single copy of packages via hardlinks
-- **Performance**: Faster installs and better caching
-- **Lockfile**: Strict dependency resolution
-- **Security**: Built-in audit and integrity checks
+- `.github/instructions/code-generation.instructions.md` (section: **Package Manager**)
+- `AGENT.md` (sections: **What you are working with** and **Default behavior checklist**)
 
-## Common Commands - pnpm vs npm
+AI agents should always use `pnpm` (never `npm` or `yarn`) and follow those documents for command patterns.
 
-| npm Command | pnpm Equivalent | Description |
-|-------------|-----------------|-------------|
-| `npm install` | `pnpm install` | Install all dependencies |
-| `npm install <pkg>` | `pnpm add <pkg>` | Install package |
-| `npm install -D <pkg>` | `pnpm add -D <pkg>` | Install dev dependency |
-| `npm run <script>` | `pnpm <script>` | Run package script |
-| `npm run build` | `pnpm build` | Run build script |
-| `npm run test` | `pnpm test` | Run test script |
-| `npm run dev` | `pnpm dev` | Run development script |
-| `npm uninstall <pkg>` | `pnpm remove <pkg>` | Remove package |
-
-## pnpm Workspace Commands
-
-| Command | Description |
-|---------|-------------|
-| `pnpm -r <command>` | Run command in all workspace packages |
-| `pnpm --filter <package> <command>` | Run command in specific package |
-| `pnpm changeset` | Generate changeset for versioning |
-| `pnpm clean` | Clean all workspace packages |
-
-## Project-Specific Scripts
-
-Based on [package.json](mdc:package.json), common commands:
-
-```bash
-# Installation
-pnpm install                    # Install all dependencies
-pnpm install:clean             # Clean install
-
-# Development
-pnpm dev                       # Start development
-pnpm watch:packages            # Watch package builds
-
-# Building
-pnpm build                     # Build all packages
-pnpm build:clean               # Clean build
-
-# Testing
-pnpm test                      # Run tests
-pnpm test:ci                   # Run tests in CI
-
-# Maintenance
-pnpm clean                     # Clean everything
-pnpm changeset                 # Generate changeset
-```
-
-## Configuration Verification
-
-The project is configured to use pnpm:
-- `packageManager: "pnpm@9.1.0"` in package.json
-- Engine requirements: `"npm": "please-use-pnpm"`
-- All scripts use pnpm commands
-
-## Error Prevention
-
-If you accidentally run npm commands, you'll see:
-```
-npm ERR! code ENOTSUP
-npm ERR! notsup Unsupported engine for fusion-framework@1.0.0-beta.0: wanted: {"npm":"please-use-pnpm","yarn":"please-use-pnpm","pnpm":">=9"} (current: {"node":"v22.x.x","npm":"10.x.x"})
-```
-
-## Best Practices
-
-- [ ] Always use `pnpm` instead of `npm`
-- [ ] Use workspace commands (`-r`, `--filter`) for multi-package operations
-- [ ] Check package.json scripts before running custom commands
-- [ ] Use `pnpm changeset` for version management
-- [ ] Keep pnpm up to date (currently requires >=9)

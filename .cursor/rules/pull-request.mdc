@@ -1,63 +1,17 @@
 ---
-description: Pull request generation guidelines and template usage
+description: Pull request generation guidelines and template usage (delegated to GitHub instructions)
 alwaysApply: true
 requireFile: ./.github/PULL_REQUEST_TEMPLATE.md
 ---
 
-# Pull Request Generation Rules
+# Pull Request Generation Rules (Cursor delegation)
 
-## Always Use GitHub PR Template
+This rule intentionally delegates to the **GitHub-based instructions** to avoid duplication.
 
-When generating pull request titles and bodies, **always** use the repository's GitHub PR template located at [`.github/PULL_REQUEST_TEMPLATE.md`](mdc:.github/PULL_REQUEST_TEMPLATE.md).
+For PR templates, titles, bodies, and review flow, follow:
 
-## Template Structure Requirements
+- `.github/instructions/pull-requests.instructions.md`
+- `AGENT.md` (sections: **Key instruction files** and **Default behavior checklist**)
 
-The PR template includes these required sections that must be filled:
+AI agents should always use the GitHub PR template and those docs when generating or editing PR content.
 
-### Why Section
-- **What kind of change does this PR introduce?** (e.g., feature, bug fix, refactor, etc.)
-- **What is the current behavior?** (describe existing behavior)
-- **What is the new behavior?** (describe what will change)
-- **Does this PR introduce a breaking change?** (yes/no and explanation)
-- **Other information?** (any additional context)
-- **closes:** (link to related issues)
-
-### Checkboxes Section
-All checkboxes in the template must be addressed:
-- [ ] Confirm completion of the [self-review checklist](mdc:contributing/self-review.md)
-- [ ] Confirm changes to target branch validation
-  - _Included files validated_
-  - _No new linting warnings_
-  - _Not a duplicate PR ([check existing](https://github.com/equinor/fusion-framework/pulls))_
-- [ ] Confirm adherence to [code of conduct](mdc:CODE_OF_CONDUCT.md)
-
-## Self-Review Checklist Requirements
-
-Before requesting review, contributors must complete the [self-review checklist](mdc:contributing/self-review.md):
-
-### Before Requesting Review
-- [ ] **Local Checks**: Run `pnpm test && pnpm build && pnpm -w check`
-- [ ] **Changeset**: Create if this affects consumers ([how-to](mdc:contributing/changeset.md))
-- [ ] **Manual Testing**: Verify the change works as expected
-- [ ] **PR Quality**: Add description and link related issues
-
-### Code Quality Check
-- [ ] **Readability**: Code is clear and understandable
-- [ ] **Documentation**: Public APIs have TSDoc comments
-- [ ] **Tests**: New functionality is tested
-- [ ] **Breaking Changes**: Documented if present
-
-## PR Title Format
-Follow conventional commit format for PR titles when possible:
-- `feat: add new feature`
-- `fix: resolve issue`
-- `refactor: improve code structure`
-- `docs: update documentation`
-- `chore: maintenance tasks`
-
-## Best Practices
-- Be descriptive but concise
-- Include relevant issue numbers
-- Reference any breaking changes clearly
-- Explain the rationale behind changes
-- Link to related PRs or issues

@@ -1,51 +1,17 @@
 ---
-description: Vitest testing setup and conventions
+description: Vitest testing setup and conventions (delegated to GitHub instructions)
 alwaysApply: false
 ---
-# Vitest Testing Rules
 
-## Test Structure
-- Place tests in `src/__tests__/` directories
-- Use `.test.ts` or `.spec.ts` naming
-- Exclude from TypeScript compilation in `tsconfig.json`
+# Vitest Testing Rules (Cursor delegation)
 
-## Basic Config
-```typescript
-import { defineProject } from 'vitest/config';
-import { fileURLToPath } from 'node:url';
-import pkg from './package.json';
+This rule intentionally delegates to the **GitHub-based instructions** to avoid duplication.
 
-export default defineProject({
-  test: {
-    environment: 'node',
-    include: ['src/__tests__/**/*.{test,spec}.ts'],
-    name: `${pkg.name}@${pkg.version}`,
-  },
-  resolve: {
-    alias: {
-      '@/': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-});
-```
+For testing structure, coverage expectations, mocking, and async/error testing, follow:
 
-## Dependencies
-```json
-{
-  "devDependencies": {
-    "vitest": "^2.0.5",
-    "@vitest/coverage-v8": "^2.0.1"
-  },
-  "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run"
-  }
-}
-```
+- `.github/instructions/testing.instructions.md`
+- `.github/instructions/react.instructions.md` (for React component tests)
+- `AGENT.md` (sections: **Key instruction files** and **Default behavior checklist**)
 
-## TypeScript Exclusion
-```json
-{
-  "exclude": ["src/__tests__/**/*"]
-}
-```
+AI agents should treat those documents as the single source of truth for testing behavior.
+
