@@ -1047,8 +1047,8 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1096,8 +1096,8 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1186,8 +1186,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/observable
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1424,8 +1424,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/query
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1688,8 +1688,8 @@ importers:
         specifier: workspace:^
         version: link:../../utils/observable
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
     devDependencies:
       '@equinor/fusion':
         specifier: ^3.4.15
@@ -1973,8 +1973,8 @@ importers:
   packages/utils/observable:
     dependencies:
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2016,8 +2016,8 @@ importers:
         specifier: workspace:^
         version: link:../observable
       immer:
-        specifier: ^10.1.3
-        version: 10.2.0
+        specifier: ^11.0.0
+        version: 11.0.0
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -6635,8 +6635,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@10.2.0:
-    resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
+  immer@11.0.0:
+    resolution: {integrity: sha512-XtRG4SINt4dpqlnJvs70O2j6hH7H0X8fUzFsjMn1rwnETaxwp83HLNimXBjZ78MrKl3/d3/pkzDH0o0Lkxm37Q==}
 
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
@@ -15416,7 +15416,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@10.2.0: {}
+  immer@11.0.0: {}
 
   immer@9.0.21: {}
 
