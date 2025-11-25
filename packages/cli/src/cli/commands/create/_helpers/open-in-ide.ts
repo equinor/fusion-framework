@@ -41,7 +41,7 @@ export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promi
   // Present IDE selection menu to user with supported options
   const { openInIDE } = await inquirer.prompt([
     {
-      type: 'list',
+      type: 'select',
       name: 'openInIDE',
       message: '🚀 Open project in IDE?',
       default: false,

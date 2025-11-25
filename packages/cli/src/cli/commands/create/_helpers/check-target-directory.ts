@@ -74,7 +74,7 @@ export async function checkTargetDirectory(
       // No clean flag, prompt user for action
       const { action } = await inquirer.prompt([
         {
-          type: 'list',
+          type: 'select',
           name: 'action',
           message: 'What would you like to do?',
           choices: [

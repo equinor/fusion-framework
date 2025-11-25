@@ -114,7 +114,7 @@ export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClie
 
   const { selectedProtocol } = await inquirer.prompt([
     {
-      type: 'list',
+      type: 'select',
       name: 'selectedProtocol',
       message: '🔐 Which Git protocol would you like to use for cloning?',
       choices: [

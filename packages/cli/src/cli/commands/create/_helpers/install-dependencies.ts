@@ -32,7 +32,7 @@ export async function installDependencies(
   // Prompt user to select their preferred package manager
   const { packageManager } = await inquirer.prompt([
     {
-      type: 'list',
+      type: 'select',
       name: 'packageManager',
       message: '📦 Which package manager do you want to use?',
       choices: ['pnpm', 'npm'],
