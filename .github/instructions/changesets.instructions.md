@@ -11,7 +11,7 @@ applyTo: ".changeset/**/*.md"
 - **When**: Any change to a published package or `.md` docs → create a changeset (docs use `@equinor/fusion-framework-docs`).
 - **Type**: Feature → `minor`, bugfix → `patch`, internal refactor → `patch` with `Internal:` prefix, breaking change → `major` with migration notes.
 - **Format**: File in `.changeset/` named `{package-name}_{short-description}.md` with YAML frontmatter listing packages and bump types.
-- **Content**: Write consumer-focused summaries (3–4 lines), reference issues, include migration or code examples for complex/breaking changes.
+- **Content**: Write consumer-focused summaries (3–4 lines for summary content; issue references don't count), reference issues, include migration or code examples for complex/breaking changes.
 - **Scope**: Prefer one package per changeset; only group packages when changes and message are identical.
 
 ## When to Create Changesets
@@ -78,7 +78,7 @@ Fixes: https://github.com/equinor/fusion-framework/issues/123
 
 **Guidelines:**
 - Be specific and consumer-focused
-- Keep under 3-4 lines
+- Keep summary content under 3-4 lines (issue references and contributor credits don't count toward this limit)
 - Include code examples for complex features
 - Reference issues: `Fixes #123` or `Closes #123`
 - Credit contributors: `Thanks @username`

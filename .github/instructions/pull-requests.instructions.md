@@ -11,6 +11,7 @@ name: Pull Request Rules
 - **Template**: Always use `.github/PULL_REQUEST_TEMPLATE.md`; fill all sections, describe current vs. new behavior, and clearly call out breaking changes.
 - **Commits**: Use Conventional Commits for titles and commit messages (e.g. `feat(module-http): add retry logic`).
 - **Content**: Do not list changed files in the PR body (GitHub already shows them); focus on motivation, behavior changes, and risk/impact.
+- **Review**: When reviewing PRs, the PR body must be reviewed and should clearly explain what the PR does and how to review the changes.
 
 ## PR Creation
 
@@ -57,6 +58,12 @@ Follow [Conventional Commits](contributing/conventional-commits.md):
 
 ## PR Review Process
 
+### When Reviewing a PR
+- **Review the PR body**: The PR body content must be reviewed as part of the code review process
+- **Clarity check**: The PR body must clearly explain what the PR does, including current vs. new behavior
+- **Review guidance**: The PR body should provide clear text on how to review the changes (e.g., what to focus on, testing steps, areas of concern)
+- If the PR body is unclear or missing essential information, request clarification before proceeding with code review
+
 ### When Changes Requested
 - PR automatically moves to draft
 - Creator must address feedback
@@ -83,4 +90,10 @@ When generating PR content:
 - Include breaking change notes if applicable
 - Reference changeset if created
 - Follow conventional commit format for commits
+- Ensure the PR body clearly explains what the PR does and provides guidance on how to review the changes
+
+When reviewing PRs:
+- Always review the PR body content as part of the review process
+- Verify the PR body clearly explains the change and provides review guidance
+- Request clarification if the PR body is unclear or missing essential information
 
