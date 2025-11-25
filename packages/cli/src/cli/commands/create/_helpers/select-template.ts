@@ -54,7 +54,7 @@ export async function selectTemplate(
 
   const { selectedTemplate } = await inquirer.prompt([
     {
-      type: 'list',
+      type: 'select',
       name: 'selectedTemplate',
       message: '🎨 Please select a template:',
       choices: templates.map((template) => ({
