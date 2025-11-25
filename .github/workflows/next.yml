@@ -18,7 +18,7 @@ jobs:
       should-run: ${{ steps.check.outputs.should-run }}
       tag: ${{ steps.check.outputs.tag }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Check if branch targets main and pre-release configuration
         id: check
@@ -59,7 +59,7 @@ jobs:
       published: ${{ steps.changesets.outputs.published }}
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
