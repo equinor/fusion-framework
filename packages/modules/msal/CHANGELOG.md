@@ -1,5 +1,11 @@
 # Change Log
 
+## 6.0.2
+
+### Patch Changes
+
+- [`b8c8149`](https://github.com/equinor/fusion-framework/commit/b8c814938be4543d2522566ece10ebc6feefee75) Thanks [@odinr](https://github.com/odinr)! - Fix proxy provider API calls to correctly wrap request parameters for `acquireToken` and `acquireAccessToken` methods.
+
 ## 6.0.1
 
 ### Patch Changes
