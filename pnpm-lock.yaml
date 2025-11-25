@@ -1277,11 +1277,11 @@ importers:
   packages/modules/msal-node:
     dependencies:
       '@azure/msal-node':
-        specifier: ^3.7.3
-        version: 3.8.1
+        specifier: ^3.8.3
+        version: 3.8.3
       '@azure/msal-node-extensions':
-        specifier: ^1.5.11
-        version: 1.5.23
+        specifier: ^1.5.25
+        version: 1.5.25
       '@equinor/fusion-framework-module':
         specifier: workspace:^
         version: link:../module
@@ -2205,23 +2205,19 @@ packages:
     resolution: {integrity: sha512-n278DdCXKeiWhLwhEL7/u9HRMyzhUXLefeajiknf6AmEedoiOiv2r5aRJ7LXdT3NGPyubkdIbthaJlVtmuEqvA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.13.0':
-    resolution: {integrity: sha512-8oF6nj02qX7eE/6+wFT5NluXRHc05AgdCC3fJnkjiJooq8u7BcLmxaYYSwc2AfEkWRMRi6Eyvvbeqk4U4412Ag==}
+  '@azure/msal-common@15.13.2':
+    resolution: {integrity: sha512-cNwUoCk3FF8VQ7Ln/MdcJVIv3sF73/OT86cRH81ECsydh7F4CNfIo2OAx6Cegtg8Yv75x4506wN4q+Emo6erOA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.13.1':
-    resolution: {integrity: sha512-vQYQcG4J43UWgo1lj7LcmdsGUKWYo28RfEvDQAEMmQIMjSFufvb+pS0FJ3KXmrPmnWlt1vHDl3oip6mIDUQ4uA==}
-    engines: {node: '>=0.8.0'}
-
-  '@azure/msal-node-extensions@1.5.23':
-    resolution: {integrity: sha512-9i9GibDBxEUiYon/3Ecisde4SDFJD89nW+VCnvlzbFnVyo2TSaV047anLA/lk2ena52GSJvBGGdZLpAQqxwo3w==}
+  '@azure/msal-node-extensions@1.5.25':
+    resolution: {integrity: sha512-8UtOy6McoHQUbvi75Cx+ftpbTuOB471j4V4yZJmRM3KJ30bMO7forXrVV+/xArvWdgZ9VkBvq26OclFstJUo8Q==}
     engines: {node: '>=16'}
 
-  '@azure/msal-node-runtime@0.19.5':
-    resolution: {integrity: sha512-0oBQgCcgOb+VwQ5k8OXShbuXCBU8FKKhpwnqWSBzzYWSFoYAtyad2zggl26ME4IKzN9telaOJPEEcsQOf/+3Ug==}
+  '@azure/msal-node-runtime@0.20.1':
+    resolution: {integrity: sha512-WVbMedbJHjt9M+qeZMH/6U1UmjXsKaMB6fN8OZUtGY7UVNYofrowZNx4nVvWN/ajPKBQCEW4Rr/MwcRuA8HGcQ==}
 
-  '@azure/msal-node@3.8.1':
-    resolution: {integrity: sha512-HszfqoC+i2C9+BRDQfuNUGp15Re7menIhCEbFCQ49D3KaqEDrgZIgQ8zSct4T59jWeUIL9N/Dwiv4o2VueTdqQ==}
+  '@azure/msal-node@3.8.3':
+    resolution: {integrity: sha512-Ul7A4gwmaHzYWj2Z5xBDly/W8JSC1vnKgJ898zPMZr0oSf1ah0tiL15sytjycU/PMhDZAlkWtEL1+MzNMU6uww==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.27.1':
@@ -9384,21 +9380,19 @@ snapshots:
 
   '@azure/msal-common@13.3.3': {}
 
-  '@azure/msal-common@15.13.0': {}
+  '@azure/msal-common@15.13.2': {}
 
-  '@azure/msal-common@15.13.1': {}
-
-  '@azure/msal-node-extensions@1.5.23':
+  '@azure/msal-node-extensions@1.5.25':
     dependencies:
-      '@azure/msal-common': 15.13.0
-      '@azure/msal-node-runtime': 0.19.5
+      '@azure/msal-common': 15.13.2
+      '@azure/msal-node-runtime': 0.20.1
       keytar: 7.9.0
 
-  '@azure/msal-node-runtime@0.19.5': {}
+  '@azure/msal-node-runtime@0.20.1': {}
 
-  '@azure/msal-node@3.8.1':
+  '@azure/msal-node@3.8.3':
     dependencies:
-      '@azure/msal-common': 15.13.1
+      '@azure/msal-common': 15.13.2
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
