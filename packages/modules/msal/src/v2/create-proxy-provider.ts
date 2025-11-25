@@ -89,8 +89,8 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
             scopes: string[];
             account?: AccountInfo_v2;
           }) => {
-            const request = isRequestV4(req) ? req : { scopes: req.scopes, account: req.account };
-            const result = await target.acquireToken({ request });
+            const args = isRequestV4(req) ? req : { request: { scopes: req.scopes, account: req.account } };
+            const result = await target.acquireToken(args);
 
             // Convert null to undefined for v2 compatibility
             return result || undefined;
@@ -103,8 +103,8 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
             scopes: string[];
             account?: AccountInfo_v2;
           }) => {
-            const request = isRequestV4(req) ? req : { scopes: req.scopes, account: req.account };
-            return await target.acquireAccessToken({ request });
+            const args = isRequestV4(req) ? req : { request: { scopes: req.scopes, account: req.account } };
+            return await target.acquireAccessToken(args);
           };
           return acquireAccessToken;
         }
