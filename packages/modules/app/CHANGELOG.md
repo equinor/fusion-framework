@@ -1,5 +1,15 @@
 # Change Log
 
+## 7.1.1
+
+### Patch Changes
+
+- [#3786](https://github.com/equinor/fusion-framework/pull/3786) [`9b6fc05`](https://github.com/equinor/fusion-framework/commit/9b6fc05d8305b179f11ed9f0bc993f2d88305136) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump immer from 10.2.0 to 11.0.0
+
+- Updated dependencies [[`9b6fc05`](https://github.com/equinor/fusion-framework/commit/9b6fc05d8305b179f11ed9f0bc993f2d88305136)]:
+  - @equinor/fusion-observable@8.5.7
+  - @equinor/fusion-query@6.0.2
+
 ## 7.1.0
 
 ### Minor Changes

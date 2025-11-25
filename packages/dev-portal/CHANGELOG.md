@@ -1,5 +1,11 @@
 # @equinor/fusion-framework-dev-portal
 
+## 1.2.6
+
+### Patch Changes
+
+- [#3779](https://github.com/equinor/fusion-framework/pull/3779) [`ee6aa77`](https://github.com/equinor/fusion-framework/commit/ee6aa7764776000edab9233ad9a4716b2d85c4eb) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 7.1.12 to 7.2.4
+
 ## 1.2.5
 
 ### Patch Changes

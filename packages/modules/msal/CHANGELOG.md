@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.0.1
+
+### Patch Changes
+
+- [`e8d6784`](https://github.com/equinor/fusion-framework/commit/e8d67848d53b8e733ddb60335fedeae637131c8d) Thanks [@odinr](https://github.com/odinr)! - Fix request format handling in v2 proxy provider to support both v2 and v4 request formats.
+
+  The `acquireToken` and `acquireAccessToken` methods in the v2 proxy provider now correctly detect and handle requests in both v2 format (`{ scopes, account }`) and v4 format (`{ request: { scopes, account } }`), ensuring compatibility with both API versions.
+
 ## 6.0.0
 
 ### Major Changes

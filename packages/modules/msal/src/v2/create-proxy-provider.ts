@@ -12,9 +12,7 @@ import { MsalModuleVersion } from '../static';
  * @param req - The request object to check
  * @returns True if the request is in v4 format (has a `request` property with `scopes` and `account`)
  */
-function isRequestV4(
-  req: unknown,
-): req is AcquireTokenOptions {
+function isRequestV4(req: unknown): req is AcquireTokenOptions {
   if (typeof req !== 'object' || req === null) {
     return false;
   }
