@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.0.3
+
+### Patch Changes
+
+- [`655ab0e`](https://github.com/equinor/fusion-framework/commit/655ab0ea9568090271225cb51285e78c2d08941e) Thanks [@odinr](https://github.com/odinr)! - Internal: fix proxy provider creation to avoid incorrect provider wiring in v2 `create-proxy-provider.ts`.
+
+  This change corrects internal wiring used when creating the proxy provider in the v2 implementation. No public API changes.
+
 ## 6.0.2
 
 ### Patch Changes
