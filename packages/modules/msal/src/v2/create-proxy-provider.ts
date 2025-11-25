@@ -1,9 +1,30 @@
 import type { IMsalProvider } from '../MsalProvider.interface';
 import type { IMsalProvider as IMsalProvider_v2 } from './MsalProvider.interface';
 import type { AccountInfo as AccountInfo_v2 } from './types';
+import type { AcquireTokenOptions } from '../MsalClient.interface';
 import { createProxyClient } from './create-proxy-client';
 import { mapAccountInfo } from './map-account-info';
 import { MsalModuleVersion } from '../static';
+
+/**
+ * Checks if a request is in MSAL v4 format.
+ *
+ * @param req - The request object to check
+ * @returns True if the request is in v4 format (has a `request` property with `scopes` and `account`)
+ */
+function isRequestV4(
+  req: unknown,
+): req is AcquireTokenOptions {
+  if (typeof req !== 'object' || req === null) {
+    return false;
+  }
+  const requestV4 = req as AcquireTokenOptions;
+  return (
+    typeof requestV4.request === 'object' &&
+    requestV4.request !== null &&
+    'request' in requestV4
+  );
+}
 
 /**
  * Creates a proxy provider for MSAL v2 compatibility.
@@ -74,9 +95,8 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
             scopes: string[];
             account?: AccountInfo_v2;
           }) => {
-            const result = await target.acquireToken({
-              request: { scopes: req.scopes, account: req.account },
-            });
+            const request = isRequestV4(req) ? req : { scopes: req.scopes, account: req.account };
+            const result = await target.acquireToken(request as AcquireTokenOptions);
 
             // Convert null to undefined for v2 compatibility
             return result || undefined;
@@ -89,9 +109,8 @@ export function createProxyProvider(provider: IMsalProvider): IMsalProvider_v2 {
             scopes: string[];
             account?: AccountInfo_v2;
           }) => {
-            return await target.acquireAccessToken({
-              request: { scopes: req.scopes, account: req.account },
-            });
+            const request = isRequestV4(req) ? req : { scopes: req.scopes, account: req.account };
+            return await target.acquireAccessToken(request as AcquireTokenOptions);
           };
           return acquireAccessToken;
         }
