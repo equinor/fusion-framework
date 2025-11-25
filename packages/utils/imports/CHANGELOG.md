@@ -1,5 +1,11 @@
 # @equinor/fusion-imports
 
+## 1.1.7
+
+### Patch Changes
+
+- [#3750](https://github.com/equinor/fusion-framework/pull/3750) [`a768715`](https://github.com/equinor/fusion-framework/commit/a7687155c0666655afd932887e475415a7b76b31) Thanks [@dependabot](https://github.com/apps/dependabot)! - Internal: update memfs from 4.50.0 to 4.51.0 to add sorting of files and folders in `toTreeSync()` output; improves test consistency and predictability.
+
 ## 1.1.6
 
 ### Patch Changes

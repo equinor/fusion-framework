@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.1.5
+
+### Patch Changes
+
+- [#3773](https://github.com/equinor/fusion-framework/pull/3773) [`da141f7`](https://github.com/equinor/fusion-framework/commit/da141f73d760865168c058ba4e3b5330faa2f018) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update `odata-query` dependency from 8.0.5 to 8.0.6 to fix encoding of illegal characters in search parameters.
+
+  This patch update improves handling of special characters in OData search queries, ensuring proper encoding of search parameters.
+
 ## 7.1.4
 
 ### Patch Changes

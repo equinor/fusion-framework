@@ -1,5 +1,21 @@
 # Change Log
 
+## 12.4.3
+
+### Patch Changes
+
+- [#3768](https://github.com/equinor/fusion-framework/pull/3768) [`28cffb2`](https://github.com/equinor/fusion-framework/commit/28cffb2d0a779bc190eb6d615f4bf6f86bb001c3) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump inquirer from 12.10.0 to 13.0.1
+
+  Updated inquirer to v13.0.1 and migrated deprecated `list` prompt type to `select` for compatibility with inquirer v13 breaking changes.
+
+- [#3779](https://github.com/equinor/fusion-framework/pull/3779) [`ee6aa77`](https://github.com/equinor/fusion-framework/commit/ee6aa7764776000edab9233ad9a4716b2d85c4eb) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump vite from 7.1.12 to 7.2.4
+
+- Updated dependencies [[`a768715`](https://github.com/equinor/fusion-framework/commit/a7687155c0666655afd932887e475415a7b76b31), [`0d31799`](https://github.com/equinor/fusion-framework/commit/0d31799be8da15b7ee4ddca643d6dc684092b905), [`ee6aa77`](https://github.com/equinor/fusion-framework/commit/ee6aa7764776000edab9233ad9a4716b2d85c4eb)]:
+  - @equinor/fusion-imports@1.1.7
+  - @equinor/fusion-framework-module-msal-node@2.0.1
+  - @equinor/fusion-framework-dev-portal@1.2.6
+  - @equinor/fusion-framework-dev-server@1.1.15
+
 ## 12.4.2
 
 ### Patch Changes

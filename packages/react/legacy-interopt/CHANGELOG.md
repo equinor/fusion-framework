@@ -1,5 +1,16 @@
 # Change Log
 
+## 27.0.1
+
+### Patch Changes
+
+- [#3786](https://github.com/equinor/fusion-framework/pull/3786) [`9b6fc05`](https://github.com/equinor/fusion-framework/commit/9b6fc05d8305b179f11ed9f0bc993f2d88305136) Thanks [@dependabot](https://github.com/apps/dependabot)! - chore: bump immer from 10.2.0 to 11.0.0
+
+- Updated dependencies [[`9b6fc05`](https://github.com/equinor/fusion-framework/commit/9b6fc05d8305b179f11ed9f0bc993f2d88305136), [`e8d6784`](https://github.com/equinor/fusion-framework/commit/e8d67848d53b8e733ddb60335fedeae637131c8d)]:
+  - @equinor/fusion-framework-module-app@7.1.1
+  - @equinor/fusion-observable@8.5.7
+  - @equinor/fusion-framework-module-msal@6.0.1
+
 ## 27.0.0
 
 ### Patch Changes
