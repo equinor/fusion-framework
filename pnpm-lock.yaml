@@ -1023,8 +1023,8 @@ importers:
         specifier: workspace:^
         version: link:../module
       ag-charts-enterprise:
-        specifier: 12.2.0
-        version: 12.2.0
+        specifier: 12.3.1
+        version: 12.3.1
       ag-grid-community:
         specifier: 34.3.1
         version: 34.3.1
@@ -1452,16 +1452,16 @@ importers:
         specifier: workspace:*
         version: link:../../modules/ag-grid
       ag-charts-enterprise:
-        specifier: 12.2.0
-        version: 12.2.0
+        specifier: ~12.3.1
+        version: 12.3.1
       ag-grid-community:
-        specifier: 34.3.1
+        specifier: ~34.3.1
         version: 34.3.1
       ag-grid-enterprise:
-        specifier: 34.3.1
+        specifier: ~34.3.1
         version: 34.3.1
       ag-grid-react:
-        specifier: 34.3.1
+        specifier: ~34.3.1
         version: 34.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
     devDependencies:
       '@equinor/fusion-framework-react-module':
@@ -5678,9 +5678,6 @@ packages:
 
   ag-charts-core@12.3.1:
     resolution: {integrity: sha512-711UJ0fXengb8+4PEW4nlzWDowmbYymPcjW2eJWHRzzvttUf14hnh+wP/l/s3EGVgYkEHe9vkXFwmeOJUlkC0Q==}
-
-  ag-charts-enterprise@12.2.0:
-    resolution: {integrity: sha512-GKboOSRIj14vBY68ueOBJJgSe/s76Ui8P0S0vU5xmfdi3xfnAC8xVIIEeMmJyZ2Z4NHsP/HxJlj1gXF/t4ZDWw==}
 
   ag-charts-enterprise@12.3.1:
     resolution: {integrity: sha512-2sQIwLfksRTcI4JVRjgQkyGq6z68UVTO/I91HKmtpukrQLsW/o0TzzHmgTtVJOXd9yO9gx2KWa2DMg0+FKdXEQ==}
@@ -14553,7 +14550,6 @@ snapshots:
       ag-charts-core: 12.3.1
       ag-charts-locale: 12.3.1
       ag-charts-types: 12.3.1
-    optional: true
 
   ag-charts-core@12.2.0:
     dependencies:
@@ -14562,23 +14558,15 @@ snapshots:
   ag-charts-core@12.3.1:
     dependencies:
       ag-charts-types: 12.3.1
-    optional: true
-
-  ag-charts-enterprise@12.2.0:
-    dependencies:
-      ag-charts-community: 12.2.0
-      ag-charts-core: 12.2.0
 
   ag-charts-enterprise@12.3.1:
     dependencies:
       ag-charts-community: 12.3.1
       ag-charts-core: 12.3.1
-    optional: true
 
   ag-charts-locale@12.2.0: {}
 
-  ag-charts-locale@12.3.1:
-    optional: true
+  ag-charts-locale@12.3.1: {}
 
   ag-charts-react@12.2.0(react@18.3.1):
     dependencies:
