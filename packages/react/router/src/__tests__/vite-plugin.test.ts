@@ -25,12 +25,14 @@ function normalizeCode(code: string): string {
 
 describe('reactRouterPlugin', () => {
   let plugin: ReactRouterPlugin;
-  const testFileId = path.join(process.cwd(), 'src/__tests__/vite-plugin.test.ts');
+  // Use absolute path to the test file directory so relative imports resolve correctly
+  const testFileId = path.resolve(__dirname, 'vite-plugin.test.ts');
 
   beforeEach(() => {
     vi.resetAllMocks();
     plugin = reactRouterPlugin({ debug: false }) as unknown as ReactRouterPlugin;
-    plugin.config({ root: process.cwd() });
+    // Set root to the package root (parent of src)
+    plugin.config({ root: path.resolve(__dirname, '../..') });
   });
 
   it('should transform a simple route() call to RouteObject', () => {

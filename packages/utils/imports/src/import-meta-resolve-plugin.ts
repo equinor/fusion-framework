@@ -109,7 +109,7 @@ async function collectOutputFiles(
  * (relative paths), we need to resolve them at build time so they work correctly
  * in the bundled output.
  */
-export const createImportMetaResolvePlugin = (): Plugin => {
+export const importMetaResolvePlugin = (): Plugin => {
   return {
     name: 'import-meta-resolve',
     setup(build) {

@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 /**
  * Options for configuring the markdown raw plugin.
  */
-export interface MarkdownRawPluginOptions {
+export interface RawMarkdownPluginOptions {
   /**
    * Regular expression filter to match file imports.
    * @default /\.mdx?\?raw$/
@@ -28,7 +28,7 @@ export interface MarkdownRawPluginOptions {
  * @param options - Configuration options for the plugin
  * @returns An esbuild plugin
  */
-export const createMarkdownRawPlugin = (options: MarkdownRawPluginOptions = {}): Plugin => {
+export const rawMarkdownPlugin = (options: RawMarkdownPluginOptions = {}): Plugin => {
   const { filter = /\.mdx?\?raw$/ } = options;
 
   return {

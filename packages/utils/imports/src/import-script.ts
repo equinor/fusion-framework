@@ -5,8 +5,8 @@ import { pathToFileURL } from 'node:url';
 import { processAccessError } from './error.js';
 
 import { readPackageUp } from 'read-package-up';
-import { createImportMetaResolvePlugin } from './import-meta-resolve-plugin.js';
-import { createMarkdownRawPlugin } from './markdown-plugin.js';
+import { importMetaResolvePlugin } from './import-meta-resolve-plugin.js';
+import { rawMarkdownPlugin } from './markdown-plugin.js';
 
 /**
  * Represents a Node.js module with an optional default export.
@@ -76,9 +76,7 @@ export const importScript = async <M extends EsmModule>(
 
   try {
     // Merge plugins: add default plugins if not already present
-    const defaultPlugins = [createImportMetaResolvePlugin(), createMarkdownRawPlugin()];
-
-    const plugins = options?.plugins ?? defaultPlugins;
+    const plugins = options?.plugins ?? [importMetaResolvePlugin(), rawMarkdownPlugin()];
 
     const buildOptions = Object.assign(
       {
