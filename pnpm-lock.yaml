@@ -234,7 +234,7 @@ importers:
     dependencies:
       ag-charts-community:
         specifier: ^12.2.0
-        version: 12.2.0
+        version: 12.3.1
       ag-charts-react:
         specifier: ^12.2.0
         version: 12.2.0(react@18.3.1)
