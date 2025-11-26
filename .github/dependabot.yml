@@ -10,6 +10,7 @@ updates:
       ag-grid:
         applies-to: version-updates
         patterns:
+          - "ag-charts-enterprise"
           - "ag-grid-enterprise"
           - "ag-grid-community"
           - "ag-grid-react"
