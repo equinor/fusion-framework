@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-framework-docs",
-  "version": "0.4.11",
+  "version": "0.4.11-cli-search-index.0",
   "description": "",
   "private": true,
   "repository": {
@@ -10,22 +10,20 @@
   },
   "scripts": {
     "dev": "vuepress dev src",
-    "build": "vuepress build src -d dist",
-    "preserve": "VUEPRESS_BASE='/' pnpm build",
-    "serve": "http-server ./dist"
+    "build": "vuepress build src -d dist"
   },
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.26",
-    "@vuepress/cli": "2.0.0-rc.26",
-    "@vuepress/client": "2.0.0-rc.26",
-    "@vuepress/plugin-register-components": "2.0.0-rc.118",
-    "@vuepress/utils": "2.0.0-rc.26",
+    "@vuepress/bundler-vite": "2.0.0-rc.24",
+    "@vuepress/cli": "2.0.0-rc.24",
+    "@vuepress/client": "2.0.0-rc.24",
+    "@vuepress/plugin-register-components": "2.0.0-rc.112",
+    "@vuepress/utils": "2.0.0-rc.24",
     "mermaid": "^11.11.0",
     "sass-embedded": "^1.86.3",
     "typescript": "^5.8.2",
-    "vue": "^3.5.25",
-    "vuepress": "2.0.0-rc.26",
-    "vuepress-theme-hope": "2.0.0-rc.98"
+    "vue": "^3.4.38",
+    "vuepress": "2.0.0-rc.24",
+    "vuepress-theme-hope": "2.0.0-rc.94"
   }
 }
