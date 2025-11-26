@@ -1,0 +1,61 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-ai-mcp",
+  "version": "1.0.0",
+  "description": "MCP server plugin for Fusion Framework CLI providing Model Context Protocol server capabilities",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "llm",
+    "ai",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/ai-mcp"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "commander": "^14.0.1"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  }
+}
