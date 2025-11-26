@@ -1,6 +1,8 @@
 import { useRef, useCallback } from 'react';
 import { Form, useSubmit } from 'react-router-dom';
 import { Button, NativeSelect, Checkbox } from '@equinor/eds-core-react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 
 interface ProductFiltersProps {
   categories: string[];
@@ -9,21 +11,22 @@ interface ProductFiltersProps {
   inStock: boolean;
 }
 
-const styles = {
-  filters: {
-    display: 'flex',
-    gap: '1rem',
-    marginBottom: '2rem',
-    padding: '1rem',
-    backgroundColor: '#f8f8f8',
-    borderRadius: '4px',
-    flexWrap: 'wrap' as const,
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.5rem',
-  },
+const Styled = {
+  Filters: styled(Form)`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.medium};
+    margin-bottom: ${tokens.spacings.comfortable.large};
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    flex-wrap: wrap;
+  `,
+  FormGroup: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    align-items: center;
+    width: 100%;
+  `,
 };
 
 /**
@@ -43,14 +46,13 @@ export function ProductFilters({ categories, filter, sort, inStock }: ProductFil
   }, [submit]);
 
   return (
-    <Form
+    <Styled.Filters
       ref={formRef}
       method="post"
       onChange={(e) => e.currentTarget.requestSubmit()}
       onReset={handleReset}
-      style={styles.filters}
     >
-      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', width: '100%' }}>
+      <Styled.FormGroup>
         <NativeSelect id="filter" name="filter" label="Category Filter" defaultValue={filter || ''}>
           <option value="">All Categories</option>
           {categories.map((category) => (
@@ -67,20 +69,14 @@ export function ProductFilters({ categories, filter, sort, inStock }: ProductFil
           <option value="price-desc">Price (High to Low)</option>
         </NativeSelect>
 
-        <Checkbox
-          style={{ width: 'inherit' }}
-          name="inStock"
-          label="In Stock Only"
-          defaultChecked={inStock}
-          value="true"
-        />
+        <Checkbox name="inStock" label="In Stock Only" defaultChecked={inStock} value="true" />
 
         {(filter || sort !== 'name-asc' || inStock) && (
           <Button type="reset" variant="outlined">
             Clear Filters
           </Button>
         )}
-      </div>
-    </Form>
+      </Styled.FormGroup>
+    </Styled.Filters>
   );
 }

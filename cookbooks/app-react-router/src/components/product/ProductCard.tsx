@@ -1,7 +1,62 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Chip, Card } from '@equinor/eds-core-react';
+import { Button, Chip, Card, Typography } from '@equinor/eds-core-react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type { Product } from '../../api/ProductApi';
+
+const Styled = {
+  Card: styled(Card)<{ $isHovered: boolean }>`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  `,
+  Title: styled(Typography)`
+    margin: 0;
+  `,
+  Image: styled.img<{ $isHovered: boolean }>`
+    width: 100%;
+    object-fit: cover;
+    opacity: ${({ $isHovered }) => ($isHovered ? 1 : 0.7)};
+    transition: opacity 0.3s ease-in-out;
+  `,
+  Content: styled(Card.Content)`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: ${tokens.spacings.comfortable.x_small};
+  `,
+  RatingContainer: styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+  Rating: styled.div`
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
+  StockBadge: styled.div<{ $inStock: boolean }>`
+    padding: ${tokens.spacings.comfortable.x_small};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    background-color: ${({ $inStock }) =>
+      $inStock ? tokens.colors.ui.background__light.hex : tokens.colors.ui.background__warning.hex};
+    border: 1px solid
+      ${({ $inStock }) =>
+        $inStock
+          ? tokens.colors.interactive.success__resting.hex
+          : tokens.colors.interactive.danger__resting.hex};
+    color: ${({ $inStock }) =>
+      $inStock
+        ? tokens.colors.interactive.success__resting.hex
+        : tokens.colors.interactive.danger__resting.hex};
+  `,
+  Price: styled(Typography)`
+    font-size: ${tokens.typography.heading.h3.fontSize};
+    font-weight: ${tokens.typography.heading.h3.fontWeight};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+  `,
+};
 
 /**
  * ProductCard component with hover effect for images
@@ -10,57 +65,41 @@ export function ProductCard({ product }: { product: Product }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Card
-      style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    <Styled.Card
+      $isHovered={isHovered}
       elevation={isHovered ? 'overlay' : 'raised'}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card.Header>
         <Card.HeaderTitle>
-          <h4 style={{ margin: 0 }}>{product.name}</h4>
+          <Styled.Title variant="h4">{product.name}</Styled.Title>
         </Card.HeaderTitle>
         <Chip variant="default">{product.category}</Chip>
       </Card.Header>
       <Card.Media>
-        <img
+        <Styled.Image
+          $isHovered={isHovered}
           src={product.image || `https://picsum.photos/400/300?random=${product.id}`}
           alt={product.name}
-          style={{
-            width: '100%',
-            objectFit: 'cover',
-            opacity: isHovered ? 1 : 0.7,
-            transition: 'opacity 0.3s ease-in-out',
-          }}
         />
       </Card.Media>
-      <Card.Content style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>
+      <Styled.Content>
+        <Styled.RatingContainer>
+          <Styled.Rating>
             ⭐ {product.rating} ({product.reviews} reviews)
-          </div>
-          <div
-            style={{
-              padding: '0.25rem',
-              borderRadius: '.25rem',
-              fontSize: '0.9rem',
-              ...(product.inStock
-                ? { backgroundColor: '#e8f5e9', color: '#2e7d32' }
-                : { backgroundColor: '#ffebee', color: '#c62828' }),
-            }}
-          >
+          </Styled.Rating>
+          <Styled.StockBadge $inStock={product.inStock}>
             {product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
-          </div>
-        </div>
-        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#0066cc' }}>
-          ${product.price}
-        </div>
-      </Card.Content>
+          </Styled.StockBadge>
+        </Styled.RatingContainer>
+        <Styled.Price variant="h3">${product.price}</Styled.Price>
+      </Styled.Content>
       <Card.Actions alignRight>
         <Button variant="contained" as={Link} to={`/products/${product.id}`} fullWidth>
           View Details
         </Button>
       </Card.Actions>
-    </Card>
+    </Styled.Card>
   );
 }

@@ -1,3 +1,6 @@
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
+import { Typography } from '@equinor/eds-core-react';
 import type { Product } from '../../api/ProductApi';
 import { ProductCard } from './ProductCard';
 
@@ -8,25 +11,27 @@ interface ProductListProps {
   styles?: React.CSSProperties;
 }
 
-const styles = {
-  info: {
-    marginBottom: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#e3f2fd',
-    borderRadius: '4px',
-    color: '#1976d2',
-    width: 'calc(100% - 1.5rem)',
-  },
-  productGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '1.5rem',
-  },
-  empty: {
-    textAlign: 'center' as const,
-    padding: '2rem',
-    color: '#666',
-  },
+const Styled = {
+  Container: styled.div``,
+  Info: styled.div`
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__info.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    width: calc(100% - ${tokens.spacings.comfortable.large});
+  `,
+  ProductGrid: styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: ${tokens.spacings.comfortable.large};
+  `,
+  Empty: styled(Typography).attrs({ variant: 'body_short' })`
+    text-align: center;
+    padding: ${tokens.spacings.comfortable.large};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
 };
 
 /**
@@ -38,20 +43,20 @@ const styles = {
 export function ProductList(props: ProductListProps) {
   const { products, total } = props;
   return (
-    <div style={props.styles}>
-      <div style={styles.info}>
+    <Styled.Container style={props.styles}>
+      <Styled.Info>
         Showing {products?.length} of {total} products
-      </div>
+      </Styled.Info>
 
       {products?.length === 0 ? (
-        <div style={styles.empty}>No products found matching your filters.</div>
+        <Styled.Empty>No products found matching your filters.</Styled.Empty>
       ) : (
-        <div style={styles.productGrid}>
+        <Styled.ProductGrid>
           {products?.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </Styled.ProductGrid>
       )}
-    </div>
+    </Styled.Container>
   );
 }

@@ -1,21 +1,25 @@
-import { LinearProgress } from '@equinor/eds-core-react';
+import { LinearProgress, Typography } from '@equinor/eds-core-react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 
-const styles = {
-  container: {
-    padding: '1rem',
-  },
+const Styled = {
+  Container: styled.div`
+    padding: ${tokens.spacings.comfortable.medium};
+  `,
+  Heading: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+  `,
 };
 
 /**
  * Loader component that displays a linear progress indicator
- * Uses EDS LinearProgress component for consistent styling
  */
 export const Loader = () => {
   return (
-    <div style={styles.container}>
-      <h3 style={{ marginBottom: '0.5rem' }}>Loading...</h3>
+    <Styled.Container>
+      <Styled.Heading variant="h3">Loading...</Styled.Heading>
       <LinearProgress />
-    </div>
+    </Styled.Container>
   );
 };
 

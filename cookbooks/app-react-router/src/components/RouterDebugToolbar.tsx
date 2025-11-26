@@ -1,36 +1,38 @@
 import { useState } from 'react';
 import { useLocation, useNavigation, useMatches } from 'react-router-dom';
 import { useNavigationModule } from '@equinor/fusion-framework-react-app/navigation';
-import { Button, Icon } from '@equinor/eds-core-react';
+import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import { SideSheet } from '@equinor/fusion-react-side-sheet';
 import { code } from '@equinor/eds-icons';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 
 // Register icons
 Icon.add({ code });
 
-const styles = {
-  section: {
-    marginBottom: '1.5rem',
-  },
-  sectionTitle: {
-    marginTop: 0,
-    marginBottom: '0.5rem',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    color: '#666',
-    textTransform: 'uppercase' as const,
-  },
-  pre: {
-    margin: 0,
-    padding: '0.75rem',
-    backgroundColor: '#f8f8f8',
-    borderRadius: '4px',
-    overflow: 'auto',
-    fontSize: '0.85rem',
-    fontFamily: 'monospace',
-    whiteSpace: 'pre-wrap' as const,
-    wordBreak: 'break-word' as const,
-  },
+const Styled = {
+  Section: styled.div`
+    margin-bottom: ${tokens.spacings.comfortable.large};
+  `,
+  SectionTitle: styled(Typography)`
+    margin-top: 0;
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    font-weight: ${tokens.typography.paragraph.caption.fontWeight};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+    text-transform: uppercase;
+  `,
+  Pre: styled.pre`
+    margin: 0;
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    overflow: auto;
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+  `,
 };
 
 /**
@@ -53,19 +55,19 @@ export const RouterDebugToolbar = () => {
       <SideSheet isOpen={isOpen} onClose={() => setIsOpen(false)} isDismissable={true}>
         <SideSheet.Title title="Router Debug Info" />
         <SideSheet.Content>
-          <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>React Router Location</h3>
-            <pre style={styles.pre}>{JSON.stringify(currentLocation, null, 2)}</pre>
-          </div>
+          <Styled.Section>
+            <Styled.SectionTitle variant="h3">React Router Location</Styled.SectionTitle>
+            <Styled.Pre>{JSON.stringify(currentLocation, null, 2)}</Styled.Pre>
+          </Styled.Section>
 
-          <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Current Match</h3>
-            <pre style={styles.pre}>{JSON.stringify(matches[matches.length - 1], null, 2)}</pre>
-          </div>
+          <Styled.Section>
+            <Styled.SectionTitle variant="h3">Current Match</Styled.SectionTitle>
+            <Styled.Pre>{JSON.stringify(matches[matches.length - 1], null, 2)}</Styled.Pre>
+          </Styled.Section>
 
-          <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>React Router Navigation State</h3>
-            <pre style={styles.pre}>
+          <Styled.Section>
+            <Styled.SectionTitle variant="h3">React Router Navigation State</Styled.SectionTitle>
+            <Styled.Pre>
               {JSON.stringify(
                 {
                   state: routerNavigation.state,
@@ -87,12 +89,12 @@ export const RouterDebugToolbar = () => {
                 null,
                 2,
               )}
-            </pre>
-          </div>
+            </Styled.Pre>
+          </Styled.Section>
 
-          <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>Navigation Provider State</h3>
-            <pre style={styles.pre}>
+          <Styled.Section>
+            <Styled.SectionTitle variant="h3">Navigation Provider State</Styled.SectionTitle>
+            <Styled.Pre>
               {JSON.stringify(
                 {
                   location: navigation.history.location,
@@ -101,8 +103,8 @@ export const RouterDebugToolbar = () => {
                 null,
                 2,
               )}
-            </pre>
-          </div>
+            </Styled.Pre>
+          </Styled.Section>
         </SideSheet.Content>
       </SideSheet>
     </>
