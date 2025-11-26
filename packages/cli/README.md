@@ -14,6 +14,7 @@ Fusion Framework CLI is a command-line tool for developing, building, and publis
 - Environment-specific configuration handling
 - Integrated authentication and authorization
 - CI/CD pipeline support with automated publishing
+- **Plugin system**: Extensible architecture with optional plugins (e.g., AI/LLM commands)
 
 ## Prerequisites
 
@@ -101,6 +102,29 @@ pnpm fusion-framework-cli app config --publish --env <environment>
 | `pnpm fusion-framework-cli portal ...` | Working with Fusion portal templates |
 | `pnpm fusion-framework-cli disco ...` | Service discovery and resolution     |
 
+**Optional Plugins:**
+| Command | Description |
+|---------|-------------|
+| `pnpm fusion-framework-cli ai ...` | AI/LLM commands (requires `@equinor/fusion-framework-cli-plugin-ai`) |
+
+**Plugin System:**
+
+The CLI supports optional plugins that extend functionality. To use plugins:
+
+1. Install the plugin package: `pnpm add -D @equinor/fusion-framework-cli-plugin-ai`
+2. Create a `fusion-cli.config.ts` file in your project root:
+   ```typescript
+   import { defineFusionCli } from '@equinor/fusion-framework-cli';
+   
+   export default defineFusionCli(() => ({
+     plugins: [
+       '@equinor/fusion-framework-cli-plugin-ai',
+     ],
+   }));
+   ```
+
+Plugins are automatically discovered and loaded when the CLI starts. The config file can be `.ts`, `.js`, or `.json`. If no config file exists, the CLI works normally without plugins.
+
 ## Example: package.json
 
 A minimal example for a Fusion Framework app:
@@ -152,6 +176,9 @@ A minimal example for a Fusion Framework app:
 - [CLI Command Reference](docs/application.md#commands): Detailed documentation of all available commands and options
 - [CI/CD Best Practices](docs/application.md#ci-cd): Automated workflows and deployment strategies
 - [Troubleshooting Guide](docs/application.md#troubleshooting-faq): Common issues and solutions
+
+**Internal Tools** (Fusion Core Team Only)
+- [AI Commands](docs/ai-commands.md): ⚠️ **Internal use only** - AI-powered chat, embeddings, and search commands for codebase understanding (not supported for third-party users ...yet)
 
   ## Troubleshooting
 
