@@ -23,13 +23,23 @@ function isValidIDECommand(command: string): command is (typeof SUPPORTED_IDE_CO
  * Displays a selection menu with supported IDEs (VS Code, Cursor) and executes
  * the appropriate command to open the project directory. The IDE runs detached
  * and independently of the CLI process. If the user chooses not to open an IDE,
- * the function completes without action.
+ * the function completes without action. If skip is true, the prompt is skipped.
  *
  * @param targetDir - Absolute path to the project directory to open
  * @param logger - Console logger for displaying prompts and instructions
+ * @param skip - If true, skip the IDE opening prompt entirely
  * @returns Promise that resolves when the IDE selection process is complete
  */
-export async function openInIDE(targetDir: string, logger: ConsoleLogger): Promise<void> {
+export async function openInIDE(
+  targetDir: string,
+  logger: ConsoleLogger,
+  skip = false,
+): Promise<void> {
+  // Skip IDE opening if requested
+  if (skip) {
+    logger.debug('Skipping IDE opening');
+    return;
+  }
   // Display helpful instructions to the user about IDE opening process
   logger.info('By selecting an IDE, it will be opened in a new window.');
   logger.info('👋 please come back to this terminal to continue.');

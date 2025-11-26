@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
+import type { GitClientProtocol } from '../../../bin/helpers/ProjectTemplateRepository.js';
 
 import { assert } from '../../../lib/utils/assert.js';
 import { updatePackageJson } from './_helpers/update-package-json.js';
@@ -10,7 +11,6 @@ import checkTargetDirectory from './_helpers/check-target-directory.js';
 import selectTemplate from './_helpers/select-template.js';
 import openInIDE from './_helpers/open-in-ide.js';
 import installDependencies from './_helpers/install-dependencies.js';
-import startDevServer from './_helpers/start-dev-server.js';
 import setupRepository from './_helpers/setup-repository.js';
 import cleanupTemplateFiles from './_helpers/cleanup-template-files.js';
 
@@ -28,6 +28,12 @@ interface CreateAppOptions {
   branch: string;
   /** Clean the repo directory before cloning (removes existing content) */
   clean: boolean;
+  /** Git protocol to use for cloning (https or ssh) - skips prompt if provided */
+  gitProtocol?: GitClientProtocol;
+  /** Clean up temporary template files after creation - skips prompt if provided */
+  cleanup?: boolean;
+  /** Skip opening the project in IDE */
+  noOpen?: boolean;
 }
 
 /**
@@ -77,7 +83,13 @@ async function createApplication(
   // Step 4: Set up and initialize the template repository
   // This clones or updates the fusion-app-template repository
   const templateRepoName = 'equinor/fusion-app-template';
-  const repo = await setupRepository(templateRepoName, options.clean, options.branch, logger);
+  const repo = await setupRepository(
+    templateRepoName,
+    options.clean,
+    options.branch,
+    logger,
+    options.gitProtocol,
+  );
 
   // Step 5: Load available templates and handle template selection
   // User can pre-select with --template or choose interactively
@@ -120,28 +132,18 @@ async function createApplication(
   }
 
   // Step 8: Clean up temporary template repository (optional)
-  // Asks user if they want to remove the cloned template repo
-  await cleanupTemplateFiles(repo, logger);
+  // Asks user if they want to remove the cloned template repo (unless --cleanup or --no-cleanup is provided)
+  await cleanupTemplateFiles(repo, logger, options.cleanup);
 
   // Step 9: Offer to open the project in the user's IDE
-  // Detects common IDEs and opens the project automatically
-  await openInIDE(targetDir, logger);
+  // Detects common IDEs and opens the project automatically (skipped if --no-open is provided)
+  if (!options.noOpen) {
+    await openInIDE(targetDir, logger);
+  }
 
   // Step 10: Install project dependencies using detected package manager
   // Supports npm, pnpm, and yarn with automatic detection
-  const { installed: dependenciesInstalled, packageManager } = await installDependencies(
-    targetDir,
-    logger,
-  );
-
-  // Step 11: Start development server if dependencies were installed
-  // Only prompts if package installation was successful
-  if (dependenciesInstalled && packageManager) {
-    const devServerStarted = await startDevServer(targetDir, packageManager, logger, true);
-    if (devServerStarted) {
-      logger.debug('Development server started successfully');
-    }
-  }
+  await installDependencies(targetDir, logger);
 }
 
 /**
@@ -152,7 +154,7 @@ async function createApplication(
  * - Selecting from available project templates (React, vanilla, etc.)
  * - Setting up complete local development environment
  * - Resolving workspace dependencies to npm versions
- * - Installing dependencies and starting development servers
+ * - Installing dependencies
  * - Opening projects in the user's preferred IDE
  *
  * @example
@@ -168,6 +170,9 @@ async function createApplication(
  *
  * # Create with clean directory and specific branch
  * ffc create app my-app --clean --branch develop
+ *
+ * # Non-interactive mode with all options specified
+ * ffc create app my-app --template basic --git-protocol https --no-cleanup --no-open
  * ```
  */
 export const createAppCommand = (name: string) =>
@@ -182,11 +187,27 @@ export const createAppCommand = (name: string) =>
     .option('--branch <branch>', 'Branch to checkout', 'main')
     .option('--clean', 'Clean the repo directory before cloning')
     .option('--debug', 'Enable debug mode for verbose logging')
+    .option(
+      '--git-protocol <protocol>',
+      'Git protocol to use for cloning (https or ssh) - skips prompt if provided',
+    )
+    .option(
+      '--cleanup',
+      'Clean up temporary template files after creation - skips prompt if provided',
+    )
+    .option('--no-cleanup', 'Do not clean up temporary template files - skips prompt if provided')
+    .option('--no-open', 'Skip opening the project in IDE')
     .action(async (name: string, options: CreateAppOptions) => {
       // Initialize logging system with debug support
       const logger = new ConsoleLogger('', {
         debug: options.debug,
       });
+
+      // Validate git-protocol option if provided
+      if (options.gitProtocol && options.gitProtocol !== 'https' && options.gitProtocol !== 'ssh') {
+        logger.error(`Invalid git-protocol: ${options.gitProtocol}. Must be 'https' or 'ssh'`);
+        process.exit(1);
+      }
 
       try {
         // Execute the main application creation workflow
