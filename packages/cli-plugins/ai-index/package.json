@@ -1,0 +1,73 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-ai-index",
+  "version": "1.0.0",
+  "description": "AI indexing plugin for Fusion Framework CLI providing document embedding and chunking utilities",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "llm",
+    "ai",
+    "index",
+    "embeddings"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/ai-index"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
+    "@equinor/fusion-imports": "workspace:*",
+    "@langchain/textsplitters": "^1.0.0",
+    "commander": "^14.0.1",
+    "find-up": "^8.0.0",
+    "globby": "^15.0.0",
+    "gray-matter": "^4.0.3",
+    "multimatch": "^7.0.0",
+    "read-package-up": "^11.0.0",
+    "rxjs": "^7.8.1",
+    "simple-git": "^3.28.0",
+    "tree-sitter": "^0.25.0",
+    "tree-sitter-typescript": "^0.23.2",
+    "ts-morph": "^27.0.2",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  }
+}
