@@ -36,9 +36,9 @@ export const handle = {
     icon: shopping_card,
     path: '/products',
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
 
-export const clientLoader = async (args: LoaderFunctionArgs) => {
+export async function clientLoader(args: LoaderFunctionArgs) {
   const { request, fusion } = args;
   const url = new URL(request.url);
   const filter = url.searchParams.get('filter') ?? null;
@@ -55,9 +55,9 @@ export const clientLoader = async (args: LoaderFunctionArgs) => {
   ]);
 
   return { products, categories, filter, sort, inStock, productCount };
-};
+}
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const filter = (formData.get('filter') as string)?.trim() || '';
   const sort = (formData.get('sort') as string)?.trim() || 'name-asc';
@@ -78,7 +78,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // Redirect to same page with search parameters
   const queryString = searchParams.toString();
   return redirect(queryString ? `.?${queryString}` : '.');
-};
+}
 
 export default function ProductsPage(props: RouteComponentProps<ProductsPageLoaderData>) {
   const { loaderData } = props;

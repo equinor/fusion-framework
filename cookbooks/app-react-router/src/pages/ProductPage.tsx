@@ -1,11 +1,12 @@
 import { Link, useSearchParams, useParams } from 'react-router-dom';
-import { Button } from '@equinor/eds-core-react';
+import { Button, Typography } from '@equinor/eds-core-react';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
-import { styles } from './ProductPage.styles';
 import type { Product } from '../api/ProductApi';
 
 export const handle = {
@@ -19,9 +20,80 @@ export const handle = {
       tab: 'Active tab for reviews section',
     },
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
 
-export const clientLoader = async ({ params, request, fusion }: LoaderFunctionArgs) => {
+const Styled = {
+  BackLink: styled(Link)`
+    display: inline-block;
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+    text-decoration: none;
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+  `,
+  Title: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+  `,
+  Category: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    text-transform: capitalize;
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
+  Price: styled(Typography)`
+    font-weight: ${tokens.typography.paragraph.body_short_bold.fontWeight};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+  `,
+  Stock: styled.div<{ $inStock: boolean }>`
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    padding: ${tokens.spacings.comfortable.medium};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    background-color: ${({ $inStock }) =>
+      $inStock ? tokens.colors.ui.background__light.hex : tokens.colors.ui.background__warning.hex};
+    border: 1px solid
+      ${({ $inStock }) =>
+        $inStock
+          ? tokens.colors.interactive.success__resting.hex
+          : tokens.colors.interactive.danger__resting.hex};
+    color: ${({ $inStock }) =>
+      $inStock
+        ? tokens.colors.interactive.success__resting.hex
+        : tokens.colors.interactive.danger__resting.hex};
+  `,
+  Tabs: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    border-bottom: 2px solid ${tokens.colors.ui.background__medium.hex};
+  `,
+  TabContent: styled.div`
+    padding: ${tokens.spacings.comfortable.small} 0;
+  `,
+  Description: styled(Typography)`
+    line-height: 1.6;
+    margin-bottom: ${tokens.spacings.comfortable.large};
+  `,
+  Info: styled.div`
+    margin-top: ${tokens.spacings.comfortable.large};
+    padding: ${tokens.spacings.comfortable.small};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+  `,
+  InfoTitle: styled.div`
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    font-weight: ${tokens.typography.paragraph.body_short_bold.fontWeight};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+    text-transform: uppercase;
+  `,
+  InfoContent: styled.div`
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    font-family: monospace;
+    color: ${tokens.colors.text.static_icons__default.hex};
+  `,
+};
+
+export async function clientLoader({ params, request, fusion }: LoaderFunctionArgs) {
   const productId = params.id;
   if (!productId) {
     throw new Response('Product ID is required', { status: 400 });
@@ -48,7 +120,7 @@ export const clientLoader = async ({ params, request, fusion }: LoaderFunctionAr
     }
     throw new Response('Failed to fetch product', { status: 500 });
   }
-};
+}
 
 type ProductPageLoaderData = {
   product: Product;
@@ -76,24 +148,17 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
 
   return (
     <>
-      <Link to="/products" style={styles.backLink}>
-        ← Back to Products
-      </Link>
+      <Styled.BackLink to="/products">← Back to Products</Styled.BackLink>
 
-      <h1 style={styles.title}>{product.name}</h1>
-      <div style={styles.category}>Category: {product.category}</div>
-      <div style={styles.price}>${product.price}</div>
+      <Styled.Title variant="h1">{product.name}</Styled.Title>
+      <Styled.Category variant="body_short">Category: {product.category}</Styled.Category>
+      <Styled.Price variant="h2">${product.price}</Styled.Price>
 
-      <div
-        style={{
-          ...styles.stock,
-          ...(product.inStock ? styles.inStock : styles.outOfStock),
-        }}
-      >
+      <Styled.Stock $inStock={product.inStock}>
         {product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
-      </div>
+      </Styled.Stock>
 
-      <div style={styles.tabs}>
+      <Styled.Tabs>
         <Button
           variant={view === 'details' ? 'contained' : 'ghost'}
           onClick={() => setView('details')}
@@ -109,27 +174,27 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
         >
           Reviews ({product.reviews})
         </Button>
-      </div>
+      </Styled.Tabs>
 
-      <div style={styles.tabContent}>
+      <Styled.TabContent>
         {view === 'details' && (
           <div>
-            <p style={styles.description}>{product.description}</p>
-            <div style={styles.info}>
-              <div style={styles.infoTitle}>Product Information</div>
-              <div style={styles.infoContent}>
+            <Styled.Description variant="body_long">{product.description}</Styled.Description>
+            <Styled.Info>
+              <Styled.InfoTitle>Product Information</Styled.InfoTitle>
+              <Styled.InfoContent>
                 Rating: {product.rating} / 5.0 ⭐<br />
                 Reviews: {product.reviews}
-              </div>
-            </div>
+              </Styled.InfoContent>
+            </Styled.Info>
           </div>
         )}
 
         {view === 'specs' && (
           <div>
-            <div style={styles.info}>
-              <div style={styles.infoTitle}>Specifications</div>
-              <div style={styles.infoContent}>
+            <Styled.Info>
+              <Styled.InfoTitle>Specifications</Styled.InfoTitle>
+              <Styled.InfoContent>
                 Product ID: {product.id}
                 <br />
                 Category: {product.category}
@@ -137,14 +202,14 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
                 Price: ${product.price}
                 <br />
                 Availability: {product.inStock ? 'In Stock' : 'Out of Stock'}
-              </div>
-            </div>
+              </Styled.InfoContent>
+            </Styled.Info>
           </div>
         )}
 
         {view === 'reviews' && (
           <div>
-            <div style={styles.tabs}>
+            <Styled.Tabs>
               <Button variant={tab === 'all' ? 'contained' : 'ghost'} onClick={() => setTab('all')}>
                 All Reviews
               </Button>
@@ -160,31 +225,31 @@ export default function ProductPage(props: RouteComponentProps<ProductPageLoader
               >
                 Negative
               </Button>
-            </div>
-            <div style={styles.info}>
-              <div style={styles.infoTitle}>Reviews ({tab})</div>
-              <div style={styles.infoContent}>
+            </Styled.Tabs>
+            <Styled.Info>
+              <Styled.InfoTitle>Reviews ({tab})</Styled.InfoTitle>
+              <Styled.InfoContent>
                 Showing {tab} reviews for {product.name}
                 <br />
                 Average rating: {product.rating} / 5.0
                 <br />
                 Total reviews: {product.reviews}
-              </div>
-            </div>
+              </Styled.InfoContent>
+            </Styled.Info>
           </div>
         )}
-      </div>
+      </Styled.TabContent>
 
-      <div style={styles.info}>
-        <div style={styles.infoTitle}>Route Information</div>
-        <div style={styles.infoContent}>
+      <Styled.Info>
+        <Styled.InfoTitle>Route Information</Styled.InfoTitle>
+        <Styled.InfoContent>
           Route Param (id): {params.id}
           <br />
           Search Param (view): {view}
           <br />
           Search Param (tab): {tab}
-        </div>
-      </div>
+        </Styled.InfoContent>
+      </Styled.Info>
     </>
   );
 }

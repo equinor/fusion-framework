@@ -1,6 +1,9 @@
+import { useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, Chip } from '@equinor/eds-core-react';
+import { Button, Chip, Typography } from '@equinor/eds-core-react';
 import { work_outline } from '@equinor/eds-icons';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
@@ -32,9 +35,9 @@ export const handle = {
     icon: work_outline,
     path: '/users',
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
 
-export const clientLoader = async ({ request, fusion }: LoaderFunctionArgs) => {
+export async function clientLoader({ request, fusion }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '1', 10);
   const limit = parseInt(url.searchParams.get('limit') || '5', 10);
@@ -46,98 +49,92 @@ export const clientLoader = async ({ request, fusion }: LoaderFunctionArgs) => {
   const result = await api.user.getUsers({ page, limit });
 
   return result;
-};
+}
 
-const styles = {
-  title: {
-    fontSize: '2rem',
-    marginBottom: '1.5rem',
-    color: '#1a1a1a',
-  },
-  controls: {
-    display: 'flex',
-    gap: '1rem',
-    marginBottom: '2rem',
-    padding: '1rem',
-    backgroundColor: '#f8f8f8',
-    borderRadius: '4px',
-    alignItems: 'center',
-    flexWrap: 'wrap' as const,
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.5rem',
-  },
-  label: {
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  input: {
-    padding: '0.5rem',
-    borderRadius: '4px',
-    border: '1px solid #ddd',
-    fontSize: '1rem',
-    width: '100px',
-  },
-  info: {
-    marginBottom: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#e3f2fd',
-    borderRadius: '4px',
-    color: '#1976d2',
-  },
-  userList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-  },
-  userItem: {
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    padding: '1rem',
-    marginBottom: '1rem',
-    backgroundColor: '#fff',
-    transition: 'box-shadow 0.2s',
-  },
-  userItemHover: {
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-  },
-  userName: {
-    fontSize: '1.3rem',
-    fontWeight: 'bold',
-    marginBottom: '0.5rem',
-    color: '#1a1a1a',
-  },
-  userEmail: {
-    fontSize: '1rem',
-    color: '#666',
-    marginBottom: '0.5rem',
-  },
-  userDetails: {
-    display: 'flex',
-    gap: '1rem',
-    marginBottom: '1rem',
-    fontSize: '0.9rem',
-    color: '#333',
-  },
-  userDetail: {
-    padding: '0.25rem 0.75rem',
-    backgroundColor: '#f0f0f0',
-    borderRadius: '4px',
-  },
-  pagination: {
-    display: 'flex',
-    gap: '0.5rem',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '2rem',
-  },
-  paginationInfo: {
-    padding: '0.5rem 1rem',
-    color: '#666',
-  },
+const Styled = {
+  Title: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+  `,
+  Controls: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.small};
+    margin-bottom: ${tokens.spacings.comfortable.large};
+    padding: ${tokens.spacings.comfortable.small};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    align-items: center;
+    flex-wrap: wrap;
+  `,
+  FormGroup: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: ${tokens.spacings.comfortable.x_small};
+  `,
+  Label: styled.label`
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    font-weight: ${tokens.typography.paragraph.body_short_bold.fontWeight};
+    color: ${tokens.colors.text.static_icons__default.hex};
+  `,
+  Input: styled.input`
+    padding: ${tokens.spacings.comfortable.x_small};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    border: 1px solid ${tokens.colors.ui.background__medium.hex};
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    width: 100px;
+  `,
+  Info: styled.div`
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__info.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+  `,
+  ChipContainer: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    flex-wrap: wrap;
+  `,
+  UserList: styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  `,
+  UserItem: styled.li`
+    border: 1px solid ${tokens.colors.ui.background__medium.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    padding: ${tokens.spacings.comfortable.small};
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: ${tokens.elevation.raised};
+    }
+  `,
+  UserName: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+  `,
+  UserEmail: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
+  UserChips: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    flex-wrap: wrap;
+    margin-bottom: ${tokens.spacings.comfortable.small};
+  `,
+  Pagination: styled.div`
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    justify-content: center;
+    align-items: center;
+    margin-top: ${tokens.spacings.comfortable.large};
+  `,
+  PaginationInfo: styled(Typography)`
+    padding: ${tokens.spacings.comfortable.x_small} ${tokens.spacings.comfortable.small};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
 };
 
 // Helper functions to get chip variants based on role and department
@@ -176,58 +173,61 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
   const [searchParams, setSearchParams] = useSearchParams();
   const { users, page, limit, total, totalPages, hasNext, hasPrev } = loaderData;
 
-  const goToPage = (newPage: number) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('page', newPage.toString());
-    setSearchParams(newParams);
-  };
+  const goToPage = useCallback(
+    (newPage: number) => {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('page', newPage.toString());
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
 
-  const setLimit = (newLimit: number) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('limit', newLimit.toString());
-    newParams.set('page', '1'); // Reset to first page when changing limit
-    setSearchParams(newParams);
-  };
+  const setLimit = useCallback(
+    (newLimit: number) => {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('limit', newLimit.toString());
+      newParams.set('page', '1'); // Reset to first page when changing limit
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
 
-  const handleRemovePage = () => {
+  const handleRemovePage = useCallback(() => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('page');
     setSearchParams(newParams);
-  };
+  }, [searchParams, setSearchParams]);
 
-  const handleRemoveLimit = () => {
+  const handleRemoveLimit = useCallback(() => {
     const newParams = new URLSearchParams(searchParams);
     newParams.delete('limit');
     setSearchParams(newParams);
-  };
+  }, [searchParams, setSearchParams]);
 
   return (
     <div>
-      <h1 style={styles.title}>Users</h1>
+      <Styled.Title variant="h1">Users</Styled.Title>
 
-      <div style={styles.controls}>
-        <div style={styles.formGroup}>
-          <label htmlFor="limit" style={styles.label}>
-            Items per page
-          </label>
-          <input
+      <Styled.Controls>
+        <Styled.FormGroup>
+          <Styled.Label htmlFor="limit">Items per page</Styled.Label>
+          <Styled.Input
             id="limit"
             type="number"
             min="1"
             max="20"
             value={limit}
             onChange={(e) => setLimit(parseInt(e.target.value, 10))}
-            style={styles.input}
           />
-        </div>
-      </div>
+        </Styled.FormGroup>
+      </Styled.Controls>
 
-      <div style={styles.info}>
-        <div style={{ marginBottom: '0.5rem' }}>
+      <Styled.Info>
+        <div style={{ marginBottom: tokens.spacings.comfortable.x_small }}>
           Showing {users.length} of {total} users (Page {page} of {totalPages})
         </div>
         {(page > 1 || limit !== 5) && (
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Styled.ChipContainer>
             {page > 1 && (
               <Chip variant="active" onDelete={handleRemovePage}>
                 {`Page: ${page}`}
@@ -238,37 +238,37 @@ export default function UsersPage(props: RouteComponentProps<UsersPageLoaderData
                 {`Limit: ${limit}`}
               </Chip>
             )}
-          </div>
+          </Styled.ChipContainer>
         )}
-      </div>
+      </Styled.Info>
 
-      <ul style={styles.userList}>
+      <Styled.UserList>
         {users.map((user) => (
-          <li key={user.id} style={styles.userItem}>
-            <div style={styles.userName}>{user.name}</div>
-            <div style={styles.userEmail}>{user.email}</div>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+          <Styled.UserItem key={user.id}>
+            <Styled.UserName variant="h3">{user.name}</Styled.UserName>
+            <Styled.UserEmail variant="body_short">{user.email}</Styled.UserEmail>
+            <Styled.UserChips>
               <Chip variant={getRoleChipVariant(user.role)}>{user.role}</Chip>
               <Chip variant={getDepartmentChipVariant(user.department)}>{user.department}</Chip>
-            </div>
+            </Styled.UserChips>
             <Button variant="contained" as={Link} to={`/users/${user.id}`}>
               View Profile
             </Button>
-          </li>
+          </Styled.UserItem>
         ))}
-      </ul>
+      </Styled.UserList>
 
-      <div style={styles.pagination}>
+      <Styled.Pagination>
         <Button variant="outlined" onClick={() => goToPage(page - 1)} disabled={!hasPrev}>
           Previous
         </Button>
-        <span style={styles.paginationInfo}>
+        <Styled.PaginationInfo variant="body_short">
           Page {page} of {totalPages}
-        </span>
+        </Styled.PaginationInfo>
         <Button variant="outlined" onClick={() => goToPage(page + 1)} disabled={!hasNext}>
           Next
         </Button>
-      </div>
+      </Styled.Pagination>
     </div>
   );
 }

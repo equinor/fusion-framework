@@ -4,7 +4,6 @@ import { Router } from '@equinor/fusion-framework-react-router';
 import { useAppModule } from '@equinor/fusion-framework-react-app';
 
 import routes from './routes';
-import Loader from './components/Loader';
 import { Api } from './api';
 
 export default function () {

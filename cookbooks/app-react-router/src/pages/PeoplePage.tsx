@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
 import { Form, useSearchParams, redirect } from 'react-router-dom';
-import { Button, Search, Chip } from '@equinor/eds-core-react';
+import { Button, Search, Chip, Typography } from '@equinor/eds-core-react';
 import { category } from '@equinor/eds-icons';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type {
   LoaderFunctionArgs,
   ActionFunctionArgs,
@@ -23,14 +25,14 @@ export const handle = {
     icon: category,
     path: '/pages/people',
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
 
 type PeoplePageLoaderData = {
   persons: PersonSearchResult[];
   searchTerm: string;
 };
 
-export const clientLoader = async (props: LoaderFunctionArgs) => {
+export async function clientLoader(props: LoaderFunctionArgs) {
   const { fusion, request } = props;
   const url = new URL(request.url);
   const searchTerm = url.searchParams.get('search') || '';
@@ -45,9 +47,9 @@ export const clientLoader = async (props: LoaderFunctionArgs) => {
     persons: results || [],
     searchTerm,
   };
-};
+}
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const searchTerm = (formData.get('search') as string)?.trim() || '';
 
@@ -56,7 +58,99 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   // Redirect to same page with search parameter
-  return redirect(`.?search=${encodeURIComponent(searchTerm)}`);
+  return redirect(`?search=${encodeURIComponent(searchTerm)}`);
+}
+
+const Styled = {
+  ErrorContainer: styled.div`
+    background-color: ${tokens.colors.ui.background__light.hex};
+    padding: ${tokens.spacings.comfortable.large};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    box-shadow: ${tokens.elevation.raised};
+    border: 2px solid ${tokens.colors.interactive.danger__resting.hex};
+  `,
+  ErrorTitle: styled(Typography)`
+    color: ${tokens.colors.interactive.danger__resting.hex};
+    margin-bottom: ${tokens.spacings.comfortable.small};
+  `,
+  ErrorMessage: styled.div`
+    font-size: ${tokens.typography.paragraph.body_short.fontSize};
+    color: ${tokens.colors.text.static_icons__default.hex};
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    padding: ${tokens.spacings.comfortable.small};
+    background-color: ${tokens.colors.ui.background__warning.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+  `,
+  Title: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+  `,
+  SearchForm: styled(Form)`
+    margin-bottom: ${tokens.spacings.comfortable.large};
+    display: flex;
+    gap: ${tokens.spacings.comfortable.x_small};
+    align-items: center;
+    flex-wrap: wrap;
+  `,
+  SearchInput: styled(Search)`
+    flex: 1;
+    min-width: 200px;
+  `,
+  ErrorMessageBox: styled.div`
+    color: ${tokens.colors.interactive.danger__resting.hex};
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__warning.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+  `,
+  ResultsInfo: styled.div`
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    padding: ${tokens.spacings.comfortable.medium};
+    background-color: ${tokens.colors.ui.background__info.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+  `,
+  PersonList: styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  `,
+  PersonItem: styled.li`
+    border: 1px solid ${tokens.colors.ui.background__medium.hex};
+    border-radius: ${tokens.shape.corners.borderRadius};
+    padding: ${tokens.spacings.comfortable.medium};
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    background-color: ${tokens.colors.ui.background__light.hex};
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: ${tokens.elevation.raised};
+    }
+  `,
+  PersonName: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+  `,
+  PersonEmail: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
+  PersonDetails: styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${tokens.spacings.comfortable.x_small};
+    margin-bottom: ${tokens.spacings.comfortable.medium};
+  `,
+  PersonDetail: styled.div`
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+    color: ${tokens.colors.text.static_icons__default.hex};
+  `,
+  EmptyState: styled.div`
+    text-align: center;
+    padding: ${tokens.spacings.comfortable.x_large};
+    color: ${tokens.colors.text.static_icons__tertiary.hex};
+  `,
+  EmptyStateTitle: styled(Typography)`
+    margin-bottom: ${tokens.spacings.comfortable.x_small};
+  `,
 };
 
 export function ErrorElement(props: ErrorElementProps) {
@@ -66,121 +160,18 @@ export function ErrorElement(props: ErrorElementProps) {
     fusion.modules.navigation.navigate({ search: '' }, { replace: true });
   }, [fusion]);
 
-  const styles = {
-    container: {
-      backgroundColor: '#fff',
-      padding: '2rem',
-      borderRadius: '8px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      border: '2px solid #f44336',
-    },
-    title: {
-      fontSize: '1.5rem',
-      color: '#f44336',
-      marginBottom: '1rem',
-    },
-    message: {
-      fontSize: '1rem',
-      color: '#333',
-      marginBottom: '1.5rem',
-      padding: '1rem',
-      backgroundColor: '#ffebee',
-      borderRadius: '4px',
-    },
-  };
-
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>⚠️ Error Encountered</h2>
-      <div style={styles.message}>
+    <Styled.ErrorContainer>
+      <Styled.ErrorTitle variant="h2">⚠️ Error Encountered</Styled.ErrorTitle>
+      <Styled.ErrorMessage>
         <strong>Error:</strong> {error.message}
-      </div>
+      </Styled.ErrorMessage>
       <Button variant="contained" onClick={onClick}>
         Clear Search and Try Again
       </Button>
-    </div>
+    </Styled.ErrorContainer>
   );
 }
-
-const styles = {
-  title: {
-    fontSize: '2rem',
-    marginBottom: '1.5rem',
-    color: '#1a1a1a',
-  },
-  searchForm: {
-    marginBottom: '2rem',
-    display: 'flex',
-    gap: '0.5rem',
-    alignItems: 'center',
-    flexWrap: 'wrap' as const,
-  },
-  searchInput: {
-    flex: 1,
-    minWidth: '200px',
-  },
-  errorMessage: {
-    color: '#f44336',
-    marginBottom: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#ffebee',
-    borderRadius: '4px',
-  },
-  resultsInfo: {
-    marginBottom: '1rem',
-    padding: '0.75rem',
-    backgroundColor: '#e3f2fd',
-    borderRadius: '4px',
-    color: '#1976d2',
-  },
-  personList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-  },
-  personItem: {
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    padding: '1.5rem',
-    marginBottom: '1rem',
-    backgroundColor: '#fff',
-    transition: 'box-shadow 0.2s',
-  },
-  personItemHover: {
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-  },
-  personName: {
-    fontSize: '1.3rem',
-    fontWeight: 'bold',
-    marginBottom: '0.5rem',
-    color: '#1a1a1a',
-  },
-  personEmail: {
-    fontSize: '1rem',
-    color: '#666',
-    marginBottom: '0.75rem',
-  },
-  personDetails: {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    gap: '0.5rem',
-    marginBottom: '0.75rem',
-  },
-  personDetail: {
-    fontSize: '0.9rem',
-    color: '#333',
-  },
-  emptyState: {
-    textAlign: 'center' as const,
-    padding: '3rem',
-    color: '#666',
-  },
-  emptyStateTitle: {
-    fontSize: '1.5rem',
-    marginBottom: '0.5rem',
-    color: '#333',
-  },
-};
 
 export default function PeoplePage(
   props: RouteComponentProps<PeoplePageLoaderData, { error: string }>,
@@ -201,25 +192,24 @@ export default function PeoplePage(
 
   return (
     <>
-      <h1 style={styles.title}>People Search</h1>
+      <Styled.Title variant="h1">People Search</Styled.Title>
 
-      <Form method="post" style={styles.searchForm}>
-        <Search
+      <Styled.SearchForm method="post">
+        <Styled.SearchInput
           name="search"
           defaultValue={currentSearch}
           placeholder="Search for people (name, email, etc.)"
-          style={styles.searchInput}
           onChange={(e) => handleSearchChange(e.target.value)}
         />
         <Button type="submit" variant="contained">
           Search
         </Button>
-      </Form>
+      </Styled.SearchForm>
 
-      {actionData?.error && <div style={styles.errorMessage}>{actionData.error}</div>}
+      {actionData?.error && <Styled.ErrorMessageBox>{actionData.error}</Styled.ErrorMessageBox>}
 
       {searchTerm && (
-        <div style={styles.resultsInfo}>
+        <Styled.ResultsInfo>
           {persons.length > 0 ? (
             <>
               Found <strong>{persons.length}</strong> result{persons.length !== 1 ? 's' : ''} for "
@@ -230,44 +220,48 @@ export default function PeoplePage(
               No results found for "<strong>{searchTerm}</strong>"
             </>
           )}
-        </div>
+        </Styled.ResultsInfo>
       )}
 
       {!searchTerm ? (
-        <div style={styles.emptyState}>
-          <h2 style={styles.emptyStateTitle}>Search for People</h2>
-          <p>Enter a name, email, or other identifier to search for people.</p>
-        </div>
+        <Styled.EmptyState>
+          <Styled.EmptyStateTitle variant="h2">Search for People</Styled.EmptyStateTitle>
+          <Typography variant="body_long">
+            Enter a name, email, or other identifier to search for people.
+          </Typography>
+        </Styled.EmptyState>
       ) : persons.length === 0 ? (
-        <div style={styles.emptyState}>
-          <h2 style={styles.emptyStateTitle}>No Results</h2>
-          <p>Try a different search term.</p>
-        </div>
+        <Styled.EmptyState>
+          <Styled.EmptyStateTitle variant="h2">No Results</Styled.EmptyStateTitle>
+          <Typography variant="body_long">Try a different search term.</Typography>
+        </Styled.EmptyState>
       ) : (
-        <ul style={styles.personList}>
+        <Styled.PersonList>
           {persons.map((person) => (
-            <li key={person.azureUniqueId || person.mail} style={styles.personItem}>
-              <div style={styles.personName}>{person.name || 'Unknown'}</div>
-              {person.mail && <div style={styles.personEmail}>{person.mail}</div>}
-              <div style={styles.personDetails}>
+            <Styled.PersonItem key={person.azureUniqueId || person.mail}>
+              <Styled.PersonName variant="h3">{person.name || 'Unknown'}</Styled.PersonName>
+              {person.mail && (
+                <Styled.PersonEmail variant="body_short">{person.mail}</Styled.PersonEmail>
+              )}
+              <Styled.PersonDetails>
                 {person.jobTitle && <Chip variant="active">{person.jobTitle}</Chip>}
                 {person.department && <Chip>{person.department}</Chip>}
                 {person.accountType && <Chip variant="error">{person.accountType}</Chip>}
-              </div>
+              </Styled.PersonDetails>
               {(person.mobilePhone || person.officeLocation) && (
-                <div style={styles.personDetail}>
+                <Styled.PersonDetail>
                   {person.mobilePhone && <div>📱 {person.mobilePhone}</div>}
                   {person.officeLocation && <div>📍 {person.officeLocation}</div>}
-                </div>
+                </Styled.PersonDetail>
               )}
               {person.fullDepartment && (
-                <div style={styles.personDetail}>
+                <Styled.PersonDetail>
                   <small>Department: {person.fullDepartment}</small>
-                </div>
+                </Styled.PersonDetail>
               )}
-            </li>
+            </Styled.PersonItem>
           ))}
-        </ul>
+        </Styled.PersonList>
       )}
     </>
   );

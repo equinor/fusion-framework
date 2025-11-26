@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
+import { tokens } from '@equinor/eds-tokens';
+import styled from 'styled-components';
 import type {
   LoaderFunctionArgs,
   RouteComponentProps,
   RouterHandle,
 } from '@equinor/fusion-framework-react-router';
-import { styles } from './UserPage.styles';
 import { UserDetail } from '../components/user/UserDetail';
 import type { User } from '../api/UserApi';
 
@@ -15,16 +16,26 @@ export const handle = {
       id: 'User identifier',
     },
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
+
+const Styled = {
+  BackLink: styled(Link)`
+    display: inline-block;
+    margin-bottom: ${tokens.spacings.comfortable.small};
+    color: ${tokens.colors.interactive.primary__resting.hex};
+    text-decoration: none;
+    font-size: ${tokens.typography.paragraph.caption.fontSize};
+  `,
+};
 
 type UserPageLoaderData = {
   user: User;
 };
 
-export const clientLoader = async ({
+export async function clientLoader({
   params,
   fusion,
-}: LoaderFunctionArgs<{ id: string }>): Promise<UserPageLoaderData> => {
+}: LoaderFunctionArgs<{ id: string }>): Promise<UserPageLoaderData> {
   if (!params.id) {
     throw new Response('User ID is required', { status: 400 });
   }
@@ -42,7 +53,7 @@ export const clientLoader = async ({
     }
     throw new Response('Failed to fetch user', { status: 500 });
   }
-};
+}
 
 export default function UserPage(props: RouteComponentProps<UserPageLoaderData>) {
   const { loaderData } = props;
@@ -50,9 +61,7 @@ export default function UserPage(props: RouteComponentProps<UserPageLoaderData>)
 
   return (
     <>
-      <Link to="/users" style={styles.backLink}>
-        ← Back to Users
-      </Link>
+      <Styled.BackLink to="/users">← Back to Users</Styled.BackLink>
       <UserDetail user={user} />
     </>
   );

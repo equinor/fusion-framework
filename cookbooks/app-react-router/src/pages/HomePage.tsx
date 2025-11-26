@@ -12,7 +12,7 @@ export const handle = {
     icon: home,
     path: '/',
   },
-} satisfies RouterHandle;
+} as const satisfies RouterHandle;
 
 export default function HomePage() {
   return <fwc-markdown-viewer>{readmeContent}</fwc-markdown-viewer>;
