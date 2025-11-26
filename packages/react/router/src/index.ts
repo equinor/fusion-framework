@@ -15,4 +15,5 @@ export type {
   RouterHandle,
   RouterSchema,
   RouteNode,
+  RouteObject
 } from './types.js';

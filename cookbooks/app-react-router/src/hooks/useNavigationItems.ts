@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { RouteObject as ReactRouterRouteObject } from 'react-router';
-import type { RouterHandle } from '@equinor/fusion-framework-react-router';
+import type { RouteObject } from '@equinor/fusion-framework-react-router';
 import type { SidebarLinkProps } from '@equinor/eds-core-react';
-
-// RouteObject with handle support (transformed by Vite plugin)
-type RouteObject = ReactRouterRouteObject & {
-  handle?: RouterHandle;
-};
 
 export type NavigationItem = {
   label: string;
@@ -48,7 +42,7 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
     }
 
     // Check if handle has navigation metadata
-    const handle = route.handle as RouterHandle | undefined;
+    const handle = route.handle;
     if (handle?.navigation) {
       items.push({
         label: handle.navigation.label,
