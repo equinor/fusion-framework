@@ -46,7 +46,7 @@ Fusion Framework uses file-based AI instructions under `.github/instructions/`. 
 - **React** → `./.github/instructions/react.instructions.md`  
   Component, hook, provider, observable, and styling patterns for React.
 - **Dependabot PRs** → `./.github/instructions/dependabot-pr.instructions.md`  
-  Full Dependabot review workflow (research, tests, comments, merge).
+  **⚠️ MANDATORY**: When handling ANY Dependabot PR, you MUST read this entire instruction file first. It contains mandatory steps including posting comments using `gh pr comment -F <file>.md`. Do not skip steps.
 
 Each instruction file declares an `applyTo` glob so tools like Copilot/Cursor can automatically apply the right rules for the files you are editing.
 

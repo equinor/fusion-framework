@@ -1,16 +1,26 @@
 ---
 description: Rules for reviewing and handling Dependabot pull requests
 name: Dependabot PR Review Rules
+applyTo: 
+  - "**/dependabot.yml"
+  - ".github/workflows/dependabot.yml"
+  - ".github/dependabot.yml"
+alwaysApply: true
 ---
 
 # Dependabot PR Review Rules
 
+**⚠️ CRITICAL: AI AGENTS MUST READ THIS ENTIRE FILE WHEN HANDLING DEPENDABOT PRs**
+
+This instruction file contains **mandatory steps** that MUST be executed in order. Do not skip steps. Do not proceed without reading the full workflow below.
+
 ## TL;DR (for AI agents)
 
+- **MANDATORY READING**: You MUST read this entire instruction file before handling any Dependabot PR. This is not optional.
 - **Consent**: Never post comments, generate changesets, push commits, close PRs, or merge without explicit user approval.
 - **Flow**: Rebase (if needed) → research dependency changes → install with `pnpm` → build → test → lint → (optionally) generate changeset → push → summarize → (optionally) merge.
 - **Safety**: Stop immediately on build/test/lint/security failures or user timeout; do not auto-resolve complex conflicts.
-- **Comments**: Use the provided research/results templates and always show content to the user for approval before posting.
+- **Comments**: Use the provided research/results templates, create temporary markdown files, show content to the user for approval, then execute `gh pr comment <PR_NUMBER> -F <comment-file>.md` to post. Always clean up temporary files.
 - **History**: Maintain linear history (force-with-lease after rebase) and clean up worktrees when done.
 
 ## Overview
@@ -76,8 +86,10 @@ Execute rebase analysis against base branch (default: `main`).
 - Continue to Step 4
 
 **B: Version Conflict (Auto-Close)**
-- Post redundancy explanation comment
-- Close PR with explanation
+- Create temporary comment file: `gh-comment-version-conflict.md` with redundancy explanation
+- **EXECUTE**: `gh pr comment <PR_NUMBER> -F gh-comment-version-conflict.md`
+- Clean up: `rm gh-comment-version-conflict.md`
+- Close PR: `gh pr close <PR_NUMBER> --comment "PR closed due to version conflict"`
 - Proceed to cleanup
 
 **C: Structural Conflict (User Consent Required)**
@@ -102,14 +114,22 @@ Execute rebase analysis against base branch (default: `main`).
 
 ### 5. Post Research Comment
 
+**MANDATORY STEP - DO NOT SKIP**
+
 1. Format research findings using [research comment template](dependabot-pr/research-comment.template.md)
-2. Display comment content to user
-3. Ask user: "Review research comment content. Is it accurate and complete?"
-4. Wait for user response
-5. Ask user: "Post this research comment to PR?"
-6. Wait for user response
-7. If approved: Post comment to PR
-8. If declined: Skip and continue
+2. Create temporary comment file: `gh-comment-research.md` with the formatted content
+3. Display comment content to user (show the file contents)
+4. Ask user: "Review research comment content. Is it accurate and complete?"
+5. Wait for user response
+6. Ask user: "Post this research comment to PR?"
+7. Wait for user response
+8. **If approved**: 
+   - **EXECUTE**: `gh pr comment <PR_NUMBER> -F gh-comment-research.md`
+   - Verify the comment was posted successfully
+   - Clean up: `rm gh-comment-research.md`
+9. **If declined**: Skip and continue (clean up: `rm gh-comment-research.md`)
+
+**CRITICAL**: You MUST execute the `gh pr comment` command when approved. Do not just say you will post it - actually run the command.
 
 **MANDATORY**: Proceed to Step 6 (Install Dependencies) - NEVER SKIP THIS STEP
 
@@ -169,15 +189,23 @@ Execute rebase analysis against base branch (default: `main`).
 
 ### 12. Comment PR Results
 
+**MANDATORY STEP - DO NOT SKIP**
+
 1. Format completion summary using [results comment template](dependabot-pr/results-comment.template.md)
-2. Display comment content to user
-3. Ask user: "Review validation results. Are they accurate?"
-4. Wait for user response (5 min timeout)
-5. Ask user: "Post this validation comment to PR?"
-6. Wait for user response (5 min timeout)
-7. If approved: Post comment to PR
-8. If declined: Skip and continue
-9. If timeout: **STOP EXECUTION** - User consent required
+2. Create temporary comment file: `gh-comment-results.md` with the formatted content
+3. Display comment content to user (show the file contents)
+4. Ask user: "Review validation results. Are they accurate?"
+5. Wait for user response (5 min timeout)
+6. Ask user: "Post this validation comment to PR?"
+7. Wait for user response (5 min timeout)
+8. **If approved**: 
+   - **EXECUTE**: `gh pr comment <PR_NUMBER> -F gh-comment-results.md`
+   - Verify the comment was posted successfully
+   - Clean up: `rm gh-comment-results.md`
+9. **If declined**: Skip and continue (clean up: `rm gh-comment-results.md`)
+10. **If timeout**: **STOP EXECUTION** - User consent required (clean up: `rm gh-comment-results.md`)
+
+**CRITICAL**: You MUST execute the `gh pr comment` command when approved. Do not just say you will post it - actually run the command.
 
 ### 13. Squash Merge PR
 
@@ -230,16 +258,21 @@ All PR comments must use the provided templates:
 
 ## AI Agent Rules
 
+**⚠️ MANDATORY: Read this entire section before handling Dependabot PRs**
+
 When handling Dependabot PRs:
 
-1. **Always get user consent** before posting comments or merging
-2. **Follow all steps sequentially** - never skip steps
-3. **Use provided templates** for all PR comments
-4. **Validate thoroughly** - build, test, lint before approval
-5. **Generate changesets** when required (follow [changeset rules](changesets.instructions.md))
-6. **Maintain linear history** - use force-with-lease after rebase
-7. **Clean up properly** - remove worktrees and temp directories
-8. **Stop execution** on any critical failure or user timeout
+1. **READ THIS FILE FIRST** - You must read and understand all steps before starting
+2. **Always get user consent** before posting comments or merging
+3. **Follow all steps sequentially** - never skip steps, especially Steps 5 and 12 (comment posting)
+4. **Use provided templates** for all PR comments
+5. **POST COMMENTS USING GITHUB CLI**: When approved, you MUST execute `gh pr comment <PR_NUMBER> -F <comment-file>.md`. Do not just say you will post - actually run the command. See [GitHub CLI file-based bodies rule](../.cursor/rules/github-cli-file-bodies.mdc)
+6. **Clean up comment files**: Always remove temporary comment files (`gh-comment-*.md`) after posting or if declined
+7. **Validate thoroughly** - build, test, lint before approval
+8. **Generate changesets** when required (follow [changeset rules](changesets.instructions.md))
+9. **Maintain linear history** - use force-with-lease after rebase
+10. **Clean up properly** - remove worktrees and temp directories
+11. **Stop execution** on any critical failure or user timeout
 
 ## Error Handling
 

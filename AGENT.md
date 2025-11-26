@@ -87,7 +87,9 @@ When you receive a task, default to this behavior:
   - Large-scale refactors across many packages.
   - Auto-merging PRs, especially Dependabot PRs.
 - **Dependabot-specific rules**:
-  - Always follow `.github/instructions/dependabot-pr.instructions.md`.
+  - **⚠️ MANDATORY**: When handling ANY Dependabot PR, you MUST read `.github/instructions/dependabot-pr.instructions.md` in its entirety before starting.
+  - The instruction file contains mandatory workflow steps that MUST be executed in order.
+  - When posting comments, you MUST execute `gh pr comment <PR_NUMBER> -F <comment-file>.md` - do not just say you will post it.
   - Do not post PR comments, push commits, or merge without user confirmation.
 
 When unsure, **stop and ask the user** instead of guessing.
