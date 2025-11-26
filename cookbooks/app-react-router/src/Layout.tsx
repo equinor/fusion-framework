@@ -37,7 +37,7 @@ const styles = {
 };
 
 export default function Layout() {
-  const n = useNavigation();
+  const { state: loadingState } = useNavigation();
 
   return (
     <div style={styles.wrapper}>
@@ -49,8 +49,8 @@ export default function Layout() {
         <Navigation />
         <div style={styles.content}>
           <Paper elevation="raised" style={styles.contentContainer}>
-            {n.state === 'loading' && <Loader />}
-            {n.state === 'idle' && <Outlet />}
+            {loadingState === 'loading' && <Loader />}
+            {loadingState === 'idle' && <Outlet />}
           </Paper>
         </div>
       </div>

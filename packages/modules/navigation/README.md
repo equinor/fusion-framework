@@ -441,17 +441,10 @@ navigation.state$.pipe(
 
 ## TypeScript Support
 
-The module is fully typed and provides comprehensive TypeScript definitions:
+The module is fully typed and provides comprehensive TypeScript definitions. Most types are inferred automatically, but you can import them when needed:
 
 ```ts
-import type {
-  INavigationProvider,
-  INavigationConfigurator,
-  NavigationModule,
-  History,
-  Path,
-  To
-} from '@equinor/fusion-framework-module-navigation';
+import type { INavigationProvider } from '@equinor/fusion-framework-module-navigation';
 
 // Type-safe navigation usage
 function navigateToUsers(navigation: INavigationProvider) {
@@ -459,6 +452,13 @@ function navigateToUsers(navigation: INavigationProvider) {
   // navigation.push(123); // ❌ Type error
 }
 ```
+
+**Available types:**
+- `INavigationProvider` - Navigation provider interface
+- `INavigationConfigurator` - Configuration interface (for helpers)
+- `History` - History instance type
+- `Path` - Path object type
+- `To` - Navigation destination type
 
 ## Examples
 
@@ -484,7 +484,6 @@ export const configure = async (configurator: ModulesConfigurator) => {
 ### React Component Usage
 
 ```tsx
-import { useFramework } from '@equinor/fusion-framework-react';
 import { useEffect, useState } from 'react';
 
 function NavigationExample() {

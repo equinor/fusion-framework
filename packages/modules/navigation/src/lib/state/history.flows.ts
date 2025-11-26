@@ -30,10 +30,11 @@ const compareLocation = (a: Location, b: Location) => {
  *
  * Execution flow:
  * 1. Filters for navigate actions
- * 2. Resolves the target path and generates a unique key
- * 3. Creates a location object with the resolved path, key, and optional state
- * 4. Updates the stack based on action type (PUSH adds entry, REPLACE updates current)
- * 5. Returns success action with the new location, or failure if action type is invalid
+ * 2. Resolves the target path from the action payload
+ * 3. Creates a location object with the resolved path, key (from action meta), and optional state
+ * 4. Checks if the new location is the same as current to prevent navigation loops
+ * 5. Updates the stack based on replace option (replace updates current, otherwise pushes new entry)
+ * 6. Returns success action with the new location and appropriate action type (PUSH/REPLACE)
  */
 export const navigate: HistoryFlowCreator =
   (stack: HistoryStack): HistoryFlow =>
@@ -214,6 +215,9 @@ export const validateCurrentLocation: HistoryFlowCreator =
       map(([, state]) => {
         const currentLocation = stack.current;
         const record = state.history.find(({ location }) => location?.key === currentLocation?.key);
+        if (!record) {
+          return validateLocation.failure(new Error('Stack state not found'));
+        }
         if (record?.location?.key !== currentLocation?.key) {
           return validateLocation.failure(new Error('Stack state not found'));
         }

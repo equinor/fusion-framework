@@ -3,22 +3,39 @@ import path from 'node:path';
 import { readFile } from 'node:fs/promises';
 
 /**
+ * Options for configuring the markdown raw plugin.
+ */
+export interface MarkdownRawPluginOptions {
+  /**
+   * Regular expression filter to match file imports.
+   * @default /\.mdx?\?raw$/
+   */
+  filter?: RegExp;
+}
+
+/**
  * Creates an esbuild plugin that handles `?raw` imports for markdown files.
  *
  * This plugin allows importing markdown files as raw strings using the `?raw` query parameter:
  * ```typescript
  * import readmeContent from '../../README.md?raw';
+ * import mdxContent from '../../docs/guide.mdx?raw';
  * ```
  *
- * The plugin intercepts imports ending with `?raw` (or `.md?raw`), reads the file content,
+ * The plugin intercepts imports ending with `?raw` (or `.md?raw`/`.mdx?raw`), reads the file content,
  * and returns it as a default export string.
+ *
+ * @param options - Configuration options for the plugin
+ * @returns An esbuild plugin
  */
-export const createMarkdownRawPlugin = (): Plugin => {
+export const createMarkdownRawPlugin = (options: MarkdownRawPluginOptions = {}): Plugin => {
+  const { filter = /\.mdx?\?raw$/ } = options;
+
   return {
     name: 'markdown-raw',
     setup(build) {
       // Handle imports ending with ?raw
-      build.onResolve({ filter: /\?raw$/ }, (args) => {
+      build.onResolve({ filter }, (args) => {
         // Remove the ?raw suffix to get the actual file path
         const filePath = args.path.replace(/\?raw$/, '');
 

@@ -12,11 +12,7 @@ export default function () {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <Router
-        routes={routes}
-        loader={<Loader />}
-        context={{ api: new Api(queryClient, httpProvider), queryClient }}
-      />
+      <Router routes={routes} context={{ api: new Api(queryClient, httpProvider), queryClient }} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

@@ -1,8 +1,5 @@
 import type { Path } from '../types';
-
-const stripTrailingWhitespace = (input: string): string => {
-  return input.replace(/ $/, '%20');
-};
+import { encodeTrailingWhitespace } from './encode-trailing-whitespace';
 
 /**
  * Converts a Partial<Path> object to a path string.
@@ -20,8 +17,8 @@ const stripTrailingWhitespace = (input: string): string => {
  * ```
  */
 export const pathToString = (to: Partial<Path>): string => {
-  const pathname = stripTrailingWhitespace(to.pathname ?? '/');
-  const search = stripTrailingWhitespace(to.search?.replace(/^\?/, '') ?? '');
-  const hash = stripTrailingWhitespace(to.hash?.replace(/^#/, '') ?? '');
+  const pathname = encodeTrailingWhitespace(to.pathname ?? '/');
+  const search = encodeTrailingWhitespace(to.search?.replace(/^\?/, '') ?? '');
+  const hash = encodeTrailingWhitespace(to.hash?.replace(/^#/, '') ?? '');
   return `${pathname}${search ? `?${search}` : ''}${hash ? `#${hash}` : ''}`;
 };

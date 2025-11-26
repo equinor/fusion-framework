@@ -9,7 +9,7 @@ export type MaybePromise<T> = T | Promise<T>;
 /**
  * The parameters that were parsed from the URL path.
  */
-export type Params<Key extends string = string> = {
+export type UrlParameters<Key extends string = string> = {
   readonly [key in Key]: string | undefined;
 };
 
@@ -53,7 +53,7 @@ export interface FusionRouterContext<
  * @template TContext - The type of Fusion router context
  */
 export type DataFunctionArgs<
-  TParams extends Params,
+  TParams extends UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
 > = {
   /** A {@link https://developer.mozilla.org/en-US/docs/Web/API/Request Fetch Request instance} which you can use to read headers (like cookies, and {@link https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams URLSearchParams} from the request. */
@@ -91,7 +91,7 @@ export type DataFunctionValue = unknown;
  * @template TContext - The type of Fusion router context
  */
 export interface LoaderFunctionArgs<
-  TParams extends Params = Params,
+  TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
 > extends DataFunctionArgs<TParams, TContext> {}
 
@@ -103,7 +103,7 @@ export interface LoaderFunctionArgs<
  * @template TContext - The type of Fusion router context
  */
 export type LoaderFunction<
-  TParams extends Params = Params,
+  TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
 > = (args: LoaderFunctionArgs<TParams, TContext>) => MaybePromise<DataFunctionValue>;
 
@@ -115,7 +115,7 @@ export type LoaderFunction<
  * @template TContext - The type of Fusion router context
  */
 export interface ActionFunctionArgs<
-  TParams extends Params = Params,
+  TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
 > extends DataFunctionArgs<TParams, TContext> {}
 
@@ -127,7 +127,7 @@ export interface ActionFunctionArgs<
  * @template TContext - The type of Fusion router context
  */
 export type ActionFunction<
-  TParams extends Params = Params,
+  TParams extends UrlParameters = UrlParameters,
   TContext extends FusionRouterContext = FusionRouterContext,
 > = (args: ActionFunctionArgs<TParams, TContext>) => MaybePromise<DataFunctionValue>;
 

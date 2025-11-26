@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-react-router": minor
+"@equinor/fusion-framework-react-router": major
 ---
 
 Add new React Router package with DSL API for React Router v7 routes.

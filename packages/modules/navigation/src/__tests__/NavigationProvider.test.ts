@@ -33,7 +33,7 @@ describe('NavigationProvider', () => {
   });
 
   it('should have navigator property (deprecated)', () => {
-    expect(provider.navigator).toBe(history);
+    expect(provider.history).toBe(history);
   });
 
   it('should have path property', () => {

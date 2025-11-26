@@ -28,6 +28,8 @@ describe('BrowserHistory', () => {
       provider.push('/about', { test: 'test' });
       await updatePromise;
 
+      expect(provider.path.pathname).toBe(history.location.pathname);
+
       expect(history.location.pathname).toBe('/about');
       expect(history.action).toBe('PUSH');
       expect(history.location.state).toEqual({ test: 'test' });

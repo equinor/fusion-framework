@@ -76,21 +76,9 @@ export const importScript = async <M extends EsmModule>(
 
   try {
     // Merge plugins: add default plugins if not already present
-    const existingPlugins = options?.plugins ?? [];
-    const hasImportMetaResolvePlugin = existingPlugins.some(
-      (plugin) => plugin.name === 'import-meta-resolve',
-    );
-    const hasMarkdownRawPlugin = existingPlugins.some((plugin) => plugin.name === 'markdown-raw');
+    const defaultPlugins = [createImportMetaResolvePlugin(), createMarkdownRawPlugin()];
 
-    const defaultPlugins = [];
-    if (!hasImportMetaResolvePlugin) {
-      defaultPlugins.push(createImportMetaResolvePlugin());
-    }
-    if (!hasMarkdownRawPlugin) {
-      defaultPlugins.push(createMarkdownRawPlugin());
-    }
-
-    const plugins = [...defaultPlugins, ...existingPlugins];
+    const plugins = options?.plugins ?? defaultPlugins;
 
     const buildOptions = Object.assign(
       {

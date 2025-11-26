@@ -66,24 +66,24 @@ import { index, route, prefix } from "@equinor/fusion-framework-react-router/rou
 
 export const pages = [
   // Index route - renders at the root path '/'
-  index(import.meta.resolve('./HomePage.tsx')),
+  index('./HomePage.tsx'),
   
   // Prefix groups related routes under a common path
   prefix('products', [
     // Index route for /products
-    index(import.meta.resolve('./ProductsPage.tsx')),
+    index('./ProductsPage.tsx'),
     // Dynamic route for /products/:id
-    route(':id', import.meta.resolve('./ProductPage.tsx')),
+    route(':id', './ProductPage.tsx'),
   ]),
   
   prefix('users', [
-    index(import.meta.resolve('./UsersPage.tsx')),
-    route(':id', import.meta.resolve('./UserPage.tsx')),
+    index('./UsersPage.tsx'),
+    route(':id', './UserPage.tsx'),
   ]),
   
   prefix('pages', [
-    route('people', import.meta.resolve('./PeoplePage.tsx')),
-    route('error-test', import.meta.resolve('./ErrorTestPage.tsx')),
+    route('people', './PeoplePage.tsx'),
+    route('error-test', './ErrorTestPage.tsx'),
   ]),
 ];
 ```
@@ -141,17 +141,17 @@ export default function Root() {
 Creates an index route - the default route for a path segment.
 
 ```typescript
-index(import.meta.resolve('./HomePage.tsx'))
+index('./HomePage.tsx')
 // Creates route at '/'
 ```
 
 **When to use:** For the default view of a section (e.g., `/products` showing a product list).
 
-### `route(path, component)`
+### `route(path, componentPath)`
 Creates a route with a specific path. Supports dynamic segments with `:paramName`.
 
 ```typescript
-route(':id', import.meta.resolve('./ProductPage.tsx'))
+route(':id', './ProductPage.tsx')
 // Creates route at '/products/:id' (when nested under prefix('products'))
 ```
 
@@ -164,8 +164,8 @@ Groups routes under a common path prefix. Useful for organizing related routes.
 
 ```typescript
 prefix('products', [
-  index(import.meta.resolve('./ProductsPage.tsx')),      // /products
-  route(':id', import.meta.resolve('./ProductPage.tsx')), // /products/:id
+  index('./ProductsPage.tsx'),      // /products
+  route(':id', './ProductPage.tsx'), // /products/:id
 ])
 ```
 
@@ -174,7 +174,7 @@ prefix('products', [
 - Reduces path repetition
 - Makes route structure more maintainable
 
-### `layout(component, children)`
+### `layout(componentPath, children)`
 Wraps routes with a layout component. The layout renders once and persists across child route changes.
 
 ```typescript
@@ -655,11 +655,11 @@ You can nest layouts for complex UI structures:
 ```typescript
 // src/routes.ts
 export const routes = layout('/src/Root.tsx', [
-  index(import.meta.resolve('./HomePage.tsx')),
+  index('./HomePage.tsx'),
   prefix('admin', [
     layout('/src/AdminLayout.tsx', [
-      index(import.meta.resolve('./AdminDashboard.tsx')),
-      route('users', import.meta.resolve('./AdminUsers.tsx')),
+      index('./AdminDashboard.tsx'),
+      route('users', './AdminUsers.tsx'),
     ]),
   ]),
 ]);
@@ -828,8 +828,8 @@ export default function ProductPage(
 
 ```typescript
 prefix('products', [
-  index(import.meta.resolve('./ProductsPage.tsx')),      // List
-  route(':id', import.meta.resolve('./ProductPage.tsx')), // Detail
+  index('./ProductsPage.tsx'),      // List
+  route(':id', './ProductPage.tsx'), // Detail
 ])
 ```
 

@@ -10,7 +10,10 @@ This Vite plugin enables importing files as raw strings using the `?raw` query p
 - **Automatic Integration**: Included by default in Fusion Framework CLI builds
 - **TypeScript Support**: Full TypeScript support with proper type definitions
 
-> **Note**: Vite does support `?raw` imports natively, but this plugin ensures reliable behavior in library mode and handles path resolution edge cases that may not work with Vite's default implementation.
+> [!NOTE]
+> While Vite supports `?raw` imports natively, it treats them as static assets. 
+> This plugin embeds the content directly in the JavaScript bundle, making it accessible at runtime without separate asset loading. 
+> This ensures reliable behavior in library mode and handles path resolution edge cases.
 
 ## Installation
 
@@ -87,7 +90,8 @@ export default defineConfig({
 });
 ```
 
-> **Note**: Files with extensions not listed in the `extensions` option will be handled by Vite's built-in `?raw` support, ensuring compatibility with existing image imports and other file types.
+> [!NOTE]
+> Files with extensions not listed in the `extensions` option will be handled by Vite's built-in `?raw` support, ensuring compatibility with existing image imports and other file types.
 
 ## How It Works
 

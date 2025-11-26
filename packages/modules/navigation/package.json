@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@remix-run/router": "^1.23.0",
+    "uuid": "^13.0.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {
@@ -44,6 +45,7 @@
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-framework-module-telemetry": "workspace:^",
     "@equinor/fusion-observable": "workspace:^",
+    "@types/uuid": "^11.0.0",
     "jsdom": "^27.1.0",
     "rxjs": "^7.8.1",
     "typescript": "^5.8.2",

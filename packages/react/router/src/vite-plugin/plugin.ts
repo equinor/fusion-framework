@@ -5,8 +5,6 @@ import type { Plugin, UserConfig } from 'vite';
 export interface ReactRouterPluginOptions {
   /** Whether to enable debug logging. Defaults to false */
   debug?: boolean;
-  /** Whether to transform all files with DSL routes or only specific ones. Defaults to false (all files) */
-  strict?: boolean;
 }
 
 // ============================================================================
@@ -141,8 +139,8 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
     return resolvedPath;
   }
 
-  // Try common extensions
-  const extensions = ['.tsx', '.ts', '.jsx', '.js'];
+  // Try common extensions, finally check without extension
+  const extensions = ['.tsx', '.ts', '.jsx', '.js', ''];
   for (const ext of extensions) {
     const pathWithExt = resolvedPath + ext;
     if (fs.existsSync(pathWithExt)) {
@@ -175,7 +173,7 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     const fileContent = fs.readFileSync(actualPath, 'utf-8');
 
     // Check for default export
-    if (EXPORT_DEFAULT_PATTERN.test(fileContent)) {
+    if (fileContent.match(EXPORT_DEFAULT_PATTERN)) {
       availableExports.add('default');
     }
 
@@ -183,8 +181,8 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
     const exportNames = ['clientLoader', 'action', 'handle', 'ErrorElement'];
     for (const name of exportNames) {
       if (
-        EXPORT_NAMED_PATTERN(name).test(fileContent) ||
-        EXPORT_REEXPORT_PATTERN(name).test(fileContent)
+        fileContent.match(EXPORT_NAMED_PATTERN(name)) ||
+        fileContent.match(EXPORT_REEXPORT_PATTERN(name))
       ) {
         availableExports.add(name);
       }
@@ -199,7 +197,7 @@ function getAvailableExports(filePath: string, currentFileId: string, debug: boo
 }
 
 /**
- * Generates a camelCase component name from a file path
+ * Generates a PascalCase component name from a file path
  */
 function generateComponentName(filePath: string): string {
   const baseName = path.basename(filePath, path.extname(filePath));
@@ -325,26 +323,28 @@ function transformNestedCall(
 
   while (changed) {
     changed = false;
-    // Reset regex lastIndex to ensure we search from the beginning
-    pattern.lastIndex = 0;
-    let match: RegExpExecArray | null = pattern.exec(result);
+    // Use matchAll to collect matches for current iteration
+    const matches = Array.from(result.matchAll(pattern));
 
-    while (match !== null) {
-      const startIndex = match.index;
-      const filePath = match[1];
-      const argsStart = match.index + match[0].length;
+    for (const m of matches) {
+      // Defensive check: ensure we have a valid index
+      const startIndex = m.index ?? -1;
+      if (startIndex < 0) {
+        continue;
+      }
+
+      const filePath = m[1];
+      const argsStart = startIndex + m[0].length;
 
       // Find the opening paren of the function call (it's in the matched string)
       const openParenIndex = result.indexOf('(', startIndex);
       if (openParenIndex === -1) {
-        match = pattern.exec(result);
         continue;
       }
 
       // Find matching closing delimiter starting from the opening paren
       const delimiterEnd = findMatchingDelimiter(result, openParenIndex, '(', ')');
       if (delimiterEnd === null) {
-        match = pattern.exec(result);
         continue;
       }
 
@@ -353,7 +353,6 @@ function transformNestedCall(
 
       // Check if childrenContent still contains nested calls
       if (nestedPattern.test(childrenContent)) {
-        match = pattern.exec(result);
         continue; // Skip, will be processed in next iteration
       }
 
@@ -367,8 +366,6 @@ function transformNestedCall(
         changed = true;
         break; // Restart from beginning
       }
-
-      match = pattern.exec(result);
     }
   }
 
@@ -518,12 +515,12 @@ export const reactRouterPlugin = (options: ReactRouterPluginOptions = {}): Plugi
         }
 
         // Check if the file contains DSL route imports
-        if (!ROUTE_IMPORT_PATTERN.test(code)) {
+        if (!code.match(ROUTE_IMPORT_PATTERN)) {
           return null;
         }
 
         // Check if the file contains actual DSL route calls
-        if (!ROUTE_CALL_PATTERN.test(code)) {
+        if (!code.match(ROUTE_CALL_PATTERN)) {
           if (debug) {
             console.log(
               '[fusion:react-router] File has DSL imports but no route calls, skipping transformation',

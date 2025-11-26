@@ -1368,6 +1368,9 @@ importers:
       '@remix-run/router':
         specifier: ^1.23.0
         version: 1.23.0
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
       zod:
         specifier: ^4.1.11
         version: 4.1.12
@@ -1384,6 +1387,9 @@ importers:
       '@equinor/fusion-observable':
         specifier: workspace:^
         version: link:../../utils/observable
+      '@types/uuid':
+        specifier: ^11.0.0
+        version: 11.0.0
       jsdom:
         specifier: ^27.1.0
         version: 27.1.0
@@ -1570,6 +1576,9 @@ importers:
       '@equinor/fusion-framework-module-app':
         specifier: workspace:^
         version: link:../../modules/app
+      '@equinor/fusion-framework-module-http':
+        specifier: workspace:^
+        version: link:../../modules/http
       '@equinor/fusion-framework-module-navigation':
         specifier: workspace:^
         version: link:../../modules/navigation

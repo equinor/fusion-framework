@@ -38,12 +38,15 @@ export const createHistoryReducer = (
     // Handle navigate.success actions to update history array
     builder.addCase(actions.navigate.success, (state, action) => {
       const { update } = action.payload;
-      // For REPLACE actions, remove the previous entry before adding the new one
-      // This ensures REPLACE doesn't add to history length, only updates the current entry
-      // We remove at findIndex - 1 because findIndex points to the current entry,
-      // and we want to remove the entry that will be replaced
+      // For REPLACE actions, remove all entries after the current location (the tail)
+      // This ensures REPLACE doesn't add to history length when at the end,
+      // and removes any forward history when not at the end
       if (update.action === 'REPLACE') {
-        state.history.splice(findIndex(state) - 1, 1);
+        const currentIndex = findIndex(state);
+        if (currentIndex !== -1) {
+          // Remove all entries from current position onwards
+          state.history.splice(currentIndex, state.history.length - currentIndex);
+        }
       }
       state.history.push(update);
     });
@@ -59,7 +62,7 @@ export const createHistoryReducer = (
       (state) => {
         if (state.history.length > maxHistory) {
           // Keep only the most recent entries, removing oldest ones
-          state.history = state.history.slice(0, maxHistory);
+          state.history = state.history.slice(-maxHistory);
         }
       },
     );

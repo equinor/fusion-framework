@@ -1,8 +1,7 @@
 import { createAction, createAsyncAction } from '@equinor/fusion-observable/actions';
 import type { ActionTypes } from '@equinor/fusion-observable/actions';
+import { v7 as generateId } from 'uuid';
 import type { To, NavigateOptions, NavigationBlocker, NavigationUpdate } from '../types';
-
-const generateId = () => `${Date.now()}-${Math.random().toString().substring(2, 9)}`;
 
 /**
  * Action for navigating to a new location (push or replace).

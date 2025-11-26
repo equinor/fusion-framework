@@ -33,7 +33,6 @@ type RouterProps = {
  * - Supports lazy loading of route components with automatic code splitting
  *
  * @param routes - Single route node or array of route nodes defining the application routes
- * @param loader - Optional React element to display while routes are loading
  * @param context - Optional context object that will be available in route loaders and components via `fusion.context`
  *
  * @example
@@ -57,13 +56,12 @@ type RouterProps = {
  *     <Router
  *       routes={routes}
  *       context={{ queryClient }}
- *       loader={<LoadingSpinner />}
  *     />
  *   );
  * }
  * ```
  */
-export function Router({ routes, loader: _loader, context }: RouterProps) {
+export function Router({ routes, context }: RouterProps) {
   const modules = useModules();
 
   const fusionRouterContext: FusionRouterContext = useMemo(() => {

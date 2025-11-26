@@ -22,13 +22,18 @@ import { pathToString } from './lib/utils';
 import type { BaseHistory } from './lib';
 
 /**
- * Normalizes a pathname by collapsing multiple consecutive slashes into a single slash.
- * Example: "/app//users///profile" becomes "/app/users/profile"
+ * Normalizes a pathname by:
+ * - Collapsing multiple consecutive slashes into a single slash
+ * - Removing trailing slashes
+ *
+ * @example
+ * normalizePathname("/app//users///profile/") // returns "/app/users/profile"
+ * normalizePathname("///multiple///slashes///") // returns "/multiple/slashes"
  *
  * @param path - The pathname to normalize
- * @returns The normalized pathname
+ * @returns The normalized pathname without consecutive or trailing slashes
  */
-const normalizePathname = (path: string) => path.replace(/\/+/g, '/');
+const normalizePathname = (path: string) => path.replace(/\/+/g, '/').replace(/\/$/, '');
 
 /**
  * Navigation provider implementation.
@@ -78,7 +83,7 @@ export class NavigationProvider
       name: 'Navigation::navigator.deprecated',
       exception: new Error('navigator is deprecated, use history instead'),
       level: TelemetryLevel.Warning,
-      scope: ['navigation', TelemetryScope.Application],
+      scope: ['navigation', TelemetryScope.Framework],
     });
     return this.#history;
   }
@@ -94,7 +99,7 @@ export class NavigationProvider
    * Gets the current localized path (basename removed).
    */
   public get path(): Path {
-    return this._localizePath(this.navigator.location);
+    return this._localizePath(this.#history.location);
   }
 
   /**
@@ -179,7 +184,7 @@ export class NavigationProvider
           this.#telemetry?.trackEvent({
             name: `Navigation::action:${action.type}`,
             level: TelemetryLevel.Debug,
-            scope: ['navigation', TelemetryScope.Application],
+            scope: ['navigation', TelemetryScope.Framework],
             properties: {
               type: action.type,
               action: action,
@@ -294,17 +299,15 @@ export class NavigationProvider
    * Creates a full path object from a target location, adding basename prefix.
    */
   protected _createToPath(to: To): Partial<Path> {
-    const {
-      pathname = this.path.pathname,
-      search = this.path.search,
-      hash = this.path.hash,
-    } = typeof to === 'string' ? { pathname: to, search: undefined, hash: undefined } : to;
-    return {
-      pathname: normalizePathname(
-        [this.#basename, pathname === '/' ? undefined : pathname].filter((x) => !!x).join('/'),
-      ),
-      search,
-      hash,
-    };
+    // Parse the 'to' parameter into path components
+    const pathComponents = typeof to === 'string' ? { pathname: to } : to;
+
+    // Extract path parts, defaulting to current path values
+    const rawPathname = pathComponents.pathname ?? this.path.pathname;
+    const pathname = normalizePathname(`${this.#basename ?? ''}/${rawPathname}`);
+    const search = pathComponents.search ?? this.path.search;
+    const hash = pathComponents.hash ?? this.path.hash;
+
+    return { pathname, search, hash };
   }
 }

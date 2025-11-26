@@ -17,10 +17,6 @@ import { pathToUrl } from './path-to-url';
  * ```
  */
 export const resolvePath = (to: To): Path => {
-  const url = pathToUrl(to);
-  return {
-    pathname: url.pathname,
-    search: url.search,
-    hash: url.hash,
-  };
+  const { pathname, search, hash } = pathToUrl(to);
+  return { pathname, search, hash };
 };

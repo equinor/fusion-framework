@@ -9,25 +9,44 @@ export interface RawImportsPluginOptions {
   /**
    * File extensions to handle with this plugin.
    * Files with other extensions will be handled by Vite's built-in `?raw` support.
-   *
-   * @default ['md']
    */
   extensions?: string[];
 }
 
 /**
- * Creates a Vite plugin that handles `?raw` imports for specific file types.
+ * Creates a Vite plugin that handles raw file imports with the `?raw` suffix.
  *
- * This plugin allows importing files as raw strings using the `?raw` query parameter:
- * ```typescript
- * import readmeContent from '../../README.md?raw';
- * ```
+ * @remarks
+ * This plugin intercepts imports ending with `?raw` for files matching the configured extensions
+ * (markdown files by default) and returns their content as an inline string module. Unlike Vite's
+ * default `?raw` behavior which treats files as static assets, this plugin embeds the content
+ * directly in the JavaScript bundle, making it accessible at runtime without separate asset loading.
  *
- * The plugin only intercepts imports ending with `?raw` for configured file extensions,
- * allowing Vite's built-in handler to process other file types (like images).
+ * The plugin:
+ * - Resolves file paths relative to the importer or working directory
+ * - Reads file contents and exports them as JavaScript string modules
+ * - Runs in the 'pre' enforcement phase before other plugins
  *
  * @param options - Configuration options for the plugin
- * @returns A Vite plugin instance
+ * @param options.extensions - Array of file extensions to handle (default: `['.md']`)
+ *
+ * @returns A Vite plugin object with `resolveId` and `load` hooks
+ *
+ * @example
+ * ```typescript
+ * // vite.config.ts
+ * import { rawImportsPlugin } from '@fusion-framework/vite-plugin-raw-imports';
+ *
+ * export default {
+ *   plugins: [
+ *     rawImportsPlugin({ extensions: ['.md', '.txt'] })
+ *   ]
+ * };
+ *
+ * // In your code
+ * import content from './README.md?raw';
+ * console.log(content); // Raw markdown content as string
+ * ```
  */
 export const rawImportsPlugin = (options?: RawImportsPluginOptions): Plugin => {
   // Default extensions: only markdown files by default

@@ -91,12 +91,19 @@ export interface NavigationTransition extends NavigationUpdate {
 export type NavigationBlocker = (transition: NavigationTransition) => void;
 
 /**
- * Options for navigation operations.
+ * Options for controlling navigation behavior.
+ *
+ * @interface NavigateOptions
+ *
+ * @property {boolean} [replace] - Determines the navigation action:
+ * - `false` (default): Pushes a new entry onto the history stack
+ * - `true`: Replaces the current entry in the history stack
+ *
+ * @property {unknown} [state] - Optional state object to associate with the navigation entry.
+ * This state can be accessed later when navigating back to this entry.
  */
 export interface NavigateOptions {
-  /** Navigation action: 'PUSH' adds to history stack, 'REPLACE' replaces current entry */
   replace?: boolean;
-  /** Optional state to associate with the navigation entry */
   state?: unknown;
 }
 

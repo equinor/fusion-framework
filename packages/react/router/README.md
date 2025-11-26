@@ -204,7 +204,7 @@ export default function ProductPage({
 In this example:
 
 - `handle` documents the route for tools and manifests – it does not affect runtime behaviour.
-- `clientLoader` runs **before** the component renders and can use Fusion modules and `fusion.context`.
+- `clientLoader` runs **before** the component associated with the current route renders.
 - `action` handles form submissions and can redirect or return validation errors.
 - The component receives the loader and action results as `loaderData` and `actionData`, plus the `fusion` context if you need it.
 
@@ -258,7 +258,7 @@ export default function AppRouter() {
   Put route components, loaders, actions, and `handle` definitions in the same `src/pages/*.tsx` files. Keep the DSL tree in a small `src/pages/index.ts` module.
 
 - **Use `fusion.context` for shared services**  
-  Put long‑lived services (e.g. `QueryClient`, HTTP API wrapper, `Api` class) on `fusion.context` so they are available in loaders, actions, and components without extra React contexts.
+  Put long‑lived services (e.g. `QueryClient`, HTTP API wrapper, `Api` class) on `fusion.context` so they are available in loaders, actions, and components without extra React contexts. See [TypeScript: typing `fusion.context` and `handle`](#typescript-typing-fusioncontext-and-handle) for how to type your custom context.
 
 - **Use `handle.route` consistently**  
   Always describe routes via `handle.route` – even for simple pages – so manifests and docs can rely on a complete route schema.
@@ -278,11 +278,8 @@ export default function AppRouter() {
   }
   ```
 
-- **Start with data routes, adopt the DSL later**  
-  For most “regular” app development, define a normal React Router **data route tree** (`RouteObject[]` with loaders/actions) and pass it straight to `Router`. The DSL + Vite plugin are powerful but still experimental; they’re best suited for teams that need file‑based routing and manifest generation, and are comfortable helping us iron out edge cases and chunking behaviour.
-
-- **Prefer the Vite plugin for larger apps**  
-  In bigger apps, use the bundled Vite plugin (`@equinor/fusion-framework-react-router/vite-plugin`) to statically transform the DSL into optimized route objects.
+- **Prefer the DSL for new apps**  
+  The route DSL (`layout`, `index`, `route`, `prefix`) is the recommended approach for Fusion apps. It keeps routes co‑located with their components, generates manifest‑ready schemas automatically, and works seamlessly with the Vite plugin. If you have an existing React Router data route tree (`RouteObject[]`), you can pass it directly to `Router` while you migrate incrementally, but new projects should start with the DSL from day one.
 
 ---
 
@@ -330,7 +327,7 @@ Under the hood, the router:
 
 Every route module can export:
 
-- `clientLoader(args: LoaderFunctionArgs)` – runs before the component renders.
+- `clientLoader(args: LoaderFunctionArgs)` – runs before the component associated with the current route renders.
 - `action(args: ActionFunctionArgs)` – handles form submissions and mutations.
 - `ErrorElement(props: ErrorElementProps)` – route‑scoped error boundary.
 - `default(props: RouteComponentProps)` – the route component.
