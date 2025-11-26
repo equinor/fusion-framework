@@ -13,7 +13,7 @@ import {
   useActionData,
   useLoaderData,
   useRouteError,
-  type RouteObject as ReactRouterRouteObject
+  type RouteObject as ReactRouterRouteObject,
 } from 'react-router';
 import type { FusionRouterContext, RouteNode, RouteObject, RouterContext } from './types.js';
 import { FusionRouterContextProvider, routerContext, useRouterContext } from './context.js';

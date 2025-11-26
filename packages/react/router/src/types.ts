@@ -244,7 +244,7 @@ export interface RouterHandle {
  * Extended React Router RouteObject with Fusion Framework handle support.
  * Adds support for RouterHandle in the handle field and typed children.
  */
-export type RouteObject = Omit<ReactRouterRouteObject, 'handle'|'children'> & {
+export type RouteObject = Omit<ReactRouterRouteObject, 'handle' | 'children'> & {
   /** Route metadata handle containing schema and custom properties */
   handle?: RouterHandle;
   /** Child routes */
