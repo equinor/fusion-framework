@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.1.3-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34)]:
+  - @equinor/fusion-framework-react-module-bookmark@5.0.2-cli-search-index.1
+  - @equinor/fusion-observable@8.5.8-cli-search-index.0
+  - @equinor/fusion-framework-react@7.4.20-cli-search-index.1
+
 ## 1.1.2
 
 ### Patch Changes
