@@ -2164,7 +2164,7 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
       vue:
-        specifier: ^3.4.38
+        specifier: ^3.5.25
         version: 3.5.25(typescript@5.9.3)
       vuepress:
         specifier: 2.0.0-rc.26
