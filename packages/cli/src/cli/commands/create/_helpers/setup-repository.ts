@@ -1,7 +1,10 @@
 import { resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import type { ConsoleLogger } from '@equinor/fusion-framework-cli/bin';
-import { ProjectTemplateRepository } from '../../../../bin/helpers/ProjectTemplateRepository.js';
+import {
+  ProjectTemplateRepository,
+  type GitClientProtocol,
+} from '../../../../bin/helpers/ProjectTemplateRepository.js';
 import { validateSafePath, safeRmSync } from '../../../../lib/utils/path-security.js';
 import selectGitProtocol from './select-git-protocol.js';
 
@@ -16,12 +19,16 @@ import selectGitProtocol from './select-git-protocol.js';
  * @param clean - Whether to clean the repo directory before cloning (removes existing directory)
  * @param branch - Git branch to checkout (defaults to 'main')
  * @param logger - Logger instance for output and debugging
+ * @param protocol - Optional Git protocol to use (skips prompt if provided)
  * @returns Promise resolving to the initialized repository ready for template access
  *
  * @example
  * ```typescript
  * const repo = await setupRepository('equinor/fusion-app-template', true, 'main', logger);
  * const templates = await repo.getAvailableTemplates();
+ *
+ * // Non-interactive mode
+ * const repo = await setupRepository('equinor/fusion-app-template', true, 'main', logger, 'https');
  * ```
  */
 export async function setupRepository(
@@ -29,6 +36,7 @@ export async function setupRepository(
   clean: boolean,
   branch: string,
   logger: ConsoleLogger,
+  protocol?: GitClientProtocol,
 ): Promise<ProjectTemplateRepository> {
   const repoDir = resolve(tmpdir(), 'ffc', 'repo', templateRepoName);
   logger.debug(`Repo dir: ${repoDir}`);
@@ -46,14 +54,14 @@ export async function setupRepository(
     }
   }
 
-  // Prompt user to select their preferred Git protocol
-  const protocol = await selectGitProtocol(logger);
+  // Select Git protocol (prompts if not provided)
+  const selectedProtocol = await selectGitProtocol(logger, protocol);
 
   const repo = new ProjectTemplateRepository(templateRepoName, {
     baseDir: repoDir,
     log: logger,
     branch: branch,
-    protocol: protocol,
+    protocol: selectedProtocol,
   });
 
   await repo.initialize();

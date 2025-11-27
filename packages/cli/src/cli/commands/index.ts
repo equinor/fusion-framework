@@ -4,11 +4,16 @@ import authCommands from './auth/index.js';
 import createCommand from './create/index.js';
 import discoCommand from './disco/index.js';
 import portalCommand from './portal/index.js';
+import { loadPlugins } from '../plugins/loader.js';
 
-export default (program: Command) => {
+export default async (program: Command) => {
   program.addCommand(appCommand);
   program.addCommand(authCommands);
   program.addCommand(createCommand);
   program.addCommand(discoCommand);
   program.addCommand(portalCommand);
+
+  // Load optional plugins from config file
+  // Config is resolved from process.cwd() or package.json root
+  await loadPlugins(program);
 };

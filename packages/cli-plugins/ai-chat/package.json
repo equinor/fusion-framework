@@ -1,0 +1,61 @@
+{
+  "name": "@equinor/fusion-framework-cli-plugin-ai-chat",
+  "version": "0.0.0",
+  "description": "AI chat plugin for Fusion Framework CLI providing interactive chat with AI models",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/types/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "build:types": "tsc -b",
+    "watch": "tsc -b --watch",
+    "prepack": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fusion-framework",
+    "cli",
+    "plugin",
+    "llm",
+    "ai",
+    "chat"
+  ],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/cli-plugins/ai/chat"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-cli-plugin-ai-base": "workspace:*",
+    "@equinor/fusion-framework-module-ai": "workspace:*",
+    "@equinor/fusion-framework-module": "workspace:*",
+    "@langchain/core": "^1.0.1",
+    "commander": "^14.0.1",
+    "rxjs": "^7.8.1"
+  },
+  "peerDependencies": {
+    "@equinor/fusion-framework-cli": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  }
+}

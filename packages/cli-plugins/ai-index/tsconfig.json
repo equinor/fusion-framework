@@ -1,0 +1,27 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist/esm",
+    "rootDir": "src",
+    "declarationDir": "./dist/types",
+    "baseUrl": "."
+  },
+  "references": [
+    {
+      "path": "../ai-base"
+    },
+    {
+      "path": "../../modules/ai"
+    },
+    {
+      "path": "../../modules/module"
+    },
+    {
+      "path": "../../utils/imports"
+    }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

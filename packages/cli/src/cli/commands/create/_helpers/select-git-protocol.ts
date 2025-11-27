@@ -86,18 +86,32 @@ function checkSSHKeys(logger?: ConsoleLogger): boolean {
  * Prompts the user to select their preferred Git protocol for repository cloning.
  *
  * This function presents a choice between HTTPS and SSH protocols, with
- * intelligent defaults based on SSH configuration detection.
+ * intelligent defaults based on SSH configuration detection. If a protocol
+ * is provided, it will be used directly without prompting.
  *
  * @param logger - Optional logger instance for debug output
+ * @param protocol - Optional protocol to use directly (skips prompt if provided)
  * @returns Promise resolving to the selected Git protocol ('https' or 'ssh')
  *
  * @example
  * ```typescript
  * const protocol = await selectGitProtocol(logger);
  * console.log(`Using ${protocol} protocol for cloning`);
+ *
+ * // Non-interactive mode
+ * const protocol = await selectGitProtocol(logger, 'https');
  * ```
  */
-export async function selectGitProtocol(logger?: ConsoleLogger): Promise<GitClientProtocol> {
+export async function selectGitProtocol(
+  logger?: ConsoleLogger,
+  protocol?: GitClientProtocol,
+): Promise<GitClientProtocol> {
+  // If protocol is provided, use it directly without prompting
+  if (protocol) {
+    logger?.debug(`Using provided protocol: ${protocol}`);
+    return protocol;
+  }
+
   logger?.debug('Detecting SSH configuration...');
 
   // Check for SSH configuration in order of preference
