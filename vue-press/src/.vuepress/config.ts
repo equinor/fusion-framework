@@ -12,7 +12,7 @@ const { description, name, version } = require('../../../package.json');
 import theme from './theme.js';
 
 export default defineUserConfig({
-  base: '/fusion-framework/',
+  base: (String(process.env.VUEPRESS_BASE) ?? '/fusion-framework/') as '/' | `/${string}/`,
   title: [name, version].join('@'),
   description,
   head: [
