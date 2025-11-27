@@ -115,7 +115,7 @@ export async function loadPlugins(program: Command): Promise<void> {
       let resolved = false;
 
       // Strategy 1: Try import.meta.resolve (Node.js 20.6.0+, handles ESM exports properly)
-      if (!resolved && typeof import.meta.resolve === 'function') {
+      if (typeof import.meta.resolve === 'function') {
         try {
           const resolvedPath = import.meta.resolve(pluginPackage);
           pluginModule = await import(resolvedPath);

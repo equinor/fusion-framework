@@ -7,7 +7,7 @@ import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 
 import type { SourceFile } from '../types.js';
 import type { MarkdownDocument, MarkdownMetadata } from './types.js';
-import { generateChunkId } from '../generate-cunk-id.js';
+import { generateChunkId } from '../generate-chunk-id.js';
 
 const markdownConfig = {
   chunkSize: 3000,

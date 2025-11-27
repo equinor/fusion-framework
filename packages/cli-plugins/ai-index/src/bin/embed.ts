@@ -19,7 +19,7 @@ import type {
 } from './types.js';
 import type { VectorStoreDocument } from '@equinor/fusion-framework-module-ai/lib';
 import { readFileSync } from 'node:fs';
-import { generateChunkId } from '../utils/generate-cunk-id.js';
+import { generateChunkId } from '../utils/generate-chunk-id.js';
 
 /**
  * Default directories to skip before expensive git operations.

@@ -1,5 +1,5 @@
 ---
-"@equinor/fusion-framework-cli-plugin-ai-base": minor
+"@equinor/fusion-framework-cli-plugin-ai-base": major
 ---
 
 Add new base plugin package for AI CLI plugins providing shared utilities and configuration.
@@ -12,3 +12,29 @@ This package provides shared utilities and options used across multiple AI CLI p
 - Common command option handling
 - Type-safe AI configuration interfaces
 
+**Quick Usage:**
+
+```typescript
+import { createCommand } from 'commander';
+import { withOptions, type AiOptions } from '@equinor/fusion-framework-cli-plugin-ai-base/command-options';
+import { setupFramework } from '@equinor/fusion-framework-cli-plugin-ai-base';
+
+const command = createCommand('my-ai-command')
+  .description('My AI command');
+
+// Add AI options to the command
+const enhancedCommand = withOptions(command, {
+  includeChat: true,
+  includeEmbedding: true,
+  includeSearch: true,
+});
+
+enhancedCommand.action(async (options: AiOptions) => {
+  // Initialize framework with AI module
+  const framework = await setupFramework(options);
+  
+  // Use framework.modules.ai for AI operations
+  const aiService = framework.modules.ai;
+  // ... your command logic
+});
+```

@@ -1,5 +1,5 @@
 import { lastValueFrom } from 'rxjs';
-import { Runnable, RunnableInterface, type RunnableConfig } from '@langchain/core/runnables';
+import { Runnable, type RunnableInterface, type RunnableConfig } from '@langchain/core/runnables';
 import type { IService } from './types.js';
 import { toAsyncIterable } from './toAsyncIterator.js';
 
