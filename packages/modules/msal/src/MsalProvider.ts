@@ -13,6 +13,7 @@ import type { MsalConfig } from './MsalConfigurator';
 import type { AcquireTokenOptionsLegacy, IMsalProvider } from './MsalProvider.interface';
 import { createProxyProvider } from './create-proxy-provider';
 import type {
+  AcquireTokenOptions,
   AcquireTokenResult,
   IMsalClient,
   LoginOptions,
@@ -245,7 +246,12 @@ export class MsalProvider extends BaseModuleProvider<MsalConfig> implements IMsa
    * ```
    */
   async acquireToken(options: AcquireTokenOptionsLegacy): Promise<AcquireTokenResult> {
-    const { behavior = 'redirect', silent = true, request } = options;
+    const {
+      behavior = 'redirect',
+      silent = true,
+      request = {} as AcquireTokenOptions['request'],
+    } = options;
+
     const account = request.account ?? this.account ?? undefined;
     // Extract scopes from either new format (request.scopes) or legacy format (scopes)
     const scopes = options.request?.scopes ?? options?.scopes ?? [];
