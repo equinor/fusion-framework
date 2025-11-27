@@ -151,5 +151,5 @@ export const configure = (configurator) => {
 
 ### Apploader
 
-@[code](@packages/cli/src/bin/dev-portal/AppLoader.tsx)
+@[code](@packages/dev-portal/src/AppLoader.tsx)
 
