@@ -1,5 +1,16 @@
 # @equinor/fusion-framework-dev-server
 
+## 1.1.18-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34)]:
+  - @equinor/fusion-framework-vite-plugin-api-service@1.2.5-cli-search-index.1
+  - @equinor/fusion-framework-vite-plugin-spa@3.0.6-cli-search-index.0
+  - @equinor/fusion-log@1.1.8-cli-search-index.1
+
 ## 1.1.17
 
 ### Patch Changes

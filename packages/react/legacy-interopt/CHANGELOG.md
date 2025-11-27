@@ -1,5 +1,22 @@
 # Change Log
 
+## 27.0.2-cli-search-index.0
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34)]:
+  - @equinor/fusion-framework-module-service-discovery@9.0.5-cli-search-index.1
+  - @equinor/fusion-framework-module-navigation@6.0.1-cli-search-index.1
+  - @equinor/fusion-observable@8.5.8-cli-search-index.0
+  - @equinor/fusion-framework-module-http@7.0.6-cli-search-index.1
+  - @equinor/fusion-framework-module-msal@6.0.4-cli-search-index.0
+  - @equinor/fusion-framework-module-app@7.1.2-cli-search-index.0
+  - @equinor/fusion-framework@7.4.3-cli-search-index.1
+  - @equinor/fusion-framework-react-app@8.0.1-cli-search-index.1
+  - @equinor/fusion-framework-app@10.1.3-cli-search-index.1
+
 ## 27.0.1
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @equinor/fusion-framework-cookbook-app-react-context-custom-error
 
+## 4.1.82-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34), [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34), [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e)]:
+  - @equinor/fusion-framework-react-module-context@6.2.34-cli-search-index.1
+  - @equinor/fusion-observable@8.5.8-cli-search-index.0
+  - @equinor/fusion-framework-react-app@8.0.1-cli-search-index.1
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.0
+
 ## 4.1.81
 
 ### Patch Changes
