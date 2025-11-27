@@ -218,9 +218,6 @@ export const validateCurrentLocation: HistoryFlowCreator =
         if (!record) {
           return validateLocation.failure(new Error('Stack state not found'));
         }
-        if (record?.location?.key !== currentLocation?.key) {
-          return validateLocation.failure(new Error('Stack state not found'));
-        }
         if (record?.location?.state !== currentLocation?.state) {
           return validateLocation.failure(new Error('Stack state mismatch'));
         }
