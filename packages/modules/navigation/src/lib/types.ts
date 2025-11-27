@@ -15,8 +15,7 @@ export enum Action {
   Pop = 'POP',
   /**
    * A PUSH indicates a new entry being added to the history stack, such as when
-   * a link is clicked and a new page loads. When this happens, all subsequent
-   * entries in the stack are lost.
+   * a link is clicked and a new page loads.
    */
   Push = 'PUSH',
   /**

@@ -75,16 +75,13 @@ export const importScript = async <M extends EsmModule>(
     );
 
   try {
-    // Merge plugins: add default plugins if not already present
-    const plugins = options?.plugins ?? [importMetaResolvePlugin(), rawMarkdownPlugin()];
-
     const buildOptions = Object.assign(
       {
         // default options
         outfile,
         platform: 'node',
         write: true,
-        plugins,
+        plugins: [importMetaResolvePlugin(), rawMarkdownPlugin()],
         // Enable metafile so the plugin can find output files when write: true
         metafile: true,
       },
@@ -97,7 +94,6 @@ export const importScript = async <M extends EsmModule>(
         packages: 'external',
         format: 'esm',
         // Override plugins to ensure import-meta-resolve is included
-        plugins,
         // Ensure metafile is enabled for the plugin to work with write: true
         metafile: options?.metafile ?? true,
       },
