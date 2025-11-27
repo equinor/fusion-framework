@@ -28,9 +28,9 @@
     "@equinor/eds-core-react": "^0.49.0",
     "@equinor/eds-icons": "^0.22.0",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-react-router": "workspace:^",
     "@equinor/fusion-react-person": "^0.10.10",
-    "@remix-run/router": "^1.8.0",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^7.9.5",
     "styled-components": "^6.0.7"
   }
 }
