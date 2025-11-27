@@ -1,16 +1,16 @@
 import type { Command } from 'commander';
-import { registerAiPlugin } from '@equinor/fusion-framework-cli-plugin-ai-base';
+import { registerAiPlugin as registerAiPluginBase } from '@equinor/fusion-framework-cli-plugin-ai-base';
 import { command as embeddingsCommand } from './command.js';
 
 /**
- * Registers the AI chat plugin command with the CLI program
+ * Registers the AI index plugin command with the CLI program
  * @param program - The Commander program instance to register commands with
  */
-export function registerChatPlugin(program: Command): void {
-  registerAiPlugin(program, embeddingsCommand);
+export function registerAiPlugin(program: Command): void {
+  registerAiPluginBase(program, embeddingsCommand);
 }
 
-export default registerChatPlugin;
+export default registerAiPlugin;
 
 // Re-export config utilities for convenience
 export {

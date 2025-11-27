@@ -8,7 +8,7 @@ import {
   type PropertyDeclaration,
 } from 'ts-morph';
 
-import { generateChunkId } from '../generate-cunk-id.js';
+import { generateChunkId } from '../generate-chunk-id.js';
 import type { TypescriptDocument, ParseTsDocOptions } from './types.js';
 import { nodeKinds } from './constants.js';
 
