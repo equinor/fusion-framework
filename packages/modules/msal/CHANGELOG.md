@@ -1,5 +1,28 @@
 # Change Log
 
+## 6.0.4
+
+### Patch Changes
+
+- [#3797](https://github.com/equinor/fusion-framework/pull/3797) [`244d615`](https://github.com/equinor/fusion-framework/commit/244d615195721541870c98754ee37baca96b8584) Thanks [@odinr](https://github.com/odinr)! - Ensure `acquireToken` normalizes legacy options when `request` is omitted by creating a default request object and applying active account fallback.
+
+  Previously `{ scopes: ["User.Read"] }` could yield a request without `account`, relying on downstream resolution. The provider now explicitly supplies an empty request object, resolves `account` from the active session, and merges legacy `scopes` for clearer telemetry and safer behavior.
+
+  Before:
+
+  ```typescript
+  await provider.acquireToken({ scopes: ["User.Read"] }); // request undefined, account implicit
+  ```
+
+  After (both forms valid, account resolved automatically):
+
+  ```typescript
+  await provider.acquireToken({ scopes: ["User.Read"] });
+  await provider.acquireToken({ request: { scopes: ["User.Read"] } });
+  ```
+
+  Internal: improves stability of legacy usage without breaking API.
+
 ## 6.0.3
 
 ### Patch Changes

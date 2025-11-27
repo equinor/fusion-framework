@@ -1,5 +1,16 @@
 # Change Log
 
+## 12.4.6
+
+### Patch Changes
+
+- [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e) Thanks [@odinr](https://github.com/odinr)! - Internal: upgrade build tooling dependency `esbuild` to 0.27.0 in `@equinor/fusion-imports`. No public API changes and no runtime impact to consumers.
+
+- Updated dependencies [[`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e)]:
+  - @equinor/fusion-imports@1.1.8
+  - @equinor/fusion-framework-dev-server@1.1.18
+  - @equinor/fusion-framework-dev-portal@1.2.6
+
 ## 12.4.5
 
 ### Patch Changes
