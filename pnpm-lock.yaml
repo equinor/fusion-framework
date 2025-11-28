@@ -26,13 +26,13 @@ importers:
         version: 2.29.7(@types/node@24.9.2)
       '@vitest/coverage-v8':
         specifier: ^3.2.4
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
       genversion:
         specifier: ^3.1.1
         version: 3.2.0
       happy-dom:
         specifier: ^20.0.0
-        version: 20.0.10
+        version: 20.0.11
       lerna-update-wizard:
         specifier: ^1.1.2
         version: 1.1.2(@types/node@24.9.2)
@@ -50,10 +50,10 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
       vitest-github-actions-reporter:
         specifier: ^0.11.1
-        version: 0.11.1(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
+        version: 0.11.1(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
 
   cookbooks/app-react:
     devDependencies:
@@ -791,7 +791,7 @@ importers:
         version: 2.4.4
       '@vitest/coverage-v8':
         specifier: ^3.2.4
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))
       adm-zip:
         specifier: ^0.5.10
         version: 0.5.16
@@ -830,7 +830,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/dev-portal:
     devDependencies:
@@ -975,7 +975,7 @@ importers:
         version: 7.2.4(@types/node@24.10.1)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/framework:
     dependencies:
@@ -1012,7 +1012,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/modules/ag-grid:
     devDependencies:
@@ -1231,7 +1231,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/modules/module:
     dependencies:
@@ -1360,7 +1360,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/modules/signalr:
     dependencies:
@@ -1413,7 +1413,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/modules/widget:
     dependencies:
@@ -1936,7 +1936,7 @@ importers:
         version: 4.6.0
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/utils/load-env:
     dependencies:
@@ -1952,7 +1952,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/utils/log:
     dependencies:
@@ -1968,7 +1968,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/utils/observable:
     dependencies:
@@ -1993,7 +1993,7 @@ importers:
         version: 11.0.0
       happy-dom:
         specifier: ^20.0.0
-        version: 20.0.10
+        version: 20.0.11
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2005,7 +2005,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/utils/query:
     dependencies:
@@ -2039,7 +2039,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/vite-plugins/api-service:
     dependencies:
@@ -2067,7 +2067,7 @@ importers:
         version: 7.2.4(@types/node@24.10.1)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
   packages/vite-plugins/spa:
     dependencies:
@@ -5499,8 +5499,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@types/node@20.19.24':
-    resolution: {integrity: sha512-FE5u0ezmi6y9OZEzlJfg37mqqf6ZDSF2V/NLjUyGrR9uTZ7Sb9F7bLNZ03S4XVUNRWGA7Ck4c1kK+YnuWjl+DA==}
+  '@types/node@20.19.25':
+    resolution: {integrity: sha512-ZsJzA5thDQMSQO788d7IocwwQbI8B5OPzmqNvpf3NY/+MHDAS759Wo0gd2WQeXYt5AAAQjzcrTVC6SKCuYgoCQ==}
 
   '@types/node@24.10.1':
     resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
@@ -6989,8 +6989,8 @@ packages:
   hachure-fill@0.5.2:
     resolution: {integrity: sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==}
 
-  happy-dom@20.0.10:
-    resolution: {integrity: sha512-6umCCHcjQrhP5oXhrHQQvLB0bwb1UzHAHdsXy+FjtKoYjUhmNZsQL8NivwM1vDvNEChJabVrUYxUnp/ZdYmy2g==}
+  happy-dom@20.0.11:
+    resolution: {integrity: sha512-QsCdAUHAmiDeKeaNojb1OHOPF7NjcWPBR7obdu3NwH2a/oyQaLg5d0aaCy/9My6CdPChYF07dvz5chaXBGaD4g==}
     engines: {node: '>=20.0.0'}
 
   hard-rejection@2.1.0:
@@ -14230,7 +14230,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-  '@types/node@20.19.24':
+  '@types/node@20.19.25':
     dependencies:
       undici-types: 6.21.0
 
@@ -14277,7 +14277,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.10.1
+      '@types/node': 17.0.45
 
   '@types/semver@7.7.1': {}
 
@@ -14323,7 +14323,7 @@ snapshots:
       vite: 7.1.12(@types/node@24.10.1)(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
       vue: 3.5.25(typescript@5.9.3)
 
-  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
+  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -14338,11 +14338,11 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
+  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -14357,7 +14357,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -16068,9 +16068,9 @@ snapshots:
 
   hachure-fill@0.5.2: {}
 
-  happy-dom@20.0.10:
+  happy-dom@20.0.11:
     dependencies:
-      '@types/node': 20.19.24
+      '@types/node': 20.19.25
       '@types/whatwg-mimetype': 3.0.2
       whatwg-mimetype: 3.0.0
 
@@ -18718,12 +18718,12 @@ snapshots:
       terser: 5.44.0
       tsx: 4.20.6
 
-  vitest-github-actions-reporter@0.11.1(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)):
+  vitest-github-actions-reporter@0.11.1(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)):
     dependencies:
       '@actions/core': 1.11.1
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6)
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.10.1)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -18751,7 +18751,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.10.1
-      happy-dom: 20.0.10
+      happy-dom: 20.0.11
     transitivePeerDependencies:
       - jiti
       - less
@@ -18766,7 +18766,7 @@ snapshots:
       - tsx
       - yaml
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.10)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(happy-dom@20.0.11)(msw@2.12.3(@types/node@24.9.2)(typescript@5.9.3))(sass-embedded@1.93.3)(sass@1.93.3)(terser@5.44.0)(tsx@4.20.6):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
@@ -18794,7 +18794,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.9.2
-      happy-dom: 20.0.10
+      happy-dom: 20.0.11
     transitivePeerDependencies:
       - jiti
       - less
