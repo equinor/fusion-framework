@@ -1048,7 +1048,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1097,7 +1097,7 @@ importers:
         version: 3.1.3
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1187,7 +1187,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1425,7 +1425,7 @@ importers:
         version: link:../../utils/query
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -1689,7 +1689,7 @@ importers:
         version: link:../../utils/observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
     devDependencies:
       '@equinor/fusion':
         specifier: ^3.4.15
@@ -1974,7 +1974,7 @@ importers:
     dependencies:
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -2017,7 +2017,7 @@ importers:
         version: link:../observable
       immer:
         specifier: ^11.0.0
-        version: 11.0.0
+        version: 11.0.1
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
@@ -7114,8 +7114,8 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
-  immer@11.0.0:
-    resolution: {integrity: sha512-XtRG4SINt4dpqlnJvs70O2j6hH7H0X8fUzFsjMn1rwnETaxwp83HLNimXBjZ78MrKl3/d3/pkzDH0o0Lkxm37Q==}
+  immer@11.0.1:
+    resolution: {integrity: sha512-naDCyggtcBWANtIrjQEajhhBEuL9b0Zg4zmlWK2CzS6xCWSE39/vvf4LqnMjUAWHBhot4m9MHCM/Z+mfWhUkiA==}
 
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
@@ -16231,7 +16231,7 @@ snapshots:
 
   ignore@5.3.2: {}
 
-  immer@11.0.0: {}
+  immer@11.0.1: {}
 
   immer@9.0.21: {}
 
