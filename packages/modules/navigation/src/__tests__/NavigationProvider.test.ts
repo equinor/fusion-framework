@@ -32,10 +32,6 @@ describe('NavigationProvider', () => {
     expect(provider.history).toBe(history);
   });
 
-  it('should have navigator property (deprecated)', () => {
-    expect(provider.history).toBe(history);
-  });
-
   it('should have path property', () => {
     expect(provider.path).toBeDefined();
     expect(provider.path.pathname).toBeDefined();

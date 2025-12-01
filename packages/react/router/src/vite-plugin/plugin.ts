@@ -140,7 +140,7 @@ function resolveFilePath(filePath: string, baseDir: string): string | null {
   }
 
   // Try common extensions, finally check without extension
-  const extensions = ['.tsx', '.ts', '.jsx', '.js', ''];
+  const extensions = ['.tsx', '.ts', '.jsx', '.js'];
   for (const ext of extensions) {
     const pathWithExt = resolvedPath + ext;
     if (fs.existsSync(pathWithExt)) {

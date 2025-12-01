@@ -1,59 +1,65 @@
 import { Outlet, useNavigation } from 'react-router-dom';
 import { tokens } from '@equinor/eds-tokens';
+import { Paper, Typography } from '@equinor/eds-core-react';
 import Navigation from './components/Navigation';
 import RouterDebugToolbar from './components/RouterDebugToolbar';
 import Loader from './components/Loader';
-import { Paper } from '@equinor/eds-core-react';
+import styled from 'styled-components';
 
-const styles = {
-  wrapper: {
-    display: 'grid',
-    gridTemplateRows: '75px auto',
-    height: 'inherit',
-  },
-  header: {
-    padding: '0 .5rem',
-    backgroundColor: tokens.colors.interactive.primary__resting.hex,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  container: {
-    display: 'grid',
-    gridTemplateColumns: 'auto 1fr',
-    backgroundColor: '#f5f5f5',
-    overflow: 'hidden',
-    height: 'calc(100vh - 123px)',
-  },
-  content: {
-    maxWidth: '1200px',
-    width: '100%',
-    overflowY: 'auto' as const,
-  },
-  contentContainer: {
-    minHeight: 'calc(100vh - (75px + 48px + 4rem))',
-    padding: '2rem 4rem',
-  },
+const Styled = {
+  Wrapper: styled.div`
+    display: grid;
+    grid-template-rows: 75px auto;
+    height: inherit;
+  `,
+  Header: styled.header`
+    padding: 0 ${tokens.spacings.comfortable.x_small};
+    background-color: ${tokens.colors.interactive.primary__resting.hex};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+  Container: styled.div`
+    display: grid;
+    grid-template-columns: auto 1fr;
+    background-color: ${tokens.colors.ui.background__light.hex};
+    overflow: hidden;
+    height: calc(100vh - 123px);
+  `,
+  Content: styled.div`
+    max-width: 1200px;
+    width: 100%;
+    overflow-y: auto;
+  `,
+  ContentContainer: styled(Paper)`
+    min-height: calc(100vh - (75px + 48px + 4rem));
+    padding: ${tokens.spacings.comfortable.large} ${tokens.spacings.comfortable.xx_large};
+  `,
+  Title: styled(Typography)`
+    color: ${tokens.colors.text.static_icons__primary_white.hex};
+  `,
 };
 
 export default function Layout() {
   const { state: loadingState } = useNavigation();
 
   return (
-    <div style={styles.wrapper}>
-      <header style={styles.header}>
-        <h1 style={{ color: 'white' }}>Cookbook - React Router App</h1>
+    <Styled.Wrapper>
+      <Styled.Header>
+        <Styled.Title variant="h1" group="heading">
+          Cookbook - React Router App
+        </Styled.Title>
         <RouterDebugToolbar />
-      </header>
-      <div style={styles.container}>
+      </Styled.Header>
+      <Styled.Container>
         <Navigation />
-        <div style={styles.content}>
-          <Paper elevation="raised" style={styles.contentContainer}>
+        <Styled.Content>
+          <Styled.ContentContainer elevation="raised">
             {loadingState === 'loading' && <Loader />}
             {loadingState === 'idle' && <Outlet />}
-          </Paper>
-        </div>
-      </div>
-    </div>
+          </Styled.ContentContainer>
+        </Styled.Content>
+      </Styled.Container>
+    </Styled.Wrapper>
   );
 }
