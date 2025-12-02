@@ -59,7 +59,7 @@ export async function handleTool(
     k: limit,
     searchType: 'similarity',
     filter: {
-      filterExpression: "startswith(metadata/source, 'cookbooks/')",
+      filterExpression: "metadata/attributes/any(x: x/key eq 'type' and x/value eq 'cookbook')",
     },
   });
 
