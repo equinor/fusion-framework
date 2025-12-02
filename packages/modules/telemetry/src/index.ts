@@ -13,7 +13,7 @@ export type { ITelemetryProvider } from './TelemetryProvider.interface.js';
 export { Measurement } from './Measurement.js';
 export type { IMeasurement } from './Measurement.interface.js';
 
-export { TelemetryLevel, TelemetryType } from './static.js';
+export { TelemetryLevel, TelemetryType, TelemetryScope } from './static.js';
 
 export type {
   MetadataExtractor,

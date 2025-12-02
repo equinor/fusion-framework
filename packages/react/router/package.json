@@ -1,0 +1,83 @@
+{
+  "name": "@equinor/fusion-framework-react-router",
+  "version": "0.1.0",
+  "description": "DSL API for defining React Router v7 routes with type safety",
+  "main": "dist/esm/index.js",
+  "type": "module",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./routes": {
+      "import": "./dist/esm/routes/index.js",
+      "types": "./dist/types/routes/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/esm/routes/to-route-schema.js",
+      "types": "./dist/types/routes/to-route-schema.d.ts"
+    },
+    "./vite-plugin": {
+      "import": "./dist/esm/vite-plugin/index.js",
+      "types": "./dist/types/vite-plugin/index.d.ts"
+    },
+    "./context": {
+      "import": "./dist/esm/context.js",
+      "types": "./dist/types/context.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "pnpm build",
+    "test": "vitest --run"
+  },
+  "keywords": [
+    "React",
+    "Router",
+    "React Router",
+    "DSL",
+    "TypeScript"
+  ],
+  "author": "odin.rochmann@gmail.com",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equinor/fusion-framework.git",
+    "directory": "packages/react/router"
+  },
+  "dependencies": {
+    "@equinor/fusion-framework-module-navigation": "workspace:^",
+    "@equinor/fusion-framework-react-module": "workspace:^",
+    "@equinor/fusion-imports": "workspace:^",
+    "react-router": "^7.9.5"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^7.9.5",
+    "@types/react": "^18.2.50",
+    "@types/react-dom": "^18.2.7",
+    "happy-dom": "^20.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.8.2",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@types/react": "^18.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^7.9.5"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  }
+}
