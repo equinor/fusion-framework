@@ -18,11 +18,11 @@ export { makeComponent, ComponentRenderArgs } from './make-component';
 
 export { createLegacyApp } from './create-legacy-app';
 
-// TODO deprecate
-export { renderApp } from './render-app';
 export { createComponent } from './create-component';
+export { renderApp } from './render-app';
 export { renderComponent } from './render-component';
 
 export type { ComponentRenderer } from './create-component';
+export type { RenderTeardown } from './render-component';
 
 export { default } from './render-app';
