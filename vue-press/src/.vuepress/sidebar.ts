@@ -305,6 +305,16 @@ export default sidebar({
     'ag-grid/',
     'widget/',
     {
+      text: 'React',
+      prefix: 'react/',
+      children: [
+        {
+          text: 'Router',
+          link: 'router/',
+        },
+      ],
+    },
+    {
       text: 'Service Discovery',
       link: 'service-discovery/',
     },

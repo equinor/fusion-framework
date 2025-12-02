@@ -41,6 +41,10 @@
       "types": "./dist/types/http/index.d.ts",
       "import": "./dist/esm/http/index.js"
     },
+    "./http/selectors": {
+      "types": "./dist/types/http/selectors.d.ts",
+      "import": "./dist/esm/http/selectors.js"
+    },
     "./msal": {
       "types": "./dist/types/msal/index.d.ts",
       "import": "./dist/esm/msal/index.js"
@@ -121,6 +125,7 @@
     "@equinor/fusion-framework-app": "workspace:^",
     "@equinor/fusion-framework-module": "workspace:^",
     "@equinor/fusion-framework-module-app": "workspace:^",
+    "@equinor/fusion-framework-module-http": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react": "workspace:^",
     "@equinor/fusion-framework-react-module": "workspace:^",
