@@ -10,7 +10,7 @@ import { FlexGrid } from '../Styled';
  *
  * @returns A React element representing the Avatar page.
  */
-export const AvatarPage = () => {
+const AvatarPage = () => {
   return (
     <>
       <h2>Avatar</h2>
@@ -21,3 +21,5 @@ export const AvatarPage = () => {
     </>
   );
 };
+
+export default AvatarPage;

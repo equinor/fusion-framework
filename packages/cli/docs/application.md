@@ -297,6 +297,7 @@ The Fusion Framework CLI provides a suite of commands to support the full applic
 
 - [Create](#create) — Create new Fusion applications from templates.
 - [Dev](#dev) — Start the development server with hot reloading.
+- [Serve](#serve) — Serve a built application with the dev-portal.
 - [Publish](#publish) — Build, upload, and tag your app for deployment.
 - [Config](#config) — Generate or upload your app configuration.
 - [Build](#build) — Build your application and generate deployment artifacts.
@@ -385,6 +386,41 @@ pnpm fusion-framework-cli dev --manifest ./app.manifest.local.ts --config ./app.
 ```
 
 > **Tip:** Use `--debug` to get detailed logs for troubleshooting during development.
+
+### Serve
+
+Serve a built application using the dev-portal, providing a production-like preview environment.
+
+The `serve` command serves your built application through the dev-portal, similar to the `dev` command but using production-built files. This is useful for testing your built application locally before deployment.
+
+| Option              | Description                                                         | Default / Example |
+| ------------------- | ------------------------------------------------------------------- | ----------------- |
+| `--port <port>`     | Port for the preview server.                                        | `4173`            |
+| `--host <host>`     | Host for the preview server.                                        | `localhost`       |
+| `--dir <directory>` | Directory to serve (default: detected from build config).          |                   |
+| `--manifest <path>` | Path to the app manifest file (`app.manifest[.env]?.[ts,js,json]`). | `app.manifest.ts` |
+| `--config <path>`   | Path to the app config file (`app.config[.env]?.[ts,js,json]`).     | `app.config.ts`   |
+| `-d`, `--debug`     | Enable debug mode for verbose logging.                              | `false`           |
+
+**Usage:**
+```sh
+pnpm fusion-framework-cli app serve [options]
+```
+
+**Examples:**
+```sh
+pnpm fusion-framework-cli app serve
+pnpm fusion-framework-cli app serve --port 5000
+pnpm fusion-framework-cli app serve --dir ./dist --host 0.0.0.0
+pnpm fusion-framework-cli app serve --manifest app.manifest.prod.ts --config app.config.prod.ts
+```
+
+> [!IMPORTANT]
+> **Prerequisites**: The application must be built first using `ffc app build` or `pnpm fusion-framework-cli app build`. The serve command will check if the build directory exists and provide an error message if it doesn't.
+>
+> **Build Directory Detection**: The build directory is automatically detected from your Vite configuration. If you need to serve a different directory, use the `--dir` option.
+>
+> **Preview Environment**: The serve command uses production mode and marks the environment as preview, so the manifest uses the compiled entry point from your build output.
 
 ### Publish
 

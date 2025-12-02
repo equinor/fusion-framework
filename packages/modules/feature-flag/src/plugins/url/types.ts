@@ -1,6 +1,5 @@
+import type { Path } from '@equinor/fusion-framework-module-navigation';
 import type { IFeatureFlag } from '../../types';
-
-export type Path = Pick<Location, 'pathname' | 'hash' | 'search'>;
 
 export type AssertFeatureFlag = (options: {
   /** name of the cgi parameter */

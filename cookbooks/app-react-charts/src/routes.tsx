@@ -1,61 +1,15 @@
-import { Outlet, type RouteObject } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import { BarChart } from './pages/BarChart';
-import { LineChart } from './pages/LineChart';
-import HomePage from './pages/HomePage';
-import { AgArea, AgBar, AgLine, AgPie } from './pages/ag-charts';
+import { layout, index, route, prefix } from '@equinor/fusion-framework-react-router/routes';
 
-const Root = () => {
-  return (
-    <div style={{ display: 'flex', gap: 20 }}>
-      <Navigation />
-      <div style={{ flexGrow: 1 }}>
-        <Outlet />
-      </div>
-    </div>
-  );
-};
-
-export const routes: RouteObject[] = [
-  {
-    path: '/',
-    element: <Root />,
-    children: [
-      {
-        index: true,
-        Component: HomePage,
-      },
-      {
-        path: 'bar-chart/*',
-        Component: BarChart,
-      },
-      {
-        path: 'line-chart/*',
-        Component: LineChart,
-      },
-      {
-        path: 'ag-chart',
-        children: [
-          {
-            path: 'bar',
-            Component: AgBar,
-          },
-          {
-            path: 'pie',
-            Component: AgPie,
-          },
-          {
-            path: 'line',
-            Component: AgLine,
-          },
-          {
-            path: 'area',
-            Component: AgArea,
-          },
-        ],
-      },
-    ],
-  },
-];
+export const routes = layout('./pages/Root.tsx', [
+  index('./pages/HomePage.tsx'),
+  route('bar-chart/*', './pages/BarChart.tsx'),
+  route('line-chart/*', './pages/LineChart.tsx'),
+  prefix('ag-chart', [
+    route('bar', './pages/ag-charts/AgBar.tsx'),
+    route('pie', './pages/ag-charts/AgPie.tsx'),
+    route('line', './pages/ag-charts/AgLine.tsx'),
+    route('area', './pages/ag-charts/AgArea.tsx'),
+  ]),
+]);
 
 export default routes;
