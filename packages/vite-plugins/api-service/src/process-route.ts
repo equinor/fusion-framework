@@ -166,7 +166,9 @@ export function processRoutes(
 
   for (const route of routes) {
     if (!req.url) continue;
-    const match = createRouteMatcher(route)(req.url ?? '', req);
+    // Extract pathname only (exclude query parameters/CGI)
+    const pathname = req.url.split('?')[0];
+    const match = createRouteMatcher(route)(pathname, req);
     if (match) {
       const [req, res, next] = middlewareArgs;
       req.params = typeof match === 'object' ? match.params : {};
