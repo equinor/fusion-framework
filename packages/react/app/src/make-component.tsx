@@ -55,7 +55,7 @@ export const makeComponent = <
 ): React.LazyExoticComponent<React.ComponentType> =>
   lazy(async () => {
     const init = configureModules<TModules, TRef, TEnv>(configure);
-    const modules = (await init(args)) as unknown as AppModulesInstance;
+    const modules = await init(args);
 
     const { fusion } = args;
 

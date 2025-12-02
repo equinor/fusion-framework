@@ -40,6 +40,9 @@
       ],
       "react": [
         "dist/types/react/index.d.ts"
+      ],
+      "actions": [
+        "dist/types/actions.d.ts"
       ]
     }
   },

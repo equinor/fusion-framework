@@ -9,8 +9,7 @@ import type IApp from './app';
 export type ConfigEnvironment = Record<string, unknown>;
 export type { AppConfig } from './AppConfig';
 
-// TODO
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: TODO - needs proper type definition
 type Fusion = any;
 
 export type AppEnv<TEnv extends ConfigEnvironment = ConfigEnvironment, TProps = unknown> = {
@@ -66,6 +65,19 @@ export type AppAdmin = AppPerson;
 
 export type AppOwner = AppPerson;
 
+/**
+ * Schema entry format for route documentation in app manifests.
+ * Each entry represents a route with its path, description, and optional parameter/search schemas.
+ */
+export type RouteSchemaEntry = [
+  path: string,
+  description: string,
+  options?: {
+    params?: Record<string, string>;
+    search?: Record<string, string>;
+  },
+];
+
 export type AppBuildManifest = {
   version: string;
   entryPoint: string;
@@ -110,6 +122,8 @@ export interface AppManifest {
   admins?: Nullable<AppAdmin[]>;
   owners?: Nullable<AppOwner[]>;
   build?: Nullable<AppBuildManifest>;
+  /** Route schema entries for documentation and API schema generation */
+  routes?: Nullable<RouteSchemaEntry[]>;
 }
 
 /**
