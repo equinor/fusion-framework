@@ -59,7 +59,7 @@ export async function handleTool(
     k: limit,
     searchType: 'similarity',
     filter: {
-      filterExpression: "metadata/type eq 'markdown'",
+      filterExpression: "metadata/attributes/any(x: x/key eq 'type' and x/value eq 'markdown')",
     },
   });
 
