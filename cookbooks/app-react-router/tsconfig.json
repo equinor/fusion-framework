@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
 
-    "jsx": "react-jsxdev"
+    "jsx": "react-jsx"
   },
   "references": [
     {
@@ -14,8 +14,11 @@
     },
     {
       "path": "../../packages/cli"
+    },
+    {
+      "path": "../../packages/react/router"
     }
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/types/**/*"],
   "exclude": ["node_modules", "lib"]
 }

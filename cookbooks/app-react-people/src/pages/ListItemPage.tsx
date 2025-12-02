@@ -41,7 +41,7 @@ const mapPersonToListItem = (person: ApiPersonSearchResultV2) => (
  *
  * @returns A React component that renders the list of persons.
  */
-export const ListItemPage = () => {
+const ListItemPage = () => {
   // Fetch and handle search results for persons
   const { persons, error, isSearching } = useSearchPersons(demoSearch);
 
@@ -77,3 +77,5 @@ export const ListItemPage = () => {
     </>
   );
 };
+
+export default ListItemPage;

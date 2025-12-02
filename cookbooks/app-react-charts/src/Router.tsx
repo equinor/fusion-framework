@@ -1,9 +1,7 @@
-import { RouterProvider } from 'react-router-dom';
-import { useRouter } from '@equinor/fusion-framework-react-app/navigation';
+import { Router } from '@equinor/fusion-framework-react-router';
 
 import routes from './routes';
 
 export default function () {
-  const router = useRouter(routes);
-  return <RouterProvider router={router} fallbackElement={<p>:(</p>} />;
+  return <Router routes={routes} />;
 }

@@ -3,6 +3,7 @@ import { importConfig } from '@equinor/fusion-imports';
 import type { AppManifest } from '@equinor/fusion-framework-module-app';
 
 import type { RuntimeEnv } from '../types.js';
+import type { RecursivePartial } from '../utils/types.js';
 import type { AppManifestFn } from './app-manifest.js';
 import mergeAppManifests from './merge-app-manifest.js';
 
@@ -93,10 +94,11 @@ export const loadAppManifest = async (
           // If the module's default export is a function, invoke it with the environment and base manifest
           if (typeof module.default === 'function') {
             const result = await module.default(env, { base });
-            return mergeAppManifests(base, result ?? {}); // Merge and cast to Record<string, unknown>
+            // Cast result to RecursivePartial<AppManifest> to handle RouteNode routes that will be serialized later
+            return mergeAppManifests(base, (result ?? {}) as RecursivePartial<AppManifest>);
           }
           // If the module's default export is not a function, treat it as a manifest object
-          return mergeAppManifests(base, module.default ?? {});
+          return mergeAppManifests(base, (module.default ?? {}) as RecursivePartial<AppManifest>);
         },
       },
     },
