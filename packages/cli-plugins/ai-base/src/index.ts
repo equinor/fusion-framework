@@ -1,9 +1,12 @@
 /**
  * Base AI plugin package for Fusion Framework CLI
  *
- * This package provides shared utilities and options for AI-related CLI plugins.
- * It is an internal package and is not published to npm. Consuming plugins should
- * bundle this package's code into their own output.
+ * @remarks
+ * This package provides shared utilities and configuration for AI-related CLI plugins.
+ * It is an internal base package and should not be used standalone. Consuming plugins
+ * should import from this package as a dependency.
+ * 
+ * @packageDocumentation
  */
 
 export {

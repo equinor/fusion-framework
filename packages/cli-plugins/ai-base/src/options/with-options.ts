@@ -11,24 +11,34 @@ import {
 } from './options.js';
 
 /**
- * Enhances a given command with AI-related options.
+ * Enhances a Commander command with AI-related options and validation.
  *
- * This function adds the following options to the provided command:
- * - `openaiApiKey`: Azure OpenAI API key
- * - `openaiApiVersion`: Azure OpenAI API version
- * - `openaiInstance`: Azure OpenAI instance name
- * - `openaiChatDeployment`: Chat model deployment name
- * - `openaiEmbeddingDeployment`: Embedding model deployment name (if includeEmbedding is true)
- * - `azureSearchEndpoint`: Azure Search endpoint URL (if includeSearch is true)
- * - `azureSearchApiKey`: Azure Search API key (if includeSearch is true)
- * - `azureSearchIndexName`: Azure Search index name (if includeSearch is true)
+ * This function adds Azure OpenAI and Azure Cognitive Search options to the provided
+ * command, along with pre-action validation hooks to ensure required options are provided.
+ * The function allows selective inclusion of chat, embedding, and search capabilities
+ * based on the command's requirements.
  *
- * @param command - The command to which AI options will be added
- * @param args - Optional configuration for which options to include
- * @param args.includeEmbedding - Whether to include embedding deployment option
- * @param args.includeChat - Whether to include chat deployment option (defaults to true)
- * @param args.includeSearch - Whether to include Azure Search options (defaults to false)
- * @returns The enhanced command with AI options
+ * Options added:
+ * - Core: `openaiApiKey`, `openaiApiVersion`, `openaiInstance` (always included)
+ * - Chat: `openaiChatDeployment` (if includeChat is true)
+ * - Embedding: `openaiEmbeddingDeployment` (if includeEmbedding is true)
+ * - Search: `azureSearchEndpoint`, `azureSearchApiKey`, `azureSearchIndexName` (if includeSearch is true)
+ *
+ * @param command - The Commander command instance to enhance with AI options
+ * @param args - Optional configuration object for selective feature inclusion
+ * @param args.includeEmbedding - Whether to include and require embedding deployment option (default: false)
+ * @param args.includeChat - Whether to include and require chat deployment option (default: false)
+ * @param args.includeSearch - Whether to include and require Azure Search options (default: false)
+ * @returns The enhanced command with AI options and validation hooks attached
+ * @throws {InvalidOptionArgumentError} During command execution if required options are missing or invalid
+ *
+ * @example
+ * ```ts
+ * const chatCommand = createCommand('chat')
+ *   .description('Start a chat session');
+ *
+ * withOptions(chatCommand, { includeChat: true });
+ * ```
  */
 export const withOptions = (
   command: Command,
