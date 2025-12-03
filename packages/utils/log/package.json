@@ -1,6 +1,6 @@
 {
   "name": "@equinor/fusion-log",
-  "version": "1.1.8-cli-search-index.0",
+  "version": "1.1.8-cli-search-index.1",
   "description": "Log utils for Fusion front-end development",
   "keywords": [
     "equinor",

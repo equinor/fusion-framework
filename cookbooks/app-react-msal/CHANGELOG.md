@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.8-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
 ## 1.1.7
 
 ### Patch Changes
