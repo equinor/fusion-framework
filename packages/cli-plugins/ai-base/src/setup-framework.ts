@@ -19,10 +19,24 @@ import { ModulesConfigurator, type ModulesInstance } from '@equinor/fusion-frame
 export type FrameworkInstance = ModulesInstance<[AIModule]>;
 
 /**
- * Initializes and configures the Fusion Framework with AI module capabilities
- * @param options - AI configuration options including API keys, deployments, and vector store settings
- * @returns Promise resolving to an initialized framework instance with AI module
+ * Initializes and configures the Fusion Framework with AI module capabilities.
+ *
+ * Sets up the framework with Azure OpenAI chat models, embedding services, and
+ * optionally Azure Cognitive Search vector stores. The function handles the complete
+ * initialization process including service registration and dependency injection.
+ *
+ * @param options - AI configuration options
+ * @param options.openaiApiKey - Azure OpenAI API key for authentication
+ * @param options.openaiApiVersion - Azure OpenAI API version (e.g., '2024-02-15-preview')
+ * @param options.openaiInstance - Azure OpenAI instance name
+ * @param options.openaiChatDeployment - Optional chat model deployment name
+ * @param options.openaiEmbeddingDeployment - Optional embedding model deployment name
+ * @param options.azureSearchEndpoint - Optional Azure Search service endpoint URL
+ * @param options.azureSearchApiKey - Optional Azure Search API key
+ * @param options.azureSearchIndexName - Optional Azure Search index name
+ * @returns Promise resolving to an initialized framework instance with AI module configured
  * @throws {Error} If embedding deployment is required but not provided when configuring vector store
+ * @throws {Error} If embedding service cannot be retrieved for vector store configuration
  */
 export const setupFramework = async (options: AiOptions): Promise<FrameworkInstance> => {
   // Create a new module configurator for the framework
@@ -66,6 +80,13 @@ export const setupFramework = async (options: AiOptions): Promise<FrameworkInsta
       // Retrieve the embedding service to pass to the vector store
       // The vector store uses embeddings to index and search documents
       const embeddingService = aiConfig.getService('embeddings', options.openaiEmbeddingDeployment);
+
+      // Check that the embedding service was successfully retrieved
+      if (!embeddingService) {
+        throw new Error(
+          `Embedding service '${options.openaiEmbeddingDeployment}' not found for vector store configuration`,
+        );
+      }
 
       aiConfig.setVectorStore(
         options.azureSearchIndexName,

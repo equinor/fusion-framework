@@ -3,10 +3,25 @@ import { createCommand } from 'commander';
 
 /**
  * Registers an AI plugin command with the CLI program.
- * Creates the 'ai' command group if it doesn't exist, then adds the provided command to it.
+ *
+ * This function ensures the 'ai' command group exists in the CLI program and adds
+ * the provided command as a subcommand. If the 'ai' group doesn't exist, it creates
+ * it with a standard description. This allows multiple AI-related plugins to register
+ * their commands under a common namespace.
  *
  * @param program - The Commander program instance to register commands with
  * @param command - The command to add to the 'ai' command group
+ * @returns void
+ *
+ * @example
+ * ```ts
+ * const myAiCommand = createCommand('chat')
+ *   .description('Start an AI chat session')
+ *   .action(() => { ... });
+ *
+ * registerAiPlugin(program, myAiCommand);
+ * // Results in: fusion-cli ai chat
+ * ```
  */
 export function registerAiPlugin(program: Command, command: Command): void {
   // Create 'ai' command group if it doesn't exist
