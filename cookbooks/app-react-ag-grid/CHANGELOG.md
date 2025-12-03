@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.4-cli-search-index.1
+
+### Patch Changes
+
+- [#3757](https://github.com/equinor/fusion-framework/pull/3757) [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34) Thanks [@odinr](https://github.com/odinr)! - preview before pr
+
+- Updated dependencies [[`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34), [`31f94be`](https://github.com/equinor/fusion-framework/commit/31f94becb9da9387624e8f8ab9e64b0f1a7e3b18), [`6bc3057`](https://github.com/equinor/fusion-framework/commit/6bc305794fdd0db1ceeb22cb14642e9d26b57b34), [`41f8e9b`](https://github.com/equinor/fusion-framework/commit/41f8e9b7a9b2680553e089d04095a9db7821567e)]:
+  - @equinor/fusion-framework-react-ag-grid@34.3.0-cli-search-index.1
+  - @equinor/fusion-framework-react-app@8.0.1-cli-search-index.1
+  - @equinor/fusion-framework-cli@13.0.0-cli-search-index.0
+
 ## 1.0.3
 
 ### Patch Changes
