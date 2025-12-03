@@ -24,17 +24,14 @@ type ProductsPageLoaderData = {
 export const handle = {
   route: {
     description: 'Products list page with filtering and sorting',
+    title: 'Products',
+    icon: shopping_card,
     params: {},
     search: {
       filter: 'Filter products by category (electronics, furniture)',
       sort: 'Sort products by price (asc, desc) or name (name-asc, name-desc)',
       inStock: 'Filter to show only in-stock products (true/false)',
     },
-  },
-  navigation: {
-    label: 'Products',
-    icon: shopping_card,
-    path: '/products',
   },
 } as const satisfies RouterHandle;
 
