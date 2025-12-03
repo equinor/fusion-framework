@@ -29,6 +29,11 @@ export const configure: AppModuleInitiator = (configurator, { env }) => {
       IntegratedChartsModule.with(AgChartsEnterpriseModule),
       AllCommunityModule,
     ]);
+    builder.setTheme((theme) =>
+      theme.withParams({
+        headerTextColor: 'cornflowerblue',
+      }),
+    );
   });
 
   /** callback when configurations is created */
