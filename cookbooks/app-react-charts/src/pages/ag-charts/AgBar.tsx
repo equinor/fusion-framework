@@ -2,7 +2,7 @@ import type { AgChartOptions } from 'ag-charts-community';
 import { salesData } from './Data';
 import { type ReactElement, useMemo } from 'react';
 import Styled from '../../App.style';
-import { AgCharts } from 'ag-charts-react';
+import { AgCharts } from '@equinor/fusion-framework-react-ag-grid/charts';
 
 /**
  * AgBar Component - Bar Chart Visualization
