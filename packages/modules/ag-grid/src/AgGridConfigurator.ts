@@ -1,7 +1,8 @@
 import { BaseConfigBuilder } from '@equinor/fusion-framework-module';
 
-import { type Theme, type Module, createTheme } from 'ag-grid-community';
+import type { Theme, Module } from 'ag-grid-community';
 import type { AgGridConfig, IAgGridConfigurator } from './AgGridConfigurator.interface';
+import { createTheme } from './themes';
 
 export class AgGridConfigurator
   extends BaseConfigBuilder<AgGridConfig>
@@ -9,14 +10,14 @@ export class AgGridConfigurator
 {
   // local template variables
   #modules: Set<Module>;
-  #theme: Theme | undefined;
+  #theme: () => Theme;
 
   constructor(args: Partial<AgGridConfig> = {}) {
     super();
 
     // set default values
     this.#modules = new Set(args.modules || []);
-    this.#theme = args.theme ?? createTheme();
+    this.#theme = args.theme ?? (() => createTheme());
 
     // set config properties
     this._set('modules', async () => [...this.#modules]);
@@ -30,9 +31,9 @@ export class AgGridConfigurator
 
   setTheme(valueOrCallback: Theme | ((baseTheme: Theme) => Theme) | null): void {
     if (typeof valueOrCallback === 'function') {
-      this.#theme = valueOrCallback(this.#theme ?? createTheme());
+      this._set('theme', async () => () => valueOrCallback(this.#theme()));
     } else {
-      this.#theme = valueOrCallback ?? undefined;
+      this._set('theme', async () => () => valueOrCallback as Theme);
     }
   }
 

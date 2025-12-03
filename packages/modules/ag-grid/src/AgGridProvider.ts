@@ -1,5 +1,10 @@
 import { LicenseManager } from 'ag-grid-enterprise';
-import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
+import {
+  createTheme,
+  ModuleRegistry,
+  provideGlobalGridOptions,
+  type Theme,
+} from 'ag-grid-community';
 
 import type { AgGridConfig } from './AgGridConfigurator.interface';
 
@@ -24,7 +29,7 @@ export class AgGridProvider implements IAgGridProvider {
    * @returns {Theme | undefined} The current theme if configured, otherwise undefined.
    */
   get theme(): Theme | undefined {
-    return this._config.theme;
+    return this._config.theme?.();
   }
 
   constructor(protected _config: AgGridConfig) {
@@ -36,7 +41,7 @@ export class AgGridProvider implements IAgGridProvider {
       LicenseManager.setLicenseKey(this.licenseKey);
     }
     provideGlobalGridOptions({
-      theme: this._config.theme,
+      theme: this._config.theme?.(),
     });
 
     if (this._config.modules) {
