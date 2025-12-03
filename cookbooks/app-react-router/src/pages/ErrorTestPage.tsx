@@ -9,11 +9,8 @@ import type { ErrorElementProps, RouterHandle } from '@equinor/fusion-framework-
 export const handle = {
   route: {
     description: 'Error handling test page',
-  },
-  navigation: {
-    label: 'Error Test',
+    title: 'Error Test',
     icon: error_outlined,
-    path: '/pages/error-test',
   },
 } as const satisfies RouterHandle;
 

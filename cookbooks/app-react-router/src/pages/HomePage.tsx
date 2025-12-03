@@ -6,11 +6,8 @@ import readmeContent from '../../README.md?raw';
 export const handle = {
   route: {
     description: 'Home page',
-  },
-  navigation: {
-    label: 'Home',
+    title: 'Home',
     icon: home,
-    path: '/',
   },
 } as const satisfies RouterHandle;
 
