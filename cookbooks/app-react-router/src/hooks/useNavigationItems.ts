@@ -43,11 +43,11 @@ function extractNavigationItems(routes: RouteObject[], currentPath: string = '')
 
     // Check if handle has navigation metadata
     const handle = route.handle;
-    if (handle?.navigation) {
+    if (handle?.route?.title && handle?.route?.icon) {
       items.push({
-        label: handle.navigation.label,
-        icon: handle.navigation.icon,
-        path: handle.navigation.path || fullPath,
+        label: handle.route.title,
+        icon: handle.route.icon,
+        path: handle.navigation?.path || fullPath,
       });
     }
 
