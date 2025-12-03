@@ -13,7 +13,7 @@ export const appSchema = z
     appKey: z.string(),
     displayName: z.string(),
     type: z.string(),
-    categoryId: z.string().optional(),
+    categoryName: z.string().optional(),
     buildVersion: z.string().optional(),
     buildTag: z.string().optional().nullable(),
   })
@@ -34,7 +34,7 @@ export const extractAppMetadata = (app: AppManifest): z.input<typeof appSchema> 
     appKey: app.appKey,
     displayName: app.displayName,
     type: app.type,
-    categoryId: app.category?.id,
+    categoryName: app.category?.name,
     buildVersion: app.build?.version,
     buildTag: app.build?.tag,
   };

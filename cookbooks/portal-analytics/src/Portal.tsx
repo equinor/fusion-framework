@@ -31,6 +31,9 @@ export const Portal = () => {
           <Link to={'apps/fusion-help-admin'}>Help admin</Link>
         </li>
         <li>
+          <Link to={'apps/fusion-help-admin/app/app-admin'}>Help admin with app admin context</Link>
+        </li>
+        <li>
           <Link to={'apps/meetings'}>Meetings</Link>
         </li>
         <li>

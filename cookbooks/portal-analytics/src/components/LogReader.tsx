@@ -96,7 +96,6 @@ export const LogReader = () => {
                     .filter((attr) => attr.key === 'portal.id')
                     .map((attr) => attr.value.stringValue)}
                 </td>
-                <td>{scopeLog.scope.name}</td>
                 <td>{logRecord.eventName}</td>
                 <td>{JSON.stringify(logRecord.body)}</td>
                 <td>{JSON.stringify(logRecord.attributes)}</td>

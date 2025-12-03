@@ -7,14 +7,14 @@ import {
 } from './utils/extractContextMetadata.js';
 import type { IAnalyticsCollector } from './AnalyticsCollector.interface.js';
 
-import type { AppEnv, AppModulesInstance } from '@equinor/fusion-framework-module-app';
+import type { AppModulesInstance, AppManifest } from '@equinor/fusion-framework-module-app';
 import type { IEventModuleProvider } from '@equinor/fusion-framework-module-event';
 
 import { type ObservableInput, Subject } from 'rxjs';
 import { z } from 'zod';
 import type { ContextModule } from '@equinor/fusion-framework-module-context';
 
-const EVENT_NAME = 'onReactAppLoaded';
+const EVENT_NAME = 'onAppModulesLoaded';
 
 /**
  * The schema of the data to be sent.
@@ -45,8 +45,10 @@ export class AppLoadedCollector
       attributes: { context?: ContextItemType };
     }>();
     this.#eventProvider.addEventListener(EVENT_NAME, (event) => {
-      const env = event.detail.env as AppEnv;
+      const manifest = event.detail.manifest as AppManifest;
       const modules = event.detail.modules as AppModulesInstance<[ContextModule]>;
+
+			console.log('111111', manifest);
 
       // console.log(11, modules.context.resolveContext(modules.context.currentContext));
       // console.log(12, modules.context.validateContext(modules.context.currentContext));
@@ -60,7 +62,7 @@ export class AppLoadedCollector
           : undefined;
 
       const data = {
-        value: env.manifest && extractAppMetadata(env.manifest),
+        value: manifest && extractAppMetadata(manifest),
         attributes: {
           context,
         },
