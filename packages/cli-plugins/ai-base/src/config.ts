@@ -13,9 +13,23 @@ export interface FusionAIConfig {
 }
 
 /**
- * Configuration factory function for Fusion AI operations
+ * Configuration factory function for Fusion AI operations.
+ *
+ * This helper function provides type safety and consistency for creating AI configuration
+ * functions. It accepts a function that returns configuration (either synchronously or
+ * asynchronously) and returns it unchanged, providing a typed interface for consumers.
+ *
  * @param fn - Function that returns Fusion AI configuration (sync or async)
- * @returns The provided configuration function
+ * @returns The same configuration function, typed for use with loadFusionAIConfig
+ *
+ * @example
+ * ```ts
+ * // fusion-ai.config.ts
+ * export default configureFusionAI(async () => ({
+ *   apiKey: process.env.OPENAI_API_KEY,
+ *   deployment: 'gpt-4',
+ * }));
+ * ```
  */
 export const configureFusionAI = <T extends FusionAIConfig>(fn: () => Promise<T> | T) => fn;
 
@@ -25,7 +39,7 @@ export const configureFusionAI = <T extends FusionAIConfig>(fn: () => Promise<T>
 export interface LoadFusionAIConfigOptions {
   /** Base directory to resolve the config file from (default: process.cwd()) */
   baseDir?: string;
-  /** File extensions to consider when resolving the config file */
+  /** File extensions to consider when resolving the config file (default: ['.ts', '.mjs', '.js', '.json']) */
   extensions?: string[];
 }
 
@@ -35,19 +49,22 @@ export interface LoadFusionAIConfigOptions {
  * The config file should export a function (via `configureFusionAI`) that returns
  * the configuration object. The function can be synchronous or asynchronous.
  *
- * @param configPath - Path to the config file (default: 'fusion-ai.config.ts')
+ * @param configPath - Path to the config file without extension (default: 'fusion-ai.config')
  * @param options - Optional parameters for loading the configuration
  * @returns Promise resolving to the loaded and executed configuration
+ * @throws {Error} If the config file cannot be found or loaded
+ * @throws {Error} If the config file does not export a valid configuration function
  *
  * @example
  * ```ts
- * const config = await loadFusionAIConfig('fusion-ai.config.ts', {
+ * const config = await loadFusionAIConfig('fusion-ai.config', {
  *   baseDir: process.cwd(),
+ *   extensions: ['.ts', '.js'],
  * });
  * ```
  */
 export async function loadFusionAIConfig<T extends FusionAIConfig = FusionAIConfig>(
-  configPath: string = 'fusion-ai.config.ts',
+  configPath: string = 'fusion-ai.config',
   options: LoadFusionAIConfigOptions = {},
 ): Promise<T> {
   const { baseDir = process.cwd(), extensions } = options;
