@@ -24,16 +24,13 @@ type UsersPageLoaderData = {
 export const handle = {
   route: {
     description: 'Users list page with pagination',
+    title: 'Users',
+    icon: work_outline,
     params: {},
     search: {
       page: 'Page number for pagination (default: 1)',
       limit: 'Number of users per page (default: 5)',
     },
-  },
-  navigation: {
-    label: 'Users',
-    icon: work_outline,
-    path: '/users',
   },
 } as const satisfies RouterHandle;
 

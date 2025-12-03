@@ -16,14 +16,11 @@ import type { PersonSearchResult } from '../api';
 export const handle = {
   route: {
     description: 'People search page with search functionality',
+    title: 'People API',
+    icon: category,
     search: {
       search: 'Search term to find people (name, email, or other identifiers)',
     },
-  },
-  navigation: {
-    label: 'People API',
-    icon: category,
-    path: '/pages/people',
   },
 } as const satisfies RouterHandle;
 
