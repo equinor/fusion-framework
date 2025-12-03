@@ -1,6 +1,5 @@
 import { LicenseManager } from 'ag-grid-enterprise';
 import {
-  createTheme,
   ModuleRegistry,
   provideGlobalGridOptions,
   type Theme,
