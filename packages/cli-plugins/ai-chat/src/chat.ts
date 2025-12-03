@@ -255,7 +255,7 @@ Summary:`;
      * Manages message history with intelligent compression using AI summarization
      * Implements a two-stage compression strategy:
      * 1. When history reaches 10 messages, summarize oldest 5 messages using AI
-     * 2. If history still exceeds limit, remove oldest messages (keeping at least 2 for context)
+     * 2. If history still exceeds limit after compression, remove oldest non-summary messages
      * @param history - Current message history array (will be mutated)
      * @param newMessage - New message to add to history
      * @param limit - Maximum number of messages to keep in history
@@ -271,6 +271,7 @@ Summary:`;
       // Stage 1: AI-based compression when history reaches 10 messages
       // Summarize the oldest 5 messages and replace them with a single summary message
       // This preserves important context while reducing token usage
+      let hasSummary = false;
       if (history.length >= 10) {
         if (options.verbose) {
           console.log('🔄 Compressing conversation history with AI summarization...');
@@ -282,6 +283,7 @@ Summary:`;
 
         // Insert the summary at the beginning to maintain chronological order
         history.unshift(summary);
+        hasSummary = true;
 
         if (options.verbose) {
           console.log(
@@ -291,13 +293,24 @@ Summary:`;
       }
 
       // Stage 2: Hard limit enforcement if history still exceeds limit after compression
-      // Always keep at least 2 messages (typically the summary + most recent message)
-      // to maintain basic conversation context
+      // If we just created a summary, start removing from position 1 to preserve it
+      // Otherwise, remove from position 0 as usual
       if (history.length > limit) {
         const messagesToRemove = history.length - limit;
-        // Calculate safe removal count: don't remove more than (history.length - 2)
-        const actualRemoval = Math.min(messagesToRemove, Math.max(0, history.length - 2));
-        history.splice(0, actualRemoval);
+        const startIndex = hasSummary ? 1 : 0;
+        // Ensure we don't remove more messages than available (keeping summary if it exists)
+        const maxRemovable = hasSummary ? history.length - 2 : history.length - 1;
+        const actualRemoval = Math.min(messagesToRemove, Math.max(0, maxRemovable));
+        
+        if (actualRemoval > 0) {
+          history.splice(startIndex, actualRemoval);
+          
+          if (options.verbose) {
+            console.log(
+              `🗑️  Removed ${actualRemoval} messages. History now has ${history.length} messages.`,
+            );
+          }
+        }
       }
 
       return history;
