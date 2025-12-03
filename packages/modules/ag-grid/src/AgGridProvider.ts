@@ -1,9 +1,5 @@
 import { LicenseManager } from 'ag-grid-enterprise';
-import {
-  ModuleRegistry,
-  provideGlobalGridOptions,
-  type Theme,
-} from 'ag-grid-community';
+import { ModuleRegistry, provideGlobalGridOptions, type Theme } from 'ag-grid-community';
 
 import type { AgGridConfig } from './AgGridConfigurator.interface';
 
