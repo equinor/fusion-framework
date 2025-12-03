@@ -2,20 +2,19 @@
 "@equinor/fusion-framework-module-ag-grid": minor
 ---
 
-Change `theme` configuration from direct `Theme` value to function `() => Theme` for lazy evaluation.
+Internal: `theme` config property now expects a function `() => Theme` for lazy evaluation, but consumer APIs remain backward compatible.
 
-The `theme` property in `AgGridConfig` now accepts a function that returns a `Theme` instead of a `Theme` directly. This enables dynamic theme evaluation and better integration with theme systems.
+Most consumers using `builder.setTheme()` do not need to migrate; it still accepts both `Theme` objects and functions. Only direct construction of `AgGridConfig` requires the function wrapper.
 
 ```typescript
-// Before
-const config = {
-  theme: myTheme
-};
-
-// After
-const config = {
+// Internal API change (rare, direct config construction)
+const config: AgGridConfig = {
   theme: () => myTheme
 };
+
+// Builder API remains backward compatible
+builder.setTheme(myTheme); // still works
+builder.setTheme((theme) => theme.withParams({...})); // also works
 ```
 
 Fixes: https://github.com/equinor/fusion-framework/issues/747
