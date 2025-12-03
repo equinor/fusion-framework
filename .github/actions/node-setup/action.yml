@@ -25,7 +25,9 @@ runs:
       if: ${{ inputs.turbo-cache == 'true' }}
       uses: actions/cache@v4
       with:
-        path: .turbo
+        path: |
+          .turbo
+          **/.turbo
         key: ${{ runner.os }}-turbo-${{ steps.pnpm-lock-hash.outputs.hash }}
         restore-keys: |
           ${{ runner.os }}-turbo-
