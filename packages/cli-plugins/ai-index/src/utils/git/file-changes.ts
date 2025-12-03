@@ -36,6 +36,15 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedF
         // Match status and file path
         // Format: "A\tfile.ts" or "M\tfile.ts" or "D\tfile.ts"
         // Also handle renames: "R100\told.ts\tnew.ts"
+        const renameMatch = line.match(/^R\d*\s+(.+?)\s+(.+)$/);
+        if (renameMatch) {
+          const [, oldFile, newFile] = renameMatch;
+          // Add both the removed old file and the new file
+          changedFiles.push({ filepath: `${projectRoot}/${oldFile}`, status: 'removed' });
+          changedFiles.push({ filepath: `${projectRoot}/${newFile}`, status: 'new' });
+          continue;
+        }
+
         const match = line.match(/^([AMD])\s+(.+)$/);
         if (match) {
           const [, gitStatus, file] = match;
@@ -49,7 +58,7 @@ export const getChangedFiles = async (options: GitDiffOptions): Promise<ChangedF
           } else if (gitStatus === 'D') {
             status = 'removed';
           } else {
-            // Skip unknown statuses (R=renamed, C=copied, etc.)
+            // Skip unknown statuses (C=copied, etc.)
             continue;
           }
 
