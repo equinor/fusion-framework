@@ -29,7 +29,7 @@ import type { FusionAIConfigWithIndex } from './config.js';
  *
  * Options:
  *   --dry-run              Show what would be processed without actually doing it
- *   --config <config>      Path to a config file (default: fusion-ai.config.ts)
+ *   --config <config>      Path to a config file (default: fusion-ai.config)
  *   --diff                 Process only changed files (workflow mode)
  *   --base-ref <ref>       Git reference to compare against (default: HEAD~1)
  *   --clean                Delete all existing documents from the vector store before processing
@@ -58,7 +58,7 @@ const _command = createCommand('embeddings')
     ),
   )
   .addOption(
-    createOption('--config <config>', 'Path to a config file').default('fusion-ai.config.ts'),
+    createOption('--config <config>', 'Path to a config file').default('fusion-ai.config'),
   )
   .addOption(createOption('--diff', 'Process only changed files (workflow mode)').default(false))
   .addOption(createOption('--base-ref <ref>', 'Git reference to compare against').default('HEAD~1'))
