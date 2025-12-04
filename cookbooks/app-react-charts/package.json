@@ -23,13 +23,13 @@
     "@equinor/fusion-framework-cli": "workspace:^",
     "@equinor/fusion-framework-module-navigation": "workspace:^",
     "@equinor/fusion-framework-react-app": "workspace:^",
-    "@types/react": "^18.2.50",
-    "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "react-router-dom": "^7.9.5",
-    "typescript": "^5.8.2",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@equinor/fusion-framework-react-router": "workspace:^",
