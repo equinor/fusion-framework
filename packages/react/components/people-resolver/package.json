@@ -37,13 +37,13 @@
     "@equinor/fusion-framework-module-bookmark": "workspace:^",
     "@equinor/fusion-framework-module-event": "workspace:^",
     "@equinor/fusion-wc-person": "^3.2.4",
-    "@types/react": "^18.2.50",
-    "react": "^18.2.0",
+    "@types/react": "^19.2.7",
+    "react": "^19.2.1",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@types/react": "^18.0.0",
-    "react": "^18.0.0"
+    "@types/react": "^18.0.0 || ^19.0.0",
+    "react": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {
